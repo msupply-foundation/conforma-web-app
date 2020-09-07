@@ -1,0 +1,91 @@
+import React, { useState, useEffect } from 'react'
+import { useQuery } from "@apollo/client"
+import { Container, Table } from 'semantic-ui-react'
+import { Application } from '../generated/graphql'
+import getApplications from '../graphql/queries/getApplications.query'
+import ApplicationEdit from './ApplicationEdit'
+
+const ApplicationsList: React.FC = () => {
+  const [applications, setApplications] = useState<Array<Application> | null>()
+  const {
+    data,
+    loading,
+    error
+  } = useQuery(getApplications)
+
+  const [values, setValues] = useState({
+      id: 0,
+      name: '',
+  })
+
+  const editApplication = (applicationId: number, applicationName: string) => {
+      setValues({
+          ...values,
+          id: applicationId,
+          name: applicationName,
+      })
+  }
+
+  useEffect(() => {    
+    if (data) {
+      console.log(data);
+      
+      if (data && data.allApplications && data.allApplications.nodes) {
+        setApplications(data.allApplications.nodes)
+        console.log('applications', applications)
+        
+      }
+    }
+    if (error) {
+      console.log(error)
+    }
+    if (loading) {
+      console.log(loading)
+    }
+  }, [data, error, loading])
+
+  return (
+    <Container>
+      <Table sortable stackable selectable>
+        <Table.Header>
+        {applications &&
+          applications.length > 0 &&
+          Object.entries(applications[0]).map(([key, value]) =>
+            (typeof value === 'object') ?
+            Object.entries(value).map(([childKey, childValue]) =>
+            <Table.HeaderCell key={`app_header_${childKey}`}>
+              {childKey}
+            </Table.HeaderCell>)
+            :
+            <Table.HeaderCell key={`app_header_${key}`}>
+              {key}
+            </Table.HeaderCell>)}
+        </Table.Header>
+        <Table.Body>
+          {applications &&
+          applications.length > 0 &&
+          applications.map((application: Application, index: number) => (
+          <Table.Row 
+            onClick={() => editApplication(application.id, application.name)}
+            key={application.id} >
+            {Object.values(application).map((value) => 
+            (typeof value === 'object') ?
+            Object.values(value).map((property) =>
+              <Table.Cell key={`app_${index}_${property}`}>
+                {property}
+              </Table.Cell>)
+            :
+            <Table.Cell key={`app_${index}_${value}`}>
+              {value}
+            </Table.Cell>)}
+          </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+      <ApplicationEdit id={values.id} name={values.name} />
+    </Container>
+  )
+}
+
+export default ApplicationsList
+
