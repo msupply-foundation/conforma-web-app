@@ -1,8 +1,10 @@
+import * as config from './config.json'
+
 module.exports = {
-    client: {
-      service: {
-        name: "irims-server-demo",
-        url: "http://localhost:4000/graphql"
-      }
+  client: {
+    service: {
+      name: "Application Manager",
+      url: config.server
     }
-  };
+  }
+}
