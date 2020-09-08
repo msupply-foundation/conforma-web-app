@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const config = {
   entry: {
+    app: `${commonPaths.appEntry}/index.tsx`,
     vendor: ['semantic-ui-react']
   },
   output: {

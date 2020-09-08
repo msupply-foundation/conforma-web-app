@@ -4,16 +4,8 @@ const port = process.env.PORT || 3000
 
 const config = {
   mode: 'development',
-  entry: {
-    app: `${commonPaths.appEntry}/index.tsx`
-  },
   output: {
     filename: '[name].[hash].js'
-  },
-  resolve: {
-    alias: {
-      "react-dom": "@hot-loader/react-dom"
-    }
   },
   devtool: 'inline-source-map',
   module: {
