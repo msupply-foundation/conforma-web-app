@@ -2,17 +2,21 @@
 
 ## References
 Inital setup was done following this tutorial: https://medium.com/free-code-camp/learn-webpack-for-react-a36d4cac5060
+
 Semantic-ui on Webpack tutorial: https://medium.com/webmonkeys/webpack-2-semantic-ui-theming-a216ddf60daf
+
 Typescript in webpack tutorial: https://www.smashingmagazine.com/2020/05/typescript-modern-react-projects-webpack-babel/#comments-typescript-modern-react-projects-webpack-babel
+
 Hot loading App tutorial: https://dev.to/cronokirby/react-typescript-parcel-setting-up-hot-module-reloading-4f3f
 
 ## Init
 **Note**: This setup is using *yarn* to install npm packages.
 
-* Create basic structure
-`yarn init -y`
-`mkdir public`
-`mkdir src`
+* Create basic structure:
+
+`yarn init -y`\
+`mkdir public`\
+`mkdir src`\
 
 ## Webpack with React and Typescrit
 
@@ -24,9 +28,11 @@ Hot loading App tutorial: https://dev.to/cronokirby/react-typescript-parcel-sett
 
 ### Configure Typescript
 * Add a file `tsconfig.json` for all your Typescript configurations:
+
 `touch tsconfig.json`
 
 * Open the file `tsconfig.json` and copy the following Typescript configuration:
+
 ```
 {
   "compilerOptions": {
@@ -51,7 +57,8 @@ Hot loading App tutorial: https://dev.to/cronokirby/react-typescript-parcel-sett
 `cd public`\
 `touch index.html`
 
-* Add the `favicon.ico` here to load on the tab.
+* Add the `favicon.ico` in here to load on the tab.
+
 * Open `public/index.html` and copy the following:
 
 ```
@@ -74,11 +81,13 @@ Hot loading App tutorial: https://dev.to/cronokirby/react-typescript-parcel-sett
 
 ### Create a very basic App
 
-* Create the entry file with .tsx (Typescript) extension
-`cd src`
+* Create the entry file with .tsx (Typescript) extension:
+
+`cd src`\
 `touch index.tsx`
 
 * Open `index.tsx` and copy the following:
+
 ```
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -92,6 +101,7 @@ ReactDOM.render(
 ## Webpack for initial setup
 
 * Create on the webpack configuration file on root folder:
+
 `touch webpack.config.js`
 
 * Open `webpack.config.js` and copy the following:
@@ -153,20 +163,22 @@ module.exports = {
 }
 ```
 
-* Run webpack dev server
+* Run webpack dev server:
 
 `npx webpack-dev-server`
 
 ## Semantic-ui React
 
-* Install development dependencies (Semantic-ui, LESS and other loaders)
-Url-loader for Semantic ui icons & images, you must make sure that your webpack configuration know’s how to bundle them.
+* Install development dependencies (Semantic-ui, LESS and other loaders):
 
 `yarn add -D semantic-ui-react semantic-ui-less less less-loader url-loader postcss-loader mini-css-extract-plugin`
+
+`url-loader` is used for icons & images, you must make sure that your webpack configuration knows how to bundle them.
 
 ### Use Semantic-ui LESS locally
 
 * Create a folder to store the local settings of Semantic-ui:
+
 `mkdir -p semantic\src`
 
 * Copy the files and folders from `node_modules/semantic-ui-less` to a local folder `semantic/src`:
@@ -177,14 +189,18 @@ Url-loader for Semantic ui icons & images, you must make sure that your webpack 
 `cp node_modules/semantic-ui-less/theme.less node_modules/semantic-ui-less/semantic.less semantic/src/`\
 `cp node_modules/semantic-ui-less/theme.config.example semantic/src/theme.config`
 
-Folders: 
+**Folders:** 
 `site` - Keeps custom style for each component (that's a step before actually creating a **custom package theme**). Change any style defined in here to see the change on the element after the App is recompiled.
+
 `themes` - Has a folder for each **package theme** which can be setup per component on `theme.config` file.
+
 `definitions` - Has JS files and LESS files. And basic definitions for each component. Imports `theme.config`.
 
-Files:
+**Files:**
 `theme.config` - Configuration of variables to be used on `semantic.less` and each component **packaged theme**.
+
 `theme.less` - Main LESS configuration for Semantic-ui Styling. Here the inheritance order is defined.
+
 `semantic.less` - Just importing all the definintion folder. This file is imported in `index.js`.
 
 * Open the `theme.config` file and copy change the last lines according with the following:
@@ -215,11 +231,13 @@ Files:
 ### Add semantic-ui to components in the App
 
 * Create a folder `components` with one file:
+
 `cd src`\
 `mkdir components && cd $_`\
 `touch App.tsx AppMenu.tsx Home.tsx Footer.tsx NoMatch.tsx Register.tsx`
 
 * Open `Home.tsx` and copy the following:
+
 ```
 import React from 'react'
 import { Label } from 'semantic-ui-react'
@@ -234,6 +252,7 @@ export default Home
 ```
 
 * Open `Footer.tsx` and copy the following:
+
 ```
 import React from 'react'
 import { Container, Icon } from 'semantic-ui-react'
@@ -249,6 +268,7 @@ export default Footer
 ```
 
 * Open `NoMatch.tsx` and copy the following:
+
 ```
 import React from 'react'
 import { Icon, Segment } from 'semantic-ui-react'
@@ -266,6 +286,7 @@ export default NoMatch
 ```
 
 * Open `Register.tsx` and copy the following:
+
 ```
 import React, { useState } from 'react'
 import { Button, Checkbox, Form, Message, Segment } from 'semantic-ui-react'
@@ -337,6 +358,7 @@ export default Register
 ```
 
 * Open `AppMenu.tsx` and copy the following:
+
 ```
 import React, { useState } from 'react'
 import { Menu } from 'semantic-ui-react'
@@ -386,6 +408,7 @@ export default withRouter(AppMenu)
 ```
 
 * Open `App.tsx` and copy the following:
+
 ```
 import React from "react"
 import { hot } from 'react-hot-loader'
@@ -432,6 +455,7 @@ export default hot(module)(App)
 ```
 
 * Open `src/index.tsx` and copy the following:
+
 ```
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -711,7 +735,7 @@ module.exports = {
 
 ## Building the app with webpack
 
-* Add the following packages to the project
+* Add some util dev dependencies to the project:
 
 `yarn add -D rimraf cross-env serve`
 
@@ -739,7 +763,14 @@ module.exports = {
 `yarn serve`
 
 ## Basic setup finished
-Great job! Now we have the basic front-end repo configured to use Semantic-ui components and LESS Styles logic for all the components in the App. 
+Great job! 
+
+Now we have the basic front-end repo configured to use Semantic-ui React components with themes that use LESS files to define the style for each semantic-ui React component used in the App.
+
+### App style
+On the `semantic/src/themes` folder are your **package themes** and `semantic/src/theme.config` keeps what style theme is being used for each component. You can create a new theme folder and use by its name. 
+
+The styles are inherited from `default` package theme. So, even if you change on `theme.config` to use another package theme what isn't defined there will be using the `default` style. You can also use definitions on `semantic/src/site` folder to add custom style on top of the selected package theme for each component. 
 
 ## Prettier & Eslint for code styling
 
@@ -808,23 +839,8 @@ Great job! Now we have the basic front-end repo configured to use Semantic-ui co
 }
 ```
 
-### App style
-On the `semantic/src/themes` folder are your **package themes** and `semantic/src/theme.config` keeps what style theme is being used for each component. You can create a new theme folder and use by its name. 
-
-The styles are inherited from `default` package theme. So, even if you change on `theme.config` to use another package theme what isn't defined there will be using the `default` style. You can also use definitions on `semantic/src/site` folder to add custom style on top of the selected package theme for each component. 
-
-### Packages used on the config:
-- **Typescript**
-- **React**
-- **React-dom**
-- **React-router-dom**
-- **Hot loading**
-- **Semantic-ui-react**
-- **LESS**
-
-## Node version
-Since Semantic-ui-less doesn't run well in node v10.15.0 there is a resctriction on the `package.json` when installing this sub-project.
-Setup installation error to check if using node >v13.8.0: [Package.json docs](https://docs.npmjs.com/files/package.json#engines)
+## Node minimal version
+Since Semantic-ui-less doesn't run well in node v10.15.0 there is a resctriction on the `package.json` when installing this sub-project. Setup installation error to check if using node >v13.8.0: [Package.json docs](https://docs.npmjs.com/files/package.json#engines)
 
 - Added in `package.json`:
 
@@ -834,7 +850,7 @@ Setup installation error to check if using node >v13.8.0: [Package.json docs](ht
 
     `engine-strict=true`
 
-**Testing**
+### Testing
 * Change to node v10.15.0 (example using nvm):
 
     `nvm use v10.15.0`
@@ -847,10 +863,28 @@ Setup installation error to check if using node >v13.8.0: [Package.json docs](ht
 * Check out the error displayed:
 ![error-node-version](images/error_node_version.png)
 
-**Note**: You need to be using a node version > v13.8.0 to build this project. To check out what is your node version:
+**Note**: You need to be using a node version > v13.8.0 to build this project. 
+
+To check out what is your node version:
+
 `node -v` 
+
+# Summary
+Webpack setp
+
+## Included packages:
+- **Typescript**
+- **React**
+- **React-dom**
+- **React-router-dom**
+- **Hot loading**
+- **Semantic-ui-react**
+- **LESS**
+
+### Back
+- [Home](Home.md)
 
 ## Next
 - [Apollo client](apollo-client.md)
-- [App Router & hooks]
-- [Theme]
+- [Auth & App Router]
+- [Themes]

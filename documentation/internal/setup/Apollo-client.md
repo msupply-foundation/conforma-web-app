@@ -2,17 +2,18 @@
 
 ## References
 Apollo-client tutorial: https://www.apollographql.com/docs/tutorial/client/
+
 Install Graphql-codegen tutorial: https://medium.com/make-it-heady/part-2-building-full-stack-web-app-with-postgraphile-and-react-client-side-1c5085c5a182
 
-## Back end server
-[Repo documentation]()
+## Run the Back-end server
+[Repo documentation](https://github.com/openmsupply/application-manager-server/pull/1)
 
-## Config file
-
+## Create a App config file
 * Create a new file to store common paths and configurations:
-`touch config.json` 
+`touch config.json`
 
 * Open `config.json` andfor now just add the localhost for back-end:
+
 ```
 {
     "server": "http://localhost:5000/graphql"
@@ -20,11 +21,13 @@ Install Graphql-codegen tutorial: https://medium.com/make-it-heady/part-2-buildi
 ```
 
 * Open the Typescript config file `tsconfig.json` and add inside `compilerOptions`:
+
 `"resolveJsonModule": true`
 
 ## Apollo client
 
 `Apollo client` This package will be used for fetching (queries and mutations) from the Graphql server. It has also other cool features such as cache management, subscription for live update, local state management and inbuilt async control for states such as **isLoading** and **error**.
+
 `Graphql-codegen` Used for Typescript to import Types from your GraphQl server
 
 ### Install dependencies (Apollo client)
@@ -36,6 +39,7 @@ Install Graphql-codegen tutorial: https://medium.com/make-it-heady/part-2-buildi
 ### Setup Graphql-codegen
 
 * Run graphql-codegen configuration wizard:
+
 `yarn graphql-codegen init`
 
 * This will launch a CLI wizard. Next, we’ll follow the steps in this list:
@@ -145,9 +149,11 @@ ReactDOM.render(
 ### Add first query and mutation
 
 * Create 1 component to show when loading a page:
+
 `touch src/components/Loading.tsx`
 
 * Open `Loading.tsx` and copy the following:
+
 ```
 import React from 'react'
 import { Loader } from 'semantic-ui-react'
@@ -158,6 +164,7 @@ export default Loading
 ```
 
 * Create 2 new components to list and edit Applications:
+
 `cd src/components`\
 `mkdir ApplicationsList.tsx ApplicationEdit.tsc`
 
@@ -393,3 +400,44 @@ const App: React.FC = () => {
 declare const module: any
 export default hot(module)(App)
 ```
+
+## VS code extension for typing GraphQL
+
+* Install extension on VS code:
+
+* Create one apollo config file on the root to point to your server:
+
+`touch apollo.config.js`
+
+* Open `apollo.config.js` and copy the following:
+
+```
+import * as config from './config.json'
+
+module.exports = {
+  client: {
+    service: {
+      name: "Application Manager",
+      url: config.server
+    }
+  }
+}
+```
+
+# Summary
+Apollo cient setup
+
+## Basics:
+- **Query**
+- **Mutation**
+- **Graphql Types generated**
+- **Graphql folder**
+- **React hooks**
+
+## Back
+- [Home](Home.md)
+- [Webpack](Webpack.md)
+
+### Next
+- [Auth & App Router]
+- [Themes]
