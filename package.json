@@ -1,7 +1,7 @@
 {
   "name": "application-manager-web-app",
   "version": "1.0.0",
-  "main": "index.tsx",
+  "main": "App.tsx",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -47,7 +47,6 @@
     "mini-css-extract-plugin": "^0.10.0",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
-    "react-delay-render": "^0.1.2",
     "react-hot-loader": "^4.12.21",
     "react-imported-component": "^6.3.11",
     "rimraf": "^3.0.2",
