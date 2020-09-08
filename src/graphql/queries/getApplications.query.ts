@@ -2,13 +2,17 @@ import { gql } from '@apollo/client'
 
 export default gql`
     query getApplications {
-        allApplications {
+        applications {
             nodes {
                 id
-                userId
                 serial
                 name
                 outcome
+                template {
+                    code
+                    id
+                    templateName
+                }
             }
     }
 }

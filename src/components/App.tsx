@@ -1,7 +1,7 @@
 import React from "react"
 import { hot } from 'react-hot-loader'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { Container, Segment } from 'semantic-ui-react'
+import { Grid, Segment } from 'semantic-ui-react'
 
 import ApplicationsList from './ApplicationList'
 import AppMenu from './AppMenu'
@@ -13,10 +13,10 @@ import Register from './Register'
 
 const App: React.FC = () => {
   return (
-    <Segment.Group inverted>
-        <Segment.Group horizontal>
-            <Router>
-                <Segment inverted>
+    <div>
+        <Router>
+            <Grid>
+                <Grid.Column width={4}>
                     <AppMenu
                             items={[
                                 ['Home', '/'],
@@ -25,25 +25,22 @@ const App: React.FC = () => {
                                 ['Applications List', '/applications']
                             ]}
                         />
-                </Segment>
-                <Segment inverted>
-                    <Container fluid>
-                            <Switch>
-                                <Route path='/' exact component={Home} />
-                                <Route path='/form' component={Form} />
-                                <Route path='/register' component={Register} />
-                                <Route path='/applications' component={ApplicationsList} />
-                                <Route component={NoMatch} />
-                            </Switch>
-                    </Container>
-                </Segment>
-            </Router>
-        </Segment.Group>
-        <Segment inverted>
-            <Footer />
-        </Segment>
-    </Segment.Group>
-
+                </Grid.Column>
+                <Grid.Column stretched width={12}>
+                    <Segment>
+                        <Switch>
+                            <Route path='/' exact component={Home} />
+                            <Route path='/form' component={Form} />
+                            <Route path='/register' component={Register} />
+                            <Route path='/applications' component={ApplicationsList} />
+                            <Route component={NoMatch} />
+                        </Switch>
+                    </Segment>
+                </Grid.Column>
+            </Grid>
+        </Router>
+        <Footer />
+    </div>
     )
 }
 

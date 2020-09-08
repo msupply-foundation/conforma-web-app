@@ -1,5 +1,6 @@
-import React from 'react'
-import { List } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import { Menu } from 'semantic-ui-react'
+import { MenuItemProps } from 'semantic-ui-react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 
 interface AppMenuProps extends RouteComponentProps {
@@ -7,6 +8,11 @@ interface AppMenuProps extends RouteComponentProps {
 }
 
 const AppMenu: React.FC<AppMenuProps> = (props: AppMenuProps) => {
+    const [activeItem, setActiveItem] = useState<String>('Home')
+    const handleItemClick = (event: any, {children} : MenuItemProps) => {
+        setActiveItem(children as String)
+    }
+
     let menuItems = []
     for (let i = 0; i < props.items.length; i++) {
         if (props.items[i].length !== 2) {
@@ -15,22 +21,25 @@ const AppMenu: React.FC<AppMenuProps> = (props: AppMenuProps) => {
             )
             break
         }
-    const name = props.items[i][0]
-    const route = props.items[i][1]
-    menuItems.push(
-        <List.Item 
-            key={`app_menu_${name}`}
-            as={Link}
-            to={route}>
+        const name = props.items[i][0]
+        const route = props.items[i][1]
+        
+        menuItems.push(
+            <Menu.Item header
+                key={`app_menu_${name}`}
+                active={(activeItem === name)}
+                onClick={handleItemClick}
+                as={Link}
+                to={route}>
                 {name}
-        </List.Item>)
+            </Menu.Item>)
+    }    
 
     return (
-        <List link>
+        <Menu fluid vertical tabular>
             {menuItems}
-        </List>
+        </Menu>
     )
-  }
 }
   
 export default withRouter(AppMenu)
