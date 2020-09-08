@@ -851,6 +851,6 @@ Setup installation error to check if using node >v13.8.0: [Package.json docs](ht
 `node -v` 
 
 ## Next
-- [Apollo client]
+- [Apollo client](apollo-client.md)
 - [App Router & hooks]
 - [Theme]
