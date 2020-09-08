@@ -13,11 +13,11 @@ import { ApolloClient,
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({ 
     uri: config.server, 
     cache: new InMemoryCache() 
-});
+})
 
 ReactDOM.render(
     <ApolloProvider client={client}>
       <App />
     </ApolloProvider>,
     document.getElementById('root')
-);
+)

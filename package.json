@@ -42,8 +42,10 @@
     "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-react-hooks": "^4.1.0",
     "html-webpack-plugin": "^4.3.0",
+    "husky": ">=4",
     "less": "^3.12.2",
     "less-loader": "^7.0.0",
+    "lint-staged": ">=10",
     "mini-css-extract-plugin": "^0.10.0",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
@@ -60,5 +62,13 @@
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^5.1.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.tsx": "eslint --cache --fix"
   }
 }

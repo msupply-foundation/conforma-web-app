@@ -86,4 +86,3 @@ const ApplicationsList: React.FC = () => {
 }
 
 export default ApplicationsList
-
