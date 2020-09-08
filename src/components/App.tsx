@@ -3,9 +3,10 @@ import { hot } from 'react-hot-loader'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Grid, Segment } from 'semantic-ui-react'
 
+import ApplicationsList from './ApplicationList'
 import AppMenu from './AppMenu'
 import Footer from './Footer'
-import Form from './Form'
+import Register from './Register'
 import Home from './Home'
 import NoMatch from './NoMatch'
 
@@ -18,8 +19,7 @@ const App: React.FC = () => {
                     <AppMenu
                             items={[
                                 ['Home', '/'],
-                                ['Form', '/form'],
-                                ['Register', '/register'],
+                                ['Register', '/form'],
                                 ['Applications List', '/applications']
                             ]}
                         />
@@ -28,8 +28,7 @@ const App: React.FC = () => {
                     <Segment>
                         <Switch>
                             <Route path='/' exact component={Home} />
-                            <Route path='/form' component={Form} />
-                            <Route path='/register' component={Register} />
+                            <Route path='/form' component={Register} />
                             <Route path='/applications' component={ApplicationsList} />
                             <Route component={NoMatch} />
                         </Switch>

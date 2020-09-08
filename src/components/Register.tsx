@@ -8,7 +8,7 @@ interface Snackbar {
     isErrorMessage: boolean
 }
 
-const Form: React.FC = () => {
+const Register: React.FC = () => {
     const [ snackbar, changeSnackback ] = useState<Snackbar>({ showMessage: false, messageTitle: '', messageText: '', isErrorMessage: false})
 
     const submitedObject: Snackbar = {
@@ -29,7 +29,7 @@ const Form: React.FC = () => {
     return (
         <Segment.Group>
             <Segment>
-                <Form inverted>
+                <Form>
                     <Form.Field>
                         <label>First Name</label>
                         <input placeholder='First Name' />
@@ -46,7 +46,9 @@ const Form: React.FC = () => {
                         onClick={()=> {
                             changeSnackback(submitedObject)  
                             setTimeout( () => {removeSnackbar()}, 2000)
-                        }}/>
+                        }}>
+                            Submit
+                        </Button>
                 </Form>
             </Segment>
             <Segment>
@@ -62,4 +64,4 @@ const Form: React.FC = () => {
     )
 }
 
-export default Form
+export default Register

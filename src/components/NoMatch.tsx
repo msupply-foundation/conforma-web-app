@@ -7,7 +7,7 @@ const NoMatch: React.FC = () => {
       <Icon name="minus circle" size="big" />
       <strong>Page not found!</strong>
     </Segment>
-  );
-};
+  )
+}
 
 export default NoMatch
