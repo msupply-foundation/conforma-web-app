@@ -3,13 +3,11 @@ import { hot } from 'react-hot-loader'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Grid, Segment } from 'semantic-ui-react'
 
-import ApplicationsList from './ApplicationList'
 import AppMenu from './AppMenu'
 import Footer from './Footer'
 import Form from './Form'
 import Home from './Home'
 import NoMatch from './NoMatch'
-import Register from './Register'
 
 const App: React.FC = () => {
   return (
@@ -44,5 +42,5 @@ const App: React.FC = () => {
     )
 }
 
-declare const module: any;
+declare const module: any
 export default hot(module)(App)

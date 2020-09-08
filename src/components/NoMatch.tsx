@@ -1,7 +1,7 @@
-import React from 'react';
-import { Icon, Header, Segment } from 'semantic-ui-react';
+import React from 'react'
+import { Icon, Segment } from 'semantic-ui-react'
 
-const NoMatch = () => {
+const NoMatch: React.FC = () => {
   return (
     <Segment>
       <Icon name="minus circle" size="big" />
@@ -10,4 +10,4 @@ const NoMatch = () => {
   );
 };
 
-export default NoMatch;
+export default NoMatch
