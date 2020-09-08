@@ -6,7 +6,7 @@ Built in a React framework with Typescript.
 
 The components style is done using Semantic UI React (SUIR). 
 
-Apollo client for data fetching from a GraphQL server (Application-manager-server)[https://github.com/openmsupply/application-manager-server] running Postgraphile.
+Apollo client for data fetching from a GraphQL server [Application-manager-server](https://github.com/openmsupply/application-manager-server) running Postgraphile.
 
 ### React
 16.13.1
