@@ -36,7 +36,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r4BD1](https://balsamiq.cloud/s
 
 A list/table of all existing applications that the user is allowed to see.
 
-Clicking on an Application (a line in the list) takes you to the **Home/Overview** page for that application.
+Clicking on an Application (a line in the list) takes you to the **Home** page for that application.
 
 The URL would update with a query string according to the filter/sorting, so that any filter/sorting combination can be saved as a link/bookmark.
 
@@ -134,7 +134,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r189E](https://balsamiq.cloud/s
 
 ## `/applications/[type]/[guid]`
 
-### Application home page (Overview)
+### Application home page
 
 The “home page” of a specific application.
 
@@ -241,7 +241,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r3C4F](https://balsamiq.cloud/s
 
 ---
 
-## `/admin/templates/[name]/[stage]/[section]/[page]`
+## `/admin/templates/[id]/[section]/[page]`
 
 ### Template in-progress creation/editor
 
