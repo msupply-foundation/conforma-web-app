@@ -2,5 +2,5 @@
 
 ## Contents
 
-- [Internal Documentation](internal/Home.md)
-- [Setup](internal/setup/Home.md)
+- [Internal Documentation](internal/Home-Internal.md)
+- [Setup](internal/setup/Setup.md)
