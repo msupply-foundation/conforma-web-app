@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery } from "@apollo/client"
 import { Container, Table } from 'semantic-ui-react'
-import { Application } from '../generated/graphql'
+import { Application, Template } from '../generated/graphql'
 import getApplications from '../graphql/queries/getApplications.query'
 
 import Loading from './Loading'
@@ -49,8 +49,8 @@ const ApplicationsList: React.FC = () => {
           {applications &&
             applications.length > 0 &&
             Object.entries(applications[0]).map(([key, value]) =>
-              (typeof value === 'object') ?
-              Object.entries(value).map(([childKey, childValue]) =>
+              (key === 'template') ?
+              Object.entries(value as object).map(([childKey]) =>
               <Table.HeaderCell key={`app_header_${childKey}`}>
                 {childKey}
               </Table.HeaderCell>)
@@ -64,11 +64,11 @@ const ApplicationsList: React.FC = () => {
             applications.length > 0 &&
             applications.map((application: Application, index: number) => (
             <Table.Row 
-              onClick={() => editApplication(application.id, application.name)}
+              onClick={() => editApplication(application.id, application.name as string)}
               key={application.id} >
               {Object.values(application).map((value) => 
               (typeof value === 'object') ?
-              Object.values(value).map((property) =>
+              Object.values(value as object).map((property) =>
                 <Table.Cell key={`app_${index}_${property}`}>
                   {property}
                 </Table.Cell>)

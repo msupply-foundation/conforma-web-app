@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App'
-import * as config from '../config.json'
+import * as config from './config.json'
 import '../semantic/src/semantic.less'
 
 import { ApolloClient, 
