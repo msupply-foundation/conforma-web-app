@@ -775,7 +775,7 @@ The styles are inherited from `default` package theme. So, even if you change on
 ## Prettier & Eslint for code styling
 
 ### Install dev dependencies
-`yarn add -D eslint eslint-plugin-prettier eslint-plugin-react-hooks`
+`yarn add -D eslint eslint-plugin-prettier eslint-plugin-react eslint-plugin-react-hooks`
 
 ### Configure Prettier and Eslint
 
@@ -838,6 +838,12 @@ The styles are inherited from `default` package theme. So, even if you change on
   }
 }
 ```
+
+* Add one pre-commit hook for linting stagged files:
+
+`npx mrm lint-staged`
+
+This will install husky and lint-staged, then add a configuration to the project’s package.json that will automatically format supported files in a pre-commit hook.
 
 ## Node minimal version
 Since Semantic-ui-less doesn't run well in node v10.15.0 there is a resctriction on the `package.json` when installing this sub-project. Setup installation error to check if using node >v13.8.0: [Package.json docs](https://docs.npmjs.com/files/package.json#engines)
