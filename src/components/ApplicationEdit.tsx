@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useMutation } from "@apollo/client"
-import updateApplicationById from '../graphql/mutations/updateApplicationById.mutation'
+import updateApplication from '../graphql/mutations/updateApplication.mutation'
 
 interface updateApplicationProps {
     id: number
@@ -31,7 +31,7 @@ const ApplicationEdit: React.FC<updateApplicationProps> = (props: updateApplicat
         })
     }
   
-    const [updateApplication, { loading, error }] = useMutation(updateApplicationById,
+    const [editApplication, { loading, error }] = useMutation(updateApplication,
         {
             onCompleted: (data) => console.log("Data from mutation", data),
             onError: (error) => console.error("Error creating a post", error),
@@ -40,11 +40,9 @@ const ApplicationEdit: React.FC<updateApplicationProps> = (props: updateApplicat
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       // the mutate function also doesn't return a promise
-      updateApplication({ variables: {
+      editApplication({ variables: {
                             id: values.id,
-                            applicationPatch: {
-                                name: values.name,
-                            },
+                            applicationName: values.name,
                         } });
     }
 
