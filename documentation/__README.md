@@ -4,6 +4,25 @@ The `./documentation` folder is the root documentation folder for this repositor
 
 Within this documentation folder is a clone of the repo's [**wiki**](https://github.com/openmsupply/application-manager-web-app/wiki) repository, which appears as a submodule in the main repo, in `./documentation/_wiki`
 
+### To configure with submodule:
+
+- Clone repo with submodule pulled (if already in master):  
+  `git clone --recurse-submodules https://github.com/openmsupply/application-manager-web-app.git`
+
+- Clone repo with submodule in specific branch:  
+  `git clone --recurse-submodules -b <branch_name> https://github.com/openmsupply/application-manager-web-app.git`
+
+- Init and pull submodule folder:  
+  `git submodule update --init`
+
+- If already on master, you can clone + pull submodules:  
+  `git clone --recurse-submodules https://github.com/openmsupply/application-manager-web-app.git`
+
+- Or after changing branches the command to init and pull:  
+  `git submodule update --init`
+
+## Wiki info
+
 The wiki contents is essentially exactly the same as the main documentation folder. However, the way the wiki software handles internal links when online is different, and all pages are presented at the wiki root level, which means some relative links need to be adjusted accordingly.
 
 In order to update the wiki from the current documentation state, and push the wiki docs online, simply run:
