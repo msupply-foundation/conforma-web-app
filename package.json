@@ -15,7 +15,8 @@
     "prebuild": "rimraf dist",
     "build": "cross-env NODE_ENV=production webpack -p --env.env=prod",
     "serve": "serve dist",
-    "generate": "graphql-codegen --config codegen.js"
+    "generate": "graphql-codegen --config codegen.js",
+    "push_docs": "exec ./utils/push_docs_to_wiki.sh"
   },
   "dependencies": {
     "@apollo/client": "^3.1.4",

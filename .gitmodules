@@ -1,0 +1,3 @@
+[submodule "documentation/_wiki"]
+	path = documentation/_wiki
+	url = https://github.com/openmsupply/application-manager-web-app.wiki.git
