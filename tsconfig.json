@@ -28,7 +28,6 @@
       "./build-utils/*",
       "apollo.config.js",
       "webpack.config.js",
-      "postcss.config.js",
-      "config.json"
+      "postcss.config.js"
     ]
 }
