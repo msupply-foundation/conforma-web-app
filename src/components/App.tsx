@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 import { hot } from 'react-hot-loader'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Grid, Segment } from 'semantic-ui-react'
@@ -13,32 +13,32 @@ import NoMatch from './NoMatch'
 const App: React.FC = () => {
   return (
     <div>
-        <Router>
-            <Grid>
-                <Grid.Column width={4}>
-                    <AppMenu
-                            items={[
-                                ['Home', '/'],
-                                ['Register', '/form'],
-                                ['Applications List', '/applications']
-                            ]}
-                        />
-                </Grid.Column>
-                <Grid.Column stretched width={12}>
-                    <Segment>
-                        <Switch>
-                            <Route path='/' exact component={Home} />
-                            <Route path='/form' component={Register} />
-                            <Route path='/applications' component={ApplicationsList} />
-                            <Route component={NoMatch} />
-                        </Switch>
-                    </Segment>
-                </Grid.Column>
-            </Grid>
-        </Router>
-        <Footer />
+      <Router>
+        <Grid>
+          <Grid.Column width={4}>
+            <AppMenu
+              items={[
+                ['Home', '/'],
+                ['Register', '/form'],
+                ['Applications List', '/applications'],
+              ]}
+            />
+          </Grid.Column>
+          <Grid.Column stretched width={12}>
+            <Segment>
+              <Switch>
+                <Route path="/" exact component={Home} />
+                <Route path="/form" component={Register} />
+                <Route path="/applications" component={ApplicationsList} />
+                <Route component={NoMatch} />
+              </Switch>
+            </Segment>
+          </Grid.Column>
+        </Grid>
+      </Router>
+      <Footer />
     </div>
-    )
+  )
 }
 
 declare const module: any
