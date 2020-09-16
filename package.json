@@ -11,9 +11,9 @@
     "node": ">=13.8.0"
   },
   "scripts": {
-    "dev": "webpack-dev-server --env.env=dev",
+    "dev": "webpack-dev-server --env.env=development",
     "prebuild": "rimraf dist",
-    "build": "cross-env NODE_ENV=production webpack -p --env.env=prod",
+    "build": "cross-env NODE_ENV=production webpack -p --env.env=production",
     "serve": "serve dist",
     "generate": "graphql-codegen --config codegen.yml",
     "push_docs": "exec ./utils/push_docs_to_wiki.sh"
