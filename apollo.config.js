@@ -1,10 +1,10 @@
-import * as config from './config.json'
+import * as config from './src/config.json'
 
 module.exports = {
   client: {
     service: {
-      name: "Application Manager",
-      url: config.server
-    }
-  }
+      name: 'Application Manager',
+      url: config.server,
+    },
+  },
 }

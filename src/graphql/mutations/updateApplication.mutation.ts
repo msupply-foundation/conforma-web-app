@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from '@apollo/client'
 
 export default gql`
   mutation updateApplication($id: Int!, $applicationName: String!) {
@@ -9,4 +9,4 @@ export default gql`
       }
     }
   }
-`;
+`
