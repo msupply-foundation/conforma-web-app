@@ -15,7 +15,7 @@ const addons = (/* string | string[] */ addonsArg) => {
 
 // 'env' will contain the environment variable from 'scripts'
 // section in 'package.json'.
-module.exports = ({ env = 'development' }) => {
+module.exports = ({ env = 'dev' }) => {
   // We use 'buildValidations' to check for the 'env' flag
   if (!env) {
     throw new Error(buildValidations.ERR_NO_ENV_FLAG)
