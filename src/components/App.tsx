@@ -8,6 +8,7 @@ import AppMenu from './AppMenu'
 import Footer from './Footer'
 import Register from './Register'
 import Home from './Home'
+import Login from './Login'
 import NoMatch from './NoMatch'
 
 const App: React.FC = () => {
@@ -27,7 +28,12 @@ const App: React.FC = () => {
           <Grid.Column stretched width={12}>
             <Segment>
               <Switch>
-                <Route path="/" exact component={Home} />
+                <Route exact path="/">
+                  <Home />
+                </Route>
+                <Route exact path="/login">
+                  <Login />
+                </Route>
                 <Route path="/form" component={Register} />
                 <Route path="/applications" component={ApplicationsList} />
                 <Route component={NoMatch} />
