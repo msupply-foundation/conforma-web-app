@@ -2,11 +2,9 @@ import React from 'react'
 import { hot } from 'react-hot-loader'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Grid, Segment } from 'semantic-ui-react'
-
 import ApplicationsList from './ApplicationList'
 import AppMenu from './AppMenu'
 import Footer from './Footer'
-import Register from './Register'
 import Home from './Home'
 import Login from './Login'
 import NoMatch from './NoMatch'
@@ -34,8 +32,9 @@ const App: React.FC = () => {
                 <Route exact path="/login">
                   <Login />
                 </Route>
-                <Route path="/form" component={Register} />
-                <Route path="/applications" component={ApplicationsList} />
+                <Route path="/applications">
+                  <ApplicationsList />
+                </Route>
                 <Route component={NoMatch} />
               </Switch>
             </Segment>

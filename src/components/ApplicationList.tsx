@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Link, useLocation, Route } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { Container, Table } from 'semantic-ui-react'
 import { Application, Template } from '../generated/graphql'
@@ -10,6 +11,10 @@ import ApplicationEdit from './ApplicationEdit'
 const ApplicationsList: React.FC = () => {
   const [applications, setApplications] = useState<Array<Application> | null>()
   const { data, loading, error } = useQuery(getApplications)
+
+  // queryParams is an object that gets the URL query params as key-value pairs
+  // This object should be used for filtering the getApplication query
+  const queryParams = new URLSearchParams(useLocation().search)
 
   const [values, setValues] = useState({
     id: 0,
