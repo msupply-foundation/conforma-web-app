@@ -1,5 +1,3 @@
-# Overview of Navigation/URL structure
-
 _This should give us a guide of what UI mockups we need to demonstrate, as well as inform the details of the Navigation links menu._
 
 ## `/login`
