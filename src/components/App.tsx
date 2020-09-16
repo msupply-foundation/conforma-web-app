@@ -9,10 +9,12 @@ import Footer from './Footer'
 import Register from './Register'
 import Home from './Home'
 import NoMatch from './NoMatch'
+import UserArea from '../container/UserArea'
 
 const App: React.FC = () => {
   return (
     <div>
+      <UserArea />
       <Router>
         <Grid>
           <Grid.Column width={4}>
