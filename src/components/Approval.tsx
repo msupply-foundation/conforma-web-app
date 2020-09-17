@@ -1,5 +1,5 @@
 import React from 'react'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 type TParams = { appId: string; sectionName?: string; page?: string }
 
