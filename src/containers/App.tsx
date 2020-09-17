@@ -3,18 +3,22 @@ import { hot } from 'react-hot-loader'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Grid, Segment } from 'semantic-ui-react'
 
-import ApplicationsList from './ApplicationList'
-import AppMenu from './AppMenu'
-import Footer from './Footer'
-import Register from './Register'
-import Home from './Home'
-import NoMatch from './NoMatch'
-import UserArea from '../container/UserArea'
+import ApplicationsList from '../components/ApplicationList'
+import AppMenu from '../components/AppMenu'
+import Footer from '../components/Footer'
+import Register from '../components/Register'
+import Home from '../components/Home'
+import NoMatch from '../components/NoMatch'
+import UserArea from './User/UserArea'
+import { UserProvider } from './User/UserState' 
 
 const App: React.FC = () => {
   return (
     <div>
-      <UserArea />
+      <UserProvider>
+        <UserArea />
+      </UserProvider>
+      
       <Router>
         <Grid>
           <Grid.Column width={4}>
