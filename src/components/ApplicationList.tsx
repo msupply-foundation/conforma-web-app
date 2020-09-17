@@ -6,6 +6,7 @@ import { Application, Template } from '../generated/graphql'
 import getApplications from '../graphql/queries/getApplications.query'
 import Loading from './Loading'
 import ApplicationEdit from './ApplicationEdit'
+import { useQueryParameters } from './App'
 
 const ApplicationsList: React.FC = () => {
   const [applications, setApplications] = useState<Array<Application> | null>()
@@ -13,9 +14,7 @@ const ApplicationsList: React.FC = () => {
 
   // queryParams is an object that gets the URL query params as key-value pairs
   // This object should be used for filtering the getApplication query
-  const queryParameters: { [key: string]: string } = {}
-  const query = new URLSearchParams(useLocation().search)
-  query.forEach((value, key) => (queryParameters[key] = value))
+  const queryParameters = useQueryParameters()
 
   const [values, setValues] = useState({
     id: 0,

@@ -1,14 +1,24 @@
 import React from 'react'
 import { hot } from 'react-hot-loader'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom'
 import { Grid, Segment } from 'semantic-ui-react'
 import ApplicationsList from './ApplicationList'
 import ApplicationNew from './ApplicationNew'
+import Application from './Application'
 import AppMenu from './AppMenu'
 import Footer from './Footer'
 import Home from './Home'
 import Login from './Login'
 import NoMatch from './NoMatch'
+
+// queryParams is an object that gets the URL query params as key-value pairs
+// This object should be used for filtering the getApplication query
+export function useQueryParameters() {
+  const queryParameters: { [key: string]: string } = {}
+  const query = new URLSearchParams(useLocation().search)
+  query.forEach((value, key) => (queryParameters[key] = value))
+  return queryParameters
+}
 
 const App: React.FC = () => {
   return (
@@ -38,6 +48,9 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/application/new">
                   <ApplicationNew />
+                </Route>
+                <Route path="/application/:appId">
+                  <Application />
                 </Route>
                 <Route component={NoMatch} />
               </Switch>
