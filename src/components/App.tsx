@@ -10,6 +10,7 @@ import Footer from './Footer'
 import Home from './Home'
 import Login from './Login'
 import NoMatch from './NoMatch'
+import { AppProps } from './Application'
 
 // queryParams is an object that gets the URL query params as key-value pairs
 // This object should be used for filtering the getApplication query
@@ -49,8 +50,14 @@ const App: React.FC = () => {
                 <Route path="/application/new">
                   <ApplicationNew />
                 </Route>
-                <Route path="/application/:appId">
+                <Route exact path="/application/:appId">
                   <Application />
+                </Route>
+                <Route exact path="/application/:appId/:sectionName/p:page">
+                  <Application />
+                </Route>
+                <Route exact path="/application/:appId/summary">
+                  <Application summary={true} />
                 </Route>
                 <Route component={NoMatch} />
               </Switch>
