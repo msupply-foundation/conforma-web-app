@@ -63,7 +63,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r4C62](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/new`
+## `/application/new`
 
 ### New application launcher
 
@@ -71,7 +71,7 @@ A standard page for creating a new application.
 
 This page can support query string to specify the application type (or application category) that shows selected in the dropdown menu.
 
-E.g. `/applications/new?type=drug-registration`
+E.g. `/application/new?type=drug-registration`
 
 On clicking the “Start application” button of this form, a new “application” record is created in the database. And the page for in-progress application is loaded.
 

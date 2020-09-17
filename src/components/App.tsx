@@ -3,6 +3,7 @@ import { hot } from 'react-hot-loader'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Grid, Segment } from 'semantic-ui-react'
 import ApplicationsList from './ApplicationList'
+import ApplicationNew from './ApplicationNew'
 import AppMenu from './AppMenu'
 import Footer from './Footer'
 import Home from './Home'
@@ -34,6 +35,9 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/applications">
                   <ApplicationsList />
+                </Route>
+                <Route path="/application/new">
+                  <ApplicationNew />
                 </Route>
                 <Route component={NoMatch} />
               </Switch>

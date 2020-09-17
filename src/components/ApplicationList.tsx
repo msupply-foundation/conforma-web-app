@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Link, useLocation, Route } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
-import { Container, Table } from 'semantic-ui-react'
+import { Container, Label, Table, List } from 'semantic-ui-react'
 import { Application, Template } from '../generated/graphql'
 import getApplications from '../graphql/queries/getApplications.query'
-
 import Loading from './Loading'
 import ApplicationEdit from './ApplicationEdit'
 
@@ -14,7 +13,9 @@ const ApplicationsList: React.FC = () => {
 
   // queryParams is an object that gets the URL query params as key-value pairs
   // This object should be used for filtering the getApplication query
-  const queryParams = new URLSearchParams(useLocation().search)
+  const queryParameters: { [key: string]: string } = {}
+  const query = new URLSearchParams(useLocation().search)
+  query.forEach((value, key) => (queryParameters[key] = value))
 
   const [values, setValues] = useState({
     id: 0,
@@ -44,6 +45,12 @@ const ApplicationsList: React.FC = () => {
     <Loading />
   ) : (
     <Container>
+      <h3>Query parameters:</h3>
+      <List>
+        {Object.entries(queryParameters).map(([key, value]) => (
+          <List.Item>{key + ' : ' + value}</List.Item>
+        ))}
+      </List>
       <Table sortable stackable selectable>
         <Table.Header>
           {applications &&
@@ -80,6 +87,17 @@ const ApplicationsList: React.FC = () => {
         </Table.Body>
       </Table>
       <ApplicationEdit id={values.id} name={values.name} />
+      <List>
+        <List.Item>
+          <Link to="?status=draft&stage=assessment">Change query: Draft/Assessment</Link>
+        </List.Item>
+        <List.Item>
+          <Link to="?status=submitted&stage=screening">Change query: Submitted/Screening</Link>
+        </List.Item>
+        <List.Item>
+          <Link to={useLocation().pathname}>Reset query</Link>
+        </List.Item>
+      </List>
     </Container>
   )
 }
