@@ -90,7 +90,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r1D2B](https://balsamiq.cloud/s
 The Home page of an application that has been created (or while editing or reviewing). URL is the same regardless of whether user is Applicant or Reviewer.
 
 Specific Sections/Pages are linked by:  
-`/applications/[id]?section=[section]&page=[page]`
+`/applications/[id]/[sectionName]/p[page]`
 
 On clicking the "Next" button it takes to another page in the same section or the next section Reviewer can see only their sections, or it goes to the **Summary** page after the last page.
 

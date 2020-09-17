@@ -1,6 +1,6 @@
 import React from 'react'
 import { useQueryParameters } from './App'
-import { useLocation, useParams } from 'react-router-dom'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 
 type TParams = { appId: string; sectionName?: string; page?: string }
 
@@ -10,8 +10,6 @@ export interface AppProps {
 
 const Application: React.FC<AppProps> = (props) => {
   const { appId, sectionName, page }: TParams = useParams()
-
-  console.log(appId, sectionName, page)
 
   console.log(useLocation().pathname)
   // const { section, page } = useQueryParameters()
@@ -32,8 +30,27 @@ const Application: React.FC<AppProps> = (props) => {
           We are on <strong>Page {page}</strong> of <strong>Section: {sectionName}</strong>.
         </p>
       )}
+      <NextPageButton sectionName={sectionName} page={page} />
     </div>
   )
 }
 
 export default Application
+
+type ButtonProps = { sectionName?: string; page?: string }
+
+const NextPageButton: React.FC<ButtonProps> = (props) => {
+  const history = useHistory()
+  const handleClick = () => {
+    history.push('p' + (Number(props.page) + 1))
+  }
+  console.log(props.sectionName)
+  if (!props.sectionName) {
+    return <div></div>
+  }
+  return (
+    <button type="submit" onClick={handleClick}>
+      Next Page
+    </button>
+  )
+}
