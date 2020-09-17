@@ -83,14 +83,11 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r1D2B](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[id]`
+## `/application/[appId]/[sectionName]/p[page]`
 
-### In-progress application
+### In-progress Application
 
-The Home page of an application that has been created (or while editing or reviewing). URL is the same regardless of whether user is Applicant or Reviewer.
-
-Specific Sections/Pages are linked by:  
-`/applications/[id]/[sectionName]/p[page]`
+Shows a specific page of an application that has been created (or while editing or reviewing). URL is the same regardless of whether user is Applicant or Reviewer.
 
 On clicking the "Next" button it takes to another page in the same section or the next section Reviewer can see only their sections, or it goes to the **Summary** page after the last page.
 
@@ -111,7 +108,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r1FFB](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[type]/[guid]/summary`
+## `/application/[appId]/summary`
 
 ### Application summary page
 
@@ -133,7 +130,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r189E](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[type]/[guid]`
+## `/application/[appId]`
 
 ### Application home page
 
@@ -166,7 +163,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD5AC](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[type]/[guid]?mode=assignment`
+## `/application/[appIs]?mode=assignment`
 
 ### Application assignment mode
 
@@ -178,7 +175,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r3DC3](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[type]/[guid]?mode=consolidation`
+## `/application/[appId]?mode=consolidation`
 
 ### Application consolidation mode
 
@@ -192,7 +189,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r5273](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[type]/[guid]/summary?mode=consolidation`
+## `/application/[appId]/summary?mode=consolidation`
 
 ### Application consolidation mode summary page
 
@@ -206,7 +203,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD7FD](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[type]/[guid]/approval`
+## `/application/[appId]/approval`
 
 ### Application approval page
 

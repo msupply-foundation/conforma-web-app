@@ -5,6 +5,8 @@ import { Grid, Segment } from 'semantic-ui-react'
 import ApplicationsList from './ApplicationList'
 import ApplicationNew from './ApplicationNew'
 import Application from './Application'
+import Approval from './Approval'
+import Admin from './Admin'
 import AppMenu from './AppMenu'
 import Footer from './Footer'
 import Home from './Home'
@@ -58,6 +60,12 @@ const App: React.FC = () => {
                 </Route>
                 <Route exact path="/application/:appId/summary">
                   <Application summary={true} />
+                </Route>
+                <Route exact path="/application/:appId/approval">
+                  <Approval />
+                </Route>
+                <Route exact path="/admin">
+                  <Admin />
                 </Route>
                 <Route component={NoMatch} />
               </Switch>

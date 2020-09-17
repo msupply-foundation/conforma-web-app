@@ -12,10 +12,11 @@ const Application: React.FC<AppProps> = (props) => {
   const { appId, sectionName, page }: TParams = useParams()
 
   console.log(useLocation().pathname)
-  // const { section, page } = useQueryParameters()
+  const { mode } = useQueryParameters()
   return (
     <div>
       <h1>Application</h1>
+      {mode && <h2>Mode: {mode}</h2>}
       <h3>ID: {appId}</h3>
       {props.summary ? (
         <p>
