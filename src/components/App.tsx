@@ -11,6 +11,13 @@ import AppMenu from './AppMenu'
 import Footer from './Footer'
 import Home from './Home'
 import Login from './Login'
+import TemplateList from './TemplateList'
+import TemplateNew from './TemplateNew'
+import Template from './Template'
+import Account from './Account'
+import { Organisation, OrgMemberEdit } from './Organisation'
+import { AdminUsers, AdminPermissions, Config } from './AdminOther'
+import { NotificationsList, Notification } from './Notification'
 import NoMatch from './NoMatch'
 
 // queryParams is an object that gets the URL query params as key-value pairs
@@ -68,6 +75,36 @@ const App: React.FC = () => {
                 </Route>
                 <Route exact path="/admin/templates">
                   <TemplateList />
+                </Route>
+                <Route exact path="/admin/template/new">
+                  <TemplateNew />
+                </Route>
+                <Route exact path="/admin/template/:templateId/:step">
+                  <Template />
+                </Route>
+                <Route exact path="/admin/users">
+                  <AdminUsers />
+                </Route>
+                <Route exact path="/admin/permissions">
+                  <AdminPermissions />
+                </Route>
+                <Route exact path="/admin/config">
+                  <Config />
+                </Route>
+                <Route exact path="/account">
+                  <Account />
+                </Route>
+                <Route exact path="/organisation/:orgName">
+                  <Organisation />
+                </Route>
+                <Route exact path="/organisation/:orgName/member-edit">
+                  <OrgMemberEdit />
+                </Route>
+                <Route exact path="/notifications">
+                  <NotificationsList />
+                </Route>
+                <Route exact path="/notifications/:notificationId">
+                  <Notification />
                 </Route>
                 <Route component={NoMatch} />
               </Switch>

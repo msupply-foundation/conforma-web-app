@@ -163,7 +163,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD5AC](https://balsamiq.cloud/s
 
 ---
 
-## `/application/[appIs]?mode=assignment`
+## `/application/[appId]?mode=assignment`
 
 ### Application assignment mode
 
@@ -229,7 +229,7 @@ Basically the same kind of thing as the Application list, but for templates
 
 ---
 
-## `/admin/templates/new`
+## `/admin/template/new`
 
 ### New Template launcher
 
@@ -239,11 +239,11 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r3C4F](https://balsamiq.cloud/s
 
 ---
 
-## `/admin/templates/[id]/[section]/[page]`
+## `/admin/templates/[id]/[step]`
 
 ### Template in-progress creation/editor
 
-Sections/Pages are created as they go, but URL also points to relevant section of _existing_ templates.
+The **step** refers to the general area of Template creation, e.g. Permissions, Sections, Stages, Triggers, etc. This is not precisely defined yet, so this url will be refined when we have a clearer grasp of the Template Builder UI.
 
 Examples:
 
