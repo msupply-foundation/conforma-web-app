@@ -6,7 +6,9 @@ const ApplicationNew: React.FC = () => {
   return (
     <div>
       <h1>New Application screen here</h1>
-      <p>Application type: {applicationType ? applicationType : 'Not specified'}</p>
+      <p>
+        Application type: <strong>{applicationType ? applicationType : 'Not specified'}</strong>
+      </p>
     </div>
   )
 }

@@ -28,7 +28,7 @@ const Application: React.FC<AppProps> = (props) => {
         </p>
       ) : (
         <p>
-          We are on <strong>Page {page}</strong> of <strong>Section: {sectionName}</strong>.
+          We are on <strong>Page {page}</strong> of Section: <strong>{sectionName}</strong>.
         </p>
       )}
       <NextPageButton sectionName={sectionName} page={page} />
