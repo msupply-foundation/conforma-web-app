@@ -38,7 +38,7 @@ Clicking on an Application (a line in the list) takes you to the **Home** page f
 
 The URL would update with a query string according to the filter/sorting, so that any filter/sorting combination can be saved as a link/bookmark.
 
-E.g. `/applications?assigned=none&status=in-progress&priority>10`
+E.g. `/applications?assigned=none&status=in-progress&priority>10`<sup name="n1root">[Note 1](#note1)</sup>
 
 Bookmark example: [https://balsamiq.cloud/scs7giw/ponj59g/rB39F](https://balsamiq.cloud/scs7giw/ponj59g/rB39F)
 
@@ -333,7 +333,7 @@ E.g. `/notifications?appid=123454678`
 
 Example: [https://balsamiq.cloud/scs7giw/ponj59g/rEFAE](https://balsamiq.cloud/scs7giw/ponj59g/rEFAE)
 
-## `/notifications/[guid]`
+## `/notifications/[notificationId]`
 
 ### Notification page
 
@@ -357,10 +357,16 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r6C38](https://balsamiq.cloud/s
 
 ---
 
-## `/products/[product-id]`
+## `/products/[productId]`
 
 ### Individual product page
 
 Shows detailed information for a specific product, with links and contact information for the associated organisations and individuals.
 
 Example: [https://balsamiq.cloud/scs7giw/ponj59g/rBFCD](https://balsamiq.cloud/scs7giw/ponj59g/rBFCD)
+
+---
+
+### Footnotes
+
+<a name="note1">[Note 1](#n1root)</a>: The use of `>` in the query string is not really going to work unless we write our own parser. Probably best to just define fields such as `priorityGreaterThan=10`.
