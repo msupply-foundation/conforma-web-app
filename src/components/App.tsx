@@ -19,6 +19,7 @@ import { Organisation, OrgMemberEdit } from './Organisation'
 import { AdminUsers, AdminPermissions, Config } from './AdminOther'
 import { NotificationsList, Notification } from './Notification'
 import NoMatch from './NoMatch'
+import { ProductList, Product } from './Product'
 
 // queryParams is an object that gets the URL query params as key-value pairs
 // This object should be used for filtering the getApplication query
@@ -105,6 +106,12 @@ const App: React.FC = () => {
                 </Route>
                 <Route exact path="/notifications/:notificationId">
                   <Notification />
+                </Route>
+                <Route exact path="/products">
+                  <ProductList />
+                </Route>
+                <Route exact path="/products/:productId">
+                  <Product />
                 </Route>
                 <Route component={NoMatch} />
               </Switch>

@@ -44,7 +44,7 @@ const ApplicationsList: React.FC = () => {
     <Loading />
   ) : (
     <Container>
-      <h3>Query parameters:</h3>
+      {Object.keys(queryParameters).length > 0 && <h3>Query parameters:</h3>}
       <List>
         {Object.entries(queryParameters).map(([key, value]) => (
           <List.Item>{key + ' : ' + value}</List.Item>

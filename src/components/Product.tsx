@@ -3,23 +3,24 @@ import { useParams, Link, useLocation } from 'react-router-dom'
 import { useQueryParameters } from './App'
 import { List, Label } from 'semantic-ui-react'
 
-export const NotificationsList: React.FC = () => {
+export const ProductList: React.FC = () => {
   const queryParameters = useQueryParameters()
 
   return (
     <div>
-      <h1>Notification Center</h1>
-      <p>List of notifications for the current user.</p>
+      <h1>Registered Products</h1>
+      <p>List of (public) registered products in the system.</p>
       <p>Can be filtered with query parameters, e.g:</p>
 
       <List>
         <List.Item>
-          <Link to="?status=unread">Unread Notifications</Link>
+          <Link to="?type=pharmaceutical">Pharamaceutical products</Link>
         </List.Item>
         <List.Item>
-          <Link to="?days=30&appid=1234">
-            Notifications in the last 30 days associated with Application ID: 1234
-          </Link>
+          <Link to="?expiration=20">Products whose registration expires in the next 20 days.</Link>
+        </List.Item>
+        <List.Item>
+          <Link to="?class=A&expired=true">Expired Class A drugs.</Link>
         </List.Item>
         <List.Item>
           <Link to={useLocation().pathname}>Reset query</Link>
@@ -31,25 +32,26 @@ export const NotificationsList: React.FC = () => {
           <List.Item>{key + ' : ' + value}</List.Item>
         ))}
       </List>
-      <h4>Notifications:</h4>
+      <h4>Product List:</h4>
       <Label>
-        <Link to={'/notifications/567'}>Your message — click to view</Link>
+        <Link to={'/products/XYZ276'}>Drug A - registered by Company B. Exp: 2020/12/10</Link>
       </Label>
     </div>
   )
 }
 
-type TParams = { notificationId: string }
+type TParams = { productId: string }
 
-export const Notification: React.FC = () => {
-  const { notificationId }: TParams = useParams()
+export const Product: React.FC = () => {
+  const { productId }: TParams = useParams()
 
   return (
     <div>
-      <h1>Title of Message</h1>
-      <p>Dear user, this message has the id: {notificationId}.</p>
+      <h1>Drug A</h1>
+      <h2>Company B</h2>
+      <p>Info for Product with id: {productId}.</p>
       <p>
-        <Link to="./">Back to Notification Center</Link>
+        <Link to="./">Back to Products</Link>
       </p>
     </div>
   )
