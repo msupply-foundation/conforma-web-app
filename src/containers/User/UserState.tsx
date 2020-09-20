@@ -42,11 +42,11 @@ const initialState: UserState = {
 // By setting the typings here, we ensure we get intellisense in VS Code
 const initialUserContext: { 
   userState: UserState
-  setMapState: React.Dispatch<UserActions> 
+  setUserState: React.Dispatch<UserActions> 
 } = {
   userState: initialState,
   // will update to the reducer we provide in MapProvider
-  setMapState: () => {}
+  setUserState: () => {}
 };
 
 // No need to export this as we use it internally only
@@ -57,14 +57,14 @@ export function UserProvider({ children }: UserProviderProps) {
   
   // rename the useReducer result to something more useful
   const userState = state;
-  const setMapState = dispatch;
+  const setUserState = dispatch;
 
   // pass the state and reducer to the context, dont forget to wrap the children
-  return <UserContext.Provider value={{ userState, setMapState }}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ userState, setUserState }}>{children}</UserContext.Provider>;
 }
 
 /**
- * To use and set the state of the map from anywhere in the app
- * - @returns an object with a reducer function `setMapState` and the `mapState`
+ * To use and set the state of the user from anywhere in the app
+ * - @returns an object with a reducer function `setUserState` and the `userState`
  */
 export const useUserState = () => useContext(UserContext);

@@ -5,7 +5,7 @@ import { useUserState } from './UserState'
 const UserArea: React.FC = () => {
     const { 
         userState: { user },
-        setMapState
+        setUserState
         } = useUserState();
     
     return (
@@ -17,16 +17,16 @@ const UserArea: React.FC = () => {
             </Container>
             <Button basic
                 color = 'green'
-                onClick={() => setMapState({type: 'setCurrentUser', payload: { nextUser: 'Nicole' }}) }> 
+                onClick={() => setUserState({type: 'setCurrentUser', payload: { nextUser: 'Nicole' }}) }> 
                 Nicole
             </Button>
             <Button basic
                 color = 'orange' 
-                onClick={() => setMapState({type: 'setCurrentUser', payload: { nextUser: 'Carl' }}) }> 
+                onClick={() => setUserState({type: 'setCurrentUser', payload: { nextUser: 'Carl' }}) }> 
                 Carl
             </Button>
             <Button basic
-                onClick={() => setMapState({type: 'resetCurrentUser'}) }> 
+                onClick={() => setUserState({type: 'resetCurrentUser'}) }> 
                 Reset
             </Button>
         </Segment.Group>
