@@ -21,8 +21,13 @@ import { NotificationsList, Notification } from './Notification'
 import NoMatch from './NoMatch'
 import { ProductList, Product } from './Product'
 
-// queryParams is an object that gets the URL query params as key-value pairs
-// This object should be used for filtering the getApplication query
+/**
+ * Custom Hook to make URL query parameters available in a
+ * simple key-value object.
+ * The object returned should be used for filtering what the database returns
+ * @params { None } (gets current URL)
+ * @returns { {URLqueryKey: URLqueryValue} } - the returned function
+ */
 export const useQueryParameters = () => {
   const queryParameters: { [key: string]: string } = {}
   const query = new URLSearchParams(useLocation().search)
