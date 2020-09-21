@@ -98,19 +98,19 @@ const App: React.FC = () => {
                 <Route exact path="/organisation/:orgName">
                   <Organisation />
                 </Route>
-                <Route exact path="/organisation/:orgName/member-edit">
+                <Route exact path="/organisation/:orgName/members">
                   <OrgMemberEdit />
                 </Route>
                 <Route exact path="/notifications">
                   <NotificationsList />
                 </Route>
-                <Route exact path="/notifications/:notificationId">
+                <Route exact path="/notification/:notificationId">
                   <Notification />
                 </Route>
                 <Route exact path="/products">
                   <ProductList />
                 </Route>
-                <Route exact path="/products/:productId">
+                <Route exact path="/product/:productId">
                   <Product />
                 </Route>
                 <Route component={NoMatch} />

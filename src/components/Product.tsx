@@ -34,7 +34,7 @@ export const ProductList: React.FC = () => {
       </List>
       <h4>Product List:</h4>
       <Label>
-        <Link to={'/products/XYZ276'}>Drug A - registered by Company B. Exp: 2020/12/10</Link>
+        <Link to={'/product/XYZ276'}>Drug A - registered by Company B. Exp: 2020/12/10</Link>
       </Label>
     </div>
   )
@@ -51,7 +51,7 @@ export const Product: React.FC = () => {
       <h2>Company B</h2>
       <p>Info for Product with id: {productId}.</p>
       <p>
-        <Link to="./">Back to Products</Link>
+        <Link to="/products">Back to Products</Link>
       </p>
     </div>
   )

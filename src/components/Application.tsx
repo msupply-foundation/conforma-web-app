@@ -11,7 +11,6 @@ export interface AppProps {
 const Application: React.FC<AppProps> = (props) => {
   const { appId, sectionName, page }: TParams = useParams()
 
-  console.log(useLocation().pathname)
   const { mode } = useQueryParameters()
   return (
     <div>
@@ -45,7 +44,6 @@ const NextPageButton: React.FC<ButtonProps> = (props) => {
   const handleClick = () => {
     history.push('p' + (Number(props.page) + 1))
   }
-  console.log(props.sectionName)
   if (!props.sectionName) {
     return <div></div>
   }

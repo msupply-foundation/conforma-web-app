@@ -311,7 +311,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r650F](https://balsamiq.cloud/s
 
 ---
 
-## `/organisation/[name-of-org]/member-edit`
+## `/organisation/[name-of-org]/members`
 
 ### Organisation Member edit
 
@@ -333,7 +333,7 @@ E.g. `/notifications?appid=123454678`
 
 Example: [https://balsamiq.cloud/scs7giw/ponj59g/rEFAE](https://balsamiq.cloud/scs7giw/ponj59g/rEFAE)
 
-## `/notifications/[notificationId]`
+## `/notification/[notificationId]`
 
 ### Notification page
 
@@ -357,7 +357,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r6C38](https://balsamiq.cloud/s
 
 ---
 
-## `/products/[productId]`
+## `/product/[productId]`
 
 ### Individual product page
 
