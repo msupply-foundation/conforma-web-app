@@ -23,7 +23,7 @@ import { ProductList, Product } from './Product'
 
 // queryParams is an object that gets the URL query params as key-value pairs
 // This object should be used for filtering the getApplication query
-export function useQueryParameters() {
+export const useQueryParameters = () => {
   const queryParameters: { [key: string]: string } = {}
   const query = new URLSearchParams(useLocation().search)
   query.forEach((value, key) => (queryParameters[key] = value))
