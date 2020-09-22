@@ -34,7 +34,7 @@ export const ProductList: React.FC = () => {
       </List>
       <h4>Product List:</h4>
       <Label>
-        <Link to={'/product/XYZ276'}>Drug A - registered by Company B. Exp: 2020/12/10</Link>
+        <Link to={'/products/XYZ276'}>Drug A - registered by Company B. Exp: 2020/12/10</Link>
       </Label>
     </div>
   )

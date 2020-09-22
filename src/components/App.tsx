@@ -58,22 +58,22 @@ const App: React.FC = () => {
                 <Route exact path="/login">
                   <Login />
                 </Route>
-                <Route path="/applications">
+                <Route exact path="/applications">
                   <ApplicationsList />
                 </Route>
-                <Route path="/application/new">
+                <Route exact path="/applications/new">
                   <ApplicationNew />
                 </Route>
-                <Route exact path="/application/:appId">
+                <Route exact path="/applications/:appId">
                   <Application />
                 </Route>
-                <Route exact path="/application/:appId/:sectionName/p:page">
+                <Route exact path="/applications/:appId/:sectionName/page:page">
                   <Application />
                 </Route>
-                <Route exact path="/application/:appId/summary">
+                <Route exact path="/applications/:appId/summary">
                   <Application summary={true} />
                 </Route>
-                <Route exact path="/application/:appId/approval">
+                <Route exact path="/applications/:appId/approval">
                   <Approval />
                 </Route>
                 <Route exact path="/admin">
@@ -82,10 +82,10 @@ const App: React.FC = () => {
                 <Route exact path="/admin/templates">
                   <TemplateList />
                 </Route>
-                <Route exact path="/admin/template/new">
+                <Route exact path="/admin/templates/new">
                   <TemplateNew />
                 </Route>
-                <Route exact path="/admin/template/:templateId/:step">
+                <Route exact path="/admin/templates/:templateId/:step">
                   <Template />
                 </Route>
                 <Route exact path="/admin/users">
@@ -109,13 +109,13 @@ const App: React.FC = () => {
                 <Route exact path="/notifications">
                   <NotificationsList />
                 </Route>
-                <Route exact path="/notification/:notificationId">
+                <Route exact path="/notifications/:notificationId">
                   <Notification />
                 </Route>
                 <Route exact path="/products">
                   <ProductList />
                 </Route>
-                <Route exact path="/product/:productId">
+                <Route exact path="/products/:productId">
                   <Product />
                 </Route>
                 <Route component={NoMatch} />
