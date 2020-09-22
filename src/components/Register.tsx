@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Button, Checkbox, Form, Message, Segment } from 'semantic-ui-react'
+import { Button, Checkbox, Dropdown, Form, Message, Segment } from 'semantic-ui-react'
+import { useCreateUserMutation, UserRole } from '../generated/graphql'
 
 interface Snackbar {
   showMessage: boolean
@@ -32,30 +33,52 @@ const Register: React.FC = () => {
     })
   }
 
+  const [createUserMutation, { loading, error }] = useCreateUserMutation()
+
+  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault()
+    // createUserMutation()
+    console.log('handleSubmit')
+  }
+
+  const afterCompleted = () => {
+    changeSnackback(submitedObject)
+    setTimeout(() => {
+      removeSnackbar()
+    }, 2000)
+  }
+
   return (
     <Segment.Group>
       <Segment>
         <Form>
           <Form.Field>
-            <label>First Name</label>
-            <input placeholder="First Name" />
+            <label>User Name</label>
+            <input placeholder="User Name" />
           </Form.Field>
           <Form.Field>
-            <label>Last Name</label>
-            <input placeholder="Last Name" />
+            <label>Password</label>
+            <input placeholder="Password" />
           </Form.Field>
+          <Form.Field>
+            <label>Email</label>
+            <input placeholder="Email" />
+          </Form.Field>
+          <Form.Group inline>
+            <label>Role</label>
+            {Object.keys(UserRole).map((element) => (
+              <Form.Radio
+                label={element}
+                value={element}
+                // checked={role === element}
+                // onChange={handleRoleChanged}
+              />
+            ))}
+          </Form.Group>
           <Form.Field>
             <Checkbox label="I agree to the Terms and Conditions" />
           </Form.Field>
-          <Button
-            type="submit"
-            onClick={() => {
-              changeSnackback(submitedObject)
-              setTimeout(() => {
-                removeSnackbar()
-              }, 2000)
-            }}
-          >
+          <Button type="submit" onClick={handleSubmit}>
             Submit
           </Button>
         </Form>

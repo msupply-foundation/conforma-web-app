@@ -21,6 +21,7 @@ import { NotificationsList, Notification } from '../components/Notification'
 import { ProductList, Product } from '../components/Product'
 import NoMatch from '../components/NoMatch'
 import UserArea from './User/UserArea'
+import Register from '../components/Register'
 import { UserProvider } from './User/UserState'
 
 // queryParams is an object that gets the URL query params as key-value pairs
@@ -45,7 +46,7 @@ const App: React.FC = () => {
             <AppMenu
               items={[
                 ['Home', '/'],
-                ['Register', '/form'],
+                ['Register', '/register'],
                 ['Applications List', '/applications'],
               ]}
             />
@@ -55,6 +56,9 @@ const App: React.FC = () => {
               <Switch>
                 <Route exact path="/">
                   <Home />
+                </Route>
+                <Route exact path="/register">
+                  <Register />
                 </Route>
                 <Route exact path="/login">
                   <Login />

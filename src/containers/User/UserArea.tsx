@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { useQuery } from '@apollo/client'
 import { Button, Container, Label, Segment } from 'semantic-ui-react'
 import { useUserState } from './UserState'
 import { useGetUsersQuery, User } from '../../generated/graphql'
@@ -34,7 +33,7 @@ const UserArea: React.FC = () => {
             <Button
               basic
               color="green"
-              onClick={() => setUserState({ type: 'setCurrentUser', payload: { nextUser: user } })}
+              onClick={() => setUserState({ type: 'setCurrentUser', nextUser: user })}
             >
               {user}
             </Button>
