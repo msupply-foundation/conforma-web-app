@@ -1,36 +1,47 @@
-import React from 'react'
-import { Button, Container, Label, Segment } from 'semantic-ui-react';
-import { useUserState } from './UserState' 
+import React, { useEffect } from 'react'
+import { useQuery } from '@apollo/client'
+import { Button, Container, Label, Segment } from 'semantic-ui-react'
+import { useUserState } from './UserState'
+import { useGetUsersQuery, User } from '../../generated/graphql'
+import Loading from '../../components/Loading'
 
 const UserArea: React.FC = () => {
-    const { 
-        userState: { user },
-        setUserState
-        } = useUserState();
-    
-    return (
-        <Segment.Group vertical> 
-            <Container>
-                <Label>
-                    The current user is: {user} 
-                </Label>
-            </Container>
-            <Button basic
-                color = 'green'
-                onClick={() => setUserState({type: 'setCurrentUser', payload: { nextUser: 'Nicole' }}) }> 
-                Nicole
+  const {
+    userState: { currentUser, users },
+    setUserState,
+  } = useUserState()
+  const { data, loading, error } = useGetUsersQuery()
+
+  useEffect(() => {
+    if (data) {
+      if (data.users && data.users.nodes) {
+        const userNames = data.users.nodes.map(({ username }) => username)
+        setUserState({ type: 'updateUsersList', updatedUsers: userNames })
+      }
+    }
+  }, [data, error])
+
+  return loading ? (
+    <Loading />
+  ) : (
+    <Segment.Group vertical>
+      <Container>
+        <Label>The current user is: {currentUser}</Label>
+      </Container>
+      <Container>
+        {users &&
+          users.map((user) => (
+            <Button
+              basic
+              color="green"
+              onClick={() => setUserState({ type: 'setCurrentUser', payload: { nextUser: user } })}
+            >
+              {user}
             </Button>
-            <Button basic
-                color = 'orange' 
-                onClick={() => setUserState({type: 'setCurrentUser', payload: { nextUser: 'Carl' }}) }> 
-                Carl
-            </Button>
-            <Button basic
-                onClick={() => setUserState({type: 'resetCurrentUser'}) }> 
-                Reset
-            </Button>
-        </Segment.Group>
-    )
+          ))}
+      </Container>
+    </Segment.Group>
+  )
 }
 
 export default UserArea
