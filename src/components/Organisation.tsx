@@ -14,7 +14,7 @@ export const Organisation: React.FC = () => {
       </p>
       <p>List of Members, summaries of applications (past and present), etc.</p>
       <p>
-        <Link to={'/organisation/' + orgName + '/members'}>Edit this org's members</Link>
+        <Link to={'/organisations/' + orgName + '/members'}>Edit this org's members</Link>
       </p>
     </div>
   )

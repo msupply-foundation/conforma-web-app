@@ -100,10 +100,10 @@ const App: React.FC = () => {
                 <Route exact path="/account">
                   <Account />
                 </Route>
-                <Route exact path="/organisation/:orgName">
+                <Route exact path="/organisations/:orgName">
                   <Organisation />
                 </Route>
-                <Route exact path="/organisation/:orgName/members">
+                <Route exact path="/organisations/:orgName/members">
                   <OrgMemberEdit />
                 </Route>
                 <Route exact path="/notifications">

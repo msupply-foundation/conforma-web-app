@@ -301,7 +301,7 @@ Any user can do basic account tasks, such as update their contact details, chang
 
 ---
 
-## `/organisation/[name-of-org]`
+## `/organisations/[name-of-org]`
 
 ### Organisation overview
 
@@ -311,7 +311,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r650F](https://balsamiq.cloud/s
 
 ---
 
-## `/organisation/[name-of-org]/members`
+## `/organisations/[name-of-org]/members`
 
 ### Organisation Member edit
 
