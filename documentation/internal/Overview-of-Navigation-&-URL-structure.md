@@ -229,7 +229,7 @@ Basically the same kind of thing as the Application list, but for templates
 
 ---
 
-## `/admin/template/new`
+## `/admin/templates/new`
 
 ### New Template launcher
 
