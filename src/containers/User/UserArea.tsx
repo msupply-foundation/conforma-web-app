@@ -23,7 +23,7 @@ const UserArea: React.FC = () => {
   return loading ? (
     <Loading />
   ) : (
-    <Segment.Group vertical>
+    <Segment.Group vertical="true">
       <Container>
         <Label>The current user is: {currentUser}</Label>
       </Container>
@@ -32,6 +32,7 @@ const UserArea: React.FC = () => {
           users.map((user) => (
             <Button
               basic
+              key={`user-area-button-${user}`}
               color="green"
               onClick={() => setUserState({ type: 'setCurrentUser', nextUser: user })}
             >

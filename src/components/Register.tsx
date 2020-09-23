@@ -131,7 +131,7 @@ const Register: React.FC = () => {
             <label>Role</label>
             {Object.keys(UserRole).map((element) => (
               <Form.Radio
-                id={`from-input-role-${element}`}
+                key={`from-input-role-${element}`}
                 label={element}
                 value={element}
                 onChange={(event, { value }) => {
