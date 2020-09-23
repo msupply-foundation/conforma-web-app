@@ -1,12 +1,19 @@
 import React, { useState } from 'react'
-import { Button, Checkbox, Dropdown, Form, Message, Segment } from 'semantic-ui-react'
+import { Button, Checkbox, Form, Input, Message, Segment } from 'semantic-ui-react'
 import { useCreateUserMutation, UserRole } from '../generated/graphql'
 
 interface Snackbar {
   showMessage: boolean
-  messageTitle: String
-  messageText: String
+  messageTitle: string
+  messageText: string
   isErrorMessage: boolean
+}
+
+interface User {
+  username: string
+  password: string
+  email: string
+  role: UserRole | undefined
 }
 
 const Register: React.FC = () => {
@@ -16,6 +23,15 @@ const Register: React.FC = () => {
     messageText: '',
     isErrorMessage: false,
   })
+
+  const [newUser, updateNewUser] = useState<User>({
+    username: '',
+    password: '',
+    email: '',
+    role: undefined,
+  })
+
+  const [createUserMutation] = useCreateUserMutation()
 
   const submitedObject: Snackbar = {
     showMessage: true,
@@ -33,12 +49,47 @@ const Register: React.FC = () => {
     })
   }
 
-  const [createUserMutation, { loading, error }] = useCreateUserMutation()
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    updateNewUser({ ...newUser, [name]: value })
+  }
 
-  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const updateUser = async () => {
+    try {
+      const { username, password, email, role } = newUser
+      const updatedUser = await createUserMutation({
+        variables: {
+          username: username,
+          password: password,
+          email: email,
+          role: role as UserRole,
+        },
+      })
+      if (
+        updatedUser &&
+        updatedUser.data &&
+        updatedUser.data.createUser &&
+        updatedUser.data.createUser.user
+      ) {
+        afterCompleted()
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    // createUserMutation()
-    console.log('handleSubmit')
+    if (
+      newUser.username != '' &&
+      newUser.password != '' &&
+      newUser.email != '' &&
+      newUser.role != undefined
+    ) {
+      updateUser()
+    } else {
+      alert('Invalid user details')
+    }
   }
 
   const afterCompleted = () => {
@@ -52,35 +103,50 @@ const Register: React.FC = () => {
     <Segment.Group>
       <Segment>
         <Form>
-          <Form.Field>
-            <label>User Name</label>
-            <input placeholder="User Name" />
-          </Form.Field>
-          <Form.Field>
-            <label>Password</label>
-            <input placeholder="Password" />
-          </Form.Field>
-          <Form.Field>
-            <label>Email</label>
-            <input placeholder="Email" />
-          </Form.Field>
+          <Form.Field
+            id="form-input-username"
+            control={Input}
+            label="Username"
+            name="username"
+            content={newUser.username}
+            onChange={handleInputChange}
+          />
+          <Form.Field
+            id="form-input-password"
+            control={Input}
+            label="Password"
+            name="password"
+            content={newUser.password}
+            onChange={handleInputChange}
+          />
+          <Form.Field
+            id="form-input-email"
+            control={Input}
+            label="Email"
+            name="email"
+            content={newUser.email}
+            onChange={handleInputChange}
+          />
           <Form.Group inline>
             <label>Role</label>
             {Object.keys(UserRole).map((element) => (
               <Form.Radio
+                id={`from-input-role-${element}`}
                 label={element}
                 value={element}
-                // checked={role === element}
-                // onChange={handleRoleChanged}
+                onChange={(event, { value }) => {
+                  const strValue: string = typeof value === 'string' ? value : ''
+                  updateNewUser({ ...newUser, role: strValue.toUpperCase() as UserRole })
+                }}
               />
             ))}
           </Form.Group>
-          <Form.Field>
-            <Checkbox label="I agree to the Terms and Conditions" />
-          </Form.Field>
-          <Button type="submit" onClick={handleSubmit}>
-            Submit
-          </Button>
+          <Form.Field
+            id="form-input-terms-and-conditions"
+            control={Checkbox}
+            label="I agree to the Terms and Conditions"
+          />
+          <Form.Input control={Button} type="submit" content="Submit" onClick={handleSubmit} />
         </Form>
       </Segment>
       <Segment>

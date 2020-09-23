@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client'
-import { UserRole } from '../../generated/graphql'
 
 export default gql`
   mutation createUser($email: String!, $password: String!, $username: String!, $role: UserRole!) {
