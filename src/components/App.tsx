@@ -118,7 +118,9 @@ const App: React.FC = () => {
                 <Route exact path="/products/:productId">
                   <Product />
                 </Route>
-                <Route component={NoMatch} />
+                <Route>
+                  <NoMatch />
+                </Route>
               </Switch>
             </Segment>
           </Grid.Column>
