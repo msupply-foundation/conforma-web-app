@@ -1,5 +1,3 @@
-# Overview of Navigation/URL structure
-
 _This should give us a guide of what UI mockups we need to demonstrate, as well as inform the details of the Navigation links menu._
 
 ## `/login`
@@ -40,7 +38,7 @@ Clicking on an Application (a line in the list) takes you to the **Home** page f
 
 The URL would update with a query string according to the filter/sorting, so that any filter/sorting combination can be saved as a link/bookmark.
 
-E.g. `/applications?assigned=none&status=in-progress&priority>10`
+E.g. `/applications?assigned=none&status=in-progress&priority>10`<sup name="n1root">[Note 1](#note1)</sup>
 
 Bookmark example: [https://balsamiq.cloud/scs7giw/ponj59g/rB39F](https://balsamiq.cloud/scs7giw/ponj59g/rB39F)
 
@@ -85,9 +83,9 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r1D2B](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[type]/[guid]/[section]/[page]`
+## `/applications/[appId]/[sectionName]/page[page]`
 
-### In-progress application
+### In-progress Application
 
 Shows a specific page of an application that has been created (or while editing or reviewing). URL is the same regardless of whether user is Applicant or Reviewer.
 
@@ -110,7 +108,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r1FFB](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[type]/[guid]/summary`
+## `/applications/[appId]/summary`
 
 ### Application summary page
 
@@ -132,7 +130,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r189E](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[type]/[guid]`
+## `/applications/[appId]`
 
 ### Application home page
 
@@ -165,7 +163,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD5AC](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[type]/[guid]?mode=assignment`
+## `/applications/[appId]?mode=assignment`
 
 ### Application assignment mode
 
@@ -177,7 +175,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r3DC3](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[type]/[guid]?mode=consolidation`
+## `/applications/[appId]?mode=consolidation`
 
 ### Application consolidation mode
 
@@ -191,7 +189,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r5273](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[type]/[guid]/summary?mode=consolidation`
+## `/applications/[appId]/summary?mode=consolidation`
 
 ### Application consolidation mode summary page
 
@@ -205,7 +203,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD7FD](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[type]/[guid]/approval`
+## `/applications/[appId]/approval`
 
 ### Application approval page
 
@@ -241,11 +239,11 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r3C4F](https://balsamiq.cloud/s
 
 ---
 
-## `/admin/templates/[id]/[section]/[page]`
+## `/admin/templates/[id]/[step]`
 
 ### Template in-progress creation/editor
 
-Sections/Pages are created as they go, but URL also points to relevant section of _existing_ templates.
+The **step** refers to the general area of Template creation, e.g. Permissions, Sections, Stages, Triggers, etc. This is not precisely defined yet, so this url will be refined when we have a clearer grasp of the Template Builder UI.
 
 Examples:
 
@@ -303,7 +301,7 @@ Any user can do basic account tasks, such as update their contact details, chang
 
 ---
 
-## `/organisation/[name-of-org]`
+## `/organisations/[name-of-org]`
 
 ### Organisation overview
 
@@ -313,7 +311,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r650F](https://balsamiq.cloud/s
 
 ---
 
-## `/organisation/[name-of-org]/member-edit`
+## `/organisations/[name-of-org]/members`
 
 ### Organisation Member edit
 
@@ -335,7 +333,7 @@ E.g. `/notifications?appid=123454678`
 
 Example: [https://balsamiq.cloud/scs7giw/ponj59g/rEFAE](https://balsamiq.cloud/scs7giw/ponj59g/rEFAE)
 
-## `/notifications/[guid]`
+## `/notifications/[notificationId]`
 
 ### Notification page
 
@@ -359,10 +357,16 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r6C38](https://balsamiq.cloud/s
 
 ---
 
-## `/products/[product-id]`
+## `/products/[productId]`
 
 ### Individual product page
 
 Shows detailed information for a specific product, with links and contact information for the associated organisations and individuals.
 
 Example: [https://balsamiq.cloud/scs7giw/ponj59g/rBFCD](https://balsamiq.cloud/scs7giw/ponj59g/rBFCD)
+
+---
+
+### Footnotes
+
+<a name="note1">[Note 1](#n1root)</a>: The use of `>` in the query string is not really going to work unless we write our own parser. Probably best to just define fields such as `priorityGreaterThan=10`.
