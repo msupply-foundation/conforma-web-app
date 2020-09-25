@@ -1,6 +1,14 @@
+import { ApolloCache } from '@apollo/client'
 import React, { useState } from 'react'
 import { Button, Checkbox, Form, Input, Message, Segment } from 'semantic-ui-react'
-import { useCreateUserMutation, UserRole } from '../generated/graphql'
+import {
+  CreateUserPayload,
+  useCreateUserMutation,
+  UserRole,
+  UsersConnection,
+} from '../generated/graphql'
+import addNewUser from '../graphql/fragments/addNewUser.fragment'
+// import getUsers from '../graphql/queries/getUsers.query'
 
 interface Snackbar {
   showMessage: boolean
@@ -31,7 +39,17 @@ const Register: React.FC = () => {
     role: undefined,
   })
 
-  const [createUserMutation] = useCreateUserMutation()
+  // const [createUserMutation] = useCreateUserMutation({
+  //   update(cache, { data: createdUser }) {
+  //     const { users } = cache.readQuery({ query: getUsers })
+  //     const newUser = createdUser.createUser.user
+  //     console.log(users)
+  //     const updatedUsers = users.push(newUser)
+  //     console.log(updatedUsers)
+  //     cache.writeQuery({ query: getUsers, data: { users: updatedUsers } })
+  //   },
+  //   onCompleted: () => console.log('Mutation finished'),
+  // })
 
   const submitedObject: Snackbar = {
     showMessage: true,
@@ -54,6 +72,41 @@ const Register: React.FC = () => {
     updateNewUser({ ...newUser, [name]: value })
   }
 
+  const [createUserMutation] = useCreateUserMutation({
+    update(cache, { data: createdUser }) {
+      if (!createdUser) return
+      cache.modify({
+        fields: {
+          users(existingUserRefs: UsersConnection, { readField }) {
+            const { user } = createdUser.createUser as CreateUserPayload
+            if (!user) return existingUserRefs
+
+            const newUserRef = cache.writeFragment({
+              data: user,
+              fragment: addNewUser,
+            })
+
+            // Quick safety check - if the new user is already
+            // present in the cache, we don't need to add it again.
+            if (
+              existingUserRefs.nodes.some((ref) => (ref ? readField('id', ref) === user.id : false))
+            ) {
+              return existingUserRefs
+            }
+
+            return [...existingUserRefs.nodes, newUserRef]
+          },
+        },
+      })
+    },
+    onCompleted: () => {
+      changeSnackback(submitedObject)
+      setTimeout(() => {
+        removeSnackbar()
+      }, 2000)
+    },
+  })
+
   const updateUser = async () => {
     try {
       const { username, password, email, role } = newUser
@@ -65,14 +118,6 @@ const Register: React.FC = () => {
           role: role as UserRole,
         },
       })
-      if (
-        updatedUser &&
-        updatedUser.data &&
-        updatedUser.data.createUser &&
-        updatedUser.data.createUser.user
-      ) {
-        afterCompleted()
-      }
     } catch (error) {
       console.error(error)
     }
@@ -90,13 +135,6 @@ const Register: React.FC = () => {
     } else {
       alert('Invalid user details')
     }
-  }
-
-  const afterCompleted = () => {
-    changeSnackback(submitedObject)
-    setTimeout(() => {
-      removeSnackbar()
-    }, 2000)
   }
 
   return (
