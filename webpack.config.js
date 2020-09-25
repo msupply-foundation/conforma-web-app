@@ -15,21 +15,17 @@ const addons = (/* string | string[] */ addonsArg) => {
 
 // 'env' will contain the environment variable from 'scripts'
 // section in 'package.json'.
-// console.log(env); => { env: 'dev' }
-module.exports = (env) => {
+module.exports = ({ env = 'dev' }) => {
   // We use 'buildValidations' to check for the 'env' flag
   if (!env) {
     throw new Error(buildValidations.ERR_NO_ENV_FLAG)
   }
 
-  // Select which Webpack configuration to use; development
-  // or production
-  // console.log(env.env); => dev
-  const envConfig = require(`./build-utils/webpack.${env.env}.js`)
+  // Select which Webpack configuration to use; development or production
+  const envConfig = require(`./build-utils/webpack.${env}.js`)
 
   // 'webpack-merge' will combine our shared configurations, the
-  // environment specific configurations and any addons we are
-  // including
+  // environment specific configurations and any addons we are including
   const mergedConfig = merge(commonConfig, envConfig, ...addons(env.addons))
 
   // Then return the final configuration for Webpack
