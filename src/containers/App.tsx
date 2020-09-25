@@ -16,6 +16,7 @@ import TemplateNew from '../components/TemplateNew'
 import Template from '../components/Template'
 import Account from '../components/Account'
 import UserArea from './User/UserArea'
+import { UserProvider } from './User/UserState'
 import { Organisation, OrgMemberEdit } from '../components/Organisation'
 import { AdminUsers, AdminPermissions, Config } from '../components/AdminOther'
 import { NotificationsList, Notification } from '../components/Notification'
@@ -40,7 +41,9 @@ export const useQueryParameters = () => {
 const App: React.FC = () => {
   return (
     <div>
-      <UserArea />
+      <UserProvider>
+        <UserArea />
+      </UserProvider>
       <Router>
         <Grid>
           <Grid.Column width={4}>
