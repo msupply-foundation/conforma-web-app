@@ -33,7 +33,7 @@ export const NotificationsList: React.FC = () => {
       </List>
       <h4>Notifications:</h4>
       <Label>
-        <Link to={'/notification/567'}>Your message — click to view</Link>
+        <Link to={'/notifications/567'}>Your message — click to view</Link>
       </Label>
     </div>
   )

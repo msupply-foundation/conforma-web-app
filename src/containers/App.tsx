@@ -15,18 +15,22 @@ import TemplateList from '../components/TemplateList'
 import TemplateNew from '../components/TemplateNew'
 import Template from '../components/Template'
 import Account from '../components/Account'
+import UserArea from './User/UserArea'
 import { Organisation, OrgMemberEdit } from '../components/Organisation'
 import { AdminUsers, AdminPermissions, Config } from '../components/AdminOther'
 import { NotificationsList, Notification } from '../components/Notification'
-import { ProductList, Product } from '../components/Product'
 import NoMatch from '../components/NoMatch'
-import UserArea from './User/UserArea'
+import { ProductList, Product } from '../components/Product'
 import Register from '../components/Register'
-import { UserProvider } from './User/UserState'
 
-// queryParams is an object that gets the URL query params as key-value pairs
-// This object should be used for filtering the getApplication query
-export function useQueryParameters() {
+/**
+ * Custom Hook to make URL query parameters available in a
+ * simple key-value object.
+ * The object returned should be used for filtering what the database returns
+ * @params { None } (gets current URL)
+ * @returns { {URLqueryKey: URLqueryValue} } - the returned function
+ */
+export const useQueryParameters = () => {
   const queryParameters: { [key: string]: string } = {}
   const query = new URLSearchParams(useLocation().search)
   query.forEach((value, key) => (queryParameters[key] = value))
@@ -36,10 +40,7 @@ export function useQueryParameters() {
 const App: React.FC = () => {
   return (
     <div>
-      <UserProvider>
-        <UserArea />
-      </UserProvider>
-
+      <UserArea />
       <Router>
         <Grid>
           <Grid.Column width={4}>
@@ -63,22 +64,22 @@ const App: React.FC = () => {
                 <Route exact path="/login">
                   <Login />
                 </Route>
-                <Route path="/applications">
+                <Route exact path="/applications">
                   <ApplicationsList />
                 </Route>
-                <Route path="/application/new">
+                <Route exact path="/applications/new">
                   <ApplicationNew />
                 </Route>
-                <Route exact path="/application/:appId">
+                <Route exact path="/applications/:appId">
                   <Application />
                 </Route>
-                <Route exact path="/application/:appId/:sectionName/p:page">
+                <Route exact path="/applications/:appId/:sectionName/page:page">
                   <Application />
                 </Route>
-                <Route exact path="/application/:appId/summary">
+                <Route exact path="/applications/:appId/summary">
                   <Application summary={true} />
                 </Route>
-                <Route exact path="/application/:appId/approval">
+                <Route exact path="/applications/:appId/approval">
                   <Approval />
                 </Route>
                 <Route exact path="/admin">
@@ -87,10 +88,10 @@ const App: React.FC = () => {
                 <Route exact path="/admin/templates">
                   <TemplateList />
                 </Route>
-                <Route exact path="/admin/template/new">
+                <Route exact path="/admin/templates/new">
                   <TemplateNew />
                 </Route>
-                <Route exact path="/admin/template/:templateId/:step">
+                <Route exact path="/admin/templates/:templateId/:step">
                   <Template />
                 </Route>
                 <Route exact path="/admin/users">
@@ -105,25 +106,27 @@ const App: React.FC = () => {
                 <Route exact path="/account">
                   <Account />
                 </Route>
-                <Route exact path="/organisation/:orgName">
+                <Route exact path="/organisations/:orgName">
                   <Organisation />
                 </Route>
-                <Route exact path="/organisation/:orgName/members">
+                <Route exact path="/organisations/:orgName/members">
                   <OrgMemberEdit />
                 </Route>
                 <Route exact path="/notifications">
                   <NotificationsList />
                 </Route>
-                <Route exact path="/notification/:notificationId">
+                <Route exact path="/notifications/:notificationId">
                   <Notification />
                 </Route>
                 <Route exact path="/products">
                   <ProductList />
                 </Route>
-                <Route exact path="/product/:productId">
+                <Route exact path="/products/:productId">
                   <Product />
                 </Route>
-                <Route component={NoMatch} />
+                <Route>
+                  <NoMatch />
+                </Route>
               </Switch>
             </Segment>
           </Grid.Column>

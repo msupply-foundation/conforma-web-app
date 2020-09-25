@@ -63,7 +63,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r4C62](https://balsamiq.cloud/s
 
 ---
 
-## `/application/new`
+## `/applications/new`
 
 ### New application launcher
 
@@ -71,7 +71,7 @@ A standard page for creating a new application.
 
 This page can support query string to specify the application type (or application category) that shows selected in the dropdown menu.
 
-E.g. `/application/new?type=drug-registration`
+E.g. `/applications/new?type=drug-registration`
 
 On clicking the “Start application” button of this form, a new “application” record is created in the database. And the page for in-progress application is loaded.
 
@@ -83,7 +83,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r1D2B](https://balsamiq.cloud/s
 
 ---
 
-## `/application/[appId]/[sectionName]/p[page]`
+## `/applications/[appId]/[sectionName]/page[page]`
 
 ### In-progress Application
 
@@ -108,7 +108,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r1FFB](https://balsamiq.cloud/s
 
 ---
 
-## `/application/[appId]/summary`
+## `/applications/[appId]/summary`
 
 ### Application summary page
 
@@ -130,7 +130,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r189E](https://balsamiq.cloud/s
 
 ---
 
-## `/application/[appId]`
+## `/applications/[appId]`
 
 ### Application home page
 
@@ -163,7 +163,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD5AC](https://balsamiq.cloud/s
 
 ---
 
-## `/application/[appId]?mode=assignment`
+## `/applications/[appId]?mode=assignment`
 
 ### Application assignment mode
 
@@ -175,7 +175,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r3DC3](https://balsamiq.cloud/s
 
 ---
 
-## `/application/[appId]?mode=consolidation`
+## `/applications/[appId]?mode=consolidation`
 
 ### Application consolidation mode
 
@@ -189,7 +189,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r5273](https://balsamiq.cloud/s
 
 ---
 
-## `/application/[appId]/summary?mode=consolidation`
+## `/applications/[appId]/summary?mode=consolidation`
 
 ### Application consolidation mode summary page
 
@@ -203,7 +203,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD7FD](https://balsamiq.cloud/s
 
 ---
 
-## `/application/[appId]/approval`
+## `/applications/[appId]/approval`
 
 ### Application approval page
 
@@ -229,7 +229,7 @@ Basically the same kind of thing as the Application list, but for templates
 
 ---
 
-## `/admin/template/new`
+## `/admin/templates/new`
 
 ### New Template launcher
 
@@ -301,7 +301,7 @@ Any user can do basic account tasks, such as update their contact details, chang
 
 ---
 
-## `/organisation/[name-of-org]`
+## `/organisations/[name-of-org]`
 
 ### Organisation overview
 
@@ -311,7 +311,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r650F](https://balsamiq.cloud/s
 
 ---
 
-## `/organisation/[name-of-org]/members`
+## `/organisations/[name-of-org]/members`
 
 ### Organisation Member edit
 
@@ -333,7 +333,7 @@ E.g. `/notifications?appid=123454678`
 
 Example: [https://balsamiq.cloud/scs7giw/ponj59g/rEFAE](https://balsamiq.cloud/scs7giw/ponj59g/rEFAE)
 
-## `/notification/[notificationId]`
+## `/notifications/[notificationId]`
 
 ### Notification page
 
@@ -357,7 +357,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r6C38](https://balsamiq.cloud/s
 
 ---
 
-## `/product/[productId]`
+## `/products/[productId]`
 
 ### Individual product page
 

@@ -27,7 +27,6 @@
     "./semantic/*",
     "./build-utils/*",
     "apollo.config.js",
-    "webpack.config.js",
-    "postcss.config.js"
+    "webpack.config.js"
   ]
 }

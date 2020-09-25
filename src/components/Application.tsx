@@ -42,7 +42,7 @@ type ButtonProps = { sectionName?: string; page?: string }
 const NextPageButton: React.FC<ButtonProps> = (props) => {
   const history = useHistory()
   const handleClick = () => {
-    history.push('p' + (Number(props.page) + 1))
+    history.push('page' + (Number(props.page) + 1))
   }
   if (!props.sectionName) {
     return <div></div>

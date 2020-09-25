@@ -12,21 +12,14 @@ const config = {
     rules: [
       {
         test: /\.less$/,
-          use: [
-            {
-              // We configure 'MiniCssExtractPlugin'              
-              loader: MiniCssExtractPlugin.loader,
-            },            
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 2,
-              }
-            },
-            'postcss-loader',
-            'less-loader'
-          ]
-      }
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
+          'css-loader',
+          'less-loader'
+        ]
+      },
     ]
   },
   plugins: [
