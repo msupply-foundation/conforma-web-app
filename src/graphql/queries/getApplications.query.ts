@@ -11,7 +11,7 @@ export default gql`
         template {
           code
           id
-          templateName
+          name
         }
       }
     }

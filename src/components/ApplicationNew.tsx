@@ -1,5 +1,5 @@
 import React from 'react'
-import { useQueryParameters } from './App'
+import { useQueryParameters } from '../containers/App'
 
 const ApplicationNew: React.FC = () => {
   const applicationType = useQueryParameters().type

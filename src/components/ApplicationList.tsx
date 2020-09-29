@@ -6,7 +6,7 @@ import { Application, Template } from '../generated/graphql'
 import getApplications from '../graphql/queries/getApplications.query'
 import Loading from './Loading'
 import ApplicationEdit from './ApplicationEdit'
-import { useQueryParameters } from './App'
+import { useQueryParameters } from '../containers/App'
 
 const ApplicationsList: React.FC = () => {
   const [applications, setApplications] = useState<Array<Application> | null>()

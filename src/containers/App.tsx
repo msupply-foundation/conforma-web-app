@@ -2,24 +2,27 @@ import React from 'react'
 import { hot } from 'react-hot-loader'
 import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom'
 import { Grid, Segment } from 'semantic-ui-react'
-import ApplicationsList from './ApplicationList'
-import ApplicationNew from './ApplicationNew'
-import Application from './Application'
-import Approval from './Approval'
-import Admin from './Admin'
-import AppMenu from './AppMenu'
-import Footer from './Footer'
-import Home from './Home'
-import Login from './Login'
-import TemplateList from './TemplateList'
-import TemplateNew from './TemplateNew'
-import Template from './Template'
-import Account from './Account'
-import { Organisation, OrgMemberEdit } from './Organisation'
-import { AdminUsers, AdminPermissions, Config } from './AdminOther'
-import { NotificationsList, Notification } from './Notification'
-import NoMatch from './NoMatch'
-import { ProductList, Product } from './Product'
+import ApplicationsList from '../components/ApplicationList'
+import ApplicationNew from '../components/ApplicationNew'
+import Application from '../components/Application'
+import Approval from '../components/Approval'
+import Admin from '../components/Admin'
+import AppMenu from '../components/AppMenu'
+import Footer from '../components/Footer'
+import Home from '../components/Home'
+import Login from '../components/Login'
+import TemplateList from '../components/TemplateList'
+import TemplateNew from '../components/TemplateNew'
+import Template from '../components/Template'
+import Account from '../components/Account'
+import UserArea from './User/UserArea'
+import { UserProvider } from './User/UserState'
+import { Organisation, OrgMemberEdit } from '../components/Organisation'
+import { AdminUsers, AdminPermissions, Config } from '../components/AdminOther'
+import { NotificationsList, Notification } from '../components/Notification'
+import NoMatch from '../components/NoMatch'
+import { ProductList, Product } from '../components/Product'
+import Register from '../components/Register'
 
 /**
  * Custom Hook to make URL query parameters available in a
@@ -38,13 +41,16 @@ export const useQueryParameters = () => {
 const App: React.FC = () => {
   return (
     <div>
+      <UserProvider>
+        <UserArea />
+      </UserProvider>
       <Router>
         <Grid>
           <Grid.Column width={4}>
             <AppMenu
               items={[
                 ['Home', '/'],
-                ['Register', '/form'],
+                ['Register', '/register'],
                 ['Applications List', '/applications'],
               ]}
             />
@@ -54,6 +60,9 @@ const App: React.FC = () => {
               <Switch>
                 <Route exact path="/">
                   <Home />
+                </Route>
+                <Route exact path="/register">
+                  <Register />
                 </Route>
                 <Route exact path="/login">
                   <Login />

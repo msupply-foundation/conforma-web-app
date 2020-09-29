@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams, Link, useLocation } from 'react-router-dom'
-import { useQueryParameters } from './App'
+import { useQueryParameters } from '../containers/App'
 import { List, Label } from 'semantic-ui-react'
 
 export const ProductList: React.FC = () => {

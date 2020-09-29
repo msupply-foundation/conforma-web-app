@@ -1,5 +1,5 @@
 import React from 'react'
-import { useQueryParameters } from './App'
+import { useQueryParameters } from '../containers/App'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 
 type TParams = { appId: string; sectionName?: string; page?: string }
