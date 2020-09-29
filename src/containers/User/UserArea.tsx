@@ -12,12 +12,10 @@ const UserArea: React.FC = () => {
   const { data, loading, error } = useGetUsersQuery()
 
   useEffect(() => {
-    if (data) {
-      if (data.users && data.users.nodes) {
-        const users = data.users.nodes as Pick<User, 'username'>[]
-        const userNames = users.map(({ username }) => username) as string[]
-        setUserState({ type: 'updateUsersList', updatedUsers: userNames })
-      }
+    if (data && data.users && data.users.nodes) {
+      const users = data.users.nodes as Pick<User, 'username'>[]
+      const userNames = users.map(({ username }) => username) as string[]
+      setUserState({ type: 'updateUsersList', updatedUsers: userNames })
     }
   }, [data, error])
 

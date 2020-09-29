@@ -8,7 +8,6 @@ import {
   UsersConnection,
 } from '../generated/graphql'
 import addNewUser from '../graphql/fragments/addNewUser.fragment'
-// import getUsers from '../graphql/queries/getUsers.query'
 
 interface Snackbar {
   showMessage: boolean
@@ -38,18 +37,6 @@ const Register: React.FC = () => {
     email: '',
     role: undefined,
   })
-
-  // const [createUserMutation] = useCreateUserMutation({
-  //   update(cache, { data: createdUser }) {
-  //     const { users } = cache.readQuery({ query: getUsers })
-  //     const newUser = createdUser.createUser.user
-  //     console.log(users)
-  //     const updatedUsers = users.push(newUser)
-  //     console.log(updatedUsers)
-  //     cache.writeQuery({ query: getUsers, data: { users: updatedUsers } })
-  //   },
-  //   onCompleted: () => console.log('Mutation finished'),
-  // })
 
   const submitedObject: Snackbar = {
     showMessage: true,
@@ -110,7 +97,7 @@ const Register: React.FC = () => {
   const updateUser = async () => {
     try {
       const { username, password, email, role } = newUser
-      const updatedUser = await createUserMutation({
+      await createUserMutation({
         variables: {
           username: username,
           password: password,
