@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
-import updateApplication from '../graphql/mutations/updateApplication.mutation'
+import updateApplication from '../../graphql/mutations/updateApplication.mutation'
 
 interface updateApplicationProps {
   id: number

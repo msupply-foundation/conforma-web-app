@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
 type UserState = {
-  /** The map user */
   currentUser: string | null
   users: Array<string>
 }
@@ -56,21 +55,17 @@ const initialUserContext: {
   setUserState: React.Dispatch<UserActions>
 } = {
   userState: initialState,
-  // will update to the reducer we provide in MapProvider
   setUserState: () => {},
 }
 
-// No need to export this as we use it internally only
 const UserContext = createContext(initialUserContext)
 
 export function UserProvider({ children }: UserProviderProps) {
   const [state, dispatch] = useReducer(reducer, initialState)
-
-  // rename the useReducer result to something more useful
   const userState = state
   const setUserState = dispatch
 
-  // pass the state and reducer to the context, dont forget to wrap the children
+  // Return the state and reducer to the context (wrap around the children)
   return <UserContext.Provider value={{ userState, setUserState }}>{children}</UserContext.Provider>
 }
 
