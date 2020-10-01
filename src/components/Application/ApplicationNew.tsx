@@ -1,9 +1,9 @@
 import React from 'react'
-import { useQueryState } from '../../containers/Main/QueryState'
+import { useNavigationState } from '../../containers/Main/QueryState'
 
 const ApplicationNew: React.FC = () => {
-  const { queryState, setQueryState } = useQueryState()
-  const { type } = queryState.queryParameters
+  const { navigationState, setNavigationState } = useNavigationState()
+  const { type } = navigationState.queryParameters
 
   return (
     <div>

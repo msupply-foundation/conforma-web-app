@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Menu } from 'semantic-ui-react'
 import { MenuItemProps } from 'semantic-ui-react'
-import { useQueryState } from '../containers/Main/QueryState'
+import { useNavigationState } from '../containers/Main/QueryState'
 import { Link, RouteComponentProps, withRouter, useLocation } from 'react-router-dom'
 
 interface AppMenuProps extends RouteComponentProps {
@@ -9,20 +9,19 @@ interface AppMenuProps extends RouteComponentProps {
 }
 
 const AppMenu: React.FC<AppMenuProps> = (props: AppMenuProps) => {
-  // const [activeItem, setActiveItem] = useState<String>('/')
-  const { queryState, setQueryState } = useQueryState()
+  const { navigationState, setNavigationState } = useNavigationState()
   const { pathname, search } = useLocation()
 
   useEffect(() => {
-    setQueryState({ type: 'setPathname', pathname: pathname })
+    setNavigationState({ type: 'setPathname', pathname: pathname })
   }, [pathname])
 
   useEffect(() => {
-    setQueryState({ type: 'updateParameters', search: search })
+    setNavigationState({ type: 'updateParameters', search: search })
   }, [search])
 
   const handleItemClick = (event: any, { to }: MenuItemProps) => {
-    setQueryState({ type: 'setPathname', pathname: to as string })
+    setNavigationState({ type: 'setPathname', pathname: to as string })
   }
 
   let menuItems = []

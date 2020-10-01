@@ -26,12 +26,12 @@ import {
   Template,
 } from '../../components'
 import ApplicationPage from '../Application/ApplicationPage'
-import { QueryProvider } from '../Main/QueryState'
+import { NavigationProvider } from '../Main/QueryState'
 
 const SiteLayout: React.FC = () => {
   return (
     <Router>
-      <QueryProvider>
+      <NavigationProvider>
         <Grid>
           <Grid.Column width={4}>
             <AppMenu
@@ -120,7 +120,7 @@ const SiteLayout: React.FC = () => {
             </Segment>
           </Grid.Column>
         </Grid>
-      </QueryProvider>
+      </NavigationProvider>
     </Router>
   )
 }

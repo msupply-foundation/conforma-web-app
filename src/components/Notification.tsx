@@ -1,11 +1,11 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { List, Label } from 'semantic-ui-react'
-import { useQueryState } from '../containers/Main/QueryState'
+import { useNavigationState } from '../containers/Main/QueryState'
 
 export const NotificationsList: React.FC = () => {
-  const { queryState, setQueryState } = useQueryState()
-  const { pathname, queryParameters } = queryState
+  const { navigationState, setNavigationState } = useNavigationState()
+  const { pathname, queryParameters } = navigationState
 
   return (
     <div>

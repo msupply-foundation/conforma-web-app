@@ -1,6 +1,6 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useQueryState } from '../Main/QueryState'
+import { useNavigationState } from '../Main/QueryState'
 import { ApplicationHeader } from '../../components/Application'
 
 type TParams = { appId: string; sectionName?: string; page?: string }
@@ -11,8 +11,8 @@ export interface AppPageProps {
 
 const ApplicationPage: React.FC<AppPageProps> = (props) => {
   const { appId, sectionName, page }: TParams = useParams()
-  const { queryState, setQueryState } = useQueryState()
-  const { mode } = queryState.queryParameters
+  const { navigationState, setNavigationState } = useNavigationState()
+  const { mode } = navigationState.queryParameters
 
   return (
     <div>

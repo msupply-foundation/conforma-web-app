@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
-type QueryState = {
+type NavigationState = {
   pathname: string
   queryParameters: { [key: string]: string }
 }
 
-export type QueryActions =
+export type NavigationActions =
   | {
       type: 'updateParameters'
       search: string
@@ -18,9 +18,9 @@ export type QueryActions =
       type: 'clearParameters'
     }
 
-type QueryProviderProps = { children: React.ReactNode }
+type NavigationProviderProps = { children: React.ReactNode }
 
-const reducer = (state: QueryState, action: QueryActions) => {
+const reducer = (state: NavigationState, action: NavigationActions) => {
   switch (action.type) {
     case 'clearParameters':
       return {
@@ -47,34 +47,40 @@ const reducer = (state: QueryState, action: QueryActions) => {
   }
 }
 
-const initialState: QueryState = {
+const initialState: NavigationState = {
   pathname: '/',
   queryParameters: {},
 }
 
-const initialQueryContext: {
-  queryState: QueryState
-  setQueryState: React.Dispatch<QueryActions>
+const initialNavigationContext: {
+  navigationState: NavigationState
+  setNavigationState: React.Dispatch<NavigationActions>
 } = {
-  queryState: initialState,
-  setQueryState: () => {},
+  navigationState: initialState,
+  setNavigationState: () => {},
 }
 
-const QueryContext = createContext(initialQueryContext)
+const NavigationContext = createContext(initialNavigationContext)
 
-export function QueryProvider({ children }: QueryProviderProps) {
+export function NavigationProvider({ children }: NavigationProviderProps) {
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  const queryState = state
-  const setQueryState = dispatch
+  const navigationState = state
+  const setNavigationState = dispatch
 
   return (
-    <QueryContext.Provider value={{ queryState, setQueryState }}>{children}</QueryContext.Provider>
+    <NavigationContext.Provider
+      value={{ navigationState: navigationState, setNavigationState: setNavigationState }}
+    >
+      {children}
+    </NavigationContext.Provider>
   )
 }
 
 /**
  * To use and set the state of the navigation query
- * - @returns an object with a reducer function `setQueryState` and the `queryState`
+ * - @returns an object with:
+ *  - Reducer function `setNavigationState`
+ *  - Current state `navigationState`
  */
-export const useQueryState = () => useContext(QueryContext)
+export const useNavigationState = () => useContext(NavigationContext)

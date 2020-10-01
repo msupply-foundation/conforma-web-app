@@ -6,16 +6,13 @@ import getApplications from '../../graphql/queries/getApplications.query'
 import Loading from '../Loading'
 import FilterList from '../FilterList'
 import ApplicationEdit from './ApplicationEdit'
-import { useQueryState } from '../../containers/Main/QueryState'
+import { useNavigationState } from '../../containers/Main/QueryState'
 
 const ApplicationList: React.FC = () => {
   const [applications, setApplications] = useState<Array<Application> | null>()
   const { data, loading, error } = useQuery(getApplications)
-
-  // queryParams is an object that gets the URL query params as key-value pairs
-  // This object should be used for filtering the getApplication query
-  const { queryState, setQueryState } = useQueryState()
-  const { queryParameters } = queryState
+  const { navigationState, setNavigationState } = useNavigationState()
+  const { queryParameters } = navigationState
 
   const [values, setValues] = useState({
     id: 0,
@@ -49,7 +46,7 @@ const ApplicationList: React.FC = () => {
       {Object.keys(queryParameters).length > 0 && <h3>Query parameters:</h3>}
       <List>
         {Object.entries(queryParameters).map(([key, value]) => (
-          <List.Item>{key + ' : ' + value}</List.Item>
+          <List.Item key={`app-selected-parameter-${value}`} content={key + ' : ' + value} />
         ))}
       </List>
       <Table sortable stackable selectable>
