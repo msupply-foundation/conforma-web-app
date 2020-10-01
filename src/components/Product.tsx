@@ -1,10 +1,11 @@
 import React from 'react'
-import { useParams, Link, useLocation } from 'react-router-dom'
-import { useQueryParameters } from '../containers/App'
+import { useParams, Link } from 'react-router-dom'
 import { List, Label } from 'semantic-ui-react'
+import { useQueryState } from '../containers/Main/QueryState'
 
 export const ProductList: React.FC = () => {
-  const queryParameters = useQueryParameters()
+  const { queryState, setQueryState } = useQueryState()
+  const { pathname, queryParameters } = queryState
 
   return (
     <div>
@@ -23,7 +24,7 @@ export const ProductList: React.FC = () => {
           <Link to="?class=A&expired=true">Expired Class A drugs.</Link>
         </List.Item>
         <List.Item>
-          <Link to={useLocation().pathname}>Reset query</Link>
+          <Link to={pathname}>Reset query</Link>
         </List.Item>
       </List>
       {Object.keys(queryParameters).length > 0 && <h4>Query parameters:</h4>}
