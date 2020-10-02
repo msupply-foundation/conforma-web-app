@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Menu } from 'semantic-ui-react'
 import { MenuItemProps } from 'semantic-ui-react'
-import { useNavigationState } from '../containers/Main/QueryState'
+import { useNavigationState } from '../containers/Main/NavigationState'
 import { Link, RouteComponentProps, withRouter, useLocation } from 'react-router-dom'
 
 interface AppMenuProps extends RouteComponentProps {

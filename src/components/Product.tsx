@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { List, Label } from 'semantic-ui-react'
-import { useNavigationState } from '../containers/Main/QueryState'
+import { useNavigationState } from '../containers/Main/NavigationState'
 
 export const ProductList: React.FC = () => {
   const { navigationState, setNavigationState } = useNavigationState()

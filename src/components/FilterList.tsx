@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, List } from 'semantic-ui-react'
-import { useNavigationState } from '../containers/Main/QueryState'
+import { useNavigationState } from '../containers/Main/NavigationState'
+import { Link } from 'react-router-dom'
 
 const FilterList: React.FC = () => {
   const { navigationState, setNavigationState } = useNavigationState()
@@ -11,31 +12,24 @@ const FilterList: React.FC = () => {
         <Button
           key={`app-list-button-draft-assessment`}
           content="Change query: Draft/Assessment"
-          onClick={() =>
-            setNavigationState({
-              type: 'updateParameters',
-              search: '?status=draft&stage=assessment',
-            })
-          }
+          as={Link}
+          to="?status=draft&stage=assessment"
         />
       </List.Item>
       <List.Item>
         <Button
           key={`app-list-button-submitted-screening`}
           content="Change query: Submitted/Screening"
-          onClick={() =>
-            setNavigationState({
-              type: 'updateParameters',
-              search: '?status=submitted&stage=screening',
-            })
-          }
+          as={Link}
+          to="?status=submitted&stage=screening"
         />
       </List.Item>
       <List.Item>
         <Button
           key={`app-list-button-reset`}
           content="Reset query"
-          onClick={() => setNavigationState({ type: 'clearParameters' })}
+          as={Link}
+          to={navigationState.pathname}
         />
       </List.Item>
     </List>

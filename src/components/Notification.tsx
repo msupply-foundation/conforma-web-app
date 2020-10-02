@@ -1,29 +1,37 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { List, Label } from 'semantic-ui-react'
-import { useNavigationState } from '../containers/Main/QueryState'
+import { Button, Card, List, Label, Segment } from 'semantic-ui-react'
+import { useNavigationState } from '../containers/Main/NavigationState'
 
 export const NotificationsList: React.FC = () => {
   const { navigationState, setNavigationState } = useNavigationState()
   const { pathname, queryParameters } = navigationState
 
   return (
-    <div>
-      <h1>Notification Center</h1>
-      <p>List of notifications for the current user.</p>
-      <p>Can be filtered with query parameters, e.g:</p>
-
-      <List>
+    <Segment.Group>
+      <Card>
+        <Card.Content header="Notification Center" />
+        <Card.Content description="List of notifications for the current user. Can be filtered with query parameters, e.g:" />
+      </Card>
+      <List horizontal>
         <List.Item>
-          <Link to="?status=unread">Unread Notifications</Link>
+          <Button
+            key="notifications-filter-unread"
+            content="Unread Notifications"
+            as={Link}
+            to="?status=unread"
+          />
         </List.Item>
         <List.Item>
-          <Link to="?days=30&appid=1234">
-            Notifications in the last 30 days associated with Application ID: 1234
-          </Link>
+          <Button
+            key="notifications-filter-days30"
+            content="Last 30 days (App. ID: 1234)"
+            as={Link}
+            to="?days=30&appid=1234"
+          />
         </List.Item>
         <List.Item>
-          <Link to={pathname}>Reset query</Link>
+          <Button key="notifications-filter-reset" content="Reset query" as={Link} to={pathname} />
         </List.Item>
       </List>
       {Object.keys(queryParameters).length > 0 && <h4>Query parameters:</h4>}
@@ -36,7 +44,7 @@ export const NotificationsList: React.FC = () => {
       <Label>
         <Link to={'/notifications/567'}>Your message — click to view</Link>
       </Label>
-    </div>
+    </Segment.Group>
   )
 }
 

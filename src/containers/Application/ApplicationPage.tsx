@@ -1,6 +1,6 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useNavigationState } from '../Main/QueryState'
+import { useNavigationState } from '../Main/NavigationState'
 import { ApplicationHeader } from '../../components/Application'
 
 type TParams = { appId: string; sectionName?: string; page?: string }

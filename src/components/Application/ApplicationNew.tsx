@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigationState } from '../../containers/Main/QueryState'
+import { useNavigationState } from '../../containers/Main/NavigationState'
 
 const ApplicationNew: React.FC = () => {
   const { navigationState, setNavigationState } = useNavigationState()

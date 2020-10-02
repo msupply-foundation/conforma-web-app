@@ -26,7 +26,7 @@ import {
   Template,
 } from '../../components'
 import ApplicationPage from '../Application/ApplicationPage'
-import { NavigationProvider } from '../Main/QueryState'
+import { NavigationProvider } from './NavigationState'
 
 const SiteLayout: React.FC = () => {
   return (
