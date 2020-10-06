@@ -6,7 +6,6 @@ import {
   AdminPermissions,
   AdminUsers,
   ApplicationList,
-  ApplicationNew,
   Approval,
   Admin,
   AppMenu,
@@ -25,7 +24,7 @@ import {
   TemplateNew,
   Template,
 } from '../../components'
-import ApplicationPage from '../Application/ApplicationPage'
+import { ApplicationNew, ApplicationPage, TemplateProvider } from '../Application'
 import { NavigationProvider } from './NavigationState'
 
 const SiteLayout: React.FC = () => {
@@ -47,18 +46,20 @@ const SiteLayout: React.FC = () => {
                 <Route exact path="/">
                   <Home />
                 </Route>
-                <Route exact path="/register">
-                  <Register />
-                </Route>
                 <Route exact path="/login">
                   <Login />
                 </Route>
-                <Route exact path="/applications">
-                  <ApplicationList />
-                </Route>
-                <Route exact path="/applications/new">
-                  <ApplicationNew />
-                </Route>
+                <TemplateProvider>
+                  <Route exact path="/register">
+                    <Register />
+                  </Route>
+                  <Route exact path="/applications">
+                    <ApplicationList />
+                  </Route>
+                  <Route exact path="/applications/new">
+                    <ApplicationNew />
+                  </Route>
+                </TemplateProvider>
                 <Route exact path="/applications/:appId">
                   <ApplicationPage />
                 </Route>

@@ -38,6 +38,7 @@ const reducer = (state: NavigationState, action: NavigationActions) => {
       }
     case 'setPathname':
       const { pathname } = action
+      console.log('pathname: 2', pathname)
       return {
         ...state,
         pathname,

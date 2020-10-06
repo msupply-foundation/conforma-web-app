@@ -13,6 +13,8 @@ const AppMenu: React.FC<AppMenuProps> = (props: AppMenuProps) => {
   const { pathname, search } = useLocation()
 
   useEffect(() => {
+    console.log('pathname:', pathname)
+
     setNavigationState({ type: 'setPathname', pathname: pathname })
   }, [pathname])
 

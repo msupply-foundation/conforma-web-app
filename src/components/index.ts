@@ -1,4 +1,9 @@
-import { ApplicationEdit, ApplicationHeader, ApplicationNew, ApplicationList } from './Application'
+import {
+  ApplicationEdit,
+  ApplicationHeader,
+  ApplicationList,
+  ApplicationStart,
+} from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
 import AppMenu from './AppMenu'
@@ -20,8 +25,9 @@ export {
   AdminPermissions,
   AdminUsers,
   ApplicationEdit,
+  ApplicationHeader,
   ApplicationList,
-  ApplicationNew,
+  ApplicationStart,
   Approval,
   Admin,
   AppMenu,

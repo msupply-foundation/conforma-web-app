@@ -1,6 +1,6 @@
 import ApplicationEdit from './ApplicationEdit'
 import ApplicationHeader from './ApplicationHeader'
 import ApplicationList from './ApplicationList'
-import ApplicationNew from './ApplicationNew'
+import ApplicationStart from './ApplicationStart'
 
-export { ApplicationEdit, ApplicationHeader, ApplicationList, ApplicationNew }
+export { ApplicationEdit, ApplicationHeader, ApplicationList, ApplicationStart }
