@@ -16286,6 +16286,67 @@ export type AddNewUserFragment = (
   & Pick<User, 'id' | 'username'>
 );
 
+export type CreateApplicationMutationVariables = Exact<{
+  name: Scalars['String'];
+  serial: Scalars['Int'];
+  templateId: Scalars['Int'];
+}>;
+
+
+export type CreateApplicationMutation = (
+  { __typename?: 'Mutation' }
+  & { createApplication?: Maybe<(
+    { __typename?: 'CreateApplicationPayload' }
+    & { application?: Maybe<(
+      { __typename?: 'Application' }
+      & Pick<Application, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+export type CreateResponseMutationVariables = Exact<{
+  applicationId: Scalars['Int'];
+  templateElementId: Scalars['Int'];
+  timeCreated: Scalars['Datetime'];
+}>;
+
+
+export type CreateResponseMutation = (
+  { __typename?: 'Mutation' }
+  & { createApplicationResponse?: Maybe<(
+    { __typename?: 'CreateApplicationResponsePayload' }
+    & { applicationResponse?: Maybe<(
+      { __typename?: 'ApplicationResponse' }
+      & Pick<ApplicationResponse, 'id' | 'value'>
+      & { templateElement?: Maybe<(
+        { __typename?: 'TemplateElement' }
+        & Pick<TemplateElement, 'code'>
+      )> }
+    )> }
+  )> }
+);
+
+export type CreateSectionMutationVariables = Exact<{
+  applicationId: Scalars['Int'];
+  templateSectionId: Scalars['Int'];
+}>;
+
+
+export type CreateSectionMutation = (
+  { __typename?: 'Mutation' }
+  & { createApplicationSection?: Maybe<(
+    { __typename?: 'CreateApplicationSectionPayload' }
+    & { applicationSection?: Maybe<(
+      { __typename?: 'ApplicationSection' }
+      & Pick<ApplicationSection, 'id'>
+      & { templateSection?: Maybe<(
+        { __typename?: 'TemplateSection' }
+        & Pick<TemplateSection, 'id' | 'code' | 'title'>
+      )> }
+    )> }
+  )> }
+);
+
 export type CreateUserMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -16339,6 +16400,22 @@ export type GetApplicationsQuery = (
   )> }
 );
 
+export type GetElementsQueryVariables = Exact<{
+  sectionId: Scalars['Int'];
+}>;
+
+
+export type GetElementsQuery = (
+  { __typename?: 'Query' }
+  & { templateElements?: Maybe<(
+    { __typename?: 'TemplateElementsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'TemplateElement' }
+      & Pick<TemplateElement, 'category' | 'code' | 'visibilityCondition' | 'nextElementCode' | 'parameters' | 'title' | 'sectionId'>
+    )>> }
+  )> }
+);
+
 export type GetTemplateQueryVariables = Exact<{
   code: Scalars['String'];
   status?: Maybe<TemplateStatus>;
@@ -16361,6 +16438,12 @@ export type GetTemplateQuery = (
             { __typename?: 'TemplateElementsConnection' }
             & Pick<TemplateElementsConnection, 'totalCount'>
           ) }
+        )>> }
+      ), templateStages: (
+        { __typename?: 'TemplateStagesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'TemplateStage' }
+          & Pick<TemplateStage, 'id' | 'number' | 'title'>
         )>> }
       ) }
     )>> }
@@ -16387,6 +16470,123 @@ export const AddNewUserFragmentDoc = gql`
   username
 }
     `;
+export const CreateApplicationDocument = gql`
+    mutation createApplication($name: String!, $serial: Int!, $templateId: Int!) {
+  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, isActive: true, outcome: PENDING}}) {
+    application {
+      id
+      name
+    }
+  }
+}
+    `;
+export type CreateApplicationMutationFn = Apollo.MutationFunction<CreateApplicationMutation, CreateApplicationMutationVariables>;
+
+/**
+ * __useCreateApplicationMutation__
+ *
+ * To run a mutation, you first call `useCreateApplicationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateApplicationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createApplicationMutation, { data, loading, error }] = useCreateApplicationMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      serial: // value for 'serial'
+ *      templateId: // value for 'templateId'
+ *   },
+ * });
+ */
+export function useCreateApplicationMutation(baseOptions?: Apollo.MutationHookOptions<CreateApplicationMutation, CreateApplicationMutationVariables>) {
+        return Apollo.useMutation<CreateApplicationMutation, CreateApplicationMutationVariables>(CreateApplicationDocument, baseOptions);
+      }
+export type CreateApplicationMutationHookResult = ReturnType<typeof useCreateApplicationMutation>;
+export type CreateApplicationMutationResult = Apollo.MutationResult<CreateApplicationMutation>;
+export type CreateApplicationMutationOptions = Apollo.BaseMutationOptions<CreateApplicationMutation, CreateApplicationMutationVariables>;
+export const CreateResponseDocument = gql`
+    mutation createResponse($applicationId: Int!, $templateElementId: Int!, $timeCreated: Datetime!) {
+  createApplicationResponse(input: {applicationResponse: {applicationId: $applicationId, templateElementId: $templateElementId, timeCreated: $timeCreated}}) {
+    applicationResponse {
+      id
+      value
+      templateElement {
+        code
+      }
+    }
+  }
+}
+    `;
+export type CreateResponseMutationFn = Apollo.MutationFunction<CreateResponseMutation, CreateResponseMutationVariables>;
+
+/**
+ * __useCreateResponseMutation__
+ *
+ * To run a mutation, you first call `useCreateResponseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateResponseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createResponseMutation, { data, loading, error }] = useCreateResponseMutation({
+ *   variables: {
+ *      applicationId: // value for 'applicationId'
+ *      templateElementId: // value for 'templateElementId'
+ *      timeCreated: // value for 'timeCreated'
+ *   },
+ * });
+ */
+export function useCreateResponseMutation(baseOptions?: Apollo.MutationHookOptions<CreateResponseMutation, CreateResponseMutationVariables>) {
+        return Apollo.useMutation<CreateResponseMutation, CreateResponseMutationVariables>(CreateResponseDocument, baseOptions);
+      }
+export type CreateResponseMutationHookResult = ReturnType<typeof useCreateResponseMutation>;
+export type CreateResponseMutationResult = Apollo.MutationResult<CreateResponseMutation>;
+export type CreateResponseMutationOptions = Apollo.BaseMutationOptions<CreateResponseMutation, CreateResponseMutationVariables>;
+export const CreateSectionDocument = gql`
+    mutation createSection($applicationId: Int!, $templateSectionId: Int!) {
+  createApplicationSection(input: {applicationSection: {applicationId: $applicationId, templateSectionId: $templateSectionId}}) {
+    applicationSection {
+      id
+      templateSection {
+        id
+        code
+        title
+      }
+    }
+  }
+}
+    `;
+export type CreateSectionMutationFn = Apollo.MutationFunction<CreateSectionMutation, CreateSectionMutationVariables>;
+
+/**
+ * __useCreateSectionMutation__
+ *
+ * To run a mutation, you first call `useCreateSectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSectionMutation, { data, loading, error }] = useCreateSectionMutation({
+ *   variables: {
+ *      applicationId: // value for 'applicationId'
+ *      templateSectionId: // value for 'templateSectionId'
+ *   },
+ * });
+ */
+export function useCreateSectionMutation(baseOptions?: Apollo.MutationHookOptions<CreateSectionMutation, CreateSectionMutationVariables>) {
+        return Apollo.useMutation<CreateSectionMutation, CreateSectionMutationVariables>(CreateSectionDocument, baseOptions);
+      }
+export type CreateSectionMutationHookResult = ReturnType<typeof useCreateSectionMutation>;
+export type CreateSectionMutationResult = Apollo.MutationResult<CreateSectionMutation>;
+export type CreateSectionMutationOptions = Apollo.BaseMutationOptions<CreateSectionMutation, CreateSectionMutationVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($email: String!, $password: String!, $username: String!) {
   createUser(input: {user: {email: $email, password: $password, username: $username}}) {
@@ -16502,6 +16702,47 @@ export function useGetApplicationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetApplicationsQueryHookResult = ReturnType<typeof useGetApplicationsQuery>;
 export type GetApplicationsLazyQueryHookResult = ReturnType<typeof useGetApplicationsLazyQuery>;
 export type GetApplicationsQueryResult = Apollo.QueryResult<GetApplicationsQuery, GetApplicationsQueryVariables>;
+export const GetElementsDocument = gql`
+    query getElements($sectionId: Int!) {
+  templateElements(filter: {sectionId: {equalTo: $sectionId}}) {
+    nodes {
+      category
+      code
+      visibilityCondition
+      nextElementCode
+      parameters
+      title
+      sectionId
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetElementsQuery__
+ *
+ * To run a query within a React component, call `useGetElementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetElementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetElementsQuery({
+ *   variables: {
+ *      sectionId: // value for 'sectionId'
+ *   },
+ * });
+ */
+export function useGetElementsQuery(baseOptions?: Apollo.QueryHookOptions<GetElementsQuery, GetElementsQueryVariables>) {
+        return Apollo.useQuery<GetElementsQuery, GetElementsQueryVariables>(GetElementsDocument, baseOptions);
+      }
+export function useGetElementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetElementsQuery, GetElementsQueryVariables>) {
+          return Apollo.useLazyQuery<GetElementsQuery, GetElementsQueryVariables>(GetElementsDocument, baseOptions);
+        }
+export type GetElementsQueryHookResult = ReturnType<typeof useGetElementsQuery>;
+export type GetElementsLazyQueryHookResult = ReturnType<typeof useGetElementsLazyQuery>;
+export type GetElementsQueryResult = Apollo.QueryResult<GetElementsQuery, GetElementsQueryVariables>;
 export const GetTemplateDocument = gql`
     query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE) {
   templates(condition: {code: $code, status: $status}) {
@@ -16517,6 +16758,13 @@ export const GetTemplateDocument = gql`
           templateElementsBySectionId {
             totalCount
           }
+        }
+      }
+      templateStages {
+        nodes {
+          id
+          number
+          title
         }
       }
     }

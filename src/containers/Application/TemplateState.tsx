@@ -1,51 +1,95 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
-interface TemplateType {
+export interface TemplateType {
   id: number
   code: string
   name: string
   description: string
   documents: string[]
 }
-interface TemplateSection {
+
+// interface TemplateStage {
+//   id: number
+//   title: string
+// }
+
+export interface Section {
   id: number
   code: string
   title: string
   elementsCount: number
 }
 
+interface TemplateElement {}
+
 type TemplateState = {
   type: TemplateType | null
-  sections: TemplateSection[] | null
+  // stages: TemplateStage[] | null
+  sections: Section[] | null
+  elements: TemplateElement[] | null
 }
 
 export type TemplateActions =
   | {
-      type: 'setCurrentTemplate'
+      type: 'setTemplate'
       nextType: TemplateType
-      nextSections: TemplateSection[]
     }
   | {
-      type: 'resetCurrentTemplate'
+      type: 'resetTemplate'
     }
+  | {
+      type: 'setTemplateElements'
+      nextElements: TemplateElement[]
+    }
+  | {
+      type: 'setTemplateSections'
+      nextSections: Section[]
+    }
+// | {
+//     type: 'setTemplateStages'
+//     nextStages: TemplateStage[]
+//   }
 
 type TemplateProviderProps = { children: React.ReactNode }
 
 const reducer = (state: TemplateState, action: TemplateActions) => {
   switch (action.type) {
-    case 'setCurrentTemplate':
-      const { nextType, nextSections } = action
+    case 'setTemplate':
+      const { nextType } = action
       return {
         ...state,
         type: nextType,
-        sections: nextSections,
+        // stages: null,
+        sections: null,
+        elements: null,
       }
-    case 'resetCurrentTemplate':
+    case 'resetTemplate':
       return {
         ...state,
         type: null,
+        // stages: null,
         sections: null,
+        elements: null,
       }
+    case 'setTemplateElements':
+      const { nextElements } = action
+      return {
+        ...state,
+        elements: nextElements,
+      }
+    case 'setTemplateSections':
+      const { nextSections } = action
+      return {
+        ...state,
+        sections: nextSections,
+        elements: null,
+      }
+    // case 'setTemplateStages':
+    //   const { nextStages } = action
+    //   return {
+    //     ...state,
+    //     stages: nextStages,
+    //   }
     default:
       return state
   }
@@ -53,7 +97,9 @@ const reducer = (state: TemplateState, action: TemplateActions) => {
 
 const initialState: TemplateState = {
   type: null,
+  // stages: null,
   sections: null,
+  elements: null,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code

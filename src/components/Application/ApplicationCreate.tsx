@@ -16,11 +16,11 @@ interface Template {
 export interface ApplicationCreateProps {
   type: Template | null
   sections: Section[] | null
-  route: string
+  handleOnClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
-  const { type, sections, route } = props
+  const { type, sections, handleOnClick } = props
 
   return (
     <Container text>
@@ -36,7 +36,7 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
                 <List.Item key={`list-item-${section.code}`} content={section.title} />
               ))}
           </List>
-          <Button content={type.name} as={Link} to={route} />
+          <Button content={type.name} onClick={handleOnClick} />
         </Segment>
       )}
       {!type && <Label content="No Application" />}

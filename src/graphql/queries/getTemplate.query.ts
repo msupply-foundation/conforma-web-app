@@ -17,6 +17,13 @@ export default gql`
             }
           }
         }
+        templateStages {
+          nodes {
+            id
+            number
+            title
+          }
+        }
       }
     }
   }
