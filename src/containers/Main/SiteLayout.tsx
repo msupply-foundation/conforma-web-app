@@ -50,15 +50,15 @@ const SiteLayout: React.FC = () => {
                 <Route exact path="/login">
                   <Login />
                 </Route>
+                <TemplateProvider>
+                  <Route exact path="/applications">
+                    <ApplicationList />
+                  </Route>
+                  <Route exact path="/applications/new">
+                    <ApplicationNew />
+                  </Route>
+                </TemplateProvider>
                 <ApplicationProvider>
-                  <TemplateProvider>
-                    <Route exact path="/applications">
-                      <ApplicationList />
-                    </Route>
-                    <Route exact path="/applications/new">
-                      <ApplicationNew />
-                    </Route>
-                  </TemplateProvider>
                   <Route exact path="/applications/:appId">
                     <ApplicationPage />
                   </Route>

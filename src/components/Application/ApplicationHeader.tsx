@@ -14,7 +14,7 @@ const ApplicationHeader: React.FC<AppHederProps> = (props) => {
 
   return (
     <Card>
-      <Card.Content header={`Application no.${appId}`} />
+      <Card.Content header={`Application number ${appId}`} />
       {mode && <Card.Content meta={mode} />}
       {summary ? (
         <Card.Content description={`SUMMARY page of the Application`} />

@@ -72,12 +72,16 @@ const ApplicationNew: React.FC = () => {
   }, [data, error])
 
   const [createApplicationMutation] = useCreateApplicationMutation()
-  const createApplication = async (template: TemplateType, sections: Section[]) => {
+  const createApplication = async (
+    serialNumber: number,
+    template: TemplateType,
+    sections: Section[]
+  ) => {
     try {
       const { data } = await createApplicationMutation({
         variables: {
           name: `Test application of ${template.name}`,
-          serial: Math.round(Math.random() * 10000),
+          serial: serialNumber,
           templateId: template.id,
         },
       })
@@ -109,10 +113,11 @@ const ApplicationNew: React.FC = () => {
     }
   }
 
-  const handleCreateApplication = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.preventDefault()
+  const handleCreateApplication = (serialNumber: number) => {
+    console.log('clicked?')
+
     if (templateType && templateType.id && templateType.name != '' && sections) {
-      createApplication(templateType, sections)
+      createApplication(serialNumber, templateType, sections)
     } else {
       alert('Invalid template details')
     }
@@ -123,6 +128,7 @@ const ApplicationNew: React.FC = () => {
       type={templateType}
       sections={sections}
       handleOnClick={handleCreateApplication}
+      serialNumber={Math.round(Math.random() * 10000)} // TODO: New issue to generate serial - should be done in server?
     />
   )
 }
