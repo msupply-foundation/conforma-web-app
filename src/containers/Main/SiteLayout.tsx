@@ -17,7 +17,6 @@ import {
   NoMatch,
   Product,
   ProductList,
-  Register,
   Organisation,
   OrgMemberEdit,
   TemplateList,
@@ -37,6 +36,7 @@ const SiteLayout: React.FC = () => {
               items={[
                 ['Home', '/'],
                 ['Applications List', '/applications'],
+                ['Register', '/applications/new?type=UserRego1'],
               ]}
             />
           </Grid.Column>
@@ -50,9 +50,6 @@ const SiteLayout: React.FC = () => {
                   <Login />
                 </Route>
                 <TemplateProvider>
-                  <Route exact path="/register">
-                    <Register />
-                  </Route>
                   <Route exact path="/applications">
                     <ApplicationList />
                   </Route>

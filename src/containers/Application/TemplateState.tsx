@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
 interface TemplateType {
+  id: number
   code: string
   name: string
   description: string
@@ -10,6 +11,7 @@ interface TemplateSection {
   id: number
   code: string
   title: string
+  elementsCount: number
 }
 
 type TemplateState = {
