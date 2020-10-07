@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { useNavigationState } from '../Main/NavigationState'
 import { useTemplateState, TemplateType, Section } from './TemplateState'
-import { useApplicationState } from './ApplicationState'
 import {
   Application,
   Template,
@@ -102,8 +101,6 @@ const ApplicationNew: React.FC = () => {
   }
 
   const handleCreateApplication = (serialNumber: number) => {
-    console.log('clicked?')
-
     if (templateType && templateType.id && templateType.name != '' && sections) {
       createApplication(serialNumber, templateType, sections)
     } else {
@@ -115,7 +112,7 @@ const ApplicationNew: React.FC = () => {
     <ApplicationCreate
       type={templateType}
       sections={sections}
-      handleOnClick={handleCreateApplication}
+      handleClick={handleCreateApplication}
       serialNumber={Math.round(Math.random() * 10000)} // TODO: New issue to generate serial - should be done in server?
     />
   )

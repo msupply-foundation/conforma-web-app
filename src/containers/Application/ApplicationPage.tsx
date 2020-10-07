@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useNavigationState } from '../Main/NavigationState'
-import { ApplicationHeader } from '../../components/Application'
+import {
+  ApplicationHeader,
+  ApplicationSummary,
+  ApplicationStep,
+} from '../../components/Application'
+import { Application, useGetApplicationQuery } from '../../generated/graphql'
 
 type TParams = { appId: string; sectionName?: string; page?: string }
 
@@ -10,39 +15,37 @@ export interface AppPageProps {
 }
 
 const ApplicationPage: React.FC<AppPageProps> = (props) => {
+  const { summary } = props
   const { appId, sectionName, page }: TParams = useParams()
   const { navigationState, setNavigationState } = useNavigationState()
   const { mode } = navigationState.queryParameters
 
-  return (
+  const { data, loading, error } = useGetApplicationQuery({
+    variables: {
+      serial: 885,
+    },
+  })
+
+  useEffect(() => {
+    if (data && data.applications && data.applications.nodes) {
+      const applications = data.applications.nodes as Application[]
+      console.log(`applications: ${applications.length}`)
+
+      // setUserState({ type: 'updateUsersList', updatedUsers: userNames })
+    }
+  }, [data, error])
+
+  console.log('ApplicationPage', navigationState, appId, sectionName, page)
+
+  return summary ? (
+    <ApplicationSummary />
+  ) : (
     <div>
-      <ApplicationHeader
-        appId={appId}
-        mode={mode}
-        sectionName={sectionName}
-        page={page}
-        {...props}
-      />
-      <NextPageButton sectionName={sectionName} page={page} />
+      <h1>TEST</h1>
+      <ApplicationHeader mode={mode} serial={1} name="test" sectionName={sectionName} page={page} />
+      {page && <ApplicationStep />}
     </div>
   )
 }
 
 export default ApplicationPage
-
-type ButtonProps = { sectionName?: string; page?: string }
-
-const NextPageButton: React.FC<ButtonProps> = (props) => {
-  const history = useHistory()
-  const handleClick = () => {
-    history.push('page' + (Number(props.page) + 1))
-  }
-  if (!props.sectionName) {
-    return <div></div>
-  }
-  return (
-    <button type="submit" onClick={handleClick}>
-      Next Page
-    </button>
-  )
-}

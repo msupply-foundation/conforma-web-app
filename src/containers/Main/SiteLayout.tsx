@@ -58,20 +58,18 @@ const SiteLayout: React.FC = () => {
                     <ApplicationNew />
                   </Route>
                 </TemplateProvider>
-                <ApplicationProvider>
-                  <Route exact path="/applications/:appId">
-                    <ApplicationPage />
-                  </Route>
-                  <Route exact path="/applications/:appId/:sectionName/page:page">
-                    <ApplicationPage />
-                  </Route>
-                  <Route exact path="/applications/:appId/summary">
-                    <ApplicationPage summary={true} />
-                  </Route>
-                  <Route exact path="/applications/:appId/approval">
-                    <Approval />
-                  </Route>
-                </ApplicationProvider>
+                <Route exact path="/applications/:appId">
+                  <ApplicationPage />
+                </Route>
+                <Route exact path="/applications/:appId/:sectionName/page:page">
+                  <ApplicationPage />
+                </Route>
+                <Route exact path="/applications/:appId/summary">
+                  <ApplicationPage summary={true} />
+                </Route>
+                <Route exact path="/applications/:appId/approval">
+                  <Approval />
+                </Route>
                 <Route exact path="/admin">
                   <Admin />
                 </Route>

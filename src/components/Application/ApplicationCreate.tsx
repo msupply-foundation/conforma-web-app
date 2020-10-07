@@ -17,11 +17,11 @@ export interface ApplicationCreateProps {
   type: Template | null
   sections: Section[] | null
   serialNumber: number
-  handleOnClick: (serial: number) => void
+  handleClick: (serial: number) => void
 }
 
 const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
-  const { type, sections, serialNumber, handleOnClick } = props
+  const { type, sections, serialNumber, handleClick } = props
 
   return (
     <Container text>
@@ -39,9 +39,9 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
           </List>
           <Button
             content={type.name}
-            onClick={() => handleOnClick(serialNumber)}
+            onClick={() => handleClick(serialNumber)}
             as={Link}
-            to={`/application/${serialNumber}`}
+            to={`/applications/${serialNumber}`}
           />
         </Segment>
       )}

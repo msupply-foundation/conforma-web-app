@@ -2,7 +2,8 @@ import {
   ApplicationEdit,
   ApplicationHeader,
   ApplicationList,
-  ApplicationStart,
+  ApplicationStep,
+  ApplicationSummary,
 } from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
@@ -27,7 +28,8 @@ export {
   ApplicationEdit,
   ApplicationHeader,
   ApplicationList,
-  ApplicationStart,
+  ApplicationStep,
+  ApplicationSummary,
   Approval,
   Admin,
   AppMenu,
