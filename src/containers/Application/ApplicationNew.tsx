@@ -7,7 +7,6 @@ import {
   Template,
   TemplateElementsConnection,
   TemplateSection,
-  // TemplateStage,
   useGetTemplateQuery,
   useCreateApplicationMutation,
   useCreateSectionMutation,
@@ -27,7 +26,7 @@ const ApplicationNew: React.FC = () => {
       if (data.templates.nodes.length > 1)
         console.log('More than one template returned. Only one expected!')
 
-      // Set the main template in the local state
+      // Send the template to the local state
       const template = data.templates.nodes[0] as Template
       const { id, code, name } = template
       const templateName = name ? name : 'Undefined name'
@@ -40,18 +39,7 @@ const ApplicationNew: React.FC = () => {
       }
       setTemplateState({ type: 'setTemplate', nextType })
 
-      // // Set the template stages in the local state
-      // if (template.templateStages && template.templateStages.nodes) {
-      //   const nextStages = template.templateStages.nodes.map((stage) => {
-      //     const { id, title } = stage as TemplateStage
-      //     const stageTitle = title ? title : 'Untitle stage'
-
-      //     return { id, title: stageTitle }
-      //   })
-      //   setTemplateState({ type: 'setTemplateStages', nextStages })
-      // }
-
-      // Set the template sections in the local state
+      // Send the template sections to the local state
       if (template.templateSections && template.templateSections.nodes) {
         if (template.templateSections.nodes.length === 0)
           console.log('No Section on the template returned. At least one expected!')

@@ -8,11 +8,6 @@ export interface TemplateType {
   documents: string[]
 }
 
-// interface TemplateStage {
-//   id: number
-//   title: string
-// }
-
 export interface Section {
   id: number
   code: string
@@ -24,7 +19,6 @@ interface TemplateElement {}
 
 type TemplateState = {
   type: TemplateType | null
-  // stages: TemplateStage[] | null
   sections: Section[] | null
   elements: TemplateElement[] | null
 }
@@ -45,10 +39,6 @@ export type TemplateActions =
       type: 'setTemplateSections'
       nextSections: Section[]
     }
-// | {
-//     type: 'setTemplateStages'
-//     nextStages: TemplateStage[]
-//   }
 
 type TemplateProviderProps = { children: React.ReactNode }
 
@@ -59,7 +49,6 @@ const reducer = (state: TemplateState, action: TemplateActions) => {
       return {
         ...state,
         type: nextType,
-        // stages: null,
         sections: null,
         elements: null,
       }
@@ -67,7 +56,6 @@ const reducer = (state: TemplateState, action: TemplateActions) => {
       return {
         ...state,
         type: null,
-        // stages: null,
         sections: null,
         elements: null,
       }
@@ -84,12 +72,6 @@ const reducer = (state: TemplateState, action: TemplateActions) => {
         sections: nextSections,
         elements: null,
       }
-    // case 'setTemplateStages':
-    //   const { nextStages } = action
-    //   return {
-    //     ...state,
-    //     stages: nextStages,
-    //   }
     default:
       return state
   }
@@ -97,7 +79,6 @@ const reducer = (state: TemplateState, action: TemplateActions) => {
 
 const initialState: TemplateState = {
   type: null,
-  // stages: null,
   sections: null,
   elements: null,
 }
@@ -108,7 +89,6 @@ const initialTemplateContext: {
   setTemplateState: React.Dispatch<TemplateActions>
 } = {
   templateState: initialState,
-  // will update to the reducer we provide in MapProvider
   setTemplateState: () => {},
 }
 
