@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useNavigationState } from '../Main/NavigationState'
 import { useTemplateState, TemplateType, Section } from './TemplateState'
+import { useApplicationState } from './ApplicationState'
 import {
   Application,
   Template,
@@ -71,8 +72,6 @@ const ApplicationNew: React.FC = () => {
   }, [data, error])
 
   const [createApplicationMutation] = useCreateApplicationMutation()
-  const [createSectionMutation] = useCreateSectionMutation()
-
   const createApplication = async (template: TemplateType, sections: Section[]) => {
     try {
       const { data } = await createApplicationMutation({
@@ -91,6 +90,7 @@ const ApplicationNew: React.FC = () => {
     }
   }
 
+  const [createSectionMutation] = useCreateSectionMutation()
   const createApplicationSections = async (
     application: Pick<Application, 'id' | 'name'>,
     sections: Section[]
@@ -118,7 +118,6 @@ const ApplicationNew: React.FC = () => {
     }
   }
 
-  // TODO: Create a new application on the server
   return (
     <ApplicationCreate
       type={templateType}

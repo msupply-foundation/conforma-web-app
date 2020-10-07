@@ -24,6 +24,7 @@ import {
   Template,
 } from '../../components'
 import { ApplicationNew, ApplicationPage, TemplateProvider } from '../Application'
+import { ApplicationProvider } from '../Application/ApplicationState'
 import { NavigationProvider } from './NavigationState'
 
 const SiteLayout: React.FC = () => {
@@ -49,26 +50,28 @@ const SiteLayout: React.FC = () => {
                 <Route exact path="/login">
                   <Login />
                 </Route>
-                <TemplateProvider>
-                  <Route exact path="/applications">
-                    <ApplicationList />
+                <ApplicationProvider>
+                  <TemplateProvider>
+                    <Route exact path="/applications">
+                      <ApplicationList />
+                    </Route>
+                    <Route exact path="/applications/new">
+                      <ApplicationNew />
+                    </Route>
+                  </TemplateProvider>
+                  <Route exact path="/applications/:appId">
+                    <ApplicationPage />
                   </Route>
-                  <Route exact path="/applications/new">
-                    <ApplicationNew />
+                  <Route exact path="/applications/:appId/:sectionName/page:page">
+                    <ApplicationPage />
                   </Route>
-                </TemplateProvider>
-                <Route exact path="/applications/:appId">
-                  <ApplicationPage />
-                </Route>
-                <Route exact path="/applications/:appId/:sectionName/page:page">
-                  <ApplicationPage />
-                </Route>
-                <Route exact path="/applications/:appId/summary">
-                  <ApplicationPage summary={true} />
-                </Route>
-                <Route exact path="/applications/:appId/approval">
-                  <Approval />
-                </Route>
+                  <Route exact path="/applications/:appId/summary">
+                    <ApplicationPage summary={true} />
+                  </Route>
+                  <Route exact path="/applications/:appId/approval">
+                    <Approval />
+                  </Route>
+                </ApplicationProvider>
                 <Route exact path="/admin">
                   <Admin />
                 </Route>
