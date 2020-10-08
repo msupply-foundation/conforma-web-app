@@ -38,8 +38,6 @@ type ApplicationProviderProps = { children: React.ReactNode }
 const reducer = (state: ApplicationState, action: ApplicationActions) => {
   switch (action.type) {
     case 'setApplication':
-      console.log('setApplication')
-
       const { nextName, nextSerial, nextTempId } = action
       return {
         ...state,
@@ -50,8 +48,6 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
         serial: nextSerial,
       }
     case 'setSection':
-      console.log('setSection')
-
       const { newSection } = action
       const { sections } = state
       return {
@@ -59,16 +55,12 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
         sections: sections ? [...sections, newSection] : new Array<Section>(newSection),
       }
     case 'setLoading':
-      console.log('isLoading')
-
       const { isLoading } = action
       return {
         ...state,
         isLoading,
       }
     case 'resetApplication':
-      console.log('resetApplication')
-
       return {
         ...state,
         appTemplateId: null,

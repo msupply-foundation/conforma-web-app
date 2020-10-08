@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ApplicationCreate from './ApplicationCreate'
 import TemplateSelect from '../../components/Template/TemplateSelect'
 import { useRouter } from '../../hooks/useRouter'
@@ -33,7 +33,6 @@ const ApplicationNew: React.FC = () => {
           const sections = application.template.templateSections.nodes.map((section) =>
             section ? section.id : -1
           )
-          console.log('Almost')
 
           setApplicationState({
             type: 'setApplication',
@@ -41,7 +40,6 @@ const ApplicationNew: React.FC = () => {
             nextSerial: application.serial as number,
             nextTempId: application.template.id,
           })
-          console.log('Done')
 
           generateApplicationSections({ applicationId: application.id, templateSections: sections })
         } else console.log('Create application failed - no sections!')
@@ -69,13 +67,15 @@ const ApplicationNew: React.FC = () => {
   const generateApplication = (payload: ApplicationPayload) => {
     const { serialNumber, templateId, templateName } = payload
     try {
-      createApplicationMutation({
+      const data = createApplicationMutation({
         variables: {
           name: `Test application of ${templateName}`,
           serial: Number(serialNumber),
           templateId: templateId,
         },
       })
+
+      console.log('data', data)
     } catch (error) {
       console.error(error)
     }
@@ -102,11 +102,7 @@ const ApplicationNew: React.FC = () => {
     templateId: number,
     templateName: string
   ) => {
-    console.log('Will handleCreateApplication...')
-
     if (serialNumber != '' && templateId && templateName != '') {
-      console.log('creating...')
-
       setApplicationState({ type: 'setLoading', isLoading: true })
       generateApplication({ serialNumber, templateId, templateName })
     } else {
