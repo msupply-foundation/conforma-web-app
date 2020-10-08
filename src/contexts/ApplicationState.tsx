@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useReducer } from 'react'
 
 interface Section {
+  id: number
   code: string
   title: string
   templateId: number

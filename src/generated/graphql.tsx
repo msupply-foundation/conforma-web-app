@@ -16349,7 +16349,6 @@ export type CreateSectionMutation = (
     { __typename?: 'CreateApplicationSectionPayload' }
     & { applicationSection?: Maybe<(
       { __typename?: 'ApplicationSection' }
-      & Pick<ApplicationSection, 'id'>
       & { templateSection?: Maybe<(
         { __typename?: 'TemplateSection' }
         & Pick<TemplateSection, 'id' | 'code' | 'title'>
@@ -16422,7 +16421,13 @@ export type GetApplicationQuery = (
             ) }
           )>> }
         ) }
-      )> }
+      )>, applicationSections: (
+        { __typename?: 'ApplicationSectionsConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ApplicationSection' }
+          & Pick<ApplicationSection, 'id' | 'templateSectionId'>
+        )>> }
+      ) }
     )>> }
   )> }
 );
@@ -16606,7 +16611,6 @@ export const CreateSectionDocument = gql`
     mutation createSection($applicationId: Int!, $templateSectionId: Int!) {
   createApplicationSection(input: {applicationSection: {applicationId: $applicationId, templateSectionId: $templateSectionId}}) {
     applicationSection {
-      id
       templateSection {
         id
         code
@@ -16744,6 +16748,12 @@ export const GetApplicationDocument = gql`
               }
             }
           }
+        }
+      }
+      applicationSections {
+        nodes {
+          id
+          templateSectionId
         }
       }
     }

@@ -33,14 +33,7 @@ const ApplicationNew: React.FC = () => {
           const sections = application.template.templateSections.nodes.map((section) =>
             section ? section.id : -1
           )
-
-          setApplicationState({
-            type: 'setApplication',
-            nextName: application.name as string,
-            nextSerial: application.serial as number,
-            nextTempId: application.template.id,
-          })
-
+          console.log(`Success to create application ${application.serial}!`)
           generateApplicationSections({ applicationId: application.id, templateSections: sections })
         } else console.log('Create application failed - no sections!')
       } else console.log('Create application failed - no data!')
@@ -50,15 +43,7 @@ const ApplicationNew: React.FC = () => {
     onCompleted: ({ createApplicationSection }) => {
       if (createApplicationSection && createApplicationSection.applicationSection) {
         if (createApplicationSection.applicationSection.templateSection) {
-          const { code, title, id } = createApplicationSection.applicationSection.templateSection
-          setApplicationState({
-            type: 'setSection',
-            newSection: {
-              code: code as string,
-              title: title as string,
-              templateId: id,
-            },
-          })
+          console.log('Success to create application sections!')
         } else console.log('Create application section failed - no template sections!')
       } else console.log('Create application section failed - no data!')
     },
@@ -74,8 +59,6 @@ const ApplicationNew: React.FC = () => {
           templateId: templateId,
         },
       })
-
-      console.log('data', data)
     } catch (error) {
       console.error(error)
     }

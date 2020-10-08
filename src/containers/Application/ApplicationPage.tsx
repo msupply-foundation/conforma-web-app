@@ -5,7 +5,12 @@ import {
   ApplicationSummary,
   ApplicationStep,
 } from '../../components/Application'
-import { Application, useGetApplicationQuery } from '../../generated/graphql'
+import {
+  Application,
+  ApplicationSection,
+  TemplateSection,
+  useGetApplicationQuery,
+} from '../../generated/graphql'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { Container } from 'semantic-ui-react'
 import Loading from '../../components/Loading'
@@ -32,8 +37,50 @@ const ApplicationPage: React.FC<AppPageProps> = (props) => {
 
   useEffect(() => {
     if (data && data.applications && data.applications.nodes) {
-      const applications = data.applications.nodes as Application[]
-      console.log(`loaded applications: ${applications.length}`)
+      if (data.applications.nodes.length > 1)
+        console.log('More than one applicstion returned. Only one expected!')
+      const application = data.applications.nodes[0] as Application
+      if (application.template) {
+        setApplicationState({
+          type: 'setApplication',
+          nextName: application.name as string,
+          nextSerial: application.serial as number,
+          nextTempId: application.template.id,
+        })
+
+        if (
+          application.template.templateSections &&
+          application.template.templateSections.nodes &&
+          application.applicationSections &&
+          application.applicationSections.nodes
+        ) {
+          application.template.templateSections.nodes.forEach((sectionTemplate) => {
+            const {
+              code,
+              title,
+              id: templateId,
+              templateElementsBySectionId: elements,
+            } = sectionTemplate as TemplateSection
+            const sections = application.applicationSections.nodes as ApplicationSection[]
+            const section = sections.find(({ templateSectionId }) =>
+              templateSectionId && templateId ? templateSectionId === templateId : false
+            )
+
+            if (!section) console.log('Section matching template not found!')
+            else {
+              setApplicationState({
+                type: 'setSection',
+                newSection: {
+                  id: section.id,
+                  code: code as string,
+                  title: title as string,
+                  templateId,
+                },
+              })
+            }
+          })
+        }
+      }
     }
   }, [data, error])
 
