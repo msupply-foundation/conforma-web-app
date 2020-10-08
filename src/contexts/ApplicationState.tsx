@@ -9,7 +9,6 @@ interface Section {
 
 type ApplicationState = {
   appTemplateId: number | null
-  isLoading: boolean
   name: string | null
   sections: Section[] | null
   serial: number | null
@@ -25,10 +24,6 @@ export type ApplicationActions =
   | {
       type: 'setSection'
       newSection: Section
-    }
-  | {
-      type: 'setLoading'
-      isLoading: boolean
     }
   | {
       type: 'resetApplication'
@@ -55,17 +50,10 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
         ...state,
         sections: sections ? [...sections, newSection] : new Array<Section>(newSection),
       }
-    case 'setLoading':
-      const { isLoading } = action
-      return {
-        ...state,
-        isLoading,
-      }
     case 'resetApplication':
       return {
         ...state,
         appTemplateId: null,
-        isLoading: false,
         name: null,
         sections: null,
         serial: null,
@@ -76,7 +64,6 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
 }
 
 const initialState: ApplicationState = {
-  isLoading: false,
   name: null,
   serial: null,
   sections: null,

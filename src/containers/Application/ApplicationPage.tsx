@@ -22,12 +22,10 @@ export interface AppPageProps {
 
 const ApplicationPage: React.FC<AppPageProps> = (props) => {
   const { applicationState, setApplicationState } = useApplicationState()
-  const { isLoading, name, serial } = applicationState
+  const { name, serial } = applicationState
   const { summary } = props
   const { query } = useRouter()
   const { mode, serialNumber, sectionName, page } = query
-
-  console.log('ApplicationPage', isLoading, name, serial)
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
@@ -84,7 +82,7 @@ const ApplicationPage: React.FC<AppPageProps> = (props) => {
     }
   }, [data, error])
 
-  return isLoading ? (
+  return loading ? (
     <Loading />
   ) : summary ? (
     <ApplicationSummary />

@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import ApplicationCreate from './ApplicationCreate'
 import TemplateSelect from '../../components/Template/TemplateSelect'
 import { useRouter } from '../../hooks/useRouter'
-import { useApplicationState } from '../../contexts/ApplicationState'
 import {
   Application,
   useCreateApplicationMutation,
@@ -21,7 +20,6 @@ interface SectionPayload {
 }
 
 const ApplicationNew: React.FC = () => {
-  const { applicationState, setApplicationState } = useApplicationState()
   const { query } = useRouter()
   const { type } = query
 
@@ -86,7 +84,6 @@ const ApplicationNew: React.FC = () => {
     templateName: string
   ) => {
     if (serialNumber != '' && templateId && templateName != '') {
-      setApplicationState({ type: 'setLoading', isLoading: true })
       generateApplication({ serialNumber, templateId, templateName })
     } else {
       alert('Create application failed - payload!')
