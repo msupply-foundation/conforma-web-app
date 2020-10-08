@@ -23,6 +23,7 @@ import { NotificationsList, Notification } from '../components/Notification'
 import NoMatch from '../components/NoMatch'
 import { ProductList, Product } from '../components/Product'
 import Register from '../components/Register'
+import ElementPluginCheck from '../components/ElementPluginCheck'
 
 /**
  * Custom Hook to make URL query parameters available in a
@@ -58,6 +59,9 @@ const App: React.FC = () => {
           <Grid.Column stretched width={12}>
             <Segment>
               <Switch>
+                <Route exact path="/pluginElement">
+                  <ElementPluginCheck />
+                </Route>
                 <Route exact path="/">
                   <Home />
                 </Route>
