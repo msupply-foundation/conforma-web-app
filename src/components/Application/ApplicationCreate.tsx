@@ -16,8 +16,8 @@ interface Template {
 export interface ApplicationCreateProps {
   type: Template | null
   sections: Section[] | null
-  serialNumber: number
-  handleClick: (serial: number) => void
+  serialNumber: string
+  handleClick: (serial: string) => void
 }
 
 const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {

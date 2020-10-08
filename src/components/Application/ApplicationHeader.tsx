@@ -2,25 +2,19 @@ import React from 'react'
 import { Card } from 'semantic-ui-react'
 
 export interface AppHederProps {
-  mode?: string
-  serial: number
+  serialNumber: string
   name: string
-  sectionName?: string
-  page?: string
+  mode?: string
 }
 
 const ApplicationHeader: React.FC<AppHederProps> = (props) => {
-  const { mode, serial, name, sectionName, page } = props
+  const { mode, serialNumber, name } = props
 
   return (
     <Card>
-      <Card.Content header={`${name} Number ${serial}`} />
+      <Card.Content header={`${name} Number ${serialNumber}`} />
       {mode && <Card.Content meta={mode} />}
-      {sectionName && page ? (
-        <Card.Content description={`PAGE ${page} of SECTION ${sectionName}`} />
-      ) : (
-        <Card.Content description={`HOME page of the Application`} />
-      )}
+      <Card.Content description={`HOME page of the Application`} />
     </Card>
   )
 }

@@ -7,7 +7,6 @@ import {
 } from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
-import AppMenu from './AppMenu'
 import Home from './Home'
 import Login from './Login'
 import TemplateList from './TemplateList'
@@ -32,7 +31,6 @@ export {
   ApplicationSummary,
   Approval,
   Admin,
-  AppMenu,
   Config,
   Home,
   Login,

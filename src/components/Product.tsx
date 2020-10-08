@@ -1,11 +1,10 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { List, Label } from 'semantic-ui-react'
-import { useNavigationState } from '../containers/Main/NavigationState'
+import { useRouter } from '../hooks/useRouter'
 
 export const ProductList: React.FC = () => {
-  const { navigationState, setNavigationState } = useNavigationState()
-  const { pathname, queryParameters } = navigationState
+  const { pathname, query } = useRouter()
 
   return (
     <div>
@@ -27,9 +26,9 @@ export const ProductList: React.FC = () => {
           <Link to={pathname}>Reset query</Link>
         </List.Item>
       </List>
-      {Object.keys(queryParameters).length > 0 && <h4>Query parameters:</h4>}
+      {Object.keys(query).length > 0 && <h4>Query parameters:</h4>}
       <List>
-        {Object.entries(queryParameters).map(([key, value]) => (
+        {Object.entries(query).map(([key, value]) => (
           <List.Item>{key + ' : ' + value}</List.Item>
         ))}
       </List>

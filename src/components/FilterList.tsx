@@ -1,10 +1,10 @@
 import React from 'react'
 import { Button, List } from 'semantic-ui-react'
-import { useNavigationState } from '../containers/Main/NavigationState'
 import { Link } from 'react-router-dom'
+import { useRouter } from '../hooks/useRouter'
 
 const FilterList: React.FC = () => {
-  const { navigationState, setNavigationState } = useNavigationState()
+  const { pathname } = useRouter()
 
   return (
     <List horizontal>
@@ -25,12 +25,7 @@ const FilterList: React.FC = () => {
         />
       </List.Item>
       <List.Item>
-        <Button
-          key={`app-list-button-reset`}
-          content="Reset query"
-          as={Link}
-          to={navigationState.pathname}
-        />
+        <Button key={`app-list-button-reset`} content="Reset query" as={Link} to={pathname} />
       </List.Item>
     </List>
   )

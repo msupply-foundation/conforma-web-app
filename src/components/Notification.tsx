@@ -1,11 +1,10 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Button, Card, List, Label, Segment } from 'semantic-ui-react'
-import { useNavigationState } from '../containers/Main/NavigationState'
+import { useRouter } from '../hooks/useRouter'
 
 export const NotificationsList: React.FC = () => {
-  const { navigationState, setNavigationState } = useNavigationState()
-  const { pathname, queryParameters } = navigationState
+  const { pathname, query } = useRouter()
 
   return (
     <Segment.Group>
@@ -34,9 +33,9 @@ export const NotificationsList: React.FC = () => {
           <Button key="notifications-filter-reset" content="Reset query" as={Link} to={pathname} />
         </List.Item>
       </List>
-      {Object.keys(queryParameters).length > 0 && <h4>Query parameters:</h4>}
+      {Object.keys(query).length > 0 && <h4>Query parameters:</h4>}
       <List>
-        {Object.entries(queryParameters).map(([key, value]) => (
+        {Object.entries(query).map(([key, value]) => (
           <List.Item>{key + ' : ' + value}</List.Item>
         ))}
       </List>

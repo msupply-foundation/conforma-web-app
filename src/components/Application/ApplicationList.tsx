@@ -6,13 +6,12 @@ import getApplications from '../../graphql/queries/getApplications.query'
 import Loading from '../Loading'
 import FilterList from '../FilterList'
 import ApplicationEdit from './ApplicationEdit'
-import { useNavigationState } from '../../containers/Main/NavigationState'
+import { useRouter } from '../../hooks/useRouter'
 
 const ApplicationList: React.FC = () => {
   const [applications, setApplications] = useState<Array<Application> | null>()
   const { data, loading, error } = useQuery(getApplications)
-  const { navigationState, setNavigationState } = useNavigationState()
-  const { queryParameters } = navigationState
+  const { query } = useRouter()
 
   const [values, setValues] = useState({
     id: 0,
@@ -43,9 +42,9 @@ const ApplicationList: React.FC = () => {
   ) : (
     <Container>
       <FilterList />
-      {Object.keys(queryParameters).length > 0 && <h3>Query parameters:</h3>}
+      {Object.keys(query).length > 0 && <h3>Query parameters:</h3>}
       <List>
-        {Object.entries(queryParameters).map(([key, value]) => (
+        {Object.entries(query).map(([key, value]) => (
           <List.Item key={`app-selected-parameter-${value}`} content={key + ' : ' + value} />
         ))}
       </List>

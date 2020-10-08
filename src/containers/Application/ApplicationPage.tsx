@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import { useNavigationState } from '../Main/NavigationState'
+import { useParams } from 'react-router'
+import { useRouter } from '../../hooks/useRouter'
 import {
   ApplicationHeader,
   ApplicationSummary,
@@ -8,21 +8,20 @@ import {
 } from '../../components/Application'
 import { Application, useGetApplicationQuery } from '../../generated/graphql'
 
-type TParams = { appId: string; sectionName?: string; page?: string }
-
+type TParams = { serialNumber: string; sectionName: string; page: string }
 export interface AppPageProps {
   summary?: boolean
 }
 
 const ApplicationPage: React.FC<AppPageProps> = (props) => {
   const { summary } = props
-  const { appId, sectionName, page }: TParams = useParams()
-  const { navigationState, setNavigationState } = useNavigationState()
-  const { mode } = navigationState.queryParameters
+  const { query } = useRouter()
+  const { mode } = query
+  const { serialNumber, sectionName, page }: TParams = useParams()
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
-      serial: 885,
+      serial: Number(serialNumber),
     },
   })
 
@@ -35,15 +34,24 @@ const ApplicationPage: React.FC<AppPageProps> = (props) => {
     }
   }, [data, error])
 
-  console.log('ApplicationPage', navigationState, appId, sectionName, page)
+  console.log('ApplicationPage', serialNumber, sectionName, page)
 
   return summary ? (
     <ApplicationSummary />
   ) : (
     <div>
-      <h1>TEST</h1>
-      <ApplicationHeader mode={mode} serial={1} name="test" sectionName={sectionName} page={page} />
-      {page && <ApplicationStep />}
+      {data &&
+        data.applications &&
+        data.applications.nodes &&
+        data.applications.nodes[0] &&
+        serialNumber && (
+          <ApplicationHeader
+            mode={mode}
+            serialNumber={serialNumber}
+            name={data.applications.nodes[0].name ? data.applications.nodes[0].name : 'No name'}
+          />
+        )}
+      {sectionName && page && <ApplicationStep />}
     </div>
   )
 }

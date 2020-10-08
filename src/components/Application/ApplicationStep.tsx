@@ -10,6 +10,11 @@ const ApplicationStep: React.FC<ApplicationStepProps> = (props) => {
   const { sectionName, page } = props
   return (
     <Container>
+      {sectionName && page ? (
+        <Header content={`PAGE ${page} of SECTION ${sectionName}`} />
+      ) : (
+        <Header content={`HOME page of the Application`} />
+      )}
       {/* {sections.map(section => ... )} */}
       <NextPageButton sectionName={sectionName} page={page} />
     </Container>
