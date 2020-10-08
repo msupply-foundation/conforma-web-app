@@ -1,5 +1,4 @@
 import React from 'react'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
 
 const Admin: React.FC = () => {
   return (

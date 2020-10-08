@@ -1,11 +1,6 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
 
-interface RouteProps {
-  exact: boolean
-  path: string
-}
-
 interface ContextRouteProps {
   contextProvider: any
   component: React.FC
@@ -15,7 +10,7 @@ interface ContextRouteProps {
 const ContextRoute: React.FC<ContextRouteProps> = (props) => {
   const { contextProvider: Provider, component: Component, ...routeProps } = props
   return (
-    <Route routeProps>
+    <Route {...routeProps}>
       <Provider>
         <Component />
       </Provider>

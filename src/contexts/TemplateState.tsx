@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
-export interface TemplateType {
+interface TemplateType {
   id: number
   code: string
   name: string
@@ -8,7 +8,7 @@ export interface TemplateType {
   documents: string[]
 }
 
-export interface Section {
+interface Section {
   id: number
   code: string
   title: string

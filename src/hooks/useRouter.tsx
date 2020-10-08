@@ -5,6 +5,14 @@ import { useMemo } from 'react'
 interface QueryObject {
   mode?: string
   type?: string
+  serialNumber?: string
+  sectionName?: string
+  page?: string
+  templateId?: string
+  step?: string
+  notificationId?: string
+  productId?: string
+  orgName?: string
 }
 
 interface RouterResult {

@@ -1,17 +1,19 @@
 import React from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { Button, Card, List, Label, Segment } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { Button, Card, List, Label, Segment, Container, Header } from 'semantic-ui-react'
 import { useRouter } from '../hooks/useRouter'
 
 export const NotificationsList: React.FC = () => {
   const { pathname, query } = useRouter()
+  const { notificationId } = query
 
   return (
     <Segment.Group>
-      <Card>
-        <Card.Content header="Notification Center" />
-        <Card.Content description="List of notifications for the current user. Can be filtered with query parameters, e.g:" />
-      </Card>
+      <Header as="h1" content="Notification Center" />
+      <Header
+        as="h2"
+        content="List of notifications for the current user. Can be filtered with query parameters, e.g:"
+      />
       <List horizontal>
         <List.Item>
           <Button
@@ -39,26 +41,23 @@ export const NotificationsList: React.FC = () => {
           <List.Item>{key + ' : ' + value}</List.Item>
         ))}
       </List>
-      <h4>Notifications:</h4>
+      <Header as="h4" content="Notifications" />
       <Label>
-        <Link to={'/notifications/567'}>Your message — click to view</Link>
+        <Button content="Your message — click to view" as={Link} to={'/notifications/567'} />
       </Label>
     </Segment.Group>
   )
 }
 
-type TParams = { notificationId: string }
-
 export const Notification: React.FC = () => {
-  const { notificationId }: TParams = useParams()
-
+  const { query } = useRouter()
+  const { notificationId } = query
   return (
-    <div>
-      <h1>Title of Message</h1>
-      <p>Dear user, this message has the id: {notificationId}.</p>
-      <p>
-        <Link to="/notifications">Back to Notification Center</Link>
-      </p>
-    </div>
+    <Container text>
+      <Header as="h1" content="Title of Message" />
+      <Header as="h2" content={`Dear user, this message has the id: ${notificationId}`}>
+        <Button content="Back to Notification Center" as={Link} to="/notifications" />
+      </Header>
+    </Container>
   )
 }

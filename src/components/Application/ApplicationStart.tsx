@@ -13,14 +13,14 @@ interface Template {
   name: string
 }
 
-export interface ApplicationCreateProps {
+export interface ApplicationStartProps {
   type: Template | null
   sections: Section[] | null
   serialNumber: string
   handleClick: (serial: string) => void
 }
 
-const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
+const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
   const { type, sections, serialNumber, handleClick } = props
 
   return (
@@ -50,4 +50,4 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
   )
 }
 
-export default ApplicationCreate
+export default ApplicationStart

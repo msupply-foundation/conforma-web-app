@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router'
 import { useRouter } from '../../hooks/useRouter'
 import {
   ApplicationHeader,
@@ -16,8 +15,7 @@ export interface AppPageProps {
 const ApplicationPage: React.FC<AppPageProps> = (props) => {
   const { summary } = props
   const { query } = useRouter()
-  const { mode } = query
-  const { serialNumber, sectionName, page }: TParams = useParams()
+  const { mode, serialNumber, sectionName, page } = query
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
