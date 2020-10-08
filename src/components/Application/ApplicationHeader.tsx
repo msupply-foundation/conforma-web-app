@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card } from 'semantic-ui-react'
+import { Container, Header } from 'semantic-ui-react'
 
 export interface AppHederProps {
   serialNumber: string
@@ -11,11 +11,10 @@ const ApplicationHeader: React.FC<AppHederProps> = (props) => {
   const { mode, serialNumber, name } = props
 
   return (
-    <Card>
-      <Card.Content header={`${name} Number ${serialNumber}`} />
-      {mode && <Card.Content meta={mode} />}
-      <Card.Content description={`HOME page of the Application`} />
-    </Card>
+    <Container text>
+      <Header as="h1" content={`${name} Number ${serialNumber}`} />
+      {mode && <Header as="h2" content={mode} />}
+    </Container>
   )
 }
 
