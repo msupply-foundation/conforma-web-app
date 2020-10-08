@@ -16299,7 +16299,18 @@ export type CreateApplicationMutation = (
     { __typename?: 'CreateApplicationPayload' }
     & { application?: Maybe<(
       { __typename?: 'Application' }
-      & Pick<Application, 'id' | 'name'>
+      & Pick<Application, 'id' | 'name' | 'serial'>
+      & { template?: Maybe<(
+        { __typename?: 'Template' }
+        & Pick<Template, 'id'>
+        & { templateSections: (
+          { __typename?: 'TemplateSectionsConnection' }
+          & { nodes: Array<Maybe<(
+            { __typename?: 'TemplateSection' }
+            & Pick<TemplateSection, 'id' | 'title'>
+          )>> }
+        ) }
+      )> }
     )> }
   )> }
 );
@@ -16510,6 +16521,16 @@ export const CreateApplicationDocument = gql`
     application {
       id
       name
+      serial
+      template {
+        id
+        templateSections {
+          nodes {
+            id
+            title
+          }
+        }
+      }
     }
   }
 }

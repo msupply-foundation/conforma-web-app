@@ -16,6 +16,16 @@ export default gql`
       application {
         id
         name
+        serial
+        template {
+          id
+          templateSections {
+            nodes {
+              id
+              title
+            }
+          }
+        }
       }
     }
   }

@@ -6,6 +6,9 @@ import {
   ApplicationStep,
 } from '../../components/Application'
 import { Application, useGetApplicationQuery } from '../../generated/graphql'
+import { useApplicationState } from '../../contexts/ApplicationState'
+import { Container } from 'semantic-ui-react'
+import Loading from '../../components/Loading'
 
 type TParams = { serialNumber: string; sectionName: string; page: string }
 export interface AppPageProps {
@@ -13,9 +16,13 @@ export interface AppPageProps {
 }
 
 const ApplicationPage: React.FC<AppPageProps> = (props) => {
+  const { applicationState, setApplicationState } = useApplicationState()
+  const { isLoading, name, serial } = applicationState
   const { summary } = props
   const { query } = useRouter()
   const { mode, serialNumber, sectionName, page } = query
+
+  console.log('ApplicationPage', isLoading, name, serial)
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
@@ -26,31 +33,21 @@ const ApplicationPage: React.FC<AppPageProps> = (props) => {
   useEffect(() => {
     if (data && data.applications && data.applications.nodes) {
       const applications = data.applications.nodes as Application[]
-      console.log(`applications: ${applications.length}`)
-
-      // setUserState({ type: 'updateUsersList', updatedUsers: userNames })
+      console.log(`loaded applications: ${applications.length}`)
     }
   }, [data, error])
 
-  console.log('ApplicationPage', serialNumber, sectionName, page)
-
-  return summary ? (
+  return isLoading ? (
+    <Loading />
+  ) : summary ? (
     <ApplicationSummary />
   ) : (
-    <div>
-      {data &&
-        data.applications &&
-        data.applications.nodes &&
-        data.applications.nodes[0] &&
-        serialNumber && (
-          <ApplicationHeader
-            mode={mode}
-            serialNumber={serialNumber}
-            name={data.applications.nodes[0].name ? data.applications.nodes[0].name : 'No name'}
-          />
-        )}
+    <Container>
+      {serial && name && (
+        <ApplicationHeader mode={mode} serialNumber={serial.toString()} name={name} />
+      )}
       {sectionName && page && <ApplicationStep />}
-    </div>
+    </Container>
   )
 }
 

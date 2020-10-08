@@ -1,32 +1,81 @@
-import React, { createContext, useContext, useReducer } from 'react'
+import React, { createContext, useContext, useEffect, useReducer } from 'react'
+
+interface Section {
+  code: string
+  title: string
+  templateId: number
+}
 
 type ApplicationState = {
-  id: number | null
+  appTemplateId: number | null
+  isLoading: boolean
+  name: string | null
+  sections: Section[] | null
+  serial: number | null
 }
 
 export type ApplicationActions =
   | {
-      type: 'setCurrentApplication'
-      nextId: number
+      type: 'setApplication'
+      nextName: string
+      nextSerial: number
+      nextTempId: number
     }
   | {
-      type: 'resetCurrentApplication'
+      type: 'setSection'
+      newSection: Section
+    }
+  | {
+      type: 'setLoading'
+      isLoading: boolean
+    }
+  | {
+      type: 'resetApplication'
     }
 
 type ApplicationProviderProps = { children: React.ReactNode }
 
 const reducer = (state: ApplicationState, action: ApplicationActions) => {
   switch (action.type) {
-    case 'setCurrentApplication':
-      const { nextId } = action
+    case 'setApplication':
+      console.log('setApplication')
+
+      const { nextName, nextSerial, nextTempId } = action
       return {
         ...state,
-        id: nextId,
+        appTemplateId: nextTempId,
+        isLoading: false,
+        name: nextName,
+        sections: new Array<Section>(),
+        serial: nextSerial,
       }
-    case 'resetCurrentApplication':
+    case 'setSection':
+      console.log('setSection')
+
+      const { newSection } = action
+      const { sections } = state
       return {
         ...state,
-        id: null,
+        sections: sections ? [...sections, newSection] : new Array<Section>(newSection),
+      }
+    case 'setLoading':
+      console.log('isLoading')
+
+      const { isLoading } = action
+      return {
+        ...state,
+        isLoading,
+      }
+    case 'resetApplication':
+      console.log('resetApplication')
+
+      return {
+        ...state,
+        appTemplateId: null,
+        isLoading: false,
+        name: null,
+        sections: null,
+        serial: null,
       }
     default:
       return state
@@ -34,7 +83,11 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
 }
 
 const initialState: ApplicationState = {
-  id: null,
+  isLoading: false,
+  name: null,
+  serial: null,
+  sections: null,
+  appTemplateId: null,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
