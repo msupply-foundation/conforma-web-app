@@ -6,7 +6,7 @@ interface QueryObject {
   mode?: string
   type?: string
   serialNumber?: string
-  sectionName?: string
+  sectionCode?: string
   page?: string
   templateId?: string
   step?: string
@@ -17,6 +17,7 @@ interface QueryObject {
 
 interface RouterResult {
   pathname: string
+  push: (path: string) => void
   query: QueryObject
 }
 

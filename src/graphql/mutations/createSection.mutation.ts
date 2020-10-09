@@ -8,9 +8,8 @@ export default gql`
       }
     ) {
       applicationSection {
+        applicationId
         templateSection {
-          id
-          code
           title
         }
       }

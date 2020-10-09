@@ -38,7 +38,6 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
       return {
         ...state,
         appTemplateId: nextTempId,
-        isLoading: false,
         name: nextName,
         sections: new Array<Section>(),
         serial: nextSerial,
@@ -46,10 +45,13 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
     case 'setSection':
       const { newSection } = action
       const { sections } = state
-      return {
+      const newState = {
         ...state,
         sections: sections ? [...sections, newSection] : new Array<Section>(newSection),
       }
+      console.log('setSection', newState)
+
+      return newState
     case 'resetApplication':
       return {
         ...state,

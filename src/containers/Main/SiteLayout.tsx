@@ -70,7 +70,7 @@ const SiteLayout: React.FC = () => {
               />
               <ContextRoute
                 exact
-                path="/applications/:serialNumber/:sectionName/page:page"
+                path="/applications/:serialNumber/:sectionCode/page:page"
                 contextProvider={ApplicationProvider}
                 component={ApplicationPage}
               />

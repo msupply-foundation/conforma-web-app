@@ -2,33 +2,33 @@ import React from 'react'
 import { Container, Header } from 'semantic-ui-react'
 
 export interface ApplicationStepProps {
-  sectionName?: string
+  sectionCode?: string
   page?: string
 }
 
 const ApplicationStep: React.FC<ApplicationStepProps> = (props) => {
-  const { sectionName, page } = props
+  const { sectionCode, page } = props
   return (
     <Container>
-      {sectionName && page ? (
-        <Header content={`PAGE ${page} of SECTION ${sectionName}`} />
+      {sectionCode && page ? (
+        <Header content={`PAGE ${page} of SECTION ${sectionCode}`} />
       ) : (
         <Header content={`HOME page of the Application`} />
       )}
       {/* {sections.map(section => ... )} */}
-      <NextPageButton sectionName={sectionName} page={page} />
+      <NextPageButton sectionCode={sectionCode} page={page} />
     </Container>
   )
 }
 
-type ButtonProps = { sectionName?: string; page?: string }
+type ButtonProps = { sectionCode?: string; page?: string }
 
 const NextPageButton: React.FC<ButtonProps> = (props) => {
   //   const history = useHistory()
   //   const handleClick = () => {
   //     history.push('page' + (Number(props.page) + 1))
   //   }
-  //   if (!props.sectionName) {
+  //   if (!props.sectionCode) {
   //     return <div></div>
   //   }
   const handleClick = () => console.log('Next page')

@@ -3,7 +3,7 @@ import { useRouter } from '../hooks/useRouter'
 
 const Approval: React.FC = () => {
   const { query } = useRouter()
-  const { serialNumber, sectionName, page } = query
+  const { serialNumber } = query
   return (
     <div>
       <h1>Application Approval page</h1>

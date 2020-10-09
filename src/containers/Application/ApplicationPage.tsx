@@ -15,17 +15,16 @@ import { useApplicationState } from '../../contexts/ApplicationState'
 import { Container } from 'semantic-ui-react'
 import Loading from '../../components/Loading'
 
-type TParams = { serialNumber: string; sectionName: string; page: string }
 export interface AppPageProps {
   summary?: boolean
 }
 
 const ApplicationPage: React.FC<AppPageProps> = (props) => {
   const { applicationState, setApplicationState } = useApplicationState()
-  const { name, serial } = applicationState
+  const { name, serial, sections } = applicationState
   const { summary } = props
-  const { query } = useRouter()
-  const { mode, serialNumber, sectionName, page } = query
+  const { pathname, push, query } = useRouter()
+  const { mode, serialNumber, sectionCode, page } = query
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
@@ -36,7 +35,7 @@ const ApplicationPage: React.FC<AppPageProps> = (props) => {
   useEffect(() => {
     if (data && data.applications && data.applications.nodes) {
       if (data.applications.nodes.length > 1)
-        console.log('More than one applicstion returned. Only one expected!')
+        console.log('More than one application returned. Only one expected!')
       const application = data.applications.nodes[0] as Application
       if (application.template) {
         setApplicationState({
@@ -59,10 +58,13 @@ const ApplicationPage: React.FC<AppPageProps> = (props) => {
               id: templateId,
               templateElementsBySectionId: elements,
             } = sectionTemplate as TemplateSection
-            const sections = application.applicationSections.nodes as ApplicationSection[]
-            const section = sections.find(({ templateSectionId }) =>
-              templateSectionId && templateId ? templateSectionId === templateId : false
-            )
+            const sectionsB = application.applicationSections.nodes as ApplicationSection[]
+
+            const section = sectionsB.find((section) => {
+              return section.templateSectionId && templateId
+                ? section.templateSectionId === templateId
+                : false
+            })
 
             if (!section) console.log('Section matching template not found!')
             else {
@@ -82,6 +84,16 @@ const ApplicationPage: React.FC<AppPageProps> = (props) => {
     }
   }, [data, error])
 
+  useEffect(() => {
+    if (!sections || sections.length === 0)
+      console.log('Cant start application - no sections found!')
+    else {
+      const sectionCode = sections[0].code
+      const pageNumber = 1 // TODO: Store what is each section page on context!
+      push(`${pathname}/${sectionCode}/page${pageNumber}`)
+    }
+  }, [sections])
+
   return loading ? (
     <Loading />
   ) : summary ? (
@@ -91,7 +103,7 @@ const ApplicationPage: React.FC<AppPageProps> = (props) => {
       {serial && name && (
         <ApplicationHeader mode={mode} serialNumber={serial.toString()} name={name} />
       )}
-      {sectionName && page && <ApplicationStep />}
+      {sectionCode && page && <ApplicationStep />}
     </Container>
   )
 }

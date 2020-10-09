@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import ApplicationCreate from './ApplicationCreate'
 import TemplateSelect from '../../components/Template/TemplateSelect'
 import { useRouter } from '../../hooks/useRouter'
@@ -7,6 +7,9 @@ import {
   useCreateApplicationMutation,
   useCreateSectionMutation,
 } from '../../generated/graphql'
+
+import getApplicationQuery from '../../graphql/queries/getApplication.query'
+import getSectionQuery from '../../graphql/queries/getSection.query'
 
 interface ApplicationPayload {
   serialNumber: string
@@ -22,6 +25,7 @@ interface SectionPayload {
 const ApplicationNew: React.FC = () => {
   const { query } = useRouter()
   const { type } = query
+  const [currentSerial, setCurrentSerial] = useState('')
 
   const [createApplicationMutation] = useCreateApplicationMutation({
     onCompleted: ({ createApplication }) => {
@@ -37,20 +41,33 @@ const ApplicationNew: React.FC = () => {
       } else console.log('Create application failed - no data!')
     },
   })
+
   const [createSectionMutation] = useCreateSectionMutation({
     onCompleted: ({ createApplicationSection }) => {
-      if (createApplicationSection && createApplicationSection.applicationSection) {
-        if (createApplicationSection.applicationSection.templateSection) {
-          console.log('Success to create application sections!')
-        } else console.log('Create application section failed - no template sections!')
+      if (
+        createApplicationSection &&
+        createApplicationSection.applicationSection &&
+        createApplicationSection.applicationSection.templateSection
+      ) {
+        const section = createApplicationSection.applicationSection.templateSection
+        console.log(`Success to create application section ${section.title}`)
       } else console.log('Create application section failed - no data!')
     },
+    refetchQueries: [
+      {
+        query: getApplicationQuery,
+        variables: { serial: Number(currentSerial) },
+      },
+    ],
   })
 
   const generateApplication = (payload: ApplicationPayload) => {
     const { serialNumber, templateId, templateName } = payload
+    setCurrentSerial(serialNumber)
+    console.log('currentSerial', currentSerial)
+
     try {
-      const data = createApplicationMutation({
+      createApplicationMutation({
         variables: {
           name: `Test application of ${templateName}`,
           serial: Number(serialNumber),
