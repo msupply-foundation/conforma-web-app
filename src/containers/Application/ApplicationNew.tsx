@@ -9,7 +9,6 @@ import {
 } from '../../generated/graphql'
 
 import getApplicationQuery from '../../graphql/queries/getApplication.query'
-import getSectionQuery from '../../graphql/queries/getSection.query'
 
 interface ApplicationPayload {
   serialNumber: string
