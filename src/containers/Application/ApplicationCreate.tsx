@@ -1,23 +1,18 @@
 import React, { useEffect } from 'react'
 import { useTemplateState } from '../../contexts/TemplateState'
 import {
-  ApplicationSectionsOrderBy,
   Template,
   TemplateElementsConnection,
   TemplateSection,
   useGetTemplateQuery,
-} from '../../generated/graphql'
+} from '../../utils/generated/graphql'
+import { ApplicationPayload } from '../../utils/types'
 import ApplicationStart from '../../components/Application/ApplicationStart'
 import Loading from '../../components/Loading'
 
 interface ApplicationCreateProps {
   type: string
-  handleClick: (
-    serialNumber: string,
-    tempalteId: number,
-    templateName: string,
-    sectionIds: number[]
-  ) => void
+  handleClick: (application: ApplicationPayload) => void
 }
 
 const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
@@ -77,10 +72,9 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
         sections={sections}
         handleClick={() =>
           handleClick(
-            serialNumber,
-            templateType.id,
-            templateType.name,
-            sections.map((section) => section.id)
+            { serialNumber,
+              templateId: templateType.id,
+              templateName: templateType.name }
           )
         }
         serialNumber={serialNumber}
