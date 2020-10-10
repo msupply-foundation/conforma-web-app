@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Menu } from 'semantic-ui-react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
-import { useRouter } from '../../hooks/useRouter'
+import { useRouter } from '../../utils/hooks/useRouter'
 
 interface AppMenuProps extends RouteComponentProps {
   items: Array<Array<String>>

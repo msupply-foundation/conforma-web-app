@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container, Header } from 'semantic-ui-react'
-import { useRouter } from '../hooks/useRouter'
+import { useRouter } from '../utils/hooks/useRouter'
 
 type TParams = { templateId: string; step?: string }
 

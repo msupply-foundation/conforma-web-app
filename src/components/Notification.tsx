@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Card, List, Label, Segment, Container, Header } from 'semantic-ui-react'
-import { useRouter } from '../hooks/useRouter'
+import { useRouter } from '../utils/hooks/useRouter'
 
 export const NotificationsList: React.FC = () => {
   const { pathname, query } = useRouter()

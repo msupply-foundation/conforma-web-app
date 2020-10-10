@@ -1,5 +1,5 @@
 import React from 'react'
-import { useRouter } from '../hooks/useRouter'
+import { useRouter } from '../utils/hooks/useRouter'
 
 const Approval: React.FC = () => {
   const { query } = useRouter()

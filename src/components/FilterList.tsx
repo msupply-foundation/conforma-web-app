@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, List } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import { useRouter } from '../hooks/useRouter'
+import { useRouter } from '../utils/hooks/useRouter'
 
 const FilterList: React.FC = () => {
   const { pathname } = useRouter()

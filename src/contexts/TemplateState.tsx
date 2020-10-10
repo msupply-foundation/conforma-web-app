@@ -113,3 +113,4 @@ export function TemplateProvider({ children }: TemplateProviderProps) {
  * - @returns an object with a reducer function `setTemplateState` and the `templateState`
  */
 export const useTemplateState = () => useContext(TemplateContext)
+

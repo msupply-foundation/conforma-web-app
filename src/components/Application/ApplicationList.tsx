@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { Container, Table, List } from 'semantic-ui-react'
-import { Application } from '../../generated/graphql'
-import getApplications from '../../graphql/queries/getApplications.query'
+import { Application } from '../../utils/generated/graphql'
+import getApplications from '../../utils/graphql/queries/getApplications.query'
 import Loading from '../Loading'
 import FilterList from '../FilterList'
 import ApplicationEdit from './ApplicationEdit'
-import { useRouter } from '../../hooks/useRouter'
+import { useRouter } from '../../utils/hooks/useRouter'
 
 const ApplicationList: React.FC = () => {
   const [applications, setApplications] = useState<Array<Application> | null>()

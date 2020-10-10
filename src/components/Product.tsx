@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { List, Label, Container, Header, Button } from 'semantic-ui-react'
-import { useRouter } from '../hooks/useRouter'
+import { useRouter } from '../utils/hooks/useRouter'
 
 export const ProductList: React.FC = () => {
   const { pathname, query } = useRouter()
