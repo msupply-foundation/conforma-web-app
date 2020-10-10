@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useRouter } from '../../hooks/useRouter'
+import { useRouter } from '../../utils/hooks/useRouter'
 import {
   ApplicationHeader,
   ApplicationSummary,
@@ -10,7 +10,7 @@ import {
   ApplicationSection,
   TemplateSection,
   useGetApplicationQuery,
-} from '../../generated/graphql'
+} from '../../utils/generated/graphql'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { Container } from 'semantic-ui-react'
 import Loading from '../../components/Loading'
@@ -36,6 +36,7 @@ const ApplicationPage: React.FC<AppPageProps> = (props) => {
     if (data && data.applications && data.applications.nodes) {
       if (data.applications.nodes.length > 1)
         console.log('More than one application returned. Only one expected!')
+        
       const application = data.applications.nodes[0] as Application
       if (application.template) {
         setApplicationState({

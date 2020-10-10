@@ -13,7 +13,15 @@ export default gql`
             code
             title
             templateElementsBySectionId {
-              totalCount
+              nodes {
+                  code
+                  elementTypePluginCode
+                  id
+                  parameters
+                  sectionId
+                  title
+                  visibilityCondition
+                }
             }
           }
         }

@@ -20,7 +20,11 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
   const { type: templateType, sections } = templateState
   const { type, handleClick } = props
 
-  const { data, loading, error } = useGetTemplateQuery({ variables: { code: type } })
+  const { data, loading, error } = useGetTemplateQuery({ 
+    variables: { 
+      code: type 
+    } 
+  })
 
   useEffect(() => {
     if (data && data.templates && data.templates.nodes) {
@@ -35,7 +39,7 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
         id,
         code,
         name: templateName,
-        description: 'TODO, Some description about this template',
+        description: 'TODO add fields to include description and documents for this template',
         documents: Array<string>(),
       }
       setTemplateState({ type: 'setTemplate', nextType })
@@ -46,13 +50,9 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
           console.log('No Section on the template returned. At least one expected!')
         else {
           const nextSections = template.templateSections.nodes.map((section) => {
-            const { id, code, title } = section as TemplateSection
-            const sectionCode = code ? code : 'Undefined code'
-            const sectionTitle = title ? title : 'Undefined title'
-            const {
-              totalCount,
-            } = section?.templateElementsBySectionId as TemplateElementsConnection
-            return { id, code: sectionCode, title: sectionTitle, elementsCount: totalCount }
+            const { id, code, title, templateElementsBySectionId} = section as TemplateSection
+            const elementsCount = templateElementsBySectionId.nodes.length
+            return { id, code: code as string, title: title as string, elementsCount }
           })
           setTemplateState({ type: 'setTemplateSections', nextSections })
         }
