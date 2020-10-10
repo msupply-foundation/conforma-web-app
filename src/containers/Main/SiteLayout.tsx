@@ -26,7 +26,6 @@ import { ApplicationNew, ApplicationPage } from '../Application'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import { TemplateProvider } from '../../contexts/TemplateState'
 import AppMenu from './AppMenu'
-import ContextRoute from './ContextRoute'
 
 const SiteLayout: React.FC = () => {
   return (
@@ -50,42 +49,38 @@ const SiteLayout: React.FC = () => {
               <Route exact path="/login">
                 <Login />
               </Route>
-              <ContextRoute
-                exact
-                path="/applications"
-                contextProvider={TemplateProvider}
-                component={ApplicationList}
-              />
-              <ContextRoute
-                exact
-                path="/applications/new"
-                contextProvider={TemplateProvider}
-                component={ApplicationNew}
-              />
-              <ContextRoute
-                exact
-                path="/applications/:serialNumber"
-                contextProvider={ApplicationProvider}
-                component={ApplicationPage}
-              />
-              <ContextRoute
-                exact
-                path="/applications/:serialNumber/:sectionCode/page:page"
-                contextProvider={ApplicationProvider}
-                component={ApplicationPage}
-              />
-              <ContextRoute
-                exact
-                path="/applications/:serialNumber/summary"
-                contextProvider={ApplicationProvider}
-                component={ApplicationPage} // TODO: Pass prop: summary={true}
-              />
-              <ContextRoute
-                exact
-                path="/applications/:serialNumber/approval"
-                contextProvider={ApplicationProvider}
-                component={Approval}
-              />
+              <Route exact path="/applications">
+                <TemplateProvider>
+                  <ApplicationList/>
+                </TemplateProvider>
+              </Route>
+              <Route exact path="/applications/new">
+                <TemplateProvider>
+                  <ApplicationProvider>
+                    <ApplicationNew/>
+                  </ApplicationProvider>
+                </TemplateProvider>
+              </Route>
+              <Route exact path="/applications/:serialNumber">
+                  <ApplicationProvider>
+                    <ApplicationPage/>
+                  </ApplicationProvider>
+              </Route>
+              <Route exact path="/applications/:serialNumber/:sectionCode/page:page">
+                  <ApplicationProvider>
+                    <ApplicationPage/>
+                  </ApplicationProvider>
+              </Route>
+              <Route exact path="/applications/:serialNumber/summary">
+                  <ApplicationProvider>
+                    <ApplicationPage/>
+                  </ApplicationProvider>
+              </Route>
+              <Route exact path="/applications/:serialNumber/approval">
+                  <ApplicationProvider>
+                    <Approval/>
+                  </ApplicationProvider>
+              </Route>
               <Route exact path="/admin">
                 <Admin />
               </Route>
