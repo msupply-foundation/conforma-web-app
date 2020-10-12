@@ -1,20 +1,17 @@
 import React from 'react'
 import { Container, Header } from 'semantic-ui-react'
+import { useRouter } from '../../utils/hooks/useRouter'
 
 export interface ApplicationStepProps {
-  sectionCode?: string
-  page?: string
+  sectionCode: string
+  page: string
 }
 
 const ApplicationStep: React.FC<ApplicationStepProps> = (props) => {
   const { sectionCode, page } = props
   return (
     <Container>
-      {sectionCode && page ? (
-        <Header content={`PAGE ${page} of SECTION ${sectionCode}`} />
-      ) : (
-        <Header content={`HOME page of the Application`} />
-      )}
+      <Header content={`PAGE ${page} of SECTION ${sectionCode}`} />
       {/* {sections.map(section => ... )} */}
       <NextPageButton sectionCode={sectionCode} page={page} />
     </Container>
@@ -24,14 +21,13 @@ const ApplicationStep: React.FC<ApplicationStepProps> = (props) => {
 type ButtonProps = { sectionCode?: string; page?: string }
 
 const NextPageButton: React.FC<ButtonProps> = (props) => {
-  //   const history = useHistory()
-  //   const handleClick = () => {
-  //     history.push('page' + (Number(props.page) + 1))
-  //   }
-  //   if (!props.sectionCode) {
-  //     return <div></div>
-  //   }
-  const handleClick = () => console.log('Next page')
+    const { push } = useRouter()
+    const handleClick = () => {
+      push('page' + (Number(props.page) + 1))
+    }
+    if (!props.sectionCode) {
+      return <div></div>
+    }
 
   return (
     <button type="submit" onClick={handleClick}>

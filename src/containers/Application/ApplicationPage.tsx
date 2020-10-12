@@ -45,7 +45,7 @@ const ApplicationPage: React.FC<AppPageProps> = (props) => {
   ) : summary ? (
     <ApplicationSummary />
   ) : serialNumber ? (<Segment.Group><ApplicationHeader mode={mode} serialNumber={serialNumber} name={applicationName} />
-      {sectionCode && page && <Segment><ApplicationStep /></Segment>}
+      {sectionCode && page && <Segment><ApplicationStep sectionCode={sectionCode} page={page}/></Segment>}
     </Segment.Group>) : <Label content="Application can't be displayed"/>
 }
 
