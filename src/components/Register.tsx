@@ -1,8 +1,8 @@
 import { ApolloCache } from '@apollo/client'
 import React, { useState } from 'react'
 import { Button, Checkbox, Form, Input, Message, Segment } from 'semantic-ui-react'
-import { CreateUserPayload, useCreateUserMutation, UsersConnection } from '../generated/graphql'
-import addNewUser from '../graphql/fragments/addNewUser.fragment'
+import { CreateUserPayload, useCreateUserMutation, UsersConnection } from '../utils/generated/graphql'
+import addNewUser from '../utils/graphql/fragments/addNewUser.fragment'
 
 interface Snackbar {
   showMessage: boolean

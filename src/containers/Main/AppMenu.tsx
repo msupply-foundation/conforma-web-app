@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Menu } from 'semantic-ui-react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { useRouter } from '../../utils/hooks/useRouter'

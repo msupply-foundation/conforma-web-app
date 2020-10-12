@@ -34,7 +34,9 @@ export default gql`
         applicationSections {
           nodes {
             id
-            templateSectionId
+            templateSection {
+              code
+            }
           }
         }
       }

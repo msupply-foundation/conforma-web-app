@@ -1,64 +1,32 @@
-import React, { createContext, useContext, useEffect, useReducer } from 'react'
-
-interface Section {
-  id: number
-  code: string
-  title: string
-  templateId: number
-}
+import React, { createContext, useContext, useReducer } from 'react'
 
 type ApplicationState = {
-  appTemplateId: number | null
-  name: string | null
-  sections: Section[] | null
-  serial: number | null
+  serialNumber: number | null
 }
 
 export type ApplicationActions =
   | {
-      type: 'setApplication'
-      nextName: string
-      nextSerial: number
-      nextTempId: number
+      type: 'setCurrent'
+      serialNumber: number
     }
   | {
-      type: 'setSection'
-      newSection: Section
-    }
-  | {
-      type: 'resetApplication'
+      type: 'reset'
     }
 
 type ApplicationProviderProps = { children: React.ReactNode }
 
 const reducer = (state: ApplicationState, action: ApplicationActions) => {
   switch (action.type) {
-    case 'setApplication':
-      const { nextName, nextSerial, nextTempId } = action
+    case 'setCurrent':
+      const { serialNumber } = action
       return {
         ...state,
-        appTemplateId: nextTempId,
-        name: nextName,
-        sections: new Array<Section>(),
-        serial: nextSerial,
+        serialNumber,
       }
-    case 'setSection':
-      const { newSection } = action
-      const { sections } = state
-      const newState = {
-        ...state,
-        sections: sections ? [...sections, newSection] : new Array<Section>(newSection),
-      }
-      console.log('setSection', newState)
-
-      return newState
-    case 'resetApplication':
+    case 'reset':
       return {
         ...state,
-        appTemplateId: null,
-        name: null,
-        sections: null,
-        serial: null,
+        serialNumber: null,
       }
     default:
       return state
@@ -66,10 +34,7 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
 }
 
 const initialState: ApplicationState = {
-  name: null,
-  serial: null,
-  sections: null,
-  appTemplateId: null,
+  serialNumber: null
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code

@@ -1,116 +1,105 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ApplicationCreate from './ApplicationCreate'
 import TemplateSelect from '../../components/Template/TemplateSelect'
-import { useRouter } from '../../hooks/useRouter'
-import {
-  Application,
+import { useRouter } from '../../utils/hooks/useRouter'
+import { Application,
+  CreateApplicationMutation,
+  CreateSectionMutation,
   useCreateApplicationMutation,
-  useCreateSectionMutation,
-} from '../../generated/graphql'
-
-import getApplicationQuery from '../../graphql/queries/getApplication.query'
-
-interface ApplicationPayload {
-  serialNumber: string
-  templateId: number
-  templateName: string
-}
-
-interface SectionPayload {
-  applicationId: number
-  templateSections: number[]
-}
+useCreateSectionMutation,
+} from '../../utils/generated/graphql'
+import { ApplicationPayload, SectionPayload, TemplatePayload } from '../../utils/types'
+import getApplicationQuery from '../../utils/graphql/queries/getApplication.query'
+import { useApplicationState } from '../../contexts/ApplicationState'
 
 const ApplicationNew: React.FC = () => {
+  const { applicationState, setApplicationState } = useApplicationState()
   const { query } = useRouter()
   const { type } = query
-  const [currentSerial, setCurrentSerial] = useState('')
-
+  
   const [createApplicationMutation] = useCreateApplicationMutation({
-    onCompleted: ({ createApplication }) => {
-      if (createApplication) {
-        const application = createApplication.application as Application
-        if (application.template && application.template.templateSections.nodes) {
-          const sections = application.template.templateSections.nodes.map((section) =>
-            section ? section.id : -1
-          )
-          console.log(`Success to create application ${application.serial}!`)
-          generateApplicationSections({ applicationId: application.id, templateSections: sections })
-        } else console.log('Create application failed - no sections!')
-      } else console.log('Create application failed - no data!')
-    },
-  })
-
+    onCompleted: (data: CreateApplicationMutation) => {
+    onCreateApplicationCompleted(data, createSectionMutation)
+  }})
   const [createSectionMutation] = useCreateSectionMutation({
-    onCompleted: ({ createApplicationSection }) => {
-      if (
-        createApplicationSection &&
-        createApplicationSection.applicationSection &&
-        createApplicationSection.applicationSection.templateSection
-      ) {
-        const section = createApplicationSection.applicationSection.templateSection
-        console.log(`Success to create application section ${section.title}`)
-      } else console.log('Create application section failed - no data!')
-    },
+    onCompleted: onCreateSectionsCompleted,
+    // Update cached query of getApplication
     refetchQueries: [
       {
         query: getApplicationQuery,
-        variables: { serial: Number(currentSerial) },
+        variables: { serial: Number(applicationState.serialNumber) },
       },
     ],
   })
 
-  const generateApplication = (payload: ApplicationPayload) => {
-    const { serialNumber, templateId, templateName } = payload
-    setCurrentSerial(serialNumber)
-    console.log('currentSerial', currentSerial)
-
-    try {
-      createApplicationMutation({
-        variables: {
-          name: `Test application of ${templateName}`,
-          serial: Number(serialNumber),
-          templateId: templateId,
-        },
-      })
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const generateApplicationSections = (payload: SectionPayload) => {
-    const { applicationId, templateSections } = payload
-    try {
-      templateSections.forEach((sectionId) => {
-        createSectionMutation({
-          variables: {
-            applicationId,
-            templateSectionId: sectionId,
-          },
-        })
-      })
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const handleCreateApplication = async (
-    serialNumber: string,
-    templateId: number,
-    templateName: string
-  ) => {
-    if (serialNumber != '' && templateId && templateName != '') {
-      generateApplication({ serialNumber, templateId, templateName })
-    } else {
-      alert('Create application failed - payload!')
-    }
-  }
-
   return type ? (
-    <ApplicationCreate type={type} handleClick={handleCreateApplication} />
+    <ApplicationCreate type={type} handleClick={(template: TemplatePayload) => {
+       // TODO: New issue to generate serial - should be done in server?
+      const serialNumber = Math.round(Math.random() * 10000)
+      setApplicationState({type: 'setCurrent', serialNumber})
+      handleCreateApplication(createApplicationMutation, {
+        template,
+        serialNumber 
+      })}
+    }/>
   ) : (
     <TemplateSelect />
   )
 }
 
 export default ApplicationNew
+
+function handleCreateApplication (createApplicationMutation: any, payload: ApplicationPayload) {
+  const { serialNumber, template } = payload
+  try {
+    createApplicationMutation({
+      variables: {
+        name: `Test application of ${template.name}`,
+        serial: Number(serialNumber),
+        templateId: template.id,
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+function onCreateApplicationCompleted ({createApplication}: CreateApplicationMutation, createSectionMutation: any) {
+  if (createApplication) {
+    const application = createApplication.application as Application
+    if (application.template && application.template.templateSections.nodes) {
+      const sections = application.template.templateSections.nodes.map((section) =>
+        section ? section.id : -1
+      )
+      console.log(`Success to create application ${application.serial}!`)
+      createApplicationSection({ applicationId: application.id, templateSections: sections }, createSectionMutation)
+    } else console.log('Create application failed - no sections!')
+  } else console.log('Create application failed - no data!')
+}
+
+function createApplicationSection (payload: SectionPayload, createSectionMutation: any) {
+  const { applicationId, templateSections } = payload
+  try {
+    templateSections.forEach((sectionId) => {
+      createSectionMutation({
+        variables: {
+          applicationId,
+          templateSectionId: sectionId,
+        }
+      })
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+  
+function onCreateSectionsCompleted ({ createApplicationSection }: CreateSectionMutation) {
+  if (
+    createApplicationSection &&
+    createApplicationSection.applicationSection &&
+    createApplicationSection.applicationSection.templateSection
+  ) {
+    const section = createApplicationSection.applicationSection.templateSection
+    console.log(`Success to create application section ${section.title}`)
+  } else console.log('Create application section failed - no data!')
+}

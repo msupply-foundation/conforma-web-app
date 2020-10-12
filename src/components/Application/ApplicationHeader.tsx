@@ -2,8 +2,8 @@ import React from 'react'
 import { Container, Header } from 'semantic-ui-react'
 
 export interface AppHederProps {
-  serialNumber: string
-  name: string
+  serialNumber: string | undefined
+  name: string | null
   mode?: string
 }
 
@@ -12,7 +12,7 @@ const ApplicationHeader: React.FC<AppHederProps> = (props) => {
 
   return (
     <Container text>
-      <Header as="h1" content={`${name} Number ${serialNumber}`} />
+      <Header as="h1" content={`Application ${name === '' ? 'Undefined': name} Number ${serialNumber ? serialNumber : 'Undefined'}`} />
       {mode && <Header as="h2" content={mode} />}
     </Container>
   )

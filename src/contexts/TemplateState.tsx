@@ -39,6 +39,10 @@ export type TemplateActions =
       type: 'setTemplateSections'
       nextSections: Section[]
     }
+  | {
+    type: 'setTemplateSerial'
+    serialNumber: string
+  }
 
 type TemplateProviderProps = { children: React.ReactNode }
 
@@ -57,7 +61,7 @@ const reducer = (state: TemplateState, action: TemplateActions) => {
         ...state,
         type: null,
         sections: null,
-        elements: null,
+        elements: null
       }
     case 'setTemplateElements':
       const { nextElements } = action
@@ -80,7 +84,7 @@ const reducer = (state: TemplateState, action: TemplateActions) => {
 const initialState: TemplateState = {
   type: null,
   sections: null,
-  elements: null,
+  elements: null
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
