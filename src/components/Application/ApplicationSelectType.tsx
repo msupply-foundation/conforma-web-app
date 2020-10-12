@@ -1,7 +1,7 @@
 import React from 'react'
 import { Container, Header } from 'semantic-ui-react'
 
-const TemplateSelect: React.FC = () => {
+const ApplicationSelectType: React.FC = () => {
   return (
     <Container>
       <Header as="h1" content="Select the Application type" />
@@ -10,4 +10,4 @@ const TemplateSelect: React.FC = () => {
   )
 }
 
-export default TemplateSelect
+export default ApplicationSelectType

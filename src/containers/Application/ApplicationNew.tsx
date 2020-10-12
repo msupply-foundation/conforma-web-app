@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import ApplicationCreate from './ApplicationCreate'
-import TemplateSelect from '../../components/Template/TemplateSelect'
+import { ApplicationSelectType } from '../../components/Application'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Application,
   CreateApplicationMutation,
@@ -43,7 +43,7 @@ const ApplicationNew: React.FC = () => {
       })}
     }/>
   ) : (
-    <TemplateSelect />
+    <ApplicationSelectType />
   )
 }
 
