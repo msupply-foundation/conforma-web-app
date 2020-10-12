@@ -25,7 +25,7 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
   const [ currentTemplateSections, setSections ] = useState<TemplateSectionPayload[]| null>(null)
   const { applicationState } = useApplicationState()
   const { type, handleClick } = props
-  const { push } = useRouter()
+  const { replace } = useRouter()
 
   const { data: templateData, loading: loadingTemplate, error: errorTemplate } = useGetTemplateQuery({ 
     variables: { 
@@ -81,8 +81,9 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
         const firstSection = application.applicationSections.nodes[0] as ApplicationSection
         if (firstSection.templateSection) {
           const sectionCode = firstSection.templateSection.code
+          
           // Show the application page (on 1st step)
-          push(`applications/${serialNumber}/${sectionCode}/page${pageNumber}`)
+          replace(`${serialNumber}/${sectionCode}/page${pageNumber}`)
         }
       }
     }

@@ -19,6 +19,7 @@ interface RouterResult {
   pathname: string
   push: (path: string) => void
   query: QueryObject
+  replace: (path: string) => void
 }
 
 export function useRouter(): RouterResult {

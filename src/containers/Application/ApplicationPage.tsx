@@ -9,7 +9,7 @@ import {
   Application,
   useGetApplicationQuery,
 } from '../../utils/generated/graphql'
-import { Container } from 'semantic-ui-react'
+import { Label, Segment } from 'semantic-ui-react'
 import Loading from '../../components/Loading'
 
 export interface AppPageProps {
@@ -44,12 +44,9 @@ const ApplicationPage: React.FC<AppPageProps> = (props) => {
     <Loading />
   ) : summary ? (
     <ApplicationSummary />
-  ) : (
-    <Container>
-      <ApplicationHeader mode={mode} serialNumber={serialNumber} name={applicationName} />
-      {sectionCode && page && <ApplicationStep />}
-    </Container>
-  )
+  ) : serialNumber ? (<Segment.Group><ApplicationHeader mode={mode} serialNumber={serialNumber} name={applicationName} />
+      {sectionCode && page && <Segment><ApplicationStep /></Segment>}
+    </Segment.Group>) : <Label content="Application can't be displayed"/>
 }
 
 export default ApplicationPage

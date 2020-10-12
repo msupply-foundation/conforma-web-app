@@ -24,7 +24,6 @@ import {
 } from '../../components'
 import { ApplicationNew, ApplicationPage } from '../Application'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
-import { TemplateProvider } from '../../contexts/TemplateState'
 import AppMenu from './AppMenu'
 
 const SiteLayout: React.FC = () => {
@@ -50,7 +49,7 @@ const SiteLayout: React.FC = () => {
                 <Login />
               </Route>
               <Route exact path="/applications">
-                  <ApplicationList/>
+                <ApplicationList/>
               </Route>
               <Route exact path="/applications/new">
                 <ApplicationProvider>
