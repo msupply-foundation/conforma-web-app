@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Input, Dropdown, Segment } from 'semantic-ui-react'
 import { pluginProvider, ErrorBoundary, JsonInput } from './'
-import { PluginComponents, TemplateViewWrapperProps } from './types'
+import { OnUpdateTemplateWrapperView, PluginComponents, TemplateViewWrapperProps } from './types'
 
 const TemplateViewWrapper = (props: TemplateViewWrapperProps) => {
   const { templateElement, onUpdate } = props
@@ -69,7 +69,7 @@ const jsonFields = {
 }
 // any for templateElement due to Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'TemplateElement'
 // TODO fix
-function renderJsonFields(templateElement: any, onUpdate: any) {
+function renderJsonFields(templateElement: any, onUpdate: OnUpdateTemplateWrapperView) {
   return (
     <>
       {Object.entries(jsonFields).map(([key, title]) => (
