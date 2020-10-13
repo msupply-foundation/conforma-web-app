@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import { Input } from 'semantic-ui-react'
 
-const JsonInput = ({
-  label,
-  initialValue,
-  onUpdate,
-}: {
+type JsonInputProps = {
   label: string
   initialValue: string
   onUpdate: any
+}
+
+const JsonInput: React.FC<JsonInputProps> = ({
+  label,
+  initialValue,
+  onUpdate,
 }) => {
   const [value, setValue] = useState(initialValue)
   const [error, setError] = useState(false)
