@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Input, Dropdown, Segment } from 'semantic-ui-react'
+import { TemplateElement } from '../generated/graphql'
 import { pluginProvider, ErrorBoundary, JsonInput } from './'
 import { OnUpdateTemplateWrapperView, PluginComponents, TemplateViewWrapperProps } from './types'
 
@@ -63,20 +64,20 @@ const TemplateViewWrapper = (props: TemplateViewWrapperProps) => {
     </Segment>
   )
 }
+
 const jsonFields = {
   isRequired: 'Is Required Condition',
   isEditable: 'Is Editable Condition',
 }
-// any for templateElement due to Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'TemplateElement'
-// TODO fix
-function renderJsonFields(templateElement: any, onUpdate: OnUpdateTemplateWrapperView) {
+
+function renderJsonFields(templateElement: TemplateElement, onUpdate: OnUpdateTemplateWrapperView) {
   return (
     <>
       {Object.entries(jsonFields).map(([key, title]) => (
         <JsonInput
           key={key}
           label={title}
-          initialValue={templateElement[key]}
+          initialValue={templateElement[key as keyof TemplateElement]}
           onUpdate={onJsonFieldChange(key, onUpdate)}
         />
       ))}
