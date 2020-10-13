@@ -4142,7 +4142,7 @@ export type TemplateElementCondition = {
   /** Checks for equality with the object’s `elementTypePluginCode` field. */
   elementTypePluginCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `isRequired` field. */
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isEditable` field. */
   isEditable?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parameters` field. */

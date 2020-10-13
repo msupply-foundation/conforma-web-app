@@ -1,0 +1,49 @@
+import React from 'react'
+import { Label } from 'semantic-ui-react'
+import { PLUGIN_ERRORS } from './pluginProvider'
+
+type Props = {
+  pluginCode: any
+  children: JSX.Element
+}
+
+type State = Readonly<{
+  hasError: boolean
+  errorMessage: string
+}>
+
+class ErrorBoundary extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = { hasError: false, errorMessage: '' }
+  }
+
+  // This trigger is for updating UI, can use prop 'error' in this method
+  static getDerivedStateFromError(error: Error) {
+    console.log(Error)
+    const knownError = Object.values(PLUGIN_ERRORS).find(
+      (errorMessage) => errorMessage === error.message
+    )
+    return { hasError: true, errorMessage: knownError ? error.message : '' }
+  }
+
+  // This trigger is for logging, can use prop 'eroror', 'errorInfo'
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.log(error, errorInfo)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <Label basic color="red">
+          {`${this.state.errorMessage || 'Failed to load plugin'}
+            code: ${this.props.pluginCode}`}
+        </Label>
+      )
+    }
+
+    return this.props.children
+  }
+}
+
+export default ErrorBoundary
