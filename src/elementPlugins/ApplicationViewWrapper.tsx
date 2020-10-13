@@ -2,7 +2,7 @@ import React from 'react'
 import { ErrorBoundary, pluginProvider } from './'
 import { ApplicatioViewProps, PluginComponents } from './types'
 
-const ApplicationViewWrapper = (props: ApplicatioViewProps) => {
+const ApplicationViewWrapper: React.FC<ApplicatioViewProps> = (props) => {
   const {
     templateElement: { elementTypePluginCode: pluginCode },
     isVisible,
