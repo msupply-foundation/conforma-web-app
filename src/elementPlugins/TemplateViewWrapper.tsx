@@ -101,7 +101,7 @@ function onJsonFieldChange(key: string, onUpdate: OnUpdateTemplateWrapperView) {
   }
 }
 
-function onFieldChange(key: string, onUpdate: any, onSetValue: any) {
+function onFieldChange(key: string, onUpdate: OnUpdateTemplateWrapperView, onSetValue: any) {
   return (_: any, { value }: any) => {
     onSetValue(value)
     onUpdate({ [key]: value })
