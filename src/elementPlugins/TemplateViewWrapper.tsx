@@ -95,7 +95,7 @@ function getPluginOptions() {
   })
 }
 
-function onJsonFieldChange(key: string, onUpdate: any) {
+function onJsonFieldChange(key: string, onUpdate: OnUpdateTemplateWrapperView) {
   return (value: string) => {
     onUpdate({ [key]: value })
   }
@@ -108,7 +108,11 @@ function onFieldChange(key: string, onUpdate: any, onSetValue: any) {
   }
 }
 
-function onPluginSelection(setPluginCode: any, setPluginInfo: any, onUpdate: any) {
+function onPluginSelection(
+  setPluginCode: any,
+  setPluginInfo: any,
+  onUpdate: OnUpdateTemplateWrapperView
+) {
   return (_: any, { value: pluginCode }: any) => {
     setPluginCode(pluginCode)
     setPluginInfo(pluginProvider.pluginManifest[pluginCode])
