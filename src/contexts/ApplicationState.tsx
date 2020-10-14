@@ -1,15 +1,17 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
-interface Page {
-  section: number
-  firstElement: number
-  lastElement?: number
+export interface Page {
+  sectionId: number
+  sectionCode: string
+  firstElement?: number
+  lastElement?: number | null
 }
 
 type ApplicationState = {
-  serialNumber: number | null
-  currentPage: number | null
+  pageIndex: number | null
+  pageNumber: number | null
   pages: Page[] | null
+  serialNumber: number | null
 }
 
 export type ApplicationActions =
@@ -19,7 +21,7 @@ export type ApplicationActions =
     }
   | {
     type: 'setCurretPage'
-    currentPage: number
+    pageNumber: number
   }
   | {
     type: 'setPages'
@@ -40,32 +42,32 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
         serialNumber,
       }
       case 'setCurretPage':
-        const { currentPage } = action
+        const { pageNumber } = action
         return {
           ...state,
-          currentPage
+          pageIndex: (!state.pages) ? null : state.pages.length >= pageNumber ? pageNumber-1 : null,
+          pageNumber 
         }
       case 'setPages':
         const { pages } = action
         return {
           ...state,
           pages,
-          currentPage: 1
+          pageIndex: pages.length > 0 ? 0 : null,
+          pageNumber: 1
         }
     case 'reset':
-      return {
-        ...state,
-        serialNumber: null,
-      }
+      return initialState
     default:
       return state
   }
 }
 
 const initialState: ApplicationState = {
+  pageIndex: null,
+  pageNumber: null,
+  pages: null,
   serialNumber: null,
-  currentPage: null,
-  pages: null
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
