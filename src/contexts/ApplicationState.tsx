@@ -1,14 +1,30 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
+interface Page {
+  section: number
+  firstElement: number
+  lastElement?: number
+}
+
 type ApplicationState = {
   serialNumber: number | null
+  currentPage: number | null
+  pages: Page[] | null
 }
 
 export type ApplicationActions =
   | {
-      type: 'setCurrent'
+      type: 'setSerialNumber'
       serialNumber: number
     }
+  | {
+    type: 'setCurretPage'
+    currentPage: number
+  }
+  | {
+    type: 'setPages'
+    pages: Page[]
+  }
   | {
       type: 'reset'
     }
@@ -17,12 +33,25 @@ type ApplicationProviderProps = { children: React.ReactNode }
 
 const reducer = (state: ApplicationState, action: ApplicationActions) => {
   switch (action.type) {
-    case 'setCurrent':
+    case 'setSerialNumber':
       const { serialNumber } = action
       return {
         ...state,
         serialNumber,
       }
+      case 'setCurretPage':
+        const { currentPage } = action
+        return {
+          ...state,
+          currentPage
+        }
+      case 'setPages':
+        const { pages } = action
+        return {
+          ...state,
+          pages,
+          currentPage: 1
+        }
     case 'reset':
       return {
         ...state,
@@ -34,7 +63,9 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
 }
 
 const initialState: ApplicationState = {
-  serialNumber: null
+  serialNumber: null,
+  currentPage: null,
+  pages: null
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
