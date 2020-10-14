@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import {
   ApplicationHeader,
-  ApplicationSummary,
   ApplicationStep,
 } from '../../components/Application'
 import {
@@ -40,13 +39,17 @@ const ApplicationPage: React.FC<AppPageProps> = (props) => {
     }
   }, [data, error])
 
-  return loading ? (
-    <Loading />
-  ) : summary ? (
-    <ApplicationSummary />
-  ) : serialNumber ? (<Segment.Group><ApplicationHeader mode={mode} serialNumber={serialNumber} name={applicationName} />
-      {sectionCode && page && <Segment><ApplicationStep sectionCode={sectionCode} page={page}/></Segment>}
-    </Segment.Group>) : <Label content="Application can't be displayed"/>
+  return loading ? <Loading /> : 
+  serialNumber ? (
+  <Segment.Group>
+    <ApplicationHeader mode={mode} serialNumber={serialNumber} name={applicationName} />
+      {sectionCode && page && 
+      <Segment>
+        <ApplicationStep sectionCode={sectionCode} page={page}/>
+        </Segment>
+      }
+    </Segment.Group>) : 
+    <Label content="Application can't be displayed"/>
 }
 
 export default ApplicationPage

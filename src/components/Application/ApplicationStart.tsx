@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button, Container, Header, Label, List, Segment } from 'semantic-ui-react'
-import { useGetApplicationQuery } from '../../utils/generated/graphql'
 import { TemplatePayload, TemplateSectionPayload } from '../../utils/types'
 
 export interface ApplicationStartProps {
@@ -11,9 +10,6 @@ export interface ApplicationStartProps {
 
 const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
   const { template: type, sections, handleClick } = props
-  const { data, loading, error } = useGetApplicationQuery({
-
-  })
   
   return (
     <Container text>
