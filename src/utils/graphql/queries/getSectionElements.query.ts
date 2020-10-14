@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getElements($sectionId: Int!) {
-    templateElements(filter: { sectionId: { equalTo: $sectionId } }) {
+  query getSectionElements($sectionId: Int!) {
+    templateElements(condition: { sectionId: $sectionId }) {
       nodes {
         category
         code
