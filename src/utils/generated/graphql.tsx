@@ -16500,12 +16500,12 @@ export type GetApplicationQuery = (
           & Pick<ApplicationSection, 'id'>
           & { templateSection?: Maybe<(
             { __typename?: 'TemplateSection' }
-            & Pick<TemplateSection, 'code'>
+            & Pick<TemplateSection, 'title' | 'code'>
             & { templateElementsBySectionId: (
               { __typename?: 'TemplateElementsConnection' }
               & { nodes: Array<Maybe<(
                 { __typename?: 'TemplateElement' }
-                & Pick<TemplateElement, 'id' | 'elementTypePluginCode'>
+                & Pick<TemplateElement, 'code' | 'elementTypePluginCode'>
               )>> }
             ) }
           )> }
@@ -16533,12 +16533,12 @@ export type GetApplicationsQuery = (
   )> }
 );
 
-export type GetElementsQueryVariables = Exact<{
+export type GetSectionElementsQueryVariables = Exact<{
   sectionId: Scalars['Int'];
 }>;
 
 
-export type GetElementsQuery = (
+export type GetSectionElementsQuery = (
   { __typename?: 'Query' }
   & { templateElements?: Maybe<(
     { __typename?: 'TemplateElementsConnection' }
@@ -16821,10 +16821,11 @@ export const GetApplicationDocument = gql`
         nodes {
           id
           templateSection {
+            title
             code
             templateElementsBySectionId {
               nodes {
-                id
+                code
                 elementTypePluginCode
               }
             }
@@ -16903,9 +16904,9 @@ export function useGetApplicationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetApplicationsQueryHookResult = ReturnType<typeof useGetApplicationsQuery>;
 export type GetApplicationsLazyQueryHookResult = ReturnType<typeof useGetApplicationsLazyQuery>;
 export type GetApplicationsQueryResult = Apollo.QueryResult<GetApplicationsQuery, GetApplicationsQueryVariables>;
-export const GetElementsDocument = gql`
-    query getElements($sectionId: Int!) {
-  templateElements(filter: {sectionId: {equalTo: $sectionId}}) {
+export const GetSectionElementsDocument = gql`
+    query getSectionElements($sectionId: Int!) {
+  templateElements(condition: {sectionId: $sectionId}) {
     nodes {
       category
       code
@@ -16920,30 +16921,30 @@ export const GetElementsDocument = gql`
     `;
 
 /**
- * __useGetElementsQuery__
+ * __useGetSectionElementsQuery__
  *
- * To run a query within a React component, call `useGetElementsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetElementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetSectionElementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSectionElementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetElementsQuery({
+ * const { data, loading, error } = useGetSectionElementsQuery({
  *   variables: {
  *      sectionId: // value for 'sectionId'
  *   },
  * });
  */
-export function useGetElementsQuery(baseOptions?: Apollo.QueryHookOptions<GetElementsQuery, GetElementsQueryVariables>) {
-        return Apollo.useQuery<GetElementsQuery, GetElementsQueryVariables>(GetElementsDocument, baseOptions);
+export function useGetSectionElementsQuery(baseOptions?: Apollo.QueryHookOptions<GetSectionElementsQuery, GetSectionElementsQueryVariables>) {
+        return Apollo.useQuery<GetSectionElementsQuery, GetSectionElementsQueryVariables>(GetSectionElementsDocument, baseOptions);
       }
-export function useGetElementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetElementsQuery, GetElementsQueryVariables>) {
-          return Apollo.useLazyQuery<GetElementsQuery, GetElementsQueryVariables>(GetElementsDocument, baseOptions);
+export function useGetSectionElementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSectionElementsQuery, GetSectionElementsQueryVariables>) {
+          return Apollo.useLazyQuery<GetSectionElementsQuery, GetSectionElementsQueryVariables>(GetSectionElementsDocument, baseOptions);
         }
-export type GetElementsQueryHookResult = ReturnType<typeof useGetElementsQuery>;
-export type GetElementsLazyQueryHookResult = ReturnType<typeof useGetElementsLazyQuery>;
-export type GetElementsQueryResult = Apollo.QueryResult<GetElementsQuery, GetElementsQueryVariables>;
+export type GetSectionElementsQueryHookResult = ReturnType<typeof useGetSectionElementsQuery>;
+export type GetSectionElementsLazyQueryHookResult = ReturnType<typeof useGetSectionElementsLazyQuery>;
+export type GetSectionElementsQueryResult = Apollo.QueryResult<GetSectionElementsQuery, GetSectionElementsQueryVariables>;
 export const GetTemplateDocument = gql`
     query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE) {
   templates(condition: {code: $code, status: $status}) {
