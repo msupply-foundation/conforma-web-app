@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import {
-  ApplicationHeader,
-  ApplicationSummary,
-  ApplicationStep,
-} from '../../components/Application'
+import ApplicationStep from './ApplicationStep'
+import { ApplicationHeader } from '../../components/Application'
+import Loading from '../../components/Loading'
 import {
   Application,
   useGetApplicationQuery,
 } from '../../utils/generated/graphql'
-import { Label, Segment } from 'semantic-ui-react'
-import Loading from '../../components/Loading'
+import { Container, Grid, Label, Segment } from 'semantic-ui-react'
 
 export interface AppPageProps {
   summary?: boolean
@@ -42,11 +39,23 @@ const ApplicationPage: React.FC<AppPageProps> = (props) => {
 
   return loading ? (
     <Loading />
-  ) : summary ? (
-    <ApplicationSummary />
-  ) : serialNumber ? (<Segment.Group><ApplicationHeader mode={mode} serialNumber={serialNumber} name={applicationName} />
-      {sectionCode && page && <Segment><ApplicationStep sectionCode={sectionCode} page={page}/></Segment>}
-    </Segment.Group>) : <Label content="Application can't be displayed"/>
+  ) : serialNumber ? (
+  <Segment.Group>
+    <ApplicationHeader mode={mode} serialNumber={serialNumber} name={applicationName} />
+    <Container>
+      <Grid columns={2} stackable textAlign='center'>
+        <Grid.Row>
+          <Grid.Column>
+            <Segment>Place holder for progress</Segment>
+          </Grid.Column>
+          <Grid.Column>
+            <ApplicationStep/>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </Container>
+    </Segment.Group>
+    ) : <Label content="Application can't be displayed"/>
 }
 
 export default ApplicationPage

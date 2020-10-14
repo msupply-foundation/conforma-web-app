@@ -2,7 +2,6 @@ import {
   ApplicationEdit,
   ApplicationHeader,
   ApplicationList,
-  ApplicationStep,
   ApplicationSummary,
 } from './Application'
 import Approval from './Approval'
@@ -27,7 +26,6 @@ export {
   ApplicationEdit,
   ApplicationHeader,
   ApplicationList,
-  ApplicationStep,
   ApplicationSummary,
   Approval,
   Admin,

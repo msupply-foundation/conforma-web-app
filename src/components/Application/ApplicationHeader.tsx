@@ -12,8 +12,8 @@ const ApplicationHeader: React.FC<AppHederProps> = (props) => {
 
   return (
     <Container>
-      <Grid fluid columns={2} stackable textAlign='right'>
-        <Grid.Row fluid>
+      <Grid columns={2} stackable textAlign='right'>
+        <Grid.Row>
           <Grid.Column>
             <Header as='h2' content={`${name}`}>
             </Header>

@@ -21,6 +21,7 @@ import {
   TemplateList,
   TemplateNew,
   Template,
+  ApplicationSummary,
 } from '../../components'
 import { ApplicationNew, ApplicationPage } from '../Application'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
@@ -63,7 +64,7 @@ const SiteLayout: React.FC = () => {
                 <ApplicationPage/>
               </Route>
               <Route exact path="/applications/:serialNumber/summary">
-                <ApplicationPage/>
+                <ApplicationSummary/>
               </Route>
               <Route exact path="/applications/:serialNumber/approval">
                 <Approval/>
