@@ -8,12 +8,7 @@ import {
 } from '../../utils/generated/graphql'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
 
-export interface AppPageProps {
-  summary?: boolean
-}
-
-const ApplicationPage: React.FC<AppPageProps> = (props) => {
-  const { summary } = props
+const ApplicationPage: React.FC = () => {
   const [ applicationName, setName ] = useState('')
   const { query } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
