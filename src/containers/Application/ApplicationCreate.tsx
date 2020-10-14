@@ -9,8 +9,7 @@ import {
   useGetTemplateQuery,
 } from '../../utils/generated/graphql'
 import { TemplatePayload, TemplateSectionPayload } from '../../utils/types'
-import ApplicationStart from '../../components/Application/ApplicationStart'
-import Loading from '../../components/Loading'
+import { ApplicationStart, Loading } from '../../components'
 import { useApplicationState, Page } from '../../contexts/ApplicationState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Container } from 'semantic-ui-react'
@@ -23,7 +22,8 @@ interface ApplicationCreateProps {
 type FlattenType = {
   sectionId: number
   sectionCode: string
-  elementId: number
+  sectionTitle: string
+  elementCode: string
   pluginCode: string
 }
 
@@ -91,28 +91,28 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
       sections.forEach((section) => {
         const { id, templateSection } = section
         if (!templateSection) return
-        const { code, templateElementsBySectionId } = templateSection
+        const { code, templateElementsBySectionId, title} = templateSection
         // TODO: Remove elements not visible in the current stage...
         // TODO: concat all sections elements...
         const elements = templateElementsBySectionId.nodes as TemplateElement[]
         const result = elements.map((element: TemplateElement) => {
-          const { id: elementId, elementTypePluginCode: pluginCode } = element
-          return { sectionId: id, sectionCode: code as string, elementId, pluginCode: pluginCode as string }
+          const { code: elementCode, elementTypePluginCode: pluginCode } = element
+          return { sectionId: id, sectionCode: code as string, sectionTitle: title as string, elementCode, pluginCode: pluginCode as string }
         })
 
         // Add first and last element of page
-        let page: Page = { sectionId: id, sectionCode: code as string }
+        let page: Page = { sectionTitle: title as string, sectionCode: code as string }
         result.forEach((element: FlattenType) => {
           const { firstElement, lastElement } = page
           
           if (!firstElement) 
-            page.firstElement = element.elementId
+            page.firstElement = element.elementCode
           if (!lastElement && element.pluginCode === 'pagebreak') 
-            page.lastElement = element.elementId
+            page.lastElement = element.elementCode
           
           if (page.firstElement && page.lastElement) {
             pages.push(page)
-            page = { sectionId: id, sectionCode: code as string }
+            page = { sectionTitle: title as string, sectionCode: code as string }
           }
         })
         if (page.firstElement && !page.lastElement) {

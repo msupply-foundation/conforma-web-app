@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
 export interface Page {
-  sectionId: number
   sectionCode: string
-  firstElement?: number
-  lastElement?: number | null
+  sectionTitle: string
+  firstElement?: string
+  lastElement?: string | null
 }
 
 type ApplicationState = {

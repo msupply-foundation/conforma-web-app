@@ -1,6 +1,6 @@
 import React from 'react'
 import ApplicationCreate from './ApplicationCreate'
-import { ApplicationSelectType } from '../../components/Application'
+import { ApplicationSelectType } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Application,
   CreateApplicationMutation,

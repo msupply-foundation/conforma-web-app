@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import ApplicationStep from './ApplicationStep'
-import { ApplicationHeader } from '../../components/Application'
-import Loading from '../../components/Loading'
+import { ApplicationHeader, Loading } from '../../components'
 import {
   Application,
   useGetApplicationQuery,

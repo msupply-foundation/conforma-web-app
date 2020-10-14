@@ -2,12 +2,16 @@ import {
   ApplicationEdit,
   ApplicationHeader,
   ApplicationList,
+  ApplicationQuestion,
+  ApplicationSelectType,
+  ApplicationStart,
   ApplicationSummary,
 } from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
 import Home from './Home'
 import Login from './Login'
+import Loading from './Loading'
 import TemplateList from './TemplateList'
 import TemplateNew from './TemplateNew'
 import Template from './Template'
@@ -26,12 +30,16 @@ export {
   ApplicationEdit,
   ApplicationHeader,
   ApplicationList,
+  ApplicationQuestion,
+  ApplicationSelectType,
+  ApplicationStart,
   ApplicationSummary,
   Approval,
   Admin,
   Config,
   Home,
   Login,
+  Loading,
   Notification,
   NotificationsList,
   NoMatch,
