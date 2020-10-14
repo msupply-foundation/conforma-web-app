@@ -7,7 +7,7 @@ interface OnUpdateApplicationView {
 interface ApplicatioViewProps {
   templateElement: TemplateElement
   onUpdate: OnUpdateApplicationView
-  isVisible: boolean
+  isVisibleExpression: object
   isEditable: boolean
   // applicationState,
   // graphQLclient

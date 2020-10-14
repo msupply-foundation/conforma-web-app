@@ -1,12 +1,21 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from './'
 import { ApplicatioViewProps, PluginComponents } from './types'
+import evaluateExpression from '@openmsupply/expression-evaluator'
 
 const ApplicationViewWrapper = (props: ApplicatioViewProps) => {
   const {
     templateElement: { elementTypePluginCode: pluginCode },
-    isVisible,
+    isVisibleExpression,
   } = props
+
+const [isVisible, setIsVisible] = useState(evaluateExpression(isVisibleExpression))  
+
+useEffect(() => {
+  evaluateExpression(isVisibleExpression).then((result:any) => {
+    setIsVisible(result)
+  })
+}, [isVisibleExpression])
 
   if (!pluginCode || !isVisible) return null
 

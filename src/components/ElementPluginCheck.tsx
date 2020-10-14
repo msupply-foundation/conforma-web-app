@@ -108,7 +108,7 @@ const ElementPluginCheck = () => {
             templateElement={getTemplate(code)}
             initialValue={value}
             isEditable={evaluateCondition(getTemplate(code).isEditable)}
-            isVisible={evaluateCondition(getTemplate(code).visibilityCondition)}
+            isVisibleExpression={JSON.parse(getTemplate(code).visibilityCondition)}
             onUpdate={(newState: any) =>
               setApplicationState(updateArrayElement(applicationState, newState, index))
             }

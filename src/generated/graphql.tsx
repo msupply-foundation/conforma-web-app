@@ -2245,7 +2245,7 @@ export type TemplateElement = Node & {
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['String']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   defaultValue?: Maybe<Scalars['JSON']>;
