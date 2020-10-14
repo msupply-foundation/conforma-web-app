@@ -4,8 +4,7 @@ import { TemplateElement } from '../generated/graphql'
 import { pluginProvider, ErrorBoundary, JsonInput } from './'
 import { OnUpdateTemplateWrapperView, PluginComponents, TemplateViewWrapperProps } from './types'
 
-const TemplateViewWrapper = (props: TemplateViewWrapperProps) => {
-  const { templateElement, onUpdate } = props
+const TemplateViewWrapper: React.FC<TemplateViewWrapperProps> = ({ templateElement, onUpdate }) => {
 
   const {
     elementTypePluginCode: initialPluginCode,
