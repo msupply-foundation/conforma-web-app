@@ -1,13 +1,13 @@
 import React from 'react'
 import { Container, Grid, Header, Segment } from 'semantic-ui-react'
 
-export interface AppHederProps {
+export interface AppHeaderProps {
   serialNumber: string
   name: string
   mode?: string
 }
 
-const ApplicationHeader: React.FC<AppHederProps> = (props) => {
+const ApplicationHeader: React.FC<AppHeaderProps> = (props) => {
   const { mode, serialNumber, name } = props
 
   return (
