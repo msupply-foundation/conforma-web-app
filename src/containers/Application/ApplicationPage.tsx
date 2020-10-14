@@ -11,12 +11,7 @@ import {
 import { Label, Segment } from 'semantic-ui-react'
 import Loading from '../../components/Loading'
 
-export interface AppPageProps {
-  summary?: boolean
-}
-
-const ApplicationPage: React.FC<AppPageProps> = (props) => {
-  const { summary } = props
+const ApplicationPage: React.FC = () => {
   const [ applicationName, setName ] = useState('')
   const { query } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
