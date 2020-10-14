@@ -1,4 +1,4 @@
-import { TemplateElement } from '../generated/graphql'
+import { TemplateElement } from '../utils/generated/graphql'
 
 interface OnUpdateApplicationView {
   (updateObject: { value?: any; isValid: boolean }): void
