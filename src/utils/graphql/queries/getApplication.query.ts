@@ -12,30 +12,19 @@ export default gql`
           code
           id
           name
-          templateSections {
-            nodes {
-              code
+        }
+        applicationSections {
+          nodes {
+            templateSection {
               id
               title
+              code
               templateElementsBySectionId {
                 nodes {
                   code
                   elementTypePluginCode
-                  id
-                  parameters
-                  sectionId
-                  title
-                  visibilityCondition
                 }
               }
-            }
-          }
-        }
-        applicationSections {
-          nodes {
-            id
-            templateSection {
-              code
             }
           }
         }

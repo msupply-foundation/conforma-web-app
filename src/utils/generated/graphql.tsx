@@ -15,6 +15,8 @@ export type Scalars = {
   JSON: any;
   /** A point in time as described by the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone. */
   Datetime: any;
+  /** The day, does not include a time. */
+  Date: any;
 };
 
 /** The root query type which gives access points into the data universe. */
@@ -117,7 +119,7 @@ export type Query = Node & {
   userOrganisation?: Maybe<UserOrganisation>;
   jwtCheckPolicy?: Maybe<Scalars['Boolean']>;
   jwtGetKey?: Maybe<Scalars['String']>;
-  jwtGetPolicyLinksAsSetofText: JwtGetPolicyLinksAsSetofTextConnection;
+  jwtGetPolicyLinksAsSetofText?: Maybe<JwtGetPolicyLinksAsSetofTextConnection>;
   jwtGetPolicyLinksAsText?: Maybe<Scalars['String']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
@@ -2155,10 +2157,16 @@ export type NotificationFilter = {
 export type UserFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
+  /** Filter by the object’s `firstName` field. */
+  firstName?: Maybe<StringFilter>;
+  /** Filter by the object’s `lastName` field. */
+  lastName?: Maybe<StringFilter>;
   /** Filter by the object’s `username` field. */
   username?: Maybe<StringFilter>;
-  /** Filter by the object’s `password` field. */
-  password?: Maybe<StringFilter>;
+  /** Filter by the object’s `dateOfBirth` field. */
+  dateOfBirth?: Maybe<DateFilter>;
+  /** Filter by the object’s `passwordHash` field. */
+  passwordHash?: Maybe<StringFilter>;
   /** Filter by the object’s `email` field. */
   email?: Maybe<StringFilter>;
   /** Filter by the object’s `userOrganisations` relation. */
@@ -2196,6 +2204,33 @@ export type UserFilter = {
   /** Negates the expression. */
   not?: Maybe<UserFilter>;
 };
+
+/** A filter to be used against Date fields. All fields are combined with a logical ‘and.’ */
+export type DateFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Scalars['Date']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Scalars['Date']>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Scalars['Date']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Scalars['Date']>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<Scalars['Date']>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<Scalars['Date']>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Scalars['Date']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Scalars['Date']>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Scalars['Date']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Scalars['Date']>;
+};
+
 
 /** A filter to be used against many `UserOrganisation` object types. All fields are combined with a logical ‘and.’ */
 export type UserToManyUserOrganisationFilter = {
@@ -2643,8 +2678,6 @@ export type TemplateElementFilter = {
   isEditable?: Maybe<JsonFilter>;
   /** Filter by the object’s `parameters` field. */
   parameters?: Maybe<JsonFilter>;
-  /** Filter by the object’s `defaultValue` field. */
-  defaultValue?: Maybe<JsonFilter>;
   /** Filter by the object’s `validation` field. */
   validation?: Maybe<JsonFilter>;
   /** Filter by the object’s `applicationResponses` relation. */
@@ -3614,8 +3647,11 @@ export type User = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
@@ -4115,8 +4151,6 @@ export enum TemplateElementsOrderBy {
   IsEditableDesc = 'IS_EDITABLE_DESC',
   ParametersAsc = 'PARAMETERS_ASC',
   ParametersDesc = 'PARAMETERS_DESC',
-  DefaultValueAsc = 'DEFAULT_VALUE_ASC',
-  DefaultValueDesc = 'DEFAULT_VALUE_DESC',
   ValidationAsc = 'VALIDATION_ASC',
   ValidationDesc = 'VALIDATION_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -4147,8 +4181,6 @@ export type TemplateElementCondition = {
   isEditable?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parameters` field. */
   parameters?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `defaultValue` field. */
-  defaultValue?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `validation` field. */
   validation?: Maybe<Scalars['JSON']>;
 };
@@ -4181,7 +4213,6 @@ export type TemplateElement = Node & {
   isRequired?: Maybe<Scalars['Boolean']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  defaultValue?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
@@ -5571,10 +5602,16 @@ export enum UsersOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
+  FirstNameAsc = 'FIRST_NAME_ASC',
+  FirstNameDesc = 'FIRST_NAME_DESC',
+  LastNameAsc = 'LAST_NAME_ASC',
+  LastNameDesc = 'LAST_NAME_DESC',
   UsernameAsc = 'USERNAME_ASC',
   UsernameDesc = 'USERNAME_DESC',
-  PasswordAsc = 'PASSWORD_ASC',
-  PasswordDesc = 'PASSWORD_DESC',
+  DateOfBirthAsc = 'DATE_OF_BIRTH_ASC',
+  DateOfBirthDesc = 'DATE_OF_BIRTH_DESC',
+  PasswordHashAsc = 'PASSWORD_HASH_ASC',
+  PasswordHashDesc = 'PASSWORD_HASH_DESC',
   EmailAsc = 'EMAIL_ASC',
   EmailDesc = 'EMAIL_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -5585,10 +5622,16 @@ export enum UsersOrderBy {
 export type UserCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `firstName` field. */
+  firstName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `lastName` field. */
+  lastName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `username` field. */
   username?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `password` field. */
-  password?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `dateOfBirth` field. */
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `passwordHash` field. */
+  passwordHash?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `email` field. */
   email?: Maybe<Scalars['String']>;
 };
@@ -7673,8 +7716,11 @@ export type UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserPkeyUpdate =
 /** An object where the defined keys will be set on the `user` being updated. */
 export type UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -7772,8 +7818,11 @@ export type UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserPkeyUpda
 /** An object where the defined keys will be set on the `user` being updated. */
 export type UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -8196,8 +8245,11 @@ export type UserOnApplicationForApplicationUserIdFkeyUsingUserPkeyUpdate = {
 /** An object where the defined keys will be set on the `user` being updated. */
 export type UpdateUserOnApplicationForApplicationUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -8587,7 +8639,6 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   isRequired?: Maybe<Scalars['Boolean']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  defaultValue?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -8744,7 +8795,6 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   isRequired?: Maybe<Scalars['Boolean']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  defaultValue?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -9033,8 +9083,11 @@ export type UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate = {
 /** An object where the defined keys will be set on the `user` being updated. */
 export type UpdateUserOnFileForFileUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -9136,8 +9189,11 @@ export type UserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFke
 /** An object where the defined keys will be set on the `user` being updated. */
 export type UpdateUserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -9217,8 +9273,11 @@ export type UserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFke
 /** An object where the defined keys will be set on the `user` being updated. */
 export type UpdateUserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -9408,8 +9467,11 @@ export type UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate = {
 /** An object where the defined keys will be set on the `user` being updated. */
 export type UpdateUserOnNotificationForNotificationUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -11497,8 +11559,11 @@ export type NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate = {
 /** Represents an update to a `User`. Fields that are set will be updated. */
 export type UserPatch = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -11512,8 +11577,11 @@ export type UserPatch = {
 /** The `user` to be created by this mutation. */
 export type NotificationUserIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -11609,8 +11677,11 @@ export type ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssi
 /** The `user` to be created by this mutation. */
 export type ReviewSectionAssignmentAssignerIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -11654,8 +11725,11 @@ export type ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssi
 /** The `user` to be created by this mutation. */
 export type ReviewSectionAssignmentReviewerIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -11699,8 +11773,11 @@ export type FileOnFileForFileUserIdFkeyNodeIdUpdate = {
 /** The `user` to be created by this mutation. */
 export type FileUserIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -11852,7 +11929,6 @@ export type TemplateElementPatch = {
   isRequired?: Maybe<Scalars['Boolean']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  defaultValue?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -11870,7 +11946,6 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   isRequired?: Maybe<Scalars['Boolean']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  defaultValue?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -11968,7 +12043,6 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   isRequired?: Maybe<Scalars['Boolean']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  defaultValue?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -12128,8 +12202,11 @@ export type ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate = {
 /** The `user` to be created by this mutation. */
 export type ApplicationUserIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -12595,8 +12672,11 @@ export type UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeI
 /** The `user` to be created by this mutation. */
 export type UserOrganisationUserIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -12636,8 +12716,11 @@ export type PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdat
 /** The `user` to be created by this mutation. */
 export type PermissionJoinUserIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -13698,7 +13781,6 @@ export type TemplateElementInput = {
   isRequired?: Maybe<Scalars['Boolean']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  defaultValue?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -13901,8 +13983,11 @@ export type CreateUserInput = {
 /** An input for mutations affecting `User` */
 export type UserInput = {
   id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -16408,20 +16493,6 @@ export type GetApplicationQuery = (
       & { template?: Maybe<(
         { __typename?: 'Template' }
         & Pick<Template, 'code' | 'id' | 'name'>
-        & { templateSections: (
-          { __typename?: 'TemplateSectionsConnection' }
-          & { nodes: Array<Maybe<(
-            { __typename?: 'TemplateSection' }
-            & Pick<TemplateSection, 'code' | 'id' | 'title'>
-            & { templateElementsBySectionId: (
-              { __typename?: 'TemplateElementsConnection' }
-              & { nodes: Array<Maybe<(
-                { __typename?: 'TemplateElement' }
-                & Pick<TemplateElement, 'code' | 'elementTypePluginCode' | 'id' | 'parameters' | 'sectionId' | 'title' | 'visibilityCondition'>
-              )>> }
-            ) }
-          )>> }
-        ) }
       )>, applicationSections: (
         { __typename?: 'ApplicationSectionsConnection' }
         & { nodes: Array<Maybe<(
@@ -16429,7 +16500,14 @@ export type GetApplicationQuery = (
           & Pick<ApplicationSection, 'id'>
           & { templateSection?: Maybe<(
             { __typename?: 'TemplateSection' }
-            & Pick<TemplateSection, 'code'>
+            & Pick<TemplateSection, 'id' | 'title' | 'code'>
+            & { templateElementsBySectionId: (
+              { __typename?: 'TemplateElementsConnection' }
+              & { nodes: Array<Maybe<(
+                { __typename?: 'TemplateElement' }
+                & Pick<TemplateElement, 'code' | 'elementTypePluginCode'>
+              )>> }
+            ) }
           )> }
         )>> }
       ) }
@@ -16455,12 +16533,12 @@ export type GetApplicationsQuery = (
   )> }
 );
 
-export type GetElementsQueryVariables = Exact<{
+export type GetSectionElementsQueryVariables = Exact<{
   sectionId: Scalars['Int'];
 }>;
 
 
-export type GetElementsQuery = (
+export type GetSectionElementsQuery = (
   { __typename?: 'Query' }
   & { templateElements?: Maybe<(
     { __typename?: 'TemplateElementsConnection' }
@@ -16655,7 +16733,7 @@ export type CreateSectionMutationResult = Apollo.MutationResult<CreateSectionMut
 export type CreateSectionMutationOptions = Apollo.BaseMutationOptions<CreateSectionMutation, CreateSectionMutationVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($email: String!, $password: String!, $username: String!) {
-  createUser(input: {user: {email: $email, password: $password, username: $username}}) {
+  createUser(input: {user: {email: $email, passwordHash: $password, username: $username}}) {
     user {
       id
       username
@@ -16738,30 +16816,20 @@ export const GetApplicationDocument = gql`
         code
         id
         name
-        templateSections {
-          nodes {
-            code
-            id
-            title
-            templateElementsBySectionId {
-              nodes {
-                code
-                elementTypePluginCode
-                id
-                parameters
-                sectionId
-                title
-                visibilityCondition
-              }
-            }
-          }
-        }
       }
       applicationSections {
         nodes {
           id
           templateSection {
+            id
+            title
             code
+            templateElementsBySectionId {
+              nodes {
+                code
+                elementTypePluginCode
+              }
+            }
           }
         }
       }
@@ -16837,9 +16905,9 @@ export function useGetApplicationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetApplicationsQueryHookResult = ReturnType<typeof useGetApplicationsQuery>;
 export type GetApplicationsLazyQueryHookResult = ReturnType<typeof useGetApplicationsLazyQuery>;
 export type GetApplicationsQueryResult = Apollo.QueryResult<GetApplicationsQuery, GetApplicationsQueryVariables>;
-export const GetElementsDocument = gql`
-    query getElements($sectionId: Int!) {
-  templateElements(filter: {sectionId: {equalTo: $sectionId}}) {
+export const GetSectionElementsDocument = gql`
+    query getSectionElements($sectionId: Int!) {
+  templateElements(condition: {sectionId: $sectionId}) {
     nodes {
       category
       code
@@ -16854,30 +16922,30 @@ export const GetElementsDocument = gql`
     `;
 
 /**
- * __useGetElementsQuery__
+ * __useGetSectionElementsQuery__
  *
- * To run a query within a React component, call `useGetElementsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetElementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetSectionElementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSectionElementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetElementsQuery({
+ * const { data, loading, error } = useGetSectionElementsQuery({
  *   variables: {
  *      sectionId: // value for 'sectionId'
  *   },
  * });
  */
-export function useGetElementsQuery(baseOptions?: Apollo.QueryHookOptions<GetElementsQuery, GetElementsQueryVariables>) {
-        return Apollo.useQuery<GetElementsQuery, GetElementsQueryVariables>(GetElementsDocument, baseOptions);
+export function useGetSectionElementsQuery(baseOptions?: Apollo.QueryHookOptions<GetSectionElementsQuery, GetSectionElementsQueryVariables>) {
+        return Apollo.useQuery<GetSectionElementsQuery, GetSectionElementsQueryVariables>(GetSectionElementsDocument, baseOptions);
       }
-export function useGetElementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetElementsQuery, GetElementsQueryVariables>) {
-          return Apollo.useLazyQuery<GetElementsQuery, GetElementsQueryVariables>(GetElementsDocument, baseOptions);
+export function useGetSectionElementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSectionElementsQuery, GetSectionElementsQueryVariables>) {
+          return Apollo.useLazyQuery<GetSectionElementsQuery, GetSectionElementsQueryVariables>(GetSectionElementsDocument, baseOptions);
         }
-export type GetElementsQueryHookResult = ReturnType<typeof useGetElementsQuery>;
-export type GetElementsLazyQueryHookResult = ReturnType<typeof useGetElementsLazyQuery>;
-export type GetElementsQueryResult = Apollo.QueryResult<GetElementsQuery, GetElementsQueryVariables>;
+export type GetSectionElementsQueryHookResult = ReturnType<typeof useGetSectionElementsQuery>;
+export type GetSectionElementsLazyQueryHookResult = ReturnType<typeof useGetSectionElementsLazyQuery>;
+export type GetSectionElementsQueryResult = Apollo.QueryResult<GetSectionElementsQuery, GetSectionElementsQueryVariables>;
 export const GetTemplateDocument = gql`
     query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE) {
   templates(condition: {code: $code, status: $status}) {

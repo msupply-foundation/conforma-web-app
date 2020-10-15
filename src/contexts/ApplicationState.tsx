@@ -1,14 +1,33 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
+export interface Page {
+  sectionCode: string
+  sectionTitle: string
+  firstElement?: string
+  lastElement?: string | null
+  templateId: number
+}
+
 type ApplicationState = {
+  pageIndex: number | null
+  pageNumber: number | null
+  pages: Page[] | null
   serialNumber: number | null
 }
 
 export type ApplicationActions =
   | {
-      type: 'setCurrent'
+      type: 'setSerialNumber'
       serialNumber: number
     }
+  | {
+    type: 'setCurretPage'
+    pageNumber: number
+  }
+  | {
+    type: 'setPages'
+    pages: Page[]
+  }
   | {
       type: 'reset'
     }
@@ -17,23 +36,38 @@ type ApplicationProviderProps = { children: React.ReactNode }
 
 const reducer = (state: ApplicationState, action: ApplicationActions) => {
   switch (action.type) {
-    case 'setCurrent':
+    case 'setSerialNumber':
       const { serialNumber } = action
       return {
         ...state,
         serialNumber,
       }
+      case 'setCurretPage':
+        const { pageNumber } = action
+        return {
+          ...state,
+          pageIndex: (!state.pages) ? null : state.pages.length >= pageNumber ? pageNumber-1 : null,
+          pageNumber 
+        }
+      case 'setPages':
+        const { pages } = action
+        return {
+          ...state,
+          pages,
+          pageIndex: pages.length > 0 ? 0 : null,
+          pageNumber: 1
+        }
     case 'reset':
-      return {
-        ...state,
-        serialNumber: null,
-      }
+      return initialState
     default:
       return state
   }
 }
 
 const initialState: ApplicationState = {
+  pageIndex: null,
+  pageNumber: null,
+  pages: null,
   serialNumber: null
 }
 

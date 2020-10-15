@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import {
-  ApplicationHeader,
-  ApplicationStep,
-} from '../../components/Application'
+import ApplicationStep from './ApplicationStep'
+import { ApplicationHeader, Loading } from '../../components'
 import {
   Application,
   useGetApplicationQuery,
 } from '../../utils/generated/graphql'
-import { Label, Segment } from 'semantic-ui-react'
-import Loading from '../../components/Loading'
+import { Container, Grid, Label, Segment } from 'semantic-ui-react'
 
 const ApplicationPage: React.FC = () => {
   const [ applicationName, setName ] = useState('')
   const { query } = useRouter()
-  const { mode, serialNumber, sectionCode, page } = query
+  const { mode, serialNumber } = query
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
@@ -28,23 +25,31 @@ const ApplicationPage: React.FC = () => {
         console.log('More than one application returned. Only one expected!')
 
       const application = data.applications.nodes[0] as Application
-      if (application.template) {
+      if (application) {
         setName(application.name as string)
       }
     }
   }, [data, error])
 
-  return loading ? <Loading /> : 
-  serialNumber ? (
+  return loading ? (
+    <Loading />
+  ) : serialNumber ? (
   <Segment.Group>
     <ApplicationHeader mode={mode} serialNumber={serialNumber} name={applicationName} />
-      {sectionCode && page && 
-      <Segment>
-        <ApplicationStep sectionCode={sectionCode} page={page}/>
-        </Segment>
-      }
-    </Segment.Group>) : 
-    <Label content="Application can't be displayed"/>
+    <Container>
+      <Grid columns={2} stackable textAlign='center'>
+        <Grid.Row>
+          <Grid.Column>
+            <Segment>Place holder for progress</Segment>
+          </Grid.Column>
+          <Grid.Column>
+            <ApplicationStep/>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </Container>
+    </Segment.Group>
+    ) : <Label content="Application can't be displayed"/>
 }
 
 export default ApplicationPage

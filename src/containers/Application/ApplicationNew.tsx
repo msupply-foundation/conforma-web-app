@@ -1,6 +1,6 @@
 import React from 'react'
 import ApplicationCreate from './ApplicationCreate'
-import { ApplicationSelectType } from '../../components/Application'
+import { ApplicationSelectType } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Application,
   CreateApplicationMutation,
@@ -36,7 +36,7 @@ const ApplicationNew: React.FC = () => {
     <ApplicationCreate type={type} handleClick={(template: TemplatePayload) => {
        // TODO: New issue to generate serial - should be done in server?
       const serialNumber = Math.round(Math.random() * 10000)
-      setApplicationState({type: 'setCurrent', serialNumber})
+      setApplicationState({type: 'setSerialNumber', serialNumber})
       handleCreateApplication(createApplicationMutation, {
         template,
         serialNumber 

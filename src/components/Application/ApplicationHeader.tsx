@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header, Segment } from 'semantic-ui-react'
+import { Container, Grid, Header, Segment } from 'semantic-ui-react'
 
 export interface AppHeaderProps {
   serialNumber: string
@@ -11,11 +11,21 @@ const ApplicationHeader: React.FC<AppHeaderProps> = (props) => {
   const { mode, serialNumber, name } = props
 
   return (
-    <Segment>
-      <Header as="h1" content={`Application ${name}`}/>
-      <Header as="h2" content={`Number ${serialNumber}`} />
+    <Container>
+      <Grid columns={2} stackable textAlign='right'>
+        <Grid.Row>
+          <Grid.Column>
+            <Header as='h2' content={`${name}`}>
+            </Header>
+          </Grid.Column>
+          <Grid.Column>
+            <Header as='h3' content={`Number ${serialNumber}`}>
+            </Header>
+          </Grid.Column>
+      </Grid.Row>
+      </Grid>
       {mode && <Header as="h3" content={mode} />}
-    </Segment>
+    </Container>
   )
 }
 
