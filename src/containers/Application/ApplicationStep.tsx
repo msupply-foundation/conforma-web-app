@@ -8,12 +8,18 @@ import { useRouter } from '../../utils/hooks/useRouter'
 const ApplicationStep: React.FC = () => {
   const { applicationState, setApplicationState } = useApplicationState()
   const { pageNumber, pageIndex, pages } = applicationState
+  
   const currentPage = (pageIndex === null || pages === null ) ? undefined : pages[pageIndex]
   const [ elements, setElements ] = useState<TemplateElement[]>([])
 
-  const { data, loading, error } = useGetSectionElementsQuery()
+  const { data, loading, error } = useGetSectionElementsQuery({
+    variables: {
+      sectionId: currentPage?.templateId as number
+    }
+  })
 
   useEffect(() => {
+    if (error) console.log(error)
     if (currentPage && data && data.templateElements && data.templateElements.nodes.length > 0) {
       const templateElements = data.templateElements.nodes as TemplateElement[]
       const { firstElement, lastElement } = currentPage
@@ -37,11 +43,11 @@ const ApplicationStep: React.FC = () => {
   }, [data, error])
 
   return loading ? <Loading/> : (
-    <Container>
+    <Container textAlign='left'>
       {currentPage ? (
       <Segment>
         <Header content={currentPage?.sectionTitle} />
-      {elements.map(element => <ApplicationQuestion/>)}
+      {elements.map(element => <ApplicationQuestion templateElement={element}/>)}
       <NextPageButton page={pageNumber as number} /> 
       </Segment>) : 
       <Header content='Some problem!'/>}

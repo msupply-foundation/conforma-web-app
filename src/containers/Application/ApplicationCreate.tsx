@@ -20,7 +20,7 @@ interface ApplicationCreateProps {
 }
 
 type FlattenType = {
-  sectionId: number
+  templateId: number
   sectionCode: string
   sectionTitle: string
   elementCode: string
@@ -89,19 +89,19 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
       // Flatten section and elements
       const sections = application.applicationSections.nodes as ApplicationSection[]
       sections.forEach((section) => {
-        const { id, templateSection } = section
+        const { templateSection } = section
         if (!templateSection) return
-        const { code, templateElementsBySectionId, title} = templateSection
+        const { id, code, templateElementsBySectionId, title} = templateSection
         // TODO: Remove elements not visible in the current stage...
         // TODO: concat all sections elements...
         const elements = templateElementsBySectionId.nodes as TemplateElement[]
         const result = elements.map((element: TemplateElement) => {
           const { code: elementCode, elementTypePluginCode: pluginCode } = element
-          return { sectionId: id, sectionCode: code as string, sectionTitle: title as string, elementCode, pluginCode: pluginCode as string }
+          return { templateId: id, sectionCode: code as string, sectionTitle: title as string, elementCode, pluginCode: pluginCode as string }
         })
 
         // Add first and last element of page
-        let page: Page = { sectionTitle: title as string, sectionCode: code as string }
+        let page: Page = { templateId: id, sectionTitle: title as string, sectionCode: code as string }
         result.forEach((element: FlattenType) => {
           const { firstElement, lastElement } = page
           
@@ -112,7 +112,7 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
           
           if (page.firstElement && page.lastElement) {
             pages.push(page)
-            page = { sectionTitle: title as string, sectionCode: code as string }
+            page = { templateId: id, sectionTitle: title as string, sectionCode: code as string }
           }
         })
         if (page.firstElement && !page.lastElement) {

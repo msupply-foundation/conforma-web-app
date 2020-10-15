@@ -15,8 +15,8 @@ export default gql`
         }
         applicationSections {
           nodes {
-            id
             templateSection {
+              id
               title
               code
               templateElementsBySectionId {
