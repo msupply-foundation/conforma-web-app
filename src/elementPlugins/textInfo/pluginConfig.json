@@ -1,0 +1,7 @@
+{
+  "isCore": true,
+  "code": "textInfo",
+  "displayName": "Static Text",
+  "//": "categories types: 'Input'|'Informative'",
+  "category": "Informative"
+}
