@@ -8,7 +8,7 @@ import { Application,
   useCreateApplicationMutation,
 useCreateSectionMutation,
 } from '../../utils/generated/graphql'
-import { ApplicationPayload, SectionPayload, TemplatePayload } from '../../utils/types'
+import { ApplicationPayload, SectionPayload, TemplateTypePayload } from '../../utils/types'
 import getApplicationQuery from '../../utils/graphql/queries/getApplication.query'
 import { useApplicationState } from '../../contexts/ApplicationState'
 
@@ -33,7 +33,7 @@ const ApplicationNew: React.FC = () => {
   })
 
   return type ? (
-    <ApplicationCreate type={type} handleClick={(template: TemplatePayload) => {
+    <ApplicationCreate type={type} handleClick={(template: TemplateTypePayload) => {
        // TODO: New issue to generate serial - should be done in server?
       const serialNumber = Math.round(Math.random() * 10000)
       setApplicationState({type: 'setSerialNumber', serialNumber})

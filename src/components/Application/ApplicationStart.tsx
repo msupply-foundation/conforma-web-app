@@ -1,9 +1,9 @@
 import React from 'react'
 import { Button, Container, Header, Label, List, Segment } from 'semantic-ui-react'
-import { TemplatePayload, TemplateSectionPayload } from '../../utils/types'
+import { TemplateTypePayload, TemplateSectionPayload } from '../../utils/types'
 
 export interface ApplicationStartProps {
-  template: TemplatePayload
+  template: TemplateTypePayload
   sections: TemplateSectionPayload[]
   handleClick: () => void
 }
