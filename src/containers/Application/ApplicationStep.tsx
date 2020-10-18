@@ -4,38 +4,36 @@ import { ApplicationQuestion, Loading } from '../../components'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { TemplateElement, useGetSectionElementsQuery } from '../../utils/generated/graphql'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { CurrentSectionPayload } from '../../utils/types'
 
-const ApplicationStep: React.FC = () => {
-  const { applicationState, setApplicationState } = useApplicationState()
-  const { pageNumber, pageIndex, pages } = applicationState
-  
-  const currentPage = (pageIndex === null || pages === null ) ? undefined : pages[pageIndex]
+interface ApplicationStepProps {
+  currentSection: CurrentSectionPayload
+  pageNumber: number
+}
+
+const ApplicationStep: React.FC<ApplicationStepProps> = (props) => {
+  const { currentSection, pageNumber } = props
   const [ elements, setElements ] = useState<TemplateElement[]>([])
 
   const { data, loading, error } = useGetSectionElementsQuery({
     variables: {
-      sectionId: currentPage?.templateId as number
+      sectionId: currentSection.templateId
     }
   })
 
   useEffect(() => {
     if (error) console.log(error)
-    if (currentPage && data && data.templateElements && data.templateElements.nodes.length > 0) {
+    if (data && data.templateElements && data.templateElements.nodes.length > 0) {
       const templateElements = data.templateElements.nodes as TemplateElement[]
-      const { firstElement, lastElement } = currentPage
 
       // Get each element (in order) from the current page
-      let currentElementCode: string | null = firstElement as string
+      let currentElementCode: string | null = templateElements[0].code as string
       const elementsInPage: TemplateElement[] = []
       while(currentElementCode != null) {
         const found = templateElements.find(element => element.code as string === currentElementCode)
         if (found) {
           elementsInPage.push(found)
           currentElementCode = (found.nextElementCode) ? found.nextElementCode : null
-          if (lastElement !== null && lastElement === currentElementCode){
-            console.log('found last element!')
-            break
-          } 
         }
       }
       setElements(elementsInPage)
@@ -44,13 +42,11 @@ const ApplicationStep: React.FC = () => {
 
   return loading ? <Loading/> : (
     <Container textAlign='left'>
-      {currentPage ? (
       <Segment>
-        <Header content={currentPage?.sectionTitle} />
+        <Header content={currentSection.title} />
       {elements.map(element => <ApplicationQuestion templateElement={element}/>)}
       <NextPageButton page={pageNumber as number} /> 
-      </Segment>) : 
-      <Header content='Some problem!'/>}
+      </Segment>
     </Container>
   )
 }

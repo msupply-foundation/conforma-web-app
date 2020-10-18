@@ -1,5 +1,6 @@
 export {
     ApplicationPayload,
+    CurrentSectionPayload,
     SectionPayload,
     TemplatePayload,
     TemplateSectionPayload
@@ -8,6 +9,11 @@ export {
 interface ApplicationPayload {
     serialNumber: number
     template: TemplatePayload
+}
+
+interface CurrentSectionPayload {
+    templateId: number
+    title: string
 }
   
 interface SectionPayload {
