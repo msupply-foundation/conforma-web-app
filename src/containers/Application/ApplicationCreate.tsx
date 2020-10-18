@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import {
-  Application,
-  ApplicationSection,
   Template,
-  TemplateElement,
   TemplateSection,
-  useGetApplicationQuery,
   useGetTemplateQuery,
 } from '../../utils/generated/graphql'
 import { TemplatePayload, TemplateSectionPayload } from '../../utils/types'
 import { ApplicationStart, Loading } from '../../components'
-import { useApplicationState, Page } from '../../contexts/ApplicationState'
+import { useApplicationState } from '../../contexts/ApplicationState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Container } from 'semantic-ui-react'
+import useLoadApplication from '../../utils/hooks/useLoadApplication'
 
 interface ApplicationCreateProps {
   type: string
@@ -30,9 +27,10 @@ type FlattenType = {
 const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
   const [ currentTemplate, setTemplate ] = useState<TemplatePayload | null>(null)
   const [ currentTemplateSections, setSections ] = useState<TemplateSectionPayload[]| null>(null)
-  const { applicationState, setApplicationState } = useApplicationState()
+  const { applicationState } = useApplicationState()
+  const { serialNumber } = applicationState
   const { type, handleClick } = props
-  const { replace } = useRouter()
+  const { push } = useRouter()
 
   const { data: templateData, loading: loadingTemplate, error: errorTemplate } = useGetTemplateQuery({ 
     variables: { 
@@ -40,11 +38,8 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
     } 
   })
 
-  const { data, loading, error} = useGetApplicationQuery({
-    variables: {
-      serial: applicationState.serialNumber as number
-    }
-  })
+  const application = useLoadApplication({serialNumber: serialNumber as number})
+  const { currentSection } = application
 
   useEffect(() => {
     if (templateData && templateData.templates && templateData.templates.nodes) {
@@ -74,69 +69,14 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
     }
   }, [templateData, errorTemplate])
 
-  useEffect(()=> {
-    if (data && data.applications && data.applications.nodes.length>0) {
-      if (data.applications.nodes.length > 1)
-        console.log('More than one application returned. Only one expected!')
-      const application = data.applications.nodes[0] as Application 
-      
-      // Check the return application has sections
-      if (!application.applicationSections || 
-        application.applicationSections.nodes.length === 0)
-        return // TODO: Should reset application here?
-      
-      const pages = Array<Page>()
-      // Flatten section and elements
-      const sections = application.applicationSections.nodes as ApplicationSection[]
-      sections.forEach((section) => {
-        const { templateSection } = section
-        if (!templateSection) return
-        const { id, code, templateElementsBySectionId, title} = templateSection
-        // TODO: Remove elements not visible in the current stage...
-        // TODO: concat all sections elements...
-        const elements = templateElementsBySectionId.nodes as TemplateElement[]
-        const result = elements.map((element: TemplateElement) => {
-          const { code: elementCode, elementTypePluginCode: pluginCode } = element
-          return { templateId: id, sectionCode: code as string, sectionTitle: title as string, elementCode, pluginCode: pluginCode as string }
-        })
-
-        // Add first and last element of page
-        let page: Page = { templateId: id, sectionTitle: title as string, sectionCode: code as string }
-        result.forEach((element: FlattenType) => {
-          const { firstElement, lastElement } = page
-          
-          if (!firstElement) 
-            page.firstElement = element.elementCode
-          if (!lastElement && element.pluginCode === 'pagebreak') 
-            page.lastElement = element.elementCode
-          
-          if (page.firstElement && page.lastElement) {
-            pages.push(page)
-            page = { templateId: id, sectionTitle: title as string, sectionCode: code as string }
-          }
-        })
-        if (page.firstElement && !page.lastElement) {
-          pages.push({ ...page, lastElement: null})
-        }
-      })
-      setApplicationState({type: 'setPages', pages})
-    }
-  }, [data, error])
-
   useEffect(() => {
-    const { pageNumber, pageIndex, pages, serialNumber } = applicationState
-    if (serialNumber && pages) {
-      
-      if (pages === null || pageIndex === null) return 
-      const sectionCode = pages[pageIndex].sectionCode
-
+    if (serialNumber && currentSection) {
       // Show the application current step (current pageNumber)
-      if (sectionCode)
-        replace(`${serialNumber}/${sectionCode}/page${pageNumber}`)
-      else
-      replace(`${serialNumber}/summary`)
+      // The pageNumber starts in 1 when is a new application.
+      const pageNumber = 1
+      push(`${serialNumber}/${currentSection}/page${pageNumber}`)
     }
-  }, [applicationState])
+  }, [serialNumber, currentSection])
 
   return loadingTemplate ? (
     <Loading />
@@ -148,7 +88,7 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
           sections={currentTemplateSections}
           handleClick={() => handleClick(currentTemplate)}
         />
-      {loading ? <Loading/> : null}
+      {application.loading ? <Loading/> : null}
       </Container>
     )
   )
