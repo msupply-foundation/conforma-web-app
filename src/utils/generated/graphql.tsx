@@ -16438,6 +16438,13 @@ export type CreateSectionMutation = (
       & { templateSection?: Maybe<(
         { __typename?: 'TemplateSection' }
         & Pick<TemplateSection, 'title'>
+        & { templateElementsBySectionId: (
+          { __typename?: 'TemplateElementsConnection' }
+          & { nodes: Array<Maybe<(
+            { __typename?: 'TemplateElement' }
+            & Pick<TemplateElement, 'id' | 'code' | 'category' | 'elementTypePluginCode'>
+          )>> }
+        ) }
       )> }
     )> }
   )> }
@@ -16497,7 +16504,6 @@ export type GetApplicationQuery = (
         { __typename?: 'ApplicationSectionsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'ApplicationSection' }
-          & Pick<ApplicationSection, 'id'>
           & { templateSection?: Maybe<(
             { __typename?: 'TemplateSection' }
             & Pick<TemplateSection, 'id' | 'title' | 'code'>
@@ -16700,6 +16706,14 @@ export const CreateSectionDocument = gql`
       applicationId
       templateSection {
         title
+        templateElementsBySectionId {
+          nodes {
+            id
+            code
+            category
+            elementTypePluginCode
+          }
+        }
       }
     }
   }
@@ -16819,7 +16833,6 @@ export const GetApplicationDocument = gql`
       }
       applicationSections {
         nodes {
-          id
           templateSection {
             id
             title
