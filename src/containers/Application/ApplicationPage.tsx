@@ -5,10 +5,12 @@ import { ApplicationHeader, Loading } from '../../components'
 import {
   Application,
   ApplicationSection,
+  TemplateElement,
   useGetApplicationQuery,
 } from '../../utils/generated/graphql'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
 import { CurrentSectionPayload } from '../../utils/types'
+import useGetElementsInPage from '../../utils/hooks/useGetElementsInPage'
 
 const ApplicationPage: React.FC = () => {
   const [ applicationName, setName ] = useState<string>('')
@@ -46,7 +48,15 @@ const ApplicationPage: React.FC = () => {
     }
   }, [data, error])
 
-  return loading ? (
+  const { elements, loadingElements , errorElements } = useGetElementsInPage({
+    templateId: currentSection.templateId,
+    currentPageInSection: Number(page) // TODO: Find the page in the section (keeping the number of pages in previous sections...)
+  })
+
+  return errorElements ? (
+    <Label content="Problem to load section" error={errorElements}/> 
+  ) :
+  loading || loadingElements ? (
     <Loading />
   ) : serialNumber ? (
   <Segment.Group>
@@ -58,7 +68,7 @@ const ApplicationPage: React.FC = () => {
             <Segment>Place holder for progress</Segment>
           </Grid.Column>
           <Grid.Column>
-            <ApplicationStep currentSection={currentSection} pageNumber={Number(page)} />
+            <ApplicationStep currentSection={currentSection} elements={elements} pageNumber={Number(page)} />
           </Grid.Column>
         </Grid.Row>
       </Grid>

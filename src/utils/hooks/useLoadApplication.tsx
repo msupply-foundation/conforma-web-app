@@ -19,7 +19,6 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
         }
       })
 
-
   useEffect(()=> {
     if (data && data.applications) {
         if (data.applications.nodes.length === 0) return
