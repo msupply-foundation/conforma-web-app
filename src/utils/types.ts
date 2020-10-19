@@ -20,7 +20,7 @@ interface ResponsePayload {
   
 interface SectionPayload {
     applicationId: number
-    templateSections: number[]
+    templateSections: (number | null)[]
 }
 
 interface TemplatePayload {

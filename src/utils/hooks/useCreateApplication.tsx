@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import {
+    Application,
+    ApplicationSection,
     CreateApplicationMutation,
     CreateResponseMutation,
     CreateSectionMutation,
@@ -13,7 +15,7 @@ import {
 import { ResponsePayload, SectionPayload } from '../types'
 
 const useCreateApplication = () => {
-    const [ serialNumber, setSerialNumber ] = useState<number | null>(null)
+    const [ serialNumber, setSerialNumber ] = useState<string | null>(null)
 
     const [ applicationMutation ] = useCreateApplicationMutation({
         onCompleted: (data: CreateApplicationMutation) =>         
@@ -44,58 +46,52 @@ const useCreateApplication = () => {
 }
   
 function onCreateApplicationCompleted ({createApplication}: CreateApplicationMutation, 
-    setSerialNumber: React.Dispatch<React.SetStateAction<number| null>>, 
+    setSerialNumber: React.Dispatch<React.SetStateAction<string| null>>, 
     sectionMutation: any) {
-    if (createApplication) {
-        const { application } = createApplication
-        if (application && application.template && application.template.templateSections) {
-            setSerialNumber(application.serial as number)
-            const sections = application.template.templateSections.nodes.map((section) =>
-                section ? section.id : -1
-            )
-            console.log(`Success to create application ${application.serial}!`)
-        
-            createApplicationSections({ applicationId: application.id, templateSections: sections }, sectionMutation)
-        } else console.log('Create application failed - no sections!')
-    } else console.log('Create application failed - no data!')
+    
+    const { id, serial, template } = createApplication?.application as Application
+    const sectionsIds = template?.templateSections.nodes.map(section => section ? section.id : null)
+
+    if (id && serial && sectionsIds) {
+        console.log(`Success to create application: ${serial}!`)
+        setSerialNumber(serial)
+        createApplicationSections({ 
+            applicationId: id, 
+            templateSections: sectionsIds 
+        }, sectionMutation)
+
+    } else console.log('Failed to create application - wrong data!', createApplication)
 }
   
 function createApplicationSections (payload: SectionPayload, sectionMutation: any) {
     const { applicationId, templateSections } = payload
     try {
-        templateSections.forEach((sectionId) => {
-            if (sectionId !== -1) {
-                sectionMutation({
-                    variables: {
-                        applicationId,
-                        templateSectionId: sectionId,
-                    }
-                })
-            }
+        templateSections.forEach((id) => {
+            sectionMutation({
+                variables: {
+                    applicationId,
+                    templateSectionId: id,
+                }
+            })
         })
     } catch (error) {
         console.error(error)
     }
 }
 
-function onCreateSectionCompleted ({ createApplicationSection }: CreateSectionMutation, responseMutation: any) {
-    if (
-        createApplicationSection &&
-        createApplicationSection.applicationSection &&
-        createApplicationSection.applicationSection.templateSection
-    ) {
-        const { applicationId } = createApplicationSection.applicationSection
-        const section = createApplicationSection.applicationSection.templateSection as TemplateSection
-        const elements = section.templateElementsBySectionId.nodes as TemplateElement[]
+function onCreateSectionCompleted ({ createApplicationSection }: CreateSectionMutation, responseMutation: any) {  
+    const { applicationId, templateSection } = createApplicationSection?.applicationSection as ApplicationSection
+    const elements = templateSection?.templateElementsBySectionId.nodes as TemplateElement[]
+
+    if (applicationId && templateSection && elements) {
         const questions = elements.filter(({category}) => category === 'QUESTION')
-        console.log(`Success to create application section ${section.title}`)
+        console.log(`Success to create application section: ${templateSection.title}`)
 
         createApplicationResponse({ 
             applicationId: applicationId as number, 
             templateQuestions: questions
         }, responseMutation)
-
-    } else console.log('Create application section failed - no data!')
+    } else console.log('Failed to create application section - wrong data!', createApplicationSection)
 }
 
 function createApplicationResponse (payload: ResponsePayload, responseMutation: any) {
@@ -116,14 +112,10 @@ function createApplicationResponse (payload: ResponsePayload, responseMutation: 
 }
 
 function onCreateResponseCompleted ({ createApplicationResponse }: CreateResponseMutation) {
-    if (
-        createApplicationResponse &&
-        createApplicationResponse.applicationResponse &&
-        createApplicationResponse.applicationResponse.templateElement
-    ) {
-        const question = createApplicationResponse.applicationResponse.templateElement
-        console.log(`Success to create application response ${question.code}`)
-    } else console.log('Create application response failed - no data!')
+    const question = createApplicationResponse?.applicationResponse?.templateElement as TemplateElement
+    if (question) {
+        console.log(`Success to create application response: ${question.code}`)
+    } else console.log('Failed to create application response - wrong data!', createApplicationResponse)
 }
 
 export default useCreateApplication
