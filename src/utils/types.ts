@@ -14,6 +14,7 @@ interface ApplicationPayload {
 interface CurrentSectionPayload {
     templateId: number
     title: string
+    totalPages: number
 }
   
 interface SectionPayload {
