@@ -16,6 +16,7 @@ interface QueryObject {
 }
 
 interface RouterResult {
+  goBack: () => void
   pathname: string
   push: (path: string) => void
   query: QueryObject
@@ -39,6 +40,8 @@ export function useRouter(): RouterResult {
       push: history.push,
 
       replace: history.replace,
+
+      goBack: history.goBack,
 
       pathname: location.pathname,
 
