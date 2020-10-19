@@ -9,7 +9,7 @@ export {
 }
 
 interface ApplicationPayload {
-    serialNumber: number
+    serialNumber: string
     template: TemplatePayload
 }
 

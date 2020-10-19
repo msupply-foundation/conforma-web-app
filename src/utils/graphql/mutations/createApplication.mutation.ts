@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  mutation createApplication($name: String!, $serial: Int!, $templateId: Int!) {
+  mutation createApplication($name: String!, $serial: String!, $templateId: Int!) {
     createApplication(
       input: {
         application: {

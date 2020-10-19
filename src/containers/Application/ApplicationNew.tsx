@@ -16,7 +16,7 @@ const ApplicationNew: React.FC = () => {
   return type ? (
     <ApplicationCreate type={type} handleClick={(template: TemplatePayload) => {
        // TODO: New issue to generate serial - should be done in server?
-      const serialNumber = Math.round(Math.random() * 10000)
+      const serialNumber = Math.round(Math.random() * 10000).toString()
       setApplicationState({type: 'setSerialNumber', serialNumber})
       handleCreateApplication(applicationMutation, {
         serialNumber,

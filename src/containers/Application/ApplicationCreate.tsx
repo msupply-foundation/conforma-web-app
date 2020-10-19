@@ -42,7 +42,7 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
 
   const { data, loading, error} = useGetApplicationQuery({
     variables: {
-      serial: applicationState.serialNumber as number
+      serial: applicationState.serialNumber as string
     }
   })
 

@@ -12,13 +12,13 @@ type ApplicationState = {
   pageIndex: number | null
   pageNumber: number | null
   pages: Page[] | null
-  serialNumber: number | null
+  serialNumber: string | null
 }
 
 export type ApplicationActions =
   | {
       type: 'setSerialNumber'
-      serialNumber: number
+      serialNumber: string
     }
   | {
     type: 'setCurretPage'
