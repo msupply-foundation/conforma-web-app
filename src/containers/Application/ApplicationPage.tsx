@@ -5,7 +5,6 @@ import { ApplicationHeader, Loading } from '../../components'
 import {
   Application,
   ApplicationSection,
-  TemplateElement,
   useGetApplicationQuery,
 } from '../../utils/generated/graphql'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
@@ -68,13 +67,22 @@ const ApplicationPage: React.FC = () => {
             <Segment>Place holder for progress</Segment>
           </Grid.Column>
           <Grid.Column>
-            <ApplicationStep currentSection={currentSection} elements={elements} pageNumber={Number(page)} />
+            <ApplicationStep 
+              currentSection={currentSection} 
+              elements={elements}
+              onPreviousClicked={null}
+              onNextClicked={nextPageButtonHandler}
+            />
           </Grid.Column>
         </Grid.Row>
       </Grid>
     </Container>
     </Segment.Group>
     ) : <Label content="Application can't be displayed"/>
+}
+
+function nextPageButtonHandler() {
+  console.log('Next button was pressed')
 }
 
 export default ApplicationPage
