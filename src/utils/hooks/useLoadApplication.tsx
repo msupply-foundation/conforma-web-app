@@ -3,7 +3,7 @@ import {
     Application,
     ApplicationSection,
     useGetApplicationQuery,
-  } from '../../utils/generated/graphql'
+  } from '../generated/graphql'
 
 interface useLoadApplicationProps {
     serialNumber: number

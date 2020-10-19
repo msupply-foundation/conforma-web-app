@@ -16833,6 +16833,14 @@ export const GetApplicationDocument = gql`
           }
         }
       }
+      applicationResponses {
+        nodes {
+          value
+          templateElement {
+            code
+          }
+        }
+      }
     }
   }
 }
