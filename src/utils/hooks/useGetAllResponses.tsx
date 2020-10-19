@@ -1,38 +1,31 @@
 import { useState, useEffect } from 'react'
-import {
-    Application,
-    ApplicationSection,
-    useGetApplicationQuery,
-  } from '../generated/graphql'
-import { Response, AllResponses} from '../types'
+import { Application, ApplicationSection, useGetApplicationQuery } from '../generated/graphql'
+import { AllResponses } from '../types'
 
 interface useLoadApplicationProps {
-    serialNumber: number
+  serialNumber: number
 }
 
 const useGetAllResponses = (props: useLoadApplicationProps) => {
-    const { serialNumber } = props
-    const [allResponses, setAllResponses] = useState({})
-    const { data, loading, error} = useGetApplicationQuery({
-        variables: {
-          serial: serialNumber
-        }
-      })
+  const { serialNumber } = props
+  const [allResponses, setAllResponses] = useState({})
+  const { data, loading, error } = useGetApplicationQuery({
+    variables: { serial: serialNumber },
+  })
 
-
-  useEffect(()=> {
+  useEffect(() => {
     if (data?.applications) {
-        if (data.applications.nodes.length === 0) return
+      if (data.applications.nodes.length === 0) return
       if (data.applications.nodes.length > 1)
         console.log('More than one application returned. Only one expected!')
-        
+
       const applicationResponses = data.applications.nodes[0]?.applicationResponses.nodes
-      
+
       const currentResponses = {} as AllResponses
 
       applicationResponses?.forEach((response) => {
         const code = response?.templateElement?.code
-        if (code) currentResponses[code] = response?.value
+        if (code) currentResponses[code] = response?.value?.text || response?.value
       })
 
       setAllResponses(currentResponses)
@@ -40,9 +33,9 @@ const useGetAllResponses = (props: useLoadApplicationProps) => {
   }, [data, error])
 
   return {
-      error,
-      loading,
-      allResponses
+    error,
+    loading,
+    allResponses,
   }
 }
 

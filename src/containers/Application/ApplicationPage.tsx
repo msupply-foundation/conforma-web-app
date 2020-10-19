@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import ApplicationStep from './ApplicationStep'
 import { ApplicationHeader, Loading } from '../../components'
-import {
-  Application,
-  useGetApplicationQuery,
-} from '../../utils/generated/graphql'
+import { Application, useGetApplicationQuery } from '../../utils/generated/graphql'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
+import useGetAllResponses from '../../utils/hooks/useGetAllResponses'
 
 const ApplicationPage: React.FC = () => {
-  const [ applicationName, setName ] = useState('')
+  const [applicationName, setName] = useState('')
   const { query } = useRouter()
   const { mode, serialNumber } = query
 
@@ -18,6 +16,10 @@ const ApplicationPage: React.FC = () => {
       serial: Number(serialNumber),
     },
   })
+
+  const { allResponses } = useGetAllResponses({ serialNumber: Number(serialNumber) })
+
+  // console.log(allResponses)
 
   useEffect(() => {
     if (data && data.applications && data.applications.nodes) {
@@ -34,22 +36,24 @@ const ApplicationPage: React.FC = () => {
   return loading ? (
     <Loading />
   ) : serialNumber ? (
-  <Segment.Group>
-    <ApplicationHeader mode={mode} serialNumber={serialNumber} name={applicationName} />
-    <Container>
-      <Grid columns={2} stackable textAlign='center'>
-        <Grid.Row>
-          <Grid.Column>
-            <Segment>Place holder for progress</Segment>
-          </Grid.Column>
-          <Grid.Column>
-            <ApplicationStep/>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-    </Container>
+    <Segment.Group>
+      <ApplicationHeader mode={mode} serialNumber={serialNumber} name={applicationName} />
+      <Container>
+        <Grid columns={2} stackable textAlign="center">
+          <Grid.Row>
+            <Grid.Column>
+              <Segment>Place holder for progress</Segment>
+            </Grid.Column>
+            <Grid.Column>
+              <ApplicationStep />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Container>
     </Segment.Group>
-    ) : <Label content="Application can't be displayed"/>
+  ) : (
+    <Label content="Application can't be displayed" />
+  )
 }
 
 export default ApplicationPage
