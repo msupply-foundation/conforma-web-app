@@ -16497,7 +16497,6 @@ export type GetApplicationQuery = (
         { __typename?: 'ApplicationSectionsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'ApplicationSection' }
-          & Pick<ApplicationSection, 'id'>
           & { templateSection?: Maybe<(
             { __typename?: 'TemplateSection' }
             & Pick<TemplateSection, 'id' | 'title' | 'code'>
@@ -16508,6 +16507,16 @@ export type GetApplicationQuery = (
                 & Pick<TemplateElement, 'code' | 'elementTypePluginCode'>
               )>> }
             ) }
+          )> }
+        )>> }
+      ), applicationResponses: (
+        { __typename?: 'ApplicationResponsesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ApplicationResponse' }
+          & Pick<ApplicationResponse, 'value'>
+          & { templateElement?: Maybe<(
+            { __typename?: 'TemplateElement' }
+            & Pick<TemplateElement, 'code'>
           )> }
         )>> }
       ) }
@@ -16819,7 +16828,6 @@ export const GetApplicationDocument = gql`
       }
       applicationSections {
         nodes {
-          id
           templateSection {
             id
             title
