@@ -5,6 +5,7 @@ import {
   ApplicationQuestion,
   ApplicationSelectType,
   ApplicationStart,
+  ApplicationStep,
   ApplicationSummary,
 } from './Application'
 import Approval from './Approval'
@@ -33,6 +34,7 @@ export {
   ApplicationQuestion,
   ApplicationSelectType,
   ApplicationStart,
+  ApplicationStep,
   ApplicationSummary,
   Approval,
   Admin,

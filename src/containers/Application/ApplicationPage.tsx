@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import ApplicationStep from './ApplicationStep'
-import { ApplicationHeader, Loading } from '../../components'
+import { ApplicationHeader, ApplicationStep, Loading } from '../../components'
 import {
   Application,
   ApplicationSection,
