@@ -2,48 +2,27 @@ import React from 'react'
 import ApplicationCreate from './ApplicationCreate'
 import { ApplicationSelectType } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
-import {
-  Application,
-  CreateApplicationMutation,
-  CreateSectionMutation,
-  useCreateApplicationMutation,
-  useCreateSectionMutation,
-} from '../../utils/generated/graphql'
-import { ApplicationPayload, SectionPayload, TemplatePayload } from '../../utils/types'
-import getApplicationQuery from '../../utils/graphql/queries/getApplication.query'
+import { ApplicationPayload, TemplateTypePayload } from '../../utils/types'
 import { useApplicationState } from '../../contexts/ApplicationState'
+import useCreateApplication from '../../utils/hooks/useCreateApplication'
 
 const ApplicationNew: React.FC = () => {
-  const { applicationState, setApplicationState } = useApplicationState()
+  const { setApplicationState } = useApplicationState()
   const { query } = useRouter()
   const { type } = query
 
-  const [createApplicationMutation] = useCreateApplicationMutation({
-    onCompleted: (data: CreateApplicationMutation) => {
-      onCreateApplicationCompleted(data, createSectionMutation)
-    },
-  })
-  const [createSectionMutation] = useCreateSectionMutation({
-    onCompleted: onCreateSectionsCompleted,
-    // Update cached query of getApplication
-    refetchQueries: [
-      {
-        query: getApplicationQuery,
-        variables: { serial: applicationState.serialNumber },
-      },
-    ],
-  })
+  const { applicationMutation } = useCreateApplication()
 
   return type ? (
     <ApplicationCreate
       type={type}
-      handleClick={(template: TemplatePayload) => {
+      handleClick={(template: TemplateTypePayload) => {
         // TODO: New issue to generate serial - should be done in server?
         const serialNumber = Math.round(Math.random() * 10000).toString()
         setApplicationState({ type: 'setSerialNumber', serialNumber })
-        handleCreateApplication(createApplicationMutation, {
-          template,
+        handleCreateApplication(applicationMutation, {
           serialNumber,
+          template,
         })
       }}
     />
@@ -52,12 +31,10 @@ const ApplicationNew: React.FC = () => {
   )
 }
 
-export default ApplicationNew
-
-function handleCreateApplication(createApplicationMutation: any, payload: ApplicationPayload) {
+function handleCreateApplication(applicationMutation: any, payload: ApplicationPayload) {
   const { serialNumber, template } = payload
   try {
-    createApplicationMutation({
+    applicationMutation({
       variables: {
         name: `Test application of ${template.name}`,
         serial: serialNumber,
@@ -69,48 +46,4 @@ function handleCreateApplication(createApplicationMutation: any, payload: Applic
   }
 }
 
-function onCreateApplicationCompleted(
-  { createApplication }: CreateApplicationMutation,
-  createSectionMutation: any
-) {
-  if (createApplication) {
-    const application = createApplication.application as Application
-    if (application.template && application.template.templateSections.nodes) {
-      const sections = application.template.templateSections.nodes.map((section) =>
-        section ? section.id : -1
-      )
-      console.log(`Success to create application ${application.serial}!`)
-      createApplicationSection(
-        { applicationId: application.id, templateSections: sections },
-        createSectionMutation
-      )
-    } else console.log('Create application failed - no sections!')
-  } else console.log('Create application failed - no data!')
-}
-
-function createApplicationSection(payload: SectionPayload, createSectionMutation: any) {
-  const { applicationId, templateSections } = payload
-  try {
-    templateSections.forEach((sectionId) => {
-      createSectionMutation({
-        variables: {
-          applicationId,
-          templateSectionId: sectionId,
-        },
-      })
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-function onCreateSectionsCompleted({ createApplicationSection }: CreateSectionMutation) {
-  if (
-    createApplicationSection &&
-    createApplicationSection.applicationSection &&
-    createApplicationSection.applicationSection.templateSection
-  ) {
-    const section = createApplicationSection.applicationSection.templateSection
-    console.log(`Success to create application section ${section.title}`)
-  } else console.log('Create application section failed - no data!')
-}
+export default ApplicationNew
