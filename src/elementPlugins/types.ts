@@ -11,7 +11,7 @@ interface ApplicationViewProps {
   isEditable: boolean
   // applicationState,
   // graphQLclient
-  initialValue: any // Could be a primative or an object with any shape
+  initialValue?: any // Could be a primative or an object with any shape
 }
 
 interface OnUpdateTemplateWrapperView {
