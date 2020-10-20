@@ -4,13 +4,13 @@ export {
     ApplicationPayload,
     ResponsePayload,
     SectionPayload,
-    TemplatePayload,
+    TemplateTypePayload,
     TemplateSectionPayload
 }
 
 interface ApplicationPayload {
     serialNumber: string
-    template: TemplatePayload
+    template: TemplateTypePayload
 }
 
 interface ResponsePayload {
@@ -23,7 +23,7 @@ interface SectionPayload {
     templateSections: (number | null)[]
 }
 
-interface TemplatePayload {
+interface TemplateTypePayload {
     id: number
     name: string
     code: string
