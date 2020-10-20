@@ -91,6 +91,7 @@ export type Query = Node & {
   actionPlugin?: Maybe<ActionPlugin>;
   actionQueue?: Maybe<ActionQueue>;
   application?: Maybe<Application>;
+  applicationBySerial?: Maybe<Application>;
   applicationResponse?: Maybe<ApplicationResponse>;
   applicationSection?: Maybe<ApplicationSection>;
   applicationStageHistory?: Maybe<ApplicationStageHistory>;
@@ -593,6 +594,12 @@ export type QueryActionQueueArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryApplicationArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationBySerialArgs = {
+  serial: Scalars['String'];
 };
 
 
@@ -1562,8 +1569,6 @@ export enum ApplicationsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  UniqueIdentifierAsc = 'UNIQUE_IDENTIFIER_ASC',
-  UniqueIdentifierDesc = 'UNIQUE_IDENTIFIER_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   UserIdAsc = 'USER_ID_ASC',
@@ -1586,14 +1591,12 @@ export enum ApplicationsOrderBy {
 export type ApplicationCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `uniqueIdentifier` field. */
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `serial` field. */
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `name` field. */
   name?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `outcome` field. */
@@ -1614,14 +1617,12 @@ export enum ApplicationOutcome {
 export type ApplicationFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `uniqueIdentifier` field. */
-  uniqueIdentifier?: Maybe<StringFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `userId` field. */
   userId?: Maybe<IntFilter>;
   /** Filter by the object’s `serial` field. */
-  serial?: Maybe<IntFilter>;
+  serial?: Maybe<StringFilter>;
   /** Filter by the object’s `name` field. */
   name?: Maybe<StringFilter>;
   /** Filter by the object’s `outcome` field. */
@@ -3159,10 +3160,9 @@ export type Application = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -5751,6 +5751,8 @@ export type Mutation = {
   updateApplicationByNodeId?: Maybe<UpdateApplicationPayload>;
   /** Updates a single `Application` using a unique key and a patch. */
   updateApplication?: Maybe<UpdateApplicationPayload>;
+  /** Updates a single `Application` using a unique key and a patch. */
+  updateApplicationBySerial?: Maybe<UpdateApplicationPayload>;
   /** Updates a single `ApplicationResponse` using its globally unique id and a patch. */
   updateApplicationResponseByNodeId?: Maybe<UpdateApplicationResponsePayload>;
   /** Updates a single `ApplicationResponse` using a unique key and a patch. */
@@ -5867,6 +5869,8 @@ export type Mutation = {
   deleteApplicationByNodeId?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `Application` using a unique key. */
   deleteApplication?: Maybe<DeleteApplicationPayload>;
+  /** Deletes a single `Application` using a unique key. */
+  deleteApplicationBySerial?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `ApplicationResponse` using its globally unique id. */
   deleteApplicationResponseByNodeId?: Maybe<DeleteApplicationResponsePayload>;
   /** Deletes a single `ApplicationResponse` using a unique key. */
@@ -6181,6 +6185,12 @@ export type MutationUpdateApplicationByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateApplicationArgs = {
   input: UpdateApplicationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateApplicationBySerialArgs = {
+  input: UpdateApplicationBySerialInput;
 };
 
 
@@ -6529,6 +6539,12 @@ export type MutationDeleteApplicationByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteApplicationArgs = {
   input: DeleteApplicationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteApplicationBySerialArgs = {
+  input: DeleteApplicationBySerialInput;
 };
 
 
@@ -7121,10 +7137,9 @@ export type CreateApplicationInput = {
 /** An input for mutations affecting `Application` */
 export type ApplicationInput = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -8155,13 +8170,19 @@ export type ApplicationTemplateIdFkeyInverseInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<Array<ApplicationApplicationPkeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<Array<ApplicationApplicationSerialKeyConnect>>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<ApplicationNodeIdConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<Array<ApplicationApplicationPkeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<Array<ApplicationApplicationSerialKeyDelete>>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<ApplicationNodeIdDelete>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<Array<ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<Array<ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate>>;
   /** A `ApplicationInput` object that will be created and connected to this object. */
@@ -8173,6 +8194,11 @@ export type ApplicationApplicationPkeyConnect = {
   id: Scalars['Int'];
 };
 
+/** The fields on `application` to look up the row to connect. */
+export type ApplicationApplicationSerialKeyConnect = {
+  serial: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to connect. */
 export type ApplicationNodeIdConnect = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
@@ -8182,6 +8208,11 @@ export type ApplicationNodeIdConnect = {
 /** The fields on `application` to look up the row to delete. */
 export type ApplicationApplicationPkeyDelete = {
   id: Scalars['Int'];
+};
+
+/** The fields on `application` to look up the row to delete. */
+export type ApplicationApplicationSerialKeyDelete = {
+  serial: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to delete. */
@@ -8200,9 +8231,8 @@ export type ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplication
 /** An object where the defined keys will be set on the `application` being updated. */
 export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -8267,13 +8297,19 @@ export type ApplicationUserIdFkeyInverseInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<Array<ApplicationApplicationPkeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<Array<ApplicationApplicationSerialKeyConnect>>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<ApplicationNodeIdConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<Array<ApplicationApplicationPkeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<Array<ApplicationApplicationSerialKeyDelete>>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<ApplicationNodeIdDelete>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<Array<ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<Array<ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate>>;
   /** A `ApplicationInput` object that will be created and connected to this object. */
@@ -8290,9 +8326,8 @@ export type ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationPkey
 /** An object where the defined keys will be set on the `application` being updated. */
 export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -8370,13 +8405,19 @@ export type ApplicationSectionApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateByNodeId?: Maybe<ApplicationSectionOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate>;
   /** A `ApplicationInput` object that will be created and connected to this object. */
@@ -8393,10 +8434,9 @@ export type ApplicationOnApplicationSectionForApplicationSectionApplicationIdFke
 /** An object where the defined keys will be set on the `application` being updated. */
 export type UpdateApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -8477,13 +8517,19 @@ export type ApplicationStageHistoryApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateByNodeId?: Maybe<ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate>;
   /** A `ApplicationInput` object that will be created and connected to this object. */
@@ -8500,10 +8546,9 @@ export type ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplic
 /** An object where the defined keys will be set on the `application` being updated. */
 export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -8844,13 +8889,19 @@ export type ApplicationResponseApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateByNodeId?: Maybe<ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate>;
   /** A `ApplicationInput` object that will be created and connected to this object. */
@@ -8867,10 +8918,9 @@ export type ApplicationOnApplicationResponseForApplicationResponseApplicationIdF
 /** An object where the defined keys will be set on the `application` being updated. */
 export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -8951,13 +9001,19 @@ export type ReviewApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateByNodeId?: Maybe<ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate>;
   /** A `ApplicationInput` object that will be created and connected to this object. */
@@ -8974,10 +9030,9 @@ export type ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpd
 /** An object where the defined keys will be set on the `application` being updated. */
 export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -9334,13 +9389,19 @@ export type FileApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnFileForFileApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnFileForFileApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateByNodeId?: Maybe<FileOnFileForFileApplicationIdFkeyNodeIdUpdate>;
   /** A `ApplicationInput` object that will be created and connected to this object. */
@@ -9357,10 +9418,9 @@ export type ApplicationOnFileForFileApplicationIdFkeyUsingApplicationPkeyUpdate 
 /** An object where the defined keys will be set on the `application` being updated. */
 export type UpdateApplicationOnFileForFileApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -9529,13 +9589,19 @@ export type NotificationApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateByNodeId?: Maybe<NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate>;
   /** A `ApplicationInput` object that will be created and connected to this object. */
@@ -9552,10 +9618,9 @@ export type ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplic
 /** An object where the defined keys will be set on the `application` being updated. */
 export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -9570,6 +9635,13 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
@@ -9581,10 +9653,9 @@ export type NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpda
 /** Represents an update to a `Application`. Fields that are set will be updated. */
 export type ApplicationPatch = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -9602,10 +9673,9 @@ export type ApplicationPatch = {
 /** The `application` to be created by this mutation. */
 export type NotificationApplicationIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -11615,6 +11685,13 @@ export type NotificationApplicationIdFkeyNotificationCreateInput = {
   fileToDocumentId?: Maybe<NotificationDocumentIdFkeyInput>;
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnFileForFileApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnFileForFileApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type FileOnFileForFileApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
@@ -11626,10 +11703,9 @@ export type FileOnFileForFileApplicationIdFkeyNodeIdUpdate = {
 /** The `application` to be created by this mutation. */
 export type FileApplicationIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -11810,6 +11886,13 @@ export type FileApplicationIdFkeyFileCreateInput = {
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
@@ -11821,10 +11904,9 @@ export type ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate = {
 /** The `application` to be created by this mutation. */
 export type ReviewApplicationIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -11859,6 +11941,13 @@ export type ReviewApplicationIdFkeyReviewCreateInput = {
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
@@ -11870,10 +11959,9 @@ export type ApplicationResponseOnApplicationResponseForApplicationResponseApplic
 /** The `application` to be created by this mutation. */
 export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -12068,6 +12156,13 @@ export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput =
   filesUsingId?: Maybe<FileApplicationResponseIdFkeyInverseInput>;
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
@@ -12079,10 +12174,9 @@ export type ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageH
 /** The `application` to be created by this mutation. */
 export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -12117,6 +12211,13 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationStageHistoryCreat
   reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentStageIdFkeyInverseInput>;
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ApplicationSectionOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
@@ -12128,10 +12229,9 @@ export type ApplicationSectionOnApplicationSectionForApplicationSectionApplicati
 /** The `application` to be created by this mutation. */
 export type ApplicationSectionApplicationIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -12163,6 +12263,13 @@ export type ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput = {
   reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInverseInput>;
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
@@ -12174,9 +12281,8 @@ export type UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate = {
 /** The `application` to be created by this mutation. */
 export type ApplicationUserIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -12217,6 +12323,13 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
@@ -12228,9 +12341,8 @@ export type TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate = {
 /** The `application` to be created by this mutation. */
 export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  uniqueIdentifier?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -14189,6 +14301,15 @@ export type UpdateApplicationInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `updateApplicationBySerial` mutation. */
+export type UpdateApplicationBySerialInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Application` being updated. */
+  patch: ApplicationPatch;
+  serial: Scalars['String'];
+};
+
 /** All input for the `updateApplicationResponseByNodeId` mutation. */
 export type UpdateApplicationResponseByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -15378,6 +15499,13 @@ export type DeleteApplicationInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `deleteApplicationBySerial` mutation. */
+export type DeleteApplicationBySerialInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  serial: Scalars['String'];
+};
+
 /** All input for the `deleteApplicationResponseByNodeId` mutation. */
 export type DeleteApplicationResponseByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -16373,7 +16501,7 @@ export type AddNewUserFragment = (
 
 export type CreateApplicationMutationVariables = Exact<{
   name: Scalars['String'];
-  serial: Scalars['Int'];
+  serial: Scalars['String'];
   templateId: Scalars['Int'];
 }>;
 
@@ -16479,7 +16607,7 @@ export type UpdateApplicationMutation = (
 );
 
 export type GetApplicationQueryVariables = Exact<{
-  serial: Scalars['Int'];
+  serial: Scalars['String'];
 }>;
 
 
@@ -16497,7 +16625,6 @@ export type GetApplicationQuery = (
         { __typename?: 'ApplicationSectionsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'ApplicationSection' }
-          & Pick<ApplicationSection, 'id'>
           & { templateSection?: Maybe<(
             { __typename?: 'TemplateSection' }
             & Pick<TemplateSection, 'id' | 'title' | 'code'>
@@ -16607,7 +16734,7 @@ export const AddNewUserFragmentDoc = gql`
 }
     `;
 export const CreateApplicationDocument = gql`
-    mutation createApplication($name: String!, $serial: Int!, $templateId: Int!) {
+    mutation createApplication($name: String!, $serial: String!, $templateId: Int!) {
   createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, isActive: true, outcome: PENDING}}) {
     application {
       id
@@ -16805,7 +16932,7 @@ export type UpdateApplicationMutationHookResult = ReturnType<typeof useUpdateApp
 export type UpdateApplicationMutationResult = Apollo.MutationResult<UpdateApplicationMutation>;
 export type UpdateApplicationMutationOptions = Apollo.BaseMutationOptions<UpdateApplicationMutation, UpdateApplicationMutationVariables>;
 export const GetApplicationDocument = gql`
-    query getApplication($serial: Int!) {
+    query getApplication($serial: String!) {
   applications(condition: {serial: $serial}) {
     nodes {
       id
@@ -16819,7 +16946,6 @@ export const GetApplicationDocument = gql`
       }
       applicationSections {
         nodes {
-          id
           templateSection {
             id
             title

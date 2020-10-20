@@ -10,7 +10,7 @@ export interface ApplicationStartProps {
 
 const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
   const { template: type, sections, handleClick } = props
-  
+
   return (
     <Container text>
       <Header as="h1" content={type ? type.description : 'Create application page'} />
@@ -25,10 +25,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
                 <List.Item key={`list-item-${section.code}`} content={section.title} />
               ))}
           </List>
-          <Button
-            content={type.name}
-            onClick={handleClick}
-          />
+          <Button content={type.name} onClick={handleClick} />
         </Segment>
       )}
       {!type && <Label content="No Application" />}

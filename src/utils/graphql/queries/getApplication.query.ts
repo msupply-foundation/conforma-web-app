@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getApplication($serial: Int!) {
+  query getApplication($serial: String!) {
     applications(condition: { serial: $serial }) {
       nodes {
         id
