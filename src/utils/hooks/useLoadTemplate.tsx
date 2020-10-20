@@ -18,16 +18,15 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  const { data, loading: appoloLoading, error: appolloError } = useGetTemplateQuery({
+  const { data, loading: appoloLoading, error: apolloError } = useGetTemplateQuery({
     variables: {
       code: templateCode,
     },
   })
 
   useEffect(() => {
-    if (appolloError) return
+    if (apolloError) return
     if (appoloLoading) return
-
     // Check that only one tempalte matched
     let error = checkForTemplateErrors(data)
     if (error) {
@@ -72,7 +71,7 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
 
   return {
     loading,
-    appolloError,
+    apolloError,
     error,
     templateType,
     templateSections,
@@ -80,7 +79,7 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
 }
 
 function checkForTemplateErrors(data: GetTemplateQuery | undefined) {
-  if (data?.templates?.nodes?.length) return 'Unexpected template result'
+  if (data?.templates?.nodes?.length === null) return 'Unexpected template result'
   const numberOfTemplates = data?.templates?.nodes.length as number
   if (numberOfTemplates === 0) return 'Template not found'
   if (numberOfTemplates > 1) return 'More then one template found'
@@ -88,7 +87,7 @@ function checkForTemplateErrors(data: GetTemplateQuery | undefined) {
 }
 
 function checkForTemplatSectionErrors(template: Template) {
-  if (template?.templateSections?.nodes) return 'Uexpected template section result'
+  if (template?.templateSections?.nodes === null) return 'Uexpected template section result'
   const numberOfSections = template?.templateSections?.nodes.length as number
   if (numberOfSections === 0) return 'No template secitons'
   return null
