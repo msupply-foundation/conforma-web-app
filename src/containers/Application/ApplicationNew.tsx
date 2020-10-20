@@ -29,7 +29,7 @@ const ApplicationNew: React.FC = () => {
     refetchQueries: [
       {
         query: getApplicationQuery,
-        variables: { serial: Number(applicationState.serialNumber) },
+        variables: { serial: applicationState.serialNumber },
       },
     ],
   })
@@ -60,7 +60,7 @@ function handleCreateApplication(createApplicationMutation: any, payload: Applic
     createApplicationMutation({
       variables: {
         name: `Test application of ${template.name}`,
-        serial: Number(serialNumber),
+        serial: serialNumber,
         templateId: template.id,
       },
     })
