@@ -87,9 +87,9 @@ function checkForTemplateErrors(data: GetTemplateQuery | undefined) {
 }
 
 function checkForTemplatSectionErrors(template: Template) {
-  if (template?.templateSections?.nodes === null) return 'Uexpected template section result'
+  if (template?.templateSections?.nodes === null) return 'Unexpected template section result'
   const numberOfSections = template?.templateSections?.nodes.length as number
-  if (numberOfSections === 0) return 'No template secitons'
+  if (numberOfSections === 0) return 'No template sections'
   return null
 }
 
