@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Container, Grid, Header, Icon, Segment } from 'semantic-ui-react'
-import { ApplicationQuestion, Loading } from '../../components'
-import { TemplateElement, useGetSectionElementsQuery } from '../../utils/generated/graphql'
+import React from 'react'
+import { Button, Container, Grid, Header, Segment } from 'semantic-ui-react'
+import { ApplicationQuestion } from '../../components'
+import { TemplateElement } from '../../utils/generated/graphql'
 import { CurrentSectionPayload } from '../../utils/types'
 
 interface ApplicationStepProps {
@@ -15,18 +15,23 @@ const ApplicationStep: React.FC<ApplicationStepProps> = (props) => {
   const { currentSection, elements, onNextClicked, onPreviousClicked } = props
 
   return (
-    <Container textAlign='left'>
+    <Container textAlign="left">
       <Segment>
         <Header content={currentSection.title} />
-        {elements.map(element => <ApplicationQuestion templateElement={element}/>)}
+        {elements.map((element) => (
+          <ApplicationQuestion templateElement={element} />
+        ))}
         <Grid columns={3}>
           <Grid.Row>
             <Grid.Column>
-              {onPreviousClicked && <PageButton title='Previous' type='left' onClicked={onPreviousClicked}/>}
+              {onPreviousClicked && (
+                <PageButton title="Previous" type="left" onClicked={onPreviousClicked} />
+              )}
             </Grid.Column>
-            <Grid.Column/>{/* Empty cell */}
+            <Grid.Column />
+            {/* Empty cell */}
             <Grid.Column>
-              {onNextClicked && <PageButton title='Next' type='right' onClicked={onNextClicked}/>}
+              {onNextClicked && <PageButton title="Next" type="right" onClicked={onNextClicked} />}
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -46,9 +51,9 @@ interface PageButtonProps {
 const PageButton: React.FC<PageButtonProps> = (props) => {
   const { title, type, onClicked } = props
   return (
-    <Button 
-      labelPosition={type} 
-      icon ={type==='right'?'right arrow' : 'left arrow'} 
+    <Button
+      labelPosition={type}
+      icon={type === 'right' ? 'right arrow' : 'left arrow'}
       content={title}
       onClick={() => onClicked()}
     />

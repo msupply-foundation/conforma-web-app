@@ -31,7 +31,7 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
 }
 
 const initialState: ApplicationState = {
-  serialNumber: null
+  serialNumber: null,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
