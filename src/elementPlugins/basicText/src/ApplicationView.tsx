@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Form } from 'semantic-ui-react'
-import { ApplicatioViewProps } from '../../types'
+import { ApplicationViewProps } from '../../types'
 
 const ApplicationView = ({
   templateElement,
   onUpdate,
   initialValue,
   isEditable,
-}: ApplicatioViewProps) => {
+}: ApplicationViewProps) => {
   const [validationMessage, setValidationMessage] = useState('')
   const [value, setValue] = useState(initialValue)
 
