@@ -39,7 +39,7 @@ const ApplicationPage: React.FC = () => {
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
-      serial: Number(serialNumber),
+      serial: serialNumber as string,
     },
   })
 

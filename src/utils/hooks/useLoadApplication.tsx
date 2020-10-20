@@ -6,7 +6,7 @@ import {
 } from '../../utils/generated/graphql'
 
 interface useLoadApplicationProps {
-  serialNumber: number
+  serialNumber: string
 }
 
 const useLoadApplication = (props: useLoadApplicationProps) => {

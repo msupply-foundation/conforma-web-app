@@ -38,7 +38,7 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
     },
   })
 
-  const application = useLoadApplication({ serialNumber: serialNumber as number })
+  const application = useLoadApplication({ serialNumber: serialNumber as string })
   const { currentSection } = application
 
   useEffect(() => {

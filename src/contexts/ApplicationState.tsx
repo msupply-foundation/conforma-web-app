@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
 type ApplicationState = {
-  serialNumber: number | null
+  serialNumber: string | null
 }
 
 export type ApplicationActions =
   | {
       type: 'setSerialNumber'
-      serialNumber: number
+      serialNumber: string
     }
   | {
       type: 'reset'
