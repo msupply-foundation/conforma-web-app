@@ -130,7 +130,6 @@ const ApplicationPage: React.FC = () => {
           </Grid.Row>
         </Grid>
       </Container>
-      <Segment></Segment>
     </Segment.Group>
   ) : (
     <Label content="Application can't be displayed" />

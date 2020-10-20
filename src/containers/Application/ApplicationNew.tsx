@@ -9,7 +9,7 @@ import {
   useCreateApplicationMutation,
   useCreateSectionMutation,
 } from '../../utils/generated/graphql'
-import { ApplicationPayload, SectionPayload, TemplatePayload } from '../../utils/types'
+import { ApplicationPayload, SectionPayload, TemplateTypePayload } from '../../utils/types'
 import getApplicationQuery from '../../utils/graphql/queries/getApplication.query'
 import { useApplicationState } from '../../contexts/ApplicationState'
 
@@ -29,7 +29,7 @@ const ApplicationNew: React.FC = () => {
     refetchQueries: [
       {
         query: getApplicationQuery,
-        variables: { serial: Number(applicationState.serialNumber) },
+        variables: { serial: applicationState.serialNumber },
       },
     ],
   })
@@ -37,7 +37,7 @@ const ApplicationNew: React.FC = () => {
   return type ? (
     <ApplicationCreate
       type={type}
-      handleClick={(template: TemplatePayload) => {
+      handleClick={(template: TemplateTypePayload) => {
         // TODO: New issue to generate serial - should be done in server?
         const serialNumber = Math.round(Math.random() * 10000).toString()
         setApplicationState({ type: 'setSerialNumber', serialNumber })
