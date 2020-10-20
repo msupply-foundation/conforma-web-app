@@ -6,6 +6,7 @@ export default gql`
       nodes {
         category
         code
+        elementTypePluginCode
         visibilityCondition
         nextElementCode
         parameters

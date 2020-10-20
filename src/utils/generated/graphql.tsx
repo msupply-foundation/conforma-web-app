@@ -16678,7 +16678,7 @@ export type GetSectionElementsQuery = (
     { __typename?: 'TemplateElementsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'TemplateElement' }
-      & Pick<TemplateElement, 'category' | 'code' | 'visibilityCondition' | 'nextElementCode' | 'parameters' | 'title' | 'sectionId'>
+      & Pick<TemplateElement, 'category' | 'code' | 'elementTypePluginCode' | 'visibilityCondition' | 'nextElementCode' | 'parameters' | 'title' | 'sectionId'>
     )>> }
   )> }
 );
@@ -17052,6 +17052,7 @@ export const GetSectionElementsDocument = gql`
     nodes {
       category
       code
+      elementTypePluginCode
       visibilityCondition
       nextElementCode
       parameters
