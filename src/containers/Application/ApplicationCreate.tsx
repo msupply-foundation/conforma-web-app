@@ -27,11 +27,10 @@ type FlattenType = {
 
 const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
   const { applicationState, setApplicationState } = useApplicationState()
-  const { type, handleClick } = props
+  const { type: templateCode, handleClick } = props
   const { replace } = useRouter()
 
-  const template = useLoadTemplate({type})
-  const { currentType, currentSections } = template
+  const { currentType, currentSections }  = useLoadTemplate({templateCode})
 
   const { data, loading, error} = useGetApplicationQuery({
     variables: {
@@ -103,7 +102,7 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
     }
   }, [applicationState])
 
-  return template.loading ? (
+  return loading ? (
     <Loading />
   ) : (
     currentType && currentSections ?

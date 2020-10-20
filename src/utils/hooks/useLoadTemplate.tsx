@@ -1,71 +1,97 @@
 import { useEffect, useState } from 'react'
-import { Template, TemplateSection, useGetTemplateQuery } from '../generated/graphql'
+import {
+  GetTemplateQuery,
+  Template,
+  TemplateSection,
+  useGetTemplateQuery,
+} from '../generated/graphql'
 import { TemplateTypePayload, TemplateSectionPayload } from '../types'
 
 interface useLoadTemplateProps {
-    type: string
+  templateCode: string
 }
 
 const useLoadTemplate = (props: useLoadTemplateProps) => {
-    const { type } = props
-    const [ currentType, setType ] = useState<TemplateTypePayload | null>(null)
-    const [ currentSections, setSections ] = useState<TemplateSectionPayload[]| null>(null)
-    
-    const { data, loading, error } = useGetTemplateQuery({
-        variables: { 
-            code: type 
-          }
+  const { templateCode } = props
+  const [currentType, setType] = useState<TemplateTypePayload | null>(null)
+  const [currentSections, setSections] = useState<TemplateSectionPayload[] | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  const { data, loading: appoloLoading, error: appolloError } = useGetTemplateQuery({
+    variables: {
+      code: templateCode,
+    },
+  })
+
+  useEffect(() => {
+    if (appolloError) return
+    if (appoloLoading) return
+
+    // Check that only one tempalte matched
+    let error = checkForTemplateErrors(data)
+    if (error) {
+      setError(error)
+      setLoading(false)
+      return
+    }
+
+    const template = data?.templates?.nodes[0] as Template
+
+    error = checkForTemplatSectionErrors(template)
+    if (error) {
+      setError(error)
+      setLoading(false)
+      return
+    }
+
+    const { id, code, name, templateSections } = template
+
+    const sections = templateSections.nodes.map((section) => {
+      const { id, code, title, templateElementsBySectionId } = section as TemplateSection
+      const elementsCount = templateElementsBySectionId.nodes.length
+      const templateSection: TemplateSectionPayload = {
+        id,
+        code: code as string,
+        title: title as string,
+        elementsCount,
+      }
+      return templateSection
     })
 
-    useEffect(() => {
-        if (data && data.templates) {
-            if (data.templates.nodes.length === 0) return
-            if (data.templates.nodes.length > 1)
-              console.log('More than one template returned. Only one expected!')
-            console.log('data.templates', data.templates);
-            
-            // Send the template to the local state
-            const template = data.templates.nodes[0] as Template
-            console.log('template', template);
-            
-            const { id, code, name } = template
-            const templateType = { 
-                id, 
-                code, 
-                name: name ? name : 'Undefined name', 
-                description: 'Include some description for this template', 
-                documents: Array<string>()
-            }
-            setType(templateType)
-      
-            // Send the template sections to the local state
-            if (template.templateSections && template.templateSections.nodes) {
-              if (template.templateSections.nodes.length === 0)
-                console.log('No Section on the template returned. At least one expected!')
-              else {
-                const sections = template.templateSections.nodes.map((section) => {
-                  const { id, code, title, templateElementsBySectionId} = section as TemplateSection
-                  const elementsCount = templateElementsBySectionId.nodes.length
-                  const templateSection: TemplateSectionPayload = {
-                    id, 
-                    code: code as string, 
-                    title: title as string, 
-                    elementsCount
-                  }
-                  return templateSection
-                })
-                setSections(sections)
-              }
-            }
-          }
-    }, [data])
+    setType({
+      id,
+      code,
+      name: name ? name : 'Undefined name',
+      description: 'Include some description for this template',
+      documents: Array<string>(),
+    })
+    setSections(sections)
+    setLoading(false)
+  }, [data])
 
-    return {
-        loading,
-        error,
-        currentType,
-        currentSections
-    }
+  return {
+    loading,
+    appolloError,
+    error,
+    currentType,
+    currentSections,
+  }
+}
+
+function checkForTemplateErrors(data: GetTemplateQuery | undefined) {
+  if (data?.templates?.nodes?.length) return 'Unexpected template result'
+  const numberOfTemplates = data?.templates?.nodes.length as number
+  if (numberOfTemplates === 0) return 'Template not found'
+  if (numberOfTemplates > 1) return 'More then one template found'
+  return null
+}
+
+function checkForTemplatSectionErrors(template: Template) {
+  if (template?.templateSections?.nodes) return 'Uexpected template section result'
+  const numberOfSections = template?.templateSections?.nodes.length as number
+  if (numberOfSections === 0) return 'No template secitons'
+  return null
 }
 
 export default useLoadTemplate
