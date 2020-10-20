@@ -18,15 +18,13 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
   })
 
   useEffect(() => {
-    if (data && data.templates) {
+    if (data?.templates) {
       if (data.templates.nodes.length === 0) return
       if (data.templates.nodes.length > 1)
         console.log('More than one template returned. Only one expected!')
-      console.log('data.templates', data.templates)
 
       // Send the template to the local state
       const template = data.templates.nodes[0] as Template
-      console.log('template', template)
 
       const { id, code, name } = template
       const templateType = {
