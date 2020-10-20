@@ -13,8 +13,8 @@ interface useLoadTemplateProps {
 
 const useLoadTemplate = (props: useLoadTemplateProps) => {
   const { templateCode } = props
-  const [currentType, setType] = useState<TemplateTypePayload | null>(null)
-  const [currentSections, setSections] = useState<TemplateSectionPayload[] | null>(null)
+  const [templateType, setTemplateType] = useState<TemplateTypePayload | null>(null)
+  const [templateSections, setTemplateSections] = useState<TemplateSectionPayload[] | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -59,14 +59,14 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
       return templateSection
     })
 
-    setType({
+    setTemplateType({
       id,
       code,
       name: name ? name : 'Undefined name',
       description: 'Include some description for this template',
       documents: Array<string>(),
     })
-    setSections(sections)
+    setTemplateSections(sections)
     setLoading(false)
   }, [data])
 
@@ -74,8 +74,8 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
     loading,
     appolloError,
     error,
-    currentType,
-    currentSections,
+    templateType,
+    templateSections,
   }
 }
 
