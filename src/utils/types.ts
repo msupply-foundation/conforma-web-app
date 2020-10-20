@@ -1,5 +1,8 @@
+import { TemplateElement } from './generated/graphql'
+
 export {
     ApplicationPayload,
+    ResponsePayload,
     SectionPayload,
     TemplateTypePayload,
     TemplateSectionPayload
@@ -9,10 +12,15 @@ interface ApplicationPayload {
     serialNumber: string
     template: TemplateTypePayload
 }
+
+interface ResponsePayload {
+    applicationId: number
+    templateQuestions: TemplateElement[]
+}
   
 interface SectionPayload {
     applicationId: number
-    templateSections: number[]
+    templateSections: (number | null)[]
 }
 
 interface TemplateTypePayload {
