@@ -17,9 +17,7 @@ const ApplicationPage: React.FC = () => {
     },
   })
 
-  const { allResponses } = useGetAllResponses({ serialNumber: Number(serialNumber) })
-
-  // console.log(allResponses)
+  const { responsesByCode } = useGetAllResponses({ serialNumber: Number(serialNumber) })
 
   useEffect(() => {
     if (data && data.applications && data.applications.nodes) {

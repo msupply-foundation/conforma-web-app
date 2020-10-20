@@ -4,7 +4,7 @@ export {
   TemplatePayload,
   TemplateSectionPayload,
   Response,
-  AllResponses,
+  ResponsesByCode,
 }
 
 interface ApplicationPayload {
@@ -38,6 +38,6 @@ type Response = {
   reference?: any // Not yet decided how to represent
 }
 
-interface AllResponses {
+interface ResponsesByCode {
   [key: string]: Response | string
 }
