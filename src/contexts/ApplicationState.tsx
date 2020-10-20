@@ -12,22 +12,22 @@ type ApplicationState = {
   pageIndex: number | null
   pageNumber: number | null
   pages: Page[] | null
-  serialNumber: number | null
+  serialNumber: string | null
 }
 
 export type ApplicationActions =
   | {
       type: 'setSerialNumber'
-      serialNumber: number
+      serialNumber: string
     }
   | {
-    type: 'setCurretPage'
-    pageNumber: number
-  }
+      type: 'setCurretPage'
+      pageNumber: number
+    }
   | {
-    type: 'setPages'
-    pages: Page[]
-  }
+      type: 'setPages'
+      pages: Page[]
+    }
   | {
       type: 'reset'
     }
@@ -42,21 +42,21 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
         ...state,
         serialNumber,
       }
-      case 'setCurretPage':
-        const { pageNumber } = action
-        return {
-          ...state,
-          pageIndex: (!state.pages) ? null : state.pages.length >= pageNumber ? pageNumber-1 : null,
-          pageNumber 
-        }
-      case 'setPages':
-        const { pages } = action
-        return {
-          ...state,
-          pages,
-          pageIndex: pages.length > 0 ? 0 : null,
-          pageNumber: 1
-        }
+    case 'setCurretPage':
+      const { pageNumber } = action
+      return {
+        ...state,
+        pageIndex: !state.pages ? null : state.pages.length >= pageNumber ? pageNumber - 1 : null,
+        pageNumber,
+      }
+    case 'setPages':
+      const { pages } = action
+      return {
+        ...state,
+        pages,
+        pageIndex: pages.length > 0 ? 0 : null,
+        pageNumber: 1,
+      }
     case 'reset':
       return initialState
     default:
@@ -68,7 +68,7 @@ const initialState: ApplicationState = {
   pageIndex: null,
   pageNumber: null,
   pages: null,
-  serialNumber: null
+  serialNumber: null,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code

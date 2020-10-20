@@ -8,10 +8,10 @@ import {
 import { ResponsesByCode } from '../types'
 
 interface useLoadApplicationProps {
-  serialNumber: number
+  serialNumber: string
 }
 
-const useGetAllResponses = (props: useLoadApplicationProps) => {
+const useGetResponsesByCode = (props: useLoadApplicationProps) => {
   const { serialNumber } = props
   const [responsesByCode, setResponsesByCode] = useState({})
   const { data, loading, error } = useGetApplicationQuery({
@@ -45,4 +45,4 @@ const useGetAllResponses = (props: useLoadApplicationProps) => {
   }
 }
 
-export default useGetAllResponses
+export default useGetResponsesByCode

@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Template,
-  TemplateSection,
-  useGetTemplateQuery,
-} from '../../utils/generated/graphql'
+import { Template, TemplateSection, useGetTemplateQuery } from '../../utils/generated/graphql'
 import { TemplatePayload, TemplateSectionPayload } from '../../utils/types'
 import { ApplicationStart, Loading } from '../../components'
 import { useApplicationState } from '../../contexts/ApplicationState'
@@ -25,20 +21,24 @@ type FlattenType = {
 }
 
 const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
-  const [ currentTemplate, setTemplate ] = useState<TemplatePayload | null>(null)
-  const [ currentTemplateSections, setSections ] = useState<TemplateSectionPayload[]| null>(null)
+  const [currentTemplate, setTemplate] = useState<TemplatePayload | null>(null)
+  const [currentTemplateSections, setSections] = useState<TemplateSectionPayload[] | null>(null)
   const { applicationState } = useApplicationState()
   const { serialNumber } = applicationState
   const { type, handleClick } = props
   const { push } = useRouter()
 
-  const { data: templateData, loading: loadingTemplate, error: errorTemplate } = useGetTemplateQuery({ 
-    variables: { 
-      code: type 
-    } 
+  const {
+    data: templateData,
+    loading: loadingTemplate,
+    error: errorTemplate,
+  } = useGetTemplateQuery({
+    variables: {
+      code: type,
+    },
   })
 
-  const application = useLoadApplication({serialNumber: serialNumber as number})
+  const application = useLoadApplication({ serialNumber: serialNumber as string })
   const { currentSection } = application
 
   useEffect(() => {
@@ -50,7 +50,13 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
       const template = templateData.templates.nodes[0] as Template
       const { id, code, name } = template
       const templateName = name ? name : 'Undefined name'
-      const templateType = { id, code, name: templateName, description: 'Include some description for this template', documents: Array<string>()}
+      const templateType = {
+        id,
+        code,
+        name: templateName,
+        description: 'Include some description for this template',
+        documents: Array<string>(),
+      }
       setTemplate(templateType)
 
       // Send the template sections to the local state
@@ -59,7 +65,7 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
           console.log('No Section on the template returned. At least one expected!')
         else {
           const sections = template.templateSections.nodes.map((section) => {
-            const { id, code, title, templateElementsBySectionId} = section as TemplateSection
+            const { id, code, title, templateElementsBySectionId } = section as TemplateSection
             const elementsCount = templateElementsBySectionId.nodes.length
             return { id, code: code as string, title: title as string, elementsCount }
           })
@@ -88,7 +94,7 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
           sections={currentTemplateSections}
           handleClick={() => handleClick(currentTemplate)}
         />
-      {application.loading ? <Loading/> : null}
+        {application.loading ? <Loading /> : null}
       </Container>
     )
   )

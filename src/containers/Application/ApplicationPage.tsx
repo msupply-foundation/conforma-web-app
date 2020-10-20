@@ -4,7 +4,7 @@ import ApplicationStep from './ApplicationStep'
 import { ApplicationHeader, Loading } from '../../components'
 import { Application, useGetApplicationQuery } from '../../utils/generated/graphql'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
-import useGetAllResponses from '../../utils/hooks/useGetAllResponses'
+import useGetResponsesByCode from '../../utils/hooks/useGetResponsesByCode'
 
 const ApplicationPage: React.FC = () => {
   const [applicationName, setName] = useState('')
@@ -13,11 +13,11 @@ const ApplicationPage: React.FC = () => {
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
-      serial: Number(serialNumber),
+      serial: serialNumber as string,
     },
   })
 
-  const { responsesByCode } = useGetAllResponses({ serialNumber: Number(serialNumber) })
+  const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
 
   useEffect(() => {
     if (data && data.applications && data.applications.nodes) {
