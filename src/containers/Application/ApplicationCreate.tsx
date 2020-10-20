@@ -30,8 +30,7 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
   const { type, handleClick } = props
   const { replace } = useRouter()
 
-  const template = useLoadTemplate({ type })
-  const { currentType, currentSections } = template
+  const { loading: templateIsLoading, templateType, templateSections } = useLoadTemplate({ type })
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
@@ -108,14 +107,14 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
     }
   }, [applicationState])
 
-  return template.loading ? (
+  return templateIsLoading ? (
     <Loading />
-  ) : currentType && currentSections ? (
+  ) : templateType && templateSections ? (
     <Container>
       <ApplicationStart
-        template={currentType}
-        sections={currentSections}
-        handleClick={() => handleClick(currentType)}
+        template={templateType}
+        sections={templateSections}
+        handleClick={() => handleClick(templateType)}
       />
       {loading ? <Loading /> : null}
     </Container>
