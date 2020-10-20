@@ -67,7 +67,7 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
     })
     setTemplateSections(sections)
     setLoading(false)
-  }, [data])
+  }, [data, apolloError])
 
   return {
     loading,
