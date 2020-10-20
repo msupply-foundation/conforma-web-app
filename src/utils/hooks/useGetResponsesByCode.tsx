@@ -4,6 +4,7 @@ import {
   ApplicationResponse,
   ApplicationSection,
   useGetApplicationQuery,
+  GetApplicationQuery,
 } from '../generated/graphql'
 import { ResponsesByCode } from '../types'
 
@@ -14,11 +15,19 @@ interface useLoadApplicationProps {
 const useGetResponsesByCode = (props: useLoadApplicationProps) => {
   const { serialNumber } = props
   const [responsesByCode, setResponsesByCode] = useState({})
-  const { data, loading, error } = useGetApplicationQuery({
+  const [error, setError] = useState('')
+  const { data, loading: apolloLoading, error: apolloError } = useGetApplicationQuery({
     variables: { serial: serialNumber },
   })
 
   useEffect(() => {
+    const error = checkForApplicationErrors(data)
+
+    if (error) {
+      setError(error)
+      return
+    }
+
     if (data?.applications) {
       if (data.applications.nodes.length === 0) return
       if (data.applications.nodes.length > 1)
@@ -36,13 +45,22 @@ const useGetResponsesByCode = (props: useLoadApplicationProps) => {
 
       setResponsesByCode(currentResponses)
     }
-  }, [data, error])
+  }, [data, apolloError])
 
   return {
+    apolloError,
+    apolloLoading,
     error,
-    loading,
     responsesByCode,
   }
 }
 
+function checkForApplicationErrors(data: GetApplicationQuery | undefined) {
+  if (data?.applications) {
+    if (data.applications.nodes.length === 0) return 'No applications found'
+    if (data.applications.nodes.length > 1)
+      return 'More than one application returned. Only one expected!'
+  }
+  return null
+}
 export default useGetResponsesByCode
