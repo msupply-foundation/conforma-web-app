@@ -19,7 +19,22 @@ class pluginProvider {
     pluginProviderInstance = this
 
     this.plugins = {}
-    this.pluginManifest = {}
+    // Needs to be called when app loads (REST call to back end)
+    // TODO
+    this.pluginManifest = {
+      shortText: {
+        displayName: 'Basic Text Input',
+        isCore: true,
+        folderName: 'shortText',
+        category: 'Input',
+      },
+      textInfo: {
+        isCore: true,
+        displayName: 'Static Text',
+        folderName: 'textInfo',
+        category: 'Informative',
+      },
+    }
   }
 
   getPluginElement(code: string) {
