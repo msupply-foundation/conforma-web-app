@@ -28,6 +28,14 @@ export default gql`
             }
           }
         }
+        applicationResponses {
+          nodes {
+            value
+            templateElement {
+              code
+            }
+          }
+        }
       }
     }
   }
