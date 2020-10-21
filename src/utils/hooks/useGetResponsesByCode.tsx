@@ -28,23 +28,17 @@ const useGetResponsesByCode = (props: useLoadApplicationProps) => {
       return
     }
 
-    if (data?.applications) {
-      if (data.applications.nodes.length === 0) return
-      if (data.applications.nodes.length > 1)
-        console.log('More than one application returned. Only one expected!')
+    const applicationResponses = data?.applications?.nodes[0]?.applicationResponses
+      .nodes as ApplicationResponse[]
 
-      const applicationResponses = data.applications.nodes[0]?.applicationResponses
-        .nodes as ApplicationResponse[]
+    const currentResponses = {} as ResponsesByCode
 
-      const currentResponses = {} as ResponsesByCode
+    applicationResponses.forEach((response) => {
+      const code = response?.templateElement?.code
+      if (code) currentResponses[code] = response?.value?.text || response?.value
+    })
 
-      applicationResponses.forEach((response) => {
-        const code = response?.templateElement?.code
-        if (code) currentResponses[code] = response?.value?.text || response?.value
-      })
-
-      setResponsesByCode(currentResponses)
-    }
+    setResponsesByCode(currentResponses)
   }, [data, apolloError])
 
   return {
