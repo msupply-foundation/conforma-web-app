@@ -14,6 +14,7 @@ const useGetResponsesByCode = (props: useLoadApplicationProps) => {
   const { serialNumber } = props
   const [responsesByCode, setResponsesByCode] = useState({})
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(true)
   const { data, loading: apolloLoading, error: apolloError } = useGetApplicationQuery({
     variables: { serial: serialNumber },
   })
@@ -23,8 +24,11 @@ const useGetResponsesByCode = (props: useLoadApplicationProps) => {
 
     if (error) {
       setError(error)
+      setLoading(false)
       return
     }
+
+    if (apolloError) return
 
     const applicationResponses = data?.applications?.nodes[0]?.applicationResponses
       .nodes as ApplicationResponse[]
@@ -37,11 +41,13 @@ const useGetResponsesByCode = (props: useLoadApplicationProps) => {
     })
 
     setResponsesByCode(currentResponses)
+    setLoading(false)
   }, [data, apolloError])
 
   return {
     apolloError,
     apolloLoading,
+    loading,
     error,
     responsesByCode,
   }
