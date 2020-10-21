@@ -18,7 +18,7 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  const { data, loading: appoloLoading, error: apolloError } = useGetTemplateQuery({
+  const { data, loading: apolloLoading, error: apolloError } = useGetTemplateQuery({
     variables: {
       code: templateCode,
     },
@@ -26,7 +26,7 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
 
   useEffect(() => {
     if (apolloError) return
-    if (appoloLoading) return
+    if (apolloLoading) return
     // Check that only one tempalte matched
     let error = checkForTemplateErrors(data)
     if (error) {
