@@ -7,7 +7,7 @@ import { Header } from 'semantic-ui-react'
 import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
 import useCreateApplication from '../../utils/hooks/useCreateApplication'
 
-const ApplicationCreate: React.FC = (props) => {
+const ApplicationCreate: React.FC = () => {
   const { applicationState, setApplicationState } = useApplicationState()
   const { serialNumber } = applicationState
   const { push, query } = useRouter()
