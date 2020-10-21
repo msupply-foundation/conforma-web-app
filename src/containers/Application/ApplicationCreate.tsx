@@ -3,25 +3,21 @@ import { TemplateTypePayload } from '../../utils/types'
 import { ApplicationStart, Loading } from '../../components'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { Container, Header } from 'semantic-ui-react'
+import { Header } from 'semantic-ui-react'
 import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
+import useCreateApplication from '../../utils/hooks/useCreateApplication'
 
-interface ApplicationCreateProps {
-  type: string
-  handleClick: (template: TemplateTypePayload) => void
-}
-
-const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
-  const { applicationState } = useApplicationState()
+const ApplicationCreate: React.FC = (props) => {
+  const { applicationState, setApplicationState } = useApplicationState()
   const { serialNumber } = applicationState
-  const { type: templateCode, handleClick } = props
-  const { push } = useRouter()
+  const { push, query } = useRouter()
+  const { type } = query
+
+  const { applicationMutation } = useCreateApplication()
 
   const { apolloError, error, loading, templateType, templateSections } = useLoadTemplate({
-    templateCode,
+    templateCode: type as string,
   })
-
-  // const { loading, currentSection } = useLoadApplication({ serialNumber: serialNumber as string })
 
   useEffect(() => {
     if (serialNumber && templateSections && templateSections.length > 0) {
@@ -40,16 +36,38 @@ const ApplicationCreate: React.FC<ApplicationCreateProps> = (props) => {
   ) : loading ? (
     <Loading />
   ) : templateType && templateSections ? (
-    <Container>
-      <ApplicationStart
-        template={templateType}
-        sections={templateSections}
-        handleClick={() => handleClick(templateType)}
-      />
-    </Container>
+    <ApplicationStart
+      template={templateType}
+      sections={templateSections}
+      handleClick={() =>
+        handleCreateApplication(applicationMutation, setApplicationState, templateType)
+      }
+    />
   ) : (
     <Header as="h2" icon="exclamation circle" content="No template found!" />
   )
+}
+
+function handleCreateApplication(
+  applicationMutation: any,
+  setApplicationState: any,
+  template: TemplateTypePayload
+) {
+  // TODO: New issue to generate serial - should be done in server?
+  const serialNumber = Math.round(Math.random() * 10000).toString()
+  setApplicationState({ type: 'setSerialNumber', serialNumber })
+
+  try {
+    applicationMutation({
+      variables: {
+        name: `Test application of ${template.name}`,
+        serial: serialNumber,
+        templateId: template.id,
+      },
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 export default ApplicationCreate

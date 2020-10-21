@@ -1,23 +1,12 @@
 import { TemplateElement } from './generated/graphql'
 
 export {
-    ApplicationPayload,
-    CurrentSectionPayload,
     ResponsePayload,
     SectionPayload,
+    SectionPages,
+    SectionPageDetails,
     TemplateTypePayload,
     TemplateSectionPayload
-}
-
-interface ApplicationPayload {
-    serialNumber: string
-    template: TemplateTypePayload
-}
-
-interface CurrentSectionPayload {
-    templateId: number
-    title: string
-    totalPages: number
 }
 
 interface ResponsePayload {
@@ -28,6 +17,18 @@ interface ResponsePayload {
 interface SectionPayload {
     applicationId: number
     templateSections: (number | null)[]
+}
+
+interface SectionPages {
+    [code: string]: SectionPageDetails
+}
+
+interface SectionPageDetails {
+    id: number
+    code: string
+    title: string
+    startPage: number
+    totalPages: number
 }
 
 interface TemplateTypePayload {

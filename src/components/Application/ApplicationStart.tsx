@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Container, Header, Label, List, Segment } from 'semantic-ui-react'
 import { TemplateTypePayload, TemplateSectionPayload } from '../../utils/types'
+import ApplicationSelectType from './ApplicationSelectType'
 
 export interface ApplicationStartProps {
   template: TemplateTypePayload
@@ -11,7 +12,7 @@ export interface ApplicationStartProps {
 const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
   const { template: type, sections, handleClick } = props
 
-  return (
+  return type ? (
     <Container text>
       <Header as="h1" content={type ? type.description : 'Create application page'} />
       {type && (
@@ -30,6 +31,8 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
       )}
       {!type && <Label content="No Application" />}
     </Container>
+  ) : (
+    <ApplicationSelectType />
   )
 }
 
