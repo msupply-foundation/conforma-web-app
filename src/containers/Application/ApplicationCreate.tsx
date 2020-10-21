@@ -13,21 +13,27 @@ const ApplicationCreate: React.FC = (props) => {
   const { push, query } = useRouter()
   const { type } = query
 
-  const { applicationMutation } = useCreateApplication()
+  const { applicationMutation, responses } = useCreateApplication()
 
   const { apolloError, error, loading, templateType, templateSections } = useLoadTemplate({
     templateCode: type as string,
   })
 
   useEffect(() => {
-    if (serialNumber && templateSections && templateSections.length > 0) {
+    if (
+      Object.values(responses).length > 0 && // Checking the responses are created
+      !Object.values(responses).some((value) => value === false) &&
+      serialNumber &&
+      templateSections &&
+      templateSections.length > 0
+    ) {
       // Call Application page on first section
       const firstSection = templateSections[0].code
       // The pageNumber starts in 1 when is a new application.
       const pageNumber = 1
       push(`${serialNumber}/${firstSection}/page${pageNumber}`)
     }
-  }, [serialNumber, templateSections])
+  }, [serialNumber, responses, templateSections])
 
   return apolloError ? (
     <Header as="h2" icon="exclamation circle" content="Can't reach the server" />
@@ -39,9 +45,10 @@ const ApplicationCreate: React.FC = (props) => {
     <ApplicationStart
       template={templateType}
       sections={templateSections}
-      handleClick={() =>
+      handleClick={() => {
+        setApplicationState({ type: 'reset' })
         handleCreateApplication(applicationMutation, setApplicationState, templateType)
-      }
+      }}
     />
   ) : (
     <Header as="h2" icon="exclamation circle" content="No template found!" />
@@ -56,7 +63,6 @@ function handleCreateApplication(
   // TODO: New issue to generate serial - should be done in server?
   const serialNumber = Math.round(Math.random() * 10000).toString()
   setApplicationState({ type: 'setSerialNumber', serialNumber })
-
   try {
     applicationMutation({
       variables: {
