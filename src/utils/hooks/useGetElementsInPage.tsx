@@ -20,23 +20,20 @@ const useGetElementsInPage = (props: useGetElementsInPageProps) => {
       const templateElements = data.templateElements.nodes as TemplateElement[]
       const elementsInPage: TemplateElement[] = []
 
-      if (!pageIndexInSection) console.log('Something wrong with getting elements of current page')
-      else {
-        let currentElementCode: string | null = getFirstCodeInPage(
-          templateElements,
-          pageIndexInSection
+      let currentElementCode: string | null = getFirstCodeInPage(
+        templateElements,
+        pageIndexInSection as number
+      )
+      while (currentElementCode != null) {
+        const found = templateElements.find(
+          (element) => (element.code as string) === currentElementCode
         )
-        while (currentElementCode != null) {
-          const found = templateElements.find(
-            (element) => (element.code as string) === currentElementCode
-          )
-          if (found) {
-            elementsInPage.push(found)
-            currentElementCode = found.nextElementCode ? found.nextElementCode : null
-          }
+        if (found) {
+          elementsInPage.push(found)
+          currentElementCode = found.nextElementCode ? found.nextElementCode : null
         }
-        setElements(elementsInPage)
       }
+      setElements(elementsInPage)
     }
   }, [data, error])
 

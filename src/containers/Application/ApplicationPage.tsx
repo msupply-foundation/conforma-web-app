@@ -14,16 +14,12 @@ const ApplicationPage: React.FC = () => {
     serialNumber: serialNumber as string,
   })
 
-  console.log('useLoadApplication', error, loading, applicationName, applicationSections)
-
   const currentSection = applicationSections[sectionCode as string]
 
   const { elements, loadingElements, errorElements } = useGetElementsInPage({
     templateId: currentSection ? currentSection.id : -1,
     pageIndexInSection: currentSection ? Number(page) - currentSection.startPage : undefined,
   })
-
-  console.log('useGetElementsInPage', elements, loadingElements, errorElements)
 
   const nextPagePayload = {
     serialNumber: serialNumber as string,
@@ -33,8 +29,11 @@ const ApplicationPage: React.FC = () => {
     push,
   }
 
-  return errorElements ? (
-    <Label content="Problem to load section" error={errorElements} />
+  return error || errorElements ? (
+    <Label
+      content="Problem to load application"
+      error={error ? error : errorElements ? errorElements : ''}
+    />
   ) : loading || loadingElements ? (
     <Loading />
   ) : serialNumber ? (
