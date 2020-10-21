@@ -2,22 +2,21 @@ import React from 'react'
 import { Button, Container, Grid, Header, Segment } from 'semantic-ui-react'
 import { ApplicationQuestion } from '../../components'
 import { TemplateElement } from '../../utils/generated/graphql'
-import { CurrentSectionPayload } from '../../utils/types'
 
 interface ApplicationStepProps {
-  currentSection: CurrentSectionPayload
+  sectionTitle: string
   elements: TemplateElement[]
   onNextClicked: (() => void) | null
   onPreviousClicked: (() => void) | null
 }
 
 const ApplicationStep: React.FC<ApplicationStepProps> = (props) => {
-  const { currentSection, elements, onNextClicked, onPreviousClicked } = props
+  const { sectionTitle, elements, onNextClicked, onPreviousClicked } = props
 
   return (
     <Container textAlign="left">
       <Segment>
-        <Header content={currentSection.title} />
+        <Header content={sectionTitle} />
         {elements.map((element) => (
           <ApplicationQuestion templateElement={element} />
         ))}

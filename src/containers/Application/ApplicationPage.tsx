@@ -1,108 +1,37 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationHeader, ApplicationStep, Loading } from '../../components'
-import {
-  Application,
-  ApplicationSection,
-  TemplateElement,
-  useGetApplicationQuery,
-} from '../../utils/generated/graphql'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
-import { CurrentSectionPayload } from '../../utils/types'
 import useGetElementsInPage from '../../utils/hooks/useGetElementsInPage'
-
-interface SectionPages {
-  [code: string]: {
-    total: number
-    start: number
-  }
-}
+import useLoadApplication from '../../utils/hooks/useLoadApplication'
+import { SectionPages } from '../../utils/types'
 
 const ApplicationPage: React.FC = () => {
-  const [applicationName, setName] = useState<string>('')
-  const [sectionPages, setSectionPages] = useState<SectionPages>({})
-  const [currentSection, setCurrentSection] = useState<CurrentSectionPayload>({
-    templateId: 0,
-    title: '',
-    totalPages: 0,
-  })
   const { query, push, goBack } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
+
+  const { error, loading, applicationName, applicationSections } = useLoadApplication({
+    serialNumber: serialNumber as string,
+  })
+
+  console.log('useLoadApplication', error, loading, applicationName, applicationSections)
+
+  const currentSection = applicationSections[sectionCode as string]
+
+  const { elements, loadingElements, errorElements } = useGetElementsInPage({
+    templateId: currentSection ? currentSection.id : -1,
+    pageIndexInSection: currentSection ? Number(page) - currentSection.startPage : undefined,
+  })
+
+  console.log('useGetElementsInPage', elements, loadingElements, errorElements)
 
   const nextPagePayload = {
     serialNumber: serialNumber as string,
     sectionCode: sectionCode as string,
     currentPage: Number(page) as number,
-    pages: sectionPages,
+    pages: applicationSections,
     push,
   }
-
-  const { data, loading, error } = useGetApplicationQuery({
-    variables: {
-      serial: serialNumber as string,
-    },
-  })
-
-  useEffect(() => {
-    if (data && data.applications && data.applications.nodes) {
-      if (data.applications.nodes.length > 1)
-        console.log('More than one application returned. Only one expected!')
-
-      const application = data.applications.nodes[0] as Application
-      if (application) {
-        setName(application.name as string)
-
-        if (application.applicationSections) {
-          const sections = application.applicationSections.nodes as ApplicationSection[]
-          const pagesBySection: SectionPages = {}
-          let startPage = 1 // Always start on page 1
-          let previousStartPage = startPage
-          sections.forEach((section) => {
-            const { templateSection } = section
-            if (templateSection) {
-              const { code } = templateSection
-              const elements = templateSection.templateElementsBySectionId
-                .nodes as TemplateElement[]
-              let totalPages = 1
-              elements.forEach((element) => {
-                if (element.elementTypePluginCode === 'PageBreak') totalPages++
-              })
-              const pages = { total: totalPages, start: startPage }
-              pagesBySection[code as string] = pages
-
-              startPage = previousStartPage + totalPages // Update the next section start page
-            }
-          })
-          setSectionPages(pagesBySection)
-
-          const currentSection = sections.find(
-            (section) => section.templateSection?.code === sectionCode
-          )
-          if (currentSection) {
-            const { templateSection } = currentSection
-            if (templateSection) {
-              const elements = templateSection.templateElementsBySectionId
-                .nodes as TemplateElement[]
-              let totalPages = 1
-              elements.forEach((element) => {
-                if (element.elementTypePluginCode === 'PageBreak') totalPages++
-              })
-              setCurrentSection({
-                templateId: templateSection.id,
-                title: templateSection.title as string,
-                totalPages,
-              })
-            }
-          }
-        }
-      }
-    }
-  }, [data, error])
-
-  const { elements, loadingElements, errorElements } = useGetElementsInPage({
-    templateId: currentSection.templateId,
-    currentPageInSection: Number(page), // TODO: Find the page in the section (keeping the number of pages in previous sections...)
-  })
 
   return errorElements ? (
     <Label content="Problem to load section" error={errorElements} />
@@ -119,7 +48,7 @@ const ApplicationPage: React.FC = () => {
             </Grid.Column>
             <Grid.Column>
               <ApplicationStep
-                currentSection={currentSection}
+                sectionTitle={currentSection.title}
                 elements={elements}
                 onPreviousClicked={
                   Number(page) === 1 ? null : () => previousButtonHandler({ goBack })
@@ -157,10 +86,10 @@ function nextPageButtonHandler(props: nextPageProps) {
 
   const nextPage = currentPage + 1
   const currentSection = pages[sectionCode]
-  const isAnotherSection = nextPage > currentSection.start + currentSection.total
+  const isAnotherSection = nextPage > currentSection.startPage + currentSection.totalPages
 
   if (isAnotherSection) {
-    const foundSection = Object.entries(pages).find(([key, obj]) => obj.start === nextPage)
+    const foundSection = Object.entries(pages).find(([key, obj]) => obj.startPage === nextPage)
     if (foundSection && foundSection.length > 0) {
       const nextSection = foundSection[0]
       push(`../../${serialNumber}/${nextSection}/page${nextPage}`)
