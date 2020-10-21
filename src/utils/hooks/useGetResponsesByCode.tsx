@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import {
-  Application,
   ApplicationResponse,
-  ApplicationSection,
   useGetApplicationQuery,
   GetApplicationQuery,
 } from '../generated/graphql'
