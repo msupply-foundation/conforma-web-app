@@ -3,7 +3,7 @@ import { hot } from 'react-hot-loader'
 import Footer from './Main/Footer'
 import SiteLayout from './Main/SiteLayout'
 import UserArea from './User/UserArea'
-import { UserProvider } from './User/UserState'
+import { UserProvider } from '../contexts/UserState'
 
 const App: React.FC = () => {
   return (
