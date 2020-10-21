@@ -2,16 +2,16 @@ import { useState } from 'react'
 import {
   Application,
   ApplicationSection,
+  ApplicationSectionsConnection,
   CreateApplicationMutation,
   CreateResponseMutation,
   CreateSectionMutation,
   TemplateElement,
-  TemplateSection,
   useCreateApplicationMutation,
   useCreateResponseMutation,
   useCreateSectionMutation,
 } from '../../utils/generated/graphql'
-import getApplicationQuery from '../../utils/graphql/queries/getApplication.query'
+import addNewSectionFragment from '../../utils/graphql/fragments/addNewSection.fragment'
 import { ResponsePayload, SectionPayload } from '../types'
 
 const useCreateApplication = () => {
@@ -28,12 +28,29 @@ const useCreateApplication = () => {
       onCreateSectionCompleted(data, responseMutation, responses, setCompletedResponse),
 
     // Update cached query of getApplication
-    refetchQueries: [
-      {
-        query: getApplicationQuery,
-        variables: { serial: serialNumber },
-      },
-    ],
+    update(cache, { data: sectionData }) {
+      const newSectionPayload = sectionData?.createApplicationSection
+      if (!newSectionPayload) return //Something wrong with the mutation
+
+      cache.modify({
+        fields: {
+          sections(existingSectionRefs: ApplicationSectionsConnection[] = [], { readField }) {
+            const newSectionRef = cache.writeFragment({
+              data: newSectionPayload,
+              fragment: addNewSectionFragment,
+            })
+
+            // Quick safety check - if the new section is already
+            // present in the cache, we don't need to add it again.
+            return existingSectionRefs.some(
+              (ref) => readField('id', ref) === newSectionPayload.applicationSection?.id
+            )
+              ? existingSectionRefs
+              : [...existingSectionRefs, newSectionRef]
+          },
+        },
+      })
+    },
   })
 
   const [responseMutation] = useCreateResponseMutation({

@@ -16494,6 +16494,11 @@ export type DeleteUserOrganisationInput = {
   id: Scalars['Int'];
 };
 
+export type AddNewSectionFragment = (
+  { __typename?: 'ApplicationSection' }
+  & Pick<ApplicationSection, 'id' | 'applicationId' | 'templateSectionId'>
+);
+
 export type AddNewUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'username'>
@@ -16562,7 +16567,7 @@ export type CreateSectionMutation = (
     { __typename?: 'CreateApplicationSectionPayload' }
     & { applicationSection?: Maybe<(
       { __typename?: 'ApplicationSection' }
-      & Pick<ApplicationSection, 'applicationId'>
+      & Pick<ApplicationSection, 'id' | 'applicationId'>
       & { templateSection?: Maybe<(
         { __typename?: 'TemplateSection' }
         & Pick<TemplateSection, 'title'>
@@ -16734,6 +16739,13 @@ export type GetUsersQuery = (
   )> }
 );
 
+export const AddNewSectionFragmentDoc = gql`
+    fragment addNewSection on ApplicationSection {
+  id
+  applicationId
+  templateSectionId
+}
+    `;
 export const AddNewUserFragmentDoc = gql`
     fragment addNewUser on User {
   id
@@ -16831,6 +16843,7 @@ export const CreateSectionDocument = gql`
     mutation createSection($applicationId: Int!, $templateSectionId: Int!) {
   createApplicationSection(input: {applicationSection: {applicationId: $applicationId, templateSectionId: $templateSectionId}}) {
     applicationSection {
+      id
       applicationId
       templateSection {
         title
