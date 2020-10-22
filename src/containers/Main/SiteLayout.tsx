@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Grid, Segment } from 'semantic-ui-react'
 import {
   Account,
+  AddUserExample,
   AdminPermissions,
   AdminUsers,
   ApplicationList,
@@ -48,6 +49,9 @@ const SiteLayout: React.FC = () => {
               </Route>
               <Route exact path="/login">
                 <Login />
+              </Route>
+              <Route exact path="/example">
+                <AddUserExample />
               </Route>
               <Route exact path="/applications">
                 <ApplicationList />
