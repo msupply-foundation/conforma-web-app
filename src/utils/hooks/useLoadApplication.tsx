@@ -81,7 +81,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
       sections.forEach((section) => {
         const { templateSection } = section
         if (templateSection) {
-          const { id, code, title } = templateSection
+          const { id, code, title, index } = templateSection
           const elements = templateSection.templateElementsBySectionId.nodes as TemplateElement[]
           let totalPages = 1
           elements.forEach((element) => {
@@ -91,8 +91,9 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
             id,
             code: code as string,
             title: title as string,
-            startPage,
-            totalPages,
+            index: index as number,
+            startPage, // TODO: Remove,
+            totalPages, // TODO: Remove
           }
           mapSectionsDetails[code as string] = sectionPayload
           startPage = previousStartPage + totalPages // Update the next section start page

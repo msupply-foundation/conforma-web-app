@@ -30,10 +30,12 @@ const useGetElementsInPage = (props: useGetElementsInPageProps) => {
 
       // TODO: Order element by ( index and section.index )
       templateElements.forEach((element) => {
-        const { elementTypePluginCode: code, title } = element
+        const { elementTypePluginCode: code } = element
         if (code === 'pageBreak') elementsByPage[++countPage] = [] as TemplateElement[]
         else elementsByPage[countPage].push(element)
       })
+
+      console.log('elementsByPage', elementsByPage, pageIndexInSection)
 
       const pageIndex = pageIndexInSection ? pageIndexInSection : 0
       const elementsInPage = elementsByPage[pageIndex]

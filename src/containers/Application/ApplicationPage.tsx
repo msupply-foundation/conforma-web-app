@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationHeader, ApplicationStep, Loading } from '../../components'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
@@ -8,8 +8,9 @@ import useGetResponsesByCode from '../../utils/hooks/useGetResponsesByCode'
 import { SectionPages } from '../../utils/types'
 
 const ApplicationPage: React.FC = () => {
+  const [pageIndex, setPageIndex] = useState(0)
   const { query, push, goBack } = useRouter()
-  const { mode, serialNumber, sectionCode, page } = query
+  const { mode, serialNumber, sectionCode, git diff } = query
 
   const { error, loading, applicationName, applicationSections } = useLoadApplication({
     serialNumber: serialNumber as string,
@@ -21,7 +22,7 @@ const ApplicationPage: React.FC = () => {
 
   const { elements, loadingElements, errorElements } = useGetElementsInPage({
     sectionTemplateId: currentSection ? currentSection.id : -1,
-    pageIndexInSection: currentSection ? Number(page) - currentSection.startPage : undefined,
+    pageIndexInSection: pageIndex,
   })
 
   const nextPagePayload = {
@@ -31,6 +32,10 @@ const ApplicationPage: React.FC = () => {
     pages: applicationSections,
     push,
   }
+
+  useEffect(() => {
+    setPageIndex(Number(page) - 1)
+  }, [page])
 
   return error || errorElements ? (
     <Label
@@ -91,10 +96,14 @@ function nextPageButtonHandler(props: nextPageProps) {
   const isAnotherSection = nextPage > currentSection.startPage + currentSection.totalPages
 
   if (isAnotherSection) {
-    const foundSection = Object.entries(pages).find(([key, obj]) => obj.startPage === nextPage)
+    console.log('isAnother')
+
+    const foundSection = Object.entries(pages).find(
+      ([key, obj]) => obj.index === currentSection.index + 1
+    )
     if (foundSection && foundSection.length > 0) {
       const nextSection = foundSection[0]
-      push(`../../${serialNumber}/${nextSection}/page${nextPage}`)
+      push(`../../${serialNumber}/${nextSection}/page1`)
     } else {
       push('../summary')
     }

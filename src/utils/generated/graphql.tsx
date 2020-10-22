@@ -16651,7 +16651,7 @@ export type GetApplicationQuery = (
           { __typename?: 'ApplicationSection' }
           & { templateSection?: Maybe<(
             { __typename?: 'TemplateSection' }
-            & Pick<TemplateSection, 'id' | 'title' | 'code'>
+            & Pick<TemplateSection, 'id' | 'title' | 'code' | 'index'>
             & { templateElementsBySectionId: (
               { __typename?: 'TemplateElementsConnection' }
               & { nodes: Array<Maybe<(
@@ -16992,6 +16992,7 @@ export const GetApplicationDocument = gql`
             id
             title
             code
+            index
             templateElementsBySectionId {
               nodes {
                 code
