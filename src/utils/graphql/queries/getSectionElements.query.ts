@@ -8,7 +8,7 @@ export default gql`
         code
         elementTypePluginCode
         visibilityCondition
-        index
+        nextElementCode
         parameters
         title
         sectionId
