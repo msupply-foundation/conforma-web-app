@@ -20,7 +20,7 @@ const ApplicationPage: React.FC = () => {
   const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
 
   const { elements, loadingElements, errorElements } = useGetElementsInPage({
-    templateId: currentSection ? currentSection.id : -1,
+    sectionTemplateId: currentSection ? currentSection.id : -1,
     pageIndexInSection: currentSection ? Number(page) - currentSection.startPage : undefined,
   })
 
