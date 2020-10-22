@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Link, useLocation, Route } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
-import { Container, Label, Table, List } from 'semantic-ui-react'
-import { Application, Template } from '../generated/graphql'
-import getApplications from '../graphql/queries/getApplications.query'
-import Loading from './Loading'
+import { Container, Table, List } from 'semantic-ui-react'
+import { Application } from '../../utils/generated/graphql'
+import getApplications from '../../utils/graphql/queries/getApplications.query'
+import Loading from '../Loading'
+import FilterList from '../FilterList'
 import ApplicationEdit from './ApplicationEdit'
-import { useQueryParameters } from '../containers/App'
+import { useRouter } from '../../utils/hooks/useRouter'
 
-const ApplicationsList: React.FC = () => {
+const ApplicationList: React.FC = () => {
   const [applications, setApplications] = useState<Array<Application> | null>()
   const { data, loading, error } = useQuery(getApplications)
-
-  // queryParams is an object that gets the URL query params as key-value pairs
-  // This object should be used for filtering the getApplication query
-  const queryParameters = useQueryParameters()
+  const { query } = useRouter()
 
   const [values, setValues] = useState({
     id: 0,
@@ -44,10 +41,11 @@ const ApplicationsList: React.FC = () => {
     <Loading />
   ) : (
     <Container>
-      {Object.keys(queryParameters).length > 0 && <h3>Query parameters:</h3>}
+      <FilterList />
+      {Object.keys(query).length > 0 && <h3>Query parameters:</h3>}
       <List>
-        {Object.entries(queryParameters).map(([key, value]) => (
-          <List.Item>{key + ' : ' + value}</List.Item>
+        {Object.entries(query).map(([key, value]) => (
+          <List.Item key={`app-selected-parameter-${value}`} content={key + ' : ' + value} />
         ))}
       </List>
       <Table sortable stackable selectable>
@@ -86,19 +84,8 @@ const ApplicationsList: React.FC = () => {
         </Table.Body>
       </Table>
       <ApplicationEdit id={values.id} name={values.name} />
-      <List>
-        <List.Item>
-          <Link to="?status=draft&stage=assessment">Change query: Draft/Assessment</Link>
-        </List.Item>
-        <List.Item>
-          <Link to="?status=submitted&stage=screening">Change query: Submitted/Screening</Link>
-        </List.Item>
-        <List.Item>
-          <Link to={useLocation().pathname}>Reset query</Link>
-        </List.Item>
-      </List>
     </Container>
   )
 }
 
-export default ApplicationsList
+export default ApplicationList

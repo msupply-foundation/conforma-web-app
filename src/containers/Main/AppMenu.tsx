@@ -1,17 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Menu } from 'semantic-ui-react'
-import { MenuItemProps } from 'semantic-ui-react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
+import { useRouter } from '../../utils/hooks/useRouter'
 
 interface AppMenuProps extends RouteComponentProps {
   items: Array<Array<String>>
 }
 
 const AppMenu: React.FC<AppMenuProps> = (props: AppMenuProps) => {
-  const [activeItem, setActiveItem] = useState<String>('Home')
-  const handleItemClick = (event: any, { children }: MenuItemProps) => {
-    setActiveItem(children as String)
-  }
+  const { pathname } = useRouter()
 
   let menuItems = []
   for (let i = 0; i < props.items.length; i++) {
@@ -23,14 +20,7 @@ const AppMenu: React.FC<AppMenuProps> = (props: AppMenuProps) => {
     const route = props.items[i][1]
 
     menuItems.push(
-      <Menu.Item
-        header
-        key={`app_menu_${name}`}
-        active={activeItem === name}
-        onClick={handleItemClick}
-        as={Link}
-        to={route}
-      >
+      <Menu.Item header key={`app_menu_${name}`} active={pathname === route} as={Link} to={route}>
         {name}
       </Menu.Item>
     )

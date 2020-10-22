@@ -1,10 +1,10 @@
-import { TemplateElement } from '../generated/graphql'
+import { TemplateElement } from '../utils/generated/graphql'
 
 interface OnUpdateApplicationView {
   (updateObject: { value?: any; isValid: boolean }): void
 }
 
-interface ApplicatioViewProps {
+interface ApplicationViewProps {
   templateElement: TemplateElement
   onUpdate: OnUpdateApplicationView
   isVisible: boolean
@@ -44,7 +44,7 @@ interface PluginManifest {
 }
 
 interface PluginComponents {
-  [key: string]: React.FunctionComponent<ApplicatioViewProps | TemplateViewProps>
+  [key: string]: React.FunctionComponent<ApplicationViewProps | TemplateViewProps>
 }
 
 interface Plugins {
@@ -55,7 +55,7 @@ export {
   OnUpdateTemplateWrapperView,
   TemplateViewProps,
   OnUpdateTemplateView,
-  ApplicatioViewProps,
+  ApplicationViewProps,
   TemplateViewWrapperProps,
   PluginConfig,
   PluginManifest,

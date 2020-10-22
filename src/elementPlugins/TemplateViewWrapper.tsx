@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { Input, Dropdown, Segment } from 'semantic-ui-react'
-import { TemplateElement } from '../generated/graphql'
+import { TemplateElement } from '../utils/generated/graphql'
 import { pluginProvider, ErrorBoundary, JsonInput } from './'
 import { OnUpdateTemplateWrapperView, PluginComponents, TemplateViewWrapperProps } from './types'
 
 const TemplateViewWrapper: React.FC<TemplateViewWrapperProps> = ({ templateElement, onUpdate }) => {
-
   const {
     elementTypePluginCode: initialPluginCode,
     parameters: initialParameters,

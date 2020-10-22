@@ -1,56 +1,63 @@
 import React from 'react'
-import { useParams, Link, useLocation } from 'react-router-dom'
-import { useQueryParameters } from '../containers/App'
-import { List, Label } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { Button, Card, List, Label, Segment, Container, Header } from 'semantic-ui-react'
+import { useRouter } from '../utils/hooks/useRouter'
 
 export const NotificationsList: React.FC = () => {
-  const queryParameters = useQueryParameters()
+  const { pathname, query } = useRouter()
+  const { notificationId } = query
 
   return (
-    <div>
-      <h1>Notification Center</h1>
-      <p>List of notifications for the current user.</p>
-      <p>Can be filtered with query parameters, e.g:</p>
-
-      <List>
+    <Segment.Group>
+      <Header as="h1" content="Notification Center" />
+      <Header
+        as="h2"
+        content="List of notifications for the current user. Can be filtered with query parameters, e.g:"
+      />
+      <List horizontal>
         <List.Item>
-          <Link to="?status=unread">Unread Notifications</Link>
+          <Button
+            key="notifications-filter-unread"
+            content="Unread Notifications"
+            as={Link}
+            to="?status=unread"
+          />
         </List.Item>
         <List.Item>
-          <Link to="?days=30&appid=1234">
-            Notifications in the last 30 days associated with Application ID: 1234
-          </Link>
+          <Button
+            key="notifications-filter-days30"
+            content="Last 30 days (App. ID: 1234)"
+            as={Link}
+            to="?days=30&appid=1234"
+          />
         </List.Item>
         <List.Item>
-          <Link to={useLocation().pathname}>Reset query</Link>
+          <Button key="notifications-filter-reset" content="Reset query" as={Link} to={pathname} />
         </List.Item>
       </List>
-      {Object.keys(queryParameters).length > 0 && <h4>Query parameters:</h4>}
+      {Object.keys(query).length > 0 && <h4>Query parameters:</h4>}
       <List>
-        {Object.entries(queryParameters).map(([key, value]) => (
+        {Object.entries(query).map(([key, value]) => (
           <List.Item>{key + ' : ' + value}</List.Item>
         ))}
       </List>
-      <h4>Notifications:</h4>
+      <Header as="h4" content="Notifications" />
       <Label>
-        <Link to={'/notifications/567'}>Your message — click to view</Link>
+        <Button content="Your message — click to view" as={Link} to={'/notifications/567'} />
       </Label>
-    </div>
+    </Segment.Group>
   )
 }
 
-type TParams = { notificationId: string }
-
 export const Notification: React.FC = () => {
-  const { notificationId }: TParams = useParams()
-
+  const { query } = useRouter()
+  const { notificationId } = query
   return (
-    <div>
-      <h1>Title of Message</h1>
-      <p>Dear user, this message has the id: {notificationId}.</p>
-      <p>
-        <Link to="/notifications">Back to Notification Center</Link>
-      </p>
-    </div>
+    <Container text>
+      <Header as="h1" content="Title of Message" />
+      <Header as="h2" content={`Dear user, this message has the id: ${notificationId}`}>
+        <Button content="Back to Notification Center" as={Link} to="/notifications" />
+      </Header>
+    </Container>
   )
 }

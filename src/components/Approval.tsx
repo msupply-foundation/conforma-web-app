@@ -1,14 +1,13 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
-
-type TParams = { appId: string; sectionName?: string; page?: string }
+import { useRouter } from '../utils/hooks/useRouter'
 
 const Approval: React.FC = () => {
-  const { appId, sectionName, page }: TParams = useParams()
+  const { query } = useRouter()
+  const { serialNumber } = query
   return (
     <div>
       <h1>Application Approval page</h1>
-      <p>Application ID: {appId}</p>
+      <p>Application number: {serialNumber}</p>
       <p>Only the Director can see this page.</p>
     </div>
   )

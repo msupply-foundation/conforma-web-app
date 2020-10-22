@@ -1,19 +1,21 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { Container, Header } from 'semantic-ui-react'
+import { useRouter } from '../utils/hooks/useRouter'
 
 type TParams = { templateId: string; step?: string }
 
 const Template: React.FC = () => {
-  const { templateId, step }: TParams = useParams()
+  const { query } = useRouter()
+  const { templateId, step } = query
 
   return (
-    <div>
-      <h1>Template Builder</h1>
-      <p>
-        This is the <strong>{step}</strong> step of creating/editing the template with ID:{' '}
-        <strong>{templateId}</strong>.
-      </p>
-    </div>
+    <Container text>
+      <Header as="h1" content="Template Builder" />
+      <Header
+        as="h2"
+        content={`This is the ${step} step of creating/editing the template code: ${templateId}`}
+      />
+    </Container>
   )
 }
 export default Template

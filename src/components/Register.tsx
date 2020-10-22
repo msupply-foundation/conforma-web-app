@@ -1,13 +1,8 @@
 import { ApolloCache } from '@apollo/client'
 import React, { useState } from 'react'
 import { Button, Checkbox, Form, Input, Message, Segment } from 'semantic-ui-react'
-import {
-  CreateUserPayload,
-  useCreateUserMutation,
-  UserRole,
-  UsersConnection,
-} from '../generated/graphql'
-import addNewUser from '../graphql/fragments/addNewUser.fragment'
+import { CreateUserPayload, useCreateUserMutation, UsersConnection } from '../utils/generated/graphql'
+import addNewUser from '../utils/graphql/fragments/addNewUser.fragment'
 
 interface Snackbar {
   showMessage: boolean
@@ -20,7 +15,6 @@ interface User {
   username: string
   password: string
   email: string
-  role: UserRole | undefined
 }
 
 const Register: React.FC = () => {
@@ -35,7 +29,6 @@ const Register: React.FC = () => {
     username: '',
     password: '',
     email: '',
-    role: undefined,
   })
 
   const submitedObject: Snackbar = {
@@ -96,13 +89,12 @@ const Register: React.FC = () => {
 
   const updateUser = async () => {
     try {
-      const { username, password, email, role } = newUser
+      const { username, password, email } = newUser
       await createUserMutation({
         variables: {
           username: username,
           password: password,
           email: email,
-          role: role as UserRole,
         },
       })
     } catch (error) {
@@ -112,12 +104,7 @@ const Register: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (
-      newUser.username != '' &&
-      newUser.password != '' &&
-      newUser.email != '' &&
-      newUser.role != undefined
-    ) {
+    if (newUser.username != '' && newUser.password != '' && newUser.email != '') {
       updateUser()
     } else {
       alert('Invalid user details')
@@ -152,20 +139,6 @@ const Register: React.FC = () => {
             content={newUser.email}
             onChange={handleInputChange}
           />
-          <Form.Group inline>
-            <label>Role</label>
-            {Object.keys(UserRole).map((element) => (
-              <Form.Radio
-                key={`from-input-role-${element}`}
-                label={element}
-                value={element}
-                onChange={(event, { value }) => {
-                  const strValue: string = typeof value === 'string' ? value : ''
-                  updateNewUser({ ...newUser, role: strValue.toUpperCase() as UserRole })
-                }}
-              />
-            ))}
-          </Form.Group>
           <Form.Field
             id="form-input-terms-and-conditions"
             control={Checkbox}
