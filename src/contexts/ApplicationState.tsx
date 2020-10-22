@@ -1,13 +1,19 @@
 import React, { createContext, useContext, useReducer } from 'react'
+import { ResponsesByCode } from '../utils/types'
 
 type ApplicationState = {
   serialNumber: string | null
+  responsesByCode: ResponsesByCode
 }
 
 export type ApplicationActions =
   | {
       type: 'setSerialNumber'
       serialNumber: string
+    }
+  | {
+      type: 'setResponsesByCode'
+      responsesByCode: ResponsesByCode
     }
   | {
       type: 'reset'
@@ -23,6 +29,12 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
         ...state,
         serialNumber,
       }
+    case 'setResponsesByCode':
+      const { responsesByCode } = action
+      return {
+        ...state,
+        responsesByCode,
+      }
     case 'reset':
       return initialState
     default:
@@ -32,6 +44,7 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
 
 const initialState: ApplicationState = {
   serialNumber: null,
+  responsesByCode: {},
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code

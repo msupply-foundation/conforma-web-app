@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationHeader, ApplicationStep, Loading } from '../../components'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
 import useGetElementsInPage from '../../utils/hooks/useGetElementsInPage'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
-import useGetResponsesByCode from '../../utils/hooks/useGetResponsesByCode'
+import { useApplicationState } from '../../contexts/ApplicationState'
 import { SectionPages } from '../../utils/types'
 
 const ApplicationPage: React.FC = () => {
+  const { applicationState, setApplicationState } = useApplicationState()
   const { query, push, goBack } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
@@ -22,6 +23,10 @@ const ApplicationPage: React.FC = () => {
   })
 
   const currentSection = applicationSections[sectionCode as string]
+
+  useEffect(() => {
+    setApplicationState({ type: 'setResponsesByCode', responsesByCode })
+  }, [responsesByCode])
 
   const { elements, loadingElements, errorElements } = useGetElementsInPage({
     templateId: currentSection ? currentSection.id : -1,
