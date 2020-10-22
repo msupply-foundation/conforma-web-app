@@ -13,6 +13,11 @@ interface ApplicationStepProps {
 const ApplicationStep: React.FC<ApplicationStepProps> = (props) => {
   const { sectionTitle, elements, onNextClicked, onPreviousClicked } = props
 
+  const updateState = (code: string, value: Response) => {
+    console.log('Response', code, value)
+    // useUpdateResponseQuery(code, value)
+  }
+
   return (
     <Container textAlign="left">
       <Segment>
@@ -20,9 +25,9 @@ const ApplicationStep: React.FC<ApplicationStepProps> = (props) => {
         {elements.map((element) => (
           <ApplicationViewWrapper
             key={`question_${element.code}`}
-            initialValue={'Test'}
             templateElement={element}
             onUpdate={() => console.log('onUpdate called')}
+            updateState={updateState}
             isVisible={true}
             isEditable={true}
           />

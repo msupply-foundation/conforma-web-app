@@ -29,7 +29,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   // This trigger is for logging, can use prop 'error', 'errorInfo'
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.log(error, errorInfo)
+    // console.log(error, errorInfo)
   }
 
   render() {

@@ -9,9 +9,10 @@ interface ApplicationViewProps {
   onUpdate: OnUpdateApplicationView
   isVisible: boolean
   isEditable: boolean
+  updateState: Function
   // applicationState,
   // graphQLclient
-  initialValue: any // Could be a primative or an object with any shape
+  // initialValue: any // Could be a primative or an object with any shape
 }
 
 interface OnUpdateTemplateWrapperView {

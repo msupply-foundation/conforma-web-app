@@ -5,11 +5,11 @@ import { ApplicationViewProps } from '../../types'
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   templateElement,
   onUpdate,
-  initialValue,
   isEditable,
+  updateState,
 }) => {
   const [validationMessage, setValidationMessage] = useState('')
-  const [value, setValue] = useState(initialValue)
+  const [value, setValue] = useState(templateElement.parameters.placeholder)
 
   return (
     <Form.Input
@@ -17,6 +17,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       label={templateElement.title}
       placeholder={templateElement.parameters.placeholder}
       onChange={onChange(setValue, setValidationMessage, onUpdate)}
+      onBlur={() => updateState(templateElement.code, value)}
       value={value}
       disabled={!isEditable}
       error={
@@ -41,7 +42,7 @@ function onChange(updateValue: any, updateValidationMessage: any, onUpdate: any)
       onUpdate({ isValid: false })
     } else {
       updateValidationMessage('')
-      onUpdate({ value: value, isValid: true })
+      onUpdate({ value: { text: value }, isValid: true })
     }
   }
 }
