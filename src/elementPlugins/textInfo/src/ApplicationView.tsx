@@ -1,8 +1,8 @@
 import React from 'react'
 import { Message } from 'semantic-ui-react'
-import { ApplicatioViewProps } from '../../types'
+import { ApplicationViewProps } from '../../types'
 
-const ApplicationView: React.FC<ApplicatioViewProps> = ({ templateElement: { parameters } }) => {
+const ApplicationView: React.FC<ApplicationViewProps> = ({ templateElement: { parameters } }) => {
   return (
     <Message>
       <Message.Header>{parameters.title}</Message.Header>

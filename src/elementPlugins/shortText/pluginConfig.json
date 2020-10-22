@@ -1,6 +1,6 @@
 {
   "isCore": true,
-  "code": "basicText",
+  "code": "shortText",
   "displayName": "Basic Text Input",
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"
