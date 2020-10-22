@@ -3,7 +3,6 @@ import { TemplateElement } from './generated/graphql'
 export {
   ResponsePayload,
   SectionPayload,
-  Sections,
   SectionPages,
   SectionPageDetails,
   TemplateTypePayload,
@@ -22,7 +21,6 @@ interface SectionPayload {
   templateSections: (number | null)[]
 }
 
-type Sections = TemplateSectionPayload[]
 interface SectionPages {
   [code: string]: SectionPageDetails
 }
@@ -31,7 +29,6 @@ interface SectionPageDetails {
   id: number
   code: string
   title: string
-  index: number
   startPage: number
   totalPages: number
 }
@@ -48,7 +45,6 @@ interface TemplateSectionPayload {
   id: number
   code: string
   title: string
-  pagesCount: number
   elementsCount: number
 }
 

@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react'
 import {
   GetTemplateQuery,
   Template,
-  TemplateElement,
-  TemplateElementCategory,
   TemplateSection,
   useGetTemplateQuery,
 } from '../generated/graphql'
@@ -50,22 +48,11 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
 
     const sections = templateSections.nodes.map((section) => {
       const { id, code, title, templateElementsBySectionId } = section as TemplateSection
-      const elements = templateElementsBySectionId.nodes as TemplateElement[]
-      const pageBreaks = elements.filter(
-        ({ elementTypePluginCode }) => elementTypePluginCode === 'pageBreak'
-      )
-      const pagesCount = pageBreaks.length + 1
-      const elementsCount = elements.filter(({ category }) => {
-        console.log(category)
-
-        return true
-        // category as TemplateElementCategory === 'Question'
-      }).length
+      const elementsCount = templateElementsBySectionId.nodes.length
       const templateSection: TemplateSectionPayload = {
         id,
         code: code as string,
         title: title as string,
-        pagesCount,
         elementsCount,
       }
       return templateSection
