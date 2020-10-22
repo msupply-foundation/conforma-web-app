@@ -4,6 +4,7 @@ import { ApplicationHeader, ApplicationStep, Loading } from '../../components'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
 import useGetElementsInPage from '../../utils/hooks/useGetElementsInPage'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
+import useGetResponsesByCode from '../../utils/hooks/useGetResponsesByCode'
 import { SectionPages } from '../../utils/types'
 
 const ApplicationPage: React.FC = () => {
@@ -15,6 +16,8 @@ const ApplicationPage: React.FC = () => {
   })
 
   const currentSection = applicationSections[sectionCode as string]
+
+  const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
 
   const { elements, loadingElements, errorElements } = useGetElementsInPage({
     templateId: currentSection ? currentSection.id : -1,

@@ -16644,6 +16644,16 @@ export type GetApplicationQuery = (
             ) }
           )> }
         )>> }
+      ), applicationResponses: (
+        { __typename?: 'ApplicationResponsesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ApplicationResponse' }
+          & Pick<ApplicationResponse, 'value'>
+          & { templateElement?: Maybe<(
+            { __typename?: 'TemplateElement' }
+            & Pick<TemplateElement, 'code'>
+          )> }
+        )>> }
       ) }
     )>> }
   )> }
@@ -16971,6 +16981,14 @@ export const GetApplicationDocument = gql`
                 elementTypePluginCode
               }
             }
+          }
+        }
+      }
+      applicationResponses {
+        nodes {
+          value
+          templateElement {
+            code
           }
         }
       }
