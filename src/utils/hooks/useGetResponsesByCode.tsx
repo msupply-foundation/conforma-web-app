@@ -30,6 +30,10 @@ const useGetResponsesByCode = (props: useLoadApplicationProps) => {
 
     if (apolloError) return
 
+    console.log('Serial No.', serialNumber)
+    console.log('DATA', data)
+    // console.log('Apollo error', apolloError)
+
     const applicationResponses = data?.applications?.nodes[0]?.applicationResponses
       .nodes as ApplicationResponse[]
 
@@ -42,7 +46,9 @@ const useGetResponsesByCode = (props: useLoadApplicationProps) => {
 
     setResponsesByCode(currentResponses)
     setLoading(false)
-  }, [data, apolloError])
+  }, [data])
+
+  console.log(apolloError, apolloLoading, loading, error, responsesByCode)
 
   return {
     apolloError,

@@ -11,13 +11,17 @@ const ApplicationPage: React.FC = () => {
   const { query, push, goBack } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
-  const { error, loading, applicationName, applicationSections } = useLoadApplication({
+  const {
+    error,
+    loading,
+    applicationName,
+    applicationSections,
+    responsesByCode,
+  } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
 
   const currentSection = applicationSections[sectionCode as string]
-
-  const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
 
   const { elements, loadingElements, errorElements } = useGetElementsInPage({
     templateId: currentSection ? currentSection.id : -1,

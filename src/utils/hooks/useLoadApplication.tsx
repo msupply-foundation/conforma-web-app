@@ -4,59 +4,19 @@ import {
   ApplicationSection,
   TemplateElement,
   useGetApplicationQuery,
+  ApplicationResponse,
 } from '../../utils/generated/graphql'
-import { SectionPages, SectionPageDetails } from '../types'
+import { SectionPages, SectionPageDetails, ResponsesByCode } from '../types'
 
 interface useLoadApplicationProps {
   serialNumber: string
 }
 
-// const useLoadApplication = (props: useLoadApplicationProps) => {
-//   const { serialNumber } = props
-//   const [currentSection, setCurrentSection] = useState<string | null>(null)
-
-//   const { data, loading, error } = useGetApplicationQuery({
-//     variables: {
-//       serial: serialNumber,
-//     },
-//   })
-
-//   useEffect(() => {
-//     if (data && data.applications) {
-//       if (data.applications.nodes.length === 0) return
-//       if (data.applications.nodes.length > 1)
-//         console.log('More than one application returned. Only one expected!')
-//       const application = data.applications.nodes[0] as Application
-
-//       // Check the return application has sections
-//       if (!application.applicationSections || application.applicationSections.nodes.length === 0)
-//         return
-
-//       // Find title of first section in application
-//       const section = application.applicationSections.nodes[0] as ApplicationSection
-//       const { templateSection } = section
-//       if (!templateSection) return
-
-//       // TODO: Remove elements not visible in the current stage...
-
-//       const { code } = templateSection
-//       setCurrentSection(code as string)
-//     }
-//   }, [data, error])
-
-//   return {
-//     error,
-//     loading,
-//     currentSection,
-//   }
-// }
-
-// export default useLoadApplication
-
 const useLoadApplication = (props: useLoadApplicationProps) => {
   const { serialNumber } = props
   const [applicationName, setName] = useState<string>('')
   const [applicationSections, setSections] = useState<SectionPages>({})
+  const [responsesByCode, setResponsesByCode] = useState({})
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
@@ -99,6 +59,19 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
         }
       })
       setSections(mapSectionsDetails)
+
+      // Build application responsesByCode object -- TO:DO add to Context applicationState
+      const applicationResponses = data?.applications?.nodes[0]?.applicationResponses
+        .nodes as ApplicationResponse[]
+
+      const currentResponses = {} as ResponsesByCode
+
+      applicationResponses.forEach((response) => {
+        const code = response?.templateElement?.code
+        if (code) currentResponses[code] = response?.value?.text || response?.value
+      })
+
+      setResponsesByCode(currentResponses)
     }
   }, [data, error])
 
@@ -107,6 +80,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
     loading,
     applicationName,
     applicationSections,
+    responsesByCode,
   }
 }
 

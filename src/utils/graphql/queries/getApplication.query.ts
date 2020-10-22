@@ -23,6 +23,7 @@ export default gql`
                 nodes {
                   code
                   elementTypePluginCode
+                  category
                 }
               }
             }
