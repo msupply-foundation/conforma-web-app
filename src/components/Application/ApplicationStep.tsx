@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Container, Grid, Header, Segment } from 'semantic-ui-react'
-import { ApplicationQuestion } from '../../components'
 import { TemplateElement } from '../../utils/generated/graphql'
+import { ApplicationViewWrapper } from '../../elementPlugins'
 
 interface ApplicationStepProps {
   sectionTitle: string
@@ -18,7 +18,14 @@ const ApplicationStep: React.FC<ApplicationStepProps> = (props) => {
       <Segment>
         <Header content={sectionTitle} />
         {elements.map((element) => (
-          <ApplicationQuestion templateElement={element} />
+          <ApplicationViewWrapper
+            key={`question_${element.code}`}
+            initialValue={'Test'}
+            templateElement={element}
+            onUpdate={() => console.log('onUpdate called')}
+            isVisible={true}
+            isEditable={true}
+          />
         ))}
         <Grid columns={3}>
           <Grid.Row>
