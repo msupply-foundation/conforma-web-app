@@ -16644,6 +16644,16 @@ export type GetApplicationQuery = (
             ) }
           )> }
         )>> }
+      ), applicationResponses: (
+        { __typename?: 'ApplicationResponsesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ApplicationResponse' }
+          & Pick<ApplicationResponse, 'value'>
+          & { templateElement?: Maybe<(
+            { __typename?: 'TemplateElement' }
+            & Pick<TemplateElement, 'code'>
+          )> }
+        )>> }
       ) }
     )>> }
   )> }
@@ -16678,7 +16688,7 @@ export type GetSectionElementsQuery = (
     { __typename?: 'TemplateElementsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'TemplateElement' }
-      & Pick<TemplateElement, 'category' | 'code' | 'visibilityCondition' | 'nextElementCode' | 'parameters' | 'title' | 'sectionId'>
+      & Pick<TemplateElement, 'category' | 'code' | 'elementTypePluginCode' | 'visibilityCondition' | 'nextElementCode' | 'parameters' | 'title' | 'sectionId'>
     )>> }
   )> }
 );
@@ -16974,6 +16984,14 @@ export const GetApplicationDocument = gql`
           }
         }
       }
+      applicationResponses {
+        nodes {
+          value
+          templateElement {
+            code
+          }
+        }
+      }
     }
   }
 }
@@ -17052,6 +17070,7 @@ export const GetSectionElementsDocument = gql`
     nodes {
       category
       code
+      elementTypePluginCode
       visibilityCondition
       nextElementCode
       parameters

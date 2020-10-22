@@ -23,7 +23,7 @@ import {
   Template,
   ApplicationSummary,
 } from '../../components'
-import { ApplicationNew, ApplicationPage } from '../Application'
+import { ApplicationCreate, ApplicationPage } from '../Application'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import AppMenu from './AppMenu'
 
@@ -50,28 +50,28 @@ const SiteLayout: React.FC = () => {
                 <Login />
               </Route>
               <Route exact path="/applications">
-                <ApplicationList/>
+                <ApplicationList />
               </Route>
               <Route exact path="/applications/new">
                 <ApplicationProvider>
-                  <ApplicationNew/>
+                  <ApplicationCreate />
                 </ApplicationProvider>
               </Route>
               <Route exact path="/applications/:serialNumber">
-              <ApplicationProvider>
-                <ApplicationPage/>
-              </ApplicationProvider>
+                <ApplicationProvider>
+                  <ApplicationPage />
+                </ApplicationProvider>
               </Route>
               <Route exact path="/applications/:serialNumber/:sectionCode/page:page">
-              <ApplicationProvider>
-                <ApplicationPage/>
-              </ApplicationProvider>
+                <ApplicationProvider>
+                  <ApplicationPage />
+                </ApplicationProvider>
               </Route>
               <Route exact path="/applications/:serialNumber/summary">
-                <ApplicationSummary/>
+                <ApplicationSummary />
               </Route>
               <Route exact path="/applications/:serialNumber/approval">
-                <Approval/>
+                <Approval />
               </Route>
               <Route exact path="/admin">
                 <Admin />

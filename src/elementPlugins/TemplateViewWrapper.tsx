@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { Input, Dropdown, Segment } from 'semantic-ui-react'
+import { TemplateElement } from '../utils/generated/graphql'
 import { pluginProvider, ErrorBoundary, JsonInput } from './'
-import { PluginComponents, TemplateViewWrapperProps } from './types'
+import { OnUpdateTemplateWrapperView, PluginComponents, TemplateViewWrapperProps } from './types'
 
-const TemplateViewWrapper = (props: TemplateViewWrapperProps) => {
-  const { templateElement, onUpdate } = props
-
+const TemplateViewWrapper: React.FC<TemplateViewWrapperProps> = ({ templateElement, onUpdate }) => {
   const {
     elementTypePluginCode: initialPluginCode,
     parameters: initialParameters,
@@ -63,20 +62,20 @@ const TemplateViewWrapper = (props: TemplateViewWrapperProps) => {
     </Segment>
   )
 }
+
 const jsonFields = {
   isRequired: 'Is Required Condition',
   isEditable: 'Is Editable Condition',
 }
-// any for templateElement due to Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'TemplateElement'
-// TODO fix
-function renderJsonFields(templateElement: any, onUpdate: any) {
+
+function renderJsonFields(templateElement: TemplateElement, onUpdate: OnUpdateTemplateWrapperView) {
   return (
     <>
       {Object.entries(jsonFields).map(([key, title]) => (
         <JsonInput
           key={key}
           label={title}
-          initialValue={templateElement[key]}
+          initialValue={templateElement[key as keyof TemplateElement]}
           onUpdate={onJsonFieldChange(key, onUpdate)}
         />
       ))}
@@ -94,20 +93,24 @@ function getPluginOptions() {
   })
 }
 
-function onJsonFieldChange(key: string, onUpdate: any) {
+function onJsonFieldChange(key: string, onUpdate: OnUpdateTemplateWrapperView) {
   return (value: string) => {
     onUpdate({ [key]: value })
   }
 }
 
-function onFieldChange(key: string, onUpdate: any, onSetValue: any) {
+function onFieldChange(key: string, onUpdate: OnUpdateTemplateWrapperView, onSetValue: any) {
   return (_: any, { value }: any) => {
     onSetValue(value)
     onUpdate({ [key]: value })
   }
 }
 
-function onPluginSelection(setPluginCode: any, setPluginInfo: any, onUpdate: any) {
+function onPluginSelection(
+  setPluginCode: any,
+  setPluginInfo: any,
+  onUpdate: OnUpdateTemplateWrapperView
+) {
   return (_: any, { value: pluginCode }: any) => {
     setPluginCode(pluginCode)
     setPluginInfo(pluginProvider.pluginManifest[pluginCode])

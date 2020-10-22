@@ -2,9 +2,9 @@ import {
   ApplicationEdit,
   ApplicationHeader,
   ApplicationList,
-  ApplicationQuestion,
   ApplicationSelectType,
   ApplicationStart,
+  ApplicationStep,
   ApplicationSummary,
 } from './Application'
 import Approval from './Approval'
@@ -30,9 +30,9 @@ export {
   ApplicationEdit,
   ApplicationHeader,
   ApplicationList,
-  ApplicationQuestion,
   ApplicationSelectType,
   ApplicationStart,
+  ApplicationStep,
   ApplicationSummary,
   Approval,
   Admin,

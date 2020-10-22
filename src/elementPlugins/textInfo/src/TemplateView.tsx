@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Input } from 'semantic-ui-react'
 import { TemplateViewProps } from '../../types'
 
-const TemplateView = ({ parameters, onUpdate }: TemplateViewProps) => {
+const TemplateView: React.FC<TemplateViewProps> = ({ parameters, onUpdate }) => {
   const [text, setText] = useState(parameters.text)
   const [title, setTitle] = useState(parameters.title)
 
