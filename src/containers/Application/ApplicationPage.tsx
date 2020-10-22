@@ -10,7 +10,7 @@ import { SectionPages } from '../../utils/types'
 const ApplicationPage: React.FC = () => {
   const [pageIndex, setPageIndex] = useState(0)
   const { query, push, goBack } = useRouter()
-  const { mode, serialNumber, sectionCode, git diff } = query
+  const { mode, serialNumber, sectionCode, page } = query
 
   const { error, loading, applicationName, applicationSections } = useLoadApplication({
     serialNumber: serialNumber as string,

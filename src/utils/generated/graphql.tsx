@@ -16732,7 +16732,7 @@ export type GetTemplateQuery = (
             { __typename?: 'TemplateElementsConnection' }
             & { nodes: Array<Maybe<(
               { __typename?: 'TemplateElement' }
-              & Pick<TemplateElement, 'code' | 'elementTypePluginCode' | 'id' | 'parameters' | 'sectionId' | 'title' | 'visibilityCondition'>
+              & Pick<TemplateElement, 'code' | 'category' | 'elementTypePluginCode' | 'id' | 'parameters' | 'sectionId' | 'title' | 'visibilityCondition'>
             )>> }
           ) }
         )>> }
@@ -17139,6 +17139,7 @@ export const GetTemplateDocument = gql`
           templateElementsBySectionId {
             nodes {
               code
+              category
               elementTypePluginCode
               id
               parameters

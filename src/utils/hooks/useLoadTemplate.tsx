@@ -55,12 +55,9 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
         ({ elementTypePluginCode }) => elementTypePluginCode === 'pageBreak'
       )
       const pagesCount = pageBreaks.length + 1
-      const elementsCount = elements.filter(({ category }) => {
-        console.log(category)
-
-        return true
-        // category as TemplateElementCategory === 'Question'
-      }).length
+      const elementsCount = elements.filter(
+        ({ category }) => category === TemplateElementCategory.Question
+      ).length
       const templateSection: TemplateSectionPayload = {
         id,
         code: code as string,
