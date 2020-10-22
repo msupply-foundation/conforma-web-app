@@ -15,7 +15,7 @@ interface ApplicationViewProps {
 }
 
 interface OnUpdateTemplateWrapperView {
-  (updateObject: { elementTypePluginCode?: string; parameters: any }): void
+  (updateObject: { [key: string]: any }): void
 }
 
 interface TemplateViewWrapperProps {

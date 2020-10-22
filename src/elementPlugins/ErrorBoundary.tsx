@@ -24,10 +24,10 @@ class ErrorBoundary extends React.Component<Props, State> {
     const knownError = Object.values(PLUGIN_ERRORS).find(
       (errorMessage) => errorMessage === error.message
     )
-    return { hasError: true, errorMessage: knownError ? error.message : '' }
+    return { hasError: true, errorMessage: knownError ? error.message : 'Failed to load plugin' }
   }
 
-  // This trigger is for logging, can use prop 'eroror', 'errorInfo'
+  // This trigger is for logging, can use prop 'error', 'errorInfo'
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.log(error, errorInfo)
   }
@@ -36,7 +36,7 @@ class ErrorBoundary extends React.Component<Props, State> {
     if (this.state.hasError) {
       return (
         <Label basic color="red">
-          {`${this.state.errorMessage || 'Failed to load plugin'}
+          {`${this.state.errorMessage}
             code: ${this.props.pluginCode}`}
         </Label>
       )
