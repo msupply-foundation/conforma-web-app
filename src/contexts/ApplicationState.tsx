@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useReducer } from 'react'
+import { TemplateSectionPayload } from '../utils/types'
 
 type ApplicationState = {
+  sections: TemplateSectionPayload[]
   serialNumber: string | null
 }
 
@@ -8,6 +10,10 @@ export type ApplicationActions =
   | {
       type: 'setSerialNumber'
       serialNumber: string
+    }
+  | {
+      type: 'setSections'
+      sections: TemplateSectionPayload[]
     }
   | {
       type: 'reset'
@@ -23,6 +29,12 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
         ...state,
         serialNumber,
       }
+    case 'setSections':
+      const { sections } = action
+      return {
+        ...state,
+        sections,
+      }
     case 'reset':
       return initialState
     default:
@@ -31,6 +43,7 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
 }
 
 const initialState: ApplicationState = {
+  sections: [],
   serialNumber: null,
 }
 
