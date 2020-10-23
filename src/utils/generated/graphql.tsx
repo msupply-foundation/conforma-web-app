@@ -16727,7 +16727,7 @@ export type GetTemplateQuery = (
         { __typename?: 'TemplateSectionsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'TemplateSection' }
-          & Pick<TemplateSection, 'id' | 'code' | 'title'>
+          & Pick<TemplateSection, 'id' | 'code' | 'title' | 'index'>
           & { templateElementsBySectionId: (
             { __typename?: 'TemplateElementsConnection' }
             & { nodes: Array<Maybe<(
@@ -17136,6 +17136,7 @@ export const GetTemplateDocument = gql`
           id
           code
           title
+          index
           templateElementsBySectionId {
             nodes {
               code

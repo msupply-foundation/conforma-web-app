@@ -3,7 +3,7 @@ import { TemplateElement, useGetSectionElementsQuery } from '../generated/graphq
 
 interface useGetElementsInPageProps {
   sectionTemplateId: number
-  pageIndexInSection?: number
+  currentPageIndex: number
 }
 
 interface SectionPages {
@@ -11,8 +11,8 @@ interface SectionPages {
 }
 
 const useGetElementsInPage = (props: useGetElementsInPageProps) => {
-  const { sectionTemplateId, pageIndexInSection } = props
-  const [elements, setElements] = useState<TemplateElement[]>([])
+  const { sectionTemplateId, currentPageIndex } = props
+  const [currentPageElements, setElements] = useState<TemplateElement[]>([])
 
   const { data, loading, error } = useGetSectionElementsQuery({
     variables: {
@@ -28,25 +28,20 @@ const useGetElementsInPage = (props: useGetElementsInPageProps) => {
       let countPage = 0
       elementsByPage[countPage] = [] as TemplateElement[]
 
-      // TODO: Order element by ( index and section.index )
       templateElements.forEach((element) => {
         const { elementTypePluginCode: code } = element
         if (code === 'pageBreak') elementsByPage[++countPage] = [] as TemplateElement[]
         else elementsByPage[countPage].push(element)
       })
-
-      console.log('elementsByPage', elementsByPage, pageIndexInSection)
-
-      const pageIndex = pageIndexInSection ? pageIndexInSection : 0
-      const elementsInPage = elementsByPage[pageIndex]
+      const elementsInPage = elementsByPage[currentPageIndex]
       setElements(elementsInPage)
     }
-  }, [data, error])
+  }, [data, error, currentPageIndex])
 
   return {
     errorElements: error,
     loadingElements: loading,
-    elements,
+    elements: currentPageElements,
   }
 }
 

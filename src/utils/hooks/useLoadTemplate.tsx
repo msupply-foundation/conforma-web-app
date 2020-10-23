@@ -3,7 +3,6 @@ import {
   GetTemplateQuery,
   Template,
   TemplateElement,
-  TemplateElementCategory,
   TemplateSection,
   useGetTemplateQuery,
 } from '../generated/graphql'
@@ -49,22 +48,20 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
     const { id, code, name, templateSections } = template
 
     const sections = templateSections.nodes.map((section) => {
-      const { id, code, title, templateElementsBySectionId } = section as TemplateSection
+      const { id, code, title, index, templateElementsBySectionId } = section as TemplateSection
       const elements = templateElementsBySectionId.nodes as TemplateElement[]
       const pageBreaks = elements.filter(
         ({ elementTypePluginCode }) => elementTypePluginCode === 'pageBreak'
       )
       const pagesCount = pageBreaks.length + 1
-      const elementsCount = elements.filter(
-        ({ category }) => category === TemplateElementCategory.Question
-      ).length
       const templateSection: TemplateSectionPayload = {
         id,
         code: code as string,
         title: title as string,
+        index: index as number,
         pagesCount,
-        elementsCount,
       }
+
       return templateSection
     })
 

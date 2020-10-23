@@ -1,41 +1,39 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationHeader, ApplicationStep, Loading } from '../../components'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
 import useGetElementsInPage from '../../utils/hooks/useGetElementsInPage'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesByCode from '../../utils/hooks/useGetResponsesByCode'
-import { SectionPages } from '../../utils/types'
+import { useApplicationState } from '../../contexts/ApplicationState'
+import { TemplateSectionPayload } from '../../utils/types'
 
 const ApplicationPage: React.FC = () => {
-  const [pageIndex, setPageIndex] = useState(0)
-  const { query, push, goBack } = useRouter()
+  const { applicationState } = useApplicationState()
+  const { query, push } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
+  const { sections } = applicationState
 
-  const { error, loading, applicationName, applicationSections } = useLoadApplication({
+  const { error, loading, applicationName } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
 
-  const currentSection = applicationSections[sectionCode as string]
+  const currentSection = sections.find(({ code }) => code == sectionCode)
 
   const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
 
   const { elements, loadingElements, errorElements } = useGetElementsInPage({
     sectionTemplateId: currentSection ? currentSection.id : -1,
-    pageIndexInSection: pageIndex,
+    currentPageIndex: Number(page) - 1, // Get page in index
   })
 
-  const nextPagePayload = {
+  const changePagePayload = {
     serialNumber: serialNumber as string,
     sectionCode: sectionCode as string,
     currentPage: Number(page) as number,
-    pages: applicationSections,
+    sections,
     push,
   }
-
-  useEffect(() => {
-    setPageIndex(Number(page) - 1)
-  }, [page])
 
   return error || errorElements ? (
     <Label
@@ -44,7 +42,7 @@ const ApplicationPage: React.FC = () => {
     />
   ) : loading || loadingElements ? (
     <Loading />
-  ) : serialNumber ? (
+  ) : serialNumber && currentSection ? (
     <Segment.Group>
       <ApplicationHeader mode={mode} serialNumber={serialNumber} name={applicationName} />
       <Container>
@@ -58,9 +56,9 @@ const ApplicationPage: React.FC = () => {
                 sectionTitle={currentSection.title}
                 elements={elements}
                 onPreviousClicked={
-                  Number(page) === 1 ? null : () => previousButtonHandler({ goBack })
+                  Number(page) === 1 ? null : () => previousButtonHandler(changePagePayload)
                 }
-                onNextClicked={() => nextPageButtonHandler(nextPagePayload)}
+                onNextClicked={() => nextPageButtonHandler(changePagePayload)}
               />
             </Grid.Column>
           </Grid.Row>
@@ -68,41 +66,62 @@ const ApplicationPage: React.FC = () => {
       </Container>
     </Segment.Group>
   ) : (
-    <Label content="Application can't be displayed" />
+    <Label content="Application's section can't be displayed" />
   )
 }
 
-interface previousPageProps {
-  goBack: () => void
-}
-function previousButtonHandler(props: previousPageProps) {
-  const { goBack } = props
-  goBack()
-}
-
-interface nextPageProps {
+interface changePageProps {
   serialNumber: string
   sectionCode: string
   currentPage: number
-  pages: SectionPages
+  sections: TemplateSectionPayload[]
   push: (path: string) => void
 }
 
-function nextPageButtonHandler(props: nextPageProps) {
-  const { serialNumber, currentPage, sectionCode, pages, push } = props
+function previousButtonHandler({
+  serialNumber,
+  currentPage,
+  sectionCode,
+  sections,
+  push,
+}: changePageProps) {
+  const currentSection = sections.find(({ code }) => code === sectionCode)
+  if (!currentSection) {
+    console.log('Problem to find currentSection!')
+    return
+  }
+  const previousPage = currentPage - 1
+  //It should go back a section!
+  if (previousPage === 0) {
+    const foundSection = sections.find(({ index }) => index === currentSection.index - 1)
+    if (foundSection) {
+      const { code: previousSection, pagesCount: lastPage } = foundSection
+      push(`../../${serialNumber}/${previousSection}/page${lastPage}`)
+    } else {
+      console.log('Problem to load previous page (not found)!')
+    }
+  } else {
+    push(`../../${serialNumber}/${sectionCode}/page${previousPage}`)
+  }
+}
 
+function nextPageButtonHandler({
+  serialNumber,
+  currentPage,
+  sectionCode,
+  sections,
+  push,
+}: changePageProps) {
   const nextPage = currentPage + 1
-  const currentSection = pages[sectionCode]
-  const isAnotherSection = nextPage > currentSection.startPage + currentSection.totalPages
-
-  if (isAnotherSection) {
-    console.log('isAnother')
-
-    const foundSection = Object.entries(pages).find(
-      ([key, obj]) => obj.index === currentSection.index + 1
-    )
-    if (foundSection && foundSection.length > 0) {
-      const nextSection = foundSection[0]
+  const currentSection = sections.find(({ code }) => code === sectionCode)
+  if (!currentSection) {
+    console.log('Problem to find currentSection!')
+    return
+  }
+  if (nextPage > currentSection.pagesCount) {
+    const foundSection = sections.find(({ index }) => index === currentSection.index + 1)
+    if (foundSection) {
+      const { code: nextSection } = foundSection
       push(`../../${serialNumber}/${nextSection}/page1`)
     } else {
       push('../summary')

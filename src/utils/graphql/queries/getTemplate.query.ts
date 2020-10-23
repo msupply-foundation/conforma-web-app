@@ -12,6 +12,7 @@ export default gql`
             id
             code
             title
+            index
             templateElementsBySectionId {
               nodes {
                   code
