@@ -16651,7 +16651,7 @@ export type GetApplicationQuery = (
           { __typename?: 'ApplicationSection' }
           & { templateSection?: Maybe<(
             { __typename?: 'TemplateSection' }
-            & Pick<TemplateSection, 'id' | 'title' | 'code' | 'index'>
+            & Pick<TemplateSection, 'id' | 'title' | 'code'>
             & { templateElementsBySectionId: (
               { __typename?: 'TemplateElementsConnection' }
               & { nodes: Array<Maybe<(
@@ -16705,7 +16705,7 @@ export type GetSectionElementsQuery = (
     { __typename?: 'TemplateElementsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'TemplateElement' }
-      & Pick<TemplateElement, 'category' | 'code' | 'elementTypePluginCode' | 'visibilityCondition' | 'index' | 'parameters' | 'title' | 'sectionId'>
+      & Pick<TemplateElement, 'category' | 'code' | 'index' | 'elementTypePluginCode' | 'visibilityCondition' | 'parameters' | 'title' | 'sectionId'>
     )>> }
   )> }
 );
@@ -16992,7 +16992,6 @@ export const GetApplicationDocument = gql`
             id
             title
             code
-            index
             templateElementsBySectionId {
               nodes {
                 code
@@ -17088,9 +17087,9 @@ export const GetSectionElementsDocument = gql`
     nodes {
       category
       code
+      index
       elementTypePluginCode
       visibilityCondition
-      index
       parameters
       title
       sectionId

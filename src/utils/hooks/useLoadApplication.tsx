@@ -1,10 +1,5 @@
 import { useState, useEffect } from 'react'
-import {
-  Application,
-  ApplicationSection,
-  TemplateElement,
-  useGetApplicationQuery,
-} from '../../utils/generated/graphql'
+import { Application, useGetApplicationQuery } from '../../utils/generated/graphql'
 
 interface useLoadApplicationProps {
   serialNumber: string

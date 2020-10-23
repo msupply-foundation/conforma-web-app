@@ -6,9 +6,9 @@ export default gql`
       nodes {
         category
         code
+        index
         elementTypePluginCode
         visibilityCondition
-        index
         parameters
         title
         sectionId
