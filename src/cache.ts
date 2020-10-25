@@ -5,7 +5,7 @@ const cache = new InMemoryCache({
     typePolicies: {
       TemplateSection: {
         fields: {
-          pageCount: {
+          totalPages: {
               read(_, { readField }) {
                 // TODO: Move code to find number of pages per section (in useLoadTemplete) to here
                   const elementsConnection = readField('templateElementsBySectionId') as TemplateElementsConnection
