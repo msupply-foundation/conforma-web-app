@@ -1,13 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Application, useGetApplicationQuery } from '../../utils/generated/graphql'
 
 interface useLoadApplicationProps {
   serialNumber: string
 }
 
+interface ApplicationDetails {
+  name: string
+  id: number
+}
+
 const useLoadApplication = (props: useLoadApplicationProps) => {
   const { serialNumber } = props
-  const [applicationName, setName] = useState<string>('')
+  const [application, setApplication] = useState<ApplicationDetails | undefined>()
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
@@ -21,14 +26,14 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
       if (data.applications.nodes.length > 1)
         console.log('More than one application returned. Only one expected!')
       const application = data.applications.nodes[0] as Application
-      setName(application.name as string)
+      setApplication({ name: application.name as string, id: application.id })
     }
-  }, [data, error])
+  }, [data, loading, error])
 
   return {
     error,
     loading,
-    applicationName,
+    application,
   }
 }
 

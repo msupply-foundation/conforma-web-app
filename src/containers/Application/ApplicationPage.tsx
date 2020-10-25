@@ -1,12 +1,12 @@
 import React from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ApplicationHeader, ApplicationStep, Loading } from '../../components'
+import { ApplicationHeader, Loading } from '../../components'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
-import useGetElementsInPage from '../../utils/hooks/useGetElementsInPage'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesByCode from '../../utils/hooks/useGetResponsesByCode'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { TemplateSectionPayload } from '../../utils/types'
+import ElementsArea from './ElementsArea'
 
 const ApplicationPage: React.FC = () => {
   const { applicationState } = useApplicationState()
@@ -14,37 +14,46 @@ const ApplicationPage: React.FC = () => {
   const { mode, serialNumber, sectionCode, page } = query
   const { sections } = applicationState
 
-  const { error, loading, applicationName } = useLoadApplication({
-    serialNumber: serialNumber as string,
-  })
+  console.log(
+    'PAGE RELOAD',
+    applicationState,
+    query,
+    mode,
+    serialNumber,
+    sectionCode,
+    page,
+    sections
+  )
 
   const currentSection = sections.find(({ code }) => code == sectionCode)
 
-  const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
-
-  const { elements, loadingElements, errorElements } = useGetElementsInPage({
-    sectionTemplateId: currentSection ? currentSection.id : -1,
-    currentPageIndex: Number(page) - 1, // Get page in index
+  const { error, loading, application } = useLoadApplication({
+    serialNumber: serialNumber as string,
   })
+
+  const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
 
   const changePagePayload = {
     serialNumber: serialNumber as string,
     sectionCode: sectionCode as string,
-    currentPage: Number(page) as number,
+    currentPage: Number(page),
     sections,
     push,
   }
 
-  return error || errorElements ? (
-    <Label
-      content="Problem to load application"
-      error={error ? error : errorElements ? errorElements : ''}
-    />
-  ) : loading || loadingElements ? (
+  const checkPagePayload = {
+    sectionCode: sectionCode as string,
+    currentPage: Number(page),
+    sections,
+  }
+
+  return error ? (
+    <Label content="Problem to load application" error={error} />
+  ) : loading ? (
     <Loading />
-  ) : serialNumber && currentSection ? (
+  ) : application && serialNumber && currentSection ? (
     <Segment.Group>
-      <ApplicationHeader mode={mode} serialNumber={serialNumber} name={applicationName} />
+      <ApplicationHeader mode={mode} serialNumber={serialNumber} name={application.name} />
       <Container>
         <Grid columns={2} stackable textAlign="center">
           <Grid.Row>
@@ -52,12 +61,14 @@ const ApplicationPage: React.FC = () => {
               <Segment>Place holder for progress</Segment>
             </Grid.Column>
             <Grid.Column>
-              <ApplicationStep
+              <ElementsArea
+                applicationId={application.id}
                 sectionTitle={currentSection.title}
-                elements={elements}
-                onPreviousClicked={
-                  Number(page) === 1 ? null : () => previousButtonHandler(changePagePayload)
-                }
+                sectionTempId={currentSection.id}
+                sectionPage={Number(page)}
+                isFirstPage={checkFirstPage(checkPagePayload)}
+                isLastPage={checkLastPage(checkPagePayload)}
+                onPreviousClicked={() => previousButtonHandler(changePagePayload)}
                 onNextClicked={() => nextPageButtonHandler(changePagePayload)}
               />
             </Grid.Column>
@@ -68,6 +79,39 @@ const ApplicationPage: React.FC = () => {
   ) : (
     <Label content="Application's section can't be displayed" />
   )
+}
+
+interface checkPageProps {
+  sectionCode: string
+  currentPage: number
+  sections: TemplateSectionPayload[]
+}
+
+function checkFirstPage({ sectionCode, currentPage, sections }: checkPageProps): boolean {
+  const previousPage = currentPage - 1
+  const currentSection = sections.find(({ code }) => code === sectionCode)
+  if (!currentSection) {
+    console.log('Problem to find currentSection!')
+    return true
+  }
+  return previousPage > 0 ||
+    (previousPage === 0 && sections.find(({ index }) => index === currentSection.index - 1))
+    ? false
+    : true
+}
+
+function checkLastPage({ sectionCode, currentPage, sections }: checkPageProps): boolean {
+  const nextPage = currentPage + 1
+  const currentSection = sections.find(({ code }) => code === sectionCode)
+  if (!currentSection) {
+    console.log('Problem to find currentSection!')
+    return true
+  }
+  return nextPage <= currentSection.totalPages ||
+    (nextPage > currentSection.totalPages &&
+      sections.find(({ index }) => index === currentSection.index + 1))
+    ? false
+    : true
 }
 
 interface changePageProps {
@@ -95,7 +139,7 @@ function previousButtonHandler({
   if (previousPage === 0) {
     const foundSection = sections.find(({ index }) => index === currentSection.index - 1)
     if (foundSection) {
-      const { code: previousSection, pagesCount: lastPage } = foundSection
+      const { code: previousSection, totalPages: lastPage } = foundSection
       push(`../../${serialNumber}/${previousSection}/page${lastPage}`)
     } else {
       console.log('Problem to load previous page (not found)!')
@@ -118,7 +162,7 @@ function nextPageButtonHandler({
     console.log('Problem to find currentSection!')
     return
   }
-  if (nextPage > currentSection.pagesCount) {
+  if (nextPage > currentSection.totalPages) {
     const foundSection = sections.find(({ index }) => index === currentSection.index + 1)
     if (foundSection) {
       const { code: nextSection } = foundSection
