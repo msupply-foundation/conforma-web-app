@@ -3,7 +3,7 @@ import ApplicationHeader from './ApplicationHeader'
 import ApplicationList from './ApplicationList'
 import ApplicationSelectType from './ApplicationSelectType'
 import ApplicationStart from './ApplicationStart'
-import ApplicationStep from './ApplicationStep'
+import ElementsArea from '../../containers/Application/ElementsArea'
 import ApplicationSummary from './ApplicationSummary'
 
 export {
@@ -12,6 +12,6 @@ export {
   ApplicationList,
   ApplicationSelectType,
   ApplicationStart,
-  ApplicationStep,
+  ElementsArea as ApplicationStep,
   ApplicationSummary,
 }
