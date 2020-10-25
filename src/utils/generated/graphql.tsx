@@ -16696,6 +16696,7 @@ export type GetApplicationsQuery = (
 
 export type GetSectionElementsQueryVariables = Exact<{
   sectionId: Scalars['Int'];
+  applicationId: Scalars['Int'];
 }>;
 
 
@@ -16706,6 +16707,13 @@ export type GetSectionElementsQuery = (
     & { nodes: Array<Maybe<(
       { __typename?: 'TemplateElement' }
       & Pick<TemplateElement, 'category' | 'code' | 'index' | 'elementTypePluginCode' | 'visibilityCondition' | 'parameters' | 'title' | 'sectionId'>
+      & { applicationResponses: (
+        { __typename?: 'ApplicationResponsesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ApplicationResponse' }
+          & Pick<ApplicationResponse, 'id' | 'timeCreated' | 'value'>
+        )>> }
+      ) }
     )>> }
   )> }
 );
@@ -17082,7 +17090,7 @@ export type GetApplicationsQueryHookResult = ReturnType<typeof useGetApplication
 export type GetApplicationsLazyQueryHookResult = ReturnType<typeof useGetApplicationsLazyQuery>;
 export type GetApplicationsQueryResult = Apollo.QueryResult<GetApplicationsQuery, GetApplicationsQueryVariables>;
 export const GetSectionElementsDocument = gql`
-    query getSectionElements($sectionId: Int!) {
+    query getSectionElements($sectionId: Int!, $applicationId: Int!) {
   templateElements(condition: {sectionId: $sectionId}) {
     nodes {
       category
@@ -17093,6 +17101,13 @@ export const GetSectionElementsDocument = gql`
       parameters
       title
       sectionId
+      applicationResponses(condition: {applicationId: $applicationId}) {
+        nodes {
+          id
+          timeCreated
+          value
+        }
+      }
     }
   }
 }
@@ -17111,6 +17126,7 @@ export const GetSectionElementsDocument = gql`
  * const { data, loading, error } = useGetSectionElementsQuery({
  *   variables: {
  *      sectionId: // value for 'sectionId'
+ *      applicationId: // value for 'applicationId'
  *   },
  * });
  */

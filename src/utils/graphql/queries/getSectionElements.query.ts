@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getSectionElements($sectionId: Int!) {
+  query getSectionElements($sectionId: Int!, $applicationId: Int!) {
     templateElements(condition: { sectionId: $sectionId }) {
       nodes {
         category
@@ -12,6 +12,13 @@ export default gql`
         parameters
         title
         sectionId
+        applicationResponses(condition:{ applicationId: $applicationId }) {
+          nodes {
+            id
+            timeCreated
+            value
+          }
+        }
       }
     }
   }
