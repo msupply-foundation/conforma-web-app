@@ -3,6 +3,7 @@ import { Button, Container, Grid, Header, Label, Segment } from 'semantic-ui-rea
 import { ApplicationViewWrapper } from '../../elementPlugins'
 import useLoadElements from '../../utils/hooks/useLoadElements'
 import { Loading } from '../../components'
+import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 
 interface ElementsAreaProps {
   applicationId: number
@@ -31,6 +32,8 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
     sectionPage,
   })
 
+  const [responseMutation] = useUpdateResponseMutation()
+
   return (
     <Container textAlign="left">
       {error ? (
@@ -40,12 +43,21 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
       ) : elements ? (
         <Segment>
           <Header content={sectionTitle} />
-          {elements.map(({ question }) => (
+          {elements.map(({ question, response }) => (
             <ApplicationViewWrapper
               key={`question_${question.code}`}
-              initialValue={'Test'}
+              initialValue={response?.value}
               templateElement={question}
-              onUpdate={() => console.log('onUpdate called')}
+              onUpdate={(updateObject) => {
+                const { isValid, value } = updateObject
+                /**
+                 * Note: Issue #46 (Persist cache) will change this to only write to cache
+                 * sending the whole application changes to the server on Submit...
+                 * Also considering send to server on 'Next' or adding a Save button.
+                 **/
+                // TODO: Only send mutation on loose focus event.
+                if (isValid) responseMutation({ variables: { id: response?.id as number, value } })
+              }}
               isVisible={true}
               isEditable={true}
             />

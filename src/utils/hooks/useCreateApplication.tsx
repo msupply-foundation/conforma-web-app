@@ -6,7 +6,6 @@ import {
   CreateResponseMutation,
   CreateSectionMutation,
   TemplateElement,
-  TemplateSection,
   useCreateApplicationMutation,
   useCreateResponseMutation,
   useCreateSectionMutation,

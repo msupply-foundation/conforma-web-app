@@ -16630,6 +16630,27 @@ export type UpdateApplicationMutation = (
   )> }
 );
 
+export type UpdateResponseMutationVariables = Exact<{
+  id: Scalars['Int'];
+  value: Scalars['JSON'];
+}>;
+
+
+export type UpdateResponseMutation = (
+  { __typename?: 'Mutation' }
+  & { updateApplicationResponse?: Maybe<(
+    { __typename?: 'UpdateApplicationResponsePayload' }
+    & { applicationResponse?: Maybe<(
+      { __typename?: 'ApplicationResponse' }
+      & Pick<ApplicationResponse, 'id' | 'value'>
+      & { templateElement?: Maybe<(
+        { __typename?: 'TemplateElement' }
+        & Pick<TemplateElement, 'code'>
+      )> }
+    )> }
+  )> }
+);
+
 export type GetApplicationQueryVariables = Exact<{
   serial: Scalars['String'];
 }>;
@@ -16981,6 +17002,45 @@ export function useUpdateApplicationMutation(baseOptions?: Apollo.MutationHookOp
 export type UpdateApplicationMutationHookResult = ReturnType<typeof useUpdateApplicationMutation>;
 export type UpdateApplicationMutationResult = Apollo.MutationResult<UpdateApplicationMutation>;
 export type UpdateApplicationMutationOptions = Apollo.BaseMutationOptions<UpdateApplicationMutation, UpdateApplicationMutationVariables>;
+export const UpdateResponseDocument = gql`
+    mutation updateResponse($id: Int!, $value: JSON!) {
+  updateApplicationResponse(input: {id: $id, patch: {value: $value}}) {
+    applicationResponse {
+      id
+      value
+      templateElement {
+        code
+      }
+    }
+  }
+}
+    `;
+export type UpdateResponseMutationFn = Apollo.MutationFunction<UpdateResponseMutation, UpdateResponseMutationVariables>;
+
+/**
+ * __useUpdateResponseMutation__
+ *
+ * To run a mutation, you first call `useUpdateResponseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateResponseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateResponseMutation, { data, loading, error }] = useUpdateResponseMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      value: // value for 'value'
+ *   },
+ * });
+ */
+export function useUpdateResponseMutation(baseOptions?: Apollo.MutationHookOptions<UpdateResponseMutation, UpdateResponseMutationVariables>) {
+        return Apollo.useMutation<UpdateResponseMutation, UpdateResponseMutationVariables>(UpdateResponseDocument, baseOptions);
+      }
+export type UpdateResponseMutationHookResult = ReturnType<typeof useUpdateResponseMutation>;
+export type UpdateResponseMutationResult = Apollo.MutationResult<UpdateResponseMutation>;
+export type UpdateResponseMutationOptions = Apollo.BaseMutationOptions<UpdateResponseMutation, UpdateResponseMutationVariables>;
 export const GetApplicationDocument = gql`
     query getApplication($serial: String!) {
   applications(condition: {serial: $serial}) {
