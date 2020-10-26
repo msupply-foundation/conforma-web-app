@@ -14,17 +14,6 @@ const ApplicationPage: React.FC = () => {
   const { mode, serialNumber, sectionCode, page } = query
   const { sections } = applicationState
 
-  console.log(
-    'PAGE RELOAD',
-    applicationState,
-    query,
-    mode,
-    serialNumber,
-    sectionCode,
-    page,
-    sections
-  )
-
   const currentSection = sections.find(({ code }) => code == sectionCode)
 
   const { error, loading, application } = useLoadApplication({
