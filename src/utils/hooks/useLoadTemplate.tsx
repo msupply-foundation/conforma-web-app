@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react'
-import {
-  GetTemplateQuery,
-  Template,
-  TemplateElement,
-  TemplateSection,
-  useGetTemplateQuery,
-} from '../generated/graphql'
+import { GetTemplateQuery, Template, useGetTemplateQuery } from '../generated/graphql'
+import { getTemplateSections } from '../helpers/getSectionsPayload'
 import { TemplateTypePayload, TemplateSectionPayload } from '../types'
 
 interface useLoadTemplateProps {
@@ -47,24 +42,6 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
 
     const { id, code, name, templateSections } = template
 
-    const sections = templateSections.nodes.map((section) => {
-      const { id, code, title, index, templateElementsBySectionId } = section as TemplateSection
-      const elements = templateElementsBySectionId.nodes as TemplateElement[]
-      const pageBreaks = elements.filter(
-        ({ elementTypePluginCode }) => elementTypePluginCode === 'pageBreak'
-      )
-      const totalPages = pageBreaks.length + 1
-      const templateSection: TemplateSectionPayload = {
-        id,
-        code: code as string,
-        title: title as string,
-        index: index as number,
-        totalPages,
-      }
-
-      return templateSection
-    })
-
     setTemplateType({
       id,
       code,
@@ -72,7 +49,10 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
       description: 'Include some description for this template',
       documents: Array<string>(),
     })
+
+    const sections = getTemplateSections(templateSections)
     setTemplateSections(sections)
+
     setLoading(false)
   }, [data, apolloError])
 

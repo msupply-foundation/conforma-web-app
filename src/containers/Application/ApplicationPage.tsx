@@ -4,19 +4,16 @@ import { ApplicationHeader, Loading } from '../../components'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesByCode from '../../utils/hooks/useGetResponsesByCode'
-import { useApplicationState } from '../../contexts/ApplicationState'
 import { TemplateSectionPayload } from '../../utils/types'
 import ElementsArea from './ElementsArea'
+import { useApplicationState } from '../../contexts/ApplicationState'
 
 const ApplicationPage: React.FC = () => {
-  const { applicationState, setApplicationState } = useApplicationState()
+  const { setApplicationState } = useApplicationState()
   const { query, push } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
-  const { sections } = applicationState
 
-  const currentSection = sections.find(({ code }) => code == sectionCode)
-
-  const { error, loading, application } = useLoadApplication({
+  const { error, loading, application, templateSections } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
 
@@ -24,20 +21,22 @@ const ApplicationPage: React.FC = () => {
     if (application) setApplicationState({ type: 'setApplicationId', id: application.id })
   }, [application])
 
-  const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
+  const currentSection = templateSections.find(({ code }) => code == sectionCode)
+
+  // const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
 
   const changePagePayload = {
     serialNumber: serialNumber as string,
     sectionCode: sectionCode as string,
     currentPage: Number(page),
-    sections,
+    sections: templateSections,
     push,
   }
 
   const checkPagePayload = {
     sectionCode: sectionCode as string,
     currentPage: Number(page),
-    sections,
+    sections: templateSections,
   }
 
   return error ? (
