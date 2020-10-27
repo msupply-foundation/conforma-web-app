@@ -72,7 +72,11 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
               <Grid.Column />
               {/* Empty cell */}
               <Grid.Column>
-                {!isLastPage && <PageButton title="Next" type="right" onClicked={onNextClicked} />}
+                {!isLastPage ? (
+                  <PageButton title="Next" type="right" onClicked={onNextClicked} />
+                ) : (
+                  <PageButton title="See summary" type="right" onClicked={onNextClicked} />
+                )}
               </Grid.Column>
             </Grid.Row>
           </Grid>

@@ -3,6 +3,7 @@ import { ApplicationResponse, TemplateElement } from './generated/graphql'
 export {
   ElementAndResponse,
   SectionPages,
+  SectionElements,
   ResponsePayload,
   SectionPayload,
   TemplateTypePayload,
@@ -18,6 +19,10 @@ interface ElementAndResponse {
 
 interface SectionPages {
   [page: number]: Array<ElementAndResponse>
+}
+
+interface SectionElements {
+  [id: number]: Array<ElementAndResponse>
 }
 
 interface ResponsePayload {
