@@ -16615,7 +16615,7 @@ export type CreateUserMutation = (
 
 export type UpdateApplicationMutationVariables = Exact<{
   id: Scalars['Int'];
-  applicationName: Scalars['String'];
+  applicationTrigger: Trigger;
 }>;
 
 
@@ -16625,7 +16625,7 @@ export type UpdateApplicationMutation = (
     { __typename?: 'UpdateApplicationPayload' }
     & { application?: Maybe<(
       { __typename?: 'Application' }
-      & Pick<Application, 'id' | 'name'>
+      & Pick<Application, 'id' | 'trigger'>
     )> }
   )> }
 );
@@ -16967,11 +16967,11 @@ export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutati
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const UpdateApplicationDocument = gql`
-    mutation updateApplication($id: Int!, $applicationName: String!) {
-  updateApplication(input: {id: $id, patch: {name: $applicationName}}) {
+    mutation updateApplication($id: Int!, $applicationTrigger: Trigger!) {
+  updateApplication(input: {id: $id, patch: {trigger: $applicationTrigger}}) {
     application {
       id
-      name
+      trigger
     }
   }
 }
@@ -16992,7 +16992,7 @@ export type UpdateApplicationMutationFn = Apollo.MutationFunction<UpdateApplicat
  * const [updateApplicationMutation, { data, loading, error }] = useUpdateApplicationMutation({
  *   variables: {
  *      id: // value for 'id'
- *      applicationName: // value for 'applicationName'
+ *      applicationTrigger: // value for 'applicationTrigger'
  *   },
  * });
  */
