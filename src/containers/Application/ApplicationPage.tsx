@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationHeader, Loading } from '../../components'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
@@ -9,7 +9,7 @@ import { TemplateSectionPayload } from '../../utils/types'
 import ElementsArea from './ElementsArea'
 
 const ApplicationPage: React.FC = () => {
-  const { applicationState } = useApplicationState()
+  const { applicationState, setApplicationState } = useApplicationState()
   const { query, push } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
   const { sections } = applicationState
@@ -19,6 +19,10 @@ const ApplicationPage: React.FC = () => {
   const { error, loading, application } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
+
+  useEffect(() => {
+    if (application) setApplicationState({ type: 'setApplicationId', id: application.id })
+  }, [application])
 
   const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
 
