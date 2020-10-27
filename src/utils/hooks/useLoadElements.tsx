@@ -1,3 +1,4 @@
+import { ApolloError } from '@apollo/client'
 import { useState, useEffect } from 'react'
 import {
   GetSectionElementsQuery,
@@ -10,19 +11,35 @@ import { ElementAndResponse, SectionPages } from '../types'
 interface useLoadElementsProps {
   applicationId: number
   sectionTempId: number
-  sectionPage: number
+  sectionPage?: number
+  onCompletedHandler?: (elements: ElementAndResponse[]) => void
+  onErrorHandler?: (error: ApolloError) => void
 }
 
-const useLoadElements = ({ applicationId, sectionTempId, sectionPage }: useLoadElementsProps) => {
+const useLoadElements = ({
+  applicationId,
+  sectionTempId,
+  sectionPage,
+  onCompletedHandler,
+  onErrorHandler,
+}: useLoadElementsProps) => {
   const [currentPageElements, setElements] = useState<ElementAndResponse[]>([])
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
-  const currentPageIndex = sectionPage - 1
 
   const { data, loading: apolloLoading, error: apolloError } = useGetSectionElementsQuery({
     variables: {
       applicationId,
       sectionId: sectionTempId,
+    },
+    onCompleted: (data) => {
+      if (onCompletedHandler) {
+        const templateElements = data?.templateElements?.nodes as TemplateElement[]
+        onCompletedHandler(getElements({ templateElements }))
+      }
+    },
+    onError: (error) => {
+      if (onErrorHandler) onErrorHandler(error)
     },
   })
 
@@ -40,29 +57,13 @@ const useLoadElements = ({ applicationId, sectionTempId, sectionPage }: useLoadE
 
     const templateElements = data?.templateElements?.nodes as TemplateElement[]
 
-    let elementsByPage = [] as SectionPages
-    let countPage = 0
-    elementsByPage[countPage] = [] as ElementAndResponse[]
+    const elements = sectionPage
+      ? getElementsInPage({ sectionPage, templateElements })
+      : getElements({ templateElements })
 
-    // Build object with elements and responses in each page
-    templateElements.forEach((element) => {
-      const { elementTypePluginCode: code } = element
-      if (code === 'pageBreak') elementsByPage[++countPage] = [] as ElementAndResponse[]
-      else {
-        const { applicationResponses, category } = element
-        // Store one response per question or null for element with information category
-        const response =
-          category === TemplateElementCategory.Question ? applicationResponses.nodes[0] : null
-        // const { applicationResponses, ...question } = element
-        // TODO: Remove the responsesConnection from each question/information element
-        elementsByPage[countPage].push({ question: element, response })
-      }
-    })
-    // Set the current page elements and reesponses in local state
-    const elementsInPage = elementsByPage[currentPageIndex]
-    setElements(elementsInPage)
+    setElements(elements)
     setLoading(false)
-  }, [data, apolloError, currentPageIndex])
+  }, [data, apolloError, sectionPage])
 
   return {
     apolloLoading,
@@ -87,6 +88,56 @@ function checkForElementErrors(data: GetSectionElementsQuery | undefined) {
     })
   }
   return null
+}
+
+interface GetElementsInPageProps {
+  sectionPage: number
+  templateElements: TemplateElement[]
+}
+
+function getElementsInPage({ sectionPage, templateElements }: GetElementsInPageProps) {
+  const currentPageIndex = sectionPage - 1
+
+  let elementsByPage = [] as SectionPages
+  let countPage = 0
+  elementsByPage[countPage] = [] as ElementAndResponse[]
+
+  // Build object with elements and responses in each page
+  templateElements.forEach((element) => {
+    const { elementTypePluginCode: code } = element
+    if (code === 'pageBreak') elementsByPage[++countPage] = [] as ElementAndResponse[]
+    else {
+      const { applicationResponses, category } = element
+      // Store one response per question or null for element with information category
+      const response =
+        category === TemplateElementCategory.Question ? applicationResponses.nodes[0] : null
+      // const { applicationResponses, ...question } = element
+      // TODO: Remove the responsesConnection from each question/information element
+      elementsByPage[countPage].push({ question: element, response })
+    }
+  })
+  // Set the current page elements and reesponses in local state
+  return elementsByPage[currentPageIndex]
+}
+
+interface GetElementProps {
+  templateElements: TemplateElement[]
+}
+
+function getElements({ templateElements }: GetElementProps) {
+  // Build object with elements and responses in each page
+  const elementsInSection = [] as ElementAndResponse[]
+  templateElements.forEach((element) => {
+    const { applicationResponses, category } = element
+    // Store one response per question or null for element with information category
+    const response =
+      category === TemplateElementCategory.Question ? applicationResponses.nodes[0] : null
+    // const { applicationResponses, ...question } = element
+    // TODO: Remove the responsesConnection from each question/information element
+    elementsInSection.push({ question: element, response })
+  })
+  // Set the current page elements and reesponses in local state
+  return elementsInSection
 }
 
 export default useLoadElements
