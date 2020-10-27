@@ -75,7 +75,7 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
                 {!isLastPage ? (
                   <PageButton title="Next" type="right" onClicked={onNextClicked} />
                 ) : (
-                  <PageButton title="See summary" type="right" onClicked={onNextClicked} />
+                  <PageButton title="Summary" type="right" onClicked={onNextClicked} />
                 )}
               </Grid.Column>
             </Grid.Row>
