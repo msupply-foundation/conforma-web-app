@@ -5,22 +5,19 @@ import { Container, Grid, Label, Segment } from 'semantic-ui-react'
 import useGetElementsInPage from '../../utils/hooks/useGetElementsInPage'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesByCode from '../../utils/hooks/useGetResponsesByCode'
-import { useApplicationState } from '../../contexts/ApplicationState'
 import { TemplateSectionPayload } from '../../utils/types'
 
 const ApplicationPage: React.FC = () => {
-  const { applicationState } = useApplicationState()
   const { query, push } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
-  const { sections } = applicationState
 
-  const { error, loading, applicationName } = useLoadApplication({
+  const { error, loading, applicationName, templateSections } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
 
-  const currentSection = sections.find(({ code }) => code == sectionCode)
+  const currentSection = templateSections.find(({ code }) => code == sectionCode)
 
-  const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
+  // const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
 
   const { elements, loadingElements, errorElements } = useGetElementsInPage({
     sectionTemplateId: currentSection ? currentSection.id : -1,
@@ -31,7 +28,7 @@ const ApplicationPage: React.FC = () => {
     serialNumber: serialNumber as string,
     sectionCode: sectionCode as string,
     currentPage: Number(page) as number,
-    sections,
+    sections: templateSections,
     push,
   }
 

@@ -27,7 +27,6 @@ const ApplicationCreate: React.FC = () => {
       templateSections &&
       templateSections.length > 0
     ) {
-      setApplicationState({ type: 'setSections', sections: templateSections })
       // Call Application page on first section
       const firstSection = templateSections[0].code
       // The pageNumber starts in 1 when is a new application.
