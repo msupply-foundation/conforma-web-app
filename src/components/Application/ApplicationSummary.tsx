@@ -1,37 +1,30 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, Container, Header, Input, Label, Segment } from 'semantic-ui-react'
-import { useApplicationState } from '../../contexts/ApplicationState'
-import {
-  TemplateElementCategory,
-  Trigger,
-  useUpdateApplicationMutation,
-} from '../../utils/generated/graphql'
+import { TemplateElementCategory } from '../../utils/generated/graphql'
 import useLoadSummary from '../../utils/hooks/useLoadSummary'
-import { ElementAndResponse } from '../../utils/types'
+import { ElementAndResponse, TemplateSectionPayload } from '../../utils/types'
 import Loading from '../Loading'
 
-const ApplicationSummary: React.FC = () => {
-  const { applicationState } = useApplicationState()
-  const { id, sections } = applicationState
-  const [submitted, setSubmitted] = useState(false)
+interface ApplicationSummaryProps {
+  applicationId: number
+  sections: TemplateSectionPayload[]
+  onSubmitHandler: () => void
+}
 
+const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
+  applicationId,
+  sections,
+  onSubmitHandler,
+}) => {
   const { sectionElements, error, loading } = useLoadSummary({
-    applicationId: id as number,
+    applicationId,
     sectionIds: sections.map(({ id }) => id),
-  })
-
-  const [applicationSubmitMutation] = useUpdateApplicationMutation({
-    onCompleted: () => setSubmitted(true),
   })
 
   return error ? (
     <Label content="Problem to load summary of application" error={error} />
   ) : loading ? (
     <Loading />
-  ) : submitted ? (
-    <Container text>
-      <Header>Application submitted!</Header>
-    </Container>
   ) : (
     <Container>
       <Header as="h1" content="REVIEW AND SUBMIT" />
@@ -59,12 +52,7 @@ const ApplicationSummary: React.FC = () => {
       <Button
         content="Submit application"
         onClick={() => {
-          applicationSubmitMutation({
-            variables: {
-              id: id as number,
-              applicationTrigger: Trigger.OnApplicationSubmit,
-            },
-          })
+          onSubmitHandler()
         }}
       />
     </Container>

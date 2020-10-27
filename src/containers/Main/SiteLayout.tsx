@@ -21,11 +21,11 @@ import {
   TemplateList,
   TemplateNew,
   Template,
-  ApplicationSummary,
 } from '../../components'
 import { ApplicationCreate, ApplicationPage } from '../Application'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import AppMenu from './AppMenu'
+import ApplicationOverview from '../Application/ApplicationOverview'
 
 const SiteLayout: React.FC = () => {
   return (
@@ -69,7 +69,7 @@ const SiteLayout: React.FC = () => {
               </Route>
               <Route exact path="/applications/:serialNumber/summary">
                 <ApplicationProvider>
-                  <ApplicationSummary />
+                  <ApplicationOverview />
                 </ApplicationProvider>
               </Route>
               <Route exact path="/applications/:serialNumber/approval">
