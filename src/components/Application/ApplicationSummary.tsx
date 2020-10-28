@@ -1,6 +1,10 @@
 import React from 'react'
-import { Button, Container, Header, Input, Label, Segment } from 'semantic-ui-react'
-import { TemplateElementCategory } from '../../utils/generated/graphql'
+import { Button, Container, Form, Grid, Header, Input, Label, Segment } from 'semantic-ui-react'
+import {
+  ApplicationResponse,
+  TemplateElement,
+  TemplateElementCategory,
+} from '../../utils/generated/graphql'
 import useLoadSummary from '../../utils/hooks/useLoadSummary'
 import { ElementAndResponse, TemplateSectionPayload } from '../../utils/types'
 import Loading from '../Loading'
@@ -21,40 +25,56 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
     sectionIds: sections.map(({ id }) => id),
   })
 
+  const getQuestion = (question: TemplateElement, response: ApplicationResponse | null) => {
+    return question.category === TemplateElementCategory.Question ? (
+      <Form.Field>
+        <Header as="h3" content={question.title} />
+        <Input disabled error={!response}>
+          {response?.value}
+        </Input>
+      </Form.Field>
+    ) : question.elementTypePluginCode !== 'pageBreak' ? (
+      <Form.Field>
+        <Header as="h5" content={question.title} />
+      </Form.Field>
+    ) : null
+  }
+
   return error ? (
     <Label content="Problem to load summary of application" error={error} />
   ) : loading ? (
     <Loading />
   ) : (
-    <Container>
+    <Container text style={{ marginTop: '2em' }}>
       <Header as="h1" content="REVIEW AND SUBMIT" />
-      {sectionElements &&
-        Object.entries(sectionElements).map(([sectionId, elements]) => {
-          const templateElements = elements as Array<ElementAndResponse>
-          const findSection = sections.find(({ id }) => id.toString() === sectionId)
-          return findSection ? (
-            <Segment size="large">
-              <Header as="h5" icon="pencil" floated="right" content="edit" color="blue" />
-              <Header content={`${findSection.title}`} />
-              {templateElements.map(({ question, response }) =>
-                question.category === TemplateElementCategory.Question ? (
-                  <Segment.Group horizontal key={`summary_${question.code}`}>
-                    <Label content={question.title} />
-                    <Input disabled>{response?.value}</Input>
-                  </Segment.Group>
-                ) : question.elementTypePluginCode !== 'pageBreak' ? (
-                  <Label content={question.title} />
-                ) : null
-              )}
-            </Segment>
-          ) : null
-        })}
-      <Button
-        content="Submit application"
-        onClick={() => {
-          onSubmitHandler()
-        }}
-      />
+      <Form>
+        {sectionElements &&
+          Object.entries(sectionElements).map(([sectionId, elements]) => {
+            const templateElements = elements as Array<ElementAndResponse>
+            const findSection = sections.find(({ id }) => id.toString() === sectionId)
+            return findSection ? (
+              <Segment.Group size="large">
+                <Grid columns={2}>
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Header as="h2" content={`${findSection.title}`} />
+                    </Grid.Column>
+                    <Grid.Column>
+                      <Header as="h5" icon="pencil" floated="right" content="edit" color="blue" />
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+                {templateElements.map(({ question, response }) => getQuestion(question, response))}
+              </Segment.Group>
+            ) : null
+          })}
+        <Button
+          content="Submit application"
+          onClick={() => {
+            onSubmitHandler()
+          }}
+        />
+      </Form>
     </Container>
   )
 }
