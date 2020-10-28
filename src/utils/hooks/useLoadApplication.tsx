@@ -24,6 +24,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
       if (data.applications.nodes.length > 1)
         console.log('More than one application returned. Only one expected!')
       const application = data.applications.nodes[0] as Application
+
       setName(application.name as string)
 
       const sections = getApplicationSections(application.applicationSections)

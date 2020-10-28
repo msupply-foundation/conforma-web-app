@@ -21,10 +21,11 @@ import { AdminUsers, AdminPermissions, Config } from './AdminOther'
 import { NotificationsList, Notification } from './Notification'
 import NoMatch from './NoMatch'
 import { ProductList, Product } from './Product'
-import Register from './Register'
+import AddUserExample from './Example/AddUser'
 
 export {
   Account,
+  AddUserExample,
   AdminPermissions,
   AdminUsers,
   ApplicationEdit,
@@ -45,7 +46,6 @@ export {
   NoMatch,
   Product,
   ProductList,
-  Register,
   Organisation,
   OrgMemberEdit,
   TemplateList,
