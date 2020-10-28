@@ -1,8 +1,12 @@
 import { ApolloCache } from '@apollo/client'
 import React, { useState } from 'react'
 import { Button, Checkbox, Form, Input, Message, Segment } from 'semantic-ui-react'
-import { CreateUserPayload, useCreateUserMutation, UsersConnection } from '../utils/generated/graphql'
-import addNewUser from '../utils/graphql/fragments/addNewUser.fragment'
+import {
+  CreateUserPayload,
+  useCreateUserMutation,
+  UsersConnection,
+} from '../../utils/generated/graphql'
+import addNewUser from '../../utils/graphql/fragments/addNewUser.fragment'
 
 interface Snackbar {
   showMessage: boolean
@@ -17,7 +21,7 @@ interface User {
   email: string
 }
 
-const Register: React.FC = () => {
+const AddUser: React.FC = () => {
   const [snackbar, changeSnackback] = useState<Snackbar>({
     showMessage: false,
     messageTitle: '',
@@ -68,13 +72,11 @@ const Register: React.FC = () => {
 
             // Quick safety check - if the new user is already
             // present in the cache, we don't need to add it again.
-            if (
-              existingUserRefs.nodes.some((ref) => (ref ? readField('id', ref) === user.id : false))
-            ) {
-              return existingUserRefs
-            }
-
-            return [...existingUserRefs.nodes, newUserRef]
+            return existingUserRefs.nodes.some((ref) =>
+              ref ? readField('id', ref) === user.id : false
+            )
+              ? existingUserRefs
+              : [...existingUserRefs.nodes, newUserRef]
           },
         },
       })
@@ -160,4 +162,4 @@ const Register: React.FC = () => {
   )
 }
 
-export default Register
+export default AddUser
