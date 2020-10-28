@@ -12,9 +12,11 @@ export default gql`
             id
             code
             title
+            index
             templateElementsBySectionId {
               nodes {
                   code
+                  category
                   elementTypePluginCode
                   id
                   parameters
