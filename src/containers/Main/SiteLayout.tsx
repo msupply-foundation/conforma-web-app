@@ -6,6 +6,7 @@ import {
   AddUserExample,
   AdminPermissions,
   AdminUsers,
+  AppMenu,
   ApplicationList,
   Approval,
   Admin,
@@ -25,7 +26,6 @@ import {
 } from '../../components'
 import { ApplicationCreate, ApplicationPage } from '../Application'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
-import AppMenu from './AppMenu'
 import ApplicationOverview from '../Application/ApplicationOverview'
 
 const SiteLayout: React.FC = () => {

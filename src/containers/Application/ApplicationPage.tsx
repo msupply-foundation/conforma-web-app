@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ApplicationHeader, Loading } from '../../components'
+import { ApplicationHeader, Loading, ProgressBar } from '../../components'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesByCode from '../../utils/hooks/useGetResponsesByCode'
@@ -50,7 +50,7 @@ const ApplicationPage: React.FC = () => {
         <Grid columns={2} stackable textAlign="center">
           <Grid.Row>
             <Grid.Column>
-              <Segment>Place holder for progress</Segment>
+              <ProgressBar />
             </Grid.Column>
             <Grid.Column>
               <ElementsArea
