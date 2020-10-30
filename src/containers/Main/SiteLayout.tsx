@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Grid, Segment } from 'semantic-ui-react'
 import {
   Account,
-  AddUserExample,
   AdminPermissions,
   AdminUsers,
   AppMenu,
@@ -25,6 +24,7 @@ import {
   Template,
 } from '../../components'
 import { ApplicationCreate, ApplicationPage } from '../Application'
+import UserRegister from '../User/UserRegister'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import ApplicationOverview from '../Application/ApplicationOverview'
 
@@ -51,7 +51,7 @@ const SiteLayout: React.FC = () => {
                 <Login />
               </Route>
               <Route exact path="/example">
-                <AddUserExample />
+                <UserRegister />
               </Route>
               <Route exact path="/applications">
                 <ApplicationList />

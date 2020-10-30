@@ -1,4 +1,3 @@
-import { ApolloCache } from '@apollo/client'
 import React, { useState } from 'react'
 import { Button, Checkbox, Form, Input, Message, Segment } from 'semantic-ui-react'
 import {
@@ -21,7 +20,7 @@ interface User {
   email: string
 }
 
-const AddUser: React.FC = () => {
+const UserRegister: React.FC = () => {
   const [snackbar, changeSnackback] = useState<Snackbar>({
     showMessage: false,
     messageTitle: '',
@@ -72,11 +71,13 @@ const AddUser: React.FC = () => {
 
             // Quick safety check - if the new user is already
             // present in the cache, we don't need to add it again.
-            return existingUserRefs.nodes.some((ref) =>
-              ref ? readField('id', ref) === user.id : false
-            )
-              ? existingUserRefs
-              : [...existingUserRefs.nodes, newUserRef]
+            if (
+              existingUserRefs.nodes.some((ref) => (ref ? readField('id', ref) === user.id : false))
+            ) {
+              return existingUserRefs
+            }
+
+            return [...existingUserRefs.nodes, newUserRef]
           },
         },
       })
@@ -162,4 +163,4 @@ const AddUser: React.FC = () => {
   )
 }
 
-export default AddUser
+export default UserRegister
