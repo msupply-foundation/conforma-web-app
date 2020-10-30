@@ -8,7 +8,7 @@ import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 interface ElementsAreaProps {
   applicationId: number
   sectionTitle: string
-  sectionTempId: number
+  sectionTemplateId: number
   sectionPage: number
   isFirstPage: boolean
   isLastPage: boolean
@@ -19,7 +19,7 @@ interface ElementsAreaProps {
 const ElementsArea: React.FC<ElementsAreaProps> = ({
   applicationId,
   sectionTitle,
-  sectionTempId,
+  sectionTemplateId: sectionTempId,
   sectionPage,
   isFirstPage,
   isLastPage,

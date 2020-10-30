@@ -56,7 +56,7 @@ const ApplicationPage: React.FC = () => {
               <ElementsArea
                 applicationId={application.id}
                 sectionTitle={currentSection.title}
-                sectionTempId={currentSection.id}
+                sectionTemplateId={currentSection.id}
                 sectionPage={Number(page)}
                 isFirstPage={checkFirstPage(checkPagePayload)}
                 isLastPage={checkLastPage(checkPagePayload)}
