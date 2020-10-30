@@ -34,57 +34,53 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
 
   const [responseMutation] = useUpdateResponseMutation()
 
-  return (
-    <Container textAlign="left">
-      {error ? (
-        <Label content="Problem to load elements" error={error} />
-      ) : loading ? (
-        <Loading />
-      ) : elements ? (
-        <Segment>
-          <Header content={sectionTitle} />
-          {elements.map(({ question, response }) => (
-            <ApplicationViewWrapper
-              key={`question_${question.code}`}
-              initialValue={response?.value}
-              templateElement={question}
-              onUpdate={(updateObject) => {
-                const { isValid, value } = updateObject
-                /**
-                 * Note: Issue #46 (Persist cache) will change this to only write to cache
-                 * sending the whole application changes to the server on Submit...
-                 * Also considering send to server on 'Next' or adding a Save button.
-                 **/
-                // TODO: Only send mutation on loose focus event.
-                if (isValid) responseMutation({ variables: { id: response?.id as number, value } })
-              }}
-              isVisible={true}
-              isEditable={true}
-            />
-          ))}
-          <Grid columns={3}>
-            <Grid.Row>
-              <Grid.Column>
-                {!isFirstPage && (
-                  <PageButton title="Previous" type="left" onClicked={onPreviousClicked} />
-                )}
-              </Grid.Column>
-              <Grid.Column />
-              {/* Empty cell */}
-              <Grid.Column>
-                {!isLastPage ? (
-                  <PageButton title="Next" type="right" onClicked={onNextClicked} />
-                ) : (
-                  <PageButton title="Summary" type="right" onClicked={onNextClicked} />
-                )}
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
-      ) : (
-        <Label content="Elements area can't be displayed" />
-      )}
-    </Container>
+  return error ? (
+    <Label content="Problem to load elements" error={error} />
+  ) : loading ? (
+    <Loading />
+  ) : elements ? (
+    <Segment vertical>
+      <Header content={sectionTitle} />
+      {elements.map(({ question, response }) => (
+        <ApplicationViewWrapper
+          key={`question_${question.code}`}
+          initialValue={response?.value}
+          templateElement={question}
+          onUpdate={(updateObject) => {
+            const { isValid, value } = updateObject
+            /**
+             * Note: Issue #46 (Persist cache) will change this to only write to cache
+             * sending the whole application changes to the server on Submit...
+             * Also considering send to server on 'Next' or adding a Save button.
+             **/
+            // TODO: Only send mutation on loose focus event.
+            if (isValid) responseMutation({ variables: { id: response?.id as number, value } })
+          }}
+          isVisible={true}
+          isEditable={true}
+        />
+      ))}
+      <Grid columns={3}>
+        <Grid.Row>
+          <Grid.Column>
+            {!isFirstPage && (
+              <PageButton title="Previous" type="left" onClicked={onPreviousClicked} />
+            )}
+          </Grid.Column>
+          <Grid.Column />
+          {/* Empty cell */}
+          <Grid.Column>
+            {!isLastPage ? (
+              <PageButton title="Next" type="right" onClicked={onNextClicked} />
+            ) : (
+              <PageButton title="Summary" type="right" onClicked={onNextClicked} />
+            )}
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </Segment>
+  ) : (
+    <Label content="Elements area can't be displayed" />
   )
 }
 

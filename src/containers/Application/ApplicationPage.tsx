@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ApplicationHeader, Loading, ProgressBar } from '../../components'
-import { Container, Grid, Label, Segment } from 'semantic-ui-react'
+import { Loading, ProgressBar } from '../../components'
+import { Grid, Label, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
-import useGetResponsesByCode from '../../utils/hooks/useGetResponsesByCode'
 import { TemplateSectionPayload } from '../../utils/types'
 import ElementsArea from './ElementsArea'
 import { useApplicationState } from '../../contexts/ApplicationState'
@@ -45,28 +44,23 @@ const ApplicationPage: React.FC = () => {
     <Loading />
   ) : application && serialNumber && currentSection ? (
     <Segment.Group>
-      <ApplicationHeader mode={mode} serialNumber={serialNumber} name={application.name} />
-      <Container>
-        <Grid columns={2} stackable textAlign="center">
-          <Grid.Row>
-            <Grid.Column>
-              <ProgressBar />
-            </Grid.Column>
-            <Grid.Column>
-              <ElementsArea
-                applicationId={application.id}
-                sectionTitle={currentSection.title}
-                sectionTempId={currentSection.id}
-                sectionPage={Number(page)}
-                isFirstPage={checkFirstPage(checkPagePayload)}
-                isLastPage={checkLastPage(checkPagePayload)}
-                onPreviousClicked={() => previousButtonHandler(changePagePayload)}
-                onNextClicked={() => nextPageButtonHandler(changePagePayload)}
-              />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Container>
+      <Grid stackable>
+        <Grid.Column width={4}>
+          <ProgressBar templateSections={templateSections} />
+        </Grid.Column>
+        <Grid.Column width={12} stretched>
+          <ElementsArea
+            applicationId={application.id}
+            sectionTitle={currentSection.title}
+            sectionTempId={currentSection.id}
+            sectionPage={Number(page)}
+            isFirstPage={checkFirstPage(checkPagePayload)}
+            isLastPage={checkLastPage(checkPagePayload)}
+            onPreviousClicked={() => previousButtonHandler(changePagePayload)}
+            onNextClicked={() => nextPageButtonHandler(changePagePayload)}
+          />
+        </Grid.Column>
+      </Grid>
     </Segment.Group>
   ) : (
     <Label content="Application's section can't be displayed" />
