@@ -1,10 +1,15 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
 type ApplicationState = {
+  id: number | null
   serialNumber: string | null
 }
 
 export type ApplicationActions =
+  | {
+      type: 'setApplicationId'
+      id: number
+    }
   | {
       type: 'setSerialNumber'
       serialNumber: string
@@ -17,6 +22,12 @@ type ApplicationProviderProps = { children: React.ReactNode }
 
 const reducer = (state: ApplicationState, action: ApplicationActions) => {
   switch (action.type) {
+    case 'setApplicationId':
+      const { id } = action
+      return {
+        ...state,
+        id,
+      }
     case 'setSerialNumber':
       const { serialNumber } = action
       return {
@@ -31,6 +42,7 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
 }
 
 const initialState: ApplicationState = {
+  id: null,
   serialNumber: null,
 }
 

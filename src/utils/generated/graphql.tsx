@@ -16620,7 +16620,7 @@ export type CreateUserMutation = (
 
 export type UpdateApplicationMutationVariables = Exact<{
   id: Scalars['Int'];
-  applicationName: Scalars['String'];
+  applicationTrigger: Trigger;
 }>;
 
 
@@ -16630,7 +16630,28 @@ export type UpdateApplicationMutation = (
     { __typename?: 'UpdateApplicationPayload' }
     & { application?: Maybe<(
       { __typename?: 'Application' }
-      & Pick<Application, 'id' | 'name'>
+      & Pick<Application, 'id' | 'trigger'>
+    )> }
+  )> }
+);
+
+export type UpdateResponseMutationVariables = Exact<{
+  id: Scalars['Int'];
+  value: Scalars['JSON'];
+}>;
+
+
+export type UpdateResponseMutation = (
+  { __typename?: 'Mutation' }
+  & { updateApplicationResponse?: Maybe<(
+    { __typename?: 'UpdateApplicationResponsePayload' }
+    & { applicationResponse?: Maybe<(
+      { __typename?: 'ApplicationResponse' }
+      & Pick<ApplicationResponse, 'id' | 'value'>
+      & { templateElement?: Maybe<(
+        { __typename?: 'TemplateElement' }
+        & Pick<TemplateElement, 'code'>
+      )> }
     )> }
   )> }
 );
@@ -16701,6 +16722,7 @@ export type GetApplicationsQuery = (
 
 export type GetSectionElementsQueryVariables = Exact<{
   sectionId: Scalars['Int'];
+  applicationId: Scalars['Int'];
 }>;
 
 
@@ -16711,6 +16733,13 @@ export type GetSectionElementsQuery = (
     & { nodes: Array<Maybe<(
       { __typename?: 'TemplateElement' }
       & Pick<TemplateElement, 'category' | 'code' | 'index' | 'elementTypePluginCode' | 'visibilityCondition' | 'parameters' | 'title' | 'sectionId'>
+      & { applicationResponses: (
+        { __typename?: 'ApplicationResponsesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ApplicationResponse' }
+          & Pick<ApplicationResponse, 'id' | 'timeCreated' | 'value'>
+        )>> }
+      ) }
     )>> }
   )> }
 );
@@ -16951,11 +16980,11 @@ export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutati
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const UpdateApplicationDocument = gql`
-    mutation updateApplication($id: Int!, $applicationName: String!) {
-  updateApplication(input: {id: $id, patch: {name: $applicationName}}) {
+    mutation updateApplication($id: Int!, $applicationTrigger: Trigger!) {
+  updateApplication(input: {id: $id, patch: {trigger: $applicationTrigger}}) {
     application {
       id
-      name
+      trigger
     }
   }
 }
@@ -16976,7 +17005,7 @@ export type UpdateApplicationMutationFn = Apollo.MutationFunction<UpdateApplicat
  * const [updateApplicationMutation, { data, loading, error }] = useUpdateApplicationMutation({
  *   variables: {
  *      id: // value for 'id'
- *      applicationName: // value for 'applicationName'
+ *      applicationTrigger: // value for 'applicationTrigger'
  *   },
  * });
  */
@@ -16986,6 +17015,45 @@ export function useUpdateApplicationMutation(baseOptions?: Apollo.MutationHookOp
 export type UpdateApplicationMutationHookResult = ReturnType<typeof useUpdateApplicationMutation>;
 export type UpdateApplicationMutationResult = Apollo.MutationResult<UpdateApplicationMutation>;
 export type UpdateApplicationMutationOptions = Apollo.BaseMutationOptions<UpdateApplicationMutation, UpdateApplicationMutationVariables>;
+export const UpdateResponseDocument = gql`
+    mutation updateResponse($id: Int!, $value: JSON!) {
+  updateApplicationResponse(input: {id: $id, patch: {value: $value}}) {
+    applicationResponse {
+      id
+      value
+      templateElement {
+        code
+      }
+    }
+  }
+}
+    `;
+export type UpdateResponseMutationFn = Apollo.MutationFunction<UpdateResponseMutation, UpdateResponseMutationVariables>;
+
+/**
+ * __useUpdateResponseMutation__
+ *
+ * To run a mutation, you first call `useUpdateResponseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateResponseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateResponseMutation, { data, loading, error }] = useUpdateResponseMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      value: // value for 'value'
+ *   },
+ * });
+ */
+export function useUpdateResponseMutation(baseOptions?: Apollo.MutationHookOptions<UpdateResponseMutation, UpdateResponseMutationVariables>) {
+        return Apollo.useMutation<UpdateResponseMutation, UpdateResponseMutationVariables>(UpdateResponseDocument, baseOptions);
+      }
+export type UpdateResponseMutationHookResult = ReturnType<typeof useUpdateResponseMutation>;
+export type UpdateResponseMutationResult = Apollo.MutationResult<UpdateResponseMutation>;
+export type UpdateResponseMutationOptions = Apollo.BaseMutationOptions<UpdateResponseMutation, UpdateResponseMutationVariables>;
 export const GetApplicationDocument = gql`
     query getApplication($serial: String!) {
   applications(condition: {serial: $serial}) {
@@ -17095,7 +17163,7 @@ export type GetApplicationsQueryHookResult = ReturnType<typeof useGetApplication
 export type GetApplicationsLazyQueryHookResult = ReturnType<typeof useGetApplicationsLazyQuery>;
 export type GetApplicationsQueryResult = Apollo.QueryResult<GetApplicationsQuery, GetApplicationsQueryVariables>;
 export const GetSectionElementsDocument = gql`
-    query getSectionElements($sectionId: Int!) {
+    query getSectionElements($sectionId: Int!, $applicationId: Int!) {
   templateElements(condition: {sectionId: $sectionId}) {
     nodes {
       category
@@ -17106,6 +17174,13 @@ export const GetSectionElementsDocument = gql`
       parameters
       title
       sectionId
+      applicationResponses(condition: {applicationId: $applicationId}) {
+        nodes {
+          id
+          timeCreated
+          value
+        }
+      }
     }
   }
 }
@@ -17124,6 +17199,7 @@ export const GetSectionElementsDocument = gql`
  * const { data, loading, error } = useGetSectionElementsQuery({
  *   variables: {
  *      sectionId: // value for 'sectionId'
+ *      applicationId: // value for 'applicationId'
  *   },
  * });
  */
