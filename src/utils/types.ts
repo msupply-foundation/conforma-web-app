@@ -10,6 +10,8 @@ export {
   TemplateSectionPayload,
   Response,
   ResponsesByCode,
+  SectionProgress,
+  SectionProgressPayload,
 }
 
 interface ElementAndResponse {
@@ -59,4 +61,16 @@ type Response = {
 
 interface ResponsesByCode {
   [key: string]: Response | string
+}
+
+interface SectionProgress { 
+  [page: string]: { 
+    valid: boolean
+    visited: boolean 
+  }
+}
+
+interface SectionProgressPayload {
+  templateSection: TemplateSectionPayload
+  pages: SectionProgress
 }

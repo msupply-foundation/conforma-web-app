@@ -1,14 +1,23 @@
 import React, { createContext, useContext, useReducer } from 'react'
+import { SectionProgress } from '../utils/types'
 
-type ApplicationState = {
+interface ApplicationState {
   id: number | null
+  sections: SectionProgress[] | null
   serialNumber: string | null
 }
 
 export type ApplicationActions =
   | {
-      type: 'setApplicationId'
+      type: 'setApplication'
       id: number
+      sectionsProgress: SectionProgress[]
+    }
+  | {
+      type: 'setPageVisited'
+      sectionIndex: number
+      pageNumber: number
+      validation: boolean
     }
   | {
       type: 'setSerialNumber'
@@ -22,11 +31,28 @@ type ApplicationProviderProps = { children: React.ReactNode }
 
 const reducer = (state: ApplicationState, action: ApplicationActions) => {
   switch (action.type) {
-    case 'setApplicationId':
-      const { id } = action
+    case 'setApplication':
+      const { id, sectionsProgress } = action
       return {
         ...state,
         id,
+        sections: sectionsProgress,
+      }
+    case 'setPageVisited':
+      const { sections } = state
+      const { sectionIndex, pageNumber, validation } = action
+
+      return {
+        ...state,
+        sections: sections
+          ? {
+              ...sections,
+              [sectionIndex]: {
+                ...sections[sectionIndex],
+                [pageNumber]: { valid: validation, visited: true },
+              },
+            }
+          : Object.assign({ [pageNumber]: { valid: validation, visited: true } }),
       }
     case 'setSerialNumber':
       const { serialNumber } = action
@@ -43,6 +69,7 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
 
 const initialState: ApplicationState = {
   id: null,
+  sections: null,
   serialNumber: null,
 }
 
