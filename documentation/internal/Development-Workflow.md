@@ -33,6 +33,10 @@ Inside the `/src` folder all files used for the Front-end are distribuited in th
 
 **Rule 2**: Name containers with suffix `Wrapper` when they are simply calling other containers (that will then call the actual components). Or name containers with suffix `Box` when it is responsible for defining the layout and calling other components to be redered inside.
 
+#### Example
+
+![ApplicationPage example](images/Development_Workflow_ApplicationPage_components.png)
+
 ### contexts
 
 `Context areas` - each area is a file containing a block with some shared states.
@@ -45,7 +49,7 @@ Inside the `/src` folder all files used for the Front-end are distribuited in th
 
 ### elementsPlugins
 
-`aka Question plugins` - This is used for all related code for the Question plugins.
+aka `Question plugins` - This is used for all related code for the Question plugins.
 
 - Each folder inside will defined each Question-type for the App. Inside each question-type folder there are 2 files:
   - `ApplicationView` => Define how this question is rendered during an application in progress/edited.
@@ -66,12 +70,21 @@ Folder with a single file `graphql.tsx`
 
 Folder storing all GraphQL queries, mutation and fragments (so everthing is in one place).
 
-- **Important**: Always check that the type for the files included in this folder are using `.ts` - or generation will fail!
-- All GraphQl calls are grouped in here to keep it in just a single place AND to be used by the type generation. After the `yarn generate` runs a new **hook** with all required types is defined in the `generated/graphql.ts` file named as the pattern.
+**Important**: Always check that the type for the files included in this folder are using `.ts` - or generation will fail!
 
-  Example: a new query called `getApplications.query.ts` will get a new hook (for querying) as `useGetApplicationsQuery`.
+**Rule 1**: All GraphQl calls are grouped in here to keep all-in-one-place and to be used on the the type generation.
 
-- **Pattern**: - Query: `get` `Entity` `.` `query` `.ts` - Mutation: (`create` | `update`) `Entity` `.` `mutation` `.ts` - Fragment: (`add` | `remove`) `Entity` `.` `fragment` `.ts`
+**Rule 2**: After adding, creating run the `yarn generate` script.
+
+After the generation runs a new **custom hook** with all required types is defined in the `generated/graphql.ts` file named as the pattern.
+
+Example: a new query called `getApplications.query.ts` will get a new hook (for querying) as `useGetApplicationsQuery`.
+
+**Rule 3**: Use the **Pattern**:
+
+- Query: `get` `Entity` `.` `query` `.ts`
+- Mutation: (`create` | `update`) `Entity` `.` `mutation` `.ts`
+- Fragment: (`add` | `remove`) `Entity` `.` `fragment` `.ts`
 
 ##### fragments
 
@@ -87,13 +100,13 @@ _What is a mutation?_ Something to be posted to the GraphQL server. Habe some de
 
 #### helpers
 
-Add here any methods that can be used in many places.
+Add here any methods that can be used in other places - that aren't hooks or compnents itselves.
 
 #### hooks
 
-Our custom hooks - exaplained in more detail in the Development sections below.
+Our **custom hooks** - exaplained in more detail in the Development sections below.
 
-#### Files in the src folder:
+### Files on the root src folder
 
 - `cache.tsx` - Start the Apollo Cache.
   Also define some local state to be used within the cache on the root level or as part of any table (@client). Read more [here](https://www.apollographql.com/docs/react/local-state/managing-state-with-field-policies/#storing-local-state-in-the-cache).
@@ -105,6 +118,74 @@ Our custom hooks - exaplained in more detail in the Development sections below.
 ---
 
 # Local vs. Remote states
+
+### Remote states
+
+The local data kept in the app by Apollo client CACHE is considered remote state since is a small mirror of the GraphQL server. The cached data is reused for up-coming queries (if we don't enforce a `refetch` from the server), just returning the local **remote state** for the queried data - when it is available. Or get from the server if not available in cache.
+
+**Important**: No need to do anything different to query from the cache instead of the server. Just a simple query will do it. Mutations on the other hand require some addition - after sending data to the server we have to update the cache.
+
+_How Apollo keeps the cache synced with the server?_
+
+Apollo client provides this cache management module, which will store all the data query or mutation results after it is fetched from the server. It requires you add the `id` of each entity - and the related entities included in the fetched data - or another identifier that you have specified before to the cache management instance if not using the `id`. The caches stores one instance of each entity queried (refreshing would clear the cache). And for each relationship it keeps a reference to its entity. In the end the remote states has one instance of each entity already fetched from the server.
+
+_Why do we update the cache after mutations?_
+
+When we create a new entity that has a relationshio with some existing in cache we need to also update the cache with the added entity! This is to avoid having to create a `refetch` to get this back from the server and keep the local cache up-to-date. The same way, after editing an entity which is already in cache we need to remember to update this entity in the cache.
+
+##### Example of remote data
+
+- Current Application
+- Application Sections (related enetities - Application)
+  - Template Sections (related enetities - Application Section)
+- Application Responses (related entities - Application)
+  - Template element (related entities - Application Response)
+
+### Local states
+
+We are using 2 options for local states:
+
+- local variables (with `useState`) passed as `props` to other components
+- context areas (with `useContext`) for sharing between components
+
+##### Example of local state
+
+**TODO**: Rename ApplicationPage => ApplicationPageWrapper (if we decide that we want to keep the wrapper thingy).
+
+**To be created** => In ApplicationPageWrapper:
+
+- List of all questions and responses
+
+How to use:
+
+1. `ApplicationPage` calls initial query to load the whole application, section and responses.
+2. `ApplicationPage` calls a custom hook to create the list of questions and responses based on query.
+3. Custom hook returns the result object Q&R with all the question elements with reduced fields (after running the `evaluateExpression` on each question) and the responses by the user.
+
+The object returned has for each Q&R (Question and Response):
+
+- Question code (key)
+- Type: Information | Question - if information none of the next fields are filled!
+- isRequired: boolean
+- isVisible: boolean
+- isValid: boolean
+- ResponseId: number
+- ResponseJSON: JSON
+- ResponseValue: string
+
+4. The Q&R object is passed to `ElementsBox` and each related question and response to the `ApplicationViewWrapper`.
+5. The `ApplicationViewWrapper` receives the mutation (from `ElementsBox`) to update the response `onFieldChage`. It should only update to the server and CACHE when the response is valid.
+6. The `ApplicationPage` will update the Q&R object when the query for elements and responses gets triggerdby the new mutation of one of the elements response on the current application.
+
+##### Example of context state
+
+`src/contexts/ApplicationState.tsx`
+
+This context area is used between components to share a few states:
+
+- Application serial number (currently created on Front-end)
+- Application id
+- Application's sections total of pages - which gets deduced by the elements in each section.
 
 ---
 
@@ -120,13 +201,13 @@ Process of creating one Application, going through each page until reach the sum
 
 ### Structure
 
-When starting a new page check:
+While starting a **new page** check:
 
 - New page is included in the `containers`.
-  - Continue on the existing or
+  - Continue on the existing; or
   - Create a new file following the pattern:
-    `Entity` + `Goal`. Example: `UserRegister`.
-  - Use a inner folder to combine pages with same entity.
+    `Entity` + `Goal` + `Wrapper` | `Box`. Example: `UserRegisterWrapper`.
+  - Use a group folder to combine pages of the same entity.
 - Think about as many pieces of that can be used only for display a certain area of the page - adding to `components`:
   - These components should received (as props or importing one context area) everything to be presented.
   - Any action triggered by button should also be passed to the components.
