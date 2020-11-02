@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useReducer } from 'react'
-import { SectionProgress } from '../utils/types'
+// import { SectionProgress } from '../utils/types'
 
 interface ApplicationState {
   id: number | null
-  sections: SectionProgress[] | null
+  // sections: SectionProgress[] | null
   serialNumber: string | null
 }
 
@@ -11,14 +11,14 @@ export type ApplicationActions =
   | {
       type: 'setApplication'
       id: number
-      sectionsProgress: SectionProgress[]
+      // sectionsProgress: SectionProgress[]
     }
-  | {
-      type: 'setPageVisited'
-      sectionIndex: number
-      pageNumber: number
-      validation: boolean
-    }
+  // | {
+  //     type: 'setPageVisited'
+  //     sectionIndex: number
+  //     pageNumber: number
+  //     validation: boolean
+  //   }
   | {
       type: 'setSerialNumber'
       serialNumber: string
@@ -32,28 +32,29 @@ type ApplicationProviderProps = { children: React.ReactNode }
 const reducer = (state: ApplicationState, action: ApplicationActions) => {
   switch (action.type) {
     case 'setApplication':
-      const { id, sectionsProgress } = action
+      const { id } = action
+      // const { id, sectionsProgress } = action
       return {
         ...state,
         id,
-        sections: sectionsProgress,
+        // sections: sectionsProgress,
       }
-    case 'setPageVisited':
-      const { sections } = state
-      const { sectionIndex, pageNumber, validation } = action
+    // case 'setPageVisited':
+    //   const { sections } = state
+    //   const { sectionIndex, pageNumber, validation } = action
 
-      return {
-        ...state,
-        sections: sections
-          ? {
-              ...sections,
-              [sectionIndex]: {
-                ...sections[sectionIndex],
-                [pageNumber]: { valid: validation, visited: true },
-              },
-            }
-          : Object.assign({ [pageNumber]: { valid: validation, visited: true } }),
-      }
+    //   return {
+    //     ...state,
+    //     sections: sections
+    //       ? {
+    //           ...sections,
+    //           [sectionIndex]: {
+    //             ...sections[sectionIndex],
+    //             [pageNumber]: { valid: validation, visited: true },
+    //           },
+    //         }
+    //       : Object.assign({ [pageNumber]: { valid: validation, visited: true } }),
+    //   }
     case 'setSerialNumber':
       const { serialNumber } = action
       return {
@@ -69,7 +70,7 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
 
 const initialState: ApplicationState = {
   id: null,
-  sections: null,
+  // sections: null,
   serialNumber: null,
 }
 
