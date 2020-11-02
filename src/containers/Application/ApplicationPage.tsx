@@ -5,7 +5,7 @@ import { Grid, Label, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { SectionProgressPayload, TemplateSectionPayload } from '../../utils/types'
 import { useApplicationState } from '../../contexts/ApplicationState'
-import ElementsArea from './ElementsArea'
+import ElementsBox from './ElementsBox'
 import NavigationBox from './NavigationBox'
 
 const ApplicationPage: React.FC = () => {
@@ -65,7 +65,7 @@ const ApplicationPage: React.FC = () => {
           {sectionProgress && <ProgressBar sections={sectionProgress} />}
         </Grid.Column>
         <Grid.Column width={11} stretched>
-          <ElementsArea
+          <ElementsBox
             applicationId={application.id}
             sectionTitle={currentSection.title}
             sectionTemplateId={currentSection.id}

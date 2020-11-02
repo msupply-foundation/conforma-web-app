@@ -5,14 +5,14 @@ import useLoadElements from '../../utils/hooks/useLoadElements'
 import { Loading } from '../../components'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 
-interface ElementsAreaProps {
+interface ElementsBoxProps {
   applicationId: number
   sectionTitle: string
   sectionTemplateId: number
   sectionPage: number
 }
 
-const ElementsArea: React.FC<ElementsAreaProps> = ({
+const ElementsBox: React.FC<ElementsBoxProps> = ({
   applicationId,
   sectionTitle,
   sectionTemplateId: sectionTempId,
@@ -58,4 +58,4 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
   )
 }
 
-export default ElementsArea
+export default ElementsBox
