@@ -4,9 +4,9 @@ import { Loading, ProgressBar } from '../../components'
 import { Grid, Label, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { SectionProgressPayload, TemplateSectionPayload } from '../../utils/types'
-import ElementsArea from './ElementsArea'
 import { useApplicationState } from '../../contexts/ApplicationState'
-import ControlArea from './ControlArea'
+import ElementsArea from './ElementsArea'
+import NavigationBox from './NavigationBox'
 
 const ApplicationPage: React.FC = () => {
   const { applicationState, setApplicationState } = useApplicationState()
@@ -71,7 +71,7 @@ const ApplicationPage: React.FC = () => {
             sectionTemplateId={currentSection.id}
             sectionPage={Number(page)}
           />
-          <ControlArea templateSections={templateSections} />
+          <NavigationBox templateSections={templateSections} />
         </Grid.Column>
       </Grid>
     </Segment.Group>

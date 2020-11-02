@@ -4,11 +4,11 @@ import PageButton from '../../components/Application/PageButton'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { TemplateSectionPayload } from '../../utils/types'
 
-interface ControlAreaProps {
+interface NavigationBoxProps {
   templateSections: TemplateSectionPayload[]
 }
 
-const ControlArea: React.FC<ControlAreaProps> = ({ templateSections }) => {
+const NavigationBox: React.FC<NavigationBoxProps> = ({ templateSections }) => {
   const { query, push } = useRouter()
   const { serialNumber, sectionCode, page } = query
 
@@ -143,4 +143,4 @@ function nextPageButtonHandler({
   } else sendToPage(currentSection.code, nextPage)
 }
 
-export default ControlArea
+export default NavigationBox
