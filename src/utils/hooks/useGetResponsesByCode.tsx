@@ -13,44 +13,44 @@ interface useLoadApplicationProps {
 const useGetResponsesByCode = (props: useLoadApplicationProps) => {
   const { serialNumber } = props
   const [responsesByCode, setResponsesByCode] = useState({})
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(true)
+  // const [error, setError] = useState('')
+  // const [loading, setLoading] = useState(true)
   const { data, loading: apolloLoading, error: apolloError } = useGetApplicationQuery({
     variables: { serial: serialNumber },
   })
 
-  useEffect(() => {
-    const error = checkForApplicationErrors(data)
+  // useEffect(() => {
+  //   const error = checkForApplicationErrors(data)
 
-    if (error) {
-      setError(error)
-      setLoading(false)
-      return
-    }
+  //   if (error) {
+  //     setError(error)
+  //     setLoading(false)
+  //     return
+  //   }
 
-    if (apolloError) return
+  //   if (apolloError) return
 
-    const applicationResponses = data?.applications?.nodes[0]?.applicationResponses
-      .nodes as ApplicationResponse[]
+  //   const applicationResponses = data?.applications?.nodes[0]?.applicationResponses
+  //     .nodes as ApplicationResponse[]
 
-    const currentResponses = {} as ResponsesByCode
+  //   const currentResponses = {} as ResponsesByCode
 
-    applicationResponses.forEach((response) => {
-      const code = response?.templateElement?.code
-      if (code) currentResponses[code] = response?.value?.text || response?.value
-    })
+  //   applicationResponses.forEach((response) => {
+  //     const code = response?.templateElement?.code
+  //     if (code) currentResponses[code] = response?.value?.text || response?.value
+  //   })
 
-    setResponsesByCode(currentResponses)
-    setLoading(false)
-  }, [data, apolloError])
+  //   setResponsesByCode(currentResponses)
+  //   setLoading(false)
+  // }, [data, apolloError])
 
-  return {
-    apolloError,
-    apolloLoading,
-    loading,
-    error,
-    responsesByCode,
-  }
+  // return {
+  //   apolloError,
+  //   apolloLoading,
+  //   loading,
+  //   error,
+  //   responsesByCode,
+  // }
 }
 
 function checkForApplicationErrors(data: GetApplicationQuery | undefined) {
