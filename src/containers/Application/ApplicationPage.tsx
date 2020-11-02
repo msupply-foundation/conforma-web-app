@@ -25,10 +25,10 @@ const ApplicationPage: React.FC = () => {
   ) : application && templateSections && serialNumber && currentSection ? (
     <Segment.Group>
       <Grid stackable>
-        <Grid.Column width={5}>
+        <Grid.Column width={4}>
           <ProgressBar templateSections={templateSections} />
         </Grid.Column>
-        <Grid.Column width={11} stretched>
+        <Grid.Column width={12} stretched>
           <ElementsBox
             applicationId={application.id}
             sectionTitle={currentSection.title}
