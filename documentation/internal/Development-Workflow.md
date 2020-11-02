@@ -1,7 +1,8 @@
 _This should help Front-end developers understand the flow of how React components and GraphQL calls interact and the current project structure._
 
-## Project Structure
+# Project Structure
 
+We have a few rules to maintain our structure comprehensive. This rules may change with time, and we should keep this file up-to-date with the current ones. Check the rules in each section below.
 Inside the `/src` folder all files used for the Front-end are distribuited in the following structure:
 
 - `components`
@@ -16,23 +17,35 @@ Inside the `/src` folder all files used for the Front-end are distribuited in th
 
 ### components
 
-`Presentation components` or simply functional UI React components that receive what should be displayed as `props`.
+`Presentation components` or functional UI React components.
+
+**Rule 1**: Not logic or should be done at the component level, it simply renders what is received in the `props`.
+
+**Rule 2**: Grouping components that are using in a certain area of the app can be usefull. For now we are keeping all application related component in the folder `src/components/Application`.
+
+**Rule 3**: Each group folder has a `index.ts` file which imports all files in this folder and exports. That's to make it easier for outsider containers/components to import these files by using the `import { nameOfComponent } from './components'`.
 
 ### containers
 
-`Controller components` or control & display of React components. The containers shouls make calls to the server, store some local state and pass the required props to each presentation components, more than one ideally.
+`Controller components` will basically contain other React components.
+
+**Rule 1**: The containers should make calls to the server (using hooks), keep local state variables and/or call hooks that transform the data into some local variable to be passed as required props on each `presentation components`.
+
+**Rule 2**: Name containers with suffix `Wrapper` when they are simply calling other containers (that will then call the actual components). Or name containers with suffix `Box` when it is responsible for defining the layout and calling other components to be redered inside.
 
 ### contexts
 
 `Context areas` - each area is a file containing a block with some shared states.
 
-- Apollo cache is doing most part of the local state management, but somethings that need to be passed by components that are not directly connect are currently using contexts.
-- We are studying the idea of using Apollo cache directives (@client) for dealing with the existing contexts states.
+**Rule 1**: Avoid using context for anything that can be fetched from the database (using Apollo client) or set in the local state (`useState`) and passed to other components as `props`.
+
+- Apollo client CACHE is doing most part of the local state management, other local states can be shared between components by `props`. But a few times we need to be passing information (that aren't in the database) from one component to another not directly connect.
+- We are studying the idea of using Apollo cache directives (@client) for replacing with the existing contexts states. Or simple local states.
 - **Important**: For a component be able to access something from a context area it will need to be (or some parent component needs to be) wrapped by the context provider! Check out how it's done in the `SiteLayout.tsx` file.
 
 ### elementsPlugins
 
-This is used for all related code for the Question plugins.
+`aka Question plugins` - This is used for all related code for the Question plugins.
 
 - Each folder inside will defined each Question-type for the App. Inside each question-type folder there are 2 files:
   - `ApplicationView` => Define how this question is rendered during an application in progress/edited.
@@ -91,6 +104,12 @@ Our custom hooks - exaplained in more detail in the Development sections below.
 
 ---
 
+# Local vs. Remote states
+
+---
+
+# Development workflow
+
 ## Example
 
 Process of creating one Application, going through each page until reach the summary page where the user can submit.
@@ -98,8 +117,6 @@ Process of creating one Application, going through each page until reach the sum
 ![development_workflow_applications](images/Development_workflow_applications.png)
 
 ---
-
-## Development workflow
 
 ### Structure
 
