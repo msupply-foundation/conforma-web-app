@@ -250,7 +250,7 @@ After you have finished adding the query/mutation:
 
 You just need another **custom hook** created now.
 
-- The reason to create - yet another - hook is that simply calling the new **generated hook** it's still needed to make some transformation with the data, sometimes even run sequential queries/mutations. The way hooks work, it's better to have another hook calling the generated one so the `container` call just you **custom hook** and get's the final result.
+- The reason to create (yet another) hook is that simply calling the new **generated hook** you still need to make additional transformations of the data, sometimes even run sequential queries/mutations. The way hooks work, it's better to have another hook calling the generated one so the `container` calls just your **custom hook** and gets the final result.
 
 - To create the custom hook to be called by the new container:
 
