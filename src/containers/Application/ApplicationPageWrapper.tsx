@@ -17,13 +17,17 @@ const ApplicationPage: React.FC = () => {
     serialNumber: serialNumber as string,
   })
 
-  const { reponseStateByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
+  const {
+    error: responsesError,
+    loading: responsesLoading,
+    responsesByCode,
+  } = useGetResponsesByCode({
+    serialNumber: serialNumber as string,
+  })
 
   useEffect(() => {
     if (application) setApplicationState({ type: 'setApplicationId', id: application.id })
   }, [application])
-
-  console.log('Application', application)
 
   const currentSection = templateSections.find(({ code }) => code == sectionCode)
 

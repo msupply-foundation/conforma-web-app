@@ -3,8 +3,10 @@ import {
   ApplicationResponse,
   useGetApplicationQuery,
   GetApplicationQuery,
+  useGetResponsesQuery,
 } from '../generated/graphql'
 import { ResponsesByCode } from '../types'
+import { evaluateExpression } from '@openmsupply/expression-evaluator'
 
 interface useLoadApplicationProps {
   serialNumber: string
@@ -13,52 +15,67 @@ interface useLoadApplicationProps {
 const useGetResponsesByCode = (props: useLoadApplicationProps) => {
   const { serialNumber } = props
   const [responsesByCode, setResponsesByCode] = useState({})
-  // const [error, setError] = useState('')
-  // const [loading, setLoading] = useState(true)
-  const { data, loading: apolloLoading, error: apolloError } = useGetApplicationQuery({
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(true)
+  const { data, loading: apolloLoading, error: apolloError } = useGetResponsesQuery({
     variables: { serial: serialNumber },
   })
 
-  // useEffect(() => {
-  //   const error = checkForApplicationErrors(data)
+  useEffect(() => {
+    // const error = checkForApplicationErrors(data)
 
-  //   if (error) {
-  //     setError(error)
-  //     setLoading(false)
-  //     return
-  //   }
+    if (error) {
+      setError(error)
+      setLoading(false)
+      return
+    }
 
-  //   if (apolloError) return
+    if (apolloError) return
 
-  //   const applicationResponses = data?.applications?.nodes[0]?.applicationResponses
-  //     .nodes as ApplicationResponse[]
+    const applicationResponses = data?.applicationBySerial?.applicationResponses?.nodes
 
-  //   const currentResponses = {} as ResponsesByCode
+    console.log('Responses:', applicationResponses)
 
-  //   applicationResponses.forEach((response) => {
-  //     const code = response?.templateElement?.code
-  //     if (code) currentResponses[code] = response?.value?.text || response?.value
-  //   })
+    const currentResponses = {} as ResponsesByCode
 
-  //   setResponsesByCode(currentResponses)
-  //   setLoading(false)
-  // }, [data, apolloError])
+    if (applicationResponses) {
+      applicationResponses.forEach((response: any) => {
+        const code = response?.templateElement?.code
+        if (code) {
+          currentResponses[code] = {
+            category: response.templateElement.category,
+            isRequired: response.templateElement.isRequired,
+            isEditable: response.templateElement.isEditable,
+            isValid: evaluateExpression(response.templateElement.validation),
+            isVisible: response.templateElement.visibilityCondition,
+            validationMessage: response.templateElement.validationMessage,
+            responseId: response.id,
+            responseJSON: response?.value,
+            responseValue: response?.value?.text,
+          }
+        }
+      })
+    }
 
-  // return {
-  //   apolloError,
-  //   apolloLoading,
-  //   loading,
-  //   error,
-  //   responsesByCode,
-  // }
-}
+    setResponsesByCode(currentResponses)
+    setLoading(false)
+  }, [data, apolloError])
 
-function checkForApplicationErrors(data: GetApplicationQuery | undefined) {
-  if (data?.applications) {
-    if (data.applications.nodes.length === 0) return 'No applications found'
-    if (data.applications.nodes.length > 1)
-      return 'More than one application returned. Only one expected!'
+  return {
+    apolloError,
+    apolloLoading,
+    loading,
+    error,
+    responsesByCode,
   }
-  return null
 }
+
+// function checkForApplicationErrors(data: GetApplicationQuery | undefined) {
+//   if (data?.applications) {
+//     if (data.applications.nodes.length === 0) return 'No applications found'
+//     if (data.applications.nodes.length > 1)
+//       return 'More than one application returned. Only one expected!'
+//   }
+//   return null
+// }
 export default useGetResponsesByCode

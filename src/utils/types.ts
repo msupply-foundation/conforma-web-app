@@ -1,4 +1,4 @@
-import { ApplicationResponse, TemplateElement } from './generated/graphql'
+import { ApplicationResponse, TemplateElement, TemplateElementCategory } from './generated/graphql'
 
 export {
   ElementAndResponse,
@@ -58,5 +58,15 @@ type Response = {
 }
 
 interface ResponsesByCode {
-  [key: string]: Response | string
+  [key: string]: {
+    category: TemplateElementCategory
+    isRequired: boolean
+    isVisible: boolean
+    isValid: boolean
+    validationMessage: string | null
+    responseId: number
+    responseJSON: Response
+    responseValue: string | number
+    isEditable: boolean
+  }
 }

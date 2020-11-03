@@ -31,8 +31,15 @@ export default gql`
         applicationResponses {
           nodes {
             value
+            id
             templateElement {
               code
+              category
+              isEditable
+              isRequired
+              validation
+              validationMessage
+              visibilityCondition
             }
           }
         }
