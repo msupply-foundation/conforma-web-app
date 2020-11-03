@@ -19,7 +19,7 @@ Inside the `/src` folder all files used for the Front-end are distribuited in th
 
 `Presentation components` or functional UI React components.
 
-**Rule 1**: Not logic or should be done at the component level, it simply renders what is received in the `props`.
+**Rule 1**: No logic should be done at the component level, it simply renders what is received in the `props`.
 
 **Rule 2**: Grouping components that are using in a certain area of the app can be usefull. For now we are keeping all application related component in the folder `src/components/Application`.
 
