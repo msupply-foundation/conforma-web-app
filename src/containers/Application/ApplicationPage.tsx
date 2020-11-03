@@ -26,7 +26,11 @@ const ApplicationPage: React.FC = () => {
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
-          <ProgressBar templateSections={templateSections} />
+          <ProgressBar
+            serialNumber={serialNumber}
+            sectionPage={{ sectionIndex: currentSection.index, currentPage: Number(page) }}
+            templateSections={templateSections}
+          />
         </Grid.Column>
         <Grid.Column width={12} stretched>
           <ElementsBox

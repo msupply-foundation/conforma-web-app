@@ -30,7 +30,7 @@ const ApplicationOverview: React.FC = () => {
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
-          <ProgressBar templateSections={templateSections} />
+          <ProgressBar serialNumber={serialNumber} templateSections={templateSections} />
         </Grid.Column>
         <Grid.Column width={12}>
           <ApplicationSummary

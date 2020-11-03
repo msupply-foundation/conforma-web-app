@@ -1,26 +1,27 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import {
-  Accordion,
-  Button,
-  Container,
-  Grid,
-  Header,
-  Label,
-  Menu,
-  Segment,
-  Sticky,
-} from 'semantic-ui-react'
+import { Accordion, Container, Grid, Header, Label, Sticky } from 'semantic-ui-react'
+import { useRouter } from '../../utils/hooks/useRouter'
 import { TemplateSectionPayload } from '../../utils/types'
 
-interface ProgressBarProps {
-  templateSections: TemplateSectionPayload[]
+interface SectionPage {
+  sectionIndex: number
+  currentPage: number
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ templateSections }) => {
-  const isLastElement = (element: number) => templateSections.length > element
+interface ProgressBarProps {
+  serialNumber: string
+  templateSections: TemplateSectionPayload[]
+  sectionPage?: SectionPage
+}
 
+const ProgressBar: React.FC<ProgressBarProps> = ({
+  serialNumber,
+  templateSections,
+  sectionPage,
+}) => {
   const childrenPanels = (step: number, totalPages: number) => {
+    const { push } = useRouter()
     const pages = Array.from(Array(totalPages).keys(), (n) => n + 1)
     return pages.map((number) => {
       return {
@@ -31,6 +32,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ templateSections }) => {
               disabled
               size="small"
               as={Link}
+              to={`applications/${serialNumber}/Page${number}`} // Not working :P
               key={`page_${number}`}
               content={`Page${number}`}
             />
@@ -40,46 +42,74 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ templateSections }) => {
     })
   }
 
-  const rootPanels = templateSections.map((section, index) => {
-    const stepNumber = index + 1
+  const rootPanels = () => {
+    const sectionItems = templateSections.map((section, index) => {
+      const stepNumber = index + 1
 
-    return {
-      key: `progress_${stepNumber}`,
+      return {
+        key: `progress_${stepNumber}`,
+        title: {
+          children: (
+            <Grid floated="right">
+              <Grid.Column width={4} textAlign="right" verticalAlign="middle">
+                {getStepNumber(stepNumber)}
+              </Grid.Column>
+              <Grid.Column width={12} textAlign="left" verticalAlign="middle">
+                <Header size="small" content={section.title} basic />
+              </Grid.Column>
+            </Grid>
+          ),
+        },
+        content: {
+          content: (
+            <Grid>
+              <Grid.Column width={4}></Grid.Column>
+              <Grid.Column width={12}>
+                <Accordion.Accordion panels={childrenPanels(stepNumber, section.totalPages)} />
+              </Grid.Column>
+            </Grid>
+          ),
+        },
+      }
+    })
+
+    const summaryNumber = sectionItems.length + 1
+    sectionItems.push({
+      key: 'progress_summary',
       title: {
         children: (
           <Grid>
-            <Grid.Column width={2}></Grid.Column>
-            <Grid.Column width={14} verticalAlign="middle">
-              {getStepNumber(stepNumber, isLastElement(stepNumber))}
-              {section.title}
+            <Grid.Column width={4} textAlign="right" verticalAlign="middle">
+              {getStepNumber(summaryNumber)}
+            </Grid.Column>
+            <Grid.Column width={12} textAlign="left" verticalAlign="middle">
+              <Header size="small" content={'Review and submit'} />
             </Grid.Column>
           </Grid>
         ),
       },
+      // Ideally this isn't needed - Couldn't find some way to remove this
       content: {
-        content: (
-          <Grid>
-            <Grid.Column width={4}></Grid.Column>
-            <Grid.Column width={12}>
-              <Accordion.Accordion panels={childrenPanels(stepNumber, section.totalPages)} />
-            </Grid.Column>
-          </Grid>
-        ),
+        content: <Header as={Link} to={`applications/${serialNumber}/summary`} />,
       },
-    }
-  })
+    })
+    return sectionItems
+  }
 
   return (
     <Sticky>
       <Container>
         <Header as="h5" textAlign="center" content="Steps to complete form" />
-        <Accordion defaultActiveIndex={0} panels={rootPanels} />
+        <Accordion
+          activeIndex={sectionPage ? sectionPage.sectionIndex : templateSections.length + 1}
+          panels={rootPanels()}
+        />
       </Container>
     </Sticky>
   )
 }
 
-const getStepNumber = (stepNumber: number, isLastElement: boolean) => (
+const getStepNumber = (stepNumber: number) => (
   //   isLastElement ? (
   <Label circular as="a" basic color="blue" key={`progress_${stepNumber}`}>
     {stepNumber}
