@@ -43,7 +43,7 @@ Inside the `/src` folder all files used for the Front-end are distribuited in th
 
 **Rule 1**: Avoid using context for anything that can be fetched from the database (using Apollo client) or set in the local state (`useState`) and passed to other components as `props`.
 
- - Apollo client CACHE is doing most of the local state management, other local states can be shared between components by `props`. But occasionally we need to pass information (that isn't in the database) from one component to another that are not directly connected.
+- Apollo client CACHE is doing most of the local state management, other local states can be shared between components by `props`. But occasionally we need to pass information (that isn't in the database) from one component to another that are not directly connected.
 - We are studying the idea of using Apollo cache directives (@client) for replacing with the existing contexts states. Or simple local states.
 - **Important**: For a component be able to access something from a context area it will need to be (or some parent component needs to be) wrapped by the context provider! Check out how it's done in the `SiteLayout.tsx` file.
 
@@ -54,6 +54,7 @@ aka `Question plugins` - This is used for all related code for the Question plug
 - Each folder inside will defined each Question-type for the App. Inside each question-type folder there are 2 files:
   - `ApplicationView` => Define how this question is rendered during an application in progress/edited.
   - `TemplateView` => Defines how this question is rendered during the configuration of the template of one application.
+  - `SummaryView` => Defines how the question and response given should show on the summary page (for Applicant or Reviewer).
 
 ### utils
 
