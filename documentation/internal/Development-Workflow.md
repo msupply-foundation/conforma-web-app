@@ -8,7 +8,7 @@ Inside the `/src` folder all files used for the Front-end are distribuited in th
 - `components`
 - `containers`
 - `contexts`
-- `elememtPlugins`
+- `elementPlugins`
 - `utils`
   - `generated`
   - `graphql`
@@ -132,13 +132,13 @@ Apollo client provides this cache management module, which will store all the da
 
 _Why do we update the cache after mutations?_
 
-When we create a new entity that has a relationshio with some existing in cache we need to also update the cache with the added entity! This is to avoid having to create a `refetch` to get this back from the server and keep the local cache up-to-date. The same way, after editing an entity which is already in cache we need to remember to update this entity in the cache.
+When we create a new entity that has a relationship with some existing data in cache we need to also update the cache with the added entity! This is to avoid having to create a `refetch` to get this back from the server and keep the local cache up-to-date. In the same way, after editing an entity which is already in cache we need to remember to update this entity in the cache.
 
 ##### Example of remote data
 
 - Current Application
-- Application Sections (related enetities - Application)
-  - Template Sections (related enetities - Application Section)
+- Application Sections (related entities - Application)
+  - Template Sections (related entities - Application Section)
 - Application Responses (related entities - Application)
   - Template element (related entities - Application Response)
 
@@ -176,7 +176,7 @@ The object returned has for each Q&R (Question and Response):
 
 4. The Q&R object is passed to `ElementsBox` and each related question and response to the `ApplicationViewWrapper`.
 5. The `ApplicationViewWrapper` receives the mutation (from `ElementsBox`) to update the response `onFieldChage`. It should only update to the server and CACHE when the response is valid.
-6. The `ApplicationPage` will update the Q&R object when the query for elements and responses gets triggerdby the new mutation of one of the elements response on the current application.
+6. The `ApplicationPage` will update the Q&R object when the query for elements and responses gets triggerd by the new mutation of one of the elements' response on the current application.
 
 ##### Example of context state
 
@@ -233,14 +233,14 @@ While starting a **new page** check:
 
 When starting to create a query first check:
 
-- If there is already one similar in `utils/graphql/queries` - you can addapt this one - considering other callers.
-- Very similarly check `utils/graphql/mutations` if you need to send data (mutation) to Graphql instead.
-- If there isn't one already - Create a new file that just return the query (using the Graphql query language).
+- If there is already one similar in `utils/graphql/queries`, you can adapt this one - considering other callers.
+- Similarly, check `utils/graphql/mutations` if you need to send data (mutation) to GraphQL.
+- If there isn't one already, create a new file that just returns the query (using the GraphQL query language).
   - The query will also defined what is returned!
   - Use a GUI tool to see the results for your query/mutation to the GraphQL server: `http://localhost:5000/graphiql` (if the server is running on localhost:5000).
   - Another helper is using the extension described in [here](setup/Apollo-clinet.md) on sections "VS code extension for typing GraphQL" to have autocomplete on the query you are writing directly on your file.
 
-After you have finished to add the query/mutation:
+After you have finished adding the query/mutation:
 
 - Run the script `yarn generate`.
 
@@ -250,7 +250,7 @@ After you have finished to add the query/mutation:
 
 You just need another **custom hook** created now.
 
-- The reason to create - yet another - hook is that simply calling the new **generated hook** it's still needed to make some transformation with the data, sometimes even run sequential queries/mutations. The way hooks work, it's better to have another hook calling the generated one so the `container` call just you **custom hook** and get's the final result.
+- The reason to create (yet another) hook is that simply calling the new **generated hook** you still need to make additional transformations of the data, sometimes even run sequential queries/mutations. The way hooks work, it's better to have another hook calling the generated one so the `container` calls just your **custom hook** and gets the final result.
 
 - To create the custom hook to be called by the new container:
 
