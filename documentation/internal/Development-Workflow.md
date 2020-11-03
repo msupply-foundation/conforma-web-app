@@ -128,7 +128,7 @@ The local data kept in the app by Apollo client CACHE is considered remote state
 
 _How Apollo keeps the cache synced with the server?_
 
-Apollo client provides this cache management module, which will store all the data query or mutation results after it is fetched from the server. It requires you add the `id` of each entity - and the related entities included in the fetched data - or another identifier that you have specified before to the cache management instance if not using the `id`. The caches stores one instance of each entity queried (refreshing would clear the cache). And for each relationship it keeps a reference to its entity. In the end the remote states has one instance of each entity already fetched from the server.
+Apollo client provides this cache management module, which will store all the data query or mutation results after it is fetched from the server. It requires you add the `id` of each entity - and the related entities included in the fetched data - or another identifier that you have specified before to the cache management instance if not using the `id`. The cache stores one instance of each entity queried (refreshing the App would clear out the cache!). And for each relationship it keeps a reference to its entity. In the end the remote states has one instance of each entity already fetched from the server.
 
 _Why do we update the cache after mutations?_
 
