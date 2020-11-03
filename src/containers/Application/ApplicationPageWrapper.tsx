@@ -61,44 +61,44 @@ const ApplicationPage: React.FC = () => {
       promiseArray.push(evaluateSingleElement(element))
     })
 
-    Promise.all(promiseArray).then((evaluatedElements) => {
-      console.log('Evaluated Elements', evaluatedElements)
-      const elementsState: any = {}
-      evaluatedElements.forEach((element) => {
-        elementsState[element.code] = {
-          id: element.id,
-          category: element.category,
-          isEditable: element.isEditable,
-          isRequired: element.isRequired,
-          isVisible: element.isVisible,
-          // isValid: element.isValid,
-        }
-      })
-      console.log('Elements state', elementsState)
-      return elementsState
+    const evaluatedElements = await Promise.all(promiseArray)
+
+    const elementsState: any = {}
+    evaluatedElements.forEach((element) => {
+      elementsState[element.code] = {
+        id: element.id,
+        category: element.category,
+        isEditable: element.isEditable,
+        isRequired: element.isRequired,
+        isVisible: element.isVisible,
+        // isValid: element.isValid,
+      }
     })
+    return elementsState
   }
 
   async function evaluateSingleElement(element: any) {
+    const evaluationParameters = {
+      objects: [responsesByCode], // TO-DO: Also send user/org objects etc.
+      // graphQLConnection: TO-DO
+    }
     const isEditable = evaluateExpression(element.isEditable)
     const isRequired = evaluateExpression(element.isRequired)
     const isVisible = evaluateExpression(element.visibilityCondition)
     // const isValid = evaluateExpression(element.validation)
 
-    Promise.all([isEditable, isRequired, isVisible]).then((results) => {
-      const evaluatedElement = {
-        code: element.code,
-        id: element.id,
-        category: element.category,
-        isEditable: results[0],
-        isRequired: results[1],
-        isVisible: results[2],
-        // isValid: results[3],
-      }
-      console.log('Single Element', evaluatedElement)
-      return evaluatedElement
-    })
-    return {}
+    const results = await Promise.all([isEditable, isRequired, isVisible])
+
+    const evaluatedElement = {
+      code: element.code,
+      id: element.id,
+      category: element.category,
+      isEditable: results[0],
+      isRequired: results[1],
+      isVisible: results[2],
+      // isValid: results[3],
+    }
+    return evaluatedElement
   }
 
   return error ? (
