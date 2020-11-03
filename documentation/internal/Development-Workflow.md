@@ -161,22 +161,28 @@ How to use:
 
 1. `ApplicationPage` calls initial query to load the whole application, section and responses.
 2. `ApplicationPage` calls a custom hook to create the list of questions and responses based on query.
-3. Custom hook returns the result object Q&R with all the question elements with reduced fields (after running the `evaluateExpression` on each question) and the responses by the user.
+3. Custom hook returns two result objects:
+   a. The array of objects with all elements and its evaluated fields (after running the `evaluateExpression` on each question)
 
-The object returned has for each Q&R (Question and Response):
+   - Element code (key)
+   - Category: Information | Question
+   - isRequired: boolean
+   - isVisible: boolean
+   - isValid: boolean
+   - isEditable: boolean
+   - validationMessage: string
+   - ResponseId: number
+   - ResponseJSON: JSON
+   - ResponseValue: string
 
-- Question code (key)
-- Type: Information | Question - if information none of the next fields are filled!
-- isRequired: boolean
-- isVisible: boolean
-- isValid: boolean
-- ResponseId: number
-- ResponseJSON: JSON
-- ResponseValue: string
+   b. A map Q&R with ONLY the **question** elements and the current value of responses given by the user.
 
-4. The Q&R object is passed to `ElementsBox` and each related question and response to the `ApplicationViewWrapper`.
-5. The `ApplicationViewWrapper` receives the mutation (from `ElementsBox`) to update the response `onFieldChage`. It should only update to the server and CACHE when the response is valid.
-6. The `ApplicationPage` will update the Q&R object when the query for elements and responses gets triggerd by the new mutation of one of the elements' response on the current application.
+   - Question code (key)
+   - Response value: string | null
+
+4. The two object evaluated elements and the Q&R are passed to `ElementsBox`.
+5. The `ElementsBox` passes each related element to the `ApplicationViewWrapper`. Question elements would also receive the Q&R object (the map of all responses in the application) and the mutation to update the response `onFieldChage`. It should only update to the server and CACHE if the response is valid.
+6. The `ApplicationPage` will update the elements and Q&R object when the **elements' query and responses** gets triggerd by a new mutation of one of the elements' valid response on the current application.
 
 ##### Example of context state
 
