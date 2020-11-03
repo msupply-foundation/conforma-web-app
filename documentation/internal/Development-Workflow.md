@@ -114,7 +114,7 @@ Our **custom hooks** - exaplained in more detail in the Development sections bel
 
 - `config.json` - Some global varibles to be used during the configuration of the App. i.e: GraphQL server host.
 
-- `index.tsx` - App start - Just connects the Apollo Cache (from `cache.tsx`), add semantic-ui for UI and call the main component: `App.tsx`.
+`index.tsx` - App start - Just connects the Apollo Cache (from `cache.tsx`), adds semantic-ui for UI and calls the main component: `App.tsx`.
 
 ---
 
