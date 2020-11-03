@@ -176,7 +176,7 @@ The object returned has for each Q&R (Question and Response):
 
 4. The Q&R object is passed to `ElementsBox` and each related question and response to the `ApplicationViewWrapper`.
 5. The `ApplicationViewWrapper` receives the mutation (from `ElementsBox`) to update the response `onFieldChage`. It should only update to the server and CACHE when the response is valid.
-6. The `ApplicationPage` will update the Q&R object when the query for elements and responses gets triggerdby the new mutation of one of the elements response on the current application.
+6. The `ApplicationPage` will update the Q&R object when the query for elements and responses gets triggerd by the new mutation of one of the elements' response on the current application.
 
 ##### Example of context state
 
