@@ -132,7 +132,7 @@ Apollo client provides this cache management module, which will store all the da
 
 _Why do we update the cache after mutations?_
 
-When we create a new entity that has a relationshio with some existing in cache we need to also update the cache with the added entity! This is to avoid having to create a `refetch` to get this back from the server and keep the local cache up-to-date. The same way, after editing an entity which is already in cache we need to remember to update this entity in the cache.
+When we create a new entity that has a relationship with some existing data in cache we need to also update the cache with the added entity! This is to avoid having to create a `refetch` to get this back from the server and keep the local cache up-to-date. In the same way, after editing an entity which is already in cache we need to remember to update this entity in the cache.
 
 ##### Example of remote data
 
