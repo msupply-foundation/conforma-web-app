@@ -50,7 +50,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         key: `progress_${stepNumber}`,
         title: {
           children: (
-            <Grid floated="right">
+            <Grid>
               <Grid.Column width={4} textAlign="right" verticalAlign="middle">
                 {getStepNumber(stepNumber)}
               </Grid.Column>
@@ -60,9 +60,10 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
             </Grid>
           ),
         },
+        onTitleClick: () => console.log('Clicked title', section.title),
         content: {
           content: (
-            <Grid>
+            <Grid divided>
               <Grid.Column width={4}></Grid.Column>
               <Grid.Column width={12}>
                 <Accordion.Accordion panels={childrenPanels(stepNumber, section.totalPages)} />
@@ -88,7 +89,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           </Grid>
         ),
       },
-      // Ideally this isn't needed - Couldn't find some way to remove this
+      // Ideally these aren't needed - Couldn't find some way to remove this
+      onTitleClick: () => console.log('Clicked on Summary'),
       content: {
         content: <Header as={Link} to={`applications/${serialNumber}/summary`} />,
       },
@@ -97,14 +99,12 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   }
 
   return (
-    <Sticky>
-      <Container>
-        <Header as="h5" textAlign="center" content="Steps to complete form" />
-        <Accordion
-          activeIndex={sectionPage ? sectionPage.sectionIndex : templateSections.length + 1}
-          panels={rootPanels()}
-        />
-      </Container>
+    <Sticky as={Container}>
+      <Header as="h5" textAlign="center" content="Steps to complete form" />
+      <Accordion
+        activeIndex={sectionPage ? sectionPage.sectionIndex : templateSections.length + 1}
+        panels={rootPanels()}
+      />
     </Sticky>
   )
 }
