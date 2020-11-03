@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.1.4",
+    "@openmsupply/expression-evaluator": "^1.1.1",
     "graphql": "^15.3.0",
     "query-string": "^6.13.5",
     "react": "^16.13.1",

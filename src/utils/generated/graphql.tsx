@@ -16888,12 +16888,12 @@ export type GetApplicationsQuery = (
   )> }
 );
 
-export type GetResponsesQueryVariables = Exact<{
+export type GetElementsAndResponsesQueryVariables = Exact<{
   serial: Scalars['String'];
 }>;
 
 
-export type GetResponsesQuery = (
+export type GetElementsAndResponsesQuery = (
   { __typename?: 'Query' }
   & { applicationBySerial?: Maybe<(
     { __typename?: 'Application' }
@@ -16901,13 +16901,28 @@ export type GetResponsesQuery = (
       { __typename?: 'ApplicationResponsesConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'ApplicationResponse' }
-        & Pick<ApplicationResponse, 'value' | 'id'>
+        & Pick<ApplicationResponse, 'id' | 'value'>
         & { templateElement?: Maybe<(
           { __typename?: 'TemplateElement' }
-          & Pick<TemplateElement, 'code' | 'category' | 'isEditable' | 'isRequired' | 'validation' | 'validationMessage' | 'visibilityCondition'>
+          & Pick<TemplateElement, 'code'>
         )> }
       )>> }
-    ) }
+    ), template?: Maybe<(
+      { __typename?: 'Template' }
+      & { templateSections: (
+        { __typename?: 'TemplateSectionsConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'TemplateSection' }
+          & { templateElementsBySectionId: (
+            { __typename?: 'TemplateElementsConnection' }
+            & { nodes: Array<Maybe<(
+              { __typename?: 'TemplateElement' }
+              & Pick<TemplateElement, 'id' | 'code' | 'category' | 'isEditable' | 'isRequired' | 'validation' | 'validationMessage' | 'visibilityCondition'>
+            )>> }
+          ) }
+        )>> }
+      ) }
+    )> }
   )> }
 );
 
@@ -17360,21 +17375,33 @@ export function useGetApplicationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetApplicationsQueryHookResult = ReturnType<typeof useGetApplicationsQuery>;
 export type GetApplicationsLazyQueryHookResult = ReturnType<typeof useGetApplicationsLazyQuery>;
 export type GetApplicationsQueryResult = Apollo.QueryResult<GetApplicationsQuery, GetApplicationsQueryVariables>;
-export const GetResponsesDocument = gql`
-    query getResponses($serial: String!) {
+export const GetElementsAndResponsesDocument = gql`
+    query getElementsAndResponses($serial: String!) {
   applicationBySerial(serial: $serial) {
     applicationResponses {
       nodes {
-        value
         id
+        value
         templateElement {
           code
-          category
-          isEditable
-          isRequired
-          validation
-          validationMessage
-          visibilityCondition
+        }
+      }
+    }
+    template {
+      templateSections {
+        nodes {
+          templateElementsBySectionId {
+            nodes {
+              id
+              code
+              category
+              isEditable
+              isRequired
+              validation
+              validationMessage
+              visibilityCondition
+            }
+          }
         }
       }
     }
@@ -17383,30 +17410,30 @@ export const GetResponsesDocument = gql`
     `;
 
 /**
- * __useGetResponsesQuery__
+ * __useGetElementsAndResponsesQuery__
  *
- * To run a query within a React component, call `useGetResponsesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetResponsesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetElementsAndResponsesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetElementsAndResponsesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetResponsesQuery({
+ * const { data, loading, error } = useGetElementsAndResponsesQuery({
  *   variables: {
  *      serial: // value for 'serial'
  *   },
  * });
  */
-export function useGetResponsesQuery(baseOptions?: Apollo.QueryHookOptions<GetResponsesQuery, GetResponsesQueryVariables>) {
-        return Apollo.useQuery<GetResponsesQuery, GetResponsesQueryVariables>(GetResponsesDocument, baseOptions);
+export function useGetElementsAndResponsesQuery(baseOptions?: Apollo.QueryHookOptions<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>) {
+        return Apollo.useQuery<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>(GetElementsAndResponsesDocument, baseOptions);
       }
-export function useGetResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetResponsesQuery, GetResponsesQueryVariables>) {
-          return Apollo.useLazyQuery<GetResponsesQuery, GetResponsesQueryVariables>(GetResponsesDocument, baseOptions);
+export function useGetElementsAndResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>) {
+          return Apollo.useLazyQuery<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>(GetElementsAndResponsesDocument, baseOptions);
         }
-export type GetResponsesQueryHookResult = ReturnType<typeof useGetResponsesQuery>;
-export type GetResponsesLazyQueryHookResult = ReturnType<typeof useGetResponsesLazyQuery>;
-export type GetResponsesQueryResult = Apollo.QueryResult<GetResponsesQuery, GetResponsesQueryVariables>;
+export type GetElementsAndResponsesQueryHookResult = ReturnType<typeof useGetElementsAndResponsesQuery>;
+export type GetElementsAndResponsesLazyQueryHookResult = ReturnType<typeof useGetElementsAndResponsesLazyQuery>;
+export type GetElementsAndResponsesQueryResult = Apollo.QueryResult<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>;
 export const GetSectionElementsDocument = gql`
     query getSectionElements($sectionId: Int!, $applicationId: Int!) {
   templateElements(condition: {sectionId: $sectionId}) {

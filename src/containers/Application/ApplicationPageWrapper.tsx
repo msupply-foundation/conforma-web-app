@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationHeader, Loading } from '../../components'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
@@ -7,9 +7,11 @@ import useGetResponsesByCode from '../../utils/hooks/useGetResponsesByCode'
 import { TemplateSectionPayload } from '../../utils/types'
 import ElementsArea from './ElementsArea'
 import { useApplicationState } from '../../contexts/ApplicationState'
+import evaluateExpression from '@openmsupply/expression-evaluator'
 
 const ApplicationPage: React.FC = () => {
   const { setApplicationState } = useApplicationState()
+  const { elementsState, setElementsState }: any = useState({})
   const { query, push } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
@@ -21,17 +23,23 @@ const ApplicationPage: React.FC = () => {
     error: responsesError,
     loading: responsesLoading,
     responsesByCode,
+    elementsExpressions,
   } = useGetResponsesByCode({
     serialNumber: serialNumber as string,
   })
+
+  console.log('Responses', responsesByCode)
+  console.log('Elements', elementsExpressions)
 
   useEffect(() => {
     if (application) setApplicationState({ type: 'setApplicationId', id: application.id })
   }, [application])
 
-  const currentSection = templateSections.find(({ code }) => code == sectionCode)
+  useEffect(() => {
+    evaluateElementExpressions().then((result: any) => setElementsState(result))
+  }, [responsesByCode])
 
-  // const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
+  const currentSection = templateSections.find(({ code }) => code == sectionCode)
 
   const changePagePayload = {
     serialNumber: serialNumber as string,
@@ -45,6 +53,52 @@ const ApplicationPage: React.FC = () => {
     sectionCode: sectionCode as string,
     currentPage: Number(page),
     sections: templateSections,
+  }
+
+  async function evaluateElementExpressions() {
+    const promiseArray: Promise<any>[] = []
+    elementsExpressions.forEach((element) => {
+      promiseArray.push(evaluateSingleElement(element))
+    })
+
+    Promise.all(promiseArray).then((evaluatedElements) => {
+      console.log('Evaluated Elements', evaluatedElements)
+      const elementsState: any = {}
+      evaluatedElements.forEach((element) => {
+        elementsState[element.code] = {
+          id: element.id,
+          category: element.category,
+          isEditable: element.isEditable,
+          isRequired: element.isRequired,
+          isVisible: element.isVisible,
+          // isValid: element.isValid,
+        }
+      })
+      console.log('Elements state', elementsState)
+      return elementsState
+    })
+  }
+
+  async function evaluateSingleElement(element: any) {
+    const isEditable = evaluateExpression(element.isEditable)
+    const isRequired = evaluateExpression(element.isRequired)
+    const isVisible = evaluateExpression(element.visibilityCondition)
+    // const isValid = evaluateExpression(element.validation)
+
+    Promise.all([isEditable, isRequired, isVisible]).then((results) => {
+      const evaluatedElement = {
+        code: element.code,
+        id: element.id,
+        category: element.category,
+        isEditable: results[0],
+        isRequired: results[1],
+        isVisible: results[2],
+        // isValid: results[3],
+      }
+      console.log('Single Element', evaluatedElement)
+      return evaluatedElement
+    })
+    return {}
   }
 
   return error ? (

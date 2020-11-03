@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { SectionElements } from '../types'
-import useLoadElements from './useLoadElements'
+import useLoadElements from './useLoadElementsOfSection'
 
 interface useLoadSummaryProps {
   applicationId: number

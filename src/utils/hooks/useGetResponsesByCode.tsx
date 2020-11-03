@@ -3,10 +3,10 @@ import {
   ApplicationResponse,
   useGetApplicationQuery,
   GetApplicationQuery,
-  useGetResponsesQuery,
+  useGetElementsAndResponsesQuery,
 } from '../generated/graphql'
-import { ResponsesByCode } from '../types'
-import { evaluateExpression } from '@openmsupply/expression-evaluator'
+import { ResponsesByCode, ApplicationElementState } from '../types'
+import evaluateExpression from '@openmsupply/expression-evaluator'
 
 interface useLoadApplicationProps {
   serialNumber: string
@@ -15,9 +15,11 @@ interface useLoadApplicationProps {
 const useGetResponsesByCode = (props: useLoadApplicationProps) => {
   const { serialNumber } = props
   const [responsesByCode, setResponsesByCode] = useState({})
+  const [elementsExpressions, setElementsExpressions] = useState([])
+  const [elementsState, setElementsState] = useState({})
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
-  const { data, loading: apolloLoading, error: apolloError } = useGetResponsesQuery({
+  const { data, loading: apolloLoading, error: apolloError } = useGetElementsAndResponsesQuery({
     variables: { serial: serialNumber },
   })
 
@@ -34,39 +36,40 @@ const useGetResponsesByCode = (props: useLoadApplicationProps) => {
 
     const applicationResponses = data?.applicationBySerial?.applicationResponses?.nodes
 
-    console.log('Responses:', applicationResponses)
+    const templateSections = data?.applicationBySerial?.template?.templateSections?.nodes
+
+    const templateElements: any = []
+
+    templateSections?.forEach((sectionNode) => {
+      sectionNode?.templateElementsBySectionId?.nodes.forEach((element) => {
+        templateElements.push(element) // No idea why ...[spread] doesn't work here.
+      })
+    })
 
     const currentResponses = {} as ResponsesByCode
+    // const currentElementsExpressions = {} as ApplicationElementState
 
     if (applicationResponses) {
       applicationResponses.forEach((response: any) => {
         const code = response?.templateElement?.code
         if (code) {
-          currentResponses[code] = {
-            category: response.templateElement.category,
-            isRequired: response.templateElement.isRequired,
-            isEditable: response.templateElement.isEditable,
-            isValid: evaluateExpression(response.templateElement.validation),
-            isVisible: response.templateElement.visibilityCondition,
-            validationMessage: response.templateElement.validationMessage,
-            responseId: response.id,
-            responseJSON: response?.value,
-            responseValue: response?.value?.text,
-          }
+          currentResponses[code] = response?.value?.text
         }
       })
     }
 
+    console.log('Current Responses', currentResponses)
+
     setResponsesByCode(currentResponses)
+    setElementsExpressions(templateElements)
     setLoading(false)
   }, [data, apolloError])
 
   return {
-    apolloError,
-    apolloLoading,
-    loading,
     error,
+    loading,
     responsesByCode,
+    elementsExpressions,
   }
 }
 

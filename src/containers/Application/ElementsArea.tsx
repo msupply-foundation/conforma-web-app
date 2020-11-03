@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Container, Grid, Header, Label, Segment } from 'semantic-ui-react'
 import { ApplicationViewWrapper } from '../../elementPlugins'
-import useLoadElements from '../../utils/hooks/useLoadElements'
+import useLoadElements from '../../utils/hooks/useLoadElementsOfSection'
 import { Loading } from '../../components'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 

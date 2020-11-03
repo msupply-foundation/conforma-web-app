@@ -10,6 +10,7 @@ export {
   TemplateSectionPayload,
   Response,
   ResponsesByCode,
+  ApplicationElementState,
 }
 
 interface ElementAndResponse {
@@ -58,15 +59,28 @@ type Response = {
 }
 
 interface ResponsesByCode {
+  [key: string]: Response
+  // [key: string]: {
+  //   category: TemplateElementCategory
+  //   isRequired: boolean
+  //   isVisible: boolean
+  //   isValid: any
+  //   validationMessage: string | null
+  //   responseId: number
+  //   responseJSON: Response
+  //   responseValue: string | number
+  //   isEditable: boolean
+  // }
+}
+
+interface ApplicationElementState {
   [key: string]: {
     category: TemplateElementCategory
     isRequired: boolean
     isVisible: boolean
-    isValid: boolean
+    isValid: any
     validationMessage: string | null
-    responseId: number
-    responseJSON: Response
-    responseValue: string | number
     isEditable: boolean
+    responseId: number
   }
 }
