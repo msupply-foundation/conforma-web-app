@@ -10,6 +10,7 @@ export default gql`
           templateId: $templateId
           isActive: true
           outcome: PENDING
+          trigger: ON_APPLICATION_CREATE
         }
       }
     ) {
