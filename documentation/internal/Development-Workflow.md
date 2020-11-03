@@ -43,7 +43,7 @@ Inside the `/src` folder all files used for the Front-end are distribuited in th
 
 **Rule 1**: Avoid using context for anything that can be fetched from the database (using Apollo client) or set in the local state (`useState`) and passed to other components as `props`.
 
-- Apollo client CACHE is doing most part of the local state management, other local states can be shared between components by `props`. But a few times we need to be passing information (that aren't in the database) from one component to another not directly connect.
+ - Apollo client CACHE is doing most of the local state management, other local states can be shared between components by `props`. But occasionally we need to pass information (that isn't in the database) from one component to another that are not directly connected.
 - We are studying the idea of using Apollo cache directives (@client) for replacing with the existing contexts states. Or simple local states.
 - **Important**: For a component be able to access something from a context area it will need to be (or some parent component needs to be) wrapped by the context provider! Check out how it's done in the `SiteLayout.tsx` file.
 
