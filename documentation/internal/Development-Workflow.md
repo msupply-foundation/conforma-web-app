@@ -21,7 +21,7 @@ Inside the `/src` folder all files used for the Front-end are distribuited in th
 
 **Rule 1**: No logic should be done at the component level, it simply renders what is received in the `props`.
 
-**Rule 2**: Grouping components that are using in a certain area of the app can be usefull. For now we are keeping all application related component in the folder `src/components/Application`.
+**Rule 2**: Grouping components that are using in a certain area of the app can be useful. For now we are keeping all application related component in the folder `src/components/Application`.
 
 **Rule 3**: Each group folder has a `index.ts` file which imports all files in this folder and exports. That's to make it easier for outsider containers/components to import these files by using the `import { nameOfComponent } from './components'`.
 
