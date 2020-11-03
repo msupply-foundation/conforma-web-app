@@ -73,7 +73,7 @@ Folder storing all GraphQL queries, mutation and fragments (so everthing is in o
 
 **Important**: Always check that the type for the files included in this folder are using `.ts` - or generation will fail!
 
-**Rule 1**: All GraphQl calls are grouped in here to keep all-in-one-place and to be used on the the type generation.
+**Rule 1**: All GraphQL calls are grouped in here to keep them all in one place and to be used for type generation.
 
 **Rule 2**: After adding, creating run the `yarn generate` script.
 
