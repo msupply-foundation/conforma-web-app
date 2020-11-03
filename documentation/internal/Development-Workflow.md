@@ -97,7 +97,7 @@ _What is a query?_ Something to be fetched from the GraphQL server. Can have som
 
 ##### mutation
 
-_What is a mutation?_ Something to be posted to the GraphQL server. Habe some defined input and also something that is returned.
+_What is a mutation?_ Something to be posted to the GraphQL server. Has some defined input and also something that is returned.
 
 #### helpers
 
