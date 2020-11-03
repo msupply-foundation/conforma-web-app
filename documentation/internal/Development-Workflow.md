@@ -122,7 +122,7 @@ Our **custom hooks** - exaplained in more detail in the Development sections bel
 
 ### Remote states
 
-The local data kept in the app by Apollo client CACHE is considered remote state since is a small mirror of the GraphQL server. The cached data is reused for up-coming queries (if we don't enforce a `refetch` from the server), just returning the local **remote state** for the queried data - when it is available. Or get from the server if not available in cache.
+The local data kept in the app by Apollo client CACHE is considered remote state since it is a small mirror of the GraphQL server. The cached data is reused for up-coming queries (if we don't enforce a `refetch` from the server), returning the local **remote state** for the queried data - when it is available. Or it fetches from the server if not available in cache.
 
 **Important**: No need to do anything different to query from the cache instead of the server. Just a simple query will do it. Mutations on the other hand require some addition - after sending data to the server we have to update the cache.
 
