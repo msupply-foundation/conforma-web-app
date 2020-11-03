@@ -8,7 +8,7 @@ Inside the `/src` folder all files used for the Front-end are distribuited in th
 - `components`
 - `containers`
 - `contexts`
-- `elememtPlugins`
+- `elementPlugins`
 - `utils`
   - `generated`
   - `graphql`
