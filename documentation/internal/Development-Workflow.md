@@ -75,7 +75,7 @@ Folder storing all GraphQL queries, mutation and fragments (so everthing is in o
 
 **Rule 1**: All GraphQL calls are grouped in here to keep them all in one place and to be used for type generation.
 
-**Rule 2**: After adding, creating run the `yarn generate` script.
+**Rule 2**: After adding or editing queries, run the `yarn generate` script.
 
 After the generation runs a new **custom hook** with all required types is defined in the `generated/graphql.ts` file named as the pattern.
 
