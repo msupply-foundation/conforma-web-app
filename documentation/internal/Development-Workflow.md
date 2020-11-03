@@ -234,7 +234,7 @@ While starting a **new page** check:
 When starting to create a query first check:
 
 - If there is already one similar in `utils/graphql/queries`, you can adapt this one - considering other callers.
-- Very similarly check `utils/graphql/mutations` if you need to send data (mutation) to Graphql instead.
+- Similarly, check `utils/graphql/mutations` if you need to send data (mutation) to GraphQL.
 - If there isn't one already - Create a new file that just return the query (using the Graphql query language).
   - The query will also defined what is returned!
   - Use a GUI tool to see the results for your query/mutation to the GraphQL server: `http://localhost:5000/graphiql` (if the server is running on localhost:5000).
