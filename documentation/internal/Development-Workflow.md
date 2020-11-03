@@ -240,7 +240,7 @@ When starting to create a query first check:
   - Use a GUI tool to see the results for your query/mutation to the GraphQL server: `http://localhost:5000/graphiql` (if the server is running on localhost:5000).
   - Another helper is using the extension described in [here](setup/Apollo-clinet.md) on sections "VS code extension for typing GraphQL" to have autocomplete on the query you are writing directly on your file.
 
-After you have finished to add the query/mutation:
+After you have finished adding the query/mutation:
 
 - Run the script `yarn generate`.
 
