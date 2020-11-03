@@ -233,7 +233,7 @@ While starting a **new page** check:
 
 When starting to create a query first check:
 
-- If there is already one similar in `utils/graphql/queries` - you can addapt this one - considering other callers.
+- If there is already one similar in `utils/graphql/queries`, you can adapt this one - considering other callers.
 - Very similarly check `utils/graphql/mutations` if you need to send data (mutation) to Graphql instead.
 - If there isn't one already - Create a new file that just return the query (using the Graphql query language).
   - The query will also defined what is returned!
