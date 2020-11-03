@@ -137,8 +137,8 @@ When we create a new entity that has a relationship with some existing data in c
 ##### Example of remote data
 
 - Current Application
-- Application Sections (related enetities - Application)
-  - Template Sections (related enetities - Application Section)
+- Application Sections (related entities - Application)
+  - Template Sections (related entities - Application Section)
 - Application Responses (related entities - Application)
   - Template element (related entities - Application Response)
 
