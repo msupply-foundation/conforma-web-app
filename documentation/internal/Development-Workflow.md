@@ -89,7 +89,7 @@ Example: a new query called `getApplications.query.ts` will get a new hook (for 
 
 ##### fragments
 
-_What is a fragment?_ A partial query or mutation that can be used as part of other queries or (Mainly) for getting or setting some data to the cache. We do have to update the cache after a mutation to keep it up-to-date.
+_What is a fragment?_ A partial query or mutation that can be used as part of other queries or (mainly) for getting or setting some data to the cache. We do have to update the cache after a mutation to keep it up-to-date.
 
 ##### queries
 
