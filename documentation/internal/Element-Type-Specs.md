@@ -21,7 +21,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
 
 ## Question/Element types
 
-**Note**: all parameter fields can also have a dynamic query object instead of a primitive. The `evaluateExpression` function will return literal strings (or numbers, booleans) as is. The types described for the parameters below are the type that is expected to be _returned_ from a query expression.
+**Note**: all parameter fields can also have a dynamic query object instead of a primitive. The [`evaluateExpression`](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax) function will return literal strings (or numbers, booleans) as is. The types described for the parameters below are the type that is expected to be _returned_ from a query expression.
 
 ### Short Text Input _(not yet implemented -- highest priority)_
 
