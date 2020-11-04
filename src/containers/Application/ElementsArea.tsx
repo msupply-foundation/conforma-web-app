@@ -4,6 +4,7 @@ import { ApplicationViewWrapper } from '../../elementPlugins'
 import useLoadElements from '../../utils/hooks/useLoadElementsOfSection'
 import { Loading } from '../../components'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
+import { ApplicationElementState, ResponsesByCode, ResponsesFullByCode } from '../../utils/types'
 
 interface ElementsAreaProps {
   applicationId: number
@@ -12,6 +13,9 @@ interface ElementsAreaProps {
   sectionPage: number
   isFirstPage: boolean
   isLastPage: boolean
+  responsesByCode: ResponsesByCode
+  responsesFullByCode: ResponsesFullByCode
+  elementsState: ApplicationElementState
   onNextClicked: () => void
   onPreviousClicked: () => void
 }
@@ -23,6 +27,9 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
   sectionPage,
   isFirstPage,
   isLastPage,
+  responsesByCode,
+  responsesFullByCode,
+  elementsState,
   onNextClicked,
   onPreviousClicked,
 }) => {

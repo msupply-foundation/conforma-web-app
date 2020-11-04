@@ -1,22 +1,20 @@
 import { useState, useEffect } from 'react'
+import { useGetElementsAndResponsesQuery, GetElementsAndResponsesQuery } from '../generated/graphql'
 import {
-  ApplicationResponse,
-  useGetApplicationQuery,
-  GetApplicationQuery,
-  useGetElementsAndResponsesQuery,
-} from '../generated/graphql'
-import { ResponsesByCode, ResponsesFullByCode, ApplicationElementState } from '../types'
+  ResponsesByCode,
+  ResponsesFullByCode,
+  ApplicationElementState,
+  TemplateElementState,
+  ResponseFull,
+  EvaluatedElement,
+} from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 
-interface useLoadApplicationProps {
-  serialNumber: string
-}
-
-const useGetResponsesAndElementState = (props: useLoadApplicationProps) => {
+const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
   const { serialNumber } = props
   const [responsesByCode, setResponsesByCode] = useState({})
   const [responsesFullByCode, setResponsesFullByCode] = useState({})
-  const [elementsExpressions, setElementsExpressions] = useState([])
+  const [elementsExpressions, setElementsExpressions] = useState([{}])
   const [elementsState, setElementsState] = useState({})
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
@@ -39,11 +37,11 @@ const useGetResponsesAndElementState = (props: useLoadApplicationProps) => {
 
     const templateSections = data?.applicationBySerial?.template?.templateSections?.nodes
 
-    const templateElements: any = []
+    const templateElements: TemplateElementState[] = []
 
     templateSections?.forEach((sectionNode) => {
       sectionNode?.templateElementsBySectionId?.nodes.forEach((element) => {
-        templateElements.push(element) // No idea why ...[spread] doesn't work here.
+        if (element) templateElements.push(element as TemplateElementState) // No idea why ...[spread] doesn't work here.
       })
     })
 
@@ -51,7 +49,7 @@ const useGetResponsesAndElementState = (props: useLoadApplicationProps) => {
     const currentFullResponses = {} as ResponsesFullByCode
 
     if (applicationResponses) {
-      applicationResponses.forEach((response: any) => {
+      applicationResponses.forEach((response) => {
         const code = response?.templateElement?.code
         if (code) {
           currentResponses[code] = response?.value?.text
@@ -60,8 +58,6 @@ const useGetResponsesAndElementState = (props: useLoadApplicationProps) => {
       })
     }
 
-    console.log('Current Responses', currentResponses)
-
     setResponsesByCode(currentResponses)
     setResponsesFullByCode(currentFullResponses)
     setElementsExpressions(templateElements)
@@ -69,11 +65,11 @@ const useGetResponsesAndElementState = (props: useLoadApplicationProps) => {
   }, [data, apolloError])
 
   useEffect(() => {
-    evaluateElementExpressions().then((result: any) => setElementsState(result))
+    evaluateElementExpressions().then((result) => setElementsState(result))
   }, [responsesByCode])
 
   async function evaluateElementExpressions() {
-    const promiseArray: Promise<any>[] = []
+    const promiseArray: Promise<EvaluatedElement>[] = []
     elementsExpressions.forEach((element) => {
       promiseArray.push(evaluateSingleElement(element))
     })
@@ -92,7 +88,7 @@ const useGetResponsesAndElementState = (props: useLoadApplicationProps) => {
     return elementsState
   }
 
-  async function evaluateSingleElement(element: any) {
+  async function evaluateSingleElement(element: any): Promise<EvaluatedElement> {
     const evaluationParameters = {
       objects: [responsesByCode, responsesFullByCode], // TO-DO: Also send user/org objects etc.
       // graphQLConnection: TO-DO
@@ -106,9 +102,9 @@ const useGetResponsesAndElementState = (props: useLoadApplicationProps) => {
       code: element.code,
       id: element.id,
       category: element.category,
-      isEditable: results[0],
-      isRequired: results[1],
-      isVisible: results[2],
+      isEditable: results[0] as boolean,
+      isRequired: results[1] as boolean,
+      isVisible: results[2] as boolean,
       // isValid: results[3],
     }
     return evaluatedElement
@@ -123,11 +119,10 @@ const useGetResponsesAndElementState = (props: useLoadApplicationProps) => {
   }
 }
 
-function checkForApplicationErrors(data: GetApplicationQuery | undefined) {
-  if (data?.applications) {
-    if (data.applications.nodes.length === 0) return 'No applications found'
-    if (data.applications.nodes.length > 1)
-      return 'More than one application returned. Only one expected!'
+function checkForApplicationErrors(data: GetElementsAndResponsesQuery | undefined) {
+  if (data?.applicationBySerial) {
+    if (data?.applicationBySerial?.applicationResponses?.nodes.length === 0)
+      return 'No responses found'
   }
   return null
 }

@@ -1,5 +1,7 @@
 import { ApplicationResponse, TemplateElement, TemplateElementCategory } from './generated/graphql'
 
+import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+
 export {
   ElementAndResponse,
   SectionPages,
@@ -12,6 +14,8 @@ export {
   ResponsesFullByCode,
   ResponsesByCode,
   ApplicationElementState,
+  TemplateElementState,
+  EvaluatedElement,
 }
 
 interface ElementAndResponse {
@@ -57,7 +61,7 @@ type ResponseFull = {
   text: string | null | undefined
   optionIndex?: number
   reference?: any // Not yet decided how to represent
-}
+} | null
 
 interface ResponsesFullByCode {
   [key: string]: ResponseFull
@@ -77,4 +81,25 @@ interface ApplicationElementState {
     isEditable: boolean
     responseId: number
   }
+}
+
+interface TemplateElementState {
+  code: string
+  id: number
+  category: TemplateElementCategory
+  isRequired: IQueryNode
+  visibilityCondition: IQueryNode
+  validation: IQueryNode
+  validationMessage: string | null
+  isEditable: IQueryNode
+}
+
+interface EvaluatedElement {
+  code: string
+  id: number
+  category: TemplateElementCategory
+  isEditable: boolean
+  isRequired: boolean
+  isVisible: boolean
+  // isValid: boolean
 }

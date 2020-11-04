@@ -74,6 +74,9 @@ const ApplicationPageWrapper: React.FC = () => {
                 sectionPage={Number(page)}
                 isFirstPage={checkFirstPage(checkPagePayload)}
                 isLastPage={checkLastPage(checkPagePayload)}
+                responsesByCode={responsesByCode}
+                responsesFullByCode={responsesFullByCode}
+                elementsState={elementsState}
                 onPreviousClicked={() => previousButtonHandler(changePagePayload)}
                 onNextClicked={() => nextPageButtonHandler(changePagePayload)}
               />
