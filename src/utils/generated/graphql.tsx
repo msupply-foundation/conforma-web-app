@@ -2460,13 +2460,15 @@ export type TemplateElementFilter = {
   /** Filter by the object’s `elementTypePluginCode` field. */
   elementTypePluginCode?: Maybe<StringFilter>;
   /** Filter by the object’s `isRequired` field. */
-  isRequired?: Maybe<BooleanFilter>;
+  isRequired?: Maybe<JsonFilter>;
   /** Filter by the object’s `isEditable` field. */
   isEditable?: Maybe<JsonFilter>;
   /** Filter by the object’s `parameters` field. */
   parameters?: Maybe<JsonFilter>;
   /** Filter by the object’s `validation` field. */
   validation?: Maybe<JsonFilter>;
+  /** Filter by the object’s `validationMessage` field. */
+  validationMessage?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponses` relation. */
   applicationResponses?: Maybe<TemplateElementToManyApplicationResponseFilter>;
   /** Some related `applicationResponses` exist. */
@@ -4003,6 +4005,8 @@ export enum TemplateElementsOrderBy {
   ParametersDesc = 'PARAMETERS_DESC',
   ValidationAsc = 'VALIDATION_ASC',
   ValidationDesc = 'VALIDATION_DESC',
+  ValidationMessageAsc = 'VALIDATION_MESSAGE_ASC',
+  ValidationMessageDesc = 'VALIDATION_MESSAGE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -4026,13 +4030,15 @@ export type TemplateElementCondition = {
   /** Checks for equality with the object’s `elementTypePluginCode` field. */
   elementTypePluginCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `isRequired` field. */
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isEditable` field. */
   isEditable?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parameters` field. */
   parameters?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `validation` field. */
   validation?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `validationMessage` field. */
+  validationMessage?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `TemplateElement` values. */
@@ -4060,10 +4066,11 @@ export type TemplateElement = Node & {
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -8956,10 +8963,11 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -9114,10 +9122,11 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -12294,10 +12303,11 @@ export type TemplateElementPatch = {
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -12311,10 +12321,11 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -12410,10 +12421,11 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -14060,10 +14072,11 @@ export type TemplateElementInput = {
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -16846,10 +16859,10 @@ export type GetApplicationQuery = (
         { __typename?: 'ApplicationResponsesConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'ApplicationResponse' }
-          & Pick<ApplicationResponse, 'value'>
+          & Pick<ApplicationResponse, 'value' | 'id'>
           & { templateElement?: Maybe<(
             { __typename?: 'TemplateElement' }
-            & Pick<TemplateElement, 'code'>
+            & Pick<TemplateElement, 'code' | 'category' | 'isEditable' | 'isRequired' | 'validation' | 'validationMessage' | 'visibilityCondition'>
           )> }
         )>> }
       ) }
@@ -16872,6 +16885,44 @@ export type GetApplicationsQuery = (
         & Pick<Template, 'code' | 'id' | 'name'>
       )> }
     )>> }
+  )> }
+);
+
+export type GetElementsAndResponsesQueryVariables = Exact<{
+  serial: Scalars['String'];
+}>;
+
+
+export type GetElementsAndResponsesQuery = (
+  { __typename?: 'Query' }
+  & { applicationBySerial?: Maybe<(
+    { __typename?: 'Application' }
+    & { applicationResponses: (
+      { __typename?: 'ApplicationResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ApplicationResponse' }
+        & Pick<ApplicationResponse, 'id' | 'value'>
+        & { templateElement?: Maybe<(
+          { __typename?: 'TemplateElement' }
+          & Pick<TemplateElement, 'code'>
+        )> }
+      )>> }
+    ), template?: Maybe<(
+      { __typename?: 'Template' }
+      & { templateSections: (
+        { __typename?: 'TemplateSectionsConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'TemplateSection' }
+          & { templateElementsBySectionId: (
+            { __typename?: 'TemplateElementsConnection' }
+            & { nodes: Array<Maybe<(
+              { __typename?: 'TemplateElement' }
+              & Pick<TemplateElement, 'id' | 'code' | 'category' | 'isEditable' | 'isRequired' | 'validation' | 'validationMessage' | 'visibilityCondition'>
+            )>> }
+          ) }
+        )>> }
+      ) }
+    )> }
   )> }
 );
 
@@ -17240,8 +17291,15 @@ export const GetApplicationDocument = gql`
       applicationResponses {
         nodes {
           value
+          id
           templateElement {
             code
+            category
+            isEditable
+            isRequired
+            validation
+            validationMessage
+            visibilityCondition
           }
         }
       }
@@ -17317,6 +17375,65 @@ export function useGetApplicationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetApplicationsQueryHookResult = ReturnType<typeof useGetApplicationsQuery>;
 export type GetApplicationsLazyQueryHookResult = ReturnType<typeof useGetApplicationsLazyQuery>;
 export type GetApplicationsQueryResult = Apollo.QueryResult<GetApplicationsQuery, GetApplicationsQueryVariables>;
+export const GetElementsAndResponsesDocument = gql`
+    query getElementsAndResponses($serial: String!) {
+  applicationBySerial(serial: $serial) {
+    applicationResponses {
+      nodes {
+        id
+        value
+        templateElement {
+          code
+        }
+      }
+    }
+    template {
+      templateSections {
+        nodes {
+          templateElementsBySectionId {
+            nodes {
+              id
+              code
+              category
+              isEditable
+              isRequired
+              validation
+              validationMessage
+              visibilityCondition
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetElementsAndResponsesQuery__
+ *
+ * To run a query within a React component, call `useGetElementsAndResponsesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetElementsAndResponsesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetElementsAndResponsesQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *   },
+ * });
+ */
+export function useGetElementsAndResponsesQuery(baseOptions?: Apollo.QueryHookOptions<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>) {
+        return Apollo.useQuery<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>(GetElementsAndResponsesDocument, baseOptions);
+      }
+export function useGetElementsAndResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>) {
+          return Apollo.useLazyQuery<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>(GetElementsAndResponsesDocument, baseOptions);
+        }
+export type GetElementsAndResponsesQueryHookResult = ReturnType<typeof useGetElementsAndResponsesQuery>;
+export type GetElementsAndResponsesLazyQueryHookResult = ReturnType<typeof useGetElementsAndResponsesLazyQuery>;
+export type GetElementsAndResponsesQueryResult = Apollo.QueryResult<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>;
 export const GetSectionElementsDocument = gql`
     query getSectionElements($sectionId: Int!, $applicationId: Int!) {
   templateElements(condition: {sectionId: $sectionId}) {
