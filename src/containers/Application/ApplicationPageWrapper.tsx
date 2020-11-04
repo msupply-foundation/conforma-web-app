@@ -3,7 +3,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationHeader, Loading } from '../../components'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
-import useGetResponsesByCode from '../../utils/hooks/useGetResponsesByCode'
+import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import { TemplateSectionPayload } from '../../utils/types'
 import ElementsArea from './ElementsArea'
 import { useApplicationState } from '../../contexts/ApplicationState'
@@ -11,7 +11,6 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 
 const ApplicationPageWrapper: React.FC = () => {
   const { setApplicationState } = useApplicationState()
-  const { elementsState, setElementsState }: any = useState({})
   const { query, push } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
@@ -23,18 +22,18 @@ const ApplicationPageWrapper: React.FC = () => {
     error: responsesError,
     loading: responsesLoading,
     responsesByCode,
-    elementsExpressions,
-  } = useGetResponsesByCode({
+    elementsState,
+  } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
   })
+
+  console.log('Responses BY Code', responsesByCode)
+
+  console.log('Element State', elementsState)
 
   useEffect(() => {
     if (application) setApplicationState({ type: 'setApplicationId', id: application.id })
   }, [application])
-
-  useEffect(() => {
-    evaluateElementExpressions().then((result: any) => setElementsState(result))
-  }, [responsesByCode])
 
   const currentSection = templateSections.find(({ code }) => code == sectionCode)
 
@@ -50,52 +49,6 @@ const ApplicationPageWrapper: React.FC = () => {
     sectionCode: sectionCode as string,
     currentPage: Number(page),
     sections: templateSections,
-  }
-
-  async function evaluateElementExpressions() {
-    const promiseArray: Promise<any>[] = []
-    elementsExpressions.forEach((element) => {
-      promiseArray.push(evaluateSingleElement(element))
-    })
-
-    const evaluatedElements = await Promise.all(promiseArray)
-
-    const elementsState: any = {}
-    evaluatedElements.forEach((element) => {
-      elementsState[element.code] = {
-        id: element.id,
-        category: element.category,
-        isEditable: element.isEditable,
-        isRequired: element.isRequired,
-        isVisible: element.isVisible,
-        // isValid: element.isValid,
-      }
-    })
-    return elementsState
-  }
-
-  async function evaluateSingleElement(element: any) {
-    const evaluationParameters = {
-      objects: [responsesByCode], // TO-DO: Also send user/org objects etc.
-      // graphQLConnection: TO-DO
-    }
-    const isEditable = evaluateExpression(element.isEditable)
-    const isRequired = evaluateExpression(element.isRequired)
-    const isVisible = evaluateExpression(element.visibilityCondition)
-    // const isValid = evaluateExpression(element.validation)
-
-    const results = await Promise.all([isEditable, isRequired, isVisible])
-
-    const evaluatedElement = {
-      code: element.code,
-      id: element.id,
-      category: element.category,
-      isEditable: results[0],
-      isRequired: results[1],
-      isVisible: results[2],
-      // isValid: results[3],
-    }
-    return evaluatedElement
   }
 
   return error ? (
