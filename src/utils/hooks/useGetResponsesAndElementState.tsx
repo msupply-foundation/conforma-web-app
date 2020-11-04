@@ -95,7 +95,7 @@ const useGetResponsesAndElementState = (props: useLoadApplicationProps) => {
 
   async function evaluateSingleElement(element: any) {
     const evaluationParameters = {
-      objects: [responsesByCode], // TO-DO: Also send user/org objects etc.
+      objects: [responsesByCode, responsesFullByCode], // TO-DO: Also send user/org objects etc.
       // graphQLConnection: TO-DO
     }
     const isEditable = evaluateExpression(element.isEditable)
