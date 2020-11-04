@@ -1,4 +1,4 @@
 import ApplicationCreate from './ApplicationCreate'
-import ApplicationPage from './ApplicationPageWrapper'
+import ApplicationPageWrapper from './ApplicationPageWrapper'
 
-export { ApplicationCreate, ApplicationPage }
+export { ApplicationCreate, ApplicationPageWrapper }

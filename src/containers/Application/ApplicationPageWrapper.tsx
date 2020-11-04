@@ -9,7 +9,7 @@ import ElementsArea from './ElementsArea'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 
-const ApplicationPage: React.FC = () => {
+const ApplicationPageWrapper: React.FC = () => {
   const { setApplicationState } = useApplicationState()
   const { elementsState, setElementsState }: any = useState({})
   const { query, push } = useRouter()
@@ -27,9 +27,6 @@ const ApplicationPage: React.FC = () => {
   } = useGetResponsesByCode({
     serialNumber: serialNumber as string,
   })
-
-  console.log('Responses', responsesByCode)
-  console.log('Elements', elementsExpressions)
 
   useEffect(() => {
     if (application) setApplicationState({ type: 'setApplicationId', id: application.id })
@@ -229,4 +226,4 @@ function nextPageButtonHandler({
   }
 }
 
-export default ApplicationPage
+export default ApplicationPageWrapper
