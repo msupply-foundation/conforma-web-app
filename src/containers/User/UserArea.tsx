@@ -14,7 +14,9 @@ const UserArea: React.FC = () => {
   useEffect(() => {
     if (data && data.users && data.users.nodes) {
       const users = data.users.nodes as Pick<User, 'username'>[]
-      const userNames = users.map(({ username }) => username) as string[]
+      const userNames = users
+        .filter((user) => user !== null)
+        .map(({ username }) => username) as string[]
       setUserState({ type: 'updateUsersList', updatedUsers: userNames })
     }
   }, [data, error])
