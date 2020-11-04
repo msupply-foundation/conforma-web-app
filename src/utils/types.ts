@@ -8,7 +8,8 @@ export {
   SectionPayload,
   TemplateTypePayload,
   TemplateSectionPayload,
-  Response,
+  ResponseFull,
+  ResponsesFullByCode,
   ResponsesByCode,
   ApplicationElementState,
 }
@@ -52,25 +53,18 @@ interface TemplateSectionPayload {
   totalPages: number
 }
 
-type Response = {
+type ResponseFull = {
   text: string | null | undefined
   optionIndex?: number
   reference?: any // Not yet decided how to represent
 }
 
+interface ResponsesFullByCode {
+  [key: string]: ResponseFull
+}
+
 interface ResponsesByCode {
-  [key: string]: Response
-  // [key: string]: {
-  //   category: TemplateElementCategory
-  //   isRequired: boolean
-  //   isVisible: boolean
-  //   isValid: any
-  //   validationMessage: string | null
-  //   responseId: number
-  //   responseJSON: Response
-  //   responseValue: string | number
-  //   isEditable: boolean
-  // }
+  [key: string]: string | null | undefined
 }
 
 interface ApplicationElementState {

@@ -22,12 +22,14 @@ const ApplicationPageWrapper: React.FC = () => {
     error: responsesError,
     loading: responsesLoading,
     responsesByCode,
+    responsesFullByCode,
     elementsState,
   } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
   })
 
   console.log('Responses BY Code', responsesByCode)
+  console.log('Responses Full by Code', responsesFullByCode)
 
   console.log('Element State', elementsState)
 
