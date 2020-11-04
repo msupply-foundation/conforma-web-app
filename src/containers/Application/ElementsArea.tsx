@@ -55,6 +55,10 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
               key={`question_${question.code}`}
               initialValue={response?.value}
               templateElement={question}
+              isVisible={elementsState[question.code].isVisible}
+              isEditable={elementsState[question.code].isEditable}
+              isRequired={elementsState[question.code].isRequired}
+              allResponses={responsesByCode}
               onUpdate={(updateObject) => {
                 const { isValid, value } = updateObject
                 /**
@@ -65,8 +69,6 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
                 // TODO: Only send mutation on loose focus event.
                 if (isValid) responseMutation({ variables: { id: response?.id as number, value } })
               }}
-              isVisible={true}
-              isEditable={true}
             />
           ))}
           <Grid columns={3}>

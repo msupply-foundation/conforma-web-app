@@ -73,13 +73,13 @@ interface ResponsesByCode {
 
 interface ApplicationElementState {
   [key: string]: {
+    id: number
     category: TemplateElementCategory
     isRequired: boolean
     isVisible: boolean
-    isValid: any
-    validationMessage: string | null
+    isValid: boolean
+    // validationMessage: string | null
     isEditable: boolean
-    responseId: number
   }
 }
 

@@ -3,9 +3,7 @@ import { useGetElementsAndResponsesQuery, GetElementsAndResponsesQuery } from '.
 import {
   ResponsesByCode,
   ResponsesFullByCode,
-  ApplicationElementState,
   TemplateElementState,
-  ResponseFull,
   EvaluatedElement,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'

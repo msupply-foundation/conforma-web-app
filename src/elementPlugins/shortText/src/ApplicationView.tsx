@@ -7,6 +7,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onUpdate,
   initialValue,
   isEditable,
+  isRequired,
+  allResponses,
 }) => {
   const [validationMessage, setValidationMessage] = useState('')
   const [value, setValue] = useState(initialValue)
