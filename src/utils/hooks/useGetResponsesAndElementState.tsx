@@ -49,7 +49,6 @@ const useGetResponsesAndElementState = (props: useLoadApplicationProps) => {
 
     const currentResponses = {} as ResponsesByCode
     const currentFullResponses = {} as ResponsesFullByCode
-    // const currentElementsExpressions = {} as ApplicationElementState
 
     if (applicationResponses) {
       applicationResponses.forEach((response: any) => {
