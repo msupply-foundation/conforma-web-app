@@ -21,6 +21,7 @@ export default gql`
               code
               templateElementsBySectionId {
                 nodes {
+                  id
                   code
                   elementTypePluginCode
                 }
