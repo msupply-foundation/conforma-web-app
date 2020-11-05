@@ -1,12 +1,28 @@
-import { TemplateElement } from './generated/graphql'
+import { ApplicationResponse, TemplateElement } from './generated/graphql'
 
 export {
+  ElementAndResponse,
+  SectionPages,
+  SectionElements,
   ResponsePayload,
   SectionPayload,
   TemplateTypePayload,
   TemplateSectionPayload,
   Response,
   ResponsesByCode,
+}
+
+interface ElementAndResponse {
+  question: TemplateElement
+  response: ApplicationResponse | null
+}
+
+interface SectionPages {
+  [page: number]: Array<ElementAndResponse>
+}
+
+interface SectionElements {
+  [id: number]: Array<ElementAndResponse>
 }
 
 interface ResponsePayload {
@@ -32,7 +48,7 @@ interface TemplateSectionPayload {
   code: string
   title: string
   index: number
-  pagesCount: number
+  totalPages: number
 }
 
 type Response = {
