@@ -28,11 +28,6 @@ const ApplicationPageWrapper: React.FC = () => {
     serialNumber: serialNumber as string,
   })
 
-  console.log('Responses BY Code', responsesByCode)
-  console.log('Responses Full by Code', responsesFullByCode)
-
-  console.log('Element State', elementsState)
-
   useEffect(() => {
     if (application) setApplicationState({ type: 'setApplicationId', id: application.id })
   }, [application])
