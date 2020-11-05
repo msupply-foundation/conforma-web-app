@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react'
-import { useGetElementsAndResponsesQuery, GetElementsAndResponsesQuery } from '../generated/graphql'
+import {
+  useGetElementsAndResponsesQuery,
+  GetElementsAndResponsesQuery,
+  ApplicationResponse,
+  TemplateSection,
+  TemplateElement,
+} from '../generated/graphql'
 import {
   ResponsesByCode,
   ResponsesFullByCode,
@@ -31,30 +37,31 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
 
     if (apolloError) return
 
-    const applicationResponses = data?.applicationBySerial?.applicationResponses?.nodes
+    const applicationResponses = data?.applicationBySerial?.applicationResponses
+      .nodes as ApplicationResponse[]
 
-    const templateSections = data?.applicationBySerial?.template?.templateSections?.nodes
+    const templateSections = data?.applicationBySerial?.template?.templateSections
+      .nodes as TemplateSection[]
 
     const templateElements: TemplateElementState[] = []
 
-    templateSections?.forEach((sectionNode) => {
-      sectionNode?.templateElementsBySectionId?.nodes.forEach((element) => {
-        if (element) templateElements.push(element as TemplateElementState) // No idea why ...[spread] doesn't work here.
+    templateSections.forEach((sectionNode) => {
+      const elementsInSection = sectionNode.templateElementsBySectionId?.nodes as TemplateElement[]
+      elementsInSection.forEach((element) => {
+        templateElements.push(element as TemplateElementState) // No idea why ...[spread] doesn't work here.
       })
     })
 
     const currentResponses = {} as ResponsesByCode
     const currentFullResponses = {} as ResponsesFullByCode
 
-    if (applicationResponses) {
-      applicationResponses.forEach((response) => {
-        const code = response?.templateElement?.code
-        if (code) {
-          currentResponses[code] = response?.value?.text
-          currentFullResponses[code] = response?.value
-        }
-      })
-    }
+    applicationResponses.forEach((response) => {
+      const code = response?.templateElement?.code
+      if (code) {
+        currentResponses[code] = response?.value?.text
+        currentFullResponses[code] = response?.value
+      }
+    })
 
     setResponsesByCode(currentResponses)
     setResponsesFullByCode(currentFullResponses)
@@ -118,10 +125,9 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
 }
 
 function checkForApplicationErrors(data: GetElementsAndResponsesQuery | undefined) {
-  if (data?.applicationBySerial) {
-    if (data?.applicationBySerial?.applicationResponses?.nodes.length === 0)
-      return 'No responses found'
-  }
+  if (data?.applicationBySerial?.applicationResponses?.nodes) return 'Data undefined'
+  if (data?.applicationBySerial?.applicationResponses?.nodes.length === 0)
+    return 'No responses found'
   return null
 }
 export default useGetResponsesAndElementState
