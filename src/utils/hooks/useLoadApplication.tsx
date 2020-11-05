@@ -33,7 +33,6 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
 
       const sections = getApplicationSections(application.applicationSections)
       setSections(sections)
-      console.log('Data', data.applications.nodes)
     }
   }, [data, loading, error])
 
