@@ -125,7 +125,11 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
 }
 
 function checkForApplicationErrors(data: GetElementsAndResponsesQuery | undefined) {
-  if (data?.applicationBySerial?.applicationResponses?.nodes) return 'Data undefined'
+  if (
+    !data?.applicationBySerial?.applicationResponses?.nodes ||
+    !data?.applicationBySerial?.template?.templateSections
+  )
+    return 'Data undefined'
   if (data?.applicationBySerial?.applicationResponses?.nodes.length === 0)
     return 'No responses found'
   return null
