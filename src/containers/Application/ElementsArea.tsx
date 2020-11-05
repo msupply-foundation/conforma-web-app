@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Container, Grid, Header, Label, Segment } from 'semantic-ui-react'
 import { ApplicationViewWrapper } from '../../elementPlugins'
-import useLoadElements from '../../utils/hooks/useLoadElementsOfSection'
+import useLoadElementsOfSection from '../../utils/hooks/useLoadElementsOfSection'
 import { Loading } from '../../components'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import { ApplicationElementState, ResponsesByCode, ResponsesFullByCode } from '../../utils/types'
@@ -33,7 +33,7 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
   onNextClicked,
   onPreviousClicked,
 }) => {
-  const { elements, loading, error } = useLoadElements({
+  const { elements, loading, error } = useLoadElementsOfSection({
     applicationId,
     sectionTempId,
     sectionPage,
