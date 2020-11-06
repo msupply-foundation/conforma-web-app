@@ -16850,7 +16850,7 @@ export type GetApplicationQuery = (
               { __typename?: 'TemplateElementsConnection' }
               & { nodes: Array<Maybe<(
                 { __typename?: 'TemplateElement' }
-                & Pick<TemplateElement, 'code' | 'elementTypePluginCode'>
+                & Pick<TemplateElement, 'id' | 'code' | 'elementTypePluginCode'>
               )>> }
             ) }
           )> }
@@ -17281,6 +17281,7 @@ export const GetApplicationDocument = gql`
             code
             templateElementsBySectionId {
               nodes {
+                id
                 code
                 elementTypePluginCode
               }
