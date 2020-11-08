@@ -53,7 +53,7 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
           {elements.map(({ question, response }) => (
             <ApplicationViewWrapper
               key={`question_${question.code}`}
-              initialValue={response?.value}
+              initialValue={response?.value?.text}
               templateElement={question}
               isVisible={elementsState[question.code].isVisible}
               isEditable={elementsState[question.code].isEditable}
