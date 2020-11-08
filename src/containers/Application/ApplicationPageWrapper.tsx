@@ -50,7 +50,7 @@ const ApplicationPageWrapper: React.FC = () => {
 
   return error ? (
     <Label content="Problem to load application" error={error} />
-  ) : loading ? (
+  ) : loading || responsesLoading ? (
     <Loading />
   ) : application && serialNumber && currentSection ? (
     <Segment.Group>

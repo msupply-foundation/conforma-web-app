@@ -67,7 +67,6 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
     setResponsesByCode(currentResponses)
     setResponsesFullByCode(currentFullResponses)
     setElementsExpressions(templateElements)
-    setLoading(false)
   }, [data, apolloError])
 
   useEffect(() => {
