@@ -5,6 +5,7 @@ import {
   ApplicationResponse,
   TemplateSection,
   TemplateElement,
+  Application,
 } from '../generated/graphql'
 import {
   ResponsesByCode,
@@ -69,7 +70,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
     setLoading(false)
   }, [data, apolloError])
 
-useEffect(() => {
+  useEffect(() => {
     if (responsesByCode)
       evaluateElementExpressions().then((result) => {
         setElementsState(result)
@@ -129,7 +130,7 @@ useEffect(() => {
 }
 
 function checkForApplicationErrors(data: GetElementsAndResponsesQuery | undefined) {
-if (!data?.applicationBySerial) return 'Data undefined'
+  if (!data?.applicationBySerial) return 'Data undefined'
   const application = data?.applicationBySerial as Application
   if (!application.applicationResponses || !application.template?.templateSections)
     return 'Application missing parameters'
