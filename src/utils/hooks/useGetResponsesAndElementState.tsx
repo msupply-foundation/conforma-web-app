@@ -125,13 +125,16 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
 }
 
 function checkForApplicationErrors(data: GetElementsAndResponsesQuery | undefined) {
-  if (
-    !data?.applicationBySerial?.applicationResponses?.nodes ||
-    !data?.applicationBySerial?.template?.templateSections
-  )
-    return 'Data undefined'
-  if (data?.applicationBySerial?.applicationResponses?.nodes.length === 0)
-    return 'No responses found'
+if (!data?.applicationBySerial) return 'Data undefined'
+  const application = data?.applicationBySerial as Application
+  if (!application.applicationResponses || !application.template?.templateSections)
+    return 'Application missing parameters'
+  if (application.template?.templateSections.nodes.length === 0) return 'No sections found'
+  if (application.applicationResponses.nodes.length === 0) return 'No responses found'
+  application.template?.templateSections.nodes.forEach((section) => {
+    const missingElements = section?.templateElementsBySectionId.nodes.some((element) => !element)
+    if (missingElements) return 'Application missing elements'
+  })
   return null
 }
 export default useGetResponsesAndElementState
