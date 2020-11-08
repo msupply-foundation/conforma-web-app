@@ -50,10 +50,12 @@ const useListApplication = () => {
 }
 
 function checkForApplicationsErrors(data: GetApplicationsQuery | undefined) {
-  // TODO: Better error handling
-  if (!data?.applications) return 'Unexpected list applications result'
-  const numberOfTemplates = data.applications.nodes.length as number
-  if (numberOfTemplates === 0) return 'Applications not found'
+  if (!data) return 'No data'
+  if (!data.applications) return 'Unexpected list applications result'
+  const numberOfApplications = data.applications.nodes.length as number
+  if (numberOfApplications === 0) return 'No Applications found'
+  if (data.applications.nodes.some((application) => !application?.template))
+    return 'Unexpected template missing in one or more applications'
   return null
 }
 
