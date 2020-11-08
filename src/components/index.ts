@@ -8,6 +8,7 @@ import {
 } from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
+import FilterList from './FilterList'
 import Home from './Home'
 import Login from './Login'
 import Loading from './Loading'
@@ -34,6 +35,7 @@ export {
   Approval,
   Admin,
   Config,
+  FilterList,
   Home,
   Login,
   Loading,

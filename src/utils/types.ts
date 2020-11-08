@@ -1,8 +1,9 @@
 import { ApplicationResponse, TemplateElement, TemplateElementCategory } from './generated/graphql'
 
-import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 export {
+  ApplicationDetails,
   ElementAndResponse,
   SectionPages,
   SectionElements,
@@ -16,6 +17,15 @@ export {
   ApplicationElementState,
   TemplateElementState,
   EvaluatedElement,
+}
+
+interface ApplicationDetails {
+  type: string
+  serial: string
+  name: string
+  stage: string
+  status: string
+  outcome: string
 }
 
 interface ElementAndResponse {
