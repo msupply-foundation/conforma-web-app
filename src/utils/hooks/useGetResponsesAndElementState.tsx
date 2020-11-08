@@ -103,10 +103,10 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
       objects: [responsesByCode, responsesFullByCode], // TO-DO: Also send user/org objects etc.
       // graphQLConnection: TO-DO
     }
-    const isEditable = evaluateExpression(element.isEditable)
-    const isRequired = evaluateExpression(element.isRequired)
-    const isVisible = evaluateExpression(element.visibilityCondition)
-    // const isValid = evaluateExpression(element.validation)
+    const isEditable = evaluateExpression(element.isEditable, evaluationParameters)
+    const isRequired = evaluateExpression(element.isRequired, evaluationParameters)
+    const isVisible = evaluateExpression(element.visibilityCondition, evaluationParameters)
+    // const isValid = evaluateExpression(element.validation, evaluationParameters)
     const results = await Promise.all([isEditable, isRequired, isVisible])
     const evaluatedElement = {
       code: element.code,
