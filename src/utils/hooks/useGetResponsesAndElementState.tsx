@@ -69,8 +69,12 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
     setLoading(false)
   }, [data, apolloError])
 
-  useEffect(() => {
-    evaluateElementExpressions().then((result) => setElementsState(result))
+useEffect(() => {
+    if (responsesByCode)
+      evaluateElementExpressions().then((result) => {
+        setElementsState(result)
+        setLoading(false)
+      })
   }, [responsesByCode])
 
   async function evaluateElementExpressions() {
