@@ -1,9 +1,10 @@
 import React from 'react'
 import { Button, Container, Grid, Header, Label, Segment } from 'semantic-ui-react'
 import { ApplicationViewWrapper } from '../../elementPlugins'
-import useLoadElements from '../../utils/hooks/useLoadElements'
+import useLoadElementsOfSection from '../../utils/hooks/useLoadElementsOfSection'
 import { Loading } from '../../components'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
+import { ApplicationElementState, ResponsesByCode, ResponsesFullByCode } from '../../utils/types'
 
 interface ElementsAreaProps {
   applicationId: number
@@ -12,6 +13,9 @@ interface ElementsAreaProps {
   sectionPage: number
   isFirstPage: boolean
   isLastPage: boolean
+  responsesByCode: ResponsesByCode
+  responsesFullByCode: ResponsesFullByCode
+  elementsState: ApplicationElementState
   onNextClicked: () => void
   onPreviousClicked: () => void
 }
@@ -23,10 +27,13 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
   sectionPage,
   isFirstPage,
   isLastPage,
+  responsesByCode,
+  responsesFullByCode,
+  elementsState,
   onNextClicked,
   onPreviousClicked,
 }) => {
-  const { elements, loading, error } = useLoadElements({
+  const { elements, loading, error } = useLoadElementsOfSection({
     applicationId,
     sectionTempId,
     sectionPage,
@@ -46,8 +53,12 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
           {elements.map(({ question, response }) => (
             <ApplicationViewWrapper
               key={`question_${question.code}`}
-              initialValue={response?.value}
+              initialValue={response?.value?.text}
               templateElement={question}
+              isVisible={elementsState[question.code].isVisible}
+              isEditable={elementsState[question.code].isEditable}
+              isRequired={elementsState[question.code].isRequired}
+              allResponses={responsesByCode}
               onUpdate={(updateObject) => {
                 const { isValid, value } = updateObject
                 /**
@@ -56,10 +67,11 @@ const ElementsArea: React.FC<ElementsAreaProps> = ({
                  * Also considering send to server on 'Next' or adding a Save button.
                  **/
                 // TODO: Only send mutation on loose focus event.
-                if (isValid) responseMutation({ variables: { id: response?.id as number, value } })
+                if (isValid)
+                  responseMutation({
+                    variables: { id: response?.id as number, value: { text: value } },
+                  })
               }}
-              isVisible={true}
-              isEditable={true}
             />
           ))}
           <Grid columns={3}>

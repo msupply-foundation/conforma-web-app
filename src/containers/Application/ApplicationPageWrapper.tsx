@@ -3,12 +3,13 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationHeader, Loading } from '../../components'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
-import useGetResponsesByCode from '../../utils/hooks/useGetResponsesByCode'
+import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import { TemplateSectionPayload } from '../../utils/types'
 import ElementsArea from './ElementsArea'
 import { useApplicationState } from '../../contexts/ApplicationState'
+import evaluateExpression from '@openmsupply/expression-evaluator'
 
-const ApplicationPage: React.FC = () => {
+const ApplicationPageWrapper: React.FC = () => {
   const { setApplicationState } = useApplicationState()
   const { query, push } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
@@ -17,13 +18,21 @@ const ApplicationPage: React.FC = () => {
     serialNumber: serialNumber as string,
   })
 
+  const {
+    error: responsesError,
+    loading: responsesLoading,
+    responsesByCode,
+    responsesFullByCode,
+    elementsState,
+  } = useGetResponsesAndElementState({
+    serialNumber: serialNumber as string,
+  })
+
   useEffect(() => {
     if (application) setApplicationState({ type: 'setApplicationId', id: application.id })
   }, [application])
 
   const currentSection = templateSections.find(({ code }) => code == sectionCode)
-
-  // const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
 
   const changePagePayload = {
     serialNumber: serialNumber as string,
@@ -41,7 +50,7 @@ const ApplicationPage: React.FC = () => {
 
   return error ? (
     <Label content="Problem to load application" error={error} />
-  ) : loading ? (
+  ) : loading || responsesLoading ? (
     <Loading />
   ) : application && serialNumber && currentSection ? (
     <Segment.Group>
@@ -60,6 +69,9 @@ const ApplicationPage: React.FC = () => {
                 sectionPage={Number(page)}
                 isFirstPage={checkFirstPage(checkPagePayload)}
                 isLastPage={checkLastPage(checkPagePayload)}
+                responsesByCode={responsesByCode}
+                responsesFullByCode={responsesFullByCode}
+                elementsState={elementsState}
                 onPreviousClicked={() => previousButtonHandler(changePagePayload)}
                 onNextClicked={() => nextPageButtonHandler(changePagePayload)}
               />
@@ -167,4 +179,4 @@ function nextPageButtonHandler({
   }
 }
 
-export default ApplicationPage
+export default ApplicationPageWrapper

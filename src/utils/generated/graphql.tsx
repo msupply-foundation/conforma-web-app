@@ -16850,7 +16850,7 @@ export type GetApplicationQuery = (
               { __typename?: 'TemplateElementsConnection' }
               & { nodes: Array<Maybe<(
                 { __typename?: 'TemplateElement' }
-                & Pick<TemplateElement, 'code' | 'elementTypePluginCode'>
+                & Pick<TemplateElement, 'id' | 'code' | 'elementTypePluginCode'>
               )>> }
             ) }
           )> }
@@ -16859,10 +16859,10 @@ export type GetApplicationQuery = (
         { __typename?: 'ApplicationResponsesConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'ApplicationResponse' }
-          & Pick<ApplicationResponse, 'value'>
+          & Pick<ApplicationResponse, 'value' | 'id'>
           & { templateElement?: Maybe<(
             { __typename?: 'TemplateElement' }
-            & Pick<TemplateElement, 'code'>
+            & Pick<TemplateElement, 'code' | 'category' | 'isEditable' | 'isRequired' | 'validation' | 'validationMessage' | 'visibilityCondition'>
           )> }
         )>> }
       ) }
@@ -16885,6 +16885,44 @@ export type GetApplicationsQuery = (
         & Pick<Template, 'code' | 'id' | 'name'>
       )> }
     )>> }
+  )> }
+);
+
+export type GetElementsAndResponsesQueryVariables = Exact<{
+  serial: Scalars['String'];
+}>;
+
+
+export type GetElementsAndResponsesQuery = (
+  { __typename?: 'Query' }
+  & { applicationBySerial?: Maybe<(
+    { __typename?: 'Application' }
+    & { applicationResponses: (
+      { __typename?: 'ApplicationResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ApplicationResponse' }
+        & Pick<ApplicationResponse, 'id' | 'value'>
+        & { templateElement?: Maybe<(
+          { __typename?: 'TemplateElement' }
+          & Pick<TemplateElement, 'code'>
+        )> }
+      )>> }
+    ), template?: Maybe<(
+      { __typename?: 'Template' }
+      & { templateSections: (
+        { __typename?: 'TemplateSectionsConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'TemplateSection' }
+          & { templateElementsBySectionId: (
+            { __typename?: 'TemplateElementsConnection' }
+            & { nodes: Array<Maybe<(
+              { __typename?: 'TemplateElement' }
+              & Pick<TemplateElement, 'id' | 'code' | 'category' | 'isEditable' | 'isRequired' | 'validation' | 'validationMessage' | 'visibilityCondition'>
+            )>> }
+          ) }
+        )>> }
+      ) }
+    )> }
   )> }
 );
 
@@ -17243,6 +17281,7 @@ export const GetApplicationDocument = gql`
             code
             templateElementsBySectionId {
               nodes {
+                id
                 code
                 elementTypePluginCode
               }
@@ -17253,8 +17292,15 @@ export const GetApplicationDocument = gql`
       applicationResponses {
         nodes {
           value
+          id
           templateElement {
             code
+            category
+            isEditable
+            isRequired
+            validation
+            validationMessage
+            visibilityCondition
           }
         }
       }
@@ -17330,6 +17376,65 @@ export function useGetApplicationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetApplicationsQueryHookResult = ReturnType<typeof useGetApplicationsQuery>;
 export type GetApplicationsLazyQueryHookResult = ReturnType<typeof useGetApplicationsLazyQuery>;
 export type GetApplicationsQueryResult = Apollo.QueryResult<GetApplicationsQuery, GetApplicationsQueryVariables>;
+export const GetElementsAndResponsesDocument = gql`
+    query getElementsAndResponses($serial: String!) {
+  applicationBySerial(serial: $serial) {
+    applicationResponses {
+      nodes {
+        id
+        value
+        templateElement {
+          code
+        }
+      }
+    }
+    template {
+      templateSections {
+        nodes {
+          templateElementsBySectionId {
+            nodes {
+              id
+              code
+              category
+              isEditable
+              isRequired
+              validation
+              validationMessage
+              visibilityCondition
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetElementsAndResponsesQuery__
+ *
+ * To run a query within a React component, call `useGetElementsAndResponsesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetElementsAndResponsesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetElementsAndResponsesQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *   },
+ * });
+ */
+export function useGetElementsAndResponsesQuery(baseOptions?: Apollo.QueryHookOptions<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>) {
+        return Apollo.useQuery<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>(GetElementsAndResponsesDocument, baseOptions);
+      }
+export function useGetElementsAndResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>) {
+          return Apollo.useLazyQuery<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>(GetElementsAndResponsesDocument, baseOptions);
+        }
+export type GetElementsAndResponsesQueryHookResult = ReturnType<typeof useGetElementsAndResponsesQuery>;
+export type GetElementsAndResponsesLazyQueryHookResult = ReturnType<typeof useGetElementsAndResponsesLazyQuery>;
+export type GetElementsAndResponsesQueryResult = Apollo.QueryResult<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>;
 export const GetSectionElementsDocument = gql`
     query getSectionElements($sectionId: Int!, $applicationId: Int!) {
   templateElements(condition: {sectionId: $sectionId}) {
