@@ -1,7 +1,6 @@
 import {
   ApplicationEdit,
   ApplicationHeader,
-  ApplicationList,
   ApplicationSelectType,
   ApplicationStart,
   ApplicationSummary,
@@ -28,7 +27,6 @@ export {
   AdminUsers,
   ApplicationEdit,
   ApplicationHeader,
-  ApplicationList,
   ApplicationSelectType,
   ApplicationStart,
   ApplicationSummary,
