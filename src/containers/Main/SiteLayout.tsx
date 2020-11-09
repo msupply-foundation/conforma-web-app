@@ -5,7 +5,6 @@ import {
   Account,
   AdminPermissions,
   AdminUsers,
-  ApplicationList,
   Approval,
   Admin,
   Config,
@@ -22,7 +21,7 @@ import {
   TemplateNew,
   Template,
 } from '../../components'
-import { ApplicationCreate, ApplicationPageWrapper } from '../Application'
+import { ApplicationCreate, ApplicationList, ApplicationPageWrapper } from '../Application'
 import UserRegister from '../User/UserRegister'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import AppMenu from './AppMenu'
