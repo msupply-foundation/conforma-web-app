@@ -10,18 +10,12 @@ import { useApplicationState } from '../../contexts/ApplicationState'
 
 const ApplicationPageWrapper: React.FC = () => {
   const { setApplicationState } = useApplicationState()
-  const [isReady, setIsReady] = useState(false)
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
   const { error, loading, application, templateSections, appStatus } = useLoadApplication({
     serialNumber: serialNumber as string,
-    skip: isReady,
   })
-
-  if (isReady) {
-    processRedirect({ ...appStatus, serialNumber, sectionCode, page, templateSections, push })
-  }
 
   const {
     error: responsesError,
@@ -36,7 +30,15 @@ const ApplicationPageWrapper: React.FC = () => {
   useEffect(() => {
     if (application) {
       setApplicationState({ type: 'setApplicationId', id: application.id })
-      setIsReady(true)
+      processRedirect({
+        ...appStatus,
+        serialNumber,
+        sectionCode,
+        page,
+        templateSections,
+        push,
+        replace,
+      })
     }
   }, [application])
 
@@ -48,7 +50,6 @@ const ApplicationPageWrapper: React.FC = () => {
     currentPage: Number(page),
     sections: templateSections,
     push,
-    replace,
   }
 
   const checkPagePayload = {

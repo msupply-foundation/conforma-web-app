@@ -12,7 +12,6 @@ const ApplicationOverview: React.FC = () => {
 
   const { error, loading, application, templateSections } = useLoadApplication({
     serialNumber: serialNumber as string,
-    skip: false,
   })
 
   const [applicationSubmitMutation] = useUpdateApplicationMutation({

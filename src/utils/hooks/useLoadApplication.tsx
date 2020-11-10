@@ -5,7 +5,6 @@ import { TemplateSectionPayload } from '../types'
 
 interface useLoadApplicationProps {
   serialNumber: string
-  skip: boolean
 }
 
 interface ApplicationDetails {
@@ -14,16 +13,17 @@ interface ApplicationDetails {
 }
 
 const useLoadApplication = (props: useLoadApplicationProps) => {
-  const { serialNumber, skip } = props
+  const { serialNumber } = props
   const [application, setApplication] = useState<ApplicationDetails | undefined>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
   const [appStatus, setAppStatus] = useState({})
+  const [isReady, setIsReady] = useState(false)
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
       serial: serialNumber,
     },
-    skip: skip,
+    skip: isReady,
   })
 
   useEffect(() => {
@@ -42,6 +42,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
         status: application?.status,
         outcome: application?.outcome,
       })
+      setIsReady(true)
     }
   }, [data, loading, error])
 
