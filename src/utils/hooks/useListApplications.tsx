@@ -19,7 +19,7 @@ const useListApplication = () => {
   useEffect(() => {
     if (apolloError) return
     if (apolloLoading) return
-    // Check that only one tempalte matched
+   // Check that only one template matched
     let error = checkForApplicationsErrors(data)
     if (error) {
       setError(error)
