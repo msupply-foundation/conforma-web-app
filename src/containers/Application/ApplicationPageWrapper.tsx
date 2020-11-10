@@ -11,7 +11,7 @@ import { useApplicationState } from '../../contexts/ApplicationState'
 const ApplicationPageWrapper: React.FC = () => {
   const { setApplicationState } = useApplicationState()
   const [isReady, setIsReady] = useState(false)
-  const { query, push } = useRouter()
+  const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
   const { error, loading, application, templateSections, appStatus } = useLoadApplication({
@@ -48,6 +48,7 @@ const ApplicationPageWrapper: React.FC = () => {
     currentPage: Number(page),
     sections: templateSections,
     push,
+    replace,
   }
 
   const checkPagePayload = {
@@ -198,14 +199,15 @@ function processRedirect(appState: any): void {
     page,
     templateSections,
     push,
+    replace,
   } = appState
   if (status !== 'DRAFT') {
-    push(`/applications/${serialNumber}/summary`)
+    replace(`/applications/${serialNumber}/summary`)
     return
   }
   if (!sectionCode || !page) {
     const firstSection = templateSections[0].code
-    push(`/applications/${serialNumber}/${firstSection}/page1`)
+    replace(`/applications/${serialNumber}/${firstSection}/page1`)
   }
 }
 
