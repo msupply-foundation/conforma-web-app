@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Accordion, Container, Grid, Header, Label, Sticky } from 'semantic-ui-react'
-import { useRouter } from '../../utils/hooks/useRouter'
 import { TemplateSectionPayload } from '../../utils/types'
 
 interface SectionPage {
@@ -21,7 +20,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   sectionPage,
 }) => {
   const childrenPanels = (step: number, totalPages: number) => {
-    const { push } = useRouter()
     const pages = Array.from(Array(totalPages).keys(), (n) => n + 1)
     return pages.map((number) => {
       return {
