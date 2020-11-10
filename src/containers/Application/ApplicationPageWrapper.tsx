@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationHeader, Loading } from '../../components'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
@@ -7,16 +7,23 @@ import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAnd
 import { TemplateSectionPayload } from '../../utils/types'
 import ElementsArea from './ElementsArea'
 import { useApplicationState } from '../../contexts/ApplicationState'
-import evaluateExpression from '@openmsupply/expression-evaluator'
 
 const ApplicationPageWrapper: React.FC = () => {
   const { setApplicationState } = useApplicationState()
+  const [isReady, setIsReady] = useState(false)
   const { query, push } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
-  const { error, loading, application, templateSections } = useLoadApplication({
+  const { error, loading, application, templateSections, appStatus } = useLoadApplication({
     serialNumber: serialNumber as string,
+    skip: isReady,
   })
+
+  if (isReady) {
+    console.log('Were ready')
+    console.log(appStatus)
+    processRedirect()
+  }
 
   const {
     error: responsesError,
@@ -29,7 +36,10 @@ const ApplicationPageWrapper: React.FC = () => {
   })
 
   useEffect(() => {
-    if (application) setApplicationState({ type: 'setApplicationId', id: application.id })
+    if (application) {
+      setApplicationState({ type: 'setApplicationId', id: application.id })
+      setIsReady(true)
+    }
   }, [application])
 
   const currentSection = templateSections.find(({ code }) => code == sectionCode)
@@ -177,6 +187,10 @@ function nextPageButtonHandler({
   } else {
     push(`../../${serialNumber}/${sectionCode}/page${nextPage}`)
   }
+}
+
+function processRedirect(): void {
+  // All logic for re-directing/configuring page based on application state, permissions, roles, etc. should go here.
 }
 
 export default ApplicationPageWrapper

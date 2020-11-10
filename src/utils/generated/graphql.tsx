@@ -1218,8 +1218,8 @@ export enum ActionQueuesOrderBy {
   SequenceDesc = 'SEQUENCE_DESC',
   ActionCodeAsc = 'ACTION_CODE_ASC',
   ActionCodeDesc = 'ACTION_CODE_DESC',
-  TriggerPayloadAsc = 'TRIGGER_PAYLOAD_ASC',
-  TriggerPayloadDesc = 'TRIGGER_PAYLOAD_DESC',
+  ApplicationDataAsc = 'APPLICATION_DATA_ASC',
+  ApplicationDataDesc = 'APPLICATION_DATA_DESC',
   ParameterQueriesAsc = 'PARAMETER_QUERIES_ASC',
   ParameterQueriesDesc = 'PARAMETER_QUERIES_DESC',
   ParametersEvaluatedAsc = 'PARAMETERS_EVALUATED_ASC',
@@ -1252,8 +1252,8 @@ export type ActionQueueCondition = {
   sequence?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `actionCode` field. */
   actionCode?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `triggerPayload` field. */
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `applicationData` field. */
+  applicationData?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parameterQueries` field. */
   parameterQueries?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parametersEvaluated` field. */
@@ -1294,8 +1294,8 @@ export type ActionQueueFilter = {
   sequence?: Maybe<IntFilter>;
   /** Filter by the object’s `actionCode` field. */
   actionCode?: Maybe<StringFilter>;
-  /** Filter by the object’s `triggerPayload` field. */
-  triggerPayload?: Maybe<JsonFilter>;
+  /** Filter by the object’s `applicationData` field. */
+  applicationData?: Maybe<JsonFilter>;
   /** Filter by the object’s `parameterQueries` field. */
   parameterQueries?: Maybe<JsonFilter>;
   /** Filter by the object’s `parametersEvaluated` field. */
@@ -1454,8 +1454,6 @@ export type TriggerQueueFilter = {
   recordId?: Maybe<IntFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `payload` field. */
-  payload?: Maybe<JsonFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<TriggerQueueStatusFilter>;
   /** Filter by the object’s `log` field. */
@@ -3114,7 +3112,7 @@ export type ActionQueue = Node & {
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -3138,7 +3136,6 @@ export type TriggerQueue = Node & {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   /** Reads and enables pagination through a set of `ActionQueue`. */
@@ -5674,8 +5671,6 @@ export enum TriggerQueuesOrderBy {
   RecordIdDesc = 'RECORD_ID_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
   TimestampDesc = 'TIMESTAMP_DESC',
-  PayloadAsc = 'PAYLOAD_ASC',
-  PayloadDesc = 'PAYLOAD_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
   LogAsc = 'LOG_ASC',
@@ -5696,8 +5691,6 @@ export type TriggerQueueCondition = {
   recordId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `timestamp` field. */
   timestamp?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `payload` field. */
-  payload?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<TriggerQueueStatus>;
   /** Checks for equality with the object’s `log` field. */
@@ -7041,7 +7034,7 @@ export type ActionQueueInput = {
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -7108,7 +7101,6 @@ export type UpdateTriggerQueueOnActionQueueForActionQueueTriggerEventFkeyPatch =
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
@@ -7169,7 +7161,7 @@ export type UpdateActionQueueOnActionQueueForActionQueueTriggerEventFkeyPatch = 
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -8353,7 +8345,7 @@ export type UpdateActionQueueOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   triggerEvent?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -8381,7 +8373,7 @@ export type ActionQueuePatch = {
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -8400,7 +8392,7 @@ export type ActionQueueTemplateIdFkeyActionQueueCreateInput = {
   triggerEvent?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -13213,7 +13205,7 @@ export type ActionQueueTriggerEventFkeyActionQueueCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -13241,7 +13233,6 @@ export type TriggerQueuePatch = {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
@@ -13254,7 +13245,6 @@ export type ActionQueueTriggerEventFkeyTriggerQueueCreateInput = {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
@@ -14324,7 +14314,6 @@ export type TriggerQueueInput = {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
@@ -16926,7 +16915,7 @@ export type GetApplicationQuery = (
     { __typename?: 'ApplicationsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'Application' }
-      & Pick<Application, 'id' | 'serial' | 'name' | 'outcome'>
+      & Pick<Application, 'id' | 'serial' | 'name' | 'outcome' | 'stage' | 'status'>
       & { template?: Maybe<(
         { __typename?: 'Template' }
         & Pick<Template, 'code' | 'id' | 'name'>
@@ -17375,6 +17364,8 @@ export const GetApplicationDocument = gql`
       serial
       name
       outcome
+      stage
+      status
       template {
         code
         id
