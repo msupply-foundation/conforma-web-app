@@ -39,12 +39,12 @@ const ApplicationList: React.FC = () => {
                   switch (key) {
                     case 'name':
                       return (
-                        <Table.Cell key={`app_${index}_${key}`}>
+                        <Table.Cell key={`app_row_${index}_${key}`}>
                           <Link to={`/applications/${application.serial}`}>{value}</Link>
                         </Table.Cell>
                       )
                     default:
-                      return <Table.Cell key={`app_${index}_${key}`}>{value}</Table.Cell>
+                      return <Table.Cell key={`app_row_${index}_${key}`}>{value}</Table.Cell>
                   }
                 })}
               </Table.Row>

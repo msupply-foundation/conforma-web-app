@@ -12,12 +12,14 @@ const useListApplication = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  const { data, loading: apolloLoading, error: apolloError } = useGetApplicationsQuery()
+  const { data, loading: apolloLoading, error: apolloError } = useGetApplicationsQuery({
+    fetchPolicy: 'network-only',
+  })
 
   useEffect(() => {
     if (apolloError) return
     if (apolloLoading) return
-    // Check that only one tempalte matched
+   // Check that only one template matched
     let error = checkForApplicationsErrors(data)
     if (error) {
       setError(error)
@@ -28,9 +30,8 @@ const useListApplication = () => {
     const applicationsList = data?.applications?.nodes as Application[]
     const applicationsDetails: ApplicationDetails[] = applicationsList.map((application) => {
       const { serial, name, stage, status, outcome, template } = application
-      const { name: type } = template as Template
       return {
-        type: type as string,
+        type: template?.name as string,
         serial: serial as string,
         name: name as string,
         stage: stage as string,
