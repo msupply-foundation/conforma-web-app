@@ -34,8 +34,8 @@ const ApplicationList: React.FC = () => {
           <Table.Body>
             {applications.map((application, index) => (
               <Table.Row key={application.serial}>
-                {Object.values(application).map((value) => (
-                  <Table.Cell key={`app_${index}_${value}`}>{value}</Table.Cell>
+                {Object.entries(application).map(([key, value]) => (
+                  <Table.Cell key={`app_row_${index}_${key}`}>{value}</Table.Cell>
                 ))}
               </Table.Row>
             ))}
