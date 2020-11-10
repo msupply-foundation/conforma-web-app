@@ -19,7 +19,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
   const { serialNumber } = props
   const [responsesByCode, setResponsesByCode] = useState({})
   const [responsesFullByCode, setResponsesFullByCode] = useState({})
-  const [elementsExpressions, setElementsExpressions] = useState([{}])
+  const [elementsExpressions, setElementsExpressions] = useState<TemplateElementState[]>([])
   const [elementsState, setElementsState] = useState({})
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
@@ -97,7 +97,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
     return elementsState
   }
 
-  async function evaluateSingleElement(element: any): Promise<EvaluatedElement> {
+  async function evaluateSingleElement(element: TemplateElementState): Promise<EvaluatedElement> {
     const evaluationParameters = {
       objects: [responsesByCode, responsesFullByCode], // TO-DO: Also send user/org objects etc.
       // graphQLConnection: TO-DO
