@@ -4,7 +4,9 @@ import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 export {
   ApplicationDetails,
+  ApplicationElementState,
   ElementAndResponse,
+  ElementState,
   SectionPages,
   SectionElements,
   ResponsePayload,
@@ -14,9 +16,7 @@ export {
   ResponseFull,
   ResponsesFullByCode,
   ResponsesByCode,
-  ApplicationElementState,
   TemplateElementState,
-  EvaluatedElement,
 }
 
 interface ApplicationDetails {
@@ -81,22 +81,24 @@ interface ResponsesByCode {
   [key: string]: string | null | undefined
 }
 
-interface ApplicationElementState {
-  [key: string]: {
-    id: number
-    category: TemplateElementCategory
-    isRequired: boolean
-    isVisible: boolean
-    isValid: boolean
-    // validationMessage: string | null
-    isEditable: boolean
-  }
+interface ElementBase {
+  id: number
+  code: string
+  title: string
+  elementTypePluginCode: string
+  section: number
+  category: TemplateElementCategory
 }
 
-interface TemplateElementState {
-  code: string
-  id: number
-  category: TemplateElementCategory
+interface ElementStateEvaluated {
+  isEditable: boolean
+  isRequired: boolean
+  isVisible: boolean
+  // isValid: boolean
+  // validationMessage: string | null
+}
+
+interface ElementStateUnevaluated {
   isRequired: IQueryNode
   visibilityCondition: IQueryNode
   validation: IQueryNode
@@ -104,12 +106,9 @@ interface TemplateElementState {
   isEditable: IQueryNode
 }
 
-interface EvaluatedElement {
-  code: string
-  id: number
-  category: TemplateElementCategory
-  isEditable: boolean
-  isRequired: boolean
-  isVisible: boolean
-  // isValid: boolean
+type TemplateElementState = ElementBase & ElementStateUnevaluated
+type ElementState = ElementBase & ElementStateEvaluated
+
+interface ApplicationElementState {
+  [key: string]: ElementState
 }
