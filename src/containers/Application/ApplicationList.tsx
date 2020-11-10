@@ -34,13 +34,13 @@ const ApplicationList: React.FC = () => {
           </Table.Header>
           <Table.Body>
             {applications.map((application, index) => (
-              <Table.Row key={`/${application.serial}`}>
+              <Table.Row key={`${application.serial}`}>
                 {Object.entries(application).map(([key, value]) => {
                   switch (key) {
                     case 'name':
                       return (
                         <Table.Cell key={`app_${index}_${key}`}>
-                          <Link to={`${pathname}/${application.serial}`}>{value}</Link>
+                          <Link to={`/applications/${application.serial}`}>{value}</Link>
                         </Table.Cell>
                       )
                     default:
