@@ -1,4 +1,6 @@
-import { ApplicationResponse, TemplateElement } from './generated/graphql'
+import { ApplicationResponse, TemplateElement, TemplateElementCategory } from './generated/graphql'
+
+import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 export {
   ElementAndResponse,
@@ -8,8 +10,12 @@ export {
   SectionPayload,
   TemplateTypePayload,
   TemplateSectionPayload,
-  Response,
+  ResponseFull,
+  ResponsesFullByCode,
   ResponsesByCode,
+  ApplicationElementState,
+  TemplateElementState,
+  EvaluatedElement,
 }
 
 interface ElementAndResponse {
@@ -51,12 +57,49 @@ interface TemplateSectionPayload {
   totalPages: number
 }
 
-type Response = {
+type ResponseFull = {
   text: string | null | undefined
   optionIndex?: number
   reference?: any // Not yet decided how to represent
+} | null
+
+interface ResponsesFullByCode {
+  [key: string]: ResponseFull
 }
 
 interface ResponsesByCode {
-  [key: string]: Response | string
+  [key: string]: string | null | undefined
+}
+
+interface ApplicationElementState {
+  [key: string]: {
+    id: number
+    category: TemplateElementCategory
+    isRequired: boolean
+    isVisible: boolean
+    isValid: boolean
+    // validationMessage: string | null
+    isEditable: boolean
+  }
+}
+
+interface TemplateElementState {
+  code: string
+  id: number
+  category: TemplateElementCategory
+  isRequired: IQueryNode
+  visibilityCondition: IQueryNode
+  validation: IQueryNode
+  validationMessage: string | null
+  isEditable: IQueryNode
+}
+
+interface EvaluatedElement {
+  code: string
+  id: number
+  category: TemplateElementCategory
+  isEditable: boolean
+  isRequired: boolean
+  isVisible: boolean
+  // isValid: boolean
 }

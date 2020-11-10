@@ -23,7 +23,7 @@ import {
   TemplateNew,
   Template,
 } from '../../components'
-import { ApplicationCreate, ApplicationPage } from '../Application'
+import { ApplicationCreate, ApplicationPageWrapper } from '../Application'
 import UserRegister from '../User/UserRegister'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import ApplicationOverview from '../Application/ApplicationOverview'
@@ -63,12 +63,12 @@ const SiteLayout: React.FC = () => {
               </Route>
               <Route exact path="/applications/:serialNumber">
                 <ApplicationProvider>
-                  <ApplicationPage />
+                  <ApplicationPageWrapper />
                 </ApplicationProvider>
               </Route>
               <Route exact path="/applications/:serialNumber/:sectionCode/page:page">
                 <ApplicationProvider>
-                  <ApplicationPage />
+                  <ApplicationPageWrapper />
                 </ApplicationProvider>
               </Route>
               <Route exact path="/applications/:serialNumber/summary">

@@ -22,6 +22,7 @@ export default gql`
               index,
               templateElementsBySectionId {
                 nodes {
+                  id
                   code
                   elementTypePluginCode
                 }
@@ -32,8 +33,15 @@ export default gql`
         applicationResponses {
           nodes {
             value
+            id
             templateElement {
               code
+              category
+              isEditable
+              isRequired
+              validation
+              validationMessage
+              visibilityCondition
             }
           }
         }

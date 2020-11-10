@@ -3,10 +3,10 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, ProgressBar } from '../../components'
 import { Grid, Label, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
-import ElementsBox from './ElementsBox'
-import NavigationBox from './NavigationBox'
+import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
+import { ElementsBox, NavigationBox } from './'
 
-const ApplicationPage: React.FC = () => {
+const ApplicationPageWrapper: React.FC = () => {
   const { query } = useRouter()
   const { serialNumber, sectionCode, page } = query
 
@@ -14,13 +14,21 @@ const ApplicationPage: React.FC = () => {
     serialNumber: serialNumber as string,
   })
 
-  const currentSection = templateSections.find(({ code }) => code == sectionCode)
+  const {
+    error: responsesError,
+    loading: responsesLoading,
+    responsesByCode,
+    responsesFullByCode,
+    elementsState,
+  } = useGetResponsesAndElementState({
+    serialNumber: serialNumber as string,
+  })
 
-  // const { responsesByCode } = useGetResponsesByCode({ serialNumber: serialNumber as string })
+  const currentSection = templateSections.find(({ code }) => code == sectionCode)
 
   return error ? (
     <Label content="Problem to load application" error={error} />
-  ) : loading ? (
+  ) : loading || responsesLoading ? (
     <Loading />
   ) : application && templateSections && serialNumber && currentSection ? (
     <Segment.Group>
@@ -38,6 +46,9 @@ const ApplicationPage: React.FC = () => {
             sectionTitle={currentSection.title}
             sectionTemplateId={currentSection.id}
             sectionPage={Number(page)}
+            responsesByCode={responsesByCode}
+            responsesFullByCode={responsesFullByCode}
+            elementsState={elementsState}
           />
           <NavigationBox templateSections={templateSections} />
         </Grid.Column>
@@ -48,4 +59,4 @@ const ApplicationPage: React.FC = () => {
   )
 }
 
-export default ApplicationPage
+export default ApplicationPageWrapper

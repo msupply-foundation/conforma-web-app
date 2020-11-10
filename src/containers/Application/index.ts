@@ -1,4 +1,6 @@
 import ApplicationCreate from './ApplicationCreate'
-import ApplicationPage from './ApplicationPage'
+import ApplicationPageWrapper from './ApplicationPageWrapper'
+import ElementsBox from './ElementsBox'
+import NavigationBox from './NavigationBox'
 
-export { ApplicationCreate, ApplicationPage }
+export { ApplicationCreate, ApplicationPageWrapper, ElementsBox, NavigationBox }

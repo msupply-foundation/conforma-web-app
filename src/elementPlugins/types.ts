@@ -1,4 +1,5 @@
 import { TemplateElement } from '../utils/generated/graphql'
+import { ResponsesByCode } from '../utils/types'
 
 interface OnUpdateApplicationView {
   (updateObject: { value?: any; isValid: boolean }): void
@@ -9,6 +10,8 @@ interface ApplicationViewProps {
   onUpdate: OnUpdateApplicationView
   isVisible: boolean
   isEditable: boolean
+  isRequired: boolean
+  allResponses: ResponsesByCode
   // applicationState,
   // graphQLclient
   initialValue: any // Could be a primative or an object with any shape
