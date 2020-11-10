@@ -20,9 +20,8 @@ const ApplicationPageWrapper: React.FC = () => {
   })
 
   if (isReady) {
-    console.log('Were ready')
     console.log(appStatus)
-    processRedirect()
+    processRedirect({ ...appStatus, serialNumber, sectionCode, page, push })
   }
 
   const {
@@ -189,8 +188,11 @@ function nextPageButtonHandler({
   }
 }
 
-function processRedirect(): void {
+function processRedirect(appState: any): void {
   // All logic for re-directing/configuring page based on application state, permissions, roles, etc. should go here.
+  console.log('State', appState)
+  const { stage, status, outcome, serialNumber, sectionCode, page, push } = appState
+  if (status !== 'DRAFT') push('summary')
 }
 
 export default ApplicationPageWrapper
