@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Accordion, Container, Grid, Header, Label, Sticky } from 'semantic-ui-react'
+import { Accordion, Container, Grid, Header, Label, List, Sticky } from 'semantic-ui-react'
 import { TemplateSectionPayload } from '../../utils/types'
 
 interface SectionPage {
@@ -19,25 +19,20 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   templateSections,
   sectionPage,
 }) => {
-  const childrenPanels = (step: number, totalPages: number) => {
+  const childrenPanels = (section: string, totalPages: number) => {
     const pages = Array.from(Array(totalPages).keys(), (n) => n + 1)
-    return pages.map((number) => {
-      return {
-        key: `progress_${step}_${number}`,
-        title: {
-          children: (
-            <Header
-              disabled
-              size="small"
-              as={Link}
-              to={`applications/${serialNumber}/Page${number}`} // Not working :P
-              key={`page_${number}`}
-              content={`Page${number}`}
-            />
-          ),
-        },
-      }
-    })
+    return (
+      <List>
+        {pages.map((number) => (
+          <List.Item
+            as={Link}
+            to={`applications/${serialNumber}/${section}/Page${number}`}
+            key={`page_${number}`}
+            header={`Page ${number}`}
+          />
+        ))}
+      </List>
+    )
   }
 
   const rootPanels = () => {
@@ -53,7 +48,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
                 {getStepNumber(stepNumber)}
               </Grid.Column>
               <Grid.Column width={12} textAlign="left" verticalAlign="middle">
-                <Header size="small" content={section.title} basic />
+                <Header size="small" content={section.title} />
               </Grid.Column>
             </Grid>
           ),
@@ -64,7 +59,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
             <Grid divided>
               <Grid.Column width={4}></Grid.Column>
               <Grid.Column width={12}>
-                <Accordion.Accordion panels={childrenPanels(stepNumber, section.totalPages)} />
+                {childrenPanels(section.code, section.totalPages)}
               </Grid.Column>
             </Grid>
           ),
