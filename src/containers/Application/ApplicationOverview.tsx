@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Container, Header, Loader, Message, Modal } from 'semantic-ui-react'
-import { ApplicationSummary, Loading } from '../../components'
+import { Container, Grid, Header, Label, Loader, Message, Modal, Segment } from 'semantic-ui-react'
+import { ApplicationSummary, Loading, ProgressBar } from '../../components'
 import { Trigger, useUpdateApplicationMutation } from '../../utils/generated/graphql'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
@@ -37,7 +37,11 @@ const ApplicationOverview: React.FC = () => {
     />
   ) : loading || responsesLoading ? (
     <Loading />
-  ) : application && templateSections && serialNumber ? (
+  ) : submitted ? (
+    <Container text>
+      <Header>Application submitted!</Header>
+    </Container>
+  ) : templateSections && serialNumber ? (
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
@@ -55,7 +59,7 @@ const ApplicationOverview: React.FC = () => {
             onSubmitHandler={() =>
               applicationSubmitMutation({
                 variables: {
-                  applicationSerial: serialNumber as string,
+                  serial: serialNumber as string,
                   applicationTrigger: Trigger.OnApplicationSubmit,
                 },
               })
