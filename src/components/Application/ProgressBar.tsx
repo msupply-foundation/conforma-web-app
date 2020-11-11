@@ -26,7 +26,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         {pages.map((number) => (
           <List.Item
             as={Link}
-            to={`applications/${serialNumber}/${section}/Page${number}`}
+            to={`/applications/${serialNumber}/${section}/Page${number}`}
             key={`page_${number}`}
             header={`Page ${number}`}
           />
