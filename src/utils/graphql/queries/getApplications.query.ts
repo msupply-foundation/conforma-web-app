@@ -4,14 +4,9 @@ export default gql`
   query getApplications {
     applications {
       nodes {
-        id
-        serial
-        name
-        outcome
+        ...Application
         template {
-          code
-          id
-          name
+          ...Template
         }
       }
     }

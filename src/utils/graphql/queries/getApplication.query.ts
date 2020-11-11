@@ -8,6 +8,8 @@ export default gql`
         serial
         name
         outcome
+        stage
+        status
         template {
           code
           id
