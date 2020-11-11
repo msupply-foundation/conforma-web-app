@@ -3,16 +3,16 @@ import { gql } from '@apollo/client'
 export default gql`
   query getApplication($serial: String!) {
     applicationBySerial( serial: $serial ) {
-      nodes {
-        ...Application
-        applicationResponses {
+      ...Application
+      applicationResponses {
         nodes {
           ...Response
         }
-        template {
-          ...Template
-        }
-        applicationSections {
+      }
+      template {
+        ...Template
+      }
+      applicationSections {
         nodes {
           id
           templateSection {

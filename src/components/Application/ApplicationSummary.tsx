@@ -1,58 +1,49 @@
 import React from 'react'
 import { Button, Container, Form, Grid, Header, Input, Segment } from 'semantic-ui-react'
 import { ApplicationResponse, TemplateElementCategory } from '../../utils/generated/graphql'
-import useLoadSummary from '../../utils/hooks/useLoadSummary'
 import {
   ApplicationElementState,
   ElementState,
+  ResponseFull,
   ResponsesFullByCode,
   TemplateSectionPayload,
 } from '../../utils/types'
-import Loading from '../Loading'
 
 interface ApplicationSummaryProps {
-  applicationId: number
-  sections: TemplateSectionPayload[]
+  templateSections: TemplateSectionPayload[]
+  elementsState: ApplicationElementState
+  responsesByCode: ResponsesFullByCode
   onSubmitHandler: () => void
 }
 
+interface SectionGroups {
+  [key: string]: ApplicationElementState
+}
+
 const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
-  applicationId,
-  sections,
+  templateSections,
+  elementsState,
+  responsesByCode,
   onSubmitHandler,
 }) => {
-  const { sectionElements, error, loading } = useLoadSummary({
-    applicationId,
-    sectionIds: sections.map(({ id }) => id),
-  })
+  const sectionsAndElements = Object.entries(elementsState).reduce(
+    (sectionGroups: SectionGroups, [code, item]) => {
+      const group = sectionGroups[item.section] || {}
+      group[code] = item
+      sectionGroups[item.section] = group
+      return sectionGroups
+    },
+    {}
+  )
 
-  const getQuestion = (question: TemplateElement, response: ApplicationResponse | null) => {
-    return question.category === TemplateElementCategory.Question ? (
-      <Form.Field>
-        <Header as="h3" content={question.title} />
-        <Input disabled error={!response}>
-          {response?.value}
-        </Input>
-      </Form.Field>
-    ) : question.elementTypePluginCode !== 'pageBreak' ? (
-      <Form.Field>
-        <Header as="h5" content={question.title} />
-      </Form.Field>
-    ) : null
-  }
-
-  return error ? (
-    <Label content="Problem to load summary of application" error={error} />
-  ) : loading ? (
-    <Loading />
-  ) : (
+  return (
     <Container style={{ marginTop: '2em' }}>
       <Header as="h1" content="REVIEW AND SUBMIT" />
       <Form>
-        {sectionElements &&
-          Object.entries(sectionElements).map(([sectionId, elements]) => {
-            const templateElements = elements as Array<ElementAndResponse>
-            const findSection = sections.find(({ id }) => id.toString() === sectionId)
+        {elementsState &&
+          templateSections &&
+          Object.entries(sectionsAndElements).map(([section, elements]) => {
+            const findSection = templateSections.find(({ id }) => id.toString() === section)
             return findSection ? (
               <Segment.Group size="large">
                 <Grid columns={2}>
@@ -65,7 +56,9 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
-                {templateElements.map(({ question, response }) => getQuestion(question, response))}
+                {Object.entries(elements).map(([code, element]) =>
+                  getQuestion(element, responsesByCode[element.code])
+                )}
               </Segment.Group>
             ) : null
           })}
@@ -78,6 +71,21 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
       </Form>
     </Container>
   )
+}
+
+function getQuestion(question: ElementState, response: ResponseFull | null) {
+  return question.category === TemplateElementCategory.Question ? (
+    <Form.Field>
+      <Header as="h3" content={question.title} />
+      <Input disabled error={!response}>
+        {response?.text}
+      </Input>
+    </Form.Field>
+  ) : question.elementTypePluginCode !== 'pageBreak' ? (
+    <Form.Field>
+      <Header as="h5" content={question.title} />
+    </Form.Field>
+  ) : null
 }
 
 export default ApplicationSummary

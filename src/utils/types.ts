@@ -71,10 +71,10 @@ type ResponseFull = {
   text: string | null | undefined
   optionIndex?: number
   reference?: any // Not yet decided how to represent
-} | null
+}
 
 interface ResponsesFullByCode {
-  [key: string]: ResponseFull
+  [key: string]: ResponseFull | null
 }
 
 interface ResponsesByCode {

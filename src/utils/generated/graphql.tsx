@@ -16849,8 +16849,6 @@ export type UpdateResponseMutation = (
   )> }
 );
 
-<<<<<<< HEAD
-=======
 export type GetApplicationQueryVariables = Exact<{
   serial: Scalars['String'];
 }>;
@@ -16858,46 +16856,39 @@ export type GetApplicationQueryVariables = Exact<{
 
 export type GetApplicationQuery = (
   { __typename?: 'Query' }
-  & { applications?: Maybe<(
-    { __typename?: 'ApplicationsConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'Application' }
-      & Pick<Application, 'id' | 'serial' | 'name' | 'outcome' | 'stage' | 'status'>
-      & { template?: Maybe<(
-        { __typename?: 'Template' }
-        & Pick<Template, 'code' | 'id' | 'name'>
-      )>, applicationSections: (
-        { __typename?: 'ApplicationSectionsConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'ApplicationSection' }
-          & { templateSection?: Maybe<(
-            { __typename?: 'TemplateSection' }
-            & Pick<TemplateSection, 'id' | 'title' | 'code' | 'index'>
-            & { templateElementsBySectionId: (
-              { __typename?: 'TemplateElementsConnection' }
-              & { nodes: Array<Maybe<(
-                { __typename?: 'TemplateElement' }
-                & Pick<TemplateElement, 'id' | 'code' | 'elementTypePluginCode'>
-              )>> }
-            ) }
-          )> }
-        )>> }
-      ), applicationResponses: (
-        { __typename?: 'ApplicationResponsesConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'ApplicationResponse' }
-          & Pick<ApplicationResponse, 'value' | 'id'>
-          & { templateElement?: Maybe<(
-            { __typename?: 'TemplateElement' }
-            & Pick<TemplateElement, 'code' | 'category' | 'isEditable' | 'isRequired' | 'validation' | 'validationMessage' | 'visibilityCondition'>
-          )> }
-        )>> }
-      ) }
-    )>> }
+  & { applicationBySerial?: Maybe<(
+    { __typename?: 'Application' }
+    & { applicationResponses: (
+      { __typename?: 'ApplicationResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ApplicationResponse' }
+        & ResponseFragment
+      )>> }
+    ), template?: Maybe<(
+      { __typename?: 'Template' }
+      & TemplateFragment
+    )>, applicationSections: (
+      { __typename?: 'ApplicationSectionsConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ApplicationSection' }
+        & Pick<ApplicationSection, 'id'>
+        & { templateSection?: Maybe<(
+          { __typename?: 'TemplateSection' }
+          & { templateElementsBySectionId: (
+            { __typename?: 'TemplateElementsConnection' }
+            & { nodes: Array<Maybe<(
+              { __typename?: 'TemplateElement' }
+              & ElementFragment
+            )>> }
+          ) }
+          & SectionFragment
+        )> }
+      )>> }
+    ) }
+    & ApplicationFragment
   )> }
 );
 
->>>>>>> #39-application-progress-bar
 export type GetApplicationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -17329,59 +17320,38 @@ export function useUpdateResponseMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateResponseMutationHookResult = ReturnType<typeof useUpdateResponseMutation>;
 export type UpdateResponseMutationResult = Apollo.MutationResult<UpdateResponseMutation>;
 export type UpdateResponseMutationOptions = Apollo.BaseMutationOptions<UpdateResponseMutation, UpdateResponseMutationVariables>;
-<<<<<<< HEAD
-=======
 export const GetApplicationDocument = gql`
     query getApplication($serial: String!) {
-  applications(condition: {serial: $serial}) {
-    nodes {
-      id
-      serial
-      name
-      outcome
-      stage
-      status
-      template {
-        code
+  applicationBySerial(serial: $serial) {
+    ...Application
+    applicationResponses {
+      nodes {
+        ...Response
+      }
+    }
+    template {
+      ...Template
+    }
+    applicationSections {
+      nodes {
         id
-        name
-      }
-      applicationSections {
-        nodes {
-          templateSection {
-            id
-            title
-            code
-            index
-            templateElementsBySectionId {
-              nodes {
-                id
-                code
-                elementTypePluginCode
-              }
+        templateSection {
+          ...Section
+          templateElementsBySectionId {
+            nodes {
+              ...Element
             }
-          }
-        }
-      }
-      applicationResponses {
-        nodes {
-          value
-          id
-          templateElement {
-            code
-            category
-            isEditable
-            isRequired
-            validation
-            validationMessage
-            visibilityCondition
           }
         }
       }
     }
   }
 }
-    `;
+    ${ApplicationFragmentDoc}
+${ResponseFragmentDoc}
+${TemplateFragmentDoc}
+${SectionFragmentDoc}
+${ElementFragmentDoc}`;
 
 /**
  * __useGetApplicationQuery__
@@ -17408,7 +17378,6 @@ export function useGetApplicationLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetApplicationQueryHookResult = ReturnType<typeof useGetApplicationQuery>;
 export type GetApplicationLazyQueryHookResult = ReturnType<typeof useGetApplicationLazyQuery>;
 export type GetApplicationQueryResult = Apollo.QueryResult<GetApplicationQuery, GetApplicationQueryVariables>;
->>>>>>> #39-application-progress-bar
 export const GetApplicationsDocument = gql`
     query getApplications {
   applications {
