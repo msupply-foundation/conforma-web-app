@@ -17,7 +17,7 @@ const useTriggerProcessing = (props: { serialNumber: string; trigger: triggerTyp
   })
 
   useEffect(() => {
-    if (data && data?.applicationTriggerStates?.nodes[0]) {
+    if (data?.applicationTriggerStates?.nodes[0]) {
       const triggerRequested = data?.applicationTriggerStates?.nodes[0][trigger]
       console.log('Data', data)
       if (triggerRequested === null) setIsProcessing(false)

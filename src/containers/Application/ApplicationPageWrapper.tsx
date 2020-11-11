@@ -17,8 +17,6 @@ const ApplicationPageWrapper: React.FC = () => {
     serialNumber: serialNumber as string,
   })
 
-  console.log('Loading', loading)
-
   const {
     error: responsesError,
     loading: responsesLoading,
