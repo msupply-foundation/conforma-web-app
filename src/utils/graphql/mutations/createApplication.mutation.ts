@@ -1,7 +1,8 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  mutation createApplication($name: String!, $serial: String!, $templateId: Int!) {
+  mutation createApplication($name: String!, $serial: String!, $templateId: Int!,
+  $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE ) {
     createApplication(
       input: {
         application: {
@@ -9,8 +10,8 @@ export default gql`
           serial: $serial
           templateId: $templateId
           isActive: true
-          outcome: PENDING
-          trigger: ON_APPLICATION_CREATE
+          outcome: $outcome
+          trigger: $trigger
         }
       }
     ) {
