@@ -4,6 +4,7 @@ export default gql`
   fragment Section on TemplateSection {
       id
       title
+      index
       code
   }
 `

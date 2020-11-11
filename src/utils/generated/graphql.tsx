@@ -16706,7 +16706,7 @@ export type ResponseFragment = (
 
 export type SectionFragment = (
   { __typename?: 'TemplateSection' }
-  & Pick<TemplateSection, 'id' | 'title' | 'code'>
+  & Pick<TemplateSection, 'id' | 'title' | 'index' | 'code'>
 );
 
 export type TemplateFragment = (
@@ -17069,6 +17069,7 @@ export const SectionFragmentDoc = gql`
     fragment Section on TemplateSection {
   id
   title
+  index
   code
 }
     `;
