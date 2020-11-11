@@ -50,7 +50,7 @@ const ApplicationPageWrapper: React.FC = () => {
         <Grid.Column width={4}>
           <ProgressBar
             serialNumber={serialNumber}
-            sectionPage={{ sectionIndex: currentSection.index, currentPage: Number(page) }}
+            currentSectionPage={{ sectionIndex: currentSection.index, currentPage: Number(page) }}
             templateSections={templateSections}
           />
         </Grid.Column>

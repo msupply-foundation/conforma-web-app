@@ -11,13 +11,13 @@ interface SectionPage {
 interface ProgressBarProps {
   serialNumber: string
   templateSections: TemplateSectionPayload[]
-  sectionPage?: SectionPage
+  currentSectionPage?: SectionPage
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   serialNumber,
   templateSections,
-  sectionPage,
+  currentSectionPage,
 }) => {
   const childrenPanels = (section: string, totalPages: number) => {
     const pages = Array.from(Array(totalPages).keys(), (n) => n + 1)
@@ -95,7 +95,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     <Sticky as={Container}>
       <Header as="h5" textAlign="center" content="Steps to complete form" />
       <Accordion
-        activeIndex={sectionPage ? sectionPage.sectionIndex : templateSections.length + 1}
+        activeIndex={
+          currentSectionPage ? currentSectionPage.sectionIndex : templateSections.length + 1
+        }
         panels={rootPanels()}
       />
     </Sticky>
