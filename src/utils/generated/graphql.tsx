@@ -16691,7 +16691,7 @@ export type AddNewUserFragment = (
 
 export type ApplicationFragment = (
   { __typename?: 'Application' }
-  & Pick<Application, 'serial' | 'name' | 'stage' | 'status' | 'outcome'>
+  & Pick<Application, 'id' | 'serial' | 'name' | 'stage' | 'status' | 'outcome'>
 );
 
 export type ElementFragment = (
@@ -17036,6 +17036,7 @@ export const AddNewUserFragmentDoc = gql`
     `;
 export const ApplicationFragmentDoc = gql`
     fragment Application on Application {
+  id
   serial
   name
   stage
