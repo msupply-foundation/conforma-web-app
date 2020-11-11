@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useReducer } from 'react'
+// import { SectionProgress } from '../utils/types'
 
-type ApplicationState = {
+interface ApplicationState {
   id: number | null
   serialNumber: string | null
 }
 
 export type ApplicationActions =
   | {
-      type: 'setApplicationId'
+      type: 'setApplication'
       id: number
     }
   | {
@@ -22,7 +23,7 @@ type ApplicationProviderProps = { children: React.ReactNode }
 
 const reducer = (state: ApplicationState, action: ApplicationActions) => {
   switch (action.type) {
-    case 'setApplicationId':
+    case 'setApplication':
       const { id } = action
       return {
         ...state,

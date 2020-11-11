@@ -45,7 +45,7 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
   ) : loading ? (
     <Loading />
   ) : (
-    <Container text style={{ marginTop: '2em' }}>
+    <Container style={{ marginTop: '2em' }}>
       <Header as="h1" content="REVIEW AND SUBMIT" />
       <Form>
         {sectionElements &&

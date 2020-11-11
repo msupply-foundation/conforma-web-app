@@ -1,6 +1,6 @@
 import React from 'react'
 import { hot } from 'react-hot-loader'
-import Footer from './Footer'
+import { Footer } from '../../components'
 import SiteLayout from './SiteLayout'
 import UserArea from '../User/UserArea'
 import { UserProvider } from '../../contexts/UserState'
