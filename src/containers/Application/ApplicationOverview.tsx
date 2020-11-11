@@ -1,6 +1,6 @@
 import React from 'react'
-import { Container, Grid, Header, Loader, Message, Modal, Segment } from 'semantic-ui-react'
-import { ApplicationSummary, Loading, ProgressBar } from '../../components'
+import { Container, Header, Loader, Message, Modal } from 'semantic-ui-react'
+import { ApplicationSummary, Loading } from '../../components'
 import { Trigger } from '../../utils/generated/graphql'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
