@@ -19,7 +19,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   templateSections,
   currentSectionPage,
 }) => {
-  const childrenPanels = (section: string, totalPages: number) => {
+  const pageList = (section: string, totalPages: number) => {
     const pages = Array.from(Array(totalPages).keys(), (n) => n + 1)
     return (
       <List link>
@@ -57,9 +57,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           content: (
             <Grid divided>
               <Grid.Column width={4}></Grid.Column>
-              <Grid.Column width={12}>
-                {childrenPanels(section.code, section.totalPages)}
-              </Grid.Column>
+              <Grid.Column width={12}>{pageList(section.code, section.totalPages)}</Grid.Column>
             </Grid>
           ),
         },
