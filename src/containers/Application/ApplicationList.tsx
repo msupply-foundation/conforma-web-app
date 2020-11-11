@@ -2,10 +2,11 @@ import React from 'react'
 import { Container, Table, List, Label } from 'semantic-ui-react'
 import { Loading, FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { Link } from 'react-router-dom'
 import useListApplication from '../../utils/hooks/useListApplications'
 
 const ApplicationList: React.FC = () => {
-  const { query } = useRouter()
+  const { query, pathname } = useRouter()
   const { error, loading, applications } = useListApplication()
 
   return error ? (
@@ -33,10 +34,19 @@ const ApplicationList: React.FC = () => {
           </Table.Header>
           <Table.Body>
             {applications.map((application, index) => (
-              <Table.Row key={application.serial}>
-                {Object.entries(application).map(([key, value]) => (
-                  <Table.Cell key={`app_row_${index}_${key}`}>{value}</Table.Cell>
-                ))}
+              <Table.Row key={`${application.serial}`}>
+                {Object.entries(application).map(([key, value]) => {
+                  switch (key) {
+                    case 'name':
+                      return (
+                        <Table.Cell key={`app_row_${index}_${key}`}>
+                          <Link to={`/applications/${application.serial}`}>{value}</Link>
+                        </Table.Cell>
+                      )
+                    default:
+                      return <Table.Cell key={`app_row_${index}_${key}`}>{value}</Table.Cell>
+                  }
+                })}
               </Table.Row>
             ))}
           </Table.Body>

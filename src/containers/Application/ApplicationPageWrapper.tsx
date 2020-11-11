@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationHeader, Loading } from '../../components'
 import { Container, Grid, Label, Segment } from 'semantic-ui-react'
@@ -7,14 +7,13 @@ import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAnd
 import { TemplateSectionPayload } from '../../utils/types'
 import ElementsArea from './ElementsArea'
 import { useApplicationState } from '../../contexts/ApplicationState'
-import evaluateExpression from '@openmsupply/expression-evaluator'
 
 const ApplicationPageWrapper: React.FC = () => {
   const { setApplicationState } = useApplicationState()
-  const { query, push } = useRouter()
+  const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
-  const { error, loading, application, templateSections } = useLoadApplication({
+  const { error, loading, application, templateSections, appStatus } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
 
@@ -29,7 +28,18 @@ const ApplicationPageWrapper: React.FC = () => {
   })
 
   useEffect(() => {
-    if (application) setApplicationState({ type: 'setApplicationId', id: application.id })
+    if (application) {
+      setApplicationState({ type: 'setApplicationId', id: application.id })
+      processRedirect({
+        ...appStatus,
+        serialNumber,
+        sectionCode,
+        page,
+        templateSections,
+        push,
+        replace,
+      })
+    }
   }, [application])
 
   const currentSection = templateSections.find(({ code }) => code == sectionCode)
@@ -176,6 +186,29 @@ function nextPageButtonHandler({
     }
   } else {
     push(`../../${serialNumber}/${sectionCode}/page${nextPage}`)
+  }
+}
+
+function processRedirect(appState: any): void {
+  // All logic for re-directing/configuring page based on application state, permissions, roles, etc. should go here.
+  const {
+    stage,
+    status,
+    outcome,
+    serialNumber,
+    sectionCode,
+    page,
+    templateSections,
+    push,
+    replace,
+  } = appState
+  if (status !== 'DRAFT') {
+    replace(`/applications/${serialNumber}/summary`)
+    return
+  }
+  if (!sectionCode || !page) {
+    const firstSection = templateSections[0].code
+    replace(`/applications/${serialNumber}/${firstSection}/page1`)
   }
 }
 
