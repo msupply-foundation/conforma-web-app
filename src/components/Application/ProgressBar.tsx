@@ -22,14 +22,13 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   const childrenPanels = (section: string, totalPages: number) => {
     const pages = Array.from(Array(totalPages).keys(), (n) => n + 1)
     return (
-      <List>
+      <List link>
         {pages.map((number) => (
           <List.Item
-            as={Link}
-            to={`/applications/${serialNumber}/${section}/Page${number}`}
+            active={true} // TODO: Change to only show active when visited in Non-linear application
+            href={`/applications/${serialNumber}/${section}/Page${number}`}
             key={`page_${number}`}
-            header={`Page ${number}`}
-          />
+          >{`Page ${number}`}</List.Item>
         ))}
       </List>
     )
