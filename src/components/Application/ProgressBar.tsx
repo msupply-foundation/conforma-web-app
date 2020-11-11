@@ -34,7 +34,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     )
   }
 
-  const rootPanels = () => {
+  const sectionList = () => {
     const sectionItems = templateSections.map((section, index) => {
       const stepNumber = index + 1
 
@@ -95,7 +95,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         activeIndex={
           currentSectionPage ? currentSectionPage.sectionIndex : templateSections.length + 1
         }
-        panels={rootPanels()}
+        panels={sectionList()}
       />
     </Sticky>
   )
