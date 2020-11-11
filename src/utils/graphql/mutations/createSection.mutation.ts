@@ -11,13 +11,10 @@ export default gql`
         id
         applicationId
         templateSection {
-          title
+          ...Section
           templateElementsBySectionId {
             nodes {
-              id
-              code
-              category
-              elementTypePluginCode
+              ...Element
             }
           }
         }

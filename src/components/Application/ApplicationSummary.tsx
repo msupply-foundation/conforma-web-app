@@ -1,12 +1,13 @@
 import React from 'react'
-import { Button, Container, Form, Grid, Header, Input, Label, Segment } from 'semantic-ui-react'
-import {
-  ApplicationResponse,
-  TemplateElement,
-  TemplateElementCategory,
-} from '../../utils/generated/graphql'
+import { Button, Container, Form, Grid, Header, Input, Segment } from 'semantic-ui-react'
+import { ApplicationResponse, TemplateElementCategory } from '../../utils/generated/graphql'
 import useLoadSummary from '../../utils/hooks/useLoadSummary'
-import { ElementAndResponse, TemplateSectionPayload } from '../../utils/types'
+import {
+  ApplicationElementState,
+  ElementState,
+  ResponsesFullByCode,
+  TemplateSectionPayload,
+} from '../../utils/types'
 import Loading from '../Loading'
 
 interface ApplicationSummaryProps {

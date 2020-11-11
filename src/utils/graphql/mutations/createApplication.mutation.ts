@@ -15,15 +15,12 @@ export default gql`
       }
     ) {
       application {
-        id
-        name
-        serial
+        ...Application
         template {
-          id
+          ...Template
           templateSections {
             nodes {
-              id
-              title
+              ...Section
             }
           }
         }

@@ -12,10 +12,9 @@ export default gql`
       }
     ) {
       applicationResponse {
-        id
-        value
+       ...Response
         templateElement {
-          code
+          ...Element
         }
       }
     }
