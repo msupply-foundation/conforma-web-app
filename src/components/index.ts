@@ -1,13 +1,13 @@
 import {
   ApplicationEdit,
   ApplicationHeader,
-  ApplicationList,
   ApplicationSelectType,
   ApplicationStart,
   ApplicationSummary,
 } from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
+import FilterList from './FilterList'
 import Home from './Home'
 import Login from './Login'
 import Loading from './Loading'
@@ -27,13 +27,13 @@ export {
   AdminUsers,
   ApplicationEdit,
   ApplicationHeader,
-  ApplicationList,
   ApplicationSelectType,
   ApplicationStart,
   ApplicationSummary,
   Approval,
   Admin,
   Config,
+  FilterList,
   Home,
   Login,
   Loading,

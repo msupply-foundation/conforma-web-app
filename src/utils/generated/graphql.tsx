@@ -16689,6 +16689,16 @@ export type AddNewUserFragment = (
   & Pick<User, 'id' | 'username'>
 );
 
+export type ApplicationFragment = (
+  { __typename?: 'Application' }
+  & Pick<Application, 'serial' | 'name' | 'stage' | 'status' | 'outcome'>
+);
+
+export type TemplateFragment = (
+  { __typename?: 'Template' }
+  & Pick<Template, 'code' | 'id' | 'name'>
+);
+
 export type CreateApplicationMutationVariables = Exact<{
   name: Scalars['String'];
   serial: Scalars['String'];
@@ -16879,11 +16889,11 @@ export type GetApplicationsQuery = (
     { __typename?: 'ApplicationsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'Application' }
-      & Pick<Application, 'id' | 'serial' | 'name' | 'outcome'>
       & { template?: Maybe<(
         { __typename?: 'Template' }
-        & Pick<Template, 'code' | 'id' | 'name'>
+        & TemplateFragment
       )> }
+      & ApplicationFragment
     )>> }
   )> }
 );
@@ -17012,6 +17022,22 @@ export const AddNewUserFragmentDoc = gql`
     fragment addNewUser on User {
   id
   username
+}
+    `;
+export const ApplicationFragmentDoc = gql`
+    fragment Application on Application {
+  serial
+  name
+  stage
+  status
+  outcome
+}
+    `;
+export const TemplateFragmentDoc = gql`
+    fragment Template on Template {
+  code
+  id
+  name
 }
     `;
 export const CreateApplicationDocument = gql`
@@ -17338,19 +17364,15 @@ export const GetApplicationsDocument = gql`
     query getApplications {
   applications {
     nodes {
-      id
-      serial
-      name
-      outcome
+      ...Application
       template {
-        code
-        id
-        name
+        ...Template
       }
     }
   }
 }
-    `;
+    ${ApplicationFragmentDoc}
+${TemplateFragmentDoc}`;
 
 /**
  * __useGetApplicationsQuery__
