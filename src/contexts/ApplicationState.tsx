@@ -3,7 +3,6 @@ import React, { createContext, useContext, useReducer } from 'react'
 
 interface ApplicationState {
   id: number | null
-  // sections: SectionProgress[] | null
   serialNumber: string | null
 }
 
@@ -11,14 +10,7 @@ export type ApplicationActions =
   | {
       type: 'setApplication'
       id: number
-      // sectionsProgress: SectionProgress[]
     }
-  // | {
-  //     type: 'setPageVisited'
-  //     sectionIndex: number
-  //     pageNumber: number
-  //     validation: boolean
-  //   }
   | {
       type: 'setSerialNumber'
       serialNumber: string
@@ -33,28 +25,10 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
   switch (action.type) {
     case 'setApplication':
       const { id } = action
-      // const { id, sectionsProgress } = action
       return {
         ...state,
         id,
-        // sections: sectionsProgress,
       }
-    // case 'setPageVisited':
-    //   const { sections } = state
-    //   const { sectionIndex, pageNumber, validation } = action
-
-    //   return {
-    //     ...state,
-    //     sections: sections
-    //       ? {
-    //           ...sections,
-    //           [sectionIndex]: {
-    //             ...sections[sectionIndex],
-    //             [pageNumber]: { valid: validation, visited: true },
-    //           },
-    //         }
-    //       : Object.assign({ [pageNumber]: { valid: validation, visited: true } }),
-    //   }
     case 'setSerialNumber':
       const { serialNumber } = action
       return {
@@ -70,7 +44,6 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
 
 const initialState: ApplicationState = {
   id: null,
-  // sections: null,
   serialNumber: null,
 }
 
