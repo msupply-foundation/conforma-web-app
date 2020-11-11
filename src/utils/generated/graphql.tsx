@@ -44,6 +44,8 @@ export type Query = Node & {
   applicationStageStatusAlls?: Maybe<ApplicationStageStatusAllsConnection>;
   /** Reads and enables pagination through a set of `ApplicationStatusHistory`. */
   applicationStatusHistories?: Maybe<ApplicationStatusHistoriesConnection>;
+  /** Reads and enables pagination through a set of `ApplicationTriggerState`. */
+  applicationTriggerStates?: Maybe<ApplicationTriggerStatesConnection>;
   /** Reads and enables pagination through a set of `ElementTypePlugin`. */
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
   /** Reads and enables pagination through a set of `File`. */
@@ -291,6 +293,19 @@ export type QueryApplicationStatusHistoriesArgs = {
   orderBy?: Maybe<Array<ApplicationStatusHistoriesOrderBy>>;
   condition?: Maybe<ApplicationStatusHistoryCondition>;
   filter?: Maybe<ApplicationStatusHistoryFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationTriggerStatesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ApplicationTriggerStatesOrderBy>>;
+  condition?: Maybe<ApplicationTriggerStateCondition>;
+  filter?: Maybe<ApplicationTriggerStateFilter>;
 };
 
 
@@ -5227,6 +5242,10 @@ export enum ApplicationStageStatusAllsOrderBy {
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  SerialAsc = 'SERIAL_ASC',
+  SerialDesc = 'SERIAL_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
   StageIdAsc = 'STAGE_ID_ASC',
   StageIdDesc = 'STAGE_ID_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
@@ -5255,6 +5274,10 @@ export type ApplicationStageStatusAllCondition = {
   applicationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `serial` field. */
+  serial?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `stageId` field. */
   stageId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageNumber` field. */
@@ -5283,6 +5306,10 @@ export type ApplicationStageStatusAllFilter = {
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `serial` field. */
+  serial?: Maybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
   /** Filter by the object’s `stageId` field. */
   stageId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageNumber` field. */
@@ -5328,6 +5355,8 @@ export type ApplicationStageStatusAll = {
   __typename?: 'ApplicationStageStatusAll';
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   stage?: Maybe<Scalars['String']>;
@@ -5347,6 +5376,79 @@ export type ApplicationStageStatusAllsEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `ApplicationStageStatusAll` at the end of the edge. */
   node?: Maybe<ApplicationStageStatusAll>;
+};
+
+/** Methods to use when ordering `ApplicationTriggerState`. */
+export enum ApplicationTriggerStatesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  SerialAsc = 'SERIAL_ASC',
+  SerialDesc = 'SERIAL_DESC',
+  ApplicationTriggerAsc = 'APPLICATION_TRIGGER_ASC',
+  ApplicationTriggerDesc = 'APPLICATION_TRIGGER_DESC',
+  ReviewTriggerAsc = 'REVIEW_TRIGGER_ASC',
+  ReviewTriggerDesc = 'REVIEW_TRIGGER_DESC'
+}
+
+/** A condition to be used against `ApplicationTriggerState` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ApplicationTriggerStateCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `serial` field. */
+  serial?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicationTrigger` field. */
+  applicationTrigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `reviewTrigger` field. */
+  reviewTrigger?: Maybe<Trigger>;
+};
+
+/** A filter to be used against `ApplicationTriggerState` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationTriggerStateFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `serial` field. */
+  serial?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationTrigger` field. */
+  applicationTrigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `reviewTrigger` field. */
+  reviewTrigger?: Maybe<TriggerFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ApplicationTriggerStateFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ApplicationTriggerStateFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ApplicationTriggerStateFilter>;
+};
+
+/** A connection to a list of `ApplicationTriggerState` values. */
+export type ApplicationTriggerStatesConnection = {
+  __typename?: 'ApplicationTriggerStatesConnection';
+  /** A list of `ApplicationTriggerState` objects. */
+  nodes: Array<Maybe<ApplicationTriggerState>>;
+  /** A list of edges which contains the `ApplicationTriggerState` and cursor to aid in pagination. */
+  edges: Array<ApplicationTriggerStatesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ApplicationTriggerState` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type ApplicationTriggerState = {
+  __typename?: 'ApplicationTriggerState';
+  id?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
+  applicationTrigger?: Maybe<Trigger>;
+  reviewTrigger?: Maybe<Trigger>;
+};
+
+/** A `ApplicationTriggerState` edge in the connection. */
+export type ApplicationTriggerStatesEdge = {
+  __typename?: 'ApplicationTriggerStatesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ApplicationTriggerState` at the end of the edge. */
+  node?: Maybe<ApplicationTriggerState>;
 };
 
 /** Methods to use when ordering `ElementTypePlugin`. */
@@ -17067,6 +17169,22 @@ export type GetTemplateQuery = (
   )> }
 );
 
+export type GetTriggersQueryVariables = Exact<{
+  serial: Scalars['String'];
+}>;
+
+
+export type GetTriggersQuery = (
+  { __typename?: 'Query' }
+  & { applicationTriggerStates?: Maybe<(
+    { __typename?: 'ApplicationTriggerStatesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ApplicationTriggerState' }
+      & Pick<ApplicationTriggerState, 'applicationTrigger' | 'reviewTrigger' | 'serial'>
+    )>> }
+  )> }
+);
+
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -17644,6 +17762,43 @@ export function useGetTemplateLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetTemplateQueryHookResult = ReturnType<typeof useGetTemplateQuery>;
 export type GetTemplateLazyQueryHookResult = ReturnType<typeof useGetTemplateLazyQuery>;
 export type GetTemplateQueryResult = Apollo.QueryResult<GetTemplateQuery, GetTemplateQueryVariables>;
+export const GetTriggersDocument = gql`
+    query getTriggers($serial: String!) {
+  applicationTriggerStates(condition: {serial: $serial}) {
+    nodes {
+      applicationTrigger
+      reviewTrigger
+      serial
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTriggersQuery__
+ *
+ * To run a query within a React component, call `useGetTriggersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTriggersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTriggersQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *   },
+ * });
+ */
+export function useGetTriggersQuery(baseOptions?: Apollo.QueryHookOptions<GetTriggersQuery, GetTriggersQueryVariables>) {
+        return Apollo.useQuery<GetTriggersQuery, GetTriggersQueryVariables>(GetTriggersDocument, baseOptions);
+      }
+export function useGetTriggersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTriggersQuery, GetTriggersQueryVariables>) {
+          return Apollo.useLazyQuery<GetTriggersQuery, GetTriggersQueryVariables>(GetTriggersDocument, baseOptions);
+        }
+export type GetTriggersQueryHookResult = ReturnType<typeof useGetTriggersQuery>;
+export type GetTriggersLazyQueryHookResult = ReturnType<typeof useGetTriggersLazyQuery>;
+export type GetTriggersQueryResult = Apollo.QueryResult<GetTriggersQuery, GetTriggersQueryVariables>;
 export const GetUsersDocument = gql`
     query getUsers {
   users {
