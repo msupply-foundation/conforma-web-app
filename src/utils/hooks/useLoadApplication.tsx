@@ -16,11 +16,14 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   const { serialNumber } = props
   const [application, setApplication] = useState<ApplicationDetails | undefined>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
+  const [appStatus, setAppStatus] = useState({})
+  const [isReady, setIsReady] = useState(false)
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
       serial: serialNumber,
     },
+    skip: isReady,
   })
 
   useEffect(() => {
@@ -33,6 +36,13 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
 
       const sections = getApplicationSections(application.applicationSections)
       setSections(sections)
+
+      setAppStatus({
+        stage: application?.stage,
+        status: application?.status,
+        outcome: application?.outcome,
+      })
+      setIsReady(true)
     }
   }, [data, loading, error])
 
@@ -41,6 +51,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
     loading,
     application,
     templateSections,
+    appStatus,
   }
 }
 

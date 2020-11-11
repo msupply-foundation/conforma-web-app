@@ -16849,6 +16849,55 @@ export type UpdateResponseMutation = (
   )> }
 );
 
+<<<<<<< HEAD
+=======
+export type GetApplicationQueryVariables = Exact<{
+  serial: Scalars['String'];
+}>;
+
+
+export type GetApplicationQuery = (
+  { __typename?: 'Query' }
+  & { applications?: Maybe<(
+    { __typename?: 'ApplicationsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'Application' }
+      & Pick<Application, 'id' | 'serial' | 'name' | 'outcome' | 'stage' | 'status'>
+      & { template?: Maybe<(
+        { __typename?: 'Template' }
+        & Pick<Template, 'code' | 'id' | 'name'>
+      )>, applicationSections: (
+        { __typename?: 'ApplicationSectionsConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ApplicationSection' }
+          & { templateSection?: Maybe<(
+            { __typename?: 'TemplateSection' }
+            & Pick<TemplateSection, 'id' | 'title' | 'code' | 'index'>
+            & { templateElementsBySectionId: (
+              { __typename?: 'TemplateElementsConnection' }
+              & { nodes: Array<Maybe<(
+                { __typename?: 'TemplateElement' }
+                & Pick<TemplateElement, 'id' | 'code' | 'elementTypePluginCode'>
+              )>> }
+            ) }
+          )> }
+        )>> }
+      ), applicationResponses: (
+        { __typename?: 'ApplicationResponsesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ApplicationResponse' }
+          & Pick<ApplicationResponse, 'value' | 'id'>
+          & { templateElement?: Maybe<(
+            { __typename?: 'TemplateElement' }
+            & Pick<TemplateElement, 'code' | 'category' | 'isEditable' | 'isRequired' | 'validation' | 'validationMessage' | 'visibilityCondition'>
+          )> }
+        )>> }
+      ) }
+    )>> }
+  )> }
+);
+
+>>>>>>> #39-application-progress-bar
 export type GetApplicationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -17280,6 +17329,86 @@ export function useUpdateResponseMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateResponseMutationHookResult = ReturnType<typeof useUpdateResponseMutation>;
 export type UpdateResponseMutationResult = Apollo.MutationResult<UpdateResponseMutation>;
 export type UpdateResponseMutationOptions = Apollo.BaseMutationOptions<UpdateResponseMutation, UpdateResponseMutationVariables>;
+<<<<<<< HEAD
+=======
+export const GetApplicationDocument = gql`
+    query getApplication($serial: String!) {
+  applications(condition: {serial: $serial}) {
+    nodes {
+      id
+      serial
+      name
+      outcome
+      stage
+      status
+      template {
+        code
+        id
+        name
+      }
+      applicationSections {
+        nodes {
+          templateSection {
+            id
+            title
+            code
+            index
+            templateElementsBySectionId {
+              nodes {
+                id
+                code
+                elementTypePluginCode
+              }
+            }
+          }
+        }
+      }
+      applicationResponses {
+        nodes {
+          value
+          id
+          templateElement {
+            code
+            category
+            isEditable
+            isRequired
+            validation
+            validationMessage
+            visibilityCondition
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetApplicationQuery__
+ *
+ * To run a query within a React component, call `useGetApplicationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetApplicationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetApplicationQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *   },
+ * });
+ */
+export function useGetApplicationQuery(baseOptions?: Apollo.QueryHookOptions<GetApplicationQuery, GetApplicationQueryVariables>) {
+        return Apollo.useQuery<GetApplicationQuery, GetApplicationQueryVariables>(GetApplicationDocument, baseOptions);
+      }
+export function useGetApplicationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApplicationQuery, GetApplicationQueryVariables>) {
+          return Apollo.useLazyQuery<GetApplicationQuery, GetApplicationQueryVariables>(GetApplicationDocument, baseOptions);
+        }
+export type GetApplicationQueryHookResult = ReturnType<typeof useGetApplicationQuery>;
+export type GetApplicationLazyQueryHookResult = ReturnType<typeof useGetApplicationLazyQuery>;
+export type GetApplicationQueryResult = Apollo.QueryResult<GetApplicationQuery, GetApplicationQueryVariables>;
+>>>>>>> #39-application-progress-bar
 export const GetApplicationsDocument = gql`
     query getApplications {
   applications {

@@ -4,6 +4,7 @@ import {
   ApplicationSelectType,
   ApplicationStart,
   ApplicationSummary,
+  ProgressBar,
 } from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
@@ -11,6 +12,10 @@ import FilterList from './FilterList'
 import Home from './Home'
 import Login from './Login'
 import Loading from './Loading'
+import {
+  AppMenu,
+  Footer
+} from './Main'
 import TemplateList from './TemplateList'
 import TemplateNew from './TemplateNew'
 import Template from './Template'
@@ -25,6 +30,7 @@ export {
   Account,
   AdminPermissions,
   AdminUsers,
+  AppMenu,
   ApplicationEdit,
   ApplicationHeader,
   ApplicationSelectType,
@@ -34,12 +40,14 @@ export {
   Admin,
   Config,
   FilterList,
+  Footer,
   Home,
   Login,
   Loading,
   Notification,
   NotificationsList,
   NoMatch,
+  ProgressBar,
   Product,
   ProductList,
   Organisation,
