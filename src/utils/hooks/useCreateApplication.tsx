@@ -111,18 +111,18 @@ function onCreateSectionCompleted(
   setCompletedResponse: (responses: object) => void
 ) {
   const {
-    applicationId,
+    application,
     templateSection,
   } = createApplicationSection?.applicationSection as ApplicationSection
   const elements = templateSection?.templateElementsBySectionId.nodes as TemplateElement[]
 
-  if (applicationId && templateSection && elements) {
+  if (application && templateSection && elements) {
     const questions = elements.filter(({ category }) => category === 'QUESTION')
     console.log(`Success to create application section: ${templateSection.title}`)
 
     createApplicationResponse(
       {
-        applicationId: applicationId as number,
+        applicationId: application.id,
         templateQuestions: questions,
       },
       responseMutation,

@@ -16,6 +16,9 @@ export default gql`
         templateElement {
           ...Element
         }
+        application {
+          serial
+        }
       }
     }
   }
