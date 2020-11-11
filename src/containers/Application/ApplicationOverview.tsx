@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Header, Loader, Message, Modal } from 'semantic-ui-react'
 import { ApplicationSummary, Loading } from '../../components'
-import { Trigger } from '../../utils/generated/graphql'
+import { Trigger, useUpdateApplicationMutation } from '../../utils/generated/graphql'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
-import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
 
 const ApplicationOverview: React.FC = () => {
+  const [submitted, setSubmitted] = useState(false)
   const { query, push } = useRouter()
   const { serialNumber } = query
 
@@ -25,9 +25,8 @@ const ApplicationOverview: React.FC = () => {
     serialNumber: serialNumber as string,
   })
 
-  const { error: submitError, processing, submitted, submit } = useUpdateApplication({
-    applicationSerial: serialNumber as string,
-    applicationTrigger: Trigger.OnApplicationSubmit,
+  const [applicationSubmitMutation] = useUpdateApplicationMutation({
+    onCompleted: () => setSubmitted(true),
   })
 
   return error || responsesError ? (
@@ -38,36 +37,36 @@ const ApplicationOverview: React.FC = () => {
     />
   ) : loading || responsesLoading ? (
     <Loading />
-  ) : submitError ? (
-    <Message error header="Problem to submit application" list={[submitError]} />
-  ) : templateSections && serialNumber && elementsState && responsesFullByCode ? (
-    <Container>
-      <ApplicationSummary
-        templateSections={templateSections}
-        elementsState={elementsState}
-        responsesByCode={responsesFullByCode}
-        onSubmitHandler={() => submit()}
-      />
-      {showProcessingModal(processing, submitted)}
-    </Container>
+  ) : application && templateSections && serialNumber ? (
+    <Segment.Group>
+      <Grid stackable>
+        <Grid.Column width={4}>
+          <ProgressBar
+            serialNumber={serialNumber}
+            templateSections={templateSections}
+            push={push}
+          />
+        </Grid.Column>
+        <Grid.Column width={12}>
+          <ApplicationSummary
+            templateSections={templateSections}
+            elementsState={elementsState}
+            responsesByCode={responsesFullByCode}
+            onSubmitHandler={() =>
+              applicationSubmitMutation({
+                variables: {
+                  applicationSerial: serialNumber as string,
+                  applicationTrigger: Trigger.OnApplicationSubmit,
+                },
+              })
+            }
+          />
+        </Grid.Column>
+      </Grid>
+    </Segment.Group>
   ) : (
-    <Message error header="Problem to load application overview" />
+    <Label content="Application's sections can't be displayed" />
   )
-}
-
-const showProcessingModal = (processing: boolean, submitted: boolean) => {
-  return processing ? (
-    <Modal basic open={processing} size="mini">
-      <Modal.Header>Please wait...</Modal.Header>
-      <Modal.Content>
-        <Loader>Application is being submitted to the server</Loader>
-      </Modal.Content>
-    </Modal>
-  ) : submitted ? (
-    <Container text>
-      <Header>Application submitted!</Header>
-    </Container>
-  ) : null
 }
 
 export default ApplicationOverview
