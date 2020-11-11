@@ -20,13 +20,18 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   const [appStatus, setAppStatus] = useState({})
   const [isReady, setIsReady] = useState(false)
 
-  const { triggerProcessing } = useTriggerProcessing({ serialNumber, table: 'application' })
+  const { triggerProcessing, error: triggerError } = useTriggerProcessing({
+    serialNumber,
+    trigger: 'applicationTrigger',
+  })
+
+  console.log('TriggerProcessing?', triggerProcessing)
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
       serial: serialNumber,
     },
-    skip: isReady,
+    skip: triggerProcessing,
   })
 
   useEffect(() => {
@@ -50,8 +55,8 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   }, [data, loading, error])
 
   return {
-    error,
-    loading,
+    error: error || triggerError,
+    loading: loading || triggerProcessing,
     application,
     templateSections,
     appStatus,
