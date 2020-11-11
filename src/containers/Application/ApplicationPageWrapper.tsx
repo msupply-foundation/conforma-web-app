@@ -52,6 +52,7 @@ const ApplicationPageWrapper: React.FC = () => {
             serialNumber={serialNumber}
             currentSectionPage={{ sectionIndex: currentSection.index, currentPage: Number(page) }}
             templateSections={templateSections}
+            push={push}
           />
         </Grid.Column>
         <Grid.Column width={12} stretched>

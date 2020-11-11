@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { Accordion, Container, Grid, Header, Label, List, Sticky } from 'semantic-ui-react'
 import { TemplateSectionPayload } from '../../utils/types'
 
@@ -12,12 +11,14 @@ interface ProgressBarProps {
   serialNumber: string
   templateSections: TemplateSectionPayload[]
   currentSectionPage?: SectionPage
+  push: (path: string) => void
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   serialNumber,
   templateSections,
   currentSectionPage,
+  push,
 }) => {
   const pageList = (section: string, totalPages: number) => {
     const pages = Array.from(Array(totalPages).keys(), (n) => n + 1)
@@ -52,7 +53,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
             </Grid>
           ),
         },
-        onTitleClick: () => console.log('Clicked title', section.title),
+        onTitleClick: () => push(`/applications/${serialNumber}/${section.code}/Page1`),
         content: {
           content: (
             <Grid divided>
@@ -79,10 +80,10 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           </Grid>
         ),
       },
+      onTitleClick: () => push(`/applications/${serialNumber}/summary`),
       // Ideally these aren't needed - Couldn't find some way to remove this
-      onTitleClick: () => console.log('Clicked on Summary'),
       content: {
-        content: <Header as={Link} to={`applications/${serialNumber}/summary`} />,
+        content: <Header />,
       },
     })
     return sectionItems

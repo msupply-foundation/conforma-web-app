@@ -7,7 +7,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 
 const ApplicationOverview: React.FC = () => {
   const [submitted, setSubmitted] = useState(false)
-  const { query } = useRouter()
+  const { query, push } = useRouter()
   const { serialNumber } = query
 
   const { error, loading, application, templateSections } = useLoadApplication({
@@ -30,7 +30,11 @@ const ApplicationOverview: React.FC = () => {
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
-          <ProgressBar serialNumber={serialNumber} templateSections={templateSections} />
+          <ProgressBar
+            serialNumber={serialNumber}
+            templateSections={templateSections}
+            push={push}
+          />
         </Grid.Column>
         <Grid.Column width={12}>
           <ApplicationSummary
