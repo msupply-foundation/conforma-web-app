@@ -5,6 +5,7 @@ import {
   Account,
   AdminPermissions,
   AdminUsers,
+  AppMenu,
   Approval,
   Admin,
   Config,
@@ -24,7 +25,6 @@ import {
 import { ApplicationCreate, ApplicationList, ApplicationPageWrapper } from '../Application'
 import UserRegister from '../User/UserRegister'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
-import AppMenu from './AppMenu'
 import ApplicationOverview from '../Application/ApplicationOverview'
 
 const SiteLayout: React.FC = () => {
@@ -61,19 +61,13 @@ const SiteLayout: React.FC = () => {
                 </ApplicationProvider>
               </Route>
               <Route exact path="/applications/:serialNumber">
-                <ApplicationProvider>
-                  <ApplicationPageWrapper />
-                </ApplicationProvider>
+                <ApplicationPageWrapper />
               </Route>
               <Route exact path="/applications/:serialNumber/:sectionCode/page:page">
-                <ApplicationProvider>
-                  <ApplicationPageWrapper />
-                </ApplicationProvider>
+                <ApplicationPageWrapper />
               </Route>
               <Route exact path="/applications/:serialNumber/summary">
-                <ApplicationProvider>
-                  <ApplicationOverview />
-                </ApplicationProvider>
+                <ApplicationOverview />
               </Route>
               <Route exact path="/applications/:serialNumber/approval">
                 <Approval />
