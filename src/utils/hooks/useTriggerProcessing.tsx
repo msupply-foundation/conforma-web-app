@@ -6,6 +6,7 @@ type triggerTypes = 'applicationTrigger' | 'reviewTrigger'
 const useTriggerProcessing = (props: { serialNumber: string; trigger: triggerTypes }) => {
   const { serialNumber, trigger } = props
   const [isProcessing, setIsProcessing] = useState(true)
+  const [triggerError, setTriggerError] = useState(false)
 
   const { data, loading, error } = useGetTriggersQuery({
     variables: {
@@ -16,13 +17,16 @@ const useTriggerProcessing = (props: { serialNumber: string; trigger: triggerTyp
     fetchPolicy: 'no-cache',
   })
 
-  useEffect(() => {
+  useEffect((): any => {
     if (data?.applicationTriggerStates?.nodes[0]) {
       const triggerRequested = data?.applicationTriggerStates?.nodes[0][trigger]
       if (triggerRequested === null) setIsProcessing(false)
+    } else {
+      setIsProcessing(false)
+      setTriggerError(true)
     }
   }, [data, loading, error])
 
-  return { triggerProcessing: isProcessing, error }
+  return { triggerProcessing: isProcessing, error: error || triggerError }
 }
 export default useTriggerProcessing
