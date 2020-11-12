@@ -28,11 +28,11 @@ const ApplicationPageWrapper: React.FC = () => {
     isReady,
   })
 
-  console.log('appStatus', appStatus)
-  console.log('responsesError', responsesError)
-  console.log('responsesLoading', responsesLoading)
-  console.log('responsesByCode', responsesByCode)
-  console.log('elementsState', elementsState)
+  // console.log('appStatus', appStatus)
+  // console.log('responsesError', responsesError)
+  // console.log('responsesLoading', responsesLoading)
+  // console.log('responsesByCode', responsesByCode)
+  // console.log('elementsState', elementsState)
 
   useEffect(() => {
     if (application) {
