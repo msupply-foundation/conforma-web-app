@@ -30,6 +30,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
       serial: serialNumber,
     },
     skip: triggerProcessing,
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
