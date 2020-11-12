@@ -32,6 +32,7 @@ const ApplicationPageWrapper: React.FC = () => {
   console.log('responsesError', responsesError)
   console.log('responsesLoading', responsesLoading)
   console.log('responsesByCode', responsesByCode)
+  console.log('elementsState', elementsState)
 
   useEffect(() => {
     if (application) {
@@ -53,7 +54,11 @@ const ApplicationPageWrapper: React.FC = () => {
     <Message error header="Problem to load application" />
   ) : loading || responsesLoading ? (
     <Loading />
-  ) : application && templateSections && serialNumber && currentSection ? (
+  ) : application &&
+    templateSections &&
+    serialNumber &&
+    currentSection &&
+    Object.keys(elementsState).length !== 0 ? (
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
