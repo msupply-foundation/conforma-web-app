@@ -25,12 +25,17 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
     trigger: 'applicationTrigger',
   })
 
+  // console.log('triggerProcessing', triggerProcessing)
+  // console.log('triggerError', triggerError)
+
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
       serial: serialNumber,
     },
     skip: triggerProcessing,
   })
+
+  console.log('data', data)
 
   useEffect(() => {
     if (data && data.applications) {

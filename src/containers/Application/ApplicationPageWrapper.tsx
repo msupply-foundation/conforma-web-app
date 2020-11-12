@@ -14,6 +14,10 @@ const ApplicationPageWrapper: React.FC = () => {
     serialNumber: serialNumber as string,
   })
 
+  // console.log('error', error)
+  // console.log('loading', loading)
+  // console.log('appStatus', appStatus)
+
   const {
     error: responsesError,
     loading: responsesLoading,
@@ -40,7 +44,7 @@ const ApplicationPageWrapper: React.FC = () => {
 
   const currentSection = templateSections.find(({ code }) => code == sectionCode)
 
-  return error ? (
+  return error || responsesError ? (
     <Message error header="Problem to load application" />
   ) : loading || responsesLoading ? (
     <Loading />
