@@ -41,7 +41,7 @@ const ApplicationPageWrapper: React.FC = () => {
   const currentSection = templateSections.find(({ code }) => code == sectionCode)
 
   return error ? (
-    <Message error header="Problem to load application" list={[error?.message]} />
+    <Message error header="Problem to load application" />
   ) : loading || responsesLoading ? (
     <Loading />
   ) : application && templateSections && serialNumber && currentSection ? (
