@@ -1,5 +1,4 @@
 import { ApolloError } from '@apollo/client'
-import { responsePathAsArray } from 'graphql'
 import { useEffect, useState } from 'react'
 import {
   ApplicationResponse,
@@ -10,13 +9,10 @@ import {
 
 interface useUpdateApplicationProps {
   applicationSerial: string
-  applicationTrigger: Trigger
+  applicationTrigger?: Trigger
 }
 
-const useUpdateApplication = ({
-  applicationSerial,
-  applicationTrigger,
-}: useUpdateApplicationProps) => {
+const useUpdateApplication = ({ applicationSerial }: useUpdateApplicationProps) => {
   const [submitted, setSubmitted] = useState(false)
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState<ApolloError | undefined>()

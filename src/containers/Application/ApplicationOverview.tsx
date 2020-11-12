@@ -1,7 +1,6 @@
 import React from 'react'
-import { Container, Grid, Header, Label, Loader, Message, Modal, Segment } from 'semantic-ui-react'
-import { ApplicationSummary, Loading, ProgressBar } from '../../components'
-import { Trigger } from '../../utils/generated/graphql'
+import { Container, Header, Loader, Message, Modal } from 'semantic-ui-react'
+import { ApplicationSummary, Loading } from '../../components'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -27,7 +26,6 @@ const ApplicationOverview: React.FC = () => {
 
   const { error: submitError, processing, submitted, submit } = useUpdateApplication({
     applicationSerial: serialNumber as string,
-    applicationTrigger: Trigger.OnApplicationSubmit,
   })
 
   return error || responsesError ? (
