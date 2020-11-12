@@ -17,21 +17,20 @@ const useTriggerProcessing = (props: { serialNumber: string; trigger: triggerTyp
     fetchPolicy: 'no-cache',
   })
 
-  console.log('serialNumber', serialNumber)
-  console.log('data', data)
-  console.log('loading', loading)
-  console.log('error', error)
-  console.log('triggerError', triggerError)
+  // console.log('serialNumber', serialNumber)
+  // console.log('data', data)
+  // console.log('loading', loading)
+  // console.log('error', error)
+  // console.log('triggerError', triggerError)
 
   useEffect((): any => {
     if (data?.applicationTriggerStates?.nodes[0]) {
       const triggerRequested = data?.applicationTriggerStates?.nodes[0][trigger]
       if (triggerRequested === null) setIsProcessing(false)
-    } else {
-      if (!data && !loading) {
-        setIsProcessing(false)
-        setTriggerError(true)
-      }
+    }
+    if (error) {
+      setIsProcessing(false)
+      setTriggerError(true)
     }
   }, [data, loading, error])
 

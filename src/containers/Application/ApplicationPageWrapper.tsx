@@ -10,13 +10,12 @@ const ApplicationPageWrapper: React.FC = () => {
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
-  const { error, loading, application, templateSections, appStatus } = useLoadApplication({
+  const { error, loading, application, templateSections, appStatus, isReady } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
 
   // console.log('error', error)
   // console.log('loading', loading)
-  // console.log('appStatus', appStatus)
 
   const {
     error: responsesError,
@@ -26,7 +25,13 @@ const ApplicationPageWrapper: React.FC = () => {
     elementsState,
   } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
+    isReady,
   })
+
+  console.log('appStatus', appStatus)
+  console.log('responsesError', responsesError)
+  console.log('responsesLoading', responsesLoading)
+  console.log('responsesByCode', responsesByCode)
 
   useEffect(() => {
     if (application) {
@@ -44,7 +49,7 @@ const ApplicationPageWrapper: React.FC = () => {
 
   const currentSection = templateSections.find(({ code }) => code == sectionCode)
 
-  return error || responsesError ? (
+  return error ? (
     <Message error header="Problem to load application" />
   ) : loading || responsesLoading ? (
     <Loading />
