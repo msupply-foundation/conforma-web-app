@@ -81,8 +81,6 @@ const ApplicationPageWrapper: React.FC = () => {
 
 function processRedirect(appState: any): void {
   // All logic for re-directing/configuring page based on application state, permissions, roles, etc. should go here.
-  console.log('Redirect check...')
-  console.log('AppState', appState)
   const {
     stage,
     status,
