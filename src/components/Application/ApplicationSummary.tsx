@@ -25,10 +25,6 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
     sectionIds: sections.map(({ id }) => id),
   })
 
-  console.log('sectionElements', sectionElements)
-  console.log('loading', loading)
-  console.log('error', error)
-
   const getQuestion = (question: TemplateElement, response: ApplicationResponse | null) => {
     return question.category === TemplateElementCategory.Question ? (
       <Form.Field>

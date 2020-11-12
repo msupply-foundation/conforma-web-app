@@ -14,9 +14,6 @@ const ApplicationPageWrapper: React.FC = () => {
     serialNumber: serialNumber as string,
   })
 
-  // console.log('error', error)
-  // console.log('loading', loading)
-
   const {
     error: responsesError,
     loading: responsesLoading,
@@ -27,12 +24,6 @@ const ApplicationPageWrapper: React.FC = () => {
     serialNumber: serialNumber as string,
     isReady,
   })
-
-  // console.log('appStatus', appStatus)
-  // console.log('responsesError', responsesError)
-  // console.log('responsesLoading', responsesLoading)
-  // console.log('responsesByCode', responsesByCode)
-  // console.log('elementsState', elementsState)
 
   useEffect(() => {
     if (application) {
