@@ -40,10 +40,12 @@ export type Query = Node & {
   applicationSections?: Maybe<ApplicationSectionsConnection>;
   /** Reads and enables pagination through a set of `ApplicationStageHistory`. */
   applicationStageHistories?: Maybe<ApplicationStageHistoriesConnection>;
-  /** Reads and enables pagination through a set of `ApplicationStageStatus`. */
-  applicationStageStatuses?: Maybe<ApplicationStageStatusesConnection>;
+  /** Reads and enables pagination through a set of `ApplicationStageStatusAll`. */
+  applicationStageStatusAlls?: Maybe<ApplicationStageStatusAllsConnection>;
   /** Reads and enables pagination through a set of `ApplicationStatusHistory`. */
   applicationStatusHistories?: Maybe<ApplicationStatusHistoriesConnection>;
+  /** Reads and enables pagination through a set of `ApplicationTriggerState`. */
+  applicationTriggerStates?: Maybe<ApplicationTriggerStatesConnection>;
   /** Reads and enables pagination through a set of `ElementTypePlugin`. */
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
   /** Reads and enables pagination through a set of `File`. */
@@ -118,6 +120,7 @@ export type Query = Node & {
   triggerQueue?: Maybe<TriggerQueue>;
   user?: Maybe<User>;
   userOrganisation?: Maybe<UserOrganisation>;
+  applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
   jwtCheckPolicy?: Maybe<Scalars['Boolean']>;
   jwtGetKey?: Maybe<Scalars['String']>;
   jwtGetPolicyLinksAsSetofText?: Maybe<JwtGetPolicyLinksAsSetofTextConnection>;
@@ -268,15 +271,15 @@ export type QueryApplicationStageHistoriesArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryApplicationStageStatusesArgs = {
+export type QueryApplicationStageStatusAllsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ApplicationStageStatusesOrderBy>>;
-  condition?: Maybe<ApplicationStageStatusCondition>;
-  filter?: Maybe<ApplicationStageStatusFilter>;
+  orderBy?: Maybe<Array<ApplicationStageStatusAllsOrderBy>>;
+  condition?: Maybe<ApplicationStageStatusAllCondition>;
+  filter?: Maybe<ApplicationStageStatusAllFilter>;
 };
 
 
@@ -290,6 +293,19 @@ export type QueryApplicationStatusHistoriesArgs = {
   orderBy?: Maybe<Array<ApplicationStatusHistoriesOrderBy>>;
   condition?: Maybe<ApplicationStatusHistoryCondition>;
   filter?: Maybe<ApplicationStatusHistoryFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationTriggerStatesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ApplicationTriggerStatesOrderBy>>;
+  condition?: Maybe<ApplicationTriggerStateCondition>;
+  filter?: Maybe<ApplicationTriggerStateFilter>;
 };
 
 
@@ -760,6 +776,12 @@ export type QueryUserOrganisationArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryApplicationStatusHistoryApplicationIdArgs = {
+  applicationStageHistoryId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryJwtCheckPolicyArgs = {
   policyName?: Maybe<Scalars['String']>;
 };
@@ -1211,8 +1233,8 @@ export enum ActionQueuesOrderBy {
   SequenceDesc = 'SEQUENCE_DESC',
   ActionCodeAsc = 'ACTION_CODE_ASC',
   ActionCodeDesc = 'ACTION_CODE_DESC',
-  TriggerPayloadAsc = 'TRIGGER_PAYLOAD_ASC',
-  TriggerPayloadDesc = 'TRIGGER_PAYLOAD_DESC',
+  ApplicationDataAsc = 'APPLICATION_DATA_ASC',
+  ApplicationDataDesc = 'APPLICATION_DATA_DESC',
   ParameterQueriesAsc = 'PARAMETER_QUERIES_ASC',
   ParameterQueriesDesc = 'PARAMETER_QUERIES_DESC',
   ParametersEvaluatedAsc = 'PARAMETERS_EVALUATED_ASC',
@@ -1225,6 +1247,8 @@ export enum ActionQueuesOrderBy {
   TimeQueuedDesc = 'TIME_QUEUED_DESC',
   TimeCompletedAsc = 'TIME_COMPLETED_ASC',
   TimeCompletedDesc = 'TIME_COMPLETED_DESC',
+  TimeScheduledAsc = 'TIME_SCHEDULED_ASC',
+  TimeScheduledDesc = 'TIME_SCHEDULED_DESC',
   ErrorLogAsc = 'ERROR_LOG_ASC',
   ErrorLogDesc = 'ERROR_LOG_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -1243,8 +1267,8 @@ export type ActionQueueCondition = {
   sequence?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `actionCode` field. */
   actionCode?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `triggerPayload` field. */
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `applicationData` field. */
+  applicationData?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parameterQueries` field. */
   parameterQueries?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parametersEvaluated` field. */
@@ -1257,6 +1281,8 @@ export type ActionQueueCondition = {
   timeQueued?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `timeCompleted` field. */
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeScheduled` field. */
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `errorLog` field. */
   errorLog?: Maybe<Scalars['String']>;
 };
@@ -1283,8 +1309,8 @@ export type ActionQueueFilter = {
   sequence?: Maybe<IntFilter>;
   /** Filter by the object’s `actionCode` field. */
   actionCode?: Maybe<StringFilter>;
-  /** Filter by the object’s `triggerPayload` field. */
-  triggerPayload?: Maybe<JsonFilter>;
+  /** Filter by the object’s `applicationData` field. */
+  applicationData?: Maybe<JsonFilter>;
   /** Filter by the object’s `parameterQueries` field. */
   parameterQueries?: Maybe<JsonFilter>;
   /** Filter by the object’s `parametersEvaluated` field. */
@@ -1297,6 +1323,8 @@ export type ActionQueueFilter = {
   timeQueued?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `timeCompleted` field. */
   timeCompleted?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `timeScheduled` field. */
+  timeScheduled?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `errorLog` field. */
   errorLog?: Maybe<StringFilter>;
   /** Filter by the object’s `triggerQueueByTriggerEvent` relation. */
@@ -1441,8 +1469,6 @@ export type TriggerQueueFilter = {
   recordId?: Maybe<IntFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `payload` field. */
-  payload?: Maybe<JsonFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<TriggerQueueStatusFilter>;
   /** Filter by the object’s `log` field. */
@@ -1747,6 +1773,8 @@ export type ApplicationStatusHistoryFilter = {
   timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `isCurrent` field. */
   isCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationStageHistory` relation. */
   applicationStageHistory?: Maybe<ApplicationStageHistoryFilter>;
   /** A related `applicationStageHistory` exists. */
@@ -1791,7 +1819,8 @@ export enum ApplicationStatus {
   Submitted = 'SUBMITTED',
   ChangesRequired = 'CHANGES_REQUIRED',
   ReSubmitted = 'RE_SUBMITTED',
-  Completed = 'COMPLETED'
+  Completed = 'COMPLETED',
+  Expired = 'EXPIRED'
 }
 
 /** A filter to be used against many `ReviewSectionAssignment` object types. All fields are combined with a logical ‘and.’ */
@@ -3098,13 +3127,14 @@ export type ActionQueue = Node & {
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   /** Reads a single `TriggerQueue` that is related to this `ActionQueue`. */
   triggerQueueByTriggerEvent?: Maybe<TriggerQueue>;
@@ -3121,7 +3151,6 @@ export type TriggerQueue = Node & {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   /** Reads and enables pagination through a set of `ActionQueue`. */
@@ -4992,6 +5021,8 @@ export enum ApplicationStatusHistoriesOrderBy {
   TimeCreatedDesc = 'TIME_CREATED_DESC',
   IsCurrentAsc = 'IS_CURRENT_ASC',
   IsCurrentDesc = 'IS_CURRENT_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -5008,6 +5039,8 @@ export type ApplicationStatusHistoryCondition = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `isCurrent` field. */
   isCurrent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
 };
 
 /** A connection to a list of `ApplicationStatusHistory` values. */
@@ -5032,6 +5065,7 @@ export type ApplicationStatusHistory = Node & {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   /** Reads a single `ApplicationStageHistory` that is related to this `ApplicationStatusHistory`. */
   applicationStageHistory?: Maybe<ApplicationStageHistory>;
 };
@@ -5201,84 +5235,220 @@ export type ActionQueuesEdge = {
   node?: Maybe<ActionQueue>;
 };
 
-/** Methods to use when ordering `ApplicationStageStatus`. */
-export enum ApplicationStageStatusesOrderBy {
+/** Methods to use when ordering `ApplicationStageStatusAll`. */
+export enum ApplicationStageStatusAllsOrderBy {
   Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  SerialAsc = 'SERIAL_ASC',
+  SerialDesc = 'SERIAL_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
+  StageIdAsc = 'STAGE_ID_ASC',
+  StageIdDesc = 'STAGE_ID_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
   StageNumberDesc = 'STAGE_NUMBER_DESC',
   StageAsc = 'STAGE_ASC',
   StageDesc = 'STAGE_DESC',
+  StageHistoryIdAsc = 'STAGE_HISTORY_ID_ASC',
+  StageHistoryIdDesc = 'STAGE_HISTORY_ID_DESC',
+  StageHistoryTimeCreatedAsc = 'STAGE_HISTORY_TIME_CREATED_ASC',
+  StageHistoryTimeCreatedDesc = 'STAGE_HISTORY_TIME_CREATED_DESC',
+  StageIsCurrentAsc = 'STAGE_IS_CURRENT_ASC',
+  StageIsCurrentDesc = 'STAGE_IS_CURRENT_DESC',
+  StatusHistoryIdAsc = 'STATUS_HISTORY_ID_ASC',
+  StatusHistoryIdDesc = 'STATUS_HISTORY_ID_DESC',
   StatusAsc = 'STATUS_ASC',
-  StatusDesc = 'STATUS_DESC'
+  StatusDesc = 'STATUS_DESC',
+  StatusHistoryTimeCreatedAsc = 'STATUS_HISTORY_TIME_CREATED_ASC',
+  StatusHistoryTimeCreatedDesc = 'STATUS_HISTORY_TIME_CREATED_DESC',
+  StatusIsCurrentAsc = 'STATUS_IS_CURRENT_ASC',
+  StatusIsCurrentDesc = 'STATUS_IS_CURRENT_DESC'
 }
 
-/** A condition to be used against `ApplicationStageStatus` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ApplicationStageStatusCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
+/** A condition to be used against `ApplicationStageStatusAll` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ApplicationStageStatusAllCondition = {
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `serial` field. */
+  serial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `name` field. */
   name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `stageId` field. */
+  stageId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageNumber` field. */
   stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stage` field. */
   stage?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `stageHistoryId` field. */
+  stageHistoryId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageHistoryTimeCreated` field. */
+  stageHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `stageIsCurrent` field. */
+  stageIsCurrent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `statusHistoryId` field. */
+  statusHistoryId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<ApplicationStatus>;
+  /** Checks for equality with the object’s `statusHistoryTimeCreated` field. */
+  statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `statusIsCurrent` field. */
+  statusIsCurrent?: Maybe<Scalars['Boolean']>;
 };
 
-/** A filter to be used against `ApplicationStageStatus` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationStageStatusFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
+/** A filter to be used against `ApplicationStageStatusAll` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationStageStatusAllFilter = {
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `serial` field. */
+  serial?: Maybe<StringFilter>;
   /** Filter by the object’s `name` field. */
   name?: Maybe<StringFilter>;
+  /** Filter by the object’s `stageId` field. */
+  stageId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageNumber` field. */
   stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `stage` field. */
   stage?: Maybe<StringFilter>;
+  /** Filter by the object’s `stageHistoryId` field. */
+  stageHistoryId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageHistoryTimeCreated` field. */
+  stageHistoryTimeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `stageIsCurrent` field. */
+  stageIsCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `statusHistoryId` field. */
+  statusHistoryId?: Maybe<IntFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ApplicationStatusFilter>;
+  /** Filter by the object’s `statusHistoryTimeCreated` field. */
+  statusHistoryTimeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `statusIsCurrent` field. */
+  statusIsCurrent?: Maybe<BooleanFilter>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ApplicationStageStatusFilter>>;
+  and?: Maybe<Array<ApplicationStageStatusAllFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ApplicationStageStatusFilter>>;
+  or?: Maybe<Array<ApplicationStageStatusAllFilter>>;
   /** Negates the expression. */
-  not?: Maybe<ApplicationStageStatusFilter>;
+  not?: Maybe<ApplicationStageStatusAllFilter>;
 };
 
-/** A connection to a list of `ApplicationStageStatus` values. */
-export type ApplicationStageStatusesConnection = {
-  __typename?: 'ApplicationStageStatusesConnection';
-  /** A list of `ApplicationStageStatus` objects. */
-  nodes: Array<Maybe<ApplicationStageStatus>>;
-  /** A list of edges which contains the `ApplicationStageStatus` and cursor to aid in pagination. */
-  edges: Array<ApplicationStageStatusesEdge>;
+/** A connection to a list of `ApplicationStageStatusAll` values. */
+export type ApplicationStageStatusAllsConnection = {
+  __typename?: 'ApplicationStageStatusAllsConnection';
+  /** A list of `ApplicationStageStatusAll` objects. */
+  nodes: Array<Maybe<ApplicationStageStatusAll>>;
+  /** A list of edges which contains the `ApplicationStageStatusAll` and cursor to aid in pagination. */
+  edges: Array<ApplicationStageStatusAllsEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `ApplicationStageStatus` you could get from the connection. */
+  /** The count of *all* `ApplicationStageStatusAll` you could get from the connection. */
   totalCount: Scalars['Int'];
 };
 
-export type ApplicationStageStatus = {
-  __typename?: 'ApplicationStageStatus';
-  id?: Maybe<Scalars['Int']>;
+export type ApplicationStageStatusAll = {
+  __typename?: 'ApplicationStageStatusAll';
+  applicationId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   stage?: Maybe<Scalars['String']>;
+  stageHistoryId?: Maybe<Scalars['Int']>;
+  stageHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
+  stageIsCurrent?: Maybe<Scalars['Boolean']>;
+  statusHistoryId?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationStatus>;
+  statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
+  statusIsCurrent?: Maybe<Scalars['Boolean']>;
 };
 
-/** A `ApplicationStageStatus` edge in the connection. */
-export type ApplicationStageStatusesEdge = {
-  __typename?: 'ApplicationStageStatusesEdge';
+/** A `ApplicationStageStatusAll` edge in the connection. */
+export type ApplicationStageStatusAllsEdge = {
+  __typename?: 'ApplicationStageStatusAllsEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ApplicationStageStatus` at the end of the edge. */
-  node?: Maybe<ApplicationStageStatus>;
+  /** The `ApplicationStageStatusAll` at the end of the edge. */
+  node?: Maybe<ApplicationStageStatusAll>;
+};
+
+/** Methods to use when ordering `ApplicationTriggerState`. */
+export enum ApplicationTriggerStatesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  SerialAsc = 'SERIAL_ASC',
+  SerialDesc = 'SERIAL_DESC',
+  ApplicationTriggerAsc = 'APPLICATION_TRIGGER_ASC',
+  ApplicationTriggerDesc = 'APPLICATION_TRIGGER_DESC',
+  ReviewTriggerAsc = 'REVIEW_TRIGGER_ASC',
+  ReviewTriggerDesc = 'REVIEW_TRIGGER_DESC'
+}
+
+/** A condition to be used against `ApplicationTriggerState` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ApplicationTriggerStateCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `serial` field. */
+  serial?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicationTrigger` field. */
+  applicationTrigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `reviewTrigger` field. */
+  reviewTrigger?: Maybe<Trigger>;
+};
+
+/** A filter to be used against `ApplicationTriggerState` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationTriggerStateFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `serial` field. */
+  serial?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationTrigger` field. */
+  applicationTrigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `reviewTrigger` field. */
+  reviewTrigger?: Maybe<TriggerFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ApplicationTriggerStateFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ApplicationTriggerStateFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ApplicationTriggerStateFilter>;
+};
+
+/** A connection to a list of `ApplicationTriggerState` values. */
+export type ApplicationTriggerStatesConnection = {
+  __typename?: 'ApplicationTriggerStatesConnection';
+  /** A list of `ApplicationTriggerState` objects. */
+  nodes: Array<Maybe<ApplicationTriggerState>>;
+  /** A list of edges which contains the `ApplicationTriggerState` and cursor to aid in pagination. */
+  edges: Array<ApplicationTriggerStatesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ApplicationTriggerState` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type ApplicationTriggerState = {
+  __typename?: 'ApplicationTriggerState';
+  id?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
+  applicationTrigger?: Maybe<Trigger>;
+  reviewTrigger?: Maybe<Trigger>;
+};
+
+/** A `ApplicationTriggerState` edge in the connection. */
+export type ApplicationTriggerStatesEdge = {
+  __typename?: 'ApplicationTriggerStatesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ApplicationTriggerState` at the end of the edge. */
+  node?: Maybe<ApplicationTriggerState>;
 };
 
 /** Methods to use when ordering `ElementTypePlugin`. */
@@ -5603,8 +5773,6 @@ export enum TriggerQueuesOrderBy {
   RecordIdDesc = 'RECORD_ID_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
   TimestampDesc = 'TIMESTAMP_DESC',
-  PayloadAsc = 'PAYLOAD_ASC',
-  PayloadDesc = 'PAYLOAD_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
   LogAsc = 'LOG_ASC',
@@ -5625,8 +5793,6 @@ export type TriggerQueueCondition = {
   recordId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `timestamp` field. */
   timestamp?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `payload` field. */
-  payload?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<TriggerQueueStatus>;
   /** Checks for equality with the object’s `log` field. */
@@ -6970,13 +7136,14 @@ export type ActionQueueInput = {
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
@@ -7036,7 +7203,6 @@ export type UpdateTriggerQueueOnActionQueueForActionQueueTriggerEventFkeyPatch =
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
@@ -7097,13 +7263,14 @@ export type UpdateActionQueueOnActionQueueForActionQueueTriggerEventFkeyPatch = 
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
@@ -8280,13 +8447,14 @@ export type UpdateActionQueueOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   triggerEvent?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
@@ -8307,13 +8475,14 @@ export type ActionQueuePatch = {
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
@@ -8325,13 +8494,14 @@ export type ActionQueueTemplateIdFkeyActionQueueCreateInput = {
   triggerEvent?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
@@ -10825,6 +10995,7 @@ export type UpdateApplicationStatusHistoryOnApplicationStatusHistoryForApplicati
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -11583,6 +11754,7 @@ export type ApplicationStatusHistoryPatch = {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -11592,6 +11764,7 @@ export type ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStat
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -13134,13 +13307,14 @@ export type ActionQueueTriggerEventFkeyActionQueueCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  triggerPayload?: Maybe<Scalars['JSON']>;
+  applicationData?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
@@ -13161,7 +13335,6 @@ export type TriggerQueuePatch = {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
@@ -13174,7 +13347,6 @@ export type ActionQueueTriggerEventFkeyTriggerQueueCreateInput = {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
@@ -13398,6 +13570,7 @@ export type ApplicationStatusHistoryInput = {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -14243,7 +14416,6 @@ export type TriggerQueueInput = {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
@@ -16718,6 +16890,8 @@ export type CreateApplicationMutationVariables = Exact<{
   name: Scalars['String'];
   serial: Scalars['String'];
   templateId: Scalars['Int'];
+  outcome?: Maybe<ApplicationOutcome>;
+  trigger?: Maybe<Trigger>;
 }>;
 
 
@@ -16813,7 +16987,8 @@ export type CreateUserMutation = (
 
 export type UpdateApplicationMutationVariables = Exact<{
   serial: Scalars['String'];
-  applicationTrigger: Trigger;
+  applicationTrigger?: Maybe<Trigger>;
+  responses?: Maybe<Array<ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationResponsePkeyUpdate>>;
 }>;
 
 
@@ -16943,6 +17118,25 @@ export type GetElementsAndResponsesQuery = (
         )>> }
       ) }
     )> }
+  )> }
+);
+
+export type GetResponsesInApplicationQueryVariables = Exact<{
+  serial: Scalars['String'];
+}>;
+
+
+export type GetResponsesInApplicationQuery = (
+  { __typename?: 'Query' }
+  & { applicationBySerial?: Maybe<(
+    { __typename?: 'Application' }
+    & { applicationResponses: (
+      { __typename?: 'ApplicationResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ApplicationResponse' }
+        & Pick<ApplicationResponse, 'id' | 'value' | 'timeCreated'>
+      )>> }
+    ) }
   )> }
 );
 
@@ -17081,8 +17275,8 @@ export const TemplateFragmentDoc = gql`
 }
     `;
 export const CreateApplicationDocument = gql`
-    mutation createApplication($name: String!, $serial: String!, $templateId: Int!) {
-  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, isActive: true, outcome: PENDING, trigger: ON_APPLICATION_CREATE}}) {
+    mutation createApplication($name: String!, $serial: String!, $templateId: Int!, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE) {
+  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, isActive: true, outcome: $outcome, trigger: $trigger}}) {
     application {
       ...Application
       template {
@@ -17117,6 +17311,8 @@ export type CreateApplicationMutationFn = Apollo.MutationFunction<CreateApplicat
  *      name: // value for 'name'
  *      serial: // value for 'serial'
  *      templateId: // value for 'templateId'
+ *      outcome: // value for 'outcome'
+ *      trigger: // value for 'trigger'
  *   },
  * });
  */
@@ -17249,8 +17445,8 @@ export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutati
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const UpdateApplicationDocument = gql`
-    mutation updateApplication($serial: String!, $applicationTrigger: Trigger!) {
-  updateApplicationBySerial(input: {serial: $serial, patch: {trigger: $applicationTrigger}}) {
+    mutation updateApplication($serial: String!, $applicationTrigger: Trigger = ON_APPLICATION_SUBMIT, $responses: [ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationResponsePkeyUpdate!]) {
+  updateApplicationBySerial(input: {serial: $serial, patch: {trigger: $applicationTrigger, applicationResponsesUsingId: {updateById: $responses}}}) {
     application {
       ...Application
     }
@@ -17274,6 +17470,7 @@ export type UpdateApplicationMutationFn = Apollo.MutationFunction<UpdateApplicat
  *   variables: {
  *      serial: // value for 'serial'
  *      applicationTrigger: // value for 'applicationTrigger'
+ *      responses: // value for 'responses'
  *   },
  * });
  */
@@ -17472,6 +17669,45 @@ export function useGetElementsAndResponsesLazyQuery(baseOptions?: Apollo.LazyQue
 export type GetElementsAndResponsesQueryHookResult = ReturnType<typeof useGetElementsAndResponsesQuery>;
 export type GetElementsAndResponsesLazyQueryHookResult = ReturnType<typeof useGetElementsAndResponsesLazyQuery>;
 export type GetElementsAndResponsesQueryResult = Apollo.QueryResult<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>;
+export const GetResponsesInApplicationDocument = gql`
+    query getResponsesInApplication($serial: String!) {
+  applicationBySerial(serial: $serial) {
+    applicationResponses {
+      nodes {
+        id
+        value
+        timeCreated
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetResponsesInApplicationQuery__
+ *
+ * To run a query within a React component, call `useGetResponsesInApplicationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetResponsesInApplicationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetResponsesInApplicationQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *   },
+ * });
+ */
+export function useGetResponsesInApplicationQuery(baseOptions?: Apollo.QueryHookOptions<GetResponsesInApplicationQuery, GetResponsesInApplicationQueryVariables>) {
+        return Apollo.useQuery<GetResponsesInApplicationQuery, GetResponsesInApplicationQueryVariables>(GetResponsesInApplicationDocument, baseOptions);
+      }
+export function useGetResponsesInApplicationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetResponsesInApplicationQuery, GetResponsesInApplicationQueryVariables>) {
+          return Apollo.useLazyQuery<GetResponsesInApplicationQuery, GetResponsesInApplicationQueryVariables>(GetResponsesInApplicationDocument, baseOptions);
+        }
+export type GetResponsesInApplicationQueryHookResult = ReturnType<typeof useGetResponsesInApplicationQuery>;
+export type GetResponsesInApplicationLazyQueryHookResult = ReturnType<typeof useGetResponsesInApplicationLazyQuery>;
+export type GetResponsesInApplicationQueryResult = Apollo.QueryResult<GetResponsesInApplicationQuery, GetResponsesInApplicationQueryVariables>;
 export const GetSectionElementsDocument = gql`
     query getSectionElements($sectionId: Int!, $applicationId: Int!) {
   templateElements(condition: {sectionId: $sectionId}) {
