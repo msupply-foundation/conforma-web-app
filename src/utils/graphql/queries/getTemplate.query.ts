@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client'
 
+// TODO: Update this query to use fragments!
 export default gql`
   query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE) {
     templates(condition: { code: $code, status: $status }) {
