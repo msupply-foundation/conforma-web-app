@@ -29,11 +29,9 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
     variables: {
       serial: serialNumber,
     },
-    skip: triggerProcessing,
+    skip: triggerProcessing || isApplicationLoaded,
     fetchPolicy: 'cache-and-network',
   })
-
-  console.log('Re-loading application')
 
   useEffect(() => {
     if (data && data.applications) {
