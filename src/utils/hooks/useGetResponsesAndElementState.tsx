@@ -15,7 +15,11 @@ import {
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 
-const useGetResponsesAndElementState = (props: { serialNumber: string; isReady: boolean }) => {
+interface useGetResponsesAndElementStateProps {
+   serialNumber: string
+   isReady: boolean 
+}
+const useGetResponsesAndElementState = ({ serialNumber, isReady } : useGetResponsesAndElementStateProps) => {
   const { serialNumber, isReady } = props
   const [responsesByCode, setResponsesByCode] = useState({})
   const [responsesFullByCode, setResponsesFullByCode] = useState({})
