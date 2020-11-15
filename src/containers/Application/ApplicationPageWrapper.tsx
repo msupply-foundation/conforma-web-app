@@ -10,7 +10,14 @@ const ApplicationPageWrapper: React.FC = () => {
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
-  const { error, loading, application, templateSections, appStatus, isReady } = useLoadApplication({
+  const {
+    error,
+    loading,
+    application,
+    templateSections,
+    appStatus,
+    isApplicationLoaded,
+  } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
 
@@ -22,7 +29,7 @@ const ApplicationPageWrapper: React.FC = () => {
     elementsState,
   } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
-    isReady,
+    isApplicationLoaded,
   })
 
   useEffect(() => {
