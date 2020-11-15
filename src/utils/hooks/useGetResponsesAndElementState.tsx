@@ -34,6 +34,10 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
   })
 
   useEffect(() => {
+    if (!isApplicationLoaded) {
+      return
+    }
+
     const error = checkForApplicationErrors(data)
 
     if (error) {

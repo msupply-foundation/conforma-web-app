@@ -48,15 +48,11 @@ const ApplicationPageWrapper: React.FC = () => {
 
   const currentSection = templateSections.find(({ code }) => code == sectionCode)
 
-  return error ? (
+  return error || responsesError ? (
     <Message error header="Problem to load application" />
   ) : loading || responsesLoading ? (
     <Loading />
-  ) : application &&
-    templateSections &&
-    serialNumber &&
-    currentSection &&
-    Object.keys(elementsState).length !== 0 ? (
+  ) : application && templateSections && serialNumber && currentSection ? (
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
