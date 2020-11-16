@@ -10,7 +10,7 @@ const createAuthorisationHeader = (JWT: string) => ({
 
 const useGetUserPermissions = () => {
   const [templatePermissions, setTemplatePermissions] = useState<TemplatePermissions | null>(null)
-  const [username, setUsername] = useState<string | null>('')
+  const [username, setUsername] = useState<string>('')
 
   useEffect(() => {
     const JWT: string = localStorage.getItem(LOCAL_STORAGE_JWT_KEY) || ''
