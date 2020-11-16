@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { Loading, ProgressBar } from '../../components'
-import { Grid, Label, Message, Segment } from 'semantic-ui-react'
+import { Loading } from '../../components'
+import { Label, Message } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
-import { ElementsBox, NavigationBox } from './'
+import ApplicationSectionWrapper from './ApplicationSectionWrapper'
 
 const ApplicationPageWrapper: React.FC = () => {
   const { query, push, replace } = useRouter()
@@ -39,41 +39,18 @@ const ApplicationPageWrapper: React.FC = () => {
     }
   }, [application])
 
-  const currentSection = templateSections.find(({ code }) => code == sectionCode)
-
   return error ? (
     <Message error header="Problem to load application" />
   ) : loading || responsesLoading ? (
     <Loading />
-  ) : application &&
-    templateSections &&
-    serialNumber &&
-    currentSection &&
-    Object.keys(elementsState).length !== 0 ? (
-    <Segment.Group>
-      <Grid stackable>
-        <Grid.Column width={4}>
-          <ProgressBar
-            serialNumber={serialNumber}
-            currentSectionPage={{ sectionIndex: currentSection.index, currentPage: Number(page) }}
-            templateSections={templateSections}
-            push={push}
-          />
-        </Grid.Column>
-        <Grid.Column width={12} stretched>
-          <ElementsBox
-            applicationId={application.id}
-            sectionTitle={currentSection.title}
-            sectionTemplateId={currentSection.id}
-            sectionPage={Number(page)}
-            responsesByCode={responsesByCode}
-            responsesFullByCode={responsesFullByCode}
-            elementsState={elementsState}
-          />
-          <NavigationBox templateSections={templateSections} />
-        </Grid.Column>
-      </Grid>
-    </Segment.Group>
+  ) : application && templateSections && serialNumber && Object.keys(elementsState).length !== 0 ? (
+    <ApplicationSectionWrapper
+      applicationId={application.id}
+      templateSections={templateSections}
+      responsesByCode={responsesByCode}
+      responsesFullByCode={responsesFullByCode}
+      elementsState={elementsState}
+    />
   ) : (
     <Label content="Application's section can't be displayed" />
   )

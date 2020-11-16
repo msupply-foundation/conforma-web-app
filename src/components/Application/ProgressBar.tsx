@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion, Container, Grid, Header, Label, List, Sticky } from 'semantic-ui-react'
+import { Accordion, Container, Grid, Header, Icon, Label, List, Sticky } from 'semantic-ui-react'
 import { TemplateSectionPayload } from '../../utils/types'
 
 interface SectionPage {
@@ -26,10 +26,16 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       <List link>
         {pages.map((number) => (
           <List.Item
-            active={true} // TODO: Change to only show active when visited in Non-linear application
-            href={`/applications/${serialNumber}/${section}/Page${number}`}
+            as="a"
             key={`page_${number}`}
-          >{`Page ${number}`}</List.Item>
+            href={`/applications/${serialNumber}/${section}/Page${number}`}
+            active={true} // TODO: Change to only show active when visited in Non-linear application
+          >
+            <Icon name="exclamation circle" color="green" />
+            <List.Content>
+              <List.Header>{`Page ${number}`}</List.Header>
+            </List.Content>
+          </List.Item>
         ))}
       </List>
     )

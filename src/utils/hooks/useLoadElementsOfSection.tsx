@@ -12,6 +12,7 @@ interface useLoadElementsProps {
   applicationId: number
   sectionTempId: number
   sectionPage?: number
+  shouldSkip?: boolean
   onCompletedHandler?: (elements: ElementAndResponse[]) => void
   onErrorHandler?: (error: ApolloError) => void
 }
@@ -20,6 +21,7 @@ const useLoadElements = ({
   applicationId,
   sectionTempId,
   sectionPage,
+  shouldSkip,
   onCompletedHandler,
   onErrorHandler,
 }: useLoadElementsProps) => {
@@ -32,6 +34,7 @@ const useLoadElements = ({
       applicationId,
       sectionId: sectionTempId,
     },
+    skip: shouldSkip,
     onCompleted: (data) => {
       if (onCompletedHandler) {
         const templateElements = data?.templateElements?.nodes as TemplateElement[]
@@ -44,7 +47,7 @@ const useLoadElements = ({
   })
 
   useEffect(() => {
-    if (!data) return
+    if (!data) return // TODO: Check if when skipping this is correct!
     if (apolloError) return
 
     const error = checkForElementErrors(data)
