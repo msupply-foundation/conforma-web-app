@@ -21,7 +21,7 @@ export default gql`
               id
               title
               code
-              index,
+              index
               templateElementsBySectionId {
                 nodes {
                   id
@@ -41,8 +41,6 @@ export default gql`
               category
               isEditable
               isRequired
-              validation
-              validationMessage
               visibilityCondition
             }
           }

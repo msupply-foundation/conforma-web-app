@@ -1,6 +1,6 @@
 import { ApplicationResponse, TemplateElement, TemplateElementCategory } from './generated/graphql'
 
-import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 export {
   ApplicationDetails,
@@ -98,9 +98,8 @@ interface TemplateElementState {
   id: number
   category: TemplateElementCategory
   isRequired: IQueryNode
+  parameters: BasicObject
   visibilityCondition: IQueryNode
-  validation: IQueryNode
-  validationMessage: string | null
   isEditable: IQueryNode
 }
 

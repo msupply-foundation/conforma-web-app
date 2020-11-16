@@ -6,14 +6,13 @@ const ApplicationViewWrapper: React.FC<ApplicationViewProps> = (props) => {
   const {
     templateElement: { elementTypePluginCode: pluginCode },
     isVisible,
-    isEditable,
-    isRequired,
-    allResponses,
   } = props
 
   if (!pluginCode || !isVisible) return null
 
   const { ApplicationView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
+
+  console.log('pluginCode', pluginCode)
 
   return (
     <ErrorBoundary pluginCode={pluginCode}>

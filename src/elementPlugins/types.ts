@@ -12,6 +12,7 @@ interface ApplicationViewProps {
   isEditable: boolean
   isRequired: boolean
   allResponses: ResponsesByCode
+  evaluator: Function
   // applicationState,
   // graphQLclient
   initialValue: any // Could be a primative or an object with any shape
