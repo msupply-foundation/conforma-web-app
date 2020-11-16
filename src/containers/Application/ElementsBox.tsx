@@ -61,7 +61,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
             // TODO: Only send mutation on loose focus event.
             if (isValid)
               responseMutation({
-                variables: { id: response?.id as number, value: { text: value } },
+                variables: { id: response?.id as number, value },
               })
           }}
         />

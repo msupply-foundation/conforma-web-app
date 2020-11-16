@@ -18,13 +18,17 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     thisResponse: undefined,
     ...allResponses,
   })
-  const { validation: validationExpression, validationMessage } = templateElement?.parameters
+  const {
+    validation: validationExpression,
+    validationMessage,
+    placeholder,
+    maskedInput,
+  } = templateElement?.parameters
 
   useEffect(() => {
     // Do validation, setIsValid
     if (validationExpression && responses.thisResponse !== undefined) {
       evaluator(validationExpression, { objects: [responses] }).then((result: boolean) => {
-        console.log('result', result)
         setIsValid(result)
       })
     } else setIsValid(true)
@@ -32,7 +36,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   useEffect(() => {
     setResponses({ thisResponse: value, ...allResponses })
-    console.log('responses', responses)
   }, [value])
 
   useEffect(() => {
@@ -47,7 +50,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   function handleLoseFocus(e: any) {
     if (isValid) {
-      onUpdate({ value: e.target.value, isValid: true }) // Re-do for proper response shape
+      onUpdate({ value: { text: e.target.value }, isValid: true })
     } else {
       onUpdate({ isValid: false })
     }
@@ -57,14 +60,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     <Form.Input
       fluid
       label={templateElement.title}
-      placeholder={templateElement.parameters.placeholder}
-      // onChange={onChange(setValue, setValidationMessage, onUpdate)}
+      placeholder={placeholder}
       onChange={handleChange}
       onBlur={handleLoseFocus}
       value={value}
       disabled={!isEditable}
+      type={maskedInput ? 'password' : undefined}
       error={
-        validationMessageDisplay
+        !isValid
           ? {
               content: validationMessageDisplay,
               pointing: 'above',
