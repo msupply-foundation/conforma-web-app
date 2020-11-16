@@ -39,9 +39,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }, [value])
 
   useEffect(() => {
-    if (isValid) {
-      setValidationMessageDisplay('')
-    } else setValidationMessageDisplay(validationMessage)
+    if (isValid) setValidationMessageDisplay('')
+    else setValidationMessageDisplay(validationMessage)
   }, [isValid])
 
   function handleChange(e: any) {

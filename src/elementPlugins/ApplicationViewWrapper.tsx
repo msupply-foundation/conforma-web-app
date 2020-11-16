@@ -12,7 +12,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewProps> = (props) => {
 
   const { ApplicationView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
-  console.log('pluginCode', pluginCode)
+  // console.log('pluginCode', pluginCode)
 
   return (
     <ErrorBoundary pluginCode={pluginCode}>
