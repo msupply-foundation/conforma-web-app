@@ -11,35 +11,46 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   allResponses,
   evaluator,
 }) => {
-  const [validationMessageDisplay, setValidationMessage] = useState('')
+  const [validationMessageDisplay, setValidationMessageDisplay] = useState('')
   const [value, setValue] = useState(initialValue?.text)
   const [isValid, setIsValid] = useState<boolean>()
+  const [responses, setResponses] = useState({
+    thisResponse: undefined,
+    ...allResponses,
+  })
   const { validation: validationExpression, validationMessage } = templateElement?.parameters
-
-  // console.log('validationExpression', validationExpression)
-  // console.log('validationMessage', validationMessage)
-
-  // const thisQuestionValue = allResponses[]
 
   useEffect(() => {
     // Do validation, setIsValid
-    if (validationExpression) {
-      console.log('Expression', validationExpression)
-      const expression = { operator: '=', children: [2, 2] }
-      evaluator(validationExpression, { objects: [allResponses] }).then((result: boolean) => {
+    if (validationExpression && responses.thisResponse !== undefined) {
+      evaluator(validationExpression, { objects: [responses] }).then((result: boolean) => {
         console.log('result', result)
         setIsValid(result)
       })
     } else setIsValid(true)
+  }, [responses])
+
+  useEffect(() => {
+    setResponses({ thisResponse: value, ...allResponses })
+    console.log('responses', responses)
   }, [value])
+
+  useEffect(() => {
+    if (isValid) {
+      setValidationMessageDisplay('')
+    } else setValidationMessageDisplay(validationMessage)
+  }, [isValid])
 
   function handleChange(e: any) {
     setValue(e.target.value)
   }
 
   function handleLoseFocus(e: any) {
-    if (isValid) onUpdate({ value: e.target.value, isValid: true }) // Re-do for proper response shape
-    onUpdate({ value: e.target.value, isValid: true })
+    if (isValid) {
+      onUpdate({ value: e.target.value, isValid: true }) // Re-do for proper response shape
+    } else {
+      onUpdate({ isValid: false })
+    }
   }
 
   return (
@@ -63,20 +74,5 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     />
   )
 }
-
-// function onChange(updateValue: any, updateValidationMessage: any) {
-//   return (_: any, { value }: any) => {
-//     updateValue(value)
-// Validation here is just an example.
-// ideally we use validation condition from templateElement and query evaluator
-// if (value.match(/^[a-zA-Z ]*$/) == null) {
-//   updateValidationMessage('Should only have letters and space')
-//   onUpdate({ isValid: false })
-// } else {
-//   updateValidationMessage('')
-//   onUpdate({ value: value, isValid: true })
-// }
-//   }
-// }
 
 export default ApplicationView
