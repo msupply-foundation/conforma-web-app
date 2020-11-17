@@ -99,7 +99,7 @@ interface ElementBase {
   code: string
   title: string
   elementTypePluginCode: string
-  section: number
+  section: number // Index
   category: TemplateElementCategory
 }
 

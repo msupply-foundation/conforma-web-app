@@ -45,7 +45,12 @@ const ApplicationPageWrapper: React.FC = () => {
     <Message error header="Problem to load application" list={[error?.message]} />
   ) : loading || responsesLoading ? (
     <Loading />
-  ) : application && templateSections && serialNumber && currentSection ? (
+  ) : application &&
+    templateSections &&
+    serialNumber &&
+    currentSection &&
+    responsesByCode &&
+    responsesFullByCode ? (
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>

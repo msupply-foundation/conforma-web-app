@@ -18,8 +18,8 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 
 const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
   const { serialNumber } = props
-  const [responsesByCode, setResponsesByCode] = useState({})
-  const [responsesFullByCode, setResponsesFullByCode] = useState({})
+  const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>()
+  const [responsesFullByCode, setResponsesFullByCode] = useState<ResponsesFullByCode>()
   const [elementsExpressions, setElementsExpressions] = useState<TemplateElementState[]>([])
   const [elementsState, setElementsState] = useState<ApplicationElementStates>()
   const [error, setError] = useState('')
@@ -50,7 +50,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
     templateSections.forEach((sectionNode) => {
       const elementsInSection = sectionNode.templateElementsBySectionId?.nodes as TemplateElement[]
       elementsInSection.forEach((element) => {
-        templateElements.push({ ...element, section: sectionNode.id } as TemplateElementState) // No idea why ...[spread] doesn't work here.
+        templateElements.push({ ...element, section: sectionNode.index } as TemplateElementState) // No idea why ...[spread] doesn't work here.
       })
     })
 
@@ -93,7 +93,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
 
   async function evaluateSingleElement(element: TemplateElementState): Promise<ElementState> {
     const evaluationParameters = {
-      objects: [responsesByCode, responsesFullByCode], // TO-DO: Also send user/org objects etc.
+      objects: [responsesByCode as ResponsesByCode, responsesFullByCode as ResponsesFullByCode], // TO-DO: Also send user/org objects etc.
       // graphQLConnection: TO-DO
     }
     const isEditable = evaluateExpression(element.isEditable, evaluationParameters)

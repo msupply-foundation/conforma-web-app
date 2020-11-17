@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Grid, Header, Label, Loader, Message, Modal, Segment } from 'semantic-ui-react'
+import { Container, Grid, Header, Label, Message, Segment } from 'semantic-ui-react'
 import { ApplicationSummary, Loading, ProgressBar } from '../../components'
 import { Trigger, useUpdateApplicationMutation } from '../../utils/generated/graphql'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ApplicationElementStates, SectionElementStates } from '../../utils/types'
-
-interface SectionGroups {
-  [key: string]: ApplicationElementStates
-}
+import { SectionElementStates } from '../../utils/types'
 
 const ApplicationOverview: React.FC = () => {
   const [submitted, setSubmitted] = useState(false)
@@ -32,19 +28,20 @@ const ApplicationOverview: React.FC = () => {
   })
 
   useEffect(() => {
-    if (!responsesLoading && elementsState) {
-      const sectionsAndElements = Object.entries(elementsState).reduce(
-        (sectionGroups: SectionGroups, [code, item]) => {
-          const group = sectionGroups[item.section] || {}
-          group[code] = item
-          sectionGroups[item.section] = group
-          return sectionGroups
-        },
-        {}
-      )
-      console.log(sectionsAndElements)
+    if (!responsesLoading && elementsState && responsesFullByCode) {
+      // Create the arary of sections with array of section's element & responses
+      const sectionsAndElements: SectionElementStates[] = templateSections
+        .sort((a, b) => a.index - b.index)
+        .map((section) => {
+          return { section, elements: [] }
+        })
 
-      // setElementsInSections()
+      Object.values(elementsState).forEach((element) => {
+        const response = responsesFullByCode[element.code]
+        const elementAndValue = { element, value: response ? response : null }
+        sectionsAndElements[element.section].elements.push(elementAndValue)
+      })
+      setElementsInSections(sectionsAndElements)
     }
   }, [elementsState, responsesLoading])
 
