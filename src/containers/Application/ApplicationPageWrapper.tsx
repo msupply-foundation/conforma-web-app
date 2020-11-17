@@ -52,7 +52,7 @@ const ApplicationPageWrapper: React.FC = () => {
     serialNumber &&
     currentSection &&
     responsesByCode &&
-    responsesFullByCode ? (
+    responsesFullByCode &&
     Object.keys(elementsState).length !== 0 ? (
     <Segment.Group>
       <Grid stackable>

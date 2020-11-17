@@ -13,7 +13,7 @@ const ApplicationOverview: React.FC = () => {
   const { query, push } = useRouter()
   const { serialNumber } = query
 
-  const { error, loading, templateSections } = useLoadApplication({
+  const { error, loading, templateSections, isReady } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
 
@@ -25,6 +25,7 @@ const ApplicationOverview: React.FC = () => {
     elementsState,
   } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
+    isReady,
   })
 
   useEffect(() => {
@@ -49,12 +50,8 @@ const ApplicationOverview: React.FC = () => {
     onCompleted: () => setSubmitted(true),
   })
 
-  return error || responsesError ? (
-    <Message
-      error
-      header="Problem to load application overview"
-      list={[responsesError, error?.message]}
-    />
+  return error ? (
+    <Message error header="Problem to load application overview" list={[error]} />
   ) : loading || responsesLoading ? (
     <Loading />
   ) : submitted ? (
