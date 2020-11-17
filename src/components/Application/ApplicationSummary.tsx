@@ -30,7 +30,7 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
       <Form.Field>
         <Header as="h3" content={question.title} />
         <Input disabled error={!response}>
-          {response?.value}
+          {response?.value?.text}
         </Input>
       </Form.Field>
     ) : question.elementTypePluginCode !== 'pageBreak' ? (

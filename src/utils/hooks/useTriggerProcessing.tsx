@@ -21,7 +21,8 @@ const useTriggerProcessing = (props: { serialNumber: string; trigger: triggerTyp
     if (data?.applicationTriggerStates?.nodes[0]) {
       const triggerRequested = data?.applicationTriggerStates?.nodes[0][trigger]
       if (triggerRequested === null) setIsProcessing(false)
-    } else {
+    }
+    if (error) {
       setIsProcessing(false)
       setTriggerError(true)
     }
