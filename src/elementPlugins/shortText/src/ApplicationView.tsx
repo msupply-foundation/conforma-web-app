@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Input } from 'semantic-ui-react'
+import { Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
