@@ -2,7 +2,7 @@ import { TemplateElement } from '../utils/generated/graphql'
 import { ResponsesByCode } from '../utils/types'
 
 interface OnUpdateApplicationView {
-  (updateObject: { value?: any; isValid: boolean }): void
+  (updateObject: { value?: any; isValid: boolean | undefined }): void
 }
 
 interface ApplicationViewProps {

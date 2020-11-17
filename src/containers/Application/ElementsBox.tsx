@@ -59,10 +59,9 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
              * Also considering send to server on 'Next' or adding a Save button.
              **/
             // TODO: Only send mutation on loose focus event.
-            if (isValid)
-              responseMutation({
-                variables: { id: response?.id as number, value },
-              })
+            responseMutation({
+              variables: { id: response?.id as number, value, isValid },
+            })
           }}
         />
       ))}

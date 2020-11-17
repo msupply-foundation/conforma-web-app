@@ -2037,6 +2037,8 @@ export type ApplicationResponseFilter = {
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `value` field. */
   value?: Maybe<JsonFilter>;
+  /** Filter by the object’s `isValid` field. */
+  isValid?: Maybe<BooleanFilter>;
   /** Filter by the object’s `timeCreated` field. */
   timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
@@ -4115,6 +4117,8 @@ export enum ApplicationResponsesOrderBy {
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
   ValueAsc = 'VALUE_ASC',
   ValueDesc = 'VALUE_DESC',
+  IsValidAsc = 'IS_VALID_ASC',
+  IsValidDesc = 'IS_VALID_DESC',
   TimeCreatedAsc = 'TIME_CREATED_ASC',
   TimeCreatedDesc = 'TIME_CREATED_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -4131,6 +4135,8 @@ export type ApplicationResponseCondition = {
   applicationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `value` field. */
   value?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `isValid` field. */
+  isValid?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `timeCreated` field. */
   timeCreated?: Maybe<Scalars['Datetime']>;
 };
@@ -4156,6 +4162,7 @@ export type ApplicationResponse = Node & {
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   /** Reads a single `TemplateElement` that is related to this `ApplicationResponse`. */
   templateElement?: Maybe<TemplateElement>;
@@ -9062,6 +9069,7 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -9322,6 +9330,7 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -10385,6 +10394,7 @@ export type UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -10482,6 +10492,7 @@ export type UpdateApplicationResponseOnReviewResponseForReviewResponseApplicatio
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -10662,6 +10673,7 @@ export type ApplicationResponsePatch = {
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -10675,6 +10687,7 @@ export type ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInpu
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -11918,6 +11931,7 @@ export type FileApplicationResponseIdFkeyApplicationResponseCreateInput = {
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -12440,6 +12454,7 @@ export type ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInp
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -12599,6 +12614,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput =
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -13423,6 +13439,7 @@ export type ApplicationResponseInput = {
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -16969,6 +16986,7 @@ export type UpdateApplicationMutation = (
 export type UpdateResponseMutationVariables = Exact<{
   id: Scalars['Int'];
   value: Scalars['JSON'];
+  isValid?: Maybe<Scalars['Boolean']>;
 }>;
 
 
@@ -17417,8 +17435,8 @@ export type UpdateApplicationMutationHookResult = ReturnType<typeof useUpdateApp
 export type UpdateApplicationMutationResult = Apollo.MutationResult<UpdateApplicationMutation>;
 export type UpdateApplicationMutationOptions = Apollo.BaseMutationOptions<UpdateApplicationMutation, UpdateApplicationMutationVariables>;
 export const UpdateResponseDocument = gql`
-    mutation updateResponse($id: Int!, $value: JSON!) {
-  updateApplicationResponse(input: {id: $id, patch: {value: $value}}) {
+    mutation updateResponse($id: Int!, $value: JSON!, $isValid: Boolean) {
+  updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid}}) {
     applicationResponse {
       id
       value
@@ -17446,6 +17464,7 @@ export type UpdateResponseMutationFn = Apollo.MutationFunction<UpdateResponseMut
  *   variables: {
  *      id: // value for 'id'
  *      value: // value for 'value'
+ *      isValid: // value for 'isValid'
  *   },
  * });
  */

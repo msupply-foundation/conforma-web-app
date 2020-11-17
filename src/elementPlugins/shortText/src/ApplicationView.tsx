@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Form } from 'semantic-ui-react'
+import { Form, Input } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
@@ -48,32 +48,30 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   function handleLoseFocus(e: any) {
-    if (isValid) {
-      onUpdate({ value: { text: e.target.value }, isValid: true })
-    } else {
-      onUpdate({ isValid: false })
-    }
+    onUpdate({ value: { text: e.target.value }, isValid })
   }
 
   return (
-    <Form.Input
-      fluid
-      label={templateElement.title}
-      placeholder={placeholder}
-      onChange={handleChange}
-      onBlur={handleLoseFocus}
-      value={value}
-      disabled={!isEditable}
-      type={maskedInput ? 'password' : undefined}
-      error={
-        !isValid
-          ? {
-              content: validationMessageDisplay,
-              pointing: 'above',
-            }
-          : null
-      }
-    />
+    <>
+      <Form.Input
+        fluid
+        label={templateElement.title}
+        placeholder={placeholder}
+        onChange={handleChange}
+        onBlur={handleLoseFocus}
+        value={value}
+        disabled={!isEditable}
+        type={maskedInput ? 'password' : undefined}
+        error={
+          !isValid && allResponses[templateElement.code]
+            ? {
+                content: validationMessageDisplay,
+                pointing: 'above',
+              }
+            : null
+        }
+      />
+    </>
   )
 }
 
