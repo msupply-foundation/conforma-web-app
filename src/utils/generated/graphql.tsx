@@ -5246,6 +5246,8 @@ export enum ApplicationStageStatusAllsOrderBy {
   SerialDesc = 'SERIAL_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
   StageIdAsc = 'STAGE_ID_ASC',
   StageIdDesc = 'STAGE_ID_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
@@ -5278,6 +5280,8 @@ export type ApplicationStageStatusAllCondition = {
   serial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `name` field. */
   name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageId` field. */
   stageId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageNumber` field. */
@@ -5310,6 +5314,8 @@ export type ApplicationStageStatusAllFilter = {
   serial?: Maybe<StringFilter>;
   /** Filter by the object’s `name` field. */
   name?: Maybe<StringFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageId` field. */
   stageId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageNumber` field. */
@@ -5357,6 +5363,7 @@ export type ApplicationStageStatusAll = {
   templateId?: Maybe<Scalars['Int']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   stage?: Maybe<Scalars['String']>;
@@ -16919,6 +16926,62 @@ export type CreateApplicationMutation = (
   )> }
 );
 
+export type CreateResponseMutationVariables = Exact<{
+  applicationId: Scalars['Int'];
+  templateElementId: Scalars['Int'];
+  timeCreated: Scalars['Datetime'];
+}>;
+
+
+export type CreateResponseMutation = (
+  { __typename?: 'Mutation' }
+  & { createApplicationResponse?: Maybe<(
+    { __typename?: 'CreateApplicationResponsePayload' }
+    & { applicationResponse?: Maybe<(
+      { __typename?: 'ApplicationResponse' }
+      & { templateElement?: Maybe<(
+        { __typename?: 'TemplateElement' }
+        & ElementFragment
+      )>, application?: Maybe<(
+        { __typename?: 'Application' }
+        & Pick<Application, 'serial'>
+      )> }
+      & ResponseFragment
+    )> }
+  )> }
+);
+
+export type CreateSectionMutationVariables = Exact<{
+  applicationId: Scalars['Int'];
+  templateSectionId: Scalars['Int'];
+}>;
+
+
+export type CreateSectionMutation = (
+  { __typename?: 'Mutation' }
+  & { createApplicationSection?: Maybe<(
+    { __typename?: 'CreateApplicationSectionPayload' }
+    & { applicationSection?: Maybe<(
+      { __typename?: 'ApplicationSection' }
+      & Pick<ApplicationSection, 'id'>
+      & { templateSection?: Maybe<(
+        { __typename?: 'TemplateSection' }
+        & { templateElementsBySectionId: (
+          { __typename?: 'TemplateElementsConnection' }
+          & { nodes: Array<Maybe<(
+            { __typename?: 'TemplateElement' }
+            & ElementFragment
+          )>> }
+        ) }
+        & SectionFragment
+      )>, application?: Maybe<(
+        { __typename?: 'Application' }
+        & Pick<Application, 'id' | 'serial'>
+      )> }
+    )> }
+  )> }
+);
+
 export type CreateUserMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -17292,6 +17355,97 @@ export function useCreateApplicationMutation(baseOptions?: Apollo.MutationHookOp
 export type CreateApplicationMutationHookResult = ReturnType<typeof useCreateApplicationMutation>;
 export type CreateApplicationMutationResult = Apollo.MutationResult<CreateApplicationMutation>;
 export type CreateApplicationMutationOptions = Apollo.BaseMutationOptions<CreateApplicationMutation, CreateApplicationMutationVariables>;
+export const CreateResponseDocument = gql`
+    mutation createResponse($applicationId: Int!, $templateElementId: Int!, $timeCreated: Datetime!) {
+  createApplicationResponse(input: {applicationResponse: {applicationId: $applicationId, templateElementId: $templateElementId, timeCreated: $timeCreated}}) {
+    applicationResponse {
+      ...Response
+      templateElement {
+        ...Element
+      }
+      application {
+        serial
+      }
+    }
+  }
+}
+    ${ResponseFragmentDoc}
+${ElementFragmentDoc}`;
+export type CreateResponseMutationFn = Apollo.MutationFunction<CreateResponseMutation, CreateResponseMutationVariables>;
+
+/**
+ * __useCreateResponseMutation__
+ *
+ * To run a mutation, you first call `useCreateResponseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateResponseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createResponseMutation, { data, loading, error }] = useCreateResponseMutation({
+ *   variables: {
+ *      applicationId: // value for 'applicationId'
+ *      templateElementId: // value for 'templateElementId'
+ *      timeCreated: // value for 'timeCreated'
+ *   },
+ * });
+ */
+export function useCreateResponseMutation(baseOptions?: Apollo.MutationHookOptions<CreateResponseMutation, CreateResponseMutationVariables>) {
+        return Apollo.useMutation<CreateResponseMutation, CreateResponseMutationVariables>(CreateResponseDocument, baseOptions);
+      }
+export type CreateResponseMutationHookResult = ReturnType<typeof useCreateResponseMutation>;
+export type CreateResponseMutationResult = Apollo.MutationResult<CreateResponseMutation>;
+export type CreateResponseMutationOptions = Apollo.BaseMutationOptions<CreateResponseMutation, CreateResponseMutationVariables>;
+export const CreateSectionDocument = gql`
+    mutation createSection($applicationId: Int!, $templateSectionId: Int!) {
+  createApplicationSection(input: {applicationSection: {applicationId: $applicationId, templateSectionId: $templateSectionId}}) {
+    applicationSection {
+      id
+      templateSection {
+        ...Section
+        templateElementsBySectionId {
+          nodes {
+            ...Element
+          }
+        }
+      }
+      application {
+        id
+        serial
+      }
+    }
+  }
+}
+    ${SectionFragmentDoc}
+${ElementFragmentDoc}`;
+export type CreateSectionMutationFn = Apollo.MutationFunction<CreateSectionMutation, CreateSectionMutationVariables>;
+
+/**
+ * __useCreateSectionMutation__
+ *
+ * To run a mutation, you first call `useCreateSectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSectionMutation, { data, loading, error }] = useCreateSectionMutation({
+ *   variables: {
+ *      applicationId: // value for 'applicationId'
+ *      templateSectionId: // value for 'templateSectionId'
+ *   },
+ * });
+ */
+export function useCreateSectionMutation(baseOptions?: Apollo.MutationHookOptions<CreateSectionMutation, CreateSectionMutationVariables>) {
+        return Apollo.useMutation<CreateSectionMutation, CreateSectionMutationVariables>(CreateSectionDocument, baseOptions);
+      }
+export type CreateSectionMutationHookResult = ReturnType<typeof useCreateSectionMutation>;
+export type CreateSectionMutationResult = Apollo.MutationResult<CreateSectionMutation>;
+export type CreateSectionMutationOptions = Apollo.BaseMutationOptions<CreateSectionMutation, CreateSectionMutationVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($email: String!, $password: String!, $username: String!) {
   createUser(input: {user: {email: $email, passwordHash: $password, username: $username}}) {
