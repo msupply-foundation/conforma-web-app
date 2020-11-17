@@ -30,6 +30,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
       serial: serialNumber,
     },
     skip: triggerProcessing,
+    fetchPolicy: 'cache-and-network',
   })
 
   useEffect(() => {
@@ -56,6 +57,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
     application,
     templateSections,
     appStatus,
+    isReady,
   }
 }
 
