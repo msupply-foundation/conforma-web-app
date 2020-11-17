@@ -29,11 +29,7 @@ const ApplicationOverview: React.FC = () => {
   })
 
   return error || responsesError ? (
-    <Message
-      error
-      header="Problem to load application overview"
-      list={[responsesError, error?.message]}
-    />
+    <Message error header="Problem to load application overview" list={[responsesError, error]} />
   ) : loading || responsesLoading ? (
     <Loading />
   ) : submitError ? (
