@@ -16,8 +16,8 @@ import {
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 
-const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
-  const { serialNumber } = props
+const useGetResponsesAndElementState = (props: { serialNumber: string; isReady: boolean }) => {
+  const { serialNumber, isReady } = props
   const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>()
   const [responsesFullByCode, setResponsesFullByCode] = useState<ResponsesFullByCode>()
   const [elementsExpressions, setElementsExpressions] = useState<TemplateElementState[]>([])
@@ -26,6 +26,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
   const [loading, setLoading] = useState(true)
   const { data, loading: apolloLoading, error: apolloError } = useGetElementsAndResponsesQuery({
     variables: { serial: serialNumber },
+    skip: !isReady,
   })
 
   useEffect(() => {
@@ -71,7 +72,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
   }, [data, apolloError])
 
   useEffect(() => {
-    if (responsesByCode)
+    if (responsesByCode && Object.keys(responsesByCode).length > 0)
       evaluateElementExpressions().then((result) => {
         setElementsState(result)
         setLoading(false)
