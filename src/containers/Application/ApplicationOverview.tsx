@@ -1,13 +1,19 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Grid, Header, Label, Loader, Message, Modal, Segment } from 'semantic-ui-react'
 import { ApplicationSummary, Loading, ProgressBar } from '../../components'
 import { Trigger, useUpdateApplicationMutation } from '../../utils/generated/graphql'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { ApplicationElementStates, SectionElementStates } from '../../utils/types'
+
+interface SectionGroups {
+  [key: string]: ApplicationElementStates
+}
 
 const ApplicationOverview: React.FC = () => {
   const [submitted, setSubmitted] = useState(false)
+  const [elementsInSections, setElementsInSections] = useState<SectionElementStates[]>()
   const { query, push } = useRouter()
   const { serialNumber } = query
 
@@ -25,6 +31,23 @@ const ApplicationOverview: React.FC = () => {
     serialNumber: serialNumber as string,
   })
 
+  useEffect(() => {
+    if (!responsesLoading && elementsState) {
+      const sectionsAndElements = Object.entries(elementsState).reduce(
+        (sectionGroups: SectionGroups, [code, item]) => {
+          const group = sectionGroups[item.section] || {}
+          group[code] = item
+          sectionGroups[item.section] = group
+          return sectionGroups
+        },
+        {}
+      )
+      console.log(sectionsAndElements)
+
+      // setElementsInSections()
+    }
+  }, [elementsState, responsesLoading])
+
   const [applicationSubmitMutation] = useUpdateApplicationMutation({
     onCompleted: () => setSubmitted(true),
   })
@@ -41,7 +64,7 @@ const ApplicationOverview: React.FC = () => {
     <Container text>
       <Header>Application submitted!</Header>
     </Container>
-  ) : templateSections && serialNumber ? (
+  ) : serialNumber && elementsInSections ? (
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
@@ -53,9 +76,7 @@ const ApplicationOverview: React.FC = () => {
         </Grid.Column>
         <Grid.Column width={12}>
           <ApplicationSummary
-            templateSections={templateSections}
-            elementsState={elementsState}
-            responsesByCode={responsesFullByCode}
+            sectionsAndElements={elementsInSections}
             onSubmitHandler={() =>
               applicationSubmitMutation({
                 variables: {

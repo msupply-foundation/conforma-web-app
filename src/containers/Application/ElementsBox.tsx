@@ -4,7 +4,7 @@ import { ApplicationViewWrapper } from '../../elementPlugins'
 import useLoadElementsOfSection from '../../utils/hooks/useLoadElementsOfSection'
 import { Loading } from '../../components'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
-import { ApplicationElementState, ResponsesByCode, ResponsesFullByCode } from '../../utils/types'
+import { ApplicationElementStates, ResponsesByCode, ResponsesFullByCode } from '../../utils/types'
 
 interface ElementsBoxProps {
   applicationId: number
@@ -13,7 +13,7 @@ interface ElementsBoxProps {
   sectionPage: number
   responsesByCode: ResponsesByCode
   responsesFullByCode: ResponsesFullByCode
-  elementsState: ApplicationElementState
+  elementsState: ApplicationElementStates
 }
 
 const ElementsBox: React.FC<ElementsBoxProps> = ({

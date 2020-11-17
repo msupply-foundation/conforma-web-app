@@ -11,7 +11,7 @@ import {
   ResponsesByCode,
   ResponsesFullByCode,
   TemplateElementState,
-  ApplicationElementState,
+  ApplicationElementStates,
   ElementState,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
@@ -21,7 +21,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
   const [responsesByCode, setResponsesByCode] = useState({})
   const [responsesFullByCode, setResponsesFullByCode] = useState({})
   const [elementsExpressions, setElementsExpressions] = useState<TemplateElementState[]>([])
-  const [elementsState, setElementsState] = useState({})
+  const [elementsState, setElementsState] = useState<ApplicationElementStates>()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const { data, loading: apolloLoading, error: apolloError } = useGetElementsAndResponsesQuery({
@@ -84,7 +84,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
       promiseArray.push(evaluateSingleElement(element))
     })
     const evaluatedElements = await Promise.all(promiseArray)
-    const elementsState: ApplicationElementState = {}
+    const elementsState: ApplicationElementStates = {}
     evaluatedElements.forEach((element) => {
       elementsState[element.code] = element
     })

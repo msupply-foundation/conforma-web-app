@@ -5,6 +5,7 @@ import { Grid, Label, Message, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import { ElementsBox, NavigationBox } from './'
+import { ApplicationElementStates } from '../../utils/types'
 
 const ApplicationPageWrapper: React.FC = () => {
   const { query, push, replace } = useRouter()
@@ -63,7 +64,7 @@ const ApplicationPageWrapper: React.FC = () => {
             sectionPage={Number(page)}
             responsesByCode={responsesByCode}
             responsesFullByCode={responsesFullByCode}
-            elementsState={elementsState}
+            elementsState={elementsState as ApplicationElementStates}
           />
           <NavigationBox templateSections={templateSections} />
         </Grid.Column>
