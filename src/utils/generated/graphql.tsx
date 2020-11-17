@@ -17153,6 +17153,22 @@ export type GetTemplateQuery = (
   )> }
 );
 
+export type GetTriggersQueryVariables = Exact<{
+  serial: Scalars['String'];
+}>;
+
+
+export type GetTriggersQuery = (
+  { __typename?: 'Query' }
+  & { applicationTriggerStates?: Maybe<(
+    { __typename?: 'ApplicationTriggerStatesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ApplicationTriggerState' }
+      & Pick<ApplicationTriggerState, 'applicationTrigger' | 'reviewTrigger' | 'serial'>
+    )>> }
+  )> }
+);
+
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -17692,6 +17708,43 @@ export function useGetTemplateLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetTemplateQueryHookResult = ReturnType<typeof useGetTemplateQuery>;
 export type GetTemplateLazyQueryHookResult = ReturnType<typeof useGetTemplateLazyQuery>;
 export type GetTemplateQueryResult = Apollo.QueryResult<GetTemplateQuery, GetTemplateQueryVariables>;
+export const GetTriggersDocument = gql`
+    query getTriggers($serial: String!) {
+  applicationTriggerStates(condition: {serial: $serial}) {
+    nodes {
+      applicationTrigger
+      reviewTrigger
+      serial
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTriggersQuery__
+ *
+ * To run a query within a React component, call `useGetTriggersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTriggersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTriggersQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *   },
+ * });
+ */
+export function useGetTriggersQuery(baseOptions?: Apollo.QueryHookOptions<GetTriggersQuery, GetTriggersQueryVariables>) {
+        return Apollo.useQuery<GetTriggersQuery, GetTriggersQueryVariables>(GetTriggersDocument, baseOptions);
+      }
+export function useGetTriggersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTriggersQuery, GetTriggersQueryVariables>) {
+          return Apollo.useLazyQuery<GetTriggersQuery, GetTriggersQueryVariables>(GetTriggersDocument, baseOptions);
+        }
+export type GetTriggersQueryHookResult = ReturnType<typeof useGetTriggersQuery>;
+export type GetTriggersLazyQueryHookResult = ReturnType<typeof useGetTriggersLazyQuery>;
+export type GetTriggersQueryResult = Apollo.QueryResult<GetTriggersQuery, GetTriggersQueryVariables>;
 export const GetUsersDocument = gql`
     query getUsers {
   users {
