@@ -6,10 +6,9 @@ export default gql`
       input: { id: $id, patch: { value: $value } }
     ) {
       applicationResponse {
-        id
-        value
+        ...Response
         templateElement {
-          code
+          ...Element
         }
       }
     }

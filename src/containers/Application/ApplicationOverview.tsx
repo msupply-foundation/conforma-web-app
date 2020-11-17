@@ -1,32 +1,64 @@
-import React, { useState } from 'react'
-import { Container, Grid, Header, Label, Segment } from 'semantic-ui-react'
+import React, { useEffect, useState } from 'react'
+import { Container, Grid, Header, Label, Message, Segment } from 'semantic-ui-react'
 import { ApplicationSummary, Loading, ProgressBar } from '../../components'
 import { Trigger, useUpdateApplicationMutation } from '../../utils/generated/graphql'
+import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { SectionElementStates } from '../../utils/types'
 
 const ApplicationOverview: React.FC = () => {
   const [submitted, setSubmitted] = useState(false)
+  const [elementsInSections, setElementsInSections] = useState<SectionElementStates[]>()
   const { query, push } = useRouter()
   const { serialNumber } = query
 
-  const { error, loading, application, templateSections } = useLoadApplication({
+  const { error, loading, templateSections, isReady } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
+
+  const {
+    error: responsesError,
+    loading: responsesLoading,
+    responsesByCode,
+    responsesFullByCode,
+    elementsState,
+  } = useGetResponsesAndElementState({
+    serialNumber: serialNumber as string,
+    isReady,
+  })
+
+  useEffect(() => {
+    if (!responsesLoading && elementsState && responsesFullByCode) {
+      // Create the arary of sections with array of section's element & responses
+      const sectionsAndElements: SectionElementStates[] = templateSections
+        .sort((a, b) => a.index - b.index)
+        .map((section) => {
+          return { section, elements: [] }
+        })
+
+      Object.values(elementsState).forEach((element) => {
+        const response = responsesFullByCode[element.code]
+        const elementAndValue = { element, value: response ? response : null }
+        sectionsAndElements[element.section].elements.push(elementAndValue)
+      })
+      setElementsInSections(sectionsAndElements)
+    }
+  }, [elementsState, responsesLoading])
 
   const [applicationSubmitMutation] = useUpdateApplicationMutation({
     onCompleted: () => setSubmitted(true),
   })
 
   return error ? (
-    <Label content="Problem to load application overview" error={error} />
-  ) : loading ? (
+    <Message error header="Problem to load application overview" list={[error]} />
+  ) : loading || responsesLoading ? (
     <Loading />
   ) : submitted ? (
     <Container text>
       <Header>Application submitted!</Header>
     </Container>
-  ) : application && templateSections && serialNumber ? (
+  ) : serialNumber && elementsInSections ? (
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
@@ -38,12 +70,11 @@ const ApplicationOverview: React.FC = () => {
         </Grid.Column>
         <Grid.Column width={12}>
           <ApplicationSummary
-            applicationId={application.id as number}
-            sections={templateSections}
+            sectionsAndElements={elementsInSections}
             onSubmitHandler={() =>
               applicationSubmitMutation({
                 variables: {
-                  id: application.id as number,
+                  serial: serialNumber as string,
                   applicationTrigger: Trigger.OnApplicationSubmit,
                 },
               })

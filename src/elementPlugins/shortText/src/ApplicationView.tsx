@@ -11,7 +11,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   allResponses,
 }) => {
   const [validationMessage, setValidationMessage] = useState('')
-  const [value, setValue] = useState(initialValue)
+  const [value, setValue] = useState(initialValue?.text)
 
   return (
     <Form.Input

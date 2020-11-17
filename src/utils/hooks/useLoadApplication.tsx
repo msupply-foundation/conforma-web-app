@@ -18,7 +18,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   const [application, setApplication] = useState<ApplicationDetails | undefined>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
   const [appStatus, setAppStatus] = useState({})
-  const [isReady, setIsReady] = useState(false)
+  const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
 
   const { triggerProcessing, error: triggerError } = useTriggerProcessing({
     serialNumber,
@@ -29,15 +29,13 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
     variables: {
       serial: serialNumber,
     },
-    skip: triggerProcessing,
+    skip: triggerProcessing || isApplicationLoaded,
+    fetchPolicy: 'cache-and-network',
   })
 
   useEffect(() => {
-    if (data && data.applications) {
-      if (data.applications.nodes.length === 0) return
-      if (data.applications.nodes.length > 1)
-        console.log('More than one application returned. Only one expected!')
-      const application = data.applications.nodes[0] as Application
+    if (data && data.applicationBySerial) {
+      const application = data.applicationBySerial as Application
       setApplication({ name: application.name as string, id: application.id })
 
       const sections = getApplicationSections(application.applicationSections)
@@ -48,7 +46,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
         status: application?.status,
         outcome: application?.outcome,
       })
-      setIsReady(true)
+      setIsApplicationLoaded(true)
     }
   }, [data, loading, error])
 
@@ -58,6 +56,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
     application,
     templateSections,
     appStatus,
+    isApplicationLoaded,
   }
 }
 
