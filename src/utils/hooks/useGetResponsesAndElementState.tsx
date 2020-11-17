@@ -11,21 +11,22 @@ import {
   ResponsesByCode,
   ResponsesFullByCode,
   TemplateElementState,
-  ApplicationElementState,
+  ApplicationElementStates,
   ElementState,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 
-const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
-  const { serialNumber } = props
-  const [responsesByCode, setResponsesByCode] = useState({})
-  const [responsesFullByCode, setResponsesFullByCode] = useState({})
+const useGetResponsesAndElementState = (props: { serialNumber: string; isReady: boolean }) => {
+  const { serialNumber, isReady } = props
+  const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>()
+  const [responsesFullByCode, setResponsesFullByCode] = useState<ResponsesFullByCode>()
   const [elementsExpressions, setElementsExpressions] = useState<TemplateElementState[]>([])
-  const [elementsState, setElementsState] = useState({})
+  const [elementsState, setElementsState] = useState<ApplicationElementStates>()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const { data, loading: apolloLoading, error: apolloError } = useGetElementsAndResponsesQuery({
     variables: { serial: serialNumber },
+    skip: !isReady,
   })
 
   useEffect(() => {
@@ -50,7 +51,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
     templateSections.forEach((sectionNode) => {
       const elementsInSection = sectionNode.templateElementsBySectionId?.nodes as TemplateElement[]
       elementsInSection.forEach((element) => {
-        templateElements.push({ ...element, section: sectionNode.id } as TemplateElementState) // No idea why ...[spread] doesn't work here.
+        templateElements.push({ ...element, section: sectionNode.index } as TemplateElementState) // No idea why ...[spread] doesn't work here.
       })
     })
 
@@ -71,7 +72,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
   }, [data, apolloError])
 
   useEffect(() => {
-    if (responsesByCode)
+    if (responsesByCode && Object.keys(responsesByCode).length > 0)
       evaluateElementExpressions().then((result) => {
         setElementsState(result)
         setLoading(false)
@@ -84,7 +85,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
       promiseArray.push(evaluateSingleElement(element))
     })
     const evaluatedElements = await Promise.all(promiseArray)
-    const elementsState: ApplicationElementState = {}
+    const elementsState: ApplicationElementStates = {}
     evaluatedElements.forEach((element) => {
       elementsState[element.code] = element
     })
@@ -93,7 +94,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string }) => {
 
   async function evaluateSingleElement(element: TemplateElementState): Promise<ElementState> {
     const evaluationParameters = {
-      objects: [responsesByCode, responsesFullByCode], // TO-DO: Also send user/org objects etc.
+      objects: [responsesByCode as ResponsesByCode, responsesFullByCode as ResponsesFullByCode], // TO-DO: Also send user/org objects etc.
       // graphQLConnection: TO-DO
     }
     const isEditable = evaluateExpression(element.isEditable, evaluationParameters)

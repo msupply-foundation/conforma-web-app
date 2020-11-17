@@ -9,7 +9,6 @@ export default gql`
     ) {
       applicationSection {
         id
-        applicationId
         templateSection {
           ...Section
           templateElementsBySectionId {
@@ -17,6 +16,10 @@ export default gql`
               ...Element
             }
           }
+        }
+        application {
+          id
+          serial
         }
       }
     }

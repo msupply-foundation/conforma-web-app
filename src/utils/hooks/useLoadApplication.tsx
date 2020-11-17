@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Application, useGetApplicationQuery } from '../../utils/generated/graphql'
+import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
 import { getApplicationSections } from '../helpers/getSectionsPayload'
 import { TemplateSectionPayload } from '../types'
 
@@ -19,11 +20,17 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   const [appStatus, setAppStatus] = useState({})
   const [isReady, setIsReady] = useState(false)
 
+  const { triggerProcessing, error: triggerError } = useTriggerProcessing({
+    serialNumber,
+    trigger: 'applicationTrigger',
+  })
+
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
       serial: serialNumber,
     },
-    skip: isReady,
+    skip: triggerProcessing,
+    fetchPolicy: 'cache-and-network',
   })
 
   useEffect(() => {
@@ -45,11 +52,12 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   }, [data, loading, error])
 
   return {
-    error,
-    loading,
+    error: error || triggerError,
+    loading: loading || triggerProcessing,
     application,
     templateSections,
     appStatus,
+    isReady,
   }
 }
 

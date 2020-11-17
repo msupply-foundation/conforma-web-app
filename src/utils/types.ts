@@ -4,12 +4,13 @@ import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 export {
   ApplicationDetails,
-  ApplicationElementState,
+  ApplicationElementStates,
   ElementAndResponse,
   ElementState,
+  ResponsePayload,
   SectionPages,
   SectionElements,
-  ResponsePayload,
+  SectionElementStates,
   SectionPayload,
   TemplateTypePayload,
   TemplateSectionPayload,
@@ -28,9 +29,18 @@ interface ApplicationDetails {
   outcome: string
 }
 
+interface ApplicationElementStates {
+  [key: string]: ElementState
+}
+
 interface ElementAndResponse {
   question: TemplateElement
   response: ApplicationResponse | null
+}
+
+interface ResponsePayload {
+  applicationId: number
+  templateQuestions: TemplateElement[]
 }
 
 interface SectionPages {
@@ -41,9 +51,12 @@ interface SectionElements {
   [id: number]: Array<ElementAndResponse>
 }
 
-interface ResponsePayload {
-  applicationId: number
-  templateQuestions: TemplateElement[]
+interface SectionElementStates {
+  section: TemplateSectionPayload
+  elements: {
+    element: ElementState
+    value: ResponseFull | null
+  }[]
 }
 
 interface SectionPayload {
@@ -86,7 +99,7 @@ interface ElementBase {
   code: string
   title: string
   elementTypePluginCode: string
-  section: number
+  section: number // Index
   category: TemplateElementCategory
 }
 
@@ -108,7 +121,3 @@ interface ElementStateUnevaluated {
 
 type TemplateElementState = ElementBase & ElementStateUnevaluated
 type ElementState = ElementBase & ElementStateEvaluated
-
-interface ApplicationElementState {
-  [key: string]: ElementState
-}

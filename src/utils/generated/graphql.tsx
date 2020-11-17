@@ -5246,6 +5246,8 @@ export enum ApplicationStageStatusAllsOrderBy {
   SerialDesc = 'SERIAL_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
   StageIdAsc = 'STAGE_ID_ASC',
   StageIdDesc = 'STAGE_ID_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
@@ -5278,6 +5280,8 @@ export type ApplicationStageStatusAllCondition = {
   serial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `name` field. */
   name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageId` field. */
   stageId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageNumber` field. */
@@ -5310,6 +5314,8 @@ export type ApplicationStageStatusAllFilter = {
   serial?: Maybe<StringFilter>;
   /** Filter by the object’s `name` field. */
   name?: Maybe<StringFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageId` field. */
   stageId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageNumber` field. */
@@ -5357,6 +5363,7 @@ export type ApplicationStageStatusAll = {
   templateId?: Maybe<Scalars['Int']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   stage?: Maybe<Scalars['String']>;
@@ -16933,6 +16940,9 @@ export type CreateResponseMutation = (
       & { templateElement?: Maybe<(
         { __typename?: 'TemplateElement' }
         & ElementFragment
+      )>, application?: Maybe<(
+        { __typename?: 'Application' }
+        & Pick<Application, 'serial'>
       )> }
       & ResponseFragment
     )> }
@@ -16951,7 +16961,7 @@ export type CreateSectionMutation = (
     { __typename?: 'CreateApplicationSectionPayload' }
     & { applicationSection?: Maybe<(
       { __typename?: 'ApplicationSection' }
-      & Pick<ApplicationSection, 'id' | 'applicationId'>
+      & Pick<ApplicationSection, 'id'>
       & { templateSection?: Maybe<(
         { __typename?: 'TemplateSection' }
         & { templateElementsBySectionId: (
@@ -16962,6 +16972,9 @@ export type CreateSectionMutation = (
           )>> }
         ) }
         & SectionFragment
+      )>, application?: Maybe<(
+        { __typename?: 'Application' }
+        & Pick<Application, 'id' | 'serial'>
       )> }
     )> }
   )> }
@@ -17201,6 +17214,22 @@ export type GetTemplateQuery = (
   )> }
 );
 
+export type GetTriggersQueryVariables = Exact<{
+  serial: Scalars['String'];
+}>;
+
+
+export type GetTriggersQuery = (
+  { __typename?: 'Query' }
+  & { applicationTriggerStates?: Maybe<(
+    { __typename?: 'ApplicationTriggerStatesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ApplicationTriggerState' }
+      & Pick<ApplicationTriggerState, 'applicationTrigger' | 'reviewTrigger' | 'serial'>
+    )>> }
+  )> }
+);
+
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -17330,6 +17359,9 @@ export const CreateResponseDocument = gql`
       templateElement {
         ...Element
       }
+      application {
+        serial
+      }
     }
   }
 }
@@ -17367,7 +17399,6 @@ export const CreateSectionDocument = gql`
   createApplicationSection(input: {applicationSection: {applicationId: $applicationId, templateSectionId: $templateSectionId}}) {
     applicationSection {
       id
-      applicationId
       templateSection {
         ...Section
         templateElementsBySectionId {
@@ -17375,6 +17406,10 @@ export const CreateSectionDocument = gql`
             ...Element
           }
         }
+      }
+      application {
+        id
+        serial
       }
     }
   }
@@ -17823,6 +17858,43 @@ export function useGetTemplateLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetTemplateQueryHookResult = ReturnType<typeof useGetTemplateQuery>;
 export type GetTemplateLazyQueryHookResult = ReturnType<typeof useGetTemplateLazyQuery>;
 export type GetTemplateQueryResult = Apollo.QueryResult<GetTemplateQuery, GetTemplateQueryVariables>;
+export const GetTriggersDocument = gql`
+    query getTriggers($serial: String!) {
+  applicationTriggerStates(condition: {serial: $serial}) {
+    nodes {
+      applicationTrigger
+      reviewTrigger
+      serial
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTriggersQuery__
+ *
+ * To run a query within a React component, call `useGetTriggersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTriggersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTriggersQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *   },
+ * });
+ */
+export function useGetTriggersQuery(baseOptions?: Apollo.QueryHookOptions<GetTriggersQuery, GetTriggersQueryVariables>) {
+        return Apollo.useQuery<GetTriggersQuery, GetTriggersQueryVariables>(GetTriggersDocument, baseOptions);
+      }
+export function useGetTriggersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTriggersQuery, GetTriggersQueryVariables>) {
+          return Apollo.useLazyQuery<GetTriggersQuery, GetTriggersQueryVariables>(GetTriggersDocument, baseOptions);
+        }
+export type GetTriggersQueryHookResult = ReturnType<typeof useGetTriggersQuery>;
+export type GetTriggersLazyQueryHookResult = ReturnType<typeof useGetTriggersLazyQuery>;
+export type GetTriggersQueryResult = Apollo.QueryResult<GetTriggersQuery, GetTriggersQueryVariables>;
 export const GetUsersDocument = gql`
     query getUsers {
   users {
