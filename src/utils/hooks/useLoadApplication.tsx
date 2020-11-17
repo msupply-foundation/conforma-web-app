@@ -2,15 +2,10 @@ import { useEffect, useState } from 'react'
 import { Application, useGetApplicationQuery } from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
 import { getApplicationSections } from '../helpers/getSectionsPayload'
-import { TemplateSectionPayload } from '../types'
+import { ApplicationDetails, TemplateSectionPayload } from '../types'
 
 interface useLoadApplicationProps {
   serialNumber: string
-}
-
-interface ApplicationDetails {
-  name: string
-  id: number
 }
 
 const useLoadApplication = (props: useLoadApplicationProps) => {
@@ -18,7 +13,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   const [application, setApplication] = useState<ApplicationDetails | undefined>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
   const [appStatus, setAppStatus] = useState({})
-  const [isReady, setIsReady] = useState(false)
+  const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
 
   const { triggerProcessing, error: triggerError } = useTriggerProcessing({
     serialNumber,
@@ -29,7 +24,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
     variables: {
       serial: serialNumber,
     },
-    skip: triggerProcessing,
+    skip: triggerProcessing || isApplicationLoaded,
     fetchPolicy: 'cache-and-network',
   })
 
@@ -39,7 +34,15 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
       if (data.applications.nodes.length > 1)
         console.log('More than one application returned. Only one expected!')
       const application = data.applications.nodes[0] as Application
-      setApplication({ name: application.name as string, id: application.id })
+      setApplication({
+        id: application.id,
+        type: application.template?.name as string,
+        serial: application.serial as string,
+        name: application.name as string,
+        stage: application.stage as string,
+        status: application.status as string,
+        outcome: application.outcome as string,
+      })
 
       const sections = getApplicationSections(application.applicationSections)
       setSections(sections)
@@ -49,7 +52,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
         status: application?.status,
         outcome: application?.outcome,
       })
-      setIsReady(true)
+      setIsApplicationLoaded(true)
     }
   }, [data, loading, error])
 
@@ -59,7 +62,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
     application,
     templateSections,
     appStatus,
-    isReady,
+    isApplicationLoaded,
   }
 }
 

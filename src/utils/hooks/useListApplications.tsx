@@ -19,7 +19,7 @@ const useListApplication = () => {
   useEffect(() => {
     if (apolloError) return
     if (apolloLoading) return
-   // Check that only one template matched
+    // Check that only one template matched
     let error = checkForApplicationsErrors(data)
     if (error) {
       setError(error)
@@ -29,8 +29,9 @@ const useListApplication = () => {
 
     const applicationsList = data?.applications?.nodes as Application[]
     const applicationsDetails: ApplicationDetails[] = applicationsList.map((application) => {
-      const { serial, name, stage, status, outcome, template } = application
+      const { id, serial, name, stage, status, outcome, template } = application
       return {
+        id,
         type: template?.name as string,
         serial: serial as string,
         name: name as string,

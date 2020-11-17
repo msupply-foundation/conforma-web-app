@@ -20,6 +20,7 @@ export {
 }
 
 interface ApplicationDetails {
+  id: number
   type: string
   serial: string
   name: string
