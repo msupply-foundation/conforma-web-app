@@ -5,6 +5,7 @@ import { Grid, Label, Message, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import { ElementsBox, NavigationBox } from './'
+import { ApplicationElementStates } from '../../utils/types'
 
 const ApplicationPageWrapper: React.FC = () => {
   const { query, push, replace } = useRouter()
@@ -52,7 +53,14 @@ const ApplicationPageWrapper: React.FC = () => {
     <Message error header="Problem to load application" />
   ) : loading || responsesLoading ? (
     <Loading />
-  ) : application && templateSections && serialNumber && currentSection ? (
+  ) : application &&
+    templateSections &&
+    elementsState &&
+    serialNumber &&
+    currentSection &&
+    responsesByCode &&
+    responsesFullByCode &&
+    Object.keys(elementsState).length !== 0 ? (
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
@@ -71,7 +79,7 @@ const ApplicationPageWrapper: React.FC = () => {
             sectionPage={Number(page)}
             responsesByCode={responsesByCode}
             responsesFullByCode={responsesFullByCode}
-            elementsState={elementsState}
+            elementsState={elementsState as ApplicationElementStates}
           />
           <NavigationBox templateSections={templateSections} />
         </Grid.Column>
