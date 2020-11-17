@@ -1,16 +1,27 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { Loading } from '../../components'
-import { Label, Message } from 'semantic-ui-react'
+import { Loading, ProgressBar } from '../../components'
+import { Grid, Label, Message, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
-import ApplicationSectionWrapper from './ApplicationSectionWrapper'
+import useGetProgressInSections from '../../utils/hooks/useGetProgressInSections'
+import ElementsBox from './ElementsBox'
+import NavigationBox from './NavigationBox'
+import { TemplateSectionPayload } from '../../utils/types'
 
 const ApplicationPageWrapper: React.FC = () => {
+  const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
-  const { error, loading, application, templateSections, appStatus, isReady } = useLoadApplication({
+  const {
+    error,
+    loading,
+    application,
+    templateSections,
+    appStatus,
+    isApplicationLoaded,
+  } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
 
@@ -22,11 +33,11 @@ const ApplicationPageWrapper: React.FC = () => {
     elementsState,
   } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
-    isReady,
+    isApplicationLoaded,
   })
 
   useEffect(() => {
-    if (application) {
+    if (isApplicationLoaded) {
       processRedirect({
         ...appStatus,
         serialNumber,
@@ -36,21 +47,49 @@ const ApplicationPageWrapper: React.FC = () => {
         push,
         replace,
       })
+      setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
     }
-  }, [application])
+  }, [isApplicationLoaded])
+
+  const { processing, progressInSections } = useGetProgressInSections({
+    application,
+    currentSection,
+    currentPage: Number(page),
+    elementsState,
+    templateSections,
+  })
 
   return error ? (
     <Message error header="Problem to load application" />
   ) : loading || responsesLoading ? (
     <Loading />
+  ) : !currentSection ? (
+    <Message error header="Problem to load sections" />
   ) : application && templateSections && serialNumber && Object.keys(elementsState).length !== 0 ? (
-    <ApplicationSectionWrapper
-      applicationId={application.id}
-      templateSections={templateSections}
-      responsesByCode={responsesByCode}
-      responsesFullByCode={responsesFullByCode}
-      elementsState={elementsState}
-    />
+    <Segment.Group>
+      <Grid stackable>
+        <Grid.Column width={4}>
+          <ProgressBar
+            serialNumber={serialNumber as string}
+            currentSectionPage={{ sectionIndex: currentSection.index, currentPage: Number(page) }}
+            templateSections={templateSections}
+            push={push}
+          />
+        </Grid.Column>
+        <Grid.Column width={12} stretched>
+          <ElementsBox
+            applicationId={application.id}
+            sectionTitle={currentSection.title}
+            sectionTemplateId={currentSection.id}
+            sectionPage={Number(page)}
+            responsesByCode={responsesByCode}
+            responsesFullByCode={responsesFullByCode}
+            elementsState={elementsState}
+          />
+          <NavigationBox templateSections={templateSections} />
+        </Grid.Column>
+      </Grid>
+    </Segment.Group>
   ) : (
     <Label content="Application's section can't be displayed" />
   )

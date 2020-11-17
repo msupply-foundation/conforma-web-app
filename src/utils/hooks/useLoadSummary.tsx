@@ -3,7 +3,7 @@ import { SectionElements } from '../types'
 import useLoadElements from './useLoadElementsOfSection'
 
 interface useLoadSummaryProps {
-  applicationId: number
+  applicationId: number | undefined
   sectionIds: number[]
 }
 

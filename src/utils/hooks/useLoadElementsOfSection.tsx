@@ -9,7 +9,7 @@ import {
 import { ElementAndResponse, SectionPages } from '../types'
 
 interface useLoadElementsProps {
-  applicationId: number
+  applicationId: number | undefined
   sectionTempId: number
   sectionPage?: number
   shouldSkip?: boolean
@@ -31,10 +31,10 @@ const useLoadElements = ({
 
   const { data, loading: apolloLoading, error: apolloError } = useGetSectionElementsQuery({
     variables: {
-      applicationId,
+      applicationId: applicationId as number,
       sectionId: sectionTempId,
     },
-    skip: shouldSkip,
+    skip: !applicationId,
     onCompleted: (data) => {
       if (onCompletedHandler) {
         const templateElements = data?.templateElements?.nodes as TemplateElement[]
@@ -47,6 +47,8 @@ const useLoadElements = ({
   })
 
   useEffect(() => {
+    console.log('useLoadElementsOfSection', data)
+
     if (!data) return // TODO: Check if when skipping this is correct!
     if (apolloError) return
 

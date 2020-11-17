@@ -15,8 +15,13 @@ import {
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 
-const useGetResponsesAndElementState = (props: { serialNumber: string; isReady: boolean }) => {
-  const { serialNumber, isReady } = props
+interface useGetResponsesAndElementStateProps {
+  serialNumber: string
+  isApplicationLoaded: boolean
+}
+
+const useGetResponsesAndElementState = (props: useGetResponsesAndElementStateProps) => {
+  const { serialNumber, isApplicationLoaded } = props
   const [responsesByCode, setResponsesByCode] = useState({})
   const [responsesFullByCode, setResponsesFullByCode] = useState({})
   const [elementsExpressions, setElementsExpressions] = useState<TemplateElementState[]>([])
@@ -25,7 +30,7 @@ const useGetResponsesAndElementState = (props: { serialNumber: string; isReady: 
   const [loading, setLoading] = useState(true)
   const { data, loading: apolloLoading, error: apolloError } = useGetElementsAndResponsesQuery({
     variables: { serial: serialNumber },
-    skip: !isReady,
+    skip: !isApplicationLoaded,
   })
 
   useEffect(() => {

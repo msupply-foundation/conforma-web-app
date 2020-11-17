@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import useLoadElementsOfSection from './useLoadElementsOfSection'
-import { TemplateSectionPayload } from '../types'
+import { ApplicationDetails, TemplateSectionPayload } from '../types'
 
 interface getProgressInSectionProps {
-  applicationId: number
+  application: ApplicationDetails | undefined
   currentSection: TemplateSectionPayload | undefined
   currentPage: number
   elementsState: any
@@ -33,7 +33,7 @@ interface CheckingSectionAndPage {
 }
 
 const getProgressInSections = ({
-  applicationId,
+  application,
   currentSection,
   currentPage,
   elementsState,
@@ -48,52 +48,57 @@ const getProgressInSections = ({
   )
 
   const { elements, loading, error } = useLoadElementsOfSection({
-    applicationId,
+    applicationId: application ? application.id : undefined,
     sectionTempId: checkingSectionAndPage ? checkingSectionAndPage.section.id : 0,
     sectionPage: checkingSectionAndPage ? checkingSectionAndPage.page : 0,
-    shouldSkip: applicationId === 0 || !processing,
   })
 
   useEffect(() => {
-    if (!currentSection || !checkingSectionAndPage) setProcessing(false)
+    console.log('useGetProgressInSections', application, currentSection)
+  }, [application, currentSection])
 
-    console.log('progressInSections', progressInSections)
+  useEffect(() => {
+    // if (!currentSection || !checkingSectionAndPage) setProcessing(false)
 
-    // Only checks for sections/pages visited
-    if (
-      currentSection === checkingSectionAndPage?.section &&
-      currentPage === checkingSectionAndPage?.page
-    ) {
-      setProcessing(false)
-      console.log('Reach end')
-    }
+    if (checkingSectionAndPage) {
+      console.log('progressInSections', progressInSections)
 
-    const section = checkingSectionAndPage?.section.code as string
-    const page = checkingSectionAndPage?.page as number
-    // Process validation in page
-    setProgressInSection({
-      ...progressInSections,
-      [section]: {
-        ...progressInSections[section],
-        pages: {
-          ...progressInSections[section].pages,
-          [page]: { pageStatus: true, visited: true }, // TODO: Update pageStatus
+      // Only checks for sections/pages visited
+      if (
+        currentSection === checkingSectionAndPage?.section &&
+        currentPage === checkingSectionAndPage?.page
+      ) {
+        setProcessing(false)
+        console.log('Reach end')
+      }
+
+      const section = checkingSectionAndPage?.section.code as string
+      const page = checkingSectionAndPage?.page as number
+      // Process validation in page
+      setProgressInSection({
+        ...progressInSections,
+        [section]: {
+          ...progressInSections[section],
+          pages: {
+            ...progressInSections[section].pages,
+            [page]: { pageStatus: true, visited: true }, // TODO: Update pageStatus
+          },
         },
-      },
-    })
-
-    // Move to the next page/section
-    const previousSectionAndPage = checkingSectionAndPage as CheckingSectionAndPage
-    if (previousSectionAndPage.page > previousSectionAndPage.section.totalPages) {
-      const nextIndex = previousSectionAndPage.section.index + 1
-      const nextSection = templateSections.find(({ index }) => index === nextIndex)
-      if (!nextSection) setProcessing(false)
-      else setCheckingSectionAndPage({ section: nextSection, page: 1 }) // TODO: Not hardcoded
-    } else {
-      setCheckingSectionAndPage({
-        ...previousSectionAndPage,
-        page: previousSectionAndPage.page + 1,
       })
+
+      // Move to the next page/section
+      const previousSectionAndPage = checkingSectionAndPage as CheckingSectionAndPage
+      if (previousSectionAndPage.page > previousSectionAndPage.section.totalPages) {
+        const nextIndex = previousSectionAndPage.section.index + 1
+        const nextSection = templateSections.find(({ index }) => index === nextIndex)
+        if (!nextSection) setProcessing(false)
+        else setCheckingSectionAndPage({ section: nextSection, page: 1 }) // TODO: Not hardcoded
+      } else {
+        setCheckingSectionAndPage({
+          ...previousSectionAndPage,
+          page: previousSectionAndPage.page + 1,
+        })
+      }
     }
   }, [checkingSectionAndPage])
 
