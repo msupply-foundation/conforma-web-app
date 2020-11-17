@@ -18,6 +18,20 @@ export {
   ResponsesFullByCode,
   ResponsesByCode,
   TemplateElementState,
+  TemplatePermissions,
+  FullUserPermissions,
+}
+
+interface TemplatePermissions {
+  [index: string]: {
+    [index: string]: Array<'Apply' | 'Review' | 'Assign'>
+  }
+}
+
+interface FullUserPermissions {
+  username: string
+  templatePermissions: TemplatePermissions
+  JWT: string
 }
 
 interface ApplicationDetails {

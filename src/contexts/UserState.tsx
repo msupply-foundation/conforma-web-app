@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useReducer } from 'react'
+import { TemplatePermissions } from '../utils/types'
 
 type UserState = {
   currentUser: string | null
   users: Array<string>
+  templatePermissions: TemplatePermissions
 }
 
 export type UserActions =
@@ -16,6 +18,10 @@ export type UserActions =
   | {
       type: 'updateUsersList'
       updatedUsers: Array<string>
+    }
+  | {
+      type: 'setTemplatePermissions'
+      templatePermissions: TemplatePermissions
     }
 
 type UserProviderProps = { children: React.ReactNode }
@@ -39,6 +45,12 @@ const reducer = (state: UserState, action: UserActions) => {
         ...state,
         users: updatedUsers,
       }
+    case 'setTemplatePermissions':
+      const { templatePermissions } = action
+      return {
+        ...state,
+        templatePermissions,
+      }
     default:
       return state
   }
@@ -47,6 +59,7 @@ const reducer = (state: UserState, action: UserActions) => {
 const initialState: UserState = {
   currentUser: null,
   users: new Array<string>(),
+  templatePermissions: {},
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code

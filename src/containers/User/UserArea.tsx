@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Container, Label, Segment } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { useGetUsersQuery, User } from '../../utils/generated/graphql'
+import useGetUserPermissions from '../../utils/hooks/useGetUserPermissions'
 import Loading from '../../components/Loading'
 
 const UserArea: React.FC = () => {
@@ -10,6 +11,17 @@ const UserArea: React.FC = () => {
     setUserState,
   } = useUserState()
   const { data, loading, error } = useGetUsersQuery()
+  const { username, templatePermissions } = useGetUserPermissions()
+
+  useEffect(() => {
+    if (!username) return
+    setUserState({ type: 'setCurrentUser', nextUser: username })
+  }, [username])
+
+  useEffect(() => {
+    if (!templatePermissions) return
+    setUserState({ type: 'setTemplatePermissions', templatePermissions })
+  }, [templatePermissions])
 
   useEffect(() => {
     if (data && data.users && data.users.nodes) {
@@ -31,12 +43,7 @@ const UserArea: React.FC = () => {
       <Container>
         {users &&
           users.map((user) => (
-            <Button
-              basic
-              key={`user-area-button-${user}`}
-              color="green"
-              onClick={() => setUserState({ type: 'setCurrentUser', nextUser: user })}
-            >
+            <Button basic key={`user-area-button-${user}`} color="green">
               {user}
             </Button>
           ))}
