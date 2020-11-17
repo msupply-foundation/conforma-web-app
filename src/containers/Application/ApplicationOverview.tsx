@@ -12,7 +12,7 @@ const ApplicationOverview: React.FC = () => {
   const { query, push } = useRouter()
   const { serialNumber } = query
 
-  const { error, loading, templateSections, isReady } = useLoadApplication({
+  const { error, loading, templateSections, isApplicationLoaded } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
 
@@ -24,7 +24,7 @@ const ApplicationOverview: React.FC = () => {
     elementsState,
   } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
-    isReady,
+    isApplicationLoaded,
   })
 
   const { error: submitError, processing, submitted, submit } = useUpdateApplication({
