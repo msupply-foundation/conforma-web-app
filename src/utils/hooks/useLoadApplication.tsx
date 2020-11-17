@@ -18,7 +18,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   const [application, setApplication] = useState<ApplicationDetails | undefined>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
   const [appStatus, setAppStatus] = useState({})
-  const [isReady, setIsReady] = useState(false)
+  const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
 
   const { triggerProcessing, error: triggerError } = useTriggerProcessing({
     serialNumber,
@@ -29,7 +29,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
     variables: {
       serial: serialNumber,
     },
-    skip: triggerProcessing,
+    skip: triggerProcessing || isApplicationLoaded,
     fetchPolicy: 'cache-and-network',
   })
 
@@ -47,7 +47,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
         status: application?.status,
         outcome: application?.outcome,
       })
-      setIsReady(true)
+      setIsApplicationLoaded(true)
     }
   }, [data, loading, error])
 
@@ -57,7 +57,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
     application,
     templateSections,
     appStatus,
-    isReady,
+    isApplicationLoaded,
   }
 }
 
