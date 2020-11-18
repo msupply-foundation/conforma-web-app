@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
@@ -9,43 +9,73 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   isEditable,
   isRequired,
   allResponses,
+  evaluator,
 }) => {
-  const [validationMessage, setValidationMessage] = useState('')
+  const [validationMessageDisplay, setValidationMessageDisplay] = useState('')
   const [value, setValue] = useState(initialValue?.text)
+  const [isValid, setIsValid] = useState<boolean>()
+  const [responses, setResponses] = useState({
+    thisResponse: undefined,
+    ...allResponses,
+  })
+  const {
+    validation: validationExpression,
+    validationMessage,
+    placeholder,
+    maskedInput,
+  } = templateElement?.parameters
+
+  useEffect(() => {
+    // Do validation, setIsValid
+    if (validationExpression && responses.thisResponse !== undefined) {
+      evaluator(validationExpression, { objects: [responses], APIfetch: fetch })
+        .then((result: boolean) => {
+          setIsValid(result)
+        })
+        .catch((err: any) => console.log(err))
+    } else setIsValid(true)
+  }, [responses])
+
+  useEffect(() => {
+    setResponses({ thisResponse: value, ...allResponses })
+  }, [value])
+
+  useEffect(() => {
+    if (isValid) setValidationMessageDisplay('')
+    else setValidationMessageDisplay(validationMessage)
+  }, [isValid])
+
+  function handleChange(e: any) {
+    setValue(e.target.value)
+  }
+
+  function handleLoseFocus(e: any) {
+    // TO-DO if password (i.e 'maskedInput'), do HASH on password before sending value
+    onUpdate({ value: { text: value }, isValid })
+  }
 
   return (
-    <Form.Input
-      fluid
-      label={templateElement.title}
-      placeholder={templateElement.parameters.placeholder}
-      onChange={onChange(setValue, setValidationMessage, onUpdate)}
-      value={value}
-      disabled={!isEditable}
-      error={
-        validationMessage
-          ? {
-              content: validationMessage,
-              pointing: 'above',
-            }
-          : null
-      }
-    />
+    <>
+      <Form.Input
+        fluid
+        label={templateElement.title}
+        placeholder={placeholder}
+        onChange={handleChange}
+        onBlur={handleLoseFocus}
+        value={value}
+        disabled={!isEditable}
+        type={maskedInput ? 'password' : undefined}
+        error={
+          !isValid && allResponses[templateElement.code]
+            ? {
+                content: validationMessageDisplay,
+                pointing: 'above',
+              }
+            : null
+        }
+      />
+    </>
   )
-}
-
-function onChange(updateValue: any, updateValidationMessage: any, onUpdate: any) {
-  return (_: any, { value }: any) => {
-    updateValue(value)
-    // Validation here is just an example.
-    // ideally we use validation condition from templateElement and query evaluator
-    if (value.match(/^[a-zA-Z ]*$/) == null) {
-      updateValidationMessage('Should only have letters and space')
-      onUpdate({ isValid: false })
-    } else {
-      updateValidationMessage('')
-      onUpdate({ value: value, isValid: true })
-    }
-  }
 }
 
 export default ApplicationView

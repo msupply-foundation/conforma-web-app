@@ -1,10 +1,8 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  mutation updateResponse($id: Int!, $value: JSON!) {
-    updateApplicationResponse(
-      input: { id: $id, patch: { value: $value } }
-    ) {
+  mutation updateResponse($id: Int!, $value: JSON!, $isValid: Boolean) {
+    updateApplicationResponse(input: { id: $id, patch: { value: $value, isValid: $isValid } }) {
       applicationResponse {
         ...Response
         templateElement {

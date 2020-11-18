@@ -15,9 +15,6 @@ _Ongoing authoritative reference of Template Question/Element types, including i
 - **is_editable**: `JSON` -- dynamic query determining whether can be edited (Would only be false in rare circumstances)
   - default: `{"value": true}`
 - **parameters**: `JSON` -- the parameters specific to each question/element type. See individual plugins below for parameter breakdown
-- **validation**: `JSON` -- a dynamic expression for checking if the user's response is a valid input.
-  - default: `{"value": true}`
-- **validation_message**: `string` -- the message that shows in the UI when validation fails.
 
 ## Question/Element types
 
@@ -37,10 +34,13 @@ _Free-form, single-line text input element_
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
 - **maskedInput**: `boolean` -- if `true`, displays user input as masked (hidden) characters -- i.e. for passwords. [Optional]
 - **minWidth**/**maxWidth**: `integer` -- optional controls over visual display [Optional] _(We may never use these)_
+- **validation**: `JSON` -- a dynamic expression for checking if the user's response is a valid input.
+  - default: `{"value": true}` or just `true`
+- **validation_message**: `string` -- the message that shows in the UI when validation fails.
 
 #### Response type
 
-_This describes the expected object that will be stored in the `application_response` table `value` field. from the user's response_
+_This describes the expected object that will be stored in the `application_response` table `value` field. from the user's response_  
 `{ text: <string> }`
 
 ---
