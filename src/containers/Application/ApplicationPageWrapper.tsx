@@ -18,7 +18,7 @@ import { TemplateElementCategory } from '../../utils/generated/graphql'
 
 const ApplicationPageWrapper: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
-  const [loadingProgressBar, setLoadingProgressBar] = useState(true)
+  const [processingValidation, setProcessingValidation] = useState(true)
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
@@ -65,7 +65,7 @@ const ApplicationPageWrapper: React.FC = () => {
   useEffect(() => {
     if (!elementsState) return
     setProgressInApplication(startProgressState(templateSections))
-    setLoadingProgressBar(false)
+    setProcessingValidation(false)
   }, [elementsState])
 
   const validateCurrentPage = (): boolean => {
@@ -73,7 +73,7 @@ const ApplicationPageWrapper: React.FC = () => {
       console.log('Problem to validate - Undefined parameters')
       return false
     }
-
+    setProcessingValidation(true)
     const progressInPage = validateProgressInPage(
       elementsState as ApplicationElementStates,
       responsesByCode as ResponsesByCode,
@@ -88,6 +88,7 @@ const ApplicationPageWrapper: React.FC = () => {
         progressInPage
       )
     )
+    setProcessingValidation(false)
 
     return application?.isLinear
       ? progressInPage.pageStatus
@@ -95,8 +96,6 @@ const ApplicationPageWrapper: React.FC = () => {
         : false
       : true // Non-linear application
   }
-
-  console.log('progressStructure', progressInApplication)
 
   return error || responsesError ? (
     <Message error header="Problem to load application" />
@@ -111,7 +110,7 @@ const ApplicationPageWrapper: React.FC = () => {
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
-          {loadingProgressBar || !progressInApplication ? (
+          {processingValidation || !progressInApplication ? (
             <Loading>Loading progress bar</Loading>
           ) : (
             <ProgressBar
@@ -203,7 +202,7 @@ const updateProgressInPage = (
     pages: { ...progressInSection.pages, [currentPage]: status },
   }
 
-  const allPagesValidated = Object.values(progressInApplication[currentSection].pages).every(
+  const allPagesValidated = Object.values(progressInSection.pages).every(
     (page) => page.pageStatus !== undefined
   )
 
@@ -211,12 +210,9 @@ const updateProgressInPage = (
     progressInSection = {
       ...progressInSection,
       visited: true,
-      sectionStatus: Object.values(progressInApplication[currentSection].pages).reduce(
-        (accStatus: boolean, page) => {
-          return accStatus && (page.pageStatus as boolean)
-        },
-        true
-      ),
+      sectionStatus: Object.values(progressInSection.pages).reduce((accStatus: boolean, page) => {
+        return accStatus && (page.pageStatus as boolean)
+      }, true),
     }
   }
 

@@ -22,11 +22,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   push,
   validateCurrentPage,
 }) => {
-  const pageList = (
-    index: number,
-    sectionCode: string,
-    pages: { [page: number]: ProgressInPage }
-  ) => {
+  const pageList = (sectionCode: string, pages: { [page: number]: ProgressInPage }) => {
+    console.log('re-render progress bar')
+
     return (
       <List link>
         {Object.entries(pages).map(([number, currentPage]) => (
@@ -70,9 +68,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
               <Grid.Column width={4} textAlign="right" verticalAlign="middle">
                 {section.sectionStatus !== undefined ? (
                   section.sectionStatus ? (
-                    <Icon name="check circle" color="green" />
+                    <Icon name="check circle" size="large" color="green" />
                   ) : (
-                    <Icon name="exclamation circle" color="red" />
+                    <Icon name="exclamation circle" size="large" color="red" />
                   )
                 ) : (
                   getStepNumber(stepNumber)
@@ -96,7 +94,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           content: (
             <Grid divided>
               <Grid.Column width={4}></Grid.Column>
-              <Grid.Column width={12}>{pageList(index, section.code, section.pages)}</Grid.Column>
+              <Grid.Column width={12}>{pageList(section.code, section.pages)}</Grid.Column>
             </Grid>
           ),
         },
