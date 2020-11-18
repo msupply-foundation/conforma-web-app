@@ -1,6 +1,6 @@
 import React from 'react'
 import { Accordion, Container, Grid, Header, Icon, Label, List, Sticky } from 'semantic-ui-react'
-import { TemplateSectionPayload } from '../../utils/types'
+import { ProgressInApplication, ProgressInPage } from '../../utils/types'
 
 interface SectionPage {
   sectionIndex: number
@@ -9,29 +9,35 @@ interface SectionPage {
 
 interface ProgressBarProps {
   serialNumber: string
-  templateSections: TemplateSectionPayload[]
   currentSectionPage?: SectionPage
+  progressStructure: ProgressInApplication
   push: (path: string) => void
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   serialNumber,
-  templateSections,
   currentSectionPage,
+  progressStructure,
   push,
 }) => {
-  const pageList = (section: string, totalPages: number) => {
-    const pages = Array.from(Array(totalPages).keys(), (n) => n + 1)
+  console.log('Progress bar', progressStructure)
+
+  const pageList = (sectionCode: string, pages: { [page: number]: ProgressInPage }) => {
+    // const pages = Array.from(Array(totalPages).keys(), (n) => n + 1)
     return (
       <List link>
-        {pages.map((number) => (
+        {Object.entries(pages).map(([number, page]) => (
           <List.Item
             as="a"
             key={`page_${number}`}
-            href={`/applications/${serialNumber}/${section}/Page${number}`}
-            active={true} // TODO: Change to only show active when visited in Non-linear application
+            href={`/applications/${serialNumber}/${sectionCode}/Page${number}`}
+            active={page.visited} // TODO: Change to only show active when visited in Non-linear application
           >
-            <Icon name="exclamation circle" color="green" />
+            {page.pageStatus == true ? (
+              <Icon name="check circle" color="green" />
+            ) : page.pageStatus == false ? (
+              <Icon name="exclamation circle" color="red" />
+            ) : null}
             <List.Content>
               <List.Header>{`Page ${number}`}</List.Header>
             </List.Content>
@@ -42,7 +48,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   }
 
   const sectionList = () => {
-    const sectionItems = templateSections.map((section, index) => {
+    const sectionItems = Object.entries(progressStructure).map(([code, section], index) => {
       const stepNumber = index + 1
 
       return {
@@ -59,12 +65,12 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
             </Grid>
           ),
         },
-        onTitleClick: () => push(`/applications/${serialNumber}/${section.code}/Page1`),
+        onTitleClick: () => push(`/applications/${serialNumber}/${code}/Page1`),
         content: {
           content: (
             <Grid divided>
               <Grid.Column width={4}></Grid.Column>
-              <Grid.Column width={12}>{pageList(section.code, section.totalPages)}</Grid.Column>
+              <Grid.Column width={12}>{pageList(code, section.pages)}</Grid.Column>
             </Grid>
           ),
         },
@@ -99,9 +105,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     <Sticky as={Container}>
       <Header as="h5" textAlign="center" content="Steps to complete form" />
       <Accordion
-        activeIndex={
-          currentSectionPage ? currentSectionPage.sectionIndex : templateSections.length + 1
-        }
+        activeIndex={currentSectionPage ? currentSectionPage.sectionIndex : 0}
         panels={sectionList()}
       />
     </Sticky>
@@ -109,18 +113,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 }
 
 const getStepNumber = (stepNumber: number) => (
-  //   isLastElement ? (
   <Label circular as="a" basic color="blue" key={`progress_${stepNumber}`}>
     {stepNumber}
   </Label>
 )
-//   ) : (
-// Note: Attempt to use the vertical divider...
-// <Divider vertical>
-//   <Label circular as="a" basic color="blue" key={`progress_${stepNumber}`}>
-//     {stepNumber}
-//   </Label>
-// </Divider>
-//   )
 
 export default ProgressBar

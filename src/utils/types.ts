@@ -14,6 +14,9 @@ export {
   SectionPayload,
   TemplateTypePayload,
   TemplateSectionPayload,
+  ProgressInApplication,
+  ProgressInSection,
+  ProgressInPage,
   ResponseFull,
   ResponsesFullByCode,
   ResponsesByCode,
@@ -93,6 +96,24 @@ interface TemplateSectionPayload {
   title: string
   index: number
   totalPages: number
+}
+
+interface ProgressInPage {
+  pageStatus?: boolean | undefined
+  visited: boolean
+}
+
+interface ProgressInSection {
+  title: string
+  sectionStatus?: boolean | undefined
+  visited: boolean
+  pages: {
+    [page: number]: ProgressInPage
+  }
+}
+
+interface ProgressInApplication {
+  [section: string]: ProgressInSection
 }
 
 type ResponseFull = {

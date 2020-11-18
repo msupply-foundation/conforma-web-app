@@ -10,7 +10,7 @@ interface useLoadApplicationProps {
 
 const useLoadApplication = (props: useLoadApplicationProps) => {
   const { serialNumber } = props
-  const [application, setApplication] = useState<ApplicationDetails | undefined>()
+  const [application, setApplication] = useState<ApplicationDetails>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
   const [appStatus, setAppStatus] = useState({})
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
