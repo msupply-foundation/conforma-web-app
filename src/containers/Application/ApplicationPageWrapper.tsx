@@ -55,12 +55,10 @@ const ApplicationPageWrapper: React.FC = () => {
     <Loading />
   ) : application &&
     templateSections &&
-    elementsState &&
     serialNumber &&
     currentSection &&
     responsesByCode &&
-    responsesFullByCode &&
-    Object.keys(elementsState).length !== 0 ? (
+    responsesFullByCode ? (
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>

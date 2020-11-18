@@ -23,8 +23,8 @@ interface useGetResponsesAndElementStateProps {
 
 const useGetResponsesAndElementState = (props: useGetResponsesAndElementStateProps) => {
   const { serialNumber, isApplicationLoaded } = props
-  const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>({})
-  const [responsesFullByCode, setResponsesFullByCode] = useState<ResponsesFullByCode>({})
+  const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>()
+  const [responsesFullByCode, setResponsesFullByCode] = useState<ResponsesFullByCode>()
   const [elementsExpressions, setElementsExpressions] = useState<TemplateElementState[]>([])
   const [elementsState, setElementsState] = useState<ApplicationElementStates>()
   const [error, setError] = useState('')

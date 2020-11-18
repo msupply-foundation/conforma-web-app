@@ -1575,6 +1575,8 @@ export type TemplateFilter = {
   name?: Maybe<StringFilter>;
   /** Filter by the object’s `code` field. */
   code?: Maybe<StringFilter>;
+  /** Filter by the object’s `isLinear` field. */
+  isLinear?: Maybe<BooleanFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<TemplateStatusFilter>;
   /** Filter by the object’s `versionTimestamp` field. */
@@ -1609,6 +1611,32 @@ export type TemplateFilter = {
   or?: Maybe<Array<TemplateFilter>>;
   /** Negates the expression. */
   not?: Maybe<TemplateFilter>;
+};
+
+/** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
+export type BooleanFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Scalars['Boolean']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Scalars['Boolean']>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Scalars['Boolean']>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<Scalars['Boolean']>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<Scalars['Boolean']>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Scalars['Boolean']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Scalars['Boolean']>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Scalars['Boolean']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against TemplateStatus fields. All fields are combined with a logical ‘and.’ */
@@ -1723,32 +1751,6 @@ export type ApplicationStageHistoryFilter = {
   or?: Maybe<Array<ApplicationStageHistoryFilter>>;
   /** Negates the expression. */
   not?: Maybe<ApplicationStageHistoryFilter>;
-};
-
-/** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
-export type BooleanFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<Scalars['Boolean']>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<Scalars['Boolean']>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<Scalars['Boolean']>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<Scalars['Boolean']>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<Scalars['Boolean']>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<Scalars['Boolean']>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<Scalars['Boolean']>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<Scalars['Boolean']>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against many `ApplicationStatusHistory` object types. All fields are combined with a logical ‘and.’ */
@@ -3176,6 +3178,7 @@ export type Template = Node & {
   id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   /** Reads and enables pagination through a set of `TemplateStage`. */
@@ -5723,6 +5726,8 @@ export enum TemplatesOrderBy {
   NameDesc = 'NAME_DESC',
   CodeAsc = 'CODE_ASC',
   CodeDesc = 'CODE_DESC',
+  IsLinearAsc = 'IS_LINEAR_ASC',
+  IsLinearDesc = 'IS_LINEAR_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
   VersionTimestampAsc = 'VERSION_TIMESTAMP_ASC',
@@ -5739,6 +5744,8 @@ export type TemplateCondition = {
   name?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `code` field. */
   code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `isLinear` field. */
+  isLinear?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<TemplateStatus>;
   /** Checks for equality with the object’s `versionTimestamp` field. */
@@ -7335,6 +7342,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -7433,6 +7441,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -7534,6 +7543,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -8287,6 +8297,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -8411,6 +8422,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -8604,6 +8616,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -8627,6 +8640,7 @@ export type TemplatePatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -8642,6 +8656,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -8696,6 +8711,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -12844,6 +12860,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -13207,6 +13224,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -13250,6 +13268,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -13290,6 +13309,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -14164,6 +14184,7 @@ export type TemplateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -16897,6 +16918,8 @@ export type CreateApplicationMutationVariables = Exact<{
   name: Scalars['String'];
   serial: Scalars['String'];
   templateId: Scalars['Int'];
+  outcome?: Maybe<ApplicationOutcome>;
+  trigger?: Maybe<Trigger>;
 }>;
 
 
@@ -16998,7 +17021,8 @@ export type CreateUserMutation = (
 
 export type UpdateApplicationMutationVariables = Exact<{
   serial: Scalars['String'];
-  applicationTrigger: Trigger;
+  applicationTrigger?: Maybe<Trigger>;
+  responses?: Maybe<Array<ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationResponsePkeyUpdate>>;
 }>;
 
 
@@ -17282,8 +17306,8 @@ export const TemplateFragmentDoc = gql`
 }
     `;
 export const CreateApplicationDocument = gql`
-    mutation createApplication($name: String!, $serial: String!, $templateId: Int!) {
-  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, isActive: true, outcome: PENDING, trigger: ON_APPLICATION_CREATE}}) {
+    mutation createApplication($name: String!, $serial: String!, $templateId: Int!, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE) {
+  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, isActive: true, outcome: $outcome, trigger: $trigger}}) {
     application {
       ...Application
       template {
@@ -17318,6 +17342,8 @@ export type CreateApplicationMutationFn = Apollo.MutationFunction<CreateApplicat
  *      name: // value for 'name'
  *      serial: // value for 'serial'
  *      templateId: // value for 'templateId'
+ *      outcome: // value for 'outcome'
+ *      trigger: // value for 'trigger'
  *   },
  * });
  */
@@ -17456,8 +17482,8 @@ export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutati
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const UpdateApplicationDocument = gql`
-    mutation updateApplication($serial: String!, $applicationTrigger: Trigger!) {
-  updateApplicationBySerial(input: {serial: $serial, patch: {trigger: $applicationTrigger}}) {
+    mutation updateApplication($serial: String!, $applicationTrigger: Trigger = ON_APPLICATION_SUBMIT, $responses: [ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationResponsePkeyUpdate!]) {
+  updateApplicationBySerial(input: {serial: $serial, patch: {trigger: $applicationTrigger, applicationResponsesUsingId: {updateById: $responses}}}) {
     application {
       ...Application
     }
@@ -17481,6 +17507,7 @@ export type UpdateApplicationMutationFn = Apollo.MutationFunction<UpdateApplicat
  *   variables: {
  *      serial: // value for 'serial'
  *      applicationTrigger: // value for 'applicationTrigger'
+ *      responses: // value for 'responses'
  *   },
  * });
  */

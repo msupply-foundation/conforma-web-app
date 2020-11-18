@@ -36,6 +36,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   useEffect(() => {
     if (data && data.applicationBySerial) {
       const application = data.applicationBySerial as Application
+
       setApplication({ name: application.name as string, id: application.id })
 
       const sections = getApplicationSections(application.applicationSections)
