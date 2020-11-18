@@ -12,6 +12,7 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
   sectionsAndElements,
   onSubmitHandler,
 }) => {
+  console.log('sectionsAndElements', sectionsAndElements)
   return (
     <Container style={{ marginTop: '2em' }}>
       <Header as="h1" content="REVIEW AND SUBMIT" />

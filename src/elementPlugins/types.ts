@@ -22,6 +22,8 @@ interface ApplicationViewProps extends ApplicationViewWrapperProps {
   onUpdate: OnUpdateApplicationView
 }
 
+interface SummaryViewWrapperProps {}
+
 interface OnUpdateTemplateWrapperView {
   (updateObject: { [key: string]: any }): void
 }
@@ -66,6 +68,7 @@ export {
   ApplicationViewWrapperProps,
   ApplicationViewProps,
   TemplateViewWrapperProps,
+  SummaryViewWrapperProps,
   PluginConfig,
   PluginManifest,
   PluginComponents,

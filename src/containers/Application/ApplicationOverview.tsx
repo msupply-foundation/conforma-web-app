@@ -33,7 +33,7 @@ const ApplicationOverview: React.FC = () => {
 
   useEffect(() => {
     if (!responsesLoading && elementsState && responsesFullByCode) {
-      // Create the arary of sections with array of section's element & responses
+      // Create the array of sections with array of section's element & responses
       const sectionsAndElements: SectionElementStates[] = templateSections
         .sort((a, b) => a.index - b.index)
         .map((section) => {
