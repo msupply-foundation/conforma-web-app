@@ -45,6 +45,7 @@ interface ApplicationDetails {
   stage: string
   status: string
   outcome: string
+  isLinear: boolean
 }
 
 interface ApplicationElementStates {

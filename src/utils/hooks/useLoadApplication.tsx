@@ -35,6 +35,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
       setApplication({
         id: application.id,
         type: application.template?.name as string,
+        isLinear: application.template?.isLinear as boolean,
         serial: application.serial as string,
         name: application.name as string,
         stage: application.stage as string,

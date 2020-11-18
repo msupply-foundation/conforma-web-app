@@ -33,6 +33,7 @@ const useListApplication = () => {
       return {
         id,
         type: template?.name as string,
+        isLinear: template?.isLinear as boolean,
         serial: serial as string,
         name: name as string,
         stage: stage as string,

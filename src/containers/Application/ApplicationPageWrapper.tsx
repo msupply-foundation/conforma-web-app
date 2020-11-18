@@ -66,10 +66,12 @@ const ApplicationPageWrapper: React.FC = () => {
   }, [elementsState])
 
   const validateCurrentPage = (): boolean => {
-    if (!currentSection || !page) {
-      console.log('Problem to validate - Undefined section or page')
+    if (!application || !currentSection || !page) {
+      console.log('Problem to validate - Undefined parameters')
       return false
     }
+
+    console.log('Application is linear', application.isLinear)
 
     const progressInPage = validateProgressInPage(
       elementsState as ApplicationElementStates,
@@ -86,7 +88,11 @@ const ApplicationPageWrapper: React.FC = () => {
       )
     )
 
-    return progressInPage.pageStatus ? progressInPage.pageStatus : false
+    return application?.isLinear
+      ? progressInPage.pageStatus
+        ? progressInPage.pageStatus
+        : false
+      : true // Not-linear application
   }
 
   return error || responsesError ? (

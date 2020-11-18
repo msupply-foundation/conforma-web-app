@@ -16911,7 +16911,7 @@ export type SectionFragment = (
 
 export type TemplateFragment = (
   { __typename?: 'Template' }
-  & Pick<Template, 'code' | 'id' | 'name'>
+  & Pick<Template, 'code' | 'id' | 'name' | 'isLinear'>
 );
 
 export type CreateApplicationMutationVariables = Exact<{
@@ -17191,19 +17191,18 @@ export type GetTemplateQuery = (
     { __typename?: 'TemplatesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'Template' }
-      & Pick<Template, 'id' | 'code' | 'name'>
       & { templateSections: (
         { __typename?: 'TemplateSectionsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'TemplateSection' }
-          & Pick<TemplateSection, 'id' | 'code' | 'title' | 'index'>
           & { templateElementsBySectionId: (
             { __typename?: 'TemplateElementsConnection' }
             & { nodes: Array<Maybe<(
               { __typename?: 'TemplateElement' }
-              & Pick<TemplateElement, 'code' | 'category' | 'elementTypePluginCode' | 'id' | 'parameters' | 'sectionId' | 'title' | 'visibilityCondition'>
+              & ElementFragment
             )>> }
           ) }
+          & SectionFragment
         )>> }
       ), templateStages: (
         { __typename?: 'TemplateStagesConnection' }
@@ -17212,6 +17211,7 @@ export type GetTemplateQuery = (
           & Pick<TemplateStage, 'id' | 'number' | 'title'>
         )>> }
       ) }
+      & TemplateFragment
     )>> }
   )> }
 );
@@ -17303,6 +17303,7 @@ export const TemplateFragmentDoc = gql`
   code
   id
   name
+  isLinear
 }
     `;
 export const CreateApplicationDocument = gql`
@@ -17760,25 +17761,13 @@ export const GetTemplateDocument = gql`
     query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE) {
   templates(condition: {code: $code, status: $status}) {
     nodes {
-      id
-      code
-      name
+      ...Template
       templateSections {
         nodes {
-          id
-          code
-          title
-          index
+          ...Section
           templateElementsBySectionId {
             nodes {
-              code
-              category
-              elementTypePluginCode
-              id
-              parameters
-              sectionId
-              title
-              visibilityCondition
+              ...Element
             }
           }
         }
@@ -17793,7 +17782,9 @@ export const GetTemplateDocument = gql`
     }
   }
 }
-    `;
+    ${TemplateFragmentDoc}
+${SectionFragmentDoc}
+${ElementFragmentDoc}`;
 
 /**
  * __useGetTemplateQuery__
