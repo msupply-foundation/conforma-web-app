@@ -29,11 +29,9 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   })
 
   useEffect(() => {
-    if (data && data.applications) {
-      if (data.applications.nodes.length === 0) return
-      if (data.applications.nodes.length > 1)
-        console.log('More than one application returned. Only one expected!')
-      const application = data.applications.nodes[0] as Application
+    if (data && data.applicationBySerial) {
+      const application = data.applicationBySerial as Application
+
       setApplication({
         id: application.id,
         type: application.template?.name as string,

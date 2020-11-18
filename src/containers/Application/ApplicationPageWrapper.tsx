@@ -4,10 +4,8 @@ import { Loading, ProgressBar } from '../../components'
 import { Grid, Label, Message, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
-import useGetProgressInSections from '../../utils/hooks/useGetProgressInSections'
-import ElementsBox from './ElementsBox'
-import NavigationBox from './NavigationBox'
-import { TemplateSectionPayload } from '../../utils/types'
+import { ElementsBox, NavigationBox } from './'
+import { ApplicationElementStates, TemplateSectionPayload } from '../../utils/types'
 
 const ApplicationPageWrapper: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
@@ -59,13 +57,16 @@ const ApplicationPageWrapper: React.FC = () => {
     templateSections,
   })
 
-  return error ? (
+  return error || responsesError ? (
     <Message error header="Problem to load application" />
   ) : loading || responsesLoading ? (
     <Loading />
-  ) : !currentSection ? (
-    <Message error header="Problem to load sections" />
-  ) : application && templateSections && serialNumber && Object.keys(elementsState).length !== 0 ? (
+  ) : application &&
+    templateSections &&
+    serialNumber &&
+    currentSection &&
+    responsesByCode &&
+    responsesFullByCode ? (
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
@@ -84,7 +85,7 @@ const ApplicationPageWrapper: React.FC = () => {
             sectionPage={Number(page)}
             responsesByCode={responsesByCode}
             responsesFullByCode={responsesFullByCode}
-            elementsState={elementsState}
+            elementsState={elementsState as ApplicationElementStates}
           />
           <NavigationBox templateSections={templateSections} />
         </Grid.Column>

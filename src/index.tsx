@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import '../semantic/src/semantic.less'
-import * as config from './config.json'
+import config from './config.json'
 import cache from './cache'
 import { AppWrapper } from './containers/Main'
 import { ApolloClient, ApolloProvider, NormalizedCacheObject } from '@apollo/client'
@@ -12,7 +12,7 @@ const App: React.FC = () => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | undefined>(undefined)
   useEffect(() => {
     const client = new ApolloClient({
-      uri: config.server,
+      uri: config.serverGraphQL,
       cache,
     })
 

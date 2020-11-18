@@ -10,8 +10,8 @@ const AppWrapper: React.FC = () => {
     <div>
       <UserProvider>
         <UserArea />
+        <SiteLayout />
       </UserProvider>
-      <SiteLayout />
       <Footer />
     </div>
   )

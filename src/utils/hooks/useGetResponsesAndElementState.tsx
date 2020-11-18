@@ -11,7 +11,8 @@ import {
   ResponsesByCode,
   ResponsesFullByCode,
   TemplateElementState,
-  EvaluatedElement,
+  ApplicationElementStates,
+  ElementState,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 
@@ -22,10 +23,10 @@ interface useGetResponsesAndElementStateProps {
 
 const useGetResponsesAndElementState = (props: useGetResponsesAndElementStateProps) => {
   const { serialNumber, isApplicationLoaded } = props
-  const [responsesByCode, setResponsesByCode] = useState({})
-  const [responsesFullByCode, setResponsesFullByCode] = useState({})
+  const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>()
+  const [responsesFullByCode, setResponsesFullByCode] = useState<ResponsesFullByCode>()
   const [elementsExpressions, setElementsExpressions] = useState<TemplateElementState[]>([])
-  const [elementsState, setElementsState] = useState({})
+  const [elementsState, setElementsState] = useState<ApplicationElementStates>()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const { data, loading: apolloLoading, error: apolloError } = useGetElementsAndResponsesQuery({
@@ -34,6 +35,10 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
   })
 
   useEffect(() => {
+    if (!isApplicationLoaded) {
+      return
+    }
+
     const error = checkForApplicationErrors(data)
 
     if (error) {
@@ -50,12 +55,12 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
     const templateSections = data?.applicationBySerial?.template?.templateSections
       .nodes as TemplateSection[]
 
-    const templateElements: TemplateElementState[] = []
+    const templateElements = [] as TemplateElementState[]
 
     templateSections.forEach((sectionNode) => {
       const elementsInSection = sectionNode.templateElementsBySectionId?.nodes as TemplateElement[]
       elementsInSection.forEach((element) => {
-        templateElements.push(element as TemplateElementState) // No idea why ...[spread] doesn't work here.
+        templateElements.push({ ...element, section: sectionNode.index } as TemplateElementState) // No idea why ...[spread] doesn't work here.
       })
     })
 
@@ -84,28 +89,21 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
   }, [responsesByCode])
 
   async function evaluateElementExpressions() {
-    const promiseArray: Promise<EvaluatedElement>[] = []
+    const promiseArray: Promise<ElementState>[] = []
     elementsExpressions.forEach((element) => {
       promiseArray.push(evaluateSingleElement(element))
     })
     const evaluatedElements = await Promise.all(promiseArray)
-    const elementsState: any = {}
+    const elementsState: ApplicationElementStates = {}
     evaluatedElements.forEach((element) => {
-      elementsState[element.code] = {
-        id: element.id,
-        category: element.category,
-        isEditable: element.isEditable,
-        isRequired: element.isRequired,
-        isVisible: element.isVisible,
-        // isValid: element.isValid,
-      }
+      elementsState[element.code] = element
     })
     return elementsState
   }
 
-  async function evaluateSingleElement(element: TemplateElementState): Promise<EvaluatedElement> {
+  async function evaluateSingleElement(element: TemplateElementState): Promise<ElementState> {
     const evaluationParameters = {
-      objects: [responsesByCode, responsesFullByCode], // TO-DO: Also send user/org objects etc.
+      objects: [responsesByCode as ResponsesByCode, responsesFullByCode as ResponsesFullByCode], // TO-DO: Also send user/org objects etc.
       // graphQLConnection: TO-DO
     }
     const isEditable = evaluateExpression(element.isEditable, evaluationParameters)
@@ -114,8 +112,11 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
     // const isValid = evaluateExpression(element.validation, evaluationParameters)
     const results = await Promise.all([isEditable, isRequired, isVisible])
     const evaluatedElement = {
-      code: element.code,
       id: element.id,
+      code: element.code,
+      title: element.title,
+      elementTypePluginCode: element.elementTypePluginCode,
+      section: element.section as number,
       category: element.category,
       isEditable: results[0] as boolean,
       isRequired: results[1] as boolean,
