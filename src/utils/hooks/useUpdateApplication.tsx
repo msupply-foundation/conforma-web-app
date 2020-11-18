@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import {
   ApplicationResponse,
   Trigger,
-  useGetResponsesInApplicationQuery,
+  useGetElementsAndResponsesQuery,
   useUpdateApplicationMutation,
 } from '../generated/graphql'
 
@@ -18,7 +18,7 @@ const useUpdateApplication = ({ applicationSerial }: useUpdateApplicationProps) 
   const [error, setError] = useState<ApolloError | undefined>()
 
   // Hook to get existing responses in cache - triggered when user submits application
-  const { data, error: responsesError } = useGetResponsesInApplicationQuery({
+  const { data, error: responsesError } = useGetElementsAndResponsesQuery({
     variables: {
       serial: applicationSerial,
     },
