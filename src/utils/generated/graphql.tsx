@@ -16866,7 +16866,7 @@ export type ApplicationFragment = (
 
 export type ElementFragment = (
   { __typename?: 'TemplateElement' }
-  & Pick<TemplateElement, 'id' | 'title' | 'elementTypePluginCode' | 'code' | 'category' | 'isEditable' | 'isRequired' | 'visibilityCondition'>
+  & Pick<TemplateElement, 'id' | 'title' | 'elementTypePluginCode' | 'code' | 'category' | 'isEditable' | 'isRequired' | 'parameters' | 'visibilityCondition'>
 );
 
 export type ResponseFragment = (
@@ -17249,6 +17249,7 @@ export const ElementFragmentDoc = gql`
   category
   isEditable
   isRequired
+  parameters
   visibilityCondition
 }
     `;

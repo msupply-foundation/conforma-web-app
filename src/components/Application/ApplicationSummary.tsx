@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Container, Form, Grid, Header, Input, Segment } from 'semantic-ui-react'
+import { SummaryViewWrapper } from '../../elementPlugins'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
 import { ElementState, ResponseFull, SectionElementStates } from '../../utils/types'
 
@@ -29,7 +30,9 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
                 </Grid.Column>
               </Grid.Row>
             </Grid>
-            {elements.map(({ element, value }) => getQuestion(element, value))}
+            {elements.map((element) => (
+              <SummaryViewWrapper element={element.element} value={element.value} />
+            ))}
           </Segment.Group>
         ))}
         <Button
@@ -43,19 +46,19 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
   )
 }
 
-function getQuestion(question: ElementState, response: ResponseFull | null) {
-  return question.category === TemplateElementCategory.Question ? (
-    <Form.Field>
-      <Header as="h3" content={question.title} />
-      <Input disabled error={!response}>
-        {response?.text}
-      </Input>
-    </Form.Field>
-  ) : question.elementTypePluginCode !== 'pageBreak' ? (
-    <Form.Field>
-      <Header as="h5" content={question.title} />
-    </Form.Field>
-  ) : null
-}
+// function getQuestion(question: ElementState, response: ResponseFull | null) {
+//   return question.category === TemplateElementCategory.Question ? (
+//     <Form.Field>
+//       <Header as="h3" content={question.title} />
+//       <Input disabled error={!response}>
+//         {response?.text}
+//       </Input>
+//     </Form.Field>
+//   ) : question.elementTypePluginCode !== 'pageBreak' ? (
+//     <Form.Field>
+//       <Header as="h5" content={question.title} />
+//     </Form.Field>
+//   ) : null
+// }
 
 export default ApplicationSummary

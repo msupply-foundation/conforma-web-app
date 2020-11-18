@@ -1,5 +1,5 @@
 import { ApplicationResponse, TemplateElement } from '../utils/generated/graphql'
-import { ResponsesByCode } from '../utils/types'
+import { ResponseFull, ResponsesByCode } from '../utils/types'
 
 interface OnUpdateApplicationView {
   (updateObject: { value?: any; isValid: boolean | undefined }): void
@@ -22,7 +22,10 @@ interface ApplicationViewProps extends ApplicationViewWrapperProps {
   onUpdate: OnUpdateApplicationView
 }
 
-interface SummaryViewWrapperProps {}
+interface SummaryViewWrapperProps {
+  element: any
+  value: ResponseFull | null
+}
 
 interface OnUpdateTemplateWrapperView {
   (updateObject: { [key: string]: any }): void

@@ -115,6 +115,7 @@ interface ElementBase {
   elementTypePluginCode: string
   section: number // Index
   category: TemplateElementCategory
+  parameters: any
 }
 
 interface TemplateElementState extends ElementBase {

@@ -31,6 +31,8 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
     sectionPage,
   })
 
+  console.log('elements', elements)
+
   return error ? (
     <Label content="Problem to load elements" error={error} />
   ) : loading ? (

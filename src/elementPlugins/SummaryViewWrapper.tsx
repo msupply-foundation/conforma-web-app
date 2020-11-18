@@ -1,38 +1,38 @@
 import React from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
-import { ApplicationViewWrapperProps, PluginComponents } from './types'
-import evaluateExpression from '@openmsupply/expression-evaluator'
-import { useUpdateResponseMutation } from '../utils/generated/graphql'
+import { Header } from 'semantic-ui-react'
+import { SummaryViewWrapperProps, PluginComponents } from './types'
 
-const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
+const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
+  const { element, value } = props
   const {
-    templateElement: { elementTypePluginCode: pluginCode },
-    isVisible,
+    parameters,
+    category,
+    code,
+    elementTypePluginCode: pluginCode,
     isEditable,
     isRequired,
-    currentResponse,
-  } = props
+    isVisible,
+  } = element
 
-  if (!pluginCode || !isVisible) return null
+  if (!pluginCode || !isVisible || category === 'INFORMATION') return null
 
-  const [responseMutation] = useUpdateResponseMutation()
+  // const newProps = { evaluator: evaluateExpression, onUpdate, ...props }
 
-  const onUpdate = (updateObject: any) => {
-    const { isValid, value } = updateObject
-    responseMutation({
-      variables: { id: currentResponse?.id as number, value, isValid },
-    })
-  }
+  const { SummaryView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
-  const newProps = { evaluator: evaluateExpression, onUpdate, ...props }
-
-  const { ApplicationView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
+  console.log('parameters', parameters)
 
   return (
     <ErrorBoundary pluginCode={pluginCode}>
-      <React.Suspense fallback="Loading Plugin">{<ApplicationView {...newProps} />}</React.Suspense>
+      <React.Suspense fallback="Loading Plugin">
+        <Header as="h3" content={parameters.label} />
+        {value?.text}
+      </React.Suspense>
     </ErrorBoundary>
   )
+
+  // return <p>Nothing to see here</p>
 }
 
-export default ApplicationViewWrapper
+export default SummaryViewWrapper
