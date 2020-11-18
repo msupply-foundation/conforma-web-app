@@ -9,17 +9,17 @@ export default gql`
     ) {
       applicationSection {
         id
-        applicationId
         templateSection {
-          title
+          ...Section
           templateElementsBySectionId {
             nodes {
-              id
-              code
-              category
-              elementTypePluginCode
+              ...Element
             }
           }
+        }
+        application {
+          id
+          serial
         }
       }
     }

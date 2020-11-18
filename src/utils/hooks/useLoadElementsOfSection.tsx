@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client'
 import { useState, useEffect } from 'react'
 import {
   GetSectionElementsQuery,
@@ -12,16 +11,12 @@ interface useLoadElementsProps {
   applicationId: number
   sectionTempId: number
   sectionPage?: number
-  onCompletedHandler?: (elements: ElementAndResponse[]) => void
-  onErrorHandler?: (error: ApolloError) => void
 }
 
-const useLoadElements = ({
+const useLoadElementsOfSection = ({
   applicationId,
   sectionTempId,
   sectionPage,
-  onCompletedHandler,
-  onErrorHandler,
 }: useLoadElementsProps) => {
   const [currentPageElements, setElements] = useState<ElementAndResponse[]>([])
   const [error, setError] = useState('')
@@ -31,15 +26,6 @@ const useLoadElements = ({
     variables: {
       applicationId,
       sectionId: sectionTempId,
-    },
-    onCompleted: (data) => {
-      if (onCompletedHandler) {
-        const templateElements = data?.templateElements?.nodes as TemplateElement[]
-        onCompletedHandler(getElements({ templateElements }))
-      }
-    },
-    onError: (error) => {
-      if (onErrorHandler) onErrorHandler(error)
     },
   })
 
@@ -140,4 +126,4 @@ function getElements({ templateElements }: GetElementProps) {
   return elementsInSection
 }
 
-export default useLoadElements
+export default useLoadElementsOfSection

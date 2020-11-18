@@ -2,46 +2,25 @@ import { gql } from '@apollo/client'
 
 export default gql`
   query getApplication($serial: String!) {
-    applications(condition: { serial: $serial }) {
-      nodes {
-        id
-        serial
-        name
-        outcome
-        stage
-        status
-        template {
-          code
+    applicationBySerial(serial: $serial) {
+      ...Application
+      applicationResponses {
+        nodes {
+          ...Response
+        }
+      }
+      template {
+        ...Template
+      }
+      applicationSections {
+        nodes {
           id
-          name
-        }
-        applicationSections {
-          nodes {
-            templateSection {
-              id
-              title
-              code
-              index
-              templateElementsBySectionId {
-                nodes {
-                  id
-                  code
-                  elementTypePluginCode
-                }
+          templateSection {
+            ...Section
+            templateElementsBySectionId {
+              nodes {
+                ...Element
               }
-            }
-          }
-        }
-        applicationResponses {
-          nodes {
-            value
-            id
-            templateElement {
-              code
-              category
-              isEditable
-              isRequired
-              visibilityCondition
             }
           }
         }

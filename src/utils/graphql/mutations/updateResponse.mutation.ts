@@ -4,10 +4,9 @@ export default gql`
   mutation updateResponse($id: Int!, $value: JSON!, $isValid: Boolean) {
     updateApplicationResponse(input: { id: $id, patch: { value: $value, isValid: $isValid } }) {
       applicationResponse {
-        id
-        value
+        ...Response
         templateElement {
-          code
+          ...Element
         }
       }
     }

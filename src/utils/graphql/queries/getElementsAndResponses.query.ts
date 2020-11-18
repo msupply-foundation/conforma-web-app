@@ -5,8 +5,7 @@ export default gql`
     applicationBySerial(serial: $serial) {
       applicationResponses {
         nodes {
-          id
-          value
+          ...Response
           templateElement {
             code
           }
@@ -15,14 +14,10 @@ export default gql`
       template {
         templateSections {
           nodes {
+            ...Section
             templateElementsBySectionId {
               nodes {
-                id
-                code
-                category
-                isEditable
-                isRequired
-                visibilityCondition
+                ...Element
               }
             }
           }

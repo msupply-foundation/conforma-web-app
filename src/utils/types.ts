@@ -4,19 +4,34 @@ import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/t
 
 export {
   ApplicationDetails,
+  ApplicationElementStates,
   ElementAndResponse,
+  ElementState,
+  ResponsePayload,
   SectionPages,
   SectionElements,
-  ResponsePayload,
+  SectionElementStates,
   SectionPayload,
   TemplateTypePayload,
   TemplateSectionPayload,
   ResponseFull,
   ResponsesFullByCode,
   ResponsesByCode,
-  ApplicationElementState,
   TemplateElementState,
-  EvaluatedElement,
+  TemplatePermissions,
+  FullUserPermissions,
+}
+
+interface TemplatePermissions {
+  [index: string]: {
+    [index: string]: Array<'Apply' | 'Review' | 'Assign'>
+  }
+}
+
+interface FullUserPermissions {
+  username: string
+  templatePermissions: TemplatePermissions
+  JWT: string
 }
 
 interface ApplicationDetails {
@@ -28,9 +43,18 @@ interface ApplicationDetails {
   outcome: string
 }
 
+interface ApplicationElementStates {
+  [key: string]: ElementState
+}
+
 interface ElementAndResponse {
   question: TemplateElement
   response: ApplicationResponse | null
+}
+
+interface ResponsePayload {
+  applicationId: number
+  templateQuestions: TemplateElement[]
 }
 
 interface SectionPages {
@@ -41,9 +65,12 @@ interface SectionElements {
   [id: number]: Array<ElementAndResponse>
 }
 
-interface ResponsePayload {
-  applicationId: number
-  templateQuestions: TemplateElement[]
+interface SectionElementStates {
+  section: TemplateSectionPayload
+  elements: {
+    element: ElementState
+    value: ResponseFull | null
+  }[]
 }
 
 interface SectionPayload {
@@ -71,44 +98,40 @@ type ResponseFull = {
   text: string | null | undefined
   optionIndex?: number
   reference?: any // Not yet decided how to represent
-} | null
+}
 
 interface ResponsesFullByCode {
-  [key: string]: ResponseFull
+  [key: string]: ResponseFull | null
 }
 
 interface ResponsesByCode {
   [key: string]: string | null | undefined
 }
 
-interface ApplicationElementState {
-  [key: string]: {
-    id: number
-    category: TemplateElementCategory
-    isRequired: boolean
-    isVisible: boolean
-    isValid: boolean
-    // validationMessage: string | null
-    isEditable: boolean
-  }
+interface ElementBase {
+  id: number
+  code: string
+  title: string
+  elementTypePluginCode: string
+  section: number // Index
+  category: TemplateElementCategory
 }
 
-interface TemplateElementState {
-  code: string
-  id: number
-  category: TemplateElementCategory
-  isRequired: IQueryNode
-  parameters: BasicObject
-  visibilityCondition: IQueryNode
-  isEditable: IQueryNode
-}
-
-interface EvaluatedElement {
-  code: string
-  id: number
-  category: TemplateElementCategory
+interface ElementStateEvaluated {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
   // isValid: boolean
+  // validationMessage: string | null
 }
+
+interface ElementStateUnevaluated {
+  isRequired: IQueryNode
+  visibilityCondition: IQueryNode
+  validation: IQueryNode
+  validationMessage: string | null
+  isEditable: IQueryNode
+}
+
+type TemplateElementState = ElementBase & ElementStateUnevaluated
+type ElementState = ElementBase & ElementStateEvaluated

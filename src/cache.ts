@@ -3,6 +3,9 @@ import { TemplateElementsConnection } from './utils/generated/graphql'
 
 const cache = new InMemoryCache({
     typePolicies: {
+      Application: {
+        keyFields: ['serial']
+      },
       TemplateSection: {
         fields: {
           totalPages: {
