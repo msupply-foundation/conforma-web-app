@@ -9,8 +9,6 @@ export default gql`
     category
     isEditable
     isRequired
-    validation
-    validationMessage
     visibilityCondition
   }
 `

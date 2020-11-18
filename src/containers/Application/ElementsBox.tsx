@@ -31,8 +31,6 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
     sectionPage,
   })
 
-  // const [responseMutation] = useUpdateResponseMutation()
-
   return error ? (
     <Label content="Problem to load elements" error={error} />
   ) : loading ? (

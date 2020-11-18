@@ -16861,7 +16861,22 @@ export type AddNewUserFragment = (
 
 export type ApplicationFragment = (
   { __typename?: 'Application' }
-  & Pick<Application, 'serial' | 'name' | 'stage' | 'status' | 'outcome'>
+  & Pick<Application, 'id' | 'serial' | 'name' | 'stage' | 'status' | 'outcome'>
+);
+
+export type ElementFragment = (
+  { __typename?: 'TemplateElement' }
+  & Pick<TemplateElement, 'id' | 'title' | 'elementTypePluginCode' | 'code' | 'category' | 'isEditable' | 'isRequired' | 'visibilityCondition'>
+);
+
+export type ResponseFragment = (
+  { __typename?: 'ApplicationResponse' }
+  & Pick<ApplicationResponse, 'id' | 'value' | 'timeCreated'>
+);
+
+export type SectionFragment = (
+  { __typename?: 'TemplateSection' }
+  & Pick<TemplateSection, 'id' | 'title' | 'index' | 'code'>
 );
 
 export type TemplateFragment = (
@@ -16873,6 +16888,8 @@ export type CreateApplicationMutationVariables = Exact<{
   name: Scalars['String'];
   serial: Scalars['String'];
   templateId: Scalars['Int'];
+  outcome?: Maybe<ApplicationOutcome>;
+  trigger?: Maybe<Trigger>;
 }>;
 
 
@@ -16882,18 +16899,18 @@ export type CreateApplicationMutation = (
     { __typename?: 'CreateApplicationPayload' }
     & { application?: Maybe<(
       { __typename?: 'Application' }
-      & Pick<Application, 'id' | 'name' | 'serial'>
       & { template?: Maybe<(
         { __typename?: 'Template' }
-        & Pick<Template, 'id'>
         & { templateSections: (
           { __typename?: 'TemplateSectionsConnection' }
           & { nodes: Array<Maybe<(
             { __typename?: 'TemplateSection' }
-            & Pick<TemplateSection, 'id' | 'title'>
+            & SectionFragment
           )>> }
         ) }
+        & TemplateFragment
       )> }
+      & ApplicationFragment
     )> }
   )> }
 );
@@ -16911,11 +16928,14 @@ export type CreateResponseMutation = (
     { __typename?: 'CreateApplicationResponsePayload' }
     & { applicationResponse?: Maybe<(
       { __typename?: 'ApplicationResponse' }
-      & Pick<ApplicationResponse, 'id' | 'value'>
       & { templateElement?: Maybe<(
         { __typename?: 'TemplateElement' }
-        & Pick<TemplateElement, 'code'>
+        & ElementFragment
+      )>, application?: Maybe<(
+        { __typename?: 'Application' }
+        & Pick<Application, 'serial'>
       )> }
+      & ResponseFragment
     )> }
   )> }
 );
@@ -16932,17 +16952,20 @@ export type CreateSectionMutation = (
     { __typename?: 'CreateApplicationSectionPayload' }
     & { applicationSection?: Maybe<(
       { __typename?: 'ApplicationSection' }
-      & Pick<ApplicationSection, 'id' | 'applicationId'>
+      & Pick<ApplicationSection, 'id'>
       & { templateSection?: Maybe<(
         { __typename?: 'TemplateSection' }
-        & Pick<TemplateSection, 'title'>
         & { templateElementsBySectionId: (
           { __typename?: 'TemplateElementsConnection' }
           & { nodes: Array<Maybe<(
             { __typename?: 'TemplateElement' }
-            & Pick<TemplateElement, 'id' | 'code' | 'category' | 'elementTypePluginCode'>
+            & ElementFragment
           )>> }
         ) }
+        & SectionFragment
+      )>, application?: Maybe<(
+        { __typename?: 'Application' }
+        & Pick<Application, 'id' | 'serial'>
       )> }
     )> }
   )> }
@@ -16967,18 +16990,19 @@ export type CreateUserMutation = (
 );
 
 export type UpdateApplicationMutationVariables = Exact<{
-  id: Scalars['Int'];
-  applicationTrigger: Trigger;
+  serial: Scalars['String'];
+  applicationTrigger?: Maybe<Trigger>;
+  responses?: Maybe<Array<ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationResponsePkeyUpdate>>;
 }>;
 
 
 export type UpdateApplicationMutation = (
   { __typename?: 'Mutation' }
-  & { updateApplication?: Maybe<(
+  & { updateApplicationBySerial?: Maybe<(
     { __typename?: 'UpdateApplicationPayload' }
     & { application?: Maybe<(
       { __typename?: 'Application' }
-      & Pick<Application, 'id' | 'trigger'>
+      & ApplicationFragment
     )> }
   )> }
 );
@@ -16996,11 +17020,11 @@ export type UpdateResponseMutation = (
     { __typename?: 'UpdateApplicationResponsePayload' }
     & { applicationResponse?: Maybe<(
       { __typename?: 'ApplicationResponse' }
-      & Pick<ApplicationResponse, 'id' | 'value'>
       & { templateElement?: Maybe<(
         { __typename?: 'TemplateElement' }
-        & Pick<TemplateElement, 'code'>
+        & ElementFragment
       )> }
+      & ResponseFragment
     )> }
   )> }
 );
@@ -17012,42 +17036,36 @@ export type GetApplicationQueryVariables = Exact<{
 
 export type GetApplicationQuery = (
   { __typename?: 'Query' }
-  & { applications?: Maybe<(
-    { __typename?: 'ApplicationsConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'Application' }
-      & Pick<Application, 'id' | 'serial' | 'name' | 'outcome' | 'stage' | 'status'>
-      & { template?: Maybe<(
-        { __typename?: 'Template' }
-        & Pick<Template, 'code' | 'id' | 'name'>
-      )>, applicationSections: (
-        { __typename?: 'ApplicationSectionsConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'ApplicationSection' }
-          & { templateSection?: Maybe<(
-            { __typename?: 'TemplateSection' }
-            & Pick<TemplateSection, 'id' | 'title' | 'code' | 'index'>
-            & { templateElementsBySectionId: (
-              { __typename?: 'TemplateElementsConnection' }
-              & { nodes: Array<Maybe<(
-                { __typename?: 'TemplateElement' }
-                & Pick<TemplateElement, 'id' | 'code' | 'elementTypePluginCode'>
-              )>> }
-            ) }
-          )> }
-        )>> }
-      ), applicationResponses: (
-        { __typename?: 'ApplicationResponsesConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'ApplicationResponse' }
-          & Pick<ApplicationResponse, 'value' | 'id'>
-          & { templateElement?: Maybe<(
-            { __typename?: 'TemplateElement' }
-            & Pick<TemplateElement, 'code' | 'category' | 'isEditable' | 'isRequired' | 'visibilityCondition'>
-          )> }
-        )>> }
-      ) }
-    )>> }
+  & { applicationBySerial?: Maybe<(
+    { __typename?: 'Application' }
+    & { applicationResponses: (
+      { __typename?: 'ApplicationResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ApplicationResponse' }
+        & ResponseFragment
+      )>> }
+    ), template?: Maybe<(
+      { __typename?: 'Template' }
+      & TemplateFragment
+    )>, applicationSections: (
+      { __typename?: 'ApplicationSectionsConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ApplicationSection' }
+        & Pick<ApplicationSection, 'id'>
+        & { templateSection?: Maybe<(
+          { __typename?: 'TemplateSection' }
+          & { templateElementsBySectionId: (
+            { __typename?: 'TemplateElementsConnection' }
+            & { nodes: Array<Maybe<(
+              { __typename?: 'TemplateElement' }
+              & ElementFragment
+            )>> }
+          ) }
+          & SectionFragment
+        )> }
+      )>> }
+    ) }
+    & ApplicationFragment
   )> }
 );
 
@@ -17082,11 +17100,11 @@ export type GetElementsAndResponsesQuery = (
       { __typename?: 'ApplicationResponsesConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'ApplicationResponse' }
-        & Pick<ApplicationResponse, 'id' | 'value'>
         & { templateElement?: Maybe<(
           { __typename?: 'TemplateElement' }
           & Pick<TemplateElement, 'code'>
         )> }
+        & ResponseFragment
       )>> }
     ), template?: Maybe<(
       { __typename?: 'Template' }
@@ -17098,9 +17116,10 @@ export type GetElementsAndResponsesQuery = (
             { __typename?: 'TemplateElementsConnection' }
             & { nodes: Array<Maybe<(
               { __typename?: 'TemplateElement' }
-              & Pick<TemplateElement, 'id' | 'code' | 'category' | 'isEditable' | 'isRequired' | 'visibilityCondition'>
+              & ElementFragment
             )>> }
           ) }
+          & SectionFragment
         )>> }
       ) }
     )> }
@@ -17213,11 +17232,39 @@ export const AddNewUserFragmentDoc = gql`
     `;
 export const ApplicationFragmentDoc = gql`
     fragment Application on Application {
+  id
   serial
   name
   stage
   status
   outcome
+}
+    `;
+export const ElementFragmentDoc = gql`
+    fragment Element on TemplateElement {
+  id
+  title
+  elementTypePluginCode
+  code
+  category
+  isEditable
+  isRequired
+  visibilityCondition
+}
+    `;
+export const ResponseFragmentDoc = gql`
+    fragment Response on ApplicationResponse {
+  id
+  value
+  timeCreated
+}
+    `;
+export const SectionFragmentDoc = gql`
+    fragment Section on TemplateSection {
+  id
+  title
+  index
+  code
 }
     `;
 export const TemplateFragmentDoc = gql`
@@ -17228,25 +17275,24 @@ export const TemplateFragmentDoc = gql`
 }
     `;
 export const CreateApplicationDocument = gql`
-    mutation createApplication($name: String!, $serial: String!, $templateId: Int!) {
-  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, isActive: true, outcome: PENDING, trigger: ON_APPLICATION_CREATE}}) {
+    mutation createApplication($name: String!, $serial: String!, $templateId: Int!, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE) {
+  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, isActive: true, outcome: $outcome, trigger: $trigger}}) {
     application {
-      id
-      name
-      serial
+      ...Application
       template {
-        id
+        ...Template
         templateSections {
           nodes {
-            id
-            title
+            ...Section
           }
         }
       }
     }
   }
 }
-    `;
+    ${ApplicationFragmentDoc}
+${TemplateFragmentDoc}
+${SectionFragmentDoc}`;
 export type CreateApplicationMutationFn = Apollo.MutationFunction<CreateApplicationMutation, CreateApplicationMutationVariables>;
 
 /**
@@ -17265,6 +17311,8 @@ export type CreateApplicationMutationFn = Apollo.MutationFunction<CreateApplicat
  *      name: // value for 'name'
  *      serial: // value for 'serial'
  *      templateId: // value for 'templateId'
+ *      outcome: // value for 'outcome'
+ *      trigger: // value for 'trigger'
  *   },
  * });
  */
@@ -17278,15 +17326,18 @@ export const CreateResponseDocument = gql`
     mutation createResponse($applicationId: Int!, $templateElementId: Int!, $timeCreated: Datetime!) {
   createApplicationResponse(input: {applicationResponse: {applicationId: $applicationId, templateElementId: $templateElementId, timeCreated: $timeCreated}}) {
     applicationResponse {
-      id
-      value
+      ...Response
       templateElement {
-        code
+        ...Element
+      }
+      application {
+        serial
       }
     }
   }
 }
-    `;
+    ${ResponseFragmentDoc}
+${ElementFragmentDoc}`;
 export type CreateResponseMutationFn = Apollo.MutationFunction<CreateResponseMutation, CreateResponseMutationVariables>;
 
 /**
@@ -17319,22 +17370,23 @@ export const CreateSectionDocument = gql`
   createApplicationSection(input: {applicationSection: {applicationId: $applicationId, templateSectionId: $templateSectionId}}) {
     applicationSection {
       id
-      applicationId
       templateSection {
-        title
+        ...Section
         templateElementsBySectionId {
           nodes {
-            id
-            code
-            category
-            elementTypePluginCode
+            ...Element
           }
         }
+      }
+      application {
+        id
+        serial
       }
     }
   }
 }
-    `;
+    ${SectionFragmentDoc}
+${ElementFragmentDoc}`;
 export type CreateSectionMutationFn = Apollo.MutationFunction<CreateSectionMutation, CreateSectionMutationVariables>;
 
 /**
@@ -17399,15 +17451,14 @@ export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutati
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const UpdateApplicationDocument = gql`
-    mutation updateApplication($id: Int!, $applicationTrigger: Trigger!) {
-  updateApplication(input: {id: $id, patch: {trigger: $applicationTrigger}}) {
+    mutation updateApplication($serial: String!, $applicationTrigger: Trigger = ON_APPLICATION_SUBMIT, $responses: [ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationResponsePkeyUpdate!]) {
+  updateApplicationBySerial(input: {serial: $serial, patch: {trigger: $applicationTrigger, applicationResponsesUsingId: {updateById: $responses}}}) {
     application {
-      id
-      trigger
+      ...Application
     }
   }
 }
-    `;
+    ${ApplicationFragmentDoc}`;
 export type UpdateApplicationMutationFn = Apollo.MutationFunction<UpdateApplicationMutation, UpdateApplicationMutationVariables>;
 
 /**
@@ -17423,8 +17474,9 @@ export type UpdateApplicationMutationFn = Apollo.MutationFunction<UpdateApplicat
  * @example
  * const [updateApplicationMutation, { data, loading, error }] = useUpdateApplicationMutation({
  *   variables: {
- *      id: // value for 'id'
+ *      serial: // value for 'serial'
  *      applicationTrigger: // value for 'applicationTrigger'
+ *      responses: // value for 'responses'
  *   },
  * });
  */
@@ -17438,15 +17490,15 @@ export const UpdateResponseDocument = gql`
     mutation updateResponse($id: Int!, $value: JSON!, $isValid: Boolean) {
   updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid}}) {
     applicationResponse {
-      id
-      value
+      ...Response
       templateElement {
-        code
+        ...Element
       }
     }
   }
 }
-    `;
+    ${ResponseFragmentDoc}
+${ElementFragmentDoc}`;
 export type UpdateResponseMutationFn = Apollo.MutationFunction<UpdateResponseMutation, UpdateResponseMutationVariables>;
 
 /**
@@ -17476,53 +17528,36 @@ export type UpdateResponseMutationResult = Apollo.MutationResult<UpdateResponseM
 export type UpdateResponseMutationOptions = Apollo.BaseMutationOptions<UpdateResponseMutation, UpdateResponseMutationVariables>;
 export const GetApplicationDocument = gql`
     query getApplication($serial: String!) {
-  applications(condition: {serial: $serial}) {
-    nodes {
-      id
-      serial
-      name
-      outcome
-      stage
-      status
-      template {
-        code
+  applicationBySerial(serial: $serial) {
+    ...Application
+    applicationResponses {
+      nodes {
+        ...Response
+      }
+    }
+    template {
+      ...Template
+    }
+    applicationSections {
+      nodes {
         id
-        name
-      }
-      applicationSections {
-        nodes {
-          templateSection {
-            id
-            title
-            code
-            index
-            templateElementsBySectionId {
-              nodes {
-                id
-                code
-                elementTypePluginCode
-              }
+        templateSection {
+          ...Section
+          templateElementsBySectionId {
+            nodes {
+              ...Element
             }
-          }
-        }
-      }
-      applicationResponses {
-        nodes {
-          value
-          id
-          templateElement {
-            code
-            category
-            isEditable
-            isRequired
-            visibilityCondition
           }
         }
       }
     }
   }
 }
-    `;
+    ${ApplicationFragmentDoc}
+${ResponseFragmentDoc}
+${TemplateFragmentDoc}
+${SectionFragmentDoc}
+${ElementFragmentDoc}`;
 
 /**
  * __useGetApplicationQuery__
@@ -17592,8 +17627,7 @@ export const GetElementsAndResponsesDocument = gql`
   applicationBySerial(serial: $serial) {
     applicationResponses {
       nodes {
-        id
-        value
+        ...Response
         templateElement {
           code
         }
@@ -17602,14 +17636,10 @@ export const GetElementsAndResponsesDocument = gql`
     template {
       templateSections {
         nodes {
+          ...Section
           templateElementsBySectionId {
             nodes {
-              id
-              code
-              category
-              isEditable
-              isRequired
-              visibilityCondition
+              ...Element
             }
           }
         }
@@ -17617,7 +17647,9 @@ export const GetElementsAndResponsesDocument = gql`
     }
   }
 }
-    `;
+    ${ResponseFragmentDoc}
+${SectionFragmentDoc}
+${ElementFragmentDoc}`;
 
 /**
  * __useGetElementsAndResponsesQuery__
