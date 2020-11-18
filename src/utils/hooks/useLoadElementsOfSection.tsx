@@ -30,9 +30,7 @@ const useLoadElementsOfSection = ({
   })
 
   useEffect(() => {
-    console.log('useLoadElementsOfSection', data)
-
-    if (!data) return // TODO: Check if when skipping this is correct!
+    if (!data) return
     if (apolloError) return
 
     const error = checkForElementErrors(data)

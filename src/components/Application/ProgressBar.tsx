@@ -1,6 +1,6 @@
 import React from 'react'
 import { Accordion, Container, Grid, Header, Icon, Label, List, Sticky } from 'semantic-ui-react'
-import { ProgressInApplication, ProgressInPage } from '../../utils/types'
+import { ProgressInApplication, ProgressInPage, ProgressInSection } from '../../utils/types'
 
 interface SectionPage {
   sectionIndex: number
@@ -12,6 +12,7 @@ interface ProgressBarProps {
   currentSectionPage?: SectionPage
   progressStructure: ProgressInApplication
   push: (path: string) => void
+  validateCurrentPage: () => boolean
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
@@ -19,23 +20,33 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   currentSectionPage,
   progressStructure,
   push,
+  validateCurrentPage,
 }) => {
-  console.log('Progress bar', progressStructure)
-
-  const pageList = (sectionCode: string, pages: { [page: number]: ProgressInPage }) => {
-    // const pages = Array.from(Array(totalPages).keys(), (n) => n + 1)
+  const pageList = (
+    index: number,
+    sectionCode: string,
+    pages: { [page: number]: ProgressInPage }
+  ) => {
     return (
       <List link>
-        {Object.entries(pages).map(([number, page]) => (
+        {Object.entries(pages).map(([number, currentPage]) => (
           <List.Item
             as="a"
             key={`page_${number}`}
-            href={`/applications/${serialNumber}/${sectionCode}/Page${number}`}
-            active={page.visited} // TODO: Change to only show active when visited in Non-linear application
+            onClick={() =>
+              attemptChangeToPage({
+                serialNumber,
+                sectionCode,
+                page: Number(number),
+                push,
+                validateCurrentPage,
+              })
+            }
+            active={currentPage.visited} // TODO: Change to only show active when visited in linear applications
           >
-            {page.pageStatus == true ? (
+            {currentPage.pageStatus == true ? (
               <Icon name="check circle" color="green" />
-            ) : page.pageStatus == false ? (
+            ) : currentPage.pageStatus == false ? (
               <Icon name="exclamation circle" color="red" />
             ) : null}
             <List.Content>
@@ -48,7 +59,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   }
 
   const sectionList = () => {
-    const sectionItems = Object.entries(progressStructure).map(([code, section], index) => {
+    const sectionItems = progressStructure.map((section, index) => {
       const stepNumber = index + 1
 
       return {
@@ -65,12 +76,19 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
             </Grid>
           ),
         },
-        onTitleClick: () => push(`/applications/${serialNumber}/${code}/Page1`),
+        onTitleClick: () =>
+          attemptChangeToPage({
+            serialNumber,
+            sectionCode: section.code,
+            page: 1,
+            push,
+            validateCurrentPage,
+          }),
         content: {
           content: (
             <Grid divided>
               <Grid.Column width={4}></Grid.Column>
-              <Grid.Column width={12}>{pageList(code, section.pages)}</Grid.Column>
+              <Grid.Column width={12}>{pageList(index, section.code, section.pages)}</Grid.Column>
             </Grid>
           ),
         },
@@ -92,7 +110,12 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           </Grid>
         ),
       },
-      onTitleClick: () => push(`/applications/${serialNumber}/summary`),
+      onTitleClick: () =>
+        attemptChangeToPage({
+          serialNumber,
+          push,
+          validateCurrentPage,
+        }),
       // Ideally these aren't needed - Couldn't find some way to remove this
       content: {
         content: <Header />,
@@ -117,5 +140,28 @@ const getStepNumber = (stepNumber: number) => (
     {stepNumber}
   </Label>
 )
+
+interface attemptChangePageProps {
+  serialNumber: string
+  sectionCode?: string
+  page?: number
+  push: (path: string) => void
+  validateCurrentPage: () => boolean
+}
+
+const attemptChangeToPage = ({
+  serialNumber,
+  sectionCode,
+  page,
+  push,
+  validateCurrentPage,
+}: attemptChangePageProps) => {
+  const status = validateCurrentPage()
+  if (status) {
+    sectionCode && page
+      ? push(`/applications/${serialNumber}/${sectionCode}/Page${page}`)
+      : push(`/applications/${serialNumber}/summary`)
+  }
+}
 
 export default ProgressBar

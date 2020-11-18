@@ -104,6 +104,7 @@ interface ProgressInPage {
 }
 
 interface ProgressInSection {
+  code: string
   title: string
   sectionStatus?: boolean | undefined
   visited: boolean
@@ -112,9 +113,7 @@ interface ProgressInSection {
   }
 }
 
-interface ProgressInApplication {
-  [section: string]: ProgressInSection
-}
+type ProgressInApplication = ProgressInSection[]
 
 type ResponseFull = {
   text: string | null | undefined

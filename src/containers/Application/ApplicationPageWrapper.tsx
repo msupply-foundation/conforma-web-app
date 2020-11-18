@@ -7,9 +7,13 @@ import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAnd
 import { ElementsBox, NavigationBox } from './'
 import {
   ApplicationElementStates,
+  ElementState,
   ProgressInApplication,
+  ProgressInPage,
+  ResponsesByCode,
   TemplateSectionPayload,
 } from '../../utils/types'
+import { TemplateElementCategory } from '../../utils/generated/graphql'
 
 const ApplicationPageWrapper: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
@@ -61,13 +65,29 @@ const ApplicationPageWrapper: React.FC = () => {
     setLoadingProgressBar(false)
   }, [elementsState])
 
-  // const { processing, progressInSections } = useGetProgressInSections({
-  //   application,
-  //   currentSection,
-  //   currentPage: Number(page),
-  //   elementsState,
-  //   templateSections,
-  // })
+  const validateCurrentPage = (): boolean => {
+    if (!currentSection || !page) {
+      console.log('Problem to validate - Undefined section or page')
+      return false
+    }
+
+    const progressInPage = validateProgressInPage(
+      elementsState as ApplicationElementStates,
+      responsesByCode as ResponsesByCode,
+      currentSection.index,
+      Number(page)
+    )
+    setProgressInApplication(
+      updateProgressInPage(
+        progressInApplication as ProgressInApplication,
+        currentSection.index,
+        Number(page),
+        progressInPage
+      )
+    )
+
+    return progressInPage.pageStatus ? progressInPage.pageStatus : false
+  }
 
   return error || responsesError ? (
     <Message error header="Problem to load application" />
@@ -89,6 +109,7 @@ const ApplicationPageWrapper: React.FC = () => {
               serialNumber={serialNumber as string}
               progressStructure={progressInApplication}
               currentSectionPage={{ sectionIndex: currentSection.index, currentPage: Number(page) }}
+              validateCurrentPage={validateCurrentPage}
               push={push}
             />
           )}
@@ -103,7 +124,10 @@ const ApplicationPageWrapper: React.FC = () => {
             responsesFullByCode={responsesFullByCode}
             elementsState={elementsState as ApplicationElementStates}
           />
-          <NavigationBox templateSections={templateSections} />
+          <NavigationBox
+            templateSections={templateSections}
+            validateCurrentPage={validateCurrentPage}
+          />
         </Grid.Column>
       </Grid>
     </Segment.Group>
@@ -136,7 +160,7 @@ function processRedirect(appState: any): void {
 }
 
 const startProgressState = (templateSections: TemplateSectionPayload[]): ProgressInApplication => {
-  return templateSections.reduce((objSections, section) => {
+  return templateSections.reduce((progressInApplication: ProgressInApplication, section) => {
     const pages = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
     const pagesProgress = pages.reduce((objPages, page) => {
       return {
@@ -146,15 +170,60 @@ const startProgressState = (templateSections: TemplateSectionPayload[]): Progres
         },
       }
     }, {})
-    return {
-      ...objSections,
-      [section.code]: {
-        title: section.title,
-        visited: false,
-        pages: pagesProgress,
-      },
+
+    const progressInSection = {
+      code: section.code,
+      title: section.title,
+      visited: false,
+      pages: pagesProgress,
     }
-  }, {})
+    return [...progressInApplication, progressInSection]
+  }, [])
+}
+
+const updateProgressInPage = (
+  progressInApplication: ProgressInApplication,
+  currentSection: number,
+  currentPage: number,
+  status: ProgressInPage
+) => {
+  progressInApplication[currentSection] = {
+    ...progressInApplication[currentSection],
+    pages: { ...progressInApplication[currentSection].pages, [currentPage]: status },
+  }
+
+  return progressInApplication
+}
+
+const validateProgressInPage = (
+  elementsState: ApplicationElementStates,
+  responsesByCode: ResponsesByCode,
+  currentSection: number,
+  currentPage: number
+): ProgressInPage => {
+  let count = 1
+  const pageElements = Object.entries(elementsState)
+    .filter(([key, { section }]) => section === currentSection)
+    .reduce((pageElements: { [index: string]: ElementState }, [key, element]) => {
+      if (element.elementTypePluginCode === 'PageBreak') {
+        count++
+        return pageElements
+      }
+
+      if (count === currentPage && element.category === TemplateElementCategory.Question)
+        pageElements[key] = element
+
+      return pageElements
+    }, {})
+
+  const status = {
+    visited: true,
+    pageStatus: !Object.values(pageElements).some(
+      (element) => element.isVisible && element.isRequired && !responsesByCode[element.code]
+    ),
+  }
+
+  return status
 }
 
 export default ApplicationPageWrapper
