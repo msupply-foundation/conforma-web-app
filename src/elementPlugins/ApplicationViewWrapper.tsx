@@ -1,8 +1,9 @@
 import React from 'react'
 import { ErrorBoundary, pluginProvider } from './'
-import { ApplicationViewProps, PluginComponents } from './types'
+import { ApplicationViewWrapperProps, PluginComponents } from './types'
+import evaluateExpression from '@openmsupply/expression-evaluator'
 
-const ApplicationViewWrapper: React.FC<ApplicationViewProps> = (props) => {
+const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const {
     templateElement: { elementTypePluginCode: pluginCode },
     isVisible,
@@ -10,13 +11,13 @@ const ApplicationViewWrapper: React.FC<ApplicationViewProps> = (props) => {
 
   if (!pluginCode || !isVisible) return null
 
-  const { ApplicationView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
+  const newProps = { evaluator: evaluateExpression, ...props }
 
-  // console.log('pluginCode', pluginCode)
+  const { ApplicationView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
   return (
     <ErrorBoundary pluginCode={pluginCode}>
-      <React.Suspense fallback="Loading Plugin">{<ApplicationView {...props} />}</React.Suspense>
+      <React.Suspense fallback="Loading Plugin">{<ApplicationView {...newProps} />}</React.Suspense>
     </ErrorBoundary>
   )
 }

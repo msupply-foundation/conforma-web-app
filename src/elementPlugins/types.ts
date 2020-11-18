@@ -5,17 +5,21 @@ interface OnUpdateApplicationView {
   (updateObject: { value?: any; isValid: boolean | undefined }): void
 }
 
-interface ApplicationViewProps {
+interface ApplicationViewWrapperProps {
   templateElement: TemplateElement
   onUpdate: OnUpdateApplicationView
   isVisible: boolean
   isEditable: boolean
   isRequired: boolean
   allResponses: ResponsesByCode
-  evaluator: Function
+  // evaluator: Function
   // applicationState,
   // graphQLclient
   initialValue: any // Could be a primative or an object with any shape
+}
+
+interface ApplicationViewProps extends ApplicationViewWrapperProps {
+  evaluator: Function
 }
 
 interface OnUpdateTemplateWrapperView {
@@ -59,6 +63,7 @@ export {
   OnUpdateTemplateWrapperView,
   TemplateViewProps,
   OnUpdateTemplateView,
+  ApplicationViewWrapperProps,
   ApplicationViewProps,
   TemplateViewWrapperProps,
   PluginConfig,

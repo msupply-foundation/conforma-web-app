@@ -5,7 +5,7 @@ import useLoadElementsOfSection from '../../utils/hooks/useLoadElementsOfSection
 import { Loading } from '../../components'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import { ApplicationElementState, ResponsesByCode, ResponsesFullByCode } from '../../utils/types'
-import evaluateExpression from '@openmsupply/expression-evaluator'
+// import evaluateExpression from '@openmsupply/expression-evaluator'
 
 interface ElementsBoxProps {
   applicationId: number
@@ -50,8 +50,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
           isEditable={elementsState[question.code].isEditable}
           isRequired={elementsState[question.code].isRequired}
           allResponses={responsesByCode}
-          evaluator={evaluateExpression}
-          onUpdate={(updateObject) => {
+          onUpdate={(updateObject: any) => {
             const { isValid, value } = updateObject
             /**
              * Note: Issue #46 (Persist cache) will change this to only write to cache
