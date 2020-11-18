@@ -10,6 +10,7 @@ import {
   ElementState,
   ProgressInApplication,
   ProgressInPage,
+  ProgressInSection,
   ResponsesByCode,
   TemplateSectionPayload,
 } from '../../utils/types'
@@ -55,9 +56,11 @@ const ApplicationPageWrapper: React.FC = () => {
         push,
         replace,
       })
-      setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
+
+      if (sectionCode && page)
+        setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
     }
-  }, [isApplicationLoaded])
+  }, [isApplicationLoaded, sectionCode, page])
 
   useEffect(() => {
     if (!elementsState) return
@@ -70,8 +73,6 @@ const ApplicationPageWrapper: React.FC = () => {
       console.log('Problem to validate - Undefined parameters')
       return false
     }
-
-    console.log('Application is linear', application.isLinear)
 
     const progressInPage = validateProgressInPage(
       elementsState as ApplicationElementStates,
@@ -92,8 +93,10 @@ const ApplicationPageWrapper: React.FC = () => {
       ? progressInPage.pageStatus
         ? progressInPage.pageStatus
         : false
-      : true // Not-linear application
+      : true // Non-linear application
   }
+
+  console.log('progressStructure', progressInApplication)
 
   return error || responsesError ? (
     <Message error header="Problem to load application" />
@@ -193,10 +196,31 @@ const updateProgressInPage = (
   currentPage: number,
   status: ProgressInPage
 ) => {
-  progressInApplication[currentSection] = {
-    ...progressInApplication[currentSection],
-    pages: { ...progressInApplication[currentSection].pages, [currentPage]: status },
+  let progressInSection: ProgressInSection = progressInApplication[currentSection]
+
+  progressInSection = {
+    ...progressInSection,
+    pages: { ...progressInSection.pages, [currentPage]: status },
   }
+
+  const allPagesValidated = Object.values(progressInApplication[currentSection].pages).every(
+    (page) => page.pageStatus !== undefined
+  )
+
+  if (allPagesValidated) {
+    progressInSection = {
+      ...progressInSection,
+      visited: true,
+      sectionStatus: Object.values(progressInApplication[currentSection].pages).reduce(
+        (accStatus: boolean, page) => {
+          return accStatus && (page.pageStatus as boolean)
+        },
+        true
+      ),
+    }
+  }
+
+  progressInApplication[currentSection] = progressInSection
 
   return progressInApplication
 }

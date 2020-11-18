@@ -100,14 +100,14 @@ interface TemplateSectionPayload {
 }
 
 interface ProgressInPage {
-  pageStatus?: boolean | undefined
+  pageStatus?: boolean
   visited: boolean
 }
 
 interface ProgressInSection {
   code: string
   title: string
-  sectionStatus?: boolean | undefined
+  sectionStatus?: boolean
   visited: boolean
   pages: {
     [page: number]: ProgressInPage

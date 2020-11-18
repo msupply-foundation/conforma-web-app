@@ -68,7 +68,15 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           children: (
             <Grid>
               <Grid.Column width={4} textAlign="right" verticalAlign="middle">
-                {getStepNumber(stepNumber)}
+                {section.sectionStatus !== undefined ? (
+                  section.sectionStatus ? (
+                    <Icon name="check circle" color="green" />
+                  ) : (
+                    <Icon name="exclamation circle" color="red" />
+                  )
+                ) : (
+                  getStepNumber(stepNumber)
+                )}
               </Grid.Column>
               <Grid.Column width={12} textAlign="left" verticalAlign="middle">
                 <Header size="small" content={section.title} />
