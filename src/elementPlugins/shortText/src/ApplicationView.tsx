@@ -28,9 +28,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useEffect(() => {
     // Do validation, setIsValid
     if (validationExpression && responses.thisResponse !== undefined) {
-      evaluator(validationExpression, { objects: [responses] }).then((result: boolean) => {
-        setIsValid(result)
-      })
+      evaluator(validationExpression, { objects: [responses] })
+        .then((result: boolean) => {
+          setIsValid(result)
+        })
+        .catch((err: any) => console.log(err))
     } else setIsValid(true)
   }, [responses])
 
