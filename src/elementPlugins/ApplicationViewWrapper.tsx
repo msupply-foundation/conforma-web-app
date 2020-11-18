@@ -8,6 +8,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const {
     templateElement: { elementTypePluginCode: pluginCode },
     isVisible,
+    isEditable,
+    isRequired,
     currentResponse,
   } = props
 
