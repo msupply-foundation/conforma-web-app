@@ -46,19 +46,4 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
   )
 }
 
-// function getQuestion(question: ElementState, response: ResponseFull | null) {
-//   return question.category === TemplateElementCategory.Question ? (
-//     <Form.Field>
-//       <Header as="h3" content={question.title} />
-//       <Input disabled error={!response}>
-//         {response?.text}
-//       </Input>
-//     </Form.Field>
-//   ) : question.elementTypePluginCode !== 'pageBreak' ? (
-//     <Form.Field>
-//       <Header as="h5" content={question.title} />
-//     </Form.Field>
-//   ) : null
-// }
-
 export default ApplicationSummary

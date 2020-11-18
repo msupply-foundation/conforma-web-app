@@ -17,17 +17,16 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
 
   if (!pluginCode || !isVisible || category === 'INFORMATION') return null
 
-  // const newProps = { evaluator: evaluateExpression, onUpdate, ...props }
-
   const { SummaryView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
-  console.log('parameters', parameters)
+  // TO-DO: Provide a Default SummaryView (just label/text) if SummaryView not provided in plugin
+
+  console.log('SummaryView', SummaryView)
 
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        <Header as="h3" content={parameters.label} />
-        {value?.text}
+        <SummaryView parameters={parameters} value={value} />
       </React.Suspense>
     </ErrorBoundary>
   )

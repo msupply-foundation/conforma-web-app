@@ -22,6 +22,11 @@ interface ApplicationViewProps extends ApplicationViewWrapperProps {
   onUpdate: OnUpdateApplicationView
 }
 
+interface SummaryViewProps {
+  parameters: any
+  value: ResponseFull | null
+}
+
 interface SummaryViewWrapperProps {
   element: any
   value: ResponseFull | null
@@ -57,7 +62,9 @@ interface PluginManifest {
 }
 
 interface PluginComponents {
-  [key: string]: React.FunctionComponent<ApplicationViewProps | TemplateViewProps>
+  [key: string]: React.FunctionComponent<
+    ApplicationViewProps | TemplateViewProps | SummaryViewProps
+  >
 }
 
 interface Plugins {
@@ -72,6 +79,7 @@ export {
   ApplicationViewProps,
   TemplateViewWrapperProps,
   SummaryViewWrapperProps,
+  SummaryViewProps,
   PluginConfig,
   PluginManifest,
   PluginComponents,
