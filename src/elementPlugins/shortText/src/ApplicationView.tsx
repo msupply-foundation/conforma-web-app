@@ -28,7 +28,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useEffect(() => {
     // Do validation, setIsValid
     if (validationExpression && responses.thisResponse !== undefined) {
-      evaluator(validationExpression, { objects: [responses] })
+      evaluator(validationExpression, { objects: [responses], APIfetch: fetch })
         .then((result: boolean) => {
           setIsValid(result)
         })
@@ -50,7 +50,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   function handleLoseFocus(e: any) {
-    onUpdate({ value: { text: e.target.value }, isValid })
+    // TO-DO if password (i.e 'maskedInput'), do HASH on password before sending value
+    onUpdate({ value: { text: value }, isValid })
   }
 
   return (
