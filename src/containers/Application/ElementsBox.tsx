@@ -31,8 +31,6 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
     sectionPage,
   })
 
-  const [responseMutation] = useUpdateResponseMutation()
-
   return error ? (
     <Label content="Problem to load elements" error={error} />
   ) : loading ? (
@@ -49,19 +47,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
           isEditable={elementsState[question.code].isEditable}
           isRequired={elementsState[question.code].isRequired}
           allResponses={responsesByCode}
-          onUpdate={(updateObject) => {
-            const { isValid, value } = updateObject
-            /**
-             * Note: Issue #46 (Persist cache) will change this to only write to cache
-             * sending the whole application changes to the server on Submit...
-             * Also considering send to server on 'Next' or adding a Save button.
-             **/
-            // TODO: Only send mutation on loose focus event.
-            if (isValid)
-              responseMutation({
-                variables: { id: response?.id as number, value: { text: value } },
-              })
-          }}
+          currentResponse={response}
         />
       ))}
     </Segment>
