@@ -8,51 +8,45 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   initialValue,
   isEditable,
   isRequired,
-  allResponses,
-  evaluator,
+  currentResponse,
+  validationState,
+  onSave,
 }) => {
-  const [validationMessageDisplay, setValidationMessageDisplay] = useState('')
   const [value, setValue] = useState(initialValue?.text)
-  const [isValid, setIsValid] = useState<boolean>()
-  const [responses, setResponses] = useState({
-    thisResponse: undefined,
-    ...allResponses,
-  })
-  const {
-    validation: validationExpression,
-    validationMessage,
-    placeholder,
-    maskedInput,
-    label,
-  } = templateElement?.parameters
+  const { placeholder, maskedInput, label } = templateElement?.parameters
+
+  // useEffect(() => {
+  //   // Do validation, setIsValid
+  //   if (validationExpression && responses.thisResponse !== undefined) {
+  //     evaluator(validationExpression, { objects: [responses], APIfetch: fetch })
+  //       .then((result: boolean) => {
+  //         setIsValid(result)
+  //       })
+  //       .catch((err: any) => console.log(err))
+  //   } else setIsValid(true)
+  // }, [responses])
+
+  // useEffect(() => {
+  //   setResponses({ thisResponse: value, ...allResponses })
+  // }, [value])
+
+  // useEffect(() => {
+  //   if (isValid) setValidationMessageDisplay('')
+  //   else setValidationMessageDisplay(validationMessage)
+  // }, [isValid])
 
   useEffect(() => {
-    // Do validation, setIsValid
-    if (validationExpression && responses.thisResponse !== undefined) {
-      evaluator(validationExpression, { objects: [responses], APIfetch: fetch })
-        .then((result: boolean) => {
-          setIsValid(result)
-        })
-        .catch((err: any) => console.log(err))
-    } else setIsValid(true)
-  }, [responses])
-
-  useEffect(() => {
-    setResponses({ thisResponse: value, ...allResponses })
-  }, [value])
-
-  useEffect(() => {
-    if (isValid) setValidationMessageDisplay('')
-    else setValidationMessageDisplay(validationMessage)
-  }, [isValid])
+    onUpdate(value)
+  }, [])
 
   function handleChange(e: any) {
+    onUpdate(e.target.value)
     setValue(e.target.value)
   }
 
   function handleLoseFocus(e: any) {
     // TO-DO if password (i.e 'maskedInput'), do HASH on password before sending value
-    onUpdate({ value: { text: value }, isValid })
+    onSave({ text: value })
   }
 
   return (
@@ -67,9 +61,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         disabled={!isEditable}
         type={maskedInput ? 'password' : undefined}
         error={
-          !isValid && allResponses[templateElement.code]
+          !validationState.isValid && currentResponse?.value?.text
             ? {
-                content: validationMessageDisplay,
+                content: validationState?.validationMessage,
                 pointing: 'above',
               }
             : null

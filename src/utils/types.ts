@@ -98,7 +98,7 @@ type ResponseFull = {
   text: string | null | undefined
   optionIndex?: number
   reference?: any // Not yet decided how to represent
-  isValid: boolean | null
+  isValid?: boolean | null
 }
 
 interface ResponsesFullByCode {

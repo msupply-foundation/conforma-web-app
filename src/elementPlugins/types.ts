@@ -18,8 +18,12 @@ interface ApplicationViewWrapperProps {
 }
 
 interface ApplicationViewProps extends ApplicationViewWrapperProps {
-  evaluator: Function
-  onUpdate: OnUpdateApplicationView
+  onUpdate: Function
+  onSave: Function
+  validationState: {
+    isValid: boolean | undefined
+    validationMessage: string | undefined
+  }
 }
 
 interface SummaryViewProps {
