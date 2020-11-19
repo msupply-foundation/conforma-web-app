@@ -10,13 +10,18 @@ export interface createApplicationProps {
   templateResponses: { templateElementId: number }[]
 }
 
-const useCreateApplication = () => {
+interface useCreateApplicationProps {
+  onCompleted: () => void
+}
+
+const useCreateApplication = ({ onCompleted }: useCreateApplicationProps) => {
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState<ApolloError | undefined>()
 
   const [applicationMutation] = useCreateApplicationMutation({
     onCompleted: () => {
       setProcessing(false)
+      onCompleted()
     },
     onError: (error) => {
       setProcessing(false)
