@@ -28,8 +28,6 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
       </React.Suspense>
     </ErrorBoundary>
   )
-
-  // return <p>Nothing to see here</p>
 }
 
 export default SummaryViewWrapper
