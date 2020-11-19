@@ -21,8 +21,6 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
 
   // TO-DO: Provide a Default SummaryView (just label/text) if SummaryView not provided in plugin
 
-  console.log('SummaryView', SummaryView)
-
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">

@@ -1,8 +1,7 @@
 import React from 'react'
-import { Button, Container, Form, Grid, Header, Input, Segment } from 'semantic-ui-react'
+import { Button, Container, Form, Grid, Header, Segment } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../elementPlugins'
-import { TemplateElementCategory } from '../../utils/generated/graphql'
-import { ElementState, ResponseFull, SectionElementStates } from '../../utils/types'
+import { SectionElementStates } from '../../utils/types'
 
 interface ApplicationSummaryProps {
   sectionsAndElements: SectionElementStates[]

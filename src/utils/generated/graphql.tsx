@@ -16871,7 +16871,7 @@ export type ElementFragment = (
 
 export type ResponseFragment = (
   { __typename?: 'ApplicationResponse' }
-  & Pick<ApplicationResponse, 'id' | 'value' | 'timeCreated'>
+  & Pick<ApplicationResponse, 'id' | 'value' | 'isValid' | 'timeCreated'>
 );
 
 export type SectionFragment = (
@@ -17257,6 +17257,7 @@ export const ResponseFragmentDoc = gql`
     fragment Response on ApplicationResponse {
   id
   value
+  isValid
   timeCreated
 }
     `;
