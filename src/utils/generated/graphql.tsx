@@ -2037,6 +2037,8 @@ export type ApplicationResponseFilter = {
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `value` field. */
   value?: Maybe<JsonFilter>;
+  /** Filter by the object’s `isValid` field. */
+  isValid?: Maybe<BooleanFilter>;
   /** Filter by the object’s `timeCreated` field. */
   timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
@@ -2494,10 +2496,6 @@ export type TemplateElementFilter = {
   isEditable?: Maybe<JsonFilter>;
   /** Filter by the object’s `parameters` field. */
   parameters?: Maybe<JsonFilter>;
-  /** Filter by the object’s `validation` field. */
-  validation?: Maybe<JsonFilter>;
-  /** Filter by the object’s `validationMessage` field. */
-  validationMessage?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponses` relation. */
   applicationResponses?: Maybe<TemplateElementToManyApplicationResponseFilter>;
   /** Some related `applicationResponses` exist. */
@@ -4032,10 +4030,6 @@ export enum TemplateElementsOrderBy {
   IsEditableDesc = 'IS_EDITABLE_DESC',
   ParametersAsc = 'PARAMETERS_ASC',
   ParametersDesc = 'PARAMETERS_DESC',
-  ValidationAsc = 'VALIDATION_ASC',
-  ValidationDesc = 'VALIDATION_DESC',
-  ValidationMessageAsc = 'VALIDATION_MESSAGE_ASC',
-  ValidationMessageDesc = 'VALIDATION_MESSAGE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -4064,10 +4058,6 @@ export type TemplateElementCondition = {
   isEditable?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parameters` field. */
   parameters?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `validation` field. */
-  validation?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `validationMessage` field. */
-  validationMessage?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `TemplateElement` values. */
@@ -4098,8 +4088,6 @@ export type TemplateElement = Node & {
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  validation?: Maybe<Scalars['JSON']>;
-  validationMessage?: Maybe<Scalars['String']>;
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -4129,6 +4117,8 @@ export enum ApplicationResponsesOrderBy {
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
   ValueAsc = 'VALUE_ASC',
   ValueDesc = 'VALUE_DESC',
+  IsValidAsc = 'IS_VALID_ASC',
+  IsValidDesc = 'IS_VALID_DESC',
   TimeCreatedAsc = 'TIME_CREATED_ASC',
   TimeCreatedDesc = 'TIME_CREATED_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -4145,6 +4135,8 @@ export type ApplicationResponseCondition = {
   applicationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `value` field. */
   value?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `isValid` field. */
+  isValid?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `timeCreated` field. */
   timeCreated?: Maybe<Scalars['Datetime']>;
 };
@@ -4170,6 +4162,7 @@ export type ApplicationResponse = Node & {
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   /** Reads a single `TemplateElement` that is related to this `ApplicationResponse`. */
   templateElement?: Maybe<TemplateElement>;
@@ -9076,6 +9069,7 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -9143,8 +9137,6 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  validation?: Maybe<Scalars['JSON']>;
-  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -9302,8 +9294,6 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  validation?: Maybe<Scalars['JSON']>;
-  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -9340,6 +9330,7 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -10403,6 +10394,7 @@ export type UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -10500,6 +10492,7 @@ export type UpdateApplicationResponseOnReviewResponseForReviewResponseApplicatio
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -10680,6 +10673,7 @@ export type ApplicationResponsePatch = {
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -10693,6 +10687,7 @@ export type ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInpu
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -11936,6 +11931,7 @@ export type FileApplicationResponseIdFkeyApplicationResponseCreateInput = {
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -12458,6 +12454,7 @@ export type ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInp
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -12486,8 +12483,6 @@ export type TemplateElementPatch = {
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  validation?: Maybe<Scalars['JSON']>;
-  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -12504,8 +12499,6 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  validation?: Maybe<Scalars['JSON']>;
-  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -12604,8 +12597,6 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  validation?: Maybe<Scalars['JSON']>;
-  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -12623,6 +12614,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput =
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -13447,6 +13439,7 @@ export type ApplicationResponseInput = {
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
@@ -14255,8 +14248,6 @@ export type TemplateElementInput = {
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
-  validation?: Maybe<Scalars['JSON']>;
-  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -16875,7 +16866,7 @@ export type ApplicationFragment = (
 
 export type ElementFragment = (
   { __typename?: 'TemplateElement' }
-  & Pick<TemplateElement, 'id' | 'title' | 'elementTypePluginCode' | 'code' | 'category' | 'isEditable' | 'isRequired' | 'validation' | 'validationMessage' | 'visibilityCondition'>
+  & Pick<TemplateElement, 'id' | 'title' | 'elementTypePluginCode' | 'code' | 'category' | 'isEditable' | 'isRequired' | 'visibilityCondition'>
 );
 
 export type ResponseFragment = (
@@ -17021,6 +17012,7 @@ export type UpdateApplicationMutation = (
 export type UpdateResponseMutationVariables = Exact<{
   id: Scalars['Int'];
   value: Scalars['JSON'];
+  isValid?: Maybe<Scalars['Boolean']>;
 }>;
 
 
@@ -17133,25 +17125,6 @@ export type GetElementsAndResponsesQuery = (
         )>> }
       ) }
     )> }
-  )> }
-);
-
-export type GetResponsesInApplicationQueryVariables = Exact<{
-  serial: Scalars['String'];
-}>;
-
-
-export type GetResponsesInApplicationQuery = (
-  { __typename?: 'Query' }
-  & { applicationBySerial?: Maybe<(
-    { __typename?: 'Application' }
-    & { applicationResponses: (
-      { __typename?: 'ApplicationResponsesConnection' }
-      & { nodes: Array<Maybe<(
-        { __typename?: 'ApplicationResponse' }
-        & Pick<ApplicationResponse, 'id' | 'value' | 'timeCreated'>
-      )>> }
-    ) }
   )> }
 );
 
@@ -17278,8 +17251,6 @@ export const ElementFragmentDoc = gql`
   category
   isEditable
   isRequired
-  validation
-  validationMessage
   visibilityCondition
 }
     `;
@@ -17520,8 +17491,8 @@ export type UpdateApplicationMutationHookResult = ReturnType<typeof useUpdateApp
 export type UpdateApplicationMutationResult = Apollo.MutationResult<UpdateApplicationMutation>;
 export type UpdateApplicationMutationOptions = Apollo.BaseMutationOptions<UpdateApplicationMutation, UpdateApplicationMutationVariables>;
 export const UpdateResponseDocument = gql`
-    mutation updateResponse($id: Int!, $value: JSON!) {
-  updateApplicationResponse(input: {id: $id, patch: {value: $value}}) {
+    mutation updateResponse($id: Int!, $value: JSON!, $isValid: Boolean) {
+  updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid}}) {
     applicationResponse {
       ...Response
       templateElement {
@@ -17549,6 +17520,7 @@ export type UpdateResponseMutationFn = Apollo.MutationFunction<UpdateResponseMut
  *   variables: {
  *      id: // value for 'id'
  *      value: // value for 'value'
+ *      isValid: // value for 'isValid'
  *   },
  * });
  */
@@ -17708,45 +17680,6 @@ export function useGetElementsAndResponsesLazyQuery(baseOptions?: Apollo.LazyQue
 export type GetElementsAndResponsesQueryHookResult = ReturnType<typeof useGetElementsAndResponsesQuery>;
 export type GetElementsAndResponsesLazyQueryHookResult = ReturnType<typeof useGetElementsAndResponsesLazyQuery>;
 export type GetElementsAndResponsesQueryResult = Apollo.QueryResult<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>;
-export const GetResponsesInApplicationDocument = gql`
-    query getResponsesInApplication($serial: String!) {
-  applicationBySerial(serial: $serial) {
-    applicationResponses {
-      nodes {
-        id
-        value
-        timeCreated
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetResponsesInApplicationQuery__
- *
- * To run a query within a React component, call `useGetResponsesInApplicationQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetResponsesInApplicationQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetResponsesInApplicationQuery({
- *   variables: {
- *      serial: // value for 'serial'
- *   },
- * });
- */
-export function useGetResponsesInApplicationQuery(baseOptions?: Apollo.QueryHookOptions<GetResponsesInApplicationQuery, GetResponsesInApplicationQueryVariables>) {
-        return Apollo.useQuery<GetResponsesInApplicationQuery, GetResponsesInApplicationQueryVariables>(GetResponsesInApplicationDocument, baseOptions);
-      }
-export function useGetResponsesInApplicationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetResponsesInApplicationQuery, GetResponsesInApplicationQueryVariables>) {
-          return Apollo.useLazyQuery<GetResponsesInApplicationQuery, GetResponsesInApplicationQueryVariables>(GetResponsesInApplicationDocument, baseOptions);
-        }
-export type GetResponsesInApplicationQueryHookResult = ReturnType<typeof useGetResponsesInApplicationQuery>;
-export type GetResponsesInApplicationLazyQueryHookResult = ReturnType<typeof useGetResponsesInApplicationLazyQuery>;
-export type GetResponsesInApplicationQueryResult = Apollo.QueryResult<GetResponsesInApplicationQuery, GetResponsesInApplicationQueryVariables>;
 export const GetSectionElementsDocument = gql`
     query getSectionElements($sectionId: Int!, $applicationId: Int!) {
   templateElements(condition: {sectionId: $sectionId}) {

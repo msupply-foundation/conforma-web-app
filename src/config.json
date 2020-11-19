@@ -1,3 +1,4 @@
 {
-  "server": "http://localhost:5000/graphql"
+  "serverGraphQL": "http://localhost:5000/graphql",
+  "serverREST": "http://localhost:8080"
 }

@@ -1,6 +1,6 @@
 import { ApplicationResponse, TemplateElement, TemplateElementCategory } from './generated/graphql'
 
-import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 export {
   ApplicationDetails,
@@ -18,6 +18,20 @@ export {
   ResponsesFullByCode,
   ResponsesByCode,
   TemplateElementState,
+  TemplatePermissions,
+  FullUserPermissions,
+}
+
+interface TemplatePermissions {
+  [index: string]: {
+    [index: string]: Array<'Apply' | 'Review' | 'Assign'>
+  }
+}
+
+interface FullUserPermissions {
+  username: string
+  templatePermissions: TemplatePermissions
+  JWT: string
 }
 
 interface ApplicationDetails {
@@ -103,21 +117,15 @@ interface ElementBase {
   category: TemplateElementCategory
 }
 
-interface ElementStateEvaluated {
+interface TemplateElementState extends ElementBase {
+  isRequired: IQueryNode
+  visibilityCondition: IQueryNode
+  isEditable: IQueryNode
+}
+
+interface ElementState extends ElementBase {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
   // isValid: boolean
-  // validationMessage: string | null
 }
-
-interface ElementStateUnevaluated {
-  isRequired: IQueryNode
-  visibilityCondition: IQueryNode
-  validation: IQueryNode
-  validationMessage: string | null
-  isEditable: IQueryNode
-}
-
-type TemplateElementState = ElementBase & ElementStateUnevaluated
-type ElementState = ElementBase & ElementStateEvaluated
