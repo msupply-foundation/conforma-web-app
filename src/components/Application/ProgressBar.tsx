@@ -22,36 +22,37 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   push,
   validateCurrentPage,
 }) => {
-  const pageList = (sectionCode: string, pages: { [page: number]: ProgressInPage }) => {
-    console.log('re-render progress bar')
-
+  const pageList = (sectionCode: string, pages: ProgressInPage[]) => {
     return (
       <List link>
-        {Object.entries(pages).map(([number, currentPage]) => (
-          <List.Item
-            as="a"
-            key={`page_${number}`}
-            onClick={() =>
-              attemptChangeToPage({
-                serialNumber,
-                sectionCode,
-                page: Number(number),
-                push,
-                validateCurrentPage,
-              })
-            }
-            active={currentPage.visited} // TODO: Change to only show active when visited in linear applications
-          >
-            {currentPage.pageStatus == true ? (
-              <Icon name="check circle" color="green" />
-            ) : currentPage.pageStatus == false ? (
-              <Icon name="exclamation circle" color="red" />
-            ) : null}
-            <List.Content>
-              <List.Header>{`Page ${number}`}</List.Header>
-            </List.Content>
-          </List.Item>
-        ))}
+        {pages.map((page) => {
+          const { pageName, isActive, status } = page
+          return (
+            <List.Item
+              as="a"
+              key={`progress_${page.pageName}`}
+              onClick={() =>
+                attemptChangeToPage({
+                  serialNumber,
+                  sectionCode,
+                  pageName,
+                  push,
+                  validateCurrentPage,
+                })
+              }
+              active={isActive}
+            >
+              {status == true ? (
+                <Icon name="check circle" color="green" />
+              ) : status == false ? (
+                <Icon name="exclamation circle" color="red" />
+              ) : null}
+              <List.Content>
+                <List.Header>{pageName}</List.Header>
+              </List.Content>
+            </List.Item>
+          )
+        })}
       </List>
     )
   }
@@ -66,8 +67,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           children: (
             <Grid>
               <Grid.Column width={4} textAlign="right" verticalAlign="middle">
-                {section.sectionStatus !== undefined ? (
-                  section.sectionStatus ? (
+                {section.status !== undefined ? (
+                  section.status ? (
                     <Icon name="check circle" size="large" color="green" />
                   ) : (
                     <Icon name="exclamation circle" size="large" color="red" />
@@ -86,7 +87,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           attemptChangeToPage({
             serialNumber,
             sectionCode: section.code,
-            page: 1,
+            pageName: 'Page1',
             push,
             validateCurrentPage,
           }),
@@ -134,7 +135,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     <Sticky as={Container}>
       <Header as="h5" textAlign="center" content="Steps to complete form" />
       <Accordion
-        activeIndex={currentSectionPage ? currentSectionPage.sectionIndex : 0}
+        activeIndex={currentSectionPage ? currentSectionPage.sectionIndex : 0} //TODO: Change to get active from structure
         panels={sectionList()}
       />
     </Sticky>
@@ -150,7 +151,7 @@ const getStepNumber = (stepNumber: number) => (
 interface attemptChangePageProps {
   serialNumber: string
   sectionCode?: string
-  page?: number
+  pageName?: string
   push: (path: string) => void
   validateCurrentPage: () => boolean
 }
@@ -158,14 +159,14 @@ interface attemptChangePageProps {
 const attemptChangeToPage = ({
   serialNumber,
   sectionCode,
-  page,
+  pageName,
   push,
   validateCurrentPage,
 }: attemptChangePageProps) => {
   const status = validateCurrentPage()
   if (status) {
-    sectionCode && page
-      ? push(`/applications/${serialNumber}/${sectionCode}/Page${page}`)
+    sectionCode && pageName
+      ? push(`/applications/${serialNumber}/${sectionCode}/${pageName.trim()}`)
       : push(`/applications/${serialNumber}/summary`)
   }
 }

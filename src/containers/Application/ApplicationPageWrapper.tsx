@@ -9,9 +9,8 @@ import {
   ApplicationElementStates,
   ElementState,
   ProgressInApplication,
-  ProgressInPage,
-  ProgressInSection,
-  ResponsesByCode,
+  ResponseFull,
+  ResponsesFullByCode,
   TemplateSectionPayload,
 } from '../../utils/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
@@ -63,10 +62,17 @@ const ApplicationPageWrapper: React.FC = () => {
   }, [isApplicationLoaded, sectionCode, page])
 
   useEffect(() => {
-    if (!elementsState) return
-    setProgressInApplication(startProgressState(templateSections))
+    const progressStructure = buildProgressInApplication({
+      elementsState,
+      responses: responsesFullByCode,
+      templateSections,
+      isLinear: application?.isLinear as boolean,
+      currentSection: currentSection?.index as number,
+      currentPage: Number(page),
+    })
+    setProgressInApplication(progressStructure)
     setProcessingValidation(false)
-  }, [elementsState])
+  }, [elementsState, currentSection, page])
 
   const validateCurrentPage = (): boolean => {
     if (!application || !currentSection || !page) {
@@ -74,27 +80,15 @@ const ApplicationPageWrapper: React.FC = () => {
       return false
     }
     setProcessingValidation(true)
-    const progressInPage = validateProgressInPage(
-      elementsState as ApplicationElementStates,
-      responsesByCode as ResponsesByCode,
-      currentSection.index,
-      Number(page)
-    )
-    setProgressInApplication(
-      updateProgressInPage(
-        progressInApplication as ProgressInApplication,
-        currentSection.index,
-        Number(page),
-        progressInPage
-      )
-    )
+    const validation = validatePage({
+      elementsState: elementsState as ApplicationElementStates,
+      responses: responsesFullByCode as ResponsesFullByCode,
+      sectionIndex: currentSection?.index as number,
+      page: Number(page),
+    })
     setProcessingValidation(false)
 
-    return application?.isLinear
-      ? progressInPage.pageStatus
-        ? progressInPage.pageStatus
-        : false
-      : true // Non-linear application
+    return application?.isLinear ? validation : true
   }
 
   return error || responsesError ? (
@@ -167,89 +161,92 @@ function processRedirect(appState: any): void {
   }
 }
 
-const startProgressState = (templateSections: TemplateSectionPayload[]): ProgressInApplication => {
-  return templateSections.reduce((progressInApplication: ProgressInApplication, section) => {
+interface buildProgressInApplicationProps {
+  elementsState: ApplicationElementStates | undefined
+  responses: ResponsesFullByCode | undefined
+  templateSections: TemplateSectionPayload[]
+  isLinear: boolean
+  currentSection: number
+  currentPage: number
+}
+function buildProgressInApplication({
+  elementsState,
+  responses,
+  templateSections,
+  isLinear,
+  currentSection,
+  currentPage,
+}: buildProgressInApplicationProps): ProgressInApplication {
+  if (!elementsState || !responses) return []
+  return templateSections.map((section) => {
+    // Create an array with all pages in each section
     const pages = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
-    const pagesProgress = pages.reduce((objPages, page) => {
-      return {
-        ...objPages,
-        [page]: {
-          visited: false,
-        },
-      }
-    }, {})
+    const canNavigateToPage = (index: number, page: number) =>
+      index < currentSection ? true : index === currentSection && page <= currentPage
 
+    // Build object to keep each section progress (and pages progress)
     const progressInSection = {
       code: section.code,
       title: section.title,
-      visited: false,
-      pages: pagesProgress,
+      canNavigate: isLinear ? section.index <= currentSection : true,
+      isActive: section.index === currentSection,
+      pages: pages.map((number) => ({
+        pageName: `Page ${number}`,
+        canNavigate: isLinear ? canNavigateToPage(section.index, number) : true,
+        isActive: section.index === currentSection && number === currentPage,
+        status: validatePage({
+          elementsState,
+          responses,
+          sectionIndex: section.index,
+          page: number,
+        }),
+      })),
     }
-    return [...progressInApplication, progressInSection]
-  }, [])
-}
 
-const updateProgressInPage = (
-  progressInApplication: ProgressInApplication,
-  currentSection: number,
-  currentPage: number,
-  status: ProgressInPage
-) => {
-  let progressInSection: ProgressInSection = progressInApplication[currentSection]
-
-  progressInSection = {
-    ...progressInSection,
-    pages: { ...progressInSection.pages, [currentPage]: status },
-  }
-
-  const allPagesValidated = Object.values(progressInSection.pages).every(
-    (page) => page.pageStatus !== undefined
-  )
-
-  if (allPagesValidated) {
-    progressInSection = {
+    // Return each section with status as the combination of its pages statuses
+    return {
       ...progressInSection,
-      visited: true,
-      sectionStatus: Object.values(progressInSection.pages).reduce((accStatus: boolean, page) => {
-        return accStatus && (page.pageStatus as boolean)
-      }, true),
+      status: progressInSection.pages.some(({ status }) => status === undefined)
+        ? undefined
+        : progressInSection.pages.every(({ status }) => status),
     }
-  }
-
-  progressInApplication[currentSection] = progressInSection
-
-  return progressInApplication
+  })
 }
 
-const validateProgressInPage = (
-  elementsState: ApplicationElementStates,
-  responsesByCode: ResponsesByCode,
-  currentSection: number,
-  currentPage: number
-): ProgressInPage => {
+interface validatePageProps {
+  elementsState: ApplicationElementStates
+  responses: ResponsesFullByCode
+  sectionIndex: number
+  page: number
+}
+
+function validatePage({
+  elementsState,
+  responses,
+  sectionIndex,
+  page,
+}: validatePageProps): boolean {
   let count = 1
-  const pageElements = Object.entries(elementsState)
-    .filter(([key, { section }]) => section === currentSection)
-    .reduce((pageElements: { [index: string]: ElementState }, [key, element]) => {
-      if (element.elementTypePluginCode === 'PageBreak') {
-        count++
-        return pageElements
-      }
-
-      if (count === currentPage && element.category === TemplateElementCategory.Question)
-        pageElements[key] = element
-
+  const elementsInCurrentPage = Object.values(elementsState)
+    .filter(({ section }) => section === sectionIndex)
+    .reduce((pageElements: ElementState[], element) => {
+      if (element.elementTypePluginCode === 'PageBreak') count++
+      if (count !== page) return pageElements
+      if (element.category === TemplateElementCategory.Question) return [...pageElements, element]
       return pageElements
-    }, {})
+    }, [])
 
-  const status = {
-    visited: true,
-    pageStatus: !Object.values(pageElements).some(
-      (element) => element.isVisible && element.isRequired && !responsesByCode[element.code]
-    ),
-  }
+  const responsesStatus = elementsInCurrentPage.reduce((responsesStatus: boolean[], element) => {
+    // return accStatus && (page.pageStatus as boolean)
+    const { text, isValid } = responses[element.code] as ResponseFull
+    const { isRequired, isVisible } = element
 
-  return status
+    if (isVisible && isRequired) return [...responsesStatus, text ? (isValid as boolean) : false]
+    if (isVisible && !isRequired) return [...responsesStatus, text ? (isValid as boolean) : true]
+    return responsesStatus
+  }, [])
+
+  return responsesStatus.every((status) => status)
 }
 
 export default ApplicationPageWrapper

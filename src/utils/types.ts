@@ -100,26 +100,28 @@ interface TemplateSectionPayload {
 }
 
 interface ProgressInPage {
-  pageStatus?: boolean
-  visited: boolean
+  pageName: string
+  status?: boolean
+  canNavigate: boolean
+  isActive: boolean
 }
 
 interface ProgressInSection {
   code: string
   title: string
-  sectionStatus?: boolean
-  visited: boolean
-  pages: {
-    [page: number]: ProgressInPage
-  }
+  status?: boolean
+  canNavigate: boolean
+  isActive: boolean
+  pages: ProgressInPage[]
 }
 
 type ProgressInApplication = ProgressInSection[]
 
-type ResponseFull = {
+interface ResponseFull {
   text: string | null | undefined
   optionIndex?: number
   reference?: any // Not yet decided how to represent
+  isValid: boolean | null | undefined
 }
 
 interface ResponsesFullByCode {
@@ -149,5 +151,4 @@ interface ElementState extends ElementBase {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
-  // isValid: boolean
 }

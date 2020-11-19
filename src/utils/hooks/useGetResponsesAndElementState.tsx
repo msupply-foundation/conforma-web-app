@@ -68,12 +68,17 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
     const currentFullResponses = {} as ResponsesFullByCode
 
     applicationResponses.forEach((response) => {
-      const code = response?.templateElement?.code
+      const code = response.templateElement?.code
       if (code) {
-        currentResponses[code] = response?.value?.text
-        currentFullResponses[code] = response?.value
+        currentResponses[code] = response.value?.text
+        currentFullResponses[code] = {
+          ...response.value,
+          isValid: response.isValid,
+        }
       }
     })
+
+    console.log('currentFullResponses', currentFullResponses)
 
     setResponsesByCode(currentResponses)
     setResponsesFullByCode(currentFullResponses)
@@ -109,19 +114,17 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
     const isEditable = evaluateExpression(element.isEditable, evaluationParameters)
     const isRequired = evaluateExpression(element.isRequired, evaluationParameters)
     const isVisible = evaluateExpression(element.visibilityCondition, evaluationParameters)
-    // const isValid = evaluateExpression(element.validation, evaluationParameters)
     const results = await Promise.all([isEditable, isRequired, isVisible])
     const evaluatedElement = {
       id: element.id,
       code: element.code,
       title: element.title,
+      category: element.category,
       elementTypePluginCode: element.elementTypePluginCode,
       section: element.section as number,
-      category: element.category,
       isEditable: results[0] as boolean,
       isRequired: results[1] as boolean,
       isVisible: results[2] as boolean,
-      // isValid: results[3],
     }
     return evaluatedElement
   }
