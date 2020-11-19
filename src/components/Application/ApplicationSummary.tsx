@@ -6,13 +6,15 @@ import { SectionElementStates } from '../../utils/types'
 interface ApplicationSummaryProps {
   sectionsAndElements: SectionElementStates[]
   onSubmitHandler: () => void
+  appStatus: any
 }
 
 const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
   sectionsAndElements,
   onSubmitHandler,
+  appStatus: { status: status },
 }) => {
-  console.log('sectionsAndElements', sectionsAndElements)
+  console.log('appStatus', status)
   return (
     <Container style={{ marginTop: '2em' }}>
       <Header as="h1" content="REVIEW AND SUBMIT" />
@@ -25,7 +27,9 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
                   <Header as="h2" content={`${section.title}`} />
                 </Grid.Column>
                 <Grid.Column>
-                  <Header as="h5" icon="pencil" floated="right" content="edit" color="blue" />
+                  {status === 'DRAFT' ? (
+                    <Header as="h5" icon="pencil" floated="right" content="edit" color="blue" />
+                  ) : null}
                 </Grid.Column>
               </Grid.Row>
             </Grid>
@@ -34,12 +38,14 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
             ))}
           </Segment.Group>
         ))}
-        <Button
-          content="Submit application"
-          onClick={() => {
-            onSubmitHandler()
-          }}
-        />
+        {status === 'DRAFT' ? (
+          <Button
+            content="Submit application"
+            onClick={() => {
+              onSubmitHandler()
+            }}
+          />
+        ) : null}
       </Form>
     </Container>
   )
