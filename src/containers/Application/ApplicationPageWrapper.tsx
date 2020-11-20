@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, ProgressBar } from '../../components'
-import { Grid, Label, Message, Segment } from 'semantic-ui-react'
+import { Grid, Label, Message, Progress, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import { ElementsBox, NavigationBox } from './'
@@ -9,11 +9,18 @@ import {
   ApplicationElementStates,
   ElementState,
   ProgressInApplication,
+  ProgressStatus,
   ResponseFull,
   ResponsesFullByCode,
   TemplateSectionPayload,
 } from '../../utils/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
+
+const progressStatus = {
+  NOT_VALID: 'NOT_VALID',
+  VALID: 'VALID',
+  INCOMPLETE: 'INCOMPLETE',
+}
 
 const ApplicationPageWrapper: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
@@ -88,7 +95,7 @@ const ApplicationPageWrapper: React.FC = () => {
     })
     setProcessingValidation(false)
 
-    return application?.isLinear ? validation : true
+    return application?.isLinear ? validation === (progressStatus.VALID as ProgressStatus) : true
   }
 
   return error || responsesError ? (
@@ -206,9 +213,15 @@ function buildProgressInApplication({
     // Return each section with status as the combination of its pages statuses
     return {
       ...progressInSection,
-      status: progressInSection.pages.some(({ status }) => status === undefined)
-        ? undefined
-        : progressInSection.pages.every(({ status }) => status),
+      status: (progressInSection.pages.every(
+        ({ status }) => status === (progressStatus.VALID as ProgressStatus)
+      )
+        ? progressStatus.VALID
+        : progressInSection.pages.every(
+            ({ status }) => status === (progressStatus.NOT_VALID as ProgressStatus)
+          )
+        ? progressStatus.NOT_VALID
+        : progressStatus.INCOMPLETE) as ProgressStatus,
     }
   })
 }
@@ -225,7 +238,7 @@ function validatePage({
   responses,
   sectionIndex,
   page,
-}: validatePageProps): boolean {
+}: validatePageProps): ProgressStatus {
   let count = 1
   const elementsInCurrentPage = Object.values(elementsState)
     .filter(({ section }) => section === sectionIndex)
@@ -236,17 +249,50 @@ function validatePage({
       return pageElements
     }, [])
 
-  const responsesStatus = elementsInCurrentPage.reduce((responsesStatus: boolean[], element) => {
-    // return accStatus && (page.pageStatus as boolean)
-    const { text, isValid } = responses[element.code] as ResponseFull
-    const { isRequired, isVisible } = element
+  const responsesStatus = elementsInCurrentPage.reduce(
+    (responsesStatuses: ProgressStatus[], element: ElementState) => {
+      const { text, isValid } = responses[element.code] as ResponseFull
+      const { isRequired, isVisible } = element
 
-    if (isVisible && isRequired) return [...responsesStatus, text ? (isValid as boolean) : false]
-    if (isVisible && !isRequired) return [...responsesStatus, text ? (isValid as boolean) : true]
-    return responsesStatus
-  }, [])
+      const findResponseIsExpected = (
+        isVisible: boolean,
+        isRequired: boolean,
+        isFilled: string | null | undefined
+      ): boolean => {
+        return !isVisible
+          ? false // Not visible
+          : isRequired
+          ? true // Visible, required element
+          : isFilled
+          ? true // Visible, not required but filled
+          : false // Visible and not required
+      }
 
-  return responsesStatus.every((status) => status)
+      const getResponseStatus = (
+        expected: boolean,
+        text: string | null | undefined,
+        isValid: boolean | null | undefined
+      ): ProgressStatus => {
+        return (expected
+          ? isValid
+            ? progressStatus.VALID
+            : !text || text.length === 0
+            ? progressStatus.INCOMPLETE
+            : progressStatus.NOT_VALID
+          : progressStatus.VALID) as ProgressStatus
+      }
+
+      const isRensponseExpected = findResponseIsExpected(isVisible, isRequired, text)
+      return [...responsesStatuses, getResponseStatus(isRensponseExpected, text, isValid)]
+    },
+    []
+  )
+
+  return (responsesStatus.every((status) => status === (progressStatus.VALID as ProgressStatus))
+    ? progressStatus.VALID
+    : responsesStatus.every((status) => status === (progressStatus.NOT_VALID as ProgressStatus))
+    ? progressStatus.NOT_VALID
+    : progressStatus.INCOMPLETE) as ProgressStatus
 }
 
 export default ApplicationPageWrapper
