@@ -7,33 +7,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onUpdate,
   initialValue,
   isEditable,
-  isRequired,
   currentResponse,
   validationState,
   onSave,
 }) => {
   const [value, setValue] = useState(initialValue?.text)
   const { placeholder, maskedInput, label } = templateElement?.parameters
-
-  // useEffect(() => {
-  //   // Do validation, setIsValid
-  //   if (validationExpression && responses.thisResponse !== undefined) {
-  //     evaluator(validationExpression, { objects: [responses], APIfetch: fetch })
-  //       .then((result: boolean) => {
-  //         setIsValid(result)
-  //       })
-  //       .catch((err: any) => console.log(err))
-  //   } else setIsValid(true)
-  // }, [responses])
-
-  // useEffect(() => {
-  //   setResponses({ thisResponse: value, ...allResponses })
-  // }, [value])
-
-  // useEffect(() => {
-  //   if (isValid) setValidationMessageDisplay('')
-  //   else setValidationMessageDisplay(validationMessage)
-  // }, [isValid])
 
   useEffect(() => {
     onUpdate(value)
