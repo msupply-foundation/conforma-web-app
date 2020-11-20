@@ -1,6 +1,21 @@
 import React from 'react'
-import { Accordion, Container, Grid, Header, Icon, Label, List, Sticky } from 'semantic-ui-react'
-import { ProgressInApplication, ProgressInPage, ProgressStatus } from '../../utils/types'
+import {
+  Accordion,
+  Container,
+  Grid,
+  Header,
+  Icon,
+  Item,
+  Label,
+  List,
+  Sticky,
+} from 'semantic-ui-react'
+import {
+  ProgressInApplication,
+  ProgressInPage,
+  ProgressStatus,
+  ReviewCode,
+} from '../../utils/types'
 
 interface SectionPage {
   sectionIndex: number
@@ -26,19 +41,23 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     const indicator = {
       VALID: <Icon name="check circle" color="green" />,
       NOT_VALID: <Icon name="exclamation circle" color="red" />,
-      INCOMPLETE: null,
+      INCOMPLETE: <Icon name="circle outline" />,
     }
     return status ? indicator[status] : null
   }
 
   const pageList = (sectionCode: string, pages: ProgressInPage[]) => {
     return (
-      <List link inverted>
+      <List style={{ paddingLeft: '50px' }} link>
         {pages.map((page) => {
-          const { pageName, isActive, status } = page
+          const { canNavigate, isActive, pageName, status } = page
           return (
             <List.Item
+              active={isActive}
               as="a"
+              disabled={!canNavigate}
+              header={pageName}
+              icon={getPageIndicator(status)}
               key={`progress_${page.pageName}`}
               onClick={() =>
                 attemptChangeToPage({
@@ -49,13 +68,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
                   validateCurrentPage,
                 })
               }
-              active={isActive}
-            >
-              {getPageIndicator(status)}
-              <List.Content>
-                <List.Header>{pageName}</List.Header>
-              </List.Content>
-            </List.Item>
+            />
           )
         })}
       </List>
@@ -63,6 +76,12 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   }
 
   const getSectionIndicator = (status: ProgressStatus | undefined, step: number) => {
+    const getStepNumber = (stepNumber: number) => (
+      <Label circular as="a" basic color="blue" key={`progress_${stepNumber}`}>
+        {stepNumber}
+      </Label>
+    )
+
     const indicator = {
       VALID: <Icon name="check circle" color="green" size="large" />,
       NOT_VALID: <Icon name="exclamation circle" color="red" size="large" />,
@@ -72,9 +91,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   }
 
   const sectionList = () => {
-    const sectionItems = progressStructure.map((section, index) => {
+    return progressStructure.map((section, index) => {
       const stepNumber = index + 1
-      const { code, pages, status, title } = section
+      const { canNavigate, code, isActive, pages, status, title } = section
 
       return {
         key: `progress_${stepNumber}`,
@@ -85,7 +104,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
                 {getSectionIndicator(status, stepNumber)}
               </Grid.Column>
               <Grid.Column width={12} textAlign="left" verticalAlign="middle">
-                <Header size="small" content={title} />
+                <Header as={isActive ? 'h3' : 'h4'} disabled={!canNavigate}>
+                  {title}
+                </Header>
               </Grid.Column>
             </Grid>
           ),
@@ -93,50 +114,19 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         onTitleClick: () =>
           attemptChangeToPage({
             serialNumber,
-            sectionCode: code,
-            pageName: 'Page1',
+            sectionCode: code === 'PR' ? undefined : code,
+            pageName: code === 'PR' ? undefined : 'Page1',
             push,
             validateCurrentPage,
           }),
         content: {
-          content: (
-            <Grid divided>
-              <Grid.Column width={4}></Grid.Column>
-              <Grid.Column width={12}>{pageList(code, pages)}</Grid.Column>
-            </Grid>
-          ),
+          content: pages ? pageList(code, pages) : null,
         },
       }
     })
-
-    const summaryNumber = sectionItems.length + 1
-    sectionItems.push({
-      key: 'progress_summary',
-      title: {
-        children: (
-          <Grid>
-            <Grid.Column width={4} textAlign="right" verticalAlign="middle">
-              {getStepNumber(summaryNumber)}
-            </Grid.Column>
-            <Grid.Column width={12} textAlign="left" verticalAlign="middle">
-              <Header size="small" content={'Review and submit'} />
-            </Grid.Column>
-          </Grid>
-        ),
-      },
-      onTitleClick: () =>
-        attemptChangeToPage({
-          serialNumber,
-          push,
-          validateCurrentPage,
-        }),
-      // Ideally these aren't needed - Couldn't find some way to remove this
-      content: {
-        content: <Header />,
-      },
-    })
-    return sectionItems
   }
+
+  console.log('Current index', currentSectionPage?.sectionIndex)
 
   return (
     <Sticky as={Container}>
@@ -148,12 +138,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     </Sticky>
   )
 }
-
-const getStepNumber = (stepNumber: number) => (
-  <Label circular as="a" basic color="blue" key={`progress_${stepNumber}`}>
-    {stepNumber}
-  </Label>
-)
 
 interface attemptChangePageProps {
   serialNumber: string

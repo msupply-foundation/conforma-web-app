@@ -18,6 +18,7 @@ export {
   ProgressInSection,
   ProgressInPage,
   ProgressStatus,
+  ReviewCode,
   ResponseFull,
   ResponsesFullByCode,
   ResponsesByCode,
@@ -102,23 +103,25 @@ interface TemplateSectionPayload {
 
 interface ProgressInPage {
   pageName: string
-  status?: ProgressStatus
+  status: ProgressStatus
   canNavigate: boolean
   isActive: boolean
 }
 
 interface ProgressInSection {
-  code: string
+  code: string | ReviewCode
   title: string
   status?: ProgressStatus
   canNavigate: boolean
   isActive: boolean
-  pages: ProgressInPage[]
+  pages?: ProgressInPage[]
 }
 
 type ProgressInApplication = ProgressInSection[]
 
 type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
+
+type ReviewCode = 'PR'
 
 interface ResponseFull {
   text: string | null | undefined

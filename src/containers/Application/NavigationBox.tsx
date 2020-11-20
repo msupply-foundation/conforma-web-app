@@ -2,7 +2,7 @@ import React from 'react'
 import { Grid } from 'semantic-ui-react'
 import PageButton from '../../components/Application/PageButton'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ProgressInPage, TemplateSectionPayload } from '../../utils/types'
+import { TemplateSectionPayload } from '../../utils/types'
 
 interface NavigationBoxProps {
   templateSections: TemplateSectionPayload[]
@@ -32,8 +32,8 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({ templateSections, validat
     currentSection: currentSection as TemplateSectionPayload,
     templateSections,
     sendToPage: (section: string, page: number) =>
-      push(`../../${serialNumber}/${section}/page${page}`),
-    sendToSummary: () => push('../summary'),
+      push(`/applications/${serialNumber}/${section}/Page${page}`),
+    sendToSummary: () => push('/applications/${serialNumber}/summary'),
     validateCurrentPage,
   }
 

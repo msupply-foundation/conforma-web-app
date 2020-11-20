@@ -9,9 +9,11 @@ import {
   ApplicationElementStates,
   ElementState,
   ProgressInApplication,
+  ProgressInSection,
   ProgressStatus,
   ResponseFull,
   ResponsesFullByCode,
+  ReviewCode,
   TemplateSectionPayload,
 } from '../../utils/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
@@ -92,6 +94,7 @@ const ApplicationPageWrapper: React.FC = () => {
       responses: responsesFullByCode as ResponsesFullByCode,
       sectionIndex: currentSection?.index as number,
       page: Number(page),
+      checkEmpty: true,
     })
     setProcessingValidation(false)
 
@@ -168,6 +171,15 @@ function processRedirect(appState: any): void {
   }
 }
 
+const getCombinedStatus = (array: { status: ProgressStatus }[] | undefined): ProgressStatus => {
+  if (!array) return progressStatus.VALID as ProgressStatus
+  return (array.every(({ status }) => status === (progressStatus.VALID as ProgressStatus))
+    ? progressStatus.VALID
+    : array.every(({ status }) => status === (progressStatus.NOT_VALID as ProgressStatus))
+    ? progressStatus.NOT_VALID
+    : progressStatus.INCOMPLETE) as ProgressStatus
+}
+
 interface buildProgressInApplicationProps {
   elementsState: ApplicationElementStates | undefined
   responses: ResponsesFullByCode | undefined
@@ -176,6 +188,7 @@ interface buildProgressInApplicationProps {
   currentSection: number
   currentPage: number
 }
+
 function buildProgressInApplication({
   elementsState,
   responses,
@@ -185,14 +198,14 @@ function buildProgressInApplication({
   currentPage,
 }: buildProgressInApplicationProps): ProgressInApplication {
   if (!elementsState || !responses) return []
-  return templateSections.map((section) => {
+  let sectionsStructure: ProgressInApplication = templateSections.map((section) => {
     // Create an array with all pages in each section
     const pages = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
     const canNavigateToPage = (index: number, page: number) =>
       index < currentSection ? true : index === currentSection && page <= currentPage
 
     // Build object to keep each section progress (and pages progress)
-    const progressInSection = {
+    const progressInSection: ProgressInSection = {
       code: section.code,
       title: section.title,
       canNavigate: isLinear ? section.index <= currentSection : true,
@@ -213,17 +226,19 @@ function buildProgressInApplication({
     // Return each section with status as the combination of its pages statuses
     return {
       ...progressInSection,
-      status: (progressInSection.pages.every(
-        ({ status }) => status === (progressStatus.VALID as ProgressStatus)
-      )
-        ? progressStatus.VALID
-        : progressInSection.pages.every(
-            ({ status }) => status === (progressStatus.NOT_VALID as ProgressStatus)
-          )
-        ? progressStatus.NOT_VALID
-        : progressStatus.INCOMPLETE) as ProgressStatus,
+      status: getCombinedStatus(progressInSection.pages),
     }
   })
+
+  // Add 'Review and submit' as last section
+  sectionsStructure.push({
+    code: 'PR' as ReviewCode,
+    title: 'Review and submit',
+    canNavigate: isLinear ? false : true,
+    isActive: false,
+  })
+
+  return sectionsStructure
 }
 
 interface validatePageProps {
@@ -231,6 +246,7 @@ interface validatePageProps {
   responses: ResponsesFullByCode
   sectionIndex: number
   page: number
+  checkEmpty?: boolean
 }
 
 function validatePage({
@@ -238,6 +254,7 @@ function validatePage({
   responses,
   sectionIndex,
   page,
+  checkEmpty = false,
 }: validatePageProps): ProgressStatus {
   let count = 1
   const elementsInCurrentPage = Object.values(elementsState)
@@ -249,23 +266,48 @@ function validatePage({
       return pageElements
     }, [])
 
-  const responsesStatus = elementsInCurrentPage.reduce(
-    (responsesStatuses: ProgressStatus[], element: ElementState) => {
+  const responsesStatuses = elementsInCurrentPage.reduce(
+    (responsesStatuses: { status: ProgressStatus }[], element: ElementState) => {
       const { text, isValid } = responses[element.code] as ResponseFull
       const { isRequired, isVisible } = element
+
+      console.log('Element code', element.code, 'text', text, 'size', text?.length)
 
       const findResponseIsExpected = (
         isVisible: boolean,
         isRequired: boolean,
-        isFilled: string | null | undefined
+        isFilled: string | null | undefined,
+        checkEmpty: boolean
       ): boolean => {
+        console.log(
+          isVisible,
+          isRequired,
+          checkEmpty,
+          isFilled,
+          !isVisible
+            ? false // Not visible
+            : isRequired
+            ? checkEmpty
+              ? true // Visible, required & check for empty responses
+              : !isFilled // Visible, required, not checking empty
+            : isFilled
+            ? true // Visible, not required but filled
+            : false // Visible and not required
+        )
+
         return !isVisible
           ? false // Not visible
+          : checkEmpty
+          ? isRequired
+            ? true // Visible, required element
+            : isFilled
+            ? true // Visible, not required but filled
+            : false // Visible and not required
+          : !isFilled
+          ? false // Unkown if required, Empty & not checking empty
           : isRequired
-          ? true // Visible, required element
-          : isFilled
-          ? true // Visible, not required but filled
-          : false // Visible and not required
+          ? true // Visible, required & check for empty responses
+          : false // Visible, not required
       }
 
       const getResponseStatus = (
@@ -279,20 +321,21 @@ function validatePage({
             : !text || text.length === 0
             ? progressStatus.INCOMPLETE
             : progressStatus.NOT_VALID
-          : progressStatus.VALID) as ProgressStatus
+          : progressStatus.INCOMPLETE) as ProgressStatus
       }
 
-      const isRensponseExpected = findResponseIsExpected(isVisible, isRequired, text)
-      return [...responsesStatuses, getResponseStatus(isRensponseExpected, text, isValid)]
+      const isRensponseExpected = findResponseIsExpected(isVisible, isRequired, text, checkEmpty)
+      return [
+        ...responsesStatuses,
+        { status: getResponseStatus(isRensponseExpected, text, isValid) },
+      ]
     },
     []
   )
 
-  return (responsesStatus.every((status) => status === (progressStatus.VALID as ProgressStatus))
-    ? progressStatus.VALID
-    : responsesStatus.every((status) => status === (progressStatus.NOT_VALID as ProgressStatus))
-    ? progressStatus.NOT_VALID
-    : progressStatus.INCOMPLETE) as ProgressStatus
+  console.log(sectionIndex, page, 'responsesStatuses', responsesStatuses)
+
+  return getCombinedStatus(responsesStatuses)
 }
 
 export default ApplicationPageWrapper
