@@ -51,9 +51,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     return validationResult
   }
 
-  const onSave = (jsonValue: ResponseFull) => {
-    const validationResult: any = onUpdate(jsonValue.text)
-    console.log({
+  const onSave = async (jsonValue: ResponseFull) => {
+    const validationResult: any = await onUpdate(jsonValue.text)
+    console.log('On Save', {
       variables: {
         id: currentResponse?.id as number,
         value: jsonValue,
