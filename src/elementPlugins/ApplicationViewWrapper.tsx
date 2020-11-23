@@ -36,7 +36,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const onUpdate = async (value: string | null | undefined) => {
     const responses = { thisResponse: value, ...allResponses }
 
-    if (!validationExpression || value === undefined) return { isValid: true }
+    if (!validationExpression || value === undefined) {
+      setValidationState({ isValid: true })
+      return { isValid: true }
+    }
 
     const evaluator = async (expression: any) => {
       return await evaluateExpression(expression, { objects: [responses], APIfetch: fetch })
@@ -83,9 +86,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 }
 
 const defaultValidate = async (validationExpress: any, validationMessage: any, evaluator: any) => {
-  console.log(validationExpress)
+  if (!validationExpress) return { isValid: true }
   const isValid = await evaluator(validationExpress)
-  console.log('evaluated', isValid)
   if (isValid) return { isValid }
   return { isValid, validationMessage }
 }
