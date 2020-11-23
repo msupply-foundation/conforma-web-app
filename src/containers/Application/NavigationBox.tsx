@@ -33,7 +33,7 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({ templateSections, validat
     templateSections,
     sendToPage: (section: string, page: number) =>
       push(`/applications/${serialNumber}/${section}/Page${page}`),
-    sendToSummary: () => push('/applications/${serialNumber}/summary'),
+    sendToSummary: () => push(`/applications/${serialNumber}/summary`),
     validateCurrentPage,
   }
 
