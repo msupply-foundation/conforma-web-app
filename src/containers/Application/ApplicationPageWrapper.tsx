@@ -214,12 +214,21 @@ function buildProgressInApplication({
         pageName: `Page ${number}`,
         canNavigate: isLinear ? canNavigateToPage(section.index, number) : true,
         isActive: section.index === currentSection && number === currentPage,
-        status: validatePage({
-          elementsState,
-          responses,
-          sectionIndex: section.index,
-          page: number,
-        }),
+        status: isLinear
+          ? canNavigateToPage(section.index, number)
+            ? validatePage({
+                elementsState,
+                responses,
+                sectionIndex: section.index,
+                page: number,
+              })
+            : (progressStatus.INCOMPLETE as ProgressStatus)
+          : validatePage({
+              elementsState,
+              responses,
+              sectionIndex: section.index,
+              page: number,
+            }),
       })),
     }
 
@@ -260,7 +269,7 @@ function validatePage({
   const elementsInCurrentPage = Object.values(elementsState)
     .filter(({ section }) => section === sectionIndex)
     .reduce((pageElements: ElementState[], element) => {
-      if (element.elementTypePluginCode === 'PageBreak') count++
+      if (element.elementTypePluginCode === 'pageBreak') count++
       if (count !== page) return pageElements
       if (element.category === TemplateElementCategory.Question) return [...pageElements, element]
       return pageElements
@@ -271,30 +280,12 @@ function validatePage({
       const { text, isValid } = responses[element.code] as ResponseFull
       const { isRequired, isVisible } = element
 
-      console.log('Element code', element.code, 'text', text, 'size', text?.length)
-
       const findResponseIsExpected = (
         isVisible: boolean,
         isRequired: boolean,
         isFilled: string | null | undefined,
         checkEmpty: boolean
       ): boolean => {
-        console.log(
-          isVisible,
-          isRequired,
-          checkEmpty,
-          isFilled,
-          !isVisible
-            ? false // Not visible
-            : isRequired
-            ? checkEmpty
-              ? true // Visible, required & check for empty responses
-              : !isFilled // Visible, required, not checking empty
-            : isFilled
-            ? true // Visible, not required but filled
-            : false // Visible and not required
-        )
-
         return !isVisible
           ? false // Not visible
           : checkEmpty
@@ -332,8 +323,6 @@ function validatePage({
     },
     []
   )
-
-  console.log(sectionIndex, page, 'responsesStatuses', responsesStatuses)
 
   return getCombinedStatus(responsesStatuses)
 }
