@@ -1,28 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, ProgressBar } from '../../components'
-import { Grid, Label, Message, Progress, Segment } from 'semantic-ui-react'
+import { Grid, Label, Message, Segment } from 'semantic-ui-react'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import { ElementsBox, NavigationBox } from './'
+import validatePage, { getCombinedStatus, PROGRESS_STATUS } from '../../utils/helpers/validatePage'
+
 import {
   ApplicationElementStates,
-  ElementState,
   ProgressInApplication,
   ProgressInSection,
   ProgressStatus,
-  ResponseFull,
   ResponsesFullByCode,
   ReviewCode,
   TemplateSectionPayload,
 } from '../../utils/types'
-import { TemplateElementCategory } from '../../utils/generated/graphql'
-
-const progressStatus = {
-  NOT_VALID: 'NOT_VALID',
-  VALID: 'VALID',
-  INCOMPLETE: 'INCOMPLETE',
-}
 
 const ApplicationPageWrapper: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
@@ -98,7 +91,7 @@ const ApplicationPageWrapper: React.FC = () => {
     })
     setProcessingValidation(false)
 
-    return application?.isLinear ? validation === (progressStatus.VALID as ProgressStatus) : true
+    return application?.isLinear ? validation === (PROGRESS_STATUS.VALID as ProgressStatus) : true
   }
 
   return error || responsesError ? (
@@ -171,15 +164,6 @@ function processRedirect(appState: any): void {
   }
 }
 
-const getCombinedStatus = (array: { status: ProgressStatus }[] | undefined): ProgressStatus => {
-  if (!array) return progressStatus.VALID as ProgressStatus
-  return (array.every(({ status }) => status === (progressStatus.VALID as ProgressStatus))
-    ? progressStatus.VALID
-    : array.every(({ status }) => status === (progressStatus.NOT_VALID as ProgressStatus))
-    ? progressStatus.NOT_VALID
-    : progressStatus.INCOMPLETE) as ProgressStatus
-}
-
 interface buildProgressInApplicationProps {
   elementsState: ApplicationElementStates | undefined
   responses: ResponsesFullByCode | undefined
@@ -222,7 +206,7 @@ function buildProgressInApplication({
                 sectionIndex: section.index,
                 page: number,
               })
-            : (progressStatus.INCOMPLETE as ProgressStatus)
+            : PROGRESS_STATUS.INCOMPLETE
           : validatePage({
               elementsState,
               responses,
@@ -248,83 +232,6 @@ function buildProgressInApplication({
   })
 
   return sectionsStructure
-}
-
-interface validatePageProps {
-  elementsState: ApplicationElementStates
-  responses: ResponsesFullByCode
-  sectionIndex: number
-  page: number
-  checkEmpty?: boolean
-}
-
-function validatePage({
-  elementsState,
-  responses,
-  sectionIndex,
-  page,
-  checkEmpty = false,
-}: validatePageProps): ProgressStatus {
-  let count = 1
-  const elementsInCurrentPage = Object.values(elementsState)
-    .filter(({ section }) => section === sectionIndex)
-    .reduce((pageElements: ElementState[], element) => {
-      if (element.elementTypePluginCode === 'pageBreak') count++
-      if (count !== page) return pageElements
-      if (element.category === TemplateElementCategory.Question) return [...pageElements, element]
-      return pageElements
-    }, [])
-
-  const responsesStatuses = elementsInCurrentPage.reduce(
-    (responsesStatuses: { status: ProgressStatus }[], element: ElementState) => {
-      const { text, isValid } = responses[element.code] as ResponseFull
-      const { isRequired, isVisible } = element
-
-      const findResponseIsExpected = (
-        isVisible: boolean,
-        isRequired: boolean,
-        isFilled: string | null | undefined,
-        checkEmpty: boolean
-      ): boolean => {
-        return !isVisible
-          ? false // Not visible
-          : checkEmpty
-          ? isRequired
-            ? true // Visible, required element
-            : isFilled
-            ? true // Visible, not required but filled
-            : false // Visible and not required
-          : !isFilled
-          ? false // Unkown if required, Empty & not checking empty
-          : isRequired
-          ? true // Visible, required & check for empty responses
-          : false // Visible, not required
-      }
-
-      const getResponseStatus = (
-        expected: boolean,
-        text: string | null | undefined,
-        isValid: boolean | null | undefined
-      ): ProgressStatus => {
-        return (expected
-          ? isValid
-            ? progressStatus.VALID
-            : !text || text.length === 0
-            ? progressStatus.INCOMPLETE
-            : progressStatus.NOT_VALID
-          : progressStatus.INCOMPLETE) as ProgressStatus
-      }
-
-      const isRensponseExpected = findResponseIsExpected(isVisible, isRequired, text, checkEmpty)
-      return [
-        ...responsesStatuses,
-        { status: getResponseStatus(isRensponseExpected, text, isValid) },
-      ]
-    },
-    []
-  )
-
-  return getCombinedStatus(responsesStatuses)
 }
 
 export default ApplicationPageWrapper

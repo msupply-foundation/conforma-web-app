@@ -78,8 +78,6 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
       }
     })
 
-    console.log('currentFullResponses', currentFullResponses)
-
     setResponsesByCode(currentResponses)
     setResponsesFullByCode(currentFullResponses)
     setElementsExpressions(templateElements)
