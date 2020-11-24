@@ -17,6 +17,7 @@ export {
   ResponseFull,
   ResponsesFullByCode,
   ResponsesByCode,
+  LooseString,
   TemplateElementState,
   TemplatePermissions,
   FullUserPermissions,
@@ -101,12 +102,14 @@ type ResponseFull = {
   isValid?: boolean | null
 }
 
+type LooseString = string | null | undefined
+
 interface ResponsesFullByCode {
   [key: string]: ResponseFull | null
 }
 
 interface ResponsesByCode {
-  [key: string]: string | null | undefined
+  [key: string]: LooseString
 }
 
 interface ElementBase {

@@ -3,7 +3,7 @@ import { ErrorBoundary, pluginProvider } from './'
 import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
-import { ResponseFull } from '../utils/types'
+import { LooseString, ResponseFull } from '../utils/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
@@ -34,7 +34,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     })
   }, [])
 
-  const onUpdate = async (value: string | null | undefined) => {
+  const onUpdate = async (value: LooseString) => {
     const responses = { thisResponse: value, ...allResponses }
 
     if (!validationExpression || value === undefined) {
