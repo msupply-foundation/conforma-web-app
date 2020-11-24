@@ -42,7 +42,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       return { isValid: true }
     }
 
-    const evaluator = async (expression: any) => {
+    const evaluator = async (expression: IQueryNode) => {
       return await evaluateExpression(expression, { objects: [responses], APIfetch: fetch })
     }
     const validationResult: any = await pluginMethods.validate(

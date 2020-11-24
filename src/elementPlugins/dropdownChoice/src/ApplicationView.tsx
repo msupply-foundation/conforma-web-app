@@ -11,7 +11,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   validationState,
   onSave,
 }) => {
-  const [value, setValue] = useState(initialValue?.text)
   const {
     label,
     description,
@@ -20,8 +19,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     default: defaultIndex,
   } = templateElement?.parameters
 
+  const [value, setValue] = useState(initialValue ? initialValue?.text : options[defaultIndex])
+
   useEffect(() => {
     onUpdate(value)
+    if (!initialValue) onSave({ text: value, optionIndex: options.indexOf(value) })
   }, [])
 
   function handleChange(e: any, data: any) {
