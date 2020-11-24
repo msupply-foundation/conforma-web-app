@@ -10,9 +10,6 @@ export {
   ElementState,
   ResponsePayload,
   SectionPages,
-  SectionElements,
-  SectionElementStates,
-  SectionPayload,
   TemplateTypePayload,
   TemplateSectionPayload,
   ProgressInApplication,
@@ -73,23 +70,6 @@ interface ResponsePayload {
 
 interface SectionPages {
   [page: number]: Array<ElementAndResponse>
-}
-
-interface SectionElements {
-  [id: number]: Array<ElementAndResponse>
-}
-
-interface SectionElementStates {
-  section: TemplateSectionPayload
-  elements: {
-    element: ElementState
-    value: ResponseFull | null
-  }[]
-}
-
-interface SectionPayload {
-  applicationId: number
-  templateSections: (number | null)[]
 }
 
 interface TemplateTypePayload {
