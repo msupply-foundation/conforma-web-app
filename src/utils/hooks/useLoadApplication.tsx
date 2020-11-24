@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Application, useGetApplicationQuery } from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
 import { getApplicationSections } from '../helpers/getSectionsPayload'
-import { ApplicationDetails, TemplateSectionPayload } from '../types'
+import { ApplicationDetails, AppStatus, TemplateSectionPayload } from '../types'
 
 interface useLoadApplicationProps {
   serialNumber: string
@@ -12,7 +12,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   const { serialNumber } = props
   const [application, setApplication] = useState<ApplicationDetails>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
-  const [appStatus, setAppStatus] = useState({})
+  const [appStatus, setAppStatus] = useState<AppStatus>()
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
 
   const { triggerProcessing, error: triggerError } = useTriggerProcessing({
@@ -47,9 +47,9 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
       setSections(sections)
 
       setAppStatus({
-        stage: application?.stage,
-        status: application?.status,
-        outcome: application?.outcome,
+        stage: application?.stage as string,
+        status: application?.status as string,
+        outcome: application?.outcome as string,
       })
       setIsApplicationLoaded(true)
     }

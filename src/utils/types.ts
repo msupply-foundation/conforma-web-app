@@ -5,6 +5,7 @@ import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/t
 export {
   ApplicationDetails,
   ApplicationElementStates,
+  AppStatus,
   ElementAndResponse,
   ElementState,
   ResponsePayload,
@@ -52,6 +53,12 @@ interface ApplicationDetails {
 
 interface ApplicationElementStates {
   [key: string]: ElementState
+}
+
+interface AppStatus {
+  stage: string
+  status: string
+  outcome: string
 }
 
 interface ElementAndResponse {
