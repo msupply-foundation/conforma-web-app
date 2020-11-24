@@ -55,7 +55,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
             <List.Item
               active={isActive}
               as="a"
-              disabled={!canNavigate}
+              disabled={isActive || !canNavigate}
               header={pageName}
               icon={getPageIndicator(status)}
               key={`progress_${page.pageName}`}
