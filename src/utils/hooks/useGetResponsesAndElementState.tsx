@@ -109,20 +109,14 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
     const isEditable = evaluateExpression(element.isEditable, evaluationParameters)
     const isRequired = evaluateExpression(element.isRequired, evaluationParameters)
     const isVisible = evaluateExpression(element.visibilityCondition, evaluationParameters)
-<<<<<<< HEAD
-=======
     // TO-DO: Evaluate element paremeters (in 'parameters' field, but unique to each element type)
->>>>>>> master
     const results = await Promise.all([isEditable, isRequired, isVisible])
     const evaluatedElement = {
       id: element.id,
       code: element.code,
       title: element.title,
-<<<<<<< HEAD
       category: element.category,
-=======
       parameters: element.parameters,
->>>>>>> master
       elementTypePluginCode: element.elementTypePluginCode,
       section: element.section as number,
       isEditable: results[0] as boolean,
