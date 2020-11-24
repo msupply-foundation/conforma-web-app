@@ -12,7 +12,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onSave,
 }) => {
   const [value, setValue] = useState<string>(initialValue?.text)
-  const { placeholder, maskedInput, label } = templateElement?.parameters
+  const { placeholder, maskedInput, label } = templateElement.parameters
 
   useEffect(() => {
     onUpdate(value)
