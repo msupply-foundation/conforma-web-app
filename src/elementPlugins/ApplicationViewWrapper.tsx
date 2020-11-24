@@ -75,13 +75,22 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   if (!pluginCode || !isVisible) return null
 
-  const newProps = { onUpdate, onSave, validationState, ...props }
+  // const newProps = { onUpdate, onSave, validationState, ...props }
 
   const { ApplicationView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
   return (
     <ErrorBoundary pluginCode={pluginCode}>
-      <React.Suspense fallback="Loading Plugin">{<ApplicationView {...newProps} />}</React.Suspense>
+      <React.Suspense fallback="Loading Plugin">
+        {
+          <ApplicationView
+            onUpdate={onUpdate}
+            onSave={onSave}
+            validationState={validationState}
+            {...props}
+          />
+        }
+      </React.Suspense>
     </ErrorBoundary>
   )
 }
