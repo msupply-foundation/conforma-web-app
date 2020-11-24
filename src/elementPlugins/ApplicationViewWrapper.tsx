@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ErrorBoundary, pluginProvider } from './'
+import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
@@ -21,8 +21,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const [responseMutation] = useUpdateResponseMutation()
   const [pluginMethods, setPluginMethods] = useState({
-    validate: (validationExpress: IQueryNode, validationMessage: string, evaluator: Function) =>
-      console.log('notLoaded'),
+    validate: (
+      validationExpress: IQueryNode,
+      validationMessage: string,
+      evaluator: Function
+    ): any => console.log('notLoaded'),
   })
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
 
@@ -45,7 +48,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     const evaluator = async (expression: IQueryNode) => {
       return await evaluateExpression(expression, { objects: [responses], APIfetch: fetch })
     }
-    const validationResult: any = await pluginMethods.validate(
+    const validationResult: ValidationState = await pluginMethods.validate(
       validationExpression,
       validationMessage,
       evaluator
@@ -56,7 +59,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }
 
   const onSave = async (jsonValue: ResponseFull) => {
-    const validationResult: any = await onUpdate(jsonValue.text)
+    const validationResult: ValidationState = await onUpdate(jsonValue.text)
     responseMutation({
       variables: {
         id: currentResponse?.id as number,
