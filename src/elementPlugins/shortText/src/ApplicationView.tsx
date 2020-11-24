@@ -11,7 +11,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   validationState,
   onSave,
 }) => {
-  const [value, setValue] = useState(initialValue?.text)
+  const [value, setValue] = useState<string>(initialValue?.text)
   const { placeholder, maskedInput, label } = templateElement?.parameters
 
   useEffect(() => {
