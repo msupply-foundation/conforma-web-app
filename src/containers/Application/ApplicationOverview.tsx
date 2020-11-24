@@ -12,7 +12,7 @@ const ApplicationOverview: React.FC = () => {
   const { query, push } = useRouter()
   const { serialNumber } = query
 
-  const { error, loading, templateSections, isApplicationLoaded } = useLoadApplication({
+  const { error, loading, templateSections, isApplicationLoaded, appStatus } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
 
@@ -33,7 +33,7 @@ const ApplicationOverview: React.FC = () => {
 
   useEffect(() => {
     if (!responsesLoading && elementsState && responsesFullByCode) {
-      // Create the arary of sections with array of section's element & responses
+      // Create the array of sections with array of section's element & responses
       const sectionsAndElements: SectionElementStates[] = templateSections
         .sort((a, b) => a.index - b.index)
         .map((section) => {
@@ -60,6 +60,7 @@ const ApplicationOverview: React.FC = () => {
       <ApplicationSummary
         sectionsAndElements={elementsInSections}
         onSubmitHandler={() => submit()}
+        appStatus={appStatus}
       />
       {showProcessingModal(processing, submitted)}
     </Container>

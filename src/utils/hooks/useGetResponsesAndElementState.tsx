@@ -60,7 +60,7 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
     templateSections.forEach((sectionNode) => {
       const elementsInSection = sectionNode.templateElementsBySectionId?.nodes as TemplateElement[]
       elementsInSection.forEach((element) => {
-        templateElements.push({ ...element, section: sectionNode.index } as TemplateElementState) // No idea why ...[spread] doesn't work here.
+        templateElements.push({ ...element, section: sectionNode.index } as TemplateElementState)
       })
     })
 
@@ -71,7 +71,7 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
       const code = response?.templateElement?.code
       if (code) {
         currentResponses[code] = response?.value?.text
-        currentFullResponses[code] = response?.value
+        currentFullResponses[code] = { isValid: response?.isValid, ...response?.value }
       }
     })
 
@@ -109,19 +109,19 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
     const isEditable = evaluateExpression(element.isEditable, evaluationParameters)
     const isRequired = evaluateExpression(element.isRequired, evaluationParameters)
     const isVisible = evaluateExpression(element.visibilityCondition, evaluationParameters)
-    // const isValid = evaluateExpression(element.validation, evaluationParameters)
+    // TO-DO: Evaluate element paremeters (in 'parameters' field, but unique to each element type)
     const results = await Promise.all([isEditable, isRequired, isVisible])
     const evaluatedElement = {
       id: element.id,
       code: element.code,
       title: element.title,
+      parameters: element.parameters,
       elementTypePluginCode: element.elementTypePluginCode,
       section: element.section as number,
       category: element.category,
       isEditable: results[0] as boolean,
       isRequired: results[1] as boolean,
       isVisible: results[2] as boolean,
-      // isValid: results[3],
     }
     return evaluatedElement
   }

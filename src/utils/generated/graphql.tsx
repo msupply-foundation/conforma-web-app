@@ -16887,12 +16887,12 @@ export type ApplicationFragment = (
 
 export type ElementFragment = (
   { __typename?: 'TemplateElement' }
-  & Pick<TemplateElement, 'id' | 'title' | 'elementTypePluginCode' | 'code' | 'category' | 'isEditable' | 'isRequired' | 'visibilityCondition'>
+  & Pick<TemplateElement, 'id' | 'title' | 'elementTypePluginCode' | 'code' | 'category' | 'isEditable' | 'isRequired' | 'parameters' | 'visibilityCondition'>
 );
 
 export type ResponseFragment = (
   { __typename?: 'ApplicationResponse' }
-  & Pick<ApplicationResponse, 'id' | 'value' | 'timeCreated'>
+  & Pick<ApplicationResponse, 'id' | 'value' | 'isValid' | 'timeCreated'>
 );
 
 export type SectionFragment = (
@@ -17217,6 +17217,7 @@ export const ElementFragmentDoc = gql`
   category
   isEditable
   isRequired
+  parameters
   visibilityCondition
 }
     `;
@@ -17224,6 +17225,7 @@ export const ResponseFragmentDoc = gql`
     fragment Response on ApplicationResponse {
   id
   value
+  isValid
   timeCreated
 }
     `;
