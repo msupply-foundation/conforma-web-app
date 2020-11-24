@@ -64,6 +64,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
                   serialNumber,
                   sectionCode,
                   pageName,
+                  canNavigate,
                   push,
                   validateCurrentPage,
                 })
@@ -116,6 +117,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
             serialNumber,
             sectionCode: code === 'PR' ? undefined : code,
             pageName: code === 'PR' ? undefined : 'Page1',
+            canNavigate,
             push,
             validateCurrentPage,
           }),
@@ -141,6 +143,7 @@ interface attemptChangePageProps {
   serialNumber: string
   sectionCode?: string
   pageName?: string
+  canNavigate: boolean
   push: (path: string) => void
   validateCurrentPage: () => boolean
 }
@@ -149,11 +152,11 @@ const attemptChangeToPage = ({
   serialNumber,
   sectionCode,
   pageName,
+  canNavigate,
   push,
   validateCurrentPage,
 }: attemptChangePageProps) => {
-  const status = validateCurrentPage()
-  if (status) {
+  if (canNavigate || validateCurrentPage()) {
     sectionCode && pageName
       ? push(`/applications/${serialNumber}/${sectionCode}/${pageName.trim()}`)
       : push(`/applications/${serialNumber}/summary`)
