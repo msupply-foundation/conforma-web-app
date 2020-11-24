@@ -49,7 +49,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Dropdown
         fluid
         selection
-        defaultValue={options[defaultIndex]}
+        // defaultValue={options[defaultIndex]}
         placeholder={placeholder}
         options={dropdownOptions}
         onChange={handleChange}
