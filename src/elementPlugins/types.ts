@@ -1,8 +1,12 @@
 import { ApplicationResponse, TemplateElement } from '../utils/generated/graphql'
-import { ResponsesByCode } from '../utils/types'
+import { ElementState, ResponseFull, ResponsesByCode } from '../utils/types'
 
 interface OnUpdateApplicationView {
   (updateObject: { value?: any; isValid: boolean | undefined }): void
+}
+
+type BasicObject = {
+  [key: string]: any
 }
 
 interface ApplicationViewWrapperProps {
@@ -20,6 +24,16 @@ interface ApplicationViewWrapperProps {
 interface ApplicationViewProps extends ApplicationViewWrapperProps {
   evaluator: Function
   onUpdate: OnUpdateApplicationView
+}
+
+interface SummaryViewProps {
+  parameters: BasicObject
+  value: ResponseFull | null
+}
+
+interface SummaryViewWrapperProps {
+  element: ElementState
+  value: ResponseFull | null
 }
 
 interface OnUpdateTemplateWrapperView {
@@ -52,7 +66,9 @@ interface PluginManifest {
 }
 
 interface PluginComponents {
-  [key: string]: React.FunctionComponent<ApplicationViewProps | TemplateViewProps>
+  [key: string]: React.FunctionComponent<
+    ApplicationViewProps | TemplateViewProps | SummaryViewProps
+  >
 }
 
 interface Plugins {
@@ -66,6 +82,8 @@ export {
   ApplicationViewWrapperProps,
   ApplicationViewProps,
   TemplateViewWrapperProps,
+  SummaryViewWrapperProps,
+  SummaryViewProps,
   PluginConfig,
   PluginManifest,
   PluginComponents,

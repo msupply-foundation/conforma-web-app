@@ -9,6 +9,7 @@ export default gql`
     category
     isEditable
     isRequired
+    parameters
     visibilityCondition
   }
 `
