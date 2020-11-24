@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from './'
-import { ApplicationViewWrapperProps, PluginComponents } from './types'
+import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
 import { ResponseFull } from '../utils/types'
+import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const {
@@ -20,10 +21,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const [responseMutation] = useUpdateResponseMutation()
   const [pluginMethods, setPluginMethods] = useState({
-    validate: (validationExpress: any, validationMessage: any, evaluator: any) =>
+    validate: (validationExpress: IQueryNode, validationMessage: string, evaluator: Function) =>
       console.log('notLoaded'),
   })
-  const [validationState, setValidationState] = useState<any>({})
+  const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
 
   useEffect(() => {
     if (!pluginCode) return
@@ -37,14 +38,14 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     const responses = { thisResponse: value, ...allResponses }
 
     if (!validationExpression || value === undefined) {
-      setValidationState({ isValid: true })
+      setValidationState({ isValid: true } as ValidationState)
       return { isValid: true }
     }
 
     const evaluator = async (expression: any) => {
       return await evaluateExpression(expression, { objects: [responses], APIfetch: fetch })
     }
-    const validationResult = await pluginMethods.validate(
+    const validationResult: any = await pluginMethods.validate(
       validationExpression,
       validationMessage,
       evaluator
@@ -85,7 +86,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   )
 }
 
-const defaultValidate = async (validationExpress: any, validationMessage: any, evaluator: any) => {
+const defaultValidate = async (
+  validationExpress: IQueryNode,
+  validationMessage: string,
+  evaluator: Function
+): Promise<ValidationState> => {
   if (!validationExpress) return { isValid: true }
   const isValid = await evaluator(validationExpress)
   if (isValid) return { isValid }
