@@ -185,7 +185,9 @@ function buildProgressInApplication({
   let sectionsStructure: ProgressInApplication = templateSections.map((section) => {
     // Create an array with all pages in each section
     const pages = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
-    const canNavigateToPage = (index: number, page: number) =>
+    const checkIsCurrentPage = (page: number) =>
+      section.index === currentSection && page === currentPage
+    const checkIsPreviousPage = (index: number, page: number) =>
       index < currentSection ? true : index === currentSection && page <= currentPage
 
     // Build object to keep each section progress (and pages progress)
@@ -196,15 +198,18 @@ function buildProgressInApplication({
       isActive: section.index === currentSection,
       pages: pages.map((number) => ({
         pageName: `Page ${number}`,
-        canNavigate: isLinear ? canNavigateToPage(section.index, number) : true,
-        isActive: section.index === currentSection && number === currentPage,
-        status: isLinear
-          ? canNavigateToPage(section.index, number)
+        canNavigate: isLinear ? checkIsPreviousPage(section.index, number) : true,
+        isActive: checkIsCurrentPage(number),
+        status: checkIsCurrentPage(number)
+          ? PROGRESS_STATUS.INCOMPLETE
+          : isLinear
+          ? checkIsPreviousPage(section.index, number)
             ? validatePage({
                 elementsState,
                 responses,
                 sectionIndex: section.index,
                 page: number,
+                checkEmpty: true,
               })
             : PROGRESS_STATUS.INCOMPLETE
           : validatePage({
@@ -212,6 +217,7 @@ function buildProgressInApplication({
               responses,
               sectionIndex: section.index,
               page: number,
+              checkEmpty: checkIsPreviousPage(section.index, number),
             }),
       })),
     }
@@ -219,7 +225,10 @@ function buildProgressInApplication({
     // Return each section with status as the combination of its pages statuses
     return {
       ...progressInSection,
-      status: getCombinedStatus(progressInSection.pages),
+      status:
+        section.index === currentSection
+          ? PROGRESS_STATUS.INCOMPLETE
+          : getCombinedStatus(progressInSection.pages),
     }
   })
 

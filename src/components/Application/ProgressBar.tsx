@@ -126,8 +126,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     })
   }
 
-  console.log('Current index', currentSectionPage?.sectionIndex)
-
   return (
     <Sticky as={Container}>
       <Header as="h5" textAlign="center" content="Steps to complete form" />

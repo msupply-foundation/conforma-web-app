@@ -15,14 +15,23 @@ export const PROGRESS_STATUS: { [key: string]: ProgressStatus } = {
 }
 
 export const getCombinedStatus = (
-  array: { status: ProgressStatus }[] | undefined
+  array: { status: ProgressStatus }[] | undefined,
+  strictly: boolean = false
 ): ProgressStatus => {
   if (!array) return PROGRESS_STATUS.VALID
-  return array.every(({ status }) => status === PROGRESS_STATUS.VALID)
-    ? PROGRESS_STATUS.VALID
-    : array.every(({ status }) => status === PROGRESS_STATUS.NOT_VALID)
-    ? PROGRESS_STATUS.NOT_VALID
-    : PROGRESS_STATUS.INCOMPLETE
+  if (strictly) {
+    return array.every(({ status }) => status === PROGRESS_STATUS.VALID)
+      ? PROGRESS_STATUS.VALID
+      : array.some(({ status }) => status === PROGRESS_STATUS.NOT_VALID)
+      ? PROGRESS_STATUS.NOT_VALID
+      : PROGRESS_STATUS.INCOMPLETE
+  } else {
+    return array.some(({ status }) => status === PROGRESS_STATUS.VALID)
+      ? PROGRESS_STATUS.VALID
+      : array.some(({ status }) => status === PROGRESS_STATUS.NOT_VALID)
+      ? PROGRESS_STATUS.NOT_VALID
+      : PROGRESS_STATUS.INCOMPLETE
+  }
 }
 
 interface validatePageProps {
@@ -84,13 +93,12 @@ const validatePage = ({
         return expected
           ? isValid
             ? PROGRESS_STATUS.VALID
-            : !text || text.length === 0
-            ? PROGRESS_STATUS.INCOMPLETE
             : PROGRESS_STATUS.NOT_VALID
           : PROGRESS_STATUS.INCOMPLETE
       }
 
       const isRensponseExpected = findResponseIsExpected(isVisible, isRequired, text, checkEmpty)
+
       return [
         ...responsesStatuses,
         { status: getResponseStatus(isRensponseExpected, text, isValid) },
@@ -99,7 +107,7 @@ const validatePage = ({
     []
   )
 
-  return getCombinedStatus(responsesStatuses)
+  return getCombinedStatus(responsesStatuses, checkEmpty)
 }
 
 export default validatePage
