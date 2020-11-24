@@ -57,13 +57,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const onSave = async (jsonValue: ResponseFull) => {
     const validationResult: any = await onUpdate(jsonValue.text)
-    console.log('On Save', {
-      variables: {
-        id: currentResponse?.id as number,
-        value: jsonValue,
-        isValid: validationResult.isValid,
-      },
-    })
     responseMutation({
       variables: {
         id: currentResponse?.id as number,
@@ -74,8 +67,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }
 
   if (!pluginCode || !isVisible) return null
-
-  // const newProps = { onUpdate, onSave, validationState, ...props }
 
   const { ApplicationView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
