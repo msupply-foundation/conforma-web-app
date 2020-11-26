@@ -19,7 +19,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     default: defaultIndex,
   } = templateElement?.parameters
 
-  const [value, setValue] = useState(initialValue ? initialValue?.text : options[defaultIndex])
+  const [value, setValue] = useState(initialValue?.text || options[defaultIndex])
 
   useEffect(() => {
     onUpdate(value)
