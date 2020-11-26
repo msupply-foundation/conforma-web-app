@@ -37,25 +37,27 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       <List style={{ paddingLeft: '50px' }} link>
         {pages.map((page) => {
           const { canNavigate, isActive, pageName, status } = page
+          const pageCode = pageName?.replace(' ', '')
+
           return (
             <List.Item
               active={isActive}
               as="a"
-              disabled={isActive || !canNavigate}
-              header={pageName}
-              icon={getPageIndicator(status)}
-              key={`progress_${page.pageName}`}
+              key={`progress_${pageName}`}
               onClick={() =>
                 attemptChangeToPage({
                   serialNumber,
                   sectionCode,
-                  pageName,
+                  pageCode,
                   canNavigate,
                   push,
                   validateCurrentPage,
                 })
               }
-            />
+            >
+              {getPageIndicator(status)}
+              {pageName}
+            </List.Item>
           )
         })}
       </List>
@@ -102,7 +104,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           attemptChangeToPage({
             serialNumber,
             sectionCode: code === SummarySectionCode ? undefined : code,
-            pageName: code === SummarySectionCode ? undefined : 'Page1',
+            pageCode: code === SummarySectionCode ? undefined : 'Page1',
             canNavigate,
             push,
             validateCurrentPage,
@@ -128,7 +130,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 interface attemptChangePageProps {
   serialNumber: string
   sectionCode?: string
-  pageName?: string
+  pageCode?: string
   canNavigate: boolean
   push: (path: string) => void
   validateCurrentPage: () => boolean
@@ -137,14 +139,14 @@ interface attemptChangePageProps {
 const attemptChangeToPage = ({
   serialNumber,
   sectionCode,
-  pageName,
+  pageCode,
   canNavigate,
   push,
   validateCurrentPage,
 }: attemptChangePageProps) => {
   if (canNavigate || validateCurrentPage()) {
-    sectionCode && pageName
-      ? push(`/applications/${serialNumber}/${sectionCode}/${pageName.trim()}`)
+    sectionCode && pageCode
+      ? push(`/applications/${serialNumber}/${sectionCode}/${pageCode}`)
       : push(`/applications/${serialNumber}/summary`)
   }
 }
