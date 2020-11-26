@@ -184,10 +184,35 @@ function buildProgressInApplication({
   if (!elementsState || !responses) return []
   let sectionsStructure: ProgressInApplication = templateSections.map((section) => {
     // Create an array with all pages in each section
-    const pages = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
+    const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
     const isCurrentPage = (page: number) => section.index === currentSection && page === currentPage
     const isPreviousPage = (sectionIndex: number, page: number) =>
-      sectionIndex < currentSection ? true : sectionIndex === currentSection && page <= currentPage
+      sectionIndex === currentSection && page <= currentPage
+
+    const pages = pageNumbers.map((pageNumber) => ({
+      pageName: `Page ${pageNumber}`,
+      canNavigate: isLinear ? isPreviousPage(section.index, pageNumber) : true,
+      isActive: isCurrentPage(pageNumber),
+      status: isCurrentPage(pageNumber)
+        ? PROGRESS_STATUS.INCOMPLETE
+        : isLinear
+        ? isPreviousPage(section.index, pageNumber)
+          ? validatePage({
+              elementsState,
+              responses,
+              sectionIndex: section.index,
+              page: pageNumber,
+              validationMode: 'STRICT',
+            })
+          : PROGRESS_STATUS.INCOMPLETE
+        : validatePage({
+            elementsState,
+            responses,
+            sectionIndex: section.index,
+            page: pageNumber,
+            validationMode: isPreviousPage(section.index, pageNumber) ? 'STRICT' : 'LOOSE',
+          }),
+    }))
 
     // Build object to keep each section progress (and pages progress)
     const progressInSection: ProgressInSection = {
@@ -195,30 +220,7 @@ function buildProgressInApplication({
       title: section.title,
       canNavigate: isLinear ? section.index <= currentSection : true,
       isActive: section.index === currentSection,
-      pages: pages.map((pageNumber) => ({
-        pageName: `Page ${pageNumber}`,
-        canNavigate: isLinear ? isPreviousPage(section.index, pageNumber) : true,
-        isActive: isCurrentPage(pageNumber),
-        status: isCurrentPage(pageNumber)
-          ? PROGRESS_STATUS.INCOMPLETE
-          : isLinear
-          ? isPreviousPage(section.index, pageNumber)
-            ? validatePage({
-                elementsState,
-                responses,
-                sectionIndex: section.index,
-                page: pageNumber,
-                validationMode: 'STRICT',
-              })
-            : PROGRESS_STATUS.INCOMPLETE
-          : validatePage({
-              elementsState,
-              responses,
-              sectionIndex: section.index,
-              page: pageNumber,
-              validationMode: isPreviousPage(section.index, pageNumber) ? 'STRICT' : 'LOOSE',
-            }),
-      })),
+      pages,
     }
 
     // Return each section with status as the combination of its pages statuses
