@@ -83,6 +83,7 @@ const ApplicationPageWrapper: React.FC = () => {
       console.log('Problem to validate - Undefined parameters')
       return false
     }
+
     const validation = validatePage({
       elementsState: elementsState as ApplicationElementStates,
       responses: responsesFullByCode as ResponsesFullByCode,
@@ -229,7 +230,7 @@ function buildProgressInApplication({
       status:
         section.index === currentSection
           ? PROGRESS_STATUS.INCOMPLETE
-          : getCombinedStatus(progressInSection.pages, 'LOOSE'),
+          : getCombinedStatus(progressInSection.pages),
     }
   })
 

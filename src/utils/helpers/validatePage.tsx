@@ -16,23 +16,14 @@ export enum PROGRESS_STATUS {
 }
 
 export const getCombinedStatus = (
-  array: { status: ProgressStatus }[] | undefined,
-  validatioMode: ValidationMode
+  pages: { status: ProgressStatus }[] | undefined
 ): ProgressStatus => {
-  if (!array) return PROGRESS_STATUS.VALID
-  if (validatioMode === 'STRICT') {
-    return array.every(({ status }) => status === PROGRESS_STATUS.VALID)
-      ? PROGRESS_STATUS.VALID
-      : array.some(({ status }) => status === PROGRESS_STATUS.NOT_VALID)
-      ? PROGRESS_STATUS.NOT_VALID
-      : PROGRESS_STATUS.INCOMPLETE
-  } else {
-    return array.some(({ status }) => status === PROGRESS_STATUS.VALID)
-      ? PROGRESS_STATUS.VALID
-      : array.some(({ status }) => status === PROGRESS_STATUS.NOT_VALID)
-      ? PROGRESS_STATUS.NOT_VALID
-      : PROGRESS_STATUS.INCOMPLETE
-  }
+  if (!pages) return PROGRESS_STATUS.VALID
+  if (pages.some(({ status }) => status === PROGRESS_STATUS.NOT_VALID))
+    return PROGRESS_STATUS.NOT_VALID
+  if (pages.some(({ status }) => status === PROGRESS_STATUS.INCOMPLETE))
+    return PROGRESS_STATUS.INCOMPLETE
+  return PROGRESS_STATUS.VALID
 }
 
 interface validatePageProps {
@@ -59,10 +50,10 @@ const validatePage = ({
   let count = 1
 
   // Filter visible elements in the current page
-  const visibleElementsInPage = Object.values(elementsState)
+  const visibleQuestions = Object.values(elementsState)
     .filter(({ section, isVisible }) => isVisible && section === sectionIndex)
     .reduce((pageElements: ElementState[], element) => {
-      if (element.elementTypePluginCode !== 'pageBreak') count++
+      if (element.elementTypePluginCode === 'pageBreak') count++
       const isInCurrrentPage = count === page
 
       // Add to array question that are in the current page
@@ -72,7 +63,7 @@ const validatePage = ({
     }, [])
 
   // Verify questions are should be considered in the (strict or loose) validation
-  const verifyQuestions = visibleElementsInPage.filter(({ code, isRequired }) => {
+  const verifyQuestions = visibleQuestions.filter(({ code, isRequired }) => {
     if (responses[code]?.text && responses[code]?.text !== '') return true
     if (isRequired && validationMode === 'STRICT') return true
     return false
@@ -94,7 +85,7 @@ const validatePage = ({
   )
 
   // Return the result of combined status for the page
-  return getCombinedStatus(responsesStatuses, validationMode)
+  return getCombinedStatus(responsesStatuses)
 }
 
 export default validatePage
