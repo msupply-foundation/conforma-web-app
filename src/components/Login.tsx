@@ -73,15 +73,11 @@ function hashPassword(password: string) {
 async function attemptLogin(username: string, passwordHash: string) {
   const response = await fetch(config.serverREST + '/login', {
     method: 'POST',
-    // mode: 'cors',
     cache: 'no-cache',
-    // credentials: 'same-origin',
     headers: {
       'Content-Type': 'application/json',
     },
-    redirect: 'follow', // manual, *follow, error
-    referrerPolicy: 'no-referrer',
-    body: JSON.stringify({ username, passwordHash }), // body data type must match "Content-Type" header
+    body: JSON.stringify({ username, passwordHash }),
   })
-  return response.json() // parses JSON response into native JavaScript objects
+  return response.json()
 }
