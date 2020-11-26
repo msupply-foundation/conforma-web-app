@@ -3,11 +3,12 @@ import { Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
-  templateElement,
+  code,
   onUpdate,
   initialValue,
   isEditable,
   isRequired,
+  parameters,
   allResponses,
   evaluator,
 }) => {
@@ -24,7 +25,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     placeholder,
     maskedInput,
     label,
-  } = templateElement?.parameters
+  } = parameters
 
   useEffect(() => {
     // Do validation, setIsValid
@@ -67,7 +68,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         disabled={!isEditable}
         type={maskedInput ? 'password' : undefined}
         error={
-          !isValid && allResponses[templateElement.code]
+          !isValid && allResponses[code]
             ? {
                 content: validationMessageDisplay,
                 pointing: 'above',

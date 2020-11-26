@@ -1,22 +1,26 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getSectionElements($sectionId: Int!, $applicationId: Int!) {
-    templateElements(condition: { sectionId: $sectionId }) {
-      nodes {
-        category
-        code
-        index
-        elementTypePluginCode
-        visibilityCondition
-        parameters
-        title
-        sectionId
-        applicationResponses(condition:{ applicationId: $applicationId }) {
+  query getSectionElementsAndResponses($serial: String!, $sectionId: Int!) {
+    applicationBySerial(serial: $serial) {
+      ...Application,
+      applicationResponses {
+        nodes {
+          ...Response
+          templateElement {
+            code
+          }
+        }
+      }
+      template {
+        templateSections(condition: {id: $sectionId}) {
           nodes {
-            id
-            timeCreated
-            value
+            ...Section
+            templateElementsBySectionId {
+              nodes {
+                ...Element
+              }
+            }
           }
         }
       }

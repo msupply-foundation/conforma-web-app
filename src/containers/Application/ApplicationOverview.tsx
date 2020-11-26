@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Header, Loader, Message, Modal } from 'semantic-ui-react'
-import { ApplicationSummary, Loading } from '../../components'
-import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
+import { Button, Container, Header, Loader, Message, Modal } from 'semantic-ui-react'
+import { Loading, SectionSummary } from '../../components'
+import useListSectionsInSummary from '../../utils/hooks/useListSectionsInSummary'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
-import { SectionElementStates } from '../../utils/types'
 
 const ApplicationOverview: React.FC = () => {
-  const [elementsInSections, setElementsInSections] = useState<SectionElementStates[]>()
+  const [status, setStatus] = useState<string>('')
   const { query, push } = useRouter()
   const { serialNumber } = query
 
@@ -16,53 +15,44 @@ const ApplicationOverview: React.FC = () => {
     serialNumber: serialNumber as string,
   })
 
-  const {
-    error: responsesError,
-    loading: responsesLoading,
-    responsesByCode,
-    responsesFullByCode,
-    elementsState,
-  } = useGetResponsesAndElementState({
+  const { error: errorSections, processing, applicationSections } = useListSectionsInSummary({
     serialNumber: serialNumber as string,
+    templateSections,
     isApplicationLoaded,
   })
 
-  const { error: submitError, processing, submitted, submit } = useUpdateApplication({
+  const {
+    error: submitError,
+    processing: processingSubmission,
+    submitted,
+    submit,
+  } = useUpdateApplication({
     applicationSerial: serialNumber as string,
   })
 
   useEffect(() => {
-    if (!responsesLoading && elementsState && responsesFullByCode) {
-      // Create the array of sections with array of section's element & responses
-      const sectionsAndElements: SectionElementStates[] = templateSections
-        .sort((a, b) => a.index - b.index)
-        .map((section) => {
-          return { section, elements: [] }
-        })
+    if (!appStatus) return
+    setStatus(appStatus.status)
+  }, [appStatus])
 
-      Object.values(elementsState).forEach((element) => {
-        const response = responsesFullByCode[element.code]
-        const elementAndValue = { element, value: response ? response : null }
-        sectionsAndElements[element.section].elements.push(elementAndValue)
-      })
-      setElementsInSections(sectionsAndElements)
-    }
-  }, [elementsState, responsesLoading])
+  console.log('isApplicationLoaded', isApplicationLoaded)
 
   return error ? (
     <Message error header="Problem to load application overview" list={[error]} />
-  ) : loading || responsesLoading ? (
+  ) : loading || processing ? (
     <Loading />
   ) : submitError ? (
     <Message error header="Problem to submit application" list={[submitError]} />
-  ) : serialNumber && elementsInSections ? (
+  ) : serialNumber && applicationSections ? (
     <Container>
-      <ApplicationSummary
+      <SectionSummary sectionsElements={applicationSections} isEditable={status === 'DRAFT'} />
+      {status === 'DRAFT' ? <Button content="Submit application" onClick={() => submit()} /> : null}
+      {/* <ApplicationSummary
         sectionsAndElements={elementsInSections}
-        onSubmitHandler={() => submit()}
+        onSubmitHandler={() => }
         appStatus={appStatus}
-      />
-      {showProcessingModal(processing, submitted)}
+      /> */}
+      {showProcessingModal(processingSubmission, submitted)}
     </Container>
   ) : (
     <Message error header="Problem to load application overview" />

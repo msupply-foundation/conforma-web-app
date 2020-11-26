@@ -2,22 +2,25 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, ProgressBar } from '../../components'
 import { Grid, Label, Message, Segment } from 'semantic-ui-react'
-import useLoadApplication from '../../utils/hooks/useLoadApplication'
-import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import { ElementsBox, NavigationBox } from './'
 import validatePage, { getCombinedStatus, PROGRESS_STATUS } from '../../utils/helpers/validatePage'
+
+import useLoadApplication from '../../utils/hooks/useLoadApplication'
+import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 
 import {
   ApplicationElementStates,
   ProgressInApplication,
   ProgressInSection,
   ProgressStatus,
+  ResponsesByCode,
   ResponsesFullByCode,
   ReviewCode,
   TemplateSectionPayload,
 } from '../../utils/types'
 
 const ApplicationPageWrapper: React.FC = () => {
+  const [loadPage, setLoadPage] = useState(false)
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
   const [processingValidation, setProcessingValidation] = useState(true)
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
@@ -47,6 +50,8 @@ const ApplicationPageWrapper: React.FC = () => {
   })
 
   useEffect(() => {
+    console.log('isApplicationLoaded', isApplicationLoaded)
+
     if (isApplicationLoaded) {
       processRedirect({
         ...appStatus,
@@ -64,6 +69,8 @@ const ApplicationPageWrapper: React.FC = () => {
   }, [isApplicationLoaded, sectionCode, page])
 
   useEffect(() => {
+    console.log('elementsState', elementsState, 'currentSection', currentSection, 'page', page)
+
     const progressStructure = buildProgressInApplication({
       elementsState,
       responses: responsesFullByCode,
@@ -74,7 +81,18 @@ const ApplicationPageWrapper: React.FC = () => {
     })
     setProgressInApplication(progressStructure)
     setProcessingValidation(false)
-  }, [elementsState, currentSection, page])
+
+    console.log('responsesFullByCode', responsesFullByCode)
+
+    if (
+      serialNumber !== undefined &&
+      elementsState !== undefined &&
+      currentSection !== undefined &&
+      responsesByCode !== undefined &&
+      responsesFullByCode !== undefined
+    )
+      setLoadPage(true)
+  }, [serialNumber, elementsState, currentSection, responsesByCode, responsesFullByCode, page])
 
   const validateCurrentPage = (): boolean => {
     if (!application || !currentSection || !page) {
@@ -82,6 +100,7 @@ const ApplicationPageWrapper: React.FC = () => {
       return false
     }
     setProcessingValidation(true)
+
     const validation = validatePage({
       elementsState: elementsState as ApplicationElementStates,
       responses: responsesFullByCode as ResponsesFullByCode,
@@ -98,12 +117,7 @@ const ApplicationPageWrapper: React.FC = () => {
     <Message error header="Problem to load application" />
   ) : loading || responsesLoading ? (
     <Loading />
-  ) : application &&
-    templateSections &&
-    serialNumber &&
-    currentSection &&
-    responsesByCode &&
-    responsesFullByCode ? (
+  ) : loadPage ? (
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
@@ -113,7 +127,10 @@ const ApplicationPageWrapper: React.FC = () => {
             <ProgressBar
               serialNumber={serialNumber as string}
               progressStructure={progressInApplication}
-              currentSectionPage={{ sectionIndex: currentSection.index, currentPage: Number(page) }}
+              currentSectionPage={{
+                sectionIndex: currentSection?.index as number,
+                currentPage: Number(page),
+              }}
               validateCurrentPage={validateCurrentPage}
               push={push}
             />
@@ -121,12 +138,12 @@ const ApplicationPageWrapper: React.FC = () => {
         </Grid.Column>
         <Grid.Column width={12} stretched>
           <ElementsBox
-            applicationId={application.id}
-            sectionTitle={currentSection.title}
-            sectionTemplateId={currentSection.id}
+            serialNumber={serialNumber as string}
+            sectionTitle={currentSection?.title as string}
+            sectionTemplateId={currentSection?.id as number}
             sectionPage={Number(page)}
-            responsesByCode={responsesByCode}
-            responsesFullByCode={responsesFullByCode}
+            responsesByCode={responsesByCode as ResponsesByCode}
+            responsesFullByCode={responsesFullByCode as ResponsesFullByCode}
             elementsState={elementsState as ApplicationElementStates}
           />
           <NavigationBox
@@ -182,6 +199,7 @@ function buildProgressInApplication({
   currentPage,
 }: buildProgressInApplicationProps): ProgressInApplication {
   if (!elementsState || !responses) return []
+
   let sectionsStructure: ProgressInApplication = templateSections.map((section) => {
     // Create an array with all pages in each section
     const pages = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
@@ -194,6 +212,7 @@ function buildProgressInApplication({
       title: section.title,
       canNavigate: isLinear ? section.index <= currentSection : true,
       isActive: section.index === currentSection,
+      // pages: [],
       pages: pages.map((number) => ({
         pageName: `Page ${number}`,
         canNavigate: isLinear ? canNavigateToPage(section.index, number) : true,

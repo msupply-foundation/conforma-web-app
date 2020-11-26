@@ -1,32 +1,51 @@
 import { useState, useEffect } from 'react'
 import {
-  GetSectionElementsQuery,
+  Application,
+  ApplicationResponse,
+  GetSectionElementsAndResponsesQuery,
   TemplateElement,
-  TemplateElementCategory,
-  useGetSectionElementsQuery,
+  TemplateSection,
+  useGetSectionElementsAndResponsesQuery,
 } from '../generated/graphql'
-import { ElementAndResponse, SectionPages } from '../types'
+import {
+  ApplicationElementStates,
+  ElementState,
+  ResponseFull,
+  ResponsesByCode,
+  ResponsesFullByCode,
+  SectionPagesElements,
+  TemplateElementState,
+} from '../types'
+import evaluateElementExpressions from '../../utils/helpers/evaluateElementExpressions'
 
 interface useLoadElementsProps {
-  applicationId: number | undefined
+  serialNumber: string
   sectionTempId: number
-  sectionPage?: number
+  isApplicationLoaded?: boolean
 }
 
 const useLoadElementsOfSection = ({
-  applicationId,
+  serialNumber,
   sectionTempId,
-  sectionPage,
+  isApplicationLoaded = true,
 }: useLoadElementsProps) => {
-  const [currentPageElements, setElements] = useState<ElementAndResponse[]>([])
+  const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>()
+  const [responsesFullByCode, setResponsesFullByCode] = useState<ResponsesFullByCode>()
+  const [elementsExpressions, setElementsExpressions] = useState<TemplateElementState[]>([])
+  const [elements, setElements] = useState<SectionPagesElements>()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
 
-  const { data, loading: apolloLoading, error: apolloError } = useGetSectionElementsQuery({
+  const {
+    data,
+    loading: apolloLoading,
+    error: apolloError,
+  } = useGetSectionElementsAndResponsesQuery({
     variables: {
-      applicationId: applicationId as number,
+      serial: serialNumber,
       sectionId: sectionTempId,
     },
+    skip: !isApplicationLoaded,
   })
 
   useEffect(() => {
@@ -41,89 +60,103 @@ const useLoadElementsOfSection = ({
       return
     }
 
-    const templateElements = data?.templateElements?.nodes as TemplateElement[]
+    const applicationResponses = data?.applicationBySerial?.applicationResponses
+      .nodes as ApplicationResponse[]
 
-    const elements = sectionPage
-      ? getElementsInPage({ sectionPage, templateElements })
-      : getElements({ templateElements })
+    const templateSection = data?.applicationBySerial?.template?.templateSections
+      .nodes[0] as TemplateSection
 
-    setElements(elements)
-    setLoading(false)
-  }, [data, apolloError, sectionPage])
+    const templateElements = [] as TemplateElementState[]
+
+    const elementsInSection = templateSection.templateElementsBySectionId
+      ?.nodes as TemplateElement[]
+
+    let countPages = 1
+    elementsInSection.forEach((element) => {
+      const section = {
+        index: templateSection.index,
+        page: countPages,
+      }
+      if (element.elementTypePluginCode === 'pageBreak') countPages++
+      templateElements.push({ ...element, section } as TemplateElementState)
+    })
+
+    const currentResponses = {} as ResponsesByCode
+    const currentFullResponses = {} as ResponsesFullByCode
+
+    applicationResponses.forEach((response) => {
+      const code = response.templateElement?.code
+      if (code) {
+        currentResponses[code] = response?.value?.text
+        currentFullResponses[code] = {
+          id: response?.id,
+          isValid: response?.isValid ? response.isValid : false,
+          value: response?.value,
+        }
+      }
+    })
+
+    setResponsesByCode(currentResponses)
+    setResponsesFullByCode(currentFullResponses)
+    setElementsExpressions(templateElements)
+  }, [data, apolloError])
+
+  useEffect(() => {
+    if (responsesByCode && responsesFullByCode && Object.keys(responsesByCode).length > 0)
+      evaluateElementExpressions({
+        elementsExpressions,
+        responsesByCode,
+        responsesFullByCode,
+      }).then((result: ApplicationElementStates) => {
+        const elements: SectionPagesElements = Object.values(result).reduce(
+          (elementsPerPage: SectionPagesElements, element: ElementState) => {
+            const {
+              section: { page },
+              code,
+            } = element
+
+            const currentPageElements = elementsPerPage[page] ? elementsPerPage[page] : []
+
+            currentPageElements.push({
+              element,
+              response: responsesFullByCode[code] as ResponseFull,
+            })
+
+            return {
+              ...elementsPerPage,
+              [page]: currentPageElements,
+            }
+          },
+          {}
+        )
+        setElements(elements)
+        setLoading(false)
+      })
+  }, [responsesByCode])
 
   return {
     apolloLoading,
     apolloError,
     error,
     loading,
-    elements: currentPageElements,
+    elements,
+    responsesByCode,
+    responsesFullByCode,
   }
 }
 
-function checkForElementErrors(data: GetSectionElementsQuery | undefined) {
-  if (data?.templateElements) {
-    if (data.templateElements.nodes.length === 0) return 'No elements found'
-    const elements = data.templateElements.nodes as TemplateElement[]
-    elements.forEach((element) => {
-      const { applicationResponses, category, code } = element
-      if (category === TemplateElementCategory.Question && applicationResponses) {
-        if (applicationResponses.nodes.length === 0) return `Missing response for question ${code}`
-        if (applicationResponses.nodes.length > 1)
-          return `Unexpected more than one response to question ${code}`
-      }
-    })
-  }
+function checkForElementErrors(data: GetSectionElementsAndResponsesQuery | undefined) {
+  if (!data?.applicationBySerial) return 'Data undefined'
+  const application = data?.applicationBySerial as Application
+  if (!application.applicationResponses || !application.template?.templateSections)
+    return 'Application missing parameters'
+  if (application.template?.templateSections.nodes.length === 0) return 'No sections found'
+  if (application.template?.templateSections.nodes.length > 1) return 'More than 1 section found'
+  const section = application.template?.templateSections.nodes[0] as TemplateSection
+  const missingElements = section.templateElementsBySectionId.nodes.some((element) => !element)
+  if (missingElements) return 'Application missing elements'
+  // TODO: Make checking for all 'QUESTION' elements have responses associated
   return null
-}
-
-interface GetElementsInPageProps {
-  sectionPage: number
-  templateElements: TemplateElement[]
-}
-
-function getElementsInPage({ sectionPage, templateElements }: GetElementsInPageProps) {
-  const currentPageIndex = sectionPage - 1
-
-  let elementsByPage = [] as SectionPages
-  let countPage = 0
-  elementsByPage[countPage] = [] as ElementAndResponse[]
-
-  // Build object with elements and responses in each page
-  templateElements.forEach((element) => {
-    const { elementTypePluginCode: code } = element
-    if (code === 'pageBreak') elementsByPage[++countPage] = [] as ElementAndResponse[]
-    else {
-      const { applicationResponses, category } = element
-      // Store one response per question or null for element with information category
-      const response =
-        category === TemplateElementCategory.Question ? applicationResponses.nodes[0] : null
-      // const { applicationResponses, ...question } = element
-      // TODO: Remove the responsesConnection from each question/information element
-      elementsByPage[countPage].push({ question: element, response })
-    }
-  })
-  // Set the current page elements and reesponses in local state
-  return elementsByPage[currentPageIndex]
-}
-
-interface GetElementProps {
-  templateElements: TemplateElement[]
-}
-
-function getElements({ templateElements }: GetElementProps) {
-  // Build object with elements and responses in each page
-  const elementsInSection = [] as ElementAndResponse[]
-  templateElements.forEach((element) => {
-    const { applicationResponses, category } = element
-    // Store one response per question or null for element with information category
-    const response =
-      category === TemplateElementCategory.Question ? applicationResponses.nodes[0] : null
-    // const { applicationResponses, ...question } = element
-    // TODO: Remove the responsesConnection from each question/information element
-    elementsInSection.push({ question: element, response })
-  })
-  // Set the current page elements and reesponses in local state
-  return elementsInSection
 }
 
 export default useLoadElementsOfSection

@@ -58,8 +58,14 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
 
     templateSections.forEach((sectionNode) => {
       const elementsInSection = sectionNode.templateElementsBySectionId?.nodes as TemplateElement[]
+      let countPages = 1
       elementsInSection.forEach((element) => {
-        templateElements.push({ ...element, section: sectionNode.index } as TemplateElementState)
+        const section = {
+          index: sectionNode.index,
+          page: countPages,
+        }
+        if (element.elementTypePluginCode === 'pageBreak') countPages++
+        templateElements.push({ ...element, section } as TemplateElementState)
       })
     })
 
@@ -70,7 +76,11 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
       const code = response.templateElement?.code
       if (code) {
         currentResponses[code] = response?.value?.text
-        currentFullResponses[code] = { isValid: response?.isValid, ...response?.value }
+        currentFullResponses[code] = {
+          id: response?.id,
+          isValid: response?.isValid ? response.isValid : false,
+          value: response?.value,
+        }
       }
     })
 

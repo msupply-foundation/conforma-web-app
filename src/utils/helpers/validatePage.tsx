@@ -42,7 +42,7 @@ const validatePage = ({
 }: validatePageProps): ProgressStatus => {
   let count = 1
   const elementsInCurrentPage = Object.values(elementsState)
-    .filter(({ section }) => section === sectionIndex)
+    .filter(({ section }) => section.index === sectionIndex)
     .reduce((pageElements: ElementState[], element) => {
       if (element.elementTypePluginCode === 'pageBreak') count++
       if (count !== page) return pageElements
@@ -52,7 +52,7 @@ const validatePage = ({
 
   const responsesStatuses = elementsInCurrentPage.reduce(
     (responsesStatuses: { status: ProgressStatus }[], element: ElementState) => {
-      const { text, isValid } = responses[element.code] as ResponseFull
+      const { value, isValid } = responses[element.code] as ResponseFull
       const { isRequired, isVisible } = element
 
       const findResponseIsExpected = (
@@ -90,10 +90,17 @@ const validatePage = ({
           : PROGRESS_STATUS.INCOMPLETE
       }
 
-      const isRensponseExpected = findResponseIsExpected(isVisible, isRequired, text, checkEmpty)
+      // Find if response validation is expected if required AND some response has been entered
+      const isRensponseExpected = findResponseIsExpected(
+        isVisible,
+        isRequired,
+        value.text,
+        checkEmpty
+      )
+
       return [
         ...responsesStatuses,
-        { status: getResponseStatus(isRensponseExpected, text, isValid) },
+        { status: getResponseStatus(isRensponseExpected, value.text, isValid) },
       ]
     },
     []

@@ -3,11 +3,15 @@ import { Header, Label, Segment } from 'semantic-ui-react'
 import { ApplicationViewWrapper } from '../../elementPlugins'
 import useLoadElementsOfSection from '../../utils/hooks/useLoadElementsOfSection'
 import { Loading } from '../../components'
-import { useUpdateResponseMutation } from '../../utils/generated/graphql'
-import { ApplicationElementStates, ResponsesByCode, ResponsesFullByCode } from '../../utils/types'
+import {
+  ApplicationElementStates,
+  ElementAndResponse,
+  ResponsesByCode,
+  ResponsesFullByCode,
+} from '../../utils/types'
 
 interface ElementsBoxProps {
-  applicationId: number
+  serialNumber: string
   sectionTitle: string
   sectionTemplateId: number
   sectionPage: number
@@ -17,35 +21,34 @@ interface ElementsBoxProps {
 }
 
 const ElementsBox: React.FC<ElementsBoxProps> = ({
-  applicationId,
+  serialNumber,
   sectionTitle,
   sectionTemplateId: sectionTempId,
   sectionPage,
   responsesByCode,
-  responsesFullByCode,
-  elementsState,
 }) => {
   const { elements, loading, error } = useLoadElementsOfSection({
-    applicationId,
+    serialNumber,
     sectionTempId,
-    sectionPage,
   })
 
   return error ? (
     <Label content="Problem to load elements" error={error} />
   ) : loading ? (
     <Loading />
-  ) : elements ? (
+  ) : elements && elements[sectionPage] ? (
     <Segment vertical>
       <Header content={sectionTitle} />
-      {elements.map(({ question, response }) => (
+      {elements[sectionPage].map(({ element, response }: ElementAndResponse) => (
         <ApplicationViewWrapper
-          key={`question_${question.code}`}
+          key={`question_${element.code}`}
+          code={element.code}
           initialValue={response?.value}
-          templateElement={question}
-          isVisible={elementsState[question.code].isVisible}
-          isEditable={elementsState[question.code].isEditable}
-          isRequired={elementsState[question.code].isRequired}
+          pluginCode={element.elementTypePluginCode}
+          isVisible={element.isVisible}
+          isEditable={element.isEditable}
+          isRequired={element.isRequired}
+          parameters={element.parameters}
           allResponses={responsesByCode}
           currentResponse={response}
         />

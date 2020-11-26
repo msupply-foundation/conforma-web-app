@@ -55,7 +55,7 @@ async function evaluateSingleElement(
     category: element.category,
     parameters: element.parameters,
     elementTypePluginCode: element.elementTypePluginCode,
-    section: element.section as number,
+    section: element.section,
     isEditable: results[0] as boolean,
     isRequired: results[1] as boolean,
     isVisible: results[2] as boolean,

@@ -5,13 +5,7 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
-  const {
-    templateElement: { elementTypePluginCode: pluginCode },
-    isVisible,
-    isEditable,
-    isRequired,
-    currentResponse,
-  } = props
+  const { pluginCode, isVisible, isEditable, isRequired, currentResponse } = props
 
   if (!pluginCode || !isVisible) return null
 
