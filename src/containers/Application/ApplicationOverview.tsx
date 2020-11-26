@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Header, Loader, Message, Modal } from 'semantic-ui-react'
-import { Loading, SectionSummary } from '../../components'
+import { Loading, ApplicationSummary } from '../../components'
 import useListSectionsInSummary from '../../utils/hooks/useListSectionsInSummary'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -43,7 +43,7 @@ const ApplicationOverview: React.FC = () => {
     <Message error header="Problem to submit application" list={[submitError]} />
   ) : serialNumber && applicationSections ? (
     <Container>
-      <SectionSummary sectionsElements={applicationSections} isEditable={status === 'DRAFT'} />
+      <ApplicationSummary sectionsElements={applicationSections} isEditable={status === 'DRAFT'} />
       {status === 'DRAFT' ? <Button content="Submit application" onClick={() => submit()} /> : null}
       {/* <ApplicationSummary
         sectionsAndElements={elementsInSections}

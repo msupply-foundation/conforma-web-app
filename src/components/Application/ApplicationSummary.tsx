@@ -8,7 +8,7 @@ interface ApplicationSummaryProps {
   isEditable?: boolean
 }
 
-const SectionSummary: React.FC<ApplicationSummaryProps> = ({
+const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
   sectionsElements,
   isEditable = false,
 }) => {
@@ -35,4 +35,4 @@ const SectionSummary: React.FC<ApplicationSummaryProps> = ({
   )
 }
 
-export default SectionSummary
+export default ApplicationSummary

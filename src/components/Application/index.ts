@@ -2,7 +2,7 @@ import ApplicationEdit from './ApplicationEdit'
 import ApplicationHeader from './ApplicationHeader'
 import ApplicationSelectType from './ApplicationSelectType'
 import ApplicationStart from './ApplicationStart'
-import SectionSummary from './SectionSummary'
+import ApplicationSummary from './ApplicationSummary'
 import ProgressBar from  './ProgressBar'
 
 export {
@@ -10,6 +10,6 @@ export {
   ApplicationHeader,
   ApplicationSelectType,
   ApplicationStart,
-  SectionSummary,
+  ApplicationSummary,
   ProgressBar,
 }

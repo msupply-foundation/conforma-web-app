@@ -3,7 +3,7 @@ import {
   ApplicationHeader,
   ApplicationSelectType,
   ApplicationStart,
-  SectionSummary,
+  ApplicationSummary,
   ProgressBar,
 } from './Application'
 import Approval from './Approval'
@@ -35,6 +35,7 @@ export {
   ApplicationHeader,
   ApplicationSelectType,
   ApplicationStart,
+  ApplicationSummary,
   Approval,
   Admin,
   Config,
@@ -49,7 +50,6 @@ export {
   ProgressBar,
   Product,
   ProductList,
-  SectionSummary,
   Organisation,
   OrgMemberEdit,
   TemplateList,
