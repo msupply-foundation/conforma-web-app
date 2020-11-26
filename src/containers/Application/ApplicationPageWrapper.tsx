@@ -19,7 +19,6 @@ import {
 
 const ApplicationPageWrapper: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
-  const [processingValidation, setProcessingValidation] = useState(true)
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
@@ -73,7 +72,6 @@ const ApplicationPageWrapper: React.FC = () => {
       currentPage: Number(page),
     })
     setProgressInApplication(progressStructure)
-    setProcessingValidation(false)
   }, [elementsState, currentSection, page])
 
   const validateCurrentPage = (): boolean => {
@@ -81,7 +79,6 @@ const ApplicationPageWrapper: React.FC = () => {
       console.log('Problem to validate - Undefined parameters')
       return false
     }
-    setProcessingValidation(true)
     const validation = validatePage({
       elementsState: elementsState as ApplicationElementStates,
       responses: responsesFullByCode as ResponsesFullByCode,
@@ -89,7 +86,6 @@ const ApplicationPageWrapper: React.FC = () => {
       page: Number(page),
       checkEmpty: true,
     })
-    setProcessingValidation(false)
 
     return application?.isLinear ? validation === (PROGRESS_STATUS.VALID as ProgressStatus) : true
   }
@@ -107,7 +103,7 @@ const ApplicationPageWrapper: React.FC = () => {
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
-          {processingValidation || !progressInApplication ? (
+          {!progressInApplication ? (
             <Loading>Loading progress bar</Loading>
           ) : (
             <ProgressBar
