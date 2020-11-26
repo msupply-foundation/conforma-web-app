@@ -185,9 +185,8 @@ function buildProgressInApplication({
   let sectionsStructure: ProgressInApplication = templateSections.map((section) => {
     // Create an array with all pages in each section
     const pages = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
-    const checkIsCurrentPage = (page: number) =>
-      section.index === currentSection && page === currentPage
-    const checkIsPreviousPage = (index: number, page: number) =>
+    const isCurrentPage = (page: number) => section.index === currentSection && page === currentPage
+    const isPreviousPage = (index: number, page: number) =>
       index < currentSection ? true : index === currentSection && page <= currentPage
 
     // Build object to keep each section progress (and pages progress)
@@ -198,12 +197,12 @@ function buildProgressInApplication({
       isActive: section.index === currentSection,
       pages: pages.map((number) => ({
         pageName: `Page ${number}`,
-        canNavigate: isLinear ? checkIsPreviousPage(section.index, number) : true,
-        isActive: checkIsCurrentPage(number),
-        status: checkIsCurrentPage(number)
+        canNavigate: isLinear ? isPreviousPage(section.index, number) : true,
+        isActive: isCurrentPage(number),
+        status: isCurrentPage(number)
           ? PROGRESS_STATUS.INCOMPLETE
           : isLinear
-          ? checkIsPreviousPage(section.index, number)
+          ? isPreviousPage(section.index, number)
             ? validatePage({
                 elementsState,
                 responses,
@@ -217,7 +216,7 @@ function buildProgressInApplication({
               responses,
               sectionIndex: section.index,
               page: number,
-              validationMode: checkIsPreviousPage(section.index, number) ? 'STRICT' : 'LOOSE',
+              validationMode: isPreviousPage(section.index, number) ? 'STRICT' : 'LOOSE',
             }),
       })),
     }
