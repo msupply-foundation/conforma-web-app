@@ -8,7 +8,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, response }) => {
       <Header as="h3" content={parameters.label} />
       <p>
         {!response?.isValid ? <Icon name="exclamation circle" color="red" /> : null}
-        {response?.text}
+        {response?.value.text}
       </p>
     </>
   )

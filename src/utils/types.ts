@@ -124,14 +124,11 @@ type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
 interface ResponseFull {
   id: number
   isValid: boolean
-  // value: {
-  //   text: string | null | undefined
-  //   optionIndex?: number
-  //   reference?: any // Not yet decided how to represent
-  // }
-  text: string | null | undefined
-  optionIndex?: number
-  reference?: any // Not yet decided how to represent
+  value: {
+    text: string | null | undefined
+    optionIndex?: number
+    reference?: any // Not yet decided how to represent
+  }
 }
 
 interface ResponsesFullByCode {

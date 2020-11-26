@@ -64,7 +64,8 @@ const validatePage = ({
 
   // Verify questions are should be considered in the (strict or loose) validation
   const verifyQuestions = visibleQuestions.filter(({ code, isRequired }) => {
-    if (responses[code]?.text && responses[code]?.text !== '') return true
+    if (responses[code]?.value && responses[code]?.value.text && responses[code]?.value.text !== '')
+      return true
     if (isRequired && validationMode === 'STRICT') return true
     return false
   })

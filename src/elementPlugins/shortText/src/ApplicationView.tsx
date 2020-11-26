@@ -13,7 +13,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   evaluator,
 }) => {
   const [validationMessageDisplay, setValidationMessageDisplay] = useState('')
-  const [value, setValue] = useState(initialValue)
+  const [value, setValue] = useState(initialValue?.text)
   const [isValid, setIsValid] = useState<boolean>()
   const [responses, setResponses] = useState({
     thisResponse: undefined,
