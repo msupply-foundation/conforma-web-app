@@ -43,7 +43,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
         <ApplicationViewWrapper
           key={`question_${element.code}`}
           code={element.code}
-          initialValue={response?.value}
+          initialValue={response?.text}
           pluginCode={element.elementTypePluginCode}
           isVisible={element.isVisible}
           isEditable={element.isEditable}

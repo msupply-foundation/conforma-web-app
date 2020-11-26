@@ -12,6 +12,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const [responseMutation] = useUpdateResponseMutation()
 
   const onUpdate = (updateObject: any) => {
+    console.log('onUpdate', updateObject)
+
     const { isValid, value } = updateObject
     responseMutation({
       variables: { id: currentResponse?.id as number, value, isValid },

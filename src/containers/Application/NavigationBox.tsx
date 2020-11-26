@@ -142,7 +142,6 @@ function nextPageButtonHandler({
   const status = validateCurrentPage()
 
   if (!status) return
-
   const nextPage = currentPage + 1
   if (nextPage > currentSection.totalPages) {
     // Will check if next page is in other section

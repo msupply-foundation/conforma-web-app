@@ -13,7 +13,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   evaluator,
 }) => {
   const [validationMessageDisplay, setValidationMessageDisplay] = useState('')
-  const [value, setValue] = useState(initialValue?.text)
+  const [value, setValue] = useState(initialValue)
   const [isValid, setIsValid] = useState<boolean>()
   const [responses, setResponses] = useState({
     thisResponse: undefined,
@@ -64,7 +64,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         placeholder={placeholder}
         onChange={handleChange}
         onBlur={handleLoseFocus}
-        value={value}
+        value={value ? value : ''}
         disabled={!isEditable}
         type={maskedInput ? 'password' : undefined}
         error={

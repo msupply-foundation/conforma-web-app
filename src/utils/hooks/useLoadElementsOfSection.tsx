@@ -91,7 +91,8 @@ const useLoadElementsOfSection = ({
         currentFullResponses[code] = {
           id: response?.id,
           isValid: response?.isValid ? response.isValid : false,
-          value: response?.value,
+          ...response?.value,
+          // value: response?.value,
         }
       }
     })

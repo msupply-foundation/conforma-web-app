@@ -4,6 +4,7 @@ import { Loading, ProgressBar } from '../../components'
 import { Grid, Label, Message, Segment } from 'semantic-ui-react'
 import { ElementsBox, NavigationBox } from './'
 import validatePage, { getCombinedStatus, PROGRESS_STATUS } from '../../utils/helpers/validatePage'
+import { SummarySectionCode } from '../../utils/constants'
 
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
@@ -15,14 +16,11 @@ import {
   ProgressStatus,
   ResponsesByCode,
   ResponsesFullByCode,
-  ReviewCode,
   TemplateSectionPayload,
 } from '../../utils/types'
 
 const ApplicationPageWrapper: React.FC = () => {
-  const [loadPage, setLoadPage] = useState(false)
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
-  const [processingValidation, setProcessingValidation] = useState(true)
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
@@ -49,6 +47,9 @@ const ApplicationPageWrapper: React.FC = () => {
     isApplicationLoaded,
   })
 
+  // Wait for application to be loaded to:
+  // 1 - ProcessRedirect: Will redirect to summary in case application is SUBMITTED
+  // 2 - Set the current section state of the application
   useEffect(() => {
     console.log('isApplicationLoaded', isApplicationLoaded)
 
@@ -68,9 +69,10 @@ const ApplicationPageWrapper: React.FC = () => {
     }
   }, [isApplicationLoaded, sectionCode, page])
 
+  // Wait for loading (and evaluating elements and responses)
+  // or a change of section/page to rebuild the progress bar
   useEffect(() => {
-    console.log('elementsState', elementsState, 'currentSection', currentSection, 'page', page)
-
+    if (responsesLoading) return
     const progressStructure = buildProgressInApplication({
       elementsState,
       responses: responsesFullByCode,
@@ -80,38 +82,31 @@ const ApplicationPageWrapper: React.FC = () => {
       currentPage: Number(page),
     })
     setProgressInApplication(progressStructure)
-    setProcessingValidation(false)
-
-    console.log('responsesFullByCode', responsesFullByCode)
-
-    if (
-      serialNumber !== undefined &&
-      elementsState !== undefined &&
-      currentSection !== undefined &&
-      responsesByCode !== undefined &&
-      responsesFullByCode !== undefined
-    )
-      setLoadPage(true)
-  }, [serialNumber, elementsState, currentSection, responsesByCode, responsesFullByCode, page])
+  }, [responsesLoading, currentSection, page])
 
   const validateCurrentPage = (): boolean => {
     if (!application || !currentSection || !page) {
       console.log('Problem to validate - Undefined parameters')
       return false
     }
-    setProcessingValidation(true)
 
     const validation = validatePage({
       elementsState: elementsState as ApplicationElementStates,
       responses: responsesFullByCode as ResponsesFullByCode,
       sectionIndex: currentSection?.index as number,
       page: Number(page),
-      checkEmpty: true,
+      validationMode: 'STRICT',
     })
-    setProcessingValidation(false)
 
     return application?.isLinear ? validation === (PROGRESS_STATUS.VALID as ProgressStatus) : true
   }
+
+  const loadPage =
+    serialNumber !== undefined &&
+    elementsState !== undefined &&
+    currentSection !== undefined &&
+    responsesByCode !== undefined &&
+    responsesFullByCode !== undefined
 
   return error || responsesError ? (
     <Message error header="Problem to load application" />
@@ -121,7 +116,7 @@ const ApplicationPageWrapper: React.FC = () => {
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
-          {processingValidation || !progressInApplication ? (
+          {!progressInApplication ? (
             <Loading>Loading progress bar</Loading>
           ) : (
             <ProgressBar
@@ -202,9 +197,35 @@ function buildProgressInApplication({
 
   let sectionsStructure: ProgressInApplication = templateSections.map((section) => {
     // Create an array with all pages in each section
-    const pages = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
-    const canNavigateToPage = (index: number, page: number) =>
-      index < currentSection ? true : index === currentSection && page <= currentPage
+    const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
+    const isCurrentPage = (page: number) => section.index === currentSection && page === currentPage
+    const isPreviousPage = (sectionIndex: number, page: number) =>
+      sectionIndex <= currentSection || page <= currentPage
+
+    const pages = pageNumbers.map((pageNumber) => ({
+      pageName: `Page ${pageNumber}`,
+      canNavigate: isLinear ? isPreviousPage(section.index, pageNumber) : true,
+      isActive: isCurrentPage(pageNumber),
+      status: isCurrentPage(pageNumber)
+        ? PROGRESS_STATUS.INCOMPLETE
+        : isLinear
+        ? isPreviousPage(section.index, pageNumber)
+          ? validatePage({
+              elementsState,
+              responses,
+              sectionIndex: section.index,
+              page: pageNumber,
+              validationMode: 'STRICT',
+            })
+          : PROGRESS_STATUS.INCOMPLETE
+        : validatePage({
+            elementsState,
+            responses,
+            sectionIndex: section.index,
+            page: pageNumber,
+            validationMode: isPreviousPage(section.index, pageNumber) ? 'STRICT' : 'LOOSE',
+          }),
+    }))
 
     // Build object to keep each section progress (and pages progress)
     const progressInSection: ProgressInSection = {
@@ -212,39 +233,22 @@ function buildProgressInApplication({
       title: section.title,
       canNavigate: isLinear ? section.index <= currentSection : true,
       isActive: section.index === currentSection,
-      // pages: [],
-      pages: pages.map((number) => ({
-        pageName: `Page ${number}`,
-        canNavigate: isLinear ? canNavigateToPage(section.index, number) : true,
-        isActive: section.index === currentSection && number === currentPage,
-        status: isLinear
-          ? canNavigateToPage(section.index, number)
-            ? validatePage({
-                elementsState,
-                responses,
-                sectionIndex: section.index,
-                page: number,
-              })
-            : PROGRESS_STATUS.INCOMPLETE
-          : validatePage({
-              elementsState,
-              responses,
-              sectionIndex: section.index,
-              page: number,
-            }),
-      })),
+      pages,
     }
 
     // Return each section with status as the combination of its pages statuses
     return {
       ...progressInSection,
-      status: getCombinedStatus(progressInSection.pages),
+      status:
+        section.index === currentSection
+          ? PROGRESS_STATUS.INCOMPLETE
+          : getCombinedStatus(progressInSection.pages),
     }
   })
 
   // Add 'Review and submit' as last section
   sectionsStructure.push({
-    code: 'PR' as ReviewCode,
+    code: SummarySectionCode,
     title: 'Review and submit',
     canNavigate: isLinear ? false : true,
     isActive: false,

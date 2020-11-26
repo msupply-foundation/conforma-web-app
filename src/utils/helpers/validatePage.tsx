@@ -4,25 +4,26 @@ import {
   ProgressStatus,
   ResponsesFullByCode,
   ResponseFull,
+  ValidationMode,
 } from '../../utils/types'
 
 import { TemplateElementCategory } from '../../utils/generated/graphql'
 
-export const PROGRESS_STATUS: { [key: string]: ProgressStatus } = {
-  NOT_VALID: 'NOT_VALID',
-  VALID: 'VALID',
-  INCOMPLETE: 'INCOMPLETE',
+export enum PROGRESS_STATUS {
+  NOT_VALID = 'NOT_VALID',
+  VALID = 'VALID',
+  INCOMPLETE = 'INCOMPLETE',
 }
 
 export const getCombinedStatus = (
-  array: { status: ProgressStatus }[] | undefined
+  pages: { status: ProgressStatus }[] | undefined
 ): ProgressStatus => {
-  if (!array) return PROGRESS_STATUS.VALID
-  return array.every(({ status }) => status === PROGRESS_STATUS.VALID)
-    ? PROGRESS_STATUS.VALID
-    : array.every(({ status }) => status === PROGRESS_STATUS.NOT_VALID)
-    ? PROGRESS_STATUS.NOT_VALID
-    : PROGRESS_STATUS.INCOMPLETE
+  if (!pages) return PROGRESS_STATUS.VALID
+  if (pages.some(({ status }) => status === PROGRESS_STATUS.NOT_VALID))
+    return PROGRESS_STATUS.NOT_VALID
+  if (pages.some(({ status }) => status === PROGRESS_STATUS.INCOMPLETE))
+    return PROGRESS_STATUS.INCOMPLETE
+  return PROGRESS_STATUS.VALID
 }
 
 interface validatePageProps {
@@ -30,82 +31,60 @@ interface validatePageProps {
   responses: ResponsesFullByCode
   sectionIndex: number
   page: number
-  checkEmpty?: boolean
+  validationMode?: ValidationMode
 }
 
+/**
+ * @function: validate a page - in strict or loose validation mode.
+ * Which elements are required to be validated depend on the validation mode:
+ * [strict mode] - All visible elements: required (filled or not) or not-required (filled)
+ * [loose mode] - Only visible elements with a response (filled)
+ */
 const validatePage = ({
   elementsState,
   responses,
   sectionIndex,
   page,
-  checkEmpty = false,
+  validationMode = 'LOOSE',
 }: validatePageProps): ProgressStatus => {
   let count = 1
-  const elementsInCurrentPage = Object.values(elementsState)
-    .filter(({ section }) => section.index === sectionIndex)
+
+  // Filter visible elements in the current page
+  const visibleQuestions = Object.values(elementsState)
+    .filter(({ section, isVisible }) => isVisible && section.index === sectionIndex)
     .reduce((pageElements: ElementState[], element) => {
       if (element.elementTypePluginCode === 'pageBreak') count++
-      if (count !== page) return pageElements
-      if (element.category === TemplateElementCategory.Question) return [...pageElements, element]
-      return pageElements
+      const isInCurrrentPage = count === page
+
+      // Add to array question that are in the current page
+      return element.category === TemplateElementCategory.Question && isInCurrrentPage
+        ? [...pageElements, element]
+        : pageElements
     }, [])
 
-  const responsesStatuses = elementsInCurrentPage.reduce(
+  // Verify questions are should be considered in the (strict or loose) validation
+  const verifyQuestions = visibleQuestions.filter(({ code, isRequired }) => {
+    if (responses[code]?.text && responses[code]?.text !== '') return true
+    if (isRequired && validationMode === 'STRICT') return true
+    return false
+  })
+
+  // Generate array with statuses of responses of question to verify
+  const responsesStatuses = verifyQuestions.reduce(
     (responsesStatuses: { status: ProgressStatus }[], element: ElementState) => {
-      const { value, isValid } = responses[element.code] as ResponseFull
-      const { isRequired, isVisible } = element
-
-      const findResponseIsExpected = (
-        isVisible: boolean,
-        isRequired: boolean,
-        isFilled: string | null | undefined,
-        checkEmpty: boolean
-      ): boolean => {
-        return !isVisible
-          ? false // Not visible
-          : checkEmpty
-          ? isRequired
-            ? true // Visible, required element
-            : isFilled
-            ? true // Visible, not required but filled
-            : false // Visible and not required
-          : !isFilled
-          ? false // Unkown if required, Empty & not checking empty
-          : isRequired
-          ? true // Visible, required & check for empty responses
-          : false // Visible, not required
-      }
-
-      const getResponseStatus = (
-        expected: boolean,
-        text: string | null | undefined,
-        isValid: boolean | null | undefined
-      ): ProgressStatus => {
-        return expected
-          ? isValid
-            ? PROGRESS_STATUS.VALID
-            : !text || text.length === 0
-            ? PROGRESS_STATUS.INCOMPLETE
-            : PROGRESS_STATUS.NOT_VALID
-          : PROGRESS_STATUS.INCOMPLETE
-      }
-
-      // Find if response validation is expected if required AND some response has been entered
-      const isRensponseExpected = findResponseIsExpected(
-        isVisible,
-        isRequired,
-        value.text,
-        checkEmpty
-      )
+      const { isValid } = responses[element.code] as ResponseFull
 
       return [
         ...responsesStatuses,
-        { status: getResponseStatus(isRensponseExpected, value.text, isValid) },
+        {
+          status: isValid ? PROGRESS_STATUS.VALID : PROGRESS_STATUS.NOT_VALID,
+        },
       ]
     },
     []
   )
 
+  // Return the result of combined status for the page
   return getCombinedStatus(responsesStatuses)
 }
 

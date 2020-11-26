@@ -1,6 +1,6 @@
-import { ApplicationResponse, TemplateElement, TemplateElementCategory } from './generated/graphql'
+import { TemplateElement, TemplateElementCategory } from './generated/graphql'
 
-import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 export {
   ApplicationDetails,
@@ -15,7 +15,6 @@ export {
   ProgressInSection,
   ProgressInPage,
   ProgressStatus,
-  ReviewCode,
   ResponseFull,
   ResponsesFullByCode,
   ResponsesByCode,
@@ -24,6 +23,7 @@ export {
   TemplateElementState,
   TemplatePermissions,
   FullUserPermissions,
+  ValidationMode,
 }
 
 interface TemplatePermissions {
@@ -108,7 +108,7 @@ interface ProgressInPage {
 }
 
 interface ProgressInSection {
-  code: string | ReviewCode
+  code: string
   title: string
   status?: ProgressStatus
   canNavigate: boolean
@@ -120,16 +120,17 @@ type ProgressInApplication = ProgressInSection[]
 
 type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
 
-type ReviewCode = 'PR'
-
 interface ResponseFull {
   id: number
   isValid: boolean
-  value: {
-    text: string | null | undefined
-    optionIndex?: number
-    reference?: any // Not yet decided how to represent
-  }
+  // value: {
+  //   text: string | null | undefined
+  //   optionIndex?: number
+  //   reference?: any // Not yet decided how to represent
+  // }
+  text: string | null | undefined
+  optionIndex?: number
+  reference?: any // Not yet decided how to represent
 }
 
 interface ResponsesFullByCode {
@@ -160,3 +161,5 @@ interface TemplateElementState extends ElementBase {
   visibilityCondition: IQueryNode
   isEditable: IQueryNode
 }
+
+type ValidationMode = 'STRICT' | 'LOOSE'

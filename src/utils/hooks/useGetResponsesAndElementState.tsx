@@ -79,8 +79,11 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
         currentFullResponses[code] = {
           id: response?.id,
           isValid: response?.isValid ? response.isValid : false,
-          value: response?.value,
+          ...response?.value,
+          // value: response?.value,
         }
+
+        console.log(code, currentFullResponses[code])
       }
     })
 

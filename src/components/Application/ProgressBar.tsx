@@ -1,21 +1,7 @@
 import React from 'react'
-import {
-  Accordion,
-  Container,
-  Grid,
-  Header,
-  Icon,
-  Item,
-  Label,
-  List,
-  Sticky,
-} from 'semantic-ui-react'
-import {
-  ProgressInApplication,
-  ProgressInPage,
-  ProgressStatus,
-  ReviewCode,
-} from '../../utils/types'
+import { Accordion, Container, Grid, Header, Icon, Label, List, Sticky } from 'semantic-ui-react'
+import { ProgressInApplication, ProgressInPage, ProgressStatus } from '../../utils/types'
+import { SummarySectionCode } from '../../utils/constants'
 
 interface SectionPage {
   sectionIndex: number
@@ -51,24 +37,27 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       <List style={{ paddingLeft: '50px' }} link>
         {pages.map((page) => {
           const { canNavigate, isActive, pageName, status } = page
+          const pageCode = pageName?.replace(' ', '')
+
           return (
             <List.Item
               active={isActive}
               as="a"
-              disabled={!canNavigate}
-              header={pageName}
-              icon={getPageIndicator(status)}
-              key={`progress_${page.pageName}`}
+              key={`progress_${pageName}`}
               onClick={() =>
                 attemptChangeToPage({
                   serialNumber,
                   sectionCode,
-                  pageName,
+                  pageCode,
+                  canNavigate,
                   push,
                   validateCurrentPage,
                 })
               }
-            />
+            >
+              {getPageIndicator(status)}
+              {pageName}
+            </List.Item>
           )
         })}
       </List>
@@ -114,8 +103,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         onTitleClick: () =>
           attemptChangeToPage({
             serialNumber,
-            sectionCode: code === 'PR' ? undefined : code,
-            pageName: code === 'PR' ? undefined : 'Page1',
+            sectionCode: code === SummarySectionCode ? undefined : code,
+            pageCode: code === SummarySectionCode ? undefined : 'Page1',
+            canNavigate,
             push,
             validateCurrentPage,
           }),
@@ -125,8 +115,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       }
     })
   }
-
-  console.log('Current index', currentSectionPage?.sectionIndex)
 
   return (
     <Sticky as={Container}>
@@ -142,7 +130,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 interface attemptChangePageProps {
   serialNumber: string
   sectionCode?: string
-  pageName?: string
+  pageCode?: string
+  canNavigate: boolean
   push: (path: string) => void
   validateCurrentPage: () => boolean
 }
@@ -150,14 +139,14 @@ interface attemptChangePageProps {
 const attemptChangeToPage = ({
   serialNumber,
   sectionCode,
-  pageName,
+  pageCode,
+  canNavigate,
   push,
   validateCurrentPage,
 }: attemptChangePageProps) => {
-  const status = validateCurrentPage()
-  if (status) {
-    sectionCode && pageName
-      ? push(`/applications/${serialNumber}/${sectionCode}/${pageName.trim()}`)
+  if (canNavigate || validateCurrentPage()) {
+    sectionCode && pageCode
+      ? push(`/applications/${serialNumber}/${sectionCode}/${pageCode}`)
       : push(`/applications/${serialNumber}/summary`)
   }
 }
