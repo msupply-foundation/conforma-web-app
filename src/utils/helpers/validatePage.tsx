@@ -61,10 +61,10 @@ const validatePage = ({
   const elementsInCurrentPage = Object.values(elementsState)
     .filter(({ section }) => section === sectionIndex)
     .reduce((pageElements: ElementState[], element) => {
-      if (element.elementTypePluginCode === 'pageBreak') count++
-      if (count !== page) return pageElements
-      if (element.category === TemplateElementCategory.Question) return [...pageElements, element]
-      return pageElements
+      if (element.elementTypePluginCode !== 'pageBreak') count++
+      return element.category !== TemplateElementCategory.Question
+        ? pageElements
+        : [...pageElements, element]
     }, [])
 
   const responsesStatuses = elementsInCurrentPage.reduce(
