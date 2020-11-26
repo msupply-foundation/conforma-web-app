@@ -82,8 +82,6 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
           ...response?.value,
           // value: response?.value,
         }
-
-        console.log(code, currentFullResponses[code])
       }
     })
 

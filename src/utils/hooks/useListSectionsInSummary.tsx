@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import useLoadElementsOfSection from './useLoadElementsOfSection'
+import useGetSectionElementAndResponses from './useGetSectionElementAndResponses'
 import { SectionElements, SectionPagesElements, TemplateSectionPayload } from '../types'
 
 interface useListSectionsInSummaryProps {
@@ -27,7 +27,11 @@ const useListSectionsInSummary = ({
     }
   }, [isApplicationLoaded])
 
-  const { loading: loadingSection, error: errorSection, elements } = useLoadElementsOfSection({
+  const {
+    loading: loadingSection,
+    error: errorSection,
+    elements,
+  } = useGetSectionElementAndResponses({
     serialNumber,
     sectionTempId: templateSections[currentSection].id,
     isApplicationLoaded,

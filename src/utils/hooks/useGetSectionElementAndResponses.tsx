@@ -18,17 +18,17 @@ import {
 } from '../types'
 import evaluateElementExpressions from '../../utils/helpers/evaluateElementExpressions'
 
-interface useLoadElementsProps {
+interface useGetSectionElementAndResponsesProps {
   serialNumber: string
   sectionTempId: number
   isApplicationLoaded?: boolean
 }
 
-const useLoadElementsOfSection = ({
+const useGetSectionElementAndResponses = ({
   serialNumber,
   sectionTempId,
   isApplicationLoaded = true,
-}: useLoadElementsProps) => {
+}: useGetSectionElementAndResponsesProps) => {
   const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>()
   const [responsesFullByCode, setResponsesFullByCode] = useState<ResponsesFullByCode>()
   const [elementsExpressions, setElementsExpressions] = useState<TemplateElementState[]>([])
@@ -160,4 +160,4 @@ function checkForElementErrors(data: GetSectionElementsAndResponsesQuery | undef
   return null
 }
 
-export default useLoadElementsOfSection
+export default useGetSectionElementAndResponses

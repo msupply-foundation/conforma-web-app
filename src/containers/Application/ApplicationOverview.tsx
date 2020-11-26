@@ -35,8 +35,6 @@ const ApplicationOverview: React.FC = () => {
     setStatus(appStatus.status)
   }, [appStatus])
 
-  console.log('isApplicationLoaded', isApplicationLoaded)
-
   return error ? (
     <Message error header="Problem to load application overview" list={[error]} />
   ) : loading || processing ? (

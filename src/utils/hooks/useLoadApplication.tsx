@@ -15,8 +15,6 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   const [appStatus, setAppStatus] = useState<AppStatus>()
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
 
-  console.log('useLoadApplication')
-
   const { triggerProcessing, error: triggerError } = useTriggerProcessing({
     serialNumber,
     trigger: 'applicationTrigger',
@@ -31,12 +29,8 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   })
 
   useEffect(() => {
-    console.log('data?', data)
-
     if (data && data.applicationBySerial) {
       const application = data.applicationBySerial as Application
-
-      console.log('setApplication')
 
       setApplication({
         id: application.id,

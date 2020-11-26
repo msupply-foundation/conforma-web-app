@@ -1,7 +1,7 @@
 import React from 'react'
 import { Header, Label, Segment } from 'semantic-ui-react'
 import { ApplicationViewWrapper } from '../../elementPlugins'
-import useLoadElementsOfSection from '../../utils/hooks/useLoadElementsOfSection'
+import useGetSectionElementAndResponses from '../../utils/hooks/useGetSectionElementAndResponses'
 import { Loading } from '../../components'
 import {
   ApplicationElementStates,
@@ -27,7 +27,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
   sectionPage,
   responsesByCode,
 }) => {
-  const { elements, loading, error } = useLoadElementsOfSection({
+  const { elements, loading, error } = useGetSectionElementAndResponses({
     serialNumber,
     sectionTempId,
   })
