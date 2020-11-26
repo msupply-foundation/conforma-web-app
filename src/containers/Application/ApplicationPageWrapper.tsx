@@ -65,8 +65,10 @@ const ApplicationPageWrapper: React.FC = () => {
     }
   }, [isApplicationLoaded, sectionCode, page])
 
-  // Wait for loading the elementsState or change of section/page to rebuild the progress bar
+  // Wait for loading (and evaluating elements and responses)
+  // or a change of section/page to rebuild the progress bar
   useEffect(() => {
+    if (responsesLoading) return
     const progressStructure = buildProgressInApplication({
       elementsState,
       responses: responsesFullByCode,
@@ -76,7 +78,7 @@ const ApplicationPageWrapper: React.FC = () => {
       currentPage: Number(page),
     })
     setProgressInApplication(progressStructure)
-  }, [elementsState, currentSection, page])
+  }, [responsesLoading, currentSection, page])
 
   const validateCurrentPage = (): boolean => {
     if (!application || !currentSection || !page) {
@@ -188,7 +190,7 @@ function buildProgressInApplication({
     const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
     const isCurrentPage = (page: number) => section.index === currentSection && page === currentPage
     const isPreviousPage = (sectionIndex: number, page: number) =>
-      sectionIndex === currentSection && page <= currentPage
+      sectionIndex <= currentSection || page <= currentPage
 
     const pages = pageNumbers.map((pageNumber) => ({
       pageName: `Page ${pageNumber}`,
