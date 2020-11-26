@@ -186,8 +186,8 @@ function buildProgressInApplication({
     // Create an array with all pages in each section
     const pages = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
     const isCurrentPage = (page: number) => section.index === currentSection && page === currentPage
-    const isPreviousPage = (index: number, page: number) =>
-      index < currentSection ? true : index === currentSection && page <= currentPage
+    const isPreviousPage = (sectionIndex: number, page: number) =>
+      sectionIndex < currentSection ? true : sectionIndex === currentSection && page <= currentPage
 
     // Build object to keep each section progress (and pages progress)
     const progressInSection: ProgressInSection = {
@@ -195,19 +195,19 @@ function buildProgressInApplication({
       title: section.title,
       canNavigate: isLinear ? section.index <= currentSection : true,
       isActive: section.index === currentSection,
-      pages: pages.map((number) => ({
-        pageName: `Page ${number}`,
-        canNavigate: isLinear ? isPreviousPage(section.index, number) : true,
-        isActive: isCurrentPage(number),
-        status: isCurrentPage(number)
+      pages: pages.map((pageNumber) => ({
+        pageName: `Page ${pageNumber}`,
+        canNavigate: isLinear ? isPreviousPage(section.index, pageNumber) : true,
+        isActive: isCurrentPage(pageNumber),
+        status: isCurrentPage(pageNumber)
           ? PROGRESS_STATUS.INCOMPLETE
           : isLinear
-          ? isPreviousPage(section.index, number)
+          ? isPreviousPage(section.index, pageNumber)
             ? validatePage({
                 elementsState,
                 responses,
                 sectionIndex: section.index,
-                page: number,
+                page: pageNumber,
                 validationMode: 'STRICT',
               })
             : PROGRESS_STATUS.INCOMPLETE
@@ -215,8 +215,8 @@ function buildProgressInApplication({
               elementsState,
               responses,
               sectionIndex: section.index,
-              page: number,
-              validationMode: isPreviousPage(section.index, number) ? 'STRICT' : 'LOOSE',
+              page: pageNumber,
+              validationMode: isPreviousPage(section.index, pageNumber) ? 'STRICT' : 'LOOSE',
             }),
       })),
     }
