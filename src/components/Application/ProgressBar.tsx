@@ -1,21 +1,7 @@
 import React from 'react'
-import {
-  Accordion,
-  Container,
-  Grid,
-  Header,
-  Icon,
-  Item,
-  Label,
-  List,
-  Sticky,
-} from 'semantic-ui-react'
-import {
-  ProgressInApplication,
-  ProgressInPage,
-  ProgressStatus,
-  ReviewCode,
-} from '../../utils/types'
+import { Accordion, Container, Grid, Header, Icon, Label, List, Sticky } from 'semantic-ui-react'
+import { ProgressInApplication, ProgressInPage, ProgressStatus } from '../../utils/types'
+import { SummarySectionCode } from '../../utils/constants'
 
 interface SectionPage {
   sectionIndex: number
@@ -115,8 +101,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         onTitleClick: () =>
           attemptChangeToPage({
             serialNumber,
-            sectionCode: code === 'PR' ? undefined : code,
-            pageName: code === 'PR' ? undefined : 'Page1',
+            sectionCode: code === SummarySectionCode ? undefined : code,
+            pageName: code === SummarySectionCode ? undefined : 'Page1',
             canNavigate,
             push,
             validateCurrentPage,

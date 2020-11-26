@@ -6,6 +6,7 @@ import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import { ElementsBox, NavigationBox } from './'
 import validatePage, { getCombinedStatus, PROGRESS_STATUS } from '../../utils/helpers/validatePage'
+import { SummarySectionCode } from '../../utils/constants'
 
 import {
   ApplicationElementStates,
@@ -13,7 +14,6 @@ import {
   ProgressInSection,
   ProgressStatus,
   ResponsesFullByCode,
-  ReviewCode,
   TemplateSectionPayload,
 } from '../../utils/types'
 
@@ -234,7 +234,7 @@ function buildProgressInApplication({
 
   // Add 'Review and submit' as last section
   sectionsStructure.push({
-    code: 'PR' as ReviewCode,
+    code: SummarySectionCode,
     title: 'Review and submit',
     canNavigate: isLinear ? false : true,
     isActive: false,
