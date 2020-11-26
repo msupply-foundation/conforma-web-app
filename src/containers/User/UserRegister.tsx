@@ -115,51 +115,55 @@ const UserRegister: React.FC = () => {
   }
 
   return (
-    <Segment.Group>
-      <Segment>
-        <Form>
-          <Form.Field
-            id="form-input-username"
-            control={Input}
-            label="Username"
-            name="username"
-            content={newUser.username}
-            onChange={handleInputChange}
-          />
-          <Form.Field
-            id="form-input-password"
-            control={Input}
-            label="Password"
-            name="password"
-            content={newUser.password}
-            onChange={handleInputChange}
-          />
-          <Form.Field
-            id="form-input-email"
-            control={Input}
-            label="Email"
-            name="email"
-            content={newUser.email}
-            onChange={handleInputChange}
-          />
-          <Form.Field
-            id="form-input-terms-and-conditions"
-            control={Checkbox}
-            label="I agree to the Terms and Conditions"
-          />
-          <Form.Input control={Button} type="submit" content="Submit" onClick={handleSubmit} />
-        </Form>
-      </Segment>
-      <Segment>
-        <Message
-          success
-          hidden={!snackbar.showMessage}
-          header={snackbar.messageTitle}
-          content={snackbar.messageText}
-          error={snackbar.isErrorMessage}
-        />
-      </Segment>
-    </Segment.Group>
+    <p>
+      TO-DO: Figure out how to display only the UserRego application without needing to be logged
+      in.
+    </p>
+    // <Segment.Group>
+    //   <Segment>
+    //     <Form>
+    //       <Form.Field
+    //         id="form-input-username"
+    //         control={Input}
+    //         label="Username"
+    //         name="username"
+    //         content={newUser.username}
+    //         onChange={handleInputChange}
+    //       />
+    //       <Form.Field
+    //         id="form-input-password"
+    //         control={Input}
+    //         label="Password"
+    //         name="password"
+    //         content={newUser.password}
+    //         onChange={handleInputChange}
+    //       />
+    //       <Form.Field
+    //         id="form-input-email"
+    //         control={Input}
+    //         label="Email"
+    //         name="email"
+    //         content={newUser.email}
+    //         onChange={handleInputChange}
+    //       />
+    //       <Form.Field
+    //         id="form-input-terms-and-conditions"
+    //         control={Checkbox}
+    //         label="I agree to the Terms and Conditions"
+    //       />
+    //       <Form.Input control={Button} type="submit" content="Submit" onClick={handleSubmit} />
+    //     </Form>
+    //   </Segment>
+    //   <Segment>
+    //     <Message
+    //       success
+    //       hidden={!snackbar.showMessage}
+    //       header={snackbar.messageTitle}
+    //       content={snackbar.messageText}
+    //       error={snackbar.isErrorMessage}
+    //     />
+    //   </Segment>
+    // </Segment.Group>
   )
 }
 

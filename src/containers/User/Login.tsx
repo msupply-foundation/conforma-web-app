@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 import { Form, Button, Container, Grid, Segment, Header } from 'semantic-ui-react'
-import config from '../../src/config.json'
+import config from '../../config.json'
+import isLoggedIn from '../../utils/helpers/loginCheck'
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('')
@@ -16,13 +18,15 @@ const Login: React.FC = () => {
     if (!loginResult.success) setIsError(true)
     else {
       setIsError(false)
-      localStorage.setItem('username', username)
-      localStorage.setItem('templatePermissions', loginResult.templatePermissions)
-      localStorage.setItem('JWT', loginResult.JWT)
+      // localStorage.setItem('username', username)
+      // localStorage.setItem('templatePermissions', loginResult.templatePermissions)
+      localStorage.setItem('persistJWT', loginResult.JWT)
       console.log('Log in successful!')
       history.push('/') // TO-DO: re-route to previous URL
     }
   }
+
+  if (isLoggedIn()) history.push('/')
 
   return (
     <Container text style={{ height: '100vh' }}>
@@ -51,9 +55,12 @@ const Login: React.FC = () => {
                   onChange={(event) => setPassword(event.target.value)}
                 />
               </Form.Field>
-              <Button type="submit" onClick={handleSubmit}>
-                Log In
-              </Button>
+              <Container>
+                <Button type="submit" onClick={handleSubmit}>
+                  Log In
+                </Button>
+                <Link to="/register">Create new account</Link>
+              </Container>
               {isError && <p>Oops! Problem with username or password</p>}
             </Form>
           </Segment>
@@ -81,3 +88,10 @@ async function attemptLogin(username: string, passwordHash: string) {
   })
   return response.json()
 }
+
+export const logOut = () => {
+  localStorage.clear()
+  window.location.replace('/')
+}
+
+// export logOut
