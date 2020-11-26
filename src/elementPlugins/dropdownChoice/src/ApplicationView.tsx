@@ -23,7 +23,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   useEffect(() => {
     onUpdate(value)
-    if (!initialValue) onSave({ text: value, optionIndex: options.indexOf(value) })
+    if (!initialValue && defaultIndex) onSave({ text: value, optionIndex: options.indexOf(value) })
   }, [])
 
   function handleChange(e: any, data: any) {
