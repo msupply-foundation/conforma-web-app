@@ -23,6 +23,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     validationMessage,
     placeholder,
     maskedInput,
+    label,
   } = templateElement?.parameters
 
   useEffect(() => {
@@ -58,11 +59,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     <>
       <Form.Input
         fluid
-        label={templateElement.title}
+        label={label}
         placeholder={placeholder}
         onChange={handleChange}
         onBlur={handleLoseFocus}
-        value={value}
+        value={value ? value : ''}
         disabled={!isEditable}
         type={maskedInput ? 'password' : undefined}
         error={

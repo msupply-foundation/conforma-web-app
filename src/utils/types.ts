@@ -125,7 +125,7 @@ interface ResponseFull {
   text: string | null | undefined
   optionIndex?: number
   reference?: any // Not yet decided how to represent
-  isValid: boolean | null | undefined
+  isValid: boolean | null
 }
 
 interface ResponsesFullByCode {
@@ -143,12 +143,14 @@ interface ElementBase {
   elementTypePluginCode: string
   section: number // Index
   category: TemplateElementCategory
+  parameters: any
 }
 
 interface TemplateElementState extends ElementBase {
   isRequired: IQueryNode
   visibilityCondition: IQueryNode
   isEditable: IQueryNode
+  // isValid: boolean | null
 }
 
 interface ElementState extends ElementBase {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { PluginManifest, PluginComponents, Plugins } from './types'
 
-const PLUGIN_COMPONENTS = ['ApplicationView', 'TemplateView']
+const PLUGIN_COMPONENTS = ['ApplicationView', 'TemplateView', 'SummaryView']
 const PLUGIN_ERRORS = {
   PLUGIN_NOT_IN_MANIFEST: 'Plugin is not present in plugin manifest',
   PLUGINS_NOT_LOADED: 'Plugins are not loaded, check connection with server',
@@ -57,6 +57,7 @@ class pluginProvider {
 
 function getLocalElementPlugin(folderName: string) {
   const result: PluginComponents = {}
+  // TO-DO: optimize so it only imports the component type (Application, Template, Summary) that is required
   PLUGIN_COMPONENTS.forEach((componentName) => {
     result[componentName] = React.lazy(
       // the exlude comment is to tell webpack not to include node_modules in possible
