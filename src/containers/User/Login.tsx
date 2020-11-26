@@ -93,5 +93,3 @@ export const logOut = () => {
   localStorage.clear()
   window.location.replace('/')
 }
-
-// export logOut
