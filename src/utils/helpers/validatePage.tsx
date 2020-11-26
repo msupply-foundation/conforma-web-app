@@ -9,10 +9,10 @@ import {
 
 import { TemplateElementCategory } from '../../utils/generated/graphql'
 
-export const PROGRESS_STATUS: { [key: string]: ProgressStatus } = {
-  NOT_VALID: 'NOT_VALID',
-  VALID: 'VALID',
-  INCOMPLETE: 'INCOMPLETE',
+export enum PROGRESS_STATUS {
+  NOT_VALID = 'NOT_VALID',
+  VALID = 'VALID',
+  INCOMPLETE = 'INCOMPLETE',
 }
 
 export const getCombinedStatus = (
