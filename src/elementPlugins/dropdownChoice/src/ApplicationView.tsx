@@ -28,7 +28,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   function handleChange(e: any, data: any) {
     const { value } = data
-    onUpdate(value)
     setValue(value)
     onSave({ text: value, optionIndex: options.indexOf(value) })
   }
