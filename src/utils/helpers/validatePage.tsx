@@ -4,6 +4,7 @@ import {
   ProgressStatus,
   ResponsesFullByCode,
   ResponseFull,
+  ValidationMode,
 } from '../../utils/types'
 
 import { TemplateElementCategory } from '../../utils/generated/graphql'
@@ -16,10 +17,10 @@ export const PROGRESS_STATUS: { [key: string]: ProgressStatus } = {
 
 export const getCombinedStatus = (
   array: { status: ProgressStatus }[] | undefined,
-  strictly: boolean = false
+  validatioMode: ValidationMode
 ): ProgressStatus => {
   if (!array) return PROGRESS_STATUS.VALID
-  if (strictly) {
+  if (validatioMode === 'STRICT') {
     return array.every(({ status }) => status === PROGRESS_STATUS.VALID)
       ? PROGRESS_STATUS.VALID
       : array.some(({ status }) => status === PROGRESS_STATUS.NOT_VALID)
@@ -39,15 +40,22 @@ interface validatePageProps {
   responses: ResponsesFullByCode
   sectionIndex: number
   page: number
-  checkEmpty?: boolean
+  validationMode?: ValidationMode
 }
 
+/**
+ * @function: validate a page - in strict or loose validation mode.
+ * Filter elements in the page, check which responses are considered in the validation.
+ * Which elements are required to be validated depend on the validation mode:
+ * [strict mode] - All visible elements: required (empty or not) or not-required but filled
+ * [loose mode] - Only visible elements not empty
+ */
 const validatePage = ({
   elementsState,
   responses,
   sectionIndex,
   page,
-  checkEmpty = false,
+  validationMode = 'LOOSE',
 }: validatePageProps): ProgressStatus => {
   let count = 1
   const elementsInCurrentPage = Object.values(elementsState)
@@ -64,50 +72,54 @@ const validatePage = ({
       const { text, isValid } = responses[element.code] as ResponseFull
       const { isRequired, isVisible } = element
 
-      const findResponseIsExpected = (
-        isVisible: boolean,
-        isRequired: boolean,
-        isFilled: string | null | undefined,
-        checkEmpty: boolean
-      ): boolean => {
-        return !isVisible
-          ? false // Not visible
-          : checkEmpty
-          ? isRequired
-            ? true // Visible, required element
-            : isFilled
-            ? true // Visible, not required but filled
-            : false // Visible and not required
-          : !isFilled
-          ? false // Unkown if required, Empty & not checking empty
-          : isRequired
-          ? true // Visible, required & check for empty responses
-          : false // Visible, not required
-      }
-
-      const getResponseStatus = (
-        expected: boolean,
-        text: string | null | undefined,
-        isValid: boolean | null | undefined
-      ): ProgressStatus => {
-        return expected
-          ? isValid
-            ? PROGRESS_STATUS.VALID
-            : PROGRESS_STATUS.NOT_VALID
-          : PROGRESS_STATUS.INCOMPLETE
-      }
-
-      const isRensponseExpected = findResponseIsExpected(isVisible, isRequired, text, checkEmpty)
-
       return [
         ...responsesStatuses,
-        { status: getResponseStatus(isRensponseExpected, text, isValid) },
+        {
+          status: getResponseStatus(
+            findResponseIsExpected(isVisible, isRequired, text, validationMode),
+            text,
+            isValid
+          ),
+        },
       ]
     },
     []
   )
 
-  return getCombinedStatus(responsesStatuses, checkEmpty)
+  return getCombinedStatus(responsesStatuses, validationMode)
+}
+
+const findResponseIsExpected = (
+  isVisible: boolean,
+  isRequired: boolean,
+  isFilled: string | null | undefined,
+  validationMode: ValidationMode
+): boolean => {
+  return !isVisible
+    ? false // Not visible
+    : validationMode === 'STRICT'
+    ? isRequired
+      ? true // Visible, required element
+      : isFilled
+      ? true // Visible, not required but filled
+      : false // Visible and not required
+    : !isFilled
+    ? false // Unkown if required, Empty & not checking empty
+    : isRequired
+    ? true // Visible, required & check for empty responses
+    : false // Visible, not required
+}
+
+const getResponseStatus = (
+  expected: boolean,
+  text: string | null | undefined,
+  isValid: boolean | null | undefined
+): ProgressStatus => {
+  return expected
+    ? isValid
+      ? PROGRESS_STATUS.VALID
+      : PROGRESS_STATUS.NOT_VALID
+    : PROGRESS_STATUS.INCOMPLETE
 }
 
 export default validatePage

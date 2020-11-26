@@ -24,6 +24,7 @@ export {
   TemplateElementState,
   TemplatePermissions,
   FullUserPermissions,
+  ValidationMode,
 }
 
 interface TemplatePermissions {
@@ -155,3 +156,5 @@ interface ElementState extends ElementBase {
   isRequired: boolean
   isVisible: boolean
 }
+
+type ValidationMode = 'STRICT' | 'LOOSE'

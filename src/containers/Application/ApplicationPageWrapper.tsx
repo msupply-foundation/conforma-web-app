@@ -45,6 +45,9 @@ const ApplicationPageWrapper: React.FC = () => {
     isApplicationLoaded,
   })
 
+  // Wait for application to be loaded to:
+  // 1 - ProcessRedirect: Will redirect to summary in case application is SUBMITTED
+  // 2 - Set the current section state of the application
   useEffect(() => {
     if (isApplicationLoaded) {
       processRedirect({
@@ -62,6 +65,7 @@ const ApplicationPageWrapper: React.FC = () => {
     }
   }, [isApplicationLoaded, sectionCode, page])
 
+  // Wait for loading the elementsState or change of section/page to rebuild the progress bar
   useEffect(() => {
     const progressStructure = buildProgressInApplication({
       elementsState,
@@ -84,7 +88,7 @@ const ApplicationPageWrapper: React.FC = () => {
       responses: responsesFullByCode as ResponsesFullByCode,
       sectionIndex: currentSection?.index as number,
       page: Number(page),
-      checkEmpty: true,
+      validationMode: 'STRICT',
     })
 
     return application?.isLinear ? validation === (PROGRESS_STATUS.VALID as ProgressStatus) : true
@@ -205,7 +209,7 @@ function buildProgressInApplication({
                 responses,
                 sectionIndex: section.index,
                 page: number,
-                checkEmpty: true,
+                validationMode: 'STRICT',
               })
             : PROGRESS_STATUS.INCOMPLETE
           : validatePage({
@@ -213,7 +217,7 @@ function buildProgressInApplication({
               responses,
               sectionIndex: section.index,
               page: number,
-              checkEmpty: checkIsPreviousPage(section.index, number),
+              validationMode: checkIsPreviousPage(section.index, number) ? 'STRICT' : 'LOOSE',
             }),
       })),
     }
@@ -224,7 +228,7 @@ function buildProgressInApplication({
       status:
         section.index === currentSection
           ? PROGRESS_STATUS.INCOMPLETE
-          : getCombinedStatus(progressInSection.pages),
+          : getCombinedStatus(progressInSection.pages, 'LOOSE'),
     }
   })
 
