@@ -20,6 +20,7 @@ export {
   ResponsesByCode,
   SectionElements,
   SectionPagesElements,
+  SectionElementStates,
   TemplateElementState,
   TemplatePermissions,
   FullUserPermissions,
@@ -156,6 +157,14 @@ interface SectionPagesElements {
   [page: number]: ElementAndResponse[]
 }
 
+// TODO: Remove this when change Summary to use hook useListSectionsInSummary
+interface SectionElementStates {
+  section: TemplateSectionPayload
+  elements: {
+    element: ElementState
+    value: ResponseFull | null
+  }[]
+}
 interface TemplateElementState extends ElementBase {
   isRequired: IQueryNode
   visibilityCondition: IQueryNode

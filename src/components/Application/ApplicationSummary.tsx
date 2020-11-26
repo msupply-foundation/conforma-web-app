@@ -1,35 +1,50 @@
 import React from 'react'
-import { Container, Divider, Form, Header, Segment } from 'semantic-ui-react'
+import { Button, Container, Form, Grid, Header, Segment } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../elementPlugins'
-import { SectionElements } from '../../utils/types'
+import { SectionElementStates } from '../../utils/types'
 
 interface ApplicationSummaryProps {
-  sectionsElements: SectionElements[]
-  isEditable?: boolean
+  sectionsAndElements: SectionElementStates[]
+  onSubmitHandler: () => void
+  appStatus: any
 }
 
 const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
-  sectionsElements,
-  isEditable = false,
+  sectionsAndElements,
+  onSubmitHandler,
+  appStatus: { status: status },
 }) => {
   return (
     <Container style={{ marginTop: '2em' }}>
       <Header as="h1" content="REVIEW AND SUBMIT" />
       <Form>
-        {sectionsElements.map(({ index, title, pages }) => (
+        {sectionsAndElements.map(({ section, elements }) => (
           <Segment.Group size="large">
-            <Header as="h2" content={`${title}`} />
-            {Object.entries(pages).map(([page, elements]) => (
-              <Segment>
-                <Divider />
-                {isEditable && (
-                  <Header as="h5" icon="pencil" floated="right" content="edit" color="blue" />
-                )}
-                <Header content={`Page elements here ${page}`} />
-              </Segment>
+            <Grid columns={2}>
+              <Grid.Row>
+                <Grid.Column>
+                  <Header as="h2" content={`${section.title}`} />
+                </Grid.Column>
+                <Grid.Column>
+                  {status === 'DRAFT' ? (
+                    <Header as="h5" icon="pencil" floated="right" content="edit" color="blue" />
+                  ) : null}
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+            {elements.map((element) => (
+              <SummaryViewWrapper element={element.element} response={element.value} />
             ))}
           </Segment.Group>
         ))}
+        {status === 'DRAFT' ? (
+          <Button
+            content="Submit application"
+            onClick={() => {
+              onSubmitHandler()
+            }}
+          />
+        ) : null}
       </Form>
     </Container>
   )

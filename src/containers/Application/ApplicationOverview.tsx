@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Header, Loader, Message, Modal } from 'semantic-ui-react'
-import { Loading, ApplicationSummary } from '../../components'
-import useListSectionsInSummary from '../../utils/hooks/useListSectionsInSummary'
+import { ApplicationSummary, Loading } from '../../components'
+import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
+import { SectionElementStates } from '../../utils/types'
 
 const ApplicationOverview: React.FC = () => {
-  const [status, setStatus] = useState<string>('')
+  const [elementsInSections, setElementsInSections] = useState<SectionElementStates[]>()
   const { query, push } = useRouter()
   const { serialNumber } = query
 
@@ -15,9 +16,14 @@ const ApplicationOverview: React.FC = () => {
     serialNumber: serialNumber as string,
   })
 
-  const { error: errorSections, processing, applicationSections } = useListSectionsInSummary({
+  const {
+    error: responsesError,
+    loading: responsesLoading,
+    responsesByCode,
+    responsesFullByCode,
+    elementsState,
+  } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
-    templateSections,
     isApplicationLoaded,
   })
 
@@ -31,25 +37,35 @@ const ApplicationOverview: React.FC = () => {
   })
 
   useEffect(() => {
-    if (!appStatus) return
-    setStatus(appStatus.status)
-  }, [appStatus])
+    if (!responsesLoading && elementsState && responsesFullByCode) {
+      // Create the array of sections with array of section's element & responses
+      const sectionsAndElements: SectionElementStates[] = templateSections
+        .sort((a, b) => a.index - b.index)
+        .map((section) => {
+          return { section, elements: [] }
+        })
+      Object.values(elementsState).forEach((element) => {
+        const response = responsesFullByCode[element.code]
+        const elementAndValue = { element, value: response ? response : null }
+        sectionsAndElements[element.section.index].elements.push(elementAndValue)
+      })
+      setElementsInSections(sectionsAndElements)
+    }
+  }, [elementsState, responsesLoading])
 
   return error ? (
     <Message error header="Problem to load application overview" list={[error]} />
-  ) : loading || processing ? (
+  ) : loading || responsesLoading ? (
     <Loading />
   ) : submitError ? (
     <Message error header="Problem to submit application" list={[submitError]} />
-  ) : serialNumber && applicationSections ? (
+  ) : serialNumber && elementsInSections ? (
     <Container>
-      <ApplicationSummary sectionsElements={applicationSections} isEditable={status === 'DRAFT'} />
-      {status === 'DRAFT' ? <Button content="Submit application" onClick={() => submit()} /> : null}
-      {/* <ApplicationSummary
+      <ApplicationSummary
         sectionsAndElements={elementsInSections}
-        onSubmitHandler={() => }
+        onSubmitHandler={() => submit()}
         appStatus={appStatus}
-      /> */}
+      />
       {showProcessingModal(processingSubmission, submitted)}
     </Container>
   ) : (
