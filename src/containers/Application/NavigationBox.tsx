@@ -140,6 +140,8 @@ function nextPageButtonHandler({
 }: changePageProps) {
   // Run the validation on the current page
   const status = validateCurrentPage()
+  console.log('validation', status)
+
   if (!status) return
 
   const nextPage = currentPage + 1

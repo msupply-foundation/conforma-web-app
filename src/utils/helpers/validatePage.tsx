@@ -45,10 +45,9 @@ interface validatePageProps {
 
 /**
  * @function: validate a page - in strict or loose validation mode.
- * Filter elements in the page, check which responses are considered in the validation.
  * Which elements are required to be validated depend on the validation mode:
- * [strict mode] - All visible elements: required (empty or not) or not-required but filled
- * [loose mode] - Only visible elements not empty
+ * [strict mode] - All visible elements: required (filled or not) or not-required (filled)
+ * [loose mode] - Only visible elements with a response (filled)
  */
 const validatePage = ({
   elementsState,
@@ -58,68 +57,44 @@ const validatePage = ({
   validationMode = 'LOOSE',
 }: validatePageProps): ProgressStatus => {
   let count = 1
-  const elementsInCurrentPage = Object.values(elementsState)
-    .filter(({ section }) => section === sectionIndex)
+
+  // Filter visible elements in the current page
+  const visibleElementsInPage = Object.values(elementsState)
+    .filter(({ section, isVisible }) => isVisible && section === sectionIndex)
     .reduce((pageElements: ElementState[], element) => {
       if (element.elementTypePluginCode !== 'pageBreak') count++
-      return element.category !== TemplateElementCategory.Question
-        ? pageElements
-        : [...pageElements, element]
+      const isInCurrrentPage = count === page
+
+      // Add to array question that are in the current page
+      return element.category === TemplateElementCategory.Question && isInCurrrentPage
+        ? [...pageElements, element]
+        : pageElements
     }, [])
 
-  const responsesStatuses = elementsInCurrentPage.reduce(
+  // Verify questions are should be considered in the (strict or loose) validation
+  const verifyQuestions = visibleElementsInPage.filter(({ code, isRequired }) => {
+    if (responses[code]?.text && responses[code]?.text !== '') return true
+    if (isRequired && validationMode === 'STRICT') return true
+    return false
+  })
+
+  // Generate array with statuses of responses of question to verify
+  const responsesStatuses = verifyQuestions.reduce(
     (responsesStatuses: { status: ProgressStatus }[], element: ElementState) => {
-      const { text, isValid } = responses[element.code] as ResponseFull
-      const { isRequired, isVisible } = element
+      const { isValid } = responses[element.code] as ResponseFull
 
       return [
         ...responsesStatuses,
         {
-          status: getResponseStatus(
-            findResponseIsExpected(isVisible, isRequired, text, validationMode),
-            text,
-            isValid
-          ),
+          status: isValid ? PROGRESS_STATUS.VALID : PROGRESS_STATUS.NOT_VALID,
         },
       ]
     },
     []
   )
 
+  // Return the result of combined status for the page
   return getCombinedStatus(responsesStatuses, validationMode)
-}
-
-const findResponseIsExpected = (
-  isVisible: boolean,
-  isRequired: boolean,
-  isFilled: string | null | undefined,
-  validationMode: ValidationMode
-): boolean => {
-  return !isVisible
-    ? false // Not visible
-    : validationMode === 'STRICT'
-    ? isRequired
-      ? true // Visible, required element
-      : isFilled
-      ? true // Visible, not required but filled
-      : false // Visible and not required
-    : !isFilled
-    ? false // Unkown if required, Empty & not checking empty
-    : isRequired
-    ? true // Visible, required & check for empty responses
-    : false // Visible, not required
-}
-
-const getResponseStatus = (
-  expected: boolean,
-  text: string | null | undefined,
-  isValid: boolean | null | undefined
-): ProgressStatus => {
-  return expected
-    ? isValid
-      ? PROGRESS_STATUS.VALID
-      : PROGRESS_STATUS.NOT_VALID
-    : PROGRESS_STATUS.INCOMPLETE
 }
 
 export default validatePage
