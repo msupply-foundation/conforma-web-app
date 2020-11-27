@@ -192,10 +192,8 @@ function buildProgressInApplication({
     // Create an array with all pages in each section
     const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
     const isCurrentPage = (page: number) => section.index === currentSection && page === currentPage
-    const isPreviousPage = (sectionIndex: number, page: number) =>
-      sectionIndex <= currentSection || page <= currentPage
 
-    const getStatus = (sectionIndex: number, page: number) => {
+    const getPageStatus = (sectionIndex: number, page: number) => {
       const draftPageStatus = validatePage({ elementsState, responses, sectionIndex, page })
       if (isLinear || validationMode === 'STRICT')
         return draftPageStatus === PROGRESS_STATUS.VALID
@@ -204,32 +202,34 @@ function buildProgressInApplication({
       return draftPageStatus
     }
 
-    const pages: ProgressInPage[] = pageNumbers.map((pageNumber) => ({
-      pageName: `Page ${pageNumber}`,
-      canNavigate: isLinear ? isPreviousPage(section.index, pageNumber) : true,
-      isActive: isCurrentPage(pageNumber),
-      status: isCurrentPage(pageNumber)
-        ? PROGRESS_STATUS.INCOMPLETE
-        : getStatus(section.index, pageNumber),
-    }))
+    let previousPageStatus: ProgressStatus = PROGRESS_STATUS.VALID
+    const pages: ProgressInPage[] = pageNumbers.map((pageNumber) => {
+      const status = getPageStatus(section.index, pageNumber)
+      const isPreviousPageValid = previousPageStatus !== PROGRESS_STATUS.NOT_VALID
+      previousPageStatus = status // Update new previous page for next iteration
+      return {
+        pageName: `Page ${pageNumber}`,
+        canNavigate: isLinear ? isPreviousPageValid : true,
+        isActive: isCurrentPage(pageNumber),
+        status: isCurrentPage(pageNumber) ? PROGRESS_STATUS.INCOMPLETE : status,
+      }
+    })
 
     // Build object to keep each section progress (and pages progress)
+    // with section status as combined statuses of pages
     const progressInSection: ProgressInSection = {
       code: section.code,
       title: section.title,
       canNavigate: isLinear ? section.index <= currentSection : true,
       isActive: section.index === currentSection,
       pages,
-    }
-
-    // Return each section with status as the combination of its pages statuses
-    return {
-      ...progressInSection,
       status:
         section.index === currentSection
           ? PROGRESS_STATUS.INCOMPLETE
           : getCombinedStatus(pages.map(({ status }) => status)),
     }
+
+    return progressInSection
   })
 
   // Add 'Review and submit' as last section
