@@ -18,9 +18,11 @@ export {
   ResponseFull,
   ResponsesFullByCode,
   ResponsesByCode,
+  SectionPages,
   SectionElements,
-  SectionPagesElements,
   SectionElementStates,
+  SectionPayload,
+  SectionPagesElements,
   TemplateElementState,
   TemplatePermissions,
   FullUserPermissions,
@@ -139,6 +141,25 @@ interface ResponsesByCode {
   [key: string]: string | null | undefined
 }
 
+// --------- To be removed
+// TODO: Remove this when change Summary to use hook useListSectionsInSummary
+interface SectionPages {
+  [page: number]: Array<ElementAndResponse>
+}
+
+interface SectionElementStates {
+  section: TemplateSectionPayload
+  elements: {
+    element: ElementState
+    value: ResponseFull | null
+  }[]
+}
+
+interface SectionPayload {
+  applicationId: number
+  templateSections: (number | null)[]
+}
+// -------------
 interface SectionDetails {
   index: number
   page: number
@@ -154,14 +175,6 @@ interface SectionPagesElements {
   [page: number]: ElementAndResponse[]
 }
 
-// TODO: Remove this when change Summary to use hook useListSectionsInSummary
-interface SectionElementStates {
-  section: TemplateSectionPayload
-  elements: {
-    element: ElementState
-    value: ResponseFull | null
-  }[]
-}
 interface TemplateElementState extends ElementBase {
   isRequired: IQueryNode
   visibilityCondition: IQueryNode
