@@ -1,42 +1,31 @@
 import { ApplicationResponse, TemplateElement, TemplateElementCategory } from './generated/graphql'
 
-import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 export {
   ApplicationDetails,
   ApplicationElementStates,
-  ElementAndResponse,
+  AppStatus,
   ElementState,
+  ElementAndResponse,
+  FullUserPermissions,
+  ProgressInApplication,
+  ProgressInSection,
+  ProgressInPage,
+  ProgressStatus,
+  ResponseFull,
   ResponsePayload,
+  ResponsesFullByCode,
+  ResponsesByCode,
   SectionPages,
   SectionElements,
   SectionElementStates,
   SectionPayload,
   TemplateTypePayload,
   TemplateSectionPayload,
-  ProgressInApplication,
-  ProgressInSection,
-  ProgressInPage,
-  ProgressStatus,
-  ResponseFull,
-  ResponsesFullByCode,
-  ResponsesByCode,
   TemplateElementState,
   TemplatePermissions,
-  FullUserPermissions,
   ValidationMode,
-}
-
-interface TemplatePermissions {
-  [index: string]: {
-    [index: string]: Array<'Apply' | 'Review' | 'Assign'>
-  }
-}
-
-interface FullUserPermissions {
-  username: string
-  templatePermissions: TemplatePermissions
-  JWT: string
 }
 
 interface ApplicationDetails {
@@ -54,14 +43,83 @@ interface ApplicationElementStates {
   [key: string]: ElementState
 }
 
+interface AppStatus {
+  stage: string
+  status: string
+  outcome: string
+}
+
+interface ElementBase {
+  id: number
+  code: string
+  title: string
+  elementTypePluginCode: string
+  section: number // Index
+  category: TemplateElementCategory
+  parameters: any
+}
+
+interface ElementState extends ElementBase {
+  isEditable: boolean
+  isRequired: boolean
+  isVisible: boolean
+}
+
+interface TemplatePermissions {
+  [index: string]: {
+    [index: string]: Array<'Apply' | 'Review' | 'Assign'>
+  }
+}
+
 interface ElementAndResponse {
   question: TemplateElement
   response: ApplicationResponse | null
 }
 
+interface FullUserPermissions {
+  username: string
+  templatePermissions: TemplatePermissions
+  JWT: string
+}
+
+interface ProgressInPage {
+  pageName: string
+  status: ProgressStatus
+  canNavigate: boolean
+  isActive: boolean
+}
+
+interface ProgressInSection {
+  code: string
+  title: string
+  status?: ProgressStatus
+  canNavigate: boolean
+  isActive: boolean
+  pages?: ProgressInPage[]
+}
+
+type ProgressInApplication = ProgressInSection[]
+
+type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
+
+interface ResponseFull {
+  text: string | null | undefined
+  optionIndex?: number
+  reference?: any // Not yet decided how to represent
+  isValid: boolean | null
+}
+
 interface ResponsePayload {
   applicationId: number
   templateQuestions: TemplateElement[]
+}
+
+interface ResponsesFullByCode {
+  [key: string]: ResponseFull | null
+}
+
+interface ResponsesByCode {
+  [key: string]: string | null | undefined
 }
 
 interface SectionPages {
@@ -101,62 +159,11 @@ interface TemplateSectionPayload {
   totalPages: number
 }
 
-interface ProgressInPage {
-  pageName: string
-  status: ProgressStatus
-  canNavigate: boolean
-  isActive: boolean
-}
-
-interface ProgressInSection {
-  code: string
-  title: string
-  status?: ProgressStatus
-  canNavigate: boolean
-  isActive: boolean
-  pages?: ProgressInPage[]
-}
-
-type ProgressInApplication = ProgressInSection[]
-
-type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
-
-interface ResponseFull {
-  text: string | null | undefined
-  optionIndex?: number
-  reference?: any // Not yet decided how to represent
-  isValid: boolean | null
-}
-
-interface ResponsesFullByCode {
-  [key: string]: ResponseFull | null
-}
-
-interface ResponsesByCode {
-  [key: string]: string | null | undefined
-}
-
-interface ElementBase {
-  id: number
-  code: string
-  title: string
-  elementTypePluginCode: string
-  section: number // Index
-  category: TemplateElementCategory
-  parameters: any
-}
-
 interface TemplateElementState extends ElementBase {
   isRequired: IQueryNode
   visibilityCondition: IQueryNode
   isEditable: IQueryNode
   // isValid: boolean | null
-}
-
-interface ElementState extends ElementBase {
-  isEditable: boolean
-  isRequired: boolean
-  isVisible: boolean
 }
 
 type ValidationMode = 'STRICT' | 'LOOSE'
