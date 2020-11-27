@@ -34,6 +34,12 @@ class pluginProvider {
         folderName: 'textInfo',
         category: 'Informative',
       },
+      dropdownChoice: {
+        isCore: true,
+        displayName: 'Drop-down Selector',
+        folderName: 'dropdownChoice',
+        category: 'Input',
+      },
     }
   }
 
