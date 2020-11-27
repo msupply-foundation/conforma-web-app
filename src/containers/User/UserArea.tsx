@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Button, Container, Label, Segment } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { useGetUsersQuery, User } from '../../utils/generated/graphql'

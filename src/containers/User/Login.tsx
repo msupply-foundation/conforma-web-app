@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router'
+import { useRouter } from '../../utils/hooks/useRouter'
 import { Link } from 'react-router-dom'
 import { Form, Button, Container, Grid, Segment, Header } from 'semantic-ui-react'
 import config from '../../config.json'
@@ -9,7 +9,7 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isError, setIsError] = useState(false)
-  const history = useHistory()
+  const { push } = useRouter()
 
   const handleSubmit = async (event: any) => {
     event.preventDefault()
@@ -18,15 +18,13 @@ const Login: React.FC = () => {
     if (!loginResult.success) setIsError(true)
     else {
       setIsError(false)
-      // localStorage.setItem('username', username)
-      // localStorage.setItem('templatePermissions', loginResult.templatePermissions)
       localStorage.setItem('persistJWT', loginResult.JWT)
       console.log('Log in successful!')
-      history.push('/') // TO-DO: re-route to previous URL
+      push('/') // TO-DO: re-route to previous URL
     }
   }
 
-  if (isLoggedIn()) history.push('/')
+  if (isLoggedIn()) push('/')
 
   return (
     <Container text style={{ height: '100vh' }}>
@@ -78,15 +76,19 @@ function hashPassword(password: string) {
 }
 
 export async function attemptLogin(username: string, passwordHash: string) {
-  const response = await fetch(config.serverREST + '/login', {
-    method: 'POST',
-    cache: 'no-cache',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ username, passwordHash }),
-  })
-  return response.json()
+  try {
+    const response = await fetch(config.serverREST + '/login', {
+      method: 'POST',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, passwordHash }),
+    })
+    return response.json()
+  } catch (err) {
+    throw err
+  }
 }
 
 export const logOut = () => {

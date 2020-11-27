@@ -1,18 +1,25 @@
-import React from 'react'
-import { useHistory } from 'react-router'
+import React, { useState } from 'react'
+import { useRouter } from '../../utils/hooks/useRouter'
 import isLoggedIn from '../../utils/helpers/loginCheck'
 import { attemptLogin } from '../User/Login'
 
 const UserRegister: React.FC = () => {
-  let history = useHistory()
-  if (isLoggedIn()) history.push('/')
+  const [networkError, setNetworkError] = useState('')
+  const { push } = useRouter()
+  if (isLoggedIn()) push('/')
 
-  attemptLogin('nonRegistered', '').then((loginResult) => {
-    localStorage.setItem('persistJWT', loginResult.JWT)
-    history.push('/applications/new?type=UserRegistration')
-  })
+  attemptLogin('nonRegistered', '')
+    .then((loginResult) => {
+      console.log('Result', loginResult)
+      localStorage.setItem('persistJWT', loginResult.JWT)
+      push('/applications/new?type=UserRegistration')
+    })
+    .catch((err) => {
+      setNetworkError(err.message)
+    })
 
-  return <p>Re-directing to user registration application...</p>
+  if (networkError) return <p>{networkError}</p>
+  else return <p>Re-directing to user registration application...</p>
 }
 
 export default UserRegister

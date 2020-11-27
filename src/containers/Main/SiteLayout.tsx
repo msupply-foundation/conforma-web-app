@@ -26,7 +26,6 @@ import { ApplicationCreate, ApplicationList, ApplicationPageWrapper } from '../A
 import UserRegister from '../User/UserRegister'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import ApplicationOverview from '../Application/ApplicationOverview'
-import isLoggedIn from '../../utils/helpers/loginCheck'
 
 const SiteLayout: React.FC = () => {
   return (
