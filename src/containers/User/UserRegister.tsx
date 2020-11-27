@@ -9,7 +9,7 @@ const UserRegister: React.FC = () => {
 
   attemptLogin('nonRegistered', '').then((loginResult) => {
     localStorage.setItem('persistJWT', loginResult.JWT)
-    history.push('/applications/new?type=UserRego1')
+    history.push('/applications/new?type=UserRegistration')
   })
 
   return <p>Re-directing to user registration application...</p>
