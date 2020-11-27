@@ -19,6 +19,7 @@ const Login: React.FC = () => {
     else {
       setIsError(false)
       localStorage.setItem('persistJWT', loginResult.JWT)
+      localStorage.setItem('username', loginResult.username)
       console.log('Log in successful!')
       push('/') // TO-DO: re-route to previous URL
     }

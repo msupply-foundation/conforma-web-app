@@ -1,6 +1,9 @@
+import { logOut } from '../../containers/User/Login'
+
 const isLoggedIn = () => {
   const JWT = localStorage.getItem('persistJWT')
-  return JWT !== null
+  const username = localStorage.getItem('username')
+  return JWT && username
 }
 
 export default isLoggedIn
