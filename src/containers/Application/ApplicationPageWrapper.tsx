@@ -12,9 +12,11 @@ import {
   ApplicationElementStates,
   ProgressInApplication,
   ProgressInSection,
+  ProgressInPage,
   ProgressStatus,
   ResponsesFullByCode,
   TemplateSectionPayload,
+  ValidationMode,
 } from '../../utils/types'
 
 const ApplicationPageWrapper: React.FC = () => {
@@ -91,7 +93,6 @@ const ApplicationPageWrapper: React.FC = () => {
       responses: responsesFullByCode as ResponsesFullByCode,
       sectionIndex: currentSection?.index as number,
       page: Number(page),
-      validationMode: 'STRICT',
     })
 
     return application?.isLinear ? validation === (PROGRESS_STATUS.VALID as ProgressStatus) : true
@@ -174,6 +175,7 @@ interface buildProgressInApplicationProps {
   isLinear: boolean
   currentSection: number
   currentPage: number
+  validationMode?: ValidationMode
 }
 
 function buildProgressInApplication({
@@ -183,6 +185,7 @@ function buildProgressInApplication({
   isLinear,
   currentSection,
   currentPage,
+  validationMode = 'LOOSE',
 }: buildProgressInApplicationProps): ProgressInApplication {
   if (!elementsState || !responses) return []
   let sectionsStructure: ProgressInApplication = templateSections.map((section) => {
@@ -192,29 +195,22 @@ function buildProgressInApplication({
     const isPreviousPage = (sectionIndex: number, page: number) =>
       sectionIndex <= currentSection || page <= currentPage
 
-    const pages = pageNumbers.map((pageNumber) => ({
+    const getStatus = (sectionIndex: number, page: number) => {
+      const draftPageStatus = validatePage({ elementsState, responses, sectionIndex, page })
+      if (isLinear || validationMode === 'STRICT')
+        return draftPageStatus === PROGRESS_STATUS.VALID
+          ? PROGRESS_STATUS.VALID
+          : PROGRESS_STATUS.NOT_VALID
+      return draftPageStatus
+    }
+
+    const pages: ProgressInPage[] = pageNumbers.map((pageNumber) => ({
       pageName: `Page ${pageNumber}`,
       canNavigate: isLinear ? isPreviousPage(section.index, pageNumber) : true,
       isActive: isCurrentPage(pageNumber),
       status: isCurrentPage(pageNumber)
         ? PROGRESS_STATUS.INCOMPLETE
-        : isLinear
-        ? isPreviousPage(section.index, pageNumber)
-          ? validatePage({
-              elementsState,
-              responses,
-              sectionIndex: section.index,
-              page: pageNumber,
-              validationMode: 'STRICT',
-            })
-          : PROGRESS_STATUS.INCOMPLETE
-        : validatePage({
-            elementsState,
-            responses,
-            sectionIndex: section.index,
-            page: pageNumber,
-            validationMode: isPreviousPage(section.index, pageNumber) ? 'STRICT' : 'LOOSE',
-          }),
+        : getStatus(section.index, pageNumber),
     }))
 
     // Build object to keep each section progress (and pages progress)
@@ -232,7 +228,7 @@ function buildProgressInApplication({
       status:
         section.index === currentSection
           ? PROGRESS_STATUS.INCOMPLETE
-          : getCombinedStatus(progressInSection.pages),
+          : getCombinedStatus(pages.map(({ status }) => status)),
     }
   })
 
