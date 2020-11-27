@@ -77,7 +77,7 @@ function hashPassword(password: string) {
   return password
 }
 
-async function attemptLogin(username: string, passwordHash: string) {
+export async function attemptLogin(username: string, passwordHash: string) {
   const response = await fetch(config.serverREST + '/login', {
     method: 'POST',
     cache: 'no-cache',
