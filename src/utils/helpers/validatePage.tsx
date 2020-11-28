@@ -63,9 +63,10 @@ const validatePage = ({
   const responsesStatuses = visibleQuestions.reduce(
     (responsesStatuses: ProgressStatus[], { code, isRequired }: ElementState) => {
       const { text, isValid } = responses[code] as ResponseFull
-      if (isRequired && (!text || isValid === null))
-        return [...responsesStatuses, PROGRESS_STATUS.INCOMPLETE]
-      if (!text || isValid === null) return [...responsesStatuses, PROGRESS_STATUS.VALID]
+      const emptyResponse = !text || isValid === null
+      if (isRequired && emptyResponse) return [...responsesStatuses, PROGRESS_STATUS.INCOMPLETE]
+      // If not required and empty response -> Should return as valid
+      else if (emptyResponse) return [...responsesStatuses, PROGRESS_STATUS.VALID]
       return [...responsesStatuses, isValid ? PROGRESS_STATUS.VALID : PROGRESS_STATUS.NOT_VALID]
     },
     []
