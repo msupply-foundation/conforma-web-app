@@ -23,9 +23,15 @@ interface ApplicationViewWrapperProps {
   initialValue: any // Could be a primative or an object with any shape
 }
 
+type ValidationState = {
+  isValid: boolean | undefined
+  validationMessage?: string | undefined
+}
+
 interface ApplicationViewProps extends ApplicationViewWrapperProps {
-  evaluator: Function
-  onUpdate: OnUpdateApplicationView
+  onUpdate: Function
+  onSave: Function
+  validationState: ValidationState
 }
 
 interface SummaryViewProps {
@@ -83,6 +89,7 @@ export {
   OnUpdateTemplateView,
   ApplicationViewWrapperProps,
   ApplicationViewProps,
+  ValidationState,
   TemplateViewWrapperProps,
   SummaryViewWrapperProps,
   SummaryViewProps,

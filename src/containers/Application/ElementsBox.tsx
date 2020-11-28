@@ -1,6 +1,6 @@
 import React from 'react'
 import { Header, Label, Segment } from 'semantic-ui-react'
-import { ApplicationViewWrapper } from '../../elementPlugins'
+import { ApplicationViewWrapper } from '../../formElementPlugins'
 import useGetSectionElementAndResponses from '../../utils/hooks/useGetSectionElementAndResponses'
 import { Loading } from '../../components'
 import {

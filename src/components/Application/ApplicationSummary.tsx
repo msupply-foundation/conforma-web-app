@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Container, Form, Grid, Header, Segment } from 'semantic-ui-react'
-import { SummaryViewWrapper } from '../../elementPlugins'
+import { SummaryViewWrapper } from '../../formElementPlugins'
 import { SectionElementStates } from '../../utils/types'
 
 interface ApplicationSummaryProps {

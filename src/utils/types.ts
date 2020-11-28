@@ -23,6 +23,7 @@ export {
   SectionElementStates,
   SectionPayload,
   SectionPagesElements,
+  LooseString,
   TemplateElementState,
   TemplatePermissions,
   FullUserPermissions,
@@ -133,12 +134,14 @@ interface ResponseFull {
   }
 }
 
+type LooseString = string | null | undefined
+
 interface ResponsesFullByCode {
   [key: string]: ResponseFull | null
 }
 
 interface ResponsesByCode {
-  [key: string]: string | null | undefined
+  [key: string]: LooseString
 }
 
 // --------- To be removed
