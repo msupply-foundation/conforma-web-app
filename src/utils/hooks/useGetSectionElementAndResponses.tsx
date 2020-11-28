@@ -66,20 +66,25 @@ const useGetSectionElementAndResponses = ({
     const templateSection = data?.applicationBySerial?.template?.templateSections
       .nodes[0] as TemplateSection
 
-    const templateElements = [] as TemplateElementState[]
-
     const elementsInSection = templateSection.templateElementsBySectionId
       ?.nodes as TemplateElement[]
 
     let countPages = 1
-    elementsInSection.forEach((element) => {
-      const section = {
-        index: templateSection.index,
-        page: countPages,
-      }
-      if (element.elementTypePluginCode === 'pageBreak') countPages++
-      templateElements.push({ ...element, section } as TemplateElementState)
-    })
+    const templateElements = elementsInSection.reduce(
+      (elementsStates: TemplateElementState[], element) => {
+        const section = {
+          index: templateSection.index,
+          page: countPages,
+        }
+        // Skip page-break elements
+        if (element.elementTypePluginCode === 'pageBreak') {
+          countPages++
+          return elementsStates
+        }
+        return [...elementsStates, { ...element, section } as TemplateElementState]
+      },
+      []
+    )
 
     const currentResponses = {} as ResponsesByCode
     const currentFullResponses = {} as ResponsesFullByCode
