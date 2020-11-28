@@ -9,7 +9,7 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isError, setIsError] = useState(false)
-  const { push } = useRouter()
+  const { push, history } = useRouter()
 
   const handleSubmit = async (event: any) => {
     event.preventDefault()
@@ -21,11 +21,14 @@ const Login: React.FC = () => {
       localStorage.setItem('persistJWT', loginResult.JWT)
       localStorage.setItem('username', loginResult.username)
       console.log('Log in successful!')
-      push('/') // TO-DO: re-route to previous URL
+      if (history.location.state.from) push(history.location.state.from)
+      else push('/')
     }
   }
 
   if (isLoggedIn()) push('/')
+
+  console.log('history', history)
 
   return (
     <Container text style={{ height: '100vh' }}>

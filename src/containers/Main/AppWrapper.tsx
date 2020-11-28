@@ -38,7 +38,7 @@ const AuthenticatedContent: React.FC = () => {
         <Footer />
       </>
     )
-  else return <Redirect to="/login" />
+  else return <Redirect to={{ pathname: '/login', state: { from: location.pathname } }} />
 }
 
 declare const module: any
