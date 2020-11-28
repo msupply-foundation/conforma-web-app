@@ -1,6 +1,6 @@
 import React from 'react'
 import { Header, Label, Segment } from 'semantic-ui-react'
-import { ApplicationViewWrapper } from '../../elementPlugins'
+import { ApplicationViewWrapper } from '../../formElementPlugins'
 import useLoadElementsOfSection from '../../utils/hooks/useLoadElementsOfSection'
 import { Loading } from '../../components'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
