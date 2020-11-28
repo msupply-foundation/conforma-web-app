@@ -15,19 +15,10 @@ export enum PROGRESS_STATUS {
 }
 
 export const getCombinedStatus = (pages: ProgressStatus[] | undefined): ProgressStatus => {
-  console.log('pages', pages)
-
   if (!pages) return PROGRESS_STATUS.VALID
-  console.log('not empty')
-
   if (pages.some((status) => status === PROGRESS_STATUS.NOT_VALID)) return PROGRESS_STATUS.NOT_VALID
-  console.log('no INVALID')
-
   if (pages.some((status) => status === PROGRESS_STATUS.INCOMPLETE))
     return PROGRESS_STATUS.INCOMPLETE
-
-  console.log('no INCOMPLETE')
-
   return PROGRESS_STATUS.VALID
 }
 

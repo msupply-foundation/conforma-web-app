@@ -1522,7 +1522,8 @@ export enum Trigger {
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnScheduleTime = 'ON_SCHEDULE_TIME',
-  Processing = 'PROCESSING'
+  Processing = 'PROCESSING',
+  Error = 'ERROR'
 }
 
 /** A filter to be used against TriggerQueueStatus fields. All fields are combined with a logical ‘and.’ */
