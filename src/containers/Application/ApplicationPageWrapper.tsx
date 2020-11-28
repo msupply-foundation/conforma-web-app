@@ -188,6 +188,7 @@ function buildProgressInApplication({
   validationMode = 'LOOSE',
 }: buildProgressInApplicationProps): ProgressInApplication {
   if (!elementsState || !responses) return []
+  let previousSectionStatus: ProgressStatus = PROGRESS_STATUS.VALID
   let sectionsStructure: ProgressInApplication = templateSections.map((section) => {
     // Create an array with all pages in each section
     const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
@@ -205,7 +206,7 @@ function buildProgressInApplication({
     let previousPageStatus: ProgressStatus = PROGRESS_STATUS.VALID
     const pages: ProgressInPage[] = pageNumbers.map((pageNumber) => {
       const status = getPageStatus(section.index, pageNumber)
-      const isPreviousPageValid = previousPageStatus !== PROGRESS_STATUS.NOT_VALID
+      const isPreviousPageValid = previousPageStatus === PROGRESS_STATUS.NOT_VALID
       previousPageStatus = status // Update new previous page for next iteration
       return {
         pageName: `Page ${pageNumber}`,
@@ -215,18 +216,19 @@ function buildProgressInApplication({
       }
     })
 
+    const sectionStatus = getCombinedStatus(pages.map(({ status }) => status))
+    const isPreviousSectionValid = previousSectionStatus === PROGRESS_STATUS.VALID
+    previousSectionStatus = sectionStatus
+
     // Build object to keep each section progress (and pages progress)
     // with section status as combined statuses of pages
     const progressInSection: ProgressInSection = {
       code: section.code,
       title: section.title,
-      canNavigate: isLinear ? section.index <= currentSection : true,
+      canNavigate: isLinear && (section.index <= currentSection || isPreviousSectionValid),
       isActive: section.index === currentSection,
       pages,
-      status:
-        section.index === currentSection
-          ? PROGRESS_STATUS.INCOMPLETE
-          : getCombinedStatus(pages.map(({ status }) => status)),
+      status: section.index === currentSection ? PROGRESS_STATUS.INCOMPLETE : sectionStatus,
     }
 
     return progressInSection
