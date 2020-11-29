@@ -45,7 +45,6 @@ const validatePage = ({
   page,
 }: validatePageProps): ProgressStatus => {
   let count = 1
-
   // Filter visible elements in the current page
   const visibleQuestions = Object.values(elementsState)
     .filter(({ section, isVisible }) => isVisible && section.index === sectionIndex)
@@ -63,7 +62,7 @@ const validatePage = ({
   const responsesStatuses = visibleQuestions.reduce(
     (responsesStatuses: ProgressStatus[], { code, isRequired }: ElementState) => {
       const { value, isValid } = responses[code] as ResponseFull
-      const emptyResponse = !value.text || isValid === null
+      const emptyResponse = !value?.text || isValid === null
       if (isRequired && emptyResponse) return [...responsesStatuses, PROGRESS_STATUS.INCOMPLETE]
       // If not required and empty response -> Should return as valid
       else if (emptyResponse) return [...responsesStatuses, PROGRESS_STATUS.VALID]
