@@ -47,11 +47,6 @@ interface AppStatus {
   outcome: string
 }
 
-interface ElementAndResponse {
-  element: ElementState,
-  response: ResponseFull | null
-}
-
 interface ElementBase {
   id: number
   code: string
@@ -122,7 +117,10 @@ interface ResponsesByCode {
 interface SectionElementStates {
   section: SectionDetails
   pages: {
-    [pageName: string]: ElementAndResponse[]
+    [pageName: string]: {
+      element: ElementState
+      response: ResponseFull | null
+    }[]
   }
 }
 

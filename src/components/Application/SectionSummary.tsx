@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Card, Header, Icon, Label, Segment } from 'semantic-ui-react'
+import { Button, Header, Segment } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
-import { ElementAndResponse, SectionElementStates } from '../../utils/types'
+import { SectionElementStates } from '../../utils/types'
 
 interface ApplicationSummaryProps {
   sectionPages: SectionElementStates
@@ -24,14 +24,12 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
         <Segment>
           <p>{pageName}</p>
           <Segment.Group>
-            {elements.map((elementAndResponse) => {
-              const {
-                element: { category, isVisible, isEditable },
-              } = elementAndResponse
+            {elements.map(({ element, response }) => {
+              const { category, isVisible, isEditable } = element
               const pageCode = pageName?.replace(' ', '')
               return (
                 <Segment>
-                  <SummaryViewWrapper {...elementAndResponse} />
+                  <SummaryViewWrapper element={element} response={response} />
                   {category === TemplateElementCategory.Question &&
                     isVisible &&
                     isEditable &&
