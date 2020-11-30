@@ -47,7 +47,6 @@ const validatePage = ({
   // Filter visible elements in the current page
   const visibleQuestions = Object.values(elementsState).filter(
     ({ sectionIndex, isVisible, page: pageNum, category }) => {
-      console.log(sectionIndex, isVisible, pageNum, page)
       return (
         isVisible &&
         currentSectionIndex === sectionIndex &&
