@@ -9,6 +9,7 @@ export {
   ElementState,
   ElementAndResponse,
   FullUserPermissions,
+  LooseString,
   ProgressInApplication,
   ProgressInSection,
   ProgressInPage,
@@ -82,6 +83,8 @@ interface FullUserPermissions {
   JWT: string
 }
 
+type LooseString = string | null | undefined
+
 interface ProgressInPage {
   pageName: string
   status: ProgressStatus
@@ -106,7 +109,7 @@ interface ResponseFull {
   text: string | null | undefined
   optionIndex?: number
   reference?: any // Not yet decided how to represent
-  isValid: boolean | null
+  isValid?: boolean | null
 }
 
 interface ResponsePayload {
@@ -119,7 +122,7 @@ interface ResponsesFullByCode {
 }
 
 interface ResponsesByCode {
-  [key: string]: string | null | undefined
+  [key: string]: LooseString
 }
 
 interface SectionPages {

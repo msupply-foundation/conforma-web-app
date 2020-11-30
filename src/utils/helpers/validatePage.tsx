@@ -4,7 +4,6 @@ import {
   ProgressStatus,
   ResponsesFullByCode,
   ResponseFull,
-  ValidationMode,
 } from '../../utils/types'
 
 import { TemplateElementCategory } from '../../utils/generated/graphql'
@@ -15,13 +14,10 @@ export enum PROGRESS_STATUS {
   INCOMPLETE = 'INCOMPLETE',
 }
 
-export const getCombinedStatus = (
-  pages: { status: ProgressStatus }[] | undefined
-): ProgressStatus => {
+export const getCombinedStatus = (pages: ProgressStatus[] | undefined): ProgressStatus => {
   if (!pages) return PROGRESS_STATUS.VALID
-  if (pages.some(({ status }) => status === PROGRESS_STATUS.NOT_VALID))
-    return PROGRESS_STATUS.NOT_VALID
-  if (pages.some(({ status }) => status === PROGRESS_STATUS.INCOMPLETE))
+  if (pages.some((status) => status === PROGRESS_STATUS.NOT_VALID)) return PROGRESS_STATUS.NOT_VALID
+  if (pages.some((status) => status === PROGRESS_STATUS.INCOMPLETE))
     return PROGRESS_STATUS.INCOMPLETE
   return PROGRESS_STATUS.VALID
 }
@@ -31,21 +27,22 @@ interface validatePageProps {
   responses: ResponsesFullByCode
   sectionIndex: number
   page: number
-  validationMode?: ValidationMode
+  // validationMode?: ValidationMode
 }
 
 /**
- * @function: validate a page - in strict or loose validation mode.
- * Which elements are required to be validated depend on the validation mode:
- * [strict mode] - All visible elements: required (filled or not) or not-required (filled)
- * [loose mode] - Only visible elements with a response (filled)
+ * @function: validate a page
+ * Returns page validation status (VALID, NOT_VALID or INCOMPLETE) after checking statuses
+ * of all required question and other filled question:
+ * NOT_VALID: Any question has an invalid response
+ * INCOMPLETE: At least one required question is empty (and no other invalid questions)
+ * VALID: All required questions (and other filled questions) have valid responses
  */
 const validatePage = ({
   elementsState,
   responses,
   sectionIndex,
   page,
-  validationMode = 'LOOSE',
 }: validatePageProps): ProgressStatus => {
   let count = 1
 
@@ -62,24 +59,15 @@ const validatePage = ({
         : pageElements
     }, [])
 
-  // Verify questions are should be considered in the (strict or loose) validation
-  const verifyQuestions = visibleQuestions.filter(({ code, isRequired }) => {
-    if (responses[code]?.text && responses[code]?.text !== '') return true
-    if (isRequired && validationMode === 'STRICT') return true
-    return false
-  })
-
-  // Generate array with statuses of responses of question to verify
-  const responsesStatuses = verifyQuestions.reduce(
-    (responsesStatuses: { status: ProgressStatus }[], element: ElementState) => {
-      const { isValid } = responses[element.code] as ResponseFull
-
-      return [
-        ...responsesStatuses,
-        {
-          status: isValid ? PROGRESS_STATUS.VALID : PROGRESS_STATUS.NOT_VALID,
-        },
-      ]
+  // Generate array with current status of responses for each question to verify
+  const responsesStatuses = visibleQuestions.reduce(
+    (responsesStatuses: ProgressStatus[], { code, isRequired }: ElementState) => {
+      const { text, isValid } = responses[code] as ResponseFull
+      const emptyResponse = !text || isValid === null
+      if (isRequired && emptyResponse) return [...responsesStatuses, PROGRESS_STATUS.INCOMPLETE]
+      // If not required and empty response -> Should return as valid
+      else if (emptyResponse) return [...responsesStatuses, PROGRESS_STATUS.VALID]
+      return [...responsesStatuses, isValid ? PROGRESS_STATUS.VALID : PROGRESS_STATUS.NOT_VALID]
     },
     []
   )
