@@ -7,7 +7,6 @@ export {
   ApplicationElementStates,
   AppStatus,
   ElementState,
-  ElementAndResponse,
   FullUserPermissions,
   LooseString,
   ProgressInApplication,
@@ -18,8 +17,6 @@ export {
   ResponsePayload,
   ResponsesFullByCode,
   ResponsesByCode,
-  SectionPages,
-  SectionElements,
   SectionElementStates,
   SectionPayload,
   TemplateTypePayload,
@@ -48,11 +45,6 @@ interface AppStatus {
   stage: string
   status: string
   outcome: string
-}
-
-interface ElementAndResponse {
-  element: ElementState,
-  response: ResponseFull
 }
 
 interface ElementBase {
@@ -120,14 +112,6 @@ interface ResponsesFullByCode {
 
 interface ResponsesByCode {
   [key: string]: LooseString
-}
-
-interface SectionPages {
-  [page: number]: Array<ElementAndResponse>
-}
-
-interface SectionElements {
-  [id: number]: Array<ElementAndResponse>
 }
 
 interface SectionElementStates {
