@@ -7,7 +7,6 @@ export {
   ApplicationElementStates,
   AppStatus,
   ElementState,
-  ElementAndResponse,
   FullUserPermissions,
   LooseString,
   ProgressInApplication,
