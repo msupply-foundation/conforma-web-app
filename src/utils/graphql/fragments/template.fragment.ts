@@ -5,5 +5,6 @@ export default gql`
       code
       id
       name
+      isLinear
   }
 `

@@ -8,7 +8,7 @@ import {
 import { ElementAndResponse, SectionPages } from '../types'
 
 interface useLoadElementsProps {
-  applicationId: number
+  applicationId: number | undefined
   sectionTempId: number
   sectionPage?: number
 }
@@ -24,7 +24,7 @@ const useLoadElementsOfSection = ({
 
   const { data, loading: apolloLoading, error: apolloError } = useGetSectionElementsQuery({
     variables: {
-      applicationId,
+      applicationId: applicationId as number,
       sectionId: sectionTempId,
     },
   })

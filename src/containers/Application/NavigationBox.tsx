@@ -6,9 +6,10 @@ import { TemplateSectionPayload } from '../../utils/types'
 
 interface NavigationBoxProps {
   templateSections: TemplateSectionPayload[]
+  validateCurrentPage: () => boolean
 }
 
-const NavigationBox: React.FC<NavigationBoxProps> = ({ templateSections }) => {
+const NavigationBox: React.FC<NavigationBoxProps> = ({ templateSections, validateCurrentPage }) => {
   const { query, push } = useRouter()
   const { serialNumber, sectionCode, page } = query
 
@@ -31,8 +32,9 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({ templateSections }) => {
     currentSection: currentSection as TemplateSectionPayload,
     templateSections,
     sendToPage: (section: string, page: number) =>
-      push(`../../${serialNumber}/${section}/page${page}`),
-    sendToSummary: () => push('../summary'),
+      push(`/applications/${serialNumber}/${section}/Page${page}`),
+    sendToSummary: () => push(`/applications/${serialNumber}/summary`),
+    validateCurrentPage,
   }
 
   return currentSection ? (
@@ -108,6 +110,7 @@ interface changePageProps {
   templateSections: TemplateSectionPayload[]
   sendToPage: (section: string, page: number) => void
   sendToSummary: () => void
+  validateCurrentPage: () => boolean
 }
 
 function previousButtonHandler({
@@ -133,9 +136,12 @@ function nextPageButtonHandler({
   templateSections,
   sendToPage,
   sendToSummary,
+  validateCurrentPage,
 }: changePageProps) {
+  // Run the validation on the current page
+  const status = validateCurrentPage()
+  if (!status) return
   const nextPage = currentPage + 1
-  // TODO: Validation
   if (nextPage > currentSection.totalPages) {
     // Will check if next page is in other section
     const foundSection = templateSections.find(({ index }) => index === currentSection.index + 1)

@@ -29,7 +29,7 @@ const ApplicationCreate: React.FC = () => {
         // Call Application page on first section
         const firstSection = templateSections[0].code
         // The pageNumber starts in 1 when is a new application
-        push(`${serialNumber}/${firstSection}/page1`)
+        push(`${serialNumber}/${firstSection}/Page1`)
       }
     },
   })

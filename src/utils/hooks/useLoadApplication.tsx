@@ -2,20 +2,15 @@ import { useEffect, useState } from 'react'
 import { Application, useGetApplicationQuery } from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
 import { getApplicationSections } from '../helpers/getSectionsPayload'
-import { TemplateSectionPayload } from '../types'
+import { ApplicationDetails, TemplateSectionPayload } from '../types'
 
 interface useLoadApplicationProps {
   serialNumber: string
 }
 
-interface ApplicationDetails {
-  name: string
-  id: number
-}
-
 const useLoadApplication = (props: useLoadApplicationProps) => {
   const { serialNumber } = props
-  const [application, setApplication] = useState<ApplicationDetails | undefined>()
+  const [application, setApplication] = useState<ApplicationDetails>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
   const [appStatus, setAppStatus] = useState({})
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
@@ -37,7 +32,16 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
     if (data && data.applicationBySerial) {
       const application = data.applicationBySerial as Application
 
-      setApplication({ name: application.name as string, id: application.id })
+      setApplication({
+        id: application.id,
+        type: application.template?.name as string,
+        isLinear: application.template?.isLinear as boolean,
+        serial: application.serial as string,
+        name: application.name as string,
+        stage: application.stage as string,
+        status: application.status as string,
+        outcome: application.outcome as string,
+      })
 
       const sections = getApplicationSections(application.applicationSections)
       setSections(sections)

@@ -68,7 +68,7 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
     const currentFullResponses = {} as ResponsesFullByCode
 
     applicationResponses.forEach((response) => {
-      const code = response?.templateElement?.code
+      const code = response.templateElement?.code
       if (code) {
         currentResponses[code] = response?.value?.text
         currentFullResponses[code] = { isValid: response?.isValid, ...response?.value }
@@ -115,10 +115,10 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
       id: element.id,
       code: element.code,
       title: element.title,
+      category: element.category,
       parameters: element.parameters,
       elementTypePluginCode: element.elementTypePluginCode,
       section: element.section as number,
-      category: element.category,
       isEditable: results[0] as boolean,
       isRequired: results[1] as boolean,
       isVisible: results[2] as boolean,

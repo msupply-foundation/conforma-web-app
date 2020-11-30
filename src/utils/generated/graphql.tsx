@@ -1522,7 +1522,8 @@ export enum Trigger {
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnScheduleTime = 'ON_SCHEDULE_TIME',
-  Processing = 'PROCESSING'
+  Processing = 'PROCESSING',
+  Error = 'ERROR'
 }
 
 /** A filter to be used against TriggerQueueStatus fields. All fields are combined with a logical ‘and.’ */
@@ -16902,7 +16903,7 @@ export type SectionFragment = (
 
 export type TemplateFragment = (
   { __typename?: 'Template' }
-  & Pick<Template, 'code' | 'id' | 'name'>
+  & Pick<Template, 'code' | 'id' | 'name' | 'isLinear'>
 );
 
 export type CreateApplicationMutationVariables = Exact<{
@@ -17227,6 +17228,7 @@ export const ResponseFragmentDoc = gql`
   value
   isValid
   timeCreated
+  isValid
 }
     `;
 export const SectionFragmentDoc = gql`
@@ -17242,6 +17244,7 @@ export const TemplateFragmentDoc = gql`
   code
   id
   name
+  isLinear
 }
     `;
 export const CreateApplicationDocument = gql`

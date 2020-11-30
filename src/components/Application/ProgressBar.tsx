@@ -1,6 +1,7 @@
 import React from 'react'
-import { Accordion, Container, Grid, Header, Label, List, Sticky } from 'semantic-ui-react'
-import { TemplateSectionPayload } from '../../utils/types'
+import { Accordion, Container, Grid, Header, Icon, Label, List, Sticky } from 'semantic-ui-react'
+import { ProgressInApplication, ProgressInPage, ProgressStatus } from '../../utils/types'
+import { SummarySectionCode } from '../../utils/constants'
 
 interface SectionPage {
   sectionIndex: number
@@ -9,35 +10,79 @@ interface SectionPage {
 
 interface ProgressBarProps {
   serialNumber: string
-  templateSections: TemplateSectionPayload[]
   currentSectionPage?: SectionPage
+  progressStructure: ProgressInApplication
   push: (path: string) => void
+  validateCurrentPage: () => boolean
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   serialNumber,
-  templateSections,
   currentSectionPage,
+  progressStructure,
   push,
+  validateCurrentPage,
 }) => {
-  const pageList = (section: string, totalPages: number) => {
-    const pages = Array.from(Array(totalPages).keys(), (n) => n + 1)
+  const getPageIndicator = (status: ProgressStatus | undefined) => {
+    const indicator = {
+      VALID: <Icon name="check circle" color="green" />,
+      NOT_VALID: <Icon name="exclamation circle" color="red" />,
+      INCOMPLETE: <Icon name="circle outline" />,
+    }
+    return status ? indicator[status] : null
+  }
+
+  const pageList = (sectionCode: string, pages: ProgressInPage[]) => {
     return (
-      <List link>
-        {pages.map((number) => (
-          <List.Item
-            active={true} // TODO: Change to only show active when visited in Non-linear application
-            href={`/applications/${serialNumber}/${section}/Page${number}`}
-            key={`page_${number}`}
-          >{`Page ${number}`}</List.Item>
-        ))}
+      <List style={{ paddingLeft: '50px' }} link>
+        {pages.map((page) => {
+          const { canNavigate, isActive, pageName, status } = page
+          const pageCode = pageName?.replace(' ', '')
+
+          return (
+            <List.Item
+              active={isActive}
+              as="a"
+              key={`progress_${pageName}`}
+              onClick={() =>
+                attemptChangeToPage({
+                  serialNumber,
+                  sectionCode,
+                  pageCode,
+                  canNavigate,
+                  push,
+                  validateCurrentPage,
+                })
+              }
+            >
+              {getPageIndicator(status)}
+              {pageName}
+            </List.Item>
+          )
+        })}
       </List>
     )
   }
 
+  const getSectionIndicator = (status: ProgressStatus | undefined, step: number) => {
+    const getStepNumber = (stepNumber: number) => (
+      <Label circular as="a" basic color="blue" key={`progress_${stepNumber}`}>
+        {stepNumber}
+      </Label>
+    )
+
+    const indicator = {
+      VALID: <Icon name="check circle" color="green" size="large" />,
+      NOT_VALID: <Icon name="exclamation circle" color="red" size="large" />,
+      INCOMPLETE: getStepNumber(step),
+    }
+    return status ? indicator[status] : getStepNumber(step)
+  }
+
   const sectionList = () => {
-    const sectionItems = templateSections.map((section, index) => {
+    return progressStructure.map((section, index) => {
       const stepNumber = index + 1
+      const { canNavigate, code, isActive, pages, status, title } = section
 
       return {
         key: `progress_${stepNumber}`,
@@ -45,76 +90,65 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           children: (
             <Grid>
               <Grid.Column width={4} textAlign="right" verticalAlign="middle">
-                {getStepNumber(stepNumber)}
+                {getSectionIndicator(status, stepNumber)}
               </Grid.Column>
               <Grid.Column width={12} textAlign="left" verticalAlign="middle">
-                <Header size="small" content={section.title} />
+                <Header as={isActive ? 'h3' : 'h4'} disabled={!canNavigate}>
+                  {title}
+                </Header>
               </Grid.Column>
             </Grid>
           ),
         },
-        onTitleClick: () => push(`/applications/${serialNumber}/${section.code}/Page1`),
+        onTitleClick: () =>
+          attemptChangeToPage({
+            serialNumber,
+            sectionCode: code === SummarySectionCode ? undefined : code,
+            pageCode: code === SummarySectionCode ? undefined : 'Page1',
+            canNavigate,
+            push,
+            validateCurrentPage,
+          }),
         content: {
-          content: (
-            <Grid divided>
-              <Grid.Column width={4}></Grid.Column>
-              <Grid.Column width={12}>{pageList(section.code, section.totalPages)}</Grid.Column>
-            </Grid>
-          ),
+          content: pages ? pageList(code, pages) : null,
         },
       }
     })
-
-    const summaryNumber = sectionItems.length + 1
-    sectionItems.push({
-      key: 'progress_summary',
-      title: {
-        children: (
-          <Grid>
-            <Grid.Column width={4} textAlign="right" verticalAlign="middle">
-              {getStepNumber(summaryNumber)}
-            </Grid.Column>
-            <Grid.Column width={12} textAlign="left" verticalAlign="middle">
-              <Header size="small" content={'Review and submit'} />
-            </Grid.Column>
-          </Grid>
-        ),
-      },
-      onTitleClick: () => push(`/applications/${serialNumber}/summary`),
-      // Ideally these aren't needed - Couldn't find some way to remove this
-      content: {
-        content: <Header />,
-      },
-    })
-    return sectionItems
   }
 
   return (
     <Sticky as={Container}>
       <Header as="h5" textAlign="center" content="Steps to complete form" />
       <Accordion
-        activeIndex={
-          currentSectionPage ? currentSectionPage.sectionIndex : templateSections.length + 1
-        }
+        activeIndex={currentSectionPage ? currentSectionPage.sectionIndex : 0} //TODO: Change to get active from structure
         panels={sectionList()}
       />
     </Sticky>
   )
 }
 
-const getStepNumber = (stepNumber: number) => (
-  //   isLastElement ? (
-  <Label circular as="a" basic color="blue" key={`progress_${stepNumber}`}>
-    {stepNumber}
-  </Label>
-)
-//   ) : (
-// Note: Attempt to use the vertical divider...
-// <Divider vertical>
-//   <Label circular as="a" basic color="blue" key={`progress_${stepNumber}`}>
-//     {stepNumber}
-//   </Label>
-// </Divider>
-//   )
+interface attemptChangePageProps {
+  serialNumber: string
+  sectionCode?: string
+  pageCode?: string
+  canNavigate: boolean
+  push: (path: string) => void
+  validateCurrentPage: () => boolean
+}
+
+const attemptChangeToPage = ({
+  serialNumber,
+  sectionCode,
+  pageCode,
+  canNavigate,
+  push,
+  validateCurrentPage,
+}: attemptChangePageProps) => {
+  if (canNavigate || validateCurrentPage()) {
+    sectionCode && pageCode
+      ? push(`/applications/${serialNumber}/${sectionCode}/${pageCode}`)
+      : push(`/applications/${serialNumber}/summary`)
+  }
+}
 
 export default ProgressBar
