@@ -8,7 +8,6 @@ import {
   Application,
 } from '../generated/graphql'
 import {
-  ResponsesByCode,
   ResponsesFullByCode,
   TemplateElementState,
   ApplicationElementStates,
@@ -23,7 +22,6 @@ interface useGetResponsesAndElementStateProps {
 
 const useGetResponsesAndElementState = (props: useGetResponsesAndElementStateProps) => {
   const { serialNumber, isApplicationLoaded } = props
-  const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>()
   const [responsesFullByCode, setResponsesFullByCode] = useState<ResponsesFullByCode>()
   const [elementsExpressions, setElementsExpressions] = useState<TemplateElementState[]>([])
   const [elementsState, setElementsState] = useState<ApplicationElementStates>()
@@ -73,13 +71,11 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
       })
     })
 
-    const currentResponses = {} as ResponsesByCode
     const currentFullResponses = {} as ResponsesFullByCode
 
     applicationResponses.forEach((response) => {
       const code = response.templateElement?.code
       if (code) {
-        currentResponses[code] = response?.value?.text
         currentFullResponses[code] = {
           id: response.id,
           isValid: response?.isValid,
@@ -88,18 +84,17 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
       }
     })
 
-    setResponsesByCode(currentResponses)
     setResponsesFullByCode(currentFullResponses)
     setElementsExpressions(templateElements)
   }, [data, apolloError])
 
   useEffect(() => {
-    if (responsesByCode && Object.keys(responsesByCode).length > 0)
+    if (responsesFullByCode && Object.keys(responsesFullByCode).length > 0)
       evaluateElementExpressions().then((result) => {
         setElementsState(result)
         setLoading(false)
       })
-  }, [responsesByCode])
+  }, [responsesFullByCode])
 
   async function evaluateElementExpressions() {
     const promiseArray: Promise<ElementState>[] = []
@@ -116,13 +111,13 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
 
   async function evaluateSingleElement(element: TemplateElementState): Promise<ElementState> {
     const evaluationParameters = {
-      objects: [responsesByCode as ResponsesByCode, responsesFullByCode as ResponsesFullByCode], // TO-DO: Also send user/org objects etc.
+      objects: [responsesFullByCode as ResponsesFullByCode], // TO-DO: Also send user/org objects etc.
       // graphQLConnection: TO-DO
     }
     const isEditable = evaluateExpression(element.isEditable, evaluationParameters)
     const isRequired = evaluateExpression(element.isRequired, evaluationParameters)
     const isVisible = evaluateExpression(element.visibilityCondition, evaluationParameters)
-    // TO-DO: Evaluate element paremeters (in 'parameters' field, but unique to each element type)
+    // TO-DO: Evaluate element parameters (in 'parameters' field, but unique to each element type)
     const results = await Promise.all([isEditable, isRequired, isVisible])
     const evaluatedElement = {
       id: element.id,
@@ -144,7 +139,6 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
   return {
     error,
     loading,
-    responsesByCode,
     responsesFullByCode,
     elementsState,
   }

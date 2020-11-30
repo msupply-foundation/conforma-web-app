@@ -17,7 +17,6 @@ export {
   ResponseFull,
   ResponsePayload,
   ResponsesFullByCode,
-  ResponsesByCode,
   SectionPages,
   SectionElements,
   SectionElementStates,
@@ -51,7 +50,7 @@ interface AppStatus {
 }
 
 interface ElementAndResponse {
-  element: ElementState,
+  element: ElementState
   response: ResponseFull
 }
 
@@ -116,10 +115,6 @@ interface ResponsePayload {
 
 interface ResponsesFullByCode {
   [key: string]: ResponseFull | null
-}
-
-interface ResponsesByCode {
-  [key: string]: LooseString
 }
 
 interface SectionPages {

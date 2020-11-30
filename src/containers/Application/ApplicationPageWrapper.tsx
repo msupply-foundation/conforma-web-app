@@ -39,7 +39,6 @@ const ApplicationPageWrapper: React.FC = () => {
   const {
     error: responsesError,
     loading: responsesLoading,
-    responsesByCode,
     responsesFullByCode,
     elementsState,
   } = useGetResponsesAndElementState({
@@ -103,12 +102,7 @@ const ApplicationPageWrapper: React.FC = () => {
     <Message error header="Problem to load application" />
   ) : loading || responsesLoading ? (
     <Loading />
-  ) : application &&
-    templateSections &&
-    serialNumber &&
-    currentSection &&
-    responsesByCode &&
-    responsesFullByCode ? (
+  ) : application && templateSections && serialNumber && currentSection && responsesFullByCode ? (
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
@@ -129,7 +123,7 @@ const ApplicationPageWrapper: React.FC = () => {
             sectionTitle={currentSection.title}
             sectionIndex={currentSection.index}
             sectionPage={Number(page)}
-            responsesByCode={responsesByCode}
+            // responsesByCode={responsesByCode}
             responsesFullByCode={responsesFullByCode}
             elementsState={elementsState as ApplicationElementStates}
           />

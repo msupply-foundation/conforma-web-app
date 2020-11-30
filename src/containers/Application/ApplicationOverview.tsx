@@ -19,7 +19,6 @@ const ApplicationOverview: React.FC = () => {
   const {
     error: responsesError,
     loading: responsesLoading,
-    responsesByCode,
     responsesFullByCode,
     elementsState,
   } = useGetResponsesAndElementState({

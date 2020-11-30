@@ -1,5 +1,5 @@
 import { ApplicationResponse, TemplateElement } from '../utils/generated/graphql'
-import { ElementState, ResponseFull, ResponsesByCode } from '../utils/types'
+import { ElementState, ResponseFull, ResponsesFullByCode } from '../utils/types'
 
 interface OnUpdateApplicationView {
   (updateObject: { value?: any; isValid: boolean | undefined }): void
@@ -15,8 +15,8 @@ interface ApplicationViewWrapperProps {
   isVisible: boolean
   isEditable: boolean
   isRequired: boolean
-  parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement) 
-  allResponses: ResponsesByCode
+  parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement)
+  allResponses: ResponsesFullByCode
   currentResponse: ResponseFull | null
   // applicationState,
   // graphQLclient

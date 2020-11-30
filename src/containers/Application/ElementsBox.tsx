@@ -1,14 +1,13 @@
 import React from 'react'
 import { Header, Label, Segment } from 'semantic-ui-react'
 import { ApplicationViewWrapper } from '../../formElementPlugins'
-import { ApplicationElementStates, ResponsesByCode, ResponsesFullByCode } from '../../utils/types'
+import { ApplicationElementStates, ResponsesFullByCode } from '../../utils/types'
 import getPageElements from '../../utils/helpers/getPageElements'
 
 interface ElementsBoxProps {
   sectionTitle: string
   sectionIndex: number
   sectionPage: number
-  responsesByCode: ResponsesByCode
   responsesFullByCode: ResponsesFullByCode
   elementsState: ApplicationElementStates
 }
@@ -17,7 +16,6 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
   sectionTitle,
   sectionIndex,
   sectionPage,
-  responsesByCode,
   responsesFullByCode,
   elementsState,
 }) => {
@@ -38,7 +36,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
             isVisible={isVisible}
             isEditable={isEditable}
             isRequired={isRequired}
-            allResponses={responsesByCode}
+            allResponses={responsesFullByCode}
             currentResponse={response}
           />
         )
