@@ -36,7 +36,7 @@ const SiteLayout: React.FC = () => {
             items={[
               ['Home', '/'],
               ['Applications List', '/applications'],
-              ['Register', '/applications/new?type=UserRego1'],
+              ['Register', '/applications/new?type=UserRegistration'],
             ]}
           />
         </Grid.Column>
