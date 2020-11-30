@@ -206,7 +206,8 @@ function buildProgressInApplication({
     let previousPageStatus: ProgressStatus = PROGRESS_STATUS.VALID
     const pages: ProgressInPage[] = pageNumbers.map((pageNumber) => {
       const status = getPageStatus(section.index, pageNumber)
-      const isPreviousPageValid = previousPageStatus === PROGRESS_STATUS.NOT_VALID
+      const isPreviousPageValid = previousPageStatus === PROGRESS_STATUS.VALID
+
       previousPageStatus = status // Update new previous page for next iteration
       return {
         pageName: `Page ${pageNumber}`,
