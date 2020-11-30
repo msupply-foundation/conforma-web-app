@@ -1,15 +1,12 @@
 import React from 'react'
 import { Header, Label, Segment } from 'semantic-ui-react'
 import { ApplicationViewWrapper } from '../../formElementPlugins'
-import useLoadElementsOfSection from '../../utils/hooks/useLoadElementsOfSection'
-import { Loading } from '../../components'
-import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import { ApplicationElementStates, ResponsesByCode, ResponsesFullByCode } from '../../utils/types'
+import getPageElements from '../../utils/helpers/getPageElements'
 
 interface ElementsBoxProps {
-  applicationId: number
   sectionTitle: string
-  sectionTemplateId: number
+  sectionIndex: number
   sectionPage: number
   responsesByCode: ResponsesByCode
   responsesFullByCode: ResponsesFullByCode
@@ -17,39 +14,35 @@ interface ElementsBoxProps {
 }
 
 const ElementsBox: React.FC<ElementsBoxProps> = ({
-  applicationId,
   sectionTitle,
-  sectionTemplateId: sectionTempId,
+  sectionIndex,
   sectionPage,
   responsesByCode,
   responsesFullByCode,
   elementsState,
 }) => {
-  const { elements, loading, error } = useLoadElementsOfSection({
-    applicationId,
-    sectionTempId,
-    sectionPage,
-  })
-
-  return error ? (
-    <Label content="Problem to load elements" error={error} />
-  ) : loading ? (
-    <Loading />
-  ) : elements ? (
+  const elements = getPageElements({ elementsState, sectionIndex, pageNumber: sectionPage })
+  return elements ? (
     <Segment vertical>
       <Header content={sectionTitle} />
-      {elements.map(({ question, response }) => (
-        <ApplicationViewWrapper
-          key={`question_${question.code}`}
-          initialValue={response?.value}
-          templateElement={question}
-          isVisible={elementsState[question.code].isVisible}
-          isEditable={elementsState[question.code].isEditable}
-          isRequired={elementsState[question.code].isRequired}
-          allResponses={responsesByCode}
-          currentResponse={response}
-        />
-      ))}
+      {elements.map((element) => {
+        const { code, pluginCode, parameters, isVisible, isRequired, isEditable } = element
+        const response = responsesFullByCode[code]
+        return (
+          <ApplicationViewWrapper
+            key={`question_${code}`}
+            code={code}
+            initialValue={response?.text}
+            pluginCode={pluginCode}
+            parameters={parameters}
+            isVisible={isVisible}
+            isEditable={isEditable}
+            isRequired={isRequired}
+            allResponses={responsesByCode}
+            currentResponse={response}
+          />
+        )
+      })}
     </Segment>
   ) : (
     <Label content="Elements area can't be displayed" />
