@@ -36,12 +36,12 @@ interface ApplicationViewProps extends ApplicationViewWrapperProps {
 
 interface SummaryViewProps {
   parameters: BasicObject
-  value: ResponseFull | null
+  response: ResponseFull | null
 }
 
 interface SummaryViewWrapperProps {
   element: ElementState
-  value: ResponseFull | null
+  response: ResponseFull | null
 }
 
 interface OnUpdateTemplateWrapperView {

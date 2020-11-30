@@ -49,7 +49,7 @@ interface AppStatus {
 
 interface ElementAndResponse {
   element: ElementState,
-  response: ResponseFull
+  response: ResponseFull | null
 }
 
 interface ElementBase {
