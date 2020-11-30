@@ -17,7 +17,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   useEffect(() => {
     onUpdate(value)
-    if (!initialValue && defaultIndex) onSave({ text: value, optionIndex: options.indexOf(value) })
+    if (!initialValue && defaultIndex !== undefined)
+      onSave({ text: value, optionIndex: options.indexOf(value) })
   }, [])
 
   function handleChange(e: any, data: any) {
@@ -42,11 +43,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Dropdown
         fluid
         selection
-        // defaultValue={options[defaultIndex]}
         placeholder={placeholder}
         options={dropdownOptions}
         onChange={handleChange}
-        // onBlur={handleLoseFocus}
         value={value}
         disabled={!isEditable}
       />
