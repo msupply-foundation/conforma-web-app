@@ -38,19 +38,26 @@ const ApplicationOverview: React.FC = () => {
       const sectionsAndElements: SectionElementStates[] = templateSections
         .sort((a, b) => a.index - b.index)
         .map((section) => {
+          const sectionDetails = {
+            title: section.title,
+            code: section.code,
+          }
           const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
-          const pages = pageNumbers.map((pageNumber) => {
-            const pageElements = getPageElements({
+          const pages = pageNumbers.reduce((pages, pageNumber) => {
+            const elements = getPageElements({
               elementsState,
               sectionIndex: section.index,
               pageNumber,
             })
-            return pageElements.map((element) => ({
+            if (elements.length === 0) return pages
+            const elementsAndResponses = elements.map((element) => ({
               element,
               response: responsesFullByCode[element.code],
             }))
-          })
-          return { sectionTitle: section.title, pages }
+            const pageName = `Page ${pageNumber}`
+            return { ...pages, [pageName]: elementsAndResponses }
+          }, {})
+          return { section: sectionDetails, pages }
         })
 
       setSectionsAndElements(sectionsAndElements)
@@ -68,7 +75,11 @@ const ApplicationOverview: React.FC = () => {
       <Header as="h1" content="REVIEW AND SUBMIT" />
       <Form>
         {sectionsPages.map((sectionPages) => (
-          <SectionSummary sectionPages={sectionPages} editable={appStatus.status === 'DRAFT'} />
+          <SectionSummary
+            sectionPages={sectionPages}
+            serialNumber={serialNumber}
+            editable={appStatus.status === 'DRAFT'}
+          />
         ))}
         {appStatus.status === 'DRAFT' ? (
           <Button content="Submit application" onClick={() => submit()} />
