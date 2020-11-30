@@ -81,7 +81,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
           <ApplicationView
             onUpdate={onUpdate}
             onSave={onSave}
-            validationState={validationState}
+            validationState={validationState || { isValid: true }}
             {...props}
           />
         }
