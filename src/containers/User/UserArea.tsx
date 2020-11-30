@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Button, Container, Label, Segment } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { useGetUsersQuery, User } from '../../utils/generated/graphql'
 import useGetUserPermissions from '../../utils/hooks/useGetUserPermissions'
 import Loading from '../../components/Loading'
+import { logOut } from '../User/Login'
 
 const UserArea: React.FC = () => {
   const {
@@ -47,6 +48,9 @@ const UserArea: React.FC = () => {
               {user}
             </Button>
           ))}
+        <Button basic color="blue" onClick={logOut}>
+          Log out
+        </Button>
       </Container>
     </Segment.Group>
   )
