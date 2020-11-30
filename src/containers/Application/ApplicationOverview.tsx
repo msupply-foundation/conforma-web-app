@@ -19,7 +19,7 @@ const ApplicationOverview: React.FC = () => {
   const {
     error: responsesError,
     loading: responsesLoading,
-    responsesFullByCode,
+    responsesByCode,
     elementsState,
   } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
@@ -31,7 +31,7 @@ const ApplicationOverview: React.FC = () => {
   })
 
   useEffect(() => {
-    if (!responsesLoading && elementsState && responsesFullByCode) {
+    if (!responsesLoading && elementsState && responsesByCode) {
       // Create the array of sections with array of section's element & responses
       const sectionsAndElements: SectionElementStates[] = templateSections
         .sort((a, b) => a.index - b.index)
@@ -40,7 +40,7 @@ const ApplicationOverview: React.FC = () => {
         })
 
       Object.values(elementsState).forEach((element) => {
-        const response = responsesFullByCode[element.code]
+        const response = responsesByCode[element.code]
         const elementAndValue = { element, value: response ? response : null }
         sectionsAndElements[element.sectionIndex].elements.push(elementAndValue)
       })

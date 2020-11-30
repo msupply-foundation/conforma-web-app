@@ -2,7 +2,7 @@ import {
   ApplicationElementStates,
   ElementState,
   ProgressStatus,
-  ResponsesFullByCode,
+  ResponsesByCode,
   ResponseFull,
 } from '../../utils/types'
 
@@ -24,7 +24,7 @@ export const getCombinedStatus = (pages: ProgressStatus[] | undefined): Progress
 
 interface validatePageProps {
   elementsState: ApplicationElementStates
-  responses: ResponsesFullByCode
+  responses: ResponsesByCode
   currentSectionIndex: number
   page: number
   // validationMode?: ValidationMode

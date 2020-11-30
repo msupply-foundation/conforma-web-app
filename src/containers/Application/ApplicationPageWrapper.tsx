@@ -14,7 +14,7 @@ import {
   ProgressInSection,
   ProgressInPage,
   ProgressStatus,
-  ResponsesFullByCode,
+  ResponsesByCode,
   TemplateSectionPayload,
   ValidationMode,
 } from '../../utils/types'
@@ -39,7 +39,7 @@ const ApplicationPageWrapper: React.FC = () => {
   const {
     error: responsesError,
     loading: responsesLoading,
-    responsesFullByCode,
+    responsesByCode,
     elementsState,
   } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
@@ -73,7 +73,7 @@ const ApplicationPageWrapper: React.FC = () => {
 
     const progressStructure = buildProgressInApplication({
       elementsState,
-      responses: responsesFullByCode,
+      responses: responsesByCode,
       templateSections,
       isLinear: application?.isLinear as boolean,
       currentSection: currentSection?.index as number,
@@ -90,7 +90,7 @@ const ApplicationPageWrapper: React.FC = () => {
 
     const validation = validatePage({
       elementsState: elementsState as ApplicationElementStates,
-      responses: responsesFullByCode as ResponsesFullByCode,
+      responses: responsesByCode as ResponsesByCode,
       currentSectionIndex: currentSection?.index as number,
       page: Number(page),
     })
@@ -102,7 +102,7 @@ const ApplicationPageWrapper: React.FC = () => {
     <Message error header="Problem to load application" />
   ) : loading || responsesLoading ? (
     <Loading />
-  ) : application && templateSections && serialNumber && currentSection && responsesFullByCode ? (
+  ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
     <Segment.Group>
       <Grid stackable>
         <Grid.Column width={4}>
@@ -123,8 +123,7 @@ const ApplicationPageWrapper: React.FC = () => {
             sectionTitle={currentSection.title}
             sectionIndex={currentSection.index}
             sectionPage={Number(page)}
-            // responsesByCode={responsesByCode}
-            responsesFullByCode={responsesFullByCode}
+            responsesByCode={responsesByCode}
             elementsState={elementsState as ApplicationElementStates}
           />
           <NavigationBox
@@ -164,7 +163,7 @@ function processRedirect(appState: any): void {
 
 interface buildProgressInApplicationProps {
   elementsState: ApplicationElementStates | undefined
-  responses: ResponsesFullByCode | undefined
+  responses: ResponsesByCode | undefined
   templateSections: TemplateSectionPayload[]
   isLinear: boolean
   currentSection: number
