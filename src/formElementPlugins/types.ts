@@ -10,12 +10,14 @@ type BasicObject = {
 }
 
 interface ApplicationViewWrapperProps {
-  templateElement: TemplateElement
+  code: string
+  pluginCode: string // TODO: Create type OR use existing from graphql
   isVisible: boolean
   isEditable: boolean
   isRequired: boolean
+  parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement) 
   allResponses: ResponsesByCode
-  currentResponse: ApplicationResponse | null
+  currentResponse: ResponseFull | null
   // applicationState,
   // graphQLclient
   initialValue: any // Could be a primative or an object with any shape

@@ -25,7 +25,7 @@ export const getCombinedStatus = (pages: ProgressStatus[] | undefined): Progress
 interface validatePageProps {
   elementsState: ApplicationElementStates
   responses: ResponsesFullByCode
-  sectionIndex: number
+  currentSectionIndex: number
   page: number
   // validationMode?: ValidationMode
 }
@@ -41,16 +41,17 @@ interface validatePageProps {
 const validatePage = ({
   elementsState,
   responses,
-  sectionIndex,
+  currentSectionIndex,
   page,
 }: validatePageProps): ProgressStatus => {
   let count = 1
 
   // Filter visible elements in the current page
   const visibleQuestions = Object.values(elementsState)
-    .filter(({ section, isVisible }) => isVisible && section === sectionIndex)
+    .filter(({ sectionIndex, isVisible }) => isVisible && currentSectionIndex === sectionIndex)
     .reduce((pageElements: ElementState[], element) => {
-      if (element.elementTypePluginCode === 'pageBreak') count++
+      // TODO: Use the page property from ElementState
+      if (element.pluginCode === 'pageBreak') count++
       const isInCurrrentPage = count === page
 
       // Add to array question that are in the current page

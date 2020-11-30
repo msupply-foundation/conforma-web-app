@@ -55,9 +55,13 @@ interface ApplicationElementStates {
   [key: string]: ElementState
 }
 
+// interface ElementAndResponse {
+//   question: TemplateElement
+//   response: ApplicationResponse | null
+// }
 interface ElementAndResponse {
-  question: TemplateElement
-  response: ApplicationResponse | null
+  element: ElementState,
+  response: ResponseFull
 }
 
 interface ResponsePayload {
@@ -123,6 +127,7 @@ type ProgressInApplication = ProgressInSection[]
 type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
 
 interface ResponseFull {
+  id: number
   text: string | null | undefined
   optionIndex?: number
   reference?: any // Not yet decided how to represent
@@ -143,8 +148,10 @@ interface ElementBase {
   id: number
   code: string
   title: string
-  elementTypePluginCode: string
-  section: number // Index
+  pluginCode: string
+  sectionIndex: number
+  elementIndex: number
+  page: number
   category: TemplateElementCategory
   parameters: any
 }

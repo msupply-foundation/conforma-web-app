@@ -43,7 +43,7 @@ const ApplicationOverview: React.FC = () => {
       Object.values(elementsState).forEach((element) => {
         const response = responsesFullByCode[element.code]
         const elementAndValue = { element, value: response ? response : null }
-        sectionsAndElements[element.section].elements.push(elementAndValue)
+        sectionsAndElements[element.sectionIndex].elements.push(elementAndValue)
       })
       setElementsInSections(sectionsAndElements)
     }

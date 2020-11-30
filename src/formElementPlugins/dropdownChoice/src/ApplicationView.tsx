@@ -3,7 +3,7 @@ import { Dropdown, Header, Message } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
-  templateElement,
+  parameters,
   onUpdate,
   initialValue,
   isEditable,
@@ -11,13 +11,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   validationState,
   onSave,
 }) => {
-  const {
-    label,
-    description,
-    placeholder,
-    options,
-    default: defaultIndex,
-  } = templateElement?.parameters
+  const { label, description, placeholder, options, default: defaultIndex } = parameters
 
   const [value, setValue] = useState(initialValue?.text || options[defaultIndex])
 

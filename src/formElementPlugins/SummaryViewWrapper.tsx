@@ -6,15 +6,7 @@ import { TemplateElementCategory } from '../utils/generated/graphql'
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   const { element, value } = props
-  const {
-    parameters,
-    category,
-    code,
-    elementTypePluginCode: pluginCode,
-    isEditable,
-    isRequired,
-    isVisible,
-  } = element
+  const { parameters, category, code, pluginCode, isEditable, isRequired, isVisible } = element
 
   // Don't show non-question elements -- although this may change
   if (!pluginCode || !isVisible || category === TemplateElementCategory.Information) return null
