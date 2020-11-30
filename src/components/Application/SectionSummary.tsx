@@ -8,13 +8,13 @@ import { ElementAndResponse, SectionElementStates } from '../../utils/types'
 interface ApplicationSummaryProps {
   sectionPages: SectionElementStates
   serialNumber: string
-  editable: boolean
+  isDraft: boolean
 }
 
 const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
   sectionPages,
   serialNumber,
-  editable,
+  isDraft,
 }) => {
   const { section, pages } = sectionPages
   return (
@@ -32,15 +32,18 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
               return (
                 <Segment>
                   <SummaryViewWrapper {...elementAndResponse} />
-                  {category === TemplateElementCategory.Question && isVisible && isEditable && (
-                    <Button
-                      size="small"
-                      as={Link}
-                      to={`/applications/${serialNumber}/${section.code}/${pageCode}`}
-                    >
-                      Edit
-                    </Button>
-                  )}
+                  {category === TemplateElementCategory.Question &&
+                    isVisible &&
+                    isEditable &&
+                    isDraft && (
+                      <Button
+                        size="small"
+                        as={Link}
+                        to={`/applications/${serialNumber}/${section.code}/${pageCode}`}
+                      >
+                        Edit
+                      </Button>
+                    )}
                 </Segment>
               )
             })}

@@ -78,7 +78,7 @@ const ApplicationOverview: React.FC = () => {
           <SectionSummary
             sectionPages={sectionPages}
             serialNumber={serialNumber}
-            editable={appStatus.status === 'DRAFT'}
+            isDraft={appStatus.status === 'DRAFT'}
           />
         ))}
         {appStatus.status === 'DRAFT' ? (
