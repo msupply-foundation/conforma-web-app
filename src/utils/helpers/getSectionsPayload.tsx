@@ -14,9 +14,9 @@ export const getTemplateSections = (sectionsConnection: TemplateSectionsConnecti
 
 export const getApplicationSections = (sectionsConnection: ApplicationSectionsConnection) => {
   const applicationSections = sectionsConnection?.nodes as ApplicationSection[]
-  const sections = applicationSections.map(
-    ({ templateSection }: ApplicationSection) => templateSection as TemplateSection
-  )
+  const sections = applicationSections
+    .map(({ templateSection }: ApplicationSection) => templateSection as TemplateSection)
+    .sort((a, b) => (a.index as number) - (b.index as number))
   return getSectionsPayload(sections)
 }
 

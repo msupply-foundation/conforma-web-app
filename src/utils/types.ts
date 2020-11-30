@@ -14,6 +14,10 @@ export {
   SectionPayload,
   TemplateTypePayload,
   TemplateSectionPayload,
+  ProgressInApplication,
+  ProgressInSection,
+  ProgressInPage,
+  ProgressStatus,
   ResponseFull,
   ResponsesFullByCode,
   ResponsesByCode,
@@ -21,6 +25,7 @@ export {
   TemplateElementState,
   TemplatePermissions,
   FullUserPermissions,
+  ValidationMode,
 }
 
 interface TemplatePermissions {
@@ -36,12 +41,14 @@ interface FullUserPermissions {
 }
 
 interface ApplicationDetails {
+  id: number
   type: string
   serial: string
   name: string
   stage: string
   status: string
   outcome: string
+  isLinear: boolean
 }
 
 interface ApplicationElementStates {
@@ -95,7 +102,27 @@ interface TemplateSectionPayload {
   totalPages: number
 }
 
-type ResponseFull = {
+interface ProgressInPage {
+  pageName: string
+  status: ProgressStatus
+  canNavigate: boolean
+  isActive: boolean
+}
+
+interface ProgressInSection {
+  code: string
+  title: string
+  status?: ProgressStatus
+  canNavigate: boolean
+  isActive: boolean
+  pages?: ProgressInPage[]
+}
+
+type ProgressInApplication = ProgressInSection[]
+
+type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
+
+interface ResponseFull {
   text: string | null | undefined
   optionIndex?: number
   reference?: any // Not yet decided how to represent
@@ -133,5 +160,6 @@ interface ElementState extends ElementBase {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
-  // isValid: boolean
 }
+
+type ValidationMode = 'STRICT' | 'LOOSE'

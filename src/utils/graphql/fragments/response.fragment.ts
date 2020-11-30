@@ -6,5 +6,6 @@ export default gql`
     value
     isValid
     timeCreated
+    isValid
   }
 `
