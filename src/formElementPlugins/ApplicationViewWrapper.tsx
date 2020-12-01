@@ -4,7 +4,8 @@ import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from '
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
-import { LooseString, ResponseFull } from '../utils/types'
+import { EvaluatorParameters, LooseString, ResponseFull } from '../utils/types'
+import { defaultValidate } from './defaultValidate'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const {
@@ -25,7 +26,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     validate: (
       validationExpress: IQueryNode,
       validationMessage: string,
-      evaluator: Function
+      evaluatorParameters: EvaluatorParameters
     ): any => console.log('notLoaded'),
   })
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
@@ -46,13 +47,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       return { isValid: true }
     }
 
-    const evaluator = async (expression: IQueryNode) => {
-      return await evaluateExpression(expression, { objects: [responses], APIfetch: fetch })
-    }
     const validationResult: ValidationState = await pluginMethods.validate(
       validationExpression,
       validationMessage,
-      evaluator
+      { objects: [responses], APIfetch: fetch }
     )
     setValidationState(validationResult)
 
@@ -88,17 +86,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       </React.Suspense>
     </ErrorBoundary>
   )
-}
-
-const defaultValidate = async (
-  validationExpress: IQueryNode,
-  validationMessage: string,
-  evaluator: Function
-): Promise<ValidationState> => {
-  if (!validationExpress) return { isValid: true }
-  const isValid = await evaluator(validationExpress)
-  if (isValid) return { isValid }
-  return { isValid, validationMessage }
 }
 
 export default ApplicationViewWrapper

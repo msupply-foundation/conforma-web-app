@@ -82,6 +82,7 @@ interface PluginComponents {
 interface Plugins {
   [key: string]: PluginComponents
 }
+
 export {
   OnUpdateApplicationView,
   OnUpdateTemplateWrapperView,

@@ -7,6 +7,7 @@ export {
   ApplicationElementStates,
   AppStatus,
   ElementState,
+  EvaluatorParameters,
   FullUserPermissions,
   LooseString,
   ProgressInApplication,
@@ -62,6 +63,17 @@ interface ElementState extends ElementBase {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
+}
+export interface IGraphQLConnection {
+  fetch: Function
+  endpoint: string
+}
+
+interface EvaluatorParameters {
+  objects?: object[]
+  pgConnection?: any // Any, because not likely to be used in front-end
+  graphQLConnection?: IGraphQLConnection
+  APIfetch?: Function
 }
 
 interface FullUserPermissions {
