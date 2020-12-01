@@ -15,7 +15,7 @@ interface ApplicationViewWrapperProps {
   isVisible: boolean
   isEditable: boolean
   isRequired: boolean
-  parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement) 
+  parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement)
   allResponses: ResponsesByCode
   currentResponse: ResponseFull | null
   // applicationState,
