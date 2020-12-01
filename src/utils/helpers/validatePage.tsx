@@ -25,7 +25,7 @@ export const getCombinedStatus = (pages: ProgressStatus[] | undefined): Progress
 interface validatePageProps {
   elementsState: ApplicationElementStates
   responses: ResponsesFullByCode
-  sectionIndex: number
+  currentSectionIndex: number
   page: number
   // validationMode?: ValidationMode
 }
@@ -41,23 +41,20 @@ interface validatePageProps {
 const validatePage = ({
   elementsState,
   responses,
-  sectionIndex,
+  currentSectionIndex,
   page,
 }: validatePageProps): ProgressStatus => {
-  let count = 1
-
   // Filter visible elements in the current page
-  const visibleQuestions = Object.values(elementsState)
-    .filter(({ section, isVisible }) => isVisible && section === sectionIndex)
-    .reduce((pageElements: ElementState[], element) => {
-      if (element.elementTypePluginCode === 'pageBreak') count++
-      const isInCurrrentPage = count === page
-
-      // Add to array question that are in the current page
-      return element.category === TemplateElementCategory.Question && isInCurrrentPage
-        ? [...pageElements, element]
-        : pageElements
-    }, [])
+  const visibleQuestions = Object.values(elementsState).filter(
+    ({ sectionIndex, isVisible, page: pageNum, category }) => {
+      return (
+        isVisible &&
+        currentSectionIndex === sectionIndex &&
+        pageNum === page &&
+        category === TemplateElementCategory.Question
+      )
+    }
+  )
 
   // Generate array with current status of responses for each question to verify
   const responsesStatuses = visibleQuestions.reduce(

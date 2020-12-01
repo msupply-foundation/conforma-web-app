@@ -7,7 +7,6 @@ export {
   ApplicationElementStates,
   AppStatus,
   ElementState,
-  ElementAndResponse,
   FullUserPermissions,
   LooseString,
   ProgressInApplication,
@@ -18,8 +17,6 @@ export {
   ResponsePayload,
   ResponsesFullByCode,
   ResponsesByCode,
-  SectionPages,
-  SectionElements,
   SectionElementStates,
   SectionPayload,
   TemplateTypePayload,
@@ -54,8 +51,10 @@ interface ElementBase {
   id: number
   code: string
   title: string
-  elementTypePluginCode: string
-  section: number // Index
+  pluginCode: string
+  sectionIndex: number
+  elementIndex: number
+  page: number
   category: TemplateElementCategory
   parameters: any
 }
@@ -64,17 +63,6 @@ interface ElementState extends ElementBase {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
-}
-
-interface TemplatePermissions {
-  [index: string]: {
-    [index: string]: Array<'Apply' | 'Review' | 'Assign'>
-  }
-}
-
-interface ElementAndResponse {
-  question: TemplateElement
-  response: ApplicationResponse | null
 }
 
 interface FullUserPermissions {
@@ -106,6 +94,7 @@ type ProgressInApplication = ProgressInSection[]
 type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
 
 interface ResponseFull {
+  id: number
   text: string | null | undefined
   optionIndex?: number
   reference?: any // Not yet decided how to represent
@@ -123,14 +112,6 @@ interface ResponsesFullByCode {
 
 interface ResponsesByCode {
   [key: string]: LooseString
-}
-
-interface SectionPages {
-  [page: number]: Array<ElementAndResponse>
-}
-
-interface SectionElements {
-  [id: number]: Array<ElementAndResponse>
 }
 
 interface SectionElementStates {
@@ -167,6 +148,12 @@ interface TemplateElementState extends ElementBase {
   visibilityCondition: IQueryNode
   isEditable: IQueryNode
   // isValid: boolean | null
+}
+
+interface TemplatePermissions {
+  [index: string]: {
+    [index: string]: Array<'Apply' | 'Review' | 'Assign'>
+  }
 }
 
 type ValidationMode = 'STRICT' | 'LOOSE'

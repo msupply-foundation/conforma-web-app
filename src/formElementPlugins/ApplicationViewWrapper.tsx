@@ -8,7 +8,9 @@ import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const {
-    templateElement,
+    code,
+    pluginCode,
+    parameters,
     isVisible,
     isEditable,
     isRequired,
@@ -16,8 +18,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     allResponses,
   } = props
 
-  const { elementTypePluginCode: pluginCode } = templateElement
-  const { validation: validationExpression, validationMessage } = templateElement?.parameters
+  const { validation: validationExpression, validationMessage } = parameters
 
   const [responseMutation] = useUpdateResponseMutation()
   const [pluginMethods, setPluginMethods] = useState({

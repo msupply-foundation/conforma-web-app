@@ -71,6 +71,7 @@ const ApplicationPageWrapper: React.FC = () => {
   // or a change of section/page to rebuild the progress bar
   useEffect(() => {
     if (responsesLoading) return
+
     const progressStructure = buildProgressInApplication({
       elementsState,
       responses: responsesFullByCode,
@@ -91,7 +92,7 @@ const ApplicationPageWrapper: React.FC = () => {
     const validation = validatePage({
       elementsState: elementsState as ApplicationElementStates,
       responses: responsesFullByCode as ResponsesFullByCode,
-      sectionIndex: currentSection?.index as number,
+      currentSectionIndex: currentSection?.index as number,
       page: Number(page),
     })
 
@@ -125,9 +126,8 @@ const ApplicationPageWrapper: React.FC = () => {
         </Grid.Column>
         <Grid.Column width={12} stretched>
           <ElementsBox
-            applicationId={application.id}
             sectionTitle={currentSection.title}
-            sectionTemplateId={currentSection.id}
+            sectionIndex={currentSection.index}
             sectionPage={Number(page)}
             responsesByCode={responsesByCode}
             responsesFullByCode={responsesFullByCode}
@@ -195,7 +195,12 @@ function buildProgressInApplication({
     const isCurrentPage = (page: number) => section.index === currentSection && page === currentPage
 
     const getPageStatus = (sectionIndex: number, page: number) => {
-      const draftPageStatus = validatePage({ elementsState, responses, sectionIndex, page })
+      const draftPageStatus = validatePage({
+        elementsState,
+        responses,
+        currentSectionIndex: sectionIndex,
+        page,
+      })
       if (isLinear || validationMode === 'STRICT')
         return draftPageStatus === PROGRESS_STATUS.VALID
           ? PROGRESS_STATUS.VALID

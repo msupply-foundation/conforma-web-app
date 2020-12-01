@@ -58,9 +58,18 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
     const templateElements = [] as TemplateElementState[]
 
     templateSections.forEach((sectionNode) => {
+      let count = 1
       const elementsInSection = sectionNode.templateElementsBySectionId?.nodes as TemplateElement[]
       elementsInSection.forEach((element) => {
-        templateElements.push({ ...element, section: sectionNode.index } as TemplateElementState)
+        if (element.elementTypePluginCode === 'pageBreak') count++
+        else
+          templateElements.push({
+            ...element,
+            pluginCode: element.elementTypePluginCode,
+            sectionIndex: sectionNode.index,
+            elementIndex: element.index,
+            page: count,
+          } as TemplateElementState)
       })
     })
 
@@ -71,7 +80,11 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
       const code = response.templateElement?.code
       if (code) {
         currentResponses[code] = response?.value?.text
-        currentFullResponses[code] = { isValid: response?.isValid, ...response?.value }
+        currentFullResponses[code] = {
+          id: response.id,
+          isValid: response?.isValid,
+          ...response?.value,
+        }
       }
     })
 
@@ -117,8 +130,10 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
       title: element.title,
       category: element.category,
       parameters: element.parameters,
-      elementTypePluginCode: element.elementTypePluginCode,
-      section: element.section as number,
+      pluginCode: element.pluginCode,
+      sectionIndex: element.sectionIndex,
+      elementIndex: element.elementIndex,
+      page: element.page,
       isEditable: results[0] as boolean,
       isRequired: results[1] as boolean,
       isVisible: results[2] as boolean,

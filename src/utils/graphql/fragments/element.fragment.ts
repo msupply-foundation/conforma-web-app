@@ -7,6 +7,7 @@ export default gql`
     elementTypePluginCode
     code
     category
+    index
     isEditable
     isRequired
     parameters
