@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Header, Loader, Message, Modal } from 'semantic-ui-react'
-import { ApplicationSummary, Loading } from '../../components'
+import { Button, Container, Form, Header, Loader, Message, Modal } from 'semantic-ui-react'
+import { SectionSummary, Loading } from '../../components'
+import getPageElements from '../../utils/helpers/getPageElements'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -8,7 +9,7 @@ import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
 import { SectionElementStates } from '../../utils/types'
 
 const ApplicationOverview: React.FC = () => {
-  const [elementsInSections, setElementsInSections] = useState<SectionElementStates[]>()
+  const [sectionsPages, setSectionsAndElements] = useState<SectionElementStates[]>()
   const { query, push } = useRouter()
   const { serialNumber } = query
 
@@ -31,20 +32,34 @@ const ApplicationOverview: React.FC = () => {
   })
 
   useEffect(() => {
-    if (!responsesLoading && elementsState && responsesByCode) {
-      // Create the array of sections with array of section's element & responses
+    if (!responsesLoading && elementsState && responsesFullByCode) {
+      // Create the sections and pages structure to display each section's element & responses
       const sectionsAndElements: SectionElementStates[] = templateSections
         .sort((a, b) => a.index - b.index)
         .map((section) => {
-          return { section, elements: [] }
+          const sectionDetails = {
+            title: section.title,
+            code: section.code,
+          }
+          const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
+          const pages = pageNumbers.reduce((pages, pageNumber) => {
+            const elements = getPageElements({
+              elementsState,
+              sectionIndex: section.index,
+              pageNumber,
+            })
+            if (elements.length === 0) return pages
+            const elementsAndResponses = elements.map((element) => ({
+              element,
+              response: responsesFullByCode[element.code],
+            }))
+            const pageName = `Page ${pageNumber}`
+            return { ...pages, [pageName]: elementsAndResponses }
+          }, {})
+          return { section: sectionDetails, pages }
         })
 
-      Object.values(elementsState).forEach((element) => {
-        const response = responsesByCode[element.code]
-        const elementAndValue = { element, value: response ? response : null }
-        sectionsAndElements[element.sectionIndex].elements.push(elementAndValue)
-      })
-      setElementsInSections(sectionsAndElements)
+      setSectionsAndElements(sectionsAndElements)
     }
   }, [elementsState, responsesLoading])
 
@@ -54,14 +69,22 @@ const ApplicationOverview: React.FC = () => {
     <Loading />
   ) : submitError ? (
     <Message error header="Problem to submit application" list={[submitError]} />
-  ) : serialNumber && elementsInSections ? (
+  ) : serialNumber && appStatus && sectionsPages ? (
     <Container>
-      <ApplicationSummary
-        sectionsAndElements={elementsInSections}
-        onSubmitHandler={() => submit()}
-        appStatus={appStatus}
-      />
-      {showProcessingModal(processing, submitted)}
+      <Header as="h1" content="REVIEW AND SUBMIT" />
+      <Form>
+        {sectionsPages.map((sectionPages) => (
+          <SectionSummary
+            sectionPages={sectionPages}
+            serialNumber={serialNumber}
+            isDraft={appStatus.status === 'DRAFT'}
+          />
+        ))}
+        {appStatus.status === 'DRAFT' ? (
+          <Button content="Submit application" onClick={() => submit()} />
+        ) : null}
+        {showProcessingModal(processing, submitted)}
+      </Form>
     </Container>
   ) : (
     <Message error header="Problem to load application overview" />
