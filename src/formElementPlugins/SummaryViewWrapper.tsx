@@ -1,6 +1,6 @@
 import React from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
-import { Header } from 'semantic-ui-react'
+import { Grid, Icon } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents } from './types'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 
@@ -18,7 +18,16 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        <SummaryView parameters={parameters} response={response} />
+        <Grid columns={2}>
+          <Grid.Row>
+            <Grid.Column floated="left" width={12}>
+              <SummaryView parameters={parameters} response={response} />
+            </Grid.Column>
+            <Grid.Column floated="right" width={3}>
+              {!response?.isValid ? <Icon name="exclamation circle" color="red" /> : null}
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </React.Suspense>
     </ErrorBoundary>
   )

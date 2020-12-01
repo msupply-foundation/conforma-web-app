@@ -32,7 +32,7 @@ const ApplicationOverview: React.FC = () => {
   })
 
   useEffect(() => {
-    if (!responsesLoading && elementsState && responsesFullByCode) {
+    if (!responsesLoading && elementsState && responsesByCode) {
       // Create the sections and pages structure to display each section's element & responses
       const sectionsAndElements: SectionElementStates[] = templateSections
         .sort((a, b) => a.index - b.index)
@@ -51,7 +51,7 @@ const ApplicationOverview: React.FC = () => {
             if (elements.length === 0) return pages
             const elementsAndResponses = elements.map((element) => ({
               element,
-              response: responsesFullByCode[element.code],
+              response: responsesByCode[element.code],
             }))
             const pageName = `Page ${pageNumber}`
             return { ...pages, [pageName]: elementsAndResponses }
