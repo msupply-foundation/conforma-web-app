@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Form } from 'semantic-ui-react'
+import { Form, Input } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
@@ -29,26 +29,25 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   return (
-    <>
-      <Form.Input
-        fluid
-        label={label}
-        placeholder={placeholder}
-        onChange={handleChange}
-        onBlur={handleLoseFocus}
-        value={value ? value : ''}
-        disabled={!isEditable}
-        type={maskedInput ? 'password' : undefined}
-        error={
-          !validationState.isValid && currentResponse?.text
-            ? {
-                content: validationState?.validationMessage,
-                pointing: 'above',
-              }
-            : null
-        }
-      />
-    </>
+    <Form.Field
+      fluid
+      control={Input}
+      label={label}
+      placeholder={placeholder}
+      onChange={handleChange}
+      onBlur={handleLoseFocus}
+      value={value ? value : ''}
+      disabled={!isEditable}
+      type={maskedInput ? 'password' : undefined}
+      error={
+        !validationState.isValid
+          ? {
+              content: validationState?.validationMessage,
+              pointing: 'above',
+            }
+          : null
+      }
+    />
   )
 }
 

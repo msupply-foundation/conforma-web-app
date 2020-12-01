@@ -19,7 +19,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   } = props
 
   const { validation: validationExpression, validationMessage } = parameters
-
   const [responseMutation] = useUpdateResponseMutation()
   const [pluginMethods, setPluginMethods] = useState({
     validate: (

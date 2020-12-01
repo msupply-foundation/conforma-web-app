@@ -2,10 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, ProgressBar } from '../../components'
 import { Grid, Label, Message, Segment } from 'semantic-ui-react'
+import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import { ElementsBox, NavigationBox } from './'
-import validatePage, { getCombinedStatus, PROGRESS_STATUS } from '../../utils/helpers/validatePage'
+import validatePage, {
+  getCombinedStatus,
+  getPageElementsStatuses,
+  PROGRESS_STATUS,
+} from '../../utils/helpers/validatePage'
 import { SummarySectionCode } from '../../utils/constants'
 
 import {
@@ -46,6 +51,8 @@ const ApplicationPageWrapper: React.FC = () => {
     isApplicationLoaded,
   })
 
+  const [responseMutation] = useUpdateResponseMutation()
+
   // Wait for application to be loaded to:
   // 1 - ProcessRedirect: Will redirect to summary in case application is SUBMITTED
   // 2 - Set the current section state of the application
@@ -70,7 +77,6 @@ const ApplicationPageWrapper: React.FC = () => {
   // or a change of section/page to rebuild the progress bar
   useEffect(() => {
     if (responsesLoading) return
-
     const progressStructure = buildProgressInApplication({
       elementsState,
       responses: responsesByCode,
@@ -88,13 +94,35 @@ const ApplicationPageWrapper: React.FC = () => {
       return false
     }
 
-    const validation = validatePage({
+    const pageElementsStatuses = getPageElementsStatuses({
       elementsState: elementsState as ApplicationElementStates,
       responses: responsesByCode as ResponsesByCode,
       currentSectionIndex: currentSection?.index as number,
       page: Number(page),
     })
 
+    if (application?.isLinear && responsesByCode) {
+      Object.entries(pageElementsStatuses).forEach(([code, status]) => {
+        if (status === PROGRESS_STATUS.INCOMPLETE) {
+          // Update responses text to re-validate the status (on the page)
+          let response = responsesByCode[code]
+          if (response) {
+            responseMutation({
+              variables: {
+                id: response.id,
+                value: { text: '' },
+                isValid: false,
+              },
+            })
+          }
+        }
+      })
+    }
+
+    const statuses = Object.values(pageElementsStatuses)
+    const validation = getCombinedStatus(statuses)
+
+    // Run STRICT validation for linear and LOOSE for non-linear application
     return application?.isLinear ? validation === (PROGRESS_STATUS.VALID as ProgressStatus) : true
   }
 
