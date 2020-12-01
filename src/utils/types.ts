@@ -15,7 +15,6 @@ export {
   ProgressStatus,
   ResponseFull,
   ResponsePayload,
-  ResponsesFullByCode,
   ResponsesByCode,
   SectionElementStates,
   SectionDetails,
@@ -106,12 +105,8 @@ interface ResponsePayload {
   templateQuestions: TemplateElement[]
 }
 
-interface ResponsesFullByCode {
-  [key: string]: ResponseFull | null
-}
-
 interface ResponsesByCode {
-  [key: string]: LooseString
+  [key: string]: ResponseFull | null
 }
 
 interface SectionElementStates {

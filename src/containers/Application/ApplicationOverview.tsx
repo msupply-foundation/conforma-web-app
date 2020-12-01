@@ -21,7 +21,6 @@ const ApplicationOverview: React.FC = () => {
     error: responsesError,
     loading: responsesLoading,
     responsesByCode,
-    responsesFullByCode,
     elementsState,
   } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
@@ -33,7 +32,7 @@ const ApplicationOverview: React.FC = () => {
   })
 
   useEffect(() => {
-    if (!responsesLoading && elementsState && responsesFullByCode) {
+    if (!responsesLoading && elementsState && responsesByCode) {
       // Create the sections and pages structure to display each section's element & responses
       const sectionsAndElements: SectionElementStates[] = templateSections
         .sort((a, b) => a.index - b.index)
@@ -60,7 +59,16 @@ const ApplicationOverview: React.FC = () => {
           return { section: sectionDetails, pages }
         })
 
+<<<<<<< HEAD
       setSectionsAndElements(sectionsAndElements)
+=======
+      Object.values(elementsState).forEach((element) => {
+        const response = responsesByCode[element.code]
+        const elementAndValue = { element, value: response ? response : null }
+        sectionsAndElements[element.sectionIndex].elements.push(elementAndValue)
+      })
+      setElementsInSections(sectionsAndElements)
+>>>>>>> master
     }
   }, [elementsState, responsesLoading])
 

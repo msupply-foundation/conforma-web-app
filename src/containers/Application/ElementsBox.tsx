@@ -1,7 +1,7 @@
 import React from 'react'
 import { Header, Label, Segment } from 'semantic-ui-react'
 import { ApplicationViewWrapper } from '../../formElementPlugins'
-import { ApplicationElementStates, ResponsesByCode, ResponsesFullByCode } from '../../utils/types'
+import { ApplicationElementStates, ResponsesByCode } from '../../utils/types'
 import getPageElements from '../../utils/helpers/getPageElements'
 
 interface ElementsBoxProps {
@@ -9,7 +9,6 @@ interface ElementsBoxProps {
   sectionIndex: number
   sectionPage: number
   responsesByCode: ResponsesByCode
-  responsesFullByCode: ResponsesFullByCode
   elementsState: ApplicationElementStates
 }
 
@@ -18,7 +17,6 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
   sectionIndex,
   sectionPage,
   responsesByCode,
-  responsesFullByCode,
   elementsState,
 }) => {
   const elements = getPageElements({ elementsState, sectionIndex, pageNumber: sectionPage })
@@ -27,7 +25,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
       <Header content={sectionTitle} />
       {elements.map((element) => {
         const { code, pluginCode, parameters, isVisible, isRequired, isEditable } = element
-        const response = responsesFullByCode[code]
+        const response = responsesByCode[code]
         return (
           <ApplicationViewWrapper
             key={`question_${code}`}
