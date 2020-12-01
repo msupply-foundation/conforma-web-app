@@ -133,6 +133,13 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
       isRequired: results[1] as boolean,
       isVisible: results[2] as boolean,
     }
+
+    // Add asterisk to question label if the fiels is required
+    if (evaluatedElement.isRequired) {
+      const { label } = evaluatedElement.parameters
+      if (label)
+        evaluatedElement.parameters = { ...evaluatedElement.parameters, label: `${label} *` }
+    }
     return evaluatedElement
   }
 
