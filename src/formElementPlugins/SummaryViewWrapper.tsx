@@ -1,12 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { Grid, Icon } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents } from './types'
 import { TemplateElementCategory } from '../utils/generated/graphql'
+import evaluateExpression from '@openmsupply/expression-evaluator'
+import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   const { element, response } = props
   const { parameters, category, code, pluginCode, isEditable, isRequired, isVisible } = element
+  const [validationState, setValidationState] = useState({
+    isValid: response?.isValid,
+    validationMessage: parameters.validationMessage,
+  })
+  const [pluginMethods, setPluginMethods] = useState({
+    validate: (
+      validationExpress: IQueryNode,
+      validationMessage: string,
+      evaluator: Function
+    ): any => console.log('notLoaded'),
+  })
+
+  useEffect(() => {
+    // Re-validate on initial load
+  }, [])
 
   // Don't show non-question elements -- although this may change
   if (!pluginCode || !isVisible || category === TemplateElementCategory.Information) return null
@@ -24,7 +41,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
               <SummaryView parameters={parameters} response={response} />
             </Grid.Column>
             <Grid.Column floated="right" width={3}>
-              {!response?.isValid ? <Icon name="exclamation circle" color="red" /> : null}
+              {!validationState?.isValid ? <Icon name="exclamation circle" color="red" /> : null}
             </Grid.Column>
           </Grid.Row>
         </Grid>
