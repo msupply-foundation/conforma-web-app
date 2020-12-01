@@ -82,6 +82,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
             onUpdate={onUpdate}
             onSave={onSave}
             validationState={validationState || { isValid: true }}
+            // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
             {...props}
           />
         }
