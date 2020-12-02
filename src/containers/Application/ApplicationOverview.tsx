@@ -73,9 +73,10 @@ const ApplicationOverview: React.FC = () => {
     <Container>
       <Header as="h1" content="REVIEW AND SUBMIT" />
       <Form>
-        {sectionsPages.map((sectionPages) => (
+        {sectionsPages.map((sectionPage) => (
           <SectionSummary
-            sectionPages={sectionPages}
+            key={`SecSummary_${sectionPage.section.code}`}
+            sectionPages={sectionPage}
             serialNumber={serialNumber}
             isDraft={appStatus.status === 'DRAFT'}
             allResponses={responsesByCode || {}}

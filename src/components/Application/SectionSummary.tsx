@@ -23,14 +23,14 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
     <Segment.Group size="large">
       <Header as="h2" content={`${section.title}`} />
       {Object.entries(pages).map(([pageName, elements]) => (
-        <Segment>
+        <Segment key={`SectionSummary_${pageName}`}>
           <p>{pageName}</p>
           <Segment.Group>
             {elements.map(({ element, response }) => {
               const { category, isVisible, isEditable } = element
               const pageCode = pageName?.replace(' ', '')
               return (
-                <Segment>
+                <Segment key={`SectionSummary_${element.code}`}>
                   <SummaryViewWrapper
                     element={element}
                     response={response}
