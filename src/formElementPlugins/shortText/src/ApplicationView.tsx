@@ -5,13 +5,13 @@ import { ApplicationViewProps } from '../../types'
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   onUpdate,
-  initialValue,
+  value,
+  setValue,
   isEditable,
   currentResponse,
   validationState,
   onSave,
 }) => {
-  const [value, setValue] = useState<string>(initialValue?.text)
   const { placeholder, maskedInput, label } = parameters
 
   useEffect(() => {

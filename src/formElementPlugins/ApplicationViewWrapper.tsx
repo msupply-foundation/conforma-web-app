@@ -12,6 +12,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     code,
     pluginCode,
     parameters,
+    initialValue,
     isVisible,
     isEditable,
     isRequired,
@@ -30,6 +31,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     ): any => console.log('notLoaded'),
   })
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
+  const [value, setValue] = useState<string>(initialValue?.text)
 
   useEffect(() => {
     if (!pluginCode) return
@@ -41,7 +43,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   useEffect(() => {
     if (forceValidation) onUpdate(currentResponse?.text)
-  }, [forceValidation])
+  }, [currentResponse, forceValidation])
 
   const onUpdate = async (value: LooseString) => {
     const responses = { thisResponse: value, ...allResponses }
@@ -80,6 +82,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     <ApplicationView
       onUpdate={onUpdate}
       onSave={onSave}
+      value={value}
+      setValue={setValue}
       validationState={validationState || { isValid: true }}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
       {...props}
