@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Header, Segment } from 'semantic-ui-react'
+import { Button, Grid, Header, Segment } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
 import { SectionElementStates } from '../../utils/types'
@@ -29,19 +29,27 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
               const pageCode = pageName?.replace(' ', '')
               return (
                 <Segment>
-                  <SummaryViewWrapper element={element} response={response} />
-                  {category === TemplateElementCategory.Question &&
-                    isVisible &&
-                    isEditable &&
-                    canEdit && (
-                      <Button
-                        size="small"
-                        as={Link}
-                        to={`/applications/${serialNumber}/${section.code}/${pageCode}`}
-                      >
-                        Edit
-                      </Button>
-                    )}
+                  <Grid columns={2} verticalAlign="middle">
+                    <Grid.Row>
+                      <Grid.Column floated="left" width={10}>
+                        <SummaryViewWrapper element={element} response={response} />
+                      </Grid.Column>
+                      <Grid.Column floated="right" width={5}>
+                        {category === TemplateElementCategory.Question &&
+                          isVisible &&
+                          isEditable &&
+                          canEdit && (
+                            <Button
+                              size="small"
+                              as={Link}
+                              to={`/applications/${serialNumber}/${section.code}/${pageCode}`}
+                            >
+                              Edit
+                            </Button>
+                          )}
+                      </Grid.Column>
+                    </Grid.Row>
+                  </Grid>
                 </Segment>
               )
             })}

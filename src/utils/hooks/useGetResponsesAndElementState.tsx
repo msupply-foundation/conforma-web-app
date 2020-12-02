@@ -133,6 +133,7 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
       isRequired: results[1] as boolean,
       isVisible: results[2] as boolean,
     }
+
     return evaluatedElement
   }
 

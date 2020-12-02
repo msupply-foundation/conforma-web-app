@@ -1,6 +1,6 @@
 import React from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
-import { Header } from 'semantic-ui-react'
+import { Form, Header } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents } from './types'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 
@@ -15,10 +15,14 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
 
   // TO-DO: Provide a Default SummaryView (just label/text) if SummaryView not provided in plugin
 
+  const PluginComponent = <SummaryView parameters={parameters} response={response} />
+
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        <SummaryView parameters={parameters} response={response} />
+        <Form.Field required={isRequired} inline>
+          {PluginComponent}
+        </Form.Field>
       </React.Suspense>
     </ErrorBoundary>
   )
