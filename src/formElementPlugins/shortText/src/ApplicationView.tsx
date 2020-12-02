@@ -29,25 +29,26 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   return (
-    <Form.Field
-      fluid
-      control={Input}
-      label={label}
-      placeholder={placeholder}
-      onChange={handleChange}
-      onBlur={handleLoseFocus}
-      value={value ? value : ''}
-      disabled={!isEditable}
-      type={maskedInput ? 'password' : undefined}
-      error={
-        !validationState.isValid
-          ? {
-              content: validationState?.validationMessage,
-              pointing: 'above',
-            }
-          : null
-      }
-    />
+    <>
+      <label>{label}</label>
+      <Form.Input
+        fluid
+        placeholder={placeholder}
+        onChange={handleChange}
+        onBlur={handleLoseFocus}
+        value={value ? value : ''}
+        disabled={!isEditable}
+        type={maskedInput ? 'password' : undefined}
+        error={
+          !validationState.isValid
+            ? {
+                content: validationState?.validationMessage,
+                pointing: 'above',
+              }
+            : null
+        }
+      />
+    </>
   )
 }
 

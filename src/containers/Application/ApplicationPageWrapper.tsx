@@ -12,9 +12,11 @@ import validatePage, {
   PROGRESS_STATUS,
 } from '../../utils/helpers/validatePage'
 import { SummarySectionCode } from '../../utils/constants'
+import getPageElements from '../../utils/helpers/getPageElements'
 
 import {
   ApplicationElementStates,
+  ElementState,
   ProgressInApplication,
   ProgressInSection,
   ProgressInPage,
@@ -23,9 +25,11 @@ import {
   TemplateSectionPayload,
   ValidationMode,
 } from '../../utils/types'
+import { TemplateElementCategory } from '../../utils/generated/graphql'
 
 const ApplicationPageWrapper: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
+  const [pageElements, setPageElements] = useState<ElementState[]>([])
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
   const [forceValidation, setForceValidation] = useState<boolean>(false)
   const { query, push, replace } = useRouter()
@@ -77,16 +81,25 @@ const ApplicationPageWrapper: React.FC = () => {
   // Wait for loading (and evaluating elements and responses)
   // or a change of section/page to rebuild the progress bar
   useEffect(() => {
-    if (responsesLoading) return
+    if (responsesLoading || !elementsState || !currentSection) return
+
     const progressStructure = buildProgressInApplication({
       elementsState,
       responses: responsesByCode,
       templateSections,
       isLinear: application?.isLinear as boolean,
-      currentSection: currentSection?.index as number,
+      currentSection: currentSection.index,
       currentPage: Number(page),
     })
     setProgressInApplication(progressStructure)
+
+    const elements = getPageElements({
+      elementsState,
+      sectionIndex: currentSection.index,
+      pageNumber: Number(page),
+    })
+
+    setPageElements(elements)
   }, [responsesLoading, currentSection, page])
 
   const validateCurrentPage = (): boolean => {
@@ -151,10 +164,9 @@ const ApplicationPageWrapper: React.FC = () => {
         <Grid.Column width={12} stretched>
           <ElementsBox
             sectionTitle={currentSection.title}
-            sectionIndex={currentSection.index}
-            sectionPage={Number(page)}
             responsesByCode={responsesByCode}
-            elementsState={elementsState as ApplicationElementStates}
+            elements={pageElements}
+            anyRequiredQuestions={getPageHasRequiredQuestions(pageElements)}
             forceValidation={forceValidation}
           />
           <NavigationBox
@@ -168,6 +180,12 @@ const ApplicationPageWrapper: React.FC = () => {
     <Label content="Application's section can't be displayed" />
   )
 }
+
+const getPageHasRequiredQuestions = (elements: ElementState[]): boolean =>
+  elements.some(
+    ({ isRequired, isVisible, category }) =>
+      category === TemplateElementCategory.Question && isRequired && isVisible
+  )
 
 function processRedirect(appState: any): void {
   // All logic for re-directing/configuring page based on application state, permissions, roles, etc. should go here.
