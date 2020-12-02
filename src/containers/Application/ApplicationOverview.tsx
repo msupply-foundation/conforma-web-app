@@ -51,7 +51,7 @@ const ApplicationOverview: React.FC = () => {
             if (elements.length === 0) return pages
             const elementsAndResponses = elements.map((element) => ({
               element,
-              response: responsesFullByCode[element.code],
+              response: responsesByCode[element.code],
             }))
             const pageName = `Page ${pageNumber}`
             return { ...pages, [pageName]: elementsAndResponses }
@@ -59,16 +59,7 @@ const ApplicationOverview: React.FC = () => {
           return { section: sectionDetails, pages }
         })
 
-<<<<<<< HEAD
       setSectionsAndElements(sectionsAndElements)
-=======
-      Object.values(elementsState).forEach((element) => {
-        const response = responsesByCode[element.code]
-        const elementAndValue = { element, value: response ? response : null }
-        sectionsAndElements[element.sectionIndex].elements.push(elementAndValue)
-      })
-      setElementsInSections(sectionsAndElements)
->>>>>>> master
     }
   }, [elementsState, responsesLoading])
 
