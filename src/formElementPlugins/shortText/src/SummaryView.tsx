@@ -6,6 +6,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, response }) => {
   const { label, maskedInput } = parameters
   return (
     <>
+      {!response?.isValid ? <Icon name="exclamation circle" color="red" /> : null}
       <label>{label}</label>
       <Input
         readOnly
@@ -13,7 +14,6 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, response }) => {
         transparent
         value={response ? response?.text : ''}
         type={maskedInput ? 'password' : undefined}
-        icon={!response?.isValid ? <Icon name="exclamation circle" color="red" /> : null}
       />
     </>
   )
