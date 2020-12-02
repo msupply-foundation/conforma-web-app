@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
-import { Grid, Icon } from 'semantic-ui-react'
+import { Grid, Icon, Header } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents, ValidationState } from './types'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 import { defaultValidate } from './defaultValidate'
@@ -58,28 +58,35 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
 
   const { SummaryView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
-  // TO-DO: Provide a Default SummaryView (just label/text) if SummaryView not provided in plugin
+  const DefaultSummaryView: React.FC = () => {
+    return (
+      <>
+        <Header as="h3" content={parameters.label} />
+        <p>{response?.text}</p>
+      </>
+    )
+  }
 
   return (
-    <ErrorBoundary pluginCode={pluginCode}>
-      <React.Suspense fallback="Loading Plugin">
-        <Grid columns={2}>
-          <Grid.Row>
-            <Grid.Column floated="left" width={12}>
+    <Grid columns={2}>
+      <Grid.Row>
+        <Grid.Column floated="left" width={12}>
+          <ErrorBoundary pluginCode={pluginCode} FallbackComponent={DefaultSummaryView}>
+            <React.Suspense fallback="Loading Plugin">
               <SummaryView parameters={parameters} response={response} />
-            </Grid.Column>
-            <Grid.Column floated="right" width={3}>
-              {!validationState?.isValid ? (
-                <>
-                  <Icon name="exclamation circle" color="red" />
-                  <p>{validationState.validationMessage}</p>
-                </>
-              ) : null}
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </React.Suspense>
-    </ErrorBoundary>
+            </React.Suspense>
+          </ErrorBoundary>
+        </Grid.Column>
+        <Grid.Column floated="right" width={3}>
+          {!validationState?.isValid ? (
+            <>
+              <Icon name="exclamation circle" color="red" />
+              <p>{validationState.validationMessage}</p>
+            </>
+          ) : null}
+        </Grid.Column>
+      </Grid.Row>
+    </Grid>
   )
 }
 
