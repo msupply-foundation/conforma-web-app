@@ -88,11 +88,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        {isRequired ? (
-          <Form.Field required>{PluginComponent}</Form.Field>
-        ) : (
-          <Form.Field>{PluginComponent}</Form.Field>
-        )}
+<Form.Field required={isRequired}>{PluginComponent}</Form.Field>
       </React.Suspense>
     </ErrorBoundary>
   )
