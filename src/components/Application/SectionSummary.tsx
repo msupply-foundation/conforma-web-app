@@ -43,7 +43,7 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
                           isStrictValidation={isStrictValidation}
                         />
                       </Grid.Column>
-                      <Grid.Column floated="right" width={5}>
+                      <Grid.Column floated="right" width={3}>
                         {category === TemplateElementCategory.Question &&
                           isVisible &&
                           isEditable &&

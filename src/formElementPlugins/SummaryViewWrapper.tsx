@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
-import { Grid, Icon, Header } from 'semantic-ui-react'
+import { Grid, Icon, Form, Input } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents, ValidationState } from './types'
-import { Form, Header } from 'semantic-ui-react'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 import { defaultValidate } from './defaultValidate'
 import { EvaluatorParameters } from '../utils/types'
@@ -62,8 +61,8 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   const DefaultSummaryView: React.FC = () => {
     return (
       <>
-        <Header as="h3" content={parameters.label} />
-        <p>{response?.text}</p>
+        <label>{parameters.label}</label>
+        <Input fluid readOnly disabled transparent value={response ? response?.text : ''} />
       </>
     )
   }
@@ -72,8 +71,8 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
 
   return (
     <Grid columns={2}>
-      <Grid.Row>
-        <Grid.Column floated="left" width={2}>
+      <Grid.Row centered>
+        <Grid.Column verticalAlign="middle" floated="left" width={2}>
           {!validationState?.isValid ? <Icon name="exclamation circle" color="red" /> : null}
         </Grid.Column>
         <Grid.Column floated="right" width={14}>
@@ -82,7 +81,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
               <Form.Field required={isRequired}>{PluginComponent}</Form.Field>
             </React.Suspense>
           </ErrorBoundary>
-          <p>{validationState.validationMessage}</p>
+          <p style={{ fontSize: '80%', color: 'red' }}>{validationState.validationMessage}</p>
         </Grid.Column>
       </Grid.Row>
     </Grid>
