@@ -8,13 +8,13 @@ import { SectionElementStates } from '../../utils/types'
 interface ApplicationSummaryProps {
   sectionPages: SectionElementStates
   serialNumber: string
-  isDraft: boolean
+  canEdit: boolean
 }
 
 const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
   sectionPages,
   serialNumber,
-  isDraft,
+  canEdit,
 }) => {
   const { section, pages } = sectionPages
   return (
@@ -33,7 +33,7 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
                   {category === TemplateElementCategory.Question &&
                     isVisible &&
                     isEditable &&
-                    isDraft && (
+                    canEdit && (
                       <Button
                         size="small"
                         as={Link}
