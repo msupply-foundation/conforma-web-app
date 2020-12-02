@@ -68,18 +68,12 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
       <React.Suspense fallback="Loading Plugin">
         <Grid columns={2}>
           <Grid.Row>
-            <Grid.Column floated="left" width={12}>
-              <Form.Field required={isRequired} inline>
-                {PluginComponent}
-              </Form.Field>
+            <Grid.Column floated="left" width={2}>
+              {!validationState?.isValid ? <Icon name="exclamation circle" color="red" /> : null}
             </Grid.Column>
-            <Grid.Column floated="right" width={3}>
-              {!validationState?.isValid ? (
-                <>
-                  <Icon name="exclamation circle" color="red" />
-                  <p>{validationState.validationMessage}</p>
-                </>
-              ) : null}
+            <Grid.Column floated="right" width={14}>
+              <Form.Field required={isRequired}>{PluginComponent}</Form.Field>
+              <p>{validationState.validationMessage}</p>
             </Grid.Column>
           </Grid.Row>
         </Grid>
