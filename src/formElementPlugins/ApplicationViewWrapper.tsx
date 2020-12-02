@@ -62,13 +62,14 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const onSave = async (jsonValue: ResponseFull) => {
     const validationResult: ValidationState = await onUpdate(jsonValue.text)
-    responseMutation({
-      variables: {
-        id: currentResponse?.id as number,
-        value: jsonValue,
-        isValid: validationResult.isValid,
-      },
-    })
+    if (jsonValue.text)
+      responseMutation({
+        variables: {
+          id: currentResponse?.id as number,
+          value: jsonValue,
+          isValid: validationResult.isValid,
+        },
+      })
   }
 
   if (!pluginCode || !isVisible) return null
@@ -88,7 +89,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-<Form.Field required={isRequired}>{PluginComponent}</Form.Field>
+        <Form.Field required={isRequired}>{PluginComponent}</Form.Field>
       </React.Suspense>
     </ErrorBoundary>
   )
