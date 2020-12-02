@@ -5,7 +5,7 @@ import { SummaryViewWrapperProps, PluginComponents } from './types'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
-  const { element, value } = props
+  const { element, response } = props
   const { parameters, category, code, pluginCode, isEditable, isRequired, isVisible } = element
 
   // Don't show non-question elements -- although this may change
@@ -18,7 +18,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        <SummaryView parameters={parameters} value={value} />
+        <SummaryView parameters={parameters} response={response} />
       </React.Suspense>
     </ErrorBoundary>
   )
