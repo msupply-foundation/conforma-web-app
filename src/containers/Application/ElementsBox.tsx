@@ -10,6 +10,7 @@ interface ElementsBoxProps {
   sectionPage: number
   responsesByCode: ResponsesByCode
   elementsState: ApplicationElementStates
+  forceValidation: boolean
 }
 
 const ElementsBox: React.FC<ElementsBoxProps> = ({
@@ -18,6 +19,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
   sectionPage,
   responsesByCode,
   elementsState,
+  forceValidation,
 }) => {
   const elements = getPageElements({ elementsState, sectionIndex, pageNumber: sectionPage })
   return elements ? (
@@ -38,6 +40,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
             isRequired={isRequired}
             allResponses={responsesByCode}
             currentResponse={response}
+            forceValidation={forceValidation}
           />
         )
       })}

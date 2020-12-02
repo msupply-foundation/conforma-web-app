@@ -16,6 +16,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     isRequired,
     currentResponse,
     allResponses,
+    forceValidation,
   } = props
 
   const { validation: validationExpression, validationMessage } = parameters
@@ -37,17 +38,17 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     })
   }, [])
 
+  useEffect(() => {
+    if (forceValidation) onUpdate(currentResponse?.text)
+  }, [forceValidation])
+
   const onUpdate = async (value: LooseString) => {
     const responses = { thisResponse: value, ...allResponses }
-
-    if (!validationExpression || value === undefined) {
-      setValidationState({ isValid: true } as ValidationState)
-      return { isValid: true }
-    }
 
     const evaluator = async (expression: IQueryNode) => {
       return await evaluateExpression(expression, { objects: [responses], APIfetch: fetch })
     }
+
     const validationResult: ValidationState = await pluginMethods.validate(
       validationExpression,
       validationMessage,

@@ -21,6 +21,7 @@ interface ApplicationViewWrapperProps {
   // applicationState,
   // graphQLclient
   initialValue: any // Could be a primative or an object with any shape
+  forceValidation: boolean // Run validation on formElement on load - usualy would run only onChange events
 }
 
 type ValidationState = {

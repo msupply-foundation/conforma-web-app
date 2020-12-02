@@ -27,6 +27,7 @@ import {
 const ApplicationPageWrapper: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
+  const [forceValidation, setForceValidation] = useState<boolean>(false)
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
@@ -107,6 +108,7 @@ const ApplicationPageWrapper: React.FC = () => {
           // Update responses text to re-validate the status (on the page)
           let response = responsesByCode[code]
           if (response) {
+            setForceValidation(true)
             responseMutation({
               variables: {
                 id: response.id,
@@ -153,6 +155,7 @@ const ApplicationPageWrapper: React.FC = () => {
             sectionPage={Number(page)}
             responsesByCode={responsesByCode}
             elementsState={elementsState as ApplicationElementStates}
+            forceValidation={forceValidation}
           />
           <NavigationBox
             templateSections={templateSections}
