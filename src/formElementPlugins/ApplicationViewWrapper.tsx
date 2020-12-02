@@ -5,6 +5,7 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
 import { LooseString, ResponseFull } from '../utils/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { Form } from 'semantic-ui-react'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const {
@@ -74,18 +75,24 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const { ApplicationView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
+  const PluginComponent = (
+    <ApplicationView
+      onUpdate={onUpdate}
+      onSave={onSave}
+      validationState={validationState || { isValid: true }}
+      // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
+      {...props}
+    />
+  )
+
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        {
-          <ApplicationView
-            onUpdate={onUpdate}
-            onSave={onSave}
-            validationState={validationState || { isValid: true }}
-            // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
-            {...props}
-          />
-        }
+        {isRequired ? (
+          <Form.Field required>{PluginComponent}</Form.Field>
+        ) : (
+          <Form.Field>{PluginComponent}</Form.Field>
+        )}
       </React.Suspense>
     </ErrorBoundary>
   )
