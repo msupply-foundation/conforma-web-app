@@ -10,6 +10,7 @@ interface SectionSummaryProps {
   serialNumber: string
   isDraft: boolean
   allResponses: ResponsesByCode
+  isStrictValidation: boolean
 }
 
 const SectionSummary: React.FC<SectionSummaryProps> = ({
@@ -17,6 +18,7 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
   serialNumber,
   isDraft,
   allResponses,
+  isStrictValidation,
 }) => {
   const { section, pages } = sectionPages
   return (
@@ -35,6 +37,7 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
                     element={element}
                     response={response}
                     allResponses={allResponses}
+                    isStrictValidation={isStrictValidation}
                   />
                   {category === TemplateElementCategory.Question &&
                     isVisible &&

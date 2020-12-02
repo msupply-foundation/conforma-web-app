@@ -10,9 +10,9 @@ import { SectionElementStates } from '../../utils/types'
 
 const ApplicationOverview: React.FC = () => {
   const [sectionsPages, setSectionsAndElements] = useState<SectionElementStates[]>()
+
   const { query, push } = useRouter()
   const { serialNumber } = query
-
   const { error, loading, templateSections, isApplicationLoaded, appStatus } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
@@ -27,7 +27,13 @@ const ApplicationOverview: React.FC = () => {
     isApplicationLoaded,
   })
 
-  const { error: submitError, processing, submitted, submit } = useUpdateApplication({
+  const {
+    error: submitError,
+    processing,
+    submitted,
+    submit,
+    isStrictValidation,
+  } = useUpdateApplication({
     applicationSerial: serialNumber as string,
   })
 
@@ -80,6 +86,7 @@ const ApplicationOverview: React.FC = () => {
             serialNumber={serialNumber}
             isDraft={appStatus.status === 'DRAFT'}
             allResponses={responsesByCode || {}}
+            isStrictValidation={isStrictValidation}
           />
         ))}
         {appStatus.status === 'DRAFT' ? (

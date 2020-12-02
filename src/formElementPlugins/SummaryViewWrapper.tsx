@@ -8,7 +8,7 @@ import { EvaluatorParameters } from '../utils/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
-  const { element, response, allResponses } = props
+  const { element, response, allResponses, isStrictValidation } = props
   const { parameters, category, code, pluginCode, isEditable, isRequired, isVisible } = element
   const { validation: validationExpression, validationMessage } = parameters
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
@@ -35,16 +35,30 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
 
   useEffect(() => {
     // Re-validate on load
-    if (!validationExpression || response?.text === undefined) {
+    console.log(code, 'Validation', validationExpression, 'required', isRequired, response)
+    console.log(
+      'Okay?',
+      (!validationExpression || response?.text === undefined) && !isStrictValidation
+    )
+    if ((!validationExpression || response?.text === undefined) && !isStrictValidation) {
+      console.log("It's fine")
       setValidationState({ isValid: true } as ValidationState)
       return
     }
+    console.log('Checking', code)
+    console.log('Strict', isStrictValidation, 'required', isRequired, response)
+    if (isStrictValidation && isRequired && response?.text === undefined) {
+      console.log('Going to invalid:', code)
+      setValidationState({ isValid: false, validationMessage: 'Field cannot be blank' })
+      return
+    }
+
     pluginMethods
       .validate(validationExpression, validationMessage, { objects: [responses], APIfetch: fetch })
       .then((validationResult: ValidationState) => {
         setValidationState(validationResult)
       })
-  }, [])
+  }, [isStrictValidation])
 
   // Don't show non-question elements -- although this may change
   if (!pluginCode || !isVisible || category === TemplateElementCategory.Information) return null
