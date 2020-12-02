@@ -17,7 +17,7 @@ export {
   ResponsePayload,
   ResponsesByCode,
   SectionElementStates,
-  SectionPayload,
+  SectionDetails,
   TemplateTypePayload,
   TemplateSectionPayload,
   TemplateElementState,
@@ -110,16 +110,18 @@ interface ResponsesByCode {
 }
 
 interface SectionElementStates {
-  section: TemplateSectionPayload
-  elements: {
-    element: ElementState
-    value: ResponseFull | null
-  }[]
+  section: SectionDetails
+  pages: {
+    [pageName: string]: {
+      element: ElementState
+      response: ResponseFull | null
+    }[]
+  }
 }
 
-interface SectionPayload {
-  applicationId: number
-  templateSections: (number | null)[]
+interface SectionDetails {
+  title: string
+  code: string
 }
 
 interface TemplateTypePayload {

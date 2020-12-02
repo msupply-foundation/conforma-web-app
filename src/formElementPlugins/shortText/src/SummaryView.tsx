@@ -1,8 +1,8 @@
 import React from 'react'
-import { Input } from 'semantic-ui-react'
+import { Icon, Input } from 'semantic-ui-react'
 import { SummaryViewProps } from '../../types'
 
-const SummaryView: React.FC<SummaryViewProps> = ({ parameters, value }) => {
+const SummaryView: React.FC<SummaryViewProps> = ({ parameters, response }) => {
   const { label, maskedInput } = parameters
   return (
     <>
@@ -11,8 +11,9 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, value }) => {
         readOnly
         disabled
         transparent
-        value={value ? value?.text : ''}
+        value={response ? response?.text : ''}
         type={maskedInput ? 'password' : undefined}
+        icon={!response?.isValid ? <Icon name="exclamation circle" color="red" /> : null}
       />
     </>
   )
