@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { Grid, Icon } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents, ValidationState } from './types'
+import { Form, Header } from 'semantic-ui-react'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 import { defaultValidate } from './defaultValidate'
 import { EvaluatorParameters } from '../utils/types'
@@ -60,13 +61,17 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
 
   // TO-DO: Provide a Default SummaryView (just label/text) if SummaryView not provided in plugin
 
+  const PluginComponent = <SummaryView parameters={parameters} response={response} />
+
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
         <Grid columns={2}>
           <Grid.Row>
             <Grid.Column floated="left" width={12}>
-              <SummaryView parameters={parameters} response={response} />
+              <Form.Field required={isRequired} inline>
+                {PluginComponent}
+              </Form.Field>
             </Grid.Column>
             <Grid.Column floated="right" width={3}>
               {!validationState?.isValid ? (
