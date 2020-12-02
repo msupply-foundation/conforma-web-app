@@ -35,18 +35,11 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
 
   useEffect(() => {
     // Re-validate on load
-    console.log(code, 'Validation', validationExpression, 'required', isRequired, response)
-    console.log(
-      'Okay?',
-      (!validationExpression || response?.text === undefined) && !isStrictValidation
-    )
-    if ((!validationExpression || response?.text === undefined) && !isStrictValidation) {
-      console.log("It's fine")
+    if (!isStrictValidation && (!validationExpression || response?.text === undefined)) {
       setValidationState({ isValid: true } as ValidationState)
       return
     }
-    console.log('Checking', code)
-    console.log('Strict', isStrictValidation, 'required', isRequired, response)
+
     if (isStrictValidation && isRequired && response?.text === undefined) {
       console.log('Going to invalid:', code)
       setValidationState({ isValid: false, validationMessage: 'Field cannot be blank' })
@@ -76,7 +69,12 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
               <SummaryView parameters={parameters} response={response} />
             </Grid.Column>
             <Grid.Column floated="right" width={3}>
-              {!validationState?.isValid ? <Icon name="exclamation circle" color="red" /> : null}
+              {!validationState?.isValid ? (
+                <>
+                  <Icon name="exclamation circle" color="red" />
+                  <p>{validationState.validationMessage}</p>
+                </>
+              ) : null}
             </Grid.Column>
           </Grid.Row>
         </Grid>
