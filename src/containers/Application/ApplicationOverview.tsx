@@ -78,6 +78,7 @@ const ApplicationOverview: React.FC = () => {
             sectionPages={sectionPages}
             serialNumber={serialNumber}
             isDraft={appStatus.status === 'DRAFT'}
+            allResponses={responsesByCode || {}}
           />
         ))}
         {appStatus.status === 'DRAFT' ? (

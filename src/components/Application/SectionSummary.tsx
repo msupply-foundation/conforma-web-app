@@ -3,18 +3,20 @@ import { Link } from 'react-router-dom'
 import { Button, Header, Segment } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
-import { SectionElementStates } from '../../utils/types'
+import { ResponsesByCode, SectionElementStates } from '../../utils/types'
 
-interface ApplicationSummaryProps {
+interface SectionSummaryProps {
   sectionPages: SectionElementStates
   serialNumber: string
   isDraft: boolean
+  allResponses: ResponsesByCode
 }
 
-const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
+const SectionSummary: React.FC<SectionSummaryProps> = ({
   sectionPages,
   serialNumber,
   isDraft,
+  allResponses,
 }) => {
   const { section, pages } = sectionPages
   return (
@@ -29,7 +31,11 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
               const pageCode = pageName?.replace(' ', '')
               return (
                 <Segment>
-                  <SummaryViewWrapper element={element} response={response} />
+                  <SummaryViewWrapper
+                    element={element}
+                    response={response}
+                    allResponses={allResponses}
+                  />
                   {category === TemplateElementCategory.Question &&
                     isVisible &&
                     isEditable &&
@@ -52,4 +58,4 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
   )
 }
 
-export default ApplicationSummary
+export default SectionSummary

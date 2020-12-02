@@ -1,28 +1,49 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { Grid, Icon } from 'semantic-ui-react'
-import { SummaryViewWrapperProps, PluginComponents } from './types'
+import { SummaryViewWrapperProps, PluginComponents, ValidationState } from './types'
 import { TemplateElementCategory } from '../utils/generated/graphql'
-import evaluateExpression from '@openmsupply/expression-evaluator'
+import { defaultValidate } from './defaultValidate'
+import { EvaluatorParameters } from '../utils/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
-  const { element, response } = props
+  const { element, response, allResponses } = props
   const { parameters, category, code, pluginCode, isEditable, isRequired, isVisible } = element
-  const [validationState, setValidationState] = useState({
-    isValid: response?.isValid,
-    validationMessage: parameters.validationMessage,
-  })
+  const { validation: validationExpression, validationMessage } = parameters
+  const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
+  const responses = { thisResponse: response?.text, ...allResponses }
   const [pluginMethods, setPluginMethods] = useState({
     validate: (
       validationExpress: IQueryNode,
       validationMessage: string,
-      evaluator: Function
-    ): any => console.log('notLoaded'),
+      evaluatorParameters: EvaluatorParameters
+    ): any =>
+      defaultValidate(validationExpression, validationMessage, {
+        objects: [responses],
+        APIfetch: fetch,
+      }),
   })
 
   useEffect(() => {
-    // Re-validate on initial load
+    if (!pluginCode) return
+    // TODO use plugin-specific validation method if defined
+    setPluginMethods({
+      validate: defaultValidate,
+    })
+  }, [])
+
+  useEffect(() => {
+    // Re-validate on load
+    if (!validationExpression || response?.text === undefined) {
+      setValidationState({ isValid: true } as ValidationState)
+      return
+    }
+    pluginMethods
+      .validate(validationExpression, validationMessage, { objects: [responses], APIfetch: fetch })
+      .then((validationResult: ValidationState) => {
+        setValidationState(validationResult)
+      })
   }, [])
 
   // Don't show non-question elements -- although this may change

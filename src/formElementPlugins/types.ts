@@ -42,6 +42,7 @@ interface SummaryViewProps {
 interface SummaryViewWrapperProps {
   element: ElementState
   response: ResponseFull | null
+  allResponses: ResponsesByCode
 }
 
 interface OnUpdateTemplateWrapperView {
