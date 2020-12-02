@@ -30,9 +30,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   return (
     <>
+      <label>{label}</label>
       <Form.Input
         fluid
-        label={label}
         placeholder={placeholder}
         onChange={handleChange}
         onBlur={handleLoseFocus}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Header, Segment } from 'semantic-ui-react'
+import { Button, Grid, Header, Segment } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
 import { ResponsesByCode, SectionElementStates } from '../../utils/types'
@@ -8,17 +8,17 @@ import { ResponsesByCode, SectionElementStates } from '../../utils/types'
 interface SectionSummaryProps {
   sectionPages: SectionElementStates
   serialNumber: string
-  isDraft: boolean
   allResponses: ResponsesByCode
   isStrictValidation: boolean
+  canEdit: boolean
 }
 
 const SectionSummary: React.FC<SectionSummaryProps> = ({
   sectionPages,
   serialNumber,
-  isDraft,
   allResponses,
   isStrictValidation,
+  canEdit,
 }) => {
   const { section, pages } = sectionPages
   return (
@@ -33,24 +33,32 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
               const pageCode = pageName?.replace(' ', '')
               return (
                 <Segment key={`SectionSummary_${element.code}`}>
-                  <SummaryViewWrapper
-                    element={element}
-                    response={response}
-                    allResponses={allResponses}
-                    isStrictValidation={isStrictValidation}
-                  />
-                  {category === TemplateElementCategory.Question &&
-                    isVisible &&
-                    isEditable &&
-                    isDraft && (
-                      <Button
-                        size="small"
-                        as={Link}
-                        to={`/applications/${serialNumber}/${section.code}/${pageCode}`}
-                      >
-                        Edit
-                      </Button>
-                    )}
+                  <Grid columns={2} verticalAlign="middle">
+                    <Grid.Row>
+                      <Grid.Column floated="left" width={10}>
+                        <SummaryViewWrapper
+                          element={element}
+                          response={response}
+                          allResponses={allResponses}
+                          isStrictValidation={isStrictValidation}
+                        />
+                      </Grid.Column>
+                      <Grid.Column floated="right" width={5}>
+                        {category === TemplateElementCategory.Question &&
+                          isVisible &&
+                          isEditable &&
+                          canEdit && (
+                            <Button
+                              size="small"
+                              as={Link}
+                              to={`/applications/${serialNumber}/${section.code}/${pageCode}`}
+                            >
+                              Edit
+                            </Button>
+                          )}
+                      </Grid.Column>
+                    </Grid.Row>
+                  </Grid>
                 </Segment>
               )
             })}

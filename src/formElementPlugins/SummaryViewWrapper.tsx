@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { Grid, Icon, Header } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents, ValidationState } from './types'
+import { Form, Header } from 'semantic-ui-react'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 import { defaultValidate } from './defaultValidate'
 import { EvaluatorParameters } from '../utils/types'
@@ -67,23 +68,21 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
     )
   }
 
+  const PluginComponent = <SummaryView parameters={parameters} response={response} />
+
   return (
     <Grid columns={2}>
       <Grid.Row>
-        <Grid.Column floated="left" width={12}>
+        <Grid.Column floated="left" width={2}>
+          {!validationState?.isValid ? <Icon name="exclamation circle" color="red" /> : null}
+        </Grid.Column>
+        <Grid.Column floated="right" width={14}>
           <ErrorBoundary pluginCode={pluginCode} FallbackComponent={DefaultSummaryView}>
             <React.Suspense fallback="Loading Plugin">
-              <SummaryView parameters={parameters} response={response} />
+              <Form.Field required={isRequired}>{PluginComponent}</Form.Field>
             </React.Suspense>
           </ErrorBoundary>
-        </Grid.Column>
-        <Grid.Column floated="right" width={3}>
-          {!validationState?.isValid ? (
-            <>
-              <Icon name="exclamation circle" color="red" />
-              <p>{validationState.validationMessage}</p>
-            </>
-          ) : null}
+          <p>{validationState.validationMessage}</p>
         </Grid.Column>
       </Grid.Row>
     </Grid>
