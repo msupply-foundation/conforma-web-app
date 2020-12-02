@@ -84,9 +84,9 @@ const ApplicationOverview: React.FC = () => {
             key={`SecSummary_${sectionPage.section.code}`}
             sectionPages={sectionPage}
             serialNumber={serialNumber}
-            isDraft={appStatus.status === 'DRAFT'}
             allResponses={responsesByCode || {}}
             isStrictValidation={isStrictValidation}
+            canEdit={appStatus.status === 'DRAFT'}
           />
         ))}
         {appStatus.status === 'DRAFT' ? (

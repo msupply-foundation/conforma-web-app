@@ -8,17 +8,17 @@ import { ResponsesByCode, SectionElementStates } from '../../utils/types'
 interface SectionSummaryProps {
   sectionPages: SectionElementStates
   serialNumber: string
-  isDraft: boolean
   allResponses: ResponsesByCode
   isStrictValidation: boolean
+  canEdit: boolean
 }
 
 const SectionSummary: React.FC<SectionSummaryProps> = ({
   sectionPages,
   serialNumber,
-  isDraft,
   allResponses,
   isStrictValidation,
+  canEdit,
 }) => {
   const { section, pages } = sectionPages
   return (
@@ -42,7 +42,7 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
                   {category === TemplateElementCategory.Question &&
                     isVisible &&
                     isEditable &&
-                    isDraft && (
+                    canEdit && (
                       <Button
                         size="small"
                         as={Link}
