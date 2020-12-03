@@ -5,7 +5,7 @@ import { SummaryViewWrapperProps, PluginComponents, ValidationState } from './ty
 import { Form, Header } from 'semantic-ui-react'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 import { defaultValidate } from './defaultValidate'
-import { EvaluatorParameters } from '../utils/types'
+import { EvaluatorParameters, ValidateObject } from '../utils/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
@@ -14,12 +14,8 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   const { validation: validationExpression, validationMessage } = parameters
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
   const responses = { thisResponse: response?.text, ...allResponses }
-  const [pluginMethods, setPluginMethods] = useState({
-    validate: (
-      validationExpress: IQueryNode,
-      validationMessage: string,
-      evaluatorParameters: EvaluatorParameters
-    ): any =>
+  const [pluginMethods, setPluginMethods] = useState<ValidateObject>({
+    validate: (validationExpress, validationMessage, evaluatorParameters) =>
       defaultValidate(validationExpression, validationMessage, {
         objects: [responses],
         APIfetch: fetch,

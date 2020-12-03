@@ -1,4 +1,4 @@
-import { ApplicationResponse, TemplateElement } from '../utils/generated/graphql'
+import { TemplateElement } from '../utils/generated/graphql'
 import { ElementState, ResponseFull, ResponsesByCode } from '../utils/types'
 
 interface OnUpdateApplicationView {

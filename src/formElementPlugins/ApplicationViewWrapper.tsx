@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
-import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
-import { EvaluatorParameters, LooseString, ResponseFull } from '../utils/types'
+import { LooseString, ResponseFull, ValidateObject } from '../utils/types'
 import { defaultValidate } from './defaultValidate'
 import { Form } from 'semantic-ui-react'
 
@@ -22,12 +21,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const { validation: validationExpression, validationMessage } = parameters
 
   const [responseMutation] = useUpdateResponseMutation()
-  const [pluginMethods, setPluginMethods] = useState({
-    validate: (
-      validationExpress: IQueryNode,
-      validationMessage: string,
-      evaluatorParameters: EvaluatorParameters
-    ): any => console.log('notLoaded'),
+  const [pluginMethods, setPluginMethods] = useState<ValidateObject>({
+    validate: (validationExpress, validationMessage, evaluatorParameters) =>
+      console.log('notLoaded'),
   })
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
 

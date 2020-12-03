@@ -25,6 +25,8 @@ export {
   TemplateElementState,
   TemplatePermissions,
   ValidationMode,
+  ValidateFunction,
+  ValidateObject,
 }
 
 interface ApplicationDetails {
@@ -165,6 +167,18 @@ interface TemplatePermissions {
   [index: string]: {
     [index: string]: Array<'Apply' | 'Review' | 'Assign'>
   }
+}
+
+interface ValidateFunction {
+  (
+    validationExpress: IQueryNode,
+    validationMessage: string,
+    evaluatorParameters: EvaluatorParameters
+  ): any
+}
+
+interface ValidateObject {
+  validate: ValidateFunction
 }
 
 type ValidationMode = 'STRICT' | 'LOOSE'
