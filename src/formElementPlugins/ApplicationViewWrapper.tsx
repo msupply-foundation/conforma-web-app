@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
-import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
 import { EvaluatorParameters, LooseString, ResponseFull } from '../utils/types'
 import { defaultValidate } from './defaultValidate'
+import evaluateExpression from '@openmsupply/expression-evaluator'
+import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { Form } from 'semantic-ui-react'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
@@ -30,6 +31,16 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     ): any => console.log('notLoaded'),
   })
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
+  const [evaluatedParameters, setEvaluatedParameters] = useState({})
+  const [parametersLoaded, setParametersLoaded] = useState(false)
+
+  const {
+    ApplicationView,
+    config: { dynamicParameters },
+  }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
+
+  const dynamicExpressions =
+    dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
 
   useEffect(() => {
     if (!pluginCode) return
@@ -38,6 +49,17 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       validate: defaultValidate,
     })
   }, [])
+
+  // Update dynamic parameters when responses change
+  useEffect(() => {
+    evaluateDynamicParameters(dynamicExpressions, {
+      objects: [allResponses],
+      APIfetch: fetch,
+    }).then((result: any) => {
+      setEvaluatedParameters(result)
+      setParametersLoaded(true)
+    })
+  }, [allResponses])
 
   const onUpdate = async (value: LooseString) => {
     const responses = { thisResponse: value, ...allResponses }
@@ -70,25 +92,49 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   if (!pluginCode || !isVisible) return null
 
-  const { ApplicationView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
-
   const PluginComponent = (
     <ApplicationView
       onUpdate={onUpdate}
       onSave={onSave}
+      {...props}
+      parameters={{ ...parameters, ...evaluatedParameters }}
       validationState={validationState || { isValid: true }}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
-      {...props}
     />
   )
 
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        <Form.Field required={isRequired}>{PluginComponent}</Form.Field>
+        {parametersLoaded && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
       </React.Suspense>
     </ErrorBoundary>
   )
 }
 
 export default ApplicationViewWrapper
+
+export function extractDynamicExpressions(fields: string[], parameters: any) {
+  const expressionObject: any = {}
+  fields.forEach((field) => {
+    expressionObject[field] = parameters[field]
+  })
+  return expressionObject
+}
+
+export async function evaluateDynamicParameters(
+  dynamicExpressions: any,
+  evaluatorParameters: EvaluatorParameters
+) {
+  if (!dynamicExpressions) return {}
+  const fields = Object.keys(dynamicExpressions)
+  const expressions = Object.values(dynamicExpressions).map((expression: any) =>
+    evaluateExpression(expression, evaluatorParameters)
+  )
+  const evaluatedExpressions = await Promise.all(expressions)
+  const evaluatedParameters: any = {}
+  for (let i = 0; i < fields.length; i++) {
+    evaluatedParameters[fields[i]] = evaluatedExpressions[i]
+  }
+  return evaluatedParameters
+}

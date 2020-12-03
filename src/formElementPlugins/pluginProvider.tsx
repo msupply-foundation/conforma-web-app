@@ -63,6 +63,7 @@ class pluginProvider {
 
 function getLocalElementPlugin(folderName: string) {
   const result: PluginComponents = {}
+  result.config = require(`./${folderName}/pluginConfig.json`)
   // TO-DO: optimize so it only imports the component type (Application, Template, Summary) that is required
   PLUGIN_COMPONENTS.forEach((componentName) => {
     result[componentName] = React.lazy(

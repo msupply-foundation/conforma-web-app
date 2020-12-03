@@ -6,12 +6,15 @@ import { TemplateElementCategory } from '../utils/generated/graphql'
 import { defaultValidate } from './defaultValidate'
 import { EvaluatorParameters } from '../utils/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { extractDynamicExpressions, evaluateDynamicParameters } from './ApplicationViewWrapper'
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   const { element, response, allResponses, isStrictValidation } = props
   const { parameters, category, code, pluginCode, isEditable, isRequired, isVisible } = element
   const { validation: validationExpression, validationMessage } = parameters
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
+  const [evaluatedParameters, setEvaluatedParameters] = useState({})
+  const [parametersLoaded, setParametersLoaded] = useState(false)
   const responses = { thisResponse: response?.text, ...allResponses }
   const [pluginMethods, setPluginMethods] = useState({
     validate: (
@@ -25,11 +28,26 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
       }),
   })
 
+  const {
+    SummaryView,
+    config: { dynamicParameters },
+  }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
+
+  const dynamicExpressions =
+    dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
+
   useEffect(() => {
     if (!pluginCode) return
     // TODO use plugin-specific validation method if defined
     setPluginMethods({
       validate: defaultValidate,
+    })
+    evaluateDynamicParameters(dynamicExpressions, {
+      objects: [allResponses],
+      APIfetch: fetch,
+    }).then((result: any) => {
+      setEvaluatedParameters(result)
+      setParametersLoaded(true)
     })
   }, [])
 
@@ -56,18 +74,19 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   // Don't show non-question elements -- although this may change
   if (!pluginCode || !isVisible || category === TemplateElementCategory.Information) return null
 
-  const { SummaryView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
-
   const DefaultSummaryView: React.FC = () => {
+    const combinedParams = { ...parameters, ...evaluatedParameters }
     return (
       <>
-        <label>{parameters.label}</label>
+        {parametersLoaded && <label>{combinedParams.label}</label>}
         <Input fluid readOnly disabled transparent value={response ? response?.text : ''} />
       </>
     )
   }
 
-  const PluginComponent = <SummaryView parameters={parameters} response={response} />
+  const PluginComponent = (
+    <SummaryView parameters={{ ...parameters, ...evaluatedParameters }} response={response} />
+  )
 
   return (
     <Grid columns={2}>
@@ -78,7 +97,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
         <Grid.Column floated="right" width={14}>
           <ErrorBoundary pluginCode={pluginCode} FallbackComponent={DefaultSummaryView}>
             <React.Suspense fallback="Loading Plugin">
-              <Form.Field required={isRequired}>{PluginComponent}</Form.Field>
+              {parametersLoaded && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
             </React.Suspense>
           </ErrorBoundary>
           <p style={{ fontSize: '80%', color: 'red' }}>{validationState.validationMessage}</p>

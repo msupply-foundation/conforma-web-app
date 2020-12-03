@@ -79,6 +79,7 @@ interface PluginComponents {
   [key: string]: React.FunctionComponent<
     ApplicationViewProps | TemplateViewProps | SummaryViewProps
   >
+  config?: any
 }
 
 interface Plugins {
