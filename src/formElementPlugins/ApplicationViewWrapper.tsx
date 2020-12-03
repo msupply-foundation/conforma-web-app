@@ -64,7 +64,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const onSave = async (jsonValue: ResponseFull) => {
     const validationResult: ValidationState = await onUpdate(jsonValue.text)
-    if (jsonValue.text)
+    if (jsonValue.text !== undefined)
       responseMutation({
         variables: {
           id: currentResponse?.id as number,
