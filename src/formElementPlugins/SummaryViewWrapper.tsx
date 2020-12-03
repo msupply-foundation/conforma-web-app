@@ -60,10 +60,10 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
 
   const DefaultSummaryView: React.FC = () => {
     return (
-      <>
+      <Form.Field required={isRequired}>
         <label>{parameters.label}</label>
         <Input fluid readOnly disabled transparent value={response ? response?.text : ''} />
-      </>
+      </Form.Field>
     )
   }
 
