@@ -27,6 +27,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   })
 
   useEffect(() => {
+    // Runs once on component mount
     if (!pluginCode) return
     // TODO use plugin-specific validation method if defined
     setPluginMethods({
@@ -42,7 +43,6 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
     }
 
     if (isStrictValidation && isRequired && response?.text === undefined) {
-      console.log('Going to invalid:', code)
       setValidationState({ isValid: false, validationMessage: 'Field cannot be blank' })
       return
     }

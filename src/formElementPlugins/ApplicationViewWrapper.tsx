@@ -32,6 +32,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
 
   useEffect(() => {
+    // Runs once on component mount
     if (!pluginCode) return
     // TODO use plugin-specific validation method if defined
     setPluginMethods({
