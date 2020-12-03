@@ -9,6 +9,7 @@ export {
   ElementState,
   EvaluatorParameters,
   FullUserPermissions,
+  IGraphQLConnection,
   LooseString,
   ProgressInApplication,
   ProgressInSection,
@@ -64,7 +65,8 @@ interface ElementState extends ElementBase {
   isRequired: boolean
   isVisible: boolean
 }
-export interface IGraphQLConnection {
+
+interface IGraphQLConnection {
   fetch: Function
   endpoint: string
 }
