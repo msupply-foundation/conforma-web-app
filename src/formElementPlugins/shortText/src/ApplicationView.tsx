@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { Form } from 'semantic-ui-react'
+import { Form, Input } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   onUpdate,
-  initialValue,
+  value,
+  setValue,
   isEditable,
   currentResponse,
   validationState,
   onSave,
 }) => {
-  const [value, setValue] = useState<string>(initialValue?.text)
   const { placeholder, maskedInput, label } = parameters
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         disabled={!isEditable}
         type={maskedInput ? 'password' : undefined}
         error={
-          !validationState.isValid && currentResponse?.text
+          !validationState.isValid && currentResponse?.text !== undefined
             ? {
                 content: validationState?.validationMessage,
                 pointing: 'above',

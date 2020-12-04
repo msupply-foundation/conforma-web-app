@@ -9,6 +9,7 @@ export {
   ElementState,
   FullUserPermissions,
   LooseString,
+  PageElementsStatuses,
   ProgressInApplication,
   ProgressInSection,
   ProgressInPage,
@@ -71,6 +72,10 @@ interface FullUserPermissions {
 }
 
 type LooseString = string | null | undefined
+
+interface PageElementsStatuses {
+  [code: string]: ProgressStatus
+}
 
 interface ProgressInPage {
   pageName: string

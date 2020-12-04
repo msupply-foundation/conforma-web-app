@@ -8,6 +8,7 @@ interface ElementsBoxProps {
   responsesByCode: ResponsesByCode
   elements: ElementState[]
   anyRequiredQuestions: boolean
+  forceValidation: boolean
 }
 
 const ElementsBox: React.FC<ElementsBoxProps> = ({
@@ -15,6 +16,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
   responsesByCode,
   elements,
   anyRequiredQuestions,
+  forceValidation,
 }) => {
   return elements ? (
     <Segment vertical>
@@ -35,6 +37,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
               isRequired={isRequired}
               allResponses={responsesByCode}
               currentResponse={response}
+              forceValidation={forceValidation}
             />
           )
         })}

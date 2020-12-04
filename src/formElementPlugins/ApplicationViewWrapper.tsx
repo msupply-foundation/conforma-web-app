@@ -12,15 +12,16 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     code,
     pluginCode,
     parameters,
+    initialValue,
     isVisible,
     isEditable,
     isRequired,
     currentResponse,
     allResponses,
+    forceValidation,
   } = props
 
   const { validation: validationExpression, validationMessage } = parameters
-
   const [responseMutation] = useUpdateResponseMutation()
   const [pluginMethods, setPluginMethods] = useState({
     validate: (
@@ -30,6 +31,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     ): any => console.log('notLoaded'),
   })
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
+  const [value, setValue] = useState<string>(initialValue?.text)
 
   useEffect(() => {
     if (!pluginCode) return
@@ -39,17 +41,17 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     })
   }, [])
 
+  useEffect(() => {
+    if (forceValidation) onUpdate(currentResponse?.text)
+  }, [currentResponse, forceValidation])
+
   const onUpdate = async (value: LooseString) => {
     const responses = { thisResponse: value, ...allResponses }
-
-    if (!validationExpression || value === undefined) {
-      setValidationState({ isValid: true } as ValidationState)
-      return { isValid: true }
-    }
 
     const evaluator = async (expression: IQueryNode) => {
       return await evaluateExpression(expression, { objects: [responses], APIfetch: fetch })
     }
+
     const validationResult: ValidationState = await pluginMethods.validate(
       validationExpression,
       validationMessage,
@@ -62,13 +64,14 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const onSave = async (jsonValue: ResponseFull) => {
     const validationResult: ValidationState = await onUpdate(jsonValue.text)
-    responseMutation({
-      variables: {
-        id: currentResponse?.id as number,
-        value: jsonValue,
-        isValid: validationResult.isValid,
-      },
-    })
+    if (jsonValue.text !== undefined)
+      responseMutation({
+        variables: {
+          id: currentResponse?.id as number,
+          value: jsonValue,
+          isValid: validationResult.isValid,
+        },
+      })
   }
 
   if (!pluginCode || !isVisible) return null
@@ -79,6 +82,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     <ApplicationView
       onUpdate={onUpdate}
       onSave={onSave}
+      value={value}
+      setValue={setValue}
       validationState={validationState || { isValid: true }}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
       {...props}
@@ -88,7 +93,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-<Form.Field required={isRequired}>{PluginComponent}</Form.Field>
+        <Form.Field required={isRequired}>{PluginComponent}</Form.Field>
       </React.Suspense>
     </ErrorBoundary>
   )
