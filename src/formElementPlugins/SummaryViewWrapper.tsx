@@ -77,10 +77,10 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   const DefaultSummaryView: React.FC = () => {
     const combinedParams = { ...parameters, ...evaluatedParameters }
     return (
-      <>
+      <Form.Field required={isRequired}>
         {parametersLoaded && <label>{combinedParams.label}</label>}
         <Input fluid readOnly disabled transparent value={response ? response?.text : ''} />
-      </>
+      </Form.Field>
     )
   }
 
@@ -91,10 +91,10 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   return (
     <Grid columns={2}>
       <Grid.Row centered>
-        <Grid.Column verticalAlign="middle" floated="left" width={2}>
+        <Grid.Column verticalAlign="middle" width={2}>
           {!validationState?.isValid ? <Icon name="exclamation circle" color="red" /> : null}
         </Grid.Column>
-        <Grid.Column floated="right" width={14}>
+        <Grid.Column width={14}>
           <ErrorBoundary pluginCode={pluginCode} FallbackComponent={DefaultSummaryView}>
             <React.Suspense fallback="Loading Plugin">
               {parametersLoaded && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}

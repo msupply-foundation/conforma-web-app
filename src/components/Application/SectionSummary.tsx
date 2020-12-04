@@ -35,7 +35,7 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
                 <Segment key={`SectionSummary_${element.code}`}>
                   <Grid columns={2} verticalAlign="middle">
                     <Grid.Row>
-                      <Grid.Column floated="left" width={10}>
+                      <Grid.Column width={13}>
                         <SummaryViewWrapper
                           element={element}
                           response={response}
@@ -43,7 +43,7 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
                           isStrictValidation={isStrictValidation}
                         />
                       </Grid.Column>
-                      <Grid.Column floated="right" width={3}>
+                      <Grid.Column width={3}>
                         {category === TemplateElementCategory.Question &&
                           isVisible &&
                           isEditable &&

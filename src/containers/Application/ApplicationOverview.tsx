@@ -79,10 +79,10 @@ const ApplicationOverview: React.FC = () => {
     <Container>
       <Header as="h1" content="REVIEW AND SUBMIT" />
       <Form>
-        {sectionsPages.map((sectionPage) => (
+        {sectionsPages.map((sectionPages) => (
           <SectionSummary
-            key={`SecSummary_${sectionPage.section.code}`}
-            sectionPages={sectionPage}
+            key={`SecSummary_${sectionPages.section.code}`}
+            sectionPages={sectionPages}
             serialNumber={serialNumber}
             allResponses={responsesByCode || {}}
             isStrictValidation={isStrictValidation}
