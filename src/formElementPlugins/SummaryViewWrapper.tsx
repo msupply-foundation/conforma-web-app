@@ -4,7 +4,7 @@ import { Grid, Icon, Form, Input } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents, ValidationState } from './types'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 import { defaultValidate } from './defaultValidate'
-import { EvaluatorParameters } from '../utils/types'
+import { ElementPluginParameters, EvaluatorParameters } from '../utils/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { extractDynamicExpressions, evaluateDynamicParameters } from './ApplicationViewWrapper'
 
@@ -45,7 +45,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
     evaluateDynamicParameters(dynamicExpressions, {
       objects: [allResponses],
       APIfetch: fetch,
-    }).then((result: any) => {
+    }).then((result: ElementPluginParameters) => {
       setEvaluatedParameters(result)
       setParametersLoaded(true)
     })

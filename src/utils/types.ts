@@ -6,6 +6,8 @@ export {
   ApplicationDetails,
   ApplicationElementStates,
   AppStatus,
+  ElementPluginParameterValue,
+  ElementPluginParameters,
   ElementState,
   EvaluatorParameters,
   FullUserPermissions,
@@ -46,6 +48,11 @@ interface AppStatus {
   stage: string
   status: string
   outcome: string
+}
+
+type ElementPluginParameterValue = string | number | string[] | IQueryNode
+interface ElementPluginParameters {
+  [key: string]: ElementPluginParameterValue
 }
 
 interface ElementBase {

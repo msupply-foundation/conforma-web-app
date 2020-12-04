@@ -66,8 +66,10 @@ interface TemplateViewProps {
 
 interface PluginConfig {
   isCore?: boolean
+  code: string
   folderName: string
   displayName: string
+  dynamicParameters: string[]
   category: 'Input' | 'Informative'
 }
 
@@ -79,7 +81,7 @@ interface PluginComponents {
   [key: string]: React.FunctionComponent<
     ApplicationViewProps | TemplateViewProps | SummaryViewProps
   >
-  config?: any
+  config?: PluginConfig
 }
 
 interface Plugins {

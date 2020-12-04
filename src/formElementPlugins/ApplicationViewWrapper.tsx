@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
-import { EvaluatorParameters, LooseString, ResponseFull } from '../utils/types'
+import {
+  EvaluatorParameters,
+  LooseString,
+  ResponseFull,
+  ElementPluginParameters,
+  ElementPluginParameterValue,
+} from '../utils/types'
 import { defaultValidate } from './defaultValidate'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
@@ -55,7 +61,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     evaluateDynamicParameters(dynamicExpressions, {
       objects: [allResponses],
       APIfetch: fetch,
-    }).then((result: any) => {
+    }).then((result: ElementPluginParameters) => {
       setEvaluatedParameters(result)
       setParametersLoaded(true)
     })
@@ -114,8 +120,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
 export default ApplicationViewWrapper
 
-export function extractDynamicExpressions(fields: string[], parameters: any) {
-  const expressionObject: any = {}
+export function extractDynamicExpressions(fields: string[], parameters: ElementPluginParameters) {
+  const expressionObject: ElementPluginParameters = {}
   fields.forEach((field) => {
     expressionObject[field] = parameters[field]
   })
@@ -123,16 +129,18 @@ export function extractDynamicExpressions(fields: string[], parameters: any) {
 }
 
 export async function evaluateDynamicParameters(
-  dynamicExpressions: any,
+  dynamicExpressions: ElementPluginParameters,
   evaluatorParameters: EvaluatorParameters
 ) {
   if (!dynamicExpressions) return {}
   const fields = Object.keys(dynamicExpressions)
-  const expressions = Object.values(dynamicExpressions).map((expression: any) =>
-    evaluateExpression(expression, evaluatorParameters)
+  const expressions = Object.values(dynamicExpressions).map(
+    (expression: ElementPluginParameterValue) => {
+      evaluateExpression(expression, evaluatorParameters)
+    }
   )
-  const evaluatedExpressions = await Promise.all(expressions)
-  const evaluatedParameters: any = {}
+  const evaluatedExpressions: any = await Promise.all(expressions)
+  const evaluatedParameters: ElementPluginParameters = {}
   for (let i = 0; i < fields.length; i++) {
     evaluatedParameters[fields[i]] = evaluatedExpressions[i]
   }
