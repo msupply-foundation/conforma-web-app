@@ -1,4 +1,4 @@
-import { ApplicationResponse, TemplateElement } from '../utils/generated/graphql'
+import { TemplateElement } from '../utils/generated/graphql'
 import { ElementState, ResponseFull, ResponsesByCode } from '../utils/types'
 
 interface OnUpdateApplicationView {
@@ -21,6 +21,7 @@ interface ApplicationViewWrapperProps {
   // applicationState,
   // graphQLclient
   initialValue: any // Could be a primative or an object with any shape
+  forceValidation: boolean // Run validation on formElement on load - usualy would run only onChange events
 }
 
 type ValidationState = {
@@ -31,6 +32,8 @@ type ValidationState = {
 interface ApplicationViewProps extends ApplicationViewWrapperProps {
   onUpdate: Function
   onSave: Function
+  value: string // TODO: Change to allow object with any shape
+  setValue: (text: string) => void // TO update the value on the ApplicationViewWrapper
   validationState: ValidationState
 }
 

@@ -4,7 +4,7 @@ import { Grid, Icon, Form, Input } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents, ValidationState } from './types'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 import { defaultValidate } from './defaultValidate'
-import { ElementPluginParameters, EvaluatorParameters } from '../utils/types'
+import { ElementPluginParameters, EvaluatorParameters, ValidateObject } from '../utils/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { extractDynamicExpressions, evaluateDynamicParameters } from './ApplicationViewWrapper'
 
@@ -16,12 +16,8 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   const [evaluatedParameters, setEvaluatedParameters] = useState({})
   const [parametersLoaded, setParametersLoaded] = useState(false)
   const responses = { thisResponse: response?.text, ...allResponses }
-  const [pluginMethods, setPluginMethods] = useState({
-    validate: (
-      validationExpress: IQueryNode,
-      validationMessage: string,
-      evaluatorParameters: EvaluatorParameters
-    ): any =>
+  const [pluginMethods, setPluginMethods] = useState<ValidateObject>({
+    validate: (validationExpress, validationMessage, evaluatorParameters) =>
       defaultValidate(validationExpression, validationMessage, {
         objects: [responses],
         APIfetch: fetch,
@@ -37,6 +33,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
 
   useEffect(() => {
+    // Runs once on component mount
     if (!pluginCode) return
     // TODO use plugin-specific validation method if defined
     setPluginMethods({
@@ -59,7 +56,6 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
     }
 
     if (isStrictValidation && isRequired && response?.text === undefined) {
-      console.log('Going to invalid:', code)
       setValidationState({ isValid: false, validationMessage: 'Field cannot be blank' })
       return
     }

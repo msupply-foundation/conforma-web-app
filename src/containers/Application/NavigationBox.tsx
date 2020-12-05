@@ -1,15 +1,27 @@
-import React from 'react'
-import { Grid } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import { Button, Grid, Header, Icon, Message, Modal } from 'semantic-ui-react'
 import PageButton from '../../components/Application/PageButton'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { TemplateSectionPayload } from '../../utils/types'
+import { VALIDATION_FAIL } from '../../utils/messages'
 
 interface NavigationBoxProps {
   templateSections: TemplateSectionPayload[]
   validateCurrentPage: () => boolean
 }
 
+interface ModalProps {
+  open: boolean
+  message: string
+  title: string
+}
+
 const NavigationBox: React.FC<NavigationBoxProps> = ({ templateSections, validateCurrentPage }) => {
+  const [showModal, setShowModal] = useState<ModalProps>({
+    open: false,
+    message: '',
+    title: '',
+  })
   const { query, push } = useRouter()
   const { serialNumber, sectionCode, page } = query
 
@@ -38,37 +50,62 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({ templateSections, validat
   }
 
   return currentSection ? (
-    <Grid columns={3}>
-      <Grid.Row>
-        <Grid.Column>
-          {!isFirstPage && (
+    <>
+      <Grid columns={3}>
+        <Grid.Row>
+          <Grid.Column>
+            {!isFirstPage && (
+              <PageButton
+                title="Previous"
+                type="left"
+                onClicked={() => previousButtonHandler(changePageProps)}
+              />
+            )}
+          </Grid.Column>
+          <Grid.Column />
+          {/* Empty cell */}
+          <Grid.Column>
             <PageButton
-              title="Previous"
-              type="left"
-              onClicked={() => previousButtonHandler(changePageProps)}
-            />
-          )}
-        </Grid.Column>
-        <Grid.Column />
-        {/* Empty cell */}
-        <Grid.Column>
-          {!isLastPage ? (
-            <PageButton
-              title="Next"
+              title={isLastPage ? 'Summary' : 'Next'}
               type="right"
-              onClicked={() => nextPageButtonHandler(changePageProps)}
+              onClicked={() => {
+                if (!nextPageButtonHandler(changePageProps)) {
+                  setShowModal({ open: true, ...VALIDATION_FAIL })
+                }
+              }}
             />
-          ) : (
-            <PageButton
-              title="Summary"
-              type="right"
-              onClicked={() => nextPageButtonHandler(changePageProps)}
-            />
-          )}
-        </Grid.Column>
-      </Grid.Row>
-    </Grid>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+      {showValidationModal(showModal, setShowModal)}
+      {/* {showMessage !== '' ? showValidationModal(showMessage) : null} */}
+    </>
   ) : null
+}
+
+const modalInitialValue: ModalProps = {
+  open: false,
+  message: '',
+  title: '',
+}
+
+function showValidationModal(showModal: ModalProps, setShowModal: Function) {
+  return (
+    <Modal basic onClose={() => setShowModal(modalInitialValue)} open={showModal.open} size="small">
+      <Header icon>
+        <Icon name="exclamation triangle" />
+        {showModal.title}
+      </Header>
+      <Modal.Content>
+        <p>{showModal.message}</p>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button color="green" inverted onClick={() => setShowModal(modalInitialValue)}>
+          <Icon name="checkmark" /> Yes
+        </Button>
+      </Modal.Actions>
+    </Modal>
+  )
 }
 
 interface checkPageProps {
@@ -137,16 +174,17 @@ function nextPageButtonHandler({
   sendToPage,
   sendToSummary,
   validateCurrentPage,
-}: changePageProps) {
+}: changePageProps): boolean {
   // Run the validation on the current page
   const status = validateCurrentPage()
-  if (!status) return
+  if (!status) return false
   const nextPage = currentPage + 1
   if (nextPage > currentSection.totalPages) {
     // Will check if next page is in other section
     const foundSection = templateSections.find(({ index }) => index === currentSection.index + 1)
     foundSection ? sendToPage(foundSection.code, 1) : sendToSummary()
   } else sendToPage(currentSection.code, nextPage)
+  return true
 }
 
 export default NavigationBox

@@ -8,6 +8,7 @@ import {
   ResponseFull,
   ElementPluginParameters,
   ElementPluginParameterValue,
+  ValidateObject,
 } from '../utils/types'
 import { defaultValidate } from './defaultValidate'
 import evaluateExpression from '@openmsupply/expression-evaluator'
@@ -19,22 +20,20 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     code,
     pluginCode,
     parameters,
+    initialValue,
     isVisible,
     isEditable,
     isRequired,
     currentResponse,
     allResponses,
+    forceValidation,
   } = props
 
   const { validation: validationExpression, validationMessage } = parameters
-
   const [responseMutation] = useUpdateResponseMutation()
-  const [pluginMethods, setPluginMethods] = useState({
-    validate: (
-      validationExpress: IQueryNode,
-      validationMessage: string,
-      evaluatorParameters: EvaluatorParameters
-    ): any => console.log('notLoaded'),
+  const [pluginMethods, setPluginMethods] = useState<ValidateObject>({
+    validate: (validationExpress, validationMessage, evaluatorParameters) =>
+      console.log('notLoaded'),
   })
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
   const [evaluatedParameters, setEvaluatedParameters] = useState({})
@@ -47,8 +46,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const dynamicExpressions =
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
+  const [value, setValue] = useState<string>(initialValue?.text)
 
   useEffect(() => {
+    // Runs once on component mount
     if (!pluginCode) return
     // TODO use plugin-specific validation method if defined
     setPluginMethods({
@@ -66,6 +67,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       setParametersLoaded(true)
     })
   }, [allResponses])
+  useEffect(() => {
+    if (forceValidation) onUpdate(currentResponse?.text)
+  }, [currentResponse, forceValidation])
 
   const onUpdate = async (value: LooseString) => {
     const responses = { thisResponse: value, ...allResponses }
@@ -87,13 +91,14 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const onSave = async (jsonValue: ResponseFull) => {
     const validationResult: ValidationState = await onUpdate(jsonValue.text)
-    responseMutation({
-      variables: {
-        id: currentResponse?.id as number,
-        value: jsonValue,
-        isValid: validationResult.isValid,
-      },
-    })
+    if (jsonValue.text !== undefined)
+      responseMutation({
+        variables: {
+          id: currentResponse?.id as number,
+          value: jsonValue,
+          isValid: validationResult.isValid,
+        },
+      })
   }
 
   if (!pluginCode || !isVisible) return null
@@ -104,6 +109,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       onSave={onSave}
       {...props}
       parameters={{ ...parameters, ...evaluatedParameters }}
+      value={value}
+      setValue={setValue}
       validationState={validationState || { isValid: true }}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
     />

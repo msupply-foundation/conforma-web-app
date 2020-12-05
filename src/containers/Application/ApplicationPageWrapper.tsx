@@ -2,10 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, ProgressBar } from '../../components'
 import { Grid, Label, Message, Segment } from 'semantic-ui-react'
+import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import { ElementsBox, NavigationBox } from './'
-import validatePage, { getCombinedStatus, PROGRESS_STATUS } from '../../utils/helpers/validatePage'
+import validatePage, {
+  getCombinedStatus,
+  getPageElementsStatuses,
+  PROGRESS_STATUS,
+} from '../../utils/helpers/validatePage'
 import { SummarySectionCode } from '../../utils/constants'
 import getPageElements from '../../utils/helpers/getPageElements'
 
@@ -26,6 +31,7 @@ const ApplicationPageWrapper: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
   const [pageElements, setPageElements] = useState<ElementState[]>([])
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
+  const [forceValidation, setForceValidation] = useState<boolean>(false)
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
@@ -49,6 +55,8 @@ const ApplicationPageWrapper: React.FC = () => {
     serialNumber: serialNumber as string,
     isApplicationLoaded,
   })
+
+  const [responseMutation] = useUpdateResponseMutation()
 
   // Wait for application to be loaded to:
   // 1 - ProcessRedirect: Will redirect to summary in case application is SUBMITTED
@@ -100,13 +108,36 @@ const ApplicationPageWrapper: React.FC = () => {
       return false
     }
 
-    const validation = validatePage({
+    const pageElementsStatuses = getPageElementsStatuses({
       elementsState: elementsState as ApplicationElementStates,
       responses: responsesByCode as ResponsesByCode,
       currentSectionIndex: currentSection?.index as number,
       page: Number(page),
     })
 
+    if (application?.isLinear && responsesByCode) {
+      Object.entries(pageElementsStatuses).forEach(([code, status]) => {
+        if (status === PROGRESS_STATUS.INCOMPLETE) {
+          // Update responses text to re-validate the status (on the page)
+          let response = responsesByCode[code]
+          if (response) {
+            setForceValidation(true)
+            responseMutation({
+              variables: {
+                id: response.id,
+                value: { text: '' },
+                isValid: false,
+              },
+            })
+          }
+        }
+      })
+    }
+
+    const statuses = Object.values(pageElementsStatuses)
+    const validation = getCombinedStatus(statuses)
+
+    // Run STRICT validation for linear and LOOSE for non-linear application
     return application?.isLinear ? validation === (PROGRESS_STATUS.VALID as ProgressStatus) : true
   }
 
@@ -136,6 +167,7 @@ const ApplicationPageWrapper: React.FC = () => {
             responsesByCode={responsesByCode}
             elements={pageElements}
             anyRequiredQuestions={getPageHasRequiredQuestions(pageElements)}
+            forceValidation={forceValidation}
           />
           <NavigationBox
             templateSections={templateSections}

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { Dropdown, Header, Message } from 'semantic-ui-react'
+import React, { useEffect } from 'react'
+import { Dropdown, Header } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   onUpdate,
-  initialValue,
+  value,
+  setValue,
   isEditable,
   currentResponse,
   validationState,
@@ -13,11 +14,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 }) => {
   const { label, description, placeholder, options, default: defaultIndex } = parameters
 
-  const [value, setValue] = useState(initialValue?.text || options[defaultIndex])
-
   useEffect(() => {
     onUpdate(value)
-    if (!initialValue.text && defaultIndex !== undefined)
+    if (!value && defaultIndex !== undefined)
       onSave({ text: value, optionIndex: options.indexOf(value) })
   }, [])
 
@@ -46,7 +45,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         placeholder={placeholder}
         options={dropdownOptions}
         onChange={handleChange}
-        value={value}
+        value={value || options[defaultIndex]}
         disabled={!isEditable}
       />
     </>

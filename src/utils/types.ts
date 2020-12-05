@@ -13,6 +13,7 @@ export {
   FullUserPermissions,
   IGraphQLConnection,
   LooseString,
+  PageElementsStatuses,
   ProgressInApplication,
   ProgressInSection,
   ProgressInPage,
@@ -27,6 +28,8 @@ export {
   TemplateElementState,
   TemplatePermissions,
   ValidationMode,
+  ValidateFunction,
+  ValidateObject,
 }
 
 interface ApplicationDetails {
@@ -92,6 +95,10 @@ interface FullUserPermissions {
 }
 
 type LooseString = string | null | undefined
+
+interface PageElementsStatuses {
+  [code: string]: ProgressStatus
+}
 
 interface ProgressInPage {
   pageName: string
@@ -172,6 +179,18 @@ interface TemplatePermissions {
   [index: string]: {
     [index: string]: Array<'Apply' | 'Review' | 'Assign'>
   }
+}
+
+interface ValidateFunction {
+  (
+    validationExpress: IQueryNode,
+    validationMessage: string,
+    evaluatorParameters: EvaluatorParameters
+  ): any
+}
+
+interface ValidateObject {
+  validate: ValidateFunction
 }
 
 type ValidationMode = 'STRICT' | 'LOOSE'
