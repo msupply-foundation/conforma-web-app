@@ -11,21 +11,23 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     code,
     pluginCode,
     parameters,
+    initialValue,
     isVisible,
     isEditable,
     isRequired,
     currentResponse,
     allResponses,
+    forceValidation,
   } = props
 
   const { validation: validationExpression, validationMessage } = parameters
-
   const [responseMutation] = useUpdateResponseMutation()
   const [pluginMethods, setPluginMethods] = useState<ValidateObject>({
     validate: (validationExpress, validationMessage, evaluatorParameters) =>
       console.log('notLoaded'),
   })
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
+  const [value, setValue] = useState<string>(initialValue?.text)
 
   useEffect(() => {
     // Runs once on component mount
@@ -35,6 +37,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       validate: defaultValidate,
     })
   }, [])
+
+  useEffect(() => {
+    if (forceValidation) onUpdate(currentResponse?.text)
+  }, [currentResponse, forceValidation])
 
   const onUpdate = async (value: LooseString) => {
     const responses = { thisResponse: value, ...allResponses }
@@ -56,13 +62,14 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const onSave = async (jsonValue: ResponseFull) => {
     const validationResult: ValidationState = await onUpdate(jsonValue.text)
-    responseMutation({
-      variables: {
-        id: currentResponse?.id as number,
-        value: jsonValue,
-        isValid: validationResult.isValid,
-      },
-    })
+    if (jsonValue.text !== undefined)
+      responseMutation({
+        variables: {
+          id: currentResponse?.id as number,
+          value: jsonValue,
+          isValid: validationResult.isValid,
+        },
+      })
   }
 
   if (!pluginCode || !isVisible) return null
@@ -73,6 +80,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     <ApplicationView
       onUpdate={onUpdate}
       onSave={onSave}
+      value={value}
+      setValue={setValue}
       validationState={validationState || { isValid: true }}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
       {...props}
