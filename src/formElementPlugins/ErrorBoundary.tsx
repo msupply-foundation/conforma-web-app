@@ -5,6 +5,7 @@ import { PLUGIN_ERRORS } from './pluginProvider'
 type Props = {
   pluginCode: any
   children: JSX.Element
+  FallbackComponent?: any
 }
 
 type State = Readonly<{
@@ -33,7 +34,9 @@ class ErrorBoundary extends React.Component<Props, State> {
   }
 
   render() {
-    if (this.state.hasError) {
+    if (this.props.FallbackComponent) {
+      return <this.props.FallbackComponent />
+    } else if (this.state.hasError) {
       return (
         <Label basic color="red">
           {`${this.state.errorMessage}
