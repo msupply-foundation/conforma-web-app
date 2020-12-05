@@ -28,8 +28,6 @@ const Login: React.FC = () => {
 
   if (isLoggedIn()) push('/')
 
-  console.log('history', history)
-
   return (
     <Container text style={{ height: '100vh' }}>
       <Grid container columns="1" centered verticalAlign="middle" style={{ height: '100%' }}>

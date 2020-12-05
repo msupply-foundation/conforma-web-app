@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
-import evaluateExpression from '@openmsupply/expression-evaluator'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
-import { LooseString, ResponseFull } from '../utils/types'
-import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { LooseString, ResponseFull, ValidateObject } from '../utils/types'
+import { defaultValidate } from './defaultValidate'
 import { Form } from 'semantic-ui-react'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
@@ -23,19 +22,17 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const { validation: validationExpression, validationMessage } = parameters
   const [responseMutation] = useUpdateResponseMutation()
-  const [pluginMethods, setPluginMethods] = useState({
-    validate: (
-      validationExpress: IQueryNode,
-      validationMessage: string,
-      evaluator: Function
-    ): any => console.log('notLoaded'),
+  const [pluginMethods, setPluginMethods] = useState<ValidateObject>({
+    validate: (validationExpress, validationMessage, evaluatorParameters) =>
+      console.log('notLoaded'),
   })
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
   const [value, setValue] = useState<string>(initialValue?.text)
 
   useEffect(() => {
+    // Runs once on component mount
     if (!pluginCode) return
-    // TODO use generic or plugin specific
+    // TODO use plugin-specific validation method if defined
     setPluginMethods({
       validate: defaultValidate,
     })
@@ -48,14 +45,15 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const onUpdate = async (value: LooseString) => {
     const responses = { thisResponse: value, ...allResponses }
 
-    const evaluator = async (expression: IQueryNode) => {
-      return await evaluateExpression(expression, { objects: [responses], APIfetch: fetch })
+    if (!validationExpression || value === undefined) {
+      setValidationState({ isValid: true } as ValidationState)
+      return { isValid: true }
     }
 
     const validationResult: ValidationState = await pluginMethods.validate(
       validationExpression,
       validationMessage,
-      evaluator
+      { objects: [responses], APIfetch: fetch }
     )
     setValidationState(validationResult)
 
@@ -97,17 +95,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       </React.Suspense>
     </ErrorBoundary>
   )
-}
-
-const defaultValidate = async (
-  validationExpress: IQueryNode,
-  validationMessage: string,
-  evaluator: Function
-): Promise<ValidationState> => {
-  if (!validationExpress) return { isValid: true }
-  const isValid = await evaluator(validationExpress)
-  if (isValid) return { isValid }
-  return { isValid, validationMessage }
 }
 
 export default ApplicationViewWrapper

@@ -1,4 +1,4 @@
-import { ApplicationResponse, TemplateElement } from '../utils/generated/graphql'
+import { TemplateElement } from '../utils/generated/graphql'
 import { ElementState, ResponseFull, ResponsesByCode } from '../utils/types'
 
 interface OnUpdateApplicationView {
@@ -45,6 +45,8 @@ interface SummaryViewProps {
 interface SummaryViewWrapperProps {
   element: ElementState
   response: ResponseFull | null
+  allResponses: ResponsesByCode
+  isStrictValidation: boolean
 }
 
 interface OnUpdateTemplateWrapperView {
@@ -85,6 +87,7 @@ interface PluginComponents {
 interface Plugins {
   [key: string]: PluginComponents
 }
+
 export {
   OnUpdateApplicationView,
   OnUpdateTemplateWrapperView,

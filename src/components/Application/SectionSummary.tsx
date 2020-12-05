@@ -3,17 +3,21 @@ import { Link } from 'react-router-dom'
 import { Button, Grid, Header, Segment } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
-import { SectionElementStates } from '../../utils/types'
+import { ResponsesByCode, SectionElementStates } from '../../utils/types'
 
-interface ApplicationSummaryProps {
+interface SectionSummaryProps {
   sectionPages: SectionElementStates
   serialNumber: string
+  allResponses: ResponsesByCode
+  isStrictValidation: boolean
   canEdit: boolean
 }
 
-const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
+const SectionSummary: React.FC<SectionSummaryProps> = ({
   sectionPages,
   serialNumber,
+  allResponses,
+  isStrictValidation,
   canEdit,
 }) => {
   const { section, pages } = sectionPages
@@ -21,18 +25,23 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
     <Segment.Group size="large">
       <Header as="h2" content={`${section.title}`} />
       {Object.entries(pages).map(([pageName, elements]) => (
-        <Segment>
+        <Segment key={`SectionSummary_${pageName}`}>
           <p>{pageName}</p>
           <Segment.Group>
             {elements.map(({ element, response }) => {
               const { category, isVisible, isEditable } = element
               const pageCode = pageName?.replace(' ', '')
               return (
-                <Segment>
+                <Segment key={`SectionSummary_${element.code}`}>
                   <Grid columns={2} verticalAlign="middle">
                     <Grid.Row>
                       <Grid.Column floated="left" width={10}>
-                        <SummaryViewWrapper element={element} response={response} />
+                        <SummaryViewWrapper
+                          element={element}
+                          response={response}
+                          allResponses={allResponses}
+                          isStrictValidation={isStrictValidation}
+                        />
                       </Grid.Column>
                       <Grid.Column floated="right" width={5}>
                         {category === TemplateElementCategory.Question &&
@@ -60,4 +69,4 @@ const ApplicationSummary: React.FC<ApplicationSummaryProps> = ({
   )
 }
 
-export default ApplicationSummary
+export default SectionSummary

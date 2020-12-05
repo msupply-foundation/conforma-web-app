@@ -7,7 +7,9 @@ export {
   ApplicationElementStates,
   AppStatus,
   ElementState,
+  EvaluatorParameters,
   FullUserPermissions,
+  IGraphQLConnection,
   LooseString,
   PageElementsStatuses,
   ProgressInApplication,
@@ -24,6 +26,8 @@ export {
   TemplateElementState,
   TemplatePermissions,
   ValidationMode,
+  ValidateFunction,
+  ValidateObject,
 }
 
 interface ApplicationDetails {
@@ -63,6 +67,18 @@ interface ElementState extends ElementBase {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
+}
+
+interface IGraphQLConnection {
+  fetch: Function
+  endpoint: string
+}
+
+interface EvaluatorParameters {
+  objects?: object[]
+  pgConnection?: any // Any, because not likely to be used in front-end
+  graphQLConnection?: IGraphQLConnection
+  APIfetch?: Function
 }
 
 interface FullUserPermissions {
@@ -156,6 +172,18 @@ interface TemplatePermissions {
   [index: string]: {
     [index: string]: Array<'Apply' | 'Review' | 'Assign'>
   }
+}
+
+interface ValidateFunction {
+  (
+    validationExpress: IQueryNode,
+    validationMessage: string,
+    evaluatorParameters: EvaluatorParameters
+  ): any
+}
+
+interface ValidateObject {
+  validate: ValidateFunction
 }
 
 type ValidationMode = 'STRICT' | 'LOOSE'
