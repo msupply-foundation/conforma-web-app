@@ -66,6 +66,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       setParametersLoaded(true)
     })
   }, [allResponses])
+
   useEffect(() => {
     if (forceValidation) onUpdate(currentResponse?.text)
   }, [currentResponse, forceValidation])
@@ -140,12 +141,13 @@ export async function evaluateDynamicParameters(
 ) {
   if (!dynamicExpressions) return {}
   const fields = Object.keys(dynamicExpressions)
-  const expressions = Object.values(dynamicExpressions).map(
-    (expression: ElementPluginParameterValue) => {
-      evaluateExpression(expression, evaluatorParameters)
-    }
+  const expressions = Object.values(
+    dynamicExpressions
+  ).map((expression: ElementPluginParameterValue) =>
+    evaluateExpression(expression, evaluatorParameters)
   )
   const evaluatedExpressions: any = await Promise.all(expressions)
+  console.log('evaluatedExpressions', evaluatedExpressions)
   const evaluatedParameters: ElementPluginParameters = {}
   for (let i = 0; i < fields.length; i++) {
     evaluatedParameters[fields[i]] = evaluatedExpressions[i]

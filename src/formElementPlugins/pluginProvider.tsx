@@ -35,7 +35,7 @@ class pluginProvider {
         code: 'textInfo',
         isCore: true,
         displayName: 'Static Text',
-        folderName: '',
+        folderName: 'textInfo',
         category: 'Informative',
       },
       dropdownChoice: {
