@@ -84,9 +84,6 @@ interface PluginComponents {
   ApplicationView: React.FunctionComponent<ApplicationViewProps>
   SummaryView: React.FunctionComponent<SummaryViewProps>
   TemplateView: React.FunctionComponent<TemplateViewProps>
-  // [key: string]: React.FunctionComponent<
-  //   ApplicationViewProps | TemplateViewProps | SummaryViewProps
-  // >
   config?: PluginConfig
 }
 

@@ -12,7 +12,6 @@ import {
 } from '../utils/types'
 import { defaultValidate } from './defaultValidate'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { Form } from 'semantic-ui-react'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
@@ -42,7 +41,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const { ApplicationView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
   const dynamicParameters = config?.dynamicParameters
-
   const dynamicExpressions =
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
   const [value, setValue] = useState<string>(initialValue?.text)

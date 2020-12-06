@@ -5,7 +5,6 @@ import { SummaryViewWrapperProps, PluginComponents, ValidationState } from './ty
 import { TemplateElementCategory } from '../utils/generated/graphql'
 import { defaultValidate } from './defaultValidate'
 import { ElementPluginParameters, EvaluatorParameters, ValidateObject } from '../utils/types'
-import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { extractDynamicExpressions, evaluateDynamicParameters } from './ApplicationViewWrapper'
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
@@ -27,7 +26,6 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   const { SummaryView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
   const dynamicParameters = config?.dynamicParameters
-
   const dynamicExpressions =
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
 

@@ -1,4 +1,4 @@
-import { ApplicationResponse, TemplateElement, TemplateElementCategory } from './generated/graphql'
+import { TemplateElement, TemplateElementCategory } from './generated/graphql'
 
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
@@ -54,6 +54,7 @@ interface AppStatus {
 }
 
 type ElementPluginParameterValue = string | number | string[] | IQueryNode
+
 interface ElementPluginParameters {
   [key: string]: ElementPluginParameterValue
 }
