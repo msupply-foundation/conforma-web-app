@@ -145,7 +145,6 @@ export async function evaluateDynamicParameters(
     evaluateExpression(expression, evaluatorParameters)
   )
   const evaluatedExpressions: any = await Promise.all(expressions)
-  console.log('evaluatedExpressions', evaluatedExpressions)
   const evaluatedParameters: ElementPluginParameters = {}
   for (let i = 0; i < fields.length; i++) {
     evaluatedParameters[fields[i]] = evaluatedExpressions[i]
