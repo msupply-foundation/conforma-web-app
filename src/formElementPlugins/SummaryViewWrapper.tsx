@@ -24,10 +24,9 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
       }),
   })
 
-  const {
-    SummaryView,
-    config: { dynamicParameters },
-  }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
+  const { SummaryView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
+
+  const dynamicParameters = config?.dynamicParameters
 
   const dynamicExpressions =
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
@@ -39,7 +38,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
     setPluginMethods({
       validate: defaultValidate,
     })
-    evaluateDynamicParameters(dynamicExpressions, {
+    evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
       objects: [allResponses],
       APIfetch: fetch,
     }).then((result: ElementPluginParameters) => {

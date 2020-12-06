@@ -1,7 +1,9 @@
 import React from 'react'
 import { PluginManifest, PluginComponents, Plugins } from './types'
 
-const PLUGIN_COMPONENTS = ['ApplicationView', 'TemplateView', 'SummaryView']
+type ComponentKeys = 'ApplicationView' | 'TemplateView' | 'SummaryView'
+
+const PLUGIN_COMPONENTS: ComponentKeys[] = ['ApplicationView', 'TemplateView', 'SummaryView']
 const PLUGIN_ERRORS = {
   PLUGIN_NOT_IN_MANIFEST: 'Plugin is not present in plugin manifest',
   PLUGINS_NOT_LOADED: 'Plugins are not loaded, check connection with server',
@@ -23,18 +25,21 @@ class pluginProvider {
     // TODO
     this.pluginManifest = {
       shortText: {
+        code: 'shortText',
         displayName: 'Basic Text Input',
         isCore: true,
         folderName: 'shortText',
         category: 'Input',
       },
       textInfo: {
+        code: 'textInfo',
         isCore: true,
         displayName: 'Static Text',
-        folderName: 'textInfo',
+        folderName: '',
         category: 'Informative',
       },
       dropdownChoice: {
+        code: 'dropdownChoice',
         isCore: true,
         displayName: 'Drop-down Selector',
         folderName: 'dropdownChoice',
@@ -62,7 +67,7 @@ class pluginProvider {
 }
 
 function getLocalElementPlugin(folderName: string) {
-  const result: PluginComponents = {}
+  const result: PluginComponents = {} as PluginComponents
   result.config = require(`./${folderName}/pluginConfig.json`)
   // TO-DO: optimize so it only imports the component type (Application, Template, Summary) that is required
   PLUGIN_COMPONENTS.forEach((componentName) => {
@@ -80,7 +85,7 @@ function getLocalElementPlugin(folderName: string) {
 // Since the interface for getPluginElement should always return { pluginComponents }
 // this helper will return a reject with an error
 function returnWithError(error: Error) {
-  const result: PluginComponents = {}
+  const result: PluginComponents = {} as PluginComponents
   PLUGIN_COMPONENTS.forEach(
     (componentName) =>
       (result[componentName] = React.lazy(async () => {
@@ -92,7 +97,7 @@ function returnWithError(error: Error) {
 }
 
 function getRemoteElementPlugin(code: string) {
-  const result: PluginComponents = {}
+  const result: PluginComponents = {} as PluginComponents
   PLUGIN_COMPONENTS.forEach((componentName) => {
     // TODO will be added in another PR
     result[componentName] = () => <div>Not Implemented</div>

@@ -39,10 +39,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const [evaluatedParameters, setEvaluatedParameters] = useState({})
   const [parametersLoaded, setParametersLoaded] = useState(false)
 
-  const {
-    ApplicationView,
-    config: { dynamicParameters },
-  }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
+  const { ApplicationView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
+
+  const dynamicParameters = config?.dynamicParameters
 
   const dynamicExpressions =
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
@@ -59,7 +58,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   // Update dynamic parameters when responses change
   useEffect(() => {
-    evaluateDynamicParameters(dynamicExpressions, {
+    evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
       objects: [allResponses],
       APIfetch: fetch,
     }).then((result: ElementPluginParameters) => {
