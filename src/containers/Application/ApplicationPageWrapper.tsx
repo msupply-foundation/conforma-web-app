@@ -26,6 +26,7 @@ import {
   ValidationMode,
 } from '../../utils/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
+import { ValidationContext } from 'graphql'
 
 const ApplicationPageWrapper: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
@@ -135,6 +136,8 @@ const ApplicationPageWrapper: React.FC = () => {
     }
 
     const statuses = Object.values(pageElementsStatuses)
+    console.log('Validation', statuses)
+
     const validation = getCombinedStatus(statuses)
 
     // Run STRICT validation for linear and LOOSE for non-linear application
@@ -236,24 +239,29 @@ function buildProgressInApplication({
     const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
     const isCurrentPage = (page: number) => section.index === currentSection && page === currentPage
 
-    const getPageStatus = (sectionIndex: number, page: number) => {
+    const getPageStatus = (sectionIndex: number, page: number, validationMode: ValidationMode) => {
       const draftPageStatus = validatePage({
         elementsState,
         responses,
         currentSectionIndex: sectionIndex,
         page,
       })
-      if (isLinear || validationMode === 'STRICT')
+      if (validationMode === 'STRICT')
         return draftPageStatus === PROGRESS_STATUS.VALID
           ? PROGRESS_STATUS.VALID
           : PROGRESS_STATUS.NOT_VALID
       return draftPageStatus
     }
 
-    let previousPageStatus: ProgressStatus = PROGRESS_STATUS.VALID
+    let previousPageStatus: ProgressStatus = previousSectionStatus
     const pages: ProgressInPage[] = pageNumbers.map((pageNumber) => {
-      const status = getPageStatus(section.index, pageNumber)
       const isPreviousPageValid = previousPageStatus === PROGRESS_STATUS.VALID
+
+      // Should run page validation in strict mode if linear previous pages are visited
+      const pageValidationMode =
+        validationMode === 'STRICT' || (isLinear && isPreviousPageValid) ? 'STRICT' : 'LOOSE'
+
+      const status = getPageStatus(section.index, pageNumber, pageValidationMode)
 
       previousPageStatus = status // Update new previous page for next iteration
       return {
