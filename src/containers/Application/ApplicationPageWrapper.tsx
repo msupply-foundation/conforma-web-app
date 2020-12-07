@@ -11,7 +11,6 @@ import validatePage, {
   getPageElementsStatuses,
   PROGRESS_STATUS,
 } from '../../utils/helpers/validatePage'
-import { SummarySectionCode } from '../../utils/constants'
 import getPageElements from '../../utils/helpers/getPageElements'
 
 import {
@@ -171,6 +170,9 @@ const ApplicationPageWrapper: React.FC = () => {
           />
           <NavigationBox
             templateSections={templateSections}
+            currentSection={currentSection}
+            serialNumber={serialNumber}
+            currentPage={Number(page as string)}
             validateCurrentPage={validateCurrentPage}
           />
         </Grid.Column>
