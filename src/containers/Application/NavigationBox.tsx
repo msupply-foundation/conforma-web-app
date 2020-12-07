@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
-import { Button, Grid, Header, Icon, Message, Modal } from 'semantic-ui-react'
-import PageButton from '../../components/Application/PageButton'
+import { Button, Container, Header, Icon, Label, Modal } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { TemplateSectionPayload } from '../../utils/types'
 import { VALIDATION_FAIL } from '../../utils/messages'
+
+const PREVIOUS = 'Previous'
+const NEXT = 'Next'
 
 interface NavigationBoxProps {
   templateSections: TemplateSectionPayload[]
@@ -47,39 +49,21 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({ templateSections, validat
       push(`/applications/${serialNumber}/${section}/Page${page}`),
     sendToSummary: () => push(`/applications/${serialNumber}/summary`),
     validateCurrentPage,
+    setShowModal,
   }
 
   return currentSection ? (
-    <>
-      <Grid columns={3}>
-        <Grid.Row>
-          <Grid.Column>
-            {!isFirstPage && (
-              <PageButton
-                title="Previous"
-                type="left"
-                onClicked={() => previousButtonHandler(changePageProps)}
-              />
-            )}
-          </Grid.Column>
-          <Grid.Column />
-          {/* Empty cell */}
-          <Grid.Column>
-            <PageButton
-              title={isLastPage ? 'Summary' : 'Next'}
-              type="right"
-              onClicked={() => {
-                if (!nextPageButtonHandler(changePageProps)) {
-                  setShowModal({ open: true, ...VALIDATION_FAIL })
-                }
-              }}
-            />
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+    <Container>
       {showValidationModal(showModal, setShowModal)}
-      {/* {showMessage !== '' ? showValidationModal(showMessage) : null} */}
-    </>
+      {!isFirstPage && (
+        <Label basic as="a" onClick={() => previousButtonHandler(changePageProps)}>
+          {PREVIOUS}
+        </Label>
+      )}
+      <Label basic as="a" onClick={() => nextPageButtonHandler(changePageProps)}>
+        {NEXT}
+      </Label>
+    </Container>
   ) : null
 }
 
@@ -148,6 +132,7 @@ interface changePageProps {
   sendToPage: (section: string, page: number) => void
   sendToSummary: () => void
   validateCurrentPage: () => boolean
+  setShowModal: (props: ModalProps) => void
 }
 
 function previousButtonHandler({
@@ -174,17 +159,20 @@ function nextPageButtonHandler({
   sendToPage,
   sendToSummary,
   validateCurrentPage,
-}: changePageProps): boolean {
+  setShowModal,
+}: changePageProps) {
   // Run the validation on the current page
   const status = validateCurrentPage()
-  if (!status) return false
+  if (!status) {
+    setShowModal({ open: true, ...VALIDATION_FAIL })
+    return
+  }
   const nextPage = currentPage + 1
   if (nextPage > currentSection.totalPages) {
     // Will check if next page is in other section
     const foundSection = templateSections.find(({ index }) => index === currentSection.index + 1)
     foundSection ? sendToPage(foundSection.code, 1) : sendToSummary()
   } else sendToPage(currentSection.code, nextPage)
-  return true
 }
 
 export default NavigationBox
