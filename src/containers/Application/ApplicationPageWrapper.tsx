@@ -146,7 +146,7 @@ const ApplicationPageWrapper: React.FC = () => {
   ) : loading || responsesLoading ? (
     <Loading />
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
-    <Segment.Group>
+    <Segment.Group style={{ padding: 10 }}>
       <Grid stackable>
         <Grid.Column width={4}>
           {!progressInApplication ? (
@@ -231,7 +231,8 @@ function buildProgressInApplication({
 }: buildProgressInApplicationProps): ProgressInApplication {
   if (!elementsState || !responses) return []
   let previousSectionStatus: ProgressStatus = PROGRESS_STATUS.VALID
-  let sectionsStructure: ProgressInApplication = templateSections.map((section) => {
+
+  return templateSections.map((section) => {
     // Create an array with all pages in each section
     const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
     const isCurrentPage = (page: number) => section.index === currentSection && page === currentPage
@@ -281,16 +282,6 @@ function buildProgressInApplication({
 
     return progressInSection
   })
-
-  // Add 'Review and submit' as last section
-  sectionsStructure.push({
-    code: SummarySectionCode,
-    title: 'Review and submit',
-    canNavigate: isLinear ? false : true,
-    isActive: false,
-  })
-
-  return sectionsStructure
 }
 
 export default ApplicationPageWrapper
