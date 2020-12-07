@@ -2042,8 +2042,8 @@ export type ApplicationResponseFilter = {
   value?: Maybe<JsonFilter>;
   /** Filter by the object’s `isValid` field. */
   isValid?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `timeCreated` field. */
-  timeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
   reviewResponses?: Maybe<ApplicationResponseToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
@@ -4123,8 +4123,8 @@ export enum ApplicationResponsesOrderBy {
   ValueDesc = 'VALUE_DESC',
   IsValidAsc = 'IS_VALID_ASC',
   IsValidDesc = 'IS_VALID_DESC',
-  TimeCreatedAsc = 'TIME_CREATED_ASC',
-  TimeCreatedDesc = 'TIME_CREATED_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -4141,8 +4141,8 @@ export type ApplicationResponseCondition = {
   value?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isValid` field. */
   isValid?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `timeCreated` field. */
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
 };
 
 /** A connection to a list of `ApplicationResponse` values. */
@@ -4167,7 +4167,7 @@ export type ApplicationResponse = Node & {
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   /** Reads a single `TemplateElement` that is related to this `ApplicationResponse`. */
   templateElement?: Maybe<TemplateElement>;
   /** Reads a single `Application` that is related to this `ApplicationResponse`. */
@@ -9087,7 +9087,7 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   templateElementId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -9348,7 +9348,7 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -10412,7 +10412,7 @@ export type UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -10510,7 +10510,7 @@ export type UpdateApplicationResponseOnReviewResponseForReviewResponseApplicatio
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -10691,7 +10691,7 @@ export type ApplicationResponsePatch = {
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -10705,7 +10705,7 @@ export type ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInpu
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -11949,7 +11949,7 @@ export type FileApplicationResponseIdFkeyApplicationResponseCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -12472,7 +12472,7 @@ export type ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInp
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -12632,7 +12632,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput =
   templateElementId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -13461,7 +13461,7 @@ export type ApplicationResponseInput = {
   applicationId?: Maybe<Scalars['Int']>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -16893,7 +16893,7 @@ export type ElementFragment = (
 
 export type ResponseFragment = (
   { __typename?: 'ApplicationResponse' }
-  & Pick<ApplicationResponse, 'id' | 'value' | 'isValid' | 'timeCreated'>
+  & Pick<ApplicationResponse, 'id' | 'value' | 'isValid'>
 );
 
 export type SectionFragment = (
@@ -17203,8 +17203,6 @@ export const ResponseFragmentDoc = gql`
     fragment Response on ApplicationResponse {
   id
   value
-  isValid
-  timeCreated
   isValid
 }
     `;
