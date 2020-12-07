@@ -1,1 +1,7 @@
-export const SummarySectionCode = 'SummarySection'
+const PREVIOUS = 'Previous'
+const NEXT = 'Next'
+
+export {
+    PREVIOUS,
+    NEXT
+}
