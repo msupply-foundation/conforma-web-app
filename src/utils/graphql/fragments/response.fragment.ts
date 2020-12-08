@@ -5,7 +5,5 @@ export default gql`
     id
     value
     isValid
-    timeCreated
-    isValid
   }
 `

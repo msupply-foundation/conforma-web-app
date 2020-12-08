@@ -38,7 +38,8 @@ const SiteLayout: React.FC = () => {
               ['Applications List', '/applications'],
               ['Register', '/applications/new?type=UserRegistration'],
               ['Company Registration', '/applications/new?type=CompRego1'],
-              ['Test Register form', '/applications/new?type=TestRego'],
+              ['Review Test form', '/applications/new?type=ReviewTest'],
+              ['Feature Showcase form', '/applications/new?type=TestRego'],
             ]}
           />
         </Grid.Column>

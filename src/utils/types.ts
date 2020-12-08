@@ -1,4 +1,4 @@
-import { ApplicationResponse, TemplateElement, TemplateElementCategory } from './generated/graphql'
+import { TemplateElement, TemplateElementCategory } from './generated/graphql'
 
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
@@ -6,6 +6,8 @@ export {
   ApplicationDetails,
   ApplicationElementStates,
   AppStatus,
+  ElementPluginParameterValue,
+  ElementPluginParameters,
   ElementState,
   EvaluatorParameters,
   FullUserPermissions,
@@ -49,6 +51,12 @@ interface AppStatus {
   stage: string
   status: string
   outcome: string
+}
+
+type ElementPluginParameterValue = string | number | string[] | IQueryNode
+
+interface ElementPluginParameters {
+  [key: string]: ElementPluginParameterValue
 }
 
 interface ElementBase {
@@ -106,7 +114,7 @@ interface ProgressInSection {
   status?: ProgressStatus
   canNavigate: boolean
   isActive: boolean
-  pages?: ProgressInPage[]
+  pages: ProgressInPage[]
 }
 
 type ProgressInApplication = ProgressInSection[]
