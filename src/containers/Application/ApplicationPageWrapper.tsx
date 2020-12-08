@@ -136,8 +136,6 @@ const ApplicationPageWrapper: React.FC = () => {
     }
 
     const statuses = Object.values(pageElementsStatuses)
-    console.log('Validation', statuses)
-
     const validation = getCombinedStatus(statuses)
 
     // Run STRICT validation for linear and LOOSE for non-linear application
@@ -233,69 +231,75 @@ function buildProgressInApplication({
   validationMode = 'LOOSE',
 }: buildProgressInApplicationProps): ProgressInApplication {
   if (!elementsState || !responses) return []
+
   let previousSectionStatus: ProgressStatus = PROGRESS_STATUS.VALID
+  let previousPageStatus: ProgressStatus = previousSectionStatus
+
+  const isCurrentPage = (page: number, sectionIndex: number) =>
+    sectionIndex === currentSection && page === currentPage
+  const isCurrentSection = (sectionIndex: number) => sectionIndex === currentSection
+
+  const isPreviousPageValid = (pageNumber: number, sectionIndex: number): boolean => {
+    const previousPage = pageNumber - 1
+    const isPreviousActive =
+      previousPage > 0
+        ? isCurrentPage(previousPage, sectionIndex)
+        : isCurrentSection(sectionIndex - 1)
+    return isPreviousActive ? false : previousPageStatus === PROGRESS_STATUS.VALID
+  }
+
+  const getPageStatus = (sectionIndex: number, page: number, validationMode: ValidationMode) => {
+    const draftPageStatus = validatePage({
+      elementsState,
+      responses,
+      currentSectionIndex: sectionIndex,
+      page,
+    })
+    if (validationMode === 'STRICT')
+      return draftPageStatus === PROGRESS_STATUS.VALID
+        ? PROGRESS_STATUS.VALID
+        : PROGRESS_STATUS.NOT_VALID
+    return draftPageStatus
+  }
+
+  const getPageValidationMode = (pageNumber: number, sectionIndex: number) =>
+    isLinear && isPreviousPageValid(pageNumber, sectionIndex) ? 'STRICT' : 'LOOSE'
+
   let sectionsStructure: ProgressInApplication = templateSections.map((section) => {
     // Create an array with all pages in each section
     const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
-    const isCurrentPage = (page: number) => section.index === currentSection && page === currentPage
 
-    const getPageStatus = (sectionIndex: number, page: number, validationMode: ValidationMode) => {
-      const draftPageStatus = validatePage({
-        elementsState,
-        responses,
-        currentSectionIndex: sectionIndex,
-        page,
-      })
-      if (validationMode === 'STRICT')
-        return draftPageStatus === PROGRESS_STATUS.VALID
-          ? PROGRESS_STATUS.VALID
-          : PROGRESS_STATUS.NOT_VALID
-      return draftPageStatus
-    }
-
-    let previousPageStatus: ProgressStatus = previousSectionStatus
-    const pages: ProgressInPage[] = pageNumbers.map((pageNumber) => {
-      const isPreviousPageValid = previousPageStatus === PROGRESS_STATUS.VALID
-
-      // Should run page validation in strict mode if linear previous pages are visited
-      const pageValidationMode =
-        validationMode === 'STRICT' || (isLinear && isPreviousPageValid) ? 'STRICT' : 'LOOSE'
-
-      const status = getPageStatus(section.index, pageNumber, pageValidationMode)
-
-      previousPageStatus = status // Update new previous page for next iteration
-      return {
-        pageName: `Page ${pageNumber}`,
-        canNavigate: isLinear ? isPreviousPageValid : true,
-        isActive: isCurrentPage(pageNumber),
-        status: isCurrentPage(pageNumber) ? PROGRESS_STATUS.INCOMPLETE : status,
-      }
-    })
-
-    const sectionStatus = getCombinedStatus(pages.map(({ status }) => status))
     const isPreviousSectionValid = previousSectionStatus === PROGRESS_STATUS.VALID
-    previousSectionStatus = sectionStatus
+    previousPageStatus = previousSectionStatus
 
-    // Build object to keep each section progress (and pages progress)
-    // with section status as combined statuses of pages
     const progressInSection: ProgressInSection = {
       code: section.code,
       title: section.title,
       canNavigate: isLinear && (section.index <= currentSection || isPreviousSectionValid),
       isActive: section.index === currentSection,
-      pages,
-      status: section.index === currentSection ? PROGRESS_STATUS.INCOMPLETE : sectionStatus,
+
+      // Run each page using strict validation mode for linear application with visited pages
+      pages: pageNumbers.map((pageNumber) => {
+        const pageValidationMode =
+          validationMode || getPageValidationMode(pageNumber, section.index)
+
+        const status = getPageStatus(section.index, pageNumber, pageValidationMode)
+        previousPageStatus = status // Update new previous page for next iteration
+
+        return {
+          pageName: `Page ${pageNumber}`,
+          canNavigate: isLinear ? isPreviousPageValid(pageNumber, section.index) : true,
+          isActive: isCurrentPage(pageNumber, section.index),
+          status,
+        }
+      }),
     }
+    progressInSection.status = getCombinedStatus(
+      progressInSection.pages.map(({ status }) => status)
+    )
+    previousSectionStatus = progressInSection.status
 
     return progressInSection
-  })
-
-  // Add 'Review and submit' as last section
-  sectionsStructure.push({
-    code: SummarySectionCode,
-    title: 'Review and submit',
-    canNavigate: isLinear ? false : true,
-    isActive: false,
   })
 
   return sectionsStructure

@@ -114,7 +114,7 @@ interface ProgressInSection {
   status?: ProgressStatus
   canNavigate: boolean
   isActive: boolean
-  pages?: ProgressInPage[]
+  pages: ProgressInPage[]
 }
 
 type ProgressInApplication = ProgressInSection[]
