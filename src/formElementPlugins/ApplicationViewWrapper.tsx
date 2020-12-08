@@ -36,7 +36,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   })
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
   const [evaluatedParameters, setEvaluatedParameters] = useState({})
-  const [parametersLoaded, setParametersLoaded] = useState(false)
+
+  // This value prevents the plugin component from rendering until parameters have been evaluated, otherwise React throws an error when trying to pass an Object in as a prop value
+  const [parametersReady, setParametersReady] = useState(false)
 
   const { ApplicationView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
@@ -61,7 +63,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       APIfetch: fetch,
     }).then((result: ElementPluginParameters) => {
       setEvaluatedParameters(result)
-      setParametersLoaded(true)
+      setParametersReady(true)
     })
   }, [allResponses])
 
@@ -117,7 +119,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        {parametersLoaded && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
+        {parametersReady && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
       </React.Suspense>
     </ErrorBoundary>
   )
