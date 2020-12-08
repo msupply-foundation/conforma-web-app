@@ -11,7 +11,6 @@ import validatePage, {
   getPageElementsStatuses,
   PROGRESS_STATUS,
 } from '../../utils/helpers/validatePage'
-import { SummarySectionCode } from '../../utils/constants'
 import getPageElements from '../../utils/helpers/getPageElements'
 
 import {
@@ -19,14 +18,12 @@ import {
   ElementState,
   ProgressInApplication,
   ProgressInSection,
-  ProgressInPage,
   ProgressStatus,
   ResponsesByCode,
   TemplateSectionPayload,
   ValidationMode,
 } from '../../utils/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
-import { ValidationContext } from 'graphql'
 
 const ApplicationPageWrapper: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
@@ -120,7 +117,7 @@ const ApplicationPageWrapper: React.FC = () => {
       Object.entries(pageElementsStatuses).forEach(([code, status]) => {
         if (status === PROGRESS_STATUS.INCOMPLETE) {
           // Update responses text to re-validate the status (on the page)
-          let response = responsesByCode[code]
+          const response = responsesByCode[code]
           if (response) {
             setForceValidation(true)
             responseMutation({
@@ -265,7 +262,7 @@ function buildProgressInApplication({
   const getPageValidationMode = (pageNumber: number, sectionIndex: number) =>
     isLinear && isPreviousPageValid(pageNumber, sectionIndex) ? 'STRICT' : 'LOOSE'
 
-  let sectionsStructure: ProgressInApplication = templateSections.map((section) => {
+  return templateSections.map((section) => {
     // Create an array with all pages in each section
     const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
 
@@ -301,8 +298,6 @@ function buildProgressInApplication({
 
     return progressInSection
   })
-
-  return sectionsStructure
 }
 
 export default ApplicationPageWrapper
