@@ -11,7 +11,6 @@ import validatePage, {
   getPageElementsStatuses,
   PROGRESS_STATUS,
 } from '../../utils/helpers/validatePage'
-import { SummarySectionCode } from '../../utils/constants'
 import getPageElements from '../../utils/helpers/getPageElements'
 
 import {
@@ -19,7 +18,6 @@ import {
   ElementState,
   ProgressInApplication,
   ProgressInSection,
-  ProgressInPage,
   ProgressStatus,
   ResponsesByCode,
   TemplateSectionPayload,
@@ -119,7 +117,7 @@ const ApplicationPageWrapper: React.FC = () => {
       Object.entries(pageElementsStatuses).forEach(([code, status]) => {
         if (status === PROGRESS_STATUS.INCOMPLETE) {
           // Update responses text to re-validate the status (on the page)
-          let response = responsesByCode[code]
+          const response = responsesByCode[code]
           if (response) {
             setForceValidation(true)
             responseMutation({
@@ -230,67 +228,76 @@ function buildProgressInApplication({
   validationMode = 'LOOSE',
 }: buildProgressInApplicationProps): ProgressInApplication {
   if (!elementsState || !responses) return []
+
   let previousSectionStatus: ProgressStatus = PROGRESS_STATUS.VALID
-  let sectionsStructure: ProgressInApplication = templateSections.map((section) => {
+  let previousPageStatus: ProgressStatus = previousSectionStatus
+
+  const isCurrentPage = (page: number, sectionIndex: number) =>
+    sectionIndex === currentSection && page === currentPage
+  const isCurrentSection = (sectionIndex: number) => sectionIndex === currentSection
+
+  const isPreviousPageValid = (pageNumber: number, sectionIndex: number): boolean => {
+    const previousPage = pageNumber - 1
+    const isPreviousActive =
+      previousPage > 0
+        ? isCurrentPage(previousPage, sectionIndex)
+        : isCurrentSection(sectionIndex - 1)
+    return isPreviousActive ? false : previousPageStatus === PROGRESS_STATUS.VALID
+  }
+
+  const getPageStatus = (sectionIndex: number, page: number, validationMode: ValidationMode) => {
+    const draftPageStatus = validatePage({
+      elementsState,
+      responses,
+      currentSectionIndex: sectionIndex,
+      page,
+    })
+    if (validationMode === 'STRICT')
+      return draftPageStatus === PROGRESS_STATUS.VALID
+        ? PROGRESS_STATUS.VALID
+        : PROGRESS_STATUS.NOT_VALID
+    return draftPageStatus
+  }
+
+  const getPageValidationMode = (pageNumber: number, sectionIndex: number) =>
+    isLinear && isPreviousPageValid(pageNumber, sectionIndex) ? 'STRICT' : 'LOOSE'
+
+  return templateSections.map((section) => {
     // Create an array with all pages in each section
     const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
-    const isCurrentPage = (page: number) => section.index === currentSection && page === currentPage
 
-    const getPageStatus = (sectionIndex: number, page: number) => {
-      const draftPageStatus = validatePage({
-        elementsState,
-        responses,
-        currentSectionIndex: sectionIndex,
-        page,
-      })
-      if (isLinear || validationMode === 'STRICT')
-        return draftPageStatus === PROGRESS_STATUS.VALID
-          ? PROGRESS_STATUS.VALID
-          : PROGRESS_STATUS.NOT_VALID
-      return draftPageStatus
-    }
-
-    let previousPageStatus: ProgressStatus = PROGRESS_STATUS.VALID
-    const pages: ProgressInPage[] = pageNumbers.map((pageNumber) => {
-      const status = getPageStatus(section.index, pageNumber)
-      const isPreviousPageValid = previousPageStatus === PROGRESS_STATUS.VALID
-
-      previousPageStatus = status // Update new previous page for next iteration
-      return {
-        pageName: `Page ${pageNumber}`,
-        canNavigate: isLinear ? isPreviousPageValid : true,
-        isActive: isCurrentPage(pageNumber),
-        status: isCurrentPage(pageNumber) ? PROGRESS_STATUS.INCOMPLETE : status,
-      }
-    })
-
-    const sectionStatus = getCombinedStatus(pages.map(({ status }) => status))
     const isPreviousSectionValid = previousSectionStatus === PROGRESS_STATUS.VALID
-    previousSectionStatus = sectionStatus
+    previousPageStatus = previousSectionStatus
 
-    // Build object to keep each section progress (and pages progress)
-    // with section status as combined statuses of pages
     const progressInSection: ProgressInSection = {
       code: section.code,
       title: section.title,
       canNavigate: isLinear && (section.index <= currentSection || isPreviousSectionValid),
       isActive: section.index === currentSection,
-      pages,
-      status: section.index === currentSection ? PROGRESS_STATUS.INCOMPLETE : sectionStatus,
+
+      // Run each page using strict validation mode for linear application with visited pages
+      pages: pageNumbers.map((pageNumber) => {
+        const pageValidationMode =
+          validationMode || getPageValidationMode(pageNumber, section.index)
+
+        const status = getPageStatus(section.index, pageNumber, pageValidationMode)
+        previousPageStatus = status // Update new previous page for next iteration
+
+        return {
+          pageName: `Page ${pageNumber}`,
+          canNavigate: isLinear ? isPreviousPageValid(pageNumber, section.index) : true,
+          isActive: isCurrentPage(pageNumber, section.index),
+          status,
+        }
+      }),
     }
+    progressInSection.status = getCombinedStatus(
+      progressInSection.pages.map(({ status }) => status)
+    )
+    previousSectionStatus = progressInSection.status
 
     return progressInSection
   })
-
-  // Add 'Review and submit' as last section
-  sectionsStructure.push({
-    code: SummarySectionCode,
-    title: 'Review and submit',
-    canNavigate: isLinear ? false : true,
-    isActive: false,
-  })
-
-  return sectionsStructure
 }
 
 export default ApplicationPageWrapper
