@@ -100,7 +100,7 @@ const ApplicationPageWrapper: React.FC = () => {
     })
 
     setPageElements(elements)
-  }, [responsesLoading, currentSection, page])
+  }, [responsesLoading, currentSection, page, elementsState])
 
   const validateCurrentPage = (): boolean => {
     if (!application || !currentSection || !page) {

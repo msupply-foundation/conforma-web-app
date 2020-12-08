@@ -2,6 +2,7 @@
   "isCore": true,
   "code": "textInfo",
   "displayName": "Static Text",
+  "dynamicParameters": ["title", "text"],
   "//": "categories types: 'Input'|'Informative'",
   "category": "Informative"
 }

@@ -2,8 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
-import { LooseString, ResponseFull, ValidateObject } from '../utils/types'
+import {
+  EvaluatorParameters,
+  LooseString,
+  ResponseFull,
+  ElementPluginParameters,
+  ElementPluginParameterValue,
+  ValidateObject,
+} from '../utils/types'
 import { defaultValidate } from './defaultValidate'
+import evaluateExpression from '@openmsupply/expression-evaluator'
 import { Form } from 'semantic-ui-react'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
@@ -27,6 +35,16 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       console.log('notLoaded'),
   })
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
+  const [evaluatedParameters, setEvaluatedParameters] = useState({})
+
+  // This value prevents the plugin component from rendering until parameters have been evaluated, otherwise React throws an error when trying to pass an Object in as a prop value
+  const [parametersReady, setParametersReady] = useState(false)
+
+  const { ApplicationView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
+
+  const dynamicParameters = config?.dynamicParameters
+  const dynamicExpressions =
+    dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
   const [value, setValue] = useState<string>(initialValue?.text)
 
   useEffect(() => {
@@ -37,6 +55,17 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       validate: defaultValidate,
     })
   }, [])
+
+  // Update dynamic parameters when responses change
+  useEffect(() => {
+    evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
+      objects: [allResponses],
+      APIfetch: fetch,
+    }).then((result: ElementPluginParameters) => {
+      setEvaluatedParameters(result)
+      setParametersReady(true)
+    })
+  }, [allResponses])
 
   useEffect(() => {
     if (forceValidation) onUpdate(currentResponse?.text)
@@ -74,27 +103,53 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   if (!pluginCode || !isVisible) return null
 
-  const { ApplicationView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
-
   const PluginComponent = (
     <ApplicationView
       onUpdate={onUpdate}
       onSave={onSave}
+      {...props}
+      parameters={{ ...parameters, ...evaluatedParameters }}
       value={value}
       setValue={setValue}
       validationState={validationState || { isValid: true }}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
-      {...props}
     />
   )
 
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        <Form.Field required={isRequired}>{PluginComponent}</Form.Field>
+        {parametersReady && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
       </React.Suspense>
     </ErrorBoundary>
   )
 }
 
 export default ApplicationViewWrapper
+
+export function extractDynamicExpressions(fields: string[], parameters: ElementPluginParameters) {
+  const expressionObject: ElementPluginParameters = {}
+  fields.forEach((field) => {
+    expressionObject[field] = parameters[field]
+  })
+  return expressionObject
+}
+
+export async function evaluateDynamicParameters(
+  dynamicExpressions: ElementPluginParameters,
+  evaluatorParameters: EvaluatorParameters
+) {
+  if (!dynamicExpressions) return {}
+  const fields = Object.keys(dynamicExpressions)
+  const expressions = Object.values(
+    dynamicExpressions
+  ).map((expression: ElementPluginParameterValue) =>
+    evaluateExpression(expression, evaluatorParameters)
+  )
+  const evaluatedExpressions: any = await Promise.all(expressions)
+  const evaluatedParameters: ElementPluginParameters = {}
+  for (let i = 0; i < fields.length; i++) {
+    evaluatedParameters[fields[i]] = evaluatedExpressions[i]
+  }
+  return evaluatedParameters
+}
