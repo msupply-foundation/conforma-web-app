@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import {
   Application,
+  ApplicationStageHistory,
   GetApplicationsQuery,
   Template,
   useGetApplicationsQuery,
@@ -30,13 +31,16 @@ const useListApplication = () => {
     const applicationsList = data?.applications?.nodes as Application[]
     const applicationsDetails: ApplicationDetails[] = applicationsList.map((application) => {
       const { id, serial, name, stage, status, outcome, template } = application
+      const { id: stageId } = application.applicationStageHistories
+        .nodes[0] as ApplicationStageHistory
+
       return {
         id,
         type: template?.name as string,
         isLinear: template?.isLinear as boolean,
         serial: serial as string,
         name: name as string,
-        stage: stage as string,
+        stageId: stageId,
         status: status as string,
         outcome: outcome as string,
       }

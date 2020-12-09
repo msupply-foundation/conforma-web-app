@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Application, useGetApplicationQuery } from '../../utils/generated/graphql'
+import {
+  Application,
+  ApplicationStageHistory,
+  useGetApplicationQuery,
+} from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
 import { getApplicationSections } from '../helpers/getSectionsPayload'
 import { ApplicationDetails, AppStatus, TemplateSectionPayload } from '../types'
@@ -31,6 +35,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   useEffect(() => {
     if (data && data.applicationBySerial) {
       const application = data.applicationBySerial as Application
+      const stage = application.applicationStageHistories.nodes[0] as ApplicationStageHistory
 
       setApplication({
         id: application.id,
@@ -38,7 +43,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
         isLinear: application.template?.isLinear as boolean,
         serial: application.serial as string,
         name: application.name as string,
-        stage: application.stage as string,
+        stageId: stage.id,
         status: application.status as string,
         outcome: application.outcome as string,
       })

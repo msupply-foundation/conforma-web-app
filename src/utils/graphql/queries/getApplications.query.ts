@@ -8,6 +8,11 @@ export default gql`
         template {
           ...Template
         }
+        applicationStageHistories(condition: {isCurrent: true}) {
+          nodes {
+            id
+          }
+        }
       }
     }
   }
