@@ -70,16 +70,22 @@ const SiteLayout: React.FC = () => {
               <Route exact path="/applications/:serialNumber/:sectionCode/Page:page">
                 <ApplicationPageWrapper />
               </Route>
+              <Route exact path="/applications/:serialNumber/summary">
+                <ApplicationOverview />
+              </Route>
               <Route exact path="/review/:serialNumber/">
                 <ReviewOverview />
               </Route>
               <Route exact path="/review/:serialNumber/:reviewId">
                 <ReviewPageWrapper />
               </Route>
-              <Route exact path="/applications/:serialNumber/summary">
-                <ApplicationOverview />
+              <Route exact path="/consolidate/:serialNumber/">
+                <NoMatch />
               </Route>
-              <Route exact path="/applications/:serialNumber/approval">
+              <Route exact path="/consolidate/:serialNumber/:consolidationId">
+                <NoMatch />
+              </Route>
+              <Route exact path="/approval/:serialNumber">
                 <Approval />
               </Route>
               <Route exact path="/admin">
