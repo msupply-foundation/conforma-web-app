@@ -23,6 +23,7 @@ import {
   Template,
 } from '../../components'
 import { ApplicationCreate, ApplicationList, ApplicationPageWrapper } from '../Application'
+import { ReviewOverview, ReviewPageWrapper } from '../Review'
 import UserRegister from '../User/UserRegister'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import ApplicationOverview from '../Application/ApplicationOverview'
@@ -68,6 +69,12 @@ const SiteLayout: React.FC = () => {
               </Route>
               <Route exact path="/applications/:serialNumber/:sectionCode/Page:page">
                 <ApplicationPageWrapper />
+              </Route>
+              <Route exact path="/review/:serialNumber/">
+                <ReviewOverview />
+              </Route>
+              <Route exact path="/review/:serialNumber/:reviewId">
+                <ReviewPageWrapper />
               </Route>
               <Route exact path="/applications/:serialNumber/summary">
                 <ApplicationOverview />
