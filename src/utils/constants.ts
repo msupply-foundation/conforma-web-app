@@ -4,7 +4,7 @@ const BUTTON_SUBMIT = 'Submit application'
 const TITLE_COMPANY_PLACEHOLDER = 'ABC Company'
 const TITLE_PROGRESS = 'Introduction'
 
-export {
+export default {
     BUTTON_NEXT,
     BUTTON_PREVIOUS,
     BUTTON_SUBMIT,

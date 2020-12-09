@@ -12,7 +12,7 @@ import validatePage, {
   PROGRESS_STATUS,
 } from '../../utils/helpers/validatePage'
 import getPageElements from '../../utils/helpers/getPageElements'
-import { TITLE_COMPANY_PLACEHOLDER, BUTTON_SUBMIT } from '../../utils/constants'
+import strings from '../../utils/constants'
 
 import {
   ApplicationElementStates,
@@ -146,7 +146,7 @@ const ApplicationPageWrapper: React.FC = () => {
     <Loading />
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
-      <Header textAlign="center">{TITLE_COMPANY_PLACEHOLDER}</Header>
+      <Header textAlign="center">{strings.TITLE_COMPANY_PLACEHOLDER}</Header>
       <Grid
         stackable
         style={{
@@ -193,7 +193,7 @@ const ApplicationPageWrapper: React.FC = () => {
       <Sticky pushing style={{ backgroundColor: 'white' }}>
         <Segment basic textAlign="right">
           <Button color="blue" onClick={() => push(`/applications/${serialNumber}/summary`)}>
-            {BUTTON_SUBMIT}
+            {strings.BUTTON_SUBMIT}
           </Button>
         </Segment>
       </Sticky>
