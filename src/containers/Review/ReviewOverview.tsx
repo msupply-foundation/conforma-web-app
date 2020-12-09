@@ -6,7 +6,12 @@ const ReviewOverview: React.FC = () => {
   // Logic for what this page will show:
   // https://github.com/openmsupply/application-manager-web-app/issues/200#issuecomment-741432161
 
-  // Hook will fetch Review info (if it exists). If user is supposed to start a new review, there will be some information about what Sections/Questions they've been assigned to.
+  // Hooks (suggested):
+  // - useLoadApplication
+  // - useGetResponsesAndElementState
+  // - new Hook to get existing Review information
+
+  // Hook(s) will fetch Application & Review info (if it exists). If user is supposed to start a new review, there will be some information about what Sections/Questions they've been assigned to.
   // And there will be a "Start Review" button. On clicking it, a new Review will be created, its ID returned, and this page will re-direct to the new Review URL.
 
   const {
