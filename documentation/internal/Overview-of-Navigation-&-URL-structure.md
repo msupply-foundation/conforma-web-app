@@ -8,13 +8,13 @@ When trying to access any URL, if not already authenticated, user is redirected 
 
 Example: [https://balsamiq.cloud/scs7giw/ponj59g/r2278](https://balsamiq.cloud/scs7giw/ponj59g/r2278)
 
-(Note: requested URL should be remembered, so that after successful login, user is redirected straight to that page)
+(Note: requested URL is remembered, so that after successful login, user is redirected straight to that page)
 
 ---
 
 ## `/`
 
-### Home
+### Home (Dashboard)
 
 “Welcome” page showing a summary of activities in progress, e.g. incomplete applications, incomplete reviews, new notifications, etc.
 
@@ -124,7 +124,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD624](https://balsamiq.cloud/s
 
 ### Reviewer
 
-Sees the list of responses in the sections they are assigned to. The decision and the comment next to each question, and the overall status per section. The comment per section can be edited in here, maybe the comment per question too.
+~~Sees the list of responses in the sections they are assigned to. The decision and the comment next to each question, and the overall status per section. The comment per section can be edited in here, maybe the comment per question too.~~
 
 Example: [https://balsamiq.cloud/scs7giw/ponj59g/r189E](https://balsamiq.cloud/scs7giw/ponj59g/r189E)
 
@@ -163,7 +163,29 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD5AC](https://balsamiq.cloud/s
 
 ---
 
+## `/review/[appId]`
+
+Overview/Start page for reviews associated with specific Application. User will see different content depending on permissions. For Reviewers who have assigned content to review, they will have the option to "Start" review, which will create a Review in the database and re-direct to the specific review page.
+
+## `/review/[appId]/[reviewId]`
+
+Specific Review page. Assigned Reviewer(s) can mark questions as "Conform" or "Non-conform" and add comments.
+
+---
+
+## `/consolidate/[appId]`
+
+Consolidation page. Shows all reviews relevant to current stage. Consolidator can start consolidation.
+
+## `/consolidate/[appId]/[consolidateId]`
+
+Specific Consolidation page. Further details TBC.
+
+---
+
 ## `/applications/[appId]?mode=assignment`
+
+_Assigment URLs to be decided_
 
 ### Application assignment mode
 
@@ -175,35 +197,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r3DC3](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[appId]?mode=consolidation`
-
-### Application consolidation mode
-
-The “home page” of a specific application during consolidation of reviewers.
-
-The Supervisor or Chief user (Consolidator) can select the LOQ (List of questions) to be sent back to the Applicant. Edit the comments or the status of a reviewed question is allowed.
-
-On clicking the 'Save changes' button will save it for later and the 'Continue' button will load the Consolidation summary page.
-
-Example: [https://balsamiq.cloud/scs7giw/ponj59g/r5273](https://balsamiq.cloud/scs7giw/ponj59g/r5273)
-
----
-
-## `/applications/[appId]/summary?mode=consolidation`
-
-### Application consolidation mode summary page
-
-The summary page for a Consolidation.
-
-Shows the LOQ (List of questions) within the section, question number, status and comments. The user making the consolidation can select their decision and an overall comment.
-
-The preview of the message to be sent to the Applicant is shown based on final decision.
-
-Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD7FD](https://balsamiq.cloud/scs7giw/ponj59g/rD7FD)
-
----
-
-## `/applications/[appId]/approval`
+## `/approval/[appId]`
 
 ### Application approval page
 
