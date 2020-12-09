@@ -51,7 +51,7 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
                             <Button
                               size="small"
                               as={Link}
-                              to={`/applications/${serialNumber}/${section.code}/${pageCode}`}
+                              to={`/application/${serialNumber}/${section.code}/${pageCode}`}
                             >
                               Edit
                             </Button>
