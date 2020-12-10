@@ -1,7 +1,7 @@
 import React from 'react'
 import { Accordion, Container, Grid, Header, Icon, Label, List, Sticky } from 'semantic-ui-react'
 import { ProgressInApplication, ProgressInPage, ProgressStatus } from '../../utils/types'
-import { SummarySectionCode } from '../../utils/constants'
+import strings from '../../utils/constants'
 
 interface SectionPage {
   sectionIndex: number
@@ -44,16 +44,10 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
               active={isActive}
               as="a"
               key={`progress_${pageName}`}
-              onClick={() =>
-                attemptChangeToPage({
-                  serialNumber,
-                  sectionCode,
-                  pageCode,
-                  canNavigate,
-                  push,
-                  validateCurrentPage,
-                })
-              }
+              onClick={() => {
+                if (canNavigate || validateCurrentPage())
+                  push(`/application/${serialNumber}/${sectionCode}/${pageCode}`)
+              }}
             >
               {getPageIndicator(status)}
               {pageName}
@@ -100,15 +94,12 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
             </Grid>
           ),
         },
-        onTitleClick: () =>
-          attemptChangeToPage({
-            serialNumber,
-            sectionCode: code === SummarySectionCode ? undefined : code,
-            pageCode: code === SummarySectionCode ? undefined : 'Page1',
-            canNavigate,
-            push,
-            validateCurrentPage,
-          }),
+        onTitleClick: () => {
+          if (canNavigate || validateCurrentPage()) {
+            const pageCode = 'Page1'
+            push(`/application/${serialNumber}/${code}/${pageCode}`)
+          }
+        },
         content: {
           content: pages ? pageList(code, pages) : null,
         },
@@ -118,37 +109,15 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 
   return (
     <Sticky as={Container}>
-      <Header as="h5" textAlign="center" content="Steps to complete form" />
+      <Header as="h5" style={{ paddingLeft: 30 }}>
+        {strings.TITLE_PROGRESS}
+      </Header>
       <Accordion
         activeIndex={currentSectionPage ? currentSectionPage.sectionIndex : 0} //TODO: Change to get active from structure
         panels={sectionList()}
       />
     </Sticky>
   )
-}
-
-interface attemptChangePageProps {
-  serialNumber: string
-  sectionCode?: string
-  pageCode?: string
-  canNavigate: boolean
-  push: (path: string) => void
-  validateCurrentPage: () => boolean
-}
-
-const attemptChangeToPage = ({
-  serialNumber,
-  sectionCode,
-  pageCode,
-  canNavigate,
-  push,
-  validateCurrentPage,
-}: attemptChangePageProps) => {
-  if (canNavigate || validateCurrentPage()) {
-    sectionCode && pageCode
-      ? push(`/application/${serialNumber}/${sectionCode}/${pageCode}`)
-      : push(`/application/${serialNumber}/summary`)
-  }
 }
 
 export default ProgressBar

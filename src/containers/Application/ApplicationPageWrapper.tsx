@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, ProgressBar } from '../../components'
-import { Button, Grid, Label, Message, Segment } from 'semantic-ui-react'
+import { Button, Grid, Header, Label, Message, Segment, Sticky } from 'semantic-ui-react'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
@@ -13,6 +13,7 @@ import validatePage, {
 } from '../../utils/helpers/validatePage'
 import getPageElements from '../../utils/helpers/getPageElements'
 import { revalidateAll } from '../../utils/helpers/revalidateAll'
+import strings from '../../utils/constants'
 
 import {
   ApplicationElementStates,
@@ -145,11 +146,21 @@ const ApplicationPageWrapper: React.FC = () => {
   ) : loading || responsesLoading ? (
     <Loading />
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
-    <Segment.Group>
-      <Grid stackable>
+    <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
+      <Header textAlign="center">{strings.TITLE_COMPANY_PLACEHOLDER}</Header>
+      <Grid
+        stackable
+        style={{
+          backgroundColor: 'white',
+          padding: 10,
+          margin: '0px 50px',
+          minHeight: 500,
+          flex: 1,
+        }}
+      >
         <Grid.Column width={4}>
           {!progressInApplication ? (
-            <Loading>Loading progress bar</Loading>
+            <Loading />
           ) : (
             <ProgressBar
               serialNumber={serialNumber as string}
@@ -160,20 +171,33 @@ const ApplicationPageWrapper: React.FC = () => {
             />
           )}
         </Grid.Column>
-        <Grid.Column width={12} stretched>
-          <ElementsBox
-            sectionTitle={currentSection.title}
-            responsesByCode={responsesByCode}
-            elements={pageElements}
-            anyRequiredQuestions={getPageHasRequiredQuestions(pageElements)}
-            forceValidation={forceValidation}
-          />
-          <NavigationBox
-            templateSections={templateSections}
-            validateCurrentPage={validateCurrentPage}
-          />
+        <Grid.Column width={10} stretched>
+          <Segment basic>
+            <ElementsBox
+              sectionTitle={currentSection.title}
+              responsesByCode={responsesByCode}
+              elements={pageElements}
+              anyRequiredQuestions={getPageHasRequiredQuestions(pageElements)}
+              forceValidation={forceValidation}
+            />
+            <NavigationBox
+              templateSections={templateSections}
+              currentSection={currentSection}
+              serialNumber={serialNumber}
+              currentPage={Number(page as string)}
+              validateCurrentPage={validateCurrentPage}
+            />
+          </Segment>
         </Grid.Column>
+        <Grid.Column width={2} />
       </Grid>
+      <Sticky pushing style={{ backgroundColor: 'white' }}>
+        <Segment basic textAlign="right">
+          <Button color="blue" onClick={() => push(`/applications/${serialNumber}/summary`)}>
+            {strings.BUTTON_SUBMIT}
+          </Button>
+        </Segment>
+      </Sticky>
     </Segment.Group>
   ) : (
     <Label content="Application's section can't be displayed" />
@@ -231,7 +255,7 @@ function buildProgressInApplication({
   if (!elementsState || !responses) return []
 
   let previousSectionStatus: ProgressStatus = PROGRESS_STATUS.VALID
-  let previousPageStatus: ProgressStatus = previousSectionStatus
+  let previousPageStatus: ProgressStatus = PROGRESS_STATUS.VALID
 
   const isCurrentPage = (page: number, sectionIndex: number) =>
     sectionIndex === currentSection && page === currentPage

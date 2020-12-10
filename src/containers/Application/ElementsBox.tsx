@@ -19,7 +19,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
   forceValidation,
 }) => {
   return elements ? (
-    <Segment vertical>
+    <Segment vertical style={{ marginBottom: 20 }}>
       <Header content={sectionTitle} />
       <Form>
         {elements.map((element) => {
