@@ -1,7 +1,7 @@
 import React from 'react'
 import { Accordion, Container, Grid, Header, Icon, Label, List, Sticky } from 'semantic-ui-react'
 import { ProgressInApplication, ProgressInPage, ProgressStatus } from '../../utils/types'
-import { TITLE_PROGRESS } from '../../utils/constants'
+import strings from '../../utils/constants'
 
 interface SectionPage {
   sectionIndex: number
@@ -110,7 +110,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   return (
     <Sticky as={Container}>
       <Header as="h5" style={{ paddingLeft: 30 }}>
-        {TITLE_PROGRESS}
+        {strings.TITLE_PROGRESS}
       </Header>
       <Accordion
         activeIndex={currentSectionPage ? currentSectionPage.sectionIndex : 0} //TODO: Change to get active from structure

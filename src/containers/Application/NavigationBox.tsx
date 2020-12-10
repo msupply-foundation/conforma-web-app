@@ -3,7 +3,7 @@ import { Button, Container, Header, Icon, Label, Modal } from 'semantic-ui-react
 import { useRouter } from '../../utils/hooks/useRouter'
 import { TemplateSectionPayload } from '../../utils/types'
 import { VALIDATION_FAIL } from '../../utils/messages'
-import { BUTTON_PREVIOUS, BUTTON_NEXT } from '../../utils/constants'
+import strings from '../../utils/constants'
 
 interface NavigationBoxProps {
   templateSections: TemplateSectionPayload[]
@@ -68,12 +68,12 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
       {showValidationModal(showModal, setShowModal)}
       {!isFirstPage && (
         <Label basic as="a" onClick={previousButtonHandler}>
-          {BUTTON_PREVIOUS}
+          {strings.BUTTON_PREVIOUS}
         </Label>
       )}
       {!isLastPage && (
         <Label basic as="a" onClick={nextPageButtonHandler}>
-          {BUTTON_NEXT}
+          {strings.BUTTON_NEXT}
         </Label>
       )}
     </Container>
