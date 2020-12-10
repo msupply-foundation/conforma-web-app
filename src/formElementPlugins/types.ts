@@ -1,3 +1,4 @@
+import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { TemplateElement } from '../utils/generated/graphql'
 import { ElementState, ResponseFull, ResponsesByCode } from '../utils/types'
 
@@ -16,6 +17,8 @@ interface ApplicationViewWrapperProps {
   isEditable: boolean
   isRequired: boolean
   parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement)
+  validationExpression: IQueryNode
+  validationMessage: string | null
   allResponses: ResponsesByCode
   currentResponse: ResponseFull | null
   // applicationState,

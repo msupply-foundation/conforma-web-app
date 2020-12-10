@@ -69,7 +69,7 @@ interface ElementBase {
   page: number
   category: TemplateElementCategory
   validation: IQueryNode
-  validationMessage: string | undefined
+  validationMessage: string | null
   parameters: any
 }
 

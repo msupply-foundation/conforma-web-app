@@ -106,7 +106,6 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
     evaluatedElements.forEach((element) => {
       elementsState[element.code] = element
     })
-    console.log('Elements state', elementsState)
     return elementsState
   }
 

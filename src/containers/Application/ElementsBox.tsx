@@ -23,7 +23,16 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
       <Header content={sectionTitle} />
       <Form>
         {elements.map((element) => {
-          const { code, pluginCode, parameters, isVisible, isRequired, isEditable } = element
+          const {
+            code,
+            pluginCode,
+            parameters,
+            isVisible,
+            isRequired,
+            isEditable,
+            validation,
+            validationMessage,
+          } = element
           const response = responsesByCode[code]
           return (
             <ApplicationViewWrapper
@@ -35,6 +44,8 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
               isVisible={isVisible}
               isEditable={isEditable}
               isRequired={isRequired}
+              validationExpression={validation}
+              validationMessage={validationMessage}
               allResponses={responsesByCode}
               currentResponse={response}
               forceValidation={forceValidation}

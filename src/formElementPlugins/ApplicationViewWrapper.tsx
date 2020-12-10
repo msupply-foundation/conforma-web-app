@@ -23,12 +23,13 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     isVisible,
     isEditable,
     isRequired,
+    validationExpression,
+    validationMessage,
     currentResponse,
     allResponses,
     forceValidation,
   } = props
 
-  const { validation: validationExpression, validationMessage } = parameters
   const [responseMutation] = useUpdateResponseMutation()
   const [pluginMethods, setPluginMethods] = useState<ValidateObject>({
     validate: (validationExpress, validationMessage, evaluatorParameters) =>
@@ -81,7 +82,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
     const validationResult: ValidationState = await pluginMethods.validate(
       validationExpression,
-      validationMessage,
+      validationMessage as string,
       { objects: [responses], APIfetch: fetch }
     )
     setValidationState(validationResult)
