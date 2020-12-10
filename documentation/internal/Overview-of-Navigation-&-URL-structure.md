@@ -8,13 +8,13 @@ When trying to access any URL, if not already authenticated, user is redirected 
 
 Example: [https://balsamiq.cloud/scs7giw/ponj59g/r2278](https://balsamiq.cloud/scs7giw/ponj59g/r2278)
 
-(Note: requested URL should be remembered, so that after successful login, user is redirected straight to that page)
+(Note: requested URL is remembered, so that after successful login, user is redirected straight to that page)
 
 ---
 
 ## `/`
 
-### Home
+### Home (Dashboard)
 
 “Welcome” page showing a summary of activities in progress, e.g. incomplete applications, incomplete reviews, new notifications, etc.
 
@@ -63,7 +63,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r4C62](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/new`
+## `/application/new`
 
 ### New application launcher
 
@@ -71,7 +71,7 @@ A standard page for creating a new application.
 
 This page can support query string to specify the application type (or application category) that shows selected in the dropdown menu.
 
-E.g. `/applications/new?type=drug-registration`
+E.g. `/application/new?type=drug-registration`
 
 On clicking the “Start application” button of this form, a new “application” record is created in the database. And the page for in-progress application is loaded.
 
@@ -83,7 +83,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r1D2B](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[appId]/[sectionName]/page[page]`
+## `/application/[serialNum]/[sectionName]/page[page]`
 
 ### In-progress Application
 
@@ -108,7 +108,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r1FFB](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[appId]/summary`
+## `/application/[serialNum]/summary`
 
 ### Application summary page
 
@@ -124,13 +124,13 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD624](https://balsamiq.cloud/s
 
 ### Reviewer
 
-Sees the list of responses in the sections they are assigned to. The decision and the comment next to each question, and the overall status per section. The comment per section can be edited in here, maybe the comment per question too.
+~~Sees the list of responses in the sections they are assigned to. The decision and the comment next to each question, and the overall status per section. The comment per section can be edited in here, maybe the comment per question too.~~
 
 Example: [https://balsamiq.cloud/scs7giw/ponj59g/r189E](https://balsamiq.cloud/scs7giw/ponj59g/r189E)
 
 ---
 
-## `/applications/[appId]`
+## `/application/[serialNum]`
 
 ### Application home page
 
@@ -163,7 +163,29 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD5AC](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[appId]?mode=assignment`
+## `/application/[serialNum]/review`
+
+Overview/Start page for reviews associated with specific Application. User will see different content depending on permissions. For Reviewers who have assigned content to review, they will have the option to "Start" review, which will create a Review in the database and re-direct to the specific review page.
+
+## `/application/[serialNum]/review/[reviewId]`
+
+Specific Review page. Assigned Reviewer(s) can mark questions as "Conform" or "Non-conform" and add comments.
+
+---
+
+## `/application/[serialNum]/consolidation`
+
+Consolidation page. Shows all reviews relevant to current stage. Consolidator can start consolidation.
+
+## `/application/[serialNum]/consolidation/[consolidateId]`
+
+Specific Consolidation page. Further details TBC.
+
+---
+
+## `/application/[serialNum]/assignment`
+
+_Assigment URLs to be decided_
 
 ### Application assignment mode
 
@@ -175,35 +197,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r3DC3](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[appId]?mode=consolidation`
-
-### Application consolidation mode
-
-The “home page” of a specific application during consolidation of reviewers.
-
-The Supervisor or Chief user (Consolidator) can select the LOQ (List of questions) to be sent back to the Applicant. Edit the comments or the status of a reviewed question is allowed.
-
-On clicking the 'Save changes' button will save it for later and the 'Continue' button will load the Consolidation summary page.
-
-Example: [https://balsamiq.cloud/scs7giw/ponj59g/r5273](https://balsamiq.cloud/scs7giw/ponj59g/r5273)
-
----
-
-## `/applications/[appId]/summary?mode=consolidation`
-
-### Application consolidation mode summary page
-
-The summary page for a Consolidation.
-
-Shows the LOQ (List of questions) within the section, question number, status and comments. The user making the consolidation can select their decision and an overall comment.
-
-The preview of the message to be sent to the Applicant is shown based on final decision.
-
-Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD7FD](https://balsamiq.cloud/scs7giw/ponj59g/rD7FD)
-
----
-
-## `/applications/[appId]/approval`
+## `/application/[serialNum]/approval`
 
 ### Application approval page
 
@@ -329,7 +323,7 @@ A list (basically an Inbox) of all notifications, with some limited filters (Unr
 
 URL also updates with query string, so (for example) links elsewhere can link to the Inbox for everything associated with a specific application:
 
-E.g. `/notifications?appid=123454678`
+E.g. `/notifications?serialNum=123454678`
 
 Example: [https://balsamiq.cloud/scs7giw/ponj59g/rEFAE](https://balsamiq.cloud/scs7giw/ponj59g/rEFAE)
 
