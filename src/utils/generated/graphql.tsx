@@ -17214,6 +17214,10 @@ export type GetApplicationQuery = (
       & { nodes: Array<Maybe<(
         { __typename?: 'ApplicationStageHistory' }
         & Pick<ApplicationStageHistory, 'id'>
+        & { stage?: Maybe<(
+          { __typename?: 'TemplateStage' }
+          & Pick<TemplateStage, 'id'>
+        )> }
       )>> }
     ) }
     & ApplicationFragment
@@ -17653,6 +17657,9 @@ export const GetApplicationDocument = gql`
     applicationStageHistories(condition: {isCurrent: true}) {
       nodes {
         id
+        stage {
+          id
+        }
       }
     }
   }

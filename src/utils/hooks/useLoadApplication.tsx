@@ -35,6 +35,11 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   useEffect(() => {
     if (data && data.applicationBySerial) {
       const application = data.applicationBySerial as Application
+      console.log(
+        'application.applicationStageHistories',
+        application.applicationStageHistories.nodes
+      )
+
       const stage = application.applicationStageHistories.nodes[0] as ApplicationStageHistory
 
       setApplication({
@@ -44,6 +49,8 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
         serial: application.serial as string,
         name: application.name as string,
         stageId: stage.id,
+        // TODO: Duplicated information. Consider using AppStatus as part of ApplicationDetails
+        stage: application.stage as string,
         status: application.status as string,
         outcome: application.outcome as string,
       })

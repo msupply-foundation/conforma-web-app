@@ -38,6 +38,7 @@ interface ApplicationDetails {
   serial: string
   name: string
   stageId: number
+  stage: string
   status: string
   outcome: string
   isLinear: boolean

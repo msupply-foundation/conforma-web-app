@@ -28,6 +28,9 @@ export default gql`
       applicationStageHistories(condition: {isCurrent: true}) {
         nodes {
           id
+          stage {
+            id
+          }
         }
       }
     }
