@@ -46,7 +46,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
               key={`progress_${pageName}`}
               onClick={() => {
                 if (canNavigate || validateCurrentPage())
-                  push(`/applications/${serialNumber}/${sectionCode}/${pageCode}`)
+                  push(`/application/${serialNumber}/${sectionCode}/${pageCode}`)
               }}
             >
               {getPageIndicator(status)}
@@ -97,7 +97,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         onTitleClick: () => {
           if (canNavigate || validateCurrentPage()) {
             const pageCode = 'Page1'
-            push(`/applications/${serialNumber}/${code}/${pageCode}`)
+            push(`/application/${serialNumber}/${code}/${pageCode}`)
           }
         },
         content: {

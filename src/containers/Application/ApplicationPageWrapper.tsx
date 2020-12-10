@@ -223,12 +223,12 @@ function processRedirect(appState: any): void {
     replace,
   } = appState
   if (status !== 'DRAFT') {
-    replace(`/applications/${serialNumber}/summary`)
+    replace(`/application/${serialNumber}/summary`)
     return
   }
   if (!sectionCode || !page) {
     const firstSection = templateSections[0].code
-    replace(`/applications/${serialNumber}/${firstSection}/page1`)
+    replace(`/application/${serialNumber}/${firstSection}/page1`)
   }
 }
 

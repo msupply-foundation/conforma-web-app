@@ -23,6 +23,7 @@ import {
   Template,
 } from '../../components'
 import { ApplicationCreate, ApplicationList, ApplicationPageWrapper } from '../Application'
+import { ReviewOverview, ReviewPageWrapper } from '../Review'
 import UserRegister from '../User/UserRegister'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import ApplicationOverview from '../Application/ApplicationOverview'
@@ -36,10 +37,10 @@ const SiteLayout: React.FC = () => {
             items={[
               ['Home', '/'],
               ['Applications List', '/applications'],
-              ['Register', '/applications/new?type=UserRegistration'],
-              ['Company Registration', '/applications/new?type=CompRego1'],
-              ['Review Test form', '/applications/new?type=ReviewTest'],
-              ['Feature Showcase form', '/applications/new?type=TestRego'],
+              ['Register', '/application/new?type=UserRegistration'],
+              ['Company Registration', '/application/new?type=CompRego1'],
+              ['Review Test form', '/application/new?type=ReviewTest'],
+              ['Feature Showcase form', '/application/new?type=TestRego'],
             ]}
           />
         </Grid.Column>
@@ -58,21 +59,33 @@ const SiteLayout: React.FC = () => {
               <Route exact path="/applications">
                 <ApplicationList />
               </Route>
-              <Route exact path="/applications/new">
+              <Route exact path="/application/new">
                 <ApplicationProvider>
                   <ApplicationCreate />
                 </ApplicationProvider>
               </Route>
-              <Route exact path="/applications/:serialNumber">
+              <Route exact path="/application/:serialNumber">
                 <ApplicationPageWrapper />
               </Route>
-              <Route exact path="/applications/:serialNumber/:sectionCode/Page:page">
+              <Route exact path="/application/:serialNumber/:sectionCode/Page:page">
                 <ApplicationPageWrapper />
               </Route>
-              <Route exact path="/applications/:serialNumber/summary">
+              <Route exact path="/application/:serialNumber/summary">
                 <ApplicationOverview />
               </Route>
-              <Route exact path="/applications/:serialNumber/approval">
+              <Route exact path="/application/:serialNumber/review">
+                <ReviewOverview />
+              </Route>
+              <Route exact path="/application/:serialNumber/review/:reviewId">
+                <ReviewPageWrapper />
+              </Route>
+              <Route exact path="/application/:serialNumber/consolidation/">
+                <NoMatch />
+              </Route>
+              <Route exact path="/application/:serialNumber/consolidation/:consolidationId">
+                <NoMatch />
+              </Route>
+              <Route exact path="/application/:serialNumber/approval">
                 <Approval />
               </Route>
               <Route exact path="/admin">

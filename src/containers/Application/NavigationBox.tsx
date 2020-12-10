@@ -35,7 +35,7 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
 
   const { push } = useRouter()
   const sendToPage = (section: string, page: number) =>
-    push(`/applications/${serialNumber}/${section}/Page${page}`)
+    push(`/application/${serialNumber}/${section}/Page${page}`)
 
   const previousButtonHandler = (_: any) => {
     const previousPage = currentPage - 1
