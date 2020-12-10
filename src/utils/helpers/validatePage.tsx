@@ -58,18 +58,6 @@ export const getPageElementsStatuses = ({
   )
 
   // Generate array with current status of responses for each question to verify
-  const responsesStatuses = visibleQuestions.reduce(
-    (responsesStatuses: ProgressStatus[], { code, isRequired }: ElementState) => {
-      const { text, isValid } = responses[code] as ResponseFull
-      const emptyResponse = !text || isValid === null
-      if (isRequired && emptyResponse) return [...responsesStatuses, PROGRESS_STATUS.INCOMPLETE]
-      // If not required and empty response -> Should return as valid
-      else if (emptyResponse) return [...responsesStatuses, PROGRESS_STATUS.VALID]
-      return [...responsesStatuses, isValid ? PROGRESS_STATUS.VALID : PROGRESS_STATUS.NOT_VALID]
-    },
-    []
-  )
-
   const pageResponsesStatuses = visibleQuestions.reduce(
     (responsesStatuses: PageElementsStatuses, { code, isRequired }: ElementState) => {
       const { text, isValid } = responses[code] as ResponseFull

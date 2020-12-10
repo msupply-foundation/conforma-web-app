@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
-import { Button, Grid, Header, Icon, Message, Modal } from 'semantic-ui-react'
-import PageButton from '../../components/Application/PageButton'
+import { Button, Container, Header, Icon, Label, Modal } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { TemplateSectionPayload } from '../../utils/types'
 import { VALIDATION_FAIL } from '../../utils/messages'
+import strings from '../../utils/constants'
 
 interface NavigationBoxProps {
   templateSections: TemplateSectionPayload[]
+  currentSection: TemplateSectionPayload
+  serialNumber: string
+  currentPage: number
   validateCurrentPage: () => boolean
 }
 
@@ -16,71 +19,65 @@ interface ModalProps {
   title: string
 }
 
-const NavigationBox: React.FC<NavigationBoxProps> = ({ templateSections, validateCurrentPage }) => {
+const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
+  const { templateSections, currentSection, serialNumber, currentPage, validateCurrentPage } = props
   const [showModal, setShowModal] = useState<ModalProps>({
     open: false,
     message: '',
     title: '',
   })
-  const { query, push } = useRouter()
-  const { serialNumber, sectionCode, page } = query
 
-  const currentSection = templateSections.find(({ code }) => code === sectionCode)
+  const nextSection = templateSections.find(({ index }) => index === currentSection.index + 1)
+  const previousSection = templateSections.find(({ index }) => index === currentSection.index - 1)
 
-  const isFirstPage = checkFirstPage({
-    sectionCode: sectionCode as string,
-    currentPage: Number(page),
-    templateSections,
-  })
+  const isFirstPage = currentPage - 1 === 0 && !previousSection
+  const isLastPage = currentPage + 1 > currentSection.totalPages && !nextSection
 
-  const isLastPage = checkLastPage({
-    sectionCode: sectionCode as string,
-    currentPage: Number(page),
-    templateSections,
-  })
+  const { push } = useRouter()
+  const sendToPage = (section: string, page: number) =>
+    push(`/application/${serialNumber}/${section}/Page${page}`)
 
-  const changePageProps: changePageProps = {
-    currentPage: Number(page),
-    currentSection: currentSection as TemplateSectionPayload,
-    templateSections,
-    sendToPage: (section: string, page: number) =>
-      push(`/application/${serialNumber}/${section}/Page${page}`),
-    sendToSummary: () => push(`/application/${serialNumber}/summary`),
-    validateCurrentPage,
+  const previousButtonHandler = (_: any) => {
+    const previousPage = currentPage - 1
+    if (previousPage === 0) {
+      // Will check if previous page is in a other section
+      previousSection
+        ? sendToPage(previousSection.code, previousSection.totalPages)
+        : console.log('Problem to load previous page (not found)!')
+    } else sendToPage(currentSection.code, previousPage)
   }
 
-  return currentSection ? (
-    <>
-      <Grid columns={3}>
-        <Grid.Row>
-          <Grid.Column>
-            {!isFirstPage && (
-              <PageButton
-                title="Previous"
-                type="left"
-                onClicked={() => previousButtonHandler(changePageProps)}
-              />
-            )}
-          </Grid.Column>
-          <Grid.Column />
-          {/* Empty cell */}
-          <Grid.Column>
-            <PageButton
-              title={isLastPage ? 'Summary' : 'Next'}
-              type="right"
-              onClicked={() => {
-                if (!nextPageButtonHandler(changePageProps)) {
-                  setShowModal({ open: true, ...VALIDATION_FAIL })
-                }
-              }}
-            />
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+  const nextPageButtonHandler = (_: any): void => {
+    // Run the validation on the current page
+    const status = validateCurrentPage()
+    if (!status) {
+      setShowModal({ open: true, ...VALIDATION_FAIL })
+      return
+    }
+    const nextPage = currentPage + 1
+    if (nextPage > currentSection.totalPages) {
+      // Will check if next page is in other section
+      nextSection
+        ? sendToPage(nextSection.code, 1)
+        : console.log('Problem to load next page (not found)!')
+    } else sendToPage(currentSection.code, nextPage)
+  }
+
+  return (
+    <Container>
       {showValidationModal(showModal, setShowModal)}
-      {/* {showMessage !== '' ? showValidationModal(showMessage) : null} */}
-    </>
-  ) : null
+      {!isFirstPage && (
+        <Label basic as="a" onClick={previousButtonHandler}>
+          {strings.BUTTON_PREVIOUS}
+        </Label>
+      )}
+      {!isLastPage && (
+        <Label basic as="a" onClick={nextPageButtonHandler}>
+          {strings.BUTTON_NEXT}
+        </Label>
+      )}
+    </Container>
+  )
 }
 
 const modalInitialValue: ModalProps = {
@@ -106,85 +103,6 @@ function showValidationModal(showModal: ModalProps, setShowModal: Function) {
       </Modal.Actions>
     </Modal>
   )
-}
-
-interface checkPageProps {
-  sectionCode: string
-  currentPage: number
-  templateSections: TemplateSectionPayload[]
-}
-
-function checkFirstPage({ sectionCode, currentPage, templateSections }: checkPageProps): boolean {
-  const previousPage = currentPage - 1
-  const currentSection = templateSections.find(({ code }) => code === sectionCode)
-  if (!currentSection) {
-    console.log('Problem to find currentSection!')
-    return true
-  }
-  return previousPage > 0 ||
-    (previousPage === 0 && templateSections.find(({ index }) => index === currentSection.index - 1))
-    ? false
-    : true
-}
-
-function checkLastPage({ sectionCode, currentPage, templateSections }: checkPageProps): boolean {
-  const nextPage = currentPage + 1
-  const currentSection = templateSections.find(({ code }) => code === sectionCode)
-  if (!currentSection) {
-    console.log('Problem to find currentSection!')
-    return true
-  }
-  return nextPage <= currentSection.totalPages ||
-    (nextPage > currentSection.totalPages &&
-      templateSections.find(({ index }) => index === currentSection.index + 1))
-    ? false
-    : true
-}
-
-interface changePageProps {
-  currentPage: number
-  currentSection: TemplateSectionPayload
-  templateSections: TemplateSectionPayload[]
-  sendToPage: (section: string, page: number) => void
-  sendToSummary: () => void
-  validateCurrentPage: () => boolean
-}
-
-function previousButtonHandler({
-  currentPage,
-  currentSection,
-  templateSections,
-  sendToPage,
-}: changePageProps) {
-  const previousPage = currentPage - 1
-
-  if (previousPage === 0) {
-    // Will check if previous page is in a other section
-    const foundSection = templateSections.find(({ index }) => index === currentSection.index - 1)
-    foundSection
-      ? sendToPage(foundSection.code, foundSection.totalPages)
-      : console.log('Problem to load previous page (not found)!')
-  } else sendToPage(currentSection.code, previousPage)
-}
-
-function nextPageButtonHandler({
-  currentPage,
-  currentSection,
-  templateSections,
-  sendToPage,
-  sendToSummary,
-  validateCurrentPage,
-}: changePageProps): boolean {
-  // Run the validation on the current page
-  const status = validateCurrentPage()
-  if (!status) return false
-  const nextPage = currentPage + 1
-  if (nextPage > currentSection.totalPages) {
-    // Will check if next page is in other section
-    const foundSection = templateSections.find(({ index }) => index === currentSection.index + 1)
-    foundSection ? sendToPage(foundSection.code, 1) : sendToSummary()
-  } else sendToPage(currentSection.code, nextPage)
-  return true
 }
 
 export default NavigationBox
