@@ -39,7 +39,8 @@ const ReviewOverview: React.FC = () => {
   useEffect(() => {
     if (assignment && assignment.review) {
       const { id, status } = assignment.review
-      if (status === ReviewStatus.Submitted) push(`/application/${serialNumber}/review/${id}`)
+      if (status === ReviewStatus.Submitted || status === ReviewStatus.Draft)
+        push(`/application/${serialNumber}/review/${id}`)
     }
   }, [assignment])
 
