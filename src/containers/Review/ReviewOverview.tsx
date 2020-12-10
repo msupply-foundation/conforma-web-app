@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Card, Container, Header, List, Message, Segment } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import useGetReviewAssignment from '../../utils/hooks/useGetReviewAssignment'
@@ -6,7 +6,9 @@ import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { Link } from 'react-router-dom'
-import { useCreateReviewMutation } from '../../utils/generated/graphql'
+import { ReviewStatus } from '../../utils/generated/graphql'
+import { AssignmentDetails } from '../../utils/types'
+import useCreateReview from '../../utils/hooks/useCreateReview'
 
 const ReviewOverview: React.FC = () => {
   const {
@@ -23,7 +25,7 @@ const ReviewOverview: React.FC = () => {
   } = useLoadApplication({ serialNumber: serialNumber })
 
   const {
-    error: errorAssignment,
+    error: fetchAssignmentError,
     loading: loadingAssignemnt,
     assignment,
     assignedSections,
@@ -34,14 +36,59 @@ const ReviewOverview: React.FC = () => {
     isApplicationLoaded,
   })
 
-  const [createReviewMutation] = useCreateReviewMutation({
-    variables: {
-      reviewAssigmentId: assignment?.id as number,
+  useEffect(() => {
+    if (assignment && assignment.review) {
+      const { id, status } = assignment.review
+      if (status === ReviewStatus.Submitted) push(`/application/${serialNumber}/review/${id}`)
+    }
+  }, [assignment])
+
+  const { processing, error: createReviewError, create } = useCreateReview({
+    onCompleted: (id: number) => {
+      if (serialNumber && templateSections && templateSections.length > 0) {
+        // Call Review page after creation
+        push(`/application/${serialNumber}/review/${id}`)
+      }
     },
   })
 
-  return error || errorAssignment ? (
-    <Message error header="Problem to load review homepage" list={[error, errorAssignment]} />
+  const handleCreate = (_: any) => {
+    if (!assignment || !assignment.review) {
+      console.log('Problem to create review - unexpected parameters')
+      return
+    }
+
+    create({
+      reviewAssigmentId: assignment.review.id,
+      applicationResponses: [],
+    })
+  }
+
+  const getActionButton = ({ review }: AssignmentDetails) => {
+    if (review) {
+      const { id, status } = review
+      if (
+        review.status === ReviewStatus.ReviewPending ||
+        review.status === ReviewStatus.ChangesRequired
+      ) {
+        return (
+          <Button as={Link} to={`/application/${serialNumber}/review/${id}`}>
+            {strings.BUTTON_REVIEW_CONTINUE}
+          </Button>
+        )
+      }
+      console.log(`Problem with review id ${id} status: ${status}`)
+      return null
+    }
+    return (
+      <Button loading={processing} onClick={handleCreate}>
+        {strings.BUTTON_REVIEW_START}
+      </Button>
+    )
+  }
+
+  return error || fetchAssignmentError || createReviewError ? (
+    <Message error header="Problem to load review homepage" list={[error, fetchAssignmentError]} />
   ) : loading || loadingAssignemnt ? (
     <Loading />
   ) : application && assignment ? (
@@ -73,19 +120,7 @@ const ReviewOverview: React.FC = () => {
           </List>
         </Segment>
       )}
-      {assignment.review ? (
-        <Button as={Link} to={`/review/${serialNumber}/${assignment.review?.id}`}>
-          {strings.BUTTON_REVIEW_CONTINUE}
-        </Button>
-      ) : (
-        <Button
-          onClick={() => {
-            createReviewMutation()
-          }}
-        >
-          {strings.BUTTON_REVIEW_START}
-        </Button>
-      )}
+      {getActionButton(assignment)}
     </Container>
   ) : (
     <Header as="h2" icon="exclamation circle" content="No review found!" />
