@@ -12,6 +12,7 @@ export default gql`
                 id
                 reviews {
                     nodes {
+                        id
                         status
                         trigger
                     }
@@ -19,10 +20,11 @@ export default gql`
                 reviewQuestionAssignments {
                     nodes {
                         templateElement {
+                            id
                             code
                             section {
+                                id
                                 index
-                                title
                             }
                         }
                     }

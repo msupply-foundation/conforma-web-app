@@ -6,6 +6,7 @@ export {
   ApplicationDetails,
   ApplicationElementStates,
   AppStatus,
+  AssignmentDetails,
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
@@ -21,6 +22,8 @@ export {
   ResponseFull,
   ResponsePayload,
   ResponsesByCode,
+  ReviewDetails,
+  ReviewQuestion,
   SectionElementStates,
   SectionDetails,
   TemplateTypePayload,
@@ -52,6 +55,12 @@ interface AppStatus {
   stage: string
   status: string
   outcome: string
+}
+
+interface AssignmentDetails {
+  id: number
+  review?: ReviewDetails
+  questions: ReviewQuestion[]
 }
 
 type ElementPluginParameterValue = string | number | string[] | IQueryNode
@@ -137,6 +146,16 @@ interface ResponsePayload {
 
 interface ResponsesByCode {
   [key: string]: ResponseFull | null
+}
+
+interface ReviewDetails {
+  id: number
+  status: string
+}
+
+interface ReviewQuestion {
+  code: string
+  sectionIndex: number
 }
 
 interface SectionElementStates {

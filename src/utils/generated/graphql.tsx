@@ -17116,6 +17116,21 @@ export type CreateApplicationMutation = (
   )> }
 );
 
+export type CreateReviewMutationVariables = Exact<{
+  reviewAssigmentId: Scalars['Int'];
+  trigger?: Maybe<Trigger>;
+  responses?: Maybe<Array<ReviewResponseReviewIdFkeyReviewResponseCreateInput>>;
+}>;
+
+
+export type CreateReviewMutation = (
+  { __typename?: 'Mutation' }
+  & { createReview?: Maybe<(
+    { __typename?: 'CreateReviewPayload' }
+    & Pick<CreateReviewPayload, 'clientMutationId'>
+  )> }
+);
+
 export type CreateUserMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -17241,6 +17256,10 @@ export type GetApplicationsQuery = (
         & { nodes: Array<Maybe<(
           { __typename?: 'ApplicationStageHistory' }
           & Pick<ApplicationStageHistory, 'id'>
+          & { stage?: Maybe<(
+            { __typename?: 'TemplateStage' }
+            & Pick<TemplateStage, 'id'>
+          )> }
         )>> }
       ) }
       & ApplicationFragment
@@ -17319,7 +17338,7 @@ export type GetReviewAssignmentQuery = (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'Review' }
-          & Pick<Review, 'status' | 'trigger'>
+          & Pick<Review, 'id' | 'status' | 'trigger'>
         )>> }
       ), reviewQuestionAssignments: (
         { __typename?: 'ReviewQuestionAssignmentsConnection' }
@@ -17327,10 +17346,10 @@ export type GetReviewAssignmentQuery = (
           { __typename?: 'ReviewQuestionAssignment' }
           & { templateElement?: Maybe<(
             { __typename?: 'TemplateElement' }
-            & Pick<TemplateElement, 'code'>
+            & Pick<TemplateElement, 'id' | 'code'>
             & { section?: Maybe<(
               { __typename?: 'TemplateSection' }
-              & Pick<TemplateSection, 'index' | 'title'>
+              & Pick<TemplateSection, 'id' | 'index'>
             )> }
           )> }
         )>> }
@@ -17516,6 +17535,40 @@ export function useCreateApplicationMutation(baseOptions?: Apollo.MutationHookOp
 export type CreateApplicationMutationHookResult = ReturnType<typeof useCreateApplicationMutation>;
 export type CreateApplicationMutationResult = Apollo.MutationResult<CreateApplicationMutation>;
 export type CreateApplicationMutationOptions = Apollo.BaseMutationOptions<CreateApplicationMutation, CreateApplicationMutationVariables>;
+export const CreateReviewDocument = gql`
+    mutation createReview($reviewAssigmentId: Int!, $trigger: Trigger = ON_REVIEW_CREATE, $responses: [ReviewResponseReviewIdFkeyReviewResponseCreateInput!]) {
+  createReview(input: {review: {reviewAssignmentId: $reviewAssigmentId, trigger: $trigger, reviewResponsesUsingId: {create: $responses}}}) {
+    clientMutationId
+  }
+}
+    `;
+export type CreateReviewMutationFn = Apollo.MutationFunction<CreateReviewMutation, CreateReviewMutationVariables>;
+
+/**
+ * __useCreateReviewMutation__
+ *
+ * To run a mutation, you first call `useCreateReviewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateReviewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createReviewMutation, { data, loading, error }] = useCreateReviewMutation({
+ *   variables: {
+ *      reviewAssigmentId: // value for 'reviewAssigmentId'
+ *      trigger: // value for 'trigger'
+ *      responses: // value for 'responses'
+ *   },
+ * });
+ */
+export function useCreateReviewMutation(baseOptions?: Apollo.MutationHookOptions<CreateReviewMutation, CreateReviewMutationVariables>) {
+        return Apollo.useMutation<CreateReviewMutation, CreateReviewMutationVariables>(CreateReviewDocument, baseOptions);
+      }
+export type CreateReviewMutationHookResult = ReturnType<typeof useCreateReviewMutation>;
+export type CreateReviewMutationResult = Apollo.MutationResult<CreateReviewMutation>;
+export type CreateReviewMutationOptions = Apollo.BaseMutationOptions<CreateReviewMutation, CreateReviewMutationVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($email: String!, $password: String!, $username: String!) {
   createUser(input: {user: {email: $email, passwordHash: $password, username: $username}}) {
@@ -17706,6 +17759,9 @@ export const GetApplicationsDocument = gql`
       applicationStageHistories(condition: {isCurrent: true}) {
         nodes {
           id
+          stage {
+            id
+          }
         }
       }
     }
@@ -17834,6 +17890,7 @@ export const GetReviewAssignmentDocument = gql`
       id
       reviews {
         nodes {
+          id
           status
           trigger
         }
@@ -17841,10 +17898,11 @@ export const GetReviewAssignmentDocument = gql`
       reviewQuestionAssignments {
         nodes {
           templateElement {
+            id
             code
             section {
+              id
               index
-              title
             }
           }
         }
