@@ -12,7 +12,7 @@ import validatePage, {
   PROGRESS_STATUS,
 } from '../../utils/helpers/validatePage'
 import getPageElements from '../../utils/helpers/getPageElements'
-import { validateAll } from '../../utils/helpers/validateAll'
+import { revalidateAll } from '../../utils/helpers/revalidateAll'
 
 import {
   ApplicationElementStates,
@@ -172,9 +172,6 @@ const ApplicationPageWrapper: React.FC = () => {
             templateSections={templateSections}
             validateCurrentPage={validateCurrentPage}
           />
-          <Button onClick={() => validateAll(elementsState, responsesByCode)}>
-            Click to Validate
-          </Button>
         </Grid.Column>
       </Grid>
     </Segment.Group>
