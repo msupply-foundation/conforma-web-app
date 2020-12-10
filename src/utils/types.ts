@@ -68,6 +68,8 @@ interface ElementBase {
   elementIndex: number
   page: number
   category: TemplateElementCategory
+  validation: IQueryNode
+  validationMessage: string | undefined
   parameters: any
 }
 

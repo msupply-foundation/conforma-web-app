@@ -106,6 +106,7 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
     evaluatedElements.forEach((element) => {
       elementsState[element.code] = element
     })
+    console.log('Elements state', elementsState)
     return elementsState
   }
 
@@ -128,6 +129,8 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
       pluginCode: element.pluginCode,
       sectionIndex: element.sectionIndex,
       elementIndex: element.elementIndex,
+      validation: element.validation,
+      validationMessage: element.validationMessage,
       page: element.page,
       isEditable: results[0] as boolean,
       isRequired: results[1] as boolean,
