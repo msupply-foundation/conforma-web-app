@@ -17184,7 +17184,7 @@ export type UpdateApplicationMutation = (
 
 export type UpdateResponseMutationVariables = Exact<{
   id: Scalars['Int'];
-  value: Scalars['JSON'];
+  value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
 }>;
 
@@ -17555,7 +17555,7 @@ export type UpdateApplicationMutationHookResult = ReturnType<typeof useUpdateApp
 export type UpdateApplicationMutationResult = Apollo.MutationResult<UpdateApplicationMutation>;
 export type UpdateApplicationMutationOptions = Apollo.BaseMutationOptions<UpdateApplicationMutation, UpdateApplicationMutationVariables>;
 export const UpdateResponseDocument = gql`
-    mutation updateResponse($id: Int!, $value: JSON!, $isValid: Boolean) {
+    mutation updateResponse($id: Int!, $value: JSON, $isValid: Boolean) {
   updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid}}) {
     applicationResponse {
       ...Response

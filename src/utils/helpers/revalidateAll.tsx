@@ -1,17 +1,29 @@
 import { ApplicationElementStates, ResponsesByCode } from '../types'
 import { defaultValidate } from '../../formElementPlugins/defaultValidate'
 
-export const validateAll = (
+export const revalidateAll = (
   elementsState: ApplicationElementStates | undefined,
   responsesByCode: ResponsesByCode | undefined,
-  strict = true
+  strict = true,
+  shouldUpdateDatabase = true
 ): boolean => {
   const validate = defaultValidate // To-Do: import custom validations
 
+  console.log('Elements', elementsState)
+  console.log('responses', responsesByCode)
   if (elementsState) {
     const elementCodes = Object.keys(elementsState).filter(
-      (key) => elementsState[key].category === 'QUESTION'
+      (key) =>
+        responsesByCode && // Typescript requires this
+        elementsState[key].category === 'QUESTION' &&
+        elementsState[key].isVisible === true &&
+        // Strict/Loose validation logic:
+        ((strict && elementsState[key].isRequired) ||
+          (strict && responsesByCode[key]?.isValid !== null) ||
+          (!strict && responsesByCode[key]?.isValid !== null))
     )
+
+    console.log('Keys', elementCodes)
     const validationExpressions = elementCodes.map((code) => elementsState[code].validation)
 
     const evaluatedValidations = []
@@ -32,11 +44,22 @@ export const validateAll = (
         })
       )
     }
-    Promise.all(evaluatedValidations).then((result) => {
+    Promise.all(evaluatedValidations).then((resultArray) => {
       // DO SIDE-EFFECTS HERE: Check isValid changed and write if so
-
-      // Also filter for isVisible and isRequired (strict)
-      return result.every((x) => x.isValid)
+      console.log('Result', resultArray)
+      const validityChanges: any = []
+      if (shouldUpdateDatabase) {
+        elementCodes.forEach((code, index) => {
+          console.log(code)
+          if (elementsState[code].validation.value !== resultArray[index].isValid) {
+            validityChanges.push({
+              id: elementsState[code].id,
+              isValid: resultArray[index].isValid,
+            })
+          }
+        })
+      }
+      return { allValid: resultArray.every((element) => element.isValid), validityChanges }
     })
   }
 
