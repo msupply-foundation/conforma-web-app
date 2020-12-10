@@ -40,7 +40,7 @@ const ApplicationList: React.FC = () => {
                     case 'name':
                       return (
                         <Table.Cell key={`app_row_${index}_${key}`}>
-                          <Link to={`/applications/${application.serial}`}>{value}</Link>
+                          <Link to={`/application/${application.serial}`}>{value}</Link>
                         </Table.Cell>
                       )
                     default:

@@ -63,7 +63,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r4C62](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/new`
+## `/application/new`
 
 ### New application launcher
 
@@ -71,7 +71,7 @@ A standard page for creating a new application.
 
 This page can support query string to specify the application type (or application category) that shows selected in the dropdown menu.
 
-E.g. `/applications/new?type=drug-registration`
+E.g. `/application/new?type=drug-registration`
 
 On clicking the “Start application” button of this form, a new “application” record is created in the database. And the page for in-progress application is loaded.
 
@@ -83,7 +83,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r1D2B](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[appId]/[sectionName]/page[page]`
+## `/application/[serialNum]/[sectionName]/page[page]`
 
 ### In-progress Application
 
@@ -108,7 +108,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r1FFB](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[appId]/summary`
+## `/application/[serialNum]/summary`
 
 ### Application summary page
 
@@ -130,7 +130,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r189E](https://balsamiq.cloud/s
 
 ---
 
-## `/applications/[appId]`
+## `/application/[serialNum]`
 
 ### Application home page
 
@@ -163,27 +163,27 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD5AC](https://balsamiq.cloud/s
 
 ---
 
-## `/review/[appId]`
+## `/application/[serialNum]/review`
 
 Overview/Start page for reviews associated with specific Application. User will see different content depending on permissions. For Reviewers who have assigned content to review, they will have the option to "Start" review, which will create a Review in the database and re-direct to the specific review page.
 
-## `/review/[appId]/[reviewId]`
+## `/application/[serialNum]/review/[reviewId]`
 
 Specific Review page. Assigned Reviewer(s) can mark questions as "Conform" or "Non-conform" and add comments.
 
 ---
 
-## `/consolidate/[appId]`
+## `/application/[serialNum]/consolidation`
 
 Consolidation page. Shows all reviews relevant to current stage. Consolidator can start consolidation.
 
-## `/consolidate/[appId]/[consolidateId]`
+## `/application/[serialNum]/consolidation/[consolidateId]`
 
 Specific Consolidation page. Further details TBC.
 
 ---
 
-## `/applications/[appId]?mode=assignment`
+## `/application/[serialNum]/assignment`
 
 _Assigment URLs to be decided_
 
@@ -197,7 +197,7 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r3DC3](https://balsamiq.cloud/s
 
 ---
 
-## `/approval/[appId]`
+## `/application/[serialNum]/approval`
 
 ### Application approval page
 
@@ -323,7 +323,7 @@ A list (basically an Inbox) of all notifications, with some limited filters (Unr
 
 URL also updates with query string, so (for example) links elsewhere can link to the Inbox for everything associated with a specific application:
 
-E.g. `/notifications?appid=123454678`
+E.g. `/notifications?serialNum=123454678`
 
 Example: [https://balsamiq.cloud/scs7giw/ponj59g/rEFAE](https://balsamiq.cloud/scs7giw/ponj59g/rEFAE)
 
