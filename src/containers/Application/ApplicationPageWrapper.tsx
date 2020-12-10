@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, ProgressBar } from '../../components'
-import { Grid, Label, Message, Segment } from 'semantic-ui-react'
+import { Button, Grid, Label, Message, Segment } from 'semantic-ui-react'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
@@ -12,6 +12,7 @@ import validatePage, {
   PROGRESS_STATUS,
 } from '../../utils/helpers/validatePage'
 import getPageElements from '../../utils/helpers/getPageElements'
+import { validateAll } from '../../utils/helpers/validateAll'
 
 import {
   ApplicationElementStates,
@@ -171,6 +172,9 @@ const ApplicationPageWrapper: React.FC = () => {
             templateSections={templateSections}
             validateCurrentPage={validateCurrentPage}
           />
+          <Button onClick={() => validateAll(elementsState, responsesByCode)}>
+            Click to Validate
+          </Button>
         </Grid.Column>
       </Grid>
     </Segment.Group>
