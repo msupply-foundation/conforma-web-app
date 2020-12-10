@@ -1850,10 +1850,6 @@ export type ApplicationFilter = {
   reviewAssignments?: Maybe<ApplicationToManyReviewAssignmentFilter>;
   /** Some related `reviewAssignments` exist. */
   reviewAssignmentsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewsByReviewAssignmentId` relation. */
-  reviewsByReviewAssignmentId?: Maybe<ApplicationToManyReviewFilter>;
-  /** Some related `reviewsByReviewAssignmentId` exist. */
-  reviewsByReviewAssignmentIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviews` relation. */
   reviews?: Maybe<ApplicationToManyReviewFilter>;
   /** Some related `reviews` exist. */
@@ -2301,6 +2297,10 @@ export type ReviewAssignmentFilter = {
   stageId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviews` relation. */
+  reviews?: Maybe<ReviewAssignmentToManyReviewFilter>;
+  /** Some related `reviews` exist. */
+  reviewsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewQuestionAssignments` relation. */
   reviewQuestionAssignments?: Maybe<ReviewAssignmentToManyReviewQuestionAssignmentFilter>;
   /** Some related `reviewQuestionAssignments` exist. */
@@ -2329,46 +2329,64 @@ export type ReviewAssignmentFilter = {
   not?: Maybe<ReviewAssignmentFilter>;
 };
 
-/** A filter to be used against many `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewAssignmentToManyReviewQuestionAssignmentFilter = {
-  /** Every related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewQuestionAssignmentFilter>;
-  /** Some related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewQuestionAssignmentFilter>;
-  /** No related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewQuestionAssignmentFilter>;
+/** A filter to be used against many `Review` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewAssignmentToManyReviewFilter = {
+  /** Every related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewFilter>;
+  /** Some related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewFilter>;
+  /** No related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewFilter>;
 };
 
-/** A filter to be used against `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewQuestionAssignmentFilter = {
+/** A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateElementId` field. */
-  templateElementId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewAssignmentId` field. */
   reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewerId` field. */
+  reviewerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<StringFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
-  reviewResponses?: Maybe<ReviewQuestionAssignmentToManyReviewResponseFilter>;
+  reviewResponses?: Maybe<ReviewToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
   reviewResponsesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `templateElement` relation. */
-  templateElement?: Maybe<TemplateElementFilter>;
-  /** A related `templateElement` exists. */
-  templateElementExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewStatusHistories` relation. */
+  reviewStatusHistories?: Maybe<ReviewToManyReviewStatusHistoryFilter>;
+  /** Some related `reviewStatusHistories` exist. */
+  reviewStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `notifications` relation. */
+  notifications?: Maybe<ReviewToManyNotificationFilter>;
+  /** Some related `notifications` exist. */
+  notificationsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewAssignment` relation. */
   reviewAssignment?: Maybe<ReviewAssignmentFilter>;
   /** A related `reviewAssignment` exists. */
   reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** A related `application` exists. */
+  applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewer` relation. */
+  reviewer?: Maybe<UserFilter>;
+  /** A related `reviewer` exists. */
+  reviewerExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewQuestionAssignmentFilter>>;
+  and?: Maybe<Array<ReviewFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewQuestionAssignmentFilter>>;
+  or?: Maybe<Array<ReviewFilter>>;
   /** Negates the expression. */
-  not?: Maybe<ReviewQuestionAssignmentFilter>;
+  not?: Maybe<ReviewFilter>;
 };
 
 /** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewQuestionAssignmentToManyReviewResponseFilter = {
+export type ReviewToManyReviewResponseFilter = {
   /** Every related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   every?: Maybe<ReviewResponseFilter>;
   /** Some related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -2443,6 +2461,129 @@ export enum ReviewResponseDecision {
   Approve = 'APPROVE',
   Decline = 'DECLINE'
 }
+
+/** A filter to be used against `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewQuestionAssignmentFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateElementId` field. */
+  templateElementId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewResponses` relation. */
+  reviewResponses?: Maybe<ReviewQuestionAssignmentToManyReviewResponseFilter>;
+  /** Some related `reviewResponses` exist. */
+  reviewResponsesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `templateElement` relation. */
+  templateElement?: Maybe<TemplateElementFilter>;
+  /** A related `templateElement` exists. */
+  templateElementExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewAssignment` relation. */
+  reviewAssignment?: Maybe<ReviewAssignmentFilter>;
+  /** A related `reviewAssignment` exists. */
+  reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ReviewQuestionAssignmentFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ReviewQuestionAssignmentFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ReviewQuestionAssignmentFilter>;
+};
+
+/** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewQuestionAssignmentToManyReviewResponseFilter = {
+  /** Every related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewResponseFilter>;
+  /** Some related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewResponseFilter>;
+  /** No related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewResponseFilter>;
+};
+
+/** A filter to be used against `TemplateElement` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateElementFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `sectionId` field. */
+  sectionId?: Maybe<IntFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `index` field. */
+  index?: Maybe<IntFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: Maybe<StringFilter>;
+  /** Filter by the object’s `category` field. */
+  category?: Maybe<TemplateElementCategoryFilter>;
+  /** Filter by the object’s `visibilityCondition` field. */
+  visibilityCondition?: Maybe<JsonFilter>;
+  /** Filter by the object’s `elementTypePluginCode` field. */
+  elementTypePluginCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `isRequired` field. */
+  isRequired?: Maybe<JsonFilter>;
+  /** Filter by the object’s `isEditable` field. */
+  isEditable?: Maybe<JsonFilter>;
+  /** Filter by the object’s `parameters` field. */
+  parameters?: Maybe<JsonFilter>;
+  /** Filter by the object’s `applicationResponses` relation. */
+  applicationResponses?: Maybe<TemplateElementToManyApplicationResponseFilter>;
+  /** Some related `applicationResponses` exist. */
+  applicationResponsesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewQuestionAssignments` relation. */
+  reviewQuestionAssignments?: Maybe<TemplateElementToManyReviewQuestionAssignmentFilter>;
+  /** Some related `reviewQuestionAssignments` exist. */
+  reviewQuestionAssignmentsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `section` relation. */
+  section?: Maybe<TemplateSectionFilter>;
+  /** A related `section` exists. */
+  sectionExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<TemplateElementFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<TemplateElementFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<TemplateElementFilter>;
+};
+
+/** A filter to be used against TemplateElementCategory fields. All fields are combined with a logical ‘and.’ */
+export type TemplateElementCategoryFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<TemplateElementCategory>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<TemplateElementCategory>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<TemplateElementCategory>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<TemplateElementCategory>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<TemplateElementCategory>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<TemplateElementCategory>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<TemplateElementCategory>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<TemplateElementCategory>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<TemplateElementCategory>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<TemplateElementCategory>;
+};
+
+export enum TemplateElementCategory {
+  Question = 'QUESTION',
+  Information = 'INFORMATION'
+}
+
+/** A filter to be used against many `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateElementToManyApplicationResponseFilter = {
+  /** Every related `ApplicationResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ApplicationResponseFilter>;
+  /** Some related `ApplicationResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ApplicationResponseFilter>;
+  /** No related `ApplicationResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ApplicationResponseFilter>;
+};
 
 /** A filter to be used against `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationResponseFilter = {
@@ -2594,60 +2735,14 @@ export type NotificationFilter = {
   not?: Maybe<NotificationFilter>;
 };
 
-/** A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewAssignmentId` field. */
-  reviewAssignmentId?: Maybe<IntFilter>;
-  /** Filter by the object’s `trigger` field. */
-  trigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewerId` field. */
-  reviewerId?: Maybe<IntFilter>;
-  /** Filter by the object’s `status` field. */
-  status?: Maybe<StringFilter>;
-  /** Filter by the object’s `reviewResponses` relation. */
-  reviewResponses?: Maybe<ReviewToManyReviewResponseFilter>;
-  /** Some related `reviewResponses` exist. */
-  reviewResponsesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewStatusHistories` relation. */
-  reviewStatusHistories?: Maybe<ReviewToManyReviewStatusHistoryFilter>;
-  /** Some related `reviewStatusHistories` exist. */
-  reviewStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `notifications` relation. */
-  notifications?: Maybe<ReviewToManyNotificationFilter>;
-  /** Some related `notifications` exist. */
-  notificationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewAssignment` relation. */
-  reviewAssignment?: Maybe<ApplicationFilter>;
-  /** A related `reviewAssignment` exists. */
-  reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewer` relation. */
-  reviewer?: Maybe<UserFilter>;
-  /** A related `reviewer` exists. */
-  reviewerExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewFilter>;
-};
-
-/** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewToManyReviewResponseFilter = {
-  /** Every related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewResponseFilter>;
-  /** Some related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewResponseFilter>;
-  /** No related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewResponseFilter>;
+/** A filter to be used against many `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateElementToManyReviewQuestionAssignmentFilter = {
+  /** Every related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewQuestionAssignmentFilter>;
+  /** Some related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewQuestionAssignmentFilter>;
+  /** No related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewQuestionAssignmentFilter>;
 };
 
 /** A filter to be used against many `ReviewStatusHistory` object types. All fields are combined with a logical ‘and.’ */
@@ -2727,93 +2822,8 @@ export type ReviewToManyNotificationFilter = {
   none?: Maybe<NotificationFilter>;
 };
 
-/** A filter to be used against `TemplateElement` object types. All fields are combined with a logical ‘and.’ */
-export type TemplateElementFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `sectionId` field. */
-  sectionId?: Maybe<IntFilter>;
-  /** Filter by the object’s `code` field. */
-  code?: Maybe<StringFilter>;
-  /** Filter by the object’s `index` field. */
-  index?: Maybe<IntFilter>;
-  /** Filter by the object’s `title` field. */
-  title?: Maybe<StringFilter>;
-  /** Filter by the object’s `category` field. */
-  category?: Maybe<TemplateElementCategoryFilter>;
-  /** Filter by the object’s `visibilityCondition` field. */
-  visibilityCondition?: Maybe<JsonFilter>;
-  /** Filter by the object’s `elementTypePluginCode` field. */
-  elementTypePluginCode?: Maybe<StringFilter>;
-  /** Filter by the object’s `isRequired` field. */
-  isRequired?: Maybe<JsonFilter>;
-  /** Filter by the object’s `isEditable` field. */
-  isEditable?: Maybe<JsonFilter>;
-  /** Filter by the object’s `parameters` field. */
-  parameters?: Maybe<JsonFilter>;
-  /** Filter by the object’s `applicationResponses` relation. */
-  applicationResponses?: Maybe<TemplateElementToManyApplicationResponseFilter>;
-  /** Some related `applicationResponses` exist. */
-  applicationResponsesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewQuestionAssignments` relation. */
-  reviewQuestionAssignments?: Maybe<TemplateElementToManyReviewQuestionAssignmentFilter>;
-  /** Some related `reviewQuestionAssignments` exist. */
-  reviewQuestionAssignmentsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `section` relation. */
-  section?: Maybe<TemplateSectionFilter>;
-  /** A related `section` exists. */
-  sectionExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<TemplateElementFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<TemplateElementFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<TemplateElementFilter>;
-};
-
-/** A filter to be used against TemplateElementCategory fields. All fields are combined with a logical ‘and.’ */
-export type TemplateElementCategoryFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<TemplateElementCategory>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<TemplateElementCategory>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<TemplateElementCategory>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<TemplateElementCategory>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<TemplateElementCategory>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<TemplateElementCategory>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<TemplateElementCategory>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<TemplateElementCategory>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<TemplateElementCategory>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<TemplateElementCategory>;
-};
-
-export enum TemplateElementCategory {
-  Question = 'QUESTION',
-  Information = 'INFORMATION'
-}
-
-/** A filter to be used against many `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
-export type TemplateElementToManyApplicationResponseFilter = {
-  /** Every related `ApplicationResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ApplicationResponseFilter>;
-  /** Some related `ApplicationResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ApplicationResponseFilter>;
-  /** No related `ApplicationResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ApplicationResponseFilter>;
-};
-
 /** A filter to be used against many `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type TemplateElementToManyReviewQuestionAssignmentFilter = {
+export type ReviewAssignmentToManyReviewQuestionAssignmentFilter = {
   /** Every related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   every?: Maybe<ReviewQuestionAssignmentFilter>;
   /** Some related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -3436,8 +3446,6 @@ export type Application = Node & {
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignments: ReviewAssignmentsConnection;
   /** Reads and enables pagination through a set of `Review`. */
-  reviewsByReviewAssignmentId: ReviewsConnection;
-  /** Reads and enables pagination through a set of `Review`. */
   reviews: ReviewsConnection;
   /** Reads and enables pagination through a set of `File`. */
   files: FilesConnection;
@@ -3494,18 +3502,6 @@ export type ApplicationReviewAssignmentsArgs = {
   orderBy?: Maybe<Array<ReviewAssignmentsOrderBy>>;
   condition?: Maybe<ReviewAssignmentCondition>;
   filter?: Maybe<ReviewAssignmentFilter>;
-};
-
-
-export type ApplicationReviewsByReviewAssignmentIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewsOrderBy>>;
-  condition?: Maybe<ReviewCondition>;
-  filter?: Maybe<ReviewFilter>;
 };
 
 
@@ -4365,8 +4361,22 @@ export type ReviewAssignment = Node & {
   stage?: Maybe<TemplateStage>;
   /** Reads a single `Application` that is related to this `ReviewAssignment`. */
   application?: Maybe<Application>;
+  /** Reads and enables pagination through a set of `Review`. */
+  reviews: ReviewsConnection;
   /** Reads and enables pagination through a set of `ReviewQuestionAssignment`. */
   reviewQuestionAssignments: ReviewQuestionAssignmentsConnection;
+};
+
+
+export type ReviewAssignmentReviewsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewsOrderBy>>;
+  condition?: Maybe<ReviewCondition>;
+  filter?: Maybe<ReviewFilter>;
 };
 
 
@@ -4381,49 +4391,48 @@ export type ReviewAssignmentReviewQuestionAssignmentsArgs = {
   filter?: Maybe<ReviewQuestionAssignmentFilter>;
 };
 
-/** Methods to use when ordering `ReviewQuestionAssignment`. */
-export enum ReviewQuestionAssignmentsOrderBy {
+/** Methods to use when ordering `Review`. */
+export enum ReviewsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
-  TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
   ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
   ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
+  TriggerAsc = 'TRIGGER_ASC',
+  TriggerDesc = 'TRIGGER_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  ReviewerIdAsc = 'REVIEWER_ID_ASC',
+  ReviewerIdDesc = 'REVIEWER_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** A condition to be used against `ReviewQuestionAssignment` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ReviewQuestionAssignmentCondition = {
+/** A condition to be used against `Review` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ReviewCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateElementId` field. */
-  templateElementId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewAssignmentId` field. */
   reviewAssignmentId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `trigger` field. */
+  trigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewerId` field. */
+  reviewerId?: Maybe<Scalars['Int']>;
 };
 
-/** A connection to a list of `ReviewQuestionAssignment` values. */
-export type ReviewQuestionAssignmentsConnection = {
-  __typename?: 'ReviewQuestionAssignmentsConnection';
-  /** A list of `ReviewQuestionAssignment` objects. */
-  nodes: Array<Maybe<ReviewQuestionAssignment>>;
-  /** A list of edges which contains the `ReviewQuestionAssignment` and cursor to aid in pagination. */
-  edges: Array<ReviewQuestionAssignmentsEdge>;
+/** A connection to a list of `Review` values. */
+export type ReviewsConnection = {
+  __typename?: 'ReviewsConnection';
+  /** A list of `Review` objects. */
+  nodes: Array<Maybe<Review>>;
+  /** A list of edges which contains the `Review` and cursor to aid in pagination. */
+  edges: Array<ReviewsEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `ReviewQuestionAssignment` you could get from the connection. */
+  /** The count of *all* `Review` you could get from the connection. */
   totalCount: Scalars['Int'];
-};
-
-/** A `ReviewQuestionAssignment` edge in the connection. */
-export type ReviewQuestionAssignmentsEdge = {
-  __typename?: 'ReviewQuestionAssignmentsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewQuestionAssignment` at the end of the edge. */
-  node?: Maybe<ReviewQuestionAssignment>;
 };
 
 export type Review = Node & {
@@ -4435,8 +4444,8 @@ export type Review = Node & {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
-  /** Reads a single `Application` that is related to this `Review`. */
-  reviewAssignment?: Maybe<Application>;
+  /** Reads a single `ReviewAssignment` that is related to this `Review`. */
+  reviewAssignment?: Maybe<ReviewAssignment>;
   /** Reads a single `Application` that is related to this `Review`. */
   application?: Maybe<Application>;
   /** Reads a single `User` that is related to this `Review`. */
@@ -4670,6 +4679,60 @@ export type NotificationsEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `Notification` at the end of the edge. */
   node?: Maybe<Notification>;
+};
+
+/** A `Review` edge in the connection. */
+export type ReviewsEdge = {
+  __typename?: 'ReviewsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Review` at the end of the edge. */
+  node?: Maybe<Review>;
+};
+
+/** Methods to use when ordering `ReviewQuestionAssignment`. */
+export enum ReviewQuestionAssignmentsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
+  TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
+  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
+  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `ReviewQuestionAssignment` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ReviewQuestionAssignmentCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateElementId` field. */
+  templateElementId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `ReviewQuestionAssignment` values. */
+export type ReviewQuestionAssignmentsConnection = {
+  __typename?: 'ReviewQuestionAssignmentsConnection';
+  /** A list of `ReviewQuestionAssignment` objects. */
+  nodes: Array<Maybe<ReviewQuestionAssignment>>;
+  /** A list of edges which contains the `ReviewQuestionAssignment` and cursor to aid in pagination. */
+  edges: Array<ReviewQuestionAssignmentsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ReviewQuestionAssignment` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ReviewQuestionAssignment` edge in the connection. */
+export type ReviewQuestionAssignmentsEdge = {
+  __typename?: 'ReviewQuestionAssignmentsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewQuestionAssignment` at the end of the edge. */
+  node?: Maybe<ReviewQuestionAssignment>;
 };
 
 /** A `ReviewResponse` edge in the connection. */
@@ -4961,59 +5024,6 @@ export type ReviewAssignmentsEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `ReviewAssignment` at the end of the edge. */
   node?: Maybe<ReviewAssignment>;
-};
-
-/** Methods to use when ordering `Review`. */
-export enum ReviewsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
-  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
-  TriggerAsc = 'TRIGGER_ASC',
-  TriggerDesc = 'TRIGGER_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  ReviewerIdAsc = 'REVIEWER_ID_ASC',
-  ReviewerIdDesc = 'REVIEWER_ID_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `Review` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ReviewCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewAssignmentId` field. */
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `trigger` field. */
-  trigger?: Maybe<Trigger>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewerId` field. */
-  reviewerId?: Maybe<Scalars['Int']>;
-};
-
-/** A connection to a list of `Review` values. */
-export type ReviewsConnection = {
-  __typename?: 'ReviewsConnection';
-  /** A list of `Review` objects. */
-  nodes: Array<Maybe<Review>>;
-  /** A list of edges which contains the `Review` and cursor to aid in pagination. */
-  edges: Array<ReviewsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Review` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Review` edge in the connection. */
-export type ReviewsEdge = {
-  __typename?: 'ReviewsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `Review` at the end of the edge. */
-  node?: Maybe<Review>;
 };
 
 /** Methods to use when ordering `ApplicationStatusHistory`. */
@@ -8311,8 +8321,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -8739,8 +8748,7 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -8849,8 +8857,7 @@ export type UpdateApplicationOnApplicationSectionForApplicationSectionApplicatio
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -8962,8 +8969,7 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -9340,8 +9346,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -9405,6 +9410,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -9489,6 +9495,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -9573,6 +9580,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -9723,6 +9731,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -9773,14 +9782,13 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `review` in the `ApplicationInput` mutation. */
-export type ReviewReviewAssignmentIdFkeyInverseInput = {
+export type ReviewApplicationIdFkeyInverseInput = {
   /** Flag indicating whether all other `review` records that match this relationship should be removed. */
   deleteOthers?: Maybe<Scalars['Boolean']>;
   /** The primary key(s) for `review` for the far side of the relationship. */
@@ -9792,11 +9800,11 @@ export type ReviewReviewAssignmentIdFkeyInverseInput = {
   /** The primary key(s) for `review` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<ReviewNodeIdDelete>>;
   /** The primary key(s) and patch data for `review` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate>>;
+  updateById?: Maybe<Array<ReviewOnReviewForReviewApplicationIdFkeyUsingReviewPkeyUpdate>>;
   /** The primary key(s) and patch data for `review` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ApplicationOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate>>;
+  updateByNodeId?: Maybe<Array<ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate>>;
   /** A `ReviewInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewReviewAssignmentIdFkeyReviewCreateInput>>;
+  create?: Maybe<Array<ReviewApplicationIdFkeyReviewCreateInput>>;
 };
 
 /** The fields on `review` to look up the row to connect. */
@@ -9822,100 +9830,6 @@ export type ReviewNodeIdDelete = {
 };
 
 /** The fields on `review` to look up the row to update. */
-export type ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate = {
-  /** An object where the defined keys will be set on the `review` being updated. */
-  patch: UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `review` being updated. */
-export type UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  trigger?: Maybe<Trigger>;
-  applicationId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
-  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `application` in the `ReviewInput` mutation. */
-export type ReviewReviewAssignmentIdFkeyInput = {
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateById?: Maybe<ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySerial?: Maybe<ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationSerialKeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate>;
-  /** A `ApplicationInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewReviewAssignmentIdFkeyApplicationCreateInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationPkeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnReviewForReviewReviewAssignmentIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `application` being updated. */
-export type UpdateApplicationOnReviewForReviewReviewAssignmentIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  outcome?: Maybe<ApplicationOutcome>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
-  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
-  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
-  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `review` in the `ApplicationInput` mutation. */
-export type ReviewApplicationIdFkeyInverseInput = {
-  /** Flag indicating whether all other `review` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `review` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewReviewPkeyConnect>>;
-  /** The primary key(s) for `review` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewNodeIdConnect>>;
-  /** The primary key(s) for `review` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewReviewPkeyDelete>>;
-  /** The primary key(s) for `review` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewNodeIdDelete>>;
-  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewOnReviewForReviewApplicationIdFkeyUsingReviewPkeyUpdate>>;
-  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate>>;
-  /** A `ReviewInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewApplicationIdFkeyReviewCreateInput>>;
-};
-
-/** The fields on `review` to look up the row to update. */
 export type ReviewOnReviewForReviewApplicationIdFkeyUsingReviewPkeyUpdate = {
   /** An object where the defined keys will be set on the `review` being updated. */
   patch: UpdateReviewOnReviewForReviewApplicationIdFkeyPatch;
@@ -9928,7 +9842,88 @@ export type UpdateReviewOnReviewForReviewApplicationIdFkeyPatch = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   reviewerId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `reviewAssignment` in the `ReviewInput` mutation. */
+export type ReviewReviewAssignmentIdFkeyInput = {
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectById?: Maybe<ReviewAssignmentReviewAssignmentPkeyConnect>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ReviewAssignmentNodeIdConnect>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteById?: Maybe<ReviewAssignmentReviewAssignmentPkeyDelete>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ReviewAssignmentNodeIdDelete>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateById?: Maybe<ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate>;
+  /** A `ReviewAssignmentInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput>;
+};
+
+/** The fields on `reviewAssignment` to look up the row to update. */
+export type ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `review` in the `ReviewAssignmentInput` mutation. */
+export type ReviewReviewAssignmentIdFkeyInverseInput = {
+  /** Flag indicating whether all other `review` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewReviewPkeyConnect>>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewNodeIdConnect>>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewReviewPkeyDelete>>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewNodeIdDelete>>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate>>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate>>;
+  /** A `ReviewInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewReviewAssignmentIdFkeyReviewCreateInput>>;
+};
+
+/** The fields on `review` to look up the row to update. */
+export type ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate = {
+  /** An object where the defined keys will be set on the `review` being updated. */
+  patch: UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `review` being updated. */
+export type UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
@@ -9983,8 +9978,7 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -10129,7 +10123,7 @@ export type UpdateReviewOnReviewForReviewReviewerIdFkeyPatch = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
@@ -10269,8 +10263,7 @@ export type UpdateApplicationOnFileForFileApplicationIdFkeyPatch = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -10472,8 +10465,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -10509,8 +10501,7 @@ export type ApplicationPatch = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -10531,8 +10522,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -10569,7 +10559,7 @@ export type UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
@@ -10811,6 +10801,7 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -11001,7 +10992,7 @@ export type UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
@@ -11099,7 +11090,7 @@ export type UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyP
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
@@ -11484,7 +11475,7 @@ export type ReviewPatch = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
@@ -11499,7 +11490,7 @@ export type ReviewStatusHistoryReviewIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
@@ -11549,7 +11540,7 @@ export type ReviewResponseReviewIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
@@ -11681,6 +11672,7 @@ export type ReviewAssignmentPatch = {
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -11695,6 +11687,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -11813,7 +11806,7 @@ export type NotificationReviewIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
@@ -11944,8 +11937,7 @@ export type FileApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -12013,7 +12005,7 @@ export type ReviewReviewerIdFkeyReviewCreateInput = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
@@ -12101,10 +12093,54 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `review` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `review` being updated. */
+  patch: ReviewPatch;
+};
+
+/** The `review` to be created by this mutation. */
+export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewAssignment` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: ReviewAssignmentPatch;
+};
+
+/** The `reviewAssignment` to be created by this mutation. */
+export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -12121,66 +12157,7 @@ export type ReviewApplicationIdFkeyReviewCreateInput = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   reviewerId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
-  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationSerialKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnReviewForReviewReviewAssignmentIdFkeyPatch;
-  serial: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `application` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: ApplicationPatch;
-};
-
-/** The `application` to be created by this mutation. */
-export type ReviewReviewAssignmentIdFkeyApplicationCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  outcome?: Maybe<ApplicationOutcome>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
-  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
-  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
-  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ApplicationOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `review` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `review` being updated. */
-  patch: ReviewPatch;
-};
-
-/** The `review` to be created by this mutation. */
-export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  trigger?: Maybe<Trigger>;
-  applicationId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
@@ -12219,8 +12196,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -12243,6 +12219,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -12489,6 +12466,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -12537,6 +12515,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -12585,6 +12564,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -12619,8 +12599,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -12954,8 +12933,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -13010,8 +12988,7 @@ export type ApplicationSectionApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -13062,8 +13039,7 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -13125,8 +13101,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -13713,8 +13688,7 @@ export type ApplicationInput = {
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -14220,7 +14194,7 @@ export type ReviewInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
-  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
@@ -14237,8 +14211,8 @@ export type CreateReviewPayload = {
   review?: Maybe<Review>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** Reads a single `Application` that is related to this `Review`. */
-  reviewAssignment?: Maybe<Application>;
+  /** Reads a single `ReviewAssignment` that is related to this `Review`. */
+  reviewAssignment?: Maybe<ReviewAssignment>;
   /** Reads a single `Application` that is related to this `Review`. */
   application?: Maybe<Application>;
   /** Reads a single `User` that is related to this `Review`. */
@@ -14272,6 +14246,7 @@ export type ReviewAssignmentInput = {
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -15441,8 +15416,8 @@ export type UpdateReviewPayload = {
   review?: Maybe<Review>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** Reads a single `Application` that is related to this `Review`. */
-  reviewAssignment?: Maybe<Application>;
+  /** Reads a single `ReviewAssignment` that is related to this `Review`. */
+  reviewAssignment?: Maybe<ReviewAssignment>;
   /** Reads a single `Application` that is related to this `Review`. */
   application?: Maybe<Application>;
   /** Reads a single `User` that is related to this `Review`. */
@@ -16557,8 +16532,8 @@ export type DeleteReviewPayload = {
   deletedReviewNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** Reads a single `Application` that is related to this `Review`. */
-  reviewAssignment?: Maybe<Application>;
+  /** Reads a single `ReviewAssignment` that is related to this `Review`. */
+  reviewAssignment?: Maybe<ReviewAssignment>;
   /** Reads a single `Application` that is related to this `Review`. */
   application?: Maybe<Application>;
   /** Reads a single `User` that is related to this `Review`. */
