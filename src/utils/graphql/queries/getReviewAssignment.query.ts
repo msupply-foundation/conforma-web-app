@@ -26,6 +26,11 @@ export default gql`
                                 id
                                 index
                             }
+                            applicationResponses {
+                                nodes {
+                                    id
+                                }
+                            }
                         }
                     }
                 }

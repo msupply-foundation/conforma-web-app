@@ -17119,7 +17119,7 @@ export type CreateApplicationMutation = (
 export type CreateReviewMutationVariables = Exact<{
   reviewAssigmentId: Scalars['Int'];
   trigger?: Maybe<Trigger>;
-  responses?: Maybe<Array<ReviewResponseReviewIdFkeyReviewResponseCreateInput>>;
+  applicationResponses?: Maybe<Array<ReviewResponseReviewIdFkeyReviewResponseCreateInput>>;
 }>;
 
 
@@ -17127,7 +17127,10 @@ export type CreateReviewMutation = (
   { __typename?: 'Mutation' }
   & { createReview?: Maybe<(
     { __typename?: 'CreateReviewPayload' }
-    & Pick<CreateReviewPayload, 'clientMutationId'>
+    & { review?: Maybe<(
+      { __typename?: 'Review' }
+      & Pick<Review, 'id'>
+    )> }
   )> }
 );
 
@@ -17350,7 +17353,13 @@ export type GetReviewAssignmentQuery = (
             & { section?: Maybe<(
               { __typename?: 'TemplateSection' }
               & Pick<TemplateSection, 'id' | 'index'>
-            )> }
+            )>, applicationResponses: (
+              { __typename?: 'ApplicationResponsesConnection' }
+              & { nodes: Array<Maybe<(
+                { __typename?: 'ApplicationResponse' }
+                & Pick<ApplicationResponse, 'id'>
+              )>> }
+            ) }
           )> }
         )>> }
       ) }
@@ -17536,9 +17545,11 @@ export type CreateApplicationMutationHookResult = ReturnType<typeof useCreateApp
 export type CreateApplicationMutationResult = Apollo.MutationResult<CreateApplicationMutation>;
 export type CreateApplicationMutationOptions = Apollo.BaseMutationOptions<CreateApplicationMutation, CreateApplicationMutationVariables>;
 export const CreateReviewDocument = gql`
-    mutation createReview($reviewAssigmentId: Int!, $trigger: Trigger = ON_REVIEW_CREATE, $responses: [ReviewResponseReviewIdFkeyReviewResponseCreateInput!]) {
-  createReview(input: {review: {reviewAssignmentId: $reviewAssigmentId, trigger: $trigger, reviewResponsesUsingId: {create: $responses}}}) {
-    clientMutationId
+    mutation createReview($reviewAssigmentId: Int!, $trigger: Trigger = ON_REVIEW_CREATE, $applicationResponses: [ReviewResponseReviewIdFkeyReviewResponseCreateInput!]) {
+  createReview(input: {review: {reviewAssignmentId: $reviewAssigmentId, trigger: $trigger, reviewResponsesUsingId: {create: $applicationResponses}}}) {
+    review {
+      id
+    }
   }
 }
     `;
@@ -17559,7 +17570,7 @@ export type CreateReviewMutationFn = Apollo.MutationFunction<CreateReviewMutatio
  *   variables: {
  *      reviewAssigmentId: // value for 'reviewAssigmentId'
  *      trigger: // value for 'trigger'
- *      responses: // value for 'responses'
+ *      applicationResponses: // value for 'applicationResponses'
  *   },
  * });
  */
@@ -17903,6 +17914,11 @@ export const GetReviewAssignmentDocument = gql`
             section {
               id
               index
+            }
+            applicationResponses {
+              nodes {
+                id
+              }
             }
           }
         }
