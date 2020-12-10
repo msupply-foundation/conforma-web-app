@@ -1,5 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { Card, Container, Header, Message } from 'semantic-ui-react'
+import { Loading } from '../../components'
+import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 
 const ReviewOverview: React.FC = () => {
@@ -18,18 +21,38 @@ const ReviewOverview: React.FC = () => {
     params: { serialNumber },
   } = useRouter()
 
-  return (
-    <div>
-      <p>This is the Overview/Start page for Reviews of Application {serialNumber}.</p>
-      <p>Overview components will go here.</p>
-      <p>
-        See{' '}
-        <Link to="https://github.com/openmsupply/application-manager-web-app/issues/200#issuecomment-741432161">
-          here
-        </Link>{' '}
-        for explanation.
-      </p>
-    </div>
+  const { error, loading, application, appStatus, isApplicationLoaded } = useLoadApplication({
+    serialNumber: serialNumber,
+  })
+
+  return error ? (
+    <Message error header="Problem to load review homepage" list={[error]} />
+  ) : loading ? (
+    <Loading />
+  ) : application ? (
+    <Container>
+      <Card fluid>
+        <Card.Content>
+          <Card.Header>{application.name}</Card.Header>
+          <Card.Description>
+            This is the Overview/Start page for Reviews of Application {serialNumber}.
+          </Card.Description>
+        </Card.Content>
+        <Card.Content extra>
+          See{' '}
+          <a
+            href={
+              'https://github.com/openmsupply/application-manager-web-app/issues/200#issuecomment-741432161'
+            }
+          >
+            here
+          </a>{' '}
+          for explanation.
+        </Card.Content>
+      </Card>
+    </Container>
+  ) : (
+    <Header as="h2" icon="exclamation circle" content="No review found!" />
   )
 }
 
