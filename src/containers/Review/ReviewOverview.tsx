@@ -53,14 +53,16 @@ const ReviewOverview: React.FC = () => {
   })
 
   const handleCreate = (_: any) => {
-    if (!assignment || !assignment.review) {
+    if (!assignment) {
       console.log('Problem to create review - unexpected parameters')
       return
     }
 
     create({
-      reviewAssigmentId: assignment.review.id,
-      applicationResponses: [],
+      reviewAssigmentId: assignment.id,
+      applicationResponses: assignment.questions.map(({ responseId }) => ({
+        applicationResponseId: responseId,
+      })),
     })
   }
 

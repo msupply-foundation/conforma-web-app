@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react'
 import {
+  ApplicationResponse,
   Review,
   ReviewAssignment,
   ReviewQuestionAssignment,
   TemplateElement,
-  TemplateSectionsOrderBy,
   useGetReviewAssignmentQuery,
 } from '../generated/graphql'
-import { ApplicationDetails, AssignmentDetails, TemplateSectionPayload } from '../types'
+import {
+  ApplicationDetails,
+  AssignmentDetails,
+  ReviewQuestion,
+  TemplateSectionPayload,
+} from '../types'
 
 interface UseGetReviewAssignmentProps {
   application: ApplicationDetails | undefined
@@ -65,14 +70,29 @@ const useGetReviewAssignment = ({
       setAssignment({
         id: currentAssignment.id,
         review: review ? { id: review.id, status: review.status as string } : undefined,
-        questions: questionsAssignments.map((questionAssignment) => {
-          const { templateElement } = questionAssignment
-          const { code, section } = templateElement as TemplateElement
-          return {
-            code,
-            sectionIndex: section?.index as number,
-          }
-        }),
+        questions: questionsAssignments.reduce(
+          (validQuestionAssignments: ReviewQuestion[], questionAssignment) => {
+            const { templateElement } = questionAssignment
+            const { code, section, applicationResponses } = templateElement as TemplateElement
+            const currentResponse =
+              applicationResponses.nodes.length > 0
+                ? (applicationResponses.nodes[0] as ApplicationResponse)
+                : undefined
+
+            // Check if assigned question is valid to include in array
+            if (!currentResponse) return validQuestionAssignments
+
+            return [
+              ...validQuestionAssignments,
+              {
+                code,
+                responseId: currentResponse.id,
+                sectionIndex: section?.index as number,
+              },
+            ]
+          },
+          []
+        ),
       })
       setLoading(false)
     }

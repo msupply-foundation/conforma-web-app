@@ -155,6 +155,7 @@ interface ReviewDetails {
 
 interface ReviewQuestion {
   code: string
+  responseId: number
   sectionIndex: number
 }
 
