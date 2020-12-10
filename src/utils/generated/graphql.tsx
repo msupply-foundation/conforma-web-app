@@ -17319,7 +17319,21 @@ export type GetReviewQuery = (
   { __typename?: 'Query' }
   & { review?: Maybe<(
     { __typename?: 'Review' }
-    & Pick<Review, 'id'>
+    & { reviewResponses: (
+      { __typename?: 'ReviewResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ReviewResponse' }
+        & Pick<ReviewResponse, 'id' | 'comment' | 'decision'>
+        & { applicationResponse?: Maybe<(
+          { __typename?: 'ApplicationResponse' }
+          & Pick<ApplicationResponse, 'id' | 'value'>
+          & { templateElement?: Maybe<(
+            { __typename?: 'TemplateElement' }
+            & Pick<TemplateElement, 'title'>
+          )> }
+        )> }
+      )>> }
+    ) }
   )> }
 );
 
@@ -17864,7 +17878,20 @@ export type GetElementsAndResponsesQueryResult = Apollo.QueryResult<GetElementsA
 export const GetReviewDocument = gql`
     query getReview($reviewId: Int!) {
   review(id: $reviewId) {
-    id
+    reviewResponses {
+      nodes {
+        id
+        comment
+        decision
+        applicationResponse {
+          id
+          value
+          templateElement {
+            title
+          }
+        }
+      }
+    }
   }
 }
     `;

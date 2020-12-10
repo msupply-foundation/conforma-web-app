@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
+import { Card, Header, List, Message } from 'semantic-ui-react'
+import { Loading } from '../../components'
+import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { ApplicationResponse, ReviewResponse } from '../../utils/generated/graphql'
 
 const ReviewPageWrapper: React.FC = () => {
   // Page will present the list of visible questions in Summary view, with additional "Reviewing" controls beneath each question.
@@ -9,10 +13,19 @@ const ReviewPageWrapper: React.FC = () => {
     params: { serialNumber, reviewId },
   } = useRouter()
 
-  // TODO: Need to load review and review_responses
-  // Need to wait for trigger to run that will set the Review status as DRAFT (after creation)
+  // TODO: Need to wait for trigger to run that will set the Review status as DRAFT (after creation)
 
-  return (
+  const { error, loading, data } = useLoadReview({ reviewId: Number(reviewId) })
+
+  useEffect(() => {
+    console.log('data', data)
+  }, [data])
+
+  return error ? (
+    <Message error header="Problem to load review" list={[error]} />
+  ) : loading ? (
+    <Loading />
+  ) : (
     <div>
       <p>
         This is the Review page for Review ID#{reviewId} of Application {serialNumber}
