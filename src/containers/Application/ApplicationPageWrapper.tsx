@@ -193,7 +193,7 @@ const ApplicationPageWrapper: React.FC = () => {
       </Grid>
       <Sticky pushing style={{ backgroundColor: 'white' }}>
         <Segment basic textAlign="right">
-          <Button color="blue" onClick={() => push(`/applications/${serialNumber}/summary`)}>
+          <Button color="blue" onClick={() => push(`/application/${serialNumber}/summary`)}>
             {strings.BUTTON_SUBMIT}
           </Button>
         </Segment>
