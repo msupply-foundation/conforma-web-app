@@ -58,7 +58,7 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
     if (nextPage > currentSection.totalPages) {
       // Will check if next page is in other section
       nextSection
-        ? sendToPage(nextSection.code, nextSection.totalPages)
+        ? sendToPage(nextSection.code, 1)
         : console.log('Problem to load next page (not found)!')
     } else sendToPage(currentSection.code, nextPage)
   }
