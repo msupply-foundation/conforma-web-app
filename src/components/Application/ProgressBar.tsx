@@ -146,8 +146,8 @@ const attemptChangeToPage = ({
 }: attemptChangePageProps) => {
   if (canNavigate || validateCurrentPage()) {
     sectionCode && pageCode
-      ? push(`/applications/${serialNumber}/${sectionCode}/${pageCode}`)
-      : push(`/applications/${serialNumber}/summary`)
+      ? push(`/application/${serialNumber}/${sectionCode}/${pageCode}`)
+      : push(`/application/${serialNumber}/summary`)
   }
 }
 
