@@ -7,9 +7,14 @@ import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
 import { SectionElementStates } from '../../utils/types'
+import { revalidateAll } from '../../utils/helpers/revalidateAll'
+import strings from '../../utils/constants'
+import messages from '../../utils/messages'
+import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 
 const ApplicationOverview: React.FC = () => {
   const [sectionsPages, setSectionsAndElements] = useState<SectionElementStates[]>()
+  const [isRevalidated, setIsRevalidated] = useState(false)
 
   const { query, push } = useRouter()
   const { serialNumber } = query
@@ -36,6 +41,32 @@ const ApplicationOverview: React.FC = () => {
   } = useUpdateApplication({
     applicationSerial: serialNumber as string,
   })
+
+  const [responseMutation] = useUpdateResponseMutation()
+
+  useEffect(() => {
+    // Fully re-validate on page load
+    console.log('Loaded?', isApplicationLoaded)
+    if (isApplicationLoaded) {
+      revalidateAll(elementsState, responsesByCode).then((result) => {
+        console.log('Revalidation', result)
+        if (result.validityChanges) {
+          // Update database if validity changed
+          result.validityChanges.forEach((changedElement) => {
+            console.log('Element', changedElement)
+            responseMutation({
+              variables: {
+                id: changedElement.id,
+                isValid: changedElement.isValid,
+              },
+            })
+          })
+        }
+        if (!result.allValid) push(`/application/${serialNumber}`) // TO-DO: Go to invalid page
+      })
+      setIsRevalidated(true)
+    }
+  }, [responsesByCode, elementsState])
 
   useEffect(() => {
     if (!responsesLoading && elementsState && responsesByCode) {
@@ -75,7 +106,7 @@ const ApplicationOverview: React.FC = () => {
     <Loading />
   ) : submitError ? (
     <Message error header="Problem to submit application" list={[submitError]} />
-  ) : serialNumber && appStatus && sectionsPages ? (
+  ) : serialNumber && appStatus && sectionsPages && isRevalidated ? (
     <Container>
       <Header as="h1" content="REVIEW AND SUBMIT" />
       <Form>
@@ -90,7 +121,7 @@ const ApplicationOverview: React.FC = () => {
           />
         ))}
         {appStatus.status === 'DRAFT' ? (
-          <Button content="Submit application" onClick={() => submit()} />
+          <Button content={strings.BUTTON_SUMMARY} onClick={() => submit()} />
         ) : null}
         {showProcessingModal(processing, submitted)}
       </Form>
