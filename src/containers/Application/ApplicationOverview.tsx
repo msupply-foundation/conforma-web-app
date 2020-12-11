@@ -6,7 +6,12 @@ import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAnd
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
-import { SectionElementStates } from '../../utils/types'
+import {
+  ApplicationElementStates,
+  ResponseFull,
+  ResponsesByCode,
+  SectionElementStates,
+} from '../../utils/types'
 import { revalidateAll } from '../../utils/helpers/revalidateAll'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
@@ -42,12 +47,13 @@ const ApplicationOverview: React.FC = () => {
     // Fully re-validate on page load
     console.log('Loaded?', isApplicationLoaded)
     if (isApplicationLoaded && elementsState && responsesByCode) {
+      console.log('Responses', responsesByCode)
+      console.log('elementsState', elementsState)
       revalidateAll(elementsState, responsesByCode).then((result) => {
         console.log('Revalidation', result)
         if (result.validityChanges) {
           // Update database if validity changed
           result.validityChanges.forEach((changedElement) => {
-            console.log('Element', changedElement)
             responseMutation({
               variables: {
                 id: changedElement.id,
@@ -56,7 +62,19 @@ const ApplicationOverview: React.FC = () => {
             })
           })
         }
-        if (!result.allValid) push(`/application/${serialNumber}`) // TO-DO: Go to invalid page
+        const { firstErrorSection, firstErrorPage } = getFirstErrorLocation(
+          responsesByCode,
+          elementsState
+        )
+        console.log('firstErrorSection', firstErrorSection)
+        console.log('firstErrorPage', firstErrorPage)
+        if (!result.allValid) {
+          const { firstErrorSection, firstErrorPage } = getFirstErrorLocation(
+            responsesByCode,
+            elementsState
+          )
+          // push(`/application/${serialNumber}`)
+        } // TO-DO: Go to invalid page
       })
       setIsRevalidated(true)
     }
@@ -140,3 +158,28 @@ const showProcessingModal = (processing: boolean, submitted: boolean) => {
 }
 
 export default ApplicationOverview
+
+function getFirstErrorLocation(
+  responses: ResponsesByCode,
+  elementsState: ApplicationElementStates
+) {
+  let firstErrorSection = Infinity
+  let firstErrorPage = Infinity
+  Object.entries(responses).forEach(([code, response]) => {
+    console.log('Code', code)
+    if (!response?.isValid && elementsState[code].category === 'QUESTION') {
+      const sectionIndex = elementsState[code].sectionIndex
+      const page = elementsState[code].page
+      // console.log('sectionIndex', sectionIndex)
+      // console.log('page', page)
+      if (sectionIndex < firstErrorSection) {
+        firstErrorSection = sectionIndex
+        firstErrorPage = page
+      } else
+        firstErrorPage =
+          sectionIndex === firstErrorSection && page < firstErrorPage ? page : firstErrorPage
+    }
+  })
+
+  return { firstErrorPage, firstErrorSection }
+}
