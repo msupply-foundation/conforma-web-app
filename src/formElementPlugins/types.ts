@@ -49,7 +49,6 @@ interface SummaryViewWrapperProps {
   element: ElementState
   response: ResponseFull | null
   allResponses: ResponsesByCode
-  isStrictValidation: boolean
 }
 
 interface OnUpdateTemplateWrapperView {

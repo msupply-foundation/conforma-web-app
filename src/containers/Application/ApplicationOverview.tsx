@@ -32,13 +32,7 @@ const ApplicationOverview: React.FC = () => {
     isApplicationLoaded,
   })
 
-  const {
-    error: submitError,
-    processing,
-    submitted,
-    submit,
-    isStrictValidation,
-  } = useUpdateApplication({
+  const { error: submitError, processing, submitted, submit } = useUpdateApplication({
     applicationSerial: serialNumber as string,
   })
 
@@ -47,7 +41,7 @@ const ApplicationOverview: React.FC = () => {
   useEffect(() => {
     // Fully re-validate on page load
     console.log('Loaded?', isApplicationLoaded)
-    if (isApplicationLoaded) {
+    if (isApplicationLoaded && elementsState && responsesByCode) {
       revalidateAll(elementsState, responsesByCode).then((result) => {
         console.log('Revalidation', result)
         if (result.validityChanges) {
@@ -116,7 +110,6 @@ const ApplicationOverview: React.FC = () => {
             sectionPages={sectionPages}
             serialNumber={serialNumber}
             allResponses={responsesByCode || {}}
-            isStrictValidation={isStrictValidation}
             canEdit={appStatus.status === 'DRAFT'}
           />
         ))}
