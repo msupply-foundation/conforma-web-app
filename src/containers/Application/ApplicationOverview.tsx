@@ -62,19 +62,14 @@ const ApplicationOverview: React.FC = () => {
             })
           })
         }
-        const { firstErrorSection, firstErrorPage } = getFirstErrorLocation(
-          responsesByCode,
-          elementsState
-        )
-        console.log('firstErrorSection', firstErrorSection)
-        console.log('firstErrorPage', firstErrorPage)
+        // If invalid responses, re-direct to first invalid page
         if (!result.allValid) {
-          const { firstErrorSection, firstErrorPage } = getFirstErrorLocation(
+          const { firstErrorSectionIndex, firstErrorPage } = getFirstErrorLocation(
             responsesByCode,
             elementsState
           )
-          // push(`/application/${serialNumber}`)
-        } // TO-DO: Go to invalid page
+          push(`/application/${serialNumber}/S${firstErrorSectionIndex + 1}/Page${firstErrorPage}`)
+        }
       })
       setIsRevalidated(true)
     }
@@ -163,23 +158,19 @@ function getFirstErrorLocation(
   responses: ResponsesByCode,
   elementsState: ApplicationElementStates
 ) {
-  let firstErrorSection = Infinity
+  let firstErrorSectionIndex = Infinity
   let firstErrorPage = Infinity
   Object.entries(responses).forEach(([code, response]) => {
-    console.log('Code', code)
     if (!response?.isValid && elementsState[code].category === 'QUESTION') {
       const sectionIndex = elementsState[code].sectionIndex
       const page = elementsState[code].page
-      // console.log('sectionIndex', sectionIndex)
-      // console.log('page', page)
-      if (sectionIndex < firstErrorSection) {
-        firstErrorSection = sectionIndex
+      if (sectionIndex < firstErrorSectionIndex) {
+        firstErrorSectionIndex = sectionIndex
         firstErrorPage = page
       } else
         firstErrorPage =
-          sectionIndex === firstErrorSection && page < firstErrorPage ? page : firstErrorPage
+          sectionIndex === firstErrorSectionIndex && page < firstErrorPage ? page : firstErrorPage
     }
   })
-
-  return { firstErrorPage, firstErrorSection }
+  return { firstErrorPage, firstErrorSectionIndex }
 }
