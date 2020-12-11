@@ -197,3 +197,11 @@ interface ValidateObject {
 }
 
 type ValidationMode = 'STRICT' | 'LOOSE'
+
+export interface RevalidateResult {
+  allValid: boolean
+  validityChanges?: {
+    id: number
+    isValid: boolean
+  }[]
+}

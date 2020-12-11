@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, ProgressBar } from '../../components'
-import { Button, Grid, Header, Label, Message, Segment, Sticky } from 'semantic-ui-react'
+import {
+  Button,
+  Grid,
+  Header,
+  Icon,
+  Label,
+  Message,
+  Modal,
+  ModalProps,
+  Segment,
+  Sticky,
+} from 'semantic-ui-react'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
@@ -14,6 +25,7 @@ import validatePage, {
 import getPageElements from '../../utils/helpers/getPageElements'
 import { revalidateAll } from '../../utils/helpers/revalidateAll'
 import strings from '../../utils/constants'
+import messages from '../../utils/messages'
 
 import {
   ApplicationElementStates,
@@ -34,6 +46,11 @@ const ApplicationPageWrapper: React.FC = () => {
   const [forceValidation, setForceValidation] = useState<boolean>(false)
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
+  const [showModal, setShowModal] = useState<ModalProps>({
+    open: false,
+    message: '',
+    title: '',
+  })
 
   const {
     error,
@@ -141,12 +158,32 @@ const ApplicationPageWrapper: React.FC = () => {
     return application?.isLinear ? validation === (PROGRESS_STATUS.VALID as ProgressStatus) : true
   }
 
+  const handleSummaryClick = async () => {
+    const revalidate = await revalidateAll(elementsState, responsesByCode)
+    console.log('Revalidation', revalidate)
+    if (revalidate.validityChanges) {
+      // Update database if validity changed
+      revalidate.validityChanges.forEach((changedElement) => {
+        console.log('Element', changedElement)
+        responseMutation({
+          variables: {
+            id: changedElement.id,
+            isValid: changedElement.isValid,
+          },
+        })
+      })
+    }
+    if (!revalidate.allValid) setShowModal({ open: true, ...messages.VALIDATION_FAIL })
+    else push(`/application/${serialNumber}/summary`)
+  }
+
   return error || responsesError ? (
     <Message error header="Problem to load application" />
   ) : loading || responsesLoading ? (
     <Loading />
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
+      {showValidationModal(showModal, setShowModal)}
       <Header textAlign="center">{strings.TITLE_COMPANY_PLACEHOLDER}</Header>
       <Grid
         stackable
@@ -186,21 +223,51 @@ const ApplicationPageWrapper: React.FC = () => {
               serialNumber={serialNumber}
               currentPage={Number(page as string)}
               validateCurrentPage={validateCurrentPage}
+              showValidationModal={showValidationModal}
+              modalState={{ showModal, setShowModal }}
             />
           </Segment>
         </Grid.Column>
         <Grid.Column width={2} />
       </Grid>
-      <Sticky pushing style={{ backgroundColor: 'white' }}>
+      <Sticky
+        pushing
+        style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
+      >
         <Segment basic textAlign="right">
-          <Button color="blue" onClick={() => push(`/application/${serialNumber}/summary`)}>
-            {strings.BUTTON_SUBMIT}
+          <Button color="blue" onClick={handleSummaryClick}>
+            {strings.BUTTON_SUMMARY}
           </Button>
         </Segment>
       </Sticky>
     </Segment.Group>
   ) : (
     <Label content="Application's section can't be displayed" />
+  )
+}
+
+const modalInitialValue: ModalProps = {
+  open: false,
+  message: '',
+  title: '',
+}
+
+function showValidationModal(showModal: ModalProps, setShowModal: Function) {
+  return (
+    <Modal basic onClose={() => setShowModal(modalInitialValue)} open={showModal.open} size="small">
+      <Header icon>
+        <Icon name="exclamation triangle" />
+        {showModal.title}
+      </Header>
+      <Modal.Content>
+        <p>{showModal.message}</p>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button color="green" inverted onClick={() => setShowModal(modalInitialValue)}>
+          <Icon name="checkmark" /> Yes
+        </Button>
+      </Modal.Actions>
+    </Modal>
   )
 }
 

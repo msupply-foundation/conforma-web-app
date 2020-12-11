@@ -1,16 +1,16 @@
-import { ApplicationElementStates, ResponsesByCode } from '../types'
+import { ApplicationElementStates, ResponsesByCode, RevalidateResult } from '../types'
 import { defaultValidate } from '../../formElementPlugins/defaultValidate'
 
-export const revalidateAll = (
+export const revalidateAll = async (
   elementsState: ApplicationElementStates | undefined,
   responsesByCode: ResponsesByCode | undefined,
   strict = true,
   shouldUpdateDatabase = true
-): boolean => {
-  const validate = defaultValidate // To-Do: import custom validations
+): Promise<RevalidateResult> => {
+  const validate = defaultValidate // To-Do: import custom validation methods
 
-  console.log('Elements', elementsState)
-  console.log('responses', responsesByCode)
+  // console.log('Elements', elementsState)
+  // console.log('responses', responsesByCode)
   if (elementsState) {
     const elementCodes = Object.keys(elementsState).filter(
       (key) =>
@@ -23,7 +23,6 @@ export const revalidateAll = (
           (!strict && responsesByCode[key]?.isValid !== null))
     )
 
-    console.log('Keys', elementCodes)
     const validationExpressions = elementCodes.map((code) => elementsState[code].validation)
 
     const evaluatedValidations = []
@@ -33,8 +32,8 @@ export const revalidateAll = (
       const thisResponse = responsesByCode
         ? responsesByCode[code]?.text
           ? responsesByCode[code]?.text
-          : responsesByCode[code]
-        : null
+          : ''
+        : ''
       const responses = { thisResponse, ...responsesByCode }
       const expression = validationExpressions[i]
       evaluatedValidations.push(
@@ -44,24 +43,21 @@ export const revalidateAll = (
         })
       )
     }
-    Promise.all(evaluatedValidations).then((resultArray) => {
-      // DO SIDE-EFFECTS HERE: Check isValid changed and write if so
-      console.log('Result', resultArray)
-      const validityChanges: any = []
-      if (shouldUpdateDatabase) {
-        elementCodes.forEach((code, index) => {
-          console.log(code)
-          if (elementsState[code].validation.value !== resultArray[index].isValid) {
-            validityChanges.push({
-              id: elementsState[code].id,
-              isValid: resultArray[index].isValid,
-            })
-          }
-        })
-      }
-      return { allValid: resultArray.every((element) => element.isValid), validityChanges }
-    })
-  }
+    const resultArray = await Promise.all(evaluatedValidations)
+    // console.log('Result', resultArray)
+    const validityChanges: any = []
+    if (shouldUpdateDatabase) {
+      elementCodes.forEach((code, index) => {
+        if (elementsState[code].validation.value !== resultArray[index].isValid) {
+          validityChanges.push({
+            id: responsesByCode && responsesByCode[code]?.id,
+            isValid: resultArray[index].isValid,
+          })
+        }
+      })
+    }
 
-  return true
+    return { allValid: resultArray.every((element) => element.isValid), validityChanges }
+  }
+  return { allValid: false }
 }

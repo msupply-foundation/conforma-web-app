@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Button, Container, Header, Icon, Label, Modal } from 'semantic-ui-react'
+import { Button, Container, Header, Icon, Label, Modal, ModalProps } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { TemplateSectionPayload } from '../../utils/types'
-import { VALIDATION_FAIL } from '../../utils/messages'
+import messages from '../../utils/messages'
 import strings from '../../utils/constants'
 
 interface NavigationBoxProps {
@@ -11,22 +11,13 @@ interface NavigationBoxProps {
   serialNumber: string
   currentPage: number
   validateCurrentPage: () => boolean
-}
-
-interface ModalProps {
-  open: boolean
-  message: string
-  title: string
+  showValidationModal: Function
+  modalState: { showModal: ModalProps; setShowModal: Function }
 }
 
 const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
   const { templateSections, currentSection, serialNumber, currentPage, validateCurrentPage } = props
-  const [showModal, setShowModal] = useState<ModalProps>({
-    open: false,
-    message: '',
-    title: '',
-  })
-
+  const { showModal, setShowModal } = props.modalState
   const nextSection = templateSections.find(({ index }) => index === currentSection.index + 1)
   const previousSection = templateSections.find(({ index }) => index === currentSection.index - 1)
 
@@ -51,7 +42,7 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
     // Run the validation on the current page
     const status = validateCurrentPage()
     if (!status) {
-      setShowModal({ open: true, ...VALIDATION_FAIL })
+      setShowModal({ open: true, ...messages.VALIDATION_FAIL })
       return
     }
     const nextPage = currentPage + 1
@@ -65,7 +56,6 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
 
   return (
     <Container>
-      {showValidationModal(showModal, setShowModal)}
       {!isFirstPage && (
         <Label basic as="a" onClick={previousButtonHandler}>
           {strings.BUTTON_PREVIOUS}
@@ -77,31 +67,6 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
         </Label>
       )}
     </Container>
-  )
-}
-
-const modalInitialValue: ModalProps = {
-  open: false,
-  message: '',
-  title: '',
-}
-
-function showValidationModal(showModal: ModalProps, setShowModal: Function) {
-  return (
-    <Modal basic onClose={() => setShowModal(modalInitialValue)} open={showModal.open} size="small">
-      <Header icon>
-        <Icon name="exclamation triangle" />
-        {showModal.title}
-      </Header>
-      <Modal.Content>
-        <p>{showModal.message}</p>
-      </Modal.Content>
-      <Modal.Actions>
-        <Button color="green" inverted onClick={() => setShowModal(modalInitialValue)}>
-          <Icon name="checkmark" /> Yes
-        </Button>
-      </Modal.Actions>
-    </Modal>
   )
 }
 
