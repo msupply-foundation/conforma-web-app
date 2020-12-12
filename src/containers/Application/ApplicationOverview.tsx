@@ -46,7 +46,6 @@ const ApplicationOverview: React.FC = () => {
     }
     if (isApplicationLoaded && elementsState && responsesByCode) {
       revalidateAndUpdate().then(() => setIsRevalidated(true))
-      // All OK -- would have been re-directed otherwise:
     }
   }, [responsesByCode, elementsState])
 
@@ -83,23 +82,23 @@ const ApplicationOverview: React.FC = () => {
   }, [elementsState, responsesLoading])
 
   const revalidateAndUpdate = async () => {
-    const result = await revalidateAll(elementsState, responsesByCode)
-    if (result.validityFailures) {
-      // Update database if validity changed
-      result.validityFailures.forEach((changedElement) => {
-        responseMutation({
-          variables: {
-            id: changedElement.id,
-            isValid: changedElement.isValid,
-          },
-        })
+    const revalidate = await revalidateAll(elementsState, responsesByCode)
+
+    // Update database if validity changed
+    revalidate.validityFailures.forEach((changedElement) => {
+      responseMutation({
+        variables: {
+          id: changedElement.id,
+          isValid: changedElement.isValid,
+        },
       })
-    }
+    })
+
     // If invalid responses, re-direct to first invalid page
-    if (!result.allValid) {
+    if (!revalidate.allValid) {
       console.log('Some responses invalid')
       const { firstErrorSectionIndex, firstErrorPage } = getFirstErrorLocation(
-        result.validityFailures,
+        revalidate.validityFailures,
         elementsState as ApplicationElementStates
       )
       // TO-DO: Alert user of Submit failure
@@ -177,5 +176,5 @@ function getFirstErrorLocation(
       firstErrorPage =
         sectionIndex === firstErrorSectionIndex && page < firstErrorPage ? page : firstErrorPage
   })
-  return { firstErrorPage, firstErrorSectionIndex }
+  return { firstErrorSectionIndex, firstErrorPage }
 }

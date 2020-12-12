@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Container, Header, Icon, Label, Modal, ModalProps } from 'semantic-ui-react'
+import { Button, Container, Label, ModalProps } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { TemplateSectionPayload } from '../../utils/types'
 import messages from '../../utils/messages'
