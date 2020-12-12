@@ -45,9 +45,8 @@ const ApplicationOverview: React.FC = () => {
       return
     }
     if (isApplicationLoaded && elementsState && responsesByCode) {
-      revalidateAndUpdate()
+      revalidateAndUpdate().then(() => setIsRevalidated(true))
       // All OK -- would have been re-directed otherwise:
-      setIsRevalidated(true)
     }
   }, [responsesByCode, elementsState])
 
@@ -83,35 +82,33 @@ const ApplicationOverview: React.FC = () => {
     }
   }, [elementsState, responsesLoading])
 
-  const revalidateAndUpdate = () => {
-    revalidateAll(elementsState, responsesByCode).then((result) => {
-      if (result.validityFailures) {
-        // Update database if validity changed
-        result.validityFailures.forEach((changedElement) => {
-          responseMutation({
-            variables: {
-              id: changedElement.id,
-              isValid: changedElement.isValid,
-            },
-          })
+  const revalidateAndUpdate = async () => {
+    const result = await revalidateAll(elementsState, responsesByCode)
+    if (result.validityFailures) {
+      // Update database if validity changed
+      result.validityFailures.forEach((changedElement) => {
+        responseMutation({
+          variables: {
+            id: changedElement.id,
+            isValid: changedElement.isValid,
+          },
         })
-      }
-      // If invalid responses, re-direct to first invalid page
-      if (!result.allValid) {
-        console.log('Some responses invalid')
-        const { firstErrorSectionIndex, firstErrorPage } = getFirstErrorLocation(
-          result.validityFailures,
-          elementsState as ApplicationElementStates
-        )
-        // TO-DO: Alert user of Submit failure
-        push(`/application/${serialNumber}/S${firstErrorSectionIndex + 1}/Page${firstErrorPage}`)
-      }
-    })
-    return
+      })
+    }
+    // If invalid responses, re-direct to first invalid page
+    if (!result.allValid) {
+      console.log('Some responses invalid')
+      const { firstErrorSectionIndex, firstErrorPage } = getFirstErrorLocation(
+        result.validityFailures,
+        elementsState as ApplicationElementStates
+      )
+      // TO-DO: Alert user of Submit failure
+      push(`/application/${serialNumber}/S${firstErrorSectionIndex + 1}/Page${firstErrorPage}`)
+    }
   }
 
-  const handleSubmit = () => {
-    revalidateAndUpdate()
+  const handleSubmit = async () => {
+    await revalidateAndUpdate()
     // All OK -- would have been re-directed otherwise:
     submit()
   }
