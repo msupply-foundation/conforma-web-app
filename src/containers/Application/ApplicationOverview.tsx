@@ -10,6 +10,8 @@ import {
   ApplicationElementStates,
   ResponseFull,
   ResponsesByCode,
+  RevalidateResult,
+  ValidityFailure,
   SectionElementStates,
 } from '../../utils/types'
 import { revalidateAll } from '../../utils/helpers/revalidateAll'
@@ -44,33 +46,14 @@ const ApplicationOverview: React.FC = () => {
   const [responseMutation] = useUpdateResponseMutation()
 
   useEffect(() => {
-    // Fully re-validate on page load
-    console.log('Loaded?', isApplicationLoaded)
+    // Fully re-validate on page load (if Draft or Changes Required)
+    if (appStatus?.status !== 'DRAFT' && appStatus?.status !== 'CHANGES_REQUIRED') {
+      setIsRevalidated(true)
+      return
+    }
     if (isApplicationLoaded && elementsState && responsesByCode) {
-      console.log('Responses', responsesByCode)
-      console.log('elementsState', elementsState)
-      revalidateAll(elementsState, responsesByCode).then((result) => {
-        console.log('Revalidation', result)
-        if (result.validityChanges) {
-          // Update database if validity changed
-          result.validityChanges.forEach((changedElement) => {
-            responseMutation({
-              variables: {
-                id: changedElement.id,
-                isValid: changedElement.isValid,
-              },
-            })
-          })
-        }
-        // If invalid responses, re-direct to first invalid page
-        if (!result.allValid) {
-          const { firstErrorSectionIndex, firstErrorPage } = getFirstErrorLocation(
-            responsesByCode,
-            elementsState
-          )
-          push(`/application/${serialNumber}/S${firstErrorSectionIndex + 1}/Page${firstErrorPage}`)
-        }
-      })
+      revalidateAndUpdate()
+      // All OK -- would have been re-directed otherwise:
       setIsRevalidated(true)
     }
   }, [responsesByCode, elementsState])
@@ -107,6 +90,38 @@ const ApplicationOverview: React.FC = () => {
     }
   }, [elementsState, responsesLoading])
 
+  const revalidateAndUpdate = () => {
+    revalidateAll(elementsState, responsesByCode).then((result) => {
+      if (result.validityFailures) {
+        // Update database if validity changed
+        result.validityFailures.forEach((changedElement) => {
+          responseMutation({
+            variables: {
+              id: changedElement.id,
+              isValid: changedElement.isValid,
+            },
+          })
+        })
+      }
+      // If invalid responses, re-direct to first invalid page
+      if (!result.allValid) {
+        console.log('Some responses invalid')
+        const { firstErrorSectionIndex, firstErrorPage } = getFirstErrorLocation(
+          result.validityFailures,
+          elementsState as ApplicationElementStates
+        )
+        // TO-DO: Alert user of Submit failure
+        push(`/application/${serialNumber}/S${firstErrorSectionIndex + 1}/Page${firstErrorPage}`)
+      }
+    })
+  }
+
+  const handleSubmit = () => {
+    revalidateAndUpdate()
+    // All OK -- would have been re-directed otherwise:
+    submit()
+  }
+
   return error ? (
     <Message error header="Problem to load application overview" list={[error]} />
   ) : loading || responsesLoading ? (
@@ -127,7 +142,7 @@ const ApplicationOverview: React.FC = () => {
           />
         ))}
         {appStatus.status === 'DRAFT' ? (
-          <Button content={strings.BUTTON_SUMMARY} onClick={() => submit()} />
+          <Button content={strings.BUTTON_SUBMIT} onClick={() => handleSubmit()} />
         ) : null}
         {showProcessingModal(processing, submitted)}
       </Form>
@@ -155,22 +170,21 @@ const showProcessingModal = (processing: boolean, submitted: boolean) => {
 export default ApplicationOverview
 
 function getFirstErrorLocation(
-  responses: ResponsesByCode,
+  validityFailures: ValidityFailure[],
   elementsState: ApplicationElementStates
 ) {
   let firstErrorSectionIndex = Infinity
   let firstErrorPage = Infinity
-  Object.entries(responses).forEach(([code, response]) => {
-    if (!response?.isValid && elementsState[code].category === 'QUESTION') {
-      const sectionIndex = elementsState[code].sectionIndex
-      const page = elementsState[code].page
-      if (sectionIndex < firstErrorSectionIndex) {
-        firstErrorSectionIndex = sectionIndex
-        firstErrorPage = page
-      } else
-        firstErrorPage =
-          sectionIndex === firstErrorSectionIndex && page < firstErrorPage ? page : firstErrorPage
-    }
+  validityFailures.forEach((failure: ValidityFailure) => {
+    const { code } = failure
+    const sectionIndex = elementsState[code].sectionIndex
+    const page = elementsState[code].page
+    if (sectionIndex < firstErrorSectionIndex) {
+      firstErrorSectionIndex = sectionIndex
+      firstErrorPage = page
+    } else
+      firstErrorPage =
+        sectionIndex === firstErrorSectionIndex && page < firstErrorPage ? page : firstErrorPage
   })
   return { firstErrorPage, firstErrorSectionIndex }
 }

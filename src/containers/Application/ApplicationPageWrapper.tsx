@@ -161,10 +161,9 @@ const ApplicationPageWrapper: React.FC = () => {
   const handleSummaryClick = async () => {
     const revalidate = await revalidateAll(elementsState, responsesByCode)
     console.log('Revalidation', revalidate)
-    if (revalidate.validityChanges) {
+    if (revalidate.validityFailures) {
       // Update database if validity changed
-      revalidate.validityChanges.forEach((changedElement) => {
-        console.log('Element', changedElement)
+      revalidate.validityFailures.forEach((changedElement) => {
         responseMutation({
           variables: {
             id: changedElement.id,

@@ -1,4 +1,9 @@
-import { ApplicationElementStates, ResponsesByCode, RevalidateResult } from '../types'
+import {
+  ApplicationElementStates,
+  ResponsesByCode,
+  RevalidateResult,
+  ValidityFailure,
+} from '../types'
 import { defaultValidate } from '../../formElementPlugins/defaultValidate'
 
 export const revalidateAll = async (
@@ -45,19 +50,24 @@ export const revalidateAll = async (
     }
     const resultArray = await Promise.all(evaluatedValidations)
     // console.log('Result', resultArray)
-    const validityChanges: any = []
+    const validityFailures: ValidityFailure[] = []
     if (shouldUpdateDatabase) {
       elementCodes.forEach((code, index) => {
-        if (elementsState[code].validation.value !== resultArray[index].isValid) {
-          validityChanges.push({
-            id: responsesByCode && responsesByCode[code]?.id,
-            isValid: resultArray[index].isValid,
+        if (!resultArray[index].isValid) {
+          validityFailures.push({
+            id: (responsesByCode && responsesByCode[code].id) || 0,
+            isValid: false,
+            code,
           })
         }
       })
     }
 
-    return { allValid: resultArray.every((element) => element.isValid), validityChanges }
+    return {
+      allValid: resultArray.every((element) => element.isValid),
+      validityFailures,
+    }
   }
-  return { allValid: false }
+  // Typescript requires final return -- it should never be reached
+  return { allValid: false, validityFailures: [] }
 }

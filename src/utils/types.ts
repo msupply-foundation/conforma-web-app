@@ -30,6 +30,8 @@ export {
   ValidationMode,
   ValidateFunction,
   ValidateObject,
+  ValidityFailure,
+  RevalidateResult,
 }
 
 interface ApplicationDetails {
@@ -137,7 +139,7 @@ interface ResponsePayload {
 }
 
 interface ResponsesByCode {
-  [key: string]: ResponseFull | null
+  [key: string]: ResponseFull
 }
 
 interface SectionElementStates {
@@ -198,10 +200,13 @@ interface ValidateObject {
 
 type ValidationMode = 'STRICT' | 'LOOSE'
 
-export interface RevalidateResult {
+interface ValidityFailure {
+  id: number
+  isValid: boolean
+  code: string
+}
+
+interface RevalidateResult {
   allValid: boolean
-  validityChanges?: {
-    id: number
-    isValid: boolean
-  }[]
+  validityFailures: ValidityFailure[]
 }
