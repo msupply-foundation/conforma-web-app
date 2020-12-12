@@ -6,14 +6,7 @@ import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAnd
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
-import {
-  ApplicationElementStates,
-  ResponseFull,
-  ResponsesByCode,
-  RevalidateResult,
-  ValidityFailure,
-  SectionElementStates,
-} from '../../utils/types'
+import { ApplicationElementStates, ValidityFailure, SectionElementStates } from '../../utils/types'
 import { revalidateAll } from '../../utils/helpers/revalidateAll'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
@@ -114,6 +107,7 @@ const ApplicationOverview: React.FC = () => {
         push(`/application/${serialNumber}/S${firstErrorSectionIndex + 1}/Page${firstErrorPage}`)
       }
     })
+    return
   }
 
   const handleSubmit = () => {
