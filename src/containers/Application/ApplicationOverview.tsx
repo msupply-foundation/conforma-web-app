@@ -39,8 +39,11 @@ const ApplicationOverview: React.FC = () => {
   const [responseMutation] = useUpdateResponseMutation()
 
   useEffect(() => {
-    // Fully re-validate on page load (if Draft or Changes Required)
+    // Fully re-validate on page load
+    if (!appStatus) return
     if (appStatus?.status !== 'DRAFT' && appStatus?.status !== 'CHANGES_REQUIRED') {
+      // Show summary, even if it no longer validates, as it would
+      // have been valid when submitted.
       setIsRevalidated(true)
       return
     }
