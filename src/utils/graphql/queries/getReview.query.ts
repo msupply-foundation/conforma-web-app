@@ -12,7 +12,10 @@ export default gql`
             id
             value
             templateElement {
-              title
+              ...Element
+              section {
+                ...Section
+              }
             }
           }
         }
