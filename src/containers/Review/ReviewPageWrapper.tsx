@@ -15,11 +15,14 @@ const ReviewPageWrapper: React.FC = () => {
 
   // TODO: Need to wait for trigger to run that will set the Review status as DRAFT (after creation)
 
-  const { error, loading, data } = useLoadReview({ reviewId: Number(reviewId) })
+  const { error, loading, reviewElements } = useLoadReview({
+    reviewId: Number(reviewId),
+    serialNumber,
+  })
 
   useEffect(() => {
-    console.log('data', data)
-  }, [data])
+    console.log('reviewElements', reviewElements)
+  }, [reviewElements])
 
   return error ? (
     <Message error header="Problem to load review" list={[error]} />
