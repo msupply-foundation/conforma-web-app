@@ -112,7 +112,7 @@ const ReviewOverview: React.FC = () => {
           <Header as="h5">Sections assigned to you:</Header>
           <List>
             {assignedSections.map((section) => (
-              <List.Item>{section}</List.Item>
+              <List.Item key={`ReviewSection_${section}`}>{section}</List.Item>
             ))}
           </List>
         </Segment>
