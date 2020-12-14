@@ -17,7 +17,7 @@ interface UseLoadReviewProps {
 }
 
 const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
-  const [reviewElements, setReviewElements] = useState<SectionElementStates>()
+  const [reviewSections, setReviewSections] = useState<SectionElementStates[]>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -101,8 +101,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
           }, {})
           return { section: sectionDetails, pages }
         })
-      console.log(data, reviewBySection)
-
+      setReviewSections(reviewBySection)
       setLoading(false)
     }
   }, [applicationError, responsesError, apolloError, data])
@@ -110,7 +109,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
   return {
     loading,
     error,
-    reviewElements,
+    reviewSections,
   }
 }
 

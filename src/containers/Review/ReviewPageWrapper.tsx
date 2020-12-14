@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react'
-import { Card, Header, List, Message } from 'semantic-ui-react'
-import { Loading } from '../../components'
+import React from 'react'
+import { Container, Form, Header, Message } from 'semantic-ui-react'
+import { Loading, ReviewSection } from '../../components'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ApplicationResponse, ReviewResponse } from '../../utils/generated/graphql'
 
 const ReviewPageWrapper: React.FC = () => {
   // Page will present the list of visible questions in Summary view, with additional "Reviewing" controls beneath each question.
@@ -15,25 +14,34 @@ const ReviewPageWrapper: React.FC = () => {
 
   // TODO: Need to wait for trigger to run that will set the Review status as DRAFT (after creation)
 
-  const { error, loading, reviewElements } = useLoadReview({
+  const { error, loading, reviewSections } = useLoadReview({
     reviewId: Number(reviewId),
     serialNumber,
   })
-
-  useEffect(() => {
-    console.log('reviewElements', reviewElements)
-  }, [reviewElements])
 
   return error ? (
     <Message error header="Problem to load review" list={[error]} />
   ) : loading ? (
     <Loading />
+  ) : reviewSections ? (
+    <Container>
+      <Header as="h1" content="REVIEW AND SUBMIT" />
+      <Form>
+        {reviewSections.map((reviewSection) => (
+          <ReviewSection
+            key={`SecSummary_${reviewSection.section.code}`}
+            reviewSection={reviewSection}
+            canEdit={true} // TODO: Check Review status
+          />
+        ))}
+        {/* {appStatus.status === 'DRAFT' ? (
+            <Button content="Submit application" onClick={() => submit()} />
+          ) : null}
+          {showProcessingModal(processing, submitted)} */}
+      </Form>
+    </Container>
   ) : (
-    <div>
-      <p>
-        This is the Review page for Review ID#{reviewId} of Application {serialNumber}
-      </p>
-    </div>
+    <Message error header="Problem to load application for review" />
   )
 }
 
