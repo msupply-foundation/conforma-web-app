@@ -17339,8 +17339,8 @@ export type GetReviewQuery = (
 
 export type GetReviewAssignmentQueryVariables = Exact<{
   reviewerId: Scalars['Int'];
-  applicationId: Scalars['Int'];
-  stageId: Scalars['Int'];
+  applicationId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -17922,7 +17922,7 @@ export type GetReviewQueryHookResult = ReturnType<typeof useGetReviewQuery>;
 export type GetReviewLazyQueryHookResult = ReturnType<typeof useGetReviewLazyQuery>;
 export type GetReviewQueryResult = Apollo.QueryResult<GetReviewQuery, GetReviewQueryVariables>;
 export const GetReviewAssignmentDocument = gql`
-    query getReviewAssignment($reviewerId: Int!, $applicationId: Int!, $stageId: Int!) {
+    query getReviewAssignment($reviewerId: Int!, $applicationId: Int, $stageId: Int) {
   reviewAssignments(condition: {reviewerId: $reviewerId, applicationId: $applicationId, stageId: $stageId}) {
     nodes {
       id

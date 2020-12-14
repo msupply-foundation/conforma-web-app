@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-    query getReviewAssignment($reviewerId: Int!, $applicationId: Int!, $stageId: Int!) {
+    query getReviewAssignment($reviewerId: Int!, $applicationId: Int, $stageId: Int) {
         reviewAssignments(
             condition: {
                 reviewerId: $reviewerId, 

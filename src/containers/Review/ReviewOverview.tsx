@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { Button, Card, Container, Header, List, Message, Segment } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import useGetReviewAssignment from '../../utils/hooks/useGetReviewAssignment'
-import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { Link } from 'react-router-dom'
@@ -17,23 +16,14 @@ const ReviewOverview: React.FC = () => {
   } = useRouter()
 
   const {
-    error,
+    error: fetchAssignmentError,
     loading,
     application,
-    templateSections,
-    isApplicationLoaded,
-  } = useLoadApplication({ serialNumber: serialNumber })
-
-  const {
-    error: fetchAssignmentError,
-    loading: loadingAssignemnt,
     assignment,
     assignedSections,
   } = useGetReviewAssignment({
-    application,
-    templateSections,
     reviewerId: 6,
-    isApplicationLoaded,
+    serialNumber,
   })
 
   useEffect(() => {
@@ -46,7 +36,7 @@ const ReviewOverview: React.FC = () => {
 
   const { processing, error: createReviewError, create } = useCreateReview({
     onCompleted: (id: number) => {
-      if (serialNumber && templateSections && templateSections.length > 0) {
+      if (serialNumber) {
         // Call Review page after creation
         push(`/application/${serialNumber}/review/${id}`)
       }
@@ -90,9 +80,13 @@ const ReviewOverview: React.FC = () => {
     )
   }
 
-  return error || fetchAssignmentError || createReviewError ? (
-    <Message error header="Problem to load review homepage" list={[error, fetchAssignmentError]} />
-  ) : loading || loadingAssignemnt ? (
+  return fetchAssignmentError || createReviewError ? (
+    <Message
+      error
+      header="Problem to load review homepage"
+      list={[fetchAssignmentError, createReviewError]}
+    />
+  ) : loading ? (
     <Loading />
   ) : application && assignment ? (
     <Container>
