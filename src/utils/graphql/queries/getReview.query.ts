@@ -3,7 +3,7 @@ import { gql } from '@apollo/client'
 export default gql`
   query getReview($reviewId: Int!) {
     review(id: $reviewId) {
-        reviewResponses {
+      reviewResponses {
         nodes {
           id
           comment
