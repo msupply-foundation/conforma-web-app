@@ -3,81 +3,65 @@ import { useGetTriggersQuery } from '../../utils/generated/graphql'
 
 type TriggerType = 'applicationTrigger' | 'reviewAssignmentTrigger' | 'reviewTrigger'
 
-interface TriggerQueryVariables {
-  serial?: string
-  reviewAssignmentId?: number
-  reviewId?: number
-  getApplicationTriggers: boolean
-  getReviewAssignmentTriggers: boolean
-  getReviewTriggers: boolean
-}
-
-const useTriggerProcessing = (props: {
+interface TrigerQueryProps {
   serialNumber?: string
   reviewAssignmentId?: number
   reviewId?: number
-  triggerType: TriggerType
-}) => {
-  const { serialNumber, reviewAssignmentId, reviewId, triggerType } = props
+  triggerType?: TriggerType
+}
+
+const useTriggerProcessing = (props: TrigerQueryProps) => {
+  const { serialNumber, reviewAssignmentId, reviewId } = props
   const [isProcessing, setIsProcessing] = useState(true)
   const [triggerError, setTriggerError] = useState(false)
 
-  console.log('Props', props)
-
-  // Check query is properly formed:
-  if (
-    (!serialNumber && !reviewAssignmentId && !reviewId) ||
-    (triggerType == 'applicationTrigger' && !serialNumber) ||
-    (triggerType == 'reviewAssignmentTrigger' && !reviewAssignmentId) ||
-    (triggerType == 'reviewTrigger' && !reviewId)
-  ) {
+  // Ensure at least one the primary identifiers is provided
+  if (!serialNumber && !reviewAssignmentId && !reviewId) {
     console.log('INVALID QUERY')
-    return {
-      triggerProcessing: false,
-      error: true,
-    }
+    setIsProcessing(false)
+    setTriggerError(true)
   }
 
-  const queryVariables: TriggerQueryVariables = {
-    serial: serialNumber,
-    reviewAssignmentId,
-    reviewId,
-    getApplicationTriggers: triggerType == 'applicationTrigger',
-    getReviewAssignmentTriggers: triggerType == 'reviewAssignmentTrigger',
-    getReviewTriggers: triggerType == 'reviewTrigger',
-  }
+  // If triggerType not provided, infer it from the supplied ID
+  const triggerType = props.triggerType
+    ? props.triggerType
+    : serialNumber
+    ? 'applicationTrigger'
+    : reviewAssignmentId
+    ? 'reviewAssignmentTrigger'
+    : 'reviewTrigger'
 
   const { data, loading, error } = useGetTriggersQuery({
-    variables: queryVariables,
+    variables: {
+      serial: serialNumber,
+      reviewAssignmentId,
+      reviewId,
+    },
     pollInterval: 500,
     skip: !isProcessing,
     fetchPolicy: 'no-cache',
   })
 
   useEffect((): any => {
-    console.log('SOmething happened')
-    if (data) {
-      console.log(data)
+    if (data?.applicationTriggerStates?.nodes[0]) {
       let triggerRequested
       switch (triggerType) {
         case 'applicationTrigger':
-          triggerRequested = data?.applications?.nodes[0]?.trigger
+          triggerRequested = data?.applicationTriggerStates?.nodes[0]?.applicationTrigger
           break
         case 'reviewAssignmentTrigger':
-          triggerRequested = data?.reviewAssignments?.nodes[0]?.trigger
+          triggerRequested = data?.applicationTriggerStates?.nodes[0]?.reviewAssignmentTrigger
           break
         case 'reviewTrigger':
-          triggerRequested = data?.reviews?.nodes[0]?.trigger
+          triggerRequested = data?.applicationTriggerStates?.nodes[0]?.reviewTrigger
           break
         default:
           setIsProcessing(false)
           setTriggerError(true)
       }
-      console.log('Trigger:', triggerRequested)
       if (triggerRequested === null) setIsProcessing(false)
     }
     if (error) {
-      console.log('WHAT?')
       setIsProcessing(false)
       setTriggerError(true)
     }
