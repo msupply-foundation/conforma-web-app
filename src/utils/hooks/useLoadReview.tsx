@@ -17,11 +17,17 @@ interface UseLoadReviewProps {
 }
 
 const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
+  const [applicationName, setApplicatioName] = useState<string>('')
   const [reviewSections, setReviewSections] = useState<SectionElementStates[]>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  const { error: applicationError, templateSections, isApplicationLoaded } = useLoadApplication({
+  const {
+    error: applicationError,
+    application,
+    templateSections,
+    isApplicationLoaded,
+  } = useLoadApplication({
     serialNumber,
   })
 
@@ -48,6 +54,10 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
       setError(error.message)
       return
     }
+    if (application) setApplicatioName(application.name)
+  }, [applicationError, application])
+
+  useEffect(() => {
     if (responsesError) {
       setError(responsesError)
       return
@@ -104,9 +114,10 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
       setReviewSections(reviewBySection)
       setLoading(false)
     }
-  }, [applicationError, responsesError, apolloError, data])
+  }, [responsesError, apolloError, data])
 
   return {
+    applicationName,
     loading,
     error,
     reviewSections,
