@@ -33,12 +33,12 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   })
 
   useEffect(() => {
-    if (data && data.applicationBySerial) {
+    if (
+      data &&
+      data.applicationBySerial &&
+      data.applicationBySerial.applicationStageHistories.nodes.length > 0
+    ) {
       const application = data.applicationBySerial as Application
-      console.log(
-        'application.applicationStageHistories',
-        application.applicationStageHistories.nodes
-      )
 
       const stage = application.applicationStageHistories.nodes[0] as ApplicationStageHistory
 
