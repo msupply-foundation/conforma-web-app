@@ -176,7 +176,7 @@ const ApplicationPageWrapper: React.FC = () => {
   }
 
   return error || responsesError ? (
-    <Message error header="Problem to load application" />
+    <Message error header={strings.ERROR_APPLICATION_PAGE} />
   ) : loading || responsesLoading ? (
     <Loading />
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
@@ -240,7 +240,7 @@ const ApplicationPageWrapper: React.FC = () => {
       </Sticky>
     </Segment.Group>
   ) : (
-    <Label content="Application's section can't be displayed" />
+    <Label content={strings.ERROR_APPLICATION_SECTION} />
   )
 }
 

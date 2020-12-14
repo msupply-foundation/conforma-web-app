@@ -1,6 +1,8 @@
+import { stripIgnoredCharacters } from 'graphql'
 import React from 'react'
 import { Form, Header, Label, Segment } from 'semantic-ui-react'
 import { ApplicationViewWrapper } from '../../formElementPlugins'
+import strings from '../../utils/constants'
 import { ElementState, ResponsesByCode } from '../../utils/types'
 
 interface ElementsBoxProps {
@@ -56,7 +58,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
       </Form>
     </Segment>
   ) : (
-    <Label content="Elements area can't be displayed" />
+    <Label content={strings.ERROR_APPLICATION_ELEMENTS} />
   )
 }
 

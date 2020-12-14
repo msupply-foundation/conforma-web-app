@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Application, useGetApplicationQuery } from '../../utils/generated/graphql'
+import {
+  Application,
+  ApplicationStageStatusAll,
+  useGetApplicationQuery,
+} from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
 import { getApplicationSections } from '../helpers/getSectionsPayload'
 import { ApplicationDetails, AppStatus, TemplateSectionPayload } from '../types'
@@ -29,25 +33,30 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
   })
 
   useEffect(() => {
-    if (data && data.applicationBySerial) {
+    if (data && data.applicationBySerial && data.applicationStageStatusAlls) {
       const application = data.applicationBySerial as Application
+      const stagesStatusAll = data.applicationStageStatusAlls.nodes as ApplicationStageStatusAll[]
+      const currentStage = stagesStatusAll[0]
 
-      setApplication({
+      const applicationDetails = {
         id: application.id,
         type: application.template?.name as string,
         isLinear: application.template?.isLinear as boolean,
         serial: application.serial as string,
         name: application.name as string,
-        stage: application.stage as string,
+        stageId: currentStage ? (currentStage.stageId as number) : undefined,
+        stage: currentStage ? (currentStage.stage as string) : '',
         status: application.status as string,
         outcome: application.outcome as string,
-      })
+      }
+
+      setApplication(applicationDetails)
 
       const sections = getApplicationSections(application.applicationSections)
       setSections(sections)
 
       setAppStatus({
-        stage: application?.stage as string,
+        stage: currentStage ? (currentStage.stage as string) : '',
         status: application?.status as string,
         outcome: application?.outcome as string,
       })

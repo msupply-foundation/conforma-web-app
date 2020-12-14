@@ -1,35 +1,126 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Button, Card, Container, Header, List, Message, Segment } from 'semantic-ui-react'
+import { Loading } from '../../components'
+import useGetReviewAssignment from '../../utils/hooks/useGetReviewAssignment'
 import { useRouter } from '../../utils/hooks/useRouter'
+import strings from '../../utils/constants'
+import { Link } from 'react-router-dom'
+import { ReviewStatus } from '../../utils/generated/graphql'
+import { AssignmentDetails } from '../../utils/types'
+import useCreateReview from '../../utils/hooks/useCreateReview'
 
 const ReviewOverview: React.FC = () => {
-  // Logic for what this page will show:
-  // https://github.com/openmsupply/application-manager-web-app/issues/200#issuecomment-741432161
-
-  // Hooks (suggested):
-  // - useLoadApplication
-  // - useGetResponsesAndElementState
-  // - new Hook to get existing Review information
-
-  // Hook(s) will fetch Application & Review info (if it exists). If user is supposed to start a new review, there will be some information about what Sections/Questions they've been assigned to.
-  // And there will be a "Start Review" button. On clicking it, a new Review will be created, its ID returned, and this page will re-direct to the new Review URL.
-
   const {
+    push,
     params: { serialNumber },
   } = useRouter()
 
-  return (
-    <div>
-      <p>This is the Overview/Start page for Reviews of Application {serialNumber}.</p>
-      <p>Overview components will go here.</p>
-      <p>
-        See{' '}
-        <Link to="https://github.com/openmsupply/application-manager-web-app/issues/200#issuecomment-741432161">
-          here
-        </Link>{' '}
-        for explanation.
-      </p>
-    </div>
+  const {
+    error: fetchAssignmentError,
+    loading,
+    application,
+    assignment,
+    assignedSections,
+  } = useGetReviewAssignment({
+    reviewerId: 6,
+    serialNumber,
+  })
+
+  useEffect(() => {
+    if (assignment && assignment.review) {
+      const { id, status } = assignment.review
+      if (status === ReviewStatus.Submitted || status === ReviewStatus.Draft)
+        push(`/application/${serialNumber}/review/${id}`)
+    }
+  }, [assignment])
+
+  const { processing, error: createReviewError, create } = useCreateReview({
+    onCompleted: (id: number) => {
+      if (serialNumber) {
+        // Call Review page after creation
+        push(`/application/${serialNumber}/review/${id}`)
+      }
+    },
+  })
+
+  const handleCreate = (_: any) => {
+    if (!assignment) {
+      console.log('Problem to create review - unexpected parameters')
+      return
+    }
+
+    create({
+      reviewAssigmentId: assignment.id,
+      applicationResponses: assignment.questions.map(({ responseId }) => ({
+        applicationResponseId: responseId,
+      })),
+    })
+  }
+
+  const getActionButton = ({ review }: AssignmentDetails) => {
+    if (review) {
+      const { id, status } = review
+      if (
+        review.status === ReviewStatus.ReviewPending ||
+        review.status === ReviewStatus.ChangesRequired
+      ) {
+        return (
+          <Button as={Link} to={`/application/${serialNumber}/review/${id}`}>
+            {strings.BUTTON_REVIEW_CONTINUE}
+          </Button>
+        )
+      }
+      console.log(`Problem with review id ${id} status: ${status}`)
+      return null
+    }
+    return (
+      <Button loading={processing} onClick={handleCreate}>
+        {strings.BUTTON_REVIEW_START}
+      </Button>
+    )
+  }
+
+  return fetchAssignmentError || createReviewError ? (
+    <Message
+      error
+      header={strings.ERROR_REVIEW_OVERVIEW}
+      list={[fetchAssignmentError, createReviewError]}
+    />
+  ) : loading ? (
+    <Loading />
+  ) : application && assignment ? (
+    <Container>
+      <Card fluid>
+        <Card.Content>
+          <Card.Header>{application.name}</Card.Header>
+          <Card.Description>
+            This is the Overview/Start page for Reviews of Application {serialNumber}.
+          </Card.Description>
+        </Card.Content>
+        <Card.Content extra>
+          <a
+            href={
+              'https://github.com/openmsupply/application-manager-web-app/issues/200#issuecomment-741432161'
+            }
+          >
+            Click here for explanation.
+          </a>
+        </Card.Content>
+      </Card>
+      {assignedSections && (
+        <Segment>
+          <Header as="h5">Sections assigned to you:</Header>
+          <List>
+            {assignedSections.map((section) => (
+              <List.Item key={`ReviewSection_${section}`}>{section}</List.Item>
+            ))}
+          </List>
+        </Segment>
+      )}
+      {getActionButton(assignment)}
+    </Container>
+  ) : (
+    <Header as="h2" icon="exclamation circle" content="No review found!" />
   )
 }
 

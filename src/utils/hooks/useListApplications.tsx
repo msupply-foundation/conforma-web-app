@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import {
   Application,
-  GetApplicationsQuery,
-  Template,
+  ApplicationStageStatusAll,
   useGetApplicationsQuery,
 } from '../../utils/generated/graphql'
 import { ApplicationDetails } from '../types'
@@ -17,32 +16,34 @@ const useListApplication = () => {
   })
 
   useEffect(() => {
-    if (apolloError) return
-    if (apolloLoading) return
-    // Check that only one template matched
-    let error = checkForApplicationsErrors(data)
-    if (error) {
-      setError(error)
-      setLoading(false)
+    if (apolloError) {
+      setError(apolloError.message)
       return
     }
+    if (data && data.applications && data.applicationStageStatusAlls) {
+      const applicationsList = data?.applications?.nodes as Application[]
+      const stagesStatusAll = data.applicationStageStatusAlls.nodes as ApplicationStageStatusAll[]
+      const applicationsDetails: ApplicationDetails[] = applicationsList.map((application) => {
+        const { id, serial, name, stage, status, outcome, template } = application
+        const findStageStatus = stagesStatusAll.find(
+          ({ serial: applicationSerial }) => applicationSerial === serial
+        )
 
-    const applicationsList = data?.applications?.nodes as Application[]
-    const applicationsDetails: ApplicationDetails[] = applicationsList.map((application) => {
-      const { id, serial, name, stage, status, outcome, template } = application
-      return {
-        id,
-        type: template?.name as string,
-        isLinear: template?.isLinear as boolean,
-        serial: serial as string,
-        name: name as string,
-        stage: stage as string,
-        status: status as string,
-        outcome: outcome as string,
-      }
-    })
-    setApplications(applicationsDetails)
-    setLoading(false)
+        return {
+          id,
+          type: template?.name as string,
+          isLinear: template?.isLinear as boolean,
+          serial: serial as string,
+          name: name as string,
+          stageId: findStageStatus ? (findStageStatus.stageId as number) : undefined,
+          stage: findStageStatus ? (findStageStatus.stage as string) : '',
+          status: status as string,
+          outcome: outcome as string,
+        }
+      })
+      setApplications(applicationsDetails)
+      setLoading(false)
+    }
   }, [data, apolloError])
 
   return {
@@ -50,16 +51,6 @@ const useListApplication = () => {
     loading,
     applications,
   }
-}
-
-function checkForApplicationsErrors(data: GetApplicationsQuery | undefined) {
-  if (!data) return 'No data'
-  if (!data.applications) return 'Unexpected list applications result'
-  const numberOfApplications = data.applications.nodes.length as number
-  if (numberOfApplications === 0) return 'No Applications found'
-  if (data.applications.nodes.some((application) => !application?.template))
-    return 'Unexpected template missing in one or more applications'
-  return null
 }
 
 export default useListApplication
