@@ -1,15 +1,25 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getTriggers($serial: String!) {
-    applicationTriggerStates(condition: { serial: $serial }) {
+  query getTriggers(
+    $serial: String
+    $reviewId: Int
+    $reviewAssignmentId: Int
+    $getApplicationTriggers: Boolean!
+    $getReviewAssignmentTriggers: Boolean!
+    $getReviewTriggers: Boolean!
+  ) {
+    applicationTriggerStates(
+      condition: { serial: $serial, reviewAssignmentId: $reviewAssignmentId, reviewId: $reviewId }
+      first: 1
+    ) {
       nodes {
-        applicationTrigger
-        reviewTrigger
         serial
+        applicationTrigger @include(if: $getApplicationTriggers)
+        reviewAssignmentTrigger @include(if: $getReviewAssignmentTriggers)
+        reviewTrigger @include(if: $getReviewTriggers)
       }
     }
   }
 `
-// TO-DO: optimise using @directives to only query the field specified (application, review, etc.)
-// Add more tables trigger fields
+// Add more tables trigger fields when required
