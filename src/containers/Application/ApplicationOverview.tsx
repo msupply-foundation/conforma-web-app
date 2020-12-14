@@ -167,6 +167,7 @@ function getFirstErrorLocation(
 ) {
   let firstErrorSectionIndex = Infinity
   let firstErrorPage = Infinity
+  console.log('Validity failures', validityFailures)
   validityFailures.forEach((failure: ValidityFailure) => {
     const { code } = failure
     const sectionIndex = elementsState[code].sectionIndex
@@ -178,5 +179,6 @@ function getFirstErrorLocation(
       firstErrorPage =
         sectionIndex === firstErrorSectionIndex && page < firstErrorPage ? page : firstErrorPage
   })
+  console.log('Redirecting to', firstErrorSectionIndex, firstErrorPage)
   return { firstErrorSectionIndex, firstErrorPage }
 }

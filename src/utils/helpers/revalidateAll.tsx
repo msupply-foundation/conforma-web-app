@@ -28,6 +28,8 @@ export const revalidateAll = async (
           (!strict && responsesByCode[key]?.isValid !== null))
     )
 
+    console.log('Codes to check:', elementCodes)
+
     const validationExpressions = elementCodes.map((code) => elementsState[code].validation)
 
     const evaluatedValidations = []
@@ -40,6 +42,7 @@ export const revalidateAll = async (
           : ''
         : ''
       const responses = { thisResponse, ...responsesByCode }
+      console.log('responses', responses)
       const expression = validationExpressions[i]
       evaluatedValidations.push(
         validate(expression, elementsState[code]?.validationMessage as string, {
@@ -49,7 +52,11 @@ export const revalidateAll = async (
       )
     }
     const resultArray = await Promise.all(evaluatedValidations)
-    // console.log('Result', resultArray)
+    console.log('Result', resultArray)
+    elementCodes.forEach((code, index) => {
+      if (elementsState[code].isRequired && responsesByCode && !responsesByCode[code]?.text)
+        resultArray[index] = { isValid: false }
+    })
     const validityFailures: ValidityFailure[] = []
     if (shouldUpdateDatabase) {
       elementCodes.forEach((code, index) => {
