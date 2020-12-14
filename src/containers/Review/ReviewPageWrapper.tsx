@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import { Card, Header, List, Message } from 'semantic-ui-react'
 import { Loading } from '../../components'
+import strings from '../../utils/constants'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ApplicationResponse, ReviewResponse } from '../../utils/generated/graphql'
 
 const ReviewPageWrapper: React.FC = () => {
   // Page will present the list of visible questions in Summary view, with additional "Reviewing" controls beneath each question.
@@ -22,7 +22,7 @@ const ReviewPageWrapper: React.FC = () => {
   }, [data])
 
   return error ? (
-    <Message error header="Problem to load review" list={[error]} />
+    <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
   ) : loading ? (
     <Loading />
   ) : (

@@ -1,6 +1,8 @@
+import { stripIgnoredCharacters } from 'graphql'
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Form, Header, Loader, Message, Modal } from 'semantic-ui-react'
 import { SectionSummary, Loading } from '../../components'
+import strings from '../../utils/constants'
 import getPageElements from '../../utils/helpers/getPageElements'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
@@ -70,14 +72,14 @@ const ApplicationOverview: React.FC = () => {
   }, [elementsState, responsesLoading])
 
   return error ? (
-    <Message error header="Problem to load application overview" list={[error]} />
+    <Message error header={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
   ) : loading || responsesLoading ? (
     <Loading />
   ) : submitError ? (
-    <Message error header="Problem to submit application" list={[submitError]} />
+    <Message error header={strings.ERROR_APPLICATION_SUBMIT} list={[submitError]} />
   ) : serialNumber && appStatus && sectionsPages ? (
     <Container>
-      <Header as="h1" content="REVIEW AND SUBMIT" />
+      <Header as="h1" content={strings.TITLE_APPLICATION_SUBMIT} />
       <Form>
         {sectionsPages.map((sectionPages) => (
           <SectionSummary
@@ -90,13 +92,13 @@ const ApplicationOverview: React.FC = () => {
           />
         ))}
         {appStatus.status === 'DRAFT' ? (
-          <Button content="Submit application" onClick={() => submit()} />
+          <Button content={strings.BUTTON_SUBMIT} onClick={() => submit()} />
         ) : null}
         {showProcessingModal(processing, submitted)}
       </Form>
     </Container>
   ) : (
-    <Message error header="Problem to load application overview" />
+    <Message error header={strings.ERROR_APPLICATION_OVERVIEW} />
   )
 }
 

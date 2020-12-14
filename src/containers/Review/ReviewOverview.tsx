@@ -83,7 +83,7 @@ const ReviewOverview: React.FC = () => {
   return fetchAssignmentError || createReviewError ? (
     <Message
       error
-      header="Problem to load review homepage"
+      header={strings.ERROR_REVIEW_OVERVIEW}
       list={[fetchAssignmentError, createReviewError]}
     />
   ) : loading ? (
