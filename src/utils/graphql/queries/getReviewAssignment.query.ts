@@ -7,6 +7,9 @@ export default gql`
     ) {
       nodes {
         id
+        applicationId
+        reviewerId
+        stageId
         reviews {
           nodes {
             id
