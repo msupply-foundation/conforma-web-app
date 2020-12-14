@@ -8,14 +8,15 @@ export default gql`
         template {
           ...Template
         }
-        applicationStageHistories(condition: {isCurrent: true}) {
-          nodes {
-            id
-            stage {
-              id
-            }
-          }
-        }
+      }
+    }
+    applicationStageStatusAlls(condition: { stageIsCurrent: true }) {
+      nodes {
+        serial
+        stageHistoryId
+        stage
+        stageId
+        stageNumber
       }
     }
   }
