@@ -14,7 +14,6 @@ export default gql`
           nodes {
             id
             status
-            trigger
           }
         }
         reviewQuestionAssignments {
