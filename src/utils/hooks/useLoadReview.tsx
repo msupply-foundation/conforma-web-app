@@ -33,8 +33,8 @@ const useLoadReview = ({ reviewId }: UseLoadReviewProps) => {
   }, [apolloError, data])
 
   return {
-    loading,
-    error,
+    loading: loading || triggerProcessing,
+    error: error || triggerError,
     data,
   }
 }
