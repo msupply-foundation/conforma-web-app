@@ -8,7 +8,7 @@ import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
 import { ApplicationElementStates, ValidityFailure, SectionElementStates } from '../../utils/types'
-import { revalidateAll } from '../../utils/helpers/revalidateAll'
+import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 
 const ApplicationOverview: React.FC = () => {
@@ -160,23 +160,3 @@ const showProcessingModal = (processing: boolean, submitted: boolean) => {
 }
 
 export default ApplicationOverview
-
-function getFirstErrorLocation(
-  validityFailures: ValidityFailure[],
-  elementsState: ApplicationElementStates
-) {
-  let firstErrorSectionIndex = Infinity
-  let firstErrorPage = Infinity
-  validityFailures.forEach((failure: ValidityFailure) => {
-    const { code } = failure
-    const sectionIndex = elementsState[code].sectionIndex
-    const page = elementsState[code].page
-    if (sectionIndex < firstErrorSectionIndex) {
-      firstErrorSectionIndex = sectionIndex
-      firstErrorPage = page
-    } else
-      firstErrorPage =
-        sectionIndex === firstErrorSectionIndex && page < firstErrorPage ? page : firstErrorPage
-  })
-  return { firstErrorSectionIndex, firstErrorPage }
-}

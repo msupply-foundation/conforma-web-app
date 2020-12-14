@@ -71,3 +71,23 @@ export const revalidateAll = async (
   // Typescript requires final return -- it should never be reached
   return { allValid: false, validityFailures: [] }
 }
+
+export const getFirstErrorLocation = (
+  validityFailures: ValidityFailure[],
+  elementsState: ApplicationElementStates
+) => {
+  let firstErrorSectionIndex = Infinity
+  let firstErrorPage = Infinity
+  validityFailures.forEach((failure: ValidityFailure) => {
+    const { code } = failure
+    const sectionIndex = elementsState[code].sectionIndex
+    const page = elementsState[code].page
+    if (sectionIndex < firstErrorSectionIndex) {
+      firstErrorSectionIndex = sectionIndex
+      firstErrorPage = page
+    } else
+      firstErrorPage =
+        sectionIndex === firstErrorSectionIndex && page < firstErrorPage ? page : firstErrorPage
+  })
+  return { firstErrorSectionIndex, firstErrorPage }
+}
