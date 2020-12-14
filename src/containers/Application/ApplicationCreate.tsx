@@ -5,6 +5,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { Header, Message } from 'semantic-ui-react'
 import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
 import useCreateApplication from '../../utils/hooks/useCreateApplication'
+import strings from '../../utils/constants'
 
 const ApplicationCreate: React.FC = () => {
   const { applicationState, setApplicationState } = useApplicationState()
@@ -61,7 +62,7 @@ const ApplicationCreate: React.FC = () => {
   return error || apolloError || creationError ? (
     <Message
       error
-      header="Problem to load application creation page"
+      header={strings.ERROR_APPLICATION_CREATE}
       list={[error, apolloError?.message, creationError?.message]}
     />
   ) : loading || processing ? (
