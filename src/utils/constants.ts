@@ -2,6 +2,7 @@ export default {
   BUTTON_NEXT: 'Next',
   BUTTON_PREVIOUS: 'Previous',
   BUTTON_SUBMIT: 'Submit application',
+  BUTTON_SUMMARY: 'Review & Summary',
   BUTTON_REVIEW_CONTINUE: 'Continue review',
   BUTTON_REVIEW_START: 'Start review',
   ERROR_APPLICATION_CREATE: 'Problem to load application creation page',
@@ -20,5 +21,5 @@ export default {
   LINK_LOGIN_USER: 'Create new account',
   TITLE_APPLICATION_SUBMIT: 'REVIEW AND SUBMIT',
   TITLE_COMPANY_PLACEHOLDER: 'ABC Company',
-  TITLE_PROGRESS: 'Introduction'
+  TITLE_PROGRESS: 'Introduction',
 }

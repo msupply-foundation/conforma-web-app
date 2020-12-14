@@ -1,4 +1,3 @@
-import { stripIgnoredCharacters } from 'graphql'
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Form, Header, Loader, Message, Modal } from 'semantic-ui-react'
 import { SectionSummary, Loading } from '../../components'
@@ -10,8 +9,6 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
 import { ApplicationElementStates, ValidityFailure, SectionElementStates } from '../../utils/types'
 import { revalidateAll } from '../../utils/helpers/revalidateAll'
-import strings from '../../utils/constants'
-import messages from '../../utils/messages'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 
 const ApplicationOverview: React.FC = () => {
