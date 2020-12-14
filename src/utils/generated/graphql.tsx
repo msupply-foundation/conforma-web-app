@@ -17462,21 +17462,33 @@ export type GetTemplateQuery = (
 
 export type GetTriggersQueryVariables = Exact<{
   serial?: Maybe<Scalars['String']>;
-  reviewId?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
   getApplicationTriggers: Scalars['Boolean'];
-  getReviewAssignmentTriggers: Scalars['Boolean'];
   getReviewTriggers: Scalars['Boolean'];
+  getReviewAssignmentTriggers: Scalars['Boolean'];
 }>;
 
 
 export type GetTriggersQuery = (
   { __typename?: 'Query' }
-  & { applicationTriggerStates?: Maybe<(
-    { __typename?: 'ApplicationTriggerStatesConnection' }
+  & { applications?: Maybe<(
+    { __typename?: 'ApplicationsConnection' }
     & { nodes: Array<Maybe<(
-      { __typename?: 'ApplicationTriggerState' }
-      & Pick<ApplicationTriggerState, 'serial' | 'applicationTrigger' | 'reviewAssignmentTrigger' | 'reviewTrigger'>
+      { __typename?: 'Application' }
+      & Pick<Application, 'id' | 'trigger'>
+    )>> }
+  )>, reviewAssignments?: Maybe<(
+    { __typename?: 'ReviewAssignmentsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ReviewAssignment' }
+      & Pick<ReviewAssignment, 'id' | 'trigger'>
+    )>> }
+  )>, reviews?: Maybe<(
+    { __typename?: 'ReviewsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'Review' }
+      & Pick<Review, 'id' | 'trigger'>
     )>> }
   )> }
 );
@@ -18085,13 +18097,23 @@ export type GetTemplateQueryHookResult = ReturnType<typeof useGetTemplateQuery>;
 export type GetTemplateLazyQueryHookResult = ReturnType<typeof useGetTemplateLazyQuery>;
 export type GetTemplateQueryResult = Apollo.QueryResult<GetTemplateQuery, GetTemplateQueryVariables>;
 export const GetTriggersDocument = gql`
-    query getTriggers($serial: String, $reviewId: Int, $reviewAssignmentId: Int, $getApplicationTriggers: Boolean!, $getReviewAssignmentTriggers: Boolean!, $getReviewTriggers: Boolean!) {
-  applicationTriggerStates(condition: {serial: $serial, reviewAssignmentId: $reviewAssignmentId, reviewId: $reviewId}, first: 1) {
+    query getTriggers($serial: String, $reviewAssignmentId: Int, $reviewId: Int, $getApplicationTriggers: Boolean!, $getReviewTriggers: Boolean!, $getReviewAssignmentTriggers: Boolean!) {
+  applications(condition: {serial: $serial}, first: 1) @include(if: $getApplicationTriggers) {
     nodes {
-      serial
-      applicationTrigger @include(if: $getApplicationTriggers)
-      reviewAssignmentTrigger @include(if: $getReviewAssignmentTriggers)
-      reviewTrigger @include(if: $getReviewTriggers)
+      id
+      trigger
+    }
+  }
+  reviewAssignments(condition: {id: $reviewAssignmentId}, first: 1) @include(if: $getReviewAssignmentTriggers) {
+    nodes {
+      id
+      trigger
+    }
+  }
+  reviews(condition: {id: $reviewId}, first: 1) @include(if: $getReviewTriggers) {
+    nodes {
+      id
+      trigger
     }
   }
 }
@@ -18110,11 +18132,11 @@ export const GetTriggersDocument = gql`
  * const { data, loading, error } = useGetTriggersQuery({
  *   variables: {
  *      serial: // value for 'serial'
- *      reviewId: // value for 'reviewId'
  *      reviewAssignmentId: // value for 'reviewAssignmentId'
+ *      reviewId: // value for 'reviewId'
  *      getApplicationTriggers: // value for 'getApplicationTriggers'
- *      getReviewAssignmentTriggers: // value for 'getReviewAssignmentTriggers'
  *      getReviewTriggers: // value for 'getReviewTriggers'
+ *      getReviewAssignmentTriggers: // value for 'getReviewAssignmentTriggers'
  *   },
  * });
  */

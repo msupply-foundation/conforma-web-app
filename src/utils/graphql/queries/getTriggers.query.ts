@@ -3,21 +3,29 @@ import { gql } from '@apollo/client'
 export default gql`
   query getTriggers(
     $serial: String
-    $reviewId: Int
     $reviewAssignmentId: Int
+    $reviewId: Int
     $getApplicationTriggers: Boolean!
-    $getReviewAssignmentTriggers: Boolean!
     $getReviewTriggers: Boolean!
+    $getReviewAssignmentTriggers: Boolean!
   ) {
-    applicationTriggerStates(
-      condition: { serial: $serial, reviewAssignmentId: $reviewAssignmentId, reviewId: $reviewId }
-      first: 1
-    ) {
+    applications(condition: { serial: $serial }, first: 1) @include(if: $getApplicationTriggers) {
       nodes {
-        serial
-        applicationTrigger @include(if: $getApplicationTriggers)
-        reviewAssignmentTrigger @include(if: $getReviewAssignmentTriggers)
-        reviewTrigger @include(if: $getReviewTriggers)
+        id
+        trigger
+      }
+    }
+    reviewAssignments(condition: { id: $reviewAssignmentId }, first: 1)
+      @include(if: $getReviewAssignmentTriggers) {
+      nodes {
+        id
+        trigger
+      }
+    }
+    reviews(condition: { id: $reviewId }, first: 1) @include(if: $getReviewTriggers) {
+      nodes {
+        id
+        trigger
       }
     }
   }

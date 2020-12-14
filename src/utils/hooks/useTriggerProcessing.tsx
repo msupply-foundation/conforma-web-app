@@ -1,8 +1,7 @@
-import { isInterfaceType } from 'graphql'
 import { useState, useEffect } from 'react'
 import { useGetTriggersQuery } from '../../utils/generated/graphql'
 
-type TriggerType = 'applicationTrigger' | 'reviewAssignmentId' | 'reviewTrigger'
+type TriggerType = 'applicationTrigger' | 'reviewAssignmentTrigger' | 'reviewTrigger'
 
 interface TriggerQueryVariables {
   serial?: string
@@ -23,18 +22,28 @@ const useTriggerProcessing = (props: {
   const [isProcessing, setIsProcessing] = useState(true)
   const [triggerError, setTriggerError] = useState(false)
 
-  if (!serialNumber && !reviewAssignmentId && !reviewId)
+  console.log('Props', props)
+
+  // Check query is properly formed:
+  if (
+    (!serialNumber && !reviewAssignmentId && !reviewId) ||
+    (triggerType == 'applicationTrigger' && !serialNumber) ||
+    (triggerType == 'reviewAssignmentTrigger' && !reviewAssignmentId) ||
+    (triggerType == 'reviewTrigger' && !reviewId)
+  ) {
+    console.log('INVALID QUERY')
     return {
       triggerProcessing: false,
       error: true,
     }
+  }
 
   const queryVariables: TriggerQueryVariables = {
-    serial: triggerType == 'applicationTrigger' ? serialNumber : undefined,
-    reviewAssignmentId: triggerType == 'reviewAssignmentId' ? reviewAssignmentId : undefined,
-    reviewId: triggerType == 'reviewTrigger' ? reviewId : undefined,
+    serial: serialNumber,
+    reviewAssignmentId,
+    reviewId,
     getApplicationTriggers: triggerType == 'applicationTrigger',
-    getReviewAssignmentTriggers: triggerType == 'reviewAssignmentId',
+    getReviewAssignmentTriggers: triggerType == 'reviewAssignmentTrigger',
     getReviewTriggers: triggerType == 'reviewTrigger',
   }
 
@@ -46,12 +55,29 @@ const useTriggerProcessing = (props: {
   })
 
   useEffect((): any => {
-    if (data?.applicationTriggerStates?.nodes[0]) {
-      console.log(data?.applicationTriggerStates?.nodes[0])
-      const triggerRequested = data?.applicationTriggerStates?.nodes[0][trigger]
+    console.log('SOmething happened')
+    if (data) {
+      console.log(data)
+      let triggerRequested
+      switch (triggerType) {
+        case 'applicationTrigger':
+          triggerRequested = data?.applications?.nodes[0]?.trigger
+          break
+        case 'reviewAssignmentTrigger':
+          triggerRequested = data?.reviewAssignments?.nodes[0]?.trigger
+          break
+        case 'reviewTrigger':
+          triggerRequested = data?.reviews?.nodes[0]?.trigger
+          break
+        default:
+          setIsProcessing(false)
+          setTriggerError(true)
+      }
+      console.log('Trigger:', triggerRequested)
       if (triggerRequested === null) setIsProcessing(false)
     }
     if (error) {
+      console.log('WHAT?')
       setIsProcessing(false)
       setTriggerError(true)
     }
