@@ -4,13 +4,14 @@ import { Loading, FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Link } from 'react-router-dom'
 import useListApplication from '../../utils/hooks/useListApplications'
+import strings from '../../utils/constants'
 
 const ApplicationList: React.FC = () => {
   const { query, pathname } = useRouter()
   const { error, loading, applications } = useListApplication()
 
   return error ? (
-    <Label content="Problem to load applications list" error={error} />
+    <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
   ) : loading ? (
     <Loading />
   ) : (

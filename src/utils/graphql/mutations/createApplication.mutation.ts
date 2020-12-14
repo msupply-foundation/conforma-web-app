@@ -1,10 +1,15 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  mutation createApplication($name: String!, $serial: String!, $templateId: Int!,
-  $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE,
-  $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!],
-  $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!] ) {
+  mutation createApplication(
+    $name: String!
+    $serial: String!
+    $templateId: Int!
+    $outcome: ApplicationOutcome = PENDING
+    $trigger: Trigger = ON_APPLICATION_CREATE
+    $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!]
+    $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]
+  ) {
     createApplication(
       input: {
         application: {
@@ -14,12 +19,8 @@ export default gql`
           isActive: true
           outcome: $outcome
           trigger: $trigger
-          applicationSectionsUsingId: {
-            create: $sections
-          }
-          applicationResponsesUsingId: {
-            create: $responses
-          }
+          applicationSectionsUsingId: { create: $sections }
+          applicationResponsesUsingId: { create: $responses }
         }
       }
     ) {

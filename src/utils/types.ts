@@ -42,7 +42,7 @@ interface ApplicationDetails {
   type: string
   serial: string
   name: string
-  stageId: number
+  stageId: number | undefined
   stage: string
   status: string
   outcome: string

@@ -141,7 +141,7 @@ const ApplicationPageWrapper: React.FC = () => {
   }
 
   return error || responsesError ? (
-    <Message error header="Problem to load application" />
+    <Message error header={strings.ERROR_APPLICATION_PAGE} />
   ) : loading || responsesLoading ? (
     <Loading />
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
@@ -192,14 +192,14 @@ const ApplicationPageWrapper: React.FC = () => {
       </Grid>
       <Sticky pushing style={{ backgroundColor: 'white' }}>
         <Segment basic textAlign="right">
-          <Button color="blue" onClick={() => push(`/applications/${serialNumber}/summary`)}>
+          <Button color="blue" onClick={() => push(`/application/${serialNumber}/summary`)}>
             {strings.BUTTON_SUBMIT}
           </Button>
         </Segment>
       </Sticky>
     </Segment.Group>
   ) : (
-    <Label content="Application's section can't be displayed" />
+    <Label content={strings.ERROR_APPLICATION_SECTION} />
   )
 }
 
