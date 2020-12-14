@@ -17060,7 +17060,7 @@ export type AddNewUserFragment = (
 
 export type ApplicationFragment = (
   { __typename?: 'Application' }
-  & Pick<Application, 'id' | 'serial' | 'name' | 'stage' | 'status' | 'outcome'>
+  & Pick<Application, 'id' | 'serial' | 'name' | 'status' | 'outcome'>
 );
 
 export type ElementFragment = (
@@ -17227,18 +17227,14 @@ export type GetApplicationQuery = (
           & SectionFragment
         )> }
       )>> }
-    ), applicationStageHistories: (
-      { __typename?: 'ApplicationStageHistoriesConnection' }
-      & { nodes: Array<Maybe<(
-        { __typename?: 'ApplicationStageHistory' }
-        & Pick<ApplicationStageHistory, 'id'>
-        & { stage?: Maybe<(
-          { __typename?: 'TemplateStage' }
-          & Pick<TemplateStage, 'id'>
-        )> }
-      )>> }
     ) }
     & ApplicationFragment
+  )>, applicationStageStatusAlls?: Maybe<(
+    { __typename?: 'ApplicationStageStatusAllsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ApplicationStageStatusAll' }
+      & Pick<ApplicationStageStatusAll, 'serial' | 'stageHistoryId' | 'stage' | 'stageId' | 'stageNumber'>
+    )>> }
   )> }
 );
 
@@ -17254,18 +17250,14 @@ export type GetApplicationsQuery = (
       & { template?: Maybe<(
         { __typename?: 'Template' }
         & TemplateFragment
-      )>, applicationStageHistories: (
-        { __typename?: 'ApplicationStageHistoriesConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'ApplicationStageHistory' }
-          & Pick<ApplicationStageHistory, 'id'>
-          & { stage?: Maybe<(
-            { __typename?: 'TemplateStage' }
-            & Pick<TemplateStage, 'id'>
-          )> }
-        )>> }
-      ) }
+      )> }
       & ApplicationFragment
+    )>> }
+  )>, applicationStageStatusAlls?: Maybe<(
+    { __typename?: 'ApplicationStageStatusAllsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ApplicationStageStatusAll' }
+      & Pick<ApplicationStageStatusAll, 'serial' | 'stageHistoryId' | 'stage' | 'stageId' | 'stageNumber'>
     )>> }
   )> }
 );
@@ -17466,7 +17458,6 @@ export const ApplicationFragmentDoc = gql`
   id
   serial
   name
-  stage
   status
   outcome
 }
@@ -17732,13 +17723,14 @@ export const GetApplicationDocument = gql`
         }
       }
     }
-    applicationStageHistories(condition: {isCurrent: true}) {
-      nodes {
-        id
-        stage {
-          id
-        }
-      }
+  }
+  applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true}) {
+    nodes {
+      serial
+      stageHistoryId
+      stage
+      stageId
+      stageNumber
     }
   }
 }
@@ -17781,14 +17773,15 @@ export const GetApplicationsDocument = gql`
       template {
         ...Template
       }
-      applicationStageHistories(condition: {isCurrent: true}) {
-        nodes {
-          id
-          stage {
-            id
-          }
-        }
-      }
+    }
+  }
+  applicationStageStatusAlls(condition: {stageIsCurrent: true}) {
+    nodes {
+      serial
+      stageHistoryId
+      stage
+      stageId
+      stageNumber
     }
   }
 }
