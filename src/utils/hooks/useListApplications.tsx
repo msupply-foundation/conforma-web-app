@@ -25,11 +25,7 @@ const useListApplication = () => {
       const applicationsDetails: ApplicationDetails[] = applicationsList.map((application) => {
         const { id, serial, name, stage, status, outcome, template } = application
         const stages = application.applicationStageHistories.nodes as ApplicationStageHistory[]
-        let stageId = -1
-        if (stages.length > 0) {
-          console.log('stage', stages[0].stage)
-          stageId = stages[0].stage ? stages[0].stage.id : -1
-        }
+        const stageId = stages.length > 0 ? stages[0].stage?.id : undefined
 
         return {
           id,

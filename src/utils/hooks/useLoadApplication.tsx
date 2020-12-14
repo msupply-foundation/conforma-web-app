@@ -48,7 +48,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
         isLinear: application.template?.isLinear as boolean,
         serial: application.serial as string,
         name: application.name as string,
-        stageId: stage.stage?.id as number,
+        stageId: stage.stage?.id,
         // TODO: Duplicated information. Consider using AppStatus as part of ApplicationDetails
         stage: application.stage as string,
         status: application.status as string,
