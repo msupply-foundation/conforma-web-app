@@ -53,7 +53,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
       setError(error.message)
       return
     }
-    if (application) setApplicatioName(application.name)
+    if (application) setApplicationName(application.name)
   }, [applicationError, application])
 
   useEffect(() => {
