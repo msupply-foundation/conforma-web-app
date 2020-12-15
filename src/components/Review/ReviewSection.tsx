@@ -12,17 +12,21 @@ interface ReviewSectionProps {
 const ReviewSection: React.FC<ReviewSectionProps> = ({ reviewSection, canEdit }) => {
   const { section, pages } = reviewSection
   return (
-    <Segment inverted style={{ backgroundColor: 'WhiteSmoke', margin: '15px 50px 0px' }}>
+    <Segment
+      key={`ReviewSection_${section.code}`}
+      inverted
+      style={{ backgroundColor: 'WhiteSmoke', margin: '15px 50px 0px' }}
+    >
       <Header as="h2" content={`${section.title}`} style={{ color: 'Grey' }} />
       {Object.entries(pages).map(([pageName, elements]) => (
-        <Segment basic>
+        <Segment key={`ReviewSection_${section.code}_${pageName}`} basic>
           <Header as="h3" style={{ color: 'DarkGrey' }}>
             {pageName}
           </Header>
           {elements.map(({ element, response, review }) => {
             const { category, isVisible, isEditable } = element
             return isVisible ? (
-              <Segment key={`ReviewSection_${element.code}`} style={{ margin: 10 }}>
+              <Segment key={`ReviewElement_${element.code}`} style={{ margin: 10 }}>
                 <Grid columns={2} verticalAlign="middle">
                   <Grid.Row>
                     <Grid.Column width={13}>
