@@ -45,7 +45,7 @@ export const revalidateAll = async (
     }
     const resultArray = await Promise.all(evaluatedValidations)
 
-    // Also make "" responses invalid for required questions
+    // Also make empty responses invalid for required questions
     elementCodes.forEach((code, index) => {
       if (
         elementsState[code].isRequired &&
