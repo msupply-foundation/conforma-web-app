@@ -17393,7 +17393,7 @@ export type GetReviewAssignmentQuery = (
           { __typename?: 'ReviewQuestionAssignment' }
           & { templateElement?: Maybe<(
             { __typename?: 'TemplateElement' }
-            & Pick<TemplateElement, 'id' | 'code'>
+            & Pick<TemplateElement, 'code'>
             & { section?: Maybe<(
               { __typename?: 'TemplateSection' }
               & Pick<TemplateSection, 'id' | 'index'>
@@ -17967,7 +17967,6 @@ export const GetReviewAssignmentDocument = gql`
       reviewQuestionAssignments {
         nodes {
           templateElement {
-            id
             code
             section {
               id

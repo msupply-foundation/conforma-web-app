@@ -19,7 +19,6 @@ export default gql`
         reviewQuestionAssignments {
           nodes {
             templateElement {
-              id
               code
               section {
                 id
