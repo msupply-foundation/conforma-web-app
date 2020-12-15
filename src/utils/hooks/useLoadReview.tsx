@@ -65,7 +65,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
       setError(apolloError.message)
       return
     }
-    if (data && data.review && data.review.reviewResponses) {
+    if (data?.review?.reviewResponses) {
       // TODO: See if this code can be merged with one in ApplicationOverview - very similar
       const reviewBySection: SectionElementStates[] = templateSections
         .sort((a, b) => a.index - b.index)
