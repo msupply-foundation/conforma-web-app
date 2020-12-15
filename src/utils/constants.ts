@@ -4,6 +4,7 @@ export default {
   BUTTON_SUBMIT: 'Submit application',
   BUTTON_REVIEW_APPROVE: 'Approve all ',
   BUTTON_REVIEW_CONTINUE: 'Continue review',
+  BUTTON_REVIEW_RESPONSE: 'Review',
   BUTTON_REVIEW_START: 'Start review',
   DATE_APPLICATION_PLACEHOLDER: '31/12/2020',
   TITLE_COMPANY_PLACEHOLDER: 'ABC Company',
