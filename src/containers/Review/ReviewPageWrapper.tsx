@@ -1,4 +1,3 @@
-import { stringify } from 'querystring'
 import React from 'react'
 import { Container, Form, Header, Label, Message } from 'semantic-ui-react'
 import { Loading, ReviewSection } from '../../components'
