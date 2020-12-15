@@ -23,6 +23,6 @@ export default {
   TITLE_COMPANY_PLACEHOLDER: 'ABC Company',
   TITLE_REVIEW_SUMMARY: 'Review Summary',
   TITLE_PROGRESS: 'Introduction',
-  STAGE_PACEHOLDER: 'assessment',
+  STAGE_PLACEHOLDER: 'Assessment',
   SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you'
 }
