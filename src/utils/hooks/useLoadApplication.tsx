@@ -21,7 +21,7 @@ const useLoadApplication = (props: useLoadApplicationProps) => {
 
   const { triggerProcessing, error: triggerError } = useTriggerProcessing({
     serialNumber,
-    trigger: 'applicationTrigger',
+    // triggerType: 'applicationTrigger',
   })
 
   const { data, loading, error } = useGetApplicationQuery({

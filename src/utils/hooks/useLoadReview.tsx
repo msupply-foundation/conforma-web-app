@@ -4,6 +4,7 @@ import { ReviewResponse, useGetReviewQuery } from '../generated/graphql'
 import { ApplicationElementStates, SectionElementStates } from '../types'
 import useLoadApplication from './useLoadApplication'
 import useGetResponsesAndElementState from './useGetResponsesAndElementState'
+import useTriggerProcessing from './useTriggerProcessing'
 import getPageElements from '../helpers/getPageElements'
 
 interface UseLoadReviewProps {
@@ -26,6 +27,11 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     serialNumber,
   })
 
+  const { triggerProcessing, error: triggerError } = useTriggerProcessing({
+    reviewId,
+    // triggerType: 'reviewTrigger',
+  })
+
   const { error: responsesError, responsesByCode, elementsState } = useGetResponsesAndElementState({
     serialNumber,
     isApplicationLoaded,
@@ -35,7 +41,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     variables: {
       reviewId,
     },
-    skip: !isApplicationLoaded || !elementsState,
+    skip: triggerProcessing || !isApplicationLoaded || !elementsState,
   })
 
   const getResponse = (code: string) =>
@@ -111,9 +117,9 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
 
   return {
     applicationName,
-    loading,
-    error,
     reviewSections,
+    loading: loading || triggerProcessing,
+    error: error || triggerError,
   }
 }
 

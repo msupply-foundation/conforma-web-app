@@ -17449,7 +17449,9 @@ export type GetTemplateQuery = (
 );
 
 export type GetTriggersQueryVariables = Exact<{
-  serial: Scalars['String'];
+  serial?: Maybe<Scalars['String']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -17459,7 +17461,7 @@ export type GetTriggersQuery = (
     { __typename?: 'ApplicationTriggerStatesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationTriggerState' }
-      & Pick<ApplicationTriggerState, 'applicationTrigger' | 'reviewTrigger' | 'serial'>
+      & Pick<ApplicationTriggerState, 'serial' | 'applicationTrigger' | 'reviewAssignmentTrigger' | 'reviewTrigger'>
     )>> }
   )> }
 );
@@ -18067,12 +18069,13 @@ export type GetTemplateQueryHookResult = ReturnType<typeof useGetTemplateQuery>;
 export type GetTemplateLazyQueryHookResult = ReturnType<typeof useGetTemplateLazyQuery>;
 export type GetTemplateQueryResult = Apollo.QueryResult<GetTemplateQuery, GetTemplateQueryVariables>;
 export const GetTriggersDocument = gql`
-    query getTriggers($serial: String!) {
-  applicationTriggerStates(condition: {serial: $serial}) {
+    query getTriggers($serial: String, $reviewAssignmentId: Int, $reviewId: Int) {
+  applicationTriggerStates(condition: {serial: $serial, reviewAssignmentId: $reviewAssignmentId, reviewId: $reviewId}, first: 1) {
     nodes {
-      applicationTrigger
-      reviewTrigger
       serial
+      applicationTrigger
+      reviewAssignmentTrigger
+      reviewTrigger
     }
   }
 }
@@ -18091,6 +18094,8 @@ export const GetTriggersDocument = gql`
  * const { data, loading, error } = useGetTriggersQuery({
  *   variables: {
  *      serial: // value for 'serial'
+ *      reviewAssignmentId: // value for 'reviewAssignmentId'
+ *      reviewId: // value for 'reviewId'
  *   },
  * });
  */
