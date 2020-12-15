@@ -14,8 +14,6 @@ export const revalidateAll = async (
 ): Promise<RevalidateResult> => {
   const validate = defaultValidate // To-Do: import custom validation methods
 
-  // console.log('Elements', elementsState)
-  // console.log('responses', responsesByCode)
   if (elementsState) {
     const elementCodes = Object.keys(elementsState).filter(
       (key) =>
@@ -23,9 +21,7 @@ export const revalidateAll = async (
         elementsState[key].category === 'QUESTION' &&
         elementsState[key].isVisible === true &&
         // Strict/Loose validation logic:
-        ((strict && elementsState[key].isRequired) ||
-          (strict && responsesByCode[key]?.isValid !== null) ||
-          (!strict && responsesByCode[key]?.isValid !== null))
+        ((strict && elementsState[key].isRequired) || responsesByCode[key]?.isValid !== null)
     )
 
     console.log('Codes to check:', elementCodes)
@@ -52,23 +48,20 @@ export const revalidateAll = async (
       )
     }
     const resultArray = await Promise.all(evaluatedValidations)
-    console.log('Result', resultArray)
-    elementCodes.forEach((code, index) => {
-      if (elementsState[code].isRequired && responsesByCode && !responsesByCode[code]?.text)
-        resultArray[index] = { isValid: false }
-    })
-    const validityFailures: ValidityFailure[] = []
-    if (shouldUpdateDatabase) {
-      elementCodes.forEach((code, index) => {
-        if (!resultArray[index].isValid) {
-          validityFailures.push({
-            id: (responsesByCode && responsesByCode[code].id) || 0,
-            isValid: false,
-            code,
-          })
-        }
-      })
-    }
+    const validityFailures: ValidityFailure[] = shouldUpdateDatabase
+      ? elementCodes.reduce((validityFailures: ValidityFailure[], code, index) => {
+          if (!resultArray[index].isValid)
+            return [
+              ...validityFailures,
+              {
+                id: (responsesByCode && responsesByCode[code].id) || 0,
+                isValid: false,
+                code,
+              },
+            ]
+          else return validityFailures
+        }, [])
+      : []
 
     return {
       allValid: resultArray.every((element) => element.isValid),
@@ -77,4 +70,26 @@ export const revalidateAll = async (
   }
   // Typescript requires final return -- it should never be reached
   return { allValid: false, validityFailures: [] }
+}
+
+export const getFirstErrorLocation = (
+  validityFailures: ValidityFailure[],
+  elementsState: ApplicationElementStates
+) => {
+  let firstErrorSectionIndex = Infinity
+  let firstErrorPage = Infinity
+  let firstErrorSectionCode = ''
+  validityFailures.forEach((failure: ValidityFailure) => {
+    const { code } = failure
+    const sectionIndex = elementsState[code].sectionIndex
+    const page = elementsState[code].page
+    if (sectionIndex < firstErrorSectionIndex) {
+      firstErrorSectionIndex = sectionIndex
+      firstErrorPage = page
+      firstErrorSectionCode = elementsState[code].sectionCode
+    } else
+      firstErrorPage =
+        sectionIndex === firstErrorSectionIndex && page < firstErrorPage ? page : firstErrorPage
+  })
+  return { firstErrorSectionIndex, firstErrorSectionCode, firstErrorPage }
 }

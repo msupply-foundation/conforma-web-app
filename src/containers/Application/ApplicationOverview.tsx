@@ -8,7 +8,7 @@ import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
 import { ApplicationElementStates, ValidityFailure, SectionElementStates } from '../../utils/types'
-import { revalidateAll } from '../../utils/helpers/revalidateAll'
+import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 
 const ApplicationOverview: React.FC = () => {
@@ -99,12 +99,12 @@ const ApplicationOverview: React.FC = () => {
     // If invalid responses, re-direct to first invalid page
     if (!revalidate.allValid) {
       console.log('Some responses invalid')
-      const { firstErrorSectionIndex, firstErrorPage } = getFirstErrorLocation(
+      const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
         revalidate.validityFailures,
         elementsState as ApplicationElementStates
       )
       // TO-DO: Alert user of Submit failure
-      push(`/application/${serialNumber}/S${firstErrorSectionIndex + 1}/Page${firstErrorPage}`)
+      push(`/application/${serialNumber}/${firstErrorSectionCode}/Page${firstErrorPage}`)
     }
   }
 
