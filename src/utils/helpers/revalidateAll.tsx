@@ -41,7 +41,6 @@ export const revalidateAll = async (
   })
 
   const resultArray = await Promise.all(validationExpressions)
-  console.log('resultArray', resultArray)
   const validityFailures: ValidityFailure[] = shouldUpdateDatabase
     ? elementCodes.reduce((validityFailures: ValidityFailure[], code, index) => {
         if (!resultArray[index].isValid)
