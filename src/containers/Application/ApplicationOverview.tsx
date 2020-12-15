@@ -1,4 +1,3 @@
-import { stripIgnoredCharacters } from 'graphql'
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Form, Header, Loader, Message, Modal } from 'semantic-ui-react'
 import { SectionSummary, Loading } from '../../components'
@@ -8,10 +7,18 @@ import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAnd
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
-import { SectionElementStates } from '../../utils/types'
+import {
+  ApplicationElementStates,
+  ValidityFailure,
+  SectionElementStates,
+  ResponsesByCode,
+} from '../../utils/types'
+import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
+import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 
 const ApplicationOverview: React.FC = () => {
   const [sectionsPages, setSectionsAndElements] = useState<SectionElementStates[]>()
+  const [isRevalidated, setIsRevalidated] = useState(false)
 
   const { query, push } = useRouter()
   const { serialNumber } = query
@@ -29,15 +36,25 @@ const ApplicationOverview: React.FC = () => {
     isApplicationLoaded,
   })
 
-  const {
-    error: submitError,
-    processing,
-    submitted,
-    submit,
-    isStrictValidation,
-  } = useUpdateApplication({
+  const { error: submitError, processing, submitted, submit } = useUpdateApplication({
     applicationSerial: serialNumber as string,
   })
+
+  const [responseMutation] = useUpdateResponseMutation()
+
+  useEffect(() => {
+    // Fully re-validate on page load
+    if (!appStatus) return
+    if (appStatus?.status !== 'DRAFT' && appStatus?.status !== 'CHANGES_REQUIRED') {
+      // Show summary, even if it no longer validates, as it would
+      // have been valid when submitted.
+      setIsRevalidated(true)
+      return
+    }
+    if (isApplicationLoaded && elementsState && responsesByCode) {
+      revalidateAndUpdate().then(() => setIsRevalidated(true))
+    }
+  }, [responsesByCode, elementsState])
 
   useEffect(() => {
     if (!responsesLoading && elementsState && responsesByCode) {
@@ -71,13 +88,47 @@ const ApplicationOverview: React.FC = () => {
     }
   }, [elementsState, responsesLoading])
 
+  const revalidateAndUpdate = async () => {
+    const revalidate = await revalidateAll(
+      elementsState as ApplicationElementStates,
+      responsesByCode as ResponsesByCode
+    )
+
+    // Update database if validity changed
+    revalidate.validityFailures.forEach((changedElement) => {
+      responseMutation({
+        variables: {
+          id: changedElement.id,
+          isValid: changedElement.isValid,
+        },
+      })
+    })
+
+    // If invalid responses, re-direct to first invalid page
+    if (!revalidate.allValid) {
+      console.log('Some responses invalid')
+      const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
+        revalidate.validityFailures,
+        elementsState as ApplicationElementStates
+      )
+      // TO-DO: Alert user of Submit failure
+      push(`/application/${serialNumber}/${firstErrorSectionCode}/Page${firstErrorPage}`)
+    }
+  }
+
+  const handleSubmit = async () => {
+    await revalidateAndUpdate()
+    // All OK -- would have been re-directed otherwise:
+    submit()
+  }
+
   return error ? (
     <Message error header={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
   ) : loading || responsesLoading ? (
     <Loading />
   ) : submitError ? (
     <Message error header={strings.ERROR_APPLICATION_SUBMIT} list={[submitError]} />
-  ) : serialNumber && appStatus && sectionsPages ? (
+  ) : serialNumber && appStatus && sectionsPages && isRevalidated ? (
     <Container>
       <Header as="h1" content={strings.TITLE_APPLICATION_SUBMIT} />
       <Form>
@@ -87,12 +138,11 @@ const ApplicationOverview: React.FC = () => {
             sectionPages={sectionPages}
             serialNumber={serialNumber}
             allResponses={responsesByCode || {}}
-            isStrictValidation={isStrictValidation}
             canEdit={appStatus.status === 'DRAFT'}
           />
         ))}
         {appStatus.status === 'DRAFT' ? (
-          <Button content={strings.BUTTON_SUBMIT} onClick={() => submit()} />
+          <Button content={strings.BUTTON_SUBMIT} onClick={() => handleSubmit()} />
         ) : null}
         {showProcessingModal(processing, submitted)}
       </Form>

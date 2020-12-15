@@ -14,6 +14,10 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - default: `{"value": true}`
 - **is_editable**: `JSON` -- dynamic query determining whether can be edited (Would only be false in rare circumstances)
   - default: `{"value": true}`
+- **validation**: `JSON` -- a dynamic expression for checking if the user's response is a valid input.
+  - default: `{"value": true}` or just `true`
+- **validation_message**: `string` -- the message that shows in the UI when validation fails.  
+  _TO-DO: Handle multiple validation criteria with different messages (eg. "Not a valid email", "Email is not unique")_
 - **parameters**: `JSON` -- the parameters specific to each question/element type. See individual plugins below for parameter breakdown
 
 ## Question/Element types
@@ -34,9 +38,6 @@ _Free-form, single-line text input element_
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
 - **maskedInput**: `boolean` -- if `true`, displays user input as masked (hidden) characters -- i.e. for passwords. [Optional]
 - **minWidth**/**maxWidth**: `integer` -- optional controls over visual display [Optional] _(We may never use these)_
-- **validation**: `JSON` -- a dynamic expression for checking if the user's response is a valid input.
-  - default: `{"value": true}` or just `true`
-- **validation_message**: `string` -- the message that shows in the UI when validation fails.
 
 #### Response type
 
