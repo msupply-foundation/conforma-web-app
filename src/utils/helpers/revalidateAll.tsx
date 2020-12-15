@@ -24,27 +24,25 @@ export const revalidateAll = async (
         ((strict && elementsState[key].isRequired) || responsesByCode[key]?.isValid !== null)
     )
 
-    const validationExpressions = elementCodes.map((code) => elementsState[code].validation)
-
-    const evaluatedValidations = []
-
-    for (let i = 0; i < elementCodes.length; i++) {
-      const code = elementCodes[i]
+    const validationExpressions = elementCodes.map((code) => {
       const thisResponse = responsesByCode
         ? responsesByCode[code]?.text
           ? responsesByCode[code]?.text
           : ''
         : ''
       const responses = { thisResponse, ...responsesByCode }
-      const expression = validationExpressions[i]
-      evaluatedValidations.push(
-        validate(expression, elementsState[code]?.validationMessage as string, {
+      return validate(
+        elementsState[code].validation,
+        elementsState[code]?.validationMessage as string,
+        {
           objects: [responses],
           APIfetch: fetch,
-        })
+        }
       )
-    }
-    const resultArray = await Promise.all(evaluatedValidations)
+    })
+
+    const resultArray = await Promise.all(validationExpressions)
+    console.log('resultArray', resultArray)
     const validityFailures: ValidityFailure[] = shouldUpdateDatabase
       ? elementCodes.reduce((validityFailures: ValidityFailure[], code, index) => {
           if (!resultArray[index].isValid)
