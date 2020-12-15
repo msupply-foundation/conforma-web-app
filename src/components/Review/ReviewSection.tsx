@@ -7,14 +7,12 @@ import { ReviewQuestionDecision, SectionElementStates } from '../../utils/types'
 
 interface ReviewSectionProps {
   reviewSection: SectionElementStates
-  updatingResponses: boolean
   updateResponses: (props: ReviewQuestionDecision[]) => void
   canEdit: boolean
 }
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({
   reviewSection,
-  updatingResponses,
   updateResponses,
   canEdit,
 }) => {
@@ -63,7 +61,6 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
               color="blue"
               inverted
               style={{ margin: 10 }}
-              loading={updatingResponses}
               onClick={() =>
                 updateResponses(
                   elementsToReview.map((review) => ({

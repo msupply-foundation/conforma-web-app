@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Container, Form, Header, Label, Message } from 'semantic-ui-react'
 import { Loading, ReviewSection } from '../../components'
 import useLoadReview from '../../utils/hooks/useLoadReview'
@@ -9,7 +9,6 @@ import { ReviewQuestionDecision } from '../../utils/types'
 import getReviewQuery from '../../utils/graphql/queries/getReview.query'
 
 const ReviewPageWrapper: React.FC = () => {
-  const [updatingResponses, setUpdatingResponses] = useState(false)
   const {
     params: { serialNumber, reviewId },
   } = useRouter()
@@ -34,11 +33,9 @@ const ReviewPageWrapper: React.FC = () => {
   })
 
   const updateResponses = (array: ReviewQuestionDecision[]) => {
-    setUpdatingResponses(true)
     array.forEach((reviewResponse) => {
       updateReviewResponse({ variables: { ...reviewResponse } })
     })
-    setUpdatingResponses(false)
   }
 
   return error ? (
@@ -62,7 +59,6 @@ const ReviewPageWrapper: React.FC = () => {
           <ReviewSection
             key={`ReviewSection_${reviewSection.section.code}`}
             reviewSection={reviewSection}
-            updatingResponses={updatingResponses}
             updateResponses={updateResponses}
             canEdit={true} // TODO: Check Review status
           />
