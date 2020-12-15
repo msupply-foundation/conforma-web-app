@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Container, Form, Header, Label, Message } from 'semantic-ui-react'
-import { Loading } from '../../components'
+import { Loading, ReviewSection } from '../../components'
 import strings from '../../utils/constants'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
