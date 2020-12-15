@@ -21,8 +21,7 @@ export const revalidateAll = async (
         elementsState[key].category === 'QUESTION' &&
         elementsState[key].isVisible === true &&
         // Strict/Loose validation logic:
-        ((strict && elementsState[key].isRequired) ||
-          (responsesByCode[key]?.isValid !== null))
+        ((strict && elementsState[key].isRequired) || responsesByCode[key]?.isValid !== null)
     )
 
     const validationExpressions = elementCodes.map((code) => elementsState[code].validation)
