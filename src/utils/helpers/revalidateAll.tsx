@@ -14,8 +14,6 @@ export const revalidateAll = async (
 ): Promise<RevalidateResult> => {
   const validate = defaultValidate // To-Do: import custom validation methods
 
-  // console.log('Elements', elementsState)
-  // console.log('responses', responsesByCode)
   if (elementsState) {
     const elementCodes = Object.keys(elementsState).filter(
       (key) =>

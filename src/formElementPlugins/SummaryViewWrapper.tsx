@@ -48,17 +48,11 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   )
 
   return (
-    <Grid columns={1}>
-      <Grid.Row centered>
-        <Grid.Column width={14}>
-          <ErrorBoundary pluginCode={pluginCode} FallbackComponent={DefaultSummaryView}>
-            <React.Suspense fallback="Loading Plugin">
-              {parametersLoaded && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
-            </React.Suspense>
-          </ErrorBoundary>
-        </Grid.Column>
-      </Grid.Row>
-    </Grid>
+    <ErrorBoundary pluginCode={pluginCode} FallbackComponent={DefaultSummaryView}>
+      <React.Suspense fallback="Loading Plugin">
+        {parametersLoaded && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
+      </React.Suspense>
+    </ErrorBoundary>
   )
 }
 
