@@ -24,7 +24,7 @@ const ReviewPageWrapper: React.FC = () => {
   ) : reviewSections ? (
     <>
       <Container text textAlign="center">
-        <Label color="blue">{strings.STAGE_PACEHOLDER}</Label>
+        <Label color="blue">{strings.STAGE_PLACEHOLDER}</Label>
         <Header content={applicationName} subheader={strings.DATE_APPLICATION_PLACEHOLDER} />
         <Header
           as="h3"
