@@ -159,7 +159,10 @@ const ApplicationPageWrapper: React.FC = () => {
   }
 
   const handleSummaryClick = async () => {
-    const revalidate = await revalidateAll(elementsState, responsesByCode)
+    const revalidate = await revalidateAll(
+      elementsState as ApplicationElementStates,
+      responsesByCode as ResponsesByCode
+    )
 
     // Update database if validity changed
     revalidate.validityFailures.forEach((changedElement) => {
