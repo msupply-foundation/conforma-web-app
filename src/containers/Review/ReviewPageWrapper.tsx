@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Form, Header, Label, Message } from 'semantic-ui-react'
 import { Loading, ReviewSection } from '../../components'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
+import { useUpdateReviewResponseMutation } from '../../utils/generated/graphql'
+import { ReviewQuestionDecision } from '../../utils/types'
+import getReviewQuery from '../../utils/graphql/queries/getReview.query'
 
 const ReviewPageWrapper: React.FC = () => {
+  const [updatingResponses, setUpdatingResponses] = useState(false)
   const {
     params: { serialNumber, reviewId },
   } = useRouter()
@@ -16,6 +20,26 @@ const ReviewPageWrapper: React.FC = () => {
     reviewId: Number(reviewId),
     serialNumber,
   })
+
+  const [updateReviewResponse] = useUpdateReviewResponseMutation({
+    onCompleted: ({ updateReviewResponse }) =>
+      console.log('Success to update reviewResponse: ', updateReviewResponse?.clientMutationId),
+    onError: (error) => console.log('Problem to update reviewResponse', error.message),
+    refetchQueries: [
+      {
+        query: getReviewQuery,
+        variables: { reviewId: Number(reviewId), serialNumber },
+      },
+    ],
+  })
+
+  const updateResponses = (array: ReviewQuestionDecision[]) => {
+    setUpdatingResponses(true)
+    array.forEach((reviewResponse) => {
+      updateReviewResponse({ variables: { ...reviewResponse } })
+    })
+    setUpdatingResponses(false)
+  }
 
   return error ? (
     <Message error header="Problem to load review" list={[error]} />
@@ -38,6 +62,8 @@ const ReviewPageWrapper: React.FC = () => {
           <ReviewSection
             key={`ReviewSection_${reviewSection.section.code}`}
             reviewSection={reviewSection}
+            updatingResponses={updatingResponses}
+            updateResponses={updateResponses}
             canEdit={true} // TODO: Check Review status
           />
         ))}

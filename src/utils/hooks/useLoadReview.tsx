@@ -101,6 +101,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
               return {
                 ...elementState,
                 review: {
+                  id: review.id,
                   decision: review.decision ? review.decision : undefined,
                   comment: review.comment ? review.comment : '',
                 },

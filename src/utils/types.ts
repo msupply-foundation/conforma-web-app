@@ -1,4 +1,8 @@
-import { TemplateElement, TemplateElementCategory } from './generated/graphql'
+import {
+  ReviewResponseDecision,
+  TemplateElement,
+  TemplateElementCategory,
+} from './generated/graphql'
 
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
@@ -22,7 +26,6 @@ export {
   ResponseFull,
   ResponsePayload,
   ResponsesByCode,
-  ReviewDecision,
   ReviewDetails,
   ReviewQuestion,
   ReviewQuestionDecision,
@@ -150,8 +153,6 @@ interface ResponsesByCode {
   [key: string]: ResponseFull | null
 }
 
-type ReviewDecision = 'Approve' | 'Reject'
-
 interface ReviewDetails {
   id: number
   status: string
@@ -163,8 +164,9 @@ interface ReviewQuestion {
   sectionIndex: number
 }
 interface ReviewQuestionDecision {
+  id: number
   comment: string
-  decision: ReviewDecision | undefined
+  decision: ReviewResponseDecision | undefined
 }
 
 interface SectionElementStates {
