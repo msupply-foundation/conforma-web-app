@@ -17192,6 +17192,38 @@ export type UpdateResponseMutation = (
   )> }
 );
 
+export type UpdateReviewResponsesMutationVariables = Exact<{
+  id: Scalars['Int'];
+  reviewResponses?: Maybe<Array<ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate>>;
+}>;
+
+
+export type UpdateReviewResponsesMutation = (
+  { __typename?: 'Mutation' }
+  & { updateReview?: Maybe<(
+    { __typename?: 'UpdateReviewPayload' }
+    & { review?: Maybe<(
+      { __typename?: 'Review' }
+      & Pick<Review, 'id'>
+    )> }
+  )> }
+);
+
+export type UpdateReviewResponseMutationVariables = Exact<{
+  id: Scalars['Int'];
+  decision?: Maybe<ReviewResponseDecision>;
+  comment?: Maybe<Scalars['String']>;
+}>;
+
+
+export type UpdateReviewResponseMutation = (
+  { __typename?: 'Mutation' }
+  & { updateReviewResponse?: Maybe<(
+    { __typename?: 'UpdateReviewResponsePayload' }
+    & Pick<UpdateReviewResponsePayload, 'clientMutationId'>
+  )> }
+);
+
 export type GetApplicationQueryVariables = Exact<{
   serial: Scalars['String'];
 }>;
@@ -17703,6 +17735,75 @@ export function useUpdateResponseMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateResponseMutationHookResult = ReturnType<typeof useUpdateResponseMutation>;
 export type UpdateResponseMutationResult = Apollo.MutationResult<UpdateResponseMutation>;
 export type UpdateResponseMutationOptions = Apollo.BaseMutationOptions<UpdateResponseMutation, UpdateResponseMutationVariables>;
+export const UpdateReviewResponsesDocument = gql`
+    mutation updateReviewResponses($id: Int!, $reviewResponses: [ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate!]) {
+  updateReview(input: {patch: {reviewResponsesUsingId: {updateById: $reviewResponses}}, id: $id}) {
+    review {
+      id
+    }
+  }
+}
+    `;
+export type UpdateReviewResponsesMutationFn = Apollo.MutationFunction<UpdateReviewResponsesMutation, UpdateReviewResponsesMutationVariables>;
+
+/**
+ * __useUpdateReviewResponsesMutation__
+ *
+ * To run a mutation, you first call `useUpdateReviewResponsesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateReviewResponsesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateReviewResponsesMutation, { data, loading, error }] = useUpdateReviewResponsesMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      reviewResponses: // value for 'reviewResponses'
+ *   },
+ * });
+ */
+export function useUpdateReviewResponsesMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReviewResponsesMutation, UpdateReviewResponsesMutationVariables>) {
+        return Apollo.useMutation<UpdateReviewResponsesMutation, UpdateReviewResponsesMutationVariables>(UpdateReviewResponsesDocument, baseOptions);
+      }
+export type UpdateReviewResponsesMutationHookResult = ReturnType<typeof useUpdateReviewResponsesMutation>;
+export type UpdateReviewResponsesMutationResult = Apollo.MutationResult<UpdateReviewResponsesMutation>;
+export type UpdateReviewResponsesMutationOptions = Apollo.BaseMutationOptions<UpdateReviewResponsesMutation, UpdateReviewResponsesMutationVariables>;
+export const UpdateReviewResponseDocument = gql`
+    mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String) {
+  updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment}}) {
+    clientMutationId
+  }
+}
+    `;
+export type UpdateReviewResponseMutationFn = Apollo.MutationFunction<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>;
+
+/**
+ * __useUpdateReviewResponseMutation__
+ *
+ * To run a mutation, you first call `useUpdateReviewResponseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateReviewResponseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateReviewResponseMutation, { data, loading, error }] = useUpdateReviewResponseMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      decision: // value for 'decision'
+ *      comment: // value for 'comment'
+ *   },
+ * });
+ */
+export function useUpdateReviewResponseMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>) {
+        return Apollo.useMutation<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>(UpdateReviewResponseDocument, baseOptions);
+      }
+export type UpdateReviewResponseMutationHookResult = ReturnType<typeof useUpdateReviewResponseMutation>;
+export type UpdateReviewResponseMutationResult = Apollo.MutationResult<UpdateReviewResponseMutation>;
+export type UpdateReviewResponseMutationOptions = Apollo.BaseMutationOptions<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>;
 export const GetApplicationDocument = gql`
     query getApplication($serial: String!) {
   applicationBySerial(serial: $serial) {
