@@ -45,10 +45,9 @@ export const revalidateAll = async (
       )
     }
     const resultArray = await Promise.all(evaluatedValidations)
-    // console.log('Result', resultArray)
-  const validityFailures: ValidityFailure[] = shouldUpdateDatabase
+    const validityFailures: ValidityFailure[] = shouldUpdateDatabase
       ? elementCodes.reduce((validityFailures: ValidityFailure[], code, index) => {
-          if (!resultArray[index].isValid) {
+          if (!resultArray[index].isValid)
             return [
               ...validityFailures,
               {
@@ -57,7 +56,7 @@ export const revalidateAll = async (
                 code,
               },
             ]
-          } else return validityFailures
+          else return validityFailures
         }, [])
       : []
 
