@@ -160,25 +160,3 @@ const showProcessingModal = (processing: boolean, submitted: boolean) => {
 }
 
 export default ApplicationOverview
-
-function getFirstErrorLocation(
-  validityFailures: ValidityFailure[],
-  elementsState: ApplicationElementStates
-) {
-  let firstErrorSectionIndex = Infinity
-  let firstErrorPage = Infinity
-  console.log('Validity failures', validityFailures)
-  validityFailures.forEach((failure: ValidityFailure) => {
-    const { code } = failure
-    const sectionIndex = elementsState[code].sectionIndex
-    const page = elementsState[code].page
-    if (sectionIndex < firstErrorSectionIndex) {
-      firstErrorSectionIndex = sectionIndex
-      firstErrorPage = page
-    } else
-      firstErrorPage =
-        sectionIndex === firstErrorSectionIndex && page < firstErrorPage ? page : firstErrorPage
-  })
-  console.log('Redirecting to', firstErrorSectionIndex, firstErrorPage)
-  return { firstErrorSectionIndex, firstErrorPage }
-}
