@@ -5,7 +5,7 @@ export default {
   BUTTON_REVIEW_CONTINUE: 'Continue review',
   BUTTON_REVIEW_START: 'Start review',
   DATE_APPLICATION_PLACEHOLDER: '31/12/2020',
-  ERROR_APPLICATION_CREATE: 'Problem to load application creation page',
+  ERROR_APPLICATION_CREATE: 'Problem loading application creation page',
   ERROR_APPLICATION_ELEMENTS: 'Elements area cannot be displayed',
   ERROR_APPLICATION_OVERVIEW: 'Problem to load application overview',
   ERROR_APPLICATION_PAGE: 'Problem to load application',
