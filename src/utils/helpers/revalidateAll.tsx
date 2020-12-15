@@ -47,7 +47,6 @@ export const revalidateAll = async (
 
     // Also make "" responses invalid for required questions
     elementCodes.forEach((code, index) => {
-      console.log(code, index)
       if (
         elementsState[code].isRequired &&
         (!responsesByCode[code]?.text ||
