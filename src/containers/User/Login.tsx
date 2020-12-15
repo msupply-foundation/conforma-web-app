@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Form, Button, Container, Grid, Segment, Header } from 'semantic-ui-react'
 import config from '../../config.json'
 import isLoggedIn from '../../utils/helpers/loginCheck'
+import strings from '../../utils/constants'
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('')
@@ -33,10 +34,10 @@ const Login: React.FC = () => {
       <Grid container columns="1" centered verticalAlign="middle" style={{ height: '100%' }}>
         <Grid.Column>
           <Segment>
-            <Header size="huge">Welcome to IRIMS Application Manager</Header>
+            <Header size="huge">{strings.LABEL_WELCOME}</Header>
             <Form>
               <Form.Field>
-                <label>Username</label>
+                <label>{strings.LABEL_LOGIN_USERNAME}</label>
                 <input
                   placeholder="Username"
                   name="username"
@@ -46,7 +47,7 @@ const Login: React.FC = () => {
                 />
               </Form.Field>
               <Form.Field>
-                <label>Password</label>
+                <label>{strings.LABEL_LOGIN_PASSWORD}</label>
                 <input
                   placeholder="Password"
                   name="password"
@@ -59,9 +60,9 @@ const Login: React.FC = () => {
                 <Button type="submit" onClick={handleSubmit}>
                   Log In
                 </Button>
-                <Link to="/register">Create new account</Link>
+                <Link to="/register">{strings.LINK_LOGIN_USER}</Link>
               </Container>
-              {isError && <p>Oops! Problem with username or password</p>}
+              {isError && <p>{strings.ERROR_LOGIN_PASSWORD}</p>}
             </Form>
           </Segment>
         </Grid.Column>

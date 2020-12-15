@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Container, Form, Header, Label, Message } from 'semantic-ui-react'
-import { Loading, ReviewSection } from '../../components'
+import { Loading } from '../../components'
+import strings from '../../utils/constants'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
-import strings from '../../utils/constants'
 import { useUpdateReviewResponseMutation } from '../../utils/generated/graphql'
 import { ReviewQuestionDecision } from '../../utils/types'
 import getReviewQuery from '../../utils/graphql/queries/getReview.query'
@@ -42,7 +42,7 @@ const ReviewPageWrapper: React.FC = () => {
   }
 
   return error ? (
-    <Message error header="Problem to load review" list={[error]} />
+    <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
   ) : loading ? (
     <Loading />
   ) : reviewSections ? (

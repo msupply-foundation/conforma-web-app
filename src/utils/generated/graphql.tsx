@@ -2514,14 +2514,18 @@ export type TemplateElementFilter = {
   title?: Maybe<StringFilter>;
   /** Filter by the object’s `category` field. */
   category?: Maybe<TemplateElementCategoryFilter>;
-  /** Filter by the object’s `visibilityCondition` field. */
-  visibilityCondition?: Maybe<JsonFilter>;
   /** Filter by the object’s `elementTypePluginCode` field. */
   elementTypePluginCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `visibilityCondition` field. */
+  visibilityCondition?: Maybe<JsonFilter>;
   /** Filter by the object’s `isRequired` field. */
   isRequired?: Maybe<JsonFilter>;
   /** Filter by the object’s `isEditable` field. */
   isEditable?: Maybe<JsonFilter>;
+  /** Filter by the object’s `validation` field. */
+  validation?: Maybe<JsonFilter>;
+  /** Filter by the object’s `validationMessage` field. */
+  validationMessage?: Maybe<StringFilter>;
   /** Filter by the object’s `parameters` field. */
   parameters?: Maybe<JsonFilter>;
   /** Filter by the object’s `applicationResponses` relation. */
@@ -4054,14 +4058,18 @@ export enum TemplateElementsOrderBy {
   TitleDesc = 'TITLE_DESC',
   CategoryAsc = 'CATEGORY_ASC',
   CategoryDesc = 'CATEGORY_DESC',
-  VisibilityConditionAsc = 'VISIBILITY_CONDITION_ASC',
-  VisibilityConditionDesc = 'VISIBILITY_CONDITION_DESC',
   ElementTypePluginCodeAsc = 'ELEMENT_TYPE_PLUGIN_CODE_ASC',
   ElementTypePluginCodeDesc = 'ELEMENT_TYPE_PLUGIN_CODE_DESC',
+  VisibilityConditionAsc = 'VISIBILITY_CONDITION_ASC',
+  VisibilityConditionDesc = 'VISIBILITY_CONDITION_DESC',
   IsRequiredAsc = 'IS_REQUIRED_ASC',
   IsRequiredDesc = 'IS_REQUIRED_DESC',
   IsEditableAsc = 'IS_EDITABLE_ASC',
   IsEditableDesc = 'IS_EDITABLE_DESC',
+  ValidationAsc = 'VALIDATION_ASC',
+  ValidationDesc = 'VALIDATION_DESC',
+  ValidationMessageAsc = 'VALIDATION_MESSAGE_ASC',
+  ValidationMessageDesc = 'VALIDATION_MESSAGE_DESC',
   ParametersAsc = 'PARAMETERS_ASC',
   ParametersDesc = 'PARAMETERS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -4082,14 +4090,18 @@ export type TemplateElementCondition = {
   title?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `category` field. */
   category?: Maybe<TemplateElementCategory>;
-  /** Checks for equality with the object’s `visibilityCondition` field. */
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `elementTypePluginCode` field. */
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `visibilityCondition` field. */
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isRequired` field. */
   isRequired?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isEditable` field. */
   isEditable?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `validation` field. */
+  validation?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `validationMessage` field. */
+  validationMessage?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `parameters` field. */
   parameters?: Maybe<Scalars['JSON']>;
 };
@@ -4117,10 +4129,12 @@ export type TemplateElement = Node & {
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
@@ -9091,10 +9105,12 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -9249,10 +9265,12 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -10719,10 +10737,12 @@ export type UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssi
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -11724,10 +11744,12 @@ export type TemplateElementPatch = {
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -11742,10 +11764,12 @@ export type ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateIn
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -12640,10 +12664,12 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -12871,10 +12897,12 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -14504,10 +14532,12 @@ export type TemplateElementInput = {
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -17060,7 +17090,7 @@ export type AddNewUserFragment = (
 
 export type ApplicationFragment = (
   { __typename?: 'Application' }
-  & Pick<Application, 'id' | 'serial' | 'name' | 'stage' | 'status' | 'outcome'>
+  & Pick<Application, 'id' | 'serial' | 'name' | 'status' | 'outcome'>
 );
 
 export type ElementFragment = (
@@ -17259,18 +17289,14 @@ export type GetApplicationQuery = (
           & SectionFragment
         )> }
       )>> }
-    ), applicationStageHistories: (
-      { __typename?: 'ApplicationStageHistoriesConnection' }
-      & { nodes: Array<Maybe<(
-        { __typename?: 'ApplicationStageHistory' }
-        & Pick<ApplicationStageHistory, 'id'>
-        & { stage?: Maybe<(
-          { __typename?: 'TemplateStage' }
-          & Pick<TemplateStage, 'id'>
-        )> }
-      )>> }
     ) }
     & ApplicationFragment
+  )>, applicationStageStatusAlls?: Maybe<(
+    { __typename?: 'ApplicationStageStatusAllsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ApplicationStageStatusAll' }
+      & Pick<ApplicationStageStatusAll, 'serial' | 'stageHistoryId' | 'stage' | 'stageId' | 'stageNumber'>
+    )>> }
   )> }
 );
 
@@ -17286,18 +17312,14 @@ export type GetApplicationsQuery = (
       & { template?: Maybe<(
         { __typename?: 'Template' }
         & TemplateFragment
-      )>, applicationStageHistories: (
-        { __typename?: 'ApplicationStageHistoriesConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'ApplicationStageHistory' }
-          & Pick<ApplicationStageHistory, 'id'>
-          & { stage?: Maybe<(
-            { __typename?: 'TemplateStage' }
-            & Pick<TemplateStage, 'id'>
-          )> }
-        )>> }
-      ) }
+      )> }
       & ApplicationFragment
+    )>> }
+  )>, applicationStageStatusAlls?: Maybe<(
+    { __typename?: 'ApplicationStageStatusAllsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ApplicationStageStatusAll' }
+      & Pick<ApplicationStageStatusAll, 'serial' | 'stageHistoryId' | 'stage' | 'stageId' | 'stageNumber'>
     )>> }
   )> }
 );
@@ -17367,8 +17389,8 @@ export type GetReviewQuery = (
 
 export type GetReviewAssignmentQueryVariables = Exact<{
   reviewerId: Scalars['Int'];
-  applicationId: Scalars['Int'];
-  stageId: Scalars['Int'];
+  applicationId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -17378,12 +17400,12 @@ export type GetReviewAssignmentQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id'>
+      & Pick<ReviewAssignment, 'id' | 'applicationId' | 'reviewerId' | 'stageId'>
       & { reviews: (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'Review' }
-          & Pick<Review, 'id' | 'status' | 'trigger'>
+          & Pick<Review, 'id' | 'status'>
         )>> }
       ), reviewQuestionAssignments: (
         { __typename?: 'ReviewQuestionAssignmentsConnection' }
@@ -17494,7 +17516,6 @@ export const ApplicationFragmentDoc = gql`
   id
   serial
   name
-  stage
   status
   outcome
 }
@@ -17829,13 +17850,14 @@ export const GetApplicationDocument = gql`
         }
       }
     }
-    applicationStageHistories(condition: {isCurrent: true}) {
-      nodes {
-        id
-        stage {
-          id
-        }
-      }
+  }
+  applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true}) {
+    nodes {
+      serial
+      stageHistoryId
+      stage
+      stageId
+      stageNumber
     }
   }
 }
@@ -17878,14 +17900,15 @@ export const GetApplicationsDocument = gql`
       template {
         ...Template
       }
-      applicationStageHistories(condition: {isCurrent: true}) {
-        nodes {
-          id
-          stage {
-            id
-          }
-        }
-      }
+    }
+  }
+  applicationStageStatusAlls(condition: {stageIsCurrent: true}) {
+    nodes {
+      serial
+      stageHistoryId
+      stage
+      stageId
+      stageNumber
     }
   }
 }
@@ -18015,15 +18038,17 @@ export type GetReviewQueryHookResult = ReturnType<typeof useGetReviewQuery>;
 export type GetReviewLazyQueryHookResult = ReturnType<typeof useGetReviewLazyQuery>;
 export type GetReviewQueryResult = Apollo.QueryResult<GetReviewQuery, GetReviewQueryVariables>;
 export const GetReviewAssignmentDocument = gql`
-    query getReviewAssignment($reviewerId: Int!, $applicationId: Int!, $stageId: Int!) {
+    query getReviewAssignment($reviewerId: Int!, $applicationId: Int, $stageId: Int) {
   reviewAssignments(condition: {reviewerId: $reviewerId, applicationId: $applicationId, stageId: $stageId}) {
     nodes {
       id
+      applicationId
+      reviewerId
+      stageId
       reviews {
         nodes {
           id
           status
-          trigger
         }
       }
       reviewQuestionAssignments {

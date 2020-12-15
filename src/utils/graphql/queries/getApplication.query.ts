@@ -25,13 +25,14 @@ export default gql`
           }
         }
       }
-      applicationStageHistories(condition: {isCurrent: true}) {
-        nodes {
-          id
-          stage {
-            id
-          }
-        }
+    }
+    applicationStageStatusAlls(condition: { serial: $serial, stageIsCurrent: true }) {
+      nodes {
+        serial
+        stageHistoryId
+        stage
+        stageId
+        stageNumber
       }
     }
   }
