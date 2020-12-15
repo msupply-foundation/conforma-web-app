@@ -14,10 +14,9 @@ export const revalidateAll = async (
 ): Promise<RevalidateResult> => {
   const validate = defaultValidate // To-Do: import custom validation methods
 
-  if (elementsState) {
+  if (elementsState && responsesByCode) {
     const elementCodes = Object.keys(elementsState).filter(
       (key) =>
-        responsesByCode && // Typescript requires this
         elementsState[key].category === 'QUESTION' &&
         elementsState[key].isVisible === true &&
         // Strict/Loose validation logic:
@@ -38,7 +37,6 @@ export const revalidateAll = async (
           : ''
         : ''
       const responses = { thisResponse, ...responsesByCode }
-      console.log('responses', responses)
       const expression = validationExpressions[i]
       evaluatedValidations.push(
         validate(expression, elementsState[code]?.validationMessage as string, {
@@ -48,13 +46,26 @@ export const revalidateAll = async (
       )
     }
     const resultArray = await Promise.all(evaluatedValidations)
+    // Also make "" responses invalid for required questions
+    console.log('Results', resultArray)
+    elementCodes.forEach((code, index) => {
+      if (
+        elementsState[code].isRequired &&
+        (!responsesByCode[code]?.text ||
+          responsesByCode[code].text === null ||
+          responsesByCode[code].text === '')
+      )
+        resultArray[index].isValid = false
+    })
+    console.log('Results', resultArray)
+
     const validityFailures: ValidityFailure[] = shouldUpdateDatabase
       ? elementCodes.reduce((validityFailures: ValidityFailure[], code, index) => {
           if (!resultArray[index].isValid)
             return [
               ...validityFailures,
               {
-                id: (responsesByCode && responsesByCode[code].id) || 0,
+                id: responsesByCode[code].id || 0,
                 isValid: false,
                 code,
               },
