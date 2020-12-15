@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ApolloError } from '@apollo/client'
 import {
-  ApplicationResponse,
   ReviewResponse,
-  TemplateElement,
   useGetReviewQuery,
 } from '../generated/graphql'
 import { ApplicationElementStates, SectionElementStates } from '../types'

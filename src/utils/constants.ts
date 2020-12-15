@@ -8,10 +8,11 @@ export default {
   ERROR_APPLICATION_CREATE: 'Problem loading application creation page',
   ERROR_APPLICATION_ELEMENTS: 'Elements area cannot be displayed',
   ERROR_APPLICATION_OVERVIEW: 'Problem loading application overview',
- ERROR_APPLICATION_PAGE: 'Problem loading application',
+  ERROR_APPLICATION_PAGE: 'Problem loading application',
   ERROR_APPLICATION_SECTION: 'Section cannot be displayed',
   ERROR_APPLICATION_SUBMIT: 'Problem submitting application',
   ERROR_APPLICATIONS_LIST: 'Problem loading applications list',
+  ERROR_REVIEW_APPLICATION: 'Problem loading application for review',
   ERROR_REVIEW_PAGE: 'Problem loading review',
   ERROR_REVIEW_OVERVIEW: 'Problem loading review homepage',
   ERROR_LOGIN_PASSWORD: 'Oops! Problem with username or password',
@@ -24,5 +25,5 @@ export default {
   TITLE_REVIEW_SUMMARY: 'Review Summary',
   TITLE_PROGRESS: 'Introduction',
   STAGE_PLACEHOLDER: 'Assessment',
-  SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you'
+  SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you',
 }

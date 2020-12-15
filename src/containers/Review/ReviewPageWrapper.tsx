@@ -44,7 +44,7 @@ const ReviewPageWrapper: React.FC = () => {
       </Form>
     </>
   ) : (
-    <Message error header="Problem to load application for review" />
+    <Message error header={strings.ERROR_REVIEW_PAGE} />
   )
 }
 
