@@ -43,9 +43,8 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     skip: !isApplicationLoaded || !elementsState,
   })
 
-  const getResponse = (code: string) => {
-    if (responsesByCode && responsesByCode[code]) return responsesByCode[code]
-    else return null
+  const getResponse = (code: string) =>
+    responsesByCode && responsesByCode[code] ? responsesByCode[code] : null
   }
 
   useEffect(() => {
