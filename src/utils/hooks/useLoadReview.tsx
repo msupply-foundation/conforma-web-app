@@ -17,7 +17,7 @@ interface UseLoadReviewProps {
 }
 
 const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
-  const [applicationName, setApplicatioName] = useState<string>('')
+  const [applicationName, setApplicationName] = useState<string>('')
   const [reviewSections, setReviewSections] = useState<SectionElementStates[]>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
