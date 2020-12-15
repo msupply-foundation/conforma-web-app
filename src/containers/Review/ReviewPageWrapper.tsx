@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Container, Form, Header, Label, Message } from 'semantic-ui-react'
 import { Loading, ReviewSection } from '../../components'
 import strings from '../../utils/constants'
@@ -12,7 +12,7 @@ const ReviewPageWrapper: React.FC = () => {
 
   // TODO: Need to wait for trigger to run that will set the Review status as DRAFT (after creation)
 
-  const { error, loading, applicationName, reviewSections } = useLoadReview({
+  const { error, loading, applicationName, responsesByCode, reviewSections } = useLoadReview({
     reviewId: Number(reviewId),
     serialNumber,
   })
@@ -21,7 +21,7 @@ const ReviewPageWrapper: React.FC = () => {
     <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
   ) : loading ? (
     <Loading />
-  ) : reviewSections ? (
+  ) : reviewSections && responsesByCode ? (
     <>
       <Container text textAlign="center">
         <Label color="blue">{strings.STAGE_PLACEHOLDER}</Label>
@@ -36,7 +36,8 @@ const ReviewPageWrapper: React.FC = () => {
       <Form>
         {reviewSections.map((reviewSection) => (
           <ReviewSection
-            key={`ReviewSection_${reviewSection.section.code}`}
+            key={`Review_${reviewSection.section.code}`}
+            allResponses={responsesByCode}
             reviewSection={reviewSection}
             canEdit={true} // TODO: Check Review status
           />

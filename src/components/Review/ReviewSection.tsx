@@ -2,14 +2,15 @@ import React from 'react'
 import { Button, Grid, Header, Segment } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
-import { SectionElementStates } from '../../utils/types'
+import { ResponsesByCode, SectionElementStates } from '../../utils/types'
 
 interface ReviewSectionProps {
+  allResponses: ResponsesByCode
   reviewSection: SectionElementStates
   canEdit: boolean
 }
 
-const ReviewSection: React.FC<ReviewSectionProps> = ({ reviewSection, canEdit }) => {
+const ReviewSection: React.FC<ReviewSectionProps> = ({ reviewSection, allResponses, canEdit }) => {
   const { section, pages } = reviewSection
   return (
     <Segment
@@ -24,21 +25,19 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ reviewSection, canEdit })
             {pageName}
           </Header>
           {elements.map(({ element, response, review }) => {
-            const { category, isVisible, isEditable } = element
+            const { category, isVisible } = element
+            const summaryViewProps = { element, response, allResponses, isStrictValidation: false }
             return isVisible ? (
               <Segment key={`ReviewElement_${element.code}`} style={{ margin: 10 }}>
                 <Grid columns={2} verticalAlign="middle">
                   <Grid.Row>
                     <Grid.Column width={13}>
-                      {/* // TODO: Replace with SummaryViewWrapper */}
-                      <Header>{element.title}</Header>
-                      {response && <Segment basic>{response?.text}</Segment>}
+                      <SummaryViewWrapper {...summaryViewProps} />
                     </Grid.Column>
                     <Grid.Column width={3}>
-                      {category === TemplateElementCategory.Question &&
-                        isVisible &&
-                        isEditable &&
-                        canEdit && <Button size="small">Review</Button>}
+                      {category === TemplateElementCategory.Question && isVisible && canEdit && (
+                        <Button size="small">Review</Button>
+                      )}
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>

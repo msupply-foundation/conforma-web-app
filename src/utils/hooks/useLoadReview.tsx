@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ApolloError } from '@apollo/client'
 import { ReviewResponse, useGetReviewQuery } from '../generated/graphql'
-import { ApplicationElementStates, SectionElementStates } from '../types'
+import { ApplicationElementStates, ResponsesByCode, SectionElementStates } from '../types'
 import useLoadApplication from './useLoadApplication'
 import useGetResponsesAndElementState from './useGetResponsesAndElementState'
 import useTriggerProcessing from './useTriggerProcessing'
@@ -118,6 +118,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
   return {
     applicationName,
     reviewSections,
+    responsesByCode,
     loading: loading || triggerProcessing,
     error: error || triggerError,
   }
