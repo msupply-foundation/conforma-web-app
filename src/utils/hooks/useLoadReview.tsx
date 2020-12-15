@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ApolloError } from '@apollo/client'
-import {
-  ReviewResponse,
-  useGetReviewQuery,
-} from '../generated/graphql'
+import { ReviewResponse, useGetReviewQuery } from '../generated/graphql'
 import { ApplicationElementStates, SectionElementStates } from '../types'
 import useLoadApplication from './useLoadApplication'
 import useGetResponsesAndElementState from './useGetResponsesAndElementState'
@@ -43,7 +40,6 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
 
   const getResponse = (code: string) =>
     responsesByCode && responsesByCode[code] ? responsesByCode[code] : null
-  }
 
   useEffect(() => {
     if (applicationError) {
