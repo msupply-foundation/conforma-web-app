@@ -46,18 +46,20 @@ export const revalidateAll = async (
     }
     const resultArray = await Promise.all(evaluatedValidations)
     // console.log('Result', resultArray)
-    const validityFailures: ValidityFailure[] = []
-    if (shouldUpdateDatabase) {
-      elementCodes.forEach((code, index) => {
-        if (!resultArray[index].isValid) {
-          validityFailures.push({
-            id: (responsesByCode && responsesByCode[code].id) || 0,
-            isValid: false,
-            code,
-          })
-        }
-      })
-    }
+  const validityFailures: ValidityFailure[] = shouldUpdateDatabase
+      ? elementCodes.reduce((validityFailures: ValidityFailure[], code, index) => {
+          if (!resultArray[index].isValid) {
+            return [
+              ...validityFailures,
+              {
+                id: (responsesByCode && responsesByCode[code].id) || 0,
+                isValid: false,
+                code,
+              },
+            ]
+          } else return validityFailures
+        }, [])
+      : []
 
     return {
       allValid: resultArray.every((element) => element.isValid),
