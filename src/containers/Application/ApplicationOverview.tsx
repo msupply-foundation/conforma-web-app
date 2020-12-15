@@ -7,7 +7,7 @@ import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAnd
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
-import { ApplicationElementStates, SectionElementStates } from '../../utils/types'
+import { ApplicationElementStates, SectionElementStates, ResponsesByCode } from '../../utils/types'
 import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 
@@ -84,7 +84,10 @@ const ApplicationOverview: React.FC = () => {
   }, [elementsState, responsesLoading])
 
   const revalidateAndUpdate = async () => {
-    const revalidate = await revalidateAll(elementsState, responsesByCode)
+    const revalidate = await revalidateAll(
+      elementsState as ApplicationElementStates,
+      responsesByCode as ResponsesByCode
+    )
 
     // Update database if validity changed
     revalidate.validityFailures.forEach((changedElement) => {
