@@ -7,7 +7,7 @@ export default {
   DATE_APPLICATION_PLACEHOLDER: '31/12/2020',
   ERROR_APPLICATION_CREATE: 'Problem loading application creation page',
   ERROR_APPLICATION_ELEMENTS: 'Elements area cannot be displayed',
-  ERROR_APPLICATION_OVERVIEW: 'Problem to load application overview',
+  ERROR_APPLICATION_OVERVIEW: 'Problem loading application overview',
   ERROR_APPLICATION_PAGE: 'Problem to load application',
   ERROR_APPLICATION_SECTION: 'Section cannot be displayed',
   ERROR_APPLICATION_SUBMIT: 'Problem to submit application',
