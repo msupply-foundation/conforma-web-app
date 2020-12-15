@@ -19,7 +19,7 @@ export default {
   LABEL_LOGIN_USERNAME: 'Username',
   LABEL_WELCOME: 'Welcome to IRIMS Application Manager',
   LINK_LOGIN_USER: 'Create new account',
-  TITLE_APPLICATION_SUBMIT: 'REVIEW AND SUBMIT',
+  TITLE_APPLICATION_SUBMIT: 'Review & Submit',
   TITLE_COMPANY_PLACEHOLDER: 'ABC Company',
   TITLE_REVIEW_SUMMARY: 'Review Summary',
   TITLE_PROGRESS: 'Introduction',
