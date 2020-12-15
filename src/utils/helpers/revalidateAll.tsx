@@ -78,6 +78,7 @@ export const getFirstErrorLocation = (
 ) => {
   let firstErrorSectionIndex = Infinity
   let firstErrorPage = Infinity
+  let firstErrorSectionCode = ''
   validityFailures.forEach((failure: ValidityFailure) => {
     const { code } = failure
     const sectionIndex = elementsState[code].sectionIndex
@@ -85,9 +86,10 @@ export const getFirstErrorLocation = (
     if (sectionIndex < firstErrorSectionIndex) {
       firstErrorSectionIndex = sectionIndex
       firstErrorPage = page
+      firstErrorSectionCode = elementsState[code].sectionCode
     } else
       firstErrorPage =
         sectionIndex === firstErrorSectionIndex && page < firstErrorPage ? page : firstErrorPage
   })
-  return { firstErrorSectionIndex, firstErrorPage }
+  return { firstErrorSectionIndex, firstErrorSectionCode, firstErrorPage }
 }

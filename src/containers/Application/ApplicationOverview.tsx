@@ -99,12 +99,12 @@ const ApplicationOverview: React.FC = () => {
     // If invalid responses, re-direct to first invalid page
     if (!revalidate.allValid) {
       console.log('Some responses invalid')
-      const { firstErrorSectionIndex, firstErrorPage } = getFirstErrorLocation(
+      const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
         revalidate.validityFailures,
         elementsState as ApplicationElementStates
       )
       // TO-DO: Alert user of Submit failure
-      push(`/application/${serialNumber}/S${firstErrorSectionIndex + 1}/Page${firstErrorPage}`)
+      push(`/application/${serialNumber}/${firstErrorSectionCode}/Page${firstErrorPage}`)
     }
   }
 

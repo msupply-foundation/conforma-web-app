@@ -77,6 +77,7 @@ interface ElementBase {
   title: string
   pluginCode: string
   sectionIndex: number
+  sectionCode: string
   elementIndex: number
   page: number
   category: TemplateElementCategory
