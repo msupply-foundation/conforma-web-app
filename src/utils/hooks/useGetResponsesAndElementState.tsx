@@ -14,6 +14,7 @@ import {
   ApplicationElementStates,
   ElementState,
   EvaluatorParameters,
+  User,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { IParameters } from '@openmsupply/expression-evaluator/lib/types'
@@ -118,22 +119,13 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
 
   async function evaluateSingleElement(element: TemplateElementState): Promise<ElementState> {
     const evaluationParameters = {
-      objects: [responsesByCode as ResponsesByCode, currentUser],
+      objects: [responsesByCode as ResponsesByCode, currentUser as User],
       // TO-DO: Also send org objects etc.
       // graphQLConnection: TO-DO
     }
-    const isEditable = evaluateExpression(
-      element.isEditable,
-      evaluationParameters as EvaluatorParameters
-    )
-    const isRequired = evaluateExpression(
-      element.isRequired,
-      evaluationParameters as EvaluatorParameters
-    )
-    const isVisible = evaluateExpression(
-      element.visibilityCondition,
-      evaluationParameters as EvaluatorParameters
-    )
+    const isEditable = evaluateExpression(element.isEditable, evaluationParameters)
+    const isRequired = evaluateExpression(element.isRequired, evaluationParameters)
+    const isVisible = evaluateExpression(element.visibilityCondition, evaluationParameters)
     // TO-DO: Evaluate element parameters (in 'parameters' field, but unique to each element type)
     const results = await Promise.all([isEditable, isRequired, isVisible])
     const evaluatedElement = {
