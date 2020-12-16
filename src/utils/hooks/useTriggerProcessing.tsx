@@ -3,14 +3,19 @@ import { useGetTriggersQuery } from '../../utils/generated/graphql'
 
 type TriggerType = 'applicationTrigger' | 'reviewAssignmentTrigger' | 'reviewTrigger'
 
-interface TrigerQueryProps {
+interface TriggerQueryProps {
   serialNumber?: string
   reviewAssignmentId?: number
   reviewId?: number
   triggerType?: TriggerType
 }
 
-const useTriggerProcessing = ({ serialNumber, reviewAssignmentId, reviewId, triggerType }: TrigerQueryProps) => {
+const useTriggerProcessing = ({
+  serialNumber,
+  reviewAssignmentId,
+  reviewId,
+  triggerType,
+}: TriggerQueryProps) => {
   const [isProcessing, setIsProcessing] = useState(true)
   const [triggerError, setTriggerError] = useState(false)
 
@@ -22,13 +27,7 @@ const useTriggerProcessing = ({ serialNumber, reviewAssignmentId, reviewId, trig
   }
 
   // If triggerType not provided, infer it from the supplied ID
-  const triggerType = props.triggerType
-    ? props.triggerType
-    : serialNumber
-    ? 'applicationTrigger'
-    : reviewAssignmentId
-    ? 'reviewAssignmentTrigger'
-    : 'reviewTrigger'
+  const inferredTriggerType = inferTriggerType(triggerType, serialNumber, reviewAssignmentId)
 
   const { data, loading, error } = useGetTriggersQuery({
     variables: {
@@ -44,7 +43,7 @@ const useTriggerProcessing = ({ serialNumber, reviewAssignmentId, reviewId, trig
   useEffect((): any => {
     if (data?.applicationTriggerStates?.nodes[0]) {
       let triggerRequested
-      switch (triggerType) {
+      switch (inferredTriggerType) {
         case 'applicationTrigger':
           triggerRequested = data?.applicationTriggerStates?.nodes[0]?.applicationTrigger
           break
@@ -69,3 +68,17 @@ const useTriggerProcessing = ({ serialNumber, reviewAssignmentId, reviewId, trig
   return { triggerProcessing: isProcessing, error: error || triggerError }
 }
 export default useTriggerProcessing
+
+function inferTriggerType(
+  triggerType: TriggerType | undefined,
+  serial: string | undefined,
+  reviewAssignmentId: number | undefined
+) {
+  return triggerType
+    ? triggerType
+    : serial
+    ? 'applicationTrigger'
+    : reviewAssignmentId
+    ? 'reviewAssignmentTrigger'
+    : 'reviewTrigger'
+}
