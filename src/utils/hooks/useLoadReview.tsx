@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react'
 import { ApolloError } from '@apollo/client'
-import {
-  ApplicationResponse,
-  ReviewResponse,
-  TemplateElement,
-  useGetReviewQuery,
-} from '../generated/graphql'
-import { ApplicationElementStates, SectionElementStates } from '../types'
+import { ReviewResponse, useGetReviewQuery } from '../generated/graphql'
+import { SectionStructure } from '../types'
 import useLoadApplication from './useLoadApplication'
 import useGetResponsesAndElementState from './useGetResponsesAndElementState'
-import getPageElements from '../helpers/getPageElements'
+import useTriggerProcessing from './useTriggerProcessing'
+import buildSectionsStructure from '../helpers/buildSectionsStructure'
 
 interface UseLoadReviewProps {
   reviewId: number
@@ -17,8 +13,8 @@ interface UseLoadReviewProps {
 }
 
 const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
-  const [applicationName, setApplicatioName] = useState<string>('')
-  const [reviewSections, setReviewSections] = useState<SectionElementStates[]>()
+  const [applicationName, setApplicationName] = useState<string>('')
+  const [reviewSections, setReviewSections] = useState<SectionStructure>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -31,6 +27,11 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     serialNumber,
   })
 
+  const { triggerProcessing, error: triggerError } = useTriggerProcessing({
+    reviewId,
+    // triggerType: 'reviewTrigger',
+  })
+
   const { error: responsesError, responsesByCode, elementsState } = useGetResponsesAndElementState({
     serialNumber,
     isApplicationLoaded,
@@ -40,13 +41,8 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     variables: {
       reviewId,
     },
-    skip: !isApplicationLoaded || !elementsState,
+    skip: triggerProcessing || !isApplicationLoaded || !elementsState,
   })
-
-  const getResponse = (code: string) => {
-    if (responsesByCode && responsesByCode[code]) return responsesByCode[code]
-    else return null
-  }
 
   useEffect(() => {
     if (applicationError) {
@@ -54,7 +50,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
       setError(error.message)
       return
     }
-    if (application) setApplicatioName(application.name)
+    if (application) setApplicationName(application.name)
   }, [applicationError, application])
 
   useEffect(() => {
@@ -66,62 +62,26 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
       setError(apolloError.message)
       return
     }
-    if (data && data.review && data.review.reviewResponses) {
-      // TODO: See if this code can be merged with one in ApplicationOverview - very similar
-      const reviewBySection: SectionElementStates[] = templateSections
-        .sort((a, b) => a.index - b.index)
-        .map((section) => {
-          const sectionDetails = {
-            title: section.title,
-            code: section.code,
-          }
-          const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
-          const pages = pageNumbers.reduce((pages, pageNumber) => {
-            const elements = getPageElements({
-              elementsState: elementsState as ApplicationElementStates,
-              sectionIndex: section.index,
-              pageNumber: pageNumber,
-            })
-            if (elements.length === 0) return pages
-            const reviewResponses = data?.review?.reviewResponses.nodes as ReviewResponse[]
+    if (data?.review?.reviewResponses && elementsState && responsesByCode) {
+      const reviewResponses = data?.review?.reviewResponses.nodes as ReviewResponse[]
+      const sectionsStructure = buildSectionsStructure({
+        templateSections,
+        elementsState,
+        responsesByCode,
+        reviewResponses,
+      })
 
-            const elementsReviews = elements.map((element) => {
-              const response = getResponse(element.code)
-              const review = response
-                ? reviewResponses.find(({ applicationResponse }) => {
-                    return response.id === applicationResponse?.id
-                  })
-                : undefined
-
-              const elementState = {
-                element,
-                response,
-              }
-              if (!review) return elementState
-              return {
-                ...elementState,
-                review: {
-                  id: review.id,
-                  decision: review.decision ? review.decision : undefined,
-                  comment: review.comment ? review.comment : '',
-                },
-              }
-            })
-            const pageName = `Page ${pageNumber}`
-            return { ...pages, [pageName]: elementsReviews }
-          }, {})
-          return { section: sectionDetails, pages }
-        })
-      setReviewSections(reviewBySection)
+      setReviewSections(sectionsStructure)
       setLoading(false)
     }
   }, [responsesError, apolloError, data])
 
   return {
     applicationName,
-    loading,
-    error,
     reviewSections,
+    responsesByCode,
+    loading: loading || triggerProcessing,
+    error: error || triggerError,
   }
 }
 

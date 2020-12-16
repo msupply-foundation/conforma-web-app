@@ -1,11 +1,11 @@
 import React from 'react'
 import { Container, Form, Header, Label, Message } from 'semantic-ui-react'
 import { Loading, ReviewSection } from '../../components'
+import strings from '../../utils/constants'
+import { ReviewQuestionDecision } from '../../utils/types'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
-import strings from '../../utils/constants'
 import { useUpdateReviewResponseMutation } from '../../utils/generated/graphql'
-import { ReviewQuestionDecision } from '../../utils/types'
 import getReviewQuery from '../../utils/graphql/queries/getReview.query'
 
 const ReviewPageWrapper: React.FC = () => {
@@ -15,7 +15,7 @@ const ReviewPageWrapper: React.FC = () => {
 
   // TODO: Need to wait for trigger to run that will set the Review status as DRAFT (after creation)
 
-  const { error, loading, applicationName, reviewSections } = useLoadReview({
+  const { error, loading, applicationName, responsesByCode, reviewSections } = useLoadReview({
     reviewId: Number(reviewId),
     serialNumber,
   })
@@ -39,13 +39,13 @@ const ReviewPageWrapper: React.FC = () => {
   }
 
   return error ? (
-    <Message error header="Problem to load review" list={[error]} />
+    <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
   ) : loading ? (
     <Loading />
-  ) : reviewSections ? (
+  ) : reviewSections && responsesByCode ? (
     <>
       <Container text textAlign="center">
-        <Label color="blue">{strings.STAGE_PACEHOLDER}</Label>
+        <Label color="blue">{strings.STAGE_PLACEHOLDER}</Label>
         <Header content={applicationName} subheader={strings.DATE_APPLICATION_PLACEHOLDER} />
         <Header
           as="h3"
@@ -57,7 +57,8 @@ const ReviewPageWrapper: React.FC = () => {
       <Form>
         {reviewSections.map((reviewSection) => (
           <ReviewSection
-            key={`ReviewSection_${reviewSection.section.code}`}
+            key={`Review_${reviewSection.section.code}`}
+            allResponses={responsesByCode}
             reviewSection={reviewSection}
             updateResponses={updateResponses}
             canEdit={true} // TODO: Check Review status
@@ -66,7 +67,7 @@ const ReviewPageWrapper: React.FC = () => {
       </Form>
     </>
   ) : (
-    <Message error header="Problem to load application for review" />
+    <Message error header={strings.ERROR_REVIEW_PAGE} />
   )
 }
 

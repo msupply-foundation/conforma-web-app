@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { ApolloError } from '@apollo/client'
 import {
   ApplicationResponse,
   Review,
@@ -7,43 +8,42 @@ import {
   TemplateElement,
   useGetReviewAssignmentQuery,
 } from '../generated/graphql'
-import {
-  ApplicationDetails,
-  AssignmentDetails,
-  ReviewQuestion,
-  TemplateSectionPayload,
-} from '../types'
+import useLoadApplication from '../../utils/hooks/useLoadApplication'
+import { AssignmentDetails, ReviewQuestion } from '../types'
 
 interface UseGetReviewAssignmentProps {
-  application: ApplicationDetails | undefined
-  templateSections: TemplateSectionPayload[] | undefined
   reviewerId: number
-  isApplicationLoaded: boolean
+  serialNumber: string
 }
 
-const useGetReviewAssignment = ({
-  application,
-  templateSections,
-  reviewerId,
-  isApplicationLoaded,
-}: UseGetReviewAssignmentProps) => {
+const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssignmentProps) => {
   const [assignment, setAssignment] = useState<AssignmentDetails | undefined>()
   const [assignedSections, setAssignedSections] = useState<string[] | undefined>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  const { id: applicationId, stageId } = application ? application : { id: -1, stageId: -1 }
+  const {
+    error: applicationError,
+    application,
+    templateSections,
+    isApplicationLoaded,
+  } = useLoadApplication({ serialNumber })
 
   const { data, loading: apolloLoading, error: apolloError } = useGetReviewAssignmentQuery({
     variables: {
       reviewerId,
-      applicationId,
-      stageId,
+      applicationId: application?.id,
+      stageId: application?.stageId,
     },
     skip: !isApplicationLoaded,
   })
 
   useEffect(() => {
+    if (applicationError) {
+      const error = applicationError as ApolloError
+      setError(error.message)
+      return
+    }
     if (apolloError) {
       setError(apolloError.message)
       return
@@ -96,7 +96,7 @@ const useGetReviewAssignment = ({
       })
       setLoading(false)
     }
-  }, [data, apolloError])
+  }, [data, applicationError, apolloError])
 
   useEffect(() => {
     if (assignment && templateSections) {
@@ -116,6 +116,7 @@ const useGetReviewAssignment = ({
   return {
     error,
     loading,
+    application,
     assignment,
     assignedSections,
   }

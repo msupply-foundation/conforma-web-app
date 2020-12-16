@@ -31,6 +31,7 @@ export {
   ReviewQuestionDecision,
   SectionElementStates,
   SectionDetails,
+  SectionStructure,
   TemplateTypePayload,
   TemplateSectionPayload,
   TemplateElementState,
@@ -45,7 +46,7 @@ interface ApplicationDetails {
   type: string
   serial: string
   name: string
-  stageId: number
+  stageId: number | undefined
   stage: string
   status: string
   outcome: string
@@ -184,6 +185,8 @@ interface SectionDetails {
   title: string
   code: string
 }
+
+type SectionStructure = SectionElementStates[]
 
 interface TemplateTypePayload {
   id: number
