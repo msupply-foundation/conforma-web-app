@@ -39,6 +39,8 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
   }
 
   const nextPageButtonHandler = (_: any): void => {
+    // Wait until all elements and responses are updated
+
     // Run the validation on the current page
     const status = validateCurrentPage()
     if (!status) {

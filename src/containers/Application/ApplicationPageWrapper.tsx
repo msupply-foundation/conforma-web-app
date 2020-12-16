@@ -99,6 +99,13 @@ const ApplicationPageWrapper: React.FC = () => {
     }
   }, [elementsState, responsesByCode, sectionCode, page])
 
+  useEffect(() => {
+    setApplicationState({
+      type: 'setElementTimestamp',
+      timestampType: 'elementsStateUpdatedTimestamp',
+    })
+  }, [elementsState])
+
   // Wait for loading (and evaluating elements and responses)
   // or a change of section/page to rebuild the progress bar
   useEffect(() => {
