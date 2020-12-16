@@ -41,7 +41,7 @@ const useTriggerProcessing = ({
   })
 
   useEffect((): any => {
-    if (data?.applicationTriggerStates?.nodes[0]) {
+    if (data?.applicationTriggerStates?.nodes?.[0]) {
       let triggerRequested
       switch (inferredTriggerType) {
         case 'applicationTrigger':
