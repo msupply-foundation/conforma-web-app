@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
+import { useApplicationState } from '../contexts/ApplicationState'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
 import {
   EvaluatorParameters,
@@ -31,6 +32,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   } = props
 
   const [responseMutation] = useUpdateResponseMutation()
+  const { applicationState, setApplicationState } = useApplicationState()
   const [pluginMethods, setPluginMethods] = useState<ValidateObject>({
     validate: (validationExpress, validationMessage, evaluatorParameters) =>
       console.log('notLoaded'),
@@ -93,13 +95,25 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const onSave = async (jsonValue: ResponseFull) => {
     const validationResult: ValidationState = await onUpdate(jsonValue.text)
     if (jsonValue.text !== undefined)
-      responseMutation({
+      await responseMutation({
         variables: {
           id: currentResponse?.id as number,
           value: jsonValue,
           isValid: validationResult.isValid,
         },
       })
+    setApplicationState({
+      type: 'setElementTimestamp',
+      timestampType: 'elementLostFocusTimestamp',
+    })
+  }
+
+  const setIsActive = async () => {
+    // Tells application state that a plugin field is in focus
+    setApplicationState({
+      type: 'setElementTimestamp',
+      timestampType: 'elementEnteredTimestamp',
+    })
   }
 
   if (!pluginCode || !isVisible) return null
@@ -112,6 +126,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       parameters={{ ...parameters, ...evaluatedParameters }}
       value={value}
       setValue={setValue}
+      setIsActive={setIsActive}
       validationState={validationState || { isValid: true }}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
     />

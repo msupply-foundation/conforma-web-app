@@ -1,10 +1,23 @@
 import React, { createContext, useContext, useReducer } from 'react'
-// import { SectionProgress } from '../utils/types'
+import { isArraySorted } from '../utils/helpers/utilityFunctions'
 
 interface ApplicationState {
   id: number | null
   serialNumber: string | null
+  inputElementsActivity: ElementsActivityState
 }
+
+interface ElementsActivityState {
+  elementEnteredTimestamp: number
+  elementLostFocusTimestamp: number
+  elementsStateUpdatedTimestamp: number
+  areTimestampsInSequence: boolean
+}
+
+type TimestampType =
+  | 'elementEnteredTimestamp'
+  | 'elementLostFocusTimestamp'
+  | 'elementsStateUpdatedTimestamp'
 
 export type ApplicationActions =
   | {
@@ -17,6 +30,10 @@ export type ApplicationActions =
     }
   | {
       type: 'reset'
+    }
+  | {
+      type: 'setElementTimestamp'
+      timestampType: TimestampType
     }
 
 type ApplicationProviderProps = { children: React.ReactNode }
@@ -35,6 +52,20 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
         ...state,
         serialNumber,
       }
+    case 'setElementTimestamp':
+      const newTimestamps = { ...state.inputElementsActivity }
+      newTimestamps[action.timestampType] = Date.now()
+
+      newTimestamps.areTimestampsInSequence = isArraySorted([
+        newTimestamps.elementEnteredTimestamp,
+        newTimestamps.elementLostFocusTimestamp,
+        newTimestamps.elementsStateUpdatedTimestamp,
+      ])
+      console.log('New timestamps', newTimestamps)
+      return {
+        ...state,
+        inputElementsActivity: newTimestamps,
+      }
     case 'reset':
       return initialState
     default:
@@ -45,6 +76,12 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
 const initialState: ApplicationState = {
   id: null,
   serialNumber: null,
+  inputElementsActivity: {
+    elementEnteredTimestamp: Date.now(),
+    elementLostFocusTimestamp: Date.now(),
+    elementsStateUpdatedTimestamp: Date.now(),
+    areTimestampsInSequence: true,
+  },
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code

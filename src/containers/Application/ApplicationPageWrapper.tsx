@@ -16,6 +16,7 @@ import {
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
+import { useApplicationState } from '../../contexts/ApplicationState'
 import { ElementsBox, NavigationBox } from './'
 import validatePage, {
   getCombinedStatus,
@@ -40,6 +41,7 @@ import {
 import { TemplateElementCategory } from '../../utils/generated/graphql'
 
 const ApplicationPageWrapper: React.FC = () => {
+  const { applicationState, setApplicationState } = useApplicationState()
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
   const [pageElements, setPageElements] = useState<ElementState[]>([])
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
