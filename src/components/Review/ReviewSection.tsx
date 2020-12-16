@@ -32,7 +32,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
           .map(({ review }) => review as ReviewQuestionDecision)
 
         return (
-          <Segment basic>
+          <Segment key={`ReviewSection_${section.code}_${pageName}`} basic>
             <Header as="h3" style={{ color: 'DarkGrey' }}>
               {pageName}
             </Header>
