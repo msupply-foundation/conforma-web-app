@@ -35,6 +35,7 @@ export {
   ValidateObject,
   ValidityFailure,
   RevalidateResult,
+  User,
 }
 
 interface ApplicationDetails {
@@ -231,4 +232,12 @@ interface ValidityFailure {
 interface RevalidateResult {
   allValid: boolean
   validityFailures: ValidityFailure[]
+}
+
+interface User {
+  firstName: string
+  lastName?: string | null
+  username: string
+  email: string
+  dateOfBirth?: Date | null
 }

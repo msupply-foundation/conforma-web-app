@@ -20,9 +20,9 @@ const Login: React.FC = () => {
     else {
       setIsError(false)
       localStorage.setItem('persistJWT', loginResult.JWT)
-      localStorage.setItem('username', loginResult.username)
+      localStorage.setItem('user', JSON.stringify(loginResult.user))
       console.log('Log in successful!')
-      if (history.location.state.from) push(history.location.state.from)
+      if (history.location?.state?.from) push(history.location.state.from)
       else push('/')
     }
   }

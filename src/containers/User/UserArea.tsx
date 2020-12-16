@@ -12,12 +12,12 @@ const UserArea: React.FC = () => {
     setUserState,
   } = useUserState()
   const { data, loading, error } = useGetUsersQuery()
-  const { username, templatePermissions } = useGetUserPermissions()
+  const { username, user, templatePermissions } = useGetUserPermissions()
 
   useEffect(() => {
-    if (!username) return
-    setUserState({ type: 'setCurrentUser', nextUser: username })
-  }, [username])
+    if (!user) return
+    setUserState({ type: 'setCurrentUser', newUser: user })
+  }, [user])
 
   useEffect(() => {
     if (!templatePermissions) return
@@ -39,7 +39,7 @@ const UserArea: React.FC = () => {
   ) : (
     <Segment.Group vertical="true">
       <Container>
-        <Label>The current user is: {currentUser}</Label>
+        <Label>The current user is: {currentUser?.username}</Label>
       </Container>
       <Container>
         {users &&
