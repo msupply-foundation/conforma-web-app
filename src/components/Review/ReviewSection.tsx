@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Grid, Header, Icon, Label, Segment } from 'semantic-ui-react'
+import { Button, Container, Grid, Header, Icon, Label, Segment } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import strings from '../../utils/constants'
 import { ReviewResponseDecision, TemplateElementCategory } from '../../utils/generated/graphql'
@@ -33,12 +33,18 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
     <Segment
       key={`ReviewSection_${section.code}`}
       inverted
-      style={{ backgroundColor: 'WhiteSmoke', margin: '15px 50px 0px' }}
+      style={{ backgroundColor: 'WhiteSmoke', marginLeft: '10%', marginRight: '10%' }}
     >
-      <Segment.Group>
-        <Header as="h2" content={`${section.title}`} style={{ color: 'Grey' }} />
-        {getSectionAssignment}
-      </Segment.Group>
+      <Grid columns={2}>
+        <Grid.Row>
+          <Grid.Column>
+            <Header as="h2" content={`${section.title}`} style={{ color: 'Grey' }} />
+          </Grid.Column>
+          <Grid.Column>
+            <Container textAlign="right">{getSectionAssignment}</Container>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
       {Object.entries(pages).map(([pageName, elements]) => {
         const elementsToReview = elements
           .filter(({ review }) => review && review.decision === undefined)
@@ -59,21 +65,22 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                 isStrictValidation: false,
               }
               return (
-                <Segment key={`ReviewElement_${element.code}`} style={{ margin: 10 }}>
+                <Segment key={`ReviewElement_${element.code}`} style={{ margin: '10px 50px 0px' }}>
                   <Grid columns={2} verticalAlign="middle">
                     <Grid.Row>
-                      <Grid.Column width={13}>
+                      <Grid.Column>
                         <SummaryViewWrapper {...summaryViewProps} />
                       </Grid.Column>
-                      <Grid.Column width={3}>
-                        {review &&
-                          category === TemplateElementCategory.Question &&
-                          canEdit &&
-                          (review?.decision === undefined ? (
-                            <Button size="small">{strings.BUTTON_REVIEW_RESPONSE}</Button>
-                          ) : (
-                            <Icon name="pencil square" color="blue" />
-                          ))}
+                      <Grid.Column>
+                        {review && category === TemplateElementCategory.Question && canEdit && (
+                          <Container textAlign="right">
+                            {review?.decision === undefined ? (
+                              <Button size="small">{strings.BUTTON_REVIEW_RESPONSE}</Button>
+                            ) : (
+                              <Icon name="pencil square" color="blue" style={{ minWidth: 100 }} />
+                            )}
+                          </Container>
+                        )}
                       </Grid.Column>
                     </Grid.Row>
                   </Grid>
