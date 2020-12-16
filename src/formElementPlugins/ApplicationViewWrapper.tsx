@@ -88,7 +88,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     const validationResult: ValidationState = await pluginMethods.validate(
       validationExpression,
       validationMessage as string,
-      { objects: [responses], APIfetch: fetch }
+      { objects: [responses, currentUser as User], APIfetch: fetch }
     )
     setValidationState(validationResult)
 

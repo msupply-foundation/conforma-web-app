@@ -2,6 +2,7 @@ import {
   ApplicationElementStates,
   ResponsesByCode,
   RevalidateResult,
+  User,
   ValidityFailure,
 } from '../types'
 import { defaultValidate } from '../../formElementPlugins/defaultValidate'
@@ -9,6 +10,7 @@ import { defaultValidate } from '../../formElementPlugins/defaultValidate'
 export const revalidateAll = async (
   elementsState: ApplicationElementStates,
   responsesByCode: ResponsesByCode,
+  currentUser: User,
   strict = true,
   shouldUpdateDatabase = true
 ): Promise<RevalidateResult> => {
@@ -34,7 +36,7 @@ export const revalidateAll = async (
       elementsState[code].validation,
       elementsState[code]?.validationMessage as string,
       {
-        objects: [responses],
+        objects: [responses, currentUser],
         APIfetch: fetch,
       }
     )
