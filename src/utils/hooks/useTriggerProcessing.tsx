@@ -43,22 +43,11 @@ const useTriggerProcessing = ({
   useEffect((): any => {
     const triggers = data?.applicationTriggerStates?.nodes?.[0]
     if (triggers) {
-      let triggerRequested
-      switch (inferredTriggerType) {
-        case 'applicationTrigger':
-          triggerRequested = data?.applicationTriggerStates?.nodes[0]?.applicationTrigger
-          break
-        case 'reviewAssignmentTrigger':
-          triggerRequested = data?.applicationTriggerStates?.nodes[0]?.reviewAssignmentTrigger
-          break
-        case 'reviewTrigger':
-          triggerRequested = data?.applicationTriggerStates?.nodes[0]?.reviewTrigger
-          break
-        default:
-          setIsProcessing(false)
-          setTriggerError(true)
-      }
+      const triggerRequested = triggers[inferredTriggerType]
       if (triggerRequested === null) setIsProcessing(false)
+    } else {
+      setIsProcessing(false)
+      setTriggerError(true)
     }
     if (error) {
       setIsProcessing(false)
@@ -74,7 +63,7 @@ function inferTriggerType(
   triggerType: TriggerType | undefined,
   serial: string | undefined,
   reviewAssignmentId: number | undefined
-) {
+): TriggerType {
   return triggerType
     ? triggerType
     : serial
