@@ -28,6 +28,7 @@ export {
   ReviewQuestionDecision,
   SectionElementStates,
   SectionDetails,
+  SectionStructure,
   TemplateTypePayload,
   TemplateSectionPayload,
   TemplateElementState,
@@ -182,6 +183,8 @@ interface SectionDetails {
   title: string
   code: string
 }
+
+type SectionStructure = SectionElementStates[]
 
 interface TemplateTypePayload {
   id: number
