@@ -10,7 +10,6 @@ const createAuthorisationHeader = (JWT: string) => ({
 
 const useGetUserPermissions = () => {
   const [templatePermissions, setTemplatePermissions] = useState<TemplatePermissions | null>(null)
-  const [username, setUsername] = useState('')
   const [user, setUser] = useState<User>()
 
   useEffect(() => {
@@ -20,7 +19,6 @@ const useGetUserPermissions = () => {
     fetch(userPermissionsUrl, { headers: createAuthorisationHeader(JWT) })
       .then((res: any) => res.json())
       .then(({ username, templatePermissions, JWT }: FullUserPermissions) => {
-        setUsername(username)
         setUser(user)
         setTemplatePermissions(templatePermissions)
 
@@ -32,7 +30,7 @@ const useGetUserPermissions = () => {
       })
   }, [])
 
-  return { username, user, templatePermissions }
+  return { user, templatePermissions }
 }
 
 export default useGetUserPermissions

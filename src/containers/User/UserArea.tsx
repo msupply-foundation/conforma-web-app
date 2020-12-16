@@ -12,7 +12,7 @@ const UserArea: React.FC = () => {
     setUserState,
   } = useUserState()
   const { data, loading, error } = useGetUsersQuery()
-  const { username, user, templatePermissions } = useGetUserPermissions()
+  const { user, templatePermissions } = useGetUserPermissions()
 
   useEffect(() => {
     if (!user) return
