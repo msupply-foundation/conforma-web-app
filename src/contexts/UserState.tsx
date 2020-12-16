@@ -30,7 +30,6 @@ const reducer = (state: UserState, action: UserActions) => {
   switch (action.type) {
     case 'setCurrentUser':
       const { newUser } = action
-      console.log('Setting user', newUser)
       return {
         ...state,
         currentUser: newUser,
