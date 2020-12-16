@@ -310,7 +310,7 @@ async function processRedirect(appState: any) {
       push(`/application/${serialNumber}/${firstErrorSectionCode}/Page${firstErrorPage}`)
     } else {
       const firstSection = templateSections[0].code
-      replace(`/application/${serialNumber}/${firstSection}/page1`)
+      replace(`/application/${serialNumber}/${firstSection}/Page1`)
     }
   }
 }
