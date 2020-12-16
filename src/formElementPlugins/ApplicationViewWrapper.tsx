@@ -93,6 +93,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }
 
   const onSave = async (jsonValue: ResponseFull) => {
+    setApplicationState({
+      type: 'setElementTimestamp',
+      timestampType: 'elementLostFocusTimestamp',
+    })
     const validationResult: ValidationState = await onUpdate(jsonValue.text)
     if (jsonValue.text !== undefined)
       await responseMutation({
@@ -102,9 +106,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
           isValid: validationResult.isValid,
         },
       })
+    console.log('This response:', jsonValue)
+    console.log('Store response', allResponses[code])
     setApplicationState({
       type: 'setElementTimestamp',
-      timestampType: 'elementLostFocusTimestamp',
+      timestampType: 'elementsStateUpdatedTimestamp',
     })
   }
 

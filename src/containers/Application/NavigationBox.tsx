@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Container, Label, ModalProps } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { useApplicationState } from '../../contexts/ApplicationState'
 import { TemplateSectionPayload } from '../../utils/types'
 import messages from '../../utils/messages'
 import strings from '../../utils/constants'
@@ -18,6 +19,11 @@ interface NavigationBoxProps {
 const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
   const { templateSections, currentSection, serialNumber, currentPage, validateCurrentPage } = props
   const { showModal, setShowModal } = props.modalState
+  const {
+    applicationState: {
+      inputElementsActivity: { areTimestampsInSequence },
+    },
+  } = useApplicationState()
   const nextSection = templateSections.find(({ index }) => index === currentSection.index + 1)
   const previousSection = templateSections.find(({ index }) => index === currentSection.index - 1)
 
@@ -39,8 +45,6 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
   }
 
   const nextPageButtonHandler = (_: any): void => {
-    // Wait until all elements and responses are updated
-
     // Run the validation on the current page
     const status = validateCurrentPage()
     if (!status) {

@@ -1,18 +1,6 @@
 import React, { createContext, useContext, useReducer } from 'react'
 import { isArraySorted } from '../utils/helpers/utilityFunctions'
-
-interface ApplicationState {
-  id: number | null
-  serialNumber: string | null
-  inputElementsActivity: ElementsActivityState
-}
-
-interface ElementsActivityState {
-  elementEnteredTimestamp: number
-  elementLostFocusTimestamp: number
-  elementsStateUpdatedTimestamp: number
-  areTimestampsInSequence: boolean
-}
+import { ApplicationState } from '../utils/types'
 
 type TimestampType =
   | 'elementEnteredTimestamp'

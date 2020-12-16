@@ -3,6 +3,7 @@ import { TemplateElement, TemplateElementCategory } from './generated/graphql'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 export {
+  ApplicationState,
   ApplicationDetails,
   ApplicationElementStates,
   AppStatus,
@@ -10,6 +11,7 @@ export {
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
+  ElementsActivityState,
   EvaluatorParameters,
   FullUserPermissions,
   IGraphQLConnection,
@@ -35,6 +37,12 @@ export {
   ValidateObject,
   ValidityFailure,
   RevalidateResult,
+}
+
+interface ApplicationState {
+  id: number | null
+  serialNumber: string | null
+  inputElementsActivity: ElementsActivityState
 }
 
 interface ApplicationDetails {
@@ -90,6 +98,13 @@ interface ElementState extends ElementBase {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
+}
+
+interface ElementsActivityState {
+  elementEnteredTimestamp: number
+  elementLostFocusTimestamp: number
+  elementsStateUpdatedTimestamp: number
+  areTimestampsInSequence: boolean
 }
 
 interface IGraphQLConnection {

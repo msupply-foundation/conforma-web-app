@@ -99,6 +99,8 @@ const ApplicationPageWrapper: React.FC = () => {
     }
   }, [elementsState, responsesByCode, sectionCode, page])
 
+  // Update timestamp to keep track of when elements have been properly updated
+  // after losing focus.
   useEffect(() => {
     setApplicationState({
       type: 'setElementTimestamp',
