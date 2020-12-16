@@ -17385,7 +17385,10 @@ export type GetReviewQuery = (
   { __typename?: 'Query' }
   & { review?: Maybe<(
     { __typename?: 'Review' }
-    & { reviewResponses: (
+    & { reviewer?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'username'>
+    )>, reviewResponses: (
       { __typename?: 'ReviewResponsesConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'ReviewResponse' }
@@ -18012,6 +18015,9 @@ export type GetElementsAndResponsesQueryResult = Apollo.QueryResult<GetElementsA
 export const GetReviewDocument = gql`
     query getReview($reviewId: Int!) {
   review(id: $reviewId) {
+    reviewer {
+      username
+    }
     reviewResponses {
       nodes {
         id

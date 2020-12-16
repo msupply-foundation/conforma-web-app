@@ -63,12 +63,14 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
       return
     }
     if (data?.review?.reviewResponses && elementsState && responsesByCode) {
-      const reviewResponses = data?.review?.reviewResponses.nodes as ReviewResponse[]
+      const reviewResponses = data.review.reviewResponses.nodes as ReviewResponse[]
+      const reviewer = data.review.reviewer?.username as string
       const sectionsStructure = buildSectionsStructure({
         templateSections,
         elementsState,
         responsesByCode,
         reviewResponses,
+        reviewer,
       })
 
       setReviewSections(sectionsStructure)

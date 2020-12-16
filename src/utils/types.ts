@@ -172,6 +172,7 @@ interface ReviewQuestionDecision {
 
 interface SectionElementStates {
   section: SectionDetails
+  assigned?: string
   pages: {
     [pageName: string]: {
       element: ElementState

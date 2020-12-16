@@ -13,6 +13,7 @@ interface BuildSectionsStructureProps {
   elementsState: ApplicationElementStates
   responsesByCode: ResponsesByCode
   reviewResponses?: ReviewResponse[]
+  reviewer?: string
 }
 
 const buildSectionsStructure = ({
@@ -20,17 +21,15 @@ const buildSectionsStructure = ({
   elementsState,
   responsesByCode,
   reviewResponses,
+  reviewer,
 }: BuildSectionsStructureProps): SectionStructure => {
   // Create the sections and pages structure to display each section's element
   // Will also add the responses for each element, and can add reviews if received by props
   return templateSections
     .sort((a, b) => a.index - b.index)
     .map((section) => {
-      const sectionDetails = {
-        title: section.title,
-        code: section.code,
-      }
       const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
+
       const pages = pageNumbers.reduce((pages, pageNumber) => {
         const elements = getPageElements({
           elementsState,
@@ -54,10 +53,25 @@ const buildSectionsStructure = ({
             review: reviewResponse,
           }
         })
+
         const pageName = `Page ${pageNumber}`
         return { ...pages, [pageName]: elementsFull }
       }, {})
-      return { section: sectionDetails, pages }
+
+      const sectionState = {
+        section: {
+          title: section.title,
+          code: section.code,
+        },
+        pages,
+      }
+
+      if (!reviewer) return sectionState
+
+      return {
+        ...sectionState,
+        assigned: reviewer,
+      }
     })
 }
 
