@@ -4,6 +4,7 @@ export default gql`
   query getReview($reviewId: Int!) {
     review(id: $reviewId) {
       reviewer {
+        id
         username
       }
       reviewResponses {

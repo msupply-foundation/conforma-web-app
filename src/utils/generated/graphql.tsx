@@ -17387,7 +17387,7 @@ export type GetReviewQuery = (
     { __typename?: 'Review' }
     & { reviewer?: Maybe<(
       { __typename?: 'User' }
-      & Pick<User, 'username'>
+      & Pick<User, 'id' | 'username'>
     )>, reviewResponses: (
       { __typename?: 'ReviewResponsesConnection' }
       & { nodes: Array<Maybe<(
@@ -18016,6 +18016,7 @@ export const GetReviewDocument = gql`
     query getReview($reviewId: Int!) {
   review(id: $reviewId) {
     reviewer {
+      id
       username
     }
     reviewResponses {

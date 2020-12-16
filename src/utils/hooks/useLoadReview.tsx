@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ApolloError } from '@apollo/client'
-import { ReviewResponse, useGetReviewQuery } from '../generated/graphql'
+import { ReviewResponse, useGetReviewQuery, User } from '../generated/graphql'
 import { SectionStructure } from '../types'
 import useLoadApplication from './useLoadApplication'
 import useGetResponsesAndElementState from './useGetResponsesAndElementState'
@@ -64,7 +64,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     }
     if (data?.review?.reviewResponses && elementsState && responsesByCode) {
       const reviewResponses = data.review.reviewResponses.nodes as ReviewResponse[]
-      const reviewer = data.review.reviewer?.username as string
+      const reviewer = data.review.reviewer as User
       const sectionsStructure = buildSectionsStructure({
         templateSections,
         elementsState,

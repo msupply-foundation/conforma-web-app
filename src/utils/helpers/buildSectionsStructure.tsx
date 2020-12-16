@@ -1,4 +1,4 @@
-import { ReviewResponse } from '../generated/graphql'
+import { ReviewResponse, User } from '../generated/graphql'
 import {
   ApplicationElementStates,
   ResponseFull,
@@ -13,7 +13,7 @@ interface BuildSectionsStructureProps {
   elementsState: ApplicationElementStates
   responsesByCode: ResponsesByCode
   reviewResponses?: ReviewResponse[]
-  reviewer?: string
+  reviewer?: User
 }
 
 const buildSectionsStructure = ({
@@ -28,8 +28,8 @@ const buildSectionsStructure = ({
   return templateSections
     .sort((a, b) => a.index - b.index)
     .map((section) => {
+      let reviewInSection = false
       const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
-
       const pages = pageNumbers.reduce((pages, pageNumber) => {
         const elements = getPageElements({
           elementsState,
@@ -48,6 +48,7 @@ const buildSectionsStructure = ({
           }
           if (!reviewResponses) return elementState
           const reviewResponse = getReviewResponse(response, reviewResponses)
+          if (reviewResponse) reviewInSection = true
           return {
             ...elementState,
             review: reviewResponse,
@@ -66,11 +67,11 @@ const buildSectionsStructure = ({
         pages,
       }
 
-      if (!reviewer) return sectionState
-
+      if (!reviewer || !reviewInSection) return sectionState
+      const { id, username } = reviewer as User
       return {
         ...sectionState,
-        assigned: reviewer,
+        assigned: { id, username: username as string },
       }
     })
 }

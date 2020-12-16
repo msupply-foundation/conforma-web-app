@@ -159,6 +159,11 @@ interface ReviewDetails {
   status: string
 }
 
+interface ReviewerDetails {
+  id: number
+  username: string
+}
+
 interface ReviewQuestion {
   code: string
   responseId: number
@@ -172,7 +177,7 @@ interface ReviewQuestionDecision {
 
 interface SectionElementStates {
   section: SectionDetails
-  assigned?: string
+  assigned?: ReviewerDetails
   pages: {
     [pageName: string]: {
       element: ElementState

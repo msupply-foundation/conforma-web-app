@@ -18,6 +18,8 @@ export default {
   ERROR_REVIEW_PAGE: 'Problem loading review',
   ERROR_REVIEW_OVERVIEW: 'Problem loading review homepage',
   ERROR_LOGIN_PASSWORD: 'Oops! Problem with username or password',
+  LABEL_ASSIGNED_TO_YOU: 'Assigned to you',
+  LABEL_ASSIGNED_TO_OTHER: 'Assigned to another reviewer',
   LABEL_LOGIN_PASSWORD: 'Password',
   LABEL_LOGIN_USERNAME: 'Username',
   LABEL_WELCOME: 'Welcome to IRIMS Application Manager',
