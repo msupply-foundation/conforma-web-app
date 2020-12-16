@@ -10,8 +10,7 @@ interface TrigerQueryProps {
   triggerType?: TriggerType
 }
 
-const useTriggerProcessing = (props: TrigerQueryProps) => {
-  const { serialNumber, reviewAssignmentId, reviewId } = props
+const useTriggerProcessing = ({ serialNumber, reviewAssignmentId, reviewId, triggerType }: TrigerQueryProps) => {
   const [isProcessing, setIsProcessing] = useState(true)
   const [triggerError, setTriggerError] = useState(false)
 
