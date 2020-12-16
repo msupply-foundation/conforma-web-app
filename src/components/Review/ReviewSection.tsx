@@ -25,9 +25,9 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ reviewSection, allRespons
             {pageName}
           </Header>
           {elements.map(({ element, response, review }) => {
-            const { category, isVisible } = element
+            const { category } = element
             const summaryViewProps = { element, response, allResponses, isStrictValidation: false }
-            return isVisible ? (
+            return (
               <Segment key={`ReviewElement_${element.code}`} style={{ margin: 10 }}>
                 <Grid columns={2} verticalAlign="middle">
                   <Grid.Row>
@@ -35,14 +35,14 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ reviewSection, allRespons
                       <SummaryViewWrapper {...summaryViewProps} />
                     </Grid.Column>
                     <Grid.Column width={3}>
-                      {category === TemplateElementCategory.Question && isVisible && canEdit && (
+                      {category === TemplateElementCategory.Question && canEdit && (
                         <Button size="small">Review</Button>
                       )}
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
               </Segment>
-            ) : null
+            )
           })}
         </Segment>
       ))}

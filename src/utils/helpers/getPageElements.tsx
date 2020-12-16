@@ -7,8 +7,8 @@ interface GetPageElementsProps {
 }
 
 const getPageElements = ({ elementsState, sectionIndex, pageNumber }: GetPageElementsProps) => {
-  // TODO: Should this also remove non-visible elements from the result?
   const result = Object.values(elementsState)
+    .filter(({ isVisible }) => isVisible)
     .filter((element) => sectionIndex === element.sectionIndex && pageNumber === element.page)
     .sort((a, b) => a.elementIndex - b.elementIndex)
 

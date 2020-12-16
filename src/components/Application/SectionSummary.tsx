@@ -29,7 +29,7 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
           <p>{pageName}</p>
           <Segment.Group>
             {elements.map(({ element, response }) => {
-              const { category, isVisible, isEditable } = element
+              const { category, isEditable } = element
               const pageCode = pageName?.replace(' ', '')
               return (
                 <Segment key={`SectionSummary_${element.code}`}>
@@ -44,18 +44,15 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
                         />
                       </Grid.Column>
                       <Grid.Column width={3}>
-                        {category === TemplateElementCategory.Question &&
-                          isVisible &&
-                          isEditable &&
-                          canEdit && (
-                            <Button
-                              size="small"
-                              as={Link}
-                              to={`/application/${serialNumber}/${section.code}/${pageCode}`}
-                            >
-                              Edit
-                            </Button>
-                          )}
+                        {category === TemplateElementCategory.Question && isEditable && canEdit && (
+                          <Button
+                            size="small"
+                            as={Link}
+                            to={`/application/${serialNumber}/${section.code}/${pageCode}`}
+                          >
+                            Edit
+                          </Button>
+                        )}
                       </Grid.Column>
                     </Grid.Row>
                   </Grid>
