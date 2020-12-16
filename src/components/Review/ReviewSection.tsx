@@ -30,6 +30,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
         const elementsToReview = elements
           .filter(({ review }) => review && review.decision === undefined)
           .map(({ review }) => review as ReviewQuestionDecision)
+        const reviewsNumber = elementsToReview.length
 
         return (
           <Segment basic>
@@ -52,7 +53,8 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                         <SummaryViewWrapper {...summaryViewProps} />
                       </Grid.Column>
                       <Grid.Column width={3}>
-                        {category === TemplateElementCategory.Question &&
+                        {review &&
+                          category === TemplateElementCategory.Question &&
                           canEdit &&
                           (review?.decision === undefined ? (
                             <Button size="small">{strings.BUTTON_REVIEW_RESPONSE}</Button>
@@ -65,20 +67,23 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                 </Segment>
               )
             })}
-            <Button
-              color="blue"
-              inverted
-              style={{ margin: 10 }}
-              onClick={() =>
-                updateResponses(
-                  elementsToReview.map((review) => ({
-                    id: review.id,
-                    decision: ReviewResponseDecision.Approve,
-                    comment: '',
-                  }))
-                )
-              }
-            >{`${strings.BUTTON_REVIEW_APPROVE}(${elementsToReview.length})`}</Button>
+            {reviewsNumber > 0 && (
+              <Button
+                color="blue"
+                inverted
+                style={{ margin: 10 }}
+                onClick={() => {
+                  console.log(elementsToReview)
+                  updateResponses(
+                    elementsToReview.map((review) => ({
+                      id: review.id,
+                      decision: ReviewResponseDecision.Approve,
+                      comment: '',
+                    }))
+                  )
+                }}
+              >{`${strings.BUTTON_REVIEW_APPROVE}(${reviewsNumber})`}</Button>
+            )}
           </Segment>
         )
       })}

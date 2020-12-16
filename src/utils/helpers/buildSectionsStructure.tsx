@@ -72,6 +72,7 @@ const getReviewResponse = (response: ResponseFull | null, reviewResponses: Revie
     : undefined
   return reviewResponse
     ? {
+        id: reviewResponse.id,
         decision: reviewResponse.decision ? reviewResponse.decision : undefined,
         comment: reviewResponse.comment ? reviewResponse.comment : '',
       }
