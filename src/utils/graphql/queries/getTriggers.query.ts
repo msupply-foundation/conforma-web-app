@@ -1,12 +1,16 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getTriggers($serial: String!) {
-    applicationTriggerStates(condition: { serial: $serial }) {
+  query getTriggers($serial: String, $reviewAssignmentId: Int, $reviewId: Int) {
+    applicationTriggerStates(
+      condition: { serial: $serial, reviewAssignmentId: $reviewAssignmentId, reviewId: $reviewId }
+      first: 1
+    ) {
       nodes {
-        applicationTrigger
-        reviewTrigger
         serial
+        applicationTrigger
+        reviewAssignmentTrigger
+        reviewTrigger
       }
     }
   }
