@@ -32,8 +32,10 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
   const isLastPage = currentPage + 1 > currentSection.totalPages && !nextSection
 
   const { push } = useRouter()
-  const sendToPage = (section: string, page: number) =>
+  const sendToPage = (section: string, page: number) => {
+    setNextButtonClicked(false)
     push(`/application/${serialNumber}/${section}/Page${page}`)
+  }
 
   const previousButtonHandler = (_: any) => {
     const previousPage = currentPage - 1
@@ -65,7 +67,6 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
   //
   useEffect(() => {
     if (areTimestampsInSequence && nextButtonClicked) {
-      console.log('Ready')
       nextPageButtonHandler()
     }
   }, [areTimestampsInSequence, nextButtonClicked])

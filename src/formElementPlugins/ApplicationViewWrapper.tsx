@@ -115,7 +115,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     }
   }
 
-  const setIsActive = async () => {
+  const setIsActive = () => {
     // Tells application state that a plugin field is in focus
     setApplicationState({
       type: 'setElementTimestamp',
