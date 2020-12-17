@@ -12,12 +12,17 @@ const UserArea: React.FC = () => {
     setUserState,
   } = useUserState()
   const { data, loading, error } = useGetUsersQuery()
-  const { user, templatePermissions } = useGetUserPermissions()
+  const { templatePermissions } = useGetUserPermissions()
 
+  // On load, get current user info from local storage and store it to context
   useEffect(() => {
-    if (!user) return
-    setUserState({ type: 'setCurrentUser', newUser: user })
-  }, [user])
+    console.log('Loaidng...')
+    if (!currentUser)
+      setUserState({
+        type: 'setCurrentUser',
+        newUser: JSON.parse(localStorage.getItem('user') || ''),
+      })
+  }, [])
 
   useEffect(() => {
     if (!templatePermissions) return

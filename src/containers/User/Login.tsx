@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { useUserState } from '../../contexts/UserState'
 import { Link } from 'react-router-dom'
 import { Form, Button, Container, Grid, Segment, Header } from 'semantic-ui-react'
 import config from '../../config.json'
@@ -11,6 +12,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('')
   const [isError, setIsError] = useState(false)
   const { push, history } = useRouter()
+  const { setUserState } = useUserState()
 
   const handleSubmit = async (event: any) => {
     event.preventDefault()
@@ -21,6 +23,7 @@ const Login: React.FC = () => {
       setIsError(false)
       localStorage.setItem('persistJWT', loginResult.JWT)
       localStorage.setItem('user', JSON.stringify(loginResult.user))
+      setUserState({ type: 'setCurrentUser', newUser: loginResult.user })
       console.log('Log in successful!')
       if (history.location?.state?.from) push(history.location.state.from)
       else push('/')

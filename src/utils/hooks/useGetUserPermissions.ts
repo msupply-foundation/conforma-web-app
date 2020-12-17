@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { TemplatePermissions, FullUserPermissions, User } from '../../utils/types'
 import config from '../../config.json'
-
 const userPermissionsUrl = `${config.serverREST}/userPermissions`
 const LOCAL_STORAGE_JWT_KEY = 'persistJWT'
 const createAuthorisationHeader = (JWT: string) => ({
@@ -10,16 +9,13 @@ const createAuthorisationHeader = (JWT: string) => ({
 
 const useGetUserPermissions = () => {
   const [templatePermissions, setTemplatePermissions] = useState<TemplatePermissions | null>(null)
-  const [user, setUser] = useState<User>()
 
   useEffect(() => {
     const JWT: string = localStorage.getItem(LOCAL_STORAGE_JWT_KEY) || ''
-    const user: User = JSON.parse(localStorage.getItem('user') || '')
 
     fetch(userPermissionsUrl, { headers: createAuthorisationHeader(JWT) })
       .then((res: any) => res.json())
       .then(({ templatePermissions, JWT }: FullUserPermissions) => {
-        setUser(user)
         setTemplatePermissions(templatePermissions)
 
         localStorage.setItem(LOCAL_STORAGE_JWT_KEY, JWT)
@@ -30,7 +26,7 @@ const useGetUserPermissions = () => {
       })
   }, [])
 
-  return { user, templatePermissions }
+  return { templatePermissions }
 }
 
 export default useGetUserPermissions
