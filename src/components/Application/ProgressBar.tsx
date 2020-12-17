@@ -13,7 +13,7 @@ interface ProgressBarProps {
   currentSectionPage?: SectionPage
   progressStructure: ProgressInApplication
   push: (path: string) => void
-  validateCurrentPage: () => boolean
+  validatePreviousPage: (sectionCode: string, page: number) => boolean
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
@@ -21,7 +21,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   currentSectionPage,
   progressStructure,
   push,
-  validateCurrentPage,
+  validatePreviousPage,
 }) => {
   const getPageIndicator = (status: ProgressStatus | undefined) => {
     const indicator = {
@@ -36,21 +36,20 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     return (
       <List style={{ paddingLeft: '50px' }} link>
         {pages.map((page) => {
-          const { canNavigate, isActive, pageName, status } = page
-          const pageCode = pageName?.replace(' ', '')
+          const { canNavigate, isActive, pageNumber, status } = page
 
           return (
             <List.Item
               active={isActive}
               as="a"
-              key={`progress_${pageName}`}
+              key={`ProgressSection_${sectionCode}_${pageNumber}`}
               onClick={() => {
-                if (canNavigate || validateCurrentPage())
-                  push(`/application/${serialNumber}/${sectionCode}/${pageCode}`)
+                if (canNavigate || validatePreviousPage(sectionCode, pageNumber))
+                  push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
               }}
             >
               {getPageIndicator(status)}
-              {pageName}
+              {`Page ${pageNumber}`}
             </List.Item>
           )
         })}
@@ -95,9 +94,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           ),
         },
         onTitleClick: () => {
-          if (canNavigate || validateCurrentPage()) {
-            const pageCode = 'Page1'
-            push(`/application/${serialNumber}/${code}/${pageCode}`)
+          const firstPage = 1
+          if (canNavigate || validatePreviousPage(code, firstPage)) {
+            push(`/application/${serialNumber}/${code}/Page${firstPage}`)
           }
         },
         content: {

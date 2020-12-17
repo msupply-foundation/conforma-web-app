@@ -92,8 +92,7 @@ const ApplicationPageWrapper: React.FC = () => {
         responsesByCode,
       })
 
-      if (sectionCode && page)
-        setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
+      if (sectionCode && page) setCurrentSection(getCurrentSection(templateSections, sectionCode))
     }
   }, [elementsState, responsesByCode, sectionCode, page])
 
@@ -121,17 +120,33 @@ const ApplicationPageWrapper: React.FC = () => {
     setPageElements(elements)
   }, [responsesLoading, currentSection, page, elementsState])
 
-  const validateCurrentPage = (): boolean => {
-    if (!application || !currentSection || !page) {
-      console.log('Problem to validate - Undefined parameters')
+  const validatePreviousPage = (sectionCode: string, pageNumber: number): boolean => {
+    const currentSection = getCurrentSection(
+      templateSections,
+      sectionCode
+    ) as TemplateSectionPayload
+
+    // Check for first page/section, which don't have a previous page
+    if (currentSection.index === 0 && pageNumber === 1) return true
+
+    // Check if previous page is in the same section
+    const previousSection =
+      pageNumber - 1 > 0
+        ? currentSection
+        : getPreviousSection(templateSections, currentSection.index)
+
+    // Will check if previous page is in a other section
+    if (!previousSection) {
+      console.log('Problem to check previous page - section not found!')
       return false
     }
+    const previousPage = pageNumber - 1 > 0 ? pageNumber - 1 : previousSection.totalPages
 
     const pageElementsStatuses = getPageElementsStatuses({
       elementsState: elementsState as ApplicationElementStates,
       responses: responsesByCode as ResponsesByCode,
-      currentSectionIndex: currentSection?.index as number,
-      page: Number(page),
+      currentSectionIndex: previousSection.index,
+      page: previousPage,
     })
 
     if (application?.isLinear && responsesByCode) {
@@ -206,7 +221,7 @@ const ApplicationPageWrapper: React.FC = () => {
               serialNumber={serialNumber as string}
               progressStructure={progressInApplication}
               currentSectionPage={{ sectionIndex: currentSection.index, currentPage: Number(page) }}
-              validateCurrentPage={validateCurrentPage}
+              validatePreviousPage={validatePreviousPage}
               push={push}
             />
           )}
@@ -225,7 +240,7 @@ const ApplicationPageWrapper: React.FC = () => {
               currentSection={currentSection}
               serialNumber={serialNumber}
               currentPage={Number(page as string)}
-              validateCurrentPage={validateCurrentPage}
+              validatePreviousPage={validatePreviousPage}
               showValidationModal={showValidationModal}
               modalState={{ showModal, setShowModal }}
             />
@@ -273,6 +288,13 @@ function showValidationModal(showModal: ModalProps, setShowModal: Function) {
     </Modal>
   )
 }
+
+const getCurrentSection = (templateSections: TemplateSectionPayload[], sectionCode: string) =>
+  templateSections.find(({ code }) => code === sectionCode)
+
+// TODO: If we allow gaps between section index this needs improvement!
+const getPreviousSection = (templateSections: TemplateSectionPayload[], currentIndex: number) =>
+  templateSections.find(({ index }) => index === currentIndex - 1)
 
 const getPageHasRequiredQuestions = (elements: ElementState[]): boolean =>
   elements.some(
@@ -391,7 +413,7 @@ function buildProgressInApplication({
         previousPageStatus = status // Update new previous page for next iteration
 
         return {
-          pageName: `Page ${pageNumber}`,
+          pageNumber,
           canNavigate: isLinear ? isPreviousPageValid(pageNumber, section.index) : true,
           isActive: isCurrentPage(pageNumber, section.index),
           status,

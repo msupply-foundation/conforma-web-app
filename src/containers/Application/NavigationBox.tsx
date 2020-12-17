@@ -10,14 +10,19 @@ interface NavigationBoxProps {
   currentSection: TemplateSectionPayload
   serialNumber: string
   currentPage: number
-  validateCurrentPage: () => boolean
+  validatePreviousPage: (sectionCode: string, page: number) => boolean
   showValidationModal: Function
   modalState: { showModal: ModalProps; setShowModal: Function }
 }
 
-const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
-  const { templateSections, currentSection, serialNumber, currentPage, validateCurrentPage } = props
-  const { showModal, setShowModal } = props.modalState
+const NavigationBox: React.FC<NavigationBoxProps> = ({
+  templateSections,
+  currentSection,
+  serialNumber,
+  currentPage,
+  validatePreviousPage,
+  modalState: { setShowModal },
+}) => {
   const nextSection = templateSections.find(({ index }) => index === currentSection.index + 1)
   const previousSection = templateSections.find(({ index }) => index === currentSection.index - 1)
 
@@ -39,19 +44,20 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
   }
 
   const nextPageButtonHandler = (_: any): void => {
-    // Run the validation on the current page
-    const status = validateCurrentPage()
-    if (!status) {
-      setShowModal({ open: true, ...messages.VALIDATION_FAIL })
+    // Get the next page and section
+    const nextPage = currentPage + 1
+    const section = nextPage > currentSection.totalPages ? nextSection : currentSection
+    if (!section) {
+      console.log('Problem to load next page (not found)!')
       return
     }
-    const nextPage = currentPage + 1
-    if (nextPage > currentSection.totalPages) {
-      // Will check if next page is in other section
-      nextSection
-        ? sendToPage(nextSection.code, 1)
-        : console.log('Problem to load next page (not found)!')
-    } else sendToPage(currentSection.code, nextPage)
+    const page = nextPage > currentSection.totalPages ? 1 : nextPage
+
+    // Check if previous page (related to next) is valid
+    const status = validatePreviousPage(section.code, page)
+
+    if (!status) setShowModal({ open: true, ...messages.VALIDATION_FAIL })
+    else sendToPage(section.code, page)
   }
 
   return (

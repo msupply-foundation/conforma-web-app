@@ -117,7 +117,7 @@ interface PageElementsStatuses {
 }
 
 interface ProgressInPage {
-  pageName: string
+  pageNumber: number
   status: ProgressStatus
   canNavigate: boolean
   isActive: boolean
