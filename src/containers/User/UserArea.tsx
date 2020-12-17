@@ -16,7 +16,6 @@ const UserArea: React.FC = () => {
 
   // On load, get current user info from local storage and store it to context
   useEffect(() => {
-    console.log('Loaidng...')
     if (!currentUser)
       setUserState({
         type: 'setCurrentUser',
