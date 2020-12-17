@@ -73,7 +73,6 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                 inverted
                 style={{ margin: 10 }}
                 onClick={() => {
-                  console.log(elementsToReview)
                   updateResponses(
                     elementsToReview.map((review) => ({
                       id: review.id,
