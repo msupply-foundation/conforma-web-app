@@ -107,7 +107,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         },
       })
     if (jsonValue.text == allResponses[code]?.text) {
-      console.log('Updating in wrapper..')
       setApplicationState({
         type: 'setElementTimestamp',
         timestampType: 'elementsStateUpdatedTimestamp',
