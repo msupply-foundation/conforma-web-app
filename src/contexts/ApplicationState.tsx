@@ -49,7 +49,6 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
         newTimestamps.elementLostFocusTimestamp,
         newTimestamps.elementsStateUpdatedTimestamp,
       ])
-      console.log('New timestamps', newTimestamps)
       return {
         ...state,
         inputElementsActivity: newTimestamps,

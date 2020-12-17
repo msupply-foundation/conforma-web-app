@@ -5,6 +5,7 @@ import strings from '../../utils/constants'
 import getPageElements from '../../utils/helpers/getPageElements'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
+import { useApplicationState } from '../../contexts/ApplicationState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
 import { ApplicationElementStates, SectionElementStates, ResponsesByCode } from '../../utils/types'
@@ -20,6 +21,12 @@ const ApplicationOverview: React.FC = () => {
   const { error, loading, templateSections, isApplicationLoaded, appStatus } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
+  const {
+    applicationState: {
+      inputElementsActivity: { areTimestampsInSequence },
+    },
+  } = useApplicationState()
+  const [submitButtonClicked, setSubmitButtonClicked] = useState(false)
 
   const {
     error: responsesError,
@@ -106,6 +113,7 @@ const ApplicationOverview: React.FC = () => {
         revalidate.validityFailures,
         elementsState as ApplicationElementStates
       )
+      setSubmitButtonClicked(false)
       // TO-DO: Alert user of Submit failure
       push(`/application/${serialNumber}/${firstErrorSectionCode}/Page${firstErrorPage}`)
     }
@@ -116,6 +124,12 @@ const ApplicationOverview: React.FC = () => {
     // All OK -- would have been re-directed otherwise:
     submit()
   }
+
+  useEffect(() => {
+    if (areTimestampsInSequence && submitButtonClicked) {
+      handleSubmit()
+    }
+  }, [areTimestampsInSequence, submitButtonClicked])
 
   return error ? (
     <Message error header={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
@@ -137,7 +151,7 @@ const ApplicationOverview: React.FC = () => {
           />
         ))}
         {appStatus.status === 'DRAFT' ? (
-          <Button content={strings.BUTTON_SUBMIT} onClick={() => handleSubmit()} />
+          <Button content={strings.BUTTON_SUBMIT} onClick={() => setSubmitButtonClicked(true)} />
         ) : null}
         {showProcessingModal(processing, submitted)}
       </Form>

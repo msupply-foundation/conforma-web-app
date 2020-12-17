@@ -32,7 +32,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   } = props
 
   const [responseMutation] = useUpdateResponseMutation()
-  const { applicationState, setApplicationState } = useApplicationState()
+  const { setApplicationState } = useApplicationState()
   const [pluginMethods, setPluginMethods] = useState<ValidateObject>({
     validate: (validationExpress, validationMessage, evaluatorParameters) =>
       console.log('notLoaded'),

@@ -41,7 +41,13 @@ import {
 import { TemplateElementCategory } from '../../utils/generated/graphql'
 
 const ApplicationPageWrapper: React.FC = () => {
-  const { applicationState, setApplicationState } = useApplicationState()
+  const {
+    applicationState: {
+      inputElementsActivity: { areTimestampsInSequence },
+    },
+    setApplicationState,
+  } = useApplicationState()
+  const [summaryButtonClicked, setSummaryButtonClicked] = useState(false)
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
   const [pageElements, setPageElements] = useState<ElementState[]>([])
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
@@ -171,6 +177,12 @@ const ApplicationPageWrapper: React.FC = () => {
     return application?.isLinear ? validation === (PROGRESS_STATUS.VALID as ProgressStatus) : true
   }
 
+  useEffect(() => {
+    if (areTimestampsInSequence && summaryButtonClicked) {
+      handleSummaryClick()
+    }
+  }, [areTimestampsInSequence, summaryButtonClicked])
+
   const handleSummaryClick = async () => {
     const revalidate = await revalidateAll(
       elementsState as ApplicationElementStates,
@@ -187,8 +199,10 @@ const ApplicationPageWrapper: React.FC = () => {
       })
     })
 
-    if (!revalidate.allValid) setShowModal({ open: true, ...messages.VALIDATION_FAIL })
-    else push(`/application/${serialNumber}/summary`)
+    if (!revalidate.allValid) {
+      setShowModal({ open: true, ...messages.VALIDATION_FAIL })
+      setSummaryButtonClicked(false)
+    } else push(`/application/${serialNumber}/summary`)
   }
 
   return error || responsesError ? (
@@ -249,7 +263,7 @@ const ApplicationPageWrapper: React.FC = () => {
         style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
       >
         <Segment basic textAlign="right">
-          <Button color="blue" onClick={handleSummaryClick}>
+          <Button color="blue" onClick={() => setSummaryButtonClicked(true)}>
             {strings.BUTTON_SUMMARY}
           </Button>
         </Segment>
