@@ -45,7 +45,7 @@ const useTriggerProcessing = ({
     if (triggers) {
       if (triggers[inferredTriggerType] === null) setIsProcessing(false)
     }
-    if (error || !triggers) {
+    if (error) {
       setIsProcessing(false)
       setTriggerError(true)
     }
