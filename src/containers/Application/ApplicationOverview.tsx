@@ -7,12 +7,7 @@ import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAnd
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
-import {
-  ApplicationElementStates,
-  ValidityFailure,
-  SectionElementStates,
-  ResponsesByCode,
-} from '../../utils/types'
+import { ApplicationElementStates, SectionElementStates, ResponsesByCode } from '../../utils/types'
 import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 

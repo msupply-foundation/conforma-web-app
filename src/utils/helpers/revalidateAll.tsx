@@ -41,9 +41,21 @@ export const revalidateAll = async (
   })
 
   const resultArray = await Promise.all(validationExpressions)
+
+  // Also make empty responses invalid for required questions
+  const strictResultArray = resultArray.map((element, index) => {
+    const code = elementCodes[index]
+    return elementsState[code].isRequired &&
+      (!responsesByCode[code]?.text ||
+        responsesByCode[code].text === null ||
+        responsesByCode[code].text === '')
+      ? { ...element, isValid: false }
+      : element
+  })
+
   const validityFailures: ValidityFailure[] = shouldUpdateDatabase
     ? elementCodes.reduce((validityFailures: ValidityFailure[], code, index) => {
-        if (!resultArray[index].isValid)
+        if (!strictResultArray[index].isValid)
           return [
             ...validityFailures,
             {
@@ -57,7 +69,7 @@ export const revalidateAll = async (
     : []
 
   return {
-    allValid: resultArray.every((element) => element.isValid),
+    allValid: strictResultArray.every((element) => element.isValid),
     validityFailures,
   }
 }
