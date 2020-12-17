@@ -18,7 +18,7 @@ const useGetUserPermissions = () => {
 
     fetch(userPermissionsUrl, { headers: createAuthorisationHeader(JWT) })
       .then((res: any) => res.json())
-      .then(({ username, templatePermissions, JWT }: FullUserPermissions) => {
+      .then(({ templatePermissions, JWT }: FullUserPermissions) => {
         setUser(user)
         setTemplatePermissions(templatePermissions)
 
