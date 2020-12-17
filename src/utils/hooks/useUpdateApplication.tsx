@@ -15,7 +15,6 @@ interface useUpdateApplicationProps {
 const useUpdateApplication = ({ applicationSerial }: useUpdateApplicationProps) => {
   const [submitted, setSubmitted] = useState(false)
   const [processing, setProcessing] = useState(false)
-  const [isStrictValidation, setIsStrictValidation] = useState(false)
   const [error, setError] = useState<ApolloError | undefined>()
 
   // Hook to get existing responses in cache - triggered when user submits application
@@ -67,7 +66,6 @@ const useUpdateApplication = ({ applicationSerial }: useUpdateApplicationProps) 
     setSubmitted(true)
     setProcessing(true)
     // TO-DO: Whole Application Validity Check here (Use Nicole's validatePage method)
-    setIsStrictValidation(true)
   }
 
   return {
@@ -75,7 +73,6 @@ const useUpdateApplication = ({ applicationSerial }: useUpdateApplicationProps) 
     processing,
     error,
     submit,
-    isStrictValidation,
   }
 }
 

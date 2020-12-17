@@ -62,8 +62,8 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                 element,
                 response,
                 allResponses,
-                isStrictValidation: false,
               }
+            if (category === TemplateElementCategory.Question) {
               return (
                 <Segment key={`ReviewElement_${element.code}`} style={{ margin: '10px 50px 0px' }}>
                   <Grid columns={2} verticalAlign="middle">
@@ -72,7 +72,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                         <SummaryViewWrapper {...summaryViewProps} />
                       </Grid.Column>
                       <Grid.Column>
-                        {review && category === TemplateElementCategory.Question && canEdit && (
+                        {review && canEdit && (
                           <Container textAlign="right">
                             {review?.decision === undefined ? (
                               <Button size="small">{strings.BUTTON_REVIEW_RESPONSE}</Button>
@@ -85,7 +85,8 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                     </Grid.Row>
                   </Grid>
                 </Segment>
-              )
+                )
+              }
             })}
             {reviewsNumber > 0 && (
               <Button
@@ -93,7 +94,6 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                 inverted
                 style={{ margin: 10 }}
                 onClick={() => {
-                  console.log(elementsToReview)
                   updateResponses(
                     elementsToReview.map((review) => ({
                       id: review.id,
@@ -102,7 +102,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                     }))
                   )
                 }}
-              >{`${strings.BUTTON_REVIEW_APPROVE}(${reviewsNumber})`}</Button>
+              >{`${strings.BUTTON_REVIEW_APPROVE_ALL}(${reviewsNumber})`}</Button>
             )}
           </Segment>
         )

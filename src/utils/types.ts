@@ -39,6 +39,8 @@ export {
   ValidationMode,
   ValidateFunction,
   ValidateObject,
+  ValidityFailure,
+  RevalidateResult,
 }
 
 interface ApplicationDetails {
@@ -81,9 +83,12 @@ interface ElementBase {
   title: string
   pluginCode: string
   sectionIndex: number
+  sectionCode: string
   elementIndex: number
   page: number
   category: TemplateElementCategory
+  validation: IQueryNode
+  validationMessage: string | null
   parameters: any
 }
 
@@ -151,7 +156,7 @@ interface ResponsePayload {
 }
 
 interface ResponsesByCode {
-  [key: string]: ResponseFull | null
+  [key: string]: ResponseFull
 }
 
 interface ReviewDetails {
@@ -236,3 +241,14 @@ interface ValidateObject {
 }
 
 type ValidationMode = 'STRICT' | 'LOOSE'
+
+interface ValidityFailure {
+  id: number
+  isValid: boolean
+  code: string
+}
+
+interface RevalidateResult {
+  allValid: boolean
+  validityFailures: ValidityFailure[]
+}

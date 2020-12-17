@@ -9,7 +9,6 @@ interface SectionSummaryProps {
   sectionPages: SectionElementStates
   serialNumber: string
   allResponses: ResponsesByCode
-  isStrictValidation: boolean
   canEdit: boolean
 }
 
@@ -17,7 +16,6 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
   sectionPages,
   serialNumber,
   allResponses,
-  isStrictValidation,
   canEdit,
 }) => {
   const { section, pages } = sectionPages
@@ -40,7 +38,6 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
                           element={element}
                           response={response}
                           allResponses={allResponses}
-                          isStrictValidation={isStrictValidation}
                         />
                       </Grid.Column>
                       <Grid.Column width={3}>

@@ -13,8 +13,7 @@ const ReviewPageWrapper: React.FC = () => {
     params: { serialNumber, reviewId },
   } = useRouter()
 
-  // TODO: Need to wait for trigger to run that will set the Review status as DRAFT (after creation)
-
+  // Will wait for trigger to run that will set the Review status as DRAFT (after creation)
   const { error, loading, applicationName, responsesByCode, reviewSections } = useLoadReview({
     reviewId: Number(reviewId),
     serialNumber,
@@ -23,7 +22,7 @@ const ReviewPageWrapper: React.FC = () => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation({
     onCompleted: ({ updateReviewResponse }) =>
       console.log('Success to update reviewResponse: ', updateReviewResponse?.clientMutationId),
-    onError: (error) => console.log('Problem to update reviewResponse', error.message),
+    onError: (error) => console.log('Problem updating reviewResponse', error.message),
     refetchQueries: [
       {
         query: getReviewQuery,
@@ -32,7 +31,7 @@ const ReviewPageWrapper: React.FC = () => {
     ],
   })
 
-  const updateResponses = (array: ReviewQuestionDecision[]) => {
+  const updateResponses = async (array: ReviewQuestionDecision[]) => {
     array.forEach((reviewResponse) => {
       updateReviewResponse({ variables: { ...reviewResponse } })
     })

@@ -2516,14 +2516,18 @@ export type TemplateElementFilter = {
   title?: Maybe<StringFilter>;
   /** Filter by the object’s `category` field. */
   category?: Maybe<TemplateElementCategoryFilter>;
-  /** Filter by the object’s `visibilityCondition` field. */
-  visibilityCondition?: Maybe<JsonFilter>;
   /** Filter by the object’s `elementTypePluginCode` field. */
   elementTypePluginCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `visibilityCondition` field. */
+  visibilityCondition?: Maybe<JsonFilter>;
   /** Filter by the object’s `isRequired` field. */
   isRequired?: Maybe<JsonFilter>;
   /** Filter by the object’s `isEditable` field. */
   isEditable?: Maybe<JsonFilter>;
+  /** Filter by the object’s `validation` field. */
+  validation?: Maybe<JsonFilter>;
+  /** Filter by the object’s `validationMessage` field. */
+  validationMessage?: Maybe<StringFilter>;
   /** Filter by the object’s `parameters` field. */
   parameters?: Maybe<JsonFilter>;
   /** Filter by the object’s `applicationResponses` relation. */
@@ -4056,14 +4060,18 @@ export enum TemplateElementsOrderBy {
   TitleDesc = 'TITLE_DESC',
   CategoryAsc = 'CATEGORY_ASC',
   CategoryDesc = 'CATEGORY_DESC',
-  VisibilityConditionAsc = 'VISIBILITY_CONDITION_ASC',
-  VisibilityConditionDesc = 'VISIBILITY_CONDITION_DESC',
   ElementTypePluginCodeAsc = 'ELEMENT_TYPE_PLUGIN_CODE_ASC',
   ElementTypePluginCodeDesc = 'ELEMENT_TYPE_PLUGIN_CODE_DESC',
+  VisibilityConditionAsc = 'VISIBILITY_CONDITION_ASC',
+  VisibilityConditionDesc = 'VISIBILITY_CONDITION_DESC',
   IsRequiredAsc = 'IS_REQUIRED_ASC',
   IsRequiredDesc = 'IS_REQUIRED_DESC',
   IsEditableAsc = 'IS_EDITABLE_ASC',
   IsEditableDesc = 'IS_EDITABLE_DESC',
+  ValidationAsc = 'VALIDATION_ASC',
+  ValidationDesc = 'VALIDATION_DESC',
+  ValidationMessageAsc = 'VALIDATION_MESSAGE_ASC',
+  ValidationMessageDesc = 'VALIDATION_MESSAGE_DESC',
   ParametersAsc = 'PARAMETERS_ASC',
   ParametersDesc = 'PARAMETERS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -4084,14 +4092,18 @@ export type TemplateElementCondition = {
   title?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `category` field. */
   category?: Maybe<TemplateElementCategory>;
-  /** Checks for equality with the object’s `visibilityCondition` field. */
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `elementTypePluginCode` field. */
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `visibilityCondition` field. */
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isRequired` field. */
   isRequired?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isEditable` field. */
   isEditable?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `validation` field. */
+  validation?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `validationMessage` field. */
+  validationMessage?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `parameters` field. */
   parameters?: Maybe<Scalars['JSON']>;
 };
@@ -4119,10 +4131,12 @@ export type TemplateElement = Node & {
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
@@ -9119,10 +9133,12 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -9277,10 +9293,12 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -10752,10 +10770,12 @@ export type UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssi
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -11760,10 +11780,12 @@ export type TemplateElementPatch = {
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -11778,10 +11800,12 @@ export type ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateIn
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -12681,10 +12705,12 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -12912,10 +12938,12 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -14546,10 +14574,12 @@ export type TemplateElementInput = {
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
   isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
@@ -17107,7 +17137,7 @@ export type ApplicationFragment = (
 
 export type ElementFragment = (
   { __typename?: 'TemplateElement' }
-  & Pick<TemplateElement, 'id' | 'title' | 'elementTypePluginCode' | 'code' | 'category' | 'index' | 'isEditable' | 'isRequired' | 'parameters' | 'visibilityCondition'>
+  & Pick<TemplateElement, 'id' | 'code' | 'index' | 'title' | 'elementTypePluginCode' | 'category' | 'visibilityCondition' | 'isRequired' | 'isEditable' | 'validation' | 'validationMessage' | 'parameters'>
 );
 
 export type ResponseFragment = (
@@ -17214,7 +17244,7 @@ export type UpdateApplicationMutation = (
 
 export type UpdateResponseMutationVariables = Exact<{
   id: Scalars['Int'];
-  value: Scalars['JSON'];
+  value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
 }>;
 
@@ -17230,23 +17260,6 @@ export type UpdateResponseMutation = (
         & ElementFragment
       )> }
       & ResponseFragment
-    )> }
-  )> }
-);
-
-export type UpdateReviewResponsesMutationVariables = Exact<{
-  id: Scalars['Int'];
-  reviewResponses?: Maybe<Array<ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate>>;
-}>;
-
-
-export type UpdateReviewResponsesMutation = (
-  { __typename?: 'Mutation' }
-  & { updateReview?: Maybe<(
-    { __typename?: 'UpdateReviewPayload' }
-    & { review?: Maybe<(
-      { __typename?: 'Review' }
-      & Pick<Review, 'id'>
     )> }
   )> }
 );
@@ -17540,15 +17553,17 @@ export const ApplicationFragmentDoc = gql`
 export const ElementFragmentDoc = gql`
     fragment Element on TemplateElement {
   id
+  code
+  index
   title
   elementTypePluginCode
-  code
   category
-  index
-  isEditable
-  isRequired
-  parameters
   visibilityCondition
+  isRequired
+  isEditable
+  validation
+  validationMessage
+  parameters
 }
     `;
 export const ResponseFragmentDoc = gql`
@@ -17734,7 +17749,7 @@ export type UpdateApplicationMutationHookResult = ReturnType<typeof useUpdateApp
 export type UpdateApplicationMutationResult = Apollo.MutationResult<UpdateApplicationMutation>;
 export type UpdateApplicationMutationOptions = Apollo.BaseMutationOptions<UpdateApplicationMutation, UpdateApplicationMutationVariables>;
 export const UpdateResponseDocument = gql`
-    mutation updateResponse($id: Int!, $value: JSON!, $isValid: Boolean) {
+    mutation updateResponse($id: Int!, $value: JSON, $isValid: Boolean) {
   updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid}}) {
     applicationResponse {
       ...Response
@@ -17773,41 +17788,6 @@ export function useUpdateResponseMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateResponseMutationHookResult = ReturnType<typeof useUpdateResponseMutation>;
 export type UpdateResponseMutationResult = Apollo.MutationResult<UpdateResponseMutation>;
 export type UpdateResponseMutationOptions = Apollo.BaseMutationOptions<UpdateResponseMutation, UpdateResponseMutationVariables>;
-export const UpdateReviewResponsesDocument = gql`
-    mutation updateReviewResponses($id: Int!, $reviewResponses: [ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate!]) {
-  updateReview(input: {patch: {reviewResponsesUsingId: {updateById: $reviewResponses}}, id: $id}) {
-    review {
-      id
-    }
-  }
-}
-    `;
-export type UpdateReviewResponsesMutationFn = Apollo.MutationFunction<UpdateReviewResponsesMutation, UpdateReviewResponsesMutationVariables>;
-
-/**
- * __useUpdateReviewResponsesMutation__
- *
- * To run a mutation, you first call `useUpdateReviewResponsesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateReviewResponsesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateReviewResponsesMutation, { data, loading, error }] = useUpdateReviewResponsesMutation({
- *   variables: {
- *      id: // value for 'id'
- *      reviewResponses: // value for 'reviewResponses'
- *   },
- * });
- */
-export function useUpdateReviewResponsesMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReviewResponsesMutation, UpdateReviewResponsesMutationVariables>) {
-        return Apollo.useMutation<UpdateReviewResponsesMutation, UpdateReviewResponsesMutationVariables>(UpdateReviewResponsesDocument, baseOptions);
-      }
-export type UpdateReviewResponsesMutationHookResult = ReturnType<typeof useUpdateReviewResponsesMutation>;
-export type UpdateReviewResponsesMutationResult = Apollo.MutationResult<UpdateReviewResponsesMutation>;
-export type UpdateReviewResponsesMutationOptions = Apollo.BaseMutationOptions<UpdateReviewResponsesMutation, UpdateReviewResponsesMutationVariables>;
 export const UpdateReviewResponseDocument = gql`
     mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String) {
   updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment}}) {

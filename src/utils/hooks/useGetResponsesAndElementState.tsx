@@ -65,6 +65,7 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
             ...element,
             pluginCode: element.elementTypePluginCode,
             sectionIndex: sectionNode.index,
+            sectionCode: sectionNode.code,
             elementIndex: element.index,
             page: count,
           } as TemplateElementState)
@@ -127,7 +128,10 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
       parameters: element.parameters,
       pluginCode: element.pluginCode,
       sectionIndex: element.sectionIndex,
+      sectionCode: element.sectionCode,
       elementIndex: element.elementIndex,
+      validation: element.validation,
+      validationMessage: element.validationMessage,
       page: element.page,
       isEditable: results[0] as boolean,
       isRequired: results[1] as boolean,

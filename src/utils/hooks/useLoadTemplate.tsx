@@ -64,7 +64,7 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
     templateSections.nodes.forEach((section) => {
       const { templateElementsBySectionId } = section as TemplateSection
       templateElementsBySectionId.nodes.forEach((element) => {
-        if (element?.id) elements.push(element.id)
+        if (element?.id && element.category === 'QUESTION') elements.push(element.id)
       })
     })
     setElementsIds(elements)
