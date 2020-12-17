@@ -29,10 +29,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     onSave({ text: value })
   }
 
-  function handleOnFocus(e: any) {
-    setIsActive()
-  }
-
   return (
     <>
       <label>{label}</label>
@@ -41,7 +37,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         placeholder={placeholder}
         onChange={handleChange}
         onBlur={handleLoseFocus}
-        onFocus={handleOnFocus}
+        onFocus={setIsActive}
         value={value ? value : ''}
         disabled={!isEditable}
         type={maskedInput ? 'password' : undefined}
