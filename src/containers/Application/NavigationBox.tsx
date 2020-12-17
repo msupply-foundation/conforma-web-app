@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Container, Label, ModalProps } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useApplicationState } from '../../contexts/ApplicationState'
@@ -24,6 +24,7 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
       inputElementsActivity: { areTimestampsInSequence },
     },
   } = useApplicationState()
+  const [nextButtonClicked, setNextButtonClicked] = useState(false)
   const nextSection = templateSections.find(({ index }) => index === currentSection.index + 1)
   const previousSection = templateSections.find(({ index }) => index === currentSection.index - 1)
 
@@ -44,11 +45,12 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
     } else sendToPage(currentSection.code, previousPage)
   }
 
-  const nextPageButtonHandler = (_: any): void => {
+  const nextPageButtonHandler = async () => {
     // Run the validation on the current page
     const status = validateCurrentPage()
     if (!status) {
       setShowModal({ open: true, ...messages.VALIDATION_FAIL })
+      setNextButtonClicked(false)
       return
     }
     const nextPage = currentPage + 1
@@ -60,6 +62,14 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
     } else sendToPage(currentSection.code, nextPage)
   }
 
+  //
+  useEffect(() => {
+    if (areTimestampsInSequence && nextButtonClicked) {
+      console.log('Ready')
+      nextPageButtonHandler()
+    }
+  }, [areTimestampsInSequence, nextButtonClicked])
+
   return (
     <Container>
       {!isFirstPage && (
@@ -68,7 +78,7 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
         </Label>
       )}
       {!isLastPage && (
-        <Label basic as="a" onClick={nextPageButtonHandler}>
+        <Label basic as="a" onClick={() => setNextButtonClicked(true)}>
           {strings.BUTTON_NEXT}
         </Label>
       )}

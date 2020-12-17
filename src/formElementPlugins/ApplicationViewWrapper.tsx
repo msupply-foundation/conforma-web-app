@@ -106,12 +106,13 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
           isValid: validationResult.isValid,
         },
       })
-    console.log('This response:', jsonValue)
-    console.log('Store response', allResponses[code])
-    setApplicationState({
-      type: 'setElementTimestamp',
-      timestampType: 'elementsStateUpdatedTimestamp',
-    })
+    if (jsonValue.text == allResponses[code]?.text) {
+      console.log('Updating in wrapper..')
+      setApplicationState({
+        type: 'setElementTimestamp',
+        timestampType: 'elementsStateUpdatedTimestamp',
+      })
+    }
   }
 
   const setIsActive = async () => {
