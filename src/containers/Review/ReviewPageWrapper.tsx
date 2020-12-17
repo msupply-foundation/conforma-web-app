@@ -1,36 +1,51 @@
-import React, { useEffect } from 'react'
-import { Card, Header, List, Message } from 'semantic-ui-react'
-import { Loading } from '../../components'
+import React from 'react'
+import { Container, Form, Header, Label, Message } from 'semantic-ui-react'
+import { Loading, ReviewSection } from '../../components'
 import strings from '../../utils/constants'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
 
 const ReviewPageWrapper: React.FC = () => {
-  // Page will present the list of visible questions in Summary view, with additional "Reviewing" controls beneath each question.
-  // Will also need to useGetTriggers hook to wait until Review(Assignment) and Application records have Null triggers before loading
-
   const {
     params: { serialNumber, reviewId },
   } = useRouter()
 
   // TODO: Need to wait for trigger to run that will set the Review status as DRAFT (after creation)
 
-  const { error, loading, data } = useLoadReview({ reviewId: Number(reviewId) })
-
-  useEffect(() => {
-    console.log('data', data)
-  }, [data])
+  const { error, loading, applicationName, responsesByCode, reviewSections } = useLoadReview({
+    reviewId: Number(reviewId),
+    serialNumber,
+  })
 
   return error ? (
     <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
   ) : loading ? (
     <Loading />
+  ) : reviewSections && responsesByCode ? (
+    <>
+      <Container text textAlign="center">
+        <Label color="blue">{strings.STAGE_PLACEHOLDER}</Label>
+        <Header content={applicationName} subheader={strings.DATE_APPLICATION_PLACEHOLDER} />
+        <Header
+          as="h3"
+          color="grey"
+          content={strings.TITLE_REVIEW_SUMMARY}
+          subheader={strings.SUBTITLE_REVIEW}
+        />
+      </Container>
+      <Form>
+        {reviewSections.map((reviewSection) => (
+          <ReviewSection
+            key={`Review_${reviewSection.section.code}`}
+            allResponses={responsesByCode}
+            reviewSection={reviewSection}
+            canEdit={true} // TODO: Check Review status
+          />
+        ))}
+      </Form>
+    </>
   ) : (
-    <div>
-      <p>
-        This is the Review page for Review ID#{reviewId} of Application {serialNumber}
-      </p>
-    </div>
+    <Message error header={strings.ERROR_REVIEW_PAGE} />
   )
 }
 

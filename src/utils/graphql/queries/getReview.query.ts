@@ -10,10 +10,6 @@ export default gql`
           decision
           applicationResponse {
             id
-            value
-            templateElement {
-              title
-            }
           }
         }
       }
