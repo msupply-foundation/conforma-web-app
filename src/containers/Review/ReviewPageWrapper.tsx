@@ -13,8 +13,7 @@ const ReviewPageWrapper: React.FC = () => {
     params: { serialNumber, reviewId },
   } = useRouter()
 
-  // TODO: Need to wait for trigger to run that will set the Review status as DRAFT (after creation)
-
+  // Will wait for trigger to run that will set the Review status as DRAFT (after creation)
   const { error, loading, applicationName, responsesByCode, reviewSections } = useLoadReview({
     reviewId: Number(reviewId),
     serialNumber,
