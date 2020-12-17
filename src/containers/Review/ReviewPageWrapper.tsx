@@ -22,7 +22,7 @@ const ReviewPageWrapper: React.FC = () => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation({
     onCompleted: ({ updateReviewResponse }) =>
       console.log('Success to update reviewResponse: ', updateReviewResponse?.clientMutationId),
-    onError: (error) => console.log('Problem to update reviewResponse', error.message),
+    onError: (error) => console.log('Problem updating reviewResponse', error.message),
     refetchQueries: [
       {
         query: getReviewQuery,
@@ -31,7 +31,7 @@ const ReviewPageWrapper: React.FC = () => {
     ],
   })
 
-  const updateResponses = (array: ReviewQuestionDecision[]) => {
+  const updateResponses = async (array: ReviewQuestionDecision[]) => {
     array.forEach((reviewResponse) => {
       updateReviewResponse({ variables: { ...reviewResponse } })
     })
