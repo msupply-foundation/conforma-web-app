@@ -82,7 +82,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                     }))
                   )
                 }}
-              >{`${strings.BUTTON_REVIEW_APPROVE}(${reviewsNumber})`}</Button>
+              >{`${strings.BUTTON_REVIEW_APPROVE_ALL}(${reviewsNumber})`}</Button>
             )}
           </Segment>
         )
