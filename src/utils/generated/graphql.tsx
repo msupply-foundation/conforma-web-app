@@ -2297,6 +2297,8 @@ export type ReviewAssignmentFilter = {
   stageId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `reviews` relation. */
   reviews?: Maybe<ReviewAssignmentToManyReviewFilter>;
   /** Some related `reviews` exist. */
@@ -4367,6 +4369,7 @@ export type ReviewAssignment = Node & {
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
   assigner?: Maybe<User>;
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
@@ -5000,6 +5003,8 @@ export enum ReviewAssignmentsOrderBy {
   StageIdDesc = 'STAGE_ID_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  TriggerAsc = 'TRIGGER_ASC',
+  TriggerDesc = 'TRIGGER_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -5016,6 +5021,8 @@ export type ReviewAssignmentCondition = {
   stageId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `trigger` field. */
+  trigger?: Maybe<Trigger>;
 };
 
 /** A connection to a list of `ReviewAssignment` values. */
@@ -5420,36 +5427,54 @@ export type ApplicationStageStatusAllsEdge = {
 /** Methods to use when ordering `ApplicationTriggerState`. */
 export enum ApplicationTriggerStatesOrderBy {
   Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
   SerialAsc = 'SERIAL_ASC',
   SerialDesc = 'SERIAL_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
   ApplicationTriggerAsc = 'APPLICATION_TRIGGER_ASC',
   ApplicationTriggerDesc = 'APPLICATION_TRIGGER_DESC',
+  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
+  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
+  ReviewAssignmentTriggerAsc = 'REVIEW_ASSIGNMENT_TRIGGER_ASC',
+  ReviewAssignmentTriggerDesc = 'REVIEW_ASSIGNMENT_TRIGGER_DESC',
+  ReviewIdAsc = 'REVIEW_ID_ASC',
+  ReviewIdDesc = 'REVIEW_ID_DESC',
   ReviewTriggerAsc = 'REVIEW_TRIGGER_ASC',
   ReviewTriggerDesc = 'REVIEW_TRIGGER_DESC'
 }
 
 /** A condition to be used against `ApplicationTriggerState` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type ApplicationTriggerStateCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `serial` field. */
   serial?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `applicationTrigger` field. */
   applicationTrigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewAssignmentTrigger` field. */
+  reviewAssignmentTrigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `reviewId` field. */
+  reviewId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewTrigger` field. */
   reviewTrigger?: Maybe<Trigger>;
 };
 
 /** A filter to be used against `ApplicationTriggerState` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationTriggerStateFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
   /** Filter by the object’s `serial` field. */
   serial?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationTrigger` field. */
   applicationTrigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewAssignmentTrigger` field. */
+  reviewAssignmentTrigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `reviewId` field. */
+  reviewId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewTrigger` field. */
   reviewTrigger?: Maybe<TriggerFilter>;
   /** Checks for all expressions in this list. */
@@ -5475,9 +5500,12 @@ export type ApplicationTriggerStatesConnection = {
 
 export type ApplicationTriggerState = {
   __typename?: 'ApplicationTriggerState';
-  id?: Maybe<Scalars['Int']>;
   serial?: Maybe<Scalars['String']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationTrigger?: Maybe<Trigger>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewAssignmentTrigger?: Maybe<Trigger>;
+  reviewId?: Maybe<Scalars['Int']>;
   reviewTrigger?: Maybe<Trigger>;
 };
 
@@ -9424,6 +9452,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -9509,6 +9538,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -9594,6 +9624,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   assignerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -9745,6 +9776,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -9900,6 +9932,7 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -10817,6 +10850,7 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -11688,6 +11722,7 @@ export type ReviewAssignmentPatch = {
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -11703,6 +11738,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -12159,6 +12195,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -12239,6 +12276,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -12486,6 +12524,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   assignerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -12535,6 +12574,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -12584,6 +12624,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -14270,6 +14311,7 @@ export type ReviewAssignmentInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -17441,7 +17483,9 @@ export type GetTemplateQuery = (
 );
 
 export type GetTriggersQueryVariables = Exact<{
-  serial: Scalars['String'];
+  serial?: Maybe<Scalars['String']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -17451,7 +17495,7 @@ export type GetTriggersQuery = (
     { __typename?: 'ApplicationTriggerStatesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationTriggerState' }
-      & Pick<ApplicationTriggerState, 'applicationTrigger' | 'reviewTrigger' | 'serial'>
+      & Pick<ApplicationTriggerState, 'serial' | 'applicationTrigger' | 'reviewAssignmentTrigger' | 'reviewTrigger'>
     )>> }
   )> }
 );
@@ -18065,12 +18109,13 @@ export type GetTemplateQueryHookResult = ReturnType<typeof useGetTemplateQuery>;
 export type GetTemplateLazyQueryHookResult = ReturnType<typeof useGetTemplateLazyQuery>;
 export type GetTemplateQueryResult = Apollo.QueryResult<GetTemplateQuery, GetTemplateQueryVariables>;
 export const GetTriggersDocument = gql`
-    query getTriggers($serial: String!) {
-  applicationTriggerStates(condition: {serial: $serial}) {
+    query getTriggers($serial: String, $reviewAssignmentId: Int, $reviewId: Int) {
+  applicationTriggerStates(condition: {serial: $serial, reviewAssignmentId: $reviewAssignmentId, reviewId: $reviewId}, first: 1) {
     nodes {
-      applicationTrigger
-      reviewTrigger
       serial
+      applicationTrigger
+      reviewAssignmentTrigger
+      reviewTrigger
     }
   }
 }
@@ -18089,6 +18134,8 @@ export const GetTriggersDocument = gql`
  * const { data, loading, error } = useGetTriggersQuery({
  *   variables: {
  *      serial: // value for 'serial'
+ *      reviewAssignmentId: // value for 'reviewAssignmentId'
+ *      reviewId: // value for 'reviewId'
  *   },
  * });
  */
