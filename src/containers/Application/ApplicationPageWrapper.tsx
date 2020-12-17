@@ -95,6 +95,7 @@ const ApplicationPageWrapper: React.FC = () => {
         replace,
         elementsState,
         responsesByCode,
+        currentUser,
       })
 
       if (sectionCode && page)
@@ -300,13 +301,14 @@ async function processRedirect(appState: any) {
     replace,
     elementsState,
     responsesByCode,
+    currentUser,
   } = appState
   if (status !== 'DRAFT') {
     replace(`/application/${serialNumber}/summary`)
     return
   }
   if (!sectionCode || !page) {
-    const revalidate = await revalidateAll(elementsState, responsesByCode)
+    const revalidate = await revalidateAll(elementsState, responsesByCode, currentUser as User)
 
     if (revalidate.validityFailures.length > 0) {
       const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
