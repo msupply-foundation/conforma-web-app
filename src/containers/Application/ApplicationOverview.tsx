@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Container, Form, Header, Loader, Message, Modal } from 'semantic-ui-react'
 import { SectionSummary, Loading } from '../../components'
 import strings from '../../utils/constants'
-import getPageElements from '../../utils/helpers/getPageElements'
+import buildSectionsStructure from '../../utils/helpers/buildSectionsStructure'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -10,7 +10,7 @@ import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
 import { useUserState } from '../../contexts/UserState'
 import {
   ApplicationElementStates,
-  SectionElementStates,
+  SectionStructure,
   ResponsesByCode,
   User,
 } from '../../utils/types'
@@ -18,7 +18,7 @@ import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revali
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 
 const ApplicationOverview: React.FC = () => {
-  const [sectionsPages, setSectionsAndElements] = useState<SectionElementStates[]>()
+  const [sectionsPages, setSectionsAndElements] = useState<SectionStructure>()
   const [isRevalidated, setIsRevalidated] = useState(false)
   const {
     userState: { currentUser },
@@ -62,33 +62,13 @@ const ApplicationOverview: React.FC = () => {
 
   useEffect(() => {
     if (!responsesLoading && elementsState && responsesByCode) {
-      // Create the sections and pages structure to display each section's element & responses
-      const sectionsAndElements: SectionElementStates[] = templateSections
-        .sort((a, b) => a.index - b.index)
-        .map((section) => {
-          const sectionDetails = {
-            title: section.title,
-            code: section.code,
-          }
-          const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
-          const pages = pageNumbers.reduce((pages, pageNumber) => {
-            const elements = getPageElements({
-              elementsState,
-              sectionIndex: section.index,
-              pageNumber,
-            })
-            if (elements.length === 0) return pages
-            const elementsAndResponses = elements.map((element) => ({
-              element,
-              response: responsesByCode[element.code],
-            }))
-            const pageName = `Page ${pageNumber}`
-            return { ...pages, [pageName]: elementsAndResponses }
-          }, {})
-          return { section: sectionDetails, pages }
-        })
+      const sectionsStructure = buildSectionsStructure({
+        templateSections,
+        elementsState,
+        responsesByCode,
+      })
 
-      setSectionsAndElements(sectionsAndElements)
+      setSectionsAndElements(sectionsStructure)
     }
   }, [elementsState, responsesLoading])
 

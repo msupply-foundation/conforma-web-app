@@ -1,4 +1,4 @@
-import { ApplicationElementStates, ElementState } from '../types'
+import { ApplicationElementStates } from '../types'
 
 interface GetPageElementsProps {
   elementsState: ApplicationElementStates
@@ -8,6 +8,7 @@ interface GetPageElementsProps {
 
 const getPageElements = ({ elementsState, sectionIndex, pageNumber }: GetPageElementsProps) => {
   const result = Object.values(elementsState)
+    .filter(({ isVisible }) => isVisible)
     .filter((element) => sectionIndex === element.sectionIndex && pageNumber === element.page)
     .sort((a, b) => a.elementIndex - b.elementIndex)
 

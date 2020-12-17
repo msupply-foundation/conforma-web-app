@@ -41,8 +41,8 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
     const combinedParams = { ...parameters, ...evaluatedParameters }
     return (
       <Form.Field required={isRequired}>
-        {parametersLoaded && <label>{combinedParams.label}</label>}
-        <Input fluid readOnly disabled transparent value={response ? response?.text : ''} />
+        {parametersLoaded && <label style={{ color: 'black' }}>{combinedParams.label}</label>}
+        <Input fluid readOnly transparent value={response ? response?.text : ''} />
       </Form.Field>
     )
   }
