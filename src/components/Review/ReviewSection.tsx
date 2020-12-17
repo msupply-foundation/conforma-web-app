@@ -43,29 +43,29 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                 element,
                 response,
                 allResponses,
-                isStrictValidation: false,
               }
-              return (
-                <Segment key={`ReviewElement_${element.code}`} style={{ margin: 10 }}>
-                  <Grid columns={2} verticalAlign="middle">
-                    <Grid.Row>
-                      <Grid.Column width={13}>
-                        <SummaryViewWrapper {...summaryViewProps} />
-                      </Grid.Column>
-                      <Grid.Column width={3}>
-                        {review &&
-                          category === TemplateElementCategory.Question &&
-                          canEdit &&
-                          (review?.decision === undefined ? (
-                            <Button size="small">{strings.BUTTON_REVIEW_RESPONSE}</Button>
-                          ) : (
-                            <Icon name="pencil square" color="blue" />
-                          ))}
-                      </Grid.Column>
-                    </Grid.Row>
-                  </Grid>
-                </Segment>
-              )
+              if (category === TemplateElementCategory.Question) {
+                return (
+                  <Segment key={`ReviewElement_${element.code}`} style={{ margin: 10 }}>
+                    <Grid columns={2} verticalAlign="middle">
+                      <Grid.Row>
+                        <Grid.Column width={13}>
+                          <SummaryViewWrapper {...summaryViewProps} />
+                        </Grid.Column>
+                        <Grid.Column width={3}>
+                          {review &&
+                            canEdit &&
+                            (review?.decision === undefined ? (
+                              <Button size="small">{strings.BUTTON_REVIEW_RESPONSE}</Button>
+                            ) : (
+                              <Icon name="pencil square" color="blue" />
+                            ))}
+                        </Grid.Column>
+                      </Grid.Row>
+                    </Grid>
+                  </Segment>
+                )
+              }
             })}
             {reviewsNumber > 0 && (
               <Button
