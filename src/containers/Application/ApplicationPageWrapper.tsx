@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, ProgressBar } from '../../components'
-import { Button, Grid, Header, Label, Message, Segment, Sticky } from 'semantic-ui-react'
+import {
+  Button,
+  Grid,
+  Header,
+  Icon,
+  Label,
+  Message,
+  Modal,
+  ModalProps,
+  Segment,
+  Sticky,
+} from 'semantic-ui-react'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
@@ -12,7 +23,9 @@ import validatePage, {
   PROGRESS_STATUS,
 } from '../../utils/helpers/validatePage'
 import getPageElements from '../../utils/helpers/getPageElements'
+import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
 import strings from '../../utils/constants'
+import messages from '../../utils/messages'
 
 import {
   ApplicationElementStates,
@@ -33,6 +46,11 @@ const ApplicationPageWrapper: React.FC = () => {
   const [forceValidation, setForceValidation] = useState<boolean>(false)
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
+  const [showModal, setShowModal] = useState<ModalProps>({
+    open: false,
+    message: '',
+    title: '',
+  })
 
   const {
     error,
@@ -61,7 +79,7 @@ const ApplicationPageWrapper: React.FC = () => {
   // 1 - ProcessRedirect: Will redirect to summary in case application is SUBMITTED
   // 2 - Set the current section state of the application
   useEffect(() => {
-    if (isApplicationLoaded) {
+    if (elementsState && responsesByCode) {
       processRedirect({
         ...appStatus,
         serialNumber,
@@ -70,12 +88,14 @@ const ApplicationPageWrapper: React.FC = () => {
         templateSections,
         push,
         replace,
+        elementsState,
+        responsesByCode,
       })
 
       if (sectionCode && page)
         setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
     }
-  }, [isApplicationLoaded, sectionCode, page])
+  }, [elementsState, responsesByCode, sectionCode, page])
 
   // Wait for loading (and evaluating elements and responses)
   // or a change of section/page to rebuild the progress bar
@@ -140,12 +160,33 @@ const ApplicationPageWrapper: React.FC = () => {
     return application?.isLinear ? validation === (PROGRESS_STATUS.VALID as ProgressStatus) : true
   }
 
+  const handleSummaryClick = async () => {
+    const revalidate = await revalidateAll(
+      elementsState as ApplicationElementStates,
+      responsesByCode as ResponsesByCode
+    )
+
+    // Update database if validity changed
+    revalidate.validityFailures.forEach((changedElement) => {
+      responseMutation({
+        variables: {
+          id: changedElement.id,
+          isValid: changedElement.isValid,
+        },
+      })
+    })
+
+    if (!revalidate.allValid) setShowModal({ open: true, ...messages.VALIDATION_FAIL })
+    else push(`/application/${serialNumber}/summary`)
+  }
+
   return error || responsesError ? (
     <Message error header={strings.ERROR_APPLICATION_PAGE} />
   ) : loading || responsesLoading ? (
     <Loading />
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
+      {showValidationModal(showModal, setShowModal)}
       <Header textAlign="center">{strings.TITLE_COMPANY_PLACEHOLDER}</Header>
       <Grid
         stackable
@@ -185,15 +226,20 @@ const ApplicationPageWrapper: React.FC = () => {
               serialNumber={serialNumber}
               currentPage={Number(page as string)}
               validateCurrentPage={validateCurrentPage}
+              showValidationModal={showValidationModal}
+              modalState={{ showModal, setShowModal }}
             />
           </Segment>
         </Grid.Column>
         <Grid.Column width={2} />
       </Grid>
-      <Sticky pushing style={{ backgroundColor: 'white' }}>
+      <Sticky
+        pushing
+        style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
+      >
         <Segment basic textAlign="right">
-          <Button color="blue" onClick={() => push(`/application/${serialNumber}/summary`)}>
-            {strings.BUTTON_SUBMIT}
+          <Button color="blue" onClick={handleSummaryClick}>
+            {strings.BUTTON_SUMMARY}
           </Button>
         </Segment>
       </Sticky>
@@ -203,13 +249,38 @@ const ApplicationPageWrapper: React.FC = () => {
   )
 }
 
+const modalInitialValue: ModalProps = {
+  open: false,
+  message: '',
+  title: '',
+}
+
+function showValidationModal(showModal: ModalProps, setShowModal: Function) {
+  return (
+    <Modal basic onClose={() => setShowModal(modalInitialValue)} open={showModal.open} size="small">
+      <Header icon>
+        <Icon name="exclamation triangle" />
+        {showModal.title}
+      </Header>
+      <Modal.Content>
+        <p>{showModal.message}</p>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button color="green" inverted onClick={() => setShowModal(modalInitialValue)}>
+          <Icon name="checkmark" /> Yes
+        </Button>
+      </Modal.Actions>
+    </Modal>
+  )
+}
+
 const getPageHasRequiredQuestions = (elements: ElementState[]): boolean =>
   elements.some(
     ({ isRequired, isVisible, category }) =>
       category === TemplateElementCategory.Question && isRequired && isVisible
   )
 
-function processRedirect(appState: any): void {
+async function processRedirect(appState: any) {
   // All logic for re-directing/configuring page based on application state, permissions, roles, etc. should go here.
   const {
     stage,
@@ -221,14 +292,26 @@ function processRedirect(appState: any): void {
     templateSections,
     push,
     replace,
+    elementsState,
+    responsesByCode,
   } = appState
   if (status !== 'DRAFT') {
     replace(`/application/${serialNumber}/summary`)
     return
   }
   if (!sectionCode || !page) {
-    const firstSection = templateSections[0].code
-    replace(`/application/${serialNumber}/${firstSection}/page1`)
+    const revalidate = await revalidateAll(elementsState, responsesByCode)
+
+    if (revalidate.validityFailures.length > 0) {
+      const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
+        revalidate.validityFailures,
+        elementsState as ApplicationElementStates
+      )
+      push(`/application/${serialNumber}/${firstErrorSectionCode}/Page${firstErrorPage}`)
+    } else {
+      const firstSection = templateSections[0].code
+      replace(`/application/${serialNumber}/${firstSection}/Page1`)
+    }
   }
 }
 
