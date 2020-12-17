@@ -24,7 +24,7 @@ import validatePage, {
   PROGRESS_STATUS,
 } from '../../utils/helpers/validatePage'
 import getPageElements from '../../utils/helpers/getPageElements'
-import { revalidateAll } from '../../utils/helpers/revalidateAll'
+import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
 
@@ -84,7 +84,7 @@ const ApplicationPageWrapper: React.FC = () => {
   // 1 - ProcessRedirect: Will redirect to summary in case application is SUBMITTED
   // 2 - Set the current section state of the application
   useEffect(() => {
-    if (isApplicationLoaded) {
+    if (elementsState && responsesByCode) {
       processRedirect({
         ...appStatus,
         serialNumber,
@@ -93,12 +93,14 @@ const ApplicationPageWrapper: React.FC = () => {
         templateSections,
         push,
         replace,
+        elementsState,
+        responsesByCode,
       })
 
       if (sectionCode && page)
         setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
     }
-  }, [isApplicationLoaded, sectionCode, page])
+  }, [elementsState, responsesByCode, sectionCode, page])
 
   // Wait for loading (and evaluating elements and responses)
   // or a change of section/page to rebuild the progress bar
@@ -284,7 +286,7 @@ const getPageHasRequiredQuestions = (elements: ElementState[]): boolean =>
       category === TemplateElementCategory.Question && isRequired && isVisible
   )
 
-function processRedirect(appState: any): void {
+async function processRedirect(appState: any) {
   // All logic for re-directing/configuring page based on application state, permissions, roles, etc. should go here.
   const {
     stage,
@@ -296,14 +298,26 @@ function processRedirect(appState: any): void {
     templateSections,
     push,
     replace,
+    elementsState,
+    responsesByCode,
   } = appState
   if (status !== 'DRAFT') {
     replace(`/application/${serialNumber}/summary`)
     return
   }
   if (!sectionCode || !page) {
-    const firstSection = templateSections[0].code
-    replace(`/application/${serialNumber}/${firstSection}/page1`)
+    const revalidate = await revalidateAll(elementsState, responsesByCode)
+
+    if (revalidate.validityFailures.length > 0) {
+      const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
+        revalidate.validityFailures,
+        elementsState as ApplicationElementStates
+      )
+      push(`/application/${serialNumber}/${firstErrorSectionCode}/Page${firstErrorPage}`)
+    } else {
+      const firstSection = templateSections[0].code
+      replace(`/application/${serialNumber}/${firstSection}/Page1`)
+    }
   }
 }
 

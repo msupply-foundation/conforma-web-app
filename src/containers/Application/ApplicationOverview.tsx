@@ -8,13 +8,7 @@ import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
 import { useUserState } from '../../contexts/UserState'
-import {
-  ApplicationElementStates,
-  ValidityFailure,
-  SectionElementStates,
-  ResponsesByCode,
-  User,
-} from '../../utils/types'
+import { ApplicationElementStates, SectionElementStates, ResponsesByCode } from '../../utils/types'
 import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 
