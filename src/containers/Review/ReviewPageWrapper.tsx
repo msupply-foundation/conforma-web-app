@@ -54,15 +54,21 @@ const ReviewPageWrapper: React.FC = () => {
         />
       </Container>
       <Form>
-        {reviewSections.map((reviewSection) => (
-          <ReviewSection
-            key={`Review_${reviewSection.section.code}`}
-            allResponses={responsesByCode}
-            reviewSection={reviewSection}
-            updateResponses={updateResponses}
-            canEdit={true} // TODO: Check Review status
-          />
-        ))}
+        {reviewSections.map((reviewSection) => {
+          console.log('Review', reviewSection, reviewSection.assigned)
+
+          const assignedToYou = reviewSection.assigned?.id === 6
+          return (
+            <ReviewSection
+              key={`Review_${reviewSection.section.code}`}
+              allResponses={responsesByCode}
+              assignedToYou={assignedToYou}
+              reviewSection={reviewSection}
+              updateResponses={updateResponses}
+              canEdit={true} // TODO: Check Review status
+            />
+          )
+        })}
       </Form>
     </>
   ) : (

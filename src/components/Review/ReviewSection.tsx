@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Grid, Header, Icon, Segment } from 'semantic-ui-react'
+import { Button, Container, Grid, Header, Icon, Label, Segment } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import strings from '../../utils/constants'
 import { ReviewResponseDecision, TemplateElementCategory } from '../../utils/generated/graphql'
@@ -7,6 +7,7 @@ import { ReviewQuestionDecision, ResponsesByCode, SectionElementStates } from '.
 
 interface ReviewSectionProps {
   allResponses: ResponsesByCode
+  assignedToYou: boolean
   reviewSection: SectionElementStates
   updateResponses: (props: ReviewQuestionDecision[]) => void
   canEdit: boolean
@@ -14,18 +15,36 @@ interface ReviewSectionProps {
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({
   allResponses,
+  assignedToYou,
   reviewSection,
   updateResponses,
   canEdit,
 }) => {
   const { section, pages } = reviewSection
+
+  const showSectionAssignment = assignedToYou ? (
+    <Label style={{ backgroundColor: 'WhiteSmoke', color: 'Blue' }}>
+      {strings.LABEL_ASSIGNED_TO_YOU}
+    </Label>
+  ) : (
+    <Label style={{ backgroundColor: 'WhiteSmoke' }}>{strings.LABEL_ASSIGNED_TO_OTHER}</Label>
+  )
   return (
     <Segment
       key={`ReviewSection_${section.code}`}
       inverted
-      style={{ backgroundColor: 'WhiteSmoke', margin: '15px 50px 0px' }}
+      style={{ backgroundColor: 'WhiteSmoke', marginLeft: '10%', marginRight: '10%' }}
     >
-      <Header as="h2" content={`${section.title}`} style={{ color: 'Grey' }} />
+      <Grid columns={2}>
+        <Grid.Row>
+          <Grid.Column>
+            <Header as="h2" content={`${section.title}`} style={{ color: 'Grey' }} />
+          </Grid.Column>
+          <Grid.Column>
+            <Container textAlign="right">{showSectionAssignment}</Container>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
       {Object.entries(pages).map(([pageName, elements]) => {
         const elementsToReview = elements
           .filter(({ review }) => review && review.decision === undefined)
@@ -33,7 +52,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
         const reviewsNumber = elementsToReview.length
 
         return (
-          <Segment basic>
+          <Segment key={`ReviewSection_${section.code}_${pageName}`} basic>
             <Header as="h3" style={{ color: 'DarkGrey' }}>
               {pageName}
             </Header>
@@ -46,20 +65,25 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
               }
               if (category === TemplateElementCategory.Question) {
                 return (
-                  <Segment key={`ReviewElement_${element.code}`} style={{ margin: 10 }}>
+                  <Segment
+                    key={`ReviewElement_${element.code}`}
+                    style={{ margin: '10px 50px 0px' }}
+                  >
                     <Grid columns={2} verticalAlign="middle">
                       <Grid.Row>
-                        <Grid.Column width={13}>
+                        <Grid.Column>
                           <SummaryViewWrapper {...summaryViewProps} />
                         </Grid.Column>
-                        <Grid.Column width={3}>
-                          {review &&
-                            canEdit &&
-                            (review?.decision === undefined ? (
-                              <Button size="small">{strings.BUTTON_REVIEW_RESPONSE}</Button>
-                            ) : (
-                              <Icon name="pencil square" color="blue" />
-                            ))}
+                        <Grid.Column>
+                          {review && canEdit && (
+                            <Container textAlign="right">
+                              {review?.decision === undefined ? (
+                                <Button size="small">{strings.BUTTON_REVIEW_RESPONSE}</Button>
+                              ) : (
+                                <Icon name="pencil square" color="blue" style={{ minWidth: 100 }} />
+                              )}
+                            </Container>
+                          )}
                         </Grid.Column>
                       </Grid.Row>
                     </Grid>
