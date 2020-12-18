@@ -19,7 +19,6 @@ const useGetUserInfo = () => {
       .then(({ templatePermissions, JWT, user }: FullUserInfo) => {
         setTemplatePermissions(templatePermissions)
         setUser(user)
-
         localStorage.setItem(LOCAL_STORAGE_JWT_KEY, JWT)
       })
       .catch((error) => {
