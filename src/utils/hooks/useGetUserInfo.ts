@@ -1,22 +1,24 @@
 import { useEffect, useState } from 'react'
-import { TemplatePermissions, FullUserPermissions, User } from '../../utils/types'
+import { TemplatePermissions, FullUserInfo, User } from '../types'
 import config from '../../config.json'
-const userPermissionsUrl = `${config.serverREST}/userPermissions`
+const userInfoUrl = `${config.serverREST}/userInfo`
 const LOCAL_STORAGE_JWT_KEY = 'persistJWT'
 const createAuthorisationHeader = (JWT: string) => ({
   Authorization: `Bearer ${JWT}`,
 })
 
-const useGetUserPermissions = () => {
+const useGetUserInfo = () => {
   const [templatePermissions, setTemplatePermissions] = useState<TemplatePermissions | null>(null)
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
     const JWT: string = localStorage.getItem(LOCAL_STORAGE_JWT_KEY) || ''
 
-    fetch(userPermissionsUrl, { headers: createAuthorisationHeader(JWT) })
+    fetch(userInfoUrl, { headers: createAuthorisationHeader(JWT) })
       .then((res: any) => res.json())
-      .then(({ templatePermissions, JWT }: FullUserPermissions) => {
+      .then(({ templatePermissions, JWT, user }: FullUserInfo) => {
         setTemplatePermissions(templatePermissions)
+        setUser(user)
 
         localStorage.setItem(LOCAL_STORAGE_JWT_KEY, JWT)
       })
@@ -26,7 +28,7 @@ const useGetUserPermissions = () => {
       })
   }, [])
 
-  return { templatePermissions }
+  return { user, templatePermissions }
 }
 
-export default useGetUserPermissions
+export default useGetUserInfo

@@ -12,7 +12,6 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('')
   const [isError, setIsError] = useState(false)
   const { push, history } = useRouter()
-  const { setUserState } = useUserState()
 
   const handleSubmit = async (event: any) => {
     event.preventDefault()
@@ -22,8 +21,6 @@ const Login: React.FC = () => {
     else {
       setIsError(false)
       localStorage.setItem('persistJWT', loginResult.JWT)
-      localStorage.setItem('user', JSON.stringify(loginResult.user))
-      setUserState({ type: 'setCurrentUser', newUser: loginResult.user })
       console.log('Log in successful!')
       if (history.location?.state?.from) push(history.location.state.from)
       else push('/')

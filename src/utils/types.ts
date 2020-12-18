@@ -11,7 +11,7 @@ export {
   ElementPluginParameters,
   ElementState,
   EvaluatorParameters,
-  FullUserPermissions,
+  FullUserInfo,
   IGraphQLConnection,
   LooseString,
   PageElementsStatuses,
@@ -108,9 +108,10 @@ interface EvaluatorParameters {
   APIfetch?: Function
 }
 
-interface FullUserPermissions {
+interface FullUserInfo {
   username: string
   templatePermissions: TemplatePermissions
+  user: User
   JWT: string
 }
 

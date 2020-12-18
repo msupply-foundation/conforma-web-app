@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Button, Container, Label, Segment } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { useGetUsersQuery, User } from '../../utils/generated/graphql'
-import useGetUserPermissions from '../../utils/hooks/useGetUserPermissions'
+import useGetUserInfo from '../../utils/hooks/useGetUserInfo'
 import Loading from '../../components/Loading'
 import { logOut } from '../User/Login'
 
@@ -12,16 +12,16 @@ const UserArea: React.FC = () => {
     setUserState,
   } = useUserState()
   const { data, loading, error } = useGetUsersQuery()
-  const { templatePermissions } = useGetUserPermissions()
+  const { user, templatePermissions } = useGetUserInfo()
 
-  // On load, get current user info from local storage and store it to context
+  // Set userinfo to context after receiving it from endpoint
   useEffect(() => {
-    if (!currentUser)
+    if (!currentUser && user)
       setUserState({
         type: 'setCurrentUser',
-        newUser: JSON.parse(localStorage.getItem('user') || ''),
+        newUser: user,
       })
-  }, [])
+  }, [user])
 
   useEffect(() => {
     if (!templatePermissions) return
