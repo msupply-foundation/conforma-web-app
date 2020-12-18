@@ -17390,11 +17390,7 @@ export type GetReviewQuery = (
         & Pick<ReviewResponse, 'id' | 'comment' | 'decision'>
         & { applicationResponse?: Maybe<(
           { __typename?: 'ApplicationResponse' }
-          & Pick<ApplicationResponse, 'id' | 'value'>
-          & { templateElement?: Maybe<(
-            { __typename?: 'TemplateElement' }
-            & Pick<TemplateElement, 'title'>
-          )> }
+          & Pick<ApplicationResponse, 'id'>
         )> }
       )>> }
     ) }
@@ -17427,7 +17423,7 @@ export type GetReviewAssignmentQuery = (
           { __typename?: 'ReviewQuestionAssignment' }
           & { templateElement?: Maybe<(
             { __typename?: 'TemplateElement' }
-            & Pick<TemplateElement, 'id' | 'code'>
+            & Pick<TemplateElement, 'code'>
             & { section?: Maybe<(
               { __typename?: 'TemplateSection' }
               & Pick<TemplateSection, 'id' | 'index'>
@@ -17954,10 +17950,6 @@ export const GetReviewDocument = gql`
         decision
         applicationResponse {
           id
-          value
-          templateElement {
-            title
-          }
         }
       }
     }
@@ -18007,7 +17999,6 @@ export const GetReviewAssignmentDocument = gql`
       reviewQuestionAssignments {
         nodes {
           templateElement {
-            id
             code
             section {
               id

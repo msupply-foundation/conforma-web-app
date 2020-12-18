@@ -24,10 +24,13 @@ export {
   ResponseFull,
   ResponsePayload,
   ResponsesByCode,
+  ReviewDecision,
   ReviewDetails,
   ReviewQuestion,
+  ReviewQuestionDecision,
   SectionElementStates,
   SectionDetails,
+  SectionStructure,
   TemplateTypePayload,
   TemplateSectionPayload,
   TemplateElementState,
@@ -168,6 +171,8 @@ interface ResponsesByCode {
   [key: string]: ResponseFull
 }
 
+type ReviewDecision = 'Approve' | 'Reject'
+
 interface ReviewDetails {
   id: number
   status: string
@@ -178,6 +183,10 @@ interface ReviewQuestion {
   responseId: number
   sectionIndex: number
 }
+interface ReviewQuestionDecision {
+  comment: string
+  decision: ReviewDecision | undefined
+}
 
 interface SectionElementStates {
   section: SectionDetails
@@ -185,6 +194,7 @@ interface SectionElementStates {
     [pageName: string]: {
       element: ElementState
       response: ResponseFull | null
+      review?: ReviewQuestionDecision
     }[]
   }
 }
@@ -193,6 +203,8 @@ interface SectionDetails {
   title: string
   code: string
 }
+
+type SectionStructure = SectionElementStates[]
 
 interface TemplateTypePayload {
   id: number
