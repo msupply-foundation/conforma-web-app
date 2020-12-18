@@ -22,7 +22,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
 }) => {
   const { section, pages } = reviewSection
 
-  const getSectionAssignment = assignedToYou ? (
+  const showSectionAssignment = assignedToYou ? (
     <Label style={{ backgroundColor: 'WhiteSmoke', color: 'Blue' }}>
       {strings.LABEL_ASSIGNED_TO_YOU}
     </Label>
@@ -41,7 +41,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
             <Header as="h2" content={`${section.title}`} style={{ color: 'Grey' }} />
           </Grid.Column>
           <Grid.Column>
-            <Container textAlign="right">{getSectionAssignment}</Container>
+            <Container textAlign="right">{showSectionAssignment}</Container>
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -63,28 +63,31 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                 response,
                 allResponses,
               }
-            if (category === TemplateElementCategory.Question) {
-              return (
-                <Segment key={`ReviewElement_${element.code}`} style={{ margin: '10px 50px 0px' }}>
-                  <Grid columns={2} verticalAlign="middle">
-                    <Grid.Row>
-                      <Grid.Column>
-                        <SummaryViewWrapper {...summaryViewProps} />
-                      </Grid.Column>
-                      <Grid.Column>
-                        {review && canEdit && (
-                          <Container textAlign="right">
-                            {review?.decision === undefined ? (
-                              <Button size="small">{strings.BUTTON_REVIEW_RESPONSE}</Button>
-                            ) : (
-                              <Icon name="pencil square" color="blue" style={{ minWidth: 100 }} />
-                            )}
-                          </Container>
-                        )}
-                      </Grid.Column>
-                    </Grid.Row>
-                  </Grid>
-                </Segment>
+              if (category === TemplateElementCategory.Question) {
+                return (
+                  <Segment
+                    key={`ReviewElement_${element.code}`}
+                    style={{ margin: '10px 50px 0px' }}
+                  >
+                    <Grid columns={2} verticalAlign="middle">
+                      <Grid.Row>
+                        <Grid.Column>
+                          <SummaryViewWrapper {...summaryViewProps} />
+                        </Grid.Column>
+                        <Grid.Column>
+                          {review && canEdit && (
+                            <Container textAlign="right">
+                              {review?.decision === undefined ? (
+                                <Button size="small">{strings.BUTTON_REVIEW_RESPONSE}</Button>
+                              ) : (
+                                <Icon name="pencil square" color="blue" style={{ minWidth: 100 }} />
+                              )}
+                            </Container>
+                          )}
+                        </Grid.Column>
+                      </Grid.Row>
+                    </Grid>
+                  </Segment>
                 )
               }
             })}
