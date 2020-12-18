@@ -39,7 +39,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     return status ? indicator[status] : null
   }
 
-  const getPreviousPageIsValid = (sectionCode: string, pageNumber: number) => {
+  const isPreviousPageIsValid = (sectionCode: string, pageNumber: number) => {
     const previousPage = getPreviousPage({ sectionCode, pageNumber })
     return previousPage && validateElementsInPage(previousPage)
   }
@@ -107,7 +107,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         },
         onTitleClick: () => {
           const firstPage = 1
-          if (canNavigate || getPreviousPageIsValid(code, firstPage)) {
+          if (canNavigate || isPreviousPageIsValid(code, firstPage)) {
             push(`/application/${serialNumber}/${code}/Page${firstPage}`)
           }
         },
