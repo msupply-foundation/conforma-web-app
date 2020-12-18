@@ -1,7 +1,13 @@
 import React from 'react'
 import { Accordion, Container, Grid, Header, Icon, Label, List, Sticky } from 'semantic-ui-react'
-import { ProgressInApplication, ProgressInPage, ProgressStatus } from '../../utils/types'
+import {
+  CurrentPage,
+  ProgressInApplication,
+  ProgressInPage,
+  ProgressStatus,
+} from '../../utils/types'
 import strings from '../../utils/constants'
+import { useRouter } from '../../utils/hooks/useRouter'
 
 interface SectionPage {
   sectionIndex: number
@@ -12,17 +18,18 @@ interface ProgressBarProps {
   serialNumber: string
   currentSectionPage?: SectionPage
   progressStructure: ProgressInApplication
-  push: (path: string) => void
-  validateCurrentPage: () => boolean
+  getPreviousPage: (props: { sectionCode: string; pageNumber: number }) => CurrentPage | undefined
+  validateElementsInPage: (props?: CurrentPage) => boolean
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   serialNumber,
   currentSectionPage,
   progressStructure,
-  push,
-  validateCurrentPage,
+  getPreviousPage,
+  validateElementsInPage,
 }) => {
+  const { push } = useRouter()
   const getPageIndicator = (status: ProgressStatus | undefined) => {
     const indicator = {
       VALID: <Icon name="check circle" color="green" />,
@@ -32,25 +39,29 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     return status ? indicator[status] : null
   }
 
+  const getPreviousPageIsValid = (sectionCode: string, pageNumber: number) => {
+    const previousPage = getPreviousPage({ sectionCode, pageNumber })
+    return previousPage && validateElementsInPage(previousPage)
+  }
+
   const pageList = (sectionCode: string, pages: ProgressInPage[]) => {
     return (
       <List style={{ paddingLeft: '50px' }} link>
         {pages.map((page) => {
-          const { canNavigate, isActive, pageName, status } = page
-          const pageCode = pageName?.replace(' ', '')
+          const { canNavigate, isActive, pageNumber, status } = page
 
           return (
             <List.Item
               active={isActive}
               as="a"
-              key={`progress_${pageName}`}
+              key={`ProgressSection_${sectionCode}_${pageNumber}`}
               onClick={() => {
-                if (canNavigate || validateCurrentPage())
-                  push(`/application/${serialNumber}/${sectionCode}/${pageCode}`)
+                if (canNavigate || validateElementsInPage())
+                  push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
               }}
             >
               {getPageIndicator(status)}
-              {pageName}
+              {`Page ${pageNumber}`}
             </List.Item>
           )
         })}
@@ -95,9 +106,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           ),
         },
         onTitleClick: () => {
-          if (canNavigate || validateCurrentPage()) {
-            const pageCode = 'Page1'
-            push(`/application/${serialNumber}/${code}/${pageCode}`)
+          const firstPage = 1
+          if (canNavigate || getPreviousPageIsValid(code, firstPage)) {
+            push(`/application/${serialNumber}/${code}/Page${firstPage}`)
           }
         },
         content: {

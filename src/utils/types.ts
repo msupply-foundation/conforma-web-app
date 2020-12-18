@@ -11,6 +11,7 @@ export {
   ApplicationElementStates,
   AppStatus,
   AssignmentDetails,
+  CurrentPage,
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
@@ -71,6 +72,11 @@ interface AssignmentDetails {
   questions: ReviewQuestion[]
 }
 
+interface CurrentPage {
+  section: TemplateSectionPayload
+  page: number
+}
+
 type ElementPluginParameterValue = string | number | string[] | IQueryNode
 
 interface ElementPluginParameters {
@@ -117,7 +123,7 @@ interface PageElementsStatuses {
 }
 
 interface ProgressInPage {
-  pageName: string
+  pageNumber: number
   status: ProgressStatus
   canNavigate: boolean
   isActive: boolean
