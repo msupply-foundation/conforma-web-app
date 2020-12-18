@@ -183,6 +183,8 @@ const ApplicationPageWrapper: React.FC = () => {
     return application?.isLinear ? validation === (PROGRESS_STATUS.VALID as ProgressStatus) : true
   }
 
+  // Make sure all responses are up-to-date (areTimestampsInSequence)
+  // and only proceed when button is clicked AND responses are ready
   useEffect(() => {
     if (areTimestampsInSequence && summaryButtonClicked) {
       handleSummaryClick()
