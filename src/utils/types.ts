@@ -11,7 +11,6 @@ export {
   ElementPluginParameters,
   ElementState,
   EvaluatorParameters,
-  FullUserInfo,
   IGraphQLConnection,
   LooseString,
   PageElementsStatuses,
@@ -106,13 +105,6 @@ interface EvaluatorParameters {
   pgConnection?: any // Any, because not likely to be used in front-end
   graphQLConnection?: IGraphQLConnection
   APIfetch?: Function
-}
-
-interface FullUserInfo {
-  username: string
-  templatePermissions: TemplatePermissions
-  user: User
-  JWT: string
 }
 
 type LooseString = string | null | undefined

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { TemplatePermissions, FullUserInfo, User } from '../types'
+import { TemplatePermissions, User } from '../types'
 import config from '../../config.json'
 const userInfoUrl = `${config.serverREST}/userInfo`
 const LOCAL_STORAGE_JWT_KEY = 'persistJWT'
@@ -8,6 +8,7 @@ const createAuthorisationHeader = (JWT: string) => ({
 })
 
 const useGetUserInfo = () => {
+  console.log('GETTING USER INFO')
   const [templatePermissions, setTemplatePermissions] = useState<TemplatePermissions | null>(null)
   const [user, setUser] = useState<User | null>(null)
 
@@ -16,7 +17,7 @@ const useGetUserInfo = () => {
 
     fetch(userInfoUrl, { headers: createAuthorisationHeader(JWT) })
       .then((res: any) => res.json())
-      .then(({ templatePermissions, JWT, user }: FullUserInfo) => {
+      .then(({ templatePermissions, JWT, user }) => {
         setTemplatePermissions(templatePermissions)
         setUser(user)
         localStorage.setItem(LOCAL_STORAGE_JWT_KEY, JWT)
