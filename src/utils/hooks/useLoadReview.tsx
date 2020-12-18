@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
 import { ApolloError } from '@apollo/client'
 import { ReviewResponse, useGetReviewQuery } from '../generated/graphql'
-import { ApplicationElementStates, ResponsesByCode, SectionElementStates } from '../types'
+import { SectionStructure } from '../types'
 import useLoadApplication from './useLoadApplication'
 import useGetResponsesAndElementState from './useGetResponsesAndElementState'
 import useTriggerProcessing from './useTriggerProcessing'
-import getPageElements from '../helpers/getPageElements'
 import buildSectionsStructure from '../helpers/buildSectionsStructure'
-import elementFragment from '../graphql/fragments/element.fragment'
 
 interface UseLoadReviewProps {
   reviewId: number
@@ -16,7 +14,7 @@ interface UseLoadReviewProps {
 
 const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
   const [applicationName, setApplicationName] = useState<string>('')
-  const [reviewSections, setReviewSections] = useState<SectionElementStates[]>()
+  const [reviewSections, setReviewSections] = useState<SectionStructure>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
