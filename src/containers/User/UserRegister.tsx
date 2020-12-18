@@ -12,7 +12,6 @@ const UserRegister: React.FC = () => {
     .then((loginResult) => {
       console.log('Result', loginResult)
       localStorage.setItem('persistJWT', loginResult.JWT)
-      localStorage.setItem('username', loginResult.username)
       push('/application/new?type=UserRegistration')
     })
     .catch((err) => {

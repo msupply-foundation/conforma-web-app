@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useReducer } from 'react'
-import { TemplatePermissions } from '../utils/types'
+import { TemplatePermissions, User } from '../utils/types'
 
 type UserState = {
-  currentUser: string | null
+  currentUser: User | null
   users: Array<string>
   templatePermissions: TemplatePermissions
 }
@@ -10,7 +10,7 @@ type UserState = {
 export type UserActions =
   | {
       type: 'setCurrentUser'
-      nextUser: string
+      newUser: User
     }
   | {
       type: 'resetCurrentUser'
@@ -29,10 +29,10 @@ type UserProviderProps = { children: React.ReactNode }
 const reducer = (state: UserState, action: UserActions) => {
   switch (action.type) {
     case 'setCurrentUser':
-      const { nextUser } = action
+      const { newUser } = action
       return {
         ...state,
-        currentUser: nextUser,
+        currentUser: newUser,
       }
     case 'resetCurrentUser':
       return {

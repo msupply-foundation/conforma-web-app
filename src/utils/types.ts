@@ -11,7 +11,6 @@ export {
   ElementPluginParameters,
   ElementState,
   EvaluatorParameters,
-  FullUserPermissions,
   IGraphQLConnection,
   LooseString,
   PageElementsStatuses,
@@ -38,6 +37,7 @@ export {
   ValidateObject,
   ValidityFailure,
   RevalidateResult,
+  User,
 }
 
 interface ApplicationDetails {
@@ -105,12 +105,6 @@ interface EvaluatorParameters {
   pgConnection?: any // Any, because not likely to be used in front-end
   graphQLConnection?: IGraphQLConnection
   APIfetch?: Function
-}
-
-interface FullUserPermissions {
-  username: string
-  templatePermissions: TemplatePermissions
-  JWT: string
 }
 
 type LooseString = string | null | undefined
@@ -243,4 +237,12 @@ interface ValidityFailure {
 interface RevalidateResult {
   allValid: boolean
   validityFailures: ValidityFailure[]
+}
+
+interface User {
+  firstName: string
+  lastName?: string | null
+  username: string
+  email: string
+  dateOfBirth?: Date | null
 }
