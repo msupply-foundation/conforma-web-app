@@ -9,7 +9,9 @@ import {
   ElementPluginParameters,
   ElementPluginParameterValue,
   ValidateObject,
+  User,
 } from '../utils/types'
+import { useUserState } from '../contexts/UserState'
 import { defaultValidate } from './defaultValidate'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { Form } from 'semantic-ui-react'
@@ -35,6 +37,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     validate: (validationExpress, validationMessage, evaluatorParameters) =>
       console.log('notLoaded'),
   })
+  const {
+    userState: { currentUser },
+  } = useUserState()
   const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
   const [evaluatedParameters, setEvaluatedParameters] = useState({})
 
@@ -60,7 +65,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   // Update dynamic parameters when responses change
   useEffect(() => {
     evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
-      objects: [allResponses],
+      objects: [allResponses, currentUser as User],
       APIfetch: fetch,
     }).then((result: ElementPluginParameters) => {
       setEvaluatedParameters(result)
@@ -83,7 +88,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     const validationResult: ValidationState = await pluginMethods.validate(
       validationExpression,
       validationMessage as string,
-      { objects: [responses], APIfetch: fetch }
+      { objects: [responses, currentUser as User], APIfetch: fetch }
     )
     setValidationState(validationResult)
 

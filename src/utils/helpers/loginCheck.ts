@@ -1,7 +1,6 @@
 const isLoggedIn = () => {
   const JWT = localStorage.getItem('persistJWT')
-  const username = localStorage.getItem('username')
-  return JWT && username
+  return JWT !== null
 }
 
 export default isLoggedIn

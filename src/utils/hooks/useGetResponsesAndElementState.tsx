@@ -7,13 +7,17 @@ import {
   TemplateElement,
   Application,
 } from '../generated/graphql'
+import { useUserState } from '../../contexts/UserState'
 import {
   ResponsesByCode,
   TemplateElementState,
   ApplicationElementStates,
   ElementState,
+  EvaluatorParameters,
+  User,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
+import { IParameters } from '@openmsupply/expression-evaluator/lib/types'
 
 interface useGetResponsesAndElementStateProps {
   serialNumber: string
@@ -27,6 +31,9 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
   const [elementsState, setElementsState] = useState<ApplicationElementStates>()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const {
+    userState: { currentUser },
+  } = useUserState()
   const { data, loading: apolloLoading, error: apolloError } = useGetElementsAndResponsesQuery({
     variables: { serial: serialNumber },
     skip: !isApplicationLoaded,
@@ -112,7 +119,8 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
 
   async function evaluateSingleElement(element: TemplateElementState): Promise<ElementState> {
     const evaluationParameters = {
-      objects: [responsesByCode as ResponsesByCode], // TO-DO: Also send user/org objects etc.
+      objects: [responsesByCode as ResponsesByCode, currentUser as User],
+      // TO-DO: Also send org objects etc.
       // graphQLConnection: TO-DO
     }
     const isEditable = evaluateExpression(element.isEditable, evaluationParameters)

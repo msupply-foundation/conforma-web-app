@@ -7,13 +7,22 @@ import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAnd
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
-import { ApplicationElementStates, SectionStructure, ResponsesByCode } from '../../utils/types'
+import { useUserState } from '../../contexts/UserState'
+import {
+  ApplicationElementStates,
+  SectionStructure,
+  ResponsesByCode,
+  User,
+} from '../../utils/types'
 import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 
 const ApplicationOverview: React.FC = () => {
   const [sectionsPages, setSectionsAndElements] = useState<SectionStructure>()
   const [isRevalidated, setIsRevalidated] = useState(false)
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   const { query, push } = useRouter()
   const { serialNumber } = query
@@ -66,7 +75,8 @@ const ApplicationOverview: React.FC = () => {
   const revalidateAndUpdate = async () => {
     const revalidate = await revalidateAll(
       elementsState as ApplicationElementStates,
-      responsesByCode as ResponsesByCode
+      responsesByCode as ResponsesByCode,
+      currentUser as User
     )
 
     // Update database if validity changed
