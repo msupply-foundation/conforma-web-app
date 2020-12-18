@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { useUserState } from '../../contexts/UserState'
 import { Link } from 'react-router-dom'
 import { Form, Button, Container, Grid, Segment, Header } from 'semantic-ui-react'
 import config from '../../config.json'
@@ -20,9 +21,8 @@ const Login: React.FC = () => {
     else {
       setIsError(false)
       localStorage.setItem('persistJWT', loginResult.JWT)
-      localStorage.setItem('username', loginResult.username)
       console.log('Log in successful!')
-      if (history.location.state.from) push(history.location.state.from)
+      if (history.location?.state?.from) push(history.location.state.from)
       else push('/')
     }
   }

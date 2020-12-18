@@ -17,6 +17,7 @@ import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import { useApplicationState } from '../../contexts/ApplicationState'
+import { useUserState } from '../../contexts/UserState'
 import { ElementsBox, NavigationBox } from './'
 import validatePage, {
   getCombinedStatus,
@@ -36,6 +37,7 @@ import {
   ProgressStatus,
   ResponsesByCode,
   TemplateSectionPayload,
+  User,
   ValidationMode,
 } from '../../utils/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
@@ -52,6 +54,9 @@ const ApplicationPageWrapper: React.FC = () => {
   const [pageElements, setPageElements] = useState<ElementState[]>([])
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
   const [forceValidation, setForceValidation] = useState<boolean>(false)
+  const {
+    userState: { currentUser },
+  } = useUserState()
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
   const [showModal, setShowModal] = useState<ModalProps>({
@@ -98,6 +103,7 @@ const ApplicationPageWrapper: React.FC = () => {
         replace,
         elementsState,
         responsesByCode,
+        currentUser,
       })
 
       if (sectionCode && page)
@@ -186,7 +192,8 @@ const ApplicationPageWrapper: React.FC = () => {
   const handleSummaryClick = async () => {
     const revalidate = await revalidateAll(
       elementsState as ApplicationElementStates,
-      responsesByCode as ResponsesByCode
+      responsesByCode as ResponsesByCode,
+      currentUser as User
     )
 
     // Update database if validity changed
@@ -319,13 +326,14 @@ async function processRedirect(appState: any) {
     replace,
     elementsState,
     responsesByCode,
+    currentUser,
   } = appState
   if (status !== 'DRAFT') {
     replace(`/application/${serialNumber}/summary`)
     return
   }
   if (!sectionCode || !page) {
-    const revalidate = await revalidateAll(elementsState, responsesByCode)
+    const revalidate = await revalidateAll(elementsState, responsesByCode, currentUser as User)
 
     if (revalidate.validityFailures.length > 0) {
       const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(

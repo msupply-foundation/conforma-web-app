@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Button, Container, Label, Segment } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { useGetUsersQuery, User } from '../../utils/generated/graphql'
-import useGetUserPermissions from '../../utils/hooks/useGetUserPermissions'
+import useGetUserInfo from '../../utils/hooks/useGetUserInfo'
 import Loading from '../../components/Loading'
 import { logOut } from '../User/Login'
 
@@ -12,12 +12,16 @@ const UserArea: React.FC = () => {
     setUserState,
   } = useUserState()
   const { data, loading, error } = useGetUsersQuery()
-  const { username, templatePermissions } = useGetUserPermissions()
+  const { user, templatePermissions } = useGetUserInfo()
 
+  // Set userinfo to context after receiving it from endpoint
   useEffect(() => {
-    if (!username) return
-    setUserState({ type: 'setCurrentUser', nextUser: username })
-  }, [username])
+    if (!currentUser && user)
+      setUserState({
+        type: 'setCurrentUser',
+        newUser: user,
+      })
+  }, [user])
 
   useEffect(() => {
     if (!templatePermissions) return
@@ -39,7 +43,7 @@ const UserArea: React.FC = () => {
   ) : (
     <Segment.Group vertical="true">
       <Container>
-        <Label>The current user is: {currentUser}</Label>
+        <Label>The current user is: {currentUser?.username}</Label>
       </Container>
       <Container>
         {users &&
