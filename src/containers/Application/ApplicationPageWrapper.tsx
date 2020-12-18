@@ -38,6 +38,7 @@ import {
   ValidationMode,
 } from '../../utils/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
+import getPreviousPage from '../../utils/helpers/getPreviousPage'
 
 const ApplicationPageWrapper: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
@@ -92,7 +93,8 @@ const ApplicationPageWrapper: React.FC = () => {
         responsesByCode,
       })
 
-      if (sectionCode && page) setCurrentSection(getCurrentSection(templateSections, sectionCode))
+      if (sectionCode && page)
+        setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
     }
   }, [elementsState, responsesByCode, sectionCode, page])
 
@@ -120,33 +122,17 @@ const ApplicationPageWrapper: React.FC = () => {
     setPageElements(elements)
   }, [responsesLoading, currentSection, page, elementsState])
 
-  const validatePreviousPage = (sectionCode: string, pageNumber: number): boolean => {
-    const currentSection = getCurrentSection(
-      templateSections,
-      sectionCode
-    ) as TemplateSectionPayload
+  const defaultCurrentPage = {
+    section: currentSection as TemplateSectionPayload,
+    page: Number(page),
+  }
 
-    // Check for first page/section, which don't have a previous page
-    if (currentSection.index === 0 && pageNumber === 1) return true
-
-    // Check if previous page is in the same section
-    const previousSection =
-      pageNumber - 1 > 0
-        ? currentSection
-        : getPreviousSection(templateSections, currentSection.index)
-
-    // Will check if previous page is in a other section
-    if (!previousSection) {
-      console.log('Problem to check previous page - section not found!')
-      return false
-    }
-    const previousPage = pageNumber - 1 > 0 ? pageNumber - 1 : previousSection.totalPages
-
+  const validateElementsInPage = ({ section, page } = defaultCurrentPage): boolean => {
     const pageElementsStatuses = getPageElementsStatuses({
       elementsState: elementsState as ApplicationElementStates,
       responses: responsesByCode as ResponsesByCode,
-      currentSectionIndex: previousSection.index,
-      page: previousPage,
+      currentSectionIndex: section.index,
+      page,
     })
 
     if (application?.isLinear && responsesByCode) {
@@ -221,8 +207,8 @@ const ApplicationPageWrapper: React.FC = () => {
               serialNumber={serialNumber as string}
               progressStructure={progressInApplication}
               currentSectionPage={{ sectionIndex: currentSection.index, currentPage: Number(page) }}
-              validatePreviousPage={validatePreviousPage}
-              push={push}
+              getPreviousPage={(props) => getPreviousPage({ templateSections, ...props })}
+              validateElementsInPage={validateElementsInPage}
             />
           )}
         </Grid.Column>
@@ -240,7 +226,7 @@ const ApplicationPageWrapper: React.FC = () => {
               currentSection={currentSection}
               serialNumber={serialNumber}
               currentPage={Number(page as string)}
-              validatePreviousPage={validatePreviousPage}
+              validateElementsInPage={validateElementsInPage}
               showValidationModal={showValidationModal}
               modalState={{ showModal, setShowModal }}
             />
@@ -288,13 +274,6 @@ function showValidationModal(showModal: ModalProps, setShowModal: Function) {
     </Modal>
   )
 }
-
-const getCurrentSection = (templateSections: TemplateSectionPayload[], sectionCode: string) =>
-  templateSections.find(({ code }) => code === sectionCode)
-
-// TODO: If we allow gaps between section index this needs improvement!
-const getPreviousSection = (templateSections: TemplateSectionPayload[], currentIndex: number) =>
-  templateSections.find(({ index }) => index === currentIndex - 1)
 
 const getPageHasRequiredQuestions = (elements: ElementState[]): boolean =>
   elements.some(
@@ -366,6 +345,7 @@ function buildProgressInApplication({
   const isCurrentSection = (sectionIndex: number) => sectionIndex === currentSection
 
   const isPreviousPageValid = (pageNumber: number, sectionIndex: number): boolean => {
+    if (pageNumber === 1 && sectionIndex === 0) return true // First page in first section can be navigated always
     const previousPage = pageNumber - 1
     const isPreviousActive =
       previousPage > 0
@@ -401,7 +381,7 @@ function buildProgressInApplication({
     const progressInSection: ProgressInSection = {
       code: section.code,
       title: section.title,
-      canNavigate: isLinear && (section.index <= currentSection || isPreviousSectionValid),
+      canNavigate: !isLinear || section.index <= currentSection || isPreviousSectionValid,
       isActive: section.index === currentSection,
 
       // Run each page using strict validation mode for linear application with visited pages

@@ -7,6 +7,7 @@ export {
   ApplicationElementStates,
   AppStatus,
   AssignmentDetails,
+  CurrentPage,
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
@@ -63,6 +64,11 @@ interface AssignmentDetails {
   id: number
   review?: ReviewDetails
   questions: ReviewQuestion[]
+}
+
+interface CurrentPage {
+  section: TemplateSectionPayload
+  page: number
 }
 
 type ElementPluginParameterValue = string | number | string[] | IQueryNode

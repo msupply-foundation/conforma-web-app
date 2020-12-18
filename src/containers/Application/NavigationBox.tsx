@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { Button, Container, Label, ModalProps } from 'semantic-ui-react'
+import React from 'react'
+import { Container, Label, ModalProps } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { TemplateSectionPayload } from '../../utils/types'
+import { CurrentPage, TemplateSectionPayload } from '../../utils/types'
 import messages from '../../utils/messages'
 import strings from '../../utils/constants'
 
@@ -10,7 +10,7 @@ interface NavigationBoxProps {
   currentSection: TemplateSectionPayload
   serialNumber: string
   currentPage: number
-  validatePreviousPage: (sectionCode: string, page: number) => boolean
+  validateElementsInPage: (props?: CurrentPage) => boolean
   showValidationModal: Function
   modalState: { showModal: ModalProps; setShowModal: Function }
 }
@@ -20,7 +20,7 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
   currentSection,
   serialNumber,
   currentPage,
-  validatePreviousPage,
+  validateElementsInPage,
   modalState: { setShowModal },
 }) => {
   const nextSection = templateSections.find(({ index }) => index === currentSection.index + 1)
@@ -54,7 +54,7 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
     const page = nextPage > currentSection.totalPages ? 1 : nextPage
 
     // Check if previous page (related to next) is valid
-    const status = validatePreviousPage(section.code, page)
+    const status = validateElementsInPage()
 
     if (!status) setShowModal({ open: true, ...messages.VALIDATION_FAIL })
     else sendToPage(section.code, page)
