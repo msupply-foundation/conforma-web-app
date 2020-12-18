@@ -64,7 +64,8 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
     } else sendToPage(currentSection.code, nextPage)
   }
 
-  //
+  // Make sure all responses are up-to-date (areTimestampsInSequence)
+  // and only proceed when button is clicked AND responses are ready
   useEffect(() => {
     if (areTimestampsInSequence && nextButtonClicked) {
       nextPageButtonHandler()
