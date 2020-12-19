@@ -193,6 +193,7 @@ const ApplicationPageWrapper: React.FC = () => {
   }, [areTimestampsInSequence, summaryButtonClicked])
 
   const handleSummaryClick = async () => {
+    setSummaryButtonClicked(false)
     const revalidate = await revalidateAll(
       elementsState as ApplicationElementStates,
       responsesByCode as ResponsesByCode,
@@ -211,7 +212,6 @@ const ApplicationPageWrapper: React.FC = () => {
 
     if (!revalidate.allValid) {
       setShowModal({ open: true, ...messages.VALIDATION_FAIL })
-      setSummaryButtonClicked(false)
     } else push(`/application/${serialNumber}/summary`)
   }
 

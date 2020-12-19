@@ -8,7 +8,6 @@ const createAuthorisationHeader = (JWT: string) => ({
 })
 
 const useGetUserInfo = () => {
-  console.log('GETTING USER INFO')
   const [templatePermissions, setTemplatePermissions] = useState<TemplatePermissions | null>(null)
   const [user, setUser] = useState<User | null>(null)
 

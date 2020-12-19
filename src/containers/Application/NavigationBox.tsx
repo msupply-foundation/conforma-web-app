@@ -39,7 +39,6 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
 
   const { push } = useRouter()
   const sendToPage = (section: string, page: number) => {
-    setNextButtonClicked(false)
     push(`/application/${serialNumber}/${section}/Page${page}`)
   }
 
@@ -57,6 +56,7 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
     // Get the next page and section
     const nextPage = currentPage + 1
     const section = nextPage > currentSection.totalPages ? nextSection : currentSection
+    setNextButtonClicked(false)
     if (!section) {
       console.log('Problem to load next page (not found)!')
       return
@@ -68,7 +68,6 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
 
     if (!status) {
       setShowModal({ open: true, ...messages.VALIDATION_FAIL })
-      setNextButtonClicked(false)
     } else sendToPage(section.code, page)
   }
 
