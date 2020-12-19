@@ -101,11 +101,9 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
   useEffect(() => {
     if (assignment && templateSections) {
       const sections = assignment.questions.reduce((sections: string[], { sectionIndex }) => {
-        if (sectionIndex) {
-          const templateSection = templateSections.find(({ index }) => index === sectionIndex)
-          if (templateSection) {
-            if (!sections.includes(templateSection.title)) sections.push(templateSection.title)
-          }
+        const templateSection = templateSections.find(({ index }) => index === sectionIndex)
+        if (templateSection) {
+          if (!sections.includes(templateSection.title)) sections.push(templateSection.title)
         }
         return sections
       }, [])

@@ -1,4 +1,8 @@
-import { TemplateElement, TemplateElementCategory } from './generated/graphql'
+import {
+  ReviewResponseDecision,
+  TemplateElement,
+  TemplateElementCategory,
+} from './generated/graphql'
 
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
@@ -8,6 +12,7 @@ export {
   ApplicationElementStates,
   AppStatus,
   AssignmentDetails,
+  CurrentPage,
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
@@ -23,7 +28,6 @@ export {
   ResponseFull,
   ResponsePayload,
   ResponsesByCode,
-  ReviewDecision,
   ReviewDetails,
   ReviewQuestion,
   ReviewQuestionDecision,
@@ -74,6 +78,11 @@ interface AssignmentDetails {
   id: number
   review?: ReviewDetails
   questions: ReviewQuestion[]
+}
+
+interface CurrentPage {
+  section: TemplateSectionPayload
+  page: number
 }
 
 type ElementPluginParameterValue = string | number | string[] | IQueryNode
@@ -129,7 +138,7 @@ interface PageElementsStatuses {
 }
 
 interface ProgressInPage {
-  pageName: string
+  pageNumber: number
   status: ProgressStatus
   canNavigate: boolean
   isActive: boolean
@@ -165,11 +174,14 @@ interface ResponsesByCode {
   [key: string]: ResponseFull
 }
 
-type ReviewDecision = 'Approve' | 'Reject'
-
 interface ReviewDetails {
   id: number
   status: string
+}
+
+interface ReviewerDetails {
+  id: number
+  username: string
 }
 
 interface ReviewQuestion {
@@ -178,12 +190,14 @@ interface ReviewQuestion {
   sectionIndex: number
 }
 interface ReviewQuestionDecision {
+  id: number
   comment: string
-  decision: ReviewDecision | undefined
+  decision: ReviewResponseDecision | undefined
 }
 
 interface SectionElementStates {
   section: SectionDetails
+  assigned?: ReviewerDetails
   pages: {
     [pageName: string]: {
       element: ElementState

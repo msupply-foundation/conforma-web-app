@@ -41,6 +41,7 @@ import {
   ValidationMode,
 } from '../../utils/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
+import getPreviousPage from '../../utils/helpers/getPreviousPage'
 
 const ApplicationPageWrapper: React.FC = () => {
   const {
@@ -144,17 +145,17 @@ const ApplicationPageWrapper: React.FC = () => {
     setPageElements(elements)
   }, [responsesLoading, currentSection, page, elementsState])
 
-  const validateCurrentPage = (): boolean => {
-    if (!application || !currentSection || !page) {
-      console.log('Problem to validate - Undefined parameters')
-      return false
-    }
+  const defaultCurrentPage = {
+    section: currentSection as TemplateSectionPayload,
+    page: Number(page),
+  }
 
+  const validateElementsInPage = ({ section, page } = defaultCurrentPage): boolean => {
     const pageElementsStatuses = getPageElementsStatuses({
       elementsState: elementsState as ApplicationElementStates,
       responses: responsesByCode as ResponsesByCode,
-      currentSectionIndex: currentSection?.index as number,
-      page: Number(page),
+      currentSectionIndex: section.index,
+      page,
     })
 
     if (application?.isLinear && responsesByCode) {
@@ -240,8 +241,8 @@ const ApplicationPageWrapper: React.FC = () => {
               serialNumber={serialNumber as string}
               progressStructure={progressInApplication}
               currentSectionPage={{ sectionIndex: currentSection.index, currentPage: Number(page) }}
-              validateCurrentPage={validateCurrentPage}
-              push={push}
+              getPreviousPage={(props) => getPreviousPage({ templateSections, ...props })}
+              validateElementsInPage={validateElementsInPage}
             />
           )}
         </Grid.Column>
@@ -259,7 +260,7 @@ const ApplicationPageWrapper: React.FC = () => {
               currentSection={currentSection}
               serialNumber={serialNumber}
               currentPage={Number(page as string)}
-              validateCurrentPage={validateCurrentPage}
+              validateElementsInPage={validateElementsInPage}
               showValidationModal={showValidationModal}
               modalState={{ showModal, setShowModal }}
             />
@@ -379,6 +380,7 @@ function buildProgressInApplication({
   const isCurrentSection = (sectionIndex: number) => sectionIndex === currentSection
 
   const isPreviousPageValid = (pageNumber: number, sectionIndex: number): boolean => {
+    if (pageNumber === 1 && sectionIndex === 0) return true // First page in first section can be navigated always
     const previousPage = pageNumber - 1
     const isPreviousActive =
       previousPage > 0
@@ -414,7 +416,7 @@ function buildProgressInApplication({
     const progressInSection: ProgressInSection = {
       code: section.code,
       title: section.title,
-      canNavigate: isLinear && (section.index <= currentSection || isPreviousSectionValid),
+      canNavigate: !isLinear || section.index <= currentSection || isPreviousSectionValid,
       isActive: section.index === currentSection,
 
       // Run each page using strict validation mode for linear application with visited pages
@@ -426,7 +428,7 @@ function buildProgressInApplication({
         previousPageStatus = status // Update new previous page for next iteration
 
         return {
-          pageName: `Page ${pageNumber}`,
+          pageNumber,
           canNavigate: isLinear ? isPreviousPageValid(pageNumber, section.index) : true,
           isActive: isCurrentPage(pageNumber, section.index),
           status,

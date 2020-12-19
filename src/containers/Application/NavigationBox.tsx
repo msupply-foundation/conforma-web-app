@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Container, Label, ModalProps } from 'semantic-ui-react'
-import { useRouter } from '../../utils/hooks/useRouter'
+import { Container, Label, ModalProps } from 'semantic-ui-react'
 import { useApplicationState } from '../../contexts/ApplicationState'
-import { TemplateSectionPayload } from '../../utils/types'
+import { useRouter } from '../../utils/hooks/useRouter'
+import { CurrentPage, TemplateSectionPayload } from '../../utils/types'
 import messages from '../../utils/messages'
 import strings from '../../utils/constants'
 
@@ -11,20 +11,26 @@ interface NavigationBoxProps {
   currentSection: TemplateSectionPayload
   serialNumber: string
   currentPage: number
-  validateCurrentPage: () => boolean
+  validateElementsInPage: (props?: CurrentPage) => boolean
   showValidationModal: Function
   modalState: { showModal: ModalProps; setShowModal: Function }
 }
 
-const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
-  const { templateSections, currentSection, serialNumber, currentPage, validateCurrentPage } = props
-  const { showModal, setShowModal } = props.modalState
+const NavigationBox: React.FC<NavigationBoxProps> = ({
+  templateSections,
+  currentSection,
+  serialNumber,
+  currentPage,
+  validateElementsInPage,
+  modalState: { setShowModal },
+}) => {
   const {
     applicationState: {
       inputElementsActivity: { areTimestampsInSequence },
     },
   } = useApplicationState()
   const [nextButtonClicked, setNextButtonClicked] = useState(false)
+
   const nextSection = templateSections.find(({ index }) => index === currentSection.index + 1)
   const previousSection = templateSections.find(({ index }) => index === currentSection.index - 1)
 
@@ -48,20 +54,22 @@ const NavigationBox: React.FC<NavigationBoxProps> = (props) => {
   }
 
   const nextPageButtonHandler = async () => {
-    // Run the validation on the current page
-    const status = validateCurrentPage()
+    // Get the next page and section
+    const nextPage = currentPage + 1
+    const section = nextPage > currentSection.totalPages ? nextSection : currentSection
+    if (!section) {
+      console.log('Problem to load next page (not found)!')
+      return
+    }
+    const page = nextPage > currentSection.totalPages ? 1 : nextPage
+
+    // Check if previous page (related to next) is valid
+    const status = validateElementsInPage()
+
     if (!status) {
       setShowModal({ open: true, ...messages.VALIDATION_FAIL })
       setNextButtonClicked(false)
-      return
-    }
-    const nextPage = currentPage + 1
-    if (nextPage > currentSection.totalPages) {
-      // Will check if next page is in other section
-      nextSection
-        ? sendToPage(nextSection.code, 1)
-        : console.log('Problem to load next page (not found)!')
-    } else sendToPage(currentSection.code, nextPage)
+    } else sendToPage(section.code, page)
   }
 
   // Make sure all responses are up-to-date (areTimestampsInSequence)
