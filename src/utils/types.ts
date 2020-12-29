@@ -203,8 +203,9 @@ interface TemplateTypePayload {
   id: number
   name: string
   code: string
-  description: string
-  documents: Array<string>
+  startTitle?: string
+  startMessage?: string
+  submissionMessage: string
 }
 
 interface TemplateSectionPayload {
