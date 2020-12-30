@@ -27,6 +27,7 @@ import { ReviewOverview, ReviewPageWrapper } from '../Review'
 import UserRegister from '../User/UserRegister'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import ApplicationOverview from '../Application/ApplicationOverview'
+import ApplicationSubmission from '../Application/ApplicationSubmission'
 
 const SiteLayout: React.FC = () => {
   return (
@@ -69,6 +70,9 @@ const SiteLayout: React.FC = () => {
               </Route>
               <Route exact path="/application/:serialNumber/:sectionCode/Page:page">
                 <ApplicationPageWrapper />
+              </Route>
+              <Route exact path="/application/:serialNumber/submission">
+                <ApplicationSubmission />
               </Route>
               <Route exact path="/application/:serialNumber/summary">
                 <ApplicationOverview />

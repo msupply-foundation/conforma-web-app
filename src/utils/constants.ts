@@ -14,6 +14,7 @@ export default {
   ERROR_APPLICATION_OVERVIEW: 'Problem to load application overview',
   ERROR_APPLICATION_PAGE: 'Problem to load application',
   ERROR_APPLICATION_SECTION: 'Section cannot be displayed',
+  ERROR_APPLICATION_SUBMISSION: 'Problem to load application submission page',
   ERROR_APPLICATION_SUBMIT: 'Problem to submit application',
   ERROR_APPLICATIONS_LIST: 'Problem to load applications list',
   ERROR_REVIEW_APPLICATION: 'Problem loading application for review',
@@ -24,6 +25,7 @@ export default {
   LABEL_ASSIGNED_TO_OTHER: 'Assigned to another reviewer',
   LABEL_LOGIN_PASSWORD: 'Password',
   LABEL_LOGIN_USERNAME: 'Username',
+  LABEL_PROCESSING: 'Processing...',
   LABEL_WELCOME: 'Welcome to IRIMS Application Manager',
   LINK_LOGIN_USER: 'Create new account',
   TITLE_APPLICATION_FORM: 'application form',
@@ -35,5 +37,6 @@ export default {
   STAGE_PLACEHOLDER: 'Assessment',
   SUBTITLE_APPLICATION_STEPS:
     'The following sterps will need to be completed before the form can be submitted',
+  SUBTITLE_SUBMISSION_STEPS: 'It will be going throught the following stages before approval',
   SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you',
 }
