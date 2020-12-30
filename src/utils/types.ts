@@ -41,6 +41,7 @@ export {
   ValidateObject,
   ValidityFailure,
   RevalidateResult,
+  UseGetApplicationProps,
   User,
 }
 
@@ -252,6 +253,11 @@ interface ValidityFailure {
 interface RevalidateResult {
   allValid: boolean
   validityFailures: ValidityFailure[]
+}
+
+interface UseGetApplicationProps {
+  serialNumber: string
+  isApplicationLoaded?: boolean
 }
 
 interface User {

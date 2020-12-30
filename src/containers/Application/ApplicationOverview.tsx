@@ -41,7 +41,7 @@ const ApplicationOverview: React.FC = () => {
   })
 
   const { error: submitError, processing, submitted, submit } = useUpdateApplication({
-    applicationSerial: serialNumber as string,
+    serialNumber: serialNumber as string,
   })
 
   const [responseMutation] = useUpdateResponseMutation()

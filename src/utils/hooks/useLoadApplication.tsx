@@ -6,13 +6,14 @@ import {
 } from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
 import { getApplicationSections } from '../helpers/getSectionsPayload'
-import { ApplicationDetails, AppStatus, TemplateSectionPayload } from '../types'
+import {
+  ApplicationDetails,
+  AppStatus,
+  TemplateSectionPayload,
+  UseGetApplicationProps,
+} from '../types'
 
-interface useLoadApplicationProps {
-  serialNumber: string
-}
-
-const useLoadApplication = (props: useLoadApplicationProps) => {
+const useLoadApplication = (props: UseGetApplicationProps) => {
   const { serialNumber } = props
   const [application, setApplication] = useState<ApplicationDetails>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
