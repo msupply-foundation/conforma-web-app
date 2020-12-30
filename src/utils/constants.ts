@@ -37,6 +37,6 @@ export default {
   STAGE_PLACEHOLDER: 'Assessment',
   SUBTITLE_APPLICATION_STEPS:
     'The following sterps will need to be completed before the form can be submitted',
-  SUBTITLE_SUBMISSION_STEPS: 'It will be going throught the following stages before approval',
+  SUBTITLE_SUBMISSION_STEPS: 'It will be going through the following stages before approval',
   SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you',
 }
