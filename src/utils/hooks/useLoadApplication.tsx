@@ -6,18 +6,12 @@ import {
 } from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
 import { getApplicationSections } from '../helpers/getSectionsPayload'
-import {
-  ApplicationDetails,
-  AppStatus,
-  TemplateSectionPayload,
-  UseGetApplicationProps,
-} from '../types'
+import { ApplicationDetails, TemplateSectionPayload, UseGetApplicationProps } from '../types'
 
 const useLoadApplication = (props: UseGetApplicationProps) => {
   const { serialNumber } = props
   const [application, setApplication] = useState<ApplicationDetails>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
-  const [appStatus, setAppStatus] = useState<AppStatus>()
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
 
   const { triggerProcessing, error: triggerError } = useTriggerProcessing({
@@ -36,8 +30,6 @@ const useLoadApplication = (props: UseGetApplicationProps) => {
   useEffect(() => {
     if (data && data.applicationBySerial && data.applicationStageStatusAlls) {
       const application = data.applicationBySerial as Application
-      const stagesStatusAll = data.applicationStageStatusAlls.nodes as ApplicationStageStatusAll[]
-      const currentStage = stagesStatusAll[0]
 
       const applicationDetails = {
         id: application.id,
@@ -45,8 +37,7 @@ const useLoadApplication = (props: UseGetApplicationProps) => {
         isLinear: application.template?.isLinear as boolean,
         serial: application.serial as string,
         name: application.name as string,
-        stageId: currentStage ? (currentStage.stageId as number) : undefined,
-        stage: currentStage ? (currentStage.stage as string) : '',
+        stage: application.stage ? (application.stage as string) : '',
         status: application.status as string,
         outcome: application.outcome as string,
       }
@@ -55,12 +46,6 @@ const useLoadApplication = (props: UseGetApplicationProps) => {
 
       const sections = getApplicationSections(application.applicationSections)
       setSections(sections)
-
-      setAppStatus({
-        stage: currentStage ? (currentStage.stage as string) : '',
-        status: application?.status as string,
-        outcome: application?.outcome as string,
-      })
       setIsApplicationLoaded(true)
     }
   }, [data, loading, error])
@@ -70,7 +55,6 @@ const useLoadApplication = (props: UseGetApplicationProps) => {
     loading: loading || triggerProcessing,
     application,
     templateSections,
-    appStatus,
     isApplicationLoaded,
   }
 }

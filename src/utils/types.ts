@@ -9,7 +9,6 @@ import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 export {
   ApplicationDetails,
   ApplicationElementStates,
-  AppStatus,
   AssignmentDetails,
   CurrentPage,
   ElementPluginParameterValue,
@@ -32,8 +31,10 @@ export {
   SectionElementStates,
   SectionDetails,
   SectionStructure,
-  TemplateTypePayload,
+  StageAndStatus,
   TemplateSectionPayload,
+  TemplateStages,
+  TemplateTypePayload,
   TemplateElementState,
   TemplatePermissions,
   ValidationMode,
@@ -50,7 +51,6 @@ interface ApplicationDetails {
   type: string
   serial: string
   name: string
-  stageId: number | undefined
   stage: string
   status: string
   outcome: string
@@ -59,12 +59,6 @@ interface ApplicationDetails {
 
 interface ApplicationElementStates {
   [key: string]: ElementState
-}
-
-interface AppStatus {
-  stage: string
-  status: string
-  outcome: string
 }
 
 interface AssignmentDetails {
@@ -200,13 +194,16 @@ interface SectionDetails {
 
 type SectionStructure = SectionElementStates[]
 
-interface TemplateTypePayload {
-  id: number
-  name: string
-  code: string
-  startTitle?: string
-  startMessage?: string
-  submissionMessage: string
+interface StageAndStatus {
+  stageId: number | undefined
+  stage: string
+  status: string
+}
+
+interface StageDetails {
+  number: number
+  title: string
+  description?: string
 }
 
 interface TemplateSectionPayload {
@@ -215,6 +212,19 @@ interface TemplateSectionPayload {
   title: string
   index: number
   totalPages: number
+}
+
+interface TemplateStages {
+  [key: number]: StageDetails
+}
+
+interface TemplateTypePayload {
+  id: number
+  name: string
+  code: string
+  startTitle?: string
+  startMessage?: string
+  submissionMessage: string
 }
 
 interface TemplateElementState extends ElementBase {

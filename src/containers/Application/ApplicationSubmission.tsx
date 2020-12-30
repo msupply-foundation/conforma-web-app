@@ -2,9 +2,9 @@ import React, { useEffect } from 'react'
 import { Container, Header, Icon, Message, Segment } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import strings from '../../utils/constants'
-import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
+import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
 
 const ApplicationSubmission: React.FC = () => {
   const {
@@ -13,7 +13,8 @@ const ApplicationSubmission: React.FC = () => {
 
   const { query, push } = useRouter()
   const { serialNumber } = query
-  const { error, loading, appStatus } = useLoadApplication({
+
+  const { error, loading, appStatus } = useGetApplicationStatus({
     serialNumber: serialNumber as string,
   })
 
@@ -31,13 +32,15 @@ const ApplicationSubmission: React.FC = () => {
   ) : loading ? (
     <Loading />
   ) : serialNumber && appStatus ? (
-    <Container textAlign="center">
-      <Segment>
+    <Container>
+      <Segment textAlign="center">
         <Header icon>
           <Icon name="clock outline" color="blue" size="huge" />
           {strings.LABEL_PROCESSING}
         </Header>
+        <Header></Header>
       </Segment>
+      <Header as="h3">{strings.SUBTITLE_SUBMISSION_STEPS}</Header>
     </Container>
   ) : (
     <Message error header={strings.ERROR_APPLICATION_SUBMISSION} />

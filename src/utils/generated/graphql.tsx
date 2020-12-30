@@ -1680,6 +1680,8 @@ export type TemplateStageFilter = {
   number?: Maybe<IntFilter>;
   /** Filter by the object’s `title` field. */
   title?: Maybe<StringFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: Maybe<StringFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationStageHistoriesByStageId` relation. */
@@ -3292,6 +3294,8 @@ export enum TemplateStagesOrderBy {
   NumberDesc = 'NUMBER_DESC',
   TitleAsc = 'TITLE_ASC',
   TitleDesc = 'TITLE_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -3306,6 +3310,8 @@ export type TemplateStageCondition = {
   number?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `title` field. */
   title?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
 };
@@ -3330,6 +3336,7 @@ export type TemplateStage = Node & {
   id: Scalars['Int'];
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   /** Reads a single `Template` that is related to this `TemplateStage`. */
   template?: Maybe<Template>;
@@ -7403,6 +7410,7 @@ export type UpdateTemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyPatc
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
@@ -9711,6 +9719,7 @@ export type UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyP
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -9785,6 +9794,7 @@ export type UpdateTemplateStageOnApplicationStageHistoryForApplicationStageHisto
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -12346,6 +12356,7 @@ export type TemplateStagePatch = {
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -12357,6 +12368,7 @@ export type ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput = {
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -12552,6 +12564,7 @@ export type ReviewAssignmentStageIdFkeyTemplateStageCreateInput = {
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -13679,6 +13692,7 @@ export type TemplateStageTemplateIdFkeyTemplateStageCreateInput = {
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
@@ -14770,6 +14784,7 @@ export type TemplateStageInput = {
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -17195,7 +17210,7 @@ export type AddNewUserFragment = (
 
 export type ApplicationFragment = (
   { __typename?: 'Application' }
-  & Pick<Application, 'id' | 'serial' | 'name' | 'status' | 'outcome'>
+  & Pick<Application, 'id' | 'serial' | 'name' | 'stage' | 'status' | 'outcome'>
 );
 
 export type ElementFragment = (
@@ -17522,6 +17537,25 @@ export type GetReviewAssignmentQuery = (
   )> }
 );
 
+export type GetStagesAndStatusQueryVariables = Exact<{
+  serial: Scalars['String'];
+}>;
+
+
+export type GetStagesAndStatusQuery = (
+  { __typename?: 'Query' }
+  & { applicationBySerial?: Maybe<(
+    { __typename?: 'Application' }
+    & Pick<Application, 'status'>
+  )>, applicationStageStatusAlls?: Maybe<(
+    { __typename?: 'ApplicationStageStatusAllsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ApplicationStageStatusAll' }
+      & Pick<ApplicationStageStatusAll, 'serial' | 'stageHistoryId' | 'stage' | 'stageId' | 'stageNumber'>
+    )>> }
+  )> }
+);
+
 export type GetTemplateQueryVariables = Exact<{
   code: Scalars['String'];
   status?: Maybe<TemplateStatus>;
@@ -17551,7 +17585,7 @@ export type GetTemplateQuery = (
         { __typename?: 'TemplateStagesConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'TemplateStage' }
-          & Pick<TemplateStage, 'id' | 'number' | 'title'>
+          & Pick<TemplateStage, 'id' | 'number' | 'title' | 'description'>
         )>> }
       ) }
       & TemplateFragment
@@ -17609,6 +17643,7 @@ export const ApplicationFragmentDoc = gql`
   id
   serial
   name
+  stage
   status
   outcome
 }
@@ -18166,6 +18201,48 @@ export function useGetReviewAssignmentLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetReviewAssignmentQueryHookResult = ReturnType<typeof useGetReviewAssignmentQuery>;
 export type GetReviewAssignmentLazyQueryHookResult = ReturnType<typeof useGetReviewAssignmentLazyQuery>;
 export type GetReviewAssignmentQueryResult = Apollo.QueryResult<GetReviewAssignmentQuery, GetReviewAssignmentQueryVariables>;
+export const GetStagesAndStatusDocument = gql`
+    query getStagesAndStatus($serial: String!) {
+  applicationBySerial(serial: $serial) {
+    status
+  }
+  applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true}) {
+    nodes {
+      serial
+      stageHistoryId
+      stage
+      stageId
+      stageNumber
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetStagesAndStatusQuery__
+ *
+ * To run a query within a React component, call `useGetStagesAndStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStagesAndStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStagesAndStatusQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *   },
+ * });
+ */
+export function useGetStagesAndStatusQuery(baseOptions?: Apollo.QueryHookOptions<GetStagesAndStatusQuery, GetStagesAndStatusQueryVariables>) {
+        return Apollo.useQuery<GetStagesAndStatusQuery, GetStagesAndStatusQueryVariables>(GetStagesAndStatusDocument, baseOptions);
+      }
+export function useGetStagesAndStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStagesAndStatusQuery, GetStagesAndStatusQueryVariables>) {
+          return Apollo.useLazyQuery<GetStagesAndStatusQuery, GetStagesAndStatusQueryVariables>(GetStagesAndStatusDocument, baseOptions);
+        }
+export type GetStagesAndStatusQueryHookResult = ReturnType<typeof useGetStagesAndStatusQuery>;
+export type GetStagesAndStatusLazyQueryHookResult = ReturnType<typeof useGetStagesAndStatusLazyQuery>;
+export type GetStagesAndStatusQueryResult = Apollo.QueryResult<GetStagesAndStatusQuery, GetStagesAndStatusQueryVariables>;
 export const GetTemplateDocument = gql`
     query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE) {
   templates(condition: {code: $code, status: $status}) {
@@ -18186,6 +18263,7 @@ export const GetTemplateDocument = gql`
           id
           number
           title
+          description
         }
       }
     }
