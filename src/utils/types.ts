@@ -9,6 +9,7 @@ import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 export {
   ApplicationDetails,
   ApplicationElementStates,
+  ApplicationStages,
   AssignmentDetails,
   CurrentPage,
   ElementPluginParameterValue,
@@ -33,7 +34,6 @@ export {
   SectionStructure,
   StageAndStatus,
   TemplateSectionPayload,
-  TemplateStages,
   TemplateTypePayload,
   TemplateElementState,
   TemplatePermissions,
@@ -60,7 +60,10 @@ interface ApplicationDetails {
 interface ApplicationElementStates {
   [key: string]: ElementState
 }
-
+interface ApplicationStages {
+  stages: StageDetails[]
+  submissionMessage: string
+}
 interface AssignmentDetails {
   id: number
   review?: ReviewDetails
@@ -214,17 +217,12 @@ interface TemplateSectionPayload {
   totalPages: number
 }
 
-interface TemplateStages {
-  [key: number]: StageDetails
-}
-
 interface TemplateTypePayload {
   id: number
   name: string
   code: string
   startTitle?: string
   startMessage?: string
-  submissionMessage: string
 }
 
 interface TemplateElementState extends ElementBase {

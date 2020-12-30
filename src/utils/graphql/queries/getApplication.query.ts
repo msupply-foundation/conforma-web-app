@@ -11,6 +11,11 @@ export default gql`
       }
       template {
         ...Template
+        templateStages {
+          nodes {
+            ...TemplateStage
+          }
+        }
       }
       applicationSections {
         nodes {

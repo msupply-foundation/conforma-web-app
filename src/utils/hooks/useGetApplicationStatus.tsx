@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react'
-import { StageAndStatus, UseGetApplicationProps } from '../types'
+import { ApplicationStages, StageAndStatus, UseGetApplicationProps } from '../types'
 import {
   Application,
   ApplicationStageStatusAll,
-  useGetStagesAndStatusQuery,
+  TemplateStage,
+  useGetApplicationStatusQuery,
 } from '../generated/graphql'
 
-const useGetApplicationStatus = ({
-  serialNumber,
-  isApplicationLoaded = true,
-}: UseGetApplicationProps) => {
+const useGetApplicationStatus = ({ serialNumber, isApplicationLoaded }: UseGetApplicationProps) => {
+  const [appStages, setAppStages] = useState<ApplicationStages>()
   const [appStatus, setAppStatus] = useState<StageAndStatus>()
 
-  const { data, loading, error } = useGetStagesAndStatusQuery({
+  const { data, loading, error } = useGetApplicationStatusQuery({
     variables: {
       serial: serialNumber,
     },
@@ -30,6 +29,17 @@ const useGetApplicationStatus = ({
         stage: currentStage ? (currentStage.stage as string) : '',
         status: application?.status as string,
       })
+
+      const templateStages = application.template?.templateStages.nodes as TemplateStage[]
+
+      setAppStages({
+        stages: templateStages.map((stage) => ({
+          number: stage.number as number,
+          title: stage.title as string,
+          description: stage.description ? stage.description : undefined,
+        })),
+        submissionMessage: application.template?.submissionMessage as string,
+      })
     }
   }, [data, loading, error])
 
@@ -37,6 +47,7 @@ const useGetApplicationStatus = ({
     error: error?.message,
     loading,
     appStatus,
+    appStages,
   }
 }
 
