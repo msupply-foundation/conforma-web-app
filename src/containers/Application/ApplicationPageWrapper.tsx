@@ -86,7 +86,7 @@ const ApplicationPageWrapper: React.FC = () => {
   // 1 - ProcessRedirect: Will redirect to summary in case application is SUBMITTED
   // 2 - Set the current section state of the application
   useEffect(() => {
-    if (elementsState && responsesByCode) {
+    if (!statusLoading && elementsState && responsesByCode) {
       processRedirect({
         ...appStatus,
         serialNumber,
@@ -103,7 +103,7 @@ const ApplicationPageWrapper: React.FC = () => {
       if (sectionCode && page)
         setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
     }
-  }, [elementsState, responsesByCode, sectionCode, page])
+  }, [statusLoading, elementsState, responsesByCode, sectionCode, page])
 
   // Wait for loading (and evaluating elements and responses)
   // or a change of section/page to rebuild the progress bar
