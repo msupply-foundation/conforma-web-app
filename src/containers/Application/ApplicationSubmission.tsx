@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Container, Header, Icon, List, Message, Segment } from 'semantic-ui-react'
+import { Button, Header, Icon, Label, List, Message, Segment } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import strings from '../../utils/constants'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -7,6 +7,7 @@ import { useUserState } from '../../contexts/UserState'
 import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { ApplicationStatus } from '../../utils/generated/graphql'
+import { Link } from 'react-router-dom'
 
 const ApplicationSubmission: React.FC = () => {
   const {
@@ -16,7 +17,7 @@ const ApplicationSubmission: React.FC = () => {
   const { query, push } = useRouter()
   const { serialNumber } = query
 
-  const { error, loading, isApplicationLoaded } = useLoadApplication({
+  const { error, loading, application, isApplicationLoaded } = useLoadApplication({
     serialNumber: serialNumber as string,
   })
 
@@ -80,6 +81,17 @@ const ApplicationSubmission: React.FC = () => {
             </List>
           </Segment>
         )}
+        <Segment basic textAlign="center" style={{ margin: '50px 50px', padding: 10 }}>
+          <Button
+            color="blue"
+            as={Link}
+            to={`/application/${serialNumber}/summary`}
+            style={{ minWidth: 200 }}
+          >{`${strings.BUTTON_BACK_TO} ${application?.type}`}</Button>
+          <Label as={Link} to={'/'}>
+            {strings.BUTTON_BACK_DASHBOARD}
+          </Label>
+        </Segment>
       </Segment>
     </Segment.Group>
   ) : (

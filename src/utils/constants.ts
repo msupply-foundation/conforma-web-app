@@ -1,5 +1,7 @@
 export default {
   BUTTON_APPLICATION_START: 'Get started',
+  BUTTON_BACK_DASHBOARD: 'Back to dashboard',
+  BUTTON_BACK_TO: 'Back to',
   BUTTON_NEXT: 'Next',
   BUTTON_PREVIOUS: 'Previous',
   BUTTON_REVIEW_APPROVE_ALL: 'Approve all ',
