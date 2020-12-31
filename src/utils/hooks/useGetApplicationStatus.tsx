@@ -6,16 +6,22 @@ import {
   TemplateStage,
   useGetApplicationStatusQuery,
 } from '../generated/graphql'
+import useTriggerProcessing from './useTriggerProcessing'
 
 const useGetApplicationStatus = ({ serialNumber, isApplicationLoaded }: UseGetApplicationProps) => {
   const [appStages, setAppStages] = useState<ApplicationStages>()
   const [appStatus, setAppStatus] = useState<StageAndStatus>()
 
+  const { triggerProcessing, error: triggerError } = useTriggerProcessing({
+    serialNumber,
+    // triggerType: 'applicationTrigger',
+  })
+
   const { data, loading, error } = useGetApplicationStatusQuery({
     variables: {
       serial: serialNumber,
     },
-    skip: !isApplicationLoaded,
+    skip: triggerProcessing || !isApplicationLoaded,
   })
 
   useEffect(() => {

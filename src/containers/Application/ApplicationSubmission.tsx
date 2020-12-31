@@ -6,6 +6,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
 import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
+import { ApplicationStatus } from '../../utils/generated/graphql'
 
 const ApplicationSubmission: React.FC = () => {
   const {
@@ -30,10 +31,13 @@ const ApplicationSubmission: React.FC = () => {
   })
 
   useEffect(() => {
-    // Check application status is different to Submitted and send to summary page
-    // Note: The summary page has its own redirect logic to any specific page.
-    if (!appStatus) return
-    if (appStatus?.status !== 'SUBMITTED') {
+    if (statusLoading) return
+    // Check if application is in Draft or Changes required status and redirect to the summary page
+    // Note: The summary page has its own redirection logic to ay specific page (with invalid items).
+    if (
+      appStatus?.status === ApplicationStatus.Draft ||
+      appStatus?.status === ApplicationStatus.ChangesRequired
+    ) {
       push(`/application/${serialNumber}/summary`)
     }
   }, [appStatus])
@@ -59,10 +63,10 @@ const ApplicationSubmission: React.FC = () => {
           <Icon name="clock outline" color="blue" size="huge" />
           {strings.LABEL_PROCESSING}
         </Header>
-        {appStages && <Header>{appStages.submissionMessage}</Header>}
+        {appStages && <Header as="h3">{appStages.submissionMessage}</Header>}
         {appStages && (
           <Segment basic textAlign="left" style={{ margin: '50px 50px', padding: 10 }}>
-            <Header as="h3">{strings.SUBTITLE_SUBMISSION_STEPS}</Header>
+            <Header as="h5">{strings.SUBTITLE_SUBMISSION_STEPS}</Header>
             <List>
               {appStages.stages.map((stage) => {
                 const { title, description } = stage

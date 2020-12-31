@@ -111,6 +111,7 @@ const ApplicationOverview: React.FC = () => {
     await revalidateAndUpdate()
     // All OK -- would have been re-directed otherwise:
     submit()
+    push(`/application/${serialNumber}/submission`)
   }
 
   return error || statusError ? (
