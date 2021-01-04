@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Label, ModalProps } from 'semantic-ui-react'
+import { useApplicationState } from '../../contexts/ApplicationState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { CurrentPage, TemplateSectionPayload } from '../../utils/types'
 import messages from '../../utils/messages'
@@ -23,6 +24,13 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
   validateElementsInPage,
   modalState: { setShowModal },
 }) => {
+  const {
+    applicationState: {
+      inputElementsActivity: { areTimestampsInSequence },
+    },
+  } = useApplicationState()
+  const [nextButtonClicked, setNextButtonClicked] = useState(false)
+
   const nextSection = templateSections.find(({ index }) => index === currentSection.index + 1)
   const previousSection = templateSections.find(({ index }) => index === currentSection.index - 1)
 
@@ -30,8 +38,9 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
   const isLastPage = currentPage + 1 > currentSection.totalPages && !nextSection
 
   const { push } = useRouter()
-  const sendToPage = (section: string, page: number) =>
+  const sendToPage = (section: string, page: number) => {
     push(`/application/${serialNumber}/${section}/Page${page}`)
+  }
 
   const previousButtonHandler = (_: any) => {
     const previousPage = currentPage - 1
@@ -43,10 +52,11 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
     } else sendToPage(currentSection.code, previousPage)
   }
 
-  const nextPageButtonHandler = (_: any): void => {
+  const nextPageButtonHandler = async () => {
     // Get the next page and section
     const nextPage = currentPage + 1
     const section = nextPage > currentSection.totalPages ? nextSection : currentSection
+    setNextButtonClicked(false)
     if (!section) {
       console.log('Problem to load next page (not found)!')
       return
@@ -56,9 +66,18 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
     // Check if previous page (related to next) is valid
     const status = validateElementsInPage()
 
-    if (!status) setShowModal({ open: true, ...messages.VALIDATION_FAIL })
-    else sendToPage(section.code, page)
+    if (!status) {
+      setShowModal({ open: true, ...messages.VALIDATION_FAIL })
+    } else sendToPage(section.code, page)
   }
+
+  // Make sure all responses are up-to-date (areTimestampsInSequence)
+  // and only proceed when button is clicked AND responses are ready
+  useEffect(() => {
+    if (areTimestampsInSequence && nextButtonClicked) {
+      nextPageButtonHandler()
+    }
+  }, [areTimestampsInSequence, nextButtonClicked])
 
   return (
     <Container>
@@ -68,7 +87,7 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
         </Label>
       )}
       {!isLastPage && (
-        <Label basic as="a" onClick={nextPageButtonHandler}>
+        <Label basic as="a" onClick={() => setNextButtonClicked(true)}>
           {strings.BUTTON_NEXT}
         </Label>
       )}
