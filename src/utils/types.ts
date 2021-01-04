@@ -254,6 +254,7 @@ interface RevalidateResult {
 }
 
 interface User {
+  id: number
   firstName: string
   lastName?: string | null
   username: string
