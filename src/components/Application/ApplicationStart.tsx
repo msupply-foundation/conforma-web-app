@@ -16,7 +16,11 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
 
   return template ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
-      <Button as="href" icon="angle left" label={{ content: name, color: 'grey' }} />
+      <Button
+        as="href"
+        icon="angle left"
+        label={{ content: `${name} ${strings.LABEL_APPLICATIONS}`, color: 'grey' }}
+      />
       <Header textAlign="center">{strings.TITLE_COMPANY_PLACEHOLDER}</Header>
       <Segment
         style={{
