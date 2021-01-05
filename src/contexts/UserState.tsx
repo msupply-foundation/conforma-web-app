@@ -3,7 +3,6 @@ import { TemplatePermissions, User } from '../utils/types'
 
 type UserState = {
   currentUser: User | null
-  users: Array<string>
   templatePermissions: TemplatePermissions
 }
 
@@ -14,10 +13,6 @@ export type UserActions =
     }
   | {
       type: 'resetCurrentUser'
-    }
-  | {
-      type: 'updateUsersList'
-      updatedUsers: Array<string>
     }
   | {
       type: 'setTemplatePermissions'
@@ -39,12 +34,6 @@ const reducer = (state: UserState, action: UserActions) => {
         ...state,
         currentUser: null,
       }
-    case 'updateUsersList':
-      const { updatedUsers } = action
-      return {
-        ...state,
-        users: updatedUsers,
-      }
     case 'setTemplatePermissions':
       const { templatePermissions } = action
       return {
@@ -58,7 +47,6 @@ const reducer = (state: UserState, action: UserActions) => {
 
 const initialState: UserState = {
   currentUser: null,
-  users: new Array<string>(),
   templatePermissions: {},
 }
 
