@@ -46,14 +46,23 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
       return
     }
 
-    const { id, code, name, templateSections } = template
+    const {
+      id,
+      code,
+      name,
+      startTitle,
+      startMessage,
+      submissionMessage,
+      templateSections,
+    } = template
 
     setTemplateType({
       id,
       code,
-      name: name ? name : 'Undefined name',
-      description: 'Include some description for this template',
-      documents: Array<string>(),
+      name: name as string,
+      startTitle: startTitle ? startTitle : undefined,
+      startMessage: startMessage ? startMessage : undefined,
+      submissionMessage: submissionMessage as string,
     })
 
     const sections = getTemplateSections(templateSections)

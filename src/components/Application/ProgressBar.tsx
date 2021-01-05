@@ -169,7 +169,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   return (
     <Sticky as={Container}>
       <Header as="h5" style={{ paddingLeft: 30 }}>
-        {strings.TITLE_PROGRESS}
+        {strings.TITLE_INTRODUCTION}
       </Header>
       <Accordion
         activeIndex={currentSectionPage ? currentSectionPage.sectionIndex : 0} //TODO: Change to get active from structure

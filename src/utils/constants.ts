@@ -1,4 +1,5 @@
 export default {
+  BUTTON_APPLICATION_START: 'Get started',
   BUTTON_NEXT: 'Next',
   BUTTON_PREVIOUS: 'Previous',
   BUTTON_REVIEW_APPROVE_ALL: 'Approve all ',
@@ -25,10 +26,14 @@ export default {
   LABEL_LOGIN_USERNAME: 'Username',
   LABEL_WELCOME: 'Welcome to IRIMS Application Manager',
   LINK_LOGIN_USER: 'Create new account',
+  TITLE_APPLICATION_FORM: 'application form',
   TITLE_APPLICATION_SUBMIT: 'Review & Submit',
   TITLE_COMPANY_PLACEHOLDER: 'ABC Company',
+  TITLE_INTRODUCTION: 'Introduction',
   TITLE_REVIEW_SUMMARY: 'Review Summary',
-  TITLE_PROGRESS: 'Introduction',
+  TITLE_STEPS: 'Steps to complete',
   STAGE_PLACEHOLDER: 'Assessment',
+  SUBTITLE_APPLICATION_STEPS:
+    'The following sterps will need to be completed before the form can be submitted',
   SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you',
 }
