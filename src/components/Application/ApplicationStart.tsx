@@ -12,7 +12,7 @@ export interface ApplicationStartProps {
 
 const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
   const { template, sections, handleClick } = props
-  const { name, code, startTitle, startMessage } = template
+  const { name, code, startMessage } = template
 
   return template ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
@@ -49,19 +49,12 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
                 ))}
             </List>
             <Divider />
-            {startTitle && (
+            {startMessage && (
               <Message info>
                 <Message.Header>
                   <Icon name="info circle" />
-                  {startTitle}
                 </Message.Header>
-                {startMessage && (
-                  <Message.List>
-                    {startMessage.split(/\r?\n/).map((str, index) => (
-                      <Message.Item key={`start-item-${index}`}>{str}</Message.Item>
-                    ))}
-                  </Message.List>
-                )}
+                <p>{startMessage}</p>
               </Message>
             )}
             <Button color="blue" onClick={handleClick}>
