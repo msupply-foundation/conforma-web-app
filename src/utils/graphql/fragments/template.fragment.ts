@@ -6,7 +6,6 @@ export default gql`
     id
     name
     isLinear
-    startTitle
     startMessage
     submissionMessage
   }

@@ -218,7 +218,6 @@ interface TemplateTypePayload {
   id: number
   name: string
   code: string
-  startTitle?: string
   startMessage?: string
   submissionMessage: string
 }
