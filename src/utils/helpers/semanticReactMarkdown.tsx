@@ -7,7 +7,7 @@ import React from 'react'
 import ReactMarkdown, { ReactMarkdownProps } from 'react-markdown'
 import { Message, Icon } from 'semantic-ui-react'
 
-type SemanticComponent = 'Message'
+type SemanticComponent = 'Message' // Enum for available renderers
 interface MarkdownBlockProps {
   text: string
   semanticComponent?: SemanticComponent
