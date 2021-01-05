@@ -1,6 +1,8 @@
 // Converts Markdown text into Semantic UI components
 // Uses ReactMarkdown library: https://www.npmjs.com/package/react-markdown
 
+// If no semanticComponent prop is supplied, will return standard HTML.
+
 import React from 'react'
 import ReactMarkdown, { ReactMarkdownProps } from 'react-markdown'
 import { Message, Icon } from 'semantic-ui-react'
