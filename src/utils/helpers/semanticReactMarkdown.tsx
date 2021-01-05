@@ -1,28 +1,44 @@
 // Converts Markdown text into Semantic UI components
-
-// Please add additional renderer methods here as required
+// Uses ReactMarkdown library: https://www.npmjs.com/package/react-markdown
 
 import React from 'react'
-import Markdown from 'react-markdown'
-import { Message } from 'semantic-ui-react'
+import ReactMarkdown, { ReactMarkdownProps } from 'react-markdown'
+import { Message, Icon } from 'semantic-ui-react'
 
-const MarkdownBlock: React.FC<any> = (props) => {
-  const { text, semanticComponent } = props
-  console.log(props)
+interface MarkdownBlockProps {
+  text: string
+  semanticComponent: string
+  info?: boolean
+}
+type Renderers = {
+  [key: string]: any
+}
 
-  return <Markdown children={text} renderers={renderers[semanticComponent]}></Markdown>
+const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
+  const { text, semanticComponent, info } = props
+
+  // These methods override the default HTML output for each type of
+  // Markdown node (heading, paragraph, etc.) so we can render them as Semantic
+  // components instead.
+  // Please add additional renderer methods here as required.
+  const renderers: Renderers = {
+    Message: {
+      root: (input: ReactMarkdownProps) => {
+        return <Message children={input.children} info={info} />
+      },
+      heading: ({ node: { children }, level }: any) => {
+        const headingText = children[0].value
+        return (
+          <Message.Header>
+            {info && <Icon name="info circle" />}
+            {headingText}
+          </Message.Header>
+        )
+      },
+    },
+  }
+
+  return <ReactMarkdown children={text} renderers={renderers[semanticComponent]}></ReactMarkdown>
 }
 
 export default MarkdownBlock
-
-const renderers: any = {
-  Message: {
-    root: (markdownText: any) => {
-      return <Message children={markdownText.children} info />
-    },
-    heading: ({ node: { children }, level }: any) => {
-      const text = children[0].value
-      return <Message.Header>{text}</Message.Header>
-    },
-  },
-}
