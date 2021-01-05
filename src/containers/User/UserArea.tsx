@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react'
-import { Button, Container, Label, Segment } from 'semantic-ui-react'
-import { useUserState } from '../../contexts/UserState'
-import { useGetUsersQuery, User } from '../../utils/generated/graphql'
-import useGetUserInfo from '../../utils/hooks/useGetUserInfo'
-import Loading from '../../components/Loading'
+import { Button, Grid, Label, Segment, Sticky } from 'semantic-ui-react'
 import { logOut } from '../User/Login'
+import strings from '../../utils/constants'
+import { useUserState } from '../../contexts/UserState'
+import useGetUserInfo from '../../utils/hooks/useGetUserInfo'
+import UserSelection from './UserSelection'
 
 const UserArea: React.FC = () => {
   const {
-    userState: { currentUser, users },
+    userState: { currentUser },
     setUserState,
   } = useUserState()
-  const { data, loading, error } = useGetUsersQuery()
   const { user, templatePermissions } = useGetUserInfo()
 
   // Set userinfo to context after receiving it from endpoint
@@ -28,35 +27,30 @@ const UserArea: React.FC = () => {
     setUserState({ type: 'setTemplatePermissions', templatePermissions })
   }, [templatePermissions])
 
-  useEffect(() => {
-    if (data && data.users && data.users.nodes) {
-      const users = data.users.nodes as Pick<User, 'username'>[]
-      const userNames = users
-        .filter((user) => user !== null)
-        .map(({ username }) => username) as string[]
-      setUserState({ type: 'updateUsersList', updatedUsers: userNames })
-    }
-  }, [data, error])
-
-  return loading ? (
-    <Loading />
-  ) : (
-    <Segment.Group vertical="true">
-      <Container>
-        <Label>The current user is: {currentUser?.username}</Label>
-      </Container>
-      <Container>
-        {users &&
-          users.map((user) => (
-            <Button basic key={`user-area-button-${user}`} color="green">
-              {user}
-            </Button>
-          ))}
-        <Button basic color="blue" onClick={logOut}>
-          Log out
-        </Button>
-      </Container>
-    </Segment.Group>
+  return (
+    <Sticky>
+      <Segment inverted vertical>
+        <Grid inverted>
+          <Grid.Column fluid style={{ width: '30%' }}>
+            <Segment inverted>{strings.TITLE_COMPANY_PLACEHOLDER}</Segment>
+          </Grid.Column>
+          <Grid.Column fluid style={{ width: '50%' }}>
+            <Segment inverted />
+          </Grid.Column>
+          <Grid.Column fluid style={{ width: '20%' }}>
+            <Segment inverted floated="right">
+              <Label as="Button" color="grey" style={{ width: '100%', padding: 10 }}>
+                {currentUser?.firstName}
+                <UserSelection />
+              </Label>
+              <Button basic color="blue" onClick={logOut}>
+                {strings.LABEL_LOG_OUT}
+              </Button>
+            </Segment>
+          </Grid.Column>
+        </Grid>
+      </Segment>
+    </Sticky>
   )
 }
 
