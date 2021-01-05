@@ -7,7 +7,7 @@ import { Message, Icon } from 'semantic-ui-react'
 
 interface MarkdownBlockProps {
   text: string
-  semanticComponent: string
+  semanticComponent?: string
   info?: boolean
 }
 type Renderers = {
@@ -28,6 +28,7 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
       },
       heading: ({ node: { children }, level }: any) => {
         const headingText = children[0].value
+        console.log('HEading')
         return (
           <Message.Header>
             {info && <Icon name="info circle" />}
@@ -38,7 +39,9 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
     },
   }
 
-  return <ReactMarkdown children={text} renderers={renderers[semanticComponent]}></ReactMarkdown>
+  const renderer = semanticComponent ? renderers[semanticComponent] : null
+
+  return <ReactMarkdown children={text} renderers={renderer}></ReactMarkdown>
 }
 
 export default MarkdownBlock

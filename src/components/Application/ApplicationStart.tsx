@@ -50,14 +50,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
                 ))}
             </List>
             <Divider />
-            {startMessage && (
-              <Message info>
-                <Message.Header>
-                  <Icon name="info circle" />
-                </Message.Header>
-                <p>{startMessage}</p>
-              </Message>
-            )}
+            <Markdown text={startMessage || ''} semanticComponent="Message" info />
             <Button color="blue" onClick={handleClick}>
               {strings.BUTTON_APPLICATION_START}
             </Button>
