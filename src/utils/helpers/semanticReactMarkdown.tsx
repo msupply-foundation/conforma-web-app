@@ -7,9 +7,10 @@ import React from 'react'
 import ReactMarkdown, { ReactMarkdownProps } from 'react-markdown'
 import { Message, Icon } from 'semantic-ui-react'
 
+type SemanticComponent = 'Message'
 interface MarkdownBlockProps {
   text: string
-  semanticComponent?: string
+  semanticComponent?: SemanticComponent
   info?: boolean
 }
 type Renderers = {
