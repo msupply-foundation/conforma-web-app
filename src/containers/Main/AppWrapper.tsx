@@ -7,7 +7,6 @@ import UserArea from '../User/UserArea'
 import Login from '../User/Login'
 import { UserProvider } from '../../contexts/UserState'
 import isLoggedIn from '../../utils/helpers/loginCheck'
-import UserRegister from '../User/UserRegister'
 
 const AppWrapper: React.FC = () => {
   return (
@@ -16,9 +15,6 @@ const AppWrapper: React.FC = () => {
         <Switch>
           <Route exact path="/login">
             <Login />
-          </Route>
-          <Route exact path="/register">
-            <UserRegister />
           </Route>
           <Route>
             <AuthenticatedContent />

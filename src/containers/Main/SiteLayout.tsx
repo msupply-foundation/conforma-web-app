@@ -24,7 +24,6 @@ import {
 } from '../../components'
 import { ApplicationCreate, ApplicationList, ApplicationPageWrapper } from '../Application'
 import { ReviewOverview, ReviewPageWrapper } from '../Review'
-import UserRegister from '../User/UserRegister'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import ApplicationOverview from '../Application/ApplicationOverview'
 
@@ -52,9 +51,6 @@ const SiteLayout: React.FC = () => {
               </Route>
               <Route exact path="/login">
                 <Login />
-              </Route>
-              <Route exact path="/example">
-                <UserRegister />
               </Route>
               <Route exact path="/applications">
                 <ApplicationList />
