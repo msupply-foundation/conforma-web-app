@@ -5,13 +5,17 @@ import { hashPassword, attemptLogin } from './Login'
 import { useGetUsersQuery } from '../../utils/generated/graphql'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { User } from '../../utils/types'
+import setUserInfo from '../../utils/helpers/setUserInfo'
+import { useUserState } from '../../contexts/UserState'
 
 const hardcodedPassword = '123456'
 
 const UserSelection: React.FC = () => {
   const { history, push } = useRouter()
   const [users, setUsers] = useState<Array<string>>([])
+  const [isOpen, setIsOpen] = useState(false)
   const { data, error } = useGetUsersQuery()
+  const { setUserState } = useUserState()
 
   useEffect(() => {
     if (data && data.users && data.users.nodes) {
@@ -24,11 +28,12 @@ const UserSelection: React.FC = () => {
   }, [data, error])
 
   const handleChangeUser = async (username: string) => {
+    setIsOpen(false)
     const passwordHash = hashPassword(hardcodedPassword)
     const loginResult = await attemptLogin(username, passwordHash)
     if (loginResult.success) {
       localStorage.setItem('persistJWT', loginResult.JWT)
-      console.log(`Changed user to ${username}`)
+      setUserInfo({ dispatch: setUserState })
       if (history.location?.state?.from) push(history.location.state.from)
       else push('/')
     }
@@ -39,13 +44,16 @@ const UserSelection: React.FC = () => {
       position="bottom right"
       trigger={<Icon name="angle down" style={{ paddingLeft: 10 }} />}
       on="click"
+      onOpen={() => setIsOpen(true)}
+      onClose={() => setIsOpen(false)}
+      open={isOpen}
     >
       {data ? (
         users ? (
           <Grid divided columns="equal">
             <Grid.Column>
-              {users.map((user) => (
-                <Grid.Row>
+              {users.map((user, index) => (
+                <Grid.Row key={`user_select_${index}`}>
                   <Button
                     basic
                     color="blue"
