@@ -30,7 +30,6 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
       },
       heading: ({ node: { children }, level }: any) => {
         const headingText = children[0].value
-        console.log('HEading')
         return (
           <Message.Header>
             {info && <Icon name="info circle" />}
