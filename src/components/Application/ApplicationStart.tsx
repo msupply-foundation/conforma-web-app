@@ -3,6 +3,7 @@ import { Button, Divider, Header, Icon, List, Message, Segment } from 'semantic-
 import strings from '../../utils/constants'
 import { TemplateTypePayload, TemplateSectionPayload } from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
+import Markdown from 'react-markdown'
 
 export interface ApplicationStartProps {
   template: TemplateTypePayload
@@ -47,6 +48,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
             <Divider />
             {startTitle && (
               <Message info>
+                <Markdown className="header" children={startMessage || ''} />
                 <Message.Header>
                   <Icon name="info circle" />
                   {startTitle}
