@@ -58,7 +58,7 @@ const Login: React.FC = () => {
               </Form.Field>
               <Container>
                 <Button type="submit" onClick={handleSubmit}>
-                  Log In
+                  {strings.LABEL_LOG_IN}
                 </Button>
                 <Link to="/register">{strings.LINK_LOGIN_USER}</Link>
               </Container>
@@ -73,7 +73,7 @@ const Login: React.FC = () => {
 
 export default Login
 
-function hashPassword(password: string) {
+export function hashPassword(password: string) {
   // TO-DO Implement password hashing
   return password
 }
