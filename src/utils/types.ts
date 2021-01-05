@@ -125,7 +125,7 @@ interface IGraphQLConnection {
 }
 
 interface EvaluatorParameters {
-  objects?: object[]
+  objects?: object
   pgConnection?: any // Any, because not likely to be used in front-end
   graphQLConnection?: IGraphQLConnection
   APIfetch?: Function

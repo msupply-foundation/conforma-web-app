@@ -26,7 +26,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   useEffect(() => {
     // Runs once on component mount
     evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
-      objects: [allResponses, currentUser as User],
+      objects: { responses: allResponses, currentUser },
       APIfetch: fetch,
     }).then((result: ElementPluginParameters) => {
       setEvaluatedParameters(result)

@@ -119,7 +119,7 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
 
   async function evaluateSingleElement(element: TemplateElementState): Promise<ElementState> {
     const evaluationParameters = {
-      objects: [responsesByCode as ResponsesByCode, currentUser as User],
+      objects: { responses: responsesByCode, currentUser },
       // TO-DO: Also send org objects etc.
       // graphQLConnection: TO-DO
     }
