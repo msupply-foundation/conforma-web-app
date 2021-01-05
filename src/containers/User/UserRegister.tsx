@@ -4,6 +4,7 @@ import isLoggedIn from '../../utils/helpers/loginCheck'
 import { attemptLogin } from '../User/Login'
 import { useUserState } from '../../contexts/UserState'
 import setUserInfo from '../../utils/helpers/setUserInfo'
+import messages from '../../utils/messages'
 
 const UserRegister: React.FC = () => {
   const [networkError, setNetworkError] = useState('')
@@ -24,7 +25,7 @@ const UserRegister: React.FC = () => {
     })
 
   if (networkError) return <p>{networkError}</p>
-  else return <p>Re-directing to user registration application...</p>
+  else return <p>{messages.REDIRECT_TO_REGISTRATION}</p>
 }
 
 export default UserRegister
