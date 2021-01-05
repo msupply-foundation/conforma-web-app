@@ -3,7 +3,7 @@ import { Button, Divider, Header, Icon, List, Message, Segment } from 'semantic-
 import strings from '../../utils/constants'
 import { TemplateTypePayload, TemplateSectionPayload } from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
-import Markdown from 'react-markdown'
+import Markdown from '../../utils/helpers/semanticReactMarkdown'
 
 export interface ApplicationStartProps {
   template: TemplateTypePayload
@@ -47,20 +47,23 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
             </List>
             <Divider />
             {startTitle && (
-              <Message info>
-                <Markdown className="header" children={startMessage || ''} />
-                <Message.Header>
-                  <Icon name="info circle" />
-                  {startTitle}
-                </Message.Header>
-                {startMessage && (
-                  <Message.List>
-                    {startMessage.split(/\r?\n/).map((str, index) => (
-                      <Message.Item key={`start-item-${index}`}>{str}</Message.Item>
-                    ))}
-                  </Message.List>
-                )}
-              </Message>
+              <>
+                <Markdown text={startMessage || ''} semanticComponent="Message" info />
+                <Message info>
+                  <Markdown text={startMessage || ''} semanticComponent="Message" />
+                  <Message.Header>
+                    <Icon name="info circle" />
+                    {startTitle}
+                  </Message.Header>
+                  {startMessage && (
+                    <Message.List>
+                      {startMessage.split(/\r?\n/).map((str, index) => (
+                        <Message.Item key={`start-item-${index}`}>{str}</Message.Item>
+                      ))}
+                    </Message.List>
+                  )}
+                </Message>
+              </>
             )}
             <Button color="blue" onClick={handleClick}>
               {strings.BUTTON_APPLICATION_START}
