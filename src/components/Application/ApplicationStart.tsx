@@ -3,6 +3,7 @@ import { Button, Divider, Header, Icon, List, Message, Segment } from 'semantic-
 import strings from '../../utils/constants'
 import { TemplateTypePayload, TemplateSectionPayload } from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
+import Markdown from '../../utils/helpers/semanticReactMarkdown'
 
 export interface ApplicationStartProps {
   template: TemplateTypePayload
@@ -49,14 +50,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
                 ))}
             </List>
             <Divider />
-            {startMessage && (
-              <Message info>
-                <Message.Header>
-                  <Icon name="info circle" />
-                </Message.Header>
-                <p>{startMessage}</p>
-              </Message>
-            )}
+            <Markdown text={startMessage || ''} semanticComponent="Message" error />
             <Button color="blue" onClick={handleClick}>
               {strings.BUTTON_APPLICATION_START}
             </Button>
