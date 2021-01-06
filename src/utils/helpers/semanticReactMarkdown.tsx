@@ -12,13 +12,14 @@ interface MarkdownBlockProps {
   text: string
   semanticComponent?: SemanticComponent
   info?: boolean
+  error?: boolean
 }
 type Renderers = {
   [key: string]: any
 }
 
 const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
-  const { text, semanticComponent, info } = props
+  const { text, semanticComponent, info, error } = props
 
   // These methods override the default HTML output for each type of
   // Markdown node (heading, paragraph, etc.) so we can render them as Semantic
@@ -27,7 +28,7 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
   const renderers: Renderers = {
     Message: {
       root: (input: ReactMarkdownProps) => {
-        return <Message children={input.children} info={info} />
+        return <Message children={input.children} info={info} error={error} />
       },
       heading: ({ node: { children }, level }: any) => {
         const headingText = children[0].value

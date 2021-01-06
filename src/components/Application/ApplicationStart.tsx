@@ -50,7 +50,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
                 ))}
             </List>
             <Divider />
-            <Markdown text={startMessage || ''} semanticComponent="Message" info />
+            <Markdown text={startMessage || ''} semanticComponent="Message" error />
             <Button color="blue" onClick={handleClick}>
               {strings.BUTTON_APPLICATION_START}
             </Button>
