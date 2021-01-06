@@ -4,6 +4,7 @@ import { Button, Divider, Header, Icon, List, Message, Segment } from 'semantic-
 import strings from '../../utils/constants'
 import { TemplateTypePayload, TemplateSectionPayload } from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
+import Markdown from '../../utils/helpers/semanticReactMarkdown'
 
 export interface ApplicationStartProps {
   template: TemplateTypePayload
@@ -13,7 +14,7 @@ export interface ApplicationStartProps {
 
 const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
   const { template, sections, handleClick } = props
-  const { name, code, startTitle, startMessage } = template
+  const { name, code, startMessage } = template
 
   return template ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
@@ -21,7 +22,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
         as={Link}
         to={`/applications`}
         icon="angle left"
-        label={{ content: name, color: 'grey' }}
+        label={{ content: `${name} ${strings.LABEL_APPLICATIONS}`, color: 'grey' }}
       />
       <Header textAlign="center">{strings.TITLE_COMPANY_PLACEHOLDER}</Header>
       <Segment
@@ -51,21 +52,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
                 ))}
             </List>
             <Divider />
-            {startTitle && (
-              <Message info>
-                <Message.Header>
-                  <Icon name="info circle" />
-                  {startTitle}
-                </Message.Header>
-                {startMessage && (
-                  <Message.List>
-                    {startMessage.split(/\r?\n/).map((str, index) => (
-                      <Message.Item key={`start-item-${index}`}>{str}</Message.Item>
-                    ))}
-                  </Message.List>
-                )}
-              </Message>
-            )}
+            <Markdown text={startMessage || ''} semanticComponent="Message" info />
             <Button color="blue" onClick={handleClick}>
               {strings.BUTTON_APPLICATION_START}
             </Button>

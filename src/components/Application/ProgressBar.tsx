@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Accordion, Container, Grid, Header, Icon, Label, List, Sticky } from 'semantic-ui-react'
 import {
   CurrentPage,
@@ -6,6 +6,7 @@ import {
   ProgressInPage,
   ProgressStatus,
 } from '../../utils/types'
+import { useApplicationState } from '../../contexts/ApplicationState'
 import strings from '../../utils/constants'
 import { useRouter } from '../../utils/hooks/useRouter'
 
@@ -22,6 +23,14 @@ interface ProgressBarProps {
   validateElementsInPage: (props?: CurrentPage) => boolean
 }
 
+interface ClickedLinkParameters {
+  canNavigate: boolean
+  sectionCode?: string
+  pageNumber?: number
+  code?: string
+  pageOrSection?: 'page' | 'section'
+}
+
 const ProgressBar: React.FC<ProgressBarProps> = ({
   serialNumber,
   currentSectionPage,
@@ -30,6 +39,38 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   validateElementsInPage,
 }) => {
   const { push } = useRouter()
+  const {
+    applicationState: {
+      inputElementsActivity: { areTimestampsInSequence },
+    },
+  } = useApplicationState()
+  const [progressLinkClicked, setProgressLinkClicked] = useState(false)
+  const [clickedLinkParameters, setClickedLinkParameters] = useState<ClickedLinkParameters>({
+    canNavigate: false,
+    sectionCode: '',
+    pageNumber: 0,
+  })
+
+  // Make sure all responses are up-to-date (areTimestampsInSequence)
+  // and only proceed when button is clicked AND responses are ready
+  useEffect(() => {
+    if (areTimestampsInSequence && progressLinkClicked) {
+      handleLinkClick()
+    }
+  }, [areTimestampsInSequence, progressLinkClicked])
+
+  const handleLinkClick = async () => {
+    const { canNavigate, sectionCode, pageNumber, code, pageOrSection } = clickedLinkParameters
+    setProgressLinkClicked(false)
+    if (pageOrSection === 'page') {
+      if (canNavigate || validateElementsInPage())
+        push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
+    } else {
+      if (canNavigate || isPreviousPageIsValid(code as string, 1))
+        push(`/application/${serialNumber}/${code}/Page${1}`)
+    }
+  }
+
   const getPageIndicator = (status: ProgressStatus | undefined) => {
     const indicator = {
       VALID: <Icon name="check circle" color="green" />,
@@ -56,8 +97,13 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
               as="a"
               key={`ProgressSection_${sectionCode}_${pageNumber}`}
               onClick={() => {
-                if (canNavigate || validateElementsInPage())
-                  push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
+                setClickedLinkParameters({
+                  canNavigate,
+                  sectionCode,
+                  pageNumber,
+                  pageOrSection: 'page',
+                })
+                setProgressLinkClicked(true)
               }}
             >
               {getPageIndicator(status)}
@@ -106,10 +152,12 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           ),
         },
         onTitleClick: () => {
-          const firstPage = 1
-          if (canNavigate || isPreviousPageIsValid(code, firstPage)) {
-            push(`/application/${serialNumber}/${code}/Page${firstPage}`)
-          }
+          setClickedLinkParameters({
+            canNavigate,
+            code,
+            pageOrSection: 'section',
+          })
+          setProgressLinkClicked(true)
         },
         content: {
           content: pages ? pageList(code, pages) : null,

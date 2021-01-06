@@ -16,6 +16,7 @@ import {
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
+import { useApplicationState } from '../../contexts/ApplicationState'
 import { useUserState } from '../../contexts/UserState'
 import { ElementsBox, NavigationBox } from './'
 import validatePage, {
@@ -44,6 +45,13 @@ import getPreviousPage from '../../utils/helpers/getPreviousPage'
 import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
 
 const ApplicationPageWrapper: React.FC = () => {
+  const {
+    applicationState: {
+      inputElementsActivity: { areTimestampsInSequence },
+    },
+    setApplicationState,
+  } = useApplicationState()
+  const [summaryButtonClicked, setSummaryButtonClicked] = useState(false)
   const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
   const [pageElements, setPageElements] = useState<ElementState[]>([])
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
@@ -104,6 +112,15 @@ const ApplicationPageWrapper: React.FC = () => {
         setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
     }
   }, [statusLoading, elementsState, responsesByCode, sectionCode, page])
+
+  // Update timestamp to keep track of when elements have been properly updated
+  // after losing focus.
+  useEffect(() => {
+    setApplicationState({
+      type: 'setElementTimestamp',
+      timestampType: 'elementsStateUpdatedTimestamp',
+    })
+  }, [elementsState])
 
   // Wait for loading (and evaluating elements and responses)
   // or a change of section/page to rebuild the progress bar
@@ -168,7 +185,16 @@ const ApplicationPageWrapper: React.FC = () => {
     return application?.isLinear ? validation === (PROGRESS_STATUS.VALID as ProgressStatus) : true
   }
 
+  // Make sure all responses are up-to-date (areTimestampsInSequence)
+  // and only proceed when button is clicked AND responses are ready
+  useEffect(() => {
+    if (areTimestampsInSequence && summaryButtonClicked) {
+      handleSummaryClick()
+    }
+  }, [areTimestampsInSequence, summaryButtonClicked])
+
   const handleSummaryClick = async () => {
+    setSummaryButtonClicked(false)
     const revalidate = await revalidateAll(
       elementsState as ApplicationElementStates,
       responsesByCode as ResponsesByCode,
@@ -185,8 +211,9 @@ const ApplicationPageWrapper: React.FC = () => {
       })
     })
 
-    if (!revalidate.allValid) setShowModal({ open: true, ...messages.VALIDATION_FAIL })
-    else push(`/application/${serialNumber}/summary`)
+    if (!revalidate.allValid) {
+      setShowModal({ open: true, ...messages.VALIDATION_FAIL })
+    } else push(`/application/${serialNumber}/summary`)
   }
 
   return error || statusError || responsesError ? (
@@ -251,7 +278,7 @@ const ApplicationPageWrapper: React.FC = () => {
         style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
       >
         <Segment basic textAlign="right">
-          <Button color="blue" onClick={handleSummaryClick}>
+          <Button color="blue" onClick={() => setSummaryButtonClicked(true)}>
             {strings.BUTTON_SUMMARY}
           </Button>
         </Segment>
