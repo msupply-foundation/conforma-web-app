@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Grid, Icon, Message, Popup } from 'semantic-ui-react'
 import { Loading } from '../../components'
-import { hashPassword, attemptLogin } from './Login'
+import { attemptLogin } from './Login'
 import { useGetUsersQuery } from '../../utils/generated/graphql'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { User } from '../../utils/types'
-import setUserInfo from '../../utils/helpers/fetchUserInfo'
 import { useUserState } from '../../contexts/UserState'
 
 const hardcodedPassword = '123456'
@@ -29,8 +28,7 @@ const UserSelection: React.FC = () => {
 
   const handleChangeUser = async (username: string) => {
     setIsOpen(false)
-    const passwordHash = hashPassword(hardcodedPassword)
-    const loginResult = await attemptLogin(username, passwordHash)
+    const loginResult = await attemptLogin(username, hardcodedPassword)
     if (loginResult.success) {
       login(loginResult.JWT)
       if (history.location?.state?.from) push(history.location.state.from)

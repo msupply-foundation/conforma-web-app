@@ -74,7 +74,7 @@ const Login: React.FC = () => {
 
 export default Login
 
-export function hashPassword(password: string) {
+function hashPassword(password: string) {
   // TO-DO Implement password hashing
   return password
 }
