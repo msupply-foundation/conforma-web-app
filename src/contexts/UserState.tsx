@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react'
+import fetchUserInfo from '../utils/helpers/fetchUserInfo'
 import { TemplatePermissions, User } from '../utils/types'
 
 type UserState = {
@@ -8,11 +9,12 @@ type UserState = {
 
 export type UserActions =
   | {
-      type: 'setCurrentUser'
-      newUser: User
+      type: 'resetCurrentUser'
     }
   | {
-      type: 'resetCurrentUser'
+      type: 'setCurrentUser'
+      newUser: User
+      newPermissions: TemplatePermissions
     }
   | {
       type: 'setTemplatePermissions'
@@ -23,16 +25,14 @@ type UserProviderProps = { children: React.ReactNode }
 
 const reducer = (state: UserState, action: UserActions) => {
   switch (action.type) {
+    case 'resetCurrentUser':
+      return initialState
     case 'setCurrentUser':
-      const { newUser } = action
+      const { newUser, newPermissions } = action
       return {
         ...state,
         currentUser: newUser,
-      }
-    case 'resetCurrentUser':
-      return {
-        ...state,
-        currentUser: null,
+        templatePermissions: newPermissions,
       }
     case 'setTemplatePermissions':
       const { templatePermissions } = action
@@ -54,9 +54,13 @@ const initialState: UserState = {
 const initialUserContext: {
   userState: UserState
   setUserState: React.Dispatch<UserActions>
+  login: Function
+  logout: Function
 } = {
   userState: initialState,
   setUserState: () => {},
+  login: () => {},
+  logout: () => {},
 }
 
 const UserContext = createContext(initialUserContext)
@@ -66,8 +70,26 @@ export function UserProvider({ children }: UserProviderProps) {
   const userState = state
   const setUserState = dispatch
 
+  const login = (JWT: string) => {
+    localStorage.setItem('persistJWT', JWT)
+    fetchUserInfo({ dispatch: setUserState })
+  }
+
+  const logout = () => {
+    localStorage.clear()
+    dispatch({ type: 'resetCurrentUser' })
+  }
+
+  // Initial check for persisted user in local storage
+  const JWT = localStorage.getItem('persistJWT')
+  if (JWT && !userState.currentUser) login(JWT)
+
   // Return the state and reducer to the context (wrap around the children)
-  return <UserContext.Provider value={{ userState, setUserState }}>{children}</UserContext.Provider>
+  return (
+    <UserContext.Provider value={{ userState, setUserState, login, logout }}>
+      {children}
+    </UserContext.Provider>
+  )
 }
 
 /**

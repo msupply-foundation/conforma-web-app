@@ -11,7 +11,7 @@ interface SetUserInfoProps {
   dispatch: Dispatch<UserActions>
 }
 
-const setUserInfo = ({ dispatch }: SetUserInfoProps) => {
+const fetchUserInfo = ({ dispatch }: SetUserInfoProps) => {
   const JWT: string = localStorage.getItem(LOCAL_STORAGE_JWT_KEY) || ''
 
   fetch(userInfoUrl, { headers: createAuthorisationHeader(JWT) })
@@ -20,15 +20,12 @@ const setUserInfo = ({ dispatch }: SetUserInfoProps) => {
       localStorage.setItem(LOCAL_STORAGE_JWT_KEY, JWT)
 
       // Set userinfo to context after receiving it from endpoint
-      if (user) {
+      if (user && templatePermissions) {
         dispatch({
           type: 'setCurrentUser',
           newUser: user,
+          newPermissions: templatePermissions,
         })
-      }
-
-      if (templatePermissions) {
-        dispatch({ type: 'setTemplatePermissions', templatePermissions })
       }
     })
     .catch((error) => {
@@ -37,4 +34,4 @@ const setUserInfo = ({ dispatch }: SetUserInfoProps) => {
     })
 }
 
-export default setUserInfo
+export default fetchUserInfo

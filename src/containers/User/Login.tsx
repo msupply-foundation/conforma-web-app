@@ -6,12 +6,14 @@ import { Form, Button, Container, Grid, Segment, Header } from 'semantic-ui-reac
 import config from '../../config.json'
 import isLoggedIn from '../../utils/helpers/loginCheck'
 import strings from '../../utils/constants'
+import setUserInfo from '../../utils/helpers/fetchUserInfo'
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isError, setIsError] = useState(false)
   const { push, history } = useRouter()
+  const { login } = useUserState()
 
   const handleSubmit = async (event: any) => {
     event.preventDefault()
@@ -20,8 +22,7 @@ const Login: React.FC = () => {
     if (!loginResult.success) setIsError(true)
     else {
       setIsError(false)
-      localStorage.setItem('persistJWT', loginResult.JWT)
-      console.log('Log in successful!')
+      login(loginResult.JWT)
       if (history.location?.state?.from) push(history.location.state.from)
       else push('/')
     }
@@ -92,9 +93,4 @@ export async function attemptLogin(username: string, passwordHash: string) {
   } catch (err) {
     throw err
   }
-}
-
-export const logOut = () => {
-  localStorage.clear()
-  window.location.replace('/')
 }

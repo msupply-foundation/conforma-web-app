@@ -5,7 +5,7 @@ import { hashPassword, attemptLogin } from './Login'
 import { useGetUsersQuery } from '../../utils/generated/graphql'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { User } from '../../utils/types'
-import setUserInfo from '../../utils/helpers/setUserInfo'
+import setUserInfo from '../../utils/helpers/fetchUserInfo'
 import { useUserState } from '../../contexts/UserState'
 
 const hardcodedPassword = '123456'
@@ -15,7 +15,7 @@ const UserSelection: React.FC = () => {
   const [users, setUsers] = useState<Array<string>>([])
   const [isOpen, setIsOpen] = useState(false)
   const { data, error } = useGetUsersQuery()
-  const { setUserState } = useUserState()
+  const { login } = useUserState()
 
   useEffect(() => {
     if (data && data.users && data.users.nodes) {
@@ -32,8 +32,7 @@ const UserSelection: React.FC = () => {
     const passwordHash = hashPassword(hardcodedPassword)
     const loginResult = await attemptLogin(username, passwordHash)
     if (loginResult.success) {
-      localStorage.setItem('persistJWT', loginResult.JWT)
-      setUserInfo({ dispatch: setUserState })
+      login(loginResult.JWT)
       if (history.location?.state?.from) push(history.location.state.from)
       else push('/')
     }

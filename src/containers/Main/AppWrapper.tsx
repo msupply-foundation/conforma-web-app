@@ -30,7 +30,9 @@ const AppWrapper: React.FC = () => {
 }
 
 const AuthenticatedContent: React.FC = () => {
-  if (isLoggedIn())
+  if (isLoggedIn()) {
+    console.log('LOGGED')
+
     return (
       <>
         <UserArea />
@@ -38,7 +40,11 @@ const AuthenticatedContent: React.FC = () => {
         <Footer />
       </>
     )
-  else return <Redirect to={{ pathname: '/login', state: { from: location.pathname } }} />
+  } else {
+    console.log('NOT LOGGED')
+
+    return <Redirect to={{ pathname: '/login', state: { from: location.pathname } }} />
+  }
 }
 
 declare const module: any
