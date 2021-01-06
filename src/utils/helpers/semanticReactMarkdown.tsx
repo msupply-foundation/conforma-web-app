@@ -35,6 +35,7 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
         return (
           <Message.Header>
             {info && <Icon name="info circle" />}
+            {error && <Icon name="exclamation circle" />}
             {headingText}
           </Message.Header>
         )
