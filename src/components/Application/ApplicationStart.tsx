@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Divider, Header, Icon, List, Message, Segment } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import { TemplateTypePayload, TemplateSectionPayload, EvaluatorParameters } from '../../utils/types'
+import {
+  TemplateTypePayload,
+  TemplateSectionPayload,
+  EvaluatorParameters,
+  User,
+} from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
-
 export interface ApplicationStartProps {
   template: TemplateTypePayload
   sections: TemplateSectionPayload[]
@@ -23,13 +27,13 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
 
   useEffect(() => {
     const evaluatorParams: EvaluatorParameters = {
-      objects: { currentUser },
+      objects: [currentUser as User],
       APIfetch: fetch,
     }
     evaluate(startMessage || '', evaluatorParams).then((result: any) =>
       setStartMessageEvaluated(result)
     )
-  }, [startMessage])
+  }, [startMessage, currentUser])
 
   return template ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
