@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button, Container, Grid, Header, Icon, Label, Segment } from 'semantic-ui-react'
+import React, { createRef } from 'react'
+import { Button, Container, Grid, Header, Icon, Label, Segment, Sticky } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import strings from '../../utils/constants'
 import { ReviewResponseDecision, TemplateElementCategory } from '../../utils/generated/graphql'
@@ -22,6 +22,8 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
 }) => {
   const { section, pages } = reviewSection
 
+  const contextRef: any = createRef()
+
   const showSectionAssignment = assignedToYou ? (
     <Label style={{ backgroundColor: 'WhiteSmoke', color: 'Blue' }}>
       {strings.LABEL_ASSIGNED_TO_YOU}
@@ -31,20 +33,23 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
   )
   return (
     <Segment
+      ref={contextRef}
       key={`ReviewSection_${section.code}`}
       inverted
       style={{ backgroundColor: 'WhiteSmoke', marginLeft: '10%', marginRight: '10%' }}
     >
-      <Grid columns={2}>
-        <Grid.Row>
-          <Grid.Column>
-            <Header as="h2" content={`${section.title}`} style={{ color: 'Grey' }} />
-          </Grid.Column>
-          <Grid.Column>
-            <Container textAlign="right">{showSectionAssignment}</Container>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+      <Sticky context={contextRef}>
+        <Grid columns={2}>
+          <Grid.Row>
+            <Grid.Column>
+              <Header as="h2" content={`${section.title}`} style={{ color: 'Grey' }} />
+            </Grid.Column>
+            <Grid.Column>
+              <Container textAlign="right">{showSectionAssignment}</Container>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Sticky>
       {Object.entries(pages).map(([pageName, elements]) => {
         const elementsToReview = elements
           .filter(({ review }) => review && review.decision === undefined)
