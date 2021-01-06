@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Divider, Header, Icon, List, Message, Segment } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import { TemplateTypePayload, TemplateSectionPayload } from '../../utils/types'
+import { TemplateTypePayload, TemplateSectionPayload, EvaluatorParameters } from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import evaluate from '@openmsupply/expression-evaluator'
+import { useUserState } from '../../contexts/UserState'
 
 export interface ApplicationStartProps {
   template: TemplateTypePayload
@@ -16,9 +17,18 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
   const { template, sections, handleClick } = props
   const { name, code, startMessage } = template
   const [startMessageEvaluated, setStartMessageEvaluated] = useState('')
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   useEffect(() => {
-    evaluate(startMessage || '').then((result: any) => setStartMessageEvaluated(result))
+    const evaluatorParams: EvaluatorParameters = {
+      objects: { currentUser },
+      APIfetch: fetch,
+    }
+    evaluate(startMessage || '', evaluatorParams).then((result: any) =>
+      setStartMessageEvaluated(result)
+    )
   }, [startMessage])
 
   return template ? (
