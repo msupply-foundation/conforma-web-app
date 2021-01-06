@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Divider, Header, Icon, List, Message, Segment } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import { TemplateTypePayload, TemplateSectionPayload } from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
+import evaluate from '@openmsupply/expression-evaluator'
 
 export interface ApplicationStartProps {
   template: TemplateTypePayload
@@ -14,6 +15,11 @@ export interface ApplicationStartProps {
 const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
   const { template, sections, handleClick } = props
   const { name, code, startMessage } = template
+  const [startMessageEvaluated, setStartMessageEvaluated] = useState('')
+
+  useEffect(() => {
+    evaluate(startMessage || '').then((result: any) => setStartMessageEvaluated(result))
+  }, [startMessage])
 
   return template ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
@@ -50,7 +56,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
                 ))}
             </List>
             <Divider />
-            <Markdown text={startMessage || ''} semanticComponent="Message" info />
+            <Markdown text={startMessageEvaluated} semanticComponent="Message" info />
             <Button color="blue" onClick={handleClick}>
               {strings.BUTTON_APPLICATION_START}
             </Button>
