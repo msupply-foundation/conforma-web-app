@@ -22,13 +22,14 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({ state, setDecision, submitH
   }
 
   return (
-    <Modal open={open} size="fullscreen" style={{ background: 'transparent' }}>
+    <Modal open={open} size="fullscreen" style={{ margin: 0, background: 'transparent' }}>
       {open && summaryViewProps && review && (
-        <Segment.Group
+        <Segment
+          floated="right"
           style={{
             backgroundColor: 'white',
-            marginLeft: '70%',
-            display: 'flex-right',
+            height: '100vh',
+            width: '300px',
           }}
         >
           <Segment basic>
@@ -62,7 +63,7 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({ state, setDecision, submitH
               {strings.BUTTON_SUBMIT}
             </Button>
           </Segment>
-        </Segment.Group>
+        </Segment>
       )}
     </Modal>
   )
