@@ -2,12 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Divider, Header, Icon, List, Message, Segment } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import {
-  TemplateTypePayload,
-  TemplateSectionPayload,
-  EvaluatorParameters,
-  User,
-} from '../../utils/types'
+import { TemplateTypePayload, TemplateSectionPayload, EvaluatorParameters } from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import evaluate from '@openmsupply/expression-evaluator'

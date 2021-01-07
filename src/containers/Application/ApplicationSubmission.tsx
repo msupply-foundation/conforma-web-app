@@ -1,15 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Header, Icon, Label, List, Message, Segment } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import strings from '../../utils/constants'
+import { EvaluatorParameters } from '../../utils/types'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
 import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { Link } from 'react-router-dom'
+import evaluate from '@openmsupply/expression-evaluator'
+import Markdown from '../../utils/helpers/semanticReactMarkdown'
 
 const ApplicationSubmission: React.FC = () => {
+  const [submissionMessageEvaluated, setSubmissionMessageEvaluated] = useState('')
   const {
     userState: { currentUser },
   } = useUserState()
@@ -31,6 +35,16 @@ const ApplicationSubmission: React.FC = () => {
     isApplicationLoaded,
     networkFetch: true,
   })
+
+  useEffect(() => {
+    const evaluatorParams: EvaluatorParameters = {
+      objects: { currentUser },
+      APIfetch: fetch,
+    }
+    evaluate(appStages?.submissionMessage || '', evaluatorParams).then((result: any) =>
+      setSubmissionMessageEvaluated(result)
+    )
+  }, [appStages, currentUser])
 
   useEffect(() => {
     if (!isApplicationLoaded || statusLoading) return
@@ -66,7 +80,7 @@ const ApplicationSubmission: React.FC = () => {
           <Icon name="clock outline" color="blue" size="huge" />
           {strings.LABEL_PROCESSING}
         </Header>
-        {appStages && <Header as="h3">{appStages.submissionMessage}</Header>}
+        {appStages && <Markdown text={submissionMessageEvaluated} />}
         {appStages && (
           <Segment basic textAlign="left" style={{ margin: '50px 50px', padding: 10 }}>
             <Header as="h5">{strings.SUBTITLE_SUBMISSION_STEPS}</Header>
