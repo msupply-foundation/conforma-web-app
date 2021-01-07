@@ -10,6 +10,7 @@ import {
 } from '../generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { AssignmentDetails, ReviewQuestion } from '../types'
+import useGetApplicationStatus from './useGetApplicationStatus'
 
 interface UseGetReviewAssignmentProps {
   reviewerId: number
@@ -29,13 +30,18 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
     isApplicationLoaded,
   } = useLoadApplication({ serialNumber })
 
+  const { error: statusError, loading: statusLoading, appStatus } = useGetApplicationStatus({
+    serialNumber: serialNumber as string,
+    isApplicationLoaded,
+  })
+
   const { data, loading: apolloLoading, error: apolloError } = useGetReviewAssignmentQuery({
     variables: {
       reviewerId,
       applicationId: application?.id,
-      stageId: application?.stageId,
+      stageId: appStatus?.stageId,
     },
-    skip: !isApplicationLoaded,
+    skip: !isApplicationLoaded || statusLoading,
   })
 
   useEffect(() => {
@@ -44,6 +50,12 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
       setError(error.message)
       return
     }
+
+    if (statusError) {
+      setError(statusError)
+      return
+    }
+
     if (apolloError) {
       setError(apolloError.message)
       return
@@ -96,7 +108,7 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
       })
       setLoading(false)
     }
-  }, [data, applicationError, apolloError])
+  }, [data, applicationError, statusError, apolloError])
 
   useEffect(() => {
     if (assignment && templateSections) {
