@@ -42,6 +42,7 @@ import {
 } from '../../utils/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
 import getPreviousPage from '../../utils/helpers/getPreviousPage'
+import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
 
 const ApplicationPageWrapper: React.FC = () => {
   const {
@@ -66,15 +67,15 @@ const ApplicationPageWrapper: React.FC = () => {
     title: '',
   })
 
-  const {
-    error,
-    loading,
-    application,
-    templateSections,
-    appStatus,
-    isApplicationLoaded,
-  } = useLoadApplication({
+  const { error, loading, application, templateSections, isApplicationLoaded } = useLoadApplication(
+    {
+      serialNumber: serialNumber as string,
+    }
+  )
+
+  const { error: statusError, loading: statusLoading, appStatus } = useGetApplicationStatus({
     serialNumber: serialNumber as string,
+    isApplicationLoaded,
   })
 
   const {
@@ -93,7 +94,7 @@ const ApplicationPageWrapper: React.FC = () => {
   // 1 - ProcessRedirect: Will redirect to summary in case application is SUBMITTED
   // 2 - Set the current section state of the application
   useEffect(() => {
-    if (elementsState && responsesByCode) {
+    if (!statusLoading && elementsState && responsesByCode) {
       processRedirect({
         ...appStatus,
         serialNumber,
@@ -110,7 +111,7 @@ const ApplicationPageWrapper: React.FC = () => {
       if (sectionCode && page)
         setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
     }
-  }, [elementsState, responsesByCode, sectionCode, page])
+  }, [statusLoading, elementsState, responsesByCode, sectionCode, page])
 
   // Update timestamp to keep track of when elements have been properly updated
   // after losing focus.
@@ -215,9 +216,13 @@ const ApplicationPageWrapper: React.FC = () => {
     } else push(`/application/${serialNumber}/summary`)
   }
 
-  return error || responsesError ? (
-    <Message error header={strings.ERROR_APPLICATION_PAGE} />
-  ) : loading || responsesLoading ? (
+  return error || statusError || responsesError ? (
+    <Message
+      error
+      header={strings.ERROR_APPLICATION_PAGE}
+      list={[error, statusError, responsesError]}
+    />
+  ) : loading || statusLoading || responsesLoading ? (
     <Loading />
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
