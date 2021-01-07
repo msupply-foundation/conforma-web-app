@@ -3,6 +3,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, ProgressBar, ModalWarning } from '../../components'
 import {
   Button,
+  ButtonProps,
   Grid,
   Header,
   Label,
@@ -53,11 +54,7 @@ const ApplicationPageWrapper: React.FC = () => {
   const [pageElements, setPageElements] = useState<ElementState[]>([])
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
   const [forceValidation, setForceValidation] = useState<boolean>(false)
-  const [showModal, setShowModal] = useState<ModalProps>({
-    open: false,
-    message: '',
-    title: '',
-  })
+  const [showModal, setShowModal] = useState<ModalProps>({ open: false })
   const {
     userState: { currentUser },
   } = useUserState()
@@ -190,6 +187,15 @@ const ApplicationPageWrapper: React.FC = () => {
     }
   }, [areTimestampsInSequence, summaryButtonClicked])
 
+  const openModal = () => {
+    setShowModal({
+      open: true,
+      ...messages.VALIDATION_FAIL,
+      onClick: (event: any, data: ButtonProps) => setShowModal({ open: false }),
+      onClose: () => setShowModal({ open: false }),
+    })
+  }
+
   const handleSummaryClick = async () => {
     setSummaryButtonClicked(false)
     const revalidate = await revalidateAll(
@@ -208,9 +214,8 @@ const ApplicationPageWrapper: React.FC = () => {
       })
     })
 
-    if (!revalidate.allValid) {
-      setShowModal({ open: true, ...messages.VALIDATION_FAIL })
-    } else push(`/application/${serialNumber}/summary`)
+    if (!revalidate.allValid) openModal()
+    else push(`/application/${serialNumber}/summary`)
   }
 
   return error || statusError || responsesError ? (
@@ -223,7 +228,7 @@ const ApplicationPageWrapper: React.FC = () => {
     <Loading />
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
-      {ModalWarning({ showModal, setShowModal })}
+      <ModalWarning showModal={showModal} />
       <Header textAlign="center">{strings.TITLE_COMPANY_PLACEHOLDER}</Header>
       <Grid
         stackable
@@ -263,7 +268,7 @@ const ApplicationPageWrapper: React.FC = () => {
               serialNumber={serialNumber}
               currentPage={Number(page as string)}
               validateElementsInPage={validateElementsInPage}
-              setShowModal={setShowModal}
+              openModal={openModal}
             />
           </Segment>
         </Grid.Column>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Label, ModalProps } from 'semantic-ui-react'
+import { ButtonProps, Container, Label, ModalProps } from 'semantic-ui-react'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { CurrentPage, TemplateSectionPayload } from '../../utils/types'
@@ -12,7 +12,7 @@ interface NavigationBoxProps {
   serialNumber: string
   currentPage: number
   validateElementsInPage: (props?: CurrentPage) => boolean
-  setShowModal: (props: ModalProps) => void
+  openModal: () => void
 }
 
 const NavigationBox: React.FC<NavigationBoxProps> = ({
@@ -21,7 +21,7 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
   serialNumber,
   currentPage,
   validateElementsInPage,
-  setShowModal,
+  openModal,
 }) => {
   const {
     applicationState: {
@@ -65,9 +65,8 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
     // Check if previous page (related to next) is valid
     const status = validateElementsInPage()
 
-    if (!status) {
-      setShowModal({ open: true, ...messages.VALIDATION_FAIL })
-    } else sendToPage(section.code, page)
+    if (!status) openModal()
+    else sendToPage(section.code, page)
   }
 
   // Make sure all responses are up-to-date (areTimestampsInSequence)
