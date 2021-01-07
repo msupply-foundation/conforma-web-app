@@ -20,7 +20,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
       <Button
         as={Link}
-        to={`/applications`}
+        to={`/applications?type=${code}`}
         icon="angle left"
         label={{ content: `${name} ${strings.LABEL_APPLICATIONS}`, color: 'grey' }}
       />
