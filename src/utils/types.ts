@@ -7,6 +7,7 @@ import {
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 export {
+  ApplicationState,
   ApplicationDetails,
   ApplicationElementStates,
   ApplicationStages,
@@ -15,6 +16,7 @@ export {
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
+  ElementsActivityState,
   EvaluatorParameters,
   IGraphQLConnection,
   LooseString,
@@ -44,6 +46,12 @@ export {
   RevalidateResult,
   UseGetApplicationProps,
   User,
+}
+
+interface ApplicationState {
+  id: number | null
+  serialNumber: string | null
+  inputElementsActivity: ElementsActivityState
 }
 
 interface ApplicationDetails {
@@ -100,6 +108,13 @@ interface ElementState extends ElementBase {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
+}
+
+interface ElementsActivityState {
+  elementEnteredTimestamp: number
+  elementLostFocusTimestamp: number
+  elementsStateUpdatedTimestamp: number
+  areTimestampsInSequence: boolean
 }
 
 interface IGraphQLConnection {
@@ -221,7 +236,6 @@ interface TemplateTypePayload {
   id: number
   name: string
   code: string
-  startTitle?: string
   startMessage?: string
 }
 
@@ -266,6 +280,7 @@ interface RevalidateResult {
 interface UseGetApplicationProps {
   serialNumber: string
   isApplicationLoaded?: boolean
+  networkFetch?: boolean
 }
 
 interface User {

@@ -25,6 +25,7 @@ export default {
   ERROR_REVIEW_OVERVIEW: 'Problem to load review homepage',
   ERROR_LOGIN_PASSWORD: 'Oops! Problem with username or password',
   ERROR_SUBMISSION_INVALID: 'Problem to submit application',
+  LABEL_APPLICATIONS: 'applications',
   LABEL_ASSIGNED_TO_YOU: 'Assigned to you',
   LABEL_ASSIGNED_TO_OTHER: 'Assigned to another reviewer',
   LABEL_LOGIN_PASSWORD: 'Password',
@@ -41,6 +42,6 @@ export default {
   STAGE_PLACEHOLDER: 'Assessment',
   SUBTITLE_APPLICATION_STEPS:
     'The following sterps will need to be completed before the form can be submitted',
-  SUBTITLE_SUBMISSION_STEPS: 'It will be going through the following stages before approval',
   SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you',
+  SUBTITLE_SUBMISSION_STEPS: 'It will be going through the following stages before approval',
 }

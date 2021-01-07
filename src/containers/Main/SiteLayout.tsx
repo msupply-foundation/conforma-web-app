@@ -66,10 +66,14 @@ const SiteLayout: React.FC = () => {
                 </ApplicationProvider>
               </Route>
               <Route exact path="/application/:serialNumber">
-                <ApplicationPageWrapper />
+                <ApplicationProvider>
+                  <ApplicationPageWrapper />
+                </ApplicationProvider>
               </Route>
               <Route exact path="/application/:serialNumber/:sectionCode/Page:page">
-                <ApplicationPageWrapper />
+                <ApplicationProvider>
+                  <ApplicationPageWrapper />
+                </ApplicationProvider>
               </Route>
               <Route exact path="/application/:serialNumber/submission">
                 <ApplicationSubmission />
