@@ -21,6 +21,7 @@ const ApplicationOverview: React.FC = () => {
   const [sectionsPages, setSectionsAndElements] = useState<SectionStructure>()
   const [isRevalidated, setIsRevalidated] = useState(false)
   const {
+    logout,
     userState: { currentUser },
   } = useUserState()
 
@@ -105,6 +106,9 @@ const ApplicationOverview: React.FC = () => {
     await revalidateAndUpdate()
     // All OK -- would have been re-directed otherwise:
     submit()
+    if (currentUser?.username === 'nonRegistered') {
+      logout()
+    }
   }
 
   return error ? (
