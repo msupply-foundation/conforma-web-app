@@ -31,10 +31,10 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
         <Accordion.Title active={isOpen} onClick={handleClick}>
           <Grid>
             <Grid.Row>
-              <Grid.Column width={13}>
+              <Grid.Column width={15}>
                 <Header as="h2" content={section.title} />
               </Grid.Column>
-              <Grid.Column width={3}>
+              <Grid.Column width={1}>
                 <Icon name={isOpen ? 'angle up' : 'angle down'} size="large" />
               </Grid.Column>
             </Grid.Row>

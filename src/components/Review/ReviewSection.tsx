@@ -59,13 +59,16 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
         }}
       >
         <Accordion.Title active={isOpen} onClick={handleClick}>
-          <Grid columns={2}>
+          <Grid columns={3}>
             <Grid.Row>
-              <Grid.Column>
+              <Grid.Column width={12}>
                 <Header as="h2" content={`${section.title}`} style={{ color: 'Grey' }} />
               </Grid.Column>
-              <Grid.Column>
+              <Grid.Column width={3}>
                 <Container textAlign="right">{showSectionAssignment}</Container>
+              </Grid.Column>
+              <Grid.Column width={1}>
+                <Icon name={isOpen ? 'angle up' : 'angle down'} size="large" />
               </Grid.Column>
             </Grid.Row>
           </Grid>
