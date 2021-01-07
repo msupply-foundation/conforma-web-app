@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { Loading, ProgressBar } from '../../components'
+import { Loading, ProgressBar, ModalWarning } from '../../components'
 import {
   Button,
   Grid,
   Header,
-  Icon,
   Label,
   Message,
-  Modal,
   ModalProps,
   Segment,
   Sticky,
@@ -28,7 +26,6 @@ import getPageElements from '../../utils/helpers/getPageElements'
 import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
-
 import {
   ApplicationElementStates,
   ElementState,
@@ -56,16 +53,16 @@ const ApplicationPageWrapper: React.FC = () => {
   const [pageElements, setPageElements] = useState<ElementState[]>([])
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
   const [forceValidation, setForceValidation] = useState<boolean>(false)
-  const {
-    userState: { currentUser },
-  } = useUserState()
-  const { query, push, replace } = useRouter()
-  const { mode, serialNumber, sectionCode, page } = query
   const [showModal, setShowModal] = useState<ModalProps>({
     open: false,
     message: '',
     title: '',
   })
+  const {
+    userState: { currentUser },
+  } = useUserState()
+  const { query, push, replace } = useRouter()
+  const { mode, serialNumber, sectionCode, page } = query
 
   const { error, loading, application, templateSections, isApplicationLoaded } = useLoadApplication(
     {
@@ -226,7 +223,7 @@ const ApplicationPageWrapper: React.FC = () => {
     <Loading />
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
-      {showValidationModal(showModal, setShowModal)}
+      {ModalWarning({ showModal, setShowModal })}
       <Header textAlign="center">{strings.TITLE_COMPANY_PLACEHOLDER}</Header>
       <Grid
         stackable
@@ -266,8 +263,7 @@ const ApplicationPageWrapper: React.FC = () => {
               serialNumber={serialNumber}
               currentPage={Number(page as string)}
               validateElementsInPage={validateElementsInPage}
-              showValidationModal={showValidationModal}
-              modalState={{ showModal, setShowModal }}
+              setShowModal={setShowModal}
             />
           </Segment>
         </Grid.Column>
@@ -286,31 +282,6 @@ const ApplicationPageWrapper: React.FC = () => {
     </Segment.Group>
   ) : (
     <Label content={strings.ERROR_APPLICATION_SECTION} />
-  )
-}
-
-const modalInitialValue: ModalProps = {
-  open: false,
-  message: '',
-  title: '',
-}
-
-function showValidationModal(showModal: ModalProps, setShowModal: Function) {
-  return (
-    <Modal basic onClose={() => setShowModal(modalInitialValue)} open={showModal.open} size="small">
-      <Header icon>
-        <Icon name="exclamation triangle" />
-        {showModal.title}
-      </Header>
-      <Modal.Content>
-        <p>{showModal.message}</p>
-      </Modal.Content>
-      <Modal.Actions>
-        <Button color="green" inverted onClick={() => setShowModal(modalInitialValue)}>
-          <Icon name="checkmark" /> Yes
-        </Button>
-      </Modal.Actions>
-    </Modal>
   )
 }
 

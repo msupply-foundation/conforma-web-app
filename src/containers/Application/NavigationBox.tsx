@@ -12,8 +12,7 @@ interface NavigationBoxProps {
   serialNumber: string
   currentPage: number
   validateElementsInPage: (props?: CurrentPage) => boolean
-  showValidationModal: Function
-  modalState: { showModal: ModalProps; setShowModal: Function }
+  setShowModal: (props: ModalProps) => void
 }
 
 const NavigationBox: React.FC<NavigationBoxProps> = ({
@@ -22,7 +21,7 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
   serialNumber,
   currentPage,
   validateElementsInPage,
-  modalState: { setShowModal },
+  setShowModal,
 }) => {
   const {
     applicationState: {
