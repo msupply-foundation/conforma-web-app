@@ -28,7 +28,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
 
   useEffect(() => {
     const evaluatorParams: EvaluatorParameters = {
-      objects: [currentUser as User],
+      objects: { currentUser },
       APIfetch: fetch,
     }
     evaluate(startMessage || '', evaluatorParams).then((result: any) =>
