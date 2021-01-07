@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Grid, Header, Segment, Accordion, Icon } from 'semantic-ui-react'
+import { Button, Grid, Header, Segment, Accordion, Icon, Sticky } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
 import { ResponsesByCode, SectionElementStates } from '../../utils/types'
@@ -25,20 +25,24 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
     setIsOpen(!isOpen)
   }
 
+  const contextRef = useRef(null)
+
   return (
     <Accordion styled fluid>
-      <Segment.Group size="large">
+      <Segment.Group size="large" ref={contextRef}>
         <Accordion.Title active={isOpen} onClick={handleClick}>
-          <Grid>
-            <Grid.Row>
-              <Grid.Column width={15}>
-                <Header as="h2" content={section.title} />
-              </Grid.Column>
-              <Grid.Column width={1}>
-                <Icon name={isOpen ? 'angle up' : 'angle down'} size="large" />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
+          <Sticky context={contextRef}>
+            <Grid>
+              <Grid.Row>
+                <Grid.Column width={15}>
+                  <Header as="h2" content={section.title} />
+                </Grid.Column>
+                <Grid.Column width={1}>
+                  <Icon name={isOpen ? 'angle up' : 'angle down'} size="large" />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Sticky>
         </Accordion.Title>
         <Accordion.Content active={isOpen}>
           {Object.entries(pages).map(([pageName, elements]) => (
