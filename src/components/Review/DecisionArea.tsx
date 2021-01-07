@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Header, Modal, Radio, Segment, TextArea } from 'semantic-ui-react'
+import { Button, Header, Modal, Radio, Segment, TextArea, TextAreaProps } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { ReviewResponseDecision } from '../../utils/generated/graphql'
 import { DecisionAreaState, ReviewQuestionDecision } from '../../utils/types'
@@ -13,12 +13,17 @@ interface DecisionAreaProps {
 
 const DecisionArea: React.FC<DecisionAreaProps> = ({ state, setDecision, submitHandler }) => {
   const { open, review, summaryViewProps } = state
-  const handleChange = (value: string) => {
+  const handleChange = (value: ReviewResponseDecision) => {
     const { id, comment } = review as ReviewQuestionDecision
     setDecision({
       ...state,
-      review: { id, comment, decision: value as ReviewResponseDecision },
+      review: { id, comment, decision: value },
     })
+  }
+
+  const handleUpdateComment = (_: any, { value }: TextAreaProps) => {
+    const { review } = state
+    setDecision({ ...state, review: { ...review, comment: value } })
   }
 
   return (
@@ -43,20 +48,24 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({ state, setDecision, submitH
               style={{ width: '100%' }}
               label={strings.LABEL_REVIEW_APPROVE}
               value={strings.LABEL_REVIEW_APPROVE}
-              checked={review.decision === strings.LABEL_REVIEW_APPROVE}
-              onChange={() => handleChange(strings.LABEL_REVIEW_APPROVE)}
+              checked={review.decision === ReviewResponseDecision.Approve}
+              onChange={() => handleChange(ReviewResponseDecision.Approve)}
             />
             <Radio
               style={{ width: '100%' }}
               label={strings.LABEL_REVIEW_RESSUBMIT}
               value={strings.LABEL_REVIEW_RESSUBMIT}
-              checked={review.decision === strings.LABEL_REVIEW_RESSUBMIT}
-              onChange={() => handleChange(strings.LABEL_REVIEW_RESSUBMIT)}
+              checked={review.decision === ReviewResponseDecision.Decline}
+              onChange={() => handleChange(ReviewResponseDecision.Decline)}
             />
           </Segment>
           <Segment basic>
             <Header as="h3">{strings.LABEL_COMMENT}</Header>
-            <TextArea style={{ minHeight: 100 }} />
+            <TextArea
+              style={{ minHeight: 100 }}
+              value={review.comment}
+              onChange={handleUpdateComment}
+            />
           </Segment>
           <Segment basic>
             <Button color="blue" basic onClick={submitHandler}>

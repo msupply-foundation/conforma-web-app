@@ -64,6 +64,7 @@ const ReviewPageWrapper: React.FC = () => {
   const submitResponseHandler = (_: any) => {
     if (review) {
       const { id, comment, decision } = review
+
       updateReviewResponse({ variables: { ...review } })
       setDecisionState(decisionAreaInitialState)
     }
@@ -88,11 +89,12 @@ const ReviewPageWrapper: React.FC = () => {
 
       <Form>
         {reviewSections.map((reviewSection) => {
-          const { id } = currentUser as User
+          const { id, firstName, lastName } = currentUser as User
           const assignedToYou = reviewSection.assigned?.id === id
           return (
             <ReviewSection
               key={`Review_${reviewSection.section.code}`}
+              reviewer={`${firstName} ${lastName}`}
               allResponses={responsesByCode}
               assignedToYou={assignedToYou}
               reviewSection={reviewSection}
