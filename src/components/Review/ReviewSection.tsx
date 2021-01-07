@@ -1,15 +1,25 @@
 import React from 'react'
 import { Button, Container, Grid, Header, Icon, Label, Segment } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
+import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import strings from '../../utils/constants'
 import { ReviewResponseDecision, TemplateElementCategory } from '../../utils/generated/graphql'
-import { ReviewQuestionDecision, ResponsesByCode, SectionElementStates } from '../../utils/types'
+import {
+  ReviewQuestionDecision,
+  ResponsesByCode,
+  SectionElementStates,
+  DecisionAreaState,
+} from '../../utils/types'
 
 interface ReviewSectionProps {
   allResponses: ResponsesByCode
   assignedToYou: boolean
   reviewSection: SectionElementStates
   updateResponses: (props: ReviewQuestionDecision[]) => void
+  setDecisionArea: (
+    review: ReviewQuestionDecision,
+    summaryViewProps: SummaryViewWrapperProps
+  ) => void
   canEdit: boolean
 }
 
@@ -18,6 +28,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
   assignedToYou,
   reviewSection,
   updateResponses,
+  setDecisionArea,
   canEdit,
 }) => {
   const { section, pages } = reviewSection
@@ -78,7 +89,11 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                           {review && canEdit && (
                             <Container textAlign="right">
                               {review?.decision === undefined ? (
-                                <Button size="small">{strings.BUTTON_REVIEW_RESPONSE}</Button>
+                                <Button
+                                  size="small"
+                                  onClick={() => setDecisionArea(review, summaryViewProps)}
+                                  content={strings.BUTTON_REVIEW_RESPONSE}
+                                />
                               ) : (
                                 <Icon name="pencil square" color="blue" style={{ minWidth: 100 }} />
                               )}

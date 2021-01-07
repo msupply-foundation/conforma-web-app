@@ -1,17 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Form, Header, Label, Message } from 'semantic-ui-react'
-import { Loading, ReviewSection } from '../../components'
-import strings from '../../utils/constants'
-import { ReviewQuestionDecision } from '../../utils/types'
+import { DecisionArea, Loading, ReviewSection } from '../../components'
+import { DecisionAreaState, ReviewQuestionDecision } from '../../utils/types'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUpdateReviewResponseMutation } from '../../utils/generated/graphql'
 import getReviewQuery from '../../utils/graphql/queries/getReview.query'
+import strings from '../../utils/constants'
+import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
+
+const initialValue = { open: false, review: null, summaryViewProps: null }
 
 const ReviewPageWrapper: React.FC = () => {
   const {
     params: { serialNumber, reviewId },
   } = useRouter()
+  const [decisionArea, setDecisionArea] = useState<DecisionAreaState>(initialValue)
+  const { open, review, summaryViewProps } = decisionArea
 
   // Will wait for trigger to run that will set the Review status as DRAFT (after creation)
   const { error, loading, applicationName, responsesByCode, reviewSections } = useLoadReview({
@@ -37,6 +42,27 @@ const ReviewPageWrapper: React.FC = () => {
     })
   }
 
+  const openDecisionArea = (
+    review: ReviewQuestionDecision,
+    summaryViewProps: SummaryViewWrapperProps
+  ) => {
+    setDecisionArea({
+      open: true,
+      review: {
+        id: review.id,
+        decision: review.decision,
+        comment: review.comment,
+      },
+      summaryViewProps,
+    })
+  }
+
+  const submitHandler = (_: any) => {
+    // Should re-run the hook to get latest review decision
+    // TODO: Handle submission of review response
+    setDecisionArea(initialValue)
+  }
+
   return error ? (
     <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
   ) : loading ? (
@@ -53,10 +79,10 @@ const ReviewPageWrapper: React.FC = () => {
           subheader={strings.SUBTITLE_REVIEW}
         />
       </Container>
+
       <Form>
         {reviewSections.map((reviewSection) => {
-          console.log('Review', reviewSection, reviewSection.assigned)
-
+          // TODO: Use current user ID and display problem with view review without assigned reviews of responses
           const assignedToYou = reviewSection.assigned?.id === 6
           return (
             <ReviewSection
@@ -65,11 +91,17 @@ const ReviewPageWrapper: React.FC = () => {
               assignedToYou={assignedToYou}
               reviewSection={reviewSection}
               updateResponses={updateResponses}
+              setDecisionArea={openDecisionArea}
               canEdit={true} // TODO: Check Review status
             />
           )
         })}
       </Form>
+      <DecisionArea
+        state={decisionArea}
+        setDecision={setDecisionArea}
+        submitHandler={submitHandler}
+      />
     </>
   ) : (
     <Message error header={strings.ERROR_REVIEW_PAGE} />
