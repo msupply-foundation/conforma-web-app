@@ -46,14 +46,13 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
       return
     }
 
-    const { id, code, name, startMessage, submissionMessage, templateSections } = template
+    const { id, code, name, startMessage, templateSections } = template
 
     setTemplateType({
       id,
       code,
       name: name as string,
       startMessage: startMessage ? startMessage : undefined,
-      submissionMessage: submissionMessage as string,
     })
 
     const sections = getTemplateSections(templateSections)
