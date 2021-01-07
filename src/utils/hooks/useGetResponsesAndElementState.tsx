@@ -13,19 +13,15 @@ import {
   TemplateElementState,
   ApplicationElementStates,
   ElementState,
-  EvaluatorParameters,
+  UseGetApplicationProps,
   User,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import { IParameters } from '@openmsupply/expression-evaluator/lib/types'
 
-interface useGetResponsesAndElementStateProps {
-  serialNumber: string
-  isApplicationLoaded: boolean
-}
-
-const useGetResponsesAndElementState = (props: useGetResponsesAndElementStateProps) => {
-  const { serialNumber, isApplicationLoaded } = props
+const useGetResponsesAndElementState = ({
+  serialNumber,
+  isApplicationLoaded,
+}: UseGetApplicationProps) => {
   const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>()
   const [elementsExpressions, setElementsExpressions] = useState<TemplateElementState[]>([])
   const [elementsState, setElementsState] = useState<ApplicationElementStates>()
@@ -119,7 +115,7 @@ const useGetResponsesAndElementState = (props: useGetResponsesAndElementStatePro
 
   async function evaluateSingleElement(element: TemplateElementState): Promise<ElementState> {
     const evaluationParameters = {
-      objects: [responsesByCode as ResponsesByCode, currentUser as User],
+      objects: { responses: responsesByCode, currentUser },
       // TO-DO: Also send org objects etc.
       // graphQLConnection: TO-DO
     }

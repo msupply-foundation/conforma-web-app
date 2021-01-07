@@ -16,6 +16,7 @@ import {
 } from '../../utils/types'
 import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
+import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
 
 const ApplicationOverview: React.FC = () => {
   const [sectionsPages, setSectionsAndElements] = useState<SectionStructure>()
@@ -27,8 +28,13 @@ const ApplicationOverview: React.FC = () => {
 
   const { query, push } = useRouter()
   const { serialNumber } = query
-  const { error, loading, templateSections, isApplicationLoaded, appStatus } = useLoadApplication({
+  const { error, loading, templateSections, isApplicationLoaded } = useLoadApplication({
     serialNumber: serialNumber as string,
+  })
+
+  const { error: statusError, loading: statusLoading, appStatus } = useGetApplicationStatus({
+    serialNumber: serialNumber as string,
+    isApplicationLoaded,
   })
 
   const {
@@ -42,7 +48,7 @@ const ApplicationOverview: React.FC = () => {
   })
 
   const { error: submitError, processing, submitted, submit } = useUpdateApplication({
-    applicationSerial: serialNumber as string,
+    serialNumber: serialNumber as string,
   })
 
   const [responseMutation] = useUpdateResponseMutation()
@@ -109,11 +115,12 @@ const ApplicationOverview: React.FC = () => {
     if (currentUser?.username === 'nonRegistered') {
       logout()
     }
+    push(`/application/${serialNumber}/submission`)
   }
 
-  return error ? (
-    <Message error header={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
-  ) : loading || responsesLoading ? (
+  return error || statusError ? (
+    <Message error header={strings.ERROR_APPLICATION_OVERVIEW} list={[error, statusError]} />
+  ) : loading || statusLoading || responsesLoading ? (
     <Loading />
   ) : submitError ? (
     <Message error header={strings.ERROR_APPLICATION_SUBMIT} list={[submitError]} />
