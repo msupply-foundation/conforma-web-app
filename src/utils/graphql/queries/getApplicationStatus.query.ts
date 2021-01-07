@@ -1,32 +1,14 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getApplication($serial: String!) {
+  query getApplicationStatus($serial: String!) {
     applicationBySerial(serial: $serial) {
-      ...Application
-      applicationResponses {
-        nodes {
-          ...Response
-        }
-      }
+      status
       template {
-        ...Template
+        submissionMessage
         templateStages {
           nodes {
             ...TemplateStage
-          }
-        }
-      }
-      applicationSections {
-        nodes {
-          id
-          templateSection {
-            ...Section
-            templateElementsBySectionId {
-              nodes {
-                ...Element
-              }
-            }
           }
         }
       }

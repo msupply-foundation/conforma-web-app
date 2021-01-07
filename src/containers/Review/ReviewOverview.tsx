@@ -8,12 +8,16 @@ import { Link } from 'react-router-dom'
 import { ReviewStatus } from '../../utils/generated/graphql'
 import { AssignmentDetails } from '../../utils/types'
 import useCreateReview from '../../utils/hooks/useCreateReview'
+import { useUserState } from '../../contexts/UserState'
 
 const ReviewOverview: React.FC = () => {
   const {
     push,
     params: { serialNumber },
   } = useRouter()
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   const {
     error: fetchAssignmentError,
@@ -22,7 +26,7 @@ const ReviewOverview: React.FC = () => {
     assignment,
     assignedSections,
   } = useGetReviewAssignment({
-    reviewerId: 6,
+    reviewerId: currentUser?.id as number,
     serialNumber,
   })
 

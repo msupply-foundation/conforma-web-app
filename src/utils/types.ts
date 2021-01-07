@@ -10,7 +10,7 @@ export {
   ApplicationState,
   ApplicationDetails,
   ApplicationElementStates,
-  AppStatus,
+  ApplicationStages,
   AssignmentDetails,
   CurrentPage,
   ElementPluginParameterValue,
@@ -34,8 +34,9 @@ export {
   SectionElementStates,
   SectionDetails,
   SectionStructure,
-  TemplateTypePayload,
+  StageAndStatus,
   TemplateSectionPayload,
+  TemplateTypePayload,
   TemplateElementState,
   TemplatePermissions,
   ValidationMode,
@@ -43,6 +44,7 @@ export {
   ValidateObject,
   ValidityFailure,
   RevalidateResult,
+  UseGetApplicationProps,
   User,
 }
 
@@ -57,7 +59,6 @@ interface ApplicationDetails {
   type: string
   serial: string
   name: string
-  stageId: number | undefined
   stage: string
   status: string
   outcome: string
@@ -67,13 +68,10 @@ interface ApplicationDetails {
 interface ApplicationElementStates {
   [key: string]: ElementState
 }
-
-interface AppStatus {
-  stage: string
-  status: string
-  outcome: string
+interface ApplicationStages {
+  stages: StageDetails[]
+  submissionMessage: string
 }
-
 interface AssignmentDetails {
   id: number
   review?: ReviewDetails
@@ -214,12 +212,16 @@ interface SectionDetails {
 
 type SectionStructure = SectionElementStates[]
 
-interface TemplateTypePayload {
-  id: number
-  name: string
-  code: string
-  description: string
-  documents: Array<string>
+interface StageAndStatus {
+  stageId: number | undefined
+  stage: string
+  status: string
+}
+
+interface StageDetails {
+  number: number
+  title: string
+  description?: string
 }
 
 interface TemplateSectionPayload {
@@ -228,6 +230,13 @@ interface TemplateSectionPayload {
   title: string
   index: number
   totalPages: number
+}
+
+interface TemplateTypePayload {
+  id: number
+  name: string
+  code: string
+  startMessage?: string
 }
 
 interface TemplateElementState extends ElementBase {
@@ -268,7 +277,14 @@ interface RevalidateResult {
   validityFailures: ValidityFailure[]
 }
 
+interface UseGetApplicationProps {
+  serialNumber: string
+  isApplicationLoaded?: boolean
+  networkFetch?: boolean
+}
+
 interface User {
+  id: number
   firstName: string
   lastName?: string | null
   username: string

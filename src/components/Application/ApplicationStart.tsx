@@ -1,7 +1,10 @@
 import React from 'react'
-import { Button, Container, Header, Label, List, Segment } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { Button, Divider, Header, Icon, List, Message, Segment } from 'semantic-ui-react'
+import strings from '../../utils/constants'
 import { TemplateTypePayload, TemplateSectionPayload } from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
+import Markdown from '../../utils/helpers/semanticReactMarkdown'
 
 export interface ApplicationStartProps {
   template: TemplateTypePayload
@@ -10,27 +13,53 @@ export interface ApplicationStartProps {
 }
 
 const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
-  const { template: type, sections, handleClick } = props
+  const { template, sections, handleClick } = props
+  const { name, code, startMessage } = template
 
-  return type ? (
-    <Container text>
-      <Header as="h1" content={type ? type.description : 'Create application page'} />
-      {type && (
-        <Segment>
-          {sections && (
-            <Header as="h2" content={`Number of sections in template: ${sections.length}`} />
-          )}
-          <List>
-            {sections &&
-              sections.map((section) => (
-                <List.Item key={`list-item-${section.code}`} content={section.title} />
-              ))}
-          </List>
-          <Button content={type.name} onClick={handleClick} />
-        </Segment>
-      )}
-      {!type && <Label content="No Application" />}
-    </Container>
+  return template ? (
+    <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
+      <Button
+        as={Link}
+        to={`/applications?type=${code}`}
+        icon="angle left"
+        label={{ content: `${name} ${strings.LABEL_APPLICATIONS}`, color: 'grey' }}
+      />
+      <Header textAlign="center">{strings.TITLE_COMPANY_PLACEHOLDER}</Header>
+      <Segment
+        style={{
+          backgroundColor: 'white',
+          padding: 10,
+          margin: '0px 50px',
+          minHeight: 500,
+          flex: 1,
+        }}
+      >
+        <Header as="h2" textAlign="center">
+          {`${name} ${strings.TITLE_APPLICATION_FORM}`}
+          <Header.Subheader>{strings.TITLE_INTRODUCTION}</Header.Subheader>
+        </Header>
+        {template && (
+          <Segment basic>
+            <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
+            <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
+            <List divided relaxed>
+              {sections &&
+                sections.map((section) => (
+                  <List.Item key={`list-item-${section.code}`}>
+                    <List.Icon name="circle outline" />
+                    <List.Content>{section.title}</List.Content>
+                  </List.Item>
+                ))}
+            </List>
+            <Divider />
+            <Markdown text={startMessage || ''} semanticComponent="Message" info />
+            <Button color="blue" onClick={handleClick}>
+              {strings.BUTTON_APPLICATION_START}
+            </Button>
+          </Segment>
+        )}
+      </Segment>
+    </Segment.Group>
   ) : (
     <ApplicationSelectType />
   )
