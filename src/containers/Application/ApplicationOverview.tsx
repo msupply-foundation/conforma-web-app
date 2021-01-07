@@ -131,6 +131,9 @@ const ApplicationOverview: React.FC = () => {
     const allValid = await revalidateAndUpdate()
     if (allValid) {
       await submit()
+      if (currentUser?.username === 'nonRegistered') {
+        logout()
+      }
       push(`/application/${serialNumber}/submission`)
     }
   }
