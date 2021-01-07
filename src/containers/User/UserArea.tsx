@@ -1,63 +1,47 @@
-import React, { useEffect } from 'react'
-import { Button, Container, Label, Segment } from 'semantic-ui-react'
+import React from 'react'
+import { Button, Grid, Label, Segment, Sticky } from 'semantic-ui-react'
+import strings from '../../utils/constants'
 import { useUserState } from '../../contexts/UserState'
-import { useGetUsersQuery, User } from '../../utils/generated/graphql'
-import useGetUserInfo from '../../utils/hooks/useGetUserInfo'
-import Loading from '../../components/Loading'
-import { logOut } from '../User/Login'
+import UserSelection from './UserSelection'
+import { useRouter } from '../../utils/hooks/useRouter'
 
 const UserArea: React.FC = () => {
   const {
-    userState: { currentUser, users },
-    setUserState,
+    userState: { currentUser },
+    logout,
   } = useUserState()
-  const { data, loading, error } = useGetUsersQuery()
-  const { user, templatePermissions } = useGetUserInfo()
+  const { replace } = useRouter()
 
-  // Set userinfo to context after receiving it from endpoint
-  useEffect(() => {
-    if (!currentUser && user)
-      setUserState({
-        type: 'setCurrentUser',
-        newUser: user,
-      })
-  }, [user])
+  const handleLogOut = async () => {
+    await logout()
+    replace('/login')
+  }
 
-  useEffect(() => {
-    if (!templatePermissions) return
-    setUserState({ type: 'setTemplatePermissions', templatePermissions })
-  }, [templatePermissions])
-
-  useEffect(() => {
-    if (data && data.users && data.users.nodes) {
-      const users = data.users.nodes as Pick<User, 'username'>[]
-      const userNames = users
-        .filter((user) => user !== null)
-        .map(({ username }) => username) as string[]
-      setUserState({ type: 'updateUsersList', updatedUsers: userNames })
-    }
-  }, [data, error])
-
-  return loading ? (
-    <Loading />
-  ) : (
-    <Segment.Group vertical="true">
-      <Container>
-        <Label>The current user is: {currentUser?.username}</Label>
-      </Container>
-      <Container>
-        {users &&
-          users.map((user) => (
-            <Button basic key={`user-area-button-${user}`} color="green">
-              {user}
-            </Button>
-          ))}
-        <Button basic color="blue" onClick={logOut}>
-          Log out
-        </Button>
-      </Container>
-    </Segment.Group>
-  )
+  return currentUser ? (
+    <Sticky>
+      <Segment inverted vertical>
+        <Grid inverted>
+          <Grid.Column style={{ width: '30%' }}>
+            <Segment inverted>{strings.TITLE_COMPANY_PLACEHOLDER}</Segment>
+          </Grid.Column>
+          <Grid.Column style={{ width: '50%' }}>
+            <Segment inverted />
+          </Grid.Column>
+          <Grid.Column style={{ width: '20%' }}>
+            <Segment inverted floated="right">
+              <Label as="button" color="grey" style={{ width: '100%', padding: 10 }}>
+                {currentUser?.firstName}
+                <UserSelection />
+              </Label>
+              <Button basic color="blue" onClick={handleLogOut}>
+                {strings.LABEL_LOG_OUT}
+              </Button>
+            </Segment>
+          </Grid.Column>
+        </Grid>
+      </Segment>
+    </Sticky>
+  ) : null
 }
 
 export default UserArea

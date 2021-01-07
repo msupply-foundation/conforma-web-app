@@ -284,6 +284,7 @@ interface UseGetApplicationProps {
 }
 
 interface User {
+  id: number
   firstName: string
   lastName?: string | null
   username: string

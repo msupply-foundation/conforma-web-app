@@ -28,6 +28,8 @@ export default {
   LABEL_ASSIGNED_TO_OTHER: 'Assigned to another reviewer',
   LABEL_LOGIN_PASSWORD: 'Password',
   LABEL_LOGIN_USERNAME: 'Username',
+  LABEL_LOG_IN: 'Log in',
+  LABEL_LOG_OUT: 'Log out',
   LABEL_PROCESSING: 'Processing...',
   LABEL_WELCOME: 'Welcome to IRIMS Application Manager',
   LINK_LOGIN_USER: 'Create new account',
