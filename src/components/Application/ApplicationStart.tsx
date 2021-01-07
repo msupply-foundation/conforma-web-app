@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { Button, Divider, Header, Icon, List, Message, Segment } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import {
@@ -38,7 +39,8 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
   return template ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
       <Button
-        as="href"
+        as={Link}
+        to={`/applications?type=${code}`}
         icon="angle left"
         label={{ content: `${name} ${strings.LABEL_APPLICATIONS}`, color: 'grey' }}
       />

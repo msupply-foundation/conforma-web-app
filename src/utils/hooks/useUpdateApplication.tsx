@@ -2,17 +2,12 @@ import { ApolloError } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import {
   ApplicationResponse,
-  Trigger,
   useGetElementsAndResponsesQuery,
   useUpdateApplicationMutation,
 } from '../generated/graphql'
+import { UseGetApplicationProps } from '../types'
 
-interface useUpdateApplicationProps {
-  applicationSerial: string
-  applicationTrigger?: Trigger
-}
-
-const useUpdateApplication = ({ applicationSerial }: useUpdateApplicationProps) => {
+const useUpdateApplication = ({ serialNumber }: UseGetApplicationProps) => {
   const [submitted, setSubmitted] = useState(false)
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState<ApolloError | undefined>()
@@ -20,7 +15,7 @@ const useUpdateApplication = ({ applicationSerial }: useUpdateApplicationProps) 
   // Hook to get existing responses in cache - triggered when user submits application
   const { data, error: responsesError } = useGetElementsAndResponsesQuery({
     variables: {
-      serial: applicationSerial,
+      serial: serialNumber,
     },
     skip: !submitted,
     fetchPolicy: 'cache-only',
@@ -56,7 +51,7 @@ const useUpdateApplication = ({ applicationSerial }: useUpdateApplicationProps) 
     // Send Application in one-block mutation to update Application + Responses
     applicationSubmitMutation({
       variables: {
-        serial: applicationSerial,
+        serial: serialNumber,
         responses: responsesPatch,
       },
     })

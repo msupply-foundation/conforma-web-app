@@ -130,6 +130,17 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/r189E](https://balsamiq.cloud/s
 
 ---
 
+## `/application/[serialNum]/submission`
+
+### Application submission page
+
+End page to be displayed after the application is submitted. Each template can have a specific `submissionMessage` defined that is displayed here.
+When the application hasn't been submitted (on status = Draft | Withdrawn | Changes requested) this page should redirect to either the summary or the last invalid page.
+
+Example: ![Submission Page example](images/Overview-of-Navigation-&-URL-structure-Submission-page.png)
+
+---
+
 ## `/application/[serialNum]`
 
 ### Application home page

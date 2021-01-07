@@ -20,6 +20,7 @@ export default gql`
             id
             number
             title
+            description
           }
         }
       }
