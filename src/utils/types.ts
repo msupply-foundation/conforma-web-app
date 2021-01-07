@@ -280,6 +280,7 @@ interface RevalidateResult {
 interface UseGetApplicationProps {
   serialNumber: string
   isApplicationLoaded?: boolean
+  networkFetch?: boolean
 }
 
 interface User {

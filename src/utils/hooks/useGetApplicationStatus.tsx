@@ -8,7 +8,11 @@ import {
 } from '../generated/graphql'
 import useTriggerProcessing from './useTriggerProcessing'
 
-const useGetApplicationStatus = ({ serialNumber, isApplicationLoaded }: UseGetApplicationProps) => {
+const useGetApplicationStatus = ({
+  serialNumber,
+  isApplicationLoaded,
+  networkFetch,
+}: UseGetApplicationProps) => {
   const [appStages, setAppStages] = useState<ApplicationStages>()
   const [appStatus, setAppStatus] = useState<StageAndStatus>()
 
@@ -22,6 +26,7 @@ const useGetApplicationStatus = ({ serialNumber, isApplicationLoaded }: UseGetAp
       serial: serialNumber,
     },
     skip: triggerProcessing || !isApplicationLoaded,
+    fetchPolicy: networkFetch ? 'no-cache' : 'cache-first',
   })
 
   useEffect(() => {

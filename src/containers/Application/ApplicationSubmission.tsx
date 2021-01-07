@@ -29,10 +29,12 @@ const ApplicationSubmission: React.FC = () => {
   } = useGetApplicationStatus({
     serialNumber: serialNumber as string,
     isApplicationLoaded,
+    networkFetch: true,
   })
 
   useEffect(() => {
-    if (statusLoading) return
+    if (!isApplicationLoaded || statusLoading) return
+
     // Check if application is in Draft or Changes required status and redirect to the summary page
     // Note: The summary page has its own redirection logic to ay specific page (with invalid items).
     if (
