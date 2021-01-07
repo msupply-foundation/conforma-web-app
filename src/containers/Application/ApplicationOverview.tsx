@@ -107,6 +107,8 @@ const ApplicationOverview: React.FC = () => {
       })
     })
 
+    console.log('All Valid?', revalidate.allValid)
+
     // If any invalid responses define first invalid page to re-direct to
     if (!revalidate.allValid) {
       const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
@@ -126,9 +128,11 @@ const ApplicationOverview: React.FC = () => {
   }
 
   const handleSubmit = async () => {
+    console.log('invalidStep before revalidate', invalidStep)
     await revalidateAndUpdate()
+    console.log('invalidStep after revalidate', invalidStep)
     if (!invalidStep) {
-      submit()
+      await submit()
       push(`/application/${serialNumber}/submission`)
     }
   }
