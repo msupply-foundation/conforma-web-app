@@ -9,12 +9,21 @@ interface DecisionAreaProps {
   state: DecisionAreaState
   setDecision: Function
   submitHandler: (_: any) => void
+  problemMessage: string
+  setProblemMessage: Function
 }
 
-const DecisionArea: React.FC<DecisionAreaProps> = ({ state, setDecision, submitHandler }) => {
+const DecisionArea: React.FC<DecisionAreaProps> = ({
+  state,
+  setDecision,
+  submitHandler,
+  problemMessage,
+  setProblemMessage,
+}) => {
   const { open, review, summaryViewProps } = state
   const handleChange = (value: ReviewResponseDecision) => {
     const { id, comment } = review as ReviewQuestionDecision
+    setProblemMessage('')
     setDecision({
       ...state,
       review: { id, comment, decision: value },
@@ -68,9 +77,8 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({ state, setDecision, submitH
             />
           </Segment>
           <Segment basic>
-            <Button color="blue" basic onClick={submitHandler}>
-              {strings.BUTTON_SUBMIT}
-            </Button>
+            <Button color="blue" basic onClick={submitHandler} content={strings.BUTTON_SUBMIT} />
+            {problemMessage !== '' && <p style={{ color: 'red' }}>{problemMessage}</p>}
           </Segment>
         </Segment>
       )}
