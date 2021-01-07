@@ -123,7 +123,7 @@ interface IGraphQLConnection {
 }
 
 interface EvaluatorParameters {
-  objects?: object[]
+  objects?: object
   pgConnection?: any // Any, because not likely to be used in front-end
   graphQLConnection?: IGraphQLConnection
   APIfetch?: Function
@@ -284,6 +284,7 @@ interface UseGetApplicationProps {
 }
 
 interface User {
+  id: number
   firstName: string
   lastName?: string | null
   username: string

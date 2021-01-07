@@ -67,7 +67,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   // Update dynamic parameters when responses change
   useEffect(() => {
     evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
-      objects: [allResponses, currentUser as User],
+      objects: { responses: allResponses, currentUser },
       APIfetch: fetch,
     }).then((result: ElementPluginParameters) => {
       setEvaluatedParameters(result)
@@ -90,7 +90,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     const validationResult: ValidationState = await pluginMethods.validate(
       validationExpression,
       validationMessage as string,
-      { objects: [responses, currentUser as User], APIfetch: fetch }
+      { objects: { responses, currentUser }, APIfetch: fetch }
     )
     setValidationState(validationResult)
 
