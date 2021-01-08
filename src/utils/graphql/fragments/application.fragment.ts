@@ -5,6 +5,7 @@ export default gql`
     id
     serial
     name
+    stage
     status
     outcome
   }

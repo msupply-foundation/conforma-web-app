@@ -36,7 +36,7 @@ export const revalidateAll = async (
       elementsState[code].validation,
       elementsState[code]?.validationMessage as string,
       {
-        objects: [responses, currentUser],
+        objects: { responses, currentUser },
         APIfetch: fetch,
       }
     )
