@@ -2,7 +2,7 @@ export default {
   VALIDATION_FAIL: {
     title: 'Validation failed',
     message: 'Please fix invalid fields before continuing',
-    option: 'Yes',
+    option: 'OK',
   },
   SUBMISSION_FAIL: {
     title: 'Problem to submit application',
