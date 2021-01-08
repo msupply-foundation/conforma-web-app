@@ -10,7 +10,7 @@ export default {
   BUTTON_REVIEW_RESPONSE: 'Review',
   BUTTON_REVIEW_START: 'Start review',
   BUTTON_SUMMARY: 'Review & Summary',
-  BUTTON_SUBMIT: 'Review',
+  BUTTON_SUBMIT: 'Submit',
   DATE_APPLICATION_PLACEHOLDER: '31/12/2020',
   ERROR_APPLICATION_CREATE: 'Problem to load application creation page',
   ERROR_APPLICATION_ELEMENTS: 'Elements area cannot be displayed',
