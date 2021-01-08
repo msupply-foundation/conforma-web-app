@@ -36,7 +36,13 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
   }
 
   return (
-    <Modal open={open} size="fullscreen" style={{ margin: 0, background: 'transparent' }}>
+    <Modal
+      closeIcon
+      open={open}
+      onClose={() => setDecision({ open: false })}
+      size="fullscreen"
+      style={{ margin: 0, background: 'transparent' }}
+    >
       {open && summaryViewProps && review && (
         <Segment
           floated="right"
