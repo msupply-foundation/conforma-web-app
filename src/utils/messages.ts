@@ -5,7 +5,7 @@ export default {
     option: 'OK',
   },
   SUBMISSION_FAIL: {
-    title: 'Problem to submit application',
+    title: 'Problem submitting application',
     message: 'Please fix invalid fields before continuing',
     option: 'Ok',
   },
