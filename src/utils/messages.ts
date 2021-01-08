@@ -7,7 +7,7 @@ export default {
   SUBMISSION_FAIL: {
     title: 'Problem submitting application',
     message: 'Please fix invalid fields before continuing',
-    option: 'Ok',
+    option: 'OK',
   },
   REDIRECT_TO_REGISTRATION: 'Re-directing to user registration application...',
 }
