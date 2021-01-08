@@ -116,6 +116,7 @@ export type Query = Node & {
   templateStage?: Maybe<TemplateStage>;
   triggerQueue?: Maybe<TriggerQueue>;
   user?: Maybe<User>;
+  userByUsername?: Maybe<User>;
   userOrganisation?: Maybe<UserOrganisation>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
   jwtCheckPolicy?: Maybe<Scalars['Boolean']>;
@@ -744,6 +745,12 @@ export type QueryTriggerQueueArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryUserArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserByUsernameArgs = {
+  username: Scalars['String'];
 };
 
 
@@ -2106,12 +2113,14 @@ export type UserFilter = {
   lastName?: Maybe<StringFilter>;
   /** Filter by the object’s `username` field. */
   username?: Maybe<StringFilter>;
+  /** Filter by the object’s `email` field. */
+  email?: Maybe<StringFilter>;
   /** Filter by the object’s `dateOfBirth` field. */
   dateOfBirth?: Maybe<DateFilter>;
   /** Filter by the object’s `passwordHash` field. */
   passwordHash?: Maybe<StringFilter>;
-  /** Filter by the object’s `email` field. */
-  email?: Maybe<StringFilter>;
+  /** Filter by the object’s `passwordSalt` field. */
+  passwordSalt?: Maybe<StringFilter>;
   /** Filter by the object’s `userOrganisations` relation. */
   userOrganisations?: Maybe<UserToManyUserOrganisationFilter>;
   /** Some related `userOrganisations` exist. */
@@ -3567,9 +3576,10 @@ export type User = Node & {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
   /** Reads and enables pagination through a set of `PermissionJoin`. */
@@ -5879,12 +5889,14 @@ export enum UsersOrderBy {
   LastNameDesc = 'LAST_NAME_DESC',
   UsernameAsc = 'USERNAME_ASC',
   UsernameDesc = 'USERNAME_DESC',
+  EmailAsc = 'EMAIL_ASC',
+  EmailDesc = 'EMAIL_DESC',
   DateOfBirthAsc = 'DATE_OF_BIRTH_ASC',
   DateOfBirthDesc = 'DATE_OF_BIRTH_DESC',
   PasswordHashAsc = 'PASSWORD_HASH_ASC',
   PasswordHashDesc = 'PASSWORD_HASH_DESC',
-  EmailAsc = 'EMAIL_ASC',
-  EmailDesc = 'EMAIL_DESC',
+  PasswordSaltAsc = 'PASSWORD_SALT_ASC',
+  PasswordSaltDesc = 'PASSWORD_SALT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -5899,12 +5911,14 @@ export type UserCondition = {
   lastName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `username` field. */
   username?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `email` field. */
+  email?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `dateOfBirth` field. */
   dateOfBirth?: Maybe<Scalars['Date']>;
   /** Checks for equality with the object’s `passwordHash` field. */
   passwordHash?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `email` field. */
-  email?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `passwordSalt` field. */
+  passwordSalt?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `User` values. */
@@ -6118,6 +6132,8 @@ export type Mutation = {
   updateUserByNodeId?: Maybe<UpdateUserPayload>;
   /** Updates a single `User` using a unique key and a patch. */
   updateUser?: Maybe<UpdateUserPayload>;
+  /** Updates a single `User` using a unique key and a patch. */
+  updateUserByUsername?: Maybe<UpdateUserPayload>;
   /** Updates a single `UserOrganisation` using its globally unique id and a patch. */
   updateUserOrganisationByNodeId?: Maybe<UpdateUserOrganisationPayload>;
   /** Updates a single `UserOrganisation` using a unique key and a patch. */
@@ -6232,6 +6248,8 @@ export type Mutation = {
   deleteUserByNodeId?: Maybe<DeleteUserPayload>;
   /** Deletes a single `User` using a unique key. */
   deleteUser?: Maybe<DeleteUserPayload>;
+  /** Deletes a single `User` using a unique key. */
+  deleteUserByUsername?: Maybe<DeleteUserPayload>;
   /** Deletes a single `UserOrganisation` using its globally unique id. */
   deleteUserOrganisationByNodeId?: Maybe<DeleteUserOrganisationPayload>;
   /** Deletes a single `UserOrganisation` using a unique key. */
@@ -6738,6 +6756,12 @@ export type MutationUpdateUserArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserByUsernameArgs = {
+  input: UpdateUserByUsernameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserOrganisationByNodeIdArgs = {
   input: UpdateUserOrganisationByNodeIdInput;
 };
@@ -7076,6 +7100,12 @@ export type MutationDeleteUserByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserArgs = {
   input: DeleteUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUserByUsernameArgs = {
+  input: DeleteUserByUsernameInput;
 };
 
 
@@ -7830,13 +7860,19 @@ export type PermissionJoinUserIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -7848,6 +7884,11 @@ export type UserUserPkeyConnect = {
   id: Scalars['Int'];
 };
 
+/** The fields on `user` to look up the row to connect. */
+export type UserUserUsernameKeyConnect = {
+  username: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to connect. */
 export type UserNodeIdConnect = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
@@ -7857,6 +7898,11 @@ export type UserNodeIdConnect = {
 /** The fields on `user` to look up the row to delete. */
 export type UserUserPkeyDelete = {
   id: Scalars['Int'];
+};
+
+/** The fields on `user` to look up the row to delete. */
+export type UserUserUsernameKeyDelete = {
+  username: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to delete. */
@@ -7878,9 +7924,10 @@ export type UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -7955,13 +8002,19 @@ export type UserOrganisationUserIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -7981,9 +8034,10 @@ export type UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -8743,13 +8797,19 @@ export type ApplicationUserIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnApplicationForApplicationUserIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -8769,9 +8829,10 @@ export type UpdateUserOnApplicationForApplicationUserIdFkeyPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -9506,13 +9567,19 @@ export type ReviewAssignmentAssignerIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -9532,9 +9599,10 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch =
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -9592,13 +9660,19 @@ export type ReviewAssignmentReviewerIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -9618,9 +9692,10 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch =
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -10144,13 +10219,19 @@ export type FileUserIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<FileOnFileForFileUserIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -10170,9 +10251,10 @@ export type UpdateUserOnFileForFileUserIdFkeyPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -10229,13 +10311,19 @@ export type ReviewReviewerIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnReviewForReviewReviewerIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -10255,9 +10343,10 @@ export type UpdateUserOnReviewForReviewReviewerIdFkeyPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -10430,13 +10519,19 @@ export type NotificationUserIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -10456,9 +10551,10 @@ export type UpdateUserOnNotificationForNotificationUserIdFkeyPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -11939,6 +12035,13 @@ export type NotificationUserIdFkeyNotificationCreateInput = {
   fileToDocumentId?: Maybe<NotificationDocumentIdFkeyInput>;
 };
 
+/** The fields on `user` to look up the row to update. */
+export type UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnNotificationForNotificationUserIdFkeyPatch;
+  username: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
@@ -11953,9 +12056,10 @@ export type UserPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -11972,9 +12076,10 @@ export type NotificationUserIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -12066,6 +12171,13 @@ export type FileUserIdFkeyFileCreateInput = {
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
 
+/** The fields on `user` to look up the row to update. */
+export type UserOnReviewForReviewReviewerIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnReviewForReviewReviewerIdFkeyPatch;
+  username: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
@@ -12080,9 +12192,10 @@ export type ReviewReviewerIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -12115,6 +12228,13 @@ export type ReviewReviewerIdFkeyReviewCreateInput = {
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
+/** The fields on `user` to look up the row to update. */
+export type UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnFileForFileUserIdFkeyPatch;
+  username: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type FileOnFileForFileUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
@@ -12129,9 +12249,10 @@ export type FileUserIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -12578,6 +12699,13 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
+/** The fields on `user` to look up the row to update. */
+export type UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
+  username: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
@@ -12592,9 +12720,10 @@ export type ReviewAssignmentReviewerIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -12628,6 +12757,13 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
 };
 
+/** The fields on `user` to look up the row to update. */
+export type UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
+  username: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
@@ -12642,9 +12778,10 @@ export type ReviewAssignmentAssignerIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -13158,6 +13295,13 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
+/** The fields on `user` to look up the row to update. */
+export type UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnApplicationForApplicationUserIdFkeyPatch;
+  username: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
@@ -13172,9 +13316,10 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -13414,6 +13559,13 @@ export type PermissionJoinUserIdFkeyPermissionJoinCreateInput = {
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
 };
 
+/** The fields on `user` to look up the row to update. */
+export type UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch;
+  username: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
@@ -13428,9 +13580,10 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -13459,6 +13612,13 @@ export type UserOrganisationUserIdFkeyUserOrganisationCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
+/** The fields on `user` to look up the row to update. */
+export type UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch;
+  username: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
@@ -13473,9 +13633,10 @@ export type PermissionJoinUserIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -14844,9 +15005,10 @@ export type UserInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  passwordSalt?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -16060,6 +16222,15 @@ export type UpdateUserInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `updateUserByUsername` mutation. */
+export type UpdateUserByUsernameInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `User` being updated. */
+  patch: UserPatch;
+  username: Scalars['String'];
+};
+
 /** All input for the `updateUserOrganisationByNodeId` mutation. */
 export type UpdateUserOrganisationByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -17136,6 +17307,13 @@ export type DeleteUserInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
+};
+
+/** All input for the `deleteUserByUsername` mutation. */
+export type DeleteUserByUsernameInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  username: Scalars['String'];
 };
 
 /** All input for the `deleteUserOrganisationByNodeId` mutation. */
