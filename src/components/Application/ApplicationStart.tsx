@@ -22,6 +22,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
   } = useUserState()
 
   useEffect(() => {
+    if (!currentUser) return
     const evaluatorParams: EvaluatorParameters = {
       objects: { currentUser },
       APIfetch: fetch,
