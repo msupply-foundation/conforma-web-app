@@ -12,6 +12,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   currentResponse,
   validationState,
   onSave,
+  Markdown,
 }) => {
   const { placeholder, maskedInput, label } = parameters
 
@@ -31,7 +32,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   return (
     <>
-      <label>{label}</label>
+      <label>
+        <Markdown text={label} semanticComponent="noParagraph" />
+      </label>
       <Form.Input
         fluid
         placeholder={placeholder}
