@@ -7,7 +7,7 @@ import React from 'react'
 import ReactMarkdown, { ReactMarkdownProps } from 'react-markdown'
 import { Message, Icon } from 'semantic-ui-react'
 
-type SemanticComponent = 'Message' // Enum for available renderers
+type SemanticComponent = 'Message' | 'noParagraph' // Enum for available renderers
 interface MarkdownBlockProps {
   text: string
   semanticComponent?: SemanticComponent
@@ -39,6 +39,12 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
             {headingText}
           </Message.Header>
         )
+      },
+    },
+    // Prevents returned HTML from being wrapped in <p></p> tags
+    noParagraph: {
+      paragraph: ({ node: { children } }: any) => {
+        return <span>{children[0].value}</span>
       },
     },
   }
