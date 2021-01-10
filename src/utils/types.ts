@@ -163,6 +163,7 @@ interface ResponseFull {
   optionIndex?: number
   reference?: any // Not yet decided how to represent
   isValid?: boolean | null
+  hash?: string
   customValidation?: ValidationState
 }
 

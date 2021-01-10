@@ -40,7 +40,7 @@ interface ApplicationViewProps extends ApplicationViewWrapperProps {
   setIsActive: () => void
   validationState: ValidationState
   Markdown: any
-  defaultValidate: Function
+  validate: Function
 }
 
 interface SummaryViewProps {

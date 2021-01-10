@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Input } from 'semantic-ui-react'
+import { Form, Checkbox } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import config from '../../../config.json'
 
@@ -10,7 +10,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   onUpdate,
   value,
-  // setValue, -- we don't want to
+  // setValue,
   setIsActive,
   isEditable,
   currentResponse,
@@ -19,11 +19,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   validationExpression,
   validationMessage,
+  validate,
+  isRequired,
 }) => {
-  const { placeholder, maskedInput, label } = parameters
+  const { placeholder, maskedInput, label, showPasswordToggle } = parameters
 
   const [password, setPassword] = useState(value)
   const [password2, setPassword2] = useState(value)
+  const [masked, setMasked] = useState(maskedInput === undefined ? true : maskedInput)
 
   // useEffect(() => {
   //   onUpdate(value)
@@ -35,9 +38,21 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setPassword(e.target.value)
   }
 
+  function handleChange2(e: any) {
+    // onUpdate(e.target.value)
+    // setValue(e.target.value)
+    setPassword2(e.target.value)
+  }
+
   async function handleLoseFocus(e: any) {
     const hash = await createHash(password)
-    onSave({ hash, customValidation: await customValidate(password) })
+    const responses = { thisResponse: password || '' }
+    onSave({
+      hash,
+      customValidation: await validate(validationExpression, validationMessage, {
+        objects: { responses },
+      }),
+    })
   }
 
   return (
@@ -53,9 +68,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         onFocus={setIsActive}
         value={password ? password : ''}
         disabled={!isEditable}
-        type={maskedInput ? 'password' : undefined}
+        type={masked ? 'password' : undefined}
         error={
-          !validationState.isValid && currentResponse?.text !== undefined
+          !validationState.isValid && password !== undefined
             ? {
                 content: validationState?.validationMessage,
                 pointing: 'above',
@@ -65,22 +80,25 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       />
       <Form.Input
         fluid
-        placeholder="Repeat password"
-        onChange={handleChange}
-        onBlur={handleLoseFocus}
+        placeholder="Confirm password"
+        onChange={handleChange2}
+        // onBlur={handleLoseFocus}
         onFocus={setIsActive}
-        value={password ? password : ''}
+        value={password2 ? password2 : ''}
         disabled={!isEditable}
-        type={maskedInput ? 'password' : undefined}
+        type={masked ? 'password' : undefined}
         error={
-          !validationState.isValid && currentResponse?.text !== undefined
+          password2 !== password && password2 !== undefined
             ? {
-                content: validationState?.validationMessage,
+                content: 'Passwords do not match',
                 pointing: 'above',
               }
             : null
         }
       />
+      {(showPasswordToggle === undefined ? true : showPasswordToggle) && (
+        <Checkbox label="Show password" checked={!masked} onClick={() => setMasked(!masked)} />
+      )}
     </>
   )
 }
@@ -107,6 +125,6 @@ const createHash = async (password: string) => {
 // In this case, the validation is not stricly "Custom", but we want
 // to localise it to the plugin so we only have to return the hashed
 // password to the Wrapper and not the password itself.
-const customValidate = async (password: string) => {
-  return { isValid: false }
-}
+// const customValidate = async (password: string) => {
+//   return { isValid: false }
+// }

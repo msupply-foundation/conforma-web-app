@@ -12,7 +12,7 @@ import {
   ValidateObject,
 } from '../utils/types'
 import { useUserState } from '../contexts/UserState'
-import { defaultValidate } from './defaultValidate'
+import validate from './defaultValidate'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { Form } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
@@ -35,10 +35,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const [responseMutation] = useUpdateResponseMutation()
   const { setApplicationState } = useApplicationState()
-  const [pluginMethods, setPluginMethods] = useState<ValidateObject>({
-    validate: (validationExpress, validationMessage, evaluatorParameters) =>
-      console.log('notLoaded'),
-  })
+  // const [pluginMethods, setPluginMethods] = useState<ValidateObject>({
+  //   validate: (validationExpress, validationMessage, evaluatorParameters) =>
+  //     console.log('notLoaded'),
+  // })
   const {
     userState: { currentUser },
   } = useUserState()
@@ -55,14 +55,14 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
   const [value, setValue] = useState<string>(initialValue?.text)
 
-  useEffect(() => {
-    // Runs once on component mount
-    if (!pluginCode) return
-    // TODO use plugin-specific validation method if defined
-    setPluginMethods({
-      validate: defaultValidate,
-    })
-  }, [])
+  // useEffect(() => {
+  //   // Runs once on component mount
+  //   if (!pluginCode) return
+  //   // TODO use plugin-specific validation method if defined
+  //   setPluginMethods({
+  //     validate: defaultValidate,
+  //   })
+  // }, [])
 
   // Update dynamic parameters when responses change
   useEffect(() => {
@@ -87,7 +87,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       return { isValid: true }
     }
 
-    const validationResult: ValidationState = await pluginMethods.validate(
+    const validationResult: ValidationState = await validate(
       validationExpression,
       validationMessage as string,
       { objects: { responses, currentUser }, APIfetch: fetch }
@@ -102,7 +102,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       type: 'setElementTimestamp',
       timestampType: 'elementLostFocusTimestamp',
     })
-    console.log('jsonValue', jsonValue)
     if (!jsonValue.customValidation) {
       // Save Response procedure for most plugins
       const validationResult: ValidationState = await onUpdate(jsonValue.text)
@@ -124,6 +123,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       // Save Response procedure for custom validation plugins or other
       // non-standard Response types
       const { isValid, validationMessage } = jsonValue.customValidation
+      console.log('jsonValue.customValidation', jsonValue.customValidation)
       setValidationState({ isValid, validationMessage })
       delete jsonValue.customValidation // Don't want to save this field
       await responseMutation({
@@ -157,8 +157,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       setIsActive={setIsActive}
       Markdown={Markdown}
       validationState={validationState || { isValid: true }}
-      defaultValidate={pluginMethods.validate}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
+      validate={validate}
     />
   )
 
