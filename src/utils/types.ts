@@ -39,6 +39,7 @@ export {
   TemplateTypePayload,
   TemplateElementState,
   TemplatePermissions,
+  TemplatesDetails,
   ValidationMode,
   ValidateFunction,
   ValidateObject,
@@ -251,6 +252,12 @@ interface TemplatePermissions {
     [index: string]: Array<'Apply' | 'Review' | 'Assign'>
   }
 }
+
+type TemplatesDetails = {
+  permission: Array<'Apply' | 'Review' | 'Assign'>
+  name: string
+  code: string
+}[]
 
 interface ValidateFunction {
   (

@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Menu } from 'semantic-ui-react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
+import useListTemplates from '../../utils/hooks/useListTemplates'
 
 interface AppMenuProps extends RouteComponentProps {
   items: Array<Array<String>>
@@ -11,8 +12,14 @@ interface AppMenuProps extends RouteComponentProps {
 const AppMenu: React.FC<AppMenuProps> = (props: AppMenuProps) => {
   const { pathname } = useRouter()
   const {
-    userState: { templatePermissions },
+    userState: { isLoading, templatePermissions },
   } = useUserState()
+
+  const { error, filteredTemplates } = useListTemplates(templatePermissions, isLoading)
+
+  useEffect(() => {
+    console.log('error', error, 'filteredTemplates', filteredTemplates)
+  }, [error, filteredTemplates])
 
   let menuItems = []
   for (let i = 0; i < props.items.length; i++) {
@@ -33,7 +40,9 @@ const AppMenu: React.FC<AppMenuProps> = (props: AppMenuProps) => {
   return (
     <Menu fluid vertical tabular>
       {menuItems}
-      <pre>{JSON.stringify(templatePermissions)}</pre>
+      {filteredTemplates.map((template) => (
+        <Menu.Item>{template}</Menu.Item>
+      ))}
     </Menu>
   )
 }

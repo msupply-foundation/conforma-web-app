@@ -1,3 +1,4 @@
+import Log from 'apollo3-cache-persist/lib/Log'
 import React, { createContext, useContext, useReducer } from 'react'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
 import { TemplatePermissions, User } from '../utils/types'
@@ -5,6 +6,7 @@ import { TemplatePermissions, User } from '../utils/types'
 type UserState = {
   currentUser: User | null
   templatePermissions: TemplatePermissions
+  isLoading: boolean
 }
 
 export type UserActions =
@@ -15,6 +17,10 @@ export type UserActions =
       type: 'setCurrentUser'
       newUser: User
       newPermissions: TemplatePermissions
+    }
+  | {
+      type: 'setLoading'
+      isLoading: boolean
     }
   | {
       type: 'setTemplatePermissions'
@@ -34,6 +40,14 @@ const reducer = (state: UserState, action: UserActions) => {
         currentUser: newUser,
         templatePermissions: newPermissions,
       }
+    case 'setLoading':
+      console.log('SET LOADING', action)
+
+      const { isLoading } = action
+      return {
+        ...state,
+        isLoading,
+      }
     case 'setTemplatePermissions':
       const { templatePermissions } = action
       return {
@@ -48,6 +62,7 @@ const reducer = (state: UserState, action: UserActions) => {
 const initialState: UserState = {
   currentUser: null,
   templatePermissions: {},
+  isLoading: false,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
@@ -71,18 +86,24 @@ export function UserProvider({ children }: UserProviderProps) {
   const setUserState = dispatch
 
   const login = (JWT: string) => {
+    dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem('persistJWT', JWT)
     fetchUserInfo({ dispatch: setUserState })
   }
 
   const logout = () => {
+    dispatch({ type: 'setLoading', isLoading: true })
     localStorage.clear()
     dispatch({ type: 'resetCurrentUser' })
   }
 
   // Initial check for persisted user in local storage
   const JWT = localStorage.getItem('persistJWT')
-  if (JWT && !userState.currentUser) login(JWT)
+  if (JWT && !userState.currentUser && !userState.isLoading) {
+    console.log('INITIAL CHECK', JWT)
+
+    login(JWT)
+  }
 
   // Return the state and reducer to the context (wrap around the children)
   return (
