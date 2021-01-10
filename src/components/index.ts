@@ -12,7 +12,7 @@ import FilterList from './FilterList'
 import Home from './Home'
 import Login from '../containers/User/Login'
 import Loading from './Loading'
-import { AppMenu, Footer } from './Main'
+import { AppMenu, Footer, ModalWarning } from './Main'
 import { DecisionArea, ReviewSection } from './Review'
 import TemplateList from './TemplateList'
 import TemplateNew from './TemplateNew'
@@ -42,6 +42,7 @@ export {
   Home,
   Login,
   Loading,
+  ModalWarning,
   Notification,
   NotificationsList,
   NoMatch,
