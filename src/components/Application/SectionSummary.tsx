@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Grid, Header, Segment, Accordion, Icon, Sticky } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
@@ -25,24 +25,20 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
     setIsOpen(!isOpen)
   }
 
-  const contextRef = useRef(null)
-
   return (
     <Accordion styled fluid>
-      <Segment.Group size="large" ref={contextRef}>
+      <Segment.Group size="large">
         <Accordion.Title active={isOpen} onClick={handleClick}>
-          <Sticky context={contextRef}>
-            <Grid>
-              <Grid.Row>
-                <Grid.Column width={15}>
-                  <Header as="h2" content={section.title} />
-                </Grid.Column>
-                <Grid.Column width={1}>
-                  <Icon name={isOpen ? 'angle up' : 'angle down'} size="large" />
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-          </Sticky>
+          <Grid>
+            <Grid.Row>
+              <Grid.Column width={15}>
+                <Header as="h2" content={section.title} />
+              </Grid.Column>
+              <Grid.Column width={1}>
+                <Icon name={isOpen ? 'angle up' : 'angle down'} size="large" />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         </Accordion.Title>
         <Accordion.Content active={isOpen}>
           {Object.entries(pages).map(([pageName, elements]) => (

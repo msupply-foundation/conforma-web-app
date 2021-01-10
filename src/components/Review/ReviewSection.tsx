@@ -1,4 +1,4 @@
-import React, { createRef, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Container,
@@ -32,8 +32,6 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
 }) => {
   const { section, pages } = reviewSection
   const [isOpen, setIsOpen] = useState(false)
-
-  // const contextRef: any = useRef()
 
   const showSectionAssignment = assignedToYou ? (
     <Label style={{ backgroundColor: 'WhiteSmoke', color: 'Blue' }}>
