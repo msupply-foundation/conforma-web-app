@@ -28,7 +28,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const dropdownOptions = options.map((option: any, index: number) => {
     return {
-      key: option,
+      key: `${index}_${option}`,
       text: option,
       value: option,
       index,
