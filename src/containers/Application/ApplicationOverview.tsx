@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Container, Form, Header, Message, ModalProps } from 'semantic-ui-react'
+import {
+  Button,
+  ButtonProps,
+  Container,
+  Form,
+  Header,
+  Message,
+  ModalProps,
+} from 'semantic-ui-react'
 import { SectionSummary, Loading, ModalWarning } from '../../components'
 import strings from '../../utils/constants'
 import buildSectionsStructure from '../../utils/helpers/buildSectionsStructure'
@@ -17,22 +25,12 @@ import {
 import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
-
-interface InvalidStep {
-  page: number
-  section: string
-  serialNumber: string
-}
+import messages from '../../utils/messages'
 
 const ApplicationOverview: React.FC = () => {
   const [sectionsPages, setSectionsAndElements] = useState<SectionStructure>()
   const [isRevalidated, setIsRevalidated] = useState(false)
-  const [invalidStep, setInvalidStep] = useState<InvalidStep | undefined>()
-  const [showModal, setShowModal] = useState<ModalProps>({
-    open: false,
-    message: '',
-    title: '',
-  })
+  const [showModal, setShowModal] = useState<ModalProps>({ open: false })
   const {
     userState: { currentUser },
   } = useUserState()
@@ -115,14 +113,14 @@ const ApplicationOverview: React.FC = () => {
         revalidate.validityFailures,
         elementsState as ApplicationElementStates
       )
-      setInvalidStep({
-        page: firstErrorPage,
-        section: firstErrorSectionCode,
-        serialNumber: serialNumber as string,
-      })
       setShowModal({
         open: true,
-        title: strings.ERROR_SUBMISSION_INVALID,
+        ...messages.SUBMISSION_FAIL,
+        onClick: (event: any, data: ButtonProps) => {
+          push(`/application/${serialNumber}/${firstErrorSectionCode}/Page${firstErrorPage}`)
+          setShowModal({ open: false })
+        },
+        onClose: () => setShowModal({ open: false }),
       })
     }
     return revalidate.allValid
@@ -134,14 +132,6 @@ const ApplicationOverview: React.FC = () => {
       await submit()
       push(`/application/${serialNumber}/submission`)
     }
-  }
-
-  const showInvalidSubmission = () => {
-    const onClickAction = () => {
-      const { serialNumber, section, page } = invalidStep as InvalidStep
-      push(`/application/${serialNumber}/${section}/Page${page}`)
-    }
-    return ModalWarning({ showModal, setShowModal, onClickAction })
   }
 
   return error || statusError ? (
@@ -166,7 +156,7 @@ const ApplicationOverview: React.FC = () => {
         {appStatus.status === 'DRAFT' ? (
           <Button content={strings.BUTTON_SUBMIT} onClick={handleSubmit} />
         ) : null}
-        {showInvalidSubmission()}
+        <ModalWarning showModal={showModal} />
       </Form>
     </Container>
   ) : (
