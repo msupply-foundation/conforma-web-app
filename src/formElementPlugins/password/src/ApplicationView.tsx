@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Input } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
+import bcrypt from 'bcrypt'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
@@ -15,6 +16,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
 }) => {
   const { placeholder, maskedInput, label } = parameters
+
+  const [value2, setValue2] = useState('')
 
   useEffect(() => {
     onUpdate(value)

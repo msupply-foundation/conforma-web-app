@@ -10,7 +10,6 @@ import {
   ElementPluginParameters,
   ElementPluginParameterValue,
   ValidateObject,
-  User,
 } from '../utils/types'
 import { useUserState } from '../contexts/UserState'
 import { defaultValidate } from './defaultValidate'

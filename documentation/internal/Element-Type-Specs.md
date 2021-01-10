@@ -24,7 +24,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
 
 **Note**: all parameter fields can also have a dynamic query object instead of a primitive. The [`evaluateExpression`](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax) function will return literal strings (or numbers, booleans) as is. The types described for the parameters below are the type that is expected to be _returned_ from a query expression.
 
-### Short Text Input _(not yet implemented -- highest priority)_
+### Short Text Input
 
 - **type/code**: `shortText`
 - **category**: `Question`
@@ -33,20 +33,42 @@ _Free-form, single-line text input element_
 
 #### Input parameters (in the `parameters` JSON)
 
-- **label**: `string` -- Text that shows in the HTML "label" attribute of the form element (suggestion: make this interpret Markdown)
+- **label**: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
 - **description**: `string` -- additional explanatory text (usually not required) [Optional]
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
 - **maskedInput**: `boolean` -- if `true`, displays user input as masked (hidden) characters -- i.e. for passwords. [Optional]
-- **minWidth**/**maxWidth**: `integer` -- optional controls over visual display [Optional] _(We may never use these)_
+- ~~**minWidth**/**maxWidth**: `integer` -- optional controls over visual display [Optional]~~ _(Not currently implemented -- We may never use these)_
 
 #### Response type
 
-_This describes the expected object that will be stored in the `application_response` table `value` field. from the user's response_  
+_This describes the expected object that will be stored in the `application_response` table `value` field from the user's response_  
 `{ text: <string> }`
 
 ---
 
-### Text Information _(not yet implemented)_
+### Password Input
+
+- **type/code**: `password`
+- **category**: `Question`
+
+_Secure password input field, with enter-twice confirmation_
+
+#### Input parameters (in the `parameters` JSON)
+
+- **label**: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
+- **description**: `string` -- additional explanatory text (usually not required) [Optional]
+- **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
+- **maskedInput**: `boolean` -- if `true`, displays user input as masked (hidden) characters -- i.e. for passwords. [Optional -- default `true`]
+- **showPasswordToggle**: `boolean` -- if `true`, displays a checkbox to show the masked input as regular text [Optional -- default `true`]
+
+#### Response type
+
+_This describes the expected object that will be stored in the `application_response` table `value` field from the user's response_  
+`{ text: <string> }`
+
+---
+
+### Text Information
 
 - **type/code**: `textInfo`
 - **category**: `Information`
