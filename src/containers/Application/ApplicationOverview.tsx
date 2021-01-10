@@ -65,7 +65,6 @@ const ApplicationOverview: React.FC = () => {
 
   useEffect(() => {
     // Fully re-validate on page load
-    console.log('appStatus', appStatus)
     if (!appStatus) return
     if (appStatus?.status !== 'DRAFT' && appStatus?.status !== 'CHANGES_REQUIRED') {
       // Show summary, even if it no longer validates, as it would
@@ -76,7 +75,7 @@ const ApplicationOverview: React.FC = () => {
     if (isApplicationLoaded && elementsState && responsesByCode) {
       revalidateAndUpdate().then(() => setIsRevalidated(true))
     }
-  }, [responsesByCode, elementsState])
+  }, [responsesByCode, elementsState, appStatus])
 
   useEffect(() => {
     if (!responsesLoading && elementsState && responsesByCode) {
