@@ -4,6 +4,8 @@ import {
   TemplateElementCategory,
 } from './generated/graphql'
 
+import { ValidationState } from '../formElementPlugins/types'
+
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 export {
@@ -161,6 +163,7 @@ interface ResponseFull {
   optionIndex?: number
   reference?: any // Not yet decided how to represent
   isValid?: boolean | null
+  customValidation?: ValidationState
 }
 
 interface ResponsePayload {

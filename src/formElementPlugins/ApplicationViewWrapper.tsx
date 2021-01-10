@@ -102,19 +102,36 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       type: 'setElementTimestamp',
       timestampType: 'elementLostFocusTimestamp',
     })
-    const validationResult: ValidationState = await onUpdate(jsonValue.text)
-    if (jsonValue.text !== undefined)
+    console.log('jsonValue', jsonValue)
+    if (!jsonValue.customValidation) {
+      // Save Response procedure for most plugins
+      const validationResult: ValidationState = await onUpdate(jsonValue.text)
+      if (jsonValue.text !== undefined)
+        await responseMutation({
+          variables: {
+            id: currentResponse?.id as number,
+            value: jsonValue,
+            isValid: validationResult.isValid,
+          },
+        })
+      if (jsonValue.text == allResponses[code]?.text) {
+        setApplicationState({
+          type: 'setElementTimestamp',
+          timestampType: 'elementsStateUpdatedTimestamp',
+        })
+      }
+    } else {
+      // Save Response procedure for custom validation plugins or other
+      // non-standard Response types
+      const { isValid, validationMessage } = jsonValue.customValidation
+      setValidationState({ isValid, validationMessage })
+      delete jsonValue.customValidation // Don't want to save this field
       await responseMutation({
         variables: {
           id: currentResponse?.id as number,
           value: jsonValue,
-          isValid: validationResult.isValid,
+          isValid,
         },
-      })
-    if (jsonValue.text == allResponses[code]?.text) {
-      setApplicationState({
-        type: 'setElementTimestamp',
-        timestampType: 'elementsStateUpdatedTimestamp',
       })
     }
   }
@@ -140,6 +157,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       setIsActive={setIsActive}
       Markdown={Markdown}
       validationState={validationState || { isValid: true }}
+      defaultValidate={pluginMethods.validate}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
     />
   )
