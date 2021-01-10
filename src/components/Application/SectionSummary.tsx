@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Grid, Header, Segment, Accordion, Icon, Sticky } from 'semantic-ui-react'
+import { Button, Grid, Header, Segment, Accordion, Icon } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
 import { ResponsesByCode, SectionElementStates } from '../../utils/types'

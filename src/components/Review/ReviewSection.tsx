@@ -1,15 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Button,
-  Container,
-  Grid,
-  Header,
-  Icon,
-  Label,
-  Segment,
-  Sticky,
-  Accordion,
-} from 'semantic-ui-react'
+import { Button, Container, Grid, Header, Icon, Label, Segment, Accordion } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import strings from '../../utils/constants'
 import { ReviewResponseDecision, TemplateElementCategory } from '../../utils/generated/graphql'
