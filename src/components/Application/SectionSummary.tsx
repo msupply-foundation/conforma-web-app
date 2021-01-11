@@ -19,7 +19,7 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
   canEdit,
 }) => {
   const { section, pages } = sectionPages
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(true)
 
   const handleClick = () => {
     setIsOpen(!isOpen)
