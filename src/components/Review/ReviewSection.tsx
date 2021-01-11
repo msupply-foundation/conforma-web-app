@@ -38,7 +38,6 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
   return (
     <Accordion fluid>
       <Segment
-        // ref={contextRef}
         key={`ReviewSection_${section.code}`}
         style={{
           backgroundColor: 'WhiteSmoke',
@@ -82,10 +81,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                   }
                   if (category === TemplateElementCategory.Question) {
                     return (
-                      <Segment
-                        key={`ReviewElement_${element.code}`}
-                        // style={{ margin: '10px 50px 0px' }}
-                      >
+                      <Segment key={`ReviewElement_${element.code}`}>
                         <Grid columns={2} verticalAlign="middle">
                           <Grid.Row>
                             <Grid.Column>
