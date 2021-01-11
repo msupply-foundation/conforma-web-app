@@ -128,14 +128,3 @@ const createHash = async (password: string) => {
     throw err
   }
 }
-
-// In this case, the validation is not stricly "Custom", but we want
-// to localise it to the plugin so we only have to return the hashed
-// password to the Wrapper and not the password itself.
-// const customValidate = async (
-//   validationExpression: IQueryNode,
-//   validationMessage: string,
-//   evaluationParams: EvaluatorParameters
-// ) => {
-//   return await validate(validationExpression, validationMessage, evaluationParams)
-// }
