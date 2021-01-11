@@ -48,7 +48,6 @@ const ApplicationSubmission: React.FC = () => {
 
   useEffect(() => {
     if (!isApplicationLoaded || statusLoading) return
-    console.log('appStatus', appStatus)
 
     // Check if application is in Draft or Changes required status and redirect to the summary page
     // Note: The summary page has its own redirection logic to ay specific page (with invalid items).
@@ -98,17 +97,19 @@ const ApplicationSubmission: React.FC = () => {
             </List>
           </Segment>
         )}
-        <Segment basic textAlign="center" style={{ margin: '50px 50px', padding: 10 }}>
-          <Button
-            color="blue"
-            as={Link}
-            to={`/application/${serialNumber}/summary`}
-            style={{ minWidth: 200 }}
-          >{`${strings.BUTTON_BACK_TO} ${application?.type}`}</Button>
-          <Label as={Link} to={'/'}>
-            {strings.BUTTON_BACK_DASHBOARD}
-          </Label>
-        </Segment>
+        {currentUser && (
+          <Segment basic textAlign="center" style={{ margin: '50px 50px', padding: 10 }}>
+            <Button
+              color="blue"
+              as={Link}
+              to={`/application/${serialNumber}/summary`}
+              style={{ minWidth: 200 }}
+            >{`${strings.BUTTON_BACK_TO} ${application?.type}`}</Button>
+            <Label as={Link} to={'/'}>
+              {strings.BUTTON_BACK_DASHBOARD}
+            </Label>
+          </Segment>
+        )}
       </Segment>
     </Segment.Group>
   ) : (

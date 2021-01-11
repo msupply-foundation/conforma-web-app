@@ -70,6 +70,7 @@ const ApplicationPageWrapper: React.FC = () => {
   const { error: statusError, loading: statusLoading, appStatus } = useGetApplicationStatus({
     serialNumber: serialNumber as string,
     isApplicationLoaded,
+    networkFetch: true,
   })
 
   const {

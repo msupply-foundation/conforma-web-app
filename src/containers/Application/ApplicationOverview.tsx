@@ -32,6 +32,7 @@ const ApplicationOverview: React.FC = () => {
   const [isRevalidated, setIsRevalidated] = useState(false)
   const [showModal, setShowModal] = useState<ModalProps>({ open: false })
   const {
+    logout,
     userState: { currentUser },
   } = useUserState()
 
@@ -44,6 +45,7 @@ const ApplicationOverview: React.FC = () => {
   const { error: statusError, loading: statusLoading, appStatus } = useGetApplicationStatus({
     serialNumber: serialNumber as string,
     isApplicationLoaded,
+    networkFetch: true,
   })
 
   const {
@@ -74,7 +76,7 @@ const ApplicationOverview: React.FC = () => {
     if (isApplicationLoaded && elementsState && responsesByCode) {
       revalidateAndUpdate().then(() => setIsRevalidated(true))
     }
-  }, [responsesByCode, elementsState])
+  }, [responsesByCode, elementsState, appStatus])
 
   useEffect(() => {
     if (!responsesLoading && elementsState && responsesByCode) {
@@ -128,6 +130,9 @@ const ApplicationOverview: React.FC = () => {
     const allValid = await revalidateAndUpdate()
     if (allValid) {
       await submit()
+      if (currentUser?.username === strings.USER_NONREGISTERED) {
+        logout()
+      }
       push(`/application/${serialNumber}/submission`)
     }
   }
