@@ -55,15 +55,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
   const [value, setValue] = useState<string>(initialValue?.text)
 
-  // useEffect(() => {
-  //   // Runs once on component mount
-  //   if (!pluginCode) return
-  //   // TODO use plugin-specific validation method if defined
-  //   setPluginMethods({
-  //     validate: defaultValidate,
-  //   })
-  // }, [])
-
   // Update dynamic parameters when responses change
   useEffect(() => {
     evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
@@ -102,36 +93,19 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       type: 'setElementTimestamp',
       timestampType: 'elementLostFocusTimestamp',
     })
-    if (!jsonValue.customValidation) {
-      // Save Response procedure for most plugins
-      const validationResult: ValidationState = await onUpdate(jsonValue.text)
-      if (jsonValue.text !== undefined)
-        await responseMutation({
-          variables: {
-            id: currentResponse?.id as number,
-            value: jsonValue,
-            isValid: validationResult.isValid,
-          },
-        })
-      if (jsonValue.text == allResponses[code]?.text) {
-        setApplicationState({
-          type: 'setElementTimestamp',
-          timestampType: 'elementsStateUpdatedTimestamp',
-        })
-      }
-    } else {
-      // Save Response procedure for custom validation plugins or other
-      // non-standard Response types
-      const { isValid, validationMessage } = jsonValue.customValidation
-      console.log('jsonValue.customValidation', jsonValue.customValidation)
-      setValidationState({ isValid, validationMessage })
-      delete jsonValue.customValidation // Don't want to save this field
+    const validationResult: ValidationState = await onUpdate(jsonValue.text)
+    if (jsonValue.text !== undefined)
       await responseMutation({
         variables: {
           id: currentResponse?.id as number,
           value: jsonValue,
-          isValid,
+          isValid: validationResult.isValid,
         },
+      })
+    if (jsonValue.text == allResponses[code]?.text) {
+      setApplicationState({
+        type: 'setElementTimestamp',
+        timestampType: 'elementsStateUpdatedTimestamp',
       })
     }
   }
@@ -158,7 +132,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       Markdown={Markdown}
       validationState={validationState || { isValid: true }}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
-      validate={validate}
     />
   )
 

@@ -19,10 +19,16 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   validationExpression,
   validationMessage,
-  validate,
   isRequired,
 }) => {
-  const { placeholder, maskedInput, label, showPasswordToggle } = parameters
+  const {
+    placeholder,
+    maskedInput,
+    label,
+    showPasswordToggle,
+    validationInternal,
+    validationMessageInternal,
+  } = parameters
 
   const [password, setPassword] = useState(value)
   const [password2, setPassword2] = useState(value)
@@ -47,12 +53,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   async function handleLoseFocus(e: any) {
     const hash = await createHash(password)
     const responses = { thisResponse: password || '' }
-    onSave({
-      hash,
-      customValidation: await validate(validationExpression, validationMessage, {
-        objects: { responses },
-      }),
-    })
+    // onSave({
+    //   hash,
+    //   customValidation: await validate(validationExpression, validationMessage, {
+    //     objects: { responses },
+    //   }),
+    // })
   }
 
   return (
