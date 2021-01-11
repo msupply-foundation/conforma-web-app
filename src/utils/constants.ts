@@ -3,7 +3,6 @@ export default {
   BUTTON_BACK_DASHBOARD: 'Back to dashboard',
   BUTTON_BACK_TO: 'Back to',
   BUTTON_NEXT: 'Next',
-  BUTTON_OPTION_YES: 'Yes',
   BUTTON_PREVIOUS: 'Previous',
   BUTTON_REVIEW_APPROVE_ALL: 'Approve all ',
   BUTTON_REVIEW_CONTINUE: 'Continue review',
@@ -24,7 +23,6 @@ export default {
   ERROR_REVIEW_PAGE: 'Problem to load review',
   ERROR_REVIEW_OVERVIEW: 'Problem to load review homepage',
   ERROR_LOGIN_PASSWORD: 'Oops! Problem with username or password',
-  ERROR_SUBMISSION_INVALID: 'Problem to submit application',
   LABEL_APPLICATIONS: 'applications',
   LABEL_ASSIGNED_TO_YOU: 'Assigned to you',
   LABEL_ASSIGNED_TO_OTHER: 'Assigned to another reviewer',
@@ -43,7 +41,7 @@ export default {
   TITLE_STEPS: 'Steps to complete',
   STAGE_PLACEHOLDER: 'Assessment',
   SUBTITLE_APPLICATION_STEPS:
-    'The following sterps will need to be completed before the form can be submitted',
+    'The following steps will need to be completed before the form can be submitted',
   SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you',
   SUBTITLE_SUBMISSION_STEPS: 'It will be going through the following stages before approval',
 }

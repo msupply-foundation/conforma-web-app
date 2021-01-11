@@ -1,42 +1,25 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, Header, Icon, Modal, ModalProps } from 'semantic-ui-react'
-import strings from '../../utils/constants'
-
-const modalInitialValue: ModalProps = {
-  open: false,
-  message: '',
-  title: '',
-}
 
 interface ModalWarningProps {
   showModal: ModalProps
-  setShowModal: (props: ModalProps) => void
-  onClickAction?: Function
 }
 
-const ModalWarning: React.FC<ModalWarningProps> = ({ showModal, setShowModal, onClickAction }) => {
-  const hideModal = () => setShowModal(modalInitialValue)
+const ModalWarning: React.FC<ModalWarningProps> = ({ showModal }) => {
+  const { title, message, option, onClick } = showModal
+
+  // TOOD: Use more props from ModalProps for more general configuration of modal (e.g. Shorthand for different actions)
   return (
-    <Modal basic onClose={() => hideModal()} open={showModal.open} size="small">
+    <Modal basic size="small" {...showModal}>
       <Header icon>
         <Icon name="exclamation triangle" />
-        {showModal.title}
+        {title}
       </Header>
       <Modal.Content>
-        <p>{showModal.message}</p>
+        <p>{message}</p>
       </Modal.Content>
       <Modal.Actions>
-        <Button
-          color="green"
-          inverted
-          onClick={() => {
-            hideModal()
-            if (onClickAction) onClickAction()
-          }}
-        >
-          <Icon name="checkmark" />
-          {strings.BUTTON_OPTION_YES}
-        </Button>
+        <Button color="green" inverted icon="checkmark" content={option} onClick={onClick} />
       </Modal.Actions>
     </Modal>
   )
