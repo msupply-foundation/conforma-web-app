@@ -115,7 +115,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       const { isValid, validationMessage } = jsonValue.customValidation
       setValidationState({ isValid, validationMessage })
       delete jsonValue.customValidation // Don't want to save this field
-      console.log('jsonValue', jsonValue)
       await responseMutation({
         variables: {
           id: currentResponse?.id as number,

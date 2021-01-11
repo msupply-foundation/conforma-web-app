@@ -39,8 +39,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }, [])
 
   function handleChange(e: any) {
-    // onUpdate(e.target.value)
-    // setValue(e.target.value)
     if (e.target.name === 'password') setPassword(e.target.value)
     else setPasswordConfirm(e.target.value)
   }
