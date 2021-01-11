@@ -4,6 +4,7 @@ import isLoggedIn from '../../utils/helpers/loginCheck'
 import { attemptLogin } from '../User/Login'
 import { useUserState } from '../../contexts/UserState'
 import messages from '../../utils/messages'
+import strings from '../../utils/constants'
 
 const UserRegister: React.FC = () => {
   const [networkError, setNetworkError] = useState('')
@@ -12,7 +13,7 @@ const UserRegister: React.FC = () => {
 
   if (isLoggedIn()) push('/')
 
-  attemptLogin('nonRegistered', '')
+  attemptLogin(strings.USER_NONREGISTERED, '')
     .then((loginResult) => {
       login(loginResult.JWT)
       push('/application/new?type=UserRegistration')
