@@ -3,9 +3,6 @@ import { Form, Checkbox } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import config from '../../../config.json'
 
-// This value must match value in back-end permissions.tsx
-const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
-
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   onUpdate,
@@ -17,9 +14,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   validationState,
   onSave,
   Markdown,
-  validationExpression,
-  validationMessage,
   isRequired,
+  validate,
 }) => {
   const {
     placeholder,
@@ -30,36 +26,43 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     validationMessageInternal,
   } = parameters
 
-  const [password, setPassword] = useState(value)
-  const [password2, setPassword2] = useState(value)
+  const [password, setPassword] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
   const [masked, setMasked] = useState(maskedInput === undefined ? true : maskedInput)
 
-  // useEffect(() => {
-  //   onUpdate(value)
-  // }, [])
+  useEffect(() => {
+    console.log('validationState', validationState)
+    console.log('value', value)
+    if (value !== undefined) {
+      console.log('Saving...')
+      onSave({ hash: '', text: '', customValidation: { isValid: null } })
+    }
+  }, [])
 
   function handleChange(e: any) {
     // onUpdate(e.target.value)
     // setValue(e.target.value)
-    setPassword(e.target.value)
-  }
-
-  function handleChange2(e: any) {
-    // onUpdate(e.target.value)
-    // setValue(e.target.value)
-    setPassword2(e.target.value)
+    if (e.target.name === 'password') setPassword(e.target.value)
+    else setPasswordConfirm(e.target.value)
   }
 
   async function handleLoseFocus(e: any) {
-    const hash = await createHash(password)
     const responses = { thisResponse: password || '' }
-    // onSave({
-    //   hash,
-    //   customValidation: await validate(validationExpression, validationMessage, {
-    //     objects: { responses },
-    //   }),
-    // })
+    const customValidation = await validate(validationInternal, validationMessageInternal, {
+      objects: { responses },
+    })
+    const passwordsMatch = password === passwordConfirm
+    const hash = customValidation.isValid && passwordsMatch ? await createHash(password) : ''
+    console.log('Hash', hash)
+
+    onSave({
+      hash,
+      text: hash !== '' ? '•••••••' : '',
+      customValidation,
+    })
   }
+
+  console.log('validationState', validationState)
 
   return (
     <>
@@ -67,6 +70,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Markdown text={label} semanticComponent="noParagraph" />
       </label>
       <Form.Input
+        name="password"
         fluid
         placeholder={placeholder}
         onChange={handleChange}
@@ -76,25 +80,26 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         disabled={!isEditable}
         type={masked ? 'password' : undefined}
         error={
-          !validationState.isValid && password !== undefined
+          !validationState.isValid && password !== ''
             ? {
-                content: validationState?.validationMessage,
+                content: validationMessageInternal,
                 pointing: 'above',
               }
             : null
         }
       />
       <Form.Input
+        name="passwordConfirm"
         fluid
         placeholder="Confirm password"
-        onChange={handleChange2}
-        // onBlur={handleLoseFocus}
+        onChange={handleChange}
+        onBlur={handleLoseFocus}
         onFocus={setIsActive}
-        value={password2 ? password2 : ''}
+        value={passwordConfirm ? passwordConfirm : ''}
         disabled={!isEditable}
         type={masked ? 'password' : undefined}
         error={
-          password2 !== password && password2 !== undefined
+          passwordConfirm !== password && passwordConfirm !== undefined
             ? {
                 content: 'Passwords do not match',
                 pointing: 'above',
@@ -131,6 +136,10 @@ const createHash = async (password: string) => {
 // In this case, the validation is not stricly "Custom", but we want
 // to localise it to the plugin so we only have to return the hashed
 // password to the Wrapper and not the password itself.
-// const customValidate = async (password: string) => {
-//   return { isValid: false }
+// const customValidate = async (
+//   validationExpression: IQueryNode,
+//   validationMessage: string,
+//   evaluationParams: EvaluatorParameters
+// ) => {
+//   return await validate(validationExpression, validationMessage, evaluationParams)
 // }

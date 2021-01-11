@@ -35,10 +35,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const [responseMutation] = useUpdateResponseMutation()
   const { setApplicationState } = useApplicationState()
-  // const [pluginMethods, setPluginMethods] = useState<ValidateObject>({
-  //   validate: (validationExpress, validationMessage, evaluatorParameters) =>
-  //     console.log('notLoaded'),
-  // })
+
   const {
     userState: { currentUser },
   } = useUserState()
@@ -93,19 +90,36 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       type: 'setElementTimestamp',
       timestampType: 'elementLostFocusTimestamp',
     })
-    const validationResult: ValidationState = await onUpdate(jsonValue.text)
-    if (jsonValue.text !== undefined)
+
+    if (!jsonValue.customValidation) {
+      // Validate and Save response -- generic
+      const validationResult: ValidationState = await onUpdate(jsonValue.text)
+      if (jsonValue.text !== undefined)
+        await responseMutation({
+          variables: {
+            id: currentResponse?.id as number,
+            value: jsonValue,
+            isValid: validationResult.isValid,
+          },
+        })
+      if (jsonValue.text === allResponses[code]?.text) {
+        setApplicationState({
+          type: 'setElementTimestamp',
+          timestampType: 'elementsStateUpdatedTimestamp',
+        })
+      }
+    } else {
+      // Save response for plugins with internal validation
+      const { isValid, validationMessage } = jsonValue.customValidation
+      setValidationState({ isValid, validationMessage })
+      delete jsonValue.customValidation // Don't want to save this field
+      console.log('jsonValue', jsonValue)
       await responseMutation({
         variables: {
           id: currentResponse?.id as number,
           value: jsonValue,
-          isValid: validationResult.isValid,
+          isValid,
         },
-      })
-    if (jsonValue.text == allResponses[code]?.text) {
-      setApplicationState({
-        type: 'setElementTimestamp',
-        timestampType: 'elementsStateUpdatedTimestamp',
       })
     }
   }
@@ -131,6 +145,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       setIsActive={setIsActive}
       Markdown={Markdown}
       validationState={validationState || { isValid: true }}
+      validate={validate}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
     />
   )

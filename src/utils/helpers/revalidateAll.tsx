@@ -5,7 +5,7 @@ import {
   User,
   ValidityFailure,
 } from '../types'
-import defaultValidate from '../../formElementPlugins/defaultValidate'
+import validate from '../../formElementPlugins/defaultValidate'
 
 export const revalidateAll = async (
   elementsState: ApplicationElementStates,
@@ -14,8 +14,6 @@ export const revalidateAll = async (
   strict = true,
   shouldUpdateDatabase = true
 ): Promise<RevalidateResult> => {
-  const validate = defaultValidate // To-Do: import custom validation methods
-
   const elementCodes = Object.keys(elementsState).filter(
     (key) =>
       responsesByCode && // Typescript requires this
@@ -32,6 +30,7 @@ export const revalidateAll = async (
         : ''
       : ''
     const responses = { thisResponse, ...responsesByCode }
+    console.log('elementsState[code]', elementsState[code])
     return validate(
       elementsState[code].validation,
       elementsState[code]?.validationMessage as string,
@@ -43,6 +42,8 @@ export const revalidateAll = async (
   })
 
   const resultArray = await Promise.all(validationExpressions)
+
+  console.log('resultArray', resultArray)
 
   // Also make empty responses invalid for required questions
   const strictResultArray = resultArray.map((element, index) => {
