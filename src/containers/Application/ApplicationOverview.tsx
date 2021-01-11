@@ -32,6 +32,7 @@ const ApplicationOverview: React.FC = () => {
   const [isRevalidated, setIsRevalidated] = useState(false)
   const [showModal, setShowModal] = useState<ModalProps>({ open: false })
   const {
+    logout,
     userState: { currentUser },
   } = useUserState()
 
@@ -129,6 +130,9 @@ const ApplicationOverview: React.FC = () => {
     const allValid = await revalidateAndUpdate()
     if (allValid) {
       await submit()
+      if (currentUser?.username === strings.USER_NONREGISTERED) {
+        logout()
+      }
       push(`/application/${serialNumber}/submission`)
     }
   }
