@@ -98,17 +98,19 @@ const ApplicationSubmission: React.FC = () => {
             </List>
           </Segment>
         )}
-        <Segment basic textAlign="center" style={{ margin: '50px 50px', padding: 10 }}>
-          <Button
-            color="blue"
-            as={Link}
-            to={`/application/${serialNumber}/summary`}
-            style={{ minWidth: 200 }}
-          >{`${strings.BUTTON_BACK_TO} ${application?.type}`}</Button>
-          <Label as={Link} to={'/'}>
-            {strings.BUTTON_BACK_DASHBOARD}
-          </Label>
-        </Segment>
+        {currentUser && (
+          <Segment basic textAlign="center" style={{ margin: '50px 50px', padding: 10 }}>
+            <Button
+              color="blue"
+              as={Link}
+              to={`/application/${serialNumber}/summary`}
+              style={{ minWidth: 200 }}
+            >{`${strings.BUTTON_BACK_TO} ${application?.type}`}</Button>
+            <Label as={Link} to={'/'}>
+              {strings.BUTTON_BACK_DASHBOARD}
+            </Label>
+          </Segment>
+        )}
       </Segment>
     </Segment.Group>
   ) : (
