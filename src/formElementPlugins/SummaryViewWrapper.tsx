@@ -6,6 +6,7 @@ import { TemplateElementCategory } from '../utils/generated/graphql'
 import { ElementPluginParameters, User } from '../utils/types'
 import { extractDynamicExpressions, evaluateDynamicParameters } from './ApplicationViewWrapper'
 import { useUserState } from '../contexts/UserState'
+import Markdown from '../utils/helpers/semanticReactMarkdown'
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   const { element, response, allResponses } = props
@@ -41,14 +42,22 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
     const combinedParams = { ...parameters, ...evaluatedParameters }
     return (
       <Form.Field required={isRequired}>
-        {parametersLoaded && <label style={{ color: 'black' }}>{combinedParams.label}</label>}
+        {parametersLoaded && (
+          <label style={{ color: 'black' }}>
+            <Markdown text={combinedParams.label} semanticComponent="noParagraph" />
+          </label>
+        )}
         <Input fluid readOnly transparent value={response ? response?.text : ''} />
       </Form.Field>
     )
   }
 
   const PluginComponent = (
-    <SummaryView parameters={{ ...parameters, ...evaluatedParameters }} response={response} />
+    <SummaryView
+      parameters={{ ...parameters, ...evaluatedParameters }}
+      response={response}
+      Markdown={Markdown}
+    />
   )
 
   return (
