@@ -55,8 +55,6 @@ const ReviewPageWrapper: React.FC = () => {
       </Container>
       <Form>
         {reviewSections.map((reviewSection) => {
-          console.log('Review', reviewSection, reviewSection.assigned)
-
           const assignedToYou = reviewSection.assigned?.id === 6
           return (
             <ReviewSection

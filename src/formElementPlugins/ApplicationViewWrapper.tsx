@@ -16,6 +16,7 @@ import { useUserState } from '../contexts/UserState'
 import { defaultValidate } from './defaultValidate'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { Form } from 'semantic-ui-react'
+import Markdown from '../utils/helpers/semanticReactMarkdown'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const {
@@ -138,6 +139,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       value={value}
       setValue={setValue}
       setIsActive={setIsActive}
+      Markdown={Markdown}
       validationState={validationState || { isValid: true }}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
     />
