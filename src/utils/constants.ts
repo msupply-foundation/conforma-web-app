@@ -50,4 +50,5 @@ export default {
     'The following steps will need to be completed before the form can be submitted',
   SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you',
   SUBTITLE_SUBMISSION_STEPS: 'It will be going through the following stages before approval',
+  USER_NONREGISTERED: 'nonRegistered',
 }
