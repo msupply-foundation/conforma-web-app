@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ApplicationStart, Loading } from '../../components'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -23,6 +23,11 @@ const ApplicationCreate: React.FC = () => {
   } = useLoadTemplate({
     templateCode: type as string,
   })
+
+  // If template has no start message, go straight to first page of new application
+  useEffect(() => {
+    if (templateType && !templateType.startMessage) handleCreate()
+  }, [templateType])
 
   const { processing, error: creationError, create } = useCreateApplication({
     onCompleted: () => {

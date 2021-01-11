@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Container, Form, Header, Loader, Message, Modal } from 'semantic-ui-react'
-import { SectionSummary, Loading } from '../../components'
+import {
+  Button,
+  ButtonProps,
+  Container,
+  Form,
+  Header,
+  Message,
+  ModalProps,
+} from 'semantic-ui-react'
+import { SectionSummary, Loading, ModalWarning } from '../../components'
 import strings from '../../utils/constants'
 import buildSectionsStructure from '../../utils/helpers/buildSectionsStructure'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
@@ -17,10 +25,12 @@ import {
 import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
+import messages from '../../utils/messages'
 
 const ApplicationOverview: React.FC = () => {
   const [sectionsPages, setSectionsAndElements] = useState<SectionStructure>()
   const [isRevalidated, setIsRevalidated] = useState(false)
+  const [showModal, setShowModal] = useState<ModalProps>({ open: false })
   const {
     userState: { currentUser },
   } = useUserState()
@@ -95,23 +105,31 @@ const ApplicationOverview: React.FC = () => {
       })
     })
 
-    // If invalid responses, re-direct to first invalid page
+    // If any invalid responses define first invalid page to re-direct to
     if (!revalidate.allValid) {
-      console.log('Some responses invalid')
       const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
         revalidate.validityFailures,
         elementsState as ApplicationElementStates
       )
-      // TO-DO: Alert user of Submit failure
-      push(`/application/${serialNumber}/${firstErrorSectionCode}/Page${firstErrorPage}`)
+      setShowModal({
+        open: true,
+        ...messages.SUBMISSION_FAIL,
+        onClick: (event: any, data: ButtonProps) => {
+          push(`/application/${serialNumber}/${firstErrorSectionCode}/Page${firstErrorPage}`)
+          setShowModal({ open: false })
+        },
+        onClose: () => setShowModal({ open: false }),
+      })
     }
+    return revalidate.allValid
   }
 
   const handleSubmit = async () => {
-    await revalidateAndUpdate()
-    // All OK -- would have been re-directed otherwise:
-    submit()
-    push(`/application/${serialNumber}/submission`)
+    const allValid = await revalidateAndUpdate()
+    if (allValid) {
+      await submit()
+      push(`/application/${serialNumber}/submission`)
+    }
   }
 
   return error || statusError ? (
@@ -136,27 +154,12 @@ const ApplicationOverview: React.FC = () => {
         {appStatus.status === 'DRAFT' ? (
           <Button content={strings.BUTTON_SUBMIT} onClick={handleSubmit} />
         ) : null}
-        {showProcessingModal(processing, submitted)}
+        <ModalWarning showModal={showModal} />
       </Form>
     </Container>
   ) : (
     <Message error header={strings.ERROR_APPLICATION_OVERVIEW} />
   )
-}
-
-const showProcessingModal = (processing: boolean, submitted: boolean) => {
-  return processing ? (
-    <Modal basic open={processing} size="mini">
-      <Modal.Header>Please wait...</Modal.Header>
-      <Modal.Content>
-        <Loader>Application is being submitted to the server</Loader>
-      </Modal.Content>
-    </Modal>
-  ) : submitted ? (
-    <Container text>
-      <Header>Application submitted!</Header>
-    </Container>
-  ) : null
 }
 
 export default ApplicationOverview
