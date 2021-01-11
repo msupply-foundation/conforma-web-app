@@ -19,6 +19,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 }) => {
   const {
     placeholder,
+    confirmPlaceholder,
     maskedInput,
     label,
     showPasswordToggle,
@@ -30,11 +31,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [passwordConfirm, setPasswordConfirm] = useState('')
   const [masked, setMasked] = useState(maskedInput === undefined ? true : maskedInput)
 
+  // Reset saved value when re-loading form (since password can't be stored)
   useEffect(() => {
-    console.log('validationState', validationState)
-    console.log('value', value)
     if (value !== undefined) {
-      console.log('Saving...')
       onSave({ hash: '', text: '', customValidation: { isValid: null } })
     }
   }, [])
@@ -53,7 +52,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     })
     const passwordsMatch = password === passwordConfirm
     const hash = customValidation.isValid && passwordsMatch ? await createHash(password) : ''
-    console.log('Hash', hash)
 
     onSave({
       hash,
@@ -72,7 +70,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Form.Input
         name="password"
         fluid
-        placeholder={placeholder}
+        placeholder={placeholder ? placeholder : 'Enter password'}
         onChange={handleChange}
         onBlur={handleLoseFocus}
         onFocus={setIsActive}
@@ -80,7 +78,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         disabled={!isEditable}
         type={masked ? 'password' : undefined}
         error={
-          !validationState.isValid && password !== ''
+          !validationState.isValid && validationState.isValid !== null
             ? {
                 content: validationMessageInternal,
                 pointing: 'above',
@@ -91,7 +89,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Form.Input
         name="passwordConfirm"
         fluid
-        placeholder="Confirm password"
+        placeholder={confirmPlaceholder ? confirmPlaceholder : 'Confirm password'}
         onChange={handleChange}
         onBlur={handleLoseFocus}
         onFocus={setIsActive}
@@ -99,7 +97,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         disabled={!isEditable}
         type={masked ? 'password' : undefined}
         error={
-          passwordConfirm !== password && passwordConfirm !== undefined
+          passwordConfirm !== password && passwordConfirm !== ''
             ? {
                 content: 'Passwords do not match',
                 pointing: 'above',

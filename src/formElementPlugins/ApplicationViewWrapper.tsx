@@ -39,7 +39,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const {
     userState: { currentUser },
   } = useUserState()
-  const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
+  const [validationState, setValidationState] = useState<ValidationState>({
+    isValid: null,
+  })
   const [evaluatedParameters, setEvaluatedParameters] = useState({})
 
   // This value prevents the plugin component from rendering until parameters have been evaluated, otherwise React throws an error when trying to pass an Object in as a prop value
