@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react'
-import {
-  Application,
-  ApplicationStageStatusAll,
-  useGetApplicationQuery,
-} from '../../utils/generated/graphql'
+import { Application, useGetApplicationQuery } from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
 import { getApplicationSections } from '../helpers/getSectionsPayload'
 import { ApplicationDetails, TemplateSectionPayload, UseGetApplicationProps } from '../types'
