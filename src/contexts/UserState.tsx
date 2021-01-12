@@ -41,8 +41,6 @@ const reducer = (state: UserState, action: UserActions) => {
         templatePermissions: newPermissions,
       }
     case 'setLoading':
-      console.log('SET LOADING', action)
-
       const { isLoading } = action
       return {
         ...state,
@@ -100,8 +98,6 @@ export function UserProvider({ children }: UserProviderProps) {
   // Initial check for persisted user in local storage
   const JWT = localStorage.getItem('persistJWT')
   if (JWT && !userState.currentUser && !userState.isLoading) {
-    console.log('INITIAL CHECK', JWT)
-
     login(JWT)
   }
 
