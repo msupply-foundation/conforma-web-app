@@ -113,12 +113,17 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                               {review && canEdit && (
                                 <Container textAlign="right">
                                   {review?.decision === undefined ? (
-                                    <Button size="small">{strings.BUTTON_REVIEW_RESPONSE}</Button>
+                                    <Button
+                                      size="small"
+                                      onClick={() => setDecisionArea(review, summaryViewProps)}
+                                      content={strings.BUTTON_REVIEW_RESPONSE}
+                                    />
                                   ) : (
                                     <Icon
                                       name="pencil square"
                                       color="blue"
                                       style={{ minWidth: 100 }}
+                                      onClick={() => setDecisionArea(review, summaryViewProps)}
                                     />
                                   )}
                                 </Container>
