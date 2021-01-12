@@ -26,7 +26,7 @@ const useGetApplicationStatus = ({
       serial: serialNumber,
     },
     skip: triggerProcessing || !isApplicationLoaded,
-    fetchPolicy: networkFetch ? 'no-cache' : 'cache-and-network',
+    fetchPolicy: networkFetch ? 'no-cache' : 'cache-first',
   })
 
   useEffect(() => {
