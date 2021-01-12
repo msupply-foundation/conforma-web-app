@@ -1,50 +1,40 @@
-import React, { useEffect } from 'react'
-import { Menu } from 'semantic-ui-react'
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Header, Menu, MenuProps } from 'semantic-ui-react'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { useUserState } from '../../contexts/UserState'
-import useListTemplates from '../../utils/hooks/useListTemplates'
+import { TemplatesDetails } from '../../utils/types'
 
 interface AppMenuProps extends RouteComponentProps {
-  items: Array<Array<String>>
+  templatePermissions: TemplatesDetails
 }
 
-const AppMenu: React.FC<AppMenuProps> = (props: AppMenuProps) => {
-  const { pathname } = useRouter()
+// THIS IS NOT WORKING YET - Code is in UserArea. To be moved here.
+
+const AppMenu: React.FC<AppMenuProps> = ({ templatePermissions }) => {
   const {
-    userState: { isLoading, templatePermissions },
-  } = useUserState()
+    pathname,
+    push,
+    query: { type },
+  } = useRouter()
+  const [menuItems, setMenuItems] = useState<MenuProps>()
 
-  const { error, filteredTemplates } = useListTemplates(templatePermissions, isLoading)
-
-  useEffect(() => {
-    console.log('error', error, 'filteredTemplates', filteredTemplates)
-  }, [error, filteredTemplates])
-
-  let menuItems = []
-  for (let i = 0; i < props.items.length; i++) {
-    if (props.items[i].length !== 2) {
-      console.error('AppMenu: items format should be ["name", "route"]')
-      break
-    }
-    const name = props.items[i][0]
-    const route = props.items[i][1]
-
-    menuItems.push(
-      <Menu.Item header key={`app_menu_${name}`} active={pathname === route} as={Link} to={route}>
-        {name}
-      </Menu.Item>
-    )
+  const items = templatePermissions.map(({ name, code, permissions }) => ({
+    key: `app_menu_${name}`,
+    content: <Header as="h5" inverted content={name} />,
+    active: type === code,
+    onClick: () => push(`/applications?type=${code}&user-role=${permissions[0]}`),
+  }))
+  const homeItem = {
+    key: `app_menu_home`,
+    content: <Header as="h5" inverted icon="home" />,
+    active: pathname === '/',
+    onClick: () => push('/'),
   }
+  setMenuItems({ items: [homeItem, ...items] })
 
-  return (
-    <Menu fluid vertical tabular>
-      {menuItems}
-      {filteredTemplates.map((template) => (
-        <Menu.Item>{template}</Menu.Item>
-      ))}
-    </Menu>
-  )
+  console.log('menuItems', menuItems)
+
+  return menuItems ? <Menu fluid inverted pointing secondary {...menuItems} /> : null
 }
 
 export default withRouter(AppMenu)
