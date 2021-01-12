@@ -7,34 +7,39 @@ import config from '../../config.json'
 import isLoggedIn from '../../utils/helpers/loginCheck'
 import strings from '../../utils/constants'
 import setUserInfo from '../../utils/helpers/fetchUserInfo'
+import { useGetUserOrgsQuery } from '../../utils/generated/graphql'
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isError, setIsError] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [selectedOrg, setSelectedOrg] = useState<string>()
   const { push, history } = useRouter()
-  const { login } = useUserState()
+  const { onLogin } = useUserState()
 
   const handleSubmit = async (event: any) => {
     event.preventDefault()
     const passwordHash = hashPassword(password)
     const loginResult = await attemptLogin(username, passwordHash)
+    console.log('Login result', loginResult)
     if (!loginResult.success) setIsError(true)
     else {
       setIsError(false)
-      login(loginResult.JWT)
-      if (history.location?.state?.from) push(history.location.state.from)
-      else push('/')
+      setIsLoggedIn(true)
+      onLogin(loginResult.JWT)
+      // if (history.location?.state?.from) push(history.location.state.from)
+      // else push('/')
     }
   }
 
-  if (isLoggedIn()) push('/')
+  // if (isLoggedIn()) push('/')
 
   return (
     <Container text style={{ height: '100vh' }}>
       <Grid container columns="1" centered verticalAlign="middle" style={{ height: '100%' }}>
-        <Grid.Column>
-          <Segment>
+        <Grid.Column width={13} style={{ padding: 10 }}>
+          <Segment clearing>
             <Header size="huge">{strings.LABEL_WELCOME}</Header>
             <Form>
               <Form.Field>
@@ -58,10 +63,10 @@ const Login: React.FC = () => {
                 />
               </Form.Field>
               <Container>
-                <Button type="submit" onClick={handleSubmit}>
+                <Link to="/register">{strings.LINK_LOGIN_USER}</Link>
+                <Button floated="right" type="submit" onClick={handleSubmit}>
                   {strings.LABEL_LOG_IN}
                 </Button>
-                <Link to="/register">{strings.LINK_LOGIN_USER}</Link>
               </Container>
               {isError && <p>{strings.ERROR_LOGIN_PASSWORD}</p>}
             </Form>

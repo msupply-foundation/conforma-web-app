@@ -14,7 +14,7 @@ const UserSelection: React.FC = () => {
   const [users, setUsers] = useState<Array<string>>([])
   const [isOpen, setIsOpen] = useState(false)
   const { data, error } = useGetUsersQuery()
-  const { login } = useUserState()
+  const { onLogin } = useUserState()
 
   useEffect(() => {
     if (data && data.users && data.users.nodes) {
@@ -30,7 +30,7 @@ const UserSelection: React.FC = () => {
     setIsOpen(false)
     const loginResult = await attemptLogin(username, hardcodedPassword)
     if (loginResult.success) {
-      login(loginResult.JWT)
+      onLogin(loginResult.JWT)
       if (history.location?.state?.from) push(history.location.state.from)
       else push('/')
     }

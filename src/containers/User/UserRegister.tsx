@@ -9,13 +9,13 @@ import strings from '../../utils/constants'
 const UserRegister: React.FC = () => {
   const [networkError, setNetworkError] = useState('')
   const { push } = useRouter()
-  const { login } = useUserState()
+  const { onLogin } = useUserState()
 
   if (isLoggedIn()) push('/')
 
   attemptLogin(strings.USER_NONREGISTERED, '')
     .then((loginResult) => {
-      login(loginResult.JWT)
+      onLogin(loginResult.JWT)
       push('/application/new?type=UserRegistration')
     })
     .catch((err) => {
