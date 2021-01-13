@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import isLoggedIn from '../../utils/helpers/loginCheck'
 import config from '../../config.json'
@@ -14,15 +14,24 @@ const UserRegister: React.FC = () => {
 
   if (isLoggedIn()) push('/')
 
-  attemptLogin({ username: strings.USER_NONREGISTERED, password: '' }, config.serverREST + '/login')
-    .then((loginResult) => {
-      const { JWT, user, templatePermissions } = loginResult
-      onLogin(JWT, user, templatePermissions)
-    })
-    .then(() => push('/application/new?type=UserRegistration'))
-    .catch((err) => {
-      setNetworkError(err.message)
-    })
+  useEffect(() => {
+    // Log in as 'nonRegistered' user to be able to apply for User Registration form
+    attemptLogin(
+      { username: strings.USER_NONREGISTERED, password: '' },
+      config.serverREST + '/login'
+    )
+      .then((loginResult) => {
+        const { JWT, user, templatePermissions } = loginResult
+        onLogin(JWT, user, templatePermissions)
+      })
+      .then(() => {
+        console.log('Trying to load new URL')
+        push('/application/new?type=UserRegistration')
+      })
+      .catch((err) => {
+        setNetworkError(err.message)
+      })
+  }, [])
 
   if (networkError) return <p>{networkError}</p>
   else return <p>{messages.REDIRECT_TO_REGISTRATION}</p>
