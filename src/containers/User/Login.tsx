@@ -24,6 +24,8 @@ const Login: React.FC = () => {
   const { push, history } = useRouter()
   const { onLogin } = useUserState()
 
+  if (isLoggedIn()) push('/')
+
   const handleSubmit = async () => {
     if (!user) {
       // User login
@@ -68,8 +70,6 @@ const Login: React.FC = () => {
       handleSubmit()
     }
   }, [orgList])
-
-  if (isLoggedIn()) push('/')
 
   const handleSelection = (e: any, data: any) => {
     const { value } = data
