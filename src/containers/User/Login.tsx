@@ -29,7 +29,6 @@ const Login: React.FC = () => {
       // User login
       const loginResult: LoginPayload = await attemptLogin({ username, password }, loginURL)
 
-      console.log('loginResult', loginResult)
       if (!loginResult.success) setIsError(true)
       else {
         setIsError(false)
@@ -45,7 +44,6 @@ const Login: React.FC = () => {
       const authHeader = { Authorization: 'Bearer ' + JWT }
       const verifyOrgResult = await attemptLogin({ userId, orgId }, loginOrgURL, authHeader)
 
-      console.log('verifyOrgResult', verifyOrgResult)
       if (verifyOrgResult.success) {
         finishLogin(verifyOrgResult)
       }
@@ -116,7 +114,7 @@ const Login: React.FC = () => {
               {user && (
                 <Dropdown
                   selection
-                  options={orgList.map((org: any, index) => ({
+                  options={orgList.map((org: OrganisationSimple, index) => ({
                     key: `org_${org.orgId}`,
                     text: `${org.orgName} ${org?.orgRole ? `(${org.orgRole})` : ''}`,
                     value: index,

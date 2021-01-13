@@ -1,3 +1,5 @@
+// Generic GET/POST methods for re-use throughout app
+
 export async function postRequest(body: object, endpointUrl: string, headers: object = {}) {
   try {
     const response = await fetch(endpointUrl, {
