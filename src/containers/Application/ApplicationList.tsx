@@ -7,8 +7,9 @@ import useListApplication from '../../utils/hooks/useListApplications'
 import strings from '../../utils/constants'
 
 const ApplicationList: React.FC = () => {
-  const { query, pathname } = useRouter()
-  const { error, loading, applications } = useListApplication()
+  const { query } = useRouter()
+  const { type, userRole } = query
+  const { error, loading, applications } = useListApplication({ type })
 
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
