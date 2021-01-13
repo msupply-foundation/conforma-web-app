@@ -31,10 +31,12 @@ The `user-role` is used to build how the columns and rows should be displayed. T
 
 ##### type
 
-- This is a **compulsory** filter. In case none is included in URL will be deduced from 1st user's persmissions.
-  Example: `type=user-registration`
-  Considered in implementation: **Yes** [#131 - Headers]
-  Can have combined values: **No**
+**This is a compulsory filter**
+In case none is included in URL will be deduced from 1st user's persmissions
+
+Example: `type=user-registration`
+Considered in implementation: **Yes** [#131 - Headers]
+Can have combined values: **No**
 
 Options:
 
@@ -60,7 +62,22 @@ Options:
 
 - Set of `stage-name` which is deduced per template (application type)
 
+##### sort-by
+
+Example: `sort-by=stage:asc`
+Considered in implementation: **Yes** [#131 - Headers]
+Can have combined values: **Yes** `sort-by=stage:asc,application-name:desc`
+
+Options:
+
+- `column-name:direction`
+- direction [Optional] `asc`/`desc`
+- if no direction is included use default: `asc`
+
 ##### user-role
+
+**This is a **compulsory** filter.**
+In case none is included in URL will be deduced from permission of type in user's persmissions.
 
 Example: `user-role=applicant`
 Considered in implementation: **Yes** [#131 - Headers]
