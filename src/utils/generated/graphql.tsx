@@ -2206,8 +2206,8 @@ export type UserOrganisationFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `userId` field. */
   userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `organistionId` field. */
-  organistionId?: Maybe<IntFilter>;
+  /** Filter by the object’s `organisationId` field. */
+  organisationId?: Maybe<IntFilter>;
   /** Filter by the object’s `userRole` field. */
   userRole?: Maybe<StringFilter>;
   /** Filter by the object’s `permissionJoins` relation. */
@@ -2218,10 +2218,10 @@ export type UserOrganisationFilter = {
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
   userExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `organistion` relation. */
-  organistion?: Maybe<OrganisationFilter>;
-  /** A related `organistion` exists. */
-  organistionExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `organisation` relation. */
+  organisation?: Maybe<OrganisationFilter>;
+  /** A related `organisation` exists. */
+  organisationExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<UserOrganisationFilter>>;
   /** Checks for any expressions in this list. */
@@ -2250,10 +2250,10 @@ export type OrganisationFilter = {
   licenceNumber?: Maybe<StringFilter>;
   /** Filter by the object’s `address` field. */
   address?: Maybe<StringFilter>;
-  /** Filter by the object’s `userOrganisationsByOrganistionId` relation. */
-  userOrganisationsByOrganistionId?: Maybe<OrganisationToManyUserOrganisationFilter>;
-  /** Some related `userOrganisationsByOrganistionId` exist. */
-  userOrganisationsByOrganistionIdExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `userOrganisations` relation. */
+  userOrganisations?: Maybe<OrganisationToManyUserOrganisationFilter>;
+  /** Some related `userOrganisations` exist. */
+  userOrganisationsExist?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<OrganisationFilter>>;
   /** Checks for any expressions in this list. */
@@ -3702,8 +3702,8 @@ export enum UserOrganisationsOrderBy {
   IdDesc = 'ID_DESC',
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC',
-  OrganistionIdAsc = 'ORGANISTION_ID_ASC',
-  OrganistionIdDesc = 'ORGANISTION_ID_DESC',
+  OrganisationIdAsc = 'ORGANISATION_ID_ASC',
+  OrganisationIdDesc = 'ORGANISATION_ID_DESC',
   UserRoleAsc = 'USER_ROLE_ASC',
   UserRoleDesc = 'USER_ROLE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -3716,8 +3716,8 @@ export type UserOrganisationCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `organistionId` field. */
-  organistionId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `organisationId` field. */
+  organisationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `userRole` field. */
   userRole?: Maybe<Scalars['String']>;
 };
@@ -3741,12 +3741,12 @@ export type UserOrganisation = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   userId?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   /** Reads a single `User` that is related to this `UserOrganisation`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `UserOrganisation`. */
-  organistion?: Maybe<Organisation>;
+  organisation?: Maybe<Organisation>;
   /** Reads and enables pagination through a set of `PermissionJoin`. */
   permissionJoins: PermissionJoinsConnection;
 };
@@ -3772,11 +3772,11 @@ export type Organisation = Node & {
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
-  userOrganisationsByOrganistionId: UserOrganisationsConnection;
+  userOrganisations: UserOrganisationsConnection;
 };
 
 
-export type OrganisationUserOrganisationsByOrganistionIdArgs = {
+export type OrganisationUserOrganisationsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -8082,10 +8082,10 @@ export type UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsing
 /** An object where the defined keys will be set on the `userOrganisation` being updated. */
 export type UpdateUserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
@@ -8205,15 +8205,15 @@ export type UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdF
 export type UpdateUserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisation` in the `UserOrganisationInput` mutation. */
-export type UserOrganisationOrganistionIdFkeyInput = {
+export type UserOrganisationOrganisationIdFkeyInput = {
   /** The primary key(s) for `organisation` for the far side of the relationship. */
   connectById?: Maybe<OrganisationOrganisationPkeyConnect>;
   /** The primary key(s) for `organisation` for the far side of the relationship. */
@@ -8223,11 +8223,11 @@ export type UserOrganisationOrganistionIdFkeyInput = {
   /** The primary key(s) for `organisation` for the far side of the relationship. */
   deleteByNodeId?: Maybe<OrganisationNodeIdDelete>;
   /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
-  updateById?: Maybe<OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingOrganisationPkeyUpdate>;
+  updateById?: Maybe<OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate>;
   /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
-  updateByNodeId?: Maybe<UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate>;
+  updateByNodeId?: Maybe<UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate>;
   /** A `OrganisationInput` object that will be created and connected to this object. */
-  create?: Maybe<UserOrganisationOrganistionIdFkeyOrganisationCreateInput>;
+  create?: Maybe<UserOrganisationOrganisationIdFkeyOrganisationCreateInput>;
 };
 
 /** The fields on `organisation` to look up the row to connect. */
@@ -8253,23 +8253,23 @@ export type OrganisationNodeIdDelete = {
 };
 
 /** The fields on `organisation` to look up the row to update. */
-export type OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingOrganisationPkeyUpdate = {
+export type OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate = {
   /** An object where the defined keys will be set on the `organisation` being updated. */
-  patch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch;
+  patch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
   id: Scalars['Int'];
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
-export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch = {
+export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationOrganistionIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `userOrganisation` in the `OrganisationInput` mutation. */
-export type UserOrganisationOrganistionIdFkeyInverseInput = {
+export type UserOrganisationOrganisationIdFkeyInverseInput = {
   /** Flag indicating whether all other `userOrganisation` records that match this relationship should be removed. */
   deleteOthers?: Maybe<Scalars['Boolean']>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
@@ -8281,27 +8281,27 @@ export type UserOrganisationOrganistionIdFkeyInverseInput = {
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<UserOrganisationNodeIdDelete>>;
   /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
-  updateById?: Maybe<Array<UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingUserOrganisationPkeyUpdate>>;
+  updateById?: Maybe<Array<UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate>>;
   /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate>>;
+  updateByNodeId?: Maybe<Array<OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate>>;
   /** A `UserOrganisationInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<UserOrganisationOrganistionIdFkeyUserOrganisationCreateInput>>;
+  create?: Maybe<Array<UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput>>;
 };
 
 /** The fields on `userOrganisation` to look up the row to update. */
-export type UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingUserOrganisationPkeyUpdate = {
+export type UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate = {
   /** An object where the defined keys will be set on the `userOrganisation` being updated. */
-  patch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch;
+  patch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
   id: Scalars['Int'];
 };
 
 /** An object where the defined keys will be set on the `userOrganisation` being updated. */
-export type UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch = {
+export type UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
@@ -13546,7 +13546,7 @@ export type PermissionJoinUserOrganisationIdFkeyPermissionJoinCreateInput = {
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate = {
+export type OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `userOrganisation` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `userOrganisation` being updated. */
@@ -13557,25 +13557,25 @@ export type OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNo
 export type UserOrganisationPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** The `userOrganisation` to be created by this mutation. */
-export type UserOrganisationOrganistionIdFkeyUserOrganisationCreateInput = {
+export type UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate = {
+export type UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `organisation` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -13588,16 +13588,16 @@ export type OrganisationPatch = {
   name?: Maybe<Scalars['String']>;
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationOrganistionIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
 };
 
 /** The `organisation` to be created by this mutation. */
-export type UserOrganisationOrganistionIdFkeyOrganisationCreateInput = {
+export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationOrganistionIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -13612,10 +13612,10 @@ export type PermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFke
 export type PermissionJoinUserOrganisationIdFkeyUserOrganisationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
@@ -13682,10 +13682,10 @@ export type UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate = {
 /** The `userOrganisation` to be created by this mutation. */
 export type UserOrganisationUserIdFkeyUserOrganisationCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
@@ -14396,7 +14396,7 @@ export type OrganisationInput = {
   name?: Maybe<Scalars['String']>;
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationOrganistionIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
 };
 
 /** The output of our create `Organisation` mutation. */
@@ -15125,10 +15125,10 @@ export type CreateUserOrganisationInput = {
 export type UserOrganisationInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
@@ -15144,7 +15144,7 @@ export type CreateUserOrganisationPayload = {
   /** Reads a single `User` that is related to this `UserOrganisation`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `UserOrganisation`. */
-  organistion?: Maybe<Organisation>;
+  organisation?: Maybe<Organisation>;
   /** An edge for our `UserOrganisation`. May be used by Relay 1. */
   userOrganisationEdge?: Maybe<UserOrganisationsEdge>;
 };
@@ -16328,7 +16328,7 @@ export type UpdateUserOrganisationPayload = {
   /** Reads a single `User` that is related to this `UserOrganisation`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `UserOrganisation`. */
-  organistion?: Maybe<Organisation>;
+  organisation?: Maybe<Organisation>;
   /** An edge for our `UserOrganisation`. May be used by Relay 1. */
   userOrganisationEdge?: Maybe<UserOrganisationsEdge>;
 };
@@ -17412,7 +17412,7 @@ export type DeleteUserOrganisationPayload = {
   /** Reads a single `User` that is related to this `UserOrganisation`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `UserOrganisation`. */
-  organistion?: Maybe<Organisation>;
+  organisation?: Maybe<Organisation>;
   /** An edge for our `UserOrganisation`. May be used by Relay 1. */
   userOrganisationEdge?: Maybe<UserOrganisationsEdge>;
 };
@@ -17863,28 +17863,6 @@ export type GetTriggersQuery = (
       { __typename?: 'ApplicationTriggerState' }
       & Pick<ApplicationTriggerState, 'serial' | 'applicationTrigger' | 'reviewAssignmentTrigger' | 'reviewTrigger'>
     )>> }
-  )> }
-);
-
-export type GetUserOrgsQueryVariables = Exact<{
-  id: Scalars['Int'];
-}>;
-
-
-export type GetUserOrgsQuery = (
-  { __typename?: 'Query' }
-  & { user?: Maybe<(
-    { __typename?: 'User' }
-    & { userOrganisations: (
-      { __typename?: 'UserOrganisationsConnection' }
-      & { nodes: Array<Maybe<(
-        { __typename?: 'UserOrganisation' }
-        & { organistion?: Maybe<(
-          { __typename?: 'Organisation' }
-          & Pick<Organisation, 'address' | 'id' | 'licenceNumber' | 'name'>
-        )> }
-      )>> }
-    ) }
   )> }
 );
 
@@ -18636,48 +18614,6 @@ export function useGetTriggersLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetTriggersQueryHookResult = ReturnType<typeof useGetTriggersQuery>;
 export type GetTriggersLazyQueryHookResult = ReturnType<typeof useGetTriggersLazyQuery>;
 export type GetTriggersQueryResult = Apollo.QueryResult<GetTriggersQuery, GetTriggersQueryVariables>;
-export const GetUserOrgsDocument = gql`
-    query getUserOrgs($id: Int!) {
-  user(id: $id) {
-    userOrganisations {
-      nodes {
-        organistion {
-          address
-          id
-          licenceNumber
-          name
-        }
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetUserOrgsQuery__
- *
- * To run a query within a React component, call `useGetUserOrgsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserOrgsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUserOrgsQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useGetUserOrgsQuery(baseOptions?: Apollo.QueryHookOptions<GetUserOrgsQuery, GetUserOrgsQueryVariables>) {
-        return Apollo.useQuery<GetUserOrgsQuery, GetUserOrgsQueryVariables>(GetUserOrgsDocument, baseOptions);
-      }
-export function useGetUserOrgsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserOrgsQuery, GetUserOrgsQueryVariables>) {
-          return Apollo.useLazyQuery<GetUserOrgsQuery, GetUserOrgsQueryVariables>(GetUserOrgsDocument, baseOptions);
-        }
-export type GetUserOrgsQueryHookResult = ReturnType<typeof useGetUserOrgsQuery>;
-export type GetUserOrgsLazyQueryHookResult = ReturnType<typeof useGetUserOrgsLazyQuery>;
-export type GetUserOrgsQueryResult = Apollo.QueryResult<GetUserOrgsQuery, GetUserOrgsQueryVariables>;
 export const GetUsersDocument = gql`
     query getUsers {
   users {

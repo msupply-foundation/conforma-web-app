@@ -1,4 +1,5 @@
 import {
+  Organisation,
   ReviewResponseDecision,
   TemplateElement,
   TemplateElementCategory,
@@ -46,6 +47,8 @@ export {
   RevalidateResult,
   UseGetApplicationProps,
   User,
+  OrganisationSimple,
+  LoginPayload,
 }
 
 interface ApplicationState {
@@ -284,10 +287,25 @@ interface UseGetApplicationProps {
 }
 
 interface User {
-  id: number
+  userId: number
   firstName: string
   lastName?: string | null
   username: string
   email: string
   dateOfBirth?: Date | null
+  organisation?: Organisation
+}
+
+type OrganisationSimple = {
+  orgId: number
+  orgRole: string | null
+  orgName: string
+}
+
+interface LoginPayload {
+  success?: boolean
+  user: User
+  JWT: string
+  templatePermissions: TemplatePermissions
+  orgList?: OrganisationSimple[]
 }

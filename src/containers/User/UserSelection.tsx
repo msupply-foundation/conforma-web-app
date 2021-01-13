@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Grid, Icon, Message, Popup } from 'semantic-ui-react'
 import { Loading } from '../../components'
-import { attemptLogin } from './Login'
+import { postRequest as attemptLogin } from '../../utils/helpers/fetchMethods'
+import config from '../../config.json'
 import { useGetUsersQuery } from '../../utils/generated/graphql'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { User } from '../../utils/types'
@@ -28,12 +29,15 @@ const UserSelection: React.FC = () => {
 
   const handleChangeUser = async (username: string) => {
     setIsOpen(false)
-    const loginResult = await attemptLogin(username, hardcodedPassword)
+    const loginResult = await attemptLogin(
+      { username, password: hardcodedPassword },
+      config.serverREST + '/login'
+    )
     if (loginResult.success) {
-      onLogin(loginResult.JWT)
-      if (history.location?.state?.from) push(history.location.state.from)
-      else push('/')
+      const { JWT, user, templatePermissions } = loginResult
+      await onLogin(JWT, user, templatePermissions)
     }
+    // TO-DO: Log in with Org (auto-select first in list)
   }
 
   return (

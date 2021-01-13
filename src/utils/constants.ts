@@ -35,7 +35,7 @@ export default {
   LINK_LOGIN_USER: 'Create new account',
   TITLE_APPLICATION_FORM: 'application form',
   TITLE_APPLICATION_SUBMIT: 'Review & Submit',
-  TITLE_COMPANY_PLACEHOLDER: 'ABC Company',
+  TITLE_NO_ORGANISATION: 'No Organisation',
   TITLE_INTRODUCTION: 'Introduction',
   TITLE_REVIEW_SUMMARY: 'Review Summary',
   TITLE_STEPS: 'Steps to complete',
