@@ -24,12 +24,16 @@ const UserArea: React.FC = () => {
     <Sticky>
       <Segment inverted vertical>
         <Grid inverted>
-          <Grid.Column style={{ width: '80%' }}>
-            {error ? <Message></Message> : <AppMenu templatePermissions={filteredTemplates} />}
+          <Grid.Column width={12}>
+            {error ? (
+              <Message error list={[error]} />
+            ) : (
+              <AppMenu templatePermissions={filteredTemplates} />
+            )}
 
             <Segment inverted>{strings.TITLE_COMPANY_PLACEHOLDER}</Segment>
           </Grid.Column>
-          <Grid.Column style={{ width: '20%' }}>
+          <Grid.Column width={4}>
             {currentUser && (
               <Segment inverted floated="right">
                 <Label as="button" color="grey" style={{ width: '100%', padding: 10 }}>
