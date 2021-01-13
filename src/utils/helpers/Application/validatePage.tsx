@@ -5,9 +5,9 @@ import {
   ProgressStatus,
   ResponsesByCode,
   ResponseFull,
-} from '../../utils/types'
+} from '../../types'
 
-import { TemplateElementCategory } from '../../utils/generated/graphql'
+import { TemplateElementCategory } from '../../generated/graphql'
 
 export enum PROGRESS_STATUS {
   NOT_VALID = 'NOT_VALID',

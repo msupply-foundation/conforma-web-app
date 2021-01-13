@@ -12,6 +12,7 @@ import { useMemo } from 'react'
 interface QueryObject {
   mode?: string
   type?: string
+  userRole?: string
   serialNumber?: string
   sectionCode?: string
   page?: string
@@ -44,6 +45,8 @@ export function useRouter(): RouterResult {
   // Memoize so that a new object is only returned if something changes
 
   return useMemo(() => {
+    console.log(queryString, queryString.parse(location.search))
+
     return {
       // For convenience add push(), replace(), pathname at top level
       push: history.push,
