@@ -1,4 +1,5 @@
 import {
+  PermissionPolicyType,
   ReviewResponseDecision,
   TemplateElement,
   TemplateElementCategory,
@@ -248,16 +249,15 @@ interface TemplateElementState extends ElementBase {
 }
 
 interface TemplatePermissions {
-  [index: string]: Array<UserRole>
+  [index: string]: Array<PermissionPolicyType>
 }
 
 type TemplatesDetails = {
-  permissions: Array<UserRole>
+  permissions: Array<PermissionPolicyType>
   name: string
   code: string
 }[]
 
-type UserRole = 'Apply' | 'Review' | 'Assign'
 interface ValidateFunction {
   (
     validationExpress: IQueryNode,
