@@ -81,7 +81,7 @@ const Login: React.FC = () => {
   return (
     <Container text style={{ height: '100vh' }}>
       <Grid container columns="1" centered verticalAlign="middle" style={{ height: '100%' }}>
-        <Grid.Column width={13} style={{ padding: 10 }}>
+        <Grid.Column width={14} style={{ padding: 10 }}>
           <Segment clearing>
             <Header size="huge">{strings.LABEL_WELCOME}</Header>
             <Form>
@@ -118,7 +118,7 @@ const Login: React.FC = () => {
                   selection
                   options={orgList.map((org: any, index) => ({
                     key: `org_${org.orgId}`,
-                    text: org.orgName,
+                    text: `${org.orgName} ${org?.orgRole ? `(${org.orgRole})` : ''}`,
                     value: index,
                   }))}
                   defaultValue={0}

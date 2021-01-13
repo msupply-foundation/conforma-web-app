@@ -10,8 +10,10 @@ import { useUserState } from '../../contexts/UserState'
 
 const hardcodedPassword = '123456'
 
+const loginURL = config.serverREST + '/login'
+const loginOrgURL = config.serverREST + '/login-org'
+
 const UserSelection: React.FC = () => {
-  const { history, push } = useRouter()
   const [users, setUsers] = useState<Array<string>>([])
   const [isOpen, setIsOpen] = useState(false)
   const { data, error } = useGetUsersQuery()
@@ -29,15 +31,33 @@ const UserSelection: React.FC = () => {
 
   const handleChangeUser = async (username: string) => {
     setIsOpen(false)
-    const loginResult = await attemptLogin(
-      { username, password: hardcodedPassword },
-      config.serverREST + '/login'
-    )
-    if (loginResult.success) {
-      const { JWT, user, templatePermissions } = loginResult
-      await onLogin(JWT, user, templatePermissions)
+    // Selected User login
+    const loginResult = await attemptLogin({ username, password: hardcodedPassword }, loginURL)
+    if (!loginResult.success) {
+      console.log(`Problem logging in user: ${username}`)
+      return
     }
-    // TO-DO: Log in with Org (auto-select first in list)
+
+    // Organisation login (auto-select first in list)
+    const { JWT, user, templatePermissions, orgList } = loginResult
+    if (orgList.length === 0) {
+      await onLogin(JWT, user, templatePermissions)
+      return
+    }
+    const selectedOrg = orgList[0]
+    const authHeader = { Authorization: 'Bearer ' + JWT }
+    const verifyOrgResult = await attemptLogin(
+      { userId: user.userId, orgId: selectedOrg.orgId },
+      loginOrgURL,
+      authHeader
+    )
+
+    if (!verifyOrgResult.success) {
+      console.log(`Problem logging in with organisation: ${selectedOrg.name}`)
+      return
+    }
+
+    await onLogin(verifyOrgResult.JWT, verifyOrgResult.user, verifyOrgResult.templatePermissions)
   }
 
   return (
