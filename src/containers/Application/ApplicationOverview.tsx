@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Container, Form, Header, Loader, Message, Modal } from 'semantic-ui-react'
 import { SectionSummary, Loading } from '../../components'
 import strings from '../../utils/constants'
-import buildSectionsStructure from '../../utils/helpers/Application/buildSectionsStructure'
+import buildSectionsStructure from '../../utils/helpers/application/buildSectionsStructure'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -14,7 +14,7 @@ import {
   ResponsesByCode,
   User,
 } from '../../utils/types'
-import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/Application/revalidateAll'
+import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/application/revalidateAll'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
 

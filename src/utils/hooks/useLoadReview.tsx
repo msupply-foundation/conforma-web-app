@@ -5,7 +5,7 @@ import { SectionStructure } from '../types'
 import useLoadApplication from './useLoadApplication'
 import useGetResponsesAndElementState from './useGetResponsesAndElementState'
 import useTriggerProcessing from './useTriggerProcessing'
-import buildSectionsStructure from '../helpers/Application/buildSectionsStructure'
+import buildSectionsStructure from '../helpers/application/buildSectionsStructure'
 
 interface UseLoadReviewProps {
   reviewId: number

@@ -5,7 +5,7 @@ import {
   TemplateSection,
   useGetTemplateQuery,
 } from '../generated/graphql'
-import { getTemplateSections } from '../helpers/Application/getSectionsPayload'
+import { getTemplateSections } from '../helpers/application/getSectionsPayload'
 import { TemplateTypePayload, TemplateSectionPayload } from '../types'
 
 interface useLoadTemplateProps {
