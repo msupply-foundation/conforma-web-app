@@ -26,10 +26,12 @@ import UserRegister from '../User/UserRegister'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import ApplicationOverview from '../Application/ApplicationOverview'
 import ApplicationSubmission from '../Application/ApplicationSubmission'
+import UserArea from '../User/UserArea'
 
 const SiteLayout: React.FC = () => {
   return (
     <Router>
+      <UserArea />
       <Switch>
         <Route exact path="/">
           <Home />
