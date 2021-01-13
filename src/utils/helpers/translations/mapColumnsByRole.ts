@@ -1,4 +1,4 @@
-enum APPLICATION_COLUMN {
+export enum APPLICATION_COLUMN {
   LAST_ACTIVE_DATE = 'Last active date',
   DEADLINE_DATE = 'Deadline date',
   APPLICATION_NAME = 'Application name',
