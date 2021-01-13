@@ -1,5 +1,6 @@
 import { PermissionPolicyType } from '../../generated/graphql'
 
+// TODO: Change to use type instead
 interface UserRoles {
   [role: string]: Array<PermissionPolicyType>
 }
