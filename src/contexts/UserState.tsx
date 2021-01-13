@@ -1,4 +1,3 @@
-import Log from 'apollo3-cache-persist/lib/Log'
 import React, { createContext, useContext, useReducer } from 'react'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
 import { TemplatePermissions, User } from '../utils/types'
