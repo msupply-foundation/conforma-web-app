@@ -8,24 +8,30 @@ import isLoggedIn from '../../utils/helpers/loginCheck'
 import strings from '../../utils/constants'
 import setUserInfo from '../../utils/helpers/fetchUserInfo'
 import { useGetUserOrgsQuery } from '../../utils/generated/graphql'
+import { User } from '../../utils/types'
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isError, setIsError] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
   const [selectedOrg, setSelectedOrg] = useState<string>()
+  const [orgList, setOrgList] = useState([])
   const { push, history } = useRouter()
   const { onLogin } = useUserState()
 
   const handleSubmit = async (event: any) => {
     event.preventDefault()
     const loginResult = await attemptLogin(username, password)
+    console.log('loginResult', loginResult)
     if (!loginResult.success) setIsError(true)
     else {
       setIsError(false)
       setIsLoggedIn(true)
-      onLogin(loginResult.JWT)
+      setOrgList(loginResult.orgList)
+      setUser(loginResult.user)
+      // onLogin(loginResult.JWT, loginResult.user, loginResult.templatePermissions)
       // if (history.location?.state?.from) push(history.location.state.from)
       // else push('/')
     }
@@ -40,28 +46,36 @@ const Login: React.FC = () => {
           <Segment clearing>
             <Header size="huge">{strings.LABEL_WELCOME}</Header>
             <Form>
-              <Form.Field>
-                <label>{strings.LABEL_LOGIN_USERNAME}</label>
-                <input
-                  placeholder="Username"
-                  name="username"
-                  type="text"
-                  value={username}
-                  onChange={(event) => setUsername(event.target.value)}
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>{strings.LABEL_LOGIN_PASSWORD}</label>
-                <input
-                  placeholder="Password"
-                  name="password"
-                  type="password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                />
-              </Form.Field>
+              {!isLoggedIn && (
+                <>
+                  <Form.Field>
+                    <label>{strings.LABEL_LOGIN_USERNAME}</label>
+                    <input
+                      placeholder="Username"
+                      name="username"
+                      type="text"
+                      value={username}
+                      onChange={(event) => setUsername(event.target.value)}
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>{strings.LABEL_LOGIN_PASSWORD}</label>
+                    <input
+                      placeholder="Password"
+                      name="password"
+                      type="password"
+                      value={password}
+                      onChange={(event) => setPassword(event.target.value)}
+                    />
+                  </Form.Field>
+                </>
+              )}
+              {isLoggedIn && user && (
+                <p>{`Welcome back, ${user.firstName}. Please select your organisation`}</p>
+              )}
+              {isLoggedIn && orgList.map((org: any) => <p key={org.orgId}>{org.orgName}</p>)}
               <Container>
-                <Link to="/register">{strings.LINK_LOGIN_USER}</Link>
+                {!isLoggedIn && <Link to="/register">{strings.LINK_LOGIN_USER}</Link>}
                 <Button floated="right" type="submit" onClick={handleSubmit}>
                   {strings.LABEL_LOG_IN}
                 </Button>

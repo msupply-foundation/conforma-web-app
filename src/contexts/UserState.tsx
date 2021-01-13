@@ -70,9 +70,14 @@ export function UserProvider({ children }: UserProviderProps) {
   const userState = state
   const setUserState = dispatch
 
-  const onLogin = (JWT: string) => {
+  const onLogin = (
+    JWT: string,
+    user: User | undefined = undefined,
+    permissions: TemplatePermissions | undefined = undefined
+  ) => {
     localStorage.setItem('persistJWT', JWT)
-    fetchUserInfo({ dispatch: setUserState })
+    if (!user || !permissions) fetchUserInfo({ dispatch: setUserState })
+    else dispatch({ type: 'setCurrentUser', newUser: user, newPermissions: permissions })
   }
 
   const logout = () => {
