@@ -35,6 +35,16 @@ interface RouterResult {
   location: any
 }
 
+const replaceHifenKeys = (parsedQuery: { [key: string]: any }) => {
+  const replacedHifenKeys = Object.keys(parsedQuery).map((key) => {
+    const convertedKey = key.replace(/-([a-z])/g, function (m, w) {
+      return w.toUpperCase()
+    })
+    return { [convertedKey]: parsedQuery[key] }
+  })
+  return replacedHifenKeys.reduce((a, b) => Object.assign({}, a, b))
+}
+
 export function useRouter(): RouterResult {
   const params = useParams()
   const location = useLocation()
@@ -45,6 +55,9 @@ export function useRouter(): RouterResult {
   // Memoize so that a new object is only returned if something changes
 
   return useMemo(() => {
+    // Convert string to object, then replace snake with camelCase
+    const queryFilters = replaceHifenKeys(queryString.parse(location.search))
+
     return {
       // For convenience add push(), replace(), pathname at top level
       push: history.push,
@@ -56,7 +69,7 @@ export function useRouter(): RouterResult {
       // so that they can be used interchangeably.
       // Example: /:topic?sort=popular -> { topic: "react", sort: "popular" }
       query: {
-        ...queryString.parse(location.search), // Convert string to object
+        ...queryFilters,
         ...params,
       },
 
