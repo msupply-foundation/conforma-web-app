@@ -1,0 +1,275 @@
+## Filters for Applications
+
+---
+
+### Overview
+
+---
+
+The list of applications to display for the current user is based on:
+
+- its permissions to view a certain group of applications
+- the application type (aka template code)
+- other optional filters selected
+
+The user has access to links to see each type of application list from the top menu or in their dashboard - the link will set basic filters in the main URL route of the list: `/applications`. For example the list to see the Application of type "Drug Registration" would take the user to `/applications?type=user-registration&user-role=applicant`.
+
+The `type` is the template code for the applications type, also displayed in the header of the Applications list.
+The `user-role` is used to build how the columns and rows should be displayed. The user-role is deduced from the permissions that the current user have to view this application type. In this example the user has **applicant** role by what was set in their permissions.
+
+### Example: [UI Design] Applicant - applications list
+
+![Applicant-List](images/Filters-for-Applications-Applicant-List.png)
+
+---
+
+### Filters
+
+---
+
+#### Label filters:
+
+##### type
+
+- This is a **compulsory** filter. In case none is included in URL will be deduced from 1st user's persmissions.
+  Example: `type=user-registration`
+  Considered in implementation: **Yes** [#131 - Headers]
+  Can have combined values: **No**
+
+Options:
+
+- `template-code` - Of application type in list (and header)
+
+##### category
+
+Example: `category=company`
+Considered in implementation: **Yes** **[New issue?]**
+Can have combined values: **No**
+
+Options:
+
+- `category-code` - Group of templates (application types)
+
+##### stage
+
+Example: `stage=screening`
+Considered in implementation: **Yes** [#251 - Filters]
+Can have combined values: **Yes** e.g: `stage=screening,assessment,final-decision`
+
+Options:
+
+- Set of `stage-name` which is deduced per template (application type)
+
+##### user-role
+
+Example: `user-role=applicant`
+Considered in implementation: **Yes** [#131 - Headers]
+Can have combined values: **No**
+
+Options:
+
+- Deduced by user's permissions (**TODO: More detailed explanation of user-role per permissions**)
+
+##### outcome
+
+Example: `outcome=pending`
+Considered in implementation: **Yes** [#251 - Filters]
+Can have combined values: **Yes** e.g: `outcome=pending,approved`
+
+Options:
+
+- Set of `outcome` common for all templates (application types)
+
+##### action
+
+Example: `action=edit-draft`
+Considered in implementation: **Yes** [#251 - Filters]
+Can have combined values: **Yes** e.g: `action=edit-draft,`
+
+Options:
+
+- Applicant:
+  `edit-draft`
+  `make-updates`
+  `renew`
+  `view` (Submitted)
+- Reviewer
+  `start-review`
+  `continue-review`
+  `review-updates`
+  `view` (Submitted)
+- Consolidator
+  `assign`
+  `consolidate`
+  `review-updates`
+  `view` (Submitted)
+
+---
+
+#### String filters:
+
+##### assigned
+
+Example: `assigned=none`
+Considered in implementation: **Yes** [#251 - Filters]
+Can have combined values: **Yes** e.g: `assigned=none,"Carl"`
+
+Options:
+
+- `none` - Applications with sections not-assigned
+- `"username"` - Reviewer username
+
+##### consolidator
+
+Example: `consolidator="Tony"`
+Considered in implementation: **Yes** [#251 - Filters]
+Can have combined values: **Yes** e.g: `consolidator="Tony","Andrei"`
+
+Options:
+
+- `"username"` - Consolidator username
+
+##### applicant
+
+Example: `applicant="John"`
+Considered in implementation: **No**
+Can have combined values: **Yes** e.g: `applicant="John","Nicole"`
+
+Options:
+
+- `"username"` - Applicant username
+
+##### org
+
+Example: `org="Company A"`
+Considered in implementation: **Yes** [#251 - Filters]
+Can have combined values: **Yes** e.g: `org="Company A","Company B"`
+
+Options:
+
+- `"organisation name"`
+
+##### search
+
+Example: `search="abc 123"`
+Considered in implementation: **Yes** [#251 - Filters]
+Can have combined values: **No**
+
+Options:
+
+- String containing [A-Z], [a-z], [0-9], _space_
+- Uses _starts with_ on search including following columns: "Application name", "Stage", ... (**TODO: continue listing columns**)
+- (See more rules on Formats & Rules)
+
+---
+
+#### Date filters:
+
+##### last-active-date
+
+Example: `last-active-date=2021-01-01`
+Considered in implementation: **Yes** [#228 - Dates in columns]
+Can have combined values: **Yes** e.g: `last-active-date=today,last-week`
+
+Options:
+
+- Pre-defined string: `today` (See more formats on Formats & Rules)
+- Single date: `YYYY-MM-DD`
+- Period (start:end): `YYYY-MM-DD:YYYY-MM-DD`
+
+##### deadline-date
+
+Example: `deadline-date=2021-01-31`
+Considered in implementation: **Yes** [#228 - Dates in columns]
+Can have combined values: **Yes** e.g: `deadline-date=today,2021-01-02`
+
+Options:
+
+- Pre-defined string: `today` (See more formats on Formats & Rules)
+- Single date: `YYYY-MM-DD`
+- Period (start:end): `YYYY-MM-DD:YYYY-MM-DD`
+
+---
+
+#### Integer filters:
+
+##### page
+
+Example: `page=1`
+Considered in implementation: **Yes** [#210 - Pagination]
+Can have combined values: **No**
+
+Options:
+
+- Number between 1 - N (maximum of pages?)
+
+##### per-page
+
+Example: `per-page=20`
+Considered in implementation: **Yes** [#210 - Pagination]
+Can have combined values: **No**
+
+Options:
+
+- Number between 10 - 100
+
+---
+
+### Formats & Rules
+
+---
+
+#### Pre-defined dates
+
+`today`, `yesterday`, `this-week`, `last-week`, `this-month`, `last-month`, `this-quarter`, `last-quarter`,`this-year`, `last-year`, ... (Add other pre-defined date here)
+
+#### Strings
+
+Can't have special caracters.
+Are case insensitive. So `thisTHAT` = `THISthat` = `thisthat`.
+
+#### Labels
+
+When combined labels are used (with separator `,`) the query will be using the OR connector.
+
+#### General
+
+When combined filters are used (with separator `&`) the query will be using the AND connector.
+
+---
+
+### Columns per user-role
+
+---
+
+### Common columns (For all user-roles)
+
+- Last active date
+- Application name
+- Stage
+- Status / Actionable
+
+#### Applicant
+
+- Deadline date
+- Progress
+
+#### Reviewer
+
+- Company
+- Applicant
+- Consolidator
+- Sections columns:
+  - Section title
+  - _Assigned to you_ / _Assigned to A Nother_
+  - Progress
+
+#### Consolidator
+
+- Company
+- Applicant
+- Sections columns:
+  - Section title
+  - Reviewer
+  - Progress
+  - Actionable
