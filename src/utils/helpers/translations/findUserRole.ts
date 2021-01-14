@@ -1,5 +1,13 @@
 import { PermissionPolicyType } from '../../generated/graphql'
 
+/**
+ * @function: findUserRole
+ * Deduce the current user Role to interact with applications.
+ * Each UserRole define different view options and actions the user have access in the UI.
+ * - @param permissions - Array with group of permissions the user have for a template
+ * - @returns UserRole deduced from group of permissions or undefined.
+ */
+
 // TODO: Change to use type instead
 interface UserRoles {
   [role: string]: Array<PermissionPolicyType>
