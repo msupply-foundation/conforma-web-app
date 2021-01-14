@@ -112,24 +112,42 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                             <Grid.Column>
                               {review && canEdit && (
                                 <Container textAlign="right">
-                                  {review?.decision === undefined ? (
+                                  {review?.decision === undefined && (
                                     <Button
                                       size="small"
                                       onClick={() => setDecisionArea(review, summaryViewProps)}
                                       content={strings.BUTTON_REVIEW_RESPONSE}
-                                    />
-                                  ) : (
-                                    <Icon
-                                      name="pencil square"
-                                      color="blue"
-                                      style={{ minWidth: 100 }}
-                                      onClick={() => setDecisionArea(review, summaryViewProps)}
                                     />
                                   )}
                                 </Container>
                               )}
                             </Grid.Column>
                           </Grid.Row>
+                          {review && review.decision && (
+                            <Grid.Row>
+                              <Card fluid>
+                                <Card.Content>
+                                  <Grid>
+                                    <Grid.Row>
+                                      <Grid.Column width="10">
+                                        <Card.Header>{review.decision}</Card.Header>
+                                        <Card.Description>{review.comment}</Card.Description>
+                                        <Card.Meta>{reviewer}</Card.Meta>
+                                      </Grid.Column>
+                                      <Grid.Column width="2">
+                                        <Icon
+                                          name="pencil square"
+                                          color="blue"
+                                          style={{ minWidth: 100 }}
+                                          onClick={() => setDecisionArea(review, summaryViewProps)}
+                                        />
+                                      </Grid.Column>
+                                    </Grid.Row>
+                                  </Grid>
+                                </Card.Content>
+                              </Card>
+                            </Grid.Row>
+                          )}
                         </Grid>
                       </Segment>
                     )
