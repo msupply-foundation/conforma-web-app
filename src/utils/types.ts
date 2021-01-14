@@ -41,6 +41,7 @@ export {
   TemplateTypePayload,
   TemplateElementState,
   TemplatePermissions,
+  TemplatesDetails,
   ValidationMode,
   ValidateFunction,
   ValidateObject,
@@ -255,11 +256,16 @@ interface TemplateElementState extends ElementBase {
 }
 
 interface TemplatePermissions {
-  [index: string]: {
-    [index: string]: Array<'Apply' | 'Review' | 'Assign'>
-  }
+  [index: string]: Array<UserRole>
 }
 
+type TemplatesDetails = {
+  permissions: Array<UserRole>
+  name: string
+  code: string
+}[]
+
+type UserRole = 'Apply' | 'Review' | 'Assign'
 interface ValidateFunction {
   (
     validationExpress: IQueryNode,

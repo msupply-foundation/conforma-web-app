@@ -17749,6 +17749,22 @@ export type GetTemplateQuery = (
   )> }
 );
 
+export type GetTemplatesQueryVariables = Exact<{
+  status?: Maybe<TemplateStatus>;
+}>;
+
+
+export type GetTemplatesQuery = (
+  { __typename?: 'Query' }
+  & { templates?: Maybe<(
+    { __typename?: 'TemplatesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'Template' }
+      & TemplateFragment
+    )>> }
+  )> }
+);
+
 export type GetTriggersQueryVariables = Exact<{
   serial?: Maybe<Scalars['String']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
@@ -18477,6 +18493,41 @@ export function useGetTemplateLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetTemplateQueryHookResult = ReturnType<typeof useGetTemplateQuery>;
 export type GetTemplateLazyQueryHookResult = ReturnType<typeof useGetTemplateLazyQuery>;
 export type GetTemplateQueryResult = Apollo.QueryResult<GetTemplateQuery, GetTemplateQueryVariables>;
+export const GetTemplatesDocument = gql`
+    query getTemplates($status: TemplateStatus = AVAILABLE) {
+  templates(condition: {status: $status}) {
+    nodes {
+      ...Template
+    }
+  }
+}
+    ${TemplateFragmentDoc}`;
+
+/**
+ * __useGetTemplatesQuery__
+ *
+ * To run a query within a React component, call `useGetTemplatesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTemplatesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTemplatesQuery({
+ *   variables: {
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useGetTemplatesQuery(baseOptions?: Apollo.QueryHookOptions<GetTemplatesQuery, GetTemplatesQueryVariables>) {
+        return Apollo.useQuery<GetTemplatesQuery, GetTemplatesQueryVariables>(GetTemplatesDocument, baseOptions);
+      }
+export function useGetTemplatesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTemplatesQuery, GetTemplatesQueryVariables>) {
+          return Apollo.useLazyQuery<GetTemplatesQuery, GetTemplatesQueryVariables>(GetTemplatesDocument, baseOptions);
+        }
+export type GetTemplatesQueryHookResult = ReturnType<typeof useGetTemplatesQuery>;
+export type GetTemplatesLazyQueryHookResult = ReturnType<typeof useGetTemplatesLazyQuery>;
+export type GetTemplatesQueryResult = Apollo.QueryResult<GetTemplatesQuery, GetTemplatesQueryVariables>;
 export const GetTriggersDocument = gql`
     query getTriggers($serial: String, $reviewAssignmentId: Int, $reviewId: Int) {
   applicationTriggerStates(condition: {serial: $serial, reviewAssignmentId: $reviewAssignmentId, reviewId: $reviewId}, first: 1) {
