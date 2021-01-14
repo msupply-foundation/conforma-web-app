@@ -7,7 +7,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   onUpdate,
   value,
-  // setValue,
+  // setValue
   setIsActive,
   isEditable,
   currentResponse,
@@ -29,6 +29,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
+  const [internalValidation, setInternalValidation] = useState({
+    isValid: true,
+    validationMessage: validationMessageInternal,
+  })
   const [masked, setMasked] = useState(maskedInput === undefined ? true : maskedInput)
 
   // Reset saved value when re-loading form (since password can't be stored)
@@ -38,9 +42,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     }
   }, [])
 
-  function handleChange(e: any) {
-    if (e.target.name === 'password') setPassword(e.target.value)
-    else setPasswordConfirm(e.target.value)
+  async function handleChange(e: any) {
+    if (e.target.name === 'password') {
+      setPassword(e.target.value)
+      const responses = { thisResponse: password || '' }
+      const customValidation = await validate(validationInternal, validationMessageInternal, {
+        objects: { responses },
+      })
+      setInternalValidation(customValidation)
+    } else setPasswordConfirm(e.target.value)
   }
 
   async function handleLoseFocus(e: any) {
@@ -48,6 +58,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const customValidation = await validate(validationInternal, validationMessageInternal, {
       objects: { responses },
     })
+    setInternalValidation(customValidation)
     const passwordsMatch = password === passwordConfirm
     const hash = customValidation.isValid && passwordsMatch ? await createHash(password) : ''
 
@@ -57,8 +68,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       customValidation,
     })
   }
-
-  console.log('validationState', validationState)
 
   return (
     <>
@@ -76,7 +85,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         disabled={!isEditable}
         type={masked ? 'password' : undefined}
         error={
-          !validationState.isValid && validationState.isValid !== null
+          // !validationState.isValid && validationState.isValid !== null
+          !internalValidation.isValid && validationState.isValid !== null
             ? {
                 content: validationMessageInternal,
                 pointing: 'above',
@@ -95,7 +105,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         disabled={!isEditable}
         type={masked ? 'password' : undefined}
         error={
-          passwordConfirm !== password && passwordConfirm !== ''
+          passwordConfirm !== password && passwordConfirm !== '' && internalValidation.isValid
             ? {
                 content: 'Passwords do not match',
                 pointing: 'above',
