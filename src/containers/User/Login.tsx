@@ -49,8 +49,6 @@ const Login: React.FC = () => {
       const authHeader = { Authorization: 'Bearer ' + JWT }
       const verifyOrgResult = await attemptLogin({ orgId }, loginOrgURL, authHeader)
 
-      console.log('verifyOrgResult', verifyOrgResult)
-
       if (verifyOrgResult.success) {
         finishLogin(verifyOrgResult)
       }
