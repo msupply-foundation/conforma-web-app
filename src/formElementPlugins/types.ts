@@ -39,11 +39,13 @@ interface ApplicationViewProps extends ApplicationViewWrapperProps {
   setValue: (text: string) => void // TO update the value on the ApplicationViewWrapper
   setIsActive: () => void
   validationState: ValidationState
+  Markdown: any
 }
 
 interface SummaryViewProps {
   parameters: BasicObject
   response: ResponseFull | null
+  Markdown: any
 }
 
 interface SummaryViewWrapperProps {

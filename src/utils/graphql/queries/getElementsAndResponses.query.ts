@@ -13,6 +13,7 @@ export default gql`
         }
       }
       template {
+        ...Template
         templateSections {
           nodes {
             ...Section
