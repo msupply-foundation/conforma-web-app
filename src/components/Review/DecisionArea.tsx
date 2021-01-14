@@ -60,16 +60,16 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
             <Header as="h3">{strings.LABEL_REVIEW}</Header>
             {/* // TODO: Change to list options dynamically? */}
             <Radio
-              style={{ width: '100%' }}
               label={strings.LABEL_REVIEW_APPROVE}
               value={strings.LABEL_REVIEW_APPROVE}
+              name="decisionGroup"
               checked={review.decision === ReviewResponseDecision.Approve}
               onChange={() => handleChange(ReviewResponseDecision.Approve)}
             />
             <Radio
-              style={{ width: '100%' }}
               label={strings.LABEL_REVIEW_RESSUBMIT}
               value={strings.LABEL_REVIEW_RESSUBMIT}
+              name="decisionGroup"
               checked={review.decision === ReviewResponseDecision.Decline}
               onChange={() => handleChange(ReviewResponseDecision.Decline)}
             />
@@ -77,7 +77,8 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
           <Segment basic>
             <Header as="h3">{strings.LABEL_COMMENT}</Header>
             <TextArea
-              style={{ minHeight: 100 }}
+              rows={3}
+              style={{ width: '100%' }}
               value={review.comment}
               onChange={handleUpdateComment}
             />

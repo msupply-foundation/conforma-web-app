@@ -14,12 +14,7 @@ import { SummaryViewWrapper } from '../../formElementPlugins'
 import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import strings from '../../utils/constants'
 import { ReviewResponseDecision, TemplateElementCategory } from '../../utils/generated/graphql'
-import {
-  ReviewQuestionDecision,
-  ResponsesByCode,
-  SectionElementStates,
-  DecisionAreaState,
-} from '../../utils/types'
+import { ReviewQuestionDecision, ResponsesByCode, SectionElementStates } from '../../utils/types'
 
 interface ReviewSectionProps {
   reviewer: string
