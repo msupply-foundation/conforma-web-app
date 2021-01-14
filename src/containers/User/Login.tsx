@@ -47,7 +47,9 @@ const Login: React.FC = () => {
       const { userId } = user as User
       const { orgId } = orgList[selectedOrgIndex] as OrganisationSimple
       const authHeader = { Authorization: 'Bearer ' + JWT }
-      const verifyOrgResult = await attemptLogin({ userId, orgId }, loginOrgURL, authHeader)
+      const verifyOrgResult = await attemptLogin({ orgId }, loginOrgURL, authHeader)
+
+      console.log('verifyOrgResult', verifyOrgResult)
 
       if (verifyOrgResult.success) {
         finishLogin(verifyOrgResult)
@@ -119,7 +121,7 @@ const Login: React.FC = () => {
                   selection
                   options={orgList.map((org: OrganisationSimple, index) => ({
                     key: `org_${org.orgId}`,
-                    text: `${org.orgName} ${org?.orgRole ? `(${org.orgRole})` : ''}`,
+                    text: `${org.name} ${org?.userRole ? `(${org.userRole})` : ''}`,
                     value: index,
                   }))}
                   defaultValue={0}

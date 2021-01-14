@@ -298,8 +298,8 @@ interface User {
 
 type OrganisationSimple = {
   orgId: number
-  orgRole: string | null
-  orgName: string
+  userRole: string | null
+  name: string
 }
 
 interface LoginPayload {
