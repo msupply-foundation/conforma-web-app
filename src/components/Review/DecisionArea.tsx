@@ -84,7 +84,13 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
             />
           </Segment>
           <Segment basic>
-            <Button color="blue" basic onClick={submitHandler} content={strings.BUTTON_SUBMIT} />
+            <Button
+              color="blue"
+              basic
+              onClick={submitHandler}
+              disabled={review.decision === undefined}
+              content={strings.BUTTON_SUBMIT}
+            />
             {problemMessage !== '' && <p style={{ color: 'red' }}>{problemMessage}</p>}
           </Segment>
         </Segment>
