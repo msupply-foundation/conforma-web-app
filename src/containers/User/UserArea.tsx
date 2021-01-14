@@ -12,12 +12,12 @@ const UserArea: React.FC = () => {
     userState: { currentUser, isLoading, templatePermissions },
     logout,
   } = useUserState()
-  const { replace } = useRouter()
   const { error, loading, filteredTemplates } = useListTemplates(templatePermissions, isLoading)
 
   const handleLogOut = async () => {
     await logout()
-    replace('/login')
+    // TODO: Improve this, before display the login it still show the Authenticate are without user!
+    window.location.href = '/login'
   }
 
   return (
