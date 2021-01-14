@@ -77,7 +77,7 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
           <Segment basic>
             <Header as="h3">{strings.LABEL_COMMENT}</Header>
             <TextArea
-              rows={3}
+              rows={6}
               style={{ width: '100%' }}
               value={review.comment}
               onChange={handleUpdateComment}
