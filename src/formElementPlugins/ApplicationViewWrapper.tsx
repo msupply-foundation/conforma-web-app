@@ -9,7 +9,6 @@ import {
   ResponseFull,
   ElementPluginParameters,
   ElementPluginParameterValue,
-  ValidateObject,
 } from '../utils/types'
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
@@ -121,6 +120,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
           value: jsonValue,
           isValid,
         },
+      })
+      setApplicationState({
+        type: 'setElementTimestamp',
+        timestampType: 'elementsStateUpdatedTimestamp',
       })
     }
   }
