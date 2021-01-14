@@ -16,7 +16,7 @@ const UserArea: React.FC = () => {
 
   const handleLogOut = async () => {
     await logout()
-    // TODO: Improve this, before display the login it still show the Authenticate are without user!
+    // TODO: Force full application reload on log out
     window.location.href = '/login'
   }
 
