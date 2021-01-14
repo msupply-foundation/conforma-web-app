@@ -24,7 +24,10 @@ const Login: React.FC = () => {
   const { push, history } = useRouter()
   const { onLogin } = useUserState()
 
-  if (isLoggedIn()) push('/')
+  // useEffect ensures isLoggedIn only runs on first mount, not re-renders
+  useEffect(() => {
+    if (isLoggedIn()) push('/')
+  }, [])
 
   const handleSubmit = async () => {
     if (!user) {

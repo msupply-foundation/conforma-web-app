@@ -12,7 +12,10 @@ const UserRegister: React.FC = () => {
   const { push } = useRouter()
   const { onLogin } = useUserState()
 
-  if (isLoggedIn()) push('/')
+  // useEffect ensures isLoggedIn only runs on first mount, not re-renders
+  useEffect(() => {
+    if (isLoggedIn()) push('/')
+  }, [])
 
   useEffect(() => {
     // Log in as 'nonRegistered' user to be able to apply for User Registration form
