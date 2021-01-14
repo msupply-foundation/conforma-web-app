@@ -52,7 +52,8 @@ const ApplicationList: React.FC = () => {
         ))}
       </List>
       {userRole && headers && applications && applications.length > 0 && (
-        // TODO: Implement sortable columns -> Requires reducer
+        // TODO: Create function on click (of a pre-defined group of sortable columns) in the header.
+        // After a click on the header the URL updates and a new query to GraphQL using sorted columns
         <Table sortable stackable selectable>
           <Table.Header>
             <Table.Row>
