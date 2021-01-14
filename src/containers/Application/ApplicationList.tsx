@@ -48,7 +48,7 @@ const ApplicationList: React.FC = () => {
       {Object.keys(query).length > 0 && <h3>Query parameters:</h3>}
       <List>
         {Object.entries(query).map(([key, value]) => (
-          <List.Item key={`app_selected_parameter_${value}`} content={key + ' : ' + value} />
+          <List.Item key={`ApplicationList-parameter-${value}`} content={key + ' : ' + value} />
         ))}
       </List>
       {userRole && headers && applications && applications.length > 0 && (
@@ -58,43 +58,49 @@ const ApplicationList: React.FC = () => {
           <Table.Header>
             <Table.Row>
               {headers.map((headerName) => (
-                <Table.HeaderCell key={`app_header_${headerName}`}>{headerName}</Table.HeaderCell>
+                <Table.HeaderCell key={`ApplicationList-header-${headerName}`}>
+                  {headerName}
+                </Table.HeaderCell>
               ))}
             </Table.Row>
           </Table.Header>
           <Table.Body>
             {applications.map((application, index) => (
-              <Table.Row key={`${application.serial}`}>
+              <Table.Row key={`ApplicationList-application-${application.serial}`}>
                 {headers.map((headerName) => {
                   // TODO: Move this to render property to be defined for each ColumnDetails in mapColumnsByRole
                   switch (headerName) {
                     case APPLICATION_COLUMN.LAST_ACTIVE_DATE:
                     case APPLICATION_COLUMN.DEADLINE_DATE:
                       return (
-                        <Table.Cell>
-                          <Header>01/01/2021</Header>
+                        <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
+                          <Header content={strings.DATE_APPLICATION_PLACEHOLDER} />
                         </Table.Cell>
                       )
                     case APPLICATION_COLUMN.APPLICATION_NAME:
                       return (
-                        <Table.Cell key={`app_row_${index}_${headerName}`}>
+                        <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
                           <Link to={`/application/${application.serial}`}>{application.name}</Link>
                         </Table.Cell>
                       )
                     case APPLICATION_COLUMN.STAGE:
                       return (
-                        <Table.Cell key={`app_row_${index}_${headerName}`}>
+                        <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
                           <Label>{application.stage}</Label>
                         </Table.Cell>
                       )
                     case APPLICATION_COLUMN.STATUS:
                       return (
-                        <Table.Cell key={`app_row_${index}_${headerName}`}>
+                        <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
                           <Progress size="tiny" />
                         </Table.Cell>
                       )
                     default:
-                      return <Table.Cell key={`app_row_${index}_${headerName}`}>Problem</Table.Cell>
+                      return (
+                        <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
+                          Problem
+                        </Table.Cell>
+                      )
                   }
                 })}
               </Table.Row>
