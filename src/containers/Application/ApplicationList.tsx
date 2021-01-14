@@ -22,20 +22,21 @@ const ApplicationList: React.FC = () => {
   const { error, loading, applications } = useListApplication({ type })
 
   useEffect(() => {
-    if (type && !userRole) {
-      const found = Object.entries(templatePermissions).find(([template]) => template === type)
-      if (found) {
-        const [template, permissions] = found
-        const newRole = findUserRole(permissions)
-        // TODO: Call helper to build similar URL query with the new userRole
-        if (newRole) push(`/applications?type=${type}&user-role=${newRole}`)
+    if (type && templatePermissions) {
+      if (!userRole) {
+        const found = Object.entries(templatePermissions).find(([template]) => template === type)
+        if (found) {
+          const [template, permissions] = found
+          const newRole = findUserRole(permissions)
+          // TODO: Call helper to build similar URL query with the new userRole
+          if (newRole) push(`/applications?type=${type}&user-role=${newRole}`)
+        }
+      } else {
+        const columns = mapColumnsByRole(userRole)
+        setHeaders(columns.map(({ headerName }) => headerName))
       }
     }
-    if (type && userRole) {
-      const columns = mapColumnsByRole(userRole)
-      setHeaders(columns.map(({ headerName }) => headerName))
-    }
-  }, [type, userRole])
+  }, [type, userRole, templatePermissions])
 
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
