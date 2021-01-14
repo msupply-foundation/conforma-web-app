@@ -12,8 +12,8 @@ import FilterList from './FilterList'
 import Home from './Home'
 import Login from '../containers/User/Login'
 import Loading from './Loading'
-import { AppMenu, Footer } from './Main'
-import { ReviewSection } from './Review'
+import { AppMenu, Footer, ModalWarning } from './Main'
+import { DecisionArea, ReviewSection } from './Review'
 import TemplateList from './TemplateList'
 import TemplateNew from './TemplateNew'
 import Template from './Template'
@@ -36,11 +36,13 @@ export {
   Approval,
   Admin,
   Config,
+  DecisionArea,
   FilterList,
   Footer,
   Home,
   Login,
   Loading,
+  ModalWarning,
   Notification,
   NotificationsList,
   NoMatch,

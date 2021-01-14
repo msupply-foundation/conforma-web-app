@@ -6,6 +6,7 @@ import {
 } from './generated/graphql'
 
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { SummaryViewWrapperProps } from '../formElementPlugins/types'
 
 export {
   ApplicationState,
@@ -19,6 +20,7 @@ export {
   ElementState,
   ElementsActivityState,
   EvaluatorParameters,
+  DecisionAreaState,
   IGraphQLConnection,
   LooseString,
   PageElementsStatuses,
@@ -117,6 +119,12 @@ interface ElementsActivityState {
   elementLostFocusTimestamp: number
   elementsStateUpdatedTimestamp: number
   areTimestampsInSequence: boolean
+}
+
+interface DecisionAreaState {
+  open: boolean
+  review: ReviewQuestionDecision | null
+  summaryViewProps: SummaryViewWrapperProps | null
 }
 
 interface IGraphQLConnection {

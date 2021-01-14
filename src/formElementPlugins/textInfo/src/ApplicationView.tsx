@@ -1,9 +1,8 @@
 import React from 'react'
 import { Message } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
-import Markdown from '../../../utils/helpers/semanticReactMarkdown'
 
-const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters }) => {
+const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters, Markdown }) => {
   return (
     <Message>
       <Message.Header>{parameters.title}</Message.Header>

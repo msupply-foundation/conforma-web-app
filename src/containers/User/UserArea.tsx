@@ -12,12 +12,12 @@ const UserArea: React.FC = () => {
     userState: { currentUser, isLoading, templatePermissions },
     logout,
   } = useUserState()
-  const { replace } = useRouter()
   const { error, loading, filteredTemplates } = useListTemplates(templatePermissions, isLoading)
 
   const handleLogOut = async () => {
     await logout()
-    replace('/login')
+    // TODO: Force full application reload on log out
+    window.location.href = '/login'
   }
 
   return (

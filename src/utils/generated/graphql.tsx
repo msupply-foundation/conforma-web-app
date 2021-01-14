@@ -17638,6 +17638,7 @@ export type GetElementsAndResponsesQuery = (
           & SectionFragment
         )>> }
       ) }
+      & TemplateFragment
     )> }
     & ApplicationFragment
   )> }
@@ -18286,6 +18287,7 @@ export const GetElementsAndResponsesDocument = gql`
       }
     }
     template {
+      ...Template
       templateSections {
         nodes {
           ...Section
@@ -18301,6 +18303,7 @@ export const GetElementsAndResponsesDocument = gql`
 }
     ${ApplicationFragmentDoc}
 ${ResponseFragmentDoc}
+${TemplateFragmentDoc}
 ${SectionFragmentDoc}
 ${ElementFragmentDoc}`;
 
