@@ -1,23 +1,41 @@
 import React, { useState } from 'react'
-import { Button, Container, Grid, Header, Icon, Label, Segment, Accordion } from 'semantic-ui-react'
+import {
+  Button,
+  Card,
+  Container,
+  Grid,
+  Header,
+  Icon,
+  Label,
+  Segment,
+  Accordion,
+} from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
+import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import strings from '../../utils/constants'
 import { ReviewResponseDecision, TemplateElementCategory } from '../../utils/generated/graphql'
 import { ReviewQuestionDecision, ResponsesByCode, SectionElementStates } from '../../utils/types'
 
 interface ReviewSectionProps {
+  reviewer: string
   allResponses: ResponsesByCode
   assignedToYou: boolean
   reviewSection: SectionElementStates
   updateResponses: (props: ReviewQuestionDecision[]) => void
+  setDecisionArea: (
+    review: ReviewQuestionDecision,
+    summaryViewProps: SummaryViewWrapperProps
+  ) => void
   canEdit: boolean
 }
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({
+  reviewer,
   allResponses,
   assignedToYou,
   reviewSection,
   updateResponses,
+  setDecisionArea,
   canEdit,
 }) => {
   const { section, pages } = reviewSection
@@ -66,7 +84,6 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
               .filter(({ review }) => review && review.decision === undefined)
               .map(({ review }) => review as ReviewQuestionDecision)
             const reviewsNumber = elementsToReview.length
-
             return (
               <Segment key={`ReviewSection_${section.code}_${pageName}`} basic>
                 <Header as="h3" style={{ color: 'DarkGrey' }}>
@@ -90,19 +107,42 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                             <Grid.Column>
                               {review && canEdit && (
                                 <Container textAlign="right">
-                                  {review?.decision === undefined ? (
-                                    <Button size="small">{strings.BUTTON_REVIEW_RESPONSE}</Button>
-                                  ) : (
-                                    <Icon
-                                      name="pencil square"
-                                      color="blue"
-                                      style={{ minWidth: 100 }}
+                                  {review?.decision === undefined && (
+                                    <Button
+                                      size="small"
+                                      onClick={() => setDecisionArea(review, summaryViewProps)}
+                                      content={strings.BUTTON_REVIEW_RESPONSE}
                                     />
                                   )}
                                 </Container>
                               )}
                             </Grid.Column>
                           </Grid.Row>
+                          {review && review.decision && (
+                            <Grid.Row>
+                              <Card fluid>
+                                <Card.Content>
+                                  <Grid>
+                                    <Grid.Row>
+                                      <Grid.Column width="10">
+                                        <Card.Header>{review.decision}</Card.Header>
+                                        <Card.Description>{review.comment}</Card.Description>
+                                        <Card.Meta>{reviewer}</Card.Meta>
+                                      </Grid.Column>
+                                      <Grid.Column width="2">
+                                        <Icon
+                                          name="pencil square"
+                                          color="blue"
+                                          style={{ minWidth: 100 }}
+                                          onClick={() => setDecisionArea(review, summaryViewProps)}
+                                        />
+                                      </Grid.Column>
+                                    </Grid.Row>
+                                  </Grid>
+                                </Card.Content>
+                              </Card>
+                            </Grid.Row>
+                          )}
                         </Grid>
                       </Segment>
                     )
