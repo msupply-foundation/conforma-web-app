@@ -5,6 +5,7 @@ import { TemplatePermissions, User } from '../utils/types'
 type UserState = {
   currentUser: User | null
   templatePermissions: TemplatePermissions
+  isLoading: boolean
 }
 
 export type UserActions =
@@ -15,6 +16,10 @@ export type UserActions =
       type: 'setCurrentUser'
       newUser: User
       newPermissions: TemplatePermissions
+    }
+  | {
+      type: 'setLoading'
+      isLoading: boolean
     }
   | {
       type: 'setTemplatePermissions'
@@ -34,6 +39,12 @@ const reducer = (state: UserState, action: UserActions) => {
         currentUser: newUser,
         templatePermissions: newPermissions,
       }
+    case 'setLoading':
+      const { isLoading } = action
+      return {
+        ...state,
+        isLoading,
+      }
     case 'setTemplatePermissions':
       const { templatePermissions } = action
       return {
@@ -48,6 +59,7 @@ const reducer = (state: UserState, action: UserActions) => {
 const initialState: UserState = {
   currentUser: null,
   templatePermissions: {},
+  isLoading: false,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
@@ -75,19 +87,23 @@ export function UserProvider({ children }: UserProviderProps) {
     user: User | undefined = undefined,
     permissions: TemplatePermissions | undefined = undefined
   ) => {
+    dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem('persistJWT', JWT)
     if (!user || !permissions) fetchUserInfo({ dispatch: setUserState })
     else dispatch({ type: 'setCurrentUser', newUser: user, newPermissions: permissions })
   }
 
   const logout = () => {
+    dispatch({ type: 'setLoading', isLoading: true })
     localStorage.clear()
     dispatch({ type: 'resetCurrentUser' })
   }
 
   // Initial check for persisted user in local storage
   const JWT = localStorage.getItem('persistJWT')
-  if (JWT && !userState.currentUser) onLogin(JWT)
+  if (JWT && !userState.currentUser && !userState.isLoading) {
+    onLogin(JWT)
+  }
 
   // Return the state and reducer to the context (wrap around the children)
   return (

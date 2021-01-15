@@ -28,6 +28,8 @@ const fetchUserInfo = ({ dispatch }: SetUserInfoProps) => {
           newPermissions: templatePermissions,
         })
       }
+
+      dispatch({ type: 'setLoading', isLoading: false })
     })
     .catch((error) => {
       // TODO handle this properly

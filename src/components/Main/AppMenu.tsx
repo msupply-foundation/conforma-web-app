@@ -1,40 +1,40 @@
 import React from 'react'
-import { Menu } from 'semantic-ui-react'
+import { Header, Menu } from 'semantic-ui-react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { useUserState } from '../../contexts/UserState'
+import { TemplatesDetails } from '../../utils/types'
 
 interface AppMenuProps extends RouteComponentProps {
-  items: Array<Array<String>>
+  templatePermissions: TemplatesDetails
 }
 
-const AppMenu: React.FC<AppMenuProps> = (props: AppMenuProps) => {
-  const { pathname } = useRouter()
+const AppMenu: React.FC<AppMenuProps> = ({ templatePermissions }) => {
   const {
-    userState: { templatePermissions },
-  } = useUserState()
-
-  let menuItems = []
-  for (let i = 0; i < props.items.length; i++) {
-    if (props.items[i].length !== 2) {
-      console.error('AppMenu: items format should be ["name", "route"]')
-      break
-    }
-    const name = props.items[i][0]
-    const route = props.items[i][1]
-
-    menuItems.push(
-      <Menu.Item header key={`app_menu_${name}`} active={pathname === route} as={Link} to={route}>
-        {name}
-      </Menu.Item>
-    )
-  }
+    pathname,
+    query: { type },
+  } = useRouter()
 
   return (
-    <Menu fluid vertical tabular>
-      {menuItems}
-      <pre>{JSON.stringify(templatePermissions)}</pre>
-    </Menu>
+    templatePermissions && (
+      <Menu fluid inverted pointing secondary>
+        <Menu.Item
+          key={`app_menu_home`}
+          content={<Header as="h5" inverted icon="home" />}
+          active={pathname === '/'}
+          as={Link}
+          to={'/'}
+        />
+        {templatePermissions.map(({ name, code, permissions }) => (
+          <Menu.Item
+            key={`app_menu_${name}`}
+            content={<Header as="h5" inverted content={name} />}
+            active={type === code}
+            as={Link}
+            to={`/applications?type=${code}&user-role=${permissions[0]}`}
+          />
+        ))}
+      </Menu>
+    )
   )
 }
 
