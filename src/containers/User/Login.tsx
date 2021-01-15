@@ -119,7 +119,7 @@ const Login: React.FC = () => {
                   selection
                   options={orgList.map((org: OrganisationSimple, index) => ({
                     key: `org_${org.orgId}`,
-                    text: `${org.name} ${org?.userRole ? `(${org.userRole})` : ''}`,
+                    text: `${org.orgName} ${org?.userRole ? `(${org.userRole})` : ''}`,
                     value: index,
                   }))}
                   defaultValue={0}

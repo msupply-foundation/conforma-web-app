@@ -41,7 +41,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
         label={{ content: `${name} ${strings.LABEL_APPLICATIONS}`, color: 'grey' }}
       />
       <Header textAlign="center">
-        {currentUser?.organisation?.name || strings.TITLE_NO_ORGANISATION}
+        {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
       </Header>
       <Segment
         style={{

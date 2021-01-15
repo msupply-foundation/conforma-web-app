@@ -23,7 +23,7 @@ const UserArea: React.FC = () => {
         <Grid inverted>
           <Grid.Column style={{ width: '30%' }}>
             <Segment inverted>
-              {currentUser?.organisation?.name || strings.TITLE_NO_ORGANISATION}
+              {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
             </Segment>
           </Grid.Column>
           <Grid.Column style={{ width: '50%' }}>

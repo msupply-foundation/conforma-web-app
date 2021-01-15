@@ -231,7 +231,7 @@ const ApplicationPageWrapper: React.FC = () => {
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
       <ModalWarning showModal={showModal} />
       <Header textAlign="center">
-        {currentUser?.organisation?.name || strings.TITLE_NO_ORGANISATION}
+        {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
       </Header>
       <Grid
         stackable

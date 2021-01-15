@@ -24,6 +24,7 @@ const UserRegister: React.FC = () => {
       config.serverREST + '/login'
     )
       .then((loginResult) => {
+        console.log('loginResult', loginResult)
         const { JWT, user, templatePermissions } = loginResult
         onLogin(JWT, user, templatePermissions)
       })

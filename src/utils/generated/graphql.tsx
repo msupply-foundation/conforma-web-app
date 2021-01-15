@@ -90,6 +90,8 @@ export type Query = Node & {
   triggerQueues?: Maybe<TriggerQueuesConnection>;
   /** Reads and enables pagination through a set of `User`. */
   users?: Maybe<UsersConnection>;
+  /** Reads and enables pagination through a set of `UserOrgJoin`. */
+  userOrgJoins?: Maybe<UserOrgJoinsConnection>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations?: Maybe<UserOrganisationsConnection>;
   actionPlugin?: Maybe<ActionPlugin>;
@@ -580,6 +582,19 @@ export type QueryUsersArgs = {
   orderBy?: Maybe<Array<UsersOrderBy>>;
   condition?: Maybe<UserCondition>;
   filter?: Maybe<UserFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserOrgJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<UserOrgJoinsOrderBy>>;
+  condition?: Maybe<UserOrgJoinCondition>;
+  filter?: Maybe<UserOrgJoinFilter>;
 };
 
 
@@ -6053,6 +6068,135 @@ export type UsersEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `User` at the end of the edge. */
   node?: Maybe<User>;
+};
+
+/** Methods to use when ordering `UserOrgJoin`. */
+export enum UserOrgJoinsOrderBy {
+  Natural = 'NATURAL',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  UsernameAsc = 'USERNAME_ASC',
+  UsernameDesc = 'USERNAME_DESC',
+  FirstNameAsc = 'FIRST_NAME_ASC',
+  FirstNameDesc = 'FIRST_NAME_DESC',
+  LastNameAsc = 'LAST_NAME_ASC',
+  LastNameDesc = 'LAST_NAME_DESC',
+  EmailAsc = 'EMAIL_ASC',
+  EmailDesc = 'EMAIL_DESC',
+  DateOfBirthAsc = 'DATE_OF_BIRTH_ASC',
+  DateOfBirthDesc = 'DATE_OF_BIRTH_DESC',
+  PasswordHashAsc = 'PASSWORD_HASH_ASC',
+  PasswordHashDesc = 'PASSWORD_HASH_DESC',
+  OrgIdAsc = 'ORG_ID_ASC',
+  OrgIdDesc = 'ORG_ID_DESC',
+  OrgNameAsc = 'ORG_NAME_ASC',
+  OrgNameDesc = 'ORG_NAME_DESC',
+  UserRoleAsc = 'USER_ROLE_ASC',
+  UserRoleDesc = 'USER_ROLE_DESC',
+  LicenceNumberAsc = 'LICENCE_NUMBER_ASC',
+  LicenceNumberDesc = 'LICENCE_NUMBER_DESC',
+  AddressAsc = 'ADDRESS_ASC',
+  AddressDesc = 'ADDRESS_DESC'
+}
+
+/** A condition to be used against `UserOrgJoin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type UserOrgJoinCondition = {
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `username` field. */
+  username?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `firstName` field. */
+  firstName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `lastName` field. */
+  lastName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `email` field. */
+  email?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `dateOfBirth` field. */
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `passwordHash` field. */
+  passwordHash?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `orgId` field. */
+  orgId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `orgName` field. */
+  orgName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `userRole` field. */
+  userRole?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `licenceNumber` field. */
+  licenceNumber?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `address` field. */
+  address?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `UserOrgJoin` object types. All fields are combined with a logical ‘and.’ */
+export type UserOrgJoinFilter = {
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `username` field. */
+  username?: Maybe<StringFilter>;
+  /** Filter by the object’s `firstName` field. */
+  firstName?: Maybe<StringFilter>;
+  /** Filter by the object’s `lastName` field. */
+  lastName?: Maybe<StringFilter>;
+  /** Filter by the object’s `email` field. */
+  email?: Maybe<StringFilter>;
+  /** Filter by the object’s `dateOfBirth` field. */
+  dateOfBirth?: Maybe<DateFilter>;
+  /** Filter by the object’s `passwordHash` field. */
+  passwordHash?: Maybe<StringFilter>;
+  /** Filter by the object’s `orgId` field. */
+  orgId?: Maybe<IntFilter>;
+  /** Filter by the object’s `orgName` field. */
+  orgName?: Maybe<StringFilter>;
+  /** Filter by the object’s `userRole` field. */
+  userRole?: Maybe<StringFilter>;
+  /** Filter by the object’s `licenceNumber` field. */
+  licenceNumber?: Maybe<StringFilter>;
+  /** Filter by the object’s `address` field. */
+  address?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<UserOrgJoinFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<UserOrgJoinFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<UserOrgJoinFilter>;
+};
+
+/** A connection to a list of `UserOrgJoin` values. */
+export type UserOrgJoinsConnection = {
+  __typename?: 'UserOrgJoinsConnection';
+  /** A list of `UserOrgJoin` objects. */
+  nodes: Array<Maybe<UserOrgJoin>>;
+  /** A list of edges which contains the `UserOrgJoin` and cursor to aid in pagination. */
+  edges: Array<UserOrgJoinsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `UserOrgJoin` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type UserOrgJoin = {
+  __typename?: 'UserOrgJoin';
+  userId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  orgId?: Maybe<Scalars['Int']>;
+  orgName?: Maybe<Scalars['String']>;
+  userRole?: Maybe<Scalars['String']>;
+  licenceNumber?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+};
+
+/** A `UserOrgJoin` edge in the connection. */
+export type UserOrgJoinsEdge = {
+  __typename?: 'UserOrgJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `UserOrgJoin` at the end of the edge. */
+  node?: Maybe<UserOrgJoin>;
 };
 
 

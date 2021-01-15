@@ -1,5 +1,4 @@
 import {
-  Organisation,
   ReviewResponseDecision,
   TemplateElement,
   TemplateElementCategory,
@@ -48,6 +47,7 @@ export {
   UseGetApplicationProps,
   User,
   OrganisationSimple,
+  Organisation,
   LoginPayload,
 }
 
@@ -296,10 +296,15 @@ interface User {
   organisation?: Organisation
 }
 
-type OrganisationSimple = {
+interface OrganisationSimple {
   orgId: number
   userRole: string | null
-  name: string
+  orgName: string
+}
+
+interface Organisation extends OrganisationSimple {
+  licenceNumber: string
+  address: string
 }
 
 interface LoginPayload {
