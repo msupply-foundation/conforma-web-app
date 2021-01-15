@@ -35,6 +35,13 @@ interface RouterResult {
   location: any
 }
 
+/**
+ * @function: replaceSnakeCaseKeys
+ * For each filter key in the query (which will use snake-case: e.g. user-role)
+ * will convert to camelCase (e.g userRole) before returning query to components.
+ * - @param parsedQuery - URL query after parsed to object
+ * - @returns Object with all query {key: value} with keys in camelCase format.
+ */
 const replaceSnakeCaseKeys = (parsedQuery: { [key: string]: any }) => {
   if (Object.keys(parsedQuery).length === 0) return parsedQuery
   const replacedKeys = Object.keys(parsedQuery).map((key) => {
