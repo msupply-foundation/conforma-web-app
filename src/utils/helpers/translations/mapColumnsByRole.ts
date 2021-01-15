@@ -13,34 +13,34 @@ import COLUMNS_PER_ROLE from '../../model/columnsPerUserRole'
 
 interface ColumnDetails {
   headerName: string
-  filters: null | string | Array<string>
+  filters: Array<string>
   render?: Function
 }
 
 const allColumns = {
   LAST_ACTIVE_DATE: {
     headerName: APPLICATION_COLUMN.LAST_ACTIVE_DATE,
-    filters: 'last-active-date',
+    filters: ['last-active-date'],
   },
   DEADLINE_DATE: {
     headerName: APPLICATION_COLUMN.DEADLINE_DATE,
-    filters: 'deadline-date',
+    filters: ['deadline-date'],
   },
   APPLICATION_NAME: {
     headerName: APPLICATION_COLUMN.APPLICATION_NAME,
-    filters: 'search',
+    filters: ['search'],
   },
   APPLICANT: {
     headerName: APPLICATION_COLUMN.APPLICANT,
-    filters: 'applicant',
+    filters: ['applicant'],
   },
   COMPANY: {
     headerName: APPLICATION_COLUMN.COMPANY,
-    filters: 'org',
+    filters: ['org'],
   },
   CONSOLIDATOR: {
     headerName: APPLICATION_COLUMN.CONSOLIDATOR,
-    filters: 'consolidator',
+    filters: ['consolidator'],
   },
   STAGE: {
     headerName: APPLICATION_COLUMN.STAGE,
@@ -48,7 +48,7 @@ const allColumns = {
   },
   STATUS: {
     headerName: APPLICATION_COLUMN.STATUS,
-    filters: 'search',
+    filters: ['search'],
   },
   ACTIONABLE: {
     headerName: '',
