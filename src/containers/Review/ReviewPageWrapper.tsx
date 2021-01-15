@@ -97,7 +97,7 @@ const ReviewPageWrapper: React.FC = () => {
 
       <Form>
         {reviewSections.map((reviewSection) => {
-          const { id, firstName, lastName } = currentUser as User
+          const { userId: id, firstName, lastName } = currentUser as User
           const assignedToYou = reviewSection.assigned?.id === id
           return (
             <ReviewSection
