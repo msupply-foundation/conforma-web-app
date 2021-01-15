@@ -1,24 +1,15 @@
+import { APPLICATION_COLUMN, USER_ROLE } from '../../model'
+import COLUMNS_PER_ROLE from '../../model/columnsPerUserRole'
 /**
  * @function: mapColumnsByRole
- * Define a object with headers details from the current user Role to interact with applications.
- * Each entry in the headers object will define the header title, possible filter keys and a render
- * function (To be done in another issue) to return a component to be rendered in the cell of
- * the columns for this header = using the application data received in params.
+ * Map object with all columns to be displayed - based on the current user Role.
+ * In each column details has the defining of the header title, possible filter keys and
+ * a render function (To be done in another issue).
+ * The render function will return the component to be rendered in each cell in this column
+ * using the application in the row props.
  * - @param userRole - Current user role - as string (TODO: Use type)
  * - @returns Object with each Column details to construct header and rows of applications list.s
  */
-
-export enum APPLICATION_COLUMN {
-  LAST_ACTIVE_DATE = 'Last active date',
-  DEADLINE_DATE = 'Deadline date',
-  APPLICATION_NAME = 'Application name',
-  APPLICANT = 'Applicant',
-  COMPANY = 'Company',
-  CONSOLIDATOR = 'Consolidator',
-  STAGE = 'Stage',
-  STATUS = 'Status',
-  ACTIONABLE = 'Actionable',
-}
 
 interface ColumnDetails {
   headerName: string
@@ -26,91 +17,46 @@ interface ColumnDetails {
   render?: Function
 }
 
-const allColumns: Array<ColumnDetails> = [
-  {
+const allColumns = {
+  LAST_ACTIVE_DATE: {
     headerName: APPLICATION_COLUMN.LAST_ACTIVE_DATE,
     filters: 'last-active-date',
   },
-  {
+  DEADLINE_DATE: {
     headerName: APPLICATION_COLUMN.DEADLINE_DATE,
     filters: 'deadline-date',
   },
-  {
+  APPLICATION_NAME: {
     headerName: APPLICATION_COLUMN.APPLICATION_NAME,
     filters: 'search',
   },
-  {
+  APPLICANT: {
     headerName: APPLICATION_COLUMN.APPLICANT,
     filters: 'applicant',
   },
-  {
+  COMPANY: {
     headerName: APPLICATION_COLUMN.COMPANY,
     filters: 'org',
   },
-  {
+  CONSOLIDATOR: {
     headerName: APPLICATION_COLUMN.CONSOLIDATOR,
     filters: 'consolidator',
   },
-  {
+  STAGE: {
     headerName: APPLICATION_COLUMN.STAGE,
     filters: ['search', 'stage'],
   },
-  {
+  STATUS: {
     headerName: APPLICATION_COLUMN.STATUS,
     filters: 'search',
   },
-  {
+  ACTIONABLE: {
     headerName: '',
     filters: ['search', 'action'],
   },
-]
-
-interface ColumnsPerRole {
-  [role: string]: Array<string>
 }
 
-const columnsPerRole: ColumnsPerRole = {
-  applicant: [
-    APPLICATION_COLUMN.LAST_ACTIVE_DATE,
-    APPLICATION_COLUMN.DEADLINE_DATE,
-    APPLICATION_COLUMN.APPLICATION_NAME,
-    APPLICATION_COLUMN.STAGE,
-    APPLICATION_COLUMN.STATUS,
-    APPLICATION_COLUMN.ACTIONABLE,
-  ],
-  reviewer1: [
-    APPLICATION_COLUMN.LAST_ACTIVE_DATE,
-    APPLICATION_COLUMN.APPLICATION_NAME,
-    APPLICATION_COLUMN.APPLICANT,
-    APPLICATION_COLUMN.CONSOLIDATOR,
-    APPLICATION_COLUMN.STAGE,
-    APPLICATION_COLUMN.STATUS,
-  ],
-  reviewer2: [
-    APPLICATION_COLUMN.LAST_ACTIVE_DATE,
-    APPLICATION_COLUMN.APPLICATION_NAME,
-    APPLICATION_COLUMN.APPLICANT,
-    APPLICATION_COLUMN.CONSOLIDATOR,
-    APPLICATION_COLUMN.STAGE,
-    APPLICATION_COLUMN.STATUS,
-  ],
-  supervisor: [
-    APPLICATION_COLUMN.LAST_ACTIVE_DATE,
-    APPLICATION_COLUMN.APPLICATION_NAME,
-    APPLICATION_COLUMN.APPLICANT,
-    APPLICATION_COLUMN.STATUS,
-  ],
-  consolidator: [
-    APPLICATION_COLUMN.LAST_ACTIVE_DATE,
-    APPLICATION_COLUMN.APPLICATION_NAME,
-    APPLICATION_COLUMN.APPLICANT,
-    APPLICATION_COLUMN.STATUS,
-  ],
-}
-
-export default (userRole: string): Array<ColumnDetails> => {
-  const columns: Array<ColumnDetails> = allColumns.filter(({ headerName }) =>
-    columnsPerRole[userRole] ? columnsPerRole[userRole].includes(headerName) : false
-  )
+export default (userRole: USER_ROLE): Array<ColumnDetails> => {
+  const columns: Array<ColumnDetails> = COLUMNS_PER_ROLE[userRole].map((key) => allColumns[key])
   return columns
 }

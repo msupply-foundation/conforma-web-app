@@ -7,9 +7,9 @@ import useListApplication from '../../utils/hooks/useListApplications'
 import strings from '../../utils/constants'
 import findUserRole from '../../utils/helpers/translations/findUserRole'
 import { useUserState } from '../../contexts/UserState'
-import mapColumnsByRole, {
-  APPLICATION_COLUMN,
-} from '../../utils/helpers/translations/mapColumnsByRole'
+import mapColumnsByRole from '../../utils/helpers/translations/mapColumnsByRole'
+import USER_ROLE from '../../utils/model/userRole'
+import APPLICATION_COLUMN from '../../utils/model/applicationColumn'
 
 const ApplicationList: React.FC = () => {
   const { query, push } = useRouter()
@@ -32,7 +32,7 @@ const ApplicationList: React.FC = () => {
           if (newRole) push(`/applications?type=${type}&user-role=${newRole}`)
         }
       } else {
-        const columns = mapColumnsByRole(userRole)
+        const columns = mapColumnsByRole(userRole as USER_ROLE)
         setHeaders(columns.map(({ headerName }) => headerName))
       }
     }

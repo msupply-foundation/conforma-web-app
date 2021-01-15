@@ -1,4 +1,5 @@
 import { PermissionPolicyType } from '../../generated/graphql'
+import { UserRoles } from '../../types'
 
 /**
  * @function: findUserRole
@@ -7,11 +8,6 @@ import { PermissionPolicyType } from '../../generated/graphql'
  * - @param permissions - Array with group of permissions the user have for a template
  * - @returns UserRole deduced from group of permissions or undefined.
  */
-
-// TODO: Change to use type instead
-interface UserRoles {
-  [role: string]: Array<PermissionPolicyType>
-}
 
 const userRoles: UserRoles = {
   applicant: [PermissionPolicyType.Apply],
@@ -25,10 +21,12 @@ export default (permissions: Array<PermissionPolicyType>): string | undefined =>
   const comparePermissions = permissions.map((permissionType) => permissionType.toUpperCase())
 
   // Compare array of permission checking if are the same
-  const matchingRoles = Object.keys(userRoles).filter((type) => {
-    const difference = userRoles[type].filter((x) => !comparePermissions.includes(x))
+  const matching = Object.entries(userRoles).filter(([role, permissionList]) => {
+    console.log('role', role)
+
+    const difference = permissionList.filter((x) => !comparePermissions.includes(x))
     return difference.length === 0
   })
-  console.log('Possible user-roles:', matchingRoles)
-  return matchingRoles.length > 0 ? matchingRoles[0] : undefined
+  console.log('Possible user-roles:', Object.keys(matching))
+  return matching.length > 0 ? Object.keys(matching)[0] : undefined
 }
