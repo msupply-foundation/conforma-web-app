@@ -44,7 +44,6 @@ const Login: React.FC = () => {
       }
     } else {
       // Organisation login
-      const { userId } = user as User
       const { orgId } = orgList[selectedOrgIndex] as OrganisationSimple
       const authHeader = { Authorization: 'Bearer ' + JWT }
       const verifyOrgResult = await attemptLogin({ orgId }, loginOrgURL, authHeader)
