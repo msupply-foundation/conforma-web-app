@@ -37,13 +37,11 @@ interface RouterResult {
 
 const replaceSnakeCaseKeys = (parsedQuery: { [key: string]: any }) => {
   if (Object.keys(parsedQuery).length === 0) return parsedQuery
-  const replacedHifenKeys = Object.keys(parsedQuery).map((key) => {
-    const convertedKey = key.replace(/-([a-z])/g, function (m, w) {
-      return w.toUpperCase()
-    })
+  const replacedKeys = Object.keys(parsedQuery).map((key) => {
+    const convertedKey = key.replace(/-([a-z])/g, (m, w) => w.toUpperCase())
     return { [convertedKey]: parsedQuery[key] }
   })
-  return replacedHifenKeys.reduce((a, b) => Object.assign({}, a, b))
+  return replacedKeys.reduce((a, b) => Object.assign({}, a, b))
 }
 
 export function useRouter(): RouterResult {
@@ -57,7 +55,7 @@ export function useRouter(): RouterResult {
 
   return useMemo(() => {
     // Convert string to object, then replace snake with camelCase
-    const queryFilters = replaceHifenKeys(queryString.parse(location.search))
+    const queryFilters = replaceSnakeCaseKeys(queryString.parse(location.search))
 
     return {
       // For convenience add push(), replace(), pathname at top level
