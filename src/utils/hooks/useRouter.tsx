@@ -35,7 +35,7 @@ interface RouterResult {
   location: any
 }
 
-const replaceHifenKeys = (parsedQuery: { [key: string]: any }) => {
+const replaceSnakeCaseKeys = (parsedQuery: { [key: string]: any }) => {
   if (Object.keys(parsedQuery).length === 0) return parsedQuery
   const replacedHifenKeys = Object.keys(parsedQuery).map((key) => {
     const convertedKey = key.replace(/-([a-z])/g, function (m, w) {
