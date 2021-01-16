@@ -94,9 +94,8 @@ export function UserProvider({ children }: UserProviderProps) {
   }
 
   const logout = () => {
-    dispatch({ type: 'setLoading', isLoading: true })
     localStorage.clear()
-    dispatch({ type: 'resetCurrentUser' })
+    window.location.href = '/login'
   }
 
   // Initial check for persisted user in local storage

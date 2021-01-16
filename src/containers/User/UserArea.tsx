@@ -13,11 +13,6 @@ const UserArea: React.FC = () => {
   } = useUserState()
   const { error, loading, filteredTemplates } = useListTemplates(templatePermissions, isLoading)
 
-  const handleLogOut = async () => {
-    await logout()
-    window.location.href = '/login'
-  }
-
   return (
     <Sticky>
       <Segment inverted vertical>
@@ -40,7 +35,7 @@ const UserArea: React.FC = () => {
                   {currentUser?.firstName}
                   <UserSelection />
                 </Label>
-                <Button basic color="blue" onClick={handleLogOut}>
+                <Button basic color="blue" onClick={() => logout()}>
                   {strings.LABEL_LOG_OUT}
                 </Button>
               </Segment>
