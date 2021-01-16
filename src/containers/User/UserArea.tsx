@@ -3,7 +3,6 @@ import { Button, Grid, Label, Message, Segment, Sticky } from 'semantic-ui-react
 import strings from '../../utils/constants'
 import { useUserState } from '../../contexts/UserState'
 import UserSelection from './UserSelection'
-import { useRouter } from '../../utils/hooks/useRouter'
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import { AppMenu } from '../../components'
 
@@ -16,7 +15,6 @@ const UserArea: React.FC = () => {
 
   const handleLogOut = async () => {
     await logout()
-    // TODO: Force full application reload on log out
     window.location.href = '/login'
   }
 
