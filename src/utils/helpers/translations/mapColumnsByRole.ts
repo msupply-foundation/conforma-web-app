@@ -2,6 +2,9 @@ import { APPLICATION_COLUMN, USER_ROLE } from '../../model'
 import COLUMNS_PER_ROLE from '../../model/columnsPerUserRole'
 import { ColumnDetails } from '../../types'
 import ApplicationNameCell from '../../../components/List/ApplicationNameCell'
+import StageCell from '../../../components/List/StageCell'
+import StatusCell from '../../../components/List/StatusCell'
+import OutcomeCell from '../../../components/List/OutcomeCell'
 
 /**
  * @function: mapColumnsByRole
@@ -21,44 +24,44 @@ const allColumns: { [key in APPLICATION_COLUMN]: ColumnDetails } = {
     ColumnComponent: ApplicationNameCell,
   },
   DEADLINE_DATE: {
-    headerName: APPLICATION_COLUMN.DEADLINE_DATE,
+    headerName: 'Deadline date',
     filters: ['deadline-date'],
     ColumnComponent: ApplicationNameCell,
   },
   APPLICATION_NAME: {
-    headerName: APPLICATION_COLUMN.APPLICATION_NAME,
+    headerName: 'Name',
     filters: ['search'],
     ColumnComponent: ApplicationNameCell,
   },
   APPLICANT: {
-    headerName: APPLICATION_COLUMN.APPLICANT,
+    headerName: 'Applicant',
     filters: ['applicant'],
     ColumnComponent: ApplicationNameCell,
   },
-  COMPANY: {
-    headerName: APPLICATION_COLUMN.COMPANY,
+  ORGANISATION: {
+    headerName: 'Organisation',
     filters: ['org'],
     ColumnComponent: ApplicationNameCell,
   },
   CONSOLIDATOR: {
-    headerName: APPLICATION_COLUMN.CONSOLIDATOR,
+    headerName: 'Consolidator',
     filters: ['consolidator'],
     ColumnComponent: ApplicationNameCell,
   },
   STAGE: {
-    headerName: APPLICATION_COLUMN.STAGE,
+    headerName: 'Stage',
     filters: ['search', 'stage'],
-    ColumnComponent: ApplicationNameCell,
+    ColumnComponent: StageCell,
   },
   STATUS: {
-    headerName: APPLICATION_COLUMN.STATUS,
-    filters: ['search'],
-    ColumnComponent: ApplicationNameCell,
-  },
-  ACTIONABLE: {
-    headerName: '',
+    headerName: 'Status',
     filters: ['search', 'action'],
-    ColumnComponent: ApplicationNameCell,
+    ColumnComponent: StatusCell,
+  },
+  OUTCOME: {
+    headerName: 'Outcome',
+    filters: ['outcome'],
+    ColumnComponent: OutcomeCell,
   },
 }
 

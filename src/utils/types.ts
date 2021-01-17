@@ -15,6 +15,7 @@ export {
   ApplicationElementStates,
   ApplicationStages,
   AssignmentDetails,
+  CellProps,
   ColumnDetails,
   ColumnsPerRole,
   CurrentPage,
@@ -85,6 +86,11 @@ interface AssignmentDetails {
   review?: ReviewDetails
   questions: ReviewQuestion[]
 }
+
+interface CellProps {
+  application: ApplicationDetails
+}
+
 interface ColumnDetails {
   headerName: string
   filters: Array<string>
