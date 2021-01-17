@@ -27,6 +27,8 @@ export default (permissions: Array<PermissionPolicyType>): string | undefined =>
     const difference = permissionList.filter((x) => !comparePermissions.includes(x))
     return difference.length === 0
   })
-  console.log('Possible user-roles:', Object.keys(matching))
-  return matching.length > 0 ? Object.keys(matching)[0] : undefined
+
+  const filteredRoles = matching.map(([role, permissions]) => role)
+  console.log('Possible user-roles:', filteredRoles)
+  return filteredRoles.length > 0 ? filteredRoles[0] : undefined
 }
