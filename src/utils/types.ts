@@ -15,6 +15,7 @@ export {
   ApplicationElementStates,
   ApplicationStages,
   AssignmentDetails,
+  ColumnDetails,
   ColumnsPerRole,
   CurrentPage,
   ElementPluginParameterValue,
@@ -83,6 +84,11 @@ interface AssignmentDetails {
   id: number
   review?: ReviewDetails
   questions: ReviewQuestion[]
+}
+interface ColumnDetails {
+  headerName: string
+  filters: Array<string>
+  ColumnComponent: React.FunctionComponent<any>
 }
 
 type ColumnsPerRole = {
