@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Table, List, Label, Segment, Button } from 'semantic-ui-react'
+import {
+  Container,
+  Table,
+  List,
+  Label,
+  Header,
+  Progress,
+  Message,
+  Segment,
+  Button,
+} from 'semantic-ui-react'
 import { Loading, FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useListApplication from '../../utils/hooks/useListApplications'
@@ -11,6 +21,7 @@ import { ColumnDetails } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { useListState } from '../../contexts/ListState'
 import { Link } from 'react-router-dom'
+import messages from '../../utils/messages'
 
 const ApplicationList: React.FC = () => {
   const { query, push } = useRouter()
@@ -64,32 +75,39 @@ const ApplicationList: React.FC = () => {
           content={strings.BUTTON_APPLICATION_NEW}
         />
       </Segment>
-
-      {userRole && columns && applications && applications.length > 0 && (
-        // TODO: Create function on click (of a pre-defined group of sortable columns) in the header.
-        // After a click on the header the URL updates and a new query to GraphQL using sorted columns
-        <Table sortable stackable selectable>
-          <Table.Header>
-            <Table.Row>
-              {columns.map(({ headerName }) => (
-                <Table.HeaderCell key={`ApplicationList-header-${headerName}`}>
-                  {headerName}
-                </Table.HeaderCell>
-              ))}
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {applications.map((application, index) => (
-              <Table.Row key={`ApplicationList-application-${application.serial}`}>
-                {columns.map(({ headerName, ColumnComponent }) => (
-                  <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
-                    <ColumnComponent application={application} />
-                  </Table.Cell>
+      {!userRole ? (
+        <Message color="red" header={messages.APPLICATIONS_MISSING_USER_ROLE} />
+      ) : (
+        columns &&
+        applications && (
+          // TODO: Create function on click (of a pre-defined group of sortable columns) in the header.
+          // After a click on the header the URL updates and a new query to GraphQL using sorted columns
+          <Table sortable stackable selectable>
+            <Table.Header>
+              <Table.Row>
+                {columns.map(({ headerName }) => (
+                  <Table.HeaderCell key={`ApplicationList-header-${headerName}`}>
+                    {headerName}
+                  </Table.HeaderCell>
                 ))}
               </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
+            </Table.Header>
+            <Table.Body>
+              {applications.map((application, index) => (
+                <Table.Row key={`ApplicationList-application-${application.serial}`}>
+                  {columns.map(({ headerName, ColumnComponent }) => (
+                    <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
+                      <ColumnComponent application={application} />
+                    </Table.Cell>
+                  ))}
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        )
+      )}
+      {applications && applications.length === 0 && (
+        <Message floating color="yellow" header={messages.APPLICATIONS_LIST_EMPTY} />
       )}
     </Container>
   )

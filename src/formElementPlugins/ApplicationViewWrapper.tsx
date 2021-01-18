@@ -9,11 +9,9 @@ import {
   ResponseFull,
   ElementPluginParameters,
   ElementPluginParameterValue,
-  ValidateObject,
-  User,
 } from '../utils/types'
 import { useUserState } from '../contexts/UserState'
-import { defaultValidate } from './defaultValidate'
+import validate from './defaultValidate'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { Form } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
@@ -36,14 +34,13 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const [responseMutation] = useUpdateResponseMutation()
   const { setApplicationState } = useApplicationState()
-  const [pluginMethods, setPluginMethods] = useState<ValidateObject>({
-    validate: (validationExpress, validationMessage, evaluatorParameters) =>
-      console.log('notLoaded'),
-  })
+
   const {
     userState: { currentUser },
   } = useUserState()
-  const [validationState, setValidationState] = useState<ValidationState>({} as ValidationState)
+  const [validationState, setValidationState] = useState<ValidationState>({
+    isValid: null,
+  })
   const [evaluatedParameters, setEvaluatedParameters] = useState({})
 
   // This value prevents the plugin component from rendering until parameters have been evaluated, otherwise React throws an error when trying to pass an Object in as a prop value
@@ -55,15 +52,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const dynamicExpressions =
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
   const [value, setValue] = useState<string>(initialValue?.text)
-
-  useEffect(() => {
-    // Runs once on component mount
-    if (!pluginCode) return
-    // TODO use plugin-specific validation method if defined
-    setPluginMethods({
-      validate: defaultValidate,
-    })
-  }, [])
 
   // Update dynamic parameters when responses change
   useEffect(() => {
@@ -88,7 +76,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       return { isValid: true }
     }
 
-    const validationResult: ValidationState = await pluginMethods.validate(
+    const validationResult: ValidationState = await validate(
       validationExpression,
       validationMessage as string,
       { objects: { responses, currentUser }, APIfetch: fetch }
@@ -103,16 +91,36 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       type: 'setElementTimestamp',
       timestampType: 'elementLostFocusTimestamp',
     })
-    const validationResult: ValidationState = await onUpdate(jsonValue.text)
-    if (jsonValue.text !== undefined)
+
+    if (!jsonValue.customValidation) {
+      // Validate and Save response -- generic
+      const validationResult: ValidationState = await onUpdate(jsonValue.text)
+      if (jsonValue.text !== undefined)
+        await responseMutation({
+          variables: {
+            id: currentResponse?.id as number,
+            value: jsonValue,
+            isValid: validationResult.isValid,
+          },
+        })
+      if (jsonValue.text === allResponses[code]?.text) {
+        setApplicationState({
+          type: 'setElementTimestamp',
+          timestampType: 'elementsStateUpdatedTimestamp',
+        })
+      }
+    } else {
+      // Save response for plugins with internal validation
+      const { isValid, validationMessage } = jsonValue.customValidation
+      setValidationState({ isValid, validationMessage })
+      delete jsonValue.customValidation // Don't want to save this field
       await responseMutation({
         variables: {
           id: currentResponse?.id as number,
           value: jsonValue,
-          isValid: validationResult.isValid,
+          isValid,
         },
       })
-    if (jsonValue.text == allResponses[code]?.text) {
       setApplicationState({
         type: 'setElementTimestamp',
         timestampType: 'elementsStateUpdatedTimestamp',
@@ -141,6 +149,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       setIsActive={setIsActive}
       Markdown={Markdown}
       validationState={validationState || { isValid: true }}
+      validate={validate}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
     />
   )
