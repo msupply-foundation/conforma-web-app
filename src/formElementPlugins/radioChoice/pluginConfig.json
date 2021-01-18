@@ -1,0 +1,8 @@
+{
+  "isCore": true,
+  "code": "radioChoice",
+  "displayName": "Radio Button Selector",
+  "dynamicParameters": ["label", "options"],
+  "//": "categories types: 'Input'|'Informative'",
+  "category": "Input"
+}

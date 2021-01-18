@@ -61,7 +61,7 @@ _For displaying blocks of text in the application_
 
 ---
 
-### Radio Buttons _(not yet implemented)_
+### Radio Buttons
 
 - **type/code**: `radioChoice`
 - **category**: `Question`
@@ -74,7 +74,6 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 - **description**: `string` -- as above [Optional]
 - **options**: `array[string]` -- the options for the radio buttons
 - **default**: `string`/`number` -- the value initially selected before user input. If `number`, refers to the index of the options array. If not provided, no options will be pre-selected.
-- **hasOther**: `boolean` -- if `true`, an additional text-entry field is provided so the user can add their own alternative option _(may not implement in first iteration but good to have the option in future)_
 
 #### Response type
 
@@ -90,7 +89,7 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 
 ---
 
-### Drop-down Selector _(not yet implemented)_
+### Drop-down Selector
 
 - **type/code**: `dropdownChoice`
 - **category**: `Question`
@@ -103,6 +102,7 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 - **description**: `string` -- as above [Optional]
 - **options**: `array[string]` -- as above
 - **default**: `string`/`number` -- if not provided, defaults to index 0.
+- **hasOther**: `boolean` -- if `true`, an additional text-entry field is provided so the user can add their own alternative option _(may not implement in first iteration but good to have the option in future)_
 
 #### Response type
 
