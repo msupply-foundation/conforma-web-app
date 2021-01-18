@@ -38,6 +38,7 @@ export default gql`
         stage
         stageId
         stageNumber
+        statusHistoryTimeCreated
       }
     }
   }

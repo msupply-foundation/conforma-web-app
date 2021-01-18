@@ -10,10 +10,11 @@ import { SummaryViewWrapperProps } from '../formElementPlugins/types'
 import { APPLICATION_COLUMN, USER_ROLE } from './model'
 
 export {
-  ApplicationState,
   ApplicationDetails,
   ApplicationElementStates,
+  ApplicationStage,
   ApplicationStages,
+  ApplicationState,
   AssignmentDetails,
   CellProps,
   ColumnDetails,
@@ -57,30 +58,39 @@ export {
   UserRoles,
 }
 
+interface ApplicationDetails {
+  id: number
+  type: string
+  serial: string
+  name: string
+  // stage: string
+  // status: string
+  outcome: string
+  isLinear: boolean
+  stage?: ApplicationStage
+}
+
+interface ApplicationElementStates {
+  [key: string]: ElementState
+}
+
+interface ApplicationStage {
+  id: number
+  name: string
+  status: string
+  date: Date
+}
+interface ApplicationStages {
+  stages: StageDetails[]
+  submissionMessage: string
+}
+
 interface ApplicationState {
   id: number | null
   serialNumber: string | null
   inputElementsActivity: ElementsActivityState
 }
 
-interface ApplicationDetails {
-  id: number
-  type: string
-  serial: string
-  name: string
-  stage: string
-  status: string
-  outcome: string
-  isLinear: boolean
-}
-
-interface ApplicationElementStates {
-  [key: string]: ElementState
-}
-interface ApplicationStages {
-  stages: StageDetails[]
-  submissionMessage: string
-}
 interface AssignmentDetails {
   id: number
   review?: ReviewDetails
