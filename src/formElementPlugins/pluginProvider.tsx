@@ -52,6 +52,13 @@ class pluginProvider {
         folderName: 'radioChoice',
         category: 'Input',
       },
+      checkbox: {
+        code: 'checkbox',
+        isCore: true,
+        displayName: 'Checkbox selectors',
+        folderName: 'checkbox',
+        category: 'Input',
+      },
     }
   }
 

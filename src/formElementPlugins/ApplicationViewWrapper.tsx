@@ -54,7 +54,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const dynamicParameters = config?.dynamicParameters
   const dynamicExpressions =
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
-  const [value, setValue] = useState<string>(initialValue?.text)
+  const [value, setValue] = useState<any>(initialValue?.text)
 
   useEffect(() => {
     // Runs once on component mount

@@ -1,7 +1,7 @@
 {
   "isCore": true,
-  "code": "radioChoice",
-  "displayName": "Radio Button Selector",
+  "code": "checkbox",
+  "displayName": "Checkbox selectors",
   "dynamicParameters": ["label", "description", "options"],
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"
