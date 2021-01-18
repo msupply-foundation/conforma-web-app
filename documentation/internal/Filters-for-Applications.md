@@ -368,7 +368,7 @@ When combined filters are used (with separator `&`) the query will be using the 
 - Consolidator
 - Sections columns:
   - Section title
-  - _Assigned to you_ / _Assigned to A Nother_
+  - _Assigned to you_ / _Assigned to another_
   - Progress
 
 ### Consolidator
