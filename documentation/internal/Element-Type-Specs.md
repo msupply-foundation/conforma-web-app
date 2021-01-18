@@ -104,7 +104,7 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 - **description\***: `string` -- as above [Optional]
 - **options\***: `array[string]` -- as above
 - **default**: `string`/`number` -- if not provided, defaults to index 0.
-- **hasOther**: `boolean` -- if `true`, an additional text-entry field is provided so the user can add their own alternative option _(may not implement in first iteration but good to have the option in future)_
+- **hasOther**: `boolean` -- if `true`, an additional text-entry field is provided so the user can add their own alternative option _(not yet implemented)_
 
 #### Response type
 
@@ -130,37 +130,5 @@ _For specifying where the list of questions is broken into UI pages/steps. The *
 
 - ~~**pageBreakValidityCheck**: `boolean` -- If `true`, the user cannot proceed to the next page unless _all_ questions on the current page have passed validation~~
   - ~~default: `false`~~
-
----
-
-### Checkboxes
-
-- **type/code**: `checkbox`
-- **category**: `Question`
-
-_One or more checkboxes in a group -- can select multiple options_
-
-#### Input parameters
-
-- **label\***: `string` -- as above
-- **description\***: `string` -- as above [Optional]
-- **options\***: `array[string OR objects]` -- an array of objects that each represent one checkbox. If strings, they represent the checkbox labels. If object, properties are:
-  - `label`: `string` -- the text for the checkbox shown in the UI
-  - `value`: `string` -- text that gets stored if selected
-  - `selected`: `boolean` -- the initial state of the checkbox (if `null`, checkbox will be displayed in "indeterminate" state)
-- **type**: `checkbox | toggle | slider` -- (default: `checkbox`). Changes the UI display to a toggle switch or a slider switch.
-- **layout**: `inline | block` -- (default: `block`) If "inline", multiple checkboxes are laid out horizontally (space depending)
-
-#### Response type
-
-```
-{
-  optionIndex: <integer> (index from the options array)
-  text: <string> (actual text from options array)
-  reference?: To-do: some way to link the response to an entity in database (e.g. an organisation)
-  -- @nmadruga maybe you have an idea of what we'd need here
-}
-
-```
 
 ---
