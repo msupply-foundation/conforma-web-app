@@ -11,7 +11,7 @@ The list of applications to display for the current user is based on:
 The user has access to links to see each type of application list from the top menu or in their dashboard - the link will set basic filters in the main URL route of the list: `/applications`. For example the list to see the Application of type "Drug Registration" would take the user to `/applications?type=user-registration&user-role=applicant`.
 
 The `type` is the template code for the applications type, also displayed in the header of the Applications list.
-The `user-role` is used to build how the columns and rows should be displayed. The user-role is deduced from the permissions that the current user have to view this application type. In this example the user has **applicant** role by what was set in their permissions.
+The `user-role` is used to determine how the columns and rows should be displayed. The user-role is deduced from the permissions that the current user has to view this application type. In this example the user has **applicant** role by what was set in their permissions.
 
 ## Table of contents
 
@@ -376,7 +376,7 @@ A few filters should automatically used (example page number) and would be in th
 - Consolidator
 - Sections columns:
   - Section title
-  - _Assigned to you_ / _Assigned to A Nother_
+  - _Assigned to you_ / _Assigned to another_
   - Progress
 
 ### Consolidator
