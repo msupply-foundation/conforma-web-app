@@ -1,10 +1,17 @@
+import {
+  ApplicantCell,
+  ApplicationNameCell,
+  ConsolidatorCell,
+  DeadlineCell,
+  LastActiveDateCell,
+  OrganisationCell,
+  OutcomeCell,
+  StageCell,
+  StatusCell,
+} from '../../../components/List'
 import { APPLICATION_COLUMN, USER_ROLE } from '../../model'
 import COLUMNS_PER_ROLE from '../../model/columnsPerUserRole'
 import { ColumnDetails } from '../../types'
-import ApplicationNameCell from '../../../components/List/ApplicationNameCell'
-import StageCell from '../../../components/List/StageCell'
-import StatusCell from '../../../components/List/StatusCell'
-import OutcomeCell from '../../../components/List/OutcomeCell'
 
 /**
  * @function: mapColumnsByRole
@@ -21,12 +28,12 @@ const allColumns: { [key in APPLICATION_COLUMN]: ColumnDetails } = {
   LAST_ACTIVE_DATE: {
     headerName: 'Last active date',
     filters: ['last-active-date'],
-    ColumnComponent: ApplicationNameCell,
+    ColumnComponent: LastActiveDateCell,
   },
   DEADLINE_DATE: {
     headerName: 'Deadline date',
     filters: ['deadline-date'],
-    ColumnComponent: ApplicationNameCell,
+    ColumnComponent: DeadlineCell,
   },
   APPLICATION_NAME: {
     headerName: 'Name',
@@ -36,17 +43,17 @@ const allColumns: { [key in APPLICATION_COLUMN]: ColumnDetails } = {
   APPLICANT: {
     headerName: 'Applicant',
     filters: ['applicant'],
-    ColumnComponent: ApplicationNameCell,
+    ColumnComponent: ApplicantCell,
   },
   ORGANISATION: {
     headerName: 'Organisation',
     filters: ['org'],
-    ColumnComponent: ApplicationNameCell,
+    ColumnComponent: OrganisationCell,
   },
   CONSOLIDATOR: {
     headerName: 'Consolidator',
     filters: ['consolidator'],
-    ColumnComponent: ApplicationNameCell,
+    ColumnComponent: ConsolidatorCell,
   },
   STAGE: {
     headerName: 'Stage',

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Grid, Icon, Label, Progress, Segment } from 'semantic-ui-react'
+import { Grid, Icon, Label, Progress } from 'semantic-ui-react'
 import { ApplicationStatus } from '../../utils/generated/graphql'
-import { CellProps } from '../../utils/types'
+import { ApplicationStage, CellProps } from '../../utils/types'
 
 enum ACTIONS {
   EDIT_DRAFT = 'Edit draft',
@@ -11,7 +11,8 @@ enum ACTIONS {
 }
 
 const StatusCell: React.FC<CellProps> = ({ application }) => {
-  const { serial, status } = application
+  const { serial, stage } = application
+  const status = stage?.status
   switch (status) {
     case ApplicationStatus.Completed:
     case ApplicationStatus.Submitted:
@@ -37,8 +38,12 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
       return <Link to={`/application/${serial}/renew`}>{ACTIONS.RENEW}</Link> // TODO: Add Renew page (and logic)
     case ApplicationStatus.ChangesRequired:
       return <Link to={`/application/${serial}`}>{ACTIONS.MAKE_CHANGES}</Link> // TODO: Show number of responses to make changes
+    case undefined:
+      console.log('Problem to get status of application serial ', serial)
+      return null
+    default:
+      return <Label>{stage?.status}</Label>
   }
-  return <Label>{application.status}</Label>
 }
 
 export default StatusCell
