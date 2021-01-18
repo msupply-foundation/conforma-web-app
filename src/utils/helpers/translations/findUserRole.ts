@@ -22,12 +22,10 @@ export default (permissions: Array<PermissionPolicyType>): string | undefined =>
 
   // Compare array of permission checking if are the same
   const matching = Object.entries(userRoles).filter(([role, permissionList]) => {
-    console.log('role', role)
-
-    const difference = permissionList.filter((x) => !comparePermissions.includes(x))
-    return difference.length === 0
+    const common = permissionList.filter((permission) => comparePermissions.includes(permission))
+    return common.length > 0
   })
-  const filteredRoles = matching.map(([role, permissions]) => role)
+  const filteredRoles = matching.map(([role]) => role)
   console.log('Possible user-roles:', filteredRoles)
-  return matching.length > 0 ? filteredRoles[0] : undefined
+  return filteredRoles?.[0] || undefined
 }
