@@ -10,7 +10,7 @@ import {
   StageCell,
   StatusCell,
 } from '../../../components/List'
-import { APPLICATION_COLUMN, USER_ROLES } from '../../data'
+import { APPLICATION_COLUMNS, USER_ROLES } from '../../data'
 import COLUMNS_PER_ROLE from '../../data/columnsPerUserRole'
 import { ColumnDetails } from '../../types'
 
@@ -25,7 +25,7 @@ import { ColumnDetails } from '../../types'
  * - @returns Object with each Column details to construct header and rows of applications list.s
  */
 
-const allColumns: { [key in APPLICATION_COLUMN]: ColumnDetails } = {
+const allColumns: { [key in APPLICATION_COLUMNS]: ColumnDetails } = {
   SERIAL_NUMBER: {
     headerName: 'Serial number',
     filters: ['serial'],

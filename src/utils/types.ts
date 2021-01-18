@@ -7,7 +7,7 @@ import {
 
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SummaryViewWrapperProps } from '../formElementPlugins/types'
-import { APPLICATION_COLUMN, USER_ROLES } from './data'
+import { APPLICATION_COLUMNS, USER_ROLES } from './data'
 
 export {
   ApplicationDetails,
@@ -101,7 +101,7 @@ interface ColumnDetails {
 }
 
 type ColumnsPerRole = {
-  [role in USER_ROLES]: Array<APPLICATION_COLUMN>
+  [role in USER_ROLES]: Array<APPLICATION_COLUMNS>
 }
 
 interface ContextApplicationState {
