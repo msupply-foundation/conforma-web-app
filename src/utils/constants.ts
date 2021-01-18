@@ -32,6 +32,7 @@ export default {
   LABEL_LOGIN_USERNAME: 'Username',
   LABEL_LOG_IN: 'Log in',
   LABEL_LOG_OUT: 'Log out',
+  LABEL_PROCEED: 'Proceed',
   LABEL_PROCESSING: 'Processing...',
   LABEL_REVIEW: 'Review',
   LABEL_REVIEW_APPROVE: 'Approve',

@@ -6,6 +6,7 @@ import { Form, Button, Container, Grid, Segment, Header, Dropdown } from 'semant
 import config from '../../config.json'
 import isLoggedIn from '../../utils/helpers/loginCheck'
 import strings from '../../utils/constants'
+import messages from '../../utils/messages'
 import { postRequest as attemptLogin } from '../../utils/helpers/fetchMethods'
 import { User, LoginPayload, OrganisationSimple, TemplatePermissions } from '../../utils/types'
 
@@ -16,10 +17,7 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isError, setIsError] = useState(false)
-  const [user, setUser] = useState<User>()
-  const [orgList, setOrgList] = useState<OrganisationSimple[]>([])
-  const [JWT, setJWT] = useState<string>()
-  const [templatePermissions, setTemplatePermissions] = useState<TemplatePermissions>()
+  const [loginPayload, setLoginPayload] = useState<LoginPayload>()
   const [selectedOrgIndex, setSelectedOrgIndex] = useState(0)
   const { push, history } = useRouter()
   const { onLogin } = useUserState()
@@ -30,26 +28,25 @@ const Login: React.FC = () => {
   }, [])
 
   const handleSubmit = async () => {
-    if (!user) {
+    if (!loginPayload) {
       // User login
       const loginResult: LoginPayload = await attemptLogin({ username, password }, loginURL)
 
       if (!loginResult.success) setIsError(true)
       else {
         setIsError(false)
-        setUser(loginResult.user)
-        setJWT(loginResult.JWT)
-        setTemplatePermissions(loginResult.templatePermissions)
-        setOrgList(loginResult?.orgList as OrganisationSimple[])
+        setLoginPayload({
+          ...loginResult,
+        })
       }
     } else {
       // Organisation login
-      const { orgId } = orgList[selectedOrgIndex] as OrganisationSimple
-      const authHeader = { Authorization: 'Bearer ' + JWT }
-      const verifyOrgResult = await attemptLogin({ orgId }, loginOrgURL, authHeader)
+      const { orgId } = loginPayload?.orgList?.[selectedOrgIndex] as OrganisationSimple
+      const authHeader = { Authorization: 'Bearer ' + loginPayload.JWT }
+      const loginOrgPayload = await attemptLogin({ orgId }, loginOrgURL, authHeader)
 
-      if (verifyOrgResult.success) {
-        finishLogin(verifyOrgResult)
+      if (loginOrgPayload.success) {
+        finishLogin(loginOrgPayload)
       }
     }
   }
@@ -62,16 +59,16 @@ const Login: React.FC = () => {
   }
 
   useEffect(() => {
-    if (orgList.length === 0) {
+    if (loginPayload?.orgList?.length === 0) {
       // No orgs, so skip org login
-      JWT && user && templatePermissions && finishLogin({ JWT, user, templatePermissions })
+      finishLogin(loginPayload)
       return
     }
-    if (orgList.length === 1) {
+    if (loginPayload?.orgList?.length === 1) {
       // Auto-login with only one organisation
       handleSubmit()
     }
-  }, [orgList])
+  }, [loginPayload])
 
   const handleSelection = (e: any, data: any) => {
     const { value } = data
@@ -85,12 +82,12 @@ const Login: React.FC = () => {
           <Segment clearing>
             <Header size="huge">{strings.LABEL_WELCOME}</Header>
             <Form>
-              {!user && (
+              {!loginPayload && (
                 <>
                   <Form.Field>
                     <label>{strings.LABEL_LOGIN_USERNAME}</label>
                     <input
-                      placeholder="Username"
+                      placeholder={strings.LABEL_LOGIN_USERNAME}
                       name="username"
                       type="text"
                       value={username}
@@ -100,7 +97,7 @@ const Login: React.FC = () => {
                   <Form.Field>
                     <label>{strings.LABEL_LOGIN_PASSWORD}</label>
                     <input
-                      placeholder="Password"
+                      placeholder={strings.LABEL_LOGIN_PASSWORD}
                       name="password"
                       type="password"
                       value={password}
@@ -109,14 +106,15 @@ const Login: React.FC = () => {
                   </Form.Field>
                 </>
               )}
-              {user && (
-                // To-Do: Add to Messages
-                <p>{`Welcome back, ${user.firstName}. Please select your organisation.`}</p>
+              {loginPayload && (
+                <p>
+                  {messages.LOGIN_WELCOME_SELECT_ORG.replace('%1', loginPayload.user.firstName)}
+                </p>
               )}
-              {user && (
+              {loginPayload && (
                 <Dropdown
                   selection
-                  options={orgList.map((org: OrganisationSimple, index) => ({
+                  options={loginPayload?.orgList?.map((org: OrganisationSimple, index) => ({
                     key: `org_${org.orgId}`,
                     text: `${org.orgName} ${org?.userRole ? `(${org.userRole})` : ''}`,
                     value: index,
@@ -126,9 +124,9 @@ const Login: React.FC = () => {
                 />
               )}
               <Container>
-                {!user && <Link to="/register">{strings.LINK_LOGIN_USER}</Link>}
+                {!loginPayload && <Link to="/register">{strings.LINK_LOGIN_USER}</Link>}
                 <Button floated="right" type="submit" onClick={handleSubmit}>
-                  {!user ? strings.LABEL_LOG_IN : 'Proceed'}
+                  {!loginPayload ? strings.LABEL_LOG_IN : strings.LABEL_PROCEED}
                 </Button>
               </Container>
               {isError && <p>{strings.ERROR_LOGIN_PASSWORD}</p>}
