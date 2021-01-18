@@ -359,6 +359,7 @@ A few filters should automatically used (example page number) and would be in th
 
 ### Common columns (For all user-roles)
 
+- Serial number
 - Last active date
 - Application name
 - Stage
@@ -371,10 +372,8 @@ A few filters should automatically used (example page number) and would be in th
 
 ### Reviewer
 
-- Company
 - Applicant
 - Organisation
-- Stage
 - Consolidator
 - Sections columns:
   - Section title
@@ -383,12 +382,9 @@ A few filters should automatically used (example page number) and would be in th
 
 ### Consolidator
 
-- Company
 - Applicant
 - Organisation
-- Stage
 - Sections columns:
   - Section title
   - Reviewer
   - Progress
-  - Actionable
