@@ -1,4 +1,5 @@
 export default {
+  APPLICATIONS_LIST_EMPTY: 'No applications found',
   VALIDATION_FAIL: {
     title: 'Validation failed',
     message: 'Please fix invalid fields before continuing',

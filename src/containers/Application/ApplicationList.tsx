@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Table, List, Label, Header, Progress } from 'semantic-ui-react'
+import { Container, Table, List, Label, Header, Progress, Message } from 'semantic-ui-react'
 import { Loading, FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Link } from 'react-router-dom'
@@ -10,6 +10,7 @@ import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/translations/mapColumnsByRole'
 import USER_ROLE from '../../utils/model/userRole'
 import APPLICATION_COLUMN from '../../utils/model/applicationColumn'
+import messages from '../../utils/messages'
 
 const ApplicationList: React.FC = () => {
   const { query, push } = useRouter()
@@ -51,7 +52,7 @@ const ApplicationList: React.FC = () => {
           <List.Item key={`ApplicationList-parameter-${value}`} content={key + ' : ' + value} />
         ))}
       </List>
-      {userRole && headers && applications && applications.length > 0 && (
+      {userRole && headers && applications && (
         // TODO: Create function on click (of a pre-defined group of sortable columns) in the header.
         // After a click on the header the URL updates and a new query to GraphQL using sorted columns
         <Table sortable stackable selectable>
@@ -107,6 +108,9 @@ const ApplicationList: React.FC = () => {
             ))}
           </Table.Body>
         </Table>
+      )}
+      {applications && applications.length === 0 && (
+        <Message floating color="yellow" header={messages.APPLICATIONS_LIST_EMPTY} />
       )}
     </Container>
   )
