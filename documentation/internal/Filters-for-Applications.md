@@ -17,6 +17,32 @@ The user has access to links to see each type of application list from the top m
 The `type` is the template code for the applications type, also displayed in the header of the Applications list.
 The `user-role` is used to build how the columns and rows should be displayed. The user-role is deduced from the permissions that the current user have to view this application type. In this example the user has **applicant** role by what was set in their permissions.
 
+### Table of contents
+
+#### Filters
+
+- [type](#type)
+- [category](#category)
+- [stage](#stage)
+- [sort-by](#sort-by)
+- [user-role](#user-role)
+- [outcome](#outcome)
+- [action](#action)
+- [assigned](#assigned)
+- [consolidator](#consolidator)
+- [applicant](#applicant)
+- [org](#org)
+- [search](#search)
+- [last-active-date](#last-active-date)
+- [deadline-date](#deadline-date)
+- [page](#page)
+- [per-page](#per-page)
+
+#### More
+
+- [Format & Rules](#format-and-rules)
+- [Columns per role](#columns)
+
 ### Example: [UI Design] Applicant - applications list
 
 ![Applicant-List](images/Filters-for-Applications-Applicant-List.png)
@@ -28,6 +54,8 @@ The `user-role` is used to build how the columns and rows should be displayed. T
 ---
 
 #### Label filters:
+
+<a name="type"></a>
 
 ##### type
 
@@ -42,6 +70,8 @@ Options:
 
 - `template-code` - Of application type in list (and header)
 
+<a name="category"></a>
+
 ##### category
 
 Example: `category=company`
@@ -52,6 +82,8 @@ Options:
 
 - `category-code` - Group of templates (application types)
 
+<a name="stage"></a>
+
 ##### stage
 
 Example: `stage=screening`
@@ -61,6 +93,8 @@ Can have combined values: **Yes** e.g: `stage=screening,assessment,final-decisio
 Options:
 
 - Set of `stage-name` which is deduced per template (application type)
+
+<a name="sort-by"></a>
 
 ##### sort-by
 
@@ -73,6 +107,8 @@ Options:
 - `column-name:direction`
 - direction [Optional] `asc`/`desc`
 - if no direction is included use default: `asc`
+
+<a name="user-role"></a>
 
 ##### user-role
 
@@ -87,6 +123,8 @@ Options:
 
 - Deduced by user's permissions (**TODO: More detailed explanation of user-role per permissions**)
 
+<a name="outcome"></a>
+
 ##### outcome
 
 Example: `outcome=pending`
@@ -96,6 +134,8 @@ Can have combined values: **Yes** e.g: `outcome=pending,approved`
 Options:
 
 - Set of `outcome` common for all templates (application types)
+
+<a name="action"></a>
 
 ##### action
 
@@ -125,6 +165,8 @@ Options:
 
 #### String filters:
 
+<a name="assigned"></a>
+
 ##### assigned
 
 Example: `assigned=none`
@@ -136,6 +178,8 @@ Options:
 - `none` - Applications with sections not-assigned
 - `"username"` - Reviewer username
 
+<a name="consolidator"></a>
+
 ##### consolidator
 
 Example: `consolidator="Tony"`
@@ -145,6 +189,8 @@ Can have combined values: **Yes** e.g: `consolidator="Tony","Andrei"`
 Options:
 
 - `"username"` - Consolidator username
+
+<a name="applicant"></a>
 
 ##### applicant
 
@@ -156,6 +202,8 @@ Options:
 
 - `"username"` - Applicant username
 
+<a name="org"></a>
+
 ##### org
 
 Example: `org="Company A"`
@@ -165,6 +213,8 @@ Can have combined values: **Yes** e.g: `org="Company A","Company B"`
 Options:
 
 - `"organisation name"`
+
+<a name="search"></a>
 
 ##### search
 
@@ -182,6 +232,8 @@ Options:
 
 #### Date filters:
 
+<a name="last-active-date"></a>
+
 ##### last-active-date
 
 Example: `last-active-date=2021-01-01`
@@ -193,6 +245,8 @@ Options:
 - Pre-defined string: `today` (See more formats on Formats & Rules)
 - Single date: `YYYY-MM-DD`
 - Period (start:end): `YYYY-MM-DD:YYYY-MM-DD`
+
+<a name="deadline-date"></a>
 
 ##### deadline-date
 
@@ -210,6 +264,8 @@ Options:
 
 #### Integer filters:
 
+<a name="page"></a>
+
 ##### page
 
 Example: `page=1`
@@ -219,6 +275,8 @@ Can have combined values: **No**
 Options:
 
 - Number between 1 - N (maximum of pages?)
+
+<a name="per-page"></a>
 
 ##### per-page
 
@@ -231,6 +289,8 @@ Options:
 - Number between 10 - 100
 
 ---
+
+<a name="format-and-rules"></a>
 
 ### Formats & Rules
 
@@ -258,6 +318,8 @@ When combined filters are used (with separator `&`) the query will be using the 
 ### Columns per user-role
 
 ---
+
+<a name="columns"></a>
 
 ### Common columns (For all user-roles)
 
