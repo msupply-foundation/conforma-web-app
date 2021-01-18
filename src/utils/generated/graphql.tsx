@@ -17,6 +17,8 @@ export type Scalars = {
   Datetime: any;
   /** The day, does not include a time. */
   Date: any;
+  /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
+  BigInt: any;
 };
 
 /** The root query type which gives access points into the data universe. */
@@ -32,6 +34,8 @@ export type Query = Node & {
   actionPlugins?: Maybe<ActionPluginsConnection>;
   /** Reads and enables pagination through a set of `ActionQueue`. */
   actionQueues?: Maybe<ActionQueuesConnection>;
+  /** Reads and enables pagination through a set of `AllPermission`. */
+  allPermissions?: Maybe<AllPermissionsConnection>;
   /** Reads and enables pagination through a set of `Application`. */
   applications?: Maybe<ApplicationsConnection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -119,10 +123,9 @@ export type Query = Node & {
   userByUsername?: Maybe<User>;
   userOrganisation?: Maybe<UserOrganisation>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
-  jwtCheckPolicy?: Maybe<Scalars['Boolean']>;
-  jwtGetKey?: Maybe<Scalars['String']>;
-  jwtGetPolicyLinksAsSetofText?: Maybe<JwtGetPolicyLinksAsSetofTextConnection>;
-  jwtGetPolicyLinksAsText?: Maybe<Scalars['String']>;
+  jwtGetBigint?: Maybe<Scalars['BigInt']>;
+  jwtGetBoolean?: Maybe<Scalars['Boolean']>;
+  jwtGetText?: Maybe<Scalars['String']>;
   reviewApplicationId?: Maybe<Scalars['Int']>;
   reviewReviewerId?: Maybe<Scalars['Int']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
@@ -213,6 +216,19 @@ export type QueryActionQueuesArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
   condition?: Maybe<ActionQueueCondition>;
   filter?: Maybe<ActionQueueFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllPermissionsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<AllPermissionsOrderBy>>;
+  condition?: Maybe<AllPermissionCondition>;
+  filter?: Maybe<AllPermissionFilter>;
 };
 
 
@@ -767,32 +783,20 @@ export type QueryApplicationStatusHistoryApplicationIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryJwtCheckPolicyArgs = {
-  policyName?: Maybe<Scalars['String']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryJwtGetKeyArgs = {
+export type QueryJwtGetBigintArgs = {
   jwtKey?: Maybe<Scalars['String']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryJwtGetPolicyLinksAsSetofTextArgs = {
-  policyName?: Maybe<Scalars['String']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  filter?: Maybe<StringFilter>;
+export type QueryJwtGetBooleanArgs = {
+  jwtKey?: Maybe<Scalars['String']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryJwtGetPolicyLinksAsTextArgs = {
-  policyName?: Maybe<Scalars['String']>;
+export type QueryJwtGetTextArgs = {
+  jwtKey?: Maybe<Scalars['String']>;
 };
 
 
@@ -5294,6 +5298,121 @@ export type ActionQueuesEdge = {
   node?: Maybe<ActionQueue>;
 };
 
+/** Methods to use when ordering `AllPermission`. */
+export enum AllPermissionsOrderBy {
+  Natural = 'NATURAL',
+  PermissionTypeAsc = 'PERMISSION_TYPE_ASC',
+  PermissionTypeDesc = 'PERMISSION_TYPE_DESC',
+  PermissionPolicyIdAsc = 'PERMISSION_POLICY_ID_ASC',
+  PermissionPolicyIdDesc = 'PERMISSION_POLICY_ID_DESC',
+  PermissionPolicyRulesAsc = 'PERMISSION_POLICY_RULES_ASC',
+  PermissionPolicyRulesDesc = 'PERMISSION_POLICY_RULES_DESC',
+  PermissionNameIdAsc = 'PERMISSION_NAME_ID_ASC',
+  PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
+  TemplatePermissionIdAsc = 'TEMPLATE_PERMISSION_ID_ASC',
+  TemplatePermissionIdDesc = 'TEMPLATE_PERMISSION_ID_DESC',
+  TemplatePermissionRestrictionsAsc = 'TEMPLATE_PERMISSION_RESTRICTIONS_ASC',
+  TemplatePermissionRestrictionsDesc = 'TEMPLATE_PERMISSION_RESTRICTIONS_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  TemplateCodeAsc = 'TEMPLATE_CODE_ASC',
+  TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  UsernameAsc = 'USERNAME_ASC',
+  UsernameDesc = 'USERNAME_DESC'
+}
+
+/** A condition to be used against `AllPermission` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type AllPermissionCondition = {
+  /** Checks for equality with the object’s `permissionType` field. */
+  permissionType?: Maybe<PermissionPolicyType>;
+  /** Checks for equality with the object’s `permissionPolicyId` field. */
+  permissionPolicyId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `permissionPolicyRules` field. */
+  permissionPolicyRules?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `permissionNameId` field. */
+  permissionNameId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templatePermissionId` field. */
+  templatePermissionId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templatePermissionRestrictions` field. */
+  templatePermissionRestrictions?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateCode` field. */
+  templateCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `username` field. */
+  username?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `AllPermission` object types. All fields are combined with a logical ‘and.’ */
+export type AllPermissionFilter = {
+  /** Filter by the object’s `permissionType` field. */
+  permissionType?: Maybe<PermissionPolicyTypeFilter>;
+  /** Filter by the object’s `permissionPolicyId` field. */
+  permissionPolicyId?: Maybe<IntFilter>;
+  /** Filter by the object’s `permissionPolicyRules` field. */
+  permissionPolicyRules?: Maybe<JsonFilter>;
+  /** Filter by the object’s `permissionNameId` field. */
+  permissionNameId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templatePermissionId` field. */
+  templatePermissionId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templatePermissionRestrictions` field. */
+  templatePermissionRestrictions?: Maybe<JsonFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateCode` field. */
+  templateCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `username` field. */
+  username?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<AllPermissionFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<AllPermissionFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<AllPermissionFilter>;
+};
+
+/** A connection to a list of `AllPermission` values. */
+export type AllPermissionsConnection = {
+  __typename?: 'AllPermissionsConnection';
+  /** A list of `AllPermission` objects. */
+  nodes: Array<Maybe<AllPermission>>;
+  /** A list of edges which contains the `AllPermission` and cursor to aid in pagination. */
+  edges: Array<AllPermissionsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AllPermission` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type AllPermission = {
+  __typename?: 'AllPermission';
+  permissionType?: Maybe<PermissionPolicyType>;
+  permissionPolicyId?: Maybe<Scalars['Int']>;
+  permissionPolicyRules?: Maybe<Scalars['JSON']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templatePermissionId?: Maybe<Scalars['Int']>;
+  templatePermissionRestrictions?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateCode?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+};
+
+/** A `AllPermission` edge in the connection. */
+export type AllPermissionsEdge = {
+  __typename?: 'AllPermissionsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `AllPermission` at the end of the edge. */
+  node?: Maybe<AllPermission>;
+};
+
 /** Methods to use when ordering `ApplicationStageStatusAll`. */
 export enum ApplicationStageStatusAllsOrderBy {
   Natural = 'NATURAL',
@@ -5936,25 +6055,6 @@ export type UsersEdge = {
   node?: Maybe<User>;
 };
 
-/** A connection to a list of `String` values. */
-export type JwtGetPolicyLinksAsSetofTextConnection = {
-  __typename?: 'JwtGetPolicyLinksAsSetofTextConnection';
-  /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
-  /** A list of edges which contains the `String` and cursor to aid in pagination. */
-  edges: Array<JwtGetPolicyLinksAsSetofTextEdge>;
-  /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `String` edge in the connection. */
-export type JwtGetPolicyLinksAsSetofTextEdge = {
-  __typename?: 'JwtGetPolicyLinksAsSetofTextEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
-};
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
@@ -17636,6 +17736,7 @@ export type GetElementsAndResponsesQuery = (
           & SectionFragment
         )>> }
       ) }
+      & TemplateFragment
     )> }
     & ApplicationFragment
   )> }
@@ -17743,6 +17844,22 @@ export type GetTemplateQuery = (
           & Pick<TemplateStage, 'id' | 'number' | 'title' | 'description'>
         )>> }
       ) }
+      & TemplateFragment
+    )>> }
+  )> }
+);
+
+export type GetTemplatesQueryVariables = Exact<{
+  status?: Maybe<TemplateStatus>;
+}>;
+
+
+export type GetTemplatesQuery = (
+  { __typename?: 'Query' }
+  & { templates?: Maybe<(
+    { __typename?: 'TemplatesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'Template' }
       & TemplateFragment
     )>> }
   )> }
@@ -18267,6 +18384,7 @@ export const GetElementsAndResponsesDocument = gql`
       }
     }
     template {
+      ...Template
       templateSections {
         nodes {
           ...Section
@@ -18282,6 +18400,7 @@ export const GetElementsAndResponsesDocument = gql`
 }
     ${ApplicationFragmentDoc}
 ${ResponseFragmentDoc}
+${TemplateFragmentDoc}
 ${SectionFragmentDoc}
 ${ElementFragmentDoc}`;
 
@@ -18474,6 +18593,41 @@ export function useGetTemplateLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetTemplateQueryHookResult = ReturnType<typeof useGetTemplateQuery>;
 export type GetTemplateLazyQueryHookResult = ReturnType<typeof useGetTemplateLazyQuery>;
 export type GetTemplateQueryResult = Apollo.QueryResult<GetTemplateQuery, GetTemplateQueryVariables>;
+export const GetTemplatesDocument = gql`
+    query getTemplates($status: TemplateStatus = AVAILABLE) {
+  templates(condition: {status: $status}) {
+    nodes {
+      ...Template
+    }
+  }
+}
+    ${TemplateFragmentDoc}`;
+
+/**
+ * __useGetTemplatesQuery__
+ *
+ * To run a query within a React component, call `useGetTemplatesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTemplatesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTemplatesQuery({
+ *   variables: {
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useGetTemplatesQuery(baseOptions?: Apollo.QueryHookOptions<GetTemplatesQuery, GetTemplatesQueryVariables>) {
+        return Apollo.useQuery<GetTemplatesQuery, GetTemplatesQueryVariables>(GetTemplatesDocument, baseOptions);
+      }
+export function useGetTemplatesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTemplatesQuery, GetTemplatesQueryVariables>) {
+          return Apollo.useLazyQuery<GetTemplatesQuery, GetTemplatesQueryVariables>(GetTemplatesDocument, baseOptions);
+        }
+export type GetTemplatesQueryHookResult = ReturnType<typeof useGetTemplatesQuery>;
+export type GetTemplatesLazyQueryHookResult = ReturnType<typeof useGetTemplatesLazyQuery>;
+export type GetTemplatesQueryResult = Apollo.QueryResult<GetTemplatesQuery, GetTemplatesQueryVariables>;
 export const GetTriggersDocument = gql`
     query getTriggers($serial: String, $reviewAssignmentId: Int, $reviewId: Int) {
   applicationTriggerStates(condition: {serial: $serial, reviewAssignmentId: $reviewAssignmentId, reviewId: $reviewId}, first: 1) {

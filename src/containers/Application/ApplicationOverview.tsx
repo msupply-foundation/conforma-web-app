@@ -157,7 +157,7 @@ const ApplicationOverview: React.FC = () => {
           />
         ))}
         {appStatus.status === 'DRAFT' ? (
-          <Button content={strings.BUTTON_SUBMIT} onClick={handleSubmit} />
+          <Button content={strings.BUTTON_APPLICATION_SUBMIT} onClick={handleSubmit} />
         ) : null}
         <ModalWarning showModal={showModal} />
       </Form>

@@ -7,6 +7,7 @@ import {
 import { ValidationState } from '../formElementPlugins/types'
 
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { SummaryViewWrapperProps } from '../formElementPlugins/types'
 
 export {
   ApplicationState,
@@ -20,6 +21,7 @@ export {
   ElementState,
   ElementsActivityState,
   EvaluatorParameters,
+  DecisionAreaState,
   IGraphQLConnection,
   LooseString,
   PageElementsStatuses,
@@ -41,6 +43,7 @@ export {
   TemplateTypePayload,
   TemplateElementState,
   TemplatePermissions,
+  TemplatesDetails,
   ValidationMode,
   ValidateFunction,
   ValidateObject,
@@ -117,6 +120,12 @@ interface ElementsActivityState {
   elementLostFocusTimestamp: number
   elementsStateUpdatedTimestamp: number
   areTimestampsInSequence: boolean
+}
+
+interface DecisionAreaState {
+  open: boolean
+  review: ReviewQuestionDecision | null
+  summaryViewProps: SummaryViewWrapperProps | null
 }
 
 interface IGraphQLConnection {
@@ -251,11 +260,16 @@ interface TemplateElementState extends ElementBase {
 }
 
 interface TemplatePermissions {
-  [index: string]: {
-    [index: string]: Array<'Apply' | 'Review' | 'Assign'>
-  }
+  [index: string]: Array<UserRole>
 }
 
+type TemplatesDetails = {
+  permissions: Array<UserRole>
+  name: string
+  code: string
+}[]
+
+type UserRole = 'Apply' | 'Review' | 'Assign'
 interface ValidateFunction {
   (
     validationExpress: IQueryNode,

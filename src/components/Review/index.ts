@@ -1,3 +1,4 @@
+import DecisionArea from './DecisionArea'
 import ReviewSection from './ReviewSection'
 
-export { ReviewSection }
+export { DecisionArea, ReviewSection }

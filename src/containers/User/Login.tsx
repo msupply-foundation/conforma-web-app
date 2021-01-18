@@ -18,7 +18,6 @@ const Login: React.FC = () => {
   const handleSubmit = async (event: any) => {
     event.preventDefault()
     const loginResult = await attemptLogin(username, password)
-    console.log('Login Result', loginResult)
     if (!loginResult.success) setIsError(true)
     else {
       setIsError(false)
