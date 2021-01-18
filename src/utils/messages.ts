@@ -1,5 +1,6 @@
 export default {
   APPLICATIONS_LIST_EMPTY: 'No applications found',
+  APPLICATIONS_MISSING_USER_ROLE: 'No user role found',
   VALIDATION_FAIL: {
     title: 'Validation failed',
     message: 'Please fix invalid fields before continuing',

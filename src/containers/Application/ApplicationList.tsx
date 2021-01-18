@@ -52,62 +52,69 @@ const ApplicationList: React.FC = () => {
           <List.Item key={`ApplicationList-parameter-${value}`} content={key + ' : ' + value} />
         ))}
       </List>
-      {userRole && headers && applications && (
-        // TODO: Create function on click (of a pre-defined group of sortable columns) in the header.
-        // After a click on the header the URL updates and a new query to GraphQL using sorted columns
-        <Table sortable stackable selectable>
-          <Table.Header>
-            <Table.Row>
-              {headers.map((headerName) => (
-                <Table.HeaderCell key={`ApplicationList-header-${headerName}`}>
-                  {headerName}
-                </Table.HeaderCell>
-              ))}
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {applications.map((application, index) => (
-              <Table.Row key={`ApplicationList-application-${application.serial}`}>
-                {headers.map((headerName) => {
-                  // TODO: Move this to render property to be defined for each ColumnDetails in mapColumnsByRole
-                  switch (headerName) {
-                    case APPLICATION_COLUMN.LAST_ACTIVE_DATE:
-                    case APPLICATION_COLUMN.DEADLINE_DATE:
-                      return (
-                        <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
-                          <Header content={strings.DATE_APPLICATION_PLACEHOLDER} />
-                        </Table.Cell>
-                      )
-                    case APPLICATION_COLUMN.APPLICATION_NAME:
-                      return (
-                        <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
-                          <Link to={`/application/${application.serial}`}>{application.name}</Link>
-                        </Table.Cell>
-                      )
-                    case APPLICATION_COLUMN.STAGE:
-                      return (
-                        <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
-                          <Label>{application.stage}</Label>
-                        </Table.Cell>
-                      )
-                    case APPLICATION_COLUMN.STATUS:
-                      return (
-                        <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
-                          <Progress size="tiny" />
-                        </Table.Cell>
-                      )
-                    default:
-                      return (
-                        <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
-                          Problem
-                        </Table.Cell>
-                      )
-                  }
-                })}
+      {!userRole ? (
+        <Message color="red" header={messages.APPLICATIONS_MISSING_USER_ROLE} />
+      ) : (
+        headers &&
+        applications && (
+          // TODO: Create function on click (of a pre-defined group of sortable columns) in the header.
+          // After a click on the header the URL updates and a new query to GraphQL using sorted columns
+          <Table sortable stackable selectable>
+            <Table.Header>
+              <Table.Row>
+                {headers.map((headerName) => (
+                  <Table.HeaderCell key={`ApplicationList-header-${headerName}`}>
+                    {headerName}
+                  </Table.HeaderCell>
+                ))}
               </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
+            </Table.Header>
+            <Table.Body>
+              {applications.map((application, index) => (
+                <Table.Row key={`ApplicationList-application-${application.serial}`}>
+                  {headers.map((headerName) => {
+                    // TODO: Move this to render property to be defined for each ColumnDetails in mapColumnsByRole
+                    switch (headerName) {
+                      case APPLICATION_COLUMN.LAST_ACTIVE_DATE:
+                      case APPLICATION_COLUMN.DEADLINE_DATE:
+                        return (
+                          <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
+                            <Header content={strings.DATE_APPLICATION_PLACEHOLDER} />
+                          </Table.Cell>
+                        )
+                      case APPLICATION_COLUMN.APPLICATION_NAME:
+                        return (
+                          <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
+                            <Link to={`/application/${application.serial}`}>
+                              {application.name}
+                            </Link>
+                          </Table.Cell>
+                        )
+                      case APPLICATION_COLUMN.STAGE:
+                        return (
+                          <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
+                            <Label>{application.stage}</Label>
+                          </Table.Cell>
+                        )
+                      case APPLICATION_COLUMN.STATUS:
+                        return (
+                          <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
+                            <Progress size="tiny" />
+                          </Table.Cell>
+                        )
+                      default:
+                        return (
+                          <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
+                            Problem
+                          </Table.Cell>
+                        )
+                    }
+                  })}
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        )
       )}
       {applications && applications.length === 0 && (
         <Message floating color="yellow" header={messages.APPLICATIONS_LIST_EMPTY} />
