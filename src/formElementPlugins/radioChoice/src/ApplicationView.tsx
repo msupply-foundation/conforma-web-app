@@ -36,7 +36,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Markdown text={label} semanticComponent="noParagraph" />
       </label>
       <Markdown text={description} />
-      {options.map((option: any, index: number) => {
+      {options.map((option: string, index: number) => {
         return (
           <Form.Field key={`${index}_${option}`} disabled={!isEditable}>
             <Radio
