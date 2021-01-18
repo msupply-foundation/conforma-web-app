@@ -373,6 +373,8 @@ A few filters should automatically used (example page number) and would be in th
 
 - Company
 - Applicant
+- Organisation
+- Stage
 - Consolidator
 - Sections columns:
   - Section title
@@ -383,6 +385,8 @@ A few filters should automatically used (example page number) and would be in th
 
 - Company
 - Applicant
+- Organisation
+- Stage
 - Sections columns:
   - Section title
   - Reviewer
