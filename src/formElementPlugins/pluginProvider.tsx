@@ -45,6 +45,13 @@ class pluginProvider {
         folderName: 'dropdownChoice',
         category: 'Input',
       },
+      password: {
+        code: 'password',
+        displayName: 'Secure Password Input',
+        isCore: true,
+        folderName: 'password',
+        category: 'Input',
+      },
     }
   }
 

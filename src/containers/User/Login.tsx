@@ -17,8 +17,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault()
-    const passwordHash = hashPassword(password)
-    const loginResult = await attemptLogin(username, passwordHash)
+    const loginResult = await attemptLogin(username, password)
     if (!loginResult.success) setIsError(true)
     else {
       setIsError(false)
@@ -74,12 +73,7 @@ const Login: React.FC = () => {
 
 export default Login
 
-function hashPassword(password: string) {
-  // TO-DO Implement password hashing
-  return password
-}
-
-export async function attemptLogin(username: string, passwordHash: string) {
+export async function attemptLogin(username: string, password: string) {
   try {
     const response = await fetch(config.serverREST + '/login', {
       method: 'POST',
@@ -87,7 +81,7 @@ export async function attemptLogin(username: string, passwordHash: string) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, passwordHash }),
+      body: JSON.stringify({ username, password }),
     })
     return response.json()
   } catch (err) {
