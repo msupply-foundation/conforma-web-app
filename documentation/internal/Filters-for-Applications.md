@@ -345,6 +345,10 @@ When combined labels are used (with separator `,`) the query will be using the O
 
 When combined filters are used (with separator `&`) the query will be using the AND connector.
 
+Filters that aren't provided would be considered as fetch ALL.
+
+A few filters should automatically used (example page number) and would be in the query filters mirroring the current displayed query.
+
 ---
 
 ## Columns per user-role
