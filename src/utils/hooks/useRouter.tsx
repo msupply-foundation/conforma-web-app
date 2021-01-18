@@ -1,11 +1,4 @@
-import {
-  useParams,
-  useLocation,
-  useHistory,
-  useRouteMatch,
-  RouteComponentProps,
-  match,
-} from 'react-router-dom'
+import { useParams, useLocation, useHistory, useRouteMatch, match } from 'react-router-dom'
 import queryString from 'query-string'
 import { useMemo } from 'react'
 
@@ -46,9 +39,9 @@ const replaceSnakeCaseKeys = (parsedQuery: { [key: string]: any }) => {
   if (Object.keys(parsedQuery).length === 0) return parsedQuery
   const replacedKeys = Object.keys(parsedQuery).map((key) => {
     const convertedKey = key.replace(/-([a-z])/g, (m, w) => w.toUpperCase())
-    return { [convertedKey]: parsedQuery[key] }
+    return [[convertedKey], parsedQuery[key]]
   })
-  return replacedKeys.reduce((a, b) => Object.assign({}, a, b))
+  return Object.fromEntries(replacedKeys)
 }
 
 export function useRouter(): RouterResult {
