@@ -104,7 +104,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         disabled={!isEditable}
         type={masked ? 'password' : undefined}
         error={
-          passwordConfirm !== password && passwordConfirm !== '' && internalValidation.isValid
+          passwordConfirm !== password && passwordConfirm !== ''
             ? {
                 content: 'Passwords do not match',
                 pointing: 'above',
