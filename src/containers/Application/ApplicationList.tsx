@@ -7,12 +7,8 @@ import strings from '../../utils/constants'
 import findUserRole from '../../utils/helpers/translations/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/translations/mapColumnsByRole'
-import USER_ROLE from '../../utils/model/userRole'
 import { ColumnDetails } from '../../utils/types'
-
-const DefaultCell: React.FC<any> = ({}) => {
-  return <p>Test</p>
-}
+import { USER_ROLES } from '../../utils/data'
 
 const ApplicationList: React.FC = () => {
   const { query, push } = useRouter()
@@ -35,11 +31,15 @@ const ApplicationList: React.FC = () => {
           if (newRole) push(`/applications?type=${type}&user-role=${newRole}`)
         }
       } else {
-        const columns = mapColumnsByRole(userRole as USER_ROLE)
+        const columns = mapColumnsByRole(userRole as USER_ROLES)
         setColumns(columns)
       }
     }
   }, [type, userRole, templatePermissions])
+
+  useEffect(() => {
+    console.log('error', error, 'loading', loading, 'applications', applications)
+  }, [error, loading, applications])
 
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />

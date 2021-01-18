@@ -7,7 +7,7 @@ import {
 
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SummaryViewWrapperProps } from '../formElementPlugins/types'
-import { APPLICATION_COLUMN, USER_ROLE } from './model'
+import { APPLICATION_COLUMN, USER_ROLES } from './data'
 
 export {
   ApplicationDetails,
@@ -108,7 +108,7 @@ interface ColumnDetails {
 }
 
 type ColumnsPerRole = {
-  [role in USER_ROLE]: Array<APPLICATION_COLUMN>
+  [role in USER_ROLES]: Array<APPLICATION_COLUMN>
 }
 interface CurrentPage {
   section: TemplateSectionPayload
@@ -335,5 +335,5 @@ interface User {
 }
 
 type UserRoles = {
-  [role in USER_ROLE]: Array<PermissionPolicyType>
+  [role in USER_ROLES]: Array<PermissionPolicyType>
 }

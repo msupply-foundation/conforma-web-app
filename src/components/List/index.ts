@@ -5,6 +5,7 @@ import DeadlineCell from './DeadlineCell'
 import LastActiveDateCell from './LastActiveDateCell'
 import StageCell from './StageCell'
 import StatusCell from './StatusCell'
+import SerialNumberCell from './SerialNumberCell'
 import OrganisationCell from './OrganisationCell'
 import OutcomeCell from './OutcomeCell'
 
@@ -14,6 +15,7 @@ export {
   ConsolidatorCell,
   DeadlineCell,
   LastActiveDateCell,
+  SerialNumberCell,
   StageCell,
   StatusCell,
   OrganisationCell,

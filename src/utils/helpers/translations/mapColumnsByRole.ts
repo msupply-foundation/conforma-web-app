@@ -6,11 +6,12 @@ import {
   LastActiveDateCell,
   OrganisationCell,
   OutcomeCell,
+  SerialNumberCell,
   StageCell,
   StatusCell,
 } from '../../../components/List'
-import { APPLICATION_COLUMN, USER_ROLE } from '../../model'
-import COLUMNS_PER_ROLE from '../../model/columnsPerUserRole'
+import { APPLICATION_COLUMN, USER_ROLES } from '../../data'
+import COLUMNS_PER_ROLE from '../../data/columnsPerUserRole'
 import { ColumnDetails } from '../../types'
 
 /**
@@ -25,6 +26,11 @@ import { ColumnDetails } from '../../types'
  */
 
 const allColumns: { [key in APPLICATION_COLUMN]: ColumnDetails } = {
+  SERIAL_NUMBER: {
+    headerName: 'Serial number',
+    filters: ['serial'],
+    ColumnComponent: SerialNumberCell,
+  },
   LAST_ACTIVE_DATE: {
     headerName: 'Last active date',
     filters: ['last-active-date'],
@@ -72,7 +78,7 @@ const allColumns: { [key in APPLICATION_COLUMN]: ColumnDetails } = {
   },
 }
 
-export default (userRole: USER_ROLE): Array<ColumnDetails> => {
-  const columns: Array<ColumnDetails> = COLUMNS_PER_ROLE[userRole].map((key) => allColumns[key])
+export default (userRoles: USER_ROLES): Array<ColumnDetails> => {
+  const columns: Array<ColumnDetails> = COLUMNS_PER_ROLE[userRoles].map((key) => allColumns[key])
   return columns
 }
