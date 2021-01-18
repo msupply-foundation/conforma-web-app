@@ -302,7 +302,7 @@ Can have combined values: **No**
 
 Options:
 
-- Number between 1 - N (maximum of pages?)
+- Positive number (When page number doesn't existing no results are displayed)
 
 <a name="per-page"></a>
 
