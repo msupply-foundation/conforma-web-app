@@ -1,8 +1,4 @@
-## Filters for Applications
-
----
-
-### Overview
+## Overview
 
 ---
 
@@ -17,9 +13,9 @@ The user has access to links to see each type of application list from the top m
 The `type` is the template code for the applications type, also displayed in the header of the Applications list.
 The `user-role` is used to build how the columns and rows should be displayed. The user-role is deduced from the permissions that the current user have to view this application type. In this example the user has **applicant** role by what was set in their permissions.
 
-### Table of contents
+## Table of contents
 
-#### Filters
+### Filters
 
 - [type](#type)
 - [category](#category)
@@ -38,26 +34,26 @@ The `user-role` is used to build how the columns and rows should be displayed. T
 - [page](#page)
 - [per-page](#per-page)
 
-#### More
+### More
 
 - [Format & Rules](#format-and-rules)
 - [Columns per role](#columns)
 
-### Example: [UI Design] Applicant - applications list
+## Example: [UI Design] Applicant - applications list
 
 ![Applicant-List](images/Filters-for-Applications-Applicant-List.png)
 
 ---
 
-### Filters
+## Filters
 
 ---
 
-#### Label filters:
+### Label filters:
 
 <a name="type"></a>
 
-##### type
+#### type
 
 **This is a compulsory filter**
 In case none is included in URL will be deduced from 1st user's persmissions
@@ -74,7 +70,7 @@ Options:
 
 <a name="category"></a>
 
-##### category
+#### category
 
 Example: `category=company`
 
@@ -88,7 +84,7 @@ Options:
 
 <a name="stage"></a>
 
-##### stage
+#### stage
 
 Example: `stage=screening`
 
@@ -102,7 +98,7 @@ Options:
 
 <a name="sort-by"></a>
 
-##### sort-by
+#### sort-by
 
 Example: `sort-by=stage:asc`
 
@@ -118,7 +114,7 @@ Options:
 
 <a name="user-role"></a>
 
-##### user-role
+#### user-role
 
 **This is a **compulsory** filter.**
 In case none is included in URL will be deduced from permission of type in user's persmissions.
@@ -135,7 +131,7 @@ Options:
 
 <a name="outcome"></a>
 
-##### outcome
+#### outcome
 
 Example: `outcome=pending`
 
@@ -149,7 +145,7 @@ Options:
 
 <a name="action"></a>
 
-##### action
+#### action
 
 Example: `action=edit-draft`
 
@@ -177,11 +173,11 @@ Options:
 
 ---
 
-#### String filters:
+### String filters:
 
 <a name="assigned"></a>
 
-##### assigned
+#### assigned
 
 Example: `assigned=none`
 
@@ -196,7 +192,7 @@ Options:
 
 <a name="consolidator"></a>
 
-##### consolidator
+#### consolidator
 
 Example: `consolidator="Tony"`
 
@@ -210,7 +206,7 @@ Options:
 
 <a name="applicant"></a>
 
-##### applicant
+#### applicant
 
 Example: `applicant="John"`
 
@@ -224,7 +220,7 @@ Options:
 
 <a name="org"></a>
 
-##### org
+#### org
 
 Example: `org="Company A"`
 
@@ -238,7 +234,7 @@ Options:
 
 <a name="search"></a>
 
-##### search
+#### search
 
 Example: `search="abc 123"`
 
@@ -254,11 +250,11 @@ Options:
 
 ---
 
-#### Date filters:
+### Date filters:
 
 <a name="last-active-date"></a>
 
-##### last-active-date
+#### last-active-date
 
 Example: `last-active-date=2021-01-01`
 
@@ -274,7 +270,7 @@ Options:
 
 <a name="deadline-date"></a>
 
-##### deadline-date
+#### deadline-date
 
 Example: `deadline-date=2021-01-31`
 
@@ -290,11 +286,11 @@ Options:
 
 ---
 
-#### Integer filters:
+### Integer filters:
 
 <a name="page"></a>
 
-##### page
+#### page
 
 Example: `page=1`
 
@@ -308,7 +304,7 @@ Options:
 
 <a name="per-page"></a>
 
-##### per-page
+#### per-page
 
 Example: `per-page=20`
 
@@ -324,30 +320,30 @@ Options:
 
 <a name="format-and-rules"></a>
 
-### Formats & Rules
+## Formats & Rules
 
 ---
 
-#### Pre-defined dates
+### Pre-defined dates
 
 `today`, `yesterday`, `this-week`, `last-week`, `this-month`, `last-month`, `this-quarter`, `last-quarter`,`this-year`, `last-year`, ... (Add other pre-defined date here)
 
-#### Strings
+### Strings
 
 Can't have special caracters.
 Are case insensitive. So `thisTHAT` = `THISthat` = `thisthat`.
 
-#### Labels
+### Labels
 
 When combined labels are used (with separator `,`) the query will be using the OR connector.
 
-#### General
+### General
 
 When combined filters are used (with separator `&`) the query will be using the AND connector.
 
 ---
 
-### Columns per user-role
+## Columns per user-role
 
 ---
 
@@ -360,12 +356,12 @@ When combined filters are used (with separator `&`) the query will be using the 
 - Stage
 - Status / Actionable
 
-#### Applicant
+### Applicant
 
 - Deadline date
 - Progress
 
-#### Reviewer
+### Reviewer
 
 - Company
 - Applicant
@@ -375,7 +371,7 @@ When combined filters are used (with separator `&`) the query will be using the 
   - _Assigned to you_ / _Assigned to A Nother_
   - Progress
 
-#### Consolidator
+### Consolidator
 
 - Company
 - Applicant
