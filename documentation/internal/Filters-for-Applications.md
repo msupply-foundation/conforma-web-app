@@ -110,7 +110,7 @@ Options:
 
 - `column-name:direction`
 - direction [Optional] `asc`/`desc`
-- if no direction is included use default: `asc`
+- if no direction is included use default: `desc`
 
 <a name="user-role"></a>
 
