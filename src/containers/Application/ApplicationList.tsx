@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Table, List, Label } from 'semantic-ui-react'
+import { Container, Table, List, Label, Segment, Button } from 'semantic-ui-react'
 import { Loading, FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useListApplication from '../../utils/hooks/useListApplications'
@@ -10,6 +10,7 @@ import mapColumnsByRole from '../../utils/helpers/translations/mapColumnsByRole'
 import { ColumnDetails } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { useListState } from '../../contexts/ListState'
+import { Link } from 'react-router-dom'
 
 const ApplicationList: React.FC = () => {
   const { query, push } = useRouter()
@@ -50,12 +51,20 @@ const ApplicationList: React.FC = () => {
   ) : (
     <Container>
       <FilterList />
-      {Object.keys(query).length > 0 && <h3>Query parameters:</h3>}
-      <List>
-        {Object.entries(query).map(([key, value]) => (
-          <List.Item key={`ApplicationList-parameter-${value}`} content={key + ' : ' + value} />
-        ))}
-      </List>
+      <Segment vertical>
+        {Object.keys(query).length > 0 && <h3>Query parameters:</h3>}
+        <List>
+          {Object.entries(query).map(([key, value]) => (
+            <List.Item key={`ApplicationList-parameter-${value}`} content={key + ' : ' + value} />
+          ))}
+        </List>
+        <Button
+          as={Link}
+          to={`/application/new?type=${type}`}
+          content={strings.BUTTON_APPLICATION_NEW}
+        />
+      </Segment>
+
       {userRole && columns && applications && applications.length > 0 && (
         // TODO: Create function on click (of a pre-defined group of sortable columns) in the header.
         // After a click on the header the URL updates and a new query to GraphQL using sorted columns
