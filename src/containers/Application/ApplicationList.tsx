@@ -9,6 +9,7 @@ import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/translations/mapColumnsByRole'
 import { ColumnDetails } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
+import { useListState } from '../../contexts/ListState'
 
 const ApplicationList: React.FC = () => {
   const { query, push } = useRouter()
@@ -17,8 +18,12 @@ const ApplicationList: React.FC = () => {
     userState: { templatePermissions },
   } = useUserState()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
+  const {
+    listState: { applications },
+    setListState,
+  } = useListState()
 
-  const { error, loading, applications } = useListApplication({ type })
+  const { error, loading } = useListApplication({ type, setListState })
 
   useEffect(() => {
     if (type && templatePermissions) {
@@ -31,15 +36,12 @@ const ApplicationList: React.FC = () => {
           if (newRole) push(`/applications?type=${type}&user-role=${newRole}`)
         }
       } else {
+        setListState({ type: 'reset' })
         const columns = mapColumnsByRole(userRole as USER_ROLES)
         setColumns(columns)
       }
     }
   }, [type, userRole, templatePermissions])
-
-  useEffect(() => {
-    console.log('error', error, 'loading', loading, 'applications', applications)
-  }, [error, loading, applications])
 
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />

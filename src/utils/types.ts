@@ -14,11 +14,12 @@ export {
   ApplicationElementStates,
   ApplicationStage,
   ApplicationStages,
-  ApplicationState,
   AssignmentDetails,
   CellProps,
   ColumnDetails,
   ColumnsPerRole,
+  ContextApplicationState,
+  ContextListState,
   CurrentPage,
   ElementPluginParameterValue,
   ElementPluginParameters,
@@ -63,8 +64,6 @@ interface ApplicationDetails {
   type: string
   serial: string
   name: string
-  // stage: string
-  // status: string
   outcome: string
   isLinear: boolean
   stage?: ApplicationStage
@@ -83,12 +82,6 @@ interface ApplicationStage {
 interface ApplicationStages {
   stages: StageDetails[]
   submissionMessage: string
-}
-
-interface ApplicationState {
-  id: number | null
-  serialNumber: string | null
-  inputElementsActivity: ElementsActivityState
 }
 
 interface AssignmentDetails {
@@ -110,6 +103,17 @@ interface ColumnDetails {
 type ColumnsPerRole = {
   [role in USER_ROLES]: Array<APPLICATION_COLUMN>
 }
+
+interface ContextApplicationState {
+  id: number | null
+  serialNumber: string | null
+  inputElementsActivity: ElementsActivityState
+}
+
+interface ContextListState {
+  applications: ApplicationDetails[]
+}
+
 interface CurrentPage {
   section: TemplateSectionPayload
   page: number

@@ -27,6 +27,7 @@ import { ApplicationProvider } from '../../contexts/ApplicationState'
 import ApplicationOverview from '../Application/ApplicationOverview'
 import ApplicationSubmission from '../Application/ApplicationSubmission'
 import UserArea from '../User/UserArea'
+import { ListProvider } from '../../contexts/ListState'
 
 const SiteLayout: React.FC = () => {
   return (
@@ -43,7 +44,9 @@ const SiteLayout: React.FC = () => {
           <UserRegister />
         </Route>
         <Route exact path="/applications">
-          <ApplicationList />
+          <ListProvider>
+            <ApplicationList />
+          </ListProvider>
         </Route>
         <Route exact path="/application/new">
           <ApplicationProvider>
