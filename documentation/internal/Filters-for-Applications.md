@@ -267,6 +267,7 @@ Options:
 - Pre-defined string: `today` (See more formats on Formats & Rules)
 - Single date: `YYYY-MM-DD`
 - Period (start:end): `YYYY-MM-DD:YYYY-MM-DD`
+- Period (start:) or (:end): `YYYY-MM-DD:` (end at last date) or `:YYYY-MM-DD` (start at first date)
 
 <a name="deadline-date"></a>
 
@@ -283,6 +284,7 @@ Options:
 - Pre-defined string: `today` (See more formats on Formats & Rules)
 - Single date: `YYYY-MM-DD`
 - Period (start:end): `YYYY-MM-DD:YYYY-MM-DD`
+- Period (start:) or (:end): `YYYY-MM-DD:` (end at last date) or `:YYYY-MM-DD` (start at first date)
 
 ---
 
@@ -326,7 +328,9 @@ Options:
 
 ### Pre-defined dates
 
-`today`, `yesterday`, `this-week`, `last-week`, `this-month`, `last-month`, `this-quarter`, `last-quarter`,`this-year`, `last-year`, ... (Add other pre-defined date here)
+`today`, `yesterday`, `this-week`, `last-week`, `this-month`, `last-month`, `this-quarter`, `last-quarter`,`this-year`, `last-year`, ...
+
+(Add other pre-defined date here)
 
 ### Strings
 
