@@ -63,7 +63,9 @@ The `user-role` is used to build how the columns and rows should be displayed. T
 In case none is included in URL will be deduced from 1st user's persmissions
 
 Example: `type=user-registration`
+
 Considered in implementation: **Yes** [#131 - Headers]
+
 Can have combined values: **No**
 
 Options:
@@ -75,7 +77,9 @@ Options:
 ##### category
 
 Example: `category=company`
+
 Considered in implementation: **Yes** **[New issue?]**
+
 Can have combined values: **No**
 
 Options:
@@ -87,7 +91,9 @@ Options:
 ##### stage
 
 Example: `stage=screening`
+
 Considered in implementation: **Yes** [#251 - Filters]
+
 Can have combined values: **Yes** e.g: `stage=screening,assessment,final-decision`
 
 Options:
@@ -99,7 +105,9 @@ Options:
 ##### sort-by
 
 Example: `sort-by=stage:asc`
+
 Considered in implementation: **Yes** [#131 - Headers]
+
 Can have combined values: **Yes** `sort-by=stage:asc,application-name:desc`
 
 Options:
@@ -116,7 +124,9 @@ Options:
 In case none is included in URL will be deduced from permission of type in user's persmissions.
 
 Example: `user-role=applicant`
+
 Considered in implementation: **Yes** [#131 - Headers]
+
 Can have combined values: **No**
 
 Options:
@@ -128,7 +138,9 @@ Options:
 ##### outcome
 
 Example: `outcome=pending`
+
 Considered in implementation: **Yes** [#251 - Filters]
+
 Can have combined values: **Yes** e.g: `outcome=pending,approved`
 
 Options:
@@ -140,7 +152,9 @@ Options:
 ##### action
 
 Example: `action=edit-draft`
+
 Considered in implementation: **Yes** [#251 - Filters]
+
 Can have combined values: **Yes** e.g: `action=edit-draft,`
 
 Options:
@@ -170,7 +184,9 @@ Options:
 ##### assigned
 
 Example: `assigned=none`
+
 Considered in implementation: **Yes** [#251 - Filters]
+
 Can have combined values: **Yes** e.g: `assigned=none,"Carl"`
 
 Options:
@@ -183,7 +199,9 @@ Options:
 ##### consolidator
 
 Example: `consolidator="Tony"`
+
 Considered in implementation: **Yes** [#251 - Filters]
+
 Can have combined values: **Yes** e.g: `consolidator="Tony","Andrei"`
 
 Options:
@@ -195,7 +213,9 @@ Options:
 ##### applicant
 
 Example: `applicant="John"`
+
 Considered in implementation: **No**
+
 Can have combined values: **Yes** e.g: `applicant="John","Nicole"`
 
 Options:
@@ -207,7 +227,9 @@ Options:
 ##### org
 
 Example: `org="Company A"`
+
 Considered in implementation: **Yes** [#251 - Filters]
+
 Can have combined values: **Yes** e.g: `org="Company A","Company B"`
 
 Options:
@@ -219,7 +241,9 @@ Options:
 ##### search
 
 Example: `search="abc 123"`
+
 Considered in implementation: **Yes** [#251 - Filters]
+
 Can have combined values: **No**
 
 Options:
@@ -237,7 +261,9 @@ Options:
 ##### last-active-date
 
 Example: `last-active-date=2021-01-01`
+
 Considered in implementation: **Yes** [#228 - Dates in columns]
+
 Can have combined values: **Yes** e.g: `last-active-date=today,last-week`
 
 Options:
@@ -251,7 +277,9 @@ Options:
 ##### deadline-date
 
 Example: `deadline-date=2021-01-31`
+
 Considered in implementation: **Yes** [#228 - Dates in columns]
+
 Can have combined values: **Yes** e.g: `deadline-date=today,2021-01-02`
 
 Options:
@@ -269,7 +297,9 @@ Options:
 ##### page
 
 Example: `page=1`
+
 Considered in implementation: **Yes** [#210 - Pagination]
+
 Can have combined values: **No**
 
 Options:
@@ -281,7 +311,9 @@ Options:
 ##### per-page
 
 Example: `per-page=20`
+
 Considered in implementation: **Yes** [#210 - Pagination]
+
 Can have combined values: **No**
 
 Options:
