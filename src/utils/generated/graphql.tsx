@@ -17678,7 +17678,7 @@ export type GetApplicationStatusQuery = (
 );
 
 export type GetApplicationsQueryVariables = Exact<{
-  code: Scalars['String'];
+  filters?: Maybe<ApplicationFilter>;
 }>;
 
 
@@ -17693,12 +17693,6 @@ export type GetApplicationsQuery = (
         & TemplateFragment
       )> }
       & ApplicationFragment
-    )>> }
-  )>, applicationStageStatusAlls?: Maybe<(
-    { __typename?: 'ApplicationStageStatusAllsConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'ApplicationStageStatusAll' }
-      & Pick<ApplicationStageStatusAll, 'serial' | 'stageHistoryId' | 'stage' | 'stageId' | 'stageNumber'>
     )>> }
   )> }
 );
@@ -18344,22 +18338,13 @@ export type GetApplicationStatusQueryHookResult = ReturnType<typeof useGetApplic
 export type GetApplicationStatusLazyQueryHookResult = ReturnType<typeof useGetApplicationStatusLazyQuery>;
 export type GetApplicationStatusQueryResult = Apollo.QueryResult<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>;
 export const GetApplicationsDocument = gql`
-    query getApplications($code: String!) {
-  applications(filter: {template: {code: {equalTo: $code}, and: {status: {equalTo: AVAILABLE}}}}) {
+    query getApplications($filters: ApplicationFilter) {
+  applications(filter: $filters) {
     nodes {
       ...Application
       template {
         ...Template
       }
-    }
-  }
-  applicationStageStatusAlls(condition: {stageIsCurrent: true}) {
-    nodes {
-      serial
-      stageHistoryId
-      stage
-      stageId
-      stageNumber
     }
   }
 }
@@ -18378,7 +18363,7 @@ ${TemplateFragmentDoc}`;
  * @example
  * const { data, loading, error } = useGetApplicationsQuery({
  *   variables: {
- *      code: // value for 'code'
+ *      filters: // value for 'filters'
  *   },
  * });
  */

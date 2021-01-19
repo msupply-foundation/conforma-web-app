@@ -1,5 +1,6 @@
 import { Dispatch, useEffect, useState } from 'react'
 import { ListActions } from '../../contexts/ListState'
+import buildFilter from '../helpers/application/buildQueryFilters'
 import {
   Application,
   ApplicationStageStatusAll,
@@ -9,6 +10,7 @@ import {
 import { ApplicationDetails } from '../types'
 
 interface UseListApplicationsProps {
+  urlFilters?: any
   type?: string
   setListState: Dispatch<ListActions>
 }
@@ -17,13 +19,18 @@ interface ApplicationDetailsMap {
   [serial: string]: ApplicationDetails
 }
 
-const useListApplication = ({ type, setListState }: UseListApplicationsProps) => {
+const useListApplication = ({ urlFilters, type, setListState }: UseListApplicationsProps) => {
   const [applications, setApplications] = useState<ApplicationDetailsMap>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  console.log('applications', applications)
+
+  const filters = buildFilter(urlFilters)
+  console.log('filters', filters)
+
   const { data, error: applicationsError } = useGetApplicationsQuery({
-    variables: { code: type as string },
+    variables: { filters },
     fetchPolicy: 'network-only',
     skip: !type,
   })
@@ -51,6 +58,7 @@ const useListApplication = ({ type, setListState }: UseListApplicationsProps) =>
               isLinear: template?.isLinear as boolean,
               serial: serial as string,
               name: name as string,
+              status: status as string,
               outcome: outcome as string,
             },
           }
