@@ -17442,7 +17442,7 @@ export type AddNewUserFragment = (
 
 export type ApplicationFragment = (
   { __typename?: 'Application' }
-  & Pick<Application, 'id' | 'serial' | 'name' | 'stage' | 'status' | 'outcome'>
+  & Pick<Application, 'id' | 'serial' | 'name' | 'outcome'>
 );
 
 export type ElementFragment = (
@@ -17458,6 +17458,11 @@ export type ResponseFragment = (
 export type SectionFragment = (
   { __typename?: 'TemplateSection' }
   & Pick<TemplateSection, 'id' | 'title' | 'index' | 'code'>
+);
+
+export type StageFragment = (
+  { __typename?: 'ApplicationStageStatusAll' }
+  & Pick<ApplicationStageStatusAll, 'serial' | 'stageHistoryId' | 'stage' | 'stageId' | 'stageNumber' | 'status' | 'statusHistoryTimeCreated'>
 );
 
 export type TemplateFragment = (
@@ -17642,7 +17647,7 @@ export type GetApplicationQuery = (
     { __typename?: 'ApplicationStageStatusAllsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationStageStatusAll' }
-      & Pick<ApplicationStageStatusAll, 'serial' | 'stageHistoryId' | 'stage' | 'stageId' | 'stageNumber' | 'statusHistoryTimeCreated'>
+      & StageFragment
     )>> }
   )> }
 );
@@ -17694,12 +17699,6 @@ export type GetApplicationsQuery = (
       )> }
       & ApplicationFragment
     )>> }
-  )>, applicationStageStatusAlls?: Maybe<(
-    { __typename?: 'ApplicationStageStatusAllsConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'ApplicationStageStatusAll' }
-      & Pick<ApplicationStageStatusAll, 'serial' | 'stageHistoryId' | 'stage' | 'stageId' | 'stageNumber'>
-    )>> }
   )> }
 );
 
@@ -17714,7 +17713,7 @@ export type GetApplicationsStagesQuery = (
     { __typename?: 'ApplicationStageStatusAllsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationStageStatusAll' }
-      & Pick<ApplicationStageStatusAll, 'serial' | 'stageHistoryId' | 'stage' | 'stageId' | 'stageNumber' | 'statusHistoryTimeCreated'>
+      & StageFragment
     )>> }
   )> }
 );
@@ -17933,8 +17932,6 @@ export const ApplicationFragmentDoc = gql`
   id
   serial
   name
-  stage
-  status
   outcome
 }
     `;
@@ -17967,6 +17964,17 @@ export const SectionFragmentDoc = gql`
   title
   index
   code
+}
+    `;
+export const StageFragmentDoc = gql`
+    fragment Stage on ApplicationStageStatusAll {
+  serial
+  stageHistoryId
+  stage
+  stageId
+  stageNumber
+  status
+  statusHistoryTimeCreated
 }
     `;
 export const TemplateFragmentDoc = gql`
@@ -18252,12 +18260,7 @@ export const GetApplicationDocument = gql`
   }
   applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true}) {
     nodes {
-      serial
-      stageHistoryId
-      stage
-      stageId
-      stageNumber
-      statusHistoryTimeCreated
+      ...Stage
     }
   }
 }
@@ -18266,7 +18269,8 @@ ${ResponseFragmentDoc}
 ${TemplateFragmentDoc}
 ${TemplateStageFragmentDoc}
 ${SectionFragmentDoc}
-${ElementFragmentDoc}`;
+${ElementFragmentDoc}
+${StageFragmentDoc}`;
 
 /**
  * __useGetApplicationQuery__
@@ -18353,15 +18357,6 @@ export const GetApplicationsDocument = gql`
       }
     }
   }
-  applicationStageStatusAlls(condition: {stageIsCurrent: true}) {
-    nodes {
-      serial
-      stageHistoryId
-      stage
-      stageId
-      stageNumber
-    }
-  }
 }
     ${ApplicationFragmentDoc}
 ${TemplateFragmentDoc}`;
@@ -18395,16 +18390,11 @@ export const GetApplicationsStagesDocument = gql`
     query getApplicationsStages($serials: [String!]) {
   applicationStageStatusAlls(filter: {serial: {in: $serials}}, condition: {stageIsCurrent: true}) {
     nodes {
-      serial
-      stageHistoryId
-      stage
-      stageId
-      stageNumber
-      statusHistoryTimeCreated
+      ...Stage
     }
   }
 }
-    `;
+    ${StageFragmentDoc}`;
 
 /**
  * __useGetApplicationsStagesQuery__
