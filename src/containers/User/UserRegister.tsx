@@ -19,12 +19,14 @@ const UserRegister: React.FC = () => {
 
   useEffect(() => {
     // Log in as 'nonRegistered' user to be able to apply for User Registration form
-    try {
-      attemptLogin({ username: strings.USER_NONREGISTERED, password: '', onLoginSuccess })
-    } catch (err) {
-      console.log('Throwing here..')
-      setNetworkError(err.message)
-    }
+
+    attemptLogin({
+      username: strings.USER_NONREGISTERED,
+      password: '',
+      onLoginSuccess,
+    }).catch((error) => {
+      setNetworkError(error.message)
+    })
   }, [])
 
   const onLoginSuccess = async (loginResult: LoginPayload) => {

@@ -32,7 +32,6 @@ export const attemptLogin = async ({
       onLoginFailure()
     } else onLoginSuccess(loginResult)
   } catch (err) {
-    console.log('Throwing...')
     throw err
   }
 }
