@@ -14,6 +14,7 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isError, setIsError] = useState(false)
+  const [networkError, setNetworkError] = useState('')
   const [loginPayload, setLoginPayload] = useState<LoginPayload>()
   const [selectedOrgIndex, setSelectedOrgIndex] = useState(0)
   const { push, history } = useRouter()
@@ -32,6 +33,7 @@ const Login: React.FC = () => {
   }
 
   const handleSubmit = async () => {
+    setNetworkError('')
     if (!loginPayload) {
       // User login
       await attemptLogin({
@@ -39,6 +41,8 @@ const Login: React.FC = () => {
         password,
         onLoginSuccess,
         onLoginFailure: () => setIsError(true),
+      }).catch((error) => {
+        setNetworkError(error.message)
       })
     } else {
       // Organisation login
@@ -132,6 +136,7 @@ const Login: React.FC = () => {
                 </Button>
               </Container>
               {isError && <p>{strings.ERROR_LOGIN_PASSWORD}</p>}
+              {networkError && <p>{networkError}</p>}
             </Form>
           </Segment>
         </Grid.Column>
