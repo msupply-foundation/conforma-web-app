@@ -1,18 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Container,
-  Table,
-  List,
-  Label,
-  Header,
-  Progress,
-  Message,
-  Segment,
-  Button,
-} from 'semantic-ui-react'
+import { Container, Table, List, Label, Message, Segment, Button } from 'semantic-ui-react'
 import { Loading, FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
-import useListApplication from '../../utils/hooks/useListApplications'
+import useListApplications from '../../utils/hooks/useListApplications'
 import strings from '../../utils/constants'
 import findUserRole from '../../utils/helpers/translations/findUserRole'
 import { useUserState } from '../../contexts/UserState'
@@ -35,7 +25,7 @@ const ApplicationList: React.FC = () => {
     setListState,
   } = useListState()
 
-  const { error, loading } = useListApplication({ type, setListState })
+  const { error, loading } = useListApplications({ type, setListState })
 
   useEffect(() => {
     if (type && templatePermissions) {
