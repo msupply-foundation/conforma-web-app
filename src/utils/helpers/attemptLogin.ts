@@ -9,7 +9,7 @@ interface loginParameters {
   username: string
   password: string
   onLoginSuccess: Function
-  onLoginFailure: Function
+  onLoginFailure?: Function
 }
 interface loginOrgParameters {
   orgId: number
@@ -22,13 +22,19 @@ export const attemptLogin = async ({
   username,
   password,
   onLoginSuccess,
-  onLoginFailure,
+  onLoginFailure = () => {},
 }: loginParameters) => {
-  const loginResult: LoginPayload = await postRequest({ username, password }, loginURL)
+  try {
+    const loginResult: LoginPayload = await postRequest({ username, password }, loginURL)
+    console.log('loginResult', loginResult)
 
-  if (!loginResult.success) {
-    onLoginFailure()
-  } else onLoginSuccess(loginResult)
+    if (!loginResult.success) {
+      onLoginFailure()
+    } else onLoginSuccess(loginResult)
+  } catch (err) {
+    console.log('Throwing...')
+    throw err
+  }
 }
 
 export const attemptLoginOrg = async ({
@@ -37,10 +43,14 @@ export const attemptLoginOrg = async ({
   onLoginOrgSuccess,
   onLoginOrgFailure = () => {},
 }: loginOrgParameters) => {
-  const authHeader = { Authorization: 'Bearer ' + JWT }
-  const loginResult: LoginPayload = await postRequest({ orgId }, loginOrgURL, authHeader)
+  try {
+    const authHeader = { Authorization: 'Bearer ' + JWT }
+    const loginResult: LoginPayload = await postRequest({ orgId }, loginOrgURL, authHeader)
 
-  if (!loginResult.success) {
-    onLoginOrgFailure()
-  } else onLoginOrgSuccess(loginResult)
+    if (!loginResult.success) {
+      onLoginOrgFailure()
+    } else onLoginOrgSuccess(loginResult)
+  } catch (err) {
+    throw err
+  }
 }

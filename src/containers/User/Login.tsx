@@ -10,9 +10,6 @@ import messages from '../../utils/messages'
 import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { LoginPayload, OrganisationSimple } from '../../utils/types'
 
-const loginURL = config.serverREST + '/login'
-const loginOrgURL = config.serverREST + '/login-org'
-
 const Login: React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
