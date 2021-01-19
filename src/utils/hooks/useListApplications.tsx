@@ -1,5 +1,4 @@
-import { Dispatch, useEffect, useState } from 'react'
-import { ListActions } from '../../contexts/ListState'
+import { useEffect, useState } from 'react'
 import {
   Application,
   ApplicationStageStatusAll,
@@ -10,14 +9,13 @@ import { ApplicationDetails } from '../types'
 
 interface UseListApplicationsProps {
   type?: string
-  setListState: Dispatch<ListActions>
 }
 
 interface ApplicationDetailsMap {
   [serial: string]: ApplicationDetails
 }
 
-const useListApplications = ({ type, setListState }: UseListApplicationsProps) => {
+const useListApplications = ({ type }: UseListApplicationsProps) => {
   const [applications, setApplications] = useState<ApplicationDetailsMap>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -90,19 +88,16 @@ const useListApplications = ({ type, setListState }: UseListApplicationsProps) =
             }
           }
         })
-        setListState({
-          type: 'setApplications',
-          applications: Object.values(applicationsWithStage),
-        })
-
-        setLoading(false)
+        setApplications(applicationsWithStage)
       }
+      setLoading(false)
     }
   }, [applications, stagesData, stagesError])
 
   return {
     error,
     loading,
+    applications,
   }
 }
 

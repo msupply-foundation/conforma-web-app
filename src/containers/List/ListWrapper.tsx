@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Table, List, Label, Message, Segment, Button } from 'semantic-ui-react'
+import { Container, List, Label, Segment, Button } from 'semantic-ui-react'
 import { Loading, FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useListApplications from '../../utils/hooks/useListApplications'
@@ -7,25 +7,20 @@ import strings from '../../utils/constants'
 import findUserRole from '../../utils/helpers/translations/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/translations/mapColumnsByRole'
-import { ColumnDetails } from '../../utils/types'
+import { ApplicationDetails, ColumnDetails } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
-import { useListState } from '../../contexts/ListState'
 import { Link } from 'react-router-dom'
-import messages from '../../utils/messages'
+import ApplicationsList from '../../components/List/ApplicationsList'
 
-const ApplicationList: React.FC = () => {
+const ListWrapper: React.FC = () => {
   const { query, push } = useRouter()
   const { type, userRole } = query
   const {
     userState: { templatePermissions },
   } = useUserState()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
-  const {
-    listState: { applications },
-    setListState,
-  } = useListState()
-
-  const { error, loading } = useListApplications({ type, setListState })
+  const [applicationsRows, setApplicationsRows] = useState<ApplicationDetails[] | undefined>()
+  const { error, loading, applications } = useListApplications({ type })
 
   useEffect(() => {
     if (type && templatePermissions) {
@@ -38,12 +33,18 @@ const ApplicationList: React.FC = () => {
           if (newRole) push(`/applications?type=${type}&user-role=${newRole}`)
         }
       } else {
-        setListState({ type: 'reset' })
+        setApplicationsRows(undefined)
         const columns = mapColumnsByRole(userRole as USER_ROLES)
         setColumns(columns)
       }
     }
   }, [type, userRole, templatePermissions])
+
+  useEffect(() => {
+    if (!loading && applications) {
+      setApplicationsRows(Object.values(applications))
+    }
+  }, [loading, applications])
 
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
@@ -65,42 +66,11 @@ const ApplicationList: React.FC = () => {
           content={strings.BUTTON_APPLICATION_NEW}
         />
       </Segment>
-      {!userRole ? (
-        <Message color="red" header={messages.APPLICATIONS_MISSING_USER_ROLE} />
-      ) : (
-        columns &&
-        applications && (
-          // TODO: Create function on click (of a pre-defined group of sortable columns) in the header.
-          // After a click on the header the URL updates and a new query to GraphQL using sorted columns
-          <Table sortable stackable selectable>
-            <Table.Header>
-              <Table.Row>
-                {columns.map(({ headerName }) => (
-                  <Table.HeaderCell key={`ApplicationList-header-${headerName}`}>
-                    {headerName}
-                  </Table.HeaderCell>
-                ))}
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {applications.map((application, index) => (
-                <Table.Row key={`ApplicationList-application-${application.serial}`}>
-                  {columns.map(({ headerName, ColumnComponent }) => (
-                    <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
-                      <ColumnComponent application={application} />
-                    </Table.Cell>
-                  ))}
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
-        )
-      )}
-      {applications && applications.length === 0 && (
-        <Message floating color="yellow" header={messages.APPLICATIONS_LIST_EMPTY} />
+      {columns && applicationsRows && (
+        <ApplicationsList columns={columns} applications={applicationsRows} />
       )}
     </Container>
   )
 }
 
-export default ApplicationList
+export default ListWrapper
