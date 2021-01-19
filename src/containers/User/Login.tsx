@@ -7,8 +7,8 @@ import config from '../../config.json'
 import isLoggedIn from '../../utils/helpers/loginCheck'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
-import { postRequest as attemptLogin } from '../../utils/helpers/fetchMethods'
-import { User, LoginPayload, OrganisationSimple, TemplatePermissions } from '../../utils/types'
+import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
+import { LoginPayload, OrganisationSimple } from '../../utils/types'
 
 const loginURL = config.serverREST + '/login'
 const loginOrgURL = config.serverREST + '/login-org'
@@ -27,27 +27,32 @@ const Login: React.FC = () => {
     if (isLoggedIn()) push('/')
   }, [])
 
+  const onLoginSuccess = (loginResult: LoginPayload) => {
+    setIsError(false)
+    setLoginPayload({
+      ...loginResult,
+    })
+  }
+
   const handleSubmit = async () => {
     if (!loginPayload) {
       // User login
-      const loginResult: LoginPayload = await attemptLogin({ username, password }, loginURL)
-
-      if (!loginResult.success) setIsError(true)
-      else {
-        setIsError(false)
-        setLoginPayload({
-          ...loginResult,
-        })
-      }
+      await attemptLogin({
+        username,
+        password,
+        onLoginSuccess,
+        onLoginFailure: () => setIsError(true),
+      })
     } else {
       // Organisation login
       const { orgId } = loginPayload?.orgList?.[selectedOrgIndex] as OrganisationSimple
-      const authHeader = { Authorization: 'Bearer ' + loginPayload.JWT }
-      const loginOrgPayload = await attemptLogin({ orgId }, loginOrgURL, authHeader)
-
-      if (loginOrgPayload.success) {
-        finishLogin(loginOrgPayload)
-      }
+      attemptLoginOrg({
+        orgId,
+        JWT: loginPayload.JWT,
+        onLoginOrgSuccess: (loginOrgResult: LoginPayload) => {
+          finishLogin(loginOrgResult)
+        },
+      })
     }
   }
 
