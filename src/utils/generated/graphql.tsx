@@ -17677,7 +17677,7 @@ export type GetApplicationStatusQuery = (
     { __typename?: 'ApplicationStageStatusAllsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationStageStatusAll' }
-      & Pick<ApplicationStageStatusAll, 'serial' | 'stageHistoryId' | 'stage' | 'stageId' | 'stageNumber'>
+      & StageFragment
     )>> }
   )> }
 );
@@ -18312,15 +18312,12 @@ export const GetApplicationStatusDocument = gql`
   }
   applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true}) {
     nodes {
-      serial
-      stageHistoryId
-      stage
-      stageId
-      stageNumber
+      ...Stage
     }
   }
 }
-    ${TemplateStageFragmentDoc}`;
+    ${TemplateStageFragmentDoc}
+${StageFragmentDoc}`;
 
 /**
  * __useGetApplicationStatusQuery__
