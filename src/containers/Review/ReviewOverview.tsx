@@ -26,7 +26,7 @@ const ReviewOverview: React.FC = () => {
     assignment,
     assignedSections,
   } = useGetReviewAssignment({
-    reviewerId: currentUser?.id as number,
+    reviewerId: currentUser?.userId as number,
     serialNumber,
   })
 

@@ -40,7 +40,9 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
         icon="angle left"
         label={{ content: `${name} ${strings.LABEL_APPLICATIONS}`, color: 'grey' }}
       />
-      <Header textAlign="center">{strings.TITLE_COMPANY_PLACEHOLDER}</Header>
+      <Header textAlign="center">
+        {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
+      </Header>
       <Segment
         style={{
           backgroundColor: 'white',
