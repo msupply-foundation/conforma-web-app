@@ -33,10 +33,9 @@ const Login: React.FC = () => {
   }
 
   const handleSubmit = async () => {
-    setNetworkError('')
     if (!loginPayload) {
       // User login
-      await attemptLogin({
+      attemptLogin({
         username,
         password,
         onLoginSuccess,
@@ -53,6 +52,8 @@ const Login: React.FC = () => {
         onLoginOrgSuccess: (loginOrgResult: LoginPayload) => {
           finishLogin(loginOrgResult)
         },
+      }).catch((error) => {
+        setNetworkError(error.message)
       })
     }
   }
