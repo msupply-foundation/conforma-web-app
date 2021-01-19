@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Container, Form, Header, Label, Message } from 'semantic-ui-react'
+import { Button, Container, Form, Header, Label, Message, Segment } from 'semantic-ui-react'
 import { DecisionArea, Loading, ReviewSection } from '../../components'
 import { DecisionAreaState, ReviewQuestionDecision, User } from '../../utils/types'
 import useLoadReview from '../../utils/hooks/useLoadReview'
@@ -83,8 +83,8 @@ const ReviewPageWrapper: React.FC = () => {
   ) : loading ? (
     <Loading />
   ) : reviewSections && responsesByCode ? (
-    <>
-      <Container text textAlign="center">
+    <Segment.Group compact>
+      <Segment textAlign="center">
         <Label color="blue">{strings.STAGE_PLACEHOLDER}</Label>
         <Header content={applicationName} subheader={strings.DATE_APPLICATION_PLACEHOLDER} />
         <Header
@@ -93,9 +93,8 @@ const ReviewPageWrapper: React.FC = () => {
           content={strings.TITLE_REVIEW_SUMMARY}
           subheader={strings.SUBTITLE_REVIEW}
         />
-      </Container>
-
-      <Form>
+      </Segment>
+      <Segment basic>
         {reviewSections.map((reviewSection) => {
           const { id, firstName, lastName } = currentUser as User
           const assignedToYou = reviewSection.assigned?.id === id
@@ -112,7 +111,16 @@ const ReviewPageWrapper: React.FC = () => {
             />
           )
         })}
-      </Form>
+      </Segment>
+      <Segment
+        basic
+        style={{
+          marginLeft: '10%',
+          marginRight: '10%',
+        }}
+      >
+        <Button color="blue" content={strings.BUTTON_REVIEW_SUBMIT} />
+      </Segment>
       <DecisionArea
         state={decisionState}
         setDecision={setDecisionState}
@@ -120,7 +128,7 @@ const ReviewPageWrapper: React.FC = () => {
         problemMessage={reviewProblem}
         setProblemMessage={setReviewProblem}
       />
-    </>
+    </Segment.Group>
   ) : (
     <Message error header={strings.ERROR_REVIEW_PAGE} />
   )

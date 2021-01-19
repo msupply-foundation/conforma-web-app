@@ -8,6 +8,7 @@ export default {
   BUTTON_REVIEW_APPROVE_ALL: 'Approve all ',
   BUTTON_REVIEW_CONTINUE: 'Continue review',
   BUTTON_REVIEW_RESPONSE: 'Review',
+  BUTTON_REVIEW_SUBMIT: 'Submit review',
   BUTTON_REVIEW_START: 'Start review',
   BUTTON_SUMMARY: 'Review & Summary',
   BUTTON_SUBMIT: 'Submit',
