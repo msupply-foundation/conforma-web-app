@@ -17,7 +17,7 @@ interface ApplicationDetailsMap {
   [serial: string]: ApplicationDetails
 }
 
-const useListApplication = ({ type, setListState }: UseListApplicationsProps) => {
+const useListApplications = ({ type, setListState }: UseListApplicationsProps) => {
   const [applications, setApplications] = useState<ApplicationDetailsMap>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -106,4 +106,4 @@ const useListApplication = ({ type, setListState }: UseListApplicationsProps) =>
   }
 }
 
-export default useListApplication
+export default useListApplications
