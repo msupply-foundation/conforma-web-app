@@ -42,12 +42,21 @@ const mapQueryToFilterField: any = {
     }
   },
   // org -- not yet implemented, see back-end issue #179
-  // search -- to do once sub-elements are made (applicant, )
   // lastActiveDate (needs better definition - Submitted?)
   // deadlineDate (TBD)
   // Done with seperate conditions:
   //    - page, per-page, sort-by
-  // search
+  search: (value: string) => {
+    return {
+      or: [
+        { name: { includesInsensitive: value } },
+        { user: { username: { includesInsensitive: value } } },
+        { user: { firstName: { includesInsensitive: value } } },
+        { user: { lastName: { includesInsensitive: value } } },
+        { stage: { startsWithInsensitive: value } },
+      ],
+    }
+  },
 }
 
 const splitCommaList = (values: string) => values.split(',')
