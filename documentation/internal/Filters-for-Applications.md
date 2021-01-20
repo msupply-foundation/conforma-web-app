@@ -59,10 +59,8 @@ The `user-role` is used to determine how the columns and rows should be displaye
 **This is a compulsory filter**
 In case none is included in URL will be deduced from 1st user's persmissions
 
-Example: `type=user-registration`
-
-Considered in implementation: **Yes** [#131 - Headers]
-
+Example: `type=user-registration`  
+Considered in implementation: **Yes** [#131 - Headers]  
 Can have combined values: **No**
 
 Options:
@@ -73,12 +71,9 @@ Options:
 
 #### category (_not yet implemented in schema_)
 
-Example: `category=company`
-
-Considered in implementation: **Yes** **[New issue?]**
-
-Can have combined values: **No**
-
+Example: `category=company`  
+Considered in implementation: **Yes** **[New issue?]**  
+Can have combined values: **No**  
 Options:
 
 - `category-code` - Group of templates (application types)
@@ -87,12 +82,9 @@ Options:
 
 #### stage
 
-Example: `stage=screening`
-
-Considered in implementation: **Yes** [#251 - Filters]
-
-Can have combined values: **Yes** e.g: `stage=screening,assessment,final-decision`
-
+Example: `stage=screening`  
+Considered in implementation: **Yes** [#251 - Filters]  
+Can have combined values: **Yes** e.g: `stage=screening,assessment,final-decision`  
 Options:
 
 - Set of `stage-name` which is deduced per template (application type)
@@ -115,12 +107,9 @@ Options:
 
 #### sort-by
 
-Example: `sort-by=stage:asc`
-
-Considered in implementation: **Yes** [#131 - Headers]
-
-Can have combined values: **Yes** `sort-by=stage:asc,application-name:desc`
-
+Example: `sort-by=stage:asc`  
+Considered in implementation: **Yes** [#131 - Headers]  
+Can have combined values: **Yes** `sort-by=stage:asc,application-name:desc`  
 Options:
 
 - `column-name:direction`
@@ -134,12 +123,9 @@ Options:
 **This is a **compulsory** filter.**
 In case none is included in URL will be deduced from permission of type in user's persmissions.
 
-Example: `user-role=applicant`
-
-Considered in implementation: **Yes** [#131 - Headers]
-
-Can have combined values: **No**
-
+Example: `user-role=applicant`  
+Considered in implementation: **Yes** [#131 - Headers]  
+Can have combined values: **No**  
 Options:
 
 - Deduced by user's permissions (**TODO: More detailed explanation of user-role per permissions**)
@@ -148,12 +134,9 @@ Options:
 
 #### outcome
 
-Example: `outcome=pending`
-
-Considered in implementation: **Yes** [#251 - Filters]
-
-Can have combined values: **Yes** e.g: `outcome=pending,approved`
-
+Example: `outcome=pending`  
+Considered in implementation: **Yes** [#251 - Filters]  
+Can have combined values: **Yes** e.g: `outcome=pending,approved`  
 Options:
 
 - Set of `outcome` common for all templates (application types)
@@ -162,12 +145,9 @@ Options:
 
 #### action
 
-Example: `action=edit-draft`
-
-Considered in implementation: **Yes** [#251 - Filters]
-
-Can have combined values: **Yes** e.g: `action=edit-draft,`
-
+Example: `action=edit-draft`  
+Considered in implementation: **Yes** [#251 - Filters]  
+Can have combined values: **Yes** e.g: `action=edit-draft,make-updates`  
 Options:
 
 - Applicant:
@@ -194,12 +174,9 @@ Options:
 
 #### assigned
 
-Example: `assigned=none`
-
-Considered in implementation: **Yes** [#251 - Filters]
-
-Can have combined values: **Yes** e.g: `assigned=none,"Carl"`
-
+Example: `assigned=none`  
+Considered in implementation: **Yes** [#251 - Filters]  
+Can have combined values: **Yes** e.g: `assigned=none,"Carl"`  
 Options:
 
 - `none` - Applications with sections not-assigned
@@ -209,12 +186,9 @@ Options:
 
 #### consolidator
 
-Example: `consolidator="Tony"`
-
-Considered in implementation: **Yes** [#251 - Filters]
-
-Can have combined values: **Yes** e.g: `consolidator="Tony","Andrei"`
-
+Example: `consolidator="Tony"`  
+Considered in implementation: **Yes** [#251 - Filters]  
+Can have combined values: **Yes** e.g: `consolidator="Tony","Andrei"`  
 Options:
 
 - `"username"` - Consolidator username
@@ -223,12 +197,9 @@ Options:
 
 #### applicant
 
-Example: `applicant="John"`
-
-Considered in implementation: **No**
-
-Can have combined values: **Yes** e.g: `applicant="John","Nicole"`
-
+Example: `applicant="John"`  
+Considered in implementation: **No**  
+Can have combined values: **Yes** e.g: `applicant="John","Nicole"`  
 Options:
 
 - `"username"` - Applicant username
@@ -237,12 +208,9 @@ Options:
 
 #### org
 
-Example: `org="Company A"`
-
-Considered in implementation: **Yes** [#251 - Filters]
-
-Can have combined values: **Yes** e.g: `org="Company A","Company B"`
-
+Example: `org="Company A"`  
+Considered in implementation: **Yes** [#251 - Filters]  
+Can have combined values: **Yes** e.g: `org="Company A","Company B"`  
 Options:
 
 - `"organisation name"`
@@ -251,12 +219,9 @@ Options:
 
 #### search
 
-Example: `search="abc 123"`
-
-Considered in implementation: **Yes** [#251 - Filters]
-
-Can have combined values: **No**
-
+Example: `search="abc 123"`  
+Considered in implementation: **Yes** [#251 - Filters]  
+Can have combined values: **No**  
 Options:
 
 - String containing [A-Z], [a-z], [0-9], _space_
@@ -271,12 +236,9 @@ Options:
 
 #### last-active-date
 
-Example: `last-active-date=2021-01-01`
-
-Considered in implementation: **Yes** [#228 - Dates in columns]
-
-Can have combined values: **Yes** e.g: `last-active-date=today,last-week`
-
+Example: `last-active-date=2021-01-01`  
+Considered in implementation: **Yes** [#228 - Dates in columns]  
+Can have combined values: **Yes** e.g: `last-active-date=today,last-week`  
 Options:
 
 - Pre-defined string: `today` (See more formats on Formats & Rules)
@@ -288,12 +250,9 @@ Options:
 
 #### deadline-date
 
-Example: `deadline-date=2021-01-31`
-
-Considered in implementation: **Yes** [#228 - Dates in columns]
-
-Can have combined values: **Yes** e.g: `deadline-date=today,2021-01-02`
-
+Example: `deadline-date=2021-01-31`  
+Considered in implementation: **Yes** [#228 - Dates in columns]  
+Can have combined values: **Yes** e.g: `deadline-date=today,2021-01-02`  
 Options:
 
 - Pre-defined string: `today` (See more formats on Formats & Rules)
@@ -309,12 +268,9 @@ Options:
 
 #### page
 
-Example: `page=1`
-
-Considered in implementation: **Yes** [#210 - Pagination]
-
-Can have combined values: **No**
-
+Example: `page=1`  
+Considered in implementation: **Yes** [#210 - Pagination]  
+Can have combined values: **No**  
 Options:
 
 - Positive number (When page number doesn't existing no results are displayed)
@@ -323,12 +279,9 @@ Options:
 
 #### per-page
 
-Example: `per-page=20`
-
-Considered in implementation: **Yes** [#210 - Pagination]
-
-Can have combined values: **No**
-
+Example: `per-page=20`  
+Considered in implementation: **Yes** [#210 - Pagination]  
+Can have combined values: **No**  
 Options:
 
 - Number between 10 - 100
@@ -358,10 +311,8 @@ When combined labels are used (with separator `,`) the query will be using the O
 
 ### General
 
-When combined filters are used (with separator `&`) the query will be using the AND connector.
-
-Filters that aren't provided would be considered as fetch ALL.
-
+When combined filters are used (with separator `&`) the query will be using the AND connector.  
+Filters that aren't provided would be considered as fetch ALL.  
 A few filters should automatically used (example page number) and would be in the query filters mirroring the current displayed query.
 
 ---
