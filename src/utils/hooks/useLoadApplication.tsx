@@ -31,7 +31,7 @@ const useLoadApplication = (props: UseGetApplicationProps) => {
     if (data?.applicationBySerial) {
       const application = data.applicationBySerial as Application
 
-      let applicationDetails: ApplicationDetails = {
+      const applicationDetails: ApplicationDetails = {
         id: application.id,
         type: application.template?.name as string,
         isLinear: application.template?.isLinear as boolean,
