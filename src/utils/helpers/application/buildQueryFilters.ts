@@ -29,6 +29,7 @@ const mapQueryToFilterField: FilterMap = {
     }
   },
   status: (values: string) => {
+    // To-Do: gracefully handle values that don't match Enum -- currently breaks query
     return { status: inEnumList(values) }
   },
   outcome: (values: string) => {
