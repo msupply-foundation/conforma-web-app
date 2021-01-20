@@ -68,10 +68,10 @@ const buildSectionsStructure = ({
       }
 
       if (!reviewer || !reviewInSection) return sectionState
-      const { id, username } = reviewer as User
+      const { id, firstName, lastName } = reviewer as User
       return {
         ...sectionState,
-        assigned: { id, username: username as string },
+        assigned: { id, firstName: firstName as string, lastName: lastName as string },
       }
     })
 }

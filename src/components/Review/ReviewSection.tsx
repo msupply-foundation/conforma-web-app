@@ -17,7 +17,6 @@ import { ReviewResponseDecision, TemplateElementCategory } from '../../utils/gen
 import { ReviewQuestionDecision, ResponsesByCode, SectionElementStates } from '../../utils/types'
 
 interface ReviewSectionProps {
-  reviewer: string
   allResponses: ResponsesByCode
   assignedToYou: boolean
   reviewSection: SectionElementStates
@@ -30,7 +29,6 @@ interface ReviewSectionProps {
 }
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({
-  reviewer,
   allResponses,
   assignedToYou,
   reviewSection,
@@ -38,7 +36,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
   setDecisionArea,
   canEdit,
 }) => {
-  const { section, pages } = reviewSection
+  const { assigned, section, pages } = reviewSection
   const [isOpen, setIsOpen] = useState(false)
 
   const showSectionAssignment = assignedToYou ? (
@@ -127,7 +125,9 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                                       <Grid.Column width="10">
                                         <Card.Header>{review.decision}</Card.Header>
                                         <Card.Description>{review.comment}</Card.Description>
-                                        <Card.Meta>{reviewer}</Card.Meta>
+                                        {assigned && (
+                                          <Card.Meta>{`${assigned.firstName} ${assigned.lastName}`}</Card.Meta>
+                                        )}
                                       </Grid.Column>
                                       <Grid.Column width="2">
                                         <Icon
