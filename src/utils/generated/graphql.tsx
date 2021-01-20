@@ -18490,7 +18490,7 @@ export type GetApplicationStatusLazyQueryHookResult = ReturnType<typeof useGetAp
 export type GetApplicationStatusQueryResult = Apollo.QueryResult<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>;
 export const GetApplicationsDocument = gql`
     query getApplications($filters: ApplicationFilter) {
-  applications(filter: $filters, orderBy: [OUTCOME_DESC]) {
+  applications(filter: $filters, orderBy: [SERIAL_DESC]) {
     nodes {
       ...Application
       template {

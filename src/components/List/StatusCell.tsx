@@ -17,6 +17,7 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
     case ApplicationStatus.Completed:
     case ApplicationStatus.Submitted:
     case ApplicationStatus.ReSubmitted:
+      return <p>{status}</p> // Remove this line later, just want to see for now
       return null
     case ApplicationStatus.Draft:
       return (

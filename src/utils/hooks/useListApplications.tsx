@@ -19,8 +19,9 @@ interface ApplicationDetailsMap {
   [serial: string]: ApplicationDetails
 }
 
-const useListApplication = ({ query: urlFilters, type }: UseListApplicationsProps) => {
-  const [applications, setApplications] = useState<ApplicationDetailsMap>()
+const useListApplications = ({ query: urlFilters, type }: UseListApplicationsProps) => {
+  const [applications, setApplications] = useState<any[]>([])
+  const [stagesDataObject, setStagesDataObject] = useState<any>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -35,78 +36,58 @@ const useListApplication = ({ query: urlFilters, type }: UseListApplicationsProp
     skip: !type,
   })
 
-  console.log('data', data)
-
   const { data: stagesData, error: stagesError } = useGetApplicationsStagesQuery({
-    variables: { serials: applications ? Object.keys(applications) : [] },
+    variables: {
+      serials: applications ? applications.map((application: any) => application.serial) : [],
+    },
     skip: !applications,
   })
-
-  useEffect(() => {
-    if (applicationsError) {
-      setError(applicationsError.message)
-      return
-    }
-    if (data?.applications) {
-      const applicationsList = data?.applications?.nodes as Application[]
-      const applicationsMap = applicationsList.reduce(
-        (applicationsMap: ApplicationDetailsMap, application) => {
-          const { id, serial, name, stage, status, outcome, template } = application
-          return {
-            ...applicationsMap,
-            [serial as string]: {
-              id,
-              type: template?.name as string,
-              isLinear: template?.isLinear as boolean,
-              serial: serial as string,
-              name: name as string,
-              status: status as string,
-              outcome: outcome as string,
-            },
-          }
-        },
-        {}
-      )
-      setApplications(applicationsMap)
-    }
-  }, [data, applicationsError])
 
   useEffect(() => {
     if (stagesError) {
       setError(stagesError.message)
       return
     }
+    if (applicationsError) {
+      setError(applicationsError.message)
+      return
+    }
+    if (!stagesData) return
+    if (data?.applications && stagesData?.applicationStageStatusAlls) {
+      const applicationsList = data?.applications?.nodes as Application[]
+      const stagesList = stagesData?.applicationStageStatusAlls?.nodes as Application[]
 
-    console.log('applications', applications)
+      // Get stages array as object indexed by serial
+      const stagesMapToObject: any[] = stagesList.reduce((stagesMap: any, stageStatus: any) => {
+        const { serial, stage, stageId, status, statusHistoryTimeCreated } = stageStatus
+        return {
+          ...stagesMap,
+          [serial]: {
+            id: stageId,
+            name: stage,
+            status: status,
+            date: statusHistoryTimeCreated.split('T')[0],
+          },
+        }
+      }, {})
 
-    if (applications) {
-      if (stagesData?.applicationStageStatusAlls) {
-        const allApplicationsStageStatus = stagesData.applicationStageStatusAlls
-          .nodes as ApplicationStageStatusAll[]
-
-        let applicationsWithStage: ApplicationDetailsMap = applications
-        Object.entries(applications).forEach(([applicationSerial, details]) => {
-          const stageFound = allApplicationsStageStatus.find(
-            ({ serial }) => serial === applicationSerial
-          )
-
-          if (stageFound) {
-            applicationsWithStage[applicationSerial] = {
-              ...details,
-              stage: {
-                id: stageFound.stageId as number,
-                name: stageFound.stage as string,
-                status: stageFound.status as string,
-                date: stageFound.statusHistoryTimeCreated.split('T')[0],
-              },
-            }
-          }
-        })
-        setApplications(applicationsWithStage)
-      }
+      // Add those stages to applications and update Applications state
+      const applicationsWithStages = applicationsList.map((application: any) => {
+        const { id, serial, name, stage, status, outcome, template } = application
+        return {
+          id,
+          serial,
+          type: template?.name,
+          isLinear: template?.isLinear,
+          name,
+          outcome,
+          stage: stagesMapToObject[application.serial],
+        }
+      })
+      setApplications(applicationsWithStages)
       setLoading(false)
     }
-  }, [applications, stagesData, stagesError])
+  }, [stagesData, stagesError, data, applicationsError])
 
   return {
     error,

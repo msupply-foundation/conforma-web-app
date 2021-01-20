@@ -20,7 +20,7 @@ const ListWrapper: React.FC = () => {
   } = useUserState()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
   const [applicationsRows, setApplicationsRows] = useState<ApplicationDetails[] | undefined>()
-  const { error, loading, applications } = useListApplications({ type })
+  const { error, loading, applications } = useListApplications({ query, type })
 
   useEffect(() => {
     if (type && templatePermissions) {
@@ -42,7 +42,7 @@ const ListWrapper: React.FC = () => {
 
   useEffect(() => {
     if (!loading && applications) {
-      setApplicationsRows(Object.values(applications))
+      setApplicationsRows(applications)
     }
   }, [loading, applications])
 
