@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer } from 'react'
 import { isArraySorted } from '../utils/helpers/utilityFunctions'
-import { ApplicationState } from '../utils/types'
+import { ContextApplicationState } from '../utils/types'
 
 type TimestampType =
   | 'elementEnteredTimestamp'
@@ -26,7 +26,7 @@ export type ApplicationActions =
 
 type ApplicationProviderProps = { children: React.ReactNode }
 
-const reducer = (state: ApplicationState, action: ApplicationActions) => {
+const reducer = (state: ContextApplicationState, action: ApplicationActions) => {
   switch (action.type) {
     case 'setApplication':
       const { id } = action
@@ -60,7 +60,7 @@ const reducer = (state: ApplicationState, action: ApplicationActions) => {
   }
 }
 
-const initialState: ApplicationState = {
+const initialState: ContextApplicationState = {
   id: null,
   serialNumber: null,
   inputElementsActivity: {
@@ -73,7 +73,7 @@ const initialState: ApplicationState = {
 
 // By setting the typings here, we ensure we get intellisense in VS Code
 const initialApplicationContext: {
-  applicationState: ApplicationState
+  applicationState: ContextApplicationState
   setApplicationState: React.Dispatch<ApplicationActions>
 } = {
   applicationState: initialState,

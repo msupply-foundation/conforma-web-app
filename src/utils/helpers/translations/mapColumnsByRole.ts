@@ -1,5 +1,19 @@
-import { APPLICATION_COLUMN, USER_ROLE } from '../../model'
-import COLUMNS_PER_ROLE from '../../model/columnsPerUserRole'
+import {
+  ApplicantCell,
+  ApplicationNameCell,
+  ConsolidatorCell,
+  DeadlineCell,
+  LastActiveDateCell,
+  OrganisationCell,
+  OutcomeCell,
+  SerialNumberCell,
+  StageCell,
+  StatusCell,
+} from '../../../components/List'
+import { APPLICATION_COLUMNS, USER_ROLES } from '../../data'
+import COLUMNS_PER_ROLE from '../../data/columnsPerUserRole'
+import { ColumnDetails } from '../../types'
+
 /**
  * @function: mapColumnsByRole
  * Map object with all columns to be displayed - based on the current user Role.
@@ -11,52 +25,60 @@ import COLUMNS_PER_ROLE from '../../model/columnsPerUserRole'
  * - @returns Object with each Column details to construct header and rows of applications list.s
  */
 
-interface ColumnDetails {
-  headerName: string
-  filters: Array<string>
-  render?: Function
-}
-
-const allColumns = {
+const allColumns: { [key in APPLICATION_COLUMNS]: ColumnDetails } = {
+  SERIAL_NUMBER: {
+    headerName: 'Serial number',
+    filters: ['serial'],
+    ColumnComponent: SerialNumberCell,
+  },
   LAST_ACTIVE_DATE: {
-    headerName: APPLICATION_COLUMN.LAST_ACTIVE_DATE,
+    headerName: 'Last active date',
     filters: ['last-active-date'],
+    ColumnComponent: LastActiveDateCell,
   },
   DEADLINE_DATE: {
-    headerName: APPLICATION_COLUMN.DEADLINE_DATE,
+    headerName: 'Deadline date',
     filters: ['deadline-date'],
+    ColumnComponent: DeadlineCell,
   },
   APPLICATION_NAME: {
-    headerName: APPLICATION_COLUMN.APPLICATION_NAME,
+    headerName: 'Name',
     filters: ['search'],
+    ColumnComponent: ApplicationNameCell,
   },
   APPLICANT: {
-    headerName: APPLICATION_COLUMN.APPLICANT,
+    headerName: 'Applicant',
     filters: ['applicant'],
+    ColumnComponent: ApplicantCell,
   },
-  COMPANY: {
-    headerName: APPLICATION_COLUMN.COMPANY,
+  ORGANISATION: {
+    headerName: 'Organisation',
     filters: ['org'],
+    ColumnComponent: OrganisationCell,
   },
   CONSOLIDATOR: {
-    headerName: APPLICATION_COLUMN.CONSOLIDATOR,
+    headerName: 'Consolidator',
     filters: ['consolidator'],
+    ColumnComponent: ConsolidatorCell,
   },
   STAGE: {
-    headerName: APPLICATION_COLUMN.STAGE,
+    headerName: 'Stage',
     filters: ['search', 'stage'],
+    ColumnComponent: StageCell,
   },
   STATUS: {
-    headerName: APPLICATION_COLUMN.STATUS,
-    filters: ['search'],
-  },
-  ACTIONABLE: {
-    headerName: '',
+    headerName: 'Status',
     filters: ['search', 'action'],
+    ColumnComponent: StatusCell,
+  },
+  OUTCOME: {
+    headerName: 'Outcome',
+    filters: ['outcome'],
+    ColumnComponent: OutcomeCell,
   },
 }
 
-export default (userRole: USER_ROLE): Array<ColumnDetails> => {
-  const columns: Array<ColumnDetails> = COLUMNS_PER_ROLE[userRole].map((key) => allColumns[key])
+export default (userRoles: USER_ROLES): Array<ColumnDetails> => {
+  const columns: Array<ColumnDetails> = COLUMNS_PER_ROLE[userRoles].map((key) => allColumns[key])
   return columns
 }

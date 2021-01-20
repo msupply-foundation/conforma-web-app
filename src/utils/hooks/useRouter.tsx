@@ -79,5 +79,5 @@ export function useRouter(): RouterResult {
       location,
       history,
     }
-  }, [params, match, location, history])
+  }, [location])
 }
