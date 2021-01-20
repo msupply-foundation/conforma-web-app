@@ -89,7 +89,7 @@ const ApplicationPageWrapper: React.FC = () => {
   // 1 - ProcessRedirect: Will redirect to summary in case application is SUBMITTED
   // 2 - Set the current section state of the application
   useEffect(() => {
-    if (!statusLoading && elementsState && responsesByCode) {
+    if (!statusLoading && elementsState && responsesByCode && appStatus) {
       processRedirect({
         ...appStatus,
         serialNumber,
@@ -106,7 +106,7 @@ const ApplicationPageWrapper: React.FC = () => {
       if (sectionCode && page)
         setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
     }
-  }, [statusLoading, elementsState, responsesByCode, sectionCode, page])
+  }, [statusLoading, elementsState, responsesByCode, sectionCode, page, appStatus])
 
   // Update timestamp to keep track of when elements have been properly updated
   // after losing focus.
@@ -230,7 +230,9 @@ const ApplicationPageWrapper: React.FC = () => {
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
       <ModalWarning showModal={showModal} />
-      <Header textAlign="center">{strings.TITLE_COMPANY_PLACEHOLDER}</Header>
+      <Header textAlign="center">
+        {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
+      </Header>
       <Grid
         stackable
         style={{

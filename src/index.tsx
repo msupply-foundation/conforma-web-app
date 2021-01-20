@@ -4,15 +4,34 @@ import '../semantic/src/semantic.less'
 import config from './config.json'
 import cache from './cache'
 import { AppWrapper } from './containers/Main'
-import { ApolloClient, ApolloProvider, NormalizedCacheObject } from '@apollo/client'
+import { ApolloClient, ApolloProvider, createHttpLink, NormalizedCacheObject } from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
 import { persistCache } from 'apollo3-cache-persist'
 import { Loading } from './components'
+
+// Adds authorisation header with token from local storage (to be used on every request)
+// see https://www.apollographql.com/docs/react/networking/authentication/#header
+const authLink = setContext((_, { headers }) => {
+  const JWT = localStorage.getItem('persistJWT')
+  return {
+    headers: {
+      ...headers,
+      authorization: JWT ? `Bearer ${JWT}` : '',
+    },
+  }
+})
+
+// Needed to link or 'chain' commands in Apollo Clients (so that headers can be added to every apollo request)
+// see https://www.apollographql.com/docs/react/networking/authentication/#header
+const httpLink = createHttpLink({
+  uri: config.serverGraphQL,
+})
 
 const App: React.FC = () => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | undefined>(undefined)
   useEffect(() => {
     const client = new ApolloClient({
-      uri: config.serverGraphQL,
+      link: authLink.concat(httpLink),
       cache,
     })
 

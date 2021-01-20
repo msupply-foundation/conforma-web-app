@@ -773,10 +773,10 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@openmsupply/expression-evaluator@^1.3.0":
-  version "1.3.0"
-  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.3.0/5cfbd4ecc2a4cf98c9eb8e55077533b2faa63fc4ed214f4adeb313b93f1180f8#e81aa987a9dc9947811ab27f60457aec71e4c58d"
-  integrity sha512-WTbe3yRFGi4w1eWjoPsNHgfoo0v+dCyfdxGutj8Z+uhmoPQSqKS8tVm+tWjP4/GSab7VPWijNM3782ML/CziOQ==
+"@openmsupply/expression-evaluator@^1.4.0":
+  version "1.4.0"
+  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.4.0/1c06ed60b0254f5c3c6f8e03bd76e7d94f1668c5032b3595873970a1cb7c77b5#1da30d7a74208b2fcba2de472e751256d0b886a7"
+  integrity sha512-frktwDBpewYNpCaSk3qTsUnFrEnUztzw4ppKr1q1x3MmK5JD/U4B6Z43EqZUgedbDAco6w2/Ygd32qxUFn+lwQ==
 
 "@reach/router@^1.3.4":
   version "1.3.4"

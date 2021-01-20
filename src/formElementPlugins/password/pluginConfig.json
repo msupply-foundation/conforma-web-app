@@ -1,0 +1,8 @@
+{
+  "isCore": true,
+  "code": "password",
+  "displayName": "Secure Password Input",
+  "dynamicParameters": ["label"],
+  "//": "categories types: 'Input'|'Informative'",
+  "category": "Input"
+}

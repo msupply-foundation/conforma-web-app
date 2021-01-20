@@ -5,6 +5,7 @@ import { TemplatePermissions, User } from '../utils/types'
 type UserState = {
   currentUser: User | null
   templatePermissions: TemplatePermissions
+  isLoading: boolean
 }
 
 export type UserActions =
@@ -15,6 +16,10 @@ export type UserActions =
       type: 'setCurrentUser'
       newUser: User
       newPermissions: TemplatePermissions
+    }
+  | {
+      type: 'setLoading'
+      isLoading: boolean
     }
   | {
       type: 'setTemplatePermissions'
@@ -34,6 +39,12 @@ const reducer = (state: UserState, action: UserActions) => {
         currentUser: newUser,
         templatePermissions: newPermissions,
       }
+    case 'setLoading':
+      const { isLoading } = action
+      return {
+        ...state,
+        isLoading,
+      }
     case 'setTemplatePermissions':
       const { templatePermissions } = action
       return {
@@ -48,18 +59,19 @@ const reducer = (state: UserState, action: UserActions) => {
 const initialState: UserState = {
   currentUser: null,
   templatePermissions: {},
+  isLoading: false,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
 const initialUserContext: {
   userState: UserState
   setUserState: React.Dispatch<UserActions>
-  login: Function
+  onLogin: Function
   logout: Function
 } = {
   userState: initialState,
   setUserState: () => {},
-  login: () => {},
+  onLogin: () => {},
   logout: () => {},
 }
 
@@ -70,23 +82,31 @@ export function UserProvider({ children }: UserProviderProps) {
   const userState = state
   const setUserState = dispatch
 
-  const login = (JWT: string) => {
+  const onLogin = (
+    JWT: string,
+    user: User | undefined = undefined,
+    permissions: TemplatePermissions | undefined = undefined
+  ) => {
+    dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem('persistJWT', JWT)
-    fetchUserInfo({ dispatch: setUserState })
+    if (!user || !permissions) fetchUserInfo({ dispatch: setUserState })
+    else dispatch({ type: 'setCurrentUser', newUser: user, newPermissions: permissions })
   }
 
   const logout = () => {
     localStorage.clear()
-    dispatch({ type: 'resetCurrentUser' })
+    window.location.href = '/login'
   }
 
   // Initial check for persisted user in local storage
   const JWT = localStorage.getItem('persistJWT')
-  if (JWT && !userState.currentUser) login(JWT)
+  if (JWT && !userState.currentUser && !userState.isLoading) {
+    onLogin(JWT)
+  }
 
   // Return the state and reducer to the context (wrap around the children)
   return (
-    <UserContext.Provider value={{ userState, setUserState, login, logout }}>
+    <UserContext.Provider value={{ userState, setUserState, onLogin, logout }}>
       {children}
     </UserContext.Provider>
   )

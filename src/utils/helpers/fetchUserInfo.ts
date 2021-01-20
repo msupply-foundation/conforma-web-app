@@ -1,7 +1,8 @@
 import { Dispatch } from 'react'
 import config from '../../config.json'
 import { UserActions } from '../../contexts/UserState'
-const userInfoUrl = `${config.serverREST}/userInfo`
+
+const userInfoUrl = `${config.serverREST}/user-info`
 const LOCAL_STORAGE_JWT_KEY = 'persistJWT'
 const createAuthorisationHeader = (JWT: string) => ({
   Authorization: `Bearer ${JWT}`,
@@ -27,6 +28,8 @@ const fetchUserInfo = ({ dispatch }: SetUserInfoProps) => {
           newPermissions: templatePermissions,
         })
       }
+
+      dispatch({ type: 'setLoading', isLoading: false })
     })
     .catch((error) => {
       // TODO handle this properly

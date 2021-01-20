@@ -4,7 +4,10 @@ import {
   TemplateElementCategory,
 } from './generated/graphql'
 
+import { ValidationState } from '../formElementPlugins/types'
+
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { SummaryViewWrapperProps } from '../formElementPlugins/types'
 
 export {
   ApplicationState,
@@ -18,6 +21,7 @@ export {
   ElementState,
   ElementsActivityState,
   EvaluatorParameters,
+  DecisionAreaState,
   IGraphQLConnection,
   LooseString,
   PageElementsStatuses,
@@ -39,6 +43,7 @@ export {
   TemplateTypePayload,
   TemplateElementState,
   TemplatePermissions,
+  TemplatesDetails,
   ValidationMode,
   ValidateFunction,
   ValidateObject,
@@ -46,6 +51,9 @@ export {
   RevalidateResult,
   UseGetApplicationProps,
   User,
+  OrganisationSimple,
+  Organisation,
+  LoginPayload,
 }
 
 interface ApplicationState {
@@ -117,6 +125,12 @@ interface ElementsActivityState {
   areTimestampsInSequence: boolean
 }
 
+interface DecisionAreaState {
+  open: boolean
+  review: ReviewQuestionDecision | null
+  summaryViewProps: SummaryViewWrapperProps | null
+}
+
 interface IGraphQLConnection {
   fetch: Function
   endpoint: string
@@ -161,6 +175,8 @@ interface ResponseFull {
   optionIndex?: number
   reference?: any // Not yet decided how to represent
   isValid?: boolean | null
+  hash?: string
+  customValidation?: ValidationState
 }
 
 interface ResponsePayload {
@@ -247,11 +263,16 @@ interface TemplateElementState extends ElementBase {
 }
 
 interface TemplatePermissions {
-  [index: string]: {
-    [index: string]: Array<'Apply' | 'Review' | 'Assign'>
-  }
+  [index: string]: Array<UserRole>
 }
 
+type TemplatesDetails = {
+  permissions: Array<UserRole>
+  name: string
+  code: string
+}[]
+
+type UserRole = 'Apply' | 'Review' | 'Assign'
 interface ValidateFunction {
   (
     validationExpress: IQueryNode,
@@ -284,10 +305,30 @@ interface UseGetApplicationProps {
 }
 
 interface User {
-  id: number
+  userId: number
   firstName: string
   lastName?: string | null
   username: string
   email: string
   dateOfBirth?: Date | null
+  organisation?: Organisation
+}
+
+interface OrganisationSimple {
+  orgId: number
+  userRole: string | null
+  orgName: string
+}
+
+interface Organisation extends OrganisationSimple {
+  licenceNumber: string
+  address: string
+}
+
+interface LoginPayload {
+  success?: boolean
+  user: User
+  JWT: string
+  templatePermissions: TemplatePermissions
+  orgList?: OrganisationSimple[]
 }
