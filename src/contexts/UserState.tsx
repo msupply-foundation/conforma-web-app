@@ -66,12 +66,12 @@ const initialState: UserState = {
 const initialUserContext: {
   userState: UserState
   setUserState: React.Dispatch<UserActions>
-  login: Function
+  onLogin: Function
   logout: Function
 } = {
   userState: initialState,
   setUserState: () => {},
-  login: () => {},
+  onLogin: () => {},
   logout: () => {},
 }
 
@@ -82,27 +82,31 @@ export function UserProvider({ children }: UserProviderProps) {
   const userState = state
   const setUserState = dispatch
 
-  const login = (JWT: string) => {
+  const onLogin = (
+    JWT: string,
+    user: User | undefined = undefined,
+    permissions: TemplatePermissions | undefined = undefined
+  ) => {
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem('persistJWT', JWT)
-    fetchUserInfo({ dispatch: setUserState })
+    if (!user || !permissions) fetchUserInfo({ dispatch: setUserState })
+    else dispatch({ type: 'setCurrentUser', newUser: user, newPermissions: permissions })
   }
 
   const logout = () => {
-    dispatch({ type: 'setLoading', isLoading: true })
     localStorage.clear()
-    dispatch({ type: 'resetCurrentUser' })
+    window.location.href = '/login'
   }
 
   // Initial check for persisted user in local storage
   const JWT = localStorage.getItem('persistJWT')
   if (JWT && !userState.currentUser && !userState.isLoading) {
-    login(JWT)
+    onLogin(JWT)
   }
 
   // Return the state and reducer to the context (wrap around the children)
   return (
-    <UserContext.Provider value={{ userState, setUserState, login, logout }}>
+    <UserContext.Provider value={{ userState, setUserState, onLogin, logout }}>
       {children}
     </UserContext.Provider>
   )

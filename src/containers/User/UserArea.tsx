@@ -3,7 +3,6 @@ import { Button, Grid, Label, Message, Segment, Sticky } from 'semantic-ui-react
 import strings from '../../utils/constants'
 import { useUserState } from '../../contexts/UserState'
 import UserSelection from './UserSelection'
-import { useRouter } from '../../utils/hooks/useRouter'
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import { AppMenu } from '../../components'
 
@@ -13,12 +12,6 @@ const UserArea: React.FC = () => {
     logout,
   } = useUserState()
   const { error, loading, filteredTemplates } = useListTemplates(templatePermissions, isLoading)
-
-  const handleLogOut = async () => {
-    await logout()
-    // TODO: Force full application reload on log out
-    window.location.href = '/login'
-  }
 
   return (
     <Sticky>
@@ -31,7 +24,9 @@ const UserArea: React.FC = () => {
               <AppMenu templatePermissions={filteredTemplates} />
             )}
 
-            <Segment inverted>{strings.TITLE_COMPANY_PLACEHOLDER}</Segment>
+            <Segment inverted>
+              {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
+            </Segment>
           </Grid.Column>
           <Grid.Column width={4}>
             {currentUser && (
@@ -40,7 +35,7 @@ const UserArea: React.FC = () => {
                   {currentUser?.firstName}
                   <UserSelection />
                 </Label>
-                <Button basic color="blue" onClick={handleLogOut}>
+                <Button basic color="blue" onClick={() => logout()}>
                   {strings.LABEL_LOG_OUT}
                 </Button>
               </Segment>

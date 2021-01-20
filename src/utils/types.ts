@@ -55,6 +55,9 @@ export {
   UseGetApplicationProps,
   User,
   UserRoles,
+  OrganisationSimple,
+  Organisation,
+  LoginPayload,
 }
 
 interface ApplicationState {
@@ -308,12 +311,32 @@ interface UseGetApplicationProps {
 }
 
 interface User {
-  id: number
+  userId: number
   firstName: string
   lastName?: string | null
   username: string
   email: string
   dateOfBirth?: Date | null
+  organisation?: Organisation
+}
+
+interface OrganisationSimple {
+  orgId: number
+  userRole: string | null
+  orgName: string
+}
+
+interface Organisation extends OrganisationSimple {
+  licenceNumber: string
+  address: string
+}
+
+interface LoginPayload {
+  success?: boolean
+  user: User
+  JWT: string
+  templatePermissions: TemplatePermissions
+  orgList?: OrganisationSimple[]
 }
 
 type UserRoles = {
