@@ -1,53 +1,45 @@
 export default function buildQueryFilters(filters: any) {
-  const keyValuePairs = Object.entries(filters)
-    .map(([key, value]) => {
-      if (!mapQueryToFilterField?.[key]) return // filter field not recognised
-      const { fieldName, valueFunction } = mapQueryToFilterField[key]
-      return [fieldName, valueFunction(value)]
-    })
-    .filter((entry) => entry) // remove undefined
-  return Object.fromEntries(keyValuePairs as string[][])
+  const graphQLfilter = Object.entries(filters).reduce((filterObj, [key, value]) => {
+    if (!mapQueryToFilterField?.[key]) return filterObj
+    return { ...filterObj, ...mapQueryToFilterField[key](value) }
+  }, {})
+  return graphQLfilter
 }
 
 const mapQueryToFilterField: any = {
-  type: {
-    fieldName: 'template',
-    valueFunction: (value: string) => {
-      return {
+  type: (value: string) => {
+    return {
+      template: {
         code: { equalToInsensitive: value },
         status: { equalTo: 'AVAILABLE' },
-      }
-    },
+      },
+    }
   },
-  // userRole -- how do we query by it?
+  // userRole -- doesn't affect filter
   // category -- not yet implemented in schema
-  stage: {
-    fieldName: 'stage',
-    valueFunction: inList,
+  stage: (values: string) => {
+    return {
+      stage: inList(values),
+    }
   },
-  status: {
-    fieldName: 'status',
-    valueFunction: inEnumList,
+  status: (values: string) => {
+    return { status: inEnumList(values) }
   },
-  outcome: {
-    fieldName: 'outcome',
-    valueFunction: inEnumList,
+  outcome: (values: string) => {
+    return { outcome: inEnumList(values) }
   },
   // (application) name,
   // action
   // assigned
   // consolidator
-  applicant: {
-    fieldName: 'or',
-    valueFunction: (values: string) => {
-      return {
-        or: [
-          { user: { username: { inInsensitive: splitCommaList(values) } } },
-          { user: { firstName: { inInsensitive: splitCommaList(values) } } },
-          { user: { lastName: { inInsensitive: splitCommaList(values) } } },
-        ],
-      }
-    },
+  applicant: (values: string) => {
+    return {
+      or: [
+        { user: { username: { inInsensitive: splitCommaList(values) } } },
+        { user: { firstName: { inInsensitive: splitCommaList(values) } } },
+        { user: { lastName: { inInsensitive: splitCommaList(values) } } },
+      ],
+    }
   },
   // org -- not yet implemented, see back-end issue #179
   // search -- to do once sub-elements are made (applicant, )
