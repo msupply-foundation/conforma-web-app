@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Grid, Icon, Label, Progress } from 'semantic-ui-react'
+import { Icon, Label, Progress, Segment } from 'semantic-ui-react'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { CellProps } from '../../utils/types'
 
@@ -14,25 +14,22 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
   const { serial, stage } = application
   const status = stage?.status
   switch (status) {
-    case ApplicationStatus.Completed:
-    case ApplicationStatus.Submitted:
-    case ApplicationStatus.ReSubmitted:
-      return null
+    case ApplicationStatus.ChangesRequired:
+      return (
+        <Segment basic textAlign="center">
+          <Link to={`/application/${serial}`}>
+            <Icon name="exclamation circle" color="red" />
+            {ACTIONS.MAKE_CHANGES}
+          </Link>
+        </Segment>
+      )
     case ApplicationStatus.Draft:
       return (
-        <Grid>
-          <Grid.Row>
-            <Grid.Column width={8}>
-              <Progress size="tiny" />
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <Link to={`/application/${serial}/summary`}>{ACTIONS.EDIT_DRAFT}</Link>
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <Icon name="trash alternate outline" />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+        <Segment basic textAlign="center">
+          <Progress size="tiny" />
+          <Link to={`/application/${serial}/summary`}>{ACTIONS.EDIT_DRAFT}</Link>
+          <Icon name="trash alternate outline" style={{ marginLeft: 10 }} />
+        </Segment>
       )
     case ApplicationStatus.Expired:
       return <Link to={`/application/${serial}/renew`}>{ACTIONS.RENEW}</Link> // TODO: Add Renew page (and logic)
@@ -42,7 +39,11 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
       console.log('Problem to get status of application serial ', serial)
       return null
     default:
-      return <Label>{stage?.status}</Label>
+      return (
+        <Segment basic textAlign="center">
+          <p>{stage?.status}</p>
+        </Segment>
+      )
   }
 }
 
