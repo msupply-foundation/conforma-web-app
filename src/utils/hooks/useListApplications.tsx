@@ -1,8 +1,10 @@
 import { Dispatch, useEffect, useState } from 'react'
 import { ListActions } from '../../contexts/ListState'
 import buildFilter from '../helpers/application/buildQueryFilters'
+import buildSortFields from '../helpers/application/buildSortFields'
 import {
   Application,
+  ApplicationsOrderBy,
   ApplicationStageStatusAll,
   useGetApplicationsQuery,
   useGetApplicationsStagesQuery,
@@ -10,7 +12,7 @@ import {
 import { ApplicationDetails } from '../types'
 
 interface UseListApplicationsProps {
-  urlFilters?: any
+  query?: any
   type?: string
   setListState: Dispatch<ListActions>
 }
@@ -19,21 +21,27 @@ interface ApplicationDetailsMap {
   [serial: string]: ApplicationDetails
 }
 
-const useListApplication = ({ urlFilters, type, setListState }: UseListApplicationsProps) => {
+const useListApplication = ({
+  query: urlFilters,
+  type,
+  setListState,
+}: UseListApplicationsProps) => {
   const [applications, setApplications] = useState<ApplicationDetailsMap>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  console.log('applications', applications)
-
   const filters = buildFilter(urlFilters)
   console.log('filters', filters)
+  const sortFields: any = ['SERIAL_ASC']
+  // buildSortFields(urlFilters?.sortBy) || []
 
   const { data, error: applicationsError } = useGetApplicationsQuery({
     variables: { filters },
     fetchPolicy: 'network-only',
     skip: !type,
   })
+
+  console.log('data', data)
 
   const { data: stagesData, error: stagesError } = useGetApplicationsStagesQuery({
     variables: { serials: applications ? Object.keys(applications) : [] },
@@ -74,6 +82,8 @@ const useListApplication = ({ urlFilters, type, setListState }: UseListApplicati
       setError(stagesError.message)
       return
     }
+
+    console.log('applications', applications)
 
     if (applications) {
       if (stagesData?.applicationStageStatusAlls) {

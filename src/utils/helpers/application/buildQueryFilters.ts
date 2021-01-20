@@ -16,7 +16,8 @@ const mapQueryToFilterField: any = {
     fieldName: 'template',
     valueFunction: (value: string) => {
       return {
-        code: { equalTo: value },
+        code: { equalToInsensitive: value },
+        status: { equalTo: 'AVAILABLE' },
       }
     },
   },
@@ -28,11 +29,13 @@ const mapQueryToFilterField: any = {
   },
   status: {
     fieldName: 'status',
-    valueFunction: inList,
+    valueFunction: inEnumList,
   },
   // NOT sort-by (done seperate)
-  // user-role
-  // outcome
+  outcome: {
+    fieldName: 'outcome',
+    valueFunction: inEnumList,
+  },
   // action
   // assigned
   // consolidator
@@ -47,6 +50,12 @@ const mapQueryToFilterField: any = {
 
 const splitCommaList = (values: string) => values.split(',')
 
+// Use this if the values can be free text strings (e.g. stage name)
 function inList(values: string) {
   return { inInsensitive: splitCommaList(values) }
+}
+
+// Use this if the values must conform to an Enum type (e.g. status name)
+function inEnumList(values: string) {
+  return { in: splitCommaList(values).map((value) => value.toUpperCase()) }
 }

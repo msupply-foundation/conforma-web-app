@@ -26,7 +26,7 @@ import messages from '../../utils/messages'
 const ApplicationList: React.FC = () => {
   const { query, push } = useRouter()
   const { type, userRole } = query
-  const urlFilters = query
+  // const urlFilters = query
   const {
     userState: { templatePermissions },
   } = useUserState()
@@ -36,7 +36,7 @@ const ApplicationList: React.FC = () => {
     setListState,
   } = useListState()
 
-  const { error, loading } = useListApplication({ urlFilters, type, setListState })
+  const { error, loading } = useListApplication({ query, type, setListState })
 
   useEffect(() => {
     if (type && templatePermissions) {
