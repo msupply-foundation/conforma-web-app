@@ -6,13 +6,19 @@ import {
 } from '../../utils/generated/graphql'
 import { ApplicationDetails } from '../types'
 
-const useListApplication = () => {
+interface UseListApplicationsProps {
+  type?: string
+}
+
+const useListApplication = ({ type }: UseListApplicationsProps) => {
   const [applications, setApplications] = useState<ApplicationDetails[] | undefined>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   const { data, loading: apolloLoading, error: apolloError } = useGetApplicationsQuery({
+    variables: { code: type as string },
     fetchPolicy: 'network-only',
+    skip: !type,
   })
 
   useEffect(() => {

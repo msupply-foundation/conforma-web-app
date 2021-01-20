@@ -10,7 +10,7 @@ import {
 } from 'semantic-ui-react'
 import { SectionSummary, Loading, ModalWarning } from '../../components'
 import strings from '../../utils/constants'
-import buildSectionsStructure from '../../utils/helpers/buildSectionsStructure'
+import buildSectionsStructure from '../../utils/helpers/application/buildSectionsStructure'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -22,7 +22,7 @@ import {
   ResponsesByCode,
   User,
 } from '../../utils/types'
-import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
+import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/application/revalidateAll'
 import { useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
 import messages from '../../utils/messages'

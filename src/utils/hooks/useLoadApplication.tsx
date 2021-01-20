@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Application, useGetApplicationQuery } from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
-import { getApplicationSections } from '../helpers/getSectionsPayload'
+import { getApplicationSections } from '../helpers/application/getSectionsPayload'
 import { ApplicationDetails, TemplateSectionPayload, UseGetApplicationProps } from '../types'
 
 const useLoadApplication = (props: UseGetApplicationProps) => {

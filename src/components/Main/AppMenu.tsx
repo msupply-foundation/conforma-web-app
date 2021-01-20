@@ -30,7 +30,7 @@ const AppMenu: React.FC<AppMenuProps> = ({ templatePermissions }) => {
             content={<Header as="h5" inverted content={name} />}
             active={type === code}
             as={Link}
-            to={`/applications?type=${code}&user-role=${permissions[0]}`}
+            to={`/applications?type=${code}`}
           />
         ))}
       </Menu>

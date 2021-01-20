@@ -1,4 +1,6 @@
 export default {
+  APPLICATIONS_LIST_EMPTY: 'No applications found',
+  APPLICATIONS_MISSING_USER_ROLE: 'No user role found',
   VALIDATION_FAIL: {
     title: 'Validation failed',
     message: 'Please fix invalid fields before continuing',
@@ -10,5 +12,7 @@ export default {
     option: 'OK',
   },
   REDIRECT_TO_REGISTRATION: 'Re-directing to user registration application...',
-  REVIEW_RESUBMIT_COMMENT: 'Please enter a comment before asking for a re-submition',
+  REVIEW_RESUBMIT_COMMENT: 'Please enter a comment before asking for a re-submission',
+  LOGIN_WELCOME_SELECT_ORG: 'Welcome back, %1. Please select your organisation.',
 }
+// To-do: create a generic string substitution function here.

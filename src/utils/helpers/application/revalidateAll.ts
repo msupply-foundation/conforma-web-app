@@ -4,8 +4,8 @@ import {
   RevalidateResult,
   User,
   ValidityFailure,
-} from '../types'
-import validate from '../../formElementPlugins/defaultValidate'
+} from '../../types'
+import validate from '../../../formElementPlugins/defaultValidate'
 
 export const revalidateAll = async (
   elementsState: ApplicationElementStates,
