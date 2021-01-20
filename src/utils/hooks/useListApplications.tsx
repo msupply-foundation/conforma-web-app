@@ -1,5 +1,4 @@
-import { Dispatch, useEffect, useState } from 'react'
-import { ListActions } from '../../contexts/ListState'
+import { useEffect, useState } from 'react'
 import buildFilter from '../helpers/application/buildQueryFilters'
 import buildSortFields from '../helpers/application/buildSortFields'
 import {
@@ -14,18 +13,13 @@ import { ApplicationDetails } from '../types'
 interface UseListApplicationsProps {
   query?: any
   type?: string
-  setListState: Dispatch<ListActions>
 }
 
 interface ApplicationDetailsMap {
   [serial: string]: ApplicationDetails
 }
 
-const useListApplication = ({
-  query: urlFilters,
-  type,
-  setListState,
-}: UseListApplicationsProps) => {
+const useListApplication = ({ query: urlFilters, type }: UseListApplicationsProps) => {
   const [applications, setApplications] = useState<ApplicationDetailsMap>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -108,20 +102,17 @@ const useListApplication = ({
             }
           }
         })
-        setListState({
-          type: 'setApplications',
-          applications: Object.values(applicationsWithStage),
-        })
-
-        setLoading(false)
+        setApplications(applicationsWithStage)
       }
+      setLoading(false)
     }
   }, [applications, stagesData, stagesError])
 
   return {
     error,
     loading,
+    applications,
   }
 }
 
-export default useListApplication
+export default useListApplications

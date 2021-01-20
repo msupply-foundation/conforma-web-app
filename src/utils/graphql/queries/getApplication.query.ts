@@ -33,12 +33,7 @@ export default gql`
     }
     applicationStageStatusAlls(condition: { serial: $serial, stageIsCurrent: true }) {
       nodes {
-        serial
-        stageHistoryId
-        stage
-        stageId
-        stageNumber
-        statusHistoryTimeCreated
+        ...Stage
       }
     }
   }

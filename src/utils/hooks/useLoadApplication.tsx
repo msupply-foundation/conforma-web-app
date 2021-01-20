@@ -49,7 +49,7 @@ const useLoadApplication = (props: UseGetApplicationProps) => {
           id: stageId as number,
           name: stage as string,
           status: status as string,
-          date: statusHistoryTimeCreated.toISOString().split('T')[0],
+          date: statusHistoryTimeCreated.split('T')[0],
         }
       }
 

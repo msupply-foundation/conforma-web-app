@@ -7,12 +7,7 @@ export default gql`
       condition: { stageIsCurrent: true }
     ) {
       nodes {
-        serial
-        stageHistoryId
-        stage
-        stageId
-        stageNumber
-        statusHistoryTimeCreated
+        ...Stage
       }
     }
   }
