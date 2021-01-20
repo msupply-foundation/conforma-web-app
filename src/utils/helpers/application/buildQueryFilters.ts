@@ -6,6 +6,7 @@ export default function buildQueryFilters(filters: URLQueryFilter) {
     if (!mapQueryToFilterField?.[key]) return filterObj
     return { ...filterObj, ...mapQueryToFilterField[key](value) }
   }, {})
+  console.log('Filters', graphQLfilter)
   return graphQLfilter
 }
 
@@ -54,11 +55,13 @@ const mapQueryToFilterField: FilterMap = {
     return {
       applicationStageHistories: {
         every: {
-          timeCreated: {
-            greaterThanOrEqualTo: startDate,
-            lessThanOrEqualTo: endDate,
-          },
           isCurrent: { equalTo: true },
+          applicationStatusHistories: {
+            every: {
+              timeCreated: { greaterThanOrEqualTo: startDate, lessThan: endDate },
+              isCurrent: { equalTo: true },
+            },
+          },
         },
       },
     }
@@ -95,8 +98,8 @@ const parseDateString = (dateString: string) => {
   if (endDate === undefined)
     // Exact date -- add 1 to cover until start of the next day
     return [startDate, datePlusDays(1, startDate)]
-  if (endDate === '') return [startDate, null] // No end date boundary
-  if (startDate === '') return [null, endDate] // No start date boundary
+  if (endDate === '') return [startDate, undefined] // No end date boundary
+  if (startDate === '') return [undefined, endDate] // No start date boundary
   return [startDate, endDate]
 }
 
