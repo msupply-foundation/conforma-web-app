@@ -37,7 +37,18 @@ const mapQueryToFilterField: any = {
   // action
   // assigned
   // consolidator
-  applicant: {},
+  applicant: {
+    fieldName: 'or',
+    valueFunction: (values: string) => {
+      return {
+        or: [
+          { user: { username: { inInsensitive: splitCommaList(values) } } },
+          { user: { firstName: { inInsensitive: splitCommaList(values) } } },
+          { user: { lastName: { inInsensitive: splitCommaList(values) } } },
+        ],
+      }
+    },
+  },
   // org -- not yet implemented, see back-end issue #179
   // search -- to do once sub-elements are made (applicant, )
   // lastActiveDate (needs better definition - Submitted?)
