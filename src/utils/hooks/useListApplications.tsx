@@ -4,7 +4,6 @@ import buildSortFields from '../helpers/application/buildSortFields'
 import {
   Application,
   ApplicationsOrderBy,
-  ApplicationStageStatusAll,
   useGetApplicationsQuery,
   useGetApplicationsStagesQuery,
 } from '../../utils/generated/graphql'
@@ -21,13 +20,15 @@ interface ApplicationDetailsMap {
 
 const useListApplications = ({ query: urlFilters, type }: UseListApplicationsProps) => {
   const [applications, setApplications] = useState<any[]>([])
-  const [stagesDataObject, setStagesDataObject] = useState<any>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   const filters = buildFilter(urlFilters)
   console.log('filters', filters)
-  const sortFields: any = buildSortFields(urlFilters?.sortBy) || []
+  const sortFields = (urlFilters?.sortBy
+    ? buildSortFields(urlFilters?.sortBy)
+    : []) as ApplicationsOrderBy[]
+  console.log('SortFields', sortFields)
 
   const { data, error: applicationsError } = useGetApplicationsQuery({
     variables: { filters, sortFields },

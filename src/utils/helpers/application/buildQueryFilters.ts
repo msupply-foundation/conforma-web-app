@@ -1,6 +1,4 @@
 export default function buildQueryFilters(filters: any) {
-  //   console.log('filters', filters)
-
   const keyValuePairs = Object.entries(filters)
     .map(([key, value]) => {
       if (!mapQueryToFilterField?.[key]) return // filter field not recognised
@@ -31,21 +29,22 @@ const mapQueryToFilterField: any = {
     fieldName: 'status',
     valueFunction: inEnumList,
   },
-  // NOT sort-by (done seperate)
   outcome: {
     fieldName: 'outcome',
     valueFunction: inEnumList,
   },
+  // (application) name,
   // action
   // assigned
   // consolidator
-  // applicant
-  // org
-  // search
+  applicant: {},
+  // org -- not yet implemented, see back-end issue #179
+  // search -- to do once sub-elements are made (applicant, )
   // lastActiveDate (needs better definition - Submitted?)
   // deadlineDate (TBD)
   // Done with seperate conditions:
   //    - page, per-page, sort-by
+  // search
 }
 
 const splitCommaList = (values: string) => values.split(',')
