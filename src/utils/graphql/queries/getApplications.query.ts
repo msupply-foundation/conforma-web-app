@@ -19,6 +19,12 @@ export default gql`
           ...Template
         }
       }
+      # Use the page and count info for rendering Pagination UI
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+      }
+      totalCount
     }
   }
 `

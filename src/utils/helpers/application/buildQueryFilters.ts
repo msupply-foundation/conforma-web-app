@@ -79,12 +79,12 @@ const mapQueryToFilterField: FilterMap = {
 const splitCommaList = (values: string) => values.split(',')
 
 // Use this if the values can be free text strings (e.g. stage name)
-function inList(values: string) {
+const inList = (values: string) => {
   return { inInsensitive: splitCommaList(values) }
 }
 
 // Use this if the values must conform to an Enum type (e.g. status)
-function inEnumList(values: string) {
+const inEnumList = (values: string) => {
   return { in: splitCommaList(values).map((value) => value.toUpperCase()) }
 }
 
@@ -92,7 +92,7 @@ const parseDateString = (dateString: string) => {
   if (mapNamedDates?.[dateString]) return mapNamedDates[dateString]
   const [startDate, endDate] = dateString.split(':')
   if (endDate === undefined)
-    // Exact date -- add 1 to cover range
+    // Exact date -- add 1 to cover until start of the next day
     return [startDate, datePlusDays(1, startDate)]
   if (endDate === '') return [startDate, null] // No end date boundary
   if (startDate === '') return [null, endDate] // No start date boundary

@@ -17838,6 +17838,7 @@ export type GetApplicationsQuery = (
   { __typename?: 'Query' }
   & { applications?: Maybe<(
     { __typename?: 'ApplicationsConnection' }
+    & Pick<ApplicationsConnection, 'totalCount'>
     & { nodes: Array<Maybe<(
       { __typename?: 'Application' }
       & { template?: Maybe<(
@@ -17845,7 +17846,10 @@ export type GetApplicationsQuery = (
         & TemplateFragment
       )> }
       & ApplicationFragment
-    )>> }
+    )>>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
+    ) }
   )> }
 );
 
@@ -18500,6 +18504,11 @@ export const GetApplicationsDocument = gql`
         ...Template
       }
     }
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+    }
+    totalCount
   }
 }
     ${ApplicationFragmentDoc}
