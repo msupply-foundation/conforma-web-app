@@ -22,9 +22,9 @@ import validatePage, {
   getCombinedStatus,
   getPageElementsStatuses,
   PROGRESS_STATUS,
-} from '../../utils/helpers/validatePage'
-import getPageElements from '../../utils/helpers/getPageElements'
-import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/revalidateAll'
+} from '../../utils/helpers/application/validatePage'
+import getPageElements from '../../utils/helpers/application/getPageElements'
+import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/application/revalidateAll'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
 import {
@@ -39,7 +39,7 @@ import {
   ValidationMode,
 } from '../../utils/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
-import getPreviousPage from '../../utils/helpers/getPreviousPage'
+import getPreviousPage from '../../utils/helpers/application/getPreviousPage'
 import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
 
 const ApplicationPageWrapper: React.FC = () => {

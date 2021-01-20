@@ -4,8 +4,8 @@ import {
   TemplateElement,
   TemplateSection,
   TemplateSectionsConnection,
-} from '../generated/graphql'
-import { TemplateSectionPayload } from '../types'
+} from '../../generated/graphql'
+import { TemplateSectionPayload } from '../../types'
 
 export const getTemplateSections = (sectionsConnection: TemplateSectionsConnection) => {
   const sections = sectionsConnection?.nodes as TemplateSection[]

@@ -17821,7 +17821,9 @@ export type GetApplicationStatusQuery = (
   )> }
 );
 
-export type GetApplicationsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetApplicationsQueryVariables = Exact<{
+  code: Scalars['String'];
+}>;
 
 
 export type GetApplicationsQuery = (
@@ -18469,8 +18471,8 @@ export type GetApplicationStatusQueryHookResult = ReturnType<typeof useGetApplic
 export type GetApplicationStatusLazyQueryHookResult = ReturnType<typeof useGetApplicationStatusLazyQuery>;
 export type GetApplicationStatusQueryResult = Apollo.QueryResult<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>;
 export const GetApplicationsDocument = gql`
-    query getApplications {
-  applications {
+    query getApplications($code: String!) {
+  applications(filter: {template: {code: {equalTo: $code}, and: {status: {equalTo: AVAILABLE}}}}) {
     nodes {
       ...Application
       template {
@@ -18503,6 +18505,7 @@ ${TemplateFragmentDoc}`;
  * @example
  * const { data, loading, error } = useGetApplicationsQuery({
  *   variables: {
+ *      code: // value for 'code'
  *   },
  * });
  */

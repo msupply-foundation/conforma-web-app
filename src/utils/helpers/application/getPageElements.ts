@@ -1,4 +1,4 @@
-import { ApplicationElementStates } from '../types'
+import { ApplicationElementStates } from '../../types'
 
 interface GetPageElementsProps {
   elementsState: ApplicationElementStates

@@ -1,4 +1,5 @@
 import {
+  PermissionPolicyType,
   ReviewResponseDecision,
   TemplateElement,
   TemplateElementCategory,
@@ -8,6 +9,7 @@ import { ValidationState } from '../formElementPlugins/types'
 
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SummaryViewWrapperProps } from '../formElementPlugins/types'
+import { APPLICATION_COLUMN, USER_ROLE } from './model'
 
 export {
   ApplicationState,
@@ -15,6 +17,7 @@ export {
   ApplicationElementStates,
   ApplicationStages,
   AssignmentDetails,
+  ColumnsPerRole,
   CurrentPage,
   ElementPluginParameterValue,
   ElementPluginParameters,
@@ -51,6 +54,7 @@ export {
   RevalidateResult,
   UseGetApplicationProps,
   User,
+  UserRoles,
   OrganisationSimple,
   Organisation,
   LoginPayload,
@@ -86,6 +90,9 @@ interface AssignmentDetails {
   questions: ReviewQuestion[]
 }
 
+type ColumnsPerRole = {
+  [role in USER_ROLE]: Array<APPLICATION_COLUMN>
+}
 interface CurrentPage {
   section: TemplateSectionPayload
   page: number
@@ -263,16 +270,15 @@ interface TemplateElementState extends ElementBase {
 }
 
 interface TemplatePermissions {
-  [index: string]: Array<UserRole>
+  [index: string]: Array<PermissionPolicyType>
 }
 
 type TemplatesDetails = {
-  permissions: Array<UserRole>
+  permissions: Array<PermissionPolicyType>
   name: string
   code: string
 }[]
 
-type UserRole = 'Apply' | 'Review' | 'Assign'
 interface ValidateFunction {
   (
     validationExpress: IQueryNode,
@@ -331,4 +337,8 @@ interface LoginPayload {
   JWT: string
   templatePermissions: TemplatePermissions
   orgList?: OrganisationSimple[]
+}
+
+type UserRoles = {
+  [role in USER_ROLE]: Array<PermissionPolicyType>
 }
