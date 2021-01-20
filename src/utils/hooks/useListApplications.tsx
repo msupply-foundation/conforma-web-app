@@ -6,7 +6,7 @@ import {
   useGetApplicationsQuery,
   useGetApplicationsStagesQuery,
 } from '../../utils/generated/graphql'
-import { ApplicationDetails, ApplicationStage, ApplicationStageMap } from '../types'
+import { ApplicationDetails } from '../types'
 import { DateTime } from 'luxon'
 
 export type URLQueryFilter = {

@@ -6,6 +6,7 @@ export default function buildSortFields(sortString: string) {
 const getGraphQLSortName = (field: string) => {
   const [fieldName, direction] = field.split(':')
   // TO-DO: Enforce fields names match Schema types and return blank if not.
+  // Will add this once we do #185 -- make Applications View table
   return `${fieldName.replace(/-/g, '_')}_${direction || 'ASC'}`.toUpperCase()
 }
 
