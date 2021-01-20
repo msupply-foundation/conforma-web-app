@@ -40,7 +40,7 @@ const Footer: React.FC = () => (
 
       <Divider inverted section />
       <Segment>
-        <Image centered size="mini" src="/images/logo-32x32.png" />
+        <Image centered size="mini" src="./images/logo-32x32.png" />
       </Segment>
       <List horizontal inverted divided link size="small">
         <List.Item as="a" href="#">

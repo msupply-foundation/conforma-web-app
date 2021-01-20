@@ -65,7 +65,9 @@ const ApplicationSubmission: React.FC = () => {
     <Loading />
   ) : serialNumber && appStatus ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
-      <Header textAlign="center">{strings.TITLE_COMPANY_PLACEHOLDER}</Header>
+      <Header textAlign="center">
+        {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
+      </Header>
       <Segment
         textAlign="center"
         style={{

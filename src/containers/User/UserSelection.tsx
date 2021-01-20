@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Grid, Icon, Message, Popup } from 'semantic-ui-react'
 import { Loading } from '../../components'
-import { attemptLogin } from './Login'
+import { postRequest as attemptLogin } from '../../utils/helpers/fetchMethods'
+import config from '../../config.json'
 import { useGetUsersQuery } from '../../utils/generated/graphql'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { User } from '../../utils/types'
@@ -9,12 +10,14 @@ import { useUserState } from '../../contexts/UserState'
 
 const hardcodedPassword = '123456'
 
+const loginURL = config.serverREST + '/login'
+const loginOrgURL = config.serverREST + '/login-org'
+
 const UserSelection: React.FC = () => {
-  const { history, push } = useRouter()
   const [users, setUsers] = useState<Array<string>>([])
   const [isOpen, setIsOpen] = useState(false)
   const { data, error } = useGetUsersQuery()
-  const { login } = useUserState()
+  const { onLogin } = useUserState()
 
   useEffect(() => {
     if (data && data.users && data.users.nodes) {
@@ -28,12 +31,33 @@ const UserSelection: React.FC = () => {
 
   const handleChangeUser = async (username: string) => {
     setIsOpen(false)
-    const loginResult = await attemptLogin(username, hardcodedPassword)
-    if (loginResult.success) {
-      login(loginResult.JWT)
-      if (history.location?.state?.from) push(history.location.state.from)
-      else push('/')
+    // Selected User login
+    const loginResult = await attemptLogin({ username, password: hardcodedPassword }, loginURL)
+    if (!loginResult.success) {
+      console.log(`Problem logging in user: ${username}`)
+      return
     }
+
+    // Organisation login (auto-select first in list)
+    const { JWT, user, templatePermissions, orgList } = loginResult
+    if (orgList.length === 0) {
+      await onLogin(JWT, user, templatePermissions)
+      return
+    }
+    const selectedOrg = orgList[0]
+    const authHeader = { Authorization: 'Bearer ' + JWT }
+    const verifyOrgResult = await attemptLogin(
+      { userId: user.userId, orgId: selectedOrg.orgId },
+      loginOrgURL,
+      authHeader
+    )
+
+    if (!verifyOrgResult.success) {
+      console.log(`Problem logging in with organisation: ${selectedOrg.name}`)
+      return
+    }
+
+    await onLogin(verifyOrgResult.JWT, verifyOrgResult.user, verifyOrgResult.templatePermissions)
   }
 
   return (
