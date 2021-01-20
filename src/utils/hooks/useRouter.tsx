@@ -29,13 +29,13 @@ interface RouterResult {
 }
 
 /**
- * @function: replaceSnakeCaseKeys
+ * @function: replaceKebabCaseKeys
  * For each filter key in the query (which will use snake-case: e.g. user-role)
  * will convert to camelCase (e.g userRole) before returning query to components.
  * - @param parsedQuery - URL query after parsed to object
  * - @returns Object with all query {key: value} with keys in camelCase format.
  */
-const replaceSnakeCaseKeys = (parsedQuery: { [key: string]: any }) => {
+const replaceKebabCaseKeys = (parsedQuery: { [key: string]: any }) => {
   if (Object.keys(parsedQuery).length === 0) return parsedQuery
   const replacedKeys = Object.keys(parsedQuery).map((key) => {
     const convertedKey = key.replace(/-([a-z])/g, (m, w) => w.toUpperCase())
@@ -55,7 +55,7 @@ export function useRouter(): RouterResult {
 
   return useMemo(() => {
     // Convert string to object, then replace snake with camelCase
-    const queryFilters = replaceSnakeCaseKeys(queryString.parse(location.search))
+    const queryFilters = replaceKebabCaseKeys(queryString.parse(location.search))
 
     return {
       // For convenience add push(), replace(), pathname at top level

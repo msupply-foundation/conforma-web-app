@@ -64,12 +64,6 @@ export {
   LoginPayload,
 }
 
-interface ApplicationState {
-  id: number | null
-  serialNumber: string | null
-  inputElementsActivity: ElementsActivityState
-}
-
 interface ApplicationDetails {
   id: number
   type: string
