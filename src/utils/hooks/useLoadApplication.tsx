@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Application, useGetApplicationQuery } from '../../utils/generated/graphql'
+import {
+  Application,
+  ApplicationStageStatusAll,
+  useGetApplicationQuery,
+} from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
 import { getApplicationSections } from '../helpers/application/getSectionsPayload'
 import { ApplicationDetails, TemplateSectionPayload, UseGetApplicationProps } from '../types'
@@ -24,18 +28,29 @@ const useLoadApplication = (props: UseGetApplicationProps) => {
   })
 
   useEffect(() => {
-    if (data && data.applicationBySerial && data.applicationStageStatusAlls) {
+    if (data?.applicationBySerial) {
       const application = data.applicationBySerial as Application
 
-      const applicationDetails = {
+      const applicationDetails: ApplicationDetails = {
         id: application.id,
         type: application.template?.name as string,
         isLinear: application.template?.isLinear as boolean,
         serial: application.serial as string,
         name: application.name as string,
-        stage: application.stage ? (application.stage as string) : '',
-        status: application.status as string,
         outcome: application.outcome as string,
+      }
+
+      if (data?.applicationStageStatusAlls && data?.applicationStageStatusAlls.nodes.length > 0) {
+        const stages = data.applicationStageStatusAlls.nodes as ApplicationStageStatusAll[]
+        if (stages.length > 1)
+          console.log('StageStatusAll More than one results for 1 application!')
+        const { stageId, stage, status, statusHistoryTimeCreated } = stages[0] // Should only have one result
+        applicationDetails.stage = {
+          id: stageId as number,
+          name: stage as string,
+          status: status as string,
+          date: statusHistoryTimeCreated.split('T')[0],
+        }
       }
 
       setApplication(applicationDetails)

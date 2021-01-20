@@ -1,4 +1,4 @@
-enum USER_ROLE {
+enum USER_ROLES {
   APPLICANT = 'applicant',
   REVIEWER_1 = 'reviewer1',
   REVIEWER_2 = 'reviewer2',
@@ -6,4 +6,4 @@ enum USER_ROLE {
   CONSOLIDATOR = 'consolidator',
 }
 
-export default USER_ROLE
+export default USER_ROLES

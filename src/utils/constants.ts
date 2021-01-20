@@ -1,4 +1,5 @@
 export default {
+  BUTTON_APPLICATION_NEW: 'New application',
   BUTTON_APPLICATION_START: 'Get started',
   BUTTON_APPLICATION_SUBMIT: 'Submit application',
   BUTTON_BACK_DASHBOARD: 'Back to dashboard',
