@@ -1,37 +1,37 @@
 import { useEffect, useState } from 'react'
 import buildFilter from '../helpers/application/buildQueryFilters'
-import buildSortFields from '../helpers/application/buildSortFields'
+import buildSortFields, { getPaginationVariables } from '../helpers/application/buildQueryVariables'
 import {
-  Application,
   ApplicationsOrderBy,
   useGetApplicationsQuery,
   useGetApplicationsStagesQuery,
 } from '../../utils/generated/graphql'
-import { ApplicationDetails } from '../types'
+import { ApplicationDetails, ApplicationStage, ApplicationStageMap } from '../types'
+import { DateTime } from 'luxon'
+
+export type URLQueryFilter = {
+  [key: string]: string
+}
 
 interface UseListApplicationsProps {
-  query?: any
-  type?: string
+  urlFilters: URLQueryFilter
 }
 
-interface ApplicationDetailsMap {
-  [serial: string]: ApplicationDetails
-}
-
-const useListApplications = ({ query: urlFilters, type }: UseListApplicationsProps) => {
-  const [applications, setApplications] = useState<any[]>([])
+const useListApplications = ({ urlFilters }: UseListApplicationsProps) => {
+  const [applications, setApplications] = useState<ApplicationDetails[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const { type, sortBy, page, perPage } = urlFilters
 
   const filters = buildFilter(urlFilters)
-  console.log('filters', filters)
-  const sortFields = (urlFilters?.sortBy
-    ? buildSortFields(urlFilters?.sortBy)
-    : []) as ApplicationsOrderBy[]
-  console.log('SortFields', sortFields)
+  const sortFields = (sortBy ? buildSortFields(sortBy) : []) as ApplicationsOrderBy[]
+  const { paginationOffset, numberToFetch } = getPaginationVariables(
+    page ? Number(page) : 1,
+    perPage ? Number(perPage) : undefined
+  )
 
   const { data, error: applicationsError } = useGetApplicationsQuery({
-    variables: { filters, sortFields },
+    variables: { filters, sortFields, paginationOffset, numberToFetch },
     fetchPolicy: 'network-only',
     skip: !type,
   })
@@ -54,11 +54,11 @@ const useListApplications = ({ query: urlFilters, type }: UseListApplicationsPro
     }
     if (!stagesData) return
     if (data?.applications && stagesData?.applicationStageStatusAlls) {
-      const applicationsList = data?.applications?.nodes as Application[]
-      const stagesList = stagesData?.applicationStageStatusAlls?.nodes as Application[]
+      const applicationsList = data?.applications?.nodes
+      const stagesList = stagesData?.applicationStageStatusAlls?.nodes
 
       // Get stages array as object indexed by serial
-      const stagesMapToObject: any[] = stagesList.reduce((stagesMap: any, stageStatus: any) => {
+      const stagesMapToObject = stagesList.reduce((stagesMap: any, stageStatus: any) => {
         const { serial, stage, stageId, status, statusHistoryTimeCreated } = stageStatus
         return {
           ...stagesMap,
@@ -66,7 +66,7 @@ const useListApplications = ({ query: urlFilters, type }: UseListApplicationsPro
             id: stageId,
             name: stage,
             status: status,
-            date: statusHistoryTimeCreated.split('T')[0],
+            date: DateTime.fromISO(statusHistoryTimeCreated).toISODate(),
           },
         }
       }, {})
@@ -81,7 +81,7 @@ const useListApplications = ({ query: urlFilters, type }: UseListApplicationsPro
           isLinear: template?.isLinear,
           name,
           outcome,
-          stage: stagesMapToObject[application.serial],
+          stage: stagesMapToObject?.[application.serial],
         }
       })
       setApplications(applicationsWithStages)

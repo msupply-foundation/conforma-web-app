@@ -1,4 +1,7 @@
-export default function buildQueryFilters(filters: any) {
+import { DateTime } from 'luxon'
+import { URLQueryFilter } from '../../hooks/useListApplications'
+
+export default function buildQueryFilters(filters: URLQueryFilter) {
   const graphQLfilter = Object.entries(filters).reduce((filterObj, [key, value]) => {
     if (!mapQueryToFilterField?.[key]) return filterObj
     return { ...filterObj, ...mapQueryToFilterField[key](value) }
@@ -6,7 +9,11 @@ export default function buildQueryFilters(filters: any) {
   return graphQLfilter
 }
 
-const mapQueryToFilterField: any = {
+interface FilterMap {
+  [key: string]: (value: string) => object
+}
+
+const mapQueryToFilterField: FilterMap = {
   type: (value: string) => {
     return {
       template: {
@@ -15,7 +22,6 @@ const mapQueryToFilterField: any = {
       },
     }
   },
-  // userRole -- doesn't affect filter
   // category -- not yet implemented in schema
   stage: (values: string) => {
     return {
@@ -28,7 +34,6 @@ const mapQueryToFilterField: any = {
   outcome: (values: string) => {
     return { outcome: inEnumList(values) }
   },
-  // (application) name,
   // action
   // assigned
   // consolidator
@@ -42,10 +47,22 @@ const mapQueryToFilterField: any = {
     }
   },
   // org -- not yet implemented, see back-end issue #179
-  // lastActiveDate (needs better definition - Submitted?)
+  lastActiveDate: (value: string) => {
+    const [startDate, endDate] = parseDateString(value)
+    console.log('Dates:', startDate, endDate)
+    return {
+      applicationStageHistories: {
+        every: {
+          timeCreated: {
+            greaterThanOrEqualTo: startDate,
+            lessThanOrEqualTo: endDate,
+          },
+          isCurrent: { equalTo: true },
+        },
+      },
+    }
+  },
   // deadlineDate (TBD)
-  // Done with seperate conditions:
-  //    - page, per-page, sort-by
   search: (value: string) => {
     return {
       or: [
@@ -66,7 +83,42 @@ function inList(values: string) {
   return { inInsensitive: splitCommaList(values) }
 }
 
-// Use this if the values must conform to an Enum type (e.g. status name)
+// Use this if the values must conform to an Enum type (e.g. status)
 function inEnumList(values: string) {
   return { in: splitCommaList(values).map((value) => value.toUpperCase()) }
+}
+
+const parseDateString = (dateString: string) => {
+  if (mapNamedDates?.[dateString]) return mapNamedDates[dateString]
+  const [startDate, endDate] = dateString.split(':')
+  if (endDate === undefined)
+    // Exact date -- add 1 to cover range
+    return [startDate, datePlusDays(1, startDate)]
+  if (endDate === '') return [startDate, null] // No end date boundary
+  if (startDate === '') return [null, endDate] // No start date boundary
+  return [startDate, endDate]
+}
+
+const datePlusDays = (offset = 0, dateString: string | undefined = undefined) => {
+  if (dateString) return DateTime.fromISO(dateString).plus({ days: offset }).toISODate()
+  return DateTime.local().plus({ days: offset }).toISODate()
+}
+
+interface NamedDateMap {
+  [key: string]: string[]
+}
+
+const mapNamedDates: NamedDateMap = {
+  today: [datePlusDays(), datePlusDays(1)],
+  yesterday: [datePlusDays(-1), datePlusDays()],
+  'this-week': [datePlusDays(-7), datePlusDays(1)],
+  // TO-DO:
+  //  last-week,
+  //  this-month,
+  //  last-month,
+  //  this-quarter,
+  //  last-quarter,
+  //  this-year,
+  //  last-year
+  //  etc...
 }

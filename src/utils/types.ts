@@ -15,6 +15,7 @@ export {
   ApplicationDetails,
   ApplicationElementStates,
   ApplicationStage,
+  ApplicationStageMap,
   ApplicationStages,
   AssignmentDetails,
   CellProps,
@@ -84,6 +85,11 @@ interface ApplicationStage {
   status: string
   date: Date
 }
+
+interface ApplicationStageMap {
+  [key: string]: ApplicationStage
+}
+
 interface ApplicationStages {
   stages: StageDetails[]
   submissionMessage: string

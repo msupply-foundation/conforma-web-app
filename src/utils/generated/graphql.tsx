@@ -17829,6 +17829,8 @@ export type GetApplicationStatusQuery = (
 export type GetApplicationsQueryVariables = Exact<{
   filters?: Maybe<ApplicationFilter>;
   sortFields?: Maybe<Array<ApplicationsOrderBy>>;
+  paginationOffset: Scalars['Int'];
+  numberToFetch: Scalars['Int'];
 }>;
 
 
@@ -18490,8 +18492,8 @@ export type GetApplicationStatusQueryHookResult = ReturnType<typeof useGetApplic
 export type GetApplicationStatusLazyQueryHookResult = ReturnType<typeof useGetApplicationStatusLazyQuery>;
 export type GetApplicationStatusQueryResult = Apollo.QueryResult<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>;
 export const GetApplicationsDocument = gql`
-    query getApplications($filters: ApplicationFilter, $sortFields: [ApplicationsOrderBy!]) {
-  applications(filter: $filters, orderBy: $sortFields) {
+    query getApplications($filters: ApplicationFilter, $sortFields: [ApplicationsOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!) {
+  applications(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch) {
     nodes {
       ...Application
       template {
@@ -18517,6 +18519,8 @@ ${TemplateFragmentDoc}`;
  *   variables: {
  *      filters: // value for 'filters'
  *      sortFields: // value for 'sortFields'
+ *      paginationOffset: // value for 'paginationOffset'
+ *      numberToFetch: // value for 'numberToFetch'
  *   },
  * });
  */

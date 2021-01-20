@@ -3,17 +3,7 @@ import queryString from 'query-string'
 import { useMemo } from 'react'
 
 interface QueryObject {
-  mode?: string
-  type?: string
-  userRole?: string
-  serialNumber?: string
-  sectionCode?: string
-  page?: string
-  templateId?: string
-  step?: string
-  notificationId?: string
-  productId?: string
-  orgName?: string
+  [key: string]: string
 }
 
 interface RouterResult {
