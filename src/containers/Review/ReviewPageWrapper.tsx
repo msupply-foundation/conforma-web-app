@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { Button, Header, Label, Message, Segment } from 'semantic-ui-react'
 import { DecisionArea, Loading, ReviewSection } from '../../components'
-import { DecisionAreaState, ReviewQuestionDecision, User } from '../../utils/types'
+import { DecisionAreaState, ReviewQuestionDecision, SectionDetails, User } from '../../utils/types'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
 import {
   ReviewResponseDecision,
+  TemplateElementCategory,
   useUpdateReviewResponseMutation,
 } from '../../utils/generated/graphql'
 import getReviewQuery from '../../utils/graphql/queries/getReview.query'
@@ -23,10 +24,10 @@ const ReviewPageWrapper: React.FC = () => {
   const {
     userState: { currentUser },
   } = useUserState()
-  const { userId } = currentUser as User
   const [reviewProblem, setReviewProblem] = useState<string>('')
   const [decisionState, setDecisionState] = useState<DecisionAreaState>(decisionAreaInitialState)
   const { review } = decisionState
+  const [invalidSection, setInvalidSection] = useState<SectionDetails>()
 
   // Will wait for trigger to run that will set the Review status as DRAFT (after creation)
   const { error, loading, applicationName, responsesByCode, reviewSections } = useLoadReview({
@@ -75,8 +76,34 @@ const ReviewPageWrapper: React.FC = () => {
       else {
         updateReviewResponse({ variables: { ...review } })
         setDecisionState(decisionAreaInitialState)
+        if (invalidSection) validateReview()
       }
     }
+  }
+
+  const submitReviewHandler = (_: any) => {
+    validateReview()
+  }
+
+  const validateReview = () => {
+    const { userId } = currentUser as User
+    const invalidSection = reviewSections?.find((reviewSection) => {
+      const { assigned, pages } = reviewSection
+      if (assigned?.id !== userId) return false
+      const validPages = Object.entries(pages).filter(([pageName, elements]) => {
+        // TODO: Create utility function to filter out all INFORMATION elements when checking for status
+        const questions = elements.filter(
+          (element) => element.element.category === TemplateElementCategory.Question
+        )
+        return (
+          questions.some(({ review }) => review?.decision === ReviewResponseDecision.Decline) ||
+          questions.every(({ review }) => review?.decision === ReviewResponseDecision.Approve)
+        )
+      })
+      // If all pages are valid then the section is valid
+      if (Object.keys(validPages).length < Object.keys(pages).length) return true
+    })
+    setInvalidSection(invalidSection ? invalidSection.section : undefined)
   }
 
   return error ? (
@@ -98,6 +125,7 @@ const ReviewPageWrapper: React.FC = () => {
         </Segment>
         <Segment basic>
           {reviewSections.map((reviewSection) => {
+            const { userId } = currentUser as User
             const assignedToYou = reviewSection.assigned?.id === userId
             return (
               <ReviewSection
@@ -108,6 +136,7 @@ const ReviewPageWrapper: React.FC = () => {
                 updateResponses={updateResponses}
                 setDecisionArea={openDecisionArea}
                 canEdit={true} // TODO: Check Review status
+                showError={reviewSection.section === invalidSection}
               />
             )
           })}
@@ -119,7 +148,13 @@ const ReviewPageWrapper: React.FC = () => {
             marginRight: '10%',
           }}
         >
-          <Button size="medium" color={'blue'} content={strings.BUTTON_REVIEW_SUBMIT} />
+          <Button
+            size="medium"
+            color={invalidSection ? 'red' : 'blue'}
+            content={strings.BUTTON_REVIEW_SUBMIT}
+            onClick={submitReviewHandler}
+          />
+          {invalidSection && <p>{messages.REVIEW_SUBMIT_FAIL}</p>}
         </Segment>
       </Segment.Group>
 

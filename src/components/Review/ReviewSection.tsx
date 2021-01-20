@@ -14,6 +14,7 @@ import { SummaryViewWrapper } from '../../formElementPlugins'
 import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import strings from '../../utils/constants'
 import { ReviewResponseDecision, TemplateElementCategory } from '../../utils/generated/graphql'
+import messages from '../../utils/messages'
 import { ReviewQuestionDecision, ResponsesByCode, SectionElementStates } from '../../utils/types'
 
 interface ReviewSectionProps {
@@ -26,6 +27,7 @@ interface ReviewSectionProps {
     summaryViewProps: SummaryViewWrapperProps
   ) => void
   canEdit: boolean
+  showError: boolean
 }
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({
@@ -35,6 +37,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
   updateResponses,
   setDecisionArea,
   canEdit,
+  showError,
 }) => {
   const { assigned, section, pages } = reviewSection
   const [isOpen, setIsOpen] = useState(false)
@@ -64,8 +67,15 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
         <Accordion.Title active={isOpen} onClick={handleClick}>
           <Grid columns={3}>
             <Grid.Row>
-              <Grid.Column width={12}>
+              <Grid.Column width={6}>
                 <Header as="h2" content={`${section.title}`} style={{ color: 'Grey' }} />
+              </Grid.Column>
+              <Grid.Column width={6}>
+                {showError && (
+                  <Icon name="exclamation circle" color="red">
+                    {messages.REVIEW_COMPLETE_SECTION}
+                  </Icon>
+                )}
               </Grid.Column>
               <Grid.Column width={3}>
                 <Container textAlign="right">{showSectionAssignment}</Container>
