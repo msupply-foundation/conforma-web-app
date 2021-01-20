@@ -17828,6 +17828,7 @@ export type GetApplicationStatusQuery = (
 
 export type GetApplicationsQueryVariables = Exact<{
   filters?: Maybe<ApplicationFilter>;
+  sortFields?: Maybe<Array<ApplicationsOrderBy>>;
 }>;
 
 
@@ -18489,8 +18490,8 @@ export type GetApplicationStatusQueryHookResult = ReturnType<typeof useGetApplic
 export type GetApplicationStatusLazyQueryHookResult = ReturnType<typeof useGetApplicationStatusLazyQuery>;
 export type GetApplicationStatusQueryResult = Apollo.QueryResult<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>;
 export const GetApplicationsDocument = gql`
-    query getApplications($filters: ApplicationFilter) {
-  applications(filter: $filters, orderBy: [SERIAL_DESC]) {
+    query getApplications($filters: ApplicationFilter, $sortFields: [ApplicationsOrderBy!]) {
+  applications(filter: $filters, orderBy: $sortFields) {
     nodes {
       ...Application
       template {
@@ -18515,6 +18516,7 @@ ${TemplateFragmentDoc}`;
  * const { data, loading, error } = useGetApplicationsQuery({
  *   variables: {
  *      filters: // value for 'filters'
+ *      sortFields: // value for 'sortFields'
  *   },
  * });
  */

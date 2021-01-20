@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getApplications($filters: ApplicationFilter) {
-    applications(filter: $filters, orderBy: [SERIAL_DESC]) {
+  query getApplications($filters: ApplicationFilter, $sortFields: [ApplicationsOrderBy!]) {
+    applications(filter: $filters, orderBy: $sortFields) {
       nodes {
         ...Application
         template {

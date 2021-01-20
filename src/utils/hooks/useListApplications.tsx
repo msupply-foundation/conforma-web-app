@@ -27,11 +27,10 @@ const useListApplications = ({ query: urlFilters, type }: UseListApplicationsPro
 
   const filters = buildFilter(urlFilters)
   console.log('filters', filters)
-  const sortFields: any = ['SERIAL_ASC']
-  // buildSortFields(urlFilters?.sortBy) || []
+  const sortFields: any = buildSortFields(urlFilters?.sortBy) || []
 
   const { data, error: applicationsError } = useGetApplicationsQuery({
-    variables: { filters },
+    variables: { filters, sortFields },
     fetchPolicy: 'network-only',
     skip: !type,
   })
