@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Container, Form, Header, Label, Message, Segment } from 'semantic-ui-react'
+import { Button, Header, Label, Message, Segment } from 'semantic-ui-react'
 import { DecisionArea, Loading, ReviewSection } from '../../components'
 import { DecisionAreaState, ReviewQuestionDecision, User } from '../../utils/types'
 import useLoadReview from '../../utils/hooks/useLoadReview'
@@ -23,6 +23,7 @@ const ReviewPageWrapper: React.FC = () => {
   const {
     userState: { currentUser },
   } = useUserState()
+  const { userId } = currentUser as User
   const [reviewProblem, setReviewProblem] = useState<string>('')
   const [decisionState, setDecisionState] = useState<DecisionAreaState>(decisionAreaInitialState)
   const { review } = decisionState
@@ -83,44 +84,45 @@ const ReviewPageWrapper: React.FC = () => {
   ) : loading ? (
     <Loading />
   ) : reviewSections && responsesByCode ? (
-    <Segment.Group>
-      <Segment textAlign="center">
-        <Label color="blue">{strings.STAGE_PLACEHOLDER}</Label>
-        <Header content={applicationName} subheader={strings.DATE_APPLICATION_PLACEHOLDER} />
-        <Header
-          as="h3"
-          color="grey"
-          content={strings.TITLE_REVIEW_SUMMARY}
-          subheader={strings.SUBTITLE_REVIEW}
-        />
-      </Segment>
-      <Segment basic>
-        {reviewSections.map((reviewSection) => {
-          const { userId, firstName, lastName } = currentUser as User
-          const assignedToYou = reviewSection.assigned?.id === userId
-          return (
-            <ReviewSection
-              key={`Review_${reviewSection.section.code}`}
-              reviewer={`${firstName} ${lastName}`}
-              allResponses={responsesByCode}
-              assignedToYou={assignedToYou}
-              reviewSection={reviewSection}
-              updateResponses={updateResponses}
-              setDecisionArea={openDecisionArea}
-              canEdit={true} // TODO: Check Review status
-            />
-          )
-        })}
-      </Segment>
-      <Segment
-        basic
-        style={{
-          marginLeft: '10%',
-          marginRight: '10%',
-        }}
-      >
-        <Button color="blue" content={strings.BUTTON_REVIEW_SUBMIT} />
-      </Segment>
+    <>
+      <Segment.Group>
+        <Segment textAlign="center">
+          <Label color="blue">{strings.STAGE_PLACEHOLDER}</Label>
+          <Header content={applicationName} subheader={strings.DATE_APPLICATION_PLACEHOLDER} />
+          <Header
+            as="h3"
+            color="grey"
+            content={strings.TITLE_REVIEW_SUMMARY}
+            subheader={strings.SUBTITLE_REVIEW}
+          />
+        </Segment>
+        <Segment basic>
+          {reviewSections.map((reviewSection) => {
+            const assignedToYou = reviewSection.assigned?.id === userId
+            return (
+              <ReviewSection
+                key={`Review_${reviewSection.section.code}`}
+                allResponses={responsesByCode}
+                assignedToYou={assignedToYou}
+                reviewSection={reviewSection}
+                updateResponses={updateResponses}
+                setDecisionArea={openDecisionArea}
+                canEdit={true} // TODO: Check Review status
+              />
+            )
+          })}
+        </Segment>
+        <Segment
+          basic
+          style={{
+            marginLeft: '10%',
+            marginRight: '10%',
+          }}
+        >
+          <Button size="medium" color={'blue'} content={strings.BUTTON_REVIEW_SUBMIT} />
+        </Segment>
+      </Segment.Group>
+
       <DecisionArea
         state={decisionState}
         setDecision={setDecisionState}
@@ -128,7 +130,7 @@ const ReviewPageWrapper: React.FC = () => {
         problemMessage={reviewProblem}
         setProblemMessage={setReviewProblem}
       />
-    </Segment.Group>
+    </>
   ) : (
     <Message error header={strings.ERROR_REVIEW_PAGE} />
   )

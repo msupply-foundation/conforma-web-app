@@ -5,7 +5,8 @@ export default gql`
     review(id: $reviewId) {
       reviewer {
         id
-        username
+        firstName
+        lastName
       }
       reviewResponses {
         nodes {

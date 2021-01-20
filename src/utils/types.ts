@@ -202,7 +202,8 @@ interface ReviewDetails {
 
 interface ReviewerDetails {
   id: number
-  username: string
+  firstName: string
+  lastName: string
 }
 
 interface ReviewQuestion {
