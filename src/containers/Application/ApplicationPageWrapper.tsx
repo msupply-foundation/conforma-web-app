@@ -64,7 +64,7 @@ const ApplicationPageWrapper: React.FC = () => {
   const { error, loading, application, templateSections, isApplicationLoaded } = useLoadApplication(
     {
       serialNumber: serialNumber as string,
-      networkFetch: true,
+      // networkFetch: true,
     }
   )
 
