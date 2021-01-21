@@ -22,7 +22,6 @@ import {
 } from '../../components'
 import { ApplicationCreate, ApplicationPageWrapper } from '../Application'
 import { ReviewOverview, ReviewPageWrapper } from '../Review'
-import UserRegister from '../User/UserRegister'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import ApplicationOverview from '../Application/ApplicationOverview'
 import ApplicationSubmission from '../Application/ApplicationSubmission'
