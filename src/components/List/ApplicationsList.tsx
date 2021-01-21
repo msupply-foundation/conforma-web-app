@@ -1,11 +1,12 @@
 import React from 'react'
 import { Table, Message } from 'semantic-ui-react'
+import { ApplicationList } from '../../utils/generated/graphql'
 import messages from '../../utils/messages'
 import { ApplicationDetails, ColumnDetails } from '../../utils/types'
 
 interface ApplicationsListProps {
   columns: Array<ColumnDetails>
-  applications: Array<ApplicationDetails>
+  applications: Array<ApplicationList>
 }
 
 const ApplicationsList: React.FC<ApplicationsListProps> = ({ columns, applications }) => {

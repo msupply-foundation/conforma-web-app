@@ -11,6 +11,7 @@ import { ApplicationDetails, ColumnDetails } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
+import { ApplicationList } from '../../utils/generated/graphql'
 
 const ListWrapper: React.FC = () => {
   const { query, push } = useRouter()
@@ -19,8 +20,10 @@ const ListWrapper: React.FC = () => {
     userState: { templatePermissions },
   } = useUserState()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
-  const [applicationsRows, setApplicationsRows] = useState<ApplicationDetails[] | undefined>()
+  const [applicationsRows, setApplicationsRows] = useState<ApplicationList[] | undefined>()
   const { error, loading, applications } = useListApplications({ urlFilters: query })
+
+  console.log('applications', applications)
 
   useEffect(() => {
     if (type && templatePermissions) {

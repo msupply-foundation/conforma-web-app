@@ -1,4 +1,5 @@
 import {
+  ApplicationList,
   PermissionPolicyType,
   ReviewResponseDecision,
   TemplateElement,
@@ -102,7 +103,7 @@ interface AssignmentDetails {
 }
 
 interface CellProps {
-  application: ApplicationDetails
+  application: ApplicationList
 }
 
 interface ColumnDetails {

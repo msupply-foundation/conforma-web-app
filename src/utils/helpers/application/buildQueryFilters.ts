@@ -16,12 +16,7 @@ interface FilterMap {
 
 const mapQueryToFilterField: FilterMap = {
   type: (value: string) => {
-    return {
-      template: {
-        code: { equalToInsensitive: value },
-        status: { equalTo: 'AVAILABLE' },
-      },
-    }
+    return { templateCode: { equalToInsensitive: value } }
   },
   // category -- not yet implemented in schema
   stage: (values: string) => {
@@ -42,9 +37,10 @@ const mapQueryToFilterField: FilterMap = {
   applicant: (values: string) => {
     return {
       or: [
-        { user: { username: { inInsensitive: splitCommaList(values) } } },
-        { user: { firstName: { inInsensitive: splitCommaList(values) } } },
-        { user: { lastName: { inInsensitive: splitCommaList(values) } } },
+        { applicant: inList(values) },
+        { applicantFirstName: inList(values) },
+        { applicantLastName: inList(values) },
+        { applicantUsername: inList(values) },
       ],
     }
   },
@@ -52,28 +48,17 @@ const mapQueryToFilterField: FilterMap = {
   lastActiveDate: (value: string) => {
     const [startDate, endDate] = parseDateString(value)
     console.log('Dates:', startDate, endDate)
-    return {
-      applicationStageHistories: {
-        every: {
-          isCurrent: { equalTo: true },
-          applicationStatusHistories: {
-            every: {
-              timeCreated: { greaterThanOrEqualTo: startDate, lessThan: endDate },
-              isCurrent: { equalTo: true },
-            },
-          },
-        },
-      },
-    }
+    return { lastActiveDate: { greaterThanOrEqualTo: startDate, lessThan: endDate } }
   },
   // deadlineDate (TBD)
   search: (value: string) => {
     return {
       or: [
         { name: { includesInsensitive: value } },
-        { user: { username: { includesInsensitive: value } } },
-        { user: { firstName: { includesInsensitive: value } } },
-        { user: { lastName: { includesInsensitive: value } } },
+        { applicantUsername: { includesInsensitive: value } },
+        { applicant: { includesInsensitive: value } },
+        { orgName: { includesInsensitive: value } },
+        { templateName: { includesInsensitive: value } },
         { stage: { startsWithInsensitive: value } },
       ],
     }
