@@ -4,13 +4,14 @@ import { DecisionArea, Loading, ReviewSection } from '../../components'
 import { DecisionAreaState, ReviewQuestionDecision, SectionDetails, User } from '../../utils/types'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ReviewResponseDecision, TemplateElementCategory } from '../../utils/generated/graphql'
+import { ReviewResponseDecision } from '../../utils/generated/graphql'
 import strings from '../../utils/constants'
 import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import { useUserState } from '../../contexts/UserState'
 import messages from '../../utils/messages'
 import useSubmitReview from '../../utils/hooks/useSubmitReview'
 import useUpdateRevieResponse from '../../utils/hooks/useUpdateReviewResponse'
+import validateReview from '../../utils/helpers/review/validateReview'
 
 const decisionAreaInitialState = { open: false, review: null, summaryViewProps: null }
 
@@ -52,7 +53,9 @@ const ReviewPageWrapper: React.FC = () => {
     array.forEach((reviewResponse) => {
       updateReviewResponse({ variables: { ...reviewResponse } })
     })
-    if (invalidSection) validateReview()
+    if (invalidSection) {
+      validateReview
+    }
   }
 
   const openDecisionArea = (
@@ -70,6 +73,13 @@ const ReviewPageWrapper: React.FC = () => {
     })
   }
 
+  const validateReviewHandler = (): boolean => {
+    const { userId } = currentUser as User
+    const invalidSection = validateReview({ userId, reviewSections })
+    setInvalidSection(invalidSection)
+    return invalidSection === undefined
+  }
+
   const submitResponseHandler = (_: any) => {
     if (review) {
       const { id, comment, decision } = review
@@ -78,37 +88,15 @@ const ReviewPageWrapper: React.FC = () => {
       else {
         updateReviewResponse({ variables: { ...review } })
         setDecisionState(decisionAreaInitialState)
-        if (invalidSection) validateReview()
+        validateReviewHandler()
       }
     }
   }
 
   const submitReviewHandler = (_: any) => {
-    if (validateReview() && !processing) {
+    if (validateReviewHandler() && !updating && !processing) {
       submit()
     }
-  }
-
-  const validateReview = (): boolean => {
-    const { userId } = currentUser as User
-    const invalidSection = reviewSections?.find((reviewSection) => {
-      const { assigned, pages } = reviewSection
-      if (assigned?.id !== userId) return false
-      const validPages = Object.entries(pages).filter(([pageName, elements]) => {
-        // TODO: Create utility function to filter out all INFORMATION elements when checking for status
-        const questions = elements.filter(
-          (element) => element.element.category === TemplateElementCategory.Question
-        )
-        return (
-          questions.some(({ review }) => review?.decision === ReviewResponseDecision.Decline) ||
-          questions.every(({ review }) => review?.decision === ReviewResponseDecision.Approve)
-        )
-      })
-      // If all pages are valid then the section is valid
-      if (Object.keys(validPages).length < Object.keys(pages).length) return true
-    })
-    setInvalidSection(invalidSection ? invalidSection.section : undefined)
-    return invalidSection === undefined
   }
 
   return error ? (
@@ -156,6 +144,7 @@ const ReviewPageWrapper: React.FC = () => {
           <Button
             size="medium"
             color={invalidSection ? 'red' : 'blue'}
+            loading={updating}
             content={strings.BUTTON_REVIEW_SUBMIT}
             onClick={submitReviewHandler}
           />
