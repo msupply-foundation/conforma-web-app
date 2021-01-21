@@ -2,7 +2,7 @@ import { useParams, useLocation, useHistory, useRouteMatch, match } from 'react-
 import queryString from 'query-string'
 import { useMemo } from 'react'
 
-interface QueryObject {
+export interface QueryObject {
   [key: string]: string
 }
 
