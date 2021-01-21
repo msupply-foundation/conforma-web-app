@@ -42,6 +42,7 @@ export {
   ReviewDetails,
   ReviewQuestion,
   ReviewQuestionDecision,
+  ReviewerResponsesPayload,
   SectionElementStates,
   SectionDetails,
   SectionStructure,
@@ -241,6 +242,11 @@ interface ReviewQuestionDecision {
   id: number
   comment: string
   decision: ReviewResponseDecision | undefined
+}
+
+interface ReviewerResponsesPayload {
+  userId: number
+  reviewSections: SectionStructure
 }
 
 interface SectionElementStates {

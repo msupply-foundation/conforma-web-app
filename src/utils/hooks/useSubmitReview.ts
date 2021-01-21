@@ -1,5 +1,10 @@
 import { useState } from 'react'
-import { useUpdateReviewMutation } from '../generated/graphql'
+import {
+  ReviewResponse,
+  ReviewResponseDecision,
+  useUpdateReviewMutation,
+} from '../generated/graphql'
+import { ReviewQuestionDecision } from '../types'
 interface UseSubmitReviewProps {
   reviewId: number
 }
@@ -17,11 +22,17 @@ const useSubmitReview = ({ reviewId }: UseSubmitReviewProps) => {
     },
   })
 
-  const submit = () => {
+  const submit = (reviewerResponses: ReviewQuestionDecision[]) => {
     setSubmitted(true)
     setProcessing(true)
     submitReviewMutation({
-      variables: { reviewId },
+      variables: {
+        reviewId,
+        reviewResponses: reviewerResponses.map(({ id, decision, comment }) => ({
+          id,
+          patch: { decision: decision as ReviewResponseDecision, comment },
+        })),
+      },
     })
   }
 
