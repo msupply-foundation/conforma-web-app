@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
-import { URLQueryFilter } from '../../hooks/useListApplications'
+import { QueryObject } from '../../hooks/useRouter'
+import { ApplicationStatus, ApplicationOutcome } from '../../../utils/generated/graphql'
 
-export default function buildQueryFilters(filters: URLQueryFilter) {
+export default function buildQueryFilters(filters: QueryObject) {
   const graphQLfilter = Object.entries(filters).reduce((filterObj, [key, value]) => {
     if (!mapQueryToFilterField?.[key]) return filterObj
     return { ...filterObj, ...mapQueryToFilterField[key](value) }
@@ -23,11 +24,10 @@ const mapQueryToFilterField: FilterMap = {
     }
   },
   status: (values: string) => {
-    // To-Do: gracefully handle values that don't match Enum -- currently breaks query
-    return { status: inEnumList(values) }
+    return { status: inEnumList(values, ApplicationStatus) }
   },
   outcome: (values: string) => {
-    return { outcome: inEnumList(values) }
+    return { outcome: inEnumList(values, ApplicationOutcome) }
   },
   // action
   // assigned
@@ -72,9 +72,15 @@ const inList = (values: string) => {
   return { inInsensitive: splitCommaList(values) }
 }
 
-// Use this if the values must conform to an Enum type (e.g. status)
-const inEnumList = (values: string) => {
-  return { in: splitCommaList(values).map((value) => value.toUpperCase()) }
+// Use this if the values must conform to an Enum type (e.g. status, outcome)
+const inEnumList = (values: string, enumList: any) => {
+  return {
+    in: splitCommaList(values)
+      .map((value) => value.toUpperCase())
+      .filter((value) => {
+        return Object.values(enumList).includes(value)
+      }),
+  }
 }
 
 const parseDateString = (dateString: string) => {
