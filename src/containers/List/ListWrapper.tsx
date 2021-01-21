@@ -25,27 +25,14 @@ const ListWrapper: React.FC = () => {
 
   useEffect(() => {
     if (templatePermissions) {
-      if (!type || !userRole) redirectURL()
+      if (!type || !userRole) redirectToDefault()
       else {
         setApplicationsRows(undefined)
         const columns = mapColumnsByRole(userRole as USER_ROLES)
         setColumns(columns)
       }
-      console.log('perms', templatePermissions)
-      const redirectType = Object.keys(templatePermissions)[0]
-      console.log('redirectType', redirectType)
-
-      if (!userRole) {
-        const found = Object.entries(templatePermissions).find(([template]) => template === type)
-        if (found) {
-          const [_, permissions] = found
-          const newRole = findUserRole(permissions)
-          // TODO: Call helper to build similar URL query with the new userRole
-          if (newRole) push(`/applicatiifons?type=${redirectType}&user-role=${newRole}`)
-        }
-      }
     }
-  }, [templatePermissions])
+  }, [templatePermissions, type, userRole])
 
   useEffect(() => {
     if (!loading && applications) {
@@ -53,20 +40,21 @@ const ListWrapper: React.FC = () => {
     }
   }, [loading, applications])
 
-  const redirectURL = () => {
+  const redirectToDefault = () => {
     const redirectType = type || Object.keys(templatePermissions)[0]
-    const redirectUserRole = userRole || getDefaultUserRole(templatePermissions)
+    const redirectUserRole = userRole || getDefaultUserRole(templatePermissions, redirectType)
     redirectType &&
       redirectUserRole &&
       push(`/applications?type=${redirectType}&user-role=${redirectUserRole}`)
 
-    function getDefaultUserRole(templatePermissions: TemplatePermissions) {
-      const found = Object.entries(templatePermissions).find(([template]) => template === type)
+    function getDefaultUserRole(templatePermissions: TemplatePermissions, redirectType: string) {
+      const found = Object.entries(templatePermissions).find(
+        ([template]) => template === redirectType
+      )
+      console.log('found', found)
       if (found) {
-        const [template, permissions] = found
-        const newRole = findUserRole(permissions)
-        // TODO: Call helper to build similar URL query with the new userRole
-        if (newRole) push(`/applicatiifons?type=${redirectType}&user-role=${newRole}`)
+        const [_, permissions] = found
+        return findUserRole(permissions)
       }
     }
   }

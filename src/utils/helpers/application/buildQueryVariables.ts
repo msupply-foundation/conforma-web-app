@@ -7,7 +7,6 @@ export default function buildSortFields(sortString: string) {
 
 const getGraphQLSortName = (field: string) => {
   const [fieldName, direction] = field.split(':')
-  // if (!(fieldName in mapSortFields)) return
   return (mapSortFields[fieldName] +
     (direction === 'asc' ? 'ASC' : 'DESC')) as ApplicationListsOrderBy
 }
