@@ -26,7 +26,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
 
 **Note**: parameters marked with \* can be defined as dynamic expressions -- these are specified in the `pluginConfig.json` file of each plugin.
 
-### Short Text Input _(not yet implemented -- highest priority)_
+### Short Text Input
 
 - **type/code**: `shortText`
 - **category**: `Question`
