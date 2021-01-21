@@ -14,8 +14,7 @@ import {
   UseGetApplicationProps,
 } from '../types'
 
-const useLoadApplication = (props: UseGetApplicationProps) => {
-  const { serialNumber } = props
+const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
   const [application, setApplication] = useState<ApplicationDetails>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
   const [appStages, setAppStages] = useState<ApplicationStages>()
@@ -31,7 +30,7 @@ const useLoadApplication = (props: UseGetApplicationProps) => {
       serial: serialNumber,
     },
     skip: triggerProcessing || isApplicationLoaded,
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: networkFetch ? 'no-cache' : 'cache-first',
   })
 
   useEffect(() => {

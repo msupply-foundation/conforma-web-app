@@ -61,16 +61,12 @@ const ApplicationPageWrapper: React.FC = () => {
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
-  const {
-    error,
-    loading,
-    application,
-    appStages,
-    templateSections,
-    isApplicationLoaded,
-  } = useLoadApplication({
-    serialNumber: serialNumber as string,
-  })
+  const { error, loading, application, templateSections, isApplicationLoaded } = useLoadApplication(
+    {
+      serialNumber: serialNumber as string,
+      networkFetch: true,
+    }
+  )
 
   const {
     error: responsesError,
@@ -89,8 +85,9 @@ const ApplicationPageWrapper: React.FC = () => {
   // 2 - Set the current section state of the application
   useEffect(() => {
     if (elementsState && responsesByCode && isApplicationLoaded) {
+      const stage = application?.stage as ApplicationStage
       processRedirect({
-        ...(application?.stage as ApplicationStage),
+        ...stage,
         serialNumber,
         sectionCode,
         page,
