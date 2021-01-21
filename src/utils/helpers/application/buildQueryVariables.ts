@@ -11,15 +11,6 @@ const getGraphQLSortName = (field: string) => {
     (direction === 'asc' ? 'ASC' : 'DESC')) as ApplicationListsOrderBy
 }
 
-type PaginationValues = {
-  numberToFetch: number
-  paginationOffset: number
-}
-
-export function getPaginationVariables(page: number, perPage = 20): PaginationValues {
-  return { numberToFetch: perPage, paginationOffset: (page - 1) * perPage }
-}
-
 const mapSortFields: any = {
   type: 'TEMPLATE_NAME_',
   serial: 'SERIAL_',
@@ -32,4 +23,13 @@ const mapSortFields: any = {
   status: 'STATUS_',
   outcome: 'OUTCOME_',
   lastActiveDate: 'LAST_ACTIVE_DATE_',
+}
+
+type PaginationValues = {
+  numberToFetch: number
+  paginationOffset: number
+}
+
+export function getPaginationVariables(page: number, perPage = 20): PaginationValues {
+  return { numberToFetch: perPage, paginationOffset: (page - 1) * perPage }
 }

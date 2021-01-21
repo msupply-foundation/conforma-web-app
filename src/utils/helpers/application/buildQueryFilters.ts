@@ -42,7 +42,9 @@ const mapQueryToFilterField: FilterMap = {
       ],
     }
   },
-  // org -- not yet implemented, see back-end issue #179
+  org: (values: string) => {
+    return { orgName: inList(values) }
+  },
   lastActiveDate: (value: string) => {
     const [startDate, endDate] = parseDateString(value)
     console.log('Dates:', startDate, endDate)
