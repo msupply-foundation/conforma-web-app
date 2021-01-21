@@ -12,6 +12,7 @@ import messages from '../../utils/messages'
 import useSubmitReview from '../../utils/hooks/useSubmitReview'
 import useUpdateRevieResponse from '../../utils/hooks/useUpdateReviewResponse'
 import validateReview from '../../utils/helpers/review/validateReview'
+import listReviewResponses from '../../utils/helpers/review/listReviewerResponses'
 
 const decisionAreaInitialState = { open: false, review: null, summaryViewProps: null }
 
@@ -27,6 +28,7 @@ const ReviewPageWrapper: React.FC = () => {
   const [decisionState, setDecisionState] = useState<DecisionAreaState>(decisionAreaInitialState)
   const { review } = decisionState
   const [invalidSection, setInvalidSection] = useState<SectionDetails>()
+  const [reviewerResponses, setReviewerResponses] = useState<ReviewQuestionDecision[]>([])
 
   // Will wait for trigger to run that will set the Review status as DRAFT (after creation)
   const { error, loading, applicationName, responsesByCode, reviewSections } = useLoadReview({
@@ -43,19 +45,26 @@ const ReviewPageWrapper: React.FC = () => {
     reviewId: Number(reviewId),
   })
 
+  // After submited redirects to Submission page
   useEffect(() => {
     if (!submitted || processing) return
     if (!submitError) push(`/application/${serialNumber}/review/${reviewId}/submission`)
     else console.log(submitError)
   }, [submitted, processing])
 
+  // Keep array with all review responses from current Reviewer
+  useEffect(() => {
+    if (!currentUser) return
+    const { userId } = currentUser
+    const reviewerResponseDecisions = listReviewResponses({ userId, reviewSections })
+    setReviewerResponses(reviewerResponseDecisions)
+  }, [reviewSections])
+
   const updateResponses = async (array: ReviewQuestionDecision[]) => {
     array.forEach((reviewResponse) => {
       updateReviewResponse({ variables: { ...reviewResponse } })
     })
-    if (invalidSection) {
-      validateReview
-    }
+    if (invalidSection) validateReviewHandler()
   }
 
   const openDecisionArea = (
@@ -76,6 +85,8 @@ const ReviewPageWrapper: React.FC = () => {
   const validateReviewHandler = (): boolean => {
     const { userId } = currentUser as User
     const invalidSection = validateReview({ userId, reviewSections })
+    console.log(invalidSection)
+
     setInvalidSection(invalidSection)
     return invalidSection === undefined
   }
@@ -88,14 +99,14 @@ const ReviewPageWrapper: React.FC = () => {
       else {
         updateReviewResponse({ variables: { ...review } })
         setDecisionState(decisionAreaInitialState)
-        validateReviewHandler()
+        if (invalidSection) validateReviewHandler()
       }
     }
   }
 
   const submitReviewHandler = (_: any) => {
     if (validateReviewHandler() && !updating && !processing) {
-      submit()
+      submit(reviewerResponses)
     }
   }
 

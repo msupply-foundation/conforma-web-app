@@ -1,10 +1,5 @@
 import { ReviewResponseDecision, TemplateElementCategory } from '../../generated/graphql'
-import { SectionDetails, SectionStructure } from '../../types'
-
-interface ValidateReviewProps {
-  userId: number
-  reviewSections: SectionStructure
-}
+import { ReviewerResponsesPayload, SectionDetails } from '../../types'
 
 /**
  * @function: validateReview
@@ -19,14 +14,14 @@ interface ValidateReviewProps {
 const validateReview = ({
   userId,
   reviewSections,
-}: ValidateReviewProps): SectionDetails | undefined => {
+}: ReviewerResponsesPayload): SectionDetails | undefined => {
   const invalidSection = reviewSections?.find((reviewSection) => {
     const { assigned, pages } = reviewSection
     if (assigned?.id !== userId) return false
     const validPages = Object.entries(pages).filter(([pageName, elements]) => {
       // TODO: Create utility function to filter out all INFORMATION elements when checking for status
       const questions = elements.filter(
-        (element) => element.element.category === TemplateElementCategory.Question
+        ({ element }) => element.category === TemplateElementCategory.Question
       )
       return (
         questions.some(({ review }) => review?.decision === ReviewResponseDecision.Decline) ||
