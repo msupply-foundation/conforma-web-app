@@ -19,7 +19,7 @@ const Home: React.FC = () => {
           <Link to="/application/new?type=TestRego">Feature showcase application</Link>
         </List.Item>
         <List.Item>
-          <Link to="/application/new?type=TestRego">User registration application</Link>
+          <Link to="/application/new?type=UserRegistration">User registration application</Link>
         </List.Item>
       </List>
     </div>
