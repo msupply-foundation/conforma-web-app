@@ -1,18 +1,27 @@
 import {
+  PermissionPolicyType,
   ReviewResponseDecision,
   TemplateElement,
   TemplateElementCategory,
 } from './generated/graphql'
 
+import { ValidationState } from '../formElementPlugins/types'
+
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SummaryViewWrapperProps } from '../formElementPlugins/types'
+import { APPLICATION_COLUMNS, USER_ROLES } from './data'
 
 export {
-  ApplicationState,
   ApplicationDetails,
   ApplicationElementStates,
+  ApplicationStage,
   ApplicationStages,
   AssignmentDetails,
+  CellProps,
+  ColumnDetails,
+  ColumnsPerRole,
+  ContextApplicationState,
+  ContextListState,
   CurrentPage,
   ElementPluginParameterValue,
   ElementPluginParameters,
@@ -49,15 +58,10 @@ export {
   RevalidateResult,
   UseGetApplicationProps,
   User,
+  UserRoles,
   OrganisationSimple,
   Organisation,
   LoginPayload,
-}
-
-interface ApplicationState {
-  id: number | null
-  serialNumber: string | null
-  inputElementsActivity: ElementsActivityState
 }
 
 interface ApplicationDetails {
@@ -65,23 +69,54 @@ interface ApplicationDetails {
   type: string
   serial: string
   name: string
-  stage: string
-  status: string
   outcome: string
   isLinear: boolean
+  stage?: ApplicationStage
 }
 
 interface ApplicationElementStates {
   [key: string]: ElementState
 }
+
+interface ApplicationStage {
+  id: number
+  name: string
+  status: string
+  date: Date
+}
 interface ApplicationStages {
   stages: StageDetails[]
   submissionMessage: string
 }
+
 interface AssignmentDetails {
   id: number
   review?: ReviewDetails
   questions: ReviewQuestion[]
+}
+
+interface CellProps {
+  application: ApplicationDetails
+}
+
+interface ColumnDetails {
+  headerName: string
+  filters: Array<string>
+  ColumnComponent: React.FunctionComponent<any>
+}
+
+type ColumnsPerRole = {
+  [role in USER_ROLES]: Array<APPLICATION_COLUMNS>
+}
+
+interface ContextApplicationState {
+  id: number | null
+  serialNumber: string | null
+  inputElementsActivity: ElementsActivityState
+}
+
+interface ContextListState {
+  applications: ApplicationDetails[]
 }
 
 interface CurrentPage {
@@ -173,6 +208,8 @@ interface ResponseFull {
   optionIndex?: number
   reference?: any // Not yet decided how to represent
   isValid?: boolean | null
+  hash?: string
+  customValidation?: ValidationState
 }
 
 interface ResponsePayload {
@@ -259,16 +296,15 @@ interface TemplateElementState extends ElementBase {
 }
 
 interface TemplatePermissions {
-  [index: string]: Array<UserRole>
+  [index: string]: Array<PermissionPolicyType>
 }
 
 type TemplatesDetails = {
-  permissions: Array<UserRole>
+  permissions: Array<PermissionPolicyType>
   name: string
   code: string
 }[]
 
-type UserRole = 'Apply' | 'Review' | 'Assign'
 interface ValidateFunction {
   (
     validationExpress: IQueryNode,
@@ -327,4 +363,8 @@ interface LoginPayload {
   JWT: string
   templatePermissions: TemplatePermissions
   orgList?: OrganisationSimple[]
+}
+
+type UserRoles = {
+  [role in USER_ROLES]: Array<PermissionPolicyType>
 }

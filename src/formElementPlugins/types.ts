@@ -28,7 +28,7 @@ interface ApplicationViewWrapperProps {
 }
 
 type ValidationState = {
-  isValid: boolean | undefined
+  isValid: boolean | undefined | null
   validationMessage?: string | undefined
 }
 
@@ -41,6 +41,7 @@ interface ApplicationViewProps extends ApplicationViewWrapperProps {
   validationState: ValidationState
   Markdown: any
   getDefaultIndex: Function
+  validate: Function
 }
 
 interface SummaryViewProps {

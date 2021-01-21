@@ -3,7 +3,7 @@ import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { ValidationState } from './types'
 import { EvaluatorParameters } from '../utils/types'
 
-export const defaultValidate = async (
+const defaultValidate = async (
   validationExpress: IQueryNode,
   validationMessage: string,
   evaluatorParameters: EvaluatorParameters
@@ -13,3 +13,5 @@ export const defaultValidate = async (
   if (isValid) return { isValid }
   return { isValid, validationMessage }
 }
+
+export default defaultValidate

@@ -26,7 +26,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   function handleLoseFocus(e: any) {
-    // TO-DO if password (i.e 'maskedInput'), do HASH on password before sending value
     onSave({ text: value })
   }
 

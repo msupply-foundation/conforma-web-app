@@ -20,13 +20,14 @@ import {
   TemplateNew,
   Template,
 } from '../../components'
-import { ApplicationCreate, ApplicationList, ApplicationPageWrapper } from '../Application'
+import { ApplicationCreate, ApplicationPageWrapper } from '../Application'
 import { ReviewOverview, ReviewPageWrapper } from '../Review'
 import UserRegister from '../User/UserRegister'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import ApplicationOverview from '../Application/ApplicationOverview'
 import ApplicationSubmission from '../Application/ApplicationSubmission'
 import UserArea from '../User/UserArea'
+import ListWrapper from '../List/ListWrapper'
 
 const SiteLayout: React.FC = () => {
   return (
@@ -43,7 +44,7 @@ const SiteLayout: React.FC = () => {
           <UserRegister />
         </Route>
         <Route exact path="/applications">
-          <ApplicationList />
+          <ListWrapper />
         </Route>
         <Route exact path="/application/new">
           <ApplicationProvider>

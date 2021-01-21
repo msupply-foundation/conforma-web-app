@@ -1,4 +1,4 @@
-import { CurrentPage, TemplateSectionPayload } from '../types'
+import { CurrentPage, TemplateSectionPayload } from '../../types'
 
 interface GetPreviousPageProps {
   templateSections: TemplateSectionPayload[]

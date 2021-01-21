@@ -1,11 +1,11 @@
-import { ReviewResponse, User } from '../generated/graphql'
+import { ReviewResponse, User } from '../../generated/graphql'
 import {
   ApplicationElementStates,
   ResponseFull,
   ResponsesByCode,
   SectionStructure,
   TemplateSectionPayload,
-} from '../types'
+} from '../../types'
 import getPageElements from './getPageElements'
 
 interface BuildSectionsStructureProps {

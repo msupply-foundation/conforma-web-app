@@ -59,6 +59,13 @@ class pluginProvider {
         folderName: 'checkbox',
         category: 'Input',
       },
+      password: {
+        code: 'password',
+        displayName: 'Secure Password Input',
+        isCore: true,
+        folderName: 'password',
+        category: 'Input',
+      },
     }
   }
 

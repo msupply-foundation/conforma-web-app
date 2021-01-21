@@ -1,4 +1,5 @@
 export default {
+  BUTTON_APPLICATION_NEW: 'New application',
   BUTTON_APPLICATION_START: 'Get started',
   BUTTON_APPLICATION_SUBMIT: 'Submit application',
   BUTTON_BACK_DASHBOARD: 'Back to dashboard',
@@ -32,6 +33,7 @@ export default {
   LABEL_LOGIN_USERNAME: 'Username',
   LABEL_LOG_IN: 'Log in',
   LABEL_LOG_OUT: 'Log out',
+  LABEL_PROCEED: 'Proceed',
   LABEL_PROCESSING: 'Processing...',
   LABEL_REVIEW: 'Review',
   LABEL_REVIEW_APPROVE: 'Approve',

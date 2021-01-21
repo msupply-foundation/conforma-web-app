@@ -4,8 +4,8 @@ import {
   RevalidateResult,
   User,
   ValidityFailure,
-} from '../types'
-import { defaultValidate } from '../../formElementPlugins/defaultValidate'
+} from '../../types'
+import validate from '../../../formElementPlugins/defaultValidate'
 
 export const revalidateAll = async (
   elementsState: ApplicationElementStates,
@@ -14,8 +14,6 @@ export const revalidateAll = async (
   strict = true,
   shouldUpdateDatabase = true
 ): Promise<RevalidateResult> => {
-  const validate = defaultValidate // To-Do: import custom validation methods
-
   const elementCodes = Object.keys(elementsState).filter(
     (key) =>
       responsesByCode && // Typescript requires this
