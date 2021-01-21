@@ -22,6 +22,7 @@ const ApplicationSubmission: React.FC = () => {
 
   const { error, loading, application, appStages, isApplicationLoaded } = useLoadApplication({
     serialNumber: serialNumber as string,
+    networkFetch: true,
   })
 
   useEffect(() => {

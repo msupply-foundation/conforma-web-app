@@ -61,16 +61,12 @@ const ApplicationPageWrapper: React.FC = () => {
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
-  const {
-    error,
-    loading,
-    application,
-    appStages,
-    templateSections,
-    isApplicationLoaded,
-  } = useLoadApplication({
-    serialNumber: serialNumber as string,
-  })
+  const { error, loading, application, templateSections, isApplicationLoaded } = useLoadApplication(
+    {
+      serialNumber: serialNumber as string,
+      networkFetch: true,
+    }
+  )
 
   const {
     error: responsesError,
