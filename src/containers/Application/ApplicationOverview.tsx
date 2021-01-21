@@ -133,8 +133,8 @@ const ApplicationOverview: React.FC = () => {
     }
   }
 
-  return error ? (
-    <Message error header={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
+  return error || responsesError ? (
+    <Message error header={strings.ERROR_APPLICATION_OVERVIEW} list={[error, responsesError]} />
   ) : loading || responsesLoading ? (
     <Loading />
   ) : submitError ? (
@@ -145,7 +145,7 @@ const ApplicationOverview: React.FC = () => {
       <Form>
         {sectionsPages.map((sectionPages) => (
           <SectionSummary
-            key={`SecSummary_${sectionPages.section.code}`}
+            key={`ApplicationSection_${sectionPages.section.code}`}
             sectionPages={sectionPages}
             serialNumber={serialNumber}
             allResponses={responsesByCode || {}}
