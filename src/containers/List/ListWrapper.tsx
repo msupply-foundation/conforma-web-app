@@ -7,7 +7,7 @@ import strings from '../../utils/constants'
 import findUserRole from '../../utils/helpers/translations/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/translations/mapColumnsByRole'
-import { ApplicationDetails, ColumnDetails } from '../../utils/types'
+import { ColumnDetails } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
@@ -21,9 +21,7 @@ const ListWrapper: React.FC = () => {
   } = useUserState()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
   const [applicationsRows, setApplicationsRows] = useState<ApplicationList[] | undefined>()
-  const { error, loading, applications } = useListApplications({ urlFilters: query })
-
-  console.log('applications', applications)
+  const { error, loading, applications } = useListApplications(query)
 
   useEffect(() => {
     if (type && templatePermissions) {

@@ -1,15 +1,14 @@
 import { DateTime } from 'luxon'
 import { URLQueryFilter } from '../../hooks/useListApplications'
+import { ApplicationStatus } from '../../../utils/generated/graphql'
 
 export default function buildQueryFilters(filters: URLQueryFilter) {
   const graphQLfilter = Object.entries(filters).reduce((filterObj, [key, value]) => {
     if (!mapQueryToFilterField?.[key]) return filterObj
     return { ...filterObj, ...mapQueryToFilterField[key](value) }
   }, {})
-  console.log('Filters', graphQLfilter)
   return graphQLfilter
 }
-
 interface FilterMap {
   [key: string]: (value: string) => object
 }

@@ -1,3 +1,5 @@
+import { ApplicationListsOrderBy } from '../../../utils/generated/graphql'
+
 export default function buildSortFields(sortString: string) {
   const sortFields = sortString.split(',')
   return sortFields.map((field) => getGraphQLSortName(field))
@@ -5,9 +7,9 @@ export default function buildSortFields(sortString: string) {
 
 const getGraphQLSortName = (field: string) => {
   const [fieldName, direction] = field.split(':')
-  // TO-DO: Enforce fields names match Schema types and return blank if not.
-  // Will add this once we do #185 -- make Applications View table
-  return `${fieldName.replace(/-/g, '_')}_${direction || 'ASC'}`.toUpperCase()
+  // if (!(fieldName in mapSortFields)) return
+  return (mapSortFields[fieldName] +
+    (direction === 'asc' ? 'ASC' : 'DESC')) as ApplicationListsOrderBy
 }
 
 type PaginationValues = {
@@ -17,4 +19,18 @@ type PaginationValues = {
 
 export function getPaginationVariables(page: number, perPage = 20): PaginationValues {
   return { numberToFetch: perPage, paginationOffset: (page - 1) * perPage }
+}
+
+const mapSortFields: any = {
+  type: 'TEMPLATE_NAME_',
+  serial: 'SERIAL_',
+  name: 'NAME_',
+  code: 'TEMPLATE_CODE_',
+  applicant: 'APPLICANT_',
+  username: 'APPLICANT_USERNAME_',
+  org: 'ORG_NAME_',
+  stage: 'STAGE_',
+  status: 'STATUS_',
+  outcome: 'OUTCOME_',
+  lastActiveDate: 'LAST_ACTIVE_DATE_',
 }
