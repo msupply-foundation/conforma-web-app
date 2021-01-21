@@ -1,25 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Header, Label, Message, Segment } from 'semantic-ui-react'
 import { DecisionArea, Loading, ReviewSection } from '../../components'
 import { DecisionAreaState, ReviewQuestionDecision, SectionDetails, User } from '../../utils/types'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
-import {
-  ReviewResponseDecision,
-  TemplateElementCategory,
-  useUpdateReviewResponseMutation,
-} from '../../utils/generated/graphql'
-import getReviewQuery from '../../utils/graphql/queries/getReview.query'
+import { ReviewResponseDecision, TemplateElementCategory } from '../../utils/generated/graphql'
 import strings from '../../utils/constants'
 import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import { useUserState } from '../../contexts/UserState'
 import messages from '../../utils/messages'
+import useSubmitReview from '../../utils/hooks/useSubmitReview'
+import useUpdateRevieResponse from '../../utils/hooks/useUpdateReviewResponse'
 
 const decisionAreaInitialState = { open: false, review: null, summaryViewProps: null }
 
 const ReviewPageWrapper: React.FC = () => {
   const {
     params: { serialNumber, reviewId },
+    push,
   } = useRouter()
   const {
     userState: { currentUser },
@@ -35,22 +33,26 @@ const ReviewPageWrapper: React.FC = () => {
     serialNumber,
   })
 
-  const [updateReviewResponse] = useUpdateReviewResponseMutation({
-    onCompleted: ({ updateReviewResponse }) =>
-      console.log('Success to update reviewResponse: ', updateReviewResponse?.clientMutationId),
-    onError: (error) => console.log('Problem updating reviewResponse', error.message),
-    refetchQueries: [
-      {
-        query: getReviewQuery,
-        variables: { reviewId: Number(reviewId), serialNumber },
-      },
-    ],
+  const { updateReviewResponse, error: updateError, updating } = useUpdateRevieResponse({
+    reviewId: Number(reviewId),
+    serialNumber,
   })
+
+  const { submit, error: submitError, submitted, processing } = useSubmitReview({
+    reviewId: Number(reviewId),
+  })
+
+  useEffect(() => {
+    if (!submitted || processing) return
+    if (!submitError) push(`/application/${serialNumber}/review/${reviewId}/submission`)
+    else console.log(submitError)
+  }, [submitted, processing])
 
   const updateResponses = async (array: ReviewQuestionDecision[]) => {
     array.forEach((reviewResponse) => {
       updateReviewResponse({ variables: { ...reviewResponse } })
     })
+    if (invalidSection) validateReview()
   }
 
   const openDecisionArea = (
@@ -82,10 +84,12 @@ const ReviewPageWrapper: React.FC = () => {
   }
 
   const submitReviewHandler = (_: any) => {
-    validateReview()
+    if (validateReview() && !processing) {
+      submit()
+    }
   }
 
-  const validateReview = () => {
+  const validateReview = (): boolean => {
     const { userId } = currentUser as User
     const invalidSection = reviewSections?.find((reviewSection) => {
       const { assigned, pages } = reviewSection
@@ -104,6 +108,7 @@ const ReviewPageWrapper: React.FC = () => {
       if (Object.keys(validPages).length < Object.keys(pages).length) return true
     })
     setInvalidSection(invalidSection ? invalidSection.section : undefined)
+    return invalidSection === undefined
   }
 
   return error ? (
@@ -157,7 +162,6 @@ const ReviewPageWrapper: React.FC = () => {
           {invalidSection && <p>{messages.REVIEW_SUBMIT_FAIL}</p>}
         </Segment>
       </Segment.Group>
-
       <DecisionArea
         state={decisionState}
         setDecision={setDecisionState}
