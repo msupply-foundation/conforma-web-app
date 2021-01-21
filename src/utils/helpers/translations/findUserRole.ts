@@ -26,6 +26,5 @@ export default (permissions: Array<PermissionPolicyType>): string | undefined =>
     return common.length > 0
   })
   const filteredRoles = matching.map(([role]) => role)
-  console.log('Possible user-roles:', filteredRoles)
   return filteredRoles?.[0] || undefined
 }

@@ -43,15 +43,16 @@ const ListWrapper: React.FC = () => {
   const redirectToDefault = () => {
     const redirectType = type || Object.keys(templatePermissions)[0]
     const redirectUserRole = userRole || getDefaultUserRole(templatePermissions, redirectType)
-    redirectType &&
-      redirectUserRole &&
+    if (redirectType && redirectUserRole)
       push(`/applications?type=${redirectType}&user-role=${redirectUserRole}`)
+    else {
+      // To-Do: Show 404 if no default found
+    }
 
     function getDefaultUserRole(templatePermissions: TemplatePermissions, redirectType: string) {
       const found = Object.entries(templatePermissions).find(
         ([template]) => template === redirectType
       )
-      console.log('found', found)
       if (found) {
         const [_, permissions] = found
         return findUserRole(permissions)
