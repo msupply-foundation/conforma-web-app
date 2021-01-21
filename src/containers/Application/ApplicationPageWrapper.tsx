@@ -89,8 +89,9 @@ const ApplicationPageWrapper: React.FC = () => {
   // 2 - Set the current section state of the application
   useEffect(() => {
     if (elementsState && responsesByCode && isApplicationLoaded) {
+      const stage = application?.stage as ApplicationStage
       processRedirect({
-        ...(application?.stage as ApplicationStage),
+        ...stage,
         serialNumber,
         sectionCode,
         page,
