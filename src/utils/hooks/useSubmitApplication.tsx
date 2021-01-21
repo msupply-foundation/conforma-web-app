@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import {
   ApplicationResponse,
@@ -7,10 +6,10 @@ import {
 } from '../generated/graphql'
 import { UseGetApplicationProps } from '../types'
 
-const useUpdateApplication = ({ serialNumber }: UseGetApplicationProps) => {
+const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
   const [submitted, setSubmitted] = useState(false)
   const [processing, setProcessing] = useState(false)
-  const [error, setError] = useState<ApolloError | undefined>()
+  const [error, setError] = useState('')
 
   // Hook to get existing responses in cache - triggered when user submits application
   const { data, error: responsesError } = useGetElementsAndResponsesQuery({
@@ -27,14 +26,14 @@ const useUpdateApplication = ({ serialNumber }: UseGetApplicationProps) => {
     },
     onError: (submitionError) => {
       setProcessing(false)
-      setError(submitionError)
+      setError(submitionError.message)
     },
   })
 
   useEffect(() => {
     if (responsesError) {
       setProcessing(false)
-      setError(responsesError)
+      setError(responsesError.message)
     }
     if (
       !data?.applicationBySerial?.applicationResponses ||
@@ -71,4 +70,4 @@ const useUpdateApplication = ({ serialNumber }: UseGetApplicationProps) => {
   }
 }
 
-export default useUpdateApplication
+export default useSubmitApplication
