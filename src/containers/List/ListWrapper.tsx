@@ -7,7 +7,7 @@ import strings from '../../utils/constants'
 import findUserRole from '../../utils/helpers/translations/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/translations/mapColumnsByRole'
-import { ColumnDetails } from '../../utils/types'
+import { ColumnDetails, TemplatePermissions } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
@@ -24,28 +24,52 @@ const ListWrapper: React.FC = () => {
   const { error, loading, applications } = useListApplications(query)
 
   useEffect(() => {
-    if (type && templatePermissions) {
-      if (!userRole) {
-        const found = Object.entries(templatePermissions).find(([template]) => template === type)
-        if (found) {
-          const [template, permissions] = found
-          const newRole = findUserRole(permissions)
-          // TODO: Call helper to build similar URL query with the new userRole
-          if (newRole) push(`/applications?type=${type}&user-role=${newRole}`)
-        }
-      } else {
+    if (templatePermissions) {
+      if (!type || !userRole) redirectURL()
+      else {
         setApplicationsRows(undefined)
         const columns = mapColumnsByRole(userRole as USER_ROLES)
         setColumns(columns)
       }
+      console.log('perms', templatePermissions)
+      const redirectType = Object.keys(templatePermissions)[0]
+      console.log('redirectType', redirectType)
+
+      if (!userRole) {
+        const found = Object.entries(templatePermissions).find(([template]) => template === type)
+        if (found) {
+          const [_, permissions] = found
+          const newRole = findUserRole(permissions)
+          // TODO: Call helper to build similar URL query with the new userRole
+          if (newRole) push(`/applicatiifons?type=${redirectType}&user-role=${newRole}`)
+        }
+      }
     }
-  }, [type, userRole, templatePermissions])
+  }, [templatePermissions])
 
   useEffect(() => {
     if (!loading && applications) {
       setApplicationsRows(applications)
     }
   }, [loading, applications])
+
+  const redirectURL = () => {
+    const redirectType = type || Object.keys(templatePermissions)[0]
+    const redirectUserRole = userRole || getDefaultUserRole(templatePermissions)
+    redirectType &&
+      redirectUserRole &&
+      push(`/applications?type=${redirectType}&user-role=${redirectUserRole}`)
+
+    function getDefaultUserRole(templatePermissions: TemplatePermissions) {
+      const found = Object.entries(templatePermissions).find(([template]) => template === type)
+      if (found) {
+        const [template, permissions] = found
+        const newRole = findUserRole(permissions)
+        // TODO: Call helper to build similar URL query with the new userRole
+        if (newRole) push(`/applicatiifons?type=${redirectType}&user-role=${newRole}`)
+      }
+    }
+  }
 
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
