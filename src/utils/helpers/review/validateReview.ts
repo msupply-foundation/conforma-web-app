@@ -6,6 +6,16 @@ interface ValidateReviewProps {
   reviewSections: SectionStructure
 }
 
+/**
+ * @function: validateReview
+ * Run the validation on the whole review responses before allow user to
+ * submit the review. Checks review responses on pages/sections assigned to
+ * the reviewed and checks if review is completed if:
+ * - All review responses have Approve decision, or
+ * - At least one review response have Decline decision
+ * @param userId Current reviewer userId
+ * @param reviewSections All reviews responses and elements of application
+ */
 const validateReview = ({
   userId,
   reviewSections,
