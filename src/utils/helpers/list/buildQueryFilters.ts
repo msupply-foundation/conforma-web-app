@@ -2,15 +2,16 @@ import { DateTime } from 'luxon'
 import { BasicStringObject } from '../../types'
 import { ApplicationStatus, ApplicationOutcome } from '../../generated/graphql'
 
+interface FilterMap {
+  [key: string]: (value: string) => object
+}
+
 export default function buildQueryFilters(filters: BasicStringObject) {
   const graphQLfilter = Object.entries(filters).reduce((filterObj, [key, value]) => {
-    if (!mapQueryToFilterField?.[key]) return filterObj
+    if (!mapQueryToFilterField[key]) return filterObj
     return { ...filterObj, ...mapQueryToFilterField[key](value) }
   }, {})
   return graphQLfilter
-}
-interface FilterMap {
-  [key: string]: (value: string) => object
 }
 
 const mapQueryToFilterField: FilterMap = {
