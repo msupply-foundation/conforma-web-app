@@ -2,13 +2,9 @@ import { useEffect, useState } from 'react'
 import buildFilter from '../helpers/list/buildQueryFilters'
 import buildSortFields, { getPaginationVariables } from '../helpers/list/buildQueryVariables'
 import { useGetApplicationsListQuery, ApplicationList } from '../../utils/generated/graphql'
-import { QueryObject } from '../hooks/useRouter'
+import { BasicStringObject } from '../types'
 
-export type URLQueryFilter = {
-  [key: string]: string
-}
-
-const useListApplications = (urlFilters: QueryObject) => {
+const useListApplications = (urlFilters: BasicStringObject) => {
   const [applications, setApplications] = useState<ApplicationList[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')

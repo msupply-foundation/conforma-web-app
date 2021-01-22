@@ -64,6 +64,7 @@ export {
   OrganisationSimple,
   Organisation,
   LoginPayload,
+  BasicStringObject,
 }
 
 interface ApplicationDetails {
@@ -100,6 +101,10 @@ interface AssignmentDetails {
   id: number
   review?: ReviewDetails
   questions: ReviewQuestion[]
+}
+
+interface BasicStringObject {
+  [key: string]: string
 }
 
 interface CellProps {
