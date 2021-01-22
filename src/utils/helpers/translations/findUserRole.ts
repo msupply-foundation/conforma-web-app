@@ -1,5 +1,5 @@
 import { PermissionPolicyType } from '../../generated/graphql'
-import { UserRoles } from '../../types'
+import { UserRoles, TemplatePermissions } from '../../types'
 
 /**
  * @function: findUserRole
@@ -17,14 +17,20 @@ const userRoles: UserRoles = {
   consolidator: [PermissionPolicyType.Assign], //, PermissionPolicyType.Consolidate]
 }
 
-export default (permissions: Array<PermissionPolicyType>): string | undefined => {
-  const comparePermissions = permissions.map((permissionType) => permissionType.toUpperCase())
+// permissions: Array<PermissionPolicyType>
 
-  // Compare array of permission checking if are the same
-  const matching = Object.entries(userRoles).filter(([role, permissionList]) => {
-    const common = permissionList.filter((permission) => comparePermissions.includes(permission))
-    return common.length > 0
-  })
-  const filteredRoles = matching.map(([role]) => role)
-  return filteredRoles?.[0] || undefined
+export default (templatePermissions: TemplatePermissions, type: string): string | undefined => {
+  const found = Object.entries(templatePermissions).find(([template]) => template === type)
+  if (found) {
+    const [_, permissions] = found
+    const comparePermissions = permissions.map((permissionType) => permissionType.toUpperCase())
+
+    // Compare array of permission checking if are the same
+    const matching = Object.entries(userRoles).filter(([role, permissionList]) => {
+      const common = permissionList.filter((permission) => comparePermissions.includes(permission))
+      return common.length > 0
+    })
+    const filteredRoles = matching.map(([role]) => role)
+    return filteredRoles?.[0] || undefined
+  }
 }

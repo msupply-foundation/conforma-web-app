@@ -4,10 +4,10 @@ import { Loading, FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useListApplications from '../../utils/hooks/useListApplications'
 import strings from '../../utils/constants'
-import findUserRole from '../../utils/helpers/translations/findUserRole'
+import getDefaultUserRole from '../../utils/helpers/translations/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/translations/mapColumnsByRole'
-import { ColumnDetails, TemplatePermissions } from '../../utils/types'
+import { ColumnDetails } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
@@ -47,16 +47,6 @@ const ListWrapper: React.FC = () => {
       push(`/applications?type=${redirectType}&user-role=${redirectUserRole}`)
     else {
       // To-Do: Show 404 if no default found
-    }
-
-    function getDefaultUserRole(templatePermissions: TemplatePermissions, redirectType: string) {
-      const found = Object.entries(templatePermissions).find(
-        ([template]) => template === redirectType
-      )
-      if (found) {
-        const [_, permissions] = found
-        return findUserRole(permissions)
-      }
     }
   }
 
