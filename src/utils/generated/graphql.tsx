@@ -18220,33 +18220,6 @@ export type GetApplicationStatusQuery = (
   )> }
 );
 
-export type GetApplicationsQueryVariables = Exact<{
-  filters?: Maybe<ApplicationFilter>;
-  sortFields?: Maybe<Array<ApplicationsOrderBy>>;
-  paginationOffset: Scalars['Int'];
-  numberToFetch: Scalars['Int'];
-}>;
-
-
-export type GetApplicationsQuery = (
-  { __typename?: 'Query' }
-  & { applications?: Maybe<(
-    { __typename?: 'ApplicationsConnection' }
-    & Pick<ApplicationsConnection, 'totalCount'>
-    & { nodes: Array<Maybe<(
-      { __typename?: 'Application' }
-      & { template?: Maybe<(
-        { __typename?: 'Template' }
-        & TemplateFragment
-      )> }
-      & ApplicationFragment
-    )>>, pageInfo: (
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
-    ) }
-  )> }
-);
-
 export type GetApplicationsListQueryVariables = Exact<{
   filters?: Maybe<ApplicationListFilter>;
   sortFields?: Maybe<Array<ApplicationListsOrderBy>>;
@@ -18267,22 +18240,6 @@ export type GetApplicationsListQuery = (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
     ) }
-  )> }
-);
-
-export type GetApplicationsStagesQueryVariables = Exact<{
-  serials?: Maybe<Array<Scalars['String']>>;
-}>;
-
-
-export type GetApplicationsStagesQuery = (
-  { __typename?: 'Query' }
-  & { applicationStageStatusAlls?: Maybe<(
-    { __typename?: 'ApplicationStageStatusAllsConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'ApplicationStageStatusAll' }
-      & StageFragment
-    )>> }
   )> }
 );
 
@@ -18912,53 +18869,6 @@ export function useGetApplicationStatusLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetApplicationStatusQueryHookResult = ReturnType<typeof useGetApplicationStatusQuery>;
 export type GetApplicationStatusLazyQueryHookResult = ReturnType<typeof useGetApplicationStatusLazyQuery>;
 export type GetApplicationStatusQueryResult = Apollo.QueryResult<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>;
-export const GetApplicationsDocument = gql`
-    query getApplications($filters: ApplicationFilter, $sortFields: [ApplicationsOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!) {
-  applications(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch) {
-    nodes {
-      ...Application
-      template {
-        ...Template
-      }
-    }
-    pageInfo {
-      hasPreviousPage
-      hasNextPage
-    }
-    totalCount
-  }
-}
-    ${ApplicationFragmentDoc}
-${TemplateFragmentDoc}`;
-
-/**
- * __useGetApplicationsQuery__
- *
- * To run a query within a React component, call `useGetApplicationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetApplicationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetApplicationsQuery({
- *   variables: {
- *      filters: // value for 'filters'
- *      sortFields: // value for 'sortFields'
- *      paginationOffset: // value for 'paginationOffset'
- *      numberToFetch: // value for 'numberToFetch'
- *   },
- * });
- */
-export function useGetApplicationsQuery(baseOptions?: Apollo.QueryHookOptions<GetApplicationsQuery, GetApplicationsQueryVariables>) {
-        return Apollo.useQuery<GetApplicationsQuery, GetApplicationsQueryVariables>(GetApplicationsDocument, baseOptions);
-      }
-export function useGetApplicationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApplicationsQuery, GetApplicationsQueryVariables>) {
-          return Apollo.useLazyQuery<GetApplicationsQuery, GetApplicationsQueryVariables>(GetApplicationsDocument, baseOptions);
-        }
-export type GetApplicationsQueryHookResult = ReturnType<typeof useGetApplicationsQuery>;
-export type GetApplicationsLazyQueryHookResult = ReturnType<typeof useGetApplicationsLazyQuery>;
-export type GetApplicationsQueryResult = Apollo.QueryResult<GetApplicationsQuery, GetApplicationsQueryVariables>;
 export const GetApplicationsListDocument = gql`
     query getApplicationsList($filters: ApplicationListFilter, $sortFields: [ApplicationListsOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!) {
   applicationLists(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch) {
@@ -19015,41 +18925,6 @@ export function useGetApplicationsListLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetApplicationsListQueryHookResult = ReturnType<typeof useGetApplicationsListQuery>;
 export type GetApplicationsListLazyQueryHookResult = ReturnType<typeof useGetApplicationsListLazyQuery>;
 export type GetApplicationsListQueryResult = Apollo.QueryResult<GetApplicationsListQuery, GetApplicationsListQueryVariables>;
-export const GetApplicationsStagesDocument = gql`
-    query getApplicationsStages($serials: [String!]) {
-  applicationStageStatusAlls(filter: {serial: {in: $serials}}, condition: {stageIsCurrent: true}) {
-    nodes {
-      ...Stage
-    }
-  }
-}
-    ${StageFragmentDoc}`;
-
-/**
- * __useGetApplicationsStagesQuery__
- *
- * To run a query within a React component, call `useGetApplicationsStagesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetApplicationsStagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetApplicationsStagesQuery({
- *   variables: {
- *      serials: // value for 'serials'
- *   },
- * });
- */
-export function useGetApplicationsStagesQuery(baseOptions?: Apollo.QueryHookOptions<GetApplicationsStagesQuery, GetApplicationsStagesQueryVariables>) {
-        return Apollo.useQuery<GetApplicationsStagesQuery, GetApplicationsStagesQueryVariables>(GetApplicationsStagesDocument, baseOptions);
-      }
-export function useGetApplicationsStagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApplicationsStagesQuery, GetApplicationsStagesQueryVariables>) {
-          return Apollo.useLazyQuery<GetApplicationsStagesQuery, GetApplicationsStagesQueryVariables>(GetApplicationsStagesDocument, baseOptions);
-        }
-export type GetApplicationsStagesQueryHookResult = ReturnType<typeof useGetApplicationsStagesQuery>;
-export type GetApplicationsStagesLazyQueryHookResult = ReturnType<typeof useGetApplicationsStagesLazyQuery>;
-export type GetApplicationsStagesQueryResult = Apollo.QueryResult<GetApplicationsStagesQuery, GetApplicationsStagesQueryVariables>;
 export const GetElementsAndResponsesDocument = gql`
     query getElementsAndResponses($serial: String!) {
   applicationBySerial(serial: $serial) {

@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import { QueryObject } from '../../hooks/useRouter'
-import { ApplicationStatus, ApplicationOutcome } from '../../../utils/generated/graphql'
+import { ApplicationStatus, ApplicationOutcome } from '../../generated/graphql'
 
 export default function buildQueryFilters(filters: QueryObject) {
   const graphQLfilter = Object.entries(filters).reduce((filterObj, [key, value]) => {

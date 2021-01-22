@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import buildFilter from '../helpers/application/buildQueryFilters'
-import buildSortFields, { getPaginationVariables } from '../helpers/application/buildQueryVariables'
+import buildFilter from '../helpers/list/buildQueryFilters'
+import buildSortFields, { getPaginationVariables } from '../helpers/list/buildQueryVariables'
 import { useGetApplicationsListQuery, ApplicationList } from '../../utils/generated/graphql'
 import { QueryObject } from '../hooks/useRouter'
 

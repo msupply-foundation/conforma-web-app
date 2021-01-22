@@ -1,4 +1,4 @@
-import { ApplicationListsOrderBy } from '../../../utils/generated/graphql'
+import { ApplicationListsOrderBy } from '../../generated/graphql'
 
 export default function buildSortFields(sortString: string) {
   const sortFields = sortString.split(',')
