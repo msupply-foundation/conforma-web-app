@@ -6,6 +6,10 @@ interface FilterMap {
   [key: string]: (value: string) => object
 }
 
+interface NamedDateMap {
+  [key: string]: string[]
+}
+
 export default function buildQueryFilters(filters: BasicStringObject) {
   const graphQLfilter = Object.entries(filters).reduce((filterObj, [key, value]) => {
     if (!mapQueryToFilterField[key]) return filterObj
@@ -15,77 +19,63 @@ export default function buildQueryFilters(filters: BasicStringObject) {
 }
 
 const mapQueryToFilterField: FilterMap = {
-  type: (value: string) => {
-    return { templateCode: { equalToInsensitive: value } }
-  },
+  type: (value: string) => ({ templateCode: { equalToInsensitive: value } }),
+
   // category -- not yet implemented in schema
-  stage: (values: string) => {
-    return {
-      stage: inList(values),
-    }
-  },
-  status: (values: string) => {
-    return { status: inEnumList(values, ApplicationStatus) }
-  },
-  outcome: (values: string) => {
-    return { outcome: inEnumList(values, ApplicationOutcome) }
-  },
+
+  stage: (values: string) => ({ stage: inList(values) }),
+
+  status: (values: string) => ({ status: inEnumList(values, ApplicationStatus) }),
+
+  outcome: (values: string) => ({ outcome: inEnumList(values, ApplicationOutcome) }),
   // action
   // assigned
   // consolidator
-  applicant: (values: string) => {
-    return {
-      or: [
-        { applicant: inList(values) },
-        { applicantFirstName: inList(values) },
-        { applicantLastName: inList(values) },
-        { applicantUsername: inList(values) },
-      ],
-    }
-  },
-  org: (values: string) => {
-    return { orgName: inList(values) }
-  },
+  applicant: (values: string) => ({
+    or: [
+      { applicant: inList(values) },
+      { applicantFirstName: inList(values) },
+      { applicantLastName: inList(values) },
+      { applicantUsername: inList(values) },
+    ],
+  }),
+
+  org: (values: string) => ({ orgName: inList(values) }),
+
   lastActiveDate: (value: string) => {
     const [startDate, endDate] = parseDateString(value)
     console.log('Dates:', startDate, endDate)
     return { lastActiveDate: { greaterThanOrEqualTo: startDate, lessThan: endDate } }
   },
+
   // deadlineDate (TBD)
-  search: (value: string) => {
-    return {
-      or: [
-        { name: { includesInsensitive: value } },
-        { applicantUsername: { includesInsensitive: value } },
-        { applicant: { includesInsensitive: value } },
-        { orgName: { includesInsensitive: value } },
-        { templateName: { includesInsensitive: value } },
-        { stage: { startsWithInsensitive: value } },
-      ],
-    }
-  },
+
+  search: (value: string) => ({
+    or: [
+      { name: { includesInsensitive: value } },
+      { applicantUsername: { includesInsensitive: value } },
+      { applicant: { includesInsensitive: value } },
+      { orgName: { includesInsensitive: value } },
+      { templateName: { includesInsensitive: value } },
+      { stage: { startsWithInsensitive: value } },
+    ],
+  }),
 }
 
 const splitCommaList = (values: string) => values.split(',')
 
 // Use this if the values can be free text strings (e.g. stage name)
-const inList = (values: string) => {
-  return { inInsensitive: splitCommaList(values) }
-}
+const inList = (values: string) => ({ inInsensitive: splitCommaList(values) })
 
 // Use this if the values must conform to an Enum type (e.g. status, outcome)
-const inEnumList = (values: string, enumList: any) => {
-  return {
-    in: splitCommaList(values)
-      .map((value) => value.toUpperCase())
-      .filter((value) => {
-        return Object.values(enumList).includes(value)
-      }),
-  }
-}
+const inEnumList = (values: string, enumList: any) => ({
+  in: splitCommaList(values)
+    .map((value) => value.toUpperCase())
+    .filter((value) => Object.values(enumList).includes(value)),
+})
 
 const parseDateString = (dateString: string) => {
-  if (mapNamedDates?.[dateString]) return mapNamedDates[dateString]
+  if (dateString in mapNamedDates) return mapNamedDates[dateString]
   const [startDate, endDate] = dateString.split(':')
   if (endDate === undefined)
     // Exact date -- add 1 to cover until start of the next day
@@ -95,14 +85,10 @@ const parseDateString = (dateString: string) => {
   return [startDate, endDate]
 }
 
-const datePlusDays = (offset = 0, dateString: string | undefined = undefined) => {
-  if (dateString) return DateTime.fromISO(dateString).plus({ days: offset }).toISODate()
-  return DateTime.local().plus({ days: offset }).toISODate()
-}
-
-interface NamedDateMap {
-  [key: string]: string[]
-}
+const datePlusDays = (offset = 0, dateString: string | undefined = undefined) =>
+  dateString
+    ? DateTime.fromISO(dateString).plus({ days: offset }).toISODate()
+    : DateTime.local().plus({ days: offset }).toISODate()
 
 const mapNamedDates: NamedDateMap = {
   today: [datePlusDays(), datePlusDays(1)],
