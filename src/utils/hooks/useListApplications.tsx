@@ -10,7 +10,7 @@ const useListApplications = (urlFilters: BasicStringObject) => {
   const [error, setError] = useState('')
   const { type, sortBy, page, perPage } = urlFilters
 
-  const filters = buildFilter(urlFilters)
+  const filters = buildFilter(queryFilters)
   const sortFields = sortBy ? buildSortFields(sortBy) : []
   const { paginationOffset, numberToFetch } = getPaginationVariables(
     page ? Number(page) : 1,
