@@ -25,7 +25,7 @@ const mapSortFields: any = {
   lastActiveDate: 'LAST_ACTIVE_DATE_',
 }
 
-type PaginationValues = {
+interface PaginationValues {
   numberToFetch: number
   paginationOffset: number
 }
