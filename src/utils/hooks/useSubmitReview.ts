@@ -1,9 +1,5 @@
 import { useState } from 'react'
-import {
-  ReviewResponse,
-  ReviewResponseDecision,
-  useUpdateReviewMutation,
-} from '../generated/graphql'
+import { ReviewResponseDecision, useUpdateReviewMutation } from '../generated/graphql'
 import { ReviewQuestionDecision } from '../types'
 interface UseSubmitReviewProps {
   reviewId: number
@@ -16,8 +12,8 @@ const useSubmitReview = ({ reviewId }: UseSubmitReviewProps) => {
 
   const [submitReviewMutation] = useUpdateReviewMutation({
     onCompleted: () => setProcessing(false),
-    onError: (submitionError) => {
-      setError(submitionError.message)
+    onError: (submissionError) => {
+      setError(submissionError.message)
       setProcessing(false)
     },
   })
