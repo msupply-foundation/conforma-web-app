@@ -10,7 +10,7 @@ import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import { useUserState } from '../../contexts/UserState'
 import messages from '../../utils/messages'
 import useSubmitReview from '../../utils/hooks/useSubmitReview'
-import useUpdateRevieResponse from '../../utils/hooks/useUpdateReviewResponse'
+import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
 import validateReview from '../../utils/helpers/review/validateReview'
 import listReviewResponses from '../../utils/helpers/review/listReviewerResponses'
 
@@ -36,7 +36,7 @@ const ReviewPageWrapper: React.FC = () => {
     serialNumber,
   })
 
-  const { updateReviewResponse, error: updateError, updating } = useUpdateRevieResponse({
+  const { updateReviewResponse, error: updateError, updating } = useUpdateReviewResponse({
     reviewId: Number(reviewId),
     serialNumber,
   })
@@ -91,7 +91,7 @@ const ReviewPageWrapper: React.FC = () => {
     return invalidSection === undefined
   }
 
-  const submitResponseHandler = (_: any) => {
+  const submitResponseHandler = () => {
     if (review) {
       const { id, comment, decision } = review
       if (decision === ReviewResponseDecision.Decline && comment === '')
@@ -104,7 +104,7 @@ const ReviewPageWrapper: React.FC = () => {
     }
   }
 
-  const submitReviewHandler = (_: any) => {
+  const submitReviewHandler = () => {
     if (validateReviewHandler() && !updating && !processing) {
       submit(reviewerResponses)
     }
