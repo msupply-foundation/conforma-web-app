@@ -11,13 +11,16 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   currentResponse,
   validationState,
   onSave,
+  Markdown,
+  getDefaultIndex,
 }) => {
-  const { label, description, placeholder, options, default: defaultIndex } = parameters
+  const { label, description, placeholder, options, default: defaultOption } = parameters
 
   useEffect(() => {
     onUpdate(value)
-    if (!value && defaultIndex !== undefined)
+    if (!value && defaultOption !== undefined)
       onSave({ text: value, optionIndex: options.indexOf(value) })
+    setValue(options[getDefaultIndex(defaultOption, options)])
   }, [])
 
   function handleChange(e: any, data: any) {
@@ -37,15 +40,17 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   return (
     <>
-      <Header content={label} />
-      {description}
+      <label>
+        <Markdown text={label} semanticComponent="noParagraph" />
+      </label>
+      <Markdown text={description} />
       <Dropdown
         fluid
         selection
         placeholder={placeholder}
         options={dropdownOptions}
         onChange={handleChange}
-        value={value || options[defaultIndex]}
+        value={value}
         disabled={!isEditable}
       />
     </>

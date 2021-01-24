@@ -1,7 +1,7 @@
 {
   "isCore": true,
-  "code": "dropdownChoice",
-  "displayName": "Drop-down Selector",
+  "code": "radioChoice",
+  "displayName": "Radio Button Selector",
   "dynamicParameters": ["label", "description", "options"],
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"

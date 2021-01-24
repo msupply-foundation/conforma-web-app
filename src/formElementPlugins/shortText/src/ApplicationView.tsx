@@ -14,7 +14,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onSave,
   Markdown,
 }) => {
-  const { placeholder, maskedInput, label } = parameters
+  const { placeholder, maskedInput, label, description } = parameters
 
   useEffect(() => {
     onUpdate(value)
@@ -34,6 +34,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <label>
         <Markdown text={label} semanticComponent="noParagraph" />
       </label>
+      <Markdown text={description} />
       <Form.Input
         fluid
         placeholder={placeholder}
