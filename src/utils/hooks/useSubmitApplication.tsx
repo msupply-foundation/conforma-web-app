@@ -24,9 +24,9 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
     onCompleted: () => {
       setProcessing(false)
     },
-    onError: (submitionError) => {
+    onError: (submissionError) => {
       setProcessing(false)
-      setError(submitionError.message)
+      setError(submissionError.message)
     },
   })
 
