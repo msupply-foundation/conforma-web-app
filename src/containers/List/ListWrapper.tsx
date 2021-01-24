@@ -4,13 +4,14 @@ import { Loading, FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useListApplications from '../../utils/hooks/useListApplications'
 import strings from '../../utils/constants'
-import findUserRole from '../../utils/helpers/translations/findUserRole'
+import getDefaultUserRole from '../../utils/helpers/list/findUserRole'
 import { useUserState } from '../../contexts/UserState'
-import mapColumnsByRole from '../../utils/helpers/translations/mapColumnsByRole'
-import { ApplicationDetails, ColumnDetails } from '../../utils/types'
+import mapColumnsByRole from '../../utils/helpers/list/mapColumnsByRole'
+import { ColumnDetails } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
+import { ApplicationList } from '../../utils/generated/graphql'
 
 const ListWrapper: React.FC = () => {
   const { query, push } = useRouter()
@@ -19,32 +20,35 @@ const ListWrapper: React.FC = () => {
     userState: { templatePermissions },
   } = useUserState()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
-  const [applicationsRows, setApplicationsRows] = useState<ApplicationDetails[] | undefined>()
-  const { error, loading, applications } = useListApplications({ type })
+  const [applicationsRows, setApplicationsRows] = useState<ApplicationList[] | undefined>()
+  const { error, loading, applications } = useListApplications(query)
 
   useEffect(() => {
-    if (type && templatePermissions) {
-      if (!userRole) {
-        const found = Object.entries(templatePermissions).find(([template]) => template === type)
-        if (found) {
-          const [template, permissions] = found
-          const newRole = findUserRole(permissions)
-          // TODO: Call helper to build similar URL query with the new userRole
-          if (newRole) push(`/applications?type=${type}&user-role=${newRole}`)
-        }
-      } else {
+    if (templatePermissions) {
+      if (!type || !userRole) redirectToDefault()
+      else {
         setApplicationsRows(undefined)
         const columns = mapColumnsByRole(userRole as USER_ROLES)
         setColumns(columns)
       }
     }
-  }, [type, userRole, templatePermissions])
+  }, [templatePermissions, type, userRole])
 
   useEffect(() => {
     if (!loading && applications) {
-      setApplicationsRows(Object.values(applications))
+      setApplicationsRows(applications)
     }
   }, [loading, applications])
+
+  const redirectToDefault = () => {
+    const redirectType = type || Object.keys(templatePermissions)[0]
+    const redirectUserRole = userRole || getDefaultUserRole(templatePermissions, redirectType)
+    if (redirectType && redirectUserRole)
+      push(`/applications?type=${redirectType}&user-role=${redirectUserRole}`)
+    else {
+      // To-Do: Show 404 if no default found
+    }
+  }
 
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />

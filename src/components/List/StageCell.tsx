@@ -3,11 +3,7 @@ import { Label } from 'semantic-ui-react'
 import { CellProps } from '../../utils/types'
 
 const StageCell: React.FC<CellProps> = ({ application }) => {
-  const { stage } = application
-  if (stage) {
-    return <Label>{stage.name}</Label>
-  }
-  return null
+  return <Label>{application.stage}</Label>
 }
 
 export default StageCell

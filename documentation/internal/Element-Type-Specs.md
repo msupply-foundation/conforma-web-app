@@ -24,6 +24,8 @@ _Ongoing authoritative reference of Template Question/Element types, including i
 
 **Note**: all parameter fields can also have a dynamic query object instead of a primitive. The [`evaluateExpression`](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax) function will return literal strings (or numbers, booleans) as is. The types described for the parameters below are the type that is expected to be _returned_ from a query expression.
 
+**Note**: parameters marked with \* can be defined as dynamic expressions -- these are specified in the `pluginConfig.json` file of each plugin.
+
 ### Short Text Input
 
 - **type/code**: `shortText`
@@ -33,8 +35,8 @@ _Free-form, single-line text input element_
 
 #### Input parameters (in the `parameters` JSON)
 
-- **label**: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
-- **description**: `string` -- additional explanatory text (usually not required) [Optional]
+- **label\***: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
+- **description\***: `string` -- additional explanatory text (usually not required) [Optional]
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
 - **maskedInput**: `boolean` -- if `true`, displays user input as masked (hidden) characters -- i.e. for passwords. [Optional]
 - ~~**minWidth**/**maxWidth**: `integer` -- optional controls over visual display [Optional]~~ _(Not currently implemented -- We may never use these)_
@@ -88,13 +90,13 @@ _For displaying blocks of text in the application_
 
 #### Input parameters
 
-- **title**: `string` -- Heading text to display [Optional]
-- **text**: `string` -- body text to display
+- **title\***: `string` -- Heading text to display [Optional]
+- **text\***: `string` -- body text to display
   _(Maybe have some formatting options, but not initially, although `text` should support Markdown)_
 
 ---
 
-### Radio Buttons _(not yet implemented)_
+### Radio Buttons
 
 - **type/code**: `radioChoice`
 - **category**: `Question`
@@ -103,11 +105,10 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 
 #### Input parameters
 
-- **label**: `string` -- as above
-- **description**: `string` -- as above [Optional]
-- **options**: `array[string]` -- the options for the radio buttons
+- **labe\*l**: `string` -- as above
+- **description\***: `string` -- as above [Optional]
+- **options\***: `array[string]` -- the options for the radio buttons
 - **default**: `string`/`number` -- the value initially selected before user input. If `number`, refers to the index of the options array. If not provided, no options will be pre-selected.
-- **hasOther**: `boolean` -- if `true`, an additional text-entry field is provided so the user can add their own alternative option _(may not implement in first iteration but good to have the option in future)_
 
 #### Response type
 
@@ -123,7 +124,7 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 
 ---
 
-### Drop-down Selector _(not yet implemented)_
+### Drop-down Selector
 
 - **type/code**: `dropdownChoice`
 - **category**: `Question`
@@ -132,10 +133,11 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 
 #### Input parameters
 
-- **label**: `string` -- as above
-- **description**: `string` -- as above [Optional]
-- **options**: `array[string]` -- as above
+- **label\***: `string` -- as above
+- **description\***: `string` -- as above [Optional]
+- **options\***: `array[string]` -- as above
 - **default**: `string`/`number` -- if not provided, defaults to index 0.
+- **hasOther**: `boolean` -- if `true`, an additional text-entry field is provided so the user can add their own alternative option _(not yet implemented)_
 
 #### Response type
 
@@ -150,7 +152,7 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 
 ---
 
-### Page Break _(not yet implemented)_
+### Page Break
 
 - **type/code**: `pageBreak`
 - **category**: `Information`
@@ -159,5 +161,7 @@ _For specifying where the list of questions is broken into UI pages/steps. The *
 
 #### Input parameters
 
-- **pageBreakValidityCheck**: `boolean` -- If `true`, the user cannot proceed to the next page unless _all_ questions on the current page have passed validation
-  - default: `false`
+- ~~**pageBreakValidityCheck**: `boolean` -- If `true`, the user cannot proceed to the next page unless _all_ questions on the current page have passed validation~~
+  - ~~default: `false`~~
+
+---

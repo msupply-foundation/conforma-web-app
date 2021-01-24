@@ -26,7 +26,6 @@ export const attemptLogin = async ({
 }: loginParameters) => {
   try {
     const loginResult: LoginPayload = await postRequest({ username, password }, loginURL)
-    console.log('loginResult', loginResult)
 
     if (!loginResult.success) {
       onLoginFailure()

@@ -1,26 +1,13 @@
 import { useParams, useLocation, useHistory, useRouteMatch, match } from 'react-router-dom'
 import queryString from 'query-string'
 import { useMemo } from 'react'
-
-interface QueryObject {
-  mode?: string
-  type?: string
-  userRole?: string
-  serialNumber?: string
-  sectionCode?: string
-  page?: string
-  templateId?: string
-  step?: string
-  notificationId?: string
-  productId?: string
-  orgName?: string
-}
+import { BasicStringObject } from '../types'
 
 interface RouterResult {
   goBack: () => void
   pathname: string
   push: (path: string) => void
-  query: QueryObject
+  query: BasicStringObject
   replace: (path: string) => void
   match: match
   history: any

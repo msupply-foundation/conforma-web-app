@@ -51,7 +51,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const dynamicParameters = config?.dynamicParameters
   const dynamicExpressions =
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
-  const [value, setValue] = useState<string>(initialValue?.text)
+  const [value, setValue] = useState<any>(initialValue?.text)
 
   // Update dynamic parameters when responses change
   useEffect(() => {
@@ -151,6 +151,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       validationState={validationState || { isValid: true }}
       validate={validate}
       // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
+      getDefaultIndex={getDefaultIndex}
     />
   )
 
@@ -164,6 +165,18 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 }
 
 export default ApplicationViewWrapper
+
+/* 
+Allows the default value in template to be either an index or string
+value. Number is assumed to be index, else it returns the index of the 
+specified value in the options array. Functions is passed as prop to
+element plug-ins so can be used by any plugin.
+*/
+const getDefaultIndex = (defaultOption: string | number, options: string[]) => {
+  if (typeof defaultOption === 'number') {
+    return defaultOption
+  } else return options.indexOf(defaultOption)
+}
 
 export function extractDynamicExpressions(fields: string[], parameters: ElementPluginParameters) {
   const expressionObject: ElementPluginParameters = {}

@@ -11,8 +11,7 @@ enum ACTIONS {
 }
 
 const StatusCell: React.FC<CellProps> = ({ application }) => {
-  const { serial, stage } = application
-  const status = stage?.status
+  const { serial, stage, status } = application
   switch (status) {
     case ApplicationStatus.ChangesRequired:
       return (
@@ -41,7 +40,7 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
     default:
       return (
         <Segment basic textAlign="center">
-          <p>{stage?.status}</p>
+          <p>{status}</p>
         </Segment>
       )
   }

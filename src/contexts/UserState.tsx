@@ -90,7 +90,10 @@ export function UserProvider({ children }: UserProviderProps) {
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem('persistJWT', JWT)
     if (!user || !permissions) fetchUserInfo({ dispatch: setUserState })
-    else dispatch({ type: 'setCurrentUser', newUser: user, newPermissions: permissions })
+    else {
+      dispatch({ type: 'setCurrentUser', newUser: user, newPermissions: permissions })
+      dispatch({ type: 'setLoading', isLoading: false })
+    }
   }
 
   const logout = () => {

@@ -1,4 +1,5 @@
 import {
+  ApplicationList,
   PermissionPolicyType,
   ReviewResponseDecision,
   TemplateElement,
@@ -15,6 +16,7 @@ export {
   ApplicationDetails,
   ApplicationElementStates,
   ApplicationStage,
+  ApplicationStageMap,
   ApplicationStages,
   AssignmentDetails,
   CellProps,
@@ -62,6 +64,7 @@ export {
   OrganisationSimple,
   Organisation,
   LoginPayload,
+  BasicStringObject,
 }
 
 interface ApplicationDetails {
@@ -84,6 +87,11 @@ interface ApplicationStage {
   status: string
   date: Date
 }
+
+interface ApplicationStageMap {
+  [key: string]: ApplicationStage
+}
+
 interface ApplicationStages {
   stages: StageDetails[]
   submissionMessage: string
@@ -95,8 +103,12 @@ interface AssignmentDetails {
   questions: ReviewQuestion[]
 }
 
+interface BasicStringObject {
+  [key: string]: string
+}
+
 interface CellProps {
-  application: ApplicationDetails
+  application: ApplicationList
 }
 
 interface ColumnDetails {
