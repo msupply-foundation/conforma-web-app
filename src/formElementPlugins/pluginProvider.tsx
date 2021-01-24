@@ -45,6 +45,20 @@ class pluginProvider {
         folderName: 'dropdownChoice',
         category: 'Input',
       },
+      radioChoice: {
+        code: 'radioChoice',
+        isCore: true,
+        displayName: 'Radio Button Selector',
+        folderName: 'radioChoice',
+        category: 'Input',
+      },
+      checkbox: {
+        code: 'checkbox',
+        isCore: true,
+        displayName: 'Checkbox selectors',
+        folderName: 'checkbox',
+        category: 'Input',
+      },
       password: {
         code: 'password',
         displayName: 'Secure Password Input',
