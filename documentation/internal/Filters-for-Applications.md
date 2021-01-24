@@ -20,6 +20,7 @@ The `user-role` is used to determine how the columns and rows should be displaye
 - [type](#type)
 - [category](#category)
 - [stage](#stage)
+- [status](#status)
 - [sort-by](#sort-by)
 - [user-role](#user-role)
 - [outcome](#outcome)
@@ -68,7 +69,7 @@ Options:
 
 <a name="category"></a>
 
-#### category
+#### category (_not yet implemented in schema_)
 
 Example: `category=company`  
 Considered in implementation: **Yes** **[New issue?]**  
@@ -87,6 +88,20 @@ Can have combined values: **Yes** e.g: `stage=screening,assessment,final-decisio
 Options:
 
 - Set of `stage-name` which is deduced per template (application type)
+
+<a name="status"></a>
+
+#### status
+
+Example: `status=draft`
+
+Considered in implementation: **Yes** [#251 - Filters]
+
+Can have combined values: **Yes** e.g: `status=draft,submitted`
+
+Options:
+
+- Set of `status` options
 
 <a name="sort-by"></a>
 
