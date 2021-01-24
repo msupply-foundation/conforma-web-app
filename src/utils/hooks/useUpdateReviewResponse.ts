@@ -7,7 +7,7 @@ interface UseUpdateReviewResponse {
   serialNumber: string
 }
 
-const useUpdateRevieResponse = ({ reviewId, serialNumber }: UseUpdateReviewResponse) => {
+const useUpdateReviewResponse = ({ reviewId, serialNumber }: UseUpdateReviewResponse) => {
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState('')
 
@@ -32,4 +32,4 @@ const useUpdateRevieResponse = ({ reviewId, serialNumber }: UseUpdateReviewRespo
   }
 }
 
-export default useUpdateRevieResponse
+export default useUpdateReviewResponse
