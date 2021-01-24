@@ -28,6 +28,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
   })
 
   const { triggerProcessing, error: triggerError } = useTriggerProcessing({
+    checkTrigger: isApplicationLoaded,
     reviewId,
     // triggerType: 'reviewTrigger',
   })

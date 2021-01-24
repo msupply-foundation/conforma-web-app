@@ -4,6 +4,7 @@ import { useGetTriggersQuery } from '../../utils/generated/graphql'
 type TriggerType = 'applicationTrigger' | 'reviewAssignmentTrigger' | 'reviewTrigger'
 
 interface TriggerQueryProps {
+  checkTrigger: boolean
   serialNumber?: string
   reviewAssignmentId?: number
   reviewId?: number
@@ -11,19 +12,19 @@ interface TriggerQueryProps {
 }
 
 const useTriggerProcessing = ({
+  checkTrigger,
   serialNumber,
   reviewAssignmentId,
   reviewId,
   triggerType,
 }: TriggerQueryProps) => {
   const [isProcessing, setIsProcessing] = useState(true)
-  const [triggerError, setTriggerError] = useState(false)
+  const [triggerError, setTriggerError] = useState('')
 
   // Ensure at least one the primary identifiers is provided
   if (!serialNumber && !reviewAssignmentId && !reviewId) {
-    console.log('INVALID QUERY')
     setIsProcessing(false)
-    setTriggerError(true)
+    setTriggerError('INVALID QUERY')
   }
 
   // If triggerType not provided, infer it from the supplied ID
@@ -36,20 +37,24 @@ const useTriggerProcessing = ({
       reviewId,
     },
     pollInterval: 500,
-    skip: !isProcessing,
+    skip: !checkTrigger || !isProcessing,
     fetchPolicy: 'no-cache',
   })
 
   useEffect((): any => {
+    console.log('checkTrigger', checkTrigger)
+
     const triggers = data?.applicationTriggerStates?.nodes?.[0]
+    console.log('triggers', triggers)
+
     if (triggers) {
       if (triggers[inferredTriggerType] === null) setIsProcessing(false)
     }
     if (error) {
       setIsProcessing(false)
-      setTriggerError(true)
+      setTriggerError(error.message)
     }
-  }, [data, loading, error])
+  }, [data, loading, error, checkTrigger])
 
   return { triggerProcessing: isProcessing, error: error || triggerError }
 }
