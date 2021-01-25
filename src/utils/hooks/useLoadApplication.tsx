@@ -4,6 +4,7 @@ import {
   ApplicationStageStatusAll,
   TemplateStage,
   useGetApplicationQuery,
+  useGetApplicationStatusQuery,
 } from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
 import { getApplicationSections } from '../helpers/application/getSectionsPayload'
@@ -19,21 +20,40 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
   const [appStages, setAppStages] = useState<ApplicationStages>()
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
-
-  const { triggerProcessing, error: triggerError } = useTriggerProcessing({
-    serialNumber,
-    // triggerType: 'applicationTrigger',
-  })
+  const [checkTrigger, setCheckTrigger] = useState(false)
+  const [applicationError, setApplicationError] = useState<string>()
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
       serial: serialNumber,
     },
-    skip: triggerProcessing || isApplicationLoaded,
+    skip: isApplicationLoaded,
     fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
   })
 
+  const { triggerProcessing, error: triggerError } = useTriggerProcessing({
+    checkTrigger,
+    serialNumber,
+    // triggerType: 'applicationTrigger',
+  })
+
+  const {
+    data: statusData,
+    loading: statusLoading,
+    error: statusError,
+  } = useGetApplicationStatusQuery({
+    variables: { serial: serialNumber },
+    skip: !application || triggerProcessing,
+    fetchPolicy: 'network-only',
+  })
+
   useEffect(() => {
+    if (isApplicationLoaded) return
+    if (!loading && !data?.applicationBySerial) {
+      setApplicationError('No application found')
+      return
+    }
+
     if (data?.applicationBySerial) {
       const application = data.applicationBySerial as Application
 
@@ -44,19 +64,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         serial: application.serial as string,
         name: application.name as string,
         outcome: application.outcome as string,
-      }
-
-      if (data?.applicationStageStatusAlls && data?.applicationStageStatusAlls.nodes.length > 0) {
-        const stages = data.applicationStageStatusAlls.nodes as ApplicationStageStatusAll[]
-        if (stages.length > 1)
-          console.log('StageStatusAll More than one results for 1 application!')
-        const { stageId, stage, status, statusHistoryTimeCreated } = stages[0] // Should only have one result
-        applicationDetails.stage = {
-          id: stageId as number,
-          name: stage as string,
-          status: status as string,
-          date: statusHistoryTimeCreated.split('T')[0],
-        }
       }
 
       setApplication(applicationDetails)
@@ -75,13 +82,40 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         submissionMessage: application.template?.submissionMessage as string,
       })
 
+      setCheckTrigger(true)
+    }
+  }, [data, loading])
+
+  useEffect(() => {
+    if (application) {
+      if (!statusData?.applicationStageStatusAlls?.nodes) {
+        setApplicationError('No status found')
+        return
+      }
+
+      const stages = statusData.applicationStageStatusAlls.nodes as ApplicationStageStatusAll[]
+      if (stages.length > 1) console.log('StageStatusAll More than one results for 1 application!')
+      const { stageId, stage, status, statusHistoryTimeCreated } = stages[0] // Should only have one result
+      setApplication({
+        ...application,
+        stage: {
+          id: stageId as number,
+          name: stage as string,
+          status: status as string,
+          date: statusHistoryTimeCreated.split('T')[0],
+        },
+      })
       setIsApplicationLoaded(true)
     }
-  }, [data, loading, error])
+  }, [statusData, statusError])
 
   return {
-    error: error || triggerError,
-    loading: loading || triggerProcessing,
+    error: error
+      ? (error.message as string)
+      : statusError
+      ? (statusError.message as string)
+      : applicationError || triggerError,
+    loading: loading || statusLoading || triggerProcessing,
     application,
     appStages,
     templateSections,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Container, Form, Header, Label, Message } from 'semantic-ui-react'
-import { DecisionArea, Loading, ReviewSection } from '../../components'
+import { DecisionArea, Loading, NoMatch, ReviewSection } from '../../components'
 import { DecisionAreaState, ReviewQuestionDecision, User } from '../../utils/types'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -79,7 +79,7 @@ const ReviewPageWrapper: React.FC = () => {
   }
 
   return error ? (
-    <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
+    <NoMatch />
   ) : loading ? (
     <Loading />
   ) : reviewSections && responsesByCode ? (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { Loading, ProgressBar, ModalWarning } from '../../components'
+import { Loading, ProgressBar, ModalWarning, NoMatch } from '../../components'
 import {
   Button,
   ButtonProps,
@@ -216,7 +216,7 @@ const ApplicationPageWrapper: React.FC = () => {
   }
 
   return error || responsesError ? (
-    <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error, responsesError]} />
+    <NoMatch />
   ) : loading || responsesLoading ? (
     <Loading />
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
