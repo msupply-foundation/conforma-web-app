@@ -20,21 +20,31 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   validationState,
   onSave,
   Markdown,
-  intitialValue,
+  initialValue,
 }) => {
   const { label, description, checkboxes, type, layout } = parameters
 
-  const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(getInitialState(checkboxes))
+  const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
+    getInitialState(initialValue, checkboxes)
+  )
 
-  useEffect(() => {
-    onUpdate(value)
-    if (!value !== undefined || value !== '') onSave({ text: value })
-    // setValue()
-  }, [])
+  console.log('Initial Value', initialValue)
 
   // useEffect(() => {
-  //   setValue(createTextString(checkboxElements))
-  // }, [checkboxElements])
+  //   onUpdate(value)
+  //   if (!value !== undefined || value !== '') onSave({ text: value })
+  //   // setValue()
+  // }, [])
+
+  useEffect(() => {
+    setValue(createTextString(checkboxElements))
+    onSave({
+      text: createTextString(checkboxElements),
+      values: Object.fromEntries(
+        checkboxElements.map((cb) => [cb.key, { text: cb.text, selected: cb.selected }])
+      ),
+    })
+  }, [checkboxElements])
 
   console.log('Value', value)
 
@@ -44,7 +54,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     changedCheckbox.selected = !changedCheckbox.selected
     setCheckboxElements(checkboxElements.map((cb, i) => (i === index ? changedCheckbox : cb)))
     // setValue(value)
-    onSave({ text: value, optionIndex: index })
+    // onSave({ text: value, optionIndex: index })
   }
 
   return (
@@ -66,19 +76,25 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
 export default ApplicationView
 
-const getInitialState = (checkboxes: Checkbox[]) => {
+const getInitialState = (initialValue: any, checkboxes: Checkbox[]) => {
   // Returns a consistent array of objects, regardless of input structure
-  return checkboxes.map((cb: any, index: number) => {
-    if (typeof cb === 'string' || typeof cb === 'number')
-      return { label: String(cb), text: String(cb), key: index, selected: false }
-    else
-      return {
-        label: cb.label,
-        text: cb?.text || cb.label,
-        key: cb?.key || index,
-        selected: cb?.selected || false,
-      }
-  })
+  const { text: initText, values: initValues } = initialValue
+  return checkboxes
+    .map((cb: any, index: number) => {
+      if (typeof cb === 'string' || typeof cb === 'number')
+        return { label: String(cb), text: String(cb), key: index, selected: false }
+      else
+        return {
+          label: cb.label,
+          text: cb?.text || cb.label,
+          key: cb?.key || index,
+          selected: cb?.selected || false,
+        }
+    })
+    .map((cb) => ({
+      ...cb,
+      selected: initText && initValues[cb.key] ? initValues[cb.key].selected : cb.selected,
+    }))
 }
 
 const createTextString = (checkboxes: Checkbox[]) =>
