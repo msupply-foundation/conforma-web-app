@@ -42,10 +42,7 @@ const useTriggerProcessing = ({
   })
 
   useEffect((): any => {
-    console.log('checkTrigger', checkTrigger)
-
     const triggers = data?.applicationTriggerStates?.nodes?.[0]
-    console.log('triggers', triggers)
 
     if (triggers) {
       if (triggers[inferredTriggerType] === null) setIsProcessing(false)
