@@ -29,7 +29,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   )
 
   useEffect(() => {
-    // setValue(createTextString(checkboxElements))
     onSave({
       text: createTextString(checkboxElements),
       values: Object.fromEntries(
@@ -43,8 +42,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const changedCheckbox = { ...checkboxElements[index] }
     changedCheckbox.selected = !changedCheckbox.selected
     setCheckboxElements(checkboxElements.map((cb, i) => (i === index ? changedCheckbox : cb)))
-    // setValue(value)
-    // onSave({ text: value, optionIndex: index })
   }
 
   return (
@@ -75,7 +72,7 @@ export default ApplicationView
 
 const getInitialState = (initialValue: any, checkboxes: Checkbox[]) => {
   // Returns a consistent array of Checkbox objects, regardless of input structure
-  const { text: initText, values: initValues } = initialValue
+  const { values: initValues } = initialValue
   return (
     checkboxes
       .map((cb: any, index: number) => {
