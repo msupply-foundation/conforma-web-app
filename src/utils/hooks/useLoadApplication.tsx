@@ -44,6 +44,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   } = useGetApplicationStatusQuery({
     variables: { serial: serialNumber },
     skip: !application || triggerProcessing,
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
