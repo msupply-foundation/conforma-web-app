@@ -27,14 +27,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
     getInitialState(initialValue, checkboxes)
   )
-  // useEffect(() => {
-  //   onUpdate(value)
-  //   if (!value !== undefined || value !== '') onSave({ text: value })
-  //   // setValue()
-  // }, [])
 
   useEffect(() => {
-    setValue(createTextString(checkboxElements))
+    // setValue(createTextString(checkboxElements))
     onSave({
       text: createTextString(checkboxElements),
       values: Object.fromEntries(
@@ -61,7 +56,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {checkboxElements.map((cb: Checkbox, index: number) => {
         return (
           <Form.Field key={`${index}_${cb.label}`} disabled={!isEditable}>
-            <Checkbox label={cb.label} checked={cb.selected} onChange={toggle} index={index} />
+            <Checkbox
+              label={cb.label}
+              checked={cb.selected}
+              onChange={toggle}
+              index={index}
+              toggle={type === 'toggle'}
+              slider={type === 'slider'}
+            />
           </Form.Field>
         )
       })}

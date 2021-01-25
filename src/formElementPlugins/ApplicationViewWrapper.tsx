@@ -55,6 +55,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   // Update dynamic parameters when responses change
   useEffect(() => {
+    // console.log('responses', allResponses)
     evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
       objects: { responses: allResponses, currentUser },
       APIfetch: fetch,
@@ -70,7 +71,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const onUpdate = async (value: LooseString) => {
     const responses = { thisResponse: value, ...allResponses }
-
     if (!validationExpression || value === undefined) {
       setValidationState({ isValid: true } as ValidationState)
       return { isValid: true }
