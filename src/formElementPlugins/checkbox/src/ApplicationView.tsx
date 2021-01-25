@@ -9,6 +9,11 @@ interface Checkbox {
   selected: boolean
 }
 
+interface CheckboxSavedState {
+  text: string
+  values: { [key: string]: Checkbox }
+}
+
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   code,
   parameters,
@@ -51,7 +56,16 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       </label>
       <Markdown text={description} />
       {checkboxElements.map((cb: Checkbox, index: number) => {
-        return (
+        return layout === 'inline' ? (
+          <Checkbox
+            label={cb.label}
+            checked={cb.selected}
+            onChange={toggle}
+            index={index}
+            toggle={type === 'toggle'}
+            slider={type === 'slider'}
+          />
+        ) : (
           <Form.Field key={`${index}_${cb.label}`} disabled={!isEditable}>
             <Checkbox
               label={cb.label}
@@ -70,12 +84,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
 export default ApplicationView
 
-const getInitialState = (initialValue: any, checkboxes: Checkbox[]) => {
+const getInitialState = (initialValue: CheckboxSavedState, checkboxes: Checkbox[]) => {
   // Returns a consistent array of Checkbox objects, regardless of input structure
   const { values: initValues } = initialValue
   return (
     checkboxes
-      .map((cb: any, index: number) => {
+      .map((cb: Checkbox, index: number) => {
         if (typeof cb === 'string' || typeof cb === 'number')
           return { label: String(cb), text: String(cb), key: index, selected: false }
         else
