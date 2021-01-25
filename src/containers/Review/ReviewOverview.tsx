@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Button, Card, Container, Header, List, Message, Segment } from 'semantic-ui-react'
-import { Loading } from '../../components'
+import { Loading, NoMatch } from '../../components'
 import useGetReviewAssignment from '../../utils/hooks/useGetReviewAssignment'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
@@ -19,13 +19,7 @@ const ReviewOverview: React.FC = () => {
     userState: { currentUser },
   } = useUserState()
 
-  const {
-    error: fetchAssignmentError,
-    loading,
-    application,
-    assignment,
-    assignedSections,
-  } = useGetReviewAssignment({
+  const { error, loading, application, assignment, assignedSections } = useGetReviewAssignment({
     reviewerId: currentUser?.userId as number,
     serialNumber,
   })
@@ -84,12 +78,8 @@ const ReviewOverview: React.FC = () => {
     )
   }
 
-  return fetchAssignmentError || createReviewError ? (
-    <Message
-      error
-      header={strings.ERROR_REVIEW_OVERVIEW}
-      list={[fetchAssignmentError, createReviewError]}
-    />
+  return error ? (
+    <NoMatch />
   ) : loading ? (
     <Loading />
   ) : application && assignment ? (
@@ -122,8 +112,14 @@ const ReviewOverview: React.FC = () => {
         </Segment>
       )}
       {getActionButton(assignment)}
+      {createReviewError && (
+        <Message error header={strings.ERROR_REVIEW_OVERVIEW}>
+          {createReviewError}
+        </Message>
+      )}
     </Container>
-    )
+  ) : (
+    <Message error content={strings.ERROR_REVIEW_OVERVIEW} />
   )
 }
 
