@@ -55,7 +55,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   // Update dynamic parameters when responses change
   useEffect(() => {
-    // console.log('responses', allResponses)
     evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
       objects: { responses: allResponses, currentUser },
       APIfetch: fetch,
