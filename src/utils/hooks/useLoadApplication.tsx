@@ -7,7 +7,6 @@ import {
   useGetApplicationStatusQuery,
 } from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
-import getApplicationStatusQuery from '../graphql/queries/getApplicationStatus.query'
 import { getApplicationSections } from '../helpers/application/getSectionsPayload'
 import {
   ApplicationDetails,
@@ -22,7 +21,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   const [appStages, setAppStages] = useState<ApplicationStages>()
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
   const [checkTrigger, setCheckTrigger] = useState(false)
-  const [applicationError, setApplicationError] = useState('')
+  const [applicationError, setApplicationError] = useState(false)
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
@@ -38,14 +37,20 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     // triggerType: 'applicationTrigger',
   })
 
-  const { data: data2, loading: loading2, error: error2 } = useGetApplicationStatusQuery({
+  const {
+    data: statusData,
+    loading: statusLoading,
+    error: statusError,
+  } = useGetApplicationStatusQuery({
     variables: { serial: serialNumber },
     skip: !application || triggerProcessing,
   })
 
   useEffect(() => {
-    if (error) {
-      setApplicationError(error.message)
+    if (isApplicationLoaded) return
+    if (!loading && !data?.applicationBySerial) {
+      setApplicationError(true)
+      return
     }
 
     if (data?.applicationBySerial) {
@@ -77,21 +82,17 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       })
 
       setCheckTrigger(true)
-      // setIsApplicationLoaded(true)
     }
-  }, [data, loading, error])
+  }, [data, loading])
 
   useEffect(() => {
-    if (error2) {
-      setApplicationError(error2.message)
-    }
+    if (application) {
+      if (!statusData?.applicationStageStatusAlls?.nodes) {
+        setApplicationError(true)
+        return
+      }
 
-    if (
-      application &&
-      data2?.applicationStageStatusAlls &&
-      data2?.applicationStageStatusAlls.nodes.length > 0
-    ) {
-      const stages = data2.applicationStageStatusAlls.nodes as ApplicationStageStatusAll[]
+      const stages = statusData.applicationStageStatusAlls.nodes as ApplicationStageStatusAll[]
       if (stages.length > 1) console.log('StageStatusAll More than one results for 1 application!')
       const { stageId, stage, status, statusHistoryTimeCreated } = stages[0] // Should only have one result
       setApplication({
@@ -103,15 +104,13 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           date: statusHistoryTimeCreated.split('T')[0],
         },
       })
-      console.log('Status', status, 'Trigger', triggerProcessing)
-
       setIsApplicationLoaded(true)
     }
-  }, [data2, error2, triggerProcessing])
+  }, [statusData, statusError])
 
   return {
-    error: error || triggerError,
-    loading: loading || triggerProcessing,
+    error: applicationError || error || statusError || triggerError,
+    loading: loading || statusLoading || triggerProcessing,
     application,
     appStages,
     templateSections,
