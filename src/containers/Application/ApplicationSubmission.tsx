@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Header, Icon, Label, List, Message, Segment } from 'semantic-ui-react'
-import { Loading } from '../../components'
+import { Loading, NoMatch } from '../../components'
 import strings from '../../utils/constants'
 import { EvaluatorParameters } from '../../utils/types'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -46,7 +46,7 @@ const ApplicationSubmission: React.FC = () => {
   }, [isApplicationLoaded])
 
   return error ? (
-    <Message error header={strings.ERROR_APPLICATION_SUBMISSION} list={[error]} />
+    <NoMatch />
   ) : loading ? (
     <Loading />
   ) : serialNumber && appStages ? (

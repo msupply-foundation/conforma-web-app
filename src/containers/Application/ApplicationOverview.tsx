@@ -8,7 +8,7 @@ import {
   Message,
   ModalProps,
 } from 'semantic-ui-react'
-import { SectionSummary, Loading, ModalWarning } from '../../components'
+import { SectionSummary, Loading, ModalWarning, NoMatch } from '../../components'
 import strings from '../../utils/constants'
 import buildSectionsStructure from '../../utils/helpers/application/buildSectionsStructure'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
@@ -63,6 +63,7 @@ const ApplicationOverview: React.FC = () => {
   useEffect(() => {
     // Fully re-validate on page load
     if (!isApplicationLoaded) return
+
     const status = application?.stage?.status
     if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired) {
       // Show summary, even if it no longer validates, as it would
@@ -135,7 +136,7 @@ const ApplicationOverview: React.FC = () => {
   }
 
   return error || responsesError ? (
-    <Message error header={strings.ERROR_APPLICATION_OVERVIEW} list={[error, responsesError]} />
+    <NoMatch />
   ) : loading || responsesLoading ? (
     <Loading />
   ) : submitError ? (
