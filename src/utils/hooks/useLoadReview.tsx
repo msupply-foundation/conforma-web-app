@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
-import { ApolloError } from '@apollo/client'
-import { ReviewResponse, useGetReviewQuery, User } from '../generated/graphql'
+import {
+  ReviewResponse,
+  ReviewStatus,
+  useGetReviewQuery,
+  useGetReviewStatusQuery,
+  User,
+} from '../generated/graphql'
 import { SectionStructure } from '../types'
 import useLoadApplication from './useLoadApplication'
 import useGetResponsesAndElementState from './useGetResponsesAndElementState'
@@ -15,8 +20,10 @@ interface UseLoadReviewProps {
 const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
   const [applicationName, setApplicationName] = useState<string>('')
   const [reviewSections, setReviewSections] = useState<SectionStructure>()
-  const [loading, setLoading] = useState(true)
+  const [reviewStatus, setReviewStatus] = useState<ReviewStatus>()
+  const [isReviewLoaded, setIsReviewLoaded] = useState(false)
   const [reviewError, setReviewError] = useState<string>()
+  const [checkTrigger, setCheckTrigger] = useState(false)
 
   const {
     error: applicationError,
@@ -27,33 +34,39 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     serialNumber,
   })
 
-  const { triggerProcessing, error: triggerError } = useTriggerProcessing({
-    checkTrigger: isApplicationLoaded,
-    reviewId,
-    // triggerType: 'reviewTrigger',
-  })
-
   const { error: responsesError, responsesByCode, elementsState } = useGetResponsesAndElementState({
     serialNumber,
     isApplicationLoaded,
   })
 
-  const { data, error, loading: apolloLoading } = useGetReviewQuery({
+  const { data, error, loading } = useGetReviewQuery({
     variables: {
       reviewId,
     },
-    skip: triggerProcessing || !isApplicationLoaded || !elementsState,
+    skip: !isApplicationLoaded || !elementsState,
+    fetchPolicy: 'network-only',
+  })
+
+  const { triggerProcessing, error: triggerError } = useTriggerProcessing({
+    checkTrigger,
+    reviewId,
+    // triggerType: 'reviewTrigger',
+  })
+
+  const { data: statusData, error: statusError, loading: statusLoading } = useGetReviewStatusQuery({
+    variables: {
+      reviewId,
+    },
   })
 
   useEffect(() => {
-    if (application) setApplicationName(application.name)
-  }, [application])
+    if (!data) return
 
-  useEffect(() => {
-    if (!apolloLoading && !data?.review) {
+    if (!loading && !data?.review) {
       setReviewError('No review found')
     }
 
+    if (application) setApplicationName(application.name)
     if (data?.review?.reviewResponses && elementsState && responsesByCode) {
       const reviewResponses = data.review.reviewResponses.nodes as ReviewResponse[]
       const reviewer = data.review.reviewer as User
@@ -66,16 +79,30 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
       })
 
       setReviewSections(sectionsStructure)
-      setLoading(false)
+      setCheckTrigger(true)
     }
   }, [data])
 
+  useEffect(() => {
+    if (!statusData) return
+    const statuses = statusData?.reviewStatusHistories?.nodes as ReviewStatus[]
+    if (statuses.length > 1) console.log('More than one status resulted for 1 review!')
+    const status = statuses[0] // Should only have one result
+    setReviewStatus(status)
+    setIsReviewLoaded(true)
+  }, [statusData])
+
   return {
     applicationName,
+    isReviewLoaded,
     reviewSections,
     responsesByCode,
-    loading: loading || triggerProcessing,
-    error: applicationError || responsesError || reviewError || triggerError,
+    loading: loading || statusLoading || triggerProcessing,
+    error: error
+      ? (error.message as string)
+      : statusError
+      ? (statusError.message as string)
+      : applicationError || responsesError || reviewError || triggerError,
   }
 }
 

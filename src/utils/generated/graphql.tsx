@@ -18334,6 +18334,22 @@ export type GetReviewAssignmentQuery = (
   )> }
 );
 
+export type GetReviewStatusQueryVariables = Exact<{
+  reviewId: Scalars['Int'];
+}>;
+
+
+export type GetReviewStatusQuery = (
+  { __typename?: 'Query' }
+  & { reviewStatusHistories?: Maybe<(
+    { __typename?: 'ReviewStatusHistoriesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ReviewStatusHistory' }
+      & Pick<ReviewStatusHistory, 'status'>
+    )>> }
+  )> }
+);
+
 export type GetTemplateQueryVariables = Exact<{
   code: Scalars['String'];
   status?: Maybe<TemplateStatus>;
@@ -19053,6 +19069,41 @@ export function useGetReviewAssignmentLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetReviewAssignmentQueryHookResult = ReturnType<typeof useGetReviewAssignmentQuery>;
 export type GetReviewAssignmentLazyQueryHookResult = ReturnType<typeof useGetReviewAssignmentLazyQuery>;
 export type GetReviewAssignmentQueryResult = Apollo.QueryResult<GetReviewAssignmentQuery, GetReviewAssignmentQueryVariables>;
+export const GetReviewStatusDocument = gql`
+    query getReviewStatus($reviewId: Int!) {
+  reviewStatusHistories(condition: {isCurrent: true, reviewId: $reviewId}) {
+    nodes {
+      status
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetReviewStatusQuery__
+ *
+ * To run a query within a React component, call `useGetReviewStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReviewStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReviewStatusQuery({
+ *   variables: {
+ *      reviewId: // value for 'reviewId'
+ *   },
+ * });
+ */
+export function useGetReviewStatusQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewStatusQuery, GetReviewStatusQueryVariables>) {
+        return Apollo.useQuery<GetReviewStatusQuery, GetReviewStatusQueryVariables>(GetReviewStatusDocument, baseOptions);
+      }
+export function useGetReviewStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewStatusQuery, GetReviewStatusQueryVariables>) {
+          return Apollo.useLazyQuery<GetReviewStatusQuery, GetReviewStatusQueryVariables>(GetReviewStatusDocument, baseOptions);
+        }
+export type GetReviewStatusQueryHookResult = ReturnType<typeof useGetReviewStatusQuery>;
+export type GetReviewStatusLazyQueryHookResult = ReturnType<typeof useGetReviewStatusLazyQuery>;
+export type GetReviewStatusQueryResult = Apollo.QueryResult<GetReviewStatusQuery, GetReviewStatusQueryVariables>;
 export const GetTemplateDocument = gql`
     query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE) {
   templates(condition: {code: $code, status: $status}) {
