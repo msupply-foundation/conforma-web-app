@@ -195,9 +195,7 @@ export async function evaluateDynamicParameters(
   const expressions = Object.values(
     dynamicExpressions
   ).map((expression: ElementPluginParameterValue) =>
-    isEvaluatorExpression(expression)
-      ? evaluateExpression(expression, evaluatorParameters)
-      : expression
+    evaluateExpression(expression, evaluatorParameters)
   )
   const evaluatedExpressions: any = await Promise.all(expressions)
   const evaluatedParameters: ElementPluginParameters = {}
@@ -205,8 +203,4 @@ export async function evaluateDynamicParameters(
     evaluatedParameters[fields[i]] = evaluatedExpressions[i]
   }
   return evaluatedParameters
-}
-
-const isEvaluatorExpression = (expression: any) => {
-  return true
 }
