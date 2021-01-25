@@ -16,7 +16,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
   const [applicationName, setApplicationName] = useState<string>('')
   const [reviewSections, setReviewSections] = useState<SectionStructure>()
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [reviewError, setReviewError] = useState<string>()
 
   const {
     error: applicationError,
@@ -38,7 +38,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     isApplicationLoaded,
   })
 
-  const { data, error: apolloError, loading: apolloLoading } = useGetReviewQuery({
+  const { data, error, loading: apolloLoading } = useGetReviewQuery({
     variables: {
       reviewId,
     },
@@ -46,23 +46,14 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
   })
 
   useEffect(() => {
-    if (applicationError) {
-      const error = applicationError as ApolloError
-      setError(error.message)
-      return
-    }
     if (application) setApplicationName(application.name)
-  }, [applicationError, application])
+  }, [application])
 
   useEffect(() => {
-    if (responsesError) {
-      setError(responsesError)
-      return
+    if (!apolloLoading && !data?.review) {
+      setReviewError('No review found')
     }
-    if (apolloError) {
-      setError(apolloError.message)
-      return
-    }
+
     if (data?.review?.reviewResponses && elementsState && responsesByCode) {
       const reviewResponses = data.review.reviewResponses.nodes as ReviewResponse[]
       const reviewer = data.review.reviewer as User
@@ -77,14 +68,14 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
       setReviewSections(sectionsStructure)
       setLoading(false)
     }
-  }, [responsesError, apolloError, data])
+  }, [data])
 
   return {
     applicationName,
     reviewSections,
     responsesByCode,
     loading: loading || triggerProcessing,
-    error: error || triggerError,
+    error: applicationError || responsesError || reviewError || triggerError,
   }
 }
 

@@ -21,7 +21,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   const [appStages, setAppStages] = useState<ApplicationStages>()
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
   const [checkTrigger, setCheckTrigger] = useState(false)
-  const [applicationError, setApplicationError] = useState(false)
+  const [applicationError, setApplicationError] = useState<string>()
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
@@ -49,7 +49,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   useEffect(() => {
     if (isApplicationLoaded) return
     if (!loading && !data?.applicationBySerial) {
-      setApplicationError(true)
+      setApplicationError('No application found')
       return
     }
 
@@ -88,7 +88,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   useEffect(() => {
     if (application) {
       if (!statusData?.applicationStageStatusAlls?.nodes) {
-        setApplicationError(true)
+        setApplicationError('No status found')
         return
       }
 
@@ -109,7 +109,11 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   }, [statusData, statusError])
 
   return {
-    error: applicationError || error || statusError || triggerError,
+    error: error
+      ? (error.message as string)
+      : statusError
+      ? (statusError.message as string)
+      : applicationError || triggerError,
     loading: loading || statusLoading || triggerProcessing,
     application,
     appStages,

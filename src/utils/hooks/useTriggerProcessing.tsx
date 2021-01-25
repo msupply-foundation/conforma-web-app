@@ -19,7 +19,7 @@ const useTriggerProcessing = ({
   triggerType,
 }: TriggerQueryProps) => {
   const [isProcessing, setIsProcessing] = useState(true)
-  const [triggerError, setTriggerError] = useState('')
+  const [triggerError, setTriggerError] = useState<string>()
 
   // Ensure at least one the primary identifiers is provided
   if (!serialNumber && !reviewAssignmentId && !reviewId) {
@@ -47,13 +47,12 @@ const useTriggerProcessing = ({
     if (triggers) {
       if (triggers[inferredTriggerType] === null) setIsProcessing(false)
     }
-    if (error) {
-      setIsProcessing(false)
-      setTriggerError(error.message)
-    }
-  }, [data, loading, error, checkTrigger])
+  }, [data, loading, checkTrigger])
 
-  return { triggerProcessing: isProcessing, error: error || triggerError }
+  return {
+    triggerProcessing: isProcessing,
+    error: error ? (error.message as string) : triggerError,
+  }
 }
 export default useTriggerProcessing
 

@@ -123,8 +123,7 @@ const ReviewOverview: React.FC = () => {
       )}
       {getActionButton(assignment)}
     </Container>
-  ) : (
-    <Header as="h2" icon="exclamation circle" content="No review found!" />
+    )
   )
 }
 
