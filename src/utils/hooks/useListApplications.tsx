@@ -1,34 +1,24 @@
 import { useEffect, useState } from 'react'
-import {
-  Application,
-  ApplicationStageStatusAll,
-  useGetApplicationsQuery,
-  useGetApplicationsStagesQuery,
-} from '../../utils/generated/graphql'
-import { ApplicationDetails } from '../types'
+import buildFilter from '../helpers/list/buildQueryFilters'
+import buildSortFields, { getPaginationVariables } from '../helpers/list/buildQueryVariables'
+import { useGetApplicationsListQuery, ApplicationList } from '../../utils/generated/graphql'
+import { BasicStringObject } from '../types'
 
-interface UseListApplicationsProps {
-  type?: string
-}
-
-interface ApplicationDetailsMap {
-  [serial: string]: ApplicationDetails
-}
-
-const useListApplications = ({ type }: UseListApplicationsProps) => {
-  const [applications, setApplications] = useState<ApplicationDetailsMap>()
+const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicStringObject) => {
+  const [applications, setApplications] = useState<ApplicationList[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  const { data, error: applicationsError } = useGetApplicationsQuery({
-    variables: { code: type as string },
-    fetchPolicy: 'network-only',
-    skip: !type,
-  })
+  const filters = buildFilter(queryFilters)
+  const sortFields = sortBy ? buildSortFields(sortBy) : []
+  const { paginationOffset, numberToFetch } = getPaginationVariables(
+    page ? Number(page) : 1,
+    perPage ? Number(perPage) : undefined
+  )
 
-  const { data: stagesData, error: stagesError } = useGetApplicationsStagesQuery({
-    variables: { serials: applications ? Object.keys(applications) : [] },
-    skip: !applications,
+  const { data, error: applicationsError } = useGetApplicationsListQuery({
+    variables: { filters, sortFields, paginationOffset, numberToFetch },
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
@@ -36,63 +26,12 @@ const useListApplications = ({ type }: UseListApplicationsProps) => {
       setError(applicationsError.message)
       return
     }
-    if (data?.applications) {
-      const applicationsList = data?.applications?.nodes as Application[]
-      const applicationsMap = applicationsList.reduce(
-        (applicationsMap: ApplicationDetailsMap, application) => {
-          const { id, serial, name, stage, status, outcome, template } = application
-          return {
-            ...applicationsMap,
-            [serial as string]: {
-              id,
-              type: template?.name as string,
-              isLinear: template?.isLinear as boolean,
-              serial: serial as string,
-              name: name as string,
-              outcome: outcome as string,
-            },
-          }
-        },
-        {}
-      )
-      setApplications(applicationsMap)
-    }
-  }, [data, applicationsError])
-
-  useEffect(() => {
-    if (stagesError) {
-      setError(stagesError.message)
-      return
-    }
-
-    if (applications) {
-      if (stagesData?.applicationStageStatusAlls) {
-        const allApplicationsStageStatus = stagesData.applicationStageStatusAlls
-          .nodes as ApplicationStageStatusAll[]
-
-        let applicationsWithStage: ApplicationDetailsMap = applications
-        Object.entries(applications).forEach(([applicationSerial, details]) => {
-          const stageFound = allApplicationsStageStatus.find(
-            ({ serial }) => serial === applicationSerial
-          )
-
-          if (stageFound) {
-            applicationsWithStage[applicationSerial] = {
-              ...details,
-              stage: {
-                id: stageFound.stageId as number,
-                name: stageFound.stage as string,
-                status: stageFound.status as string,
-                date: stageFound.statusHistoryTimeCreated.split('T')[0],
-              },
-            }
-          }
-        })
-        setApplications(applicationsWithStage)
-      }
+    if (data?.applicationLists) {
+      const applicationsList = data?.applicationLists?.nodes
+      setApplications(applicationsList as ApplicationList[])
       setLoading(false)
     }
-  }, [applications, stagesData, stagesError])
+  }, [data, applicationsError])
 
   return {
     error,

@@ -1,11 +1,8 @@
 import React from 'react'
+import { DateTime } from 'luxon'
 import { CellProps } from '../../utils/types'
 
 const LastActiveDateCell: React.FC<CellProps> = ({ application }) => {
-  const { stage } = application
-  if (stage) {
-    return <p>{stage.date}</p>
-  }
-  return null
+  return <p>{DateTime.fromISO(application.lastActiveDate).toISODate()}</p>
 }
 export default LastActiveDateCell
