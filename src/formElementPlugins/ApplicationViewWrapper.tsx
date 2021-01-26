@@ -70,6 +70,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const onUpdate = async (value: LooseString) => {
     const responses = { thisResponse: value, ...allResponses }
+
     if (!validationExpression || value === undefined) {
       setValidationState({ isValid: true } as ValidationState)
       return { isValid: true }
