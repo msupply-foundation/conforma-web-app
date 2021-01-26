@@ -47,7 +47,7 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
 
   const renderer = semanticComponent ? renderers[semanticComponent] : null
 
-  return <ReactMarkdown children={text} renderers={renderer} disallowedTypes={[]}></ReactMarkdown>
+  return <ReactMarkdown children={text} renderers={renderer}></ReactMarkdown>
 }
 
 export default MarkdownBlock
