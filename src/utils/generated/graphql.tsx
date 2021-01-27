@@ -18024,6 +18024,8 @@ export type CreateApplicationMutationVariables = Exact<{
   name: Scalars['String'];
   serial: Scalars['String'];
   templateId: Scalars['Int'];
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
   outcome?: Maybe<ApplicationOutcome>;
   trigger?: Maybe<Trigger>;
   sections?: Maybe<Array<ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput>>;
@@ -18037,6 +18039,7 @@ export type CreateApplicationMutation = (
     { __typename?: 'CreateApplicationPayload' }
     & { application?: Maybe<(
       { __typename?: 'Application' }
+      & Pick<Application, 'userId' | 'orgId'>
       & { template?: Maybe<(
         { __typename?: 'Template' }
         & { templateSections: (
@@ -18528,9 +18531,11 @@ export const TemplateStageFragmentDoc = gql`
 }
     `;
 export const CreateApplicationDocument = gql`
-    mutation createApplication($name: String!, $serial: String!, $templateId: Int!, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE, $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!], $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]) {
-  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, isActive: true, outcome: $outcome, trigger: $trigger, applicationSectionsUsingId: {create: $sections}, applicationResponsesUsingId: {create: $responses}}}) {
+    mutation createApplication($name: String!, $serial: String!, $templateId: Int!, $userId: Int, $orgId: Int, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE, $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!], $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]) {
+  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, userId: $userId, orgId: $orgId, isActive: true, outcome: $outcome, trigger: $trigger, applicationSectionsUsingId: {create: $sections}, applicationResponsesUsingId: {create: $responses}}}) {
     application {
+      userId
+      orgId
       ...Application
       template {
         ...Template
@@ -18564,6 +18569,8 @@ export type CreateApplicationMutationFn = Apollo.MutationFunction<CreateApplicat
  *      name: // value for 'name'
  *      serial: // value for 'serial'
  *      templateId: // value for 'templateId'
+ *      userId: // value for 'userId'
+ *      orgId: // value for 'orgId'
  *      outcome: // value for 'outcome'
  *      trigger: // value for 'trigger'
  *      sections: // value for 'sections'

@@ -5,6 +5,8 @@ export default gql`
     $name: String!
     $serial: String!
     $templateId: Int!
+    $userId: Int
+    $orgId: Int
     $outcome: ApplicationOutcome = PENDING
     $trigger: Trigger = ON_APPLICATION_CREATE
     $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!]
@@ -16,6 +18,8 @@ export default gql`
           name: $name
           serial: $serial
           templateId: $templateId
+          userId: $userId
+          orgId: $orgId
           isActive: true
           outcome: $outcome
           trigger: $trigger
@@ -25,6 +29,8 @@ export default gql`
       }
     ) {
       application {
+        userId
+        orgId
         ...Application
         template {
           ...Template
