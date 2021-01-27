@@ -39,7 +39,7 @@ const ApplicationSubmission: React.FC = () => {
     if (!isApplicationLoaded) return
     const status = application?.stage?.status
     // Check if application is in Draft or Changes required status and redirect to the summary page
-    // Note: The summary page has its own redirection logic to ay specific page (with invalid items).
+    // Note: The summary page has its own redirection logic to a specific page (with invalid items).
     if (status === ApplicationStatus.Draft || status === ApplicationStatus.ChangesRequired) {
       push(`/application/${serialNumber}/summary`)
     }
