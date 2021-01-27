@@ -14,13 +14,12 @@ import {
   ApplicationElementStates,
   ElementState,
   UseGetApplicationProps,
-  User,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 
 const useGetResponsesAndElementState = ({
   serialNumber,
-  isApplicationLoaded,
+  isApplicationReady,
 }: UseGetApplicationProps) => {
   const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>()
   const [elementsExpressions, setElementsExpressions] = useState<TemplateElementState[]>([])
@@ -32,11 +31,11 @@ const useGetResponsesAndElementState = ({
   } = useUserState()
   const { data, error: apolloError } = useGetElementsAndResponsesQuery({
     variables: { serial: serialNumber },
-    skip: !isApplicationLoaded,
+    skip: !isApplicationReady,
   })
 
   useEffect(() => {
-    if (!isApplicationLoaded) {
+    if (!isApplicationReady) {
       return
     }
 

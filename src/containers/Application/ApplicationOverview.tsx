@@ -37,12 +37,10 @@ const ApplicationOverview: React.FC = () => {
 
   const { query, push } = useRouter()
   const { serialNumber } = query
-  const { error, loading, application, templateSections, isApplicationLoaded } = useLoadApplication(
-    {
-      serialNumber: serialNumber as string,
-      networkFetch: true,
-    }
-  )
+  const { error, loading, application, templateSections, isApplicationReady } = useLoadApplication({
+    serialNumber: serialNumber as string,
+    networkFetch: true,
+  })
 
   const {
     error: responsesError,
@@ -51,7 +49,7 @@ const ApplicationOverview: React.FC = () => {
     elementsState,
   } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
-    isApplicationLoaded,
+    isApplicationReady,
   })
 
   const { error: submitError, processing, submitted, submit } = useSubmitApplication({
@@ -62,7 +60,7 @@ const ApplicationOverview: React.FC = () => {
 
   useEffect(() => {
     // Fully re-validate on page load
-    if (!isApplicationLoaded) return
+    if (!isApplicationReady) return
     const status = application?.stage?.status
     if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired) {
       // Show summary, even if it no longer validates, as it would
@@ -70,7 +68,7 @@ const ApplicationOverview: React.FC = () => {
       setIsRevalidated(true)
       return
     }
-    if (isApplicationLoaded && elementsState && responsesByCode) {
+    if (elementsState && responsesByCode) {
       revalidateAndUpdate().then(() => setIsRevalidated(true))
     }
   }, [responsesByCode, elementsState, application])

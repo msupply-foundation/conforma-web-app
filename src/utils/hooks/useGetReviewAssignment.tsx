@@ -25,7 +25,7 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
     loading: applicationLoading,
     application,
     templateSections,
-    isApplicationLoaded,
+    isApplicationReady,
   } = useLoadApplication({ serialNumber })
 
   const { data, loading: apolloLoading, error: apolloError } = useGetReviewAssignmentQuery({
@@ -34,7 +34,7 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
       applicationId: application?.id,
       stageId: application?.stage?.id,
     },
-    skip: !isApplicationLoaded,
+    skip: !isApplicationReady,
   })
 
   useEffect(() => {

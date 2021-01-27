@@ -60,12 +60,10 @@ const ApplicationPageWrapper: React.FC = () => {
   const { query, push, replace } = useRouter()
   const { mode, serialNumber, sectionCode, page } = query
 
-  const { error, loading, application, templateSections, isApplicationLoaded } = useLoadApplication(
-    {
-      serialNumber: serialNumber as string,
-      networkFetch: true,
-    }
-  )
+  const { error, loading, application, templateSections, isApplicationReady } = useLoadApplication({
+    serialNumber: serialNumber as string,
+    networkFetch: true,
+  })
 
   const {
     error: responsesError,
@@ -74,7 +72,7 @@ const ApplicationPageWrapper: React.FC = () => {
     elementsState,
   } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
-    isApplicationLoaded,
+    isApplicationReady,
   })
 
   const [responseMutation] = useUpdateResponseMutation()
@@ -83,7 +81,7 @@ const ApplicationPageWrapper: React.FC = () => {
   // 1 - ProcessRedirect: Will redirect to summary in case application is SUBMITTED
   // 2 - Set the current section state of the application
   useEffect(() => {
-    if (elementsState && responsesByCode && isApplicationLoaded) {
+    if (elementsState && responsesByCode && isApplicationReady) {
       const stage = application?.stage as ApplicationStage
       processRedirect({
         ...stage,
@@ -101,7 +99,7 @@ const ApplicationPageWrapper: React.FC = () => {
       if (sectionCode && page)
         setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
     }
-  }, [elementsState, responsesByCode, sectionCode, page, isApplicationLoaded])
+  }, [elementsState, responsesByCode, sectionCode, page, isApplicationReady])
 
   // Update timestamp to keep track of when elements have been properly updated
   // after losing focus.

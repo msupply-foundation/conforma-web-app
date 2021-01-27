@@ -21,34 +21,34 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
   const [applicationName, setApplicationName] = useState<string>('')
   const [reviewSections, setReviewSections] = useState<SectionStructure>()
   const [reviewStatus, setReviewStatus] = useState<ReviewStatus>()
+  const [isReviewReady, setIsReviewReady] = useState(false)
   const [isReviewLoaded, setIsReviewLoaded] = useState(false)
   const [reviewError, setReviewError] = useState<string>()
-  const [checkTrigger, setCheckTrigger] = useState(false)
 
   const {
     error: applicationError,
     application,
     templateSections,
-    isApplicationLoaded,
+    isApplicationReady,
   } = useLoadApplication({
     serialNumber,
   })
 
   const { error: responsesError, responsesByCode, elementsState } = useGetResponsesAndElementState({
     serialNumber,
-    isApplicationLoaded,
+    isApplicationReady,
   })
 
   const { data, error, loading } = useGetReviewQuery({
     variables: {
       reviewId,
     },
-    skip: !isApplicationLoaded || !elementsState,
+    skip: !isApplicationReady || !elementsState,
     fetchPolicy: 'network-only',
   })
 
-  const { triggerProcessing, error: triggerError } = useTriggerProcessing({
-    checkTrigger,
+  const { error: triggerError, isTriggerProcessing } = useTriggerProcessing({
+    isReviewLoaded: isReviewReady,
     reviewId,
     // triggerType: 'reviewTrigger',
   })
@@ -57,6 +57,8 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     variables: {
       reviewId,
     },
+    skip: !isReviewLoaded || isTriggerProcessing,
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
@@ -79,7 +81,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
       })
 
       setReviewSections(sectionsStructure)
-      setCheckTrigger(true)
+      setIsReviewLoaded(true)
     }
   }, [data])
 
@@ -89,15 +91,15 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     if (statuses.length > 1) console.log('More than one status resulted for 1 review!')
     const status = statuses[0] // Should only have one result
     setReviewStatus(status)
-    setIsReviewLoaded(true)
+    setIsReviewReady(true)
   }, [statusData])
 
   return {
     applicationName,
-    isReviewLoaded,
+    isReviewReady,
     reviewSections,
     responsesByCode,
-    loading: loading || statusLoading || triggerProcessing,
+    loading: loading || statusLoading || isTriggerProcessing,
     error: error
       ? (error.message as string)
       : statusError

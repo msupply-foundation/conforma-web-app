@@ -19,20 +19,20 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   const [application, setApplication] = useState<ApplicationDetails>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
   const [appStages, setAppStages] = useState<ApplicationStages>()
+  const [isApplicationReady, setIsApplicationReady] = useState(false)
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
-  const [checkTrigger, setCheckTrigger] = useState(false)
   const [applicationError, setApplicationError] = useState<string>()
 
   const { data, loading, error } = useGetApplicationQuery({
     variables: {
       serial: serialNumber,
     },
-    skip: isApplicationLoaded,
+    skip: isApplicationReady,
     fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
   })
 
-  const { triggerProcessing, error: triggerError } = useTriggerProcessing({
-    checkTrigger,
+  const { error: triggerError, isTriggerProcessing } = useTriggerProcessing({
+    isApplicationLoaded,
     serialNumber,
     // triggerType: 'applicationTrigger',
   })
@@ -43,12 +43,12 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     error: statusError,
   } = useGetApplicationStatusQuery({
     variables: { serial: serialNumber },
-    skip: !application || triggerProcessing,
+    skip: !isApplicationLoaded || isTriggerProcessing,
     fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
-    if (isApplicationLoaded) return
+    if (isApplicationReady) return
     if (!loading && !data?.applicationBySerial) {
       setApplicationError('No application found')
       return
@@ -82,7 +82,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         submissionMessage: application.template?.submissionMessage as string,
       })
 
-      setCheckTrigger(true)
+      setIsApplicationLoaded(true)
     }
   }, [data, loading])
 
@@ -105,7 +105,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           date: statusHistoryTimeCreated.split('T')[0],
         },
       })
-      setIsApplicationLoaded(true)
+      setIsApplicationReady(true)
     }
   }, [statusData, statusError])
 
@@ -115,11 +115,11 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       : statusError
       ? (statusError.message as string)
       : applicationError || triggerError,
-    loading: loading || statusLoading || triggerProcessing,
+    loading: loading || statusLoading || isTriggerProcessing,
     application,
     appStages,
     templateSections,
-    isApplicationLoaded,
+    isApplicationReady,
   }
 }
 

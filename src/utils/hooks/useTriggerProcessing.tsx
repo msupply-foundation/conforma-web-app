@@ -3,32 +3,40 @@ import { useGetTriggersQuery } from '../../utils/generated/graphql'
 
 type TriggerType = 'applicationTrigger' | 'reviewAssignmentTrigger' | 'reviewTrigger'
 
-interface TriggerQueryProps {
-  checkTrigger: boolean
-  serialNumber?: string
-  reviewAssignmentId?: number
-  reviewId?: number
-  triggerType?: TriggerType
+interface TriggerApplication {
+  isApplicationLoaded: boolean
+  serialNumber: string
 }
+interface TriggerReview {
+  isReviewLoaded: boolean
+  reviewId: number
+}
+interface TriggerAssignment {
+  reviewAssignmentId: number
+}
+type TriggerQueryProps = { triggerType?: TriggerType } & (
+  | TriggerApplication
+  | TriggerReview
+  | TriggerAssignment
+)
 
-const useTriggerProcessing = ({
-  checkTrigger,
-  serialNumber,
-  reviewAssignmentId,
-  reviewId,
-  triggerType,
-}: TriggerQueryProps) => {
+const useTriggerProcessing = ({ triggerType, ...props }: TriggerQueryProps) => {
   const [isProcessing, setIsProcessing] = useState(true)
   const [triggerError, setTriggerError] = useState<string>()
 
-  // Ensure at least one the primary identifiers is provided
-  if (!serialNumber && !reviewAssignmentId && !reviewId) {
+  // If triggerType not provided, infer it from the supplied ID
+  const inferredTriggerType = inferTriggerType(triggerType, props)
+
+  if (!inferredTriggerType) {
     setIsProcessing(false)
-    setTriggerError('INVALID QUERY')
+    setTriggerError('Type not defined')
   }
 
-  // If triggerType not provided, infer it from the supplied ID
-  const inferredTriggerType = inferTriggerType(triggerType, serialNumber, reviewAssignmentId)
+  const { serialNumber, isApplicationLoaded } = props as TriggerApplication
+  const { reviewAssignmentId } = props as TriggerAssignment
+  const { reviewId, isReviewLoaded } = props as TriggerReview
+
+  const checkTrigger = isApplicationLoaded || isReviewLoaded
 
   const { data, loading, error } = useGetTriggersQuery({
     variables: {
@@ -45,12 +53,12 @@ const useTriggerProcessing = ({
     const triggers = data?.applicationTriggerStates?.nodes?.[0]
 
     if (triggers) {
-      if (triggers[inferredTriggerType] === null) setIsProcessing(false)
+      if (triggers[inferredTriggerType as TriggerType] === null) setIsProcessing(false)
     }
   }, [data, loading, checkTrigger])
 
   return {
-    triggerProcessing: isProcessing,
+    isTriggerProcessing: isProcessing,
     error: error ? (error.message as string) : triggerError,
   }
 }
@@ -58,14 +66,15 @@ export default useTriggerProcessing
 
 function inferTriggerType(
   triggerType: TriggerType | undefined,
-  serial: string | undefined,
-  reviewAssignmentId: number | undefined
-): TriggerType {
+  receivedProps: TriggerApplication | TriggerReview | TriggerAssignment
+): TriggerType | null {
   return triggerType
     ? triggerType
-    : serial
+    : (receivedProps as TriggerApplication)
     ? 'applicationTrigger'
-    : reviewAssignmentId
+    : (receivedProps as TriggerAssignment)
     ? 'reviewAssignmentTrigger'
-    : 'reviewTrigger'
+    : (receivedProps as TriggerReview)
+    ? 'reviewTrigger'
+    : null
 }
