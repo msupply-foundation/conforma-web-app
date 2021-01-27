@@ -1,10 +1,13 @@
 import React from 'react'
-import { Loader } from 'semantic-ui-react'
+import { Loader, Segment } from 'semantic-ui-react'
+import strings from '../utils/constants'
 
 const Loading: React.FC = () => (
-  <Loader active size="massive">
-    Loading...
-  </Loader>
+  <Segment basic style={{ height: 500 }}>
+    <Loader active size="massive">
+      {strings.LABEL_LOADING}
+    </Loader>
+  </Segment>
 )
 
 export default Loading
