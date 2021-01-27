@@ -12,6 +12,8 @@ export default {
     option: 'OK',
   },
   REDIRECT_TO_REGISTRATION: 'Re-directing to user registration application...',
+  REVIEW_COMPLETE_SECTION: 'Please complete this section',
+  REVIEW_SUBMIT_FAIL: 'Not all sections have been reviewed',
   REVIEW_RESUBMIT_COMMENT: 'Please enter a comment before asking for a re-submission',
   LOGIN_WELCOME_SELECT_ORG: 'Welcome back, %1. Please select your organisation.',
 }

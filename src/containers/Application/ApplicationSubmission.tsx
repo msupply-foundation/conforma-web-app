@@ -5,7 +5,6 @@ import strings from '../../utils/constants'
 import { EvaluatorParameters } from '../../utils/types'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
-import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { Link } from 'react-router-dom'
@@ -21,18 +20,8 @@ const ApplicationSubmission: React.FC = () => {
   const { query, push } = useRouter()
   const { serialNumber } = query
 
-  const { error, loading, application, isApplicationLoaded } = useLoadApplication({
+  const { error, loading, application, appStages, isApplicationLoaded } = useLoadApplication({
     serialNumber: serialNumber as string,
-  })
-
-  const {
-    error: statusError,
-    loading: statusLoading,
-    appStatus,
-    appStages,
-  } = useGetApplicationStatus({
-    serialNumber: serialNumber as string,
-    isApplicationLoaded,
     networkFetch: true,
   })
 
@@ -47,23 +36,20 @@ const ApplicationSubmission: React.FC = () => {
   }, [appStages, currentUser])
 
   useEffect(() => {
-    if (!isApplicationLoaded || statusLoading) return
-
+    if (!isApplicationLoaded) return
+    const status = application?.stage?.status
     // Check if application is in Draft or Changes required status and redirect to the summary page
     // Note: The summary page has its own redirection logic to ay specific page (with invalid items).
-    if (
-      appStatus?.status === ApplicationStatus.Draft ||
-      appStatus?.status === ApplicationStatus.ChangesRequired
-    ) {
+    if (status === ApplicationStatus.Draft || status === ApplicationStatus.ChangesRequired) {
       push(`/application/${serialNumber}/summary`)
     }
-  }, [appStatus])
+  }, [isApplicationLoaded])
 
   return error ? (
     <Message error header={strings.ERROR_APPLICATION_SUBMISSION} list={[error]} />
   ) : loading ? (
     <Loading />
-  ) : serialNumber && appStatus ? (
+  ) : serialNumber && appStages ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
       <Header textAlign="center">
         {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}

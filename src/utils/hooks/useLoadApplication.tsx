@@ -2,16 +2,22 @@ import { useEffect, useState } from 'react'
 import {
   Application,
   ApplicationStageStatusAll,
+  TemplateStage,
   useGetApplicationQuery,
 } from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
 import { getApplicationSections } from '../helpers/application/getSectionsPayload'
-import { ApplicationDetails, TemplateSectionPayload, UseGetApplicationProps } from '../types'
+import {
+  ApplicationDetails,
+  ApplicationStages,
+  TemplateSectionPayload,
+  UseGetApplicationProps,
+} from '../types'
 
-const useLoadApplication = (props: UseGetApplicationProps) => {
-  const { serialNumber } = props
+const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
   const [application, setApplication] = useState<ApplicationDetails>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
+  const [appStages, setAppStages] = useState<ApplicationStages>()
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
 
   const { triggerProcessing, error: triggerError } = useTriggerProcessing({
@@ -24,7 +30,7 @@ const useLoadApplication = (props: UseGetApplicationProps) => {
       serial: serialNumber,
     },
     skip: triggerProcessing || isApplicationLoaded,
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: networkFetch ? 'no-cache' : 'cache-first',
   })
 
   useEffect(() => {
@@ -57,6 +63,18 @@ const useLoadApplication = (props: UseGetApplicationProps) => {
 
       const sections = getApplicationSections(application.applicationSections)
       setSections(sections)
+
+      const templateStages = application.template?.templateStages.nodes as TemplateStage[]
+
+      setAppStages({
+        stages: templateStages.map((stage) => ({
+          number: stage.number as number,
+          title: stage.title as string,
+          description: stage.description ? stage.description : undefined,
+        })),
+        submissionMessage: application.template?.submissionMessage as string,
+      })
+
       setIsApplicationLoaded(true)
     }
   }, [data, loading, error])
@@ -65,6 +83,7 @@ const useLoadApplication = (props: UseGetApplicationProps) => {
     error: error || triggerError,
     loading: loading || triggerProcessing,
     application,
+    appStages,
     templateSections,
     isApplicationLoaded,
   }
