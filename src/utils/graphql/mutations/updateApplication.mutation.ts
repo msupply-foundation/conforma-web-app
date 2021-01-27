@@ -16,8 +16,6 @@ export default gql`
       }
     ) {
       application {
-        userId
-        orgId
         ...Application
       }
     }
