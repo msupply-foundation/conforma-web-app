@@ -14,7 +14,7 @@ import buildSectionsStructure from '../../utils/helpers/application/buildSection
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
-import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
+import useSubmitApplication from '../../utils/hooks/useSubmitApplication'
 import { useUserState } from '../../contexts/UserState'
 import {
   ApplicationElementStates,
@@ -54,7 +54,7 @@ const ApplicationOverview: React.FC = () => {
     isApplicationLoaded,
   })
 
-  const { error: submitError, processing, submitted, submit } = useUpdateApplication({
+  const { error: submitError, processing, submitted, submit } = useSubmitApplication({
     serialNumber: serialNumber as string,
   })
 
@@ -63,7 +63,6 @@ const ApplicationOverview: React.FC = () => {
   useEffect(() => {
     // Fully re-validate on page load
     if (!isApplicationLoaded) return
-
     const status = application?.stage?.status
     if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired) {
       // Show summary, even if it no longer validates, as it would
