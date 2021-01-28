@@ -36,7 +36,10 @@ const useTriggerProcessing = ({ triggerType, ...props }: TriggerQueryProps) => {
   const { reviewAssignmentId } = props as TriggerAssignment
   const { reviewId, isReviewLoaded } = props as TriggerReview
 
-  const checkTrigger = isApplicationLoaded || isReviewLoaded
+  // Skip processing the trigger using one of the following flags (depending on trigger type)
+  let skipTrigger = true
+  if (isApplicationLoaded !== undefined) skipTrigger = !isApplicationLoaded
+  else if (isReviewLoaded !== undefined) skipTrigger = !isReviewLoaded
 
   const { data, loading, error } = useGetTriggersQuery({
     variables: {
@@ -45,7 +48,7 @@ const useTriggerProcessing = ({ triggerType, ...props }: TriggerQueryProps) => {
       reviewId,
     },
     pollInterval: 500,
-    skip: !checkTrigger || !isProcessing,
+    skip: skipTrigger || !isProcessing,
     fetchPolicy: 'no-cache',
   })
 
@@ -55,7 +58,7 @@ const useTriggerProcessing = ({ triggerType, ...props }: TriggerQueryProps) => {
     if (triggers) {
       if (triggers[inferredTriggerType as TriggerType] === null) setIsProcessing(false)
     }
-  }, [data, loading, checkTrigger])
+  }, [data, loading, skipTrigger])
 
   return {
     isTriggerProcessing: isProcessing,
