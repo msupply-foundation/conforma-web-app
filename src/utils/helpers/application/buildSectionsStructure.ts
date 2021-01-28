@@ -85,11 +85,13 @@ const getReviewResponse = (response: ResponseFull | null, reviewResponses: Revie
         return response.id === applicationResponse?.id
       })
     : undefined
+
+  const { id, reviewResponseDecision: decision, comment } = reviewResponse as ReviewResponse
   return reviewResponse
     ? {
-        id: reviewResponse.id,
-        decision: reviewResponse.decision ? reviewResponse.decision : undefined,
-        comment: reviewResponse.comment ? reviewResponse.comment : '',
+        id,
+        decision: decision ? decision : undefined,
+        comment: comment ? comment : '',
       }
     : undefined
 }
