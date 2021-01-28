@@ -20,6 +20,8 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
 
   const { SummaryView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
+  console.log('SummaryView', SummaryView)
+
   const dynamicParameters = config?.dynamicParameters
   const dynamicExpressions =
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
@@ -35,8 +37,12 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
     })
   }, [])
 
-  // Don't show non-question elements -- although this may change
-  if (!pluginCode || !isVisible || category === TemplateElementCategory.Information) return null
+  if (
+    !pluginCode ||
+    !isVisible
+    // || category === TemplateElementCategory.Information
+  )
+    return null
 
   const DefaultSummaryView: React.FC = () => {
     const combinedParams = { ...parameters, ...evaluatedParameters }
