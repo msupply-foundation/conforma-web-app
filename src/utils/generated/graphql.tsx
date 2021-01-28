@@ -70,6 +70,8 @@ export type Query = Node & {
   reviews?: Maybe<ReviewsConnection>;
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignments?: Maybe<ReviewAssignmentsConnection>;
+  /** Reads and enables pagination through a set of `ReviewDecision`. */
+  reviewDecisions?: Maybe<ReviewDecisionsConnection>;
   /** Reads and enables pagination through a set of `ReviewQuestionAssignment`. */
   reviewQuestionAssignments?: Maybe<ReviewQuestionAssignmentsConnection>;
   /** Reads and enables pagination through a set of `ReviewResponse`. */
@@ -113,6 +115,7 @@ export type Query = Node & {
   permissionPolicy?: Maybe<PermissionPolicy>;
   review?: Maybe<Review>;
   reviewAssignment?: Maybe<ReviewAssignment>;
+  reviewDecision?: Maybe<ReviewDecision>;
   reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   reviewResponse?: Maybe<ReviewResponse>;
   reviewStatusHistory?: Maybe<ReviewStatusHistory>;
@@ -164,6 +167,8 @@ export type Query = Node & {
   reviewByNodeId?: Maybe<Review>;
   /** Reads a single `ReviewAssignment` using its globally unique `ID`. */
   reviewAssignmentByNodeId?: Maybe<ReviewAssignment>;
+  /** Reads a single `ReviewDecision` using its globally unique `ID`. */
+  reviewDecisionByNodeId?: Maybe<ReviewDecision>;
   /** Reads a single `ReviewQuestionAssignment` using its globally unique `ID`. */
   reviewQuestionAssignmentByNodeId?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ReviewResponse` using its globally unique `ID`. */
@@ -458,6 +463,19 @@ export type QueryReviewAssignmentsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryReviewDecisionsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewDecisionsOrderBy>>;
+  condition?: Maybe<ReviewDecisionCondition>;
+  filter?: Maybe<ReviewDecisionFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryReviewQuestionAssignmentsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -729,6 +747,12 @@ export type QueryReviewAssignmentArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryReviewDecisionArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryReviewQuestionAssignmentArgs = {
   id: Scalars['Int'];
 };
@@ -934,6 +958,12 @@ export type QueryReviewByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewAssignmentByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewDecisionByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -2362,10 +2392,16 @@ export type ReviewAssignmentFilter = {
   reviewerId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageId` field. */
   stageId?: Maybe<IntFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<ReviewAssignmentStatusFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `availableSectionsIds` field. */
+  availableSectionsIds?: Maybe<IntListFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `reviews` relation. */
   reviews?: Maybe<ReviewAssignmentToManyReviewFilter>;
   /** Some related `reviews` exist. */
@@ -2398,6 +2434,79 @@ export type ReviewAssignmentFilter = {
   not?: Maybe<ReviewAssignmentFilter>;
 };
 
+/** A filter to be used against ReviewAssignmentStatus fields. All fields are combined with a logical ‘and.’ */
+export type ReviewAssignmentStatusFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<ReviewAssignmentStatus>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<ReviewAssignmentStatus>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<ReviewAssignmentStatus>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<ReviewAssignmentStatus>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<ReviewAssignmentStatus>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<ReviewAssignmentStatus>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<ReviewAssignmentStatus>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<ReviewAssignmentStatus>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<ReviewAssignmentStatus>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<ReviewAssignmentStatus>;
+};
+
+export enum ReviewAssignmentStatus {
+  Available = 'AVAILABLE',
+  NotAvailable = 'NOT_AVAILABLE',
+  Assigned = 'ASSIGNED',
+  AvailableForSelfAssignment = 'AVAILABLE_FOR_SELF_ASSIGNMENT'
+}
+
+/** A filter to be used against Int List fields. All fields are combined with a logical ‘and.’ */
+export type IntListFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Contains the specified list of values. */
+  contains?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Contained by the specified list of values. */
+  containedBy?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Overlaps the specified list of values. */
+  overlaps?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Any array item is equal to the specified value. */
+  anyEqualTo?: Maybe<Scalars['Int']>;
+  /** Any array item is not equal to the specified value. */
+  anyNotEqualTo?: Maybe<Scalars['Int']>;
+  /** Any array item is less than the specified value. */
+  anyLessThan?: Maybe<Scalars['Int']>;
+  /** Any array item is less than or equal to the specified value. */
+  anyLessThanOrEqualTo?: Maybe<Scalars['Int']>;
+  /** Any array item is greater than the specified value. */
+  anyGreaterThan?: Maybe<Scalars['Int']>;
+  /** Any array item is greater than or equal to the specified value. */
+  anyGreaterThanOrEqualTo?: Maybe<Scalars['Int']>;
+};
+
 /** A filter to be used against many `Review` object types. All fields are combined with a logical ‘and.’ */
 export type ReviewAssignmentToManyReviewFilter = {
   /** Every related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -2426,6 +2535,10 @@ export type ReviewFilter = {
   reviewResponses?: Maybe<ReviewToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
   reviewResponsesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewDecisions` relation. */
+  reviewDecisions?: Maybe<ReviewToManyReviewDecisionFilter>;
+  /** Some related `reviewDecisions` exist. */
+  reviewDecisionsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewStatusHistories` relation. */
   reviewStatusHistories?: Maybe<ReviewToManyReviewStatusHistoryFilter>;
   /** Some related `reviewStatusHistories` exist. */
@@ -2470,16 +2583,24 @@ export type ReviewResponseFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `comment` field. */
   comment?: Maybe<StringFilter>;
-  /** Filter by the object’s `decision` field. */
-  decision?: Maybe<ReviewResponseDecisionFilter>;
+  /** Filter by the object’s `reviewResponseDecision` field. */
+  reviewResponseDecision?: Maybe<ReviewResponseDecisionFilter>;
   /** Filter by the object’s `reviewQuestionAssignmentId` field. */
   reviewQuestionAssignmentId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationResponseId` field. */
   applicationResponseId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewResponseId` field. */
+  reviewResponseId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewId` field. */
   reviewId?: Maybe<IntFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<ReviewResponseStatusFilter>;
+  /** Filter by the object’s `reviewResponses` relation. */
+  reviewResponses?: Maybe<ReviewResponseToManyReviewResponseFilter>;
+  /** Some related `reviewResponses` exist. */
+  reviewResponsesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewQuestionAssignment` relation. */
   reviewQuestionAssignment?: Maybe<ReviewQuestionAssignmentFilter>;
   /** A related `reviewQuestionAssignment` exists. */
@@ -2488,6 +2609,10 @@ export type ReviewResponseFilter = {
   applicationResponse?: Maybe<ApplicationResponseFilter>;
   /** A related `applicationResponse` exists. */
   applicationResponseExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `review_reponse_link_id` relation. */
+  review_reponse_link_id?: Maybe<ReviewResponseFilter>;
+  /** A related `review_reponse_link_id` exists. */
+  review_reponse_link_idExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `review` relation. */
   review?: Maybe<ReviewFilter>;
   /** A related `review` exists. */
@@ -2530,6 +2655,47 @@ export enum ReviewResponseDecision {
   Approve = 'APPROVE',
   Decline = 'DECLINE'
 }
+
+/** A filter to be used against ReviewResponseStatus fields. All fields are combined with a logical ‘and.’ */
+export type ReviewResponseStatusFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<ReviewResponseStatus>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<ReviewResponseStatus>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<ReviewResponseStatus>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<ReviewResponseStatus>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<ReviewResponseStatus>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<ReviewResponseStatus>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<ReviewResponseStatus>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<ReviewResponseStatus>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<ReviewResponseStatus>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<ReviewResponseStatus>;
+};
+
+export enum ReviewResponseStatus {
+  Draft = 'DRAFT',
+  Submitted = 'SUBMITTED'
+}
+
+/** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewResponseToManyReviewResponseFilter = {
+  /** Every related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewResponseFilter>;
+  /** Some related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewResponseFilter>;
+  /** No related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewResponseFilter>;
+};
 
 /** A filter to be used against `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
 export type ReviewQuestionAssignmentFilter = {
@@ -2818,6 +2984,73 @@ export type TemplateElementToManyReviewQuestionAssignmentFilter = {
   none?: Maybe<ReviewQuestionAssignmentFilter>;
 };
 
+/** A filter to be used against many `ReviewDecision` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewToManyReviewDecisionFilter = {
+  /** Every related `ReviewDecision` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewDecisionFilter>;
+  /** Some related `ReviewDecision` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewDecisionFilter>;
+  /** No related `ReviewDecision` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewDecisionFilter>;
+};
+
+/** A filter to be used against `ReviewDecision` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewDecisionFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewId` field. */
+  reviewId?: Maybe<IntFilter>;
+  /** Filter by the object’s `decision` field. */
+  decision?: Maybe<DecisionFilter>;
+  /** Filter by the object’s `comment` field. */
+  comment?: Maybe<StringFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `review` relation. */
+  review?: Maybe<ReviewFilter>;
+  /** A related `review` exists. */
+  reviewExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ReviewDecisionFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ReviewDecisionFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ReviewDecisionFilter>;
+};
+
+/** A filter to be used against Decision fields. All fields are combined with a logical ‘and.’ */
+export type DecisionFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Decision>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Decision>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Decision>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Decision>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<Decision>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<Decision>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Decision>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Decision>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Decision>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Decision>;
+};
+
+export enum Decision {
+  Loq = 'LOQ',
+  Conform = 'CONFORM',
+  NoConform = 'NO_CONFORM',
+  ChangesRequested = 'CHANGES_REQUESTED'
+}
+
 /** A filter to be used against many `ReviewStatusHistory` object types. All fields are combined with a logical ‘and.’ */
 export type ReviewToManyReviewStatusHistoryFilter = {
   /** Every related `ReviewStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -2881,8 +3114,9 @@ export type ReviewStatusFilter = {
 export enum ReviewStatus {
   Draft = 'DRAFT',
   Submitted = 'SUBMITTED',
-  ChangesRequired = 'CHANGES_REQUIRED',
-  ReviewPending = 'REVIEW_PENDING'
+  ChangesRequested = 'CHANGES_REQUESTED',
+  Pending = 'PENDING',
+  Locked = 'LOCKED'
 }
 
 /** A filter to be used against many `Notification` object types. All fields are combined with a logical ‘and.’ */
@@ -4429,16 +4663,20 @@ export enum ReviewResponsesOrderBy {
   IdDesc = 'ID_DESC',
   CommentAsc = 'COMMENT_ASC',
   CommentDesc = 'COMMENT_DESC',
-  DecisionAsc = 'DECISION_ASC',
-  DecisionDesc = 'DECISION_DESC',
+  ReviewResponseDecisionAsc = 'REVIEW_RESPONSE_DECISION_ASC',
+  ReviewResponseDecisionDesc = 'REVIEW_RESPONSE_DECISION_DESC',
   ReviewQuestionAssignmentIdAsc = 'REVIEW_QUESTION_ASSIGNMENT_ID_ASC',
   ReviewQuestionAssignmentIdDesc = 'REVIEW_QUESTION_ASSIGNMENT_ID_DESC',
   ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
   ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
+  ReviewResponseIdAsc = 'REVIEW_RESPONSE_ID_ASC',
+  ReviewResponseIdDesc = 'REVIEW_RESPONSE_ID_DESC',
   ReviewIdAsc = 'REVIEW_ID_ASC',
   ReviewIdDesc = 'REVIEW_ID_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
   TimestampDesc = 'TIMESTAMP_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -4449,16 +4687,20 @@ export type ReviewResponseCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `comment` field. */
   comment?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `decision` field. */
-  decision?: Maybe<ReviewResponseDecision>;
+  /** Checks for equality with the object’s `reviewResponseDecision` field. */
+  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
   /** Checks for equality with the object’s `reviewQuestionAssignmentId` field. */
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `applicationResponseId` field. */
   applicationResponseId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewResponseId` field. */
+  reviewResponseId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewId` field. */
   reviewId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `timestamp` field. */
   timestamp?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: Maybe<ReviewResponseStatus>;
 };
 
 /** A connection to a list of `ReviewResponse` values. */
@@ -4480,17 +4722,35 @@ export type ReviewResponse = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   comment?: Maybe<Scalars['String']>;
-  decision?: Maybe<ReviewResponseDecision>;
+  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  status?: Maybe<ReviewResponseStatus>;
   /** Reads a single `ReviewQuestionAssignment` that is related to this `ReviewResponse`. */
   reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ApplicationResponse` that is related to this `ReviewResponse`. */
   applicationResponse?: Maybe<ApplicationResponse>;
+  /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
+  review_reponse_link_id?: Maybe<ReviewResponse>;
   /** Reads a single `Review` that is related to this `ReviewResponse`. */
   review?: Maybe<Review>;
+  /** Reads and enables pagination through a set of `ReviewResponse`. */
+  reviewResponses: ReviewResponsesConnection;
+};
+
+
+export type ReviewResponseReviewResponsesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewResponsesOrderBy>>;
+  condition?: Maybe<ReviewResponseCondition>;
+  filter?: Maybe<ReviewResponseFilter>;
 };
 
 export type ReviewQuestionAssignment = Node & {
@@ -4528,8 +4788,11 @@ export type ReviewAssignment = Node & {
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
   assigner?: Maybe<User>;
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
@@ -4629,6 +4892,8 @@ export type Review = Node & {
   reviewer?: Maybe<User>;
   /** Reads and enables pagination through a set of `ReviewResponse`. */
   reviewResponses: ReviewResponsesConnection;
+  /** Reads and enables pagination through a set of `ReviewDecision`. */
+  reviewDecisions: ReviewDecisionsConnection;
   /** Reads and enables pagination through a set of `ReviewStatusHistory`. */
   reviewStatusHistories: ReviewStatusHistoriesConnection;
   /** Reads and enables pagination through a set of `Notification`. */
@@ -4646,6 +4911,18 @@ export type ReviewReviewResponsesArgs = {
   orderBy?: Maybe<Array<ReviewResponsesOrderBy>>;
   condition?: Maybe<ReviewResponseCondition>;
   filter?: Maybe<ReviewResponseFilter>;
+};
+
+
+export type ReviewReviewDecisionsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewDecisionsOrderBy>>;
+  condition?: Maybe<ReviewDecisionCondition>;
+  filter?: Maybe<ReviewDecisionFilter>;
 };
 
 
@@ -4670,6 +4947,72 @@ export type ReviewNotificationsArgs = {
   orderBy?: Maybe<Array<NotificationsOrderBy>>;
   condition?: Maybe<NotificationCondition>;
   filter?: Maybe<NotificationFilter>;
+};
+
+/** Methods to use when ordering `ReviewDecision`. */
+export enum ReviewDecisionsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ReviewIdAsc = 'REVIEW_ID_ASC',
+  ReviewIdDesc = 'REVIEW_ID_DESC',
+  DecisionAsc = 'DECISION_ASC',
+  DecisionDesc = 'DECISION_DESC',
+  CommentAsc = 'COMMENT_ASC',
+  CommentDesc = 'COMMENT_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `ReviewDecision` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ReviewDecisionCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewId` field. */
+  reviewId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `decision` field. */
+  decision?: Maybe<Decision>;
+  /** Checks for equality with the object’s `comment` field. */
+  comment?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
+};
+
+/** A connection to a list of `ReviewDecision` values. */
+export type ReviewDecisionsConnection = {
+  __typename?: 'ReviewDecisionsConnection';
+  /** A list of `ReviewDecision` objects. */
+  nodes: Array<Maybe<ReviewDecision>>;
+  /** A list of edges which contains the `ReviewDecision` and cursor to aid in pagination. */
+  edges: Array<ReviewDecisionsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ReviewDecision` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type ReviewDecision = Node & {
+  __typename?: 'ReviewDecision';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  reviewId?: Maybe<Scalars['Int']>;
+  decision?: Maybe<Decision>;
+  comment?: Maybe<Scalars['String']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  /** Reads a single `Review` that is related to this `ReviewDecision`. */
+  review?: Maybe<Review>;
+};
+
+/** A `ReviewDecision` edge in the connection. */
+export type ReviewDecisionsEdge = {
+  __typename?: 'ReviewDecisionsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewDecision` at the end of the edge. */
+  node?: Maybe<ReviewDecision>;
 };
 
 /** Methods to use when ordering `ReviewStatusHistory`. */
@@ -5096,10 +5439,16 @@ export enum ReviewAssignmentsOrderBy {
   ReviewerIdDesc = 'REVIEWER_ID_DESC',
   StageIdAsc = 'STAGE_ID_ASC',
   StageIdDesc = 'STAGE_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  AvailableSectionsIdsAsc = 'AVAILABLE_SECTIONS_IDS_ASC',
+  AvailableSectionsIdsDesc = 'AVAILABLE_SECTIONS_IDS_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -5114,10 +5463,16 @@ export type ReviewAssignmentCondition = {
   reviewerId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageId` field. */
   stageId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: Maybe<ReviewAssignmentStatus>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `availableSectionsIds` field. */
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
 };
 
 /** A connection to a list of `ReviewAssignment` values. */
@@ -5640,6 +5995,8 @@ export enum ApplicationStageStatusAllsOrderBy {
   NameDesc = 'NAME_DESC',
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC',
+  OrgIdAsc = 'ORG_ID_ASC',
+  OrgIdDesc = 'ORG_ID_DESC',
   StageIdAsc = 'STAGE_ID_ASC',
   StageIdDesc = 'STAGE_ID_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
@@ -5674,6 +6031,8 @@ export type ApplicationStageStatusAllCondition = {
   name?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `orgId` field. */
+  orgId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageId` field. */
   stageId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageNumber` field. */
@@ -5708,6 +6067,8 @@ export type ApplicationStageStatusAllFilter = {
   name?: Maybe<StringFilter>;
   /** Filter by the object’s `userId` field. */
   userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `orgId` field. */
+  orgId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageId` field. */
   stageId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageNumber` field. */
@@ -5756,6 +6117,7 @@ export type ApplicationStageStatusAll = {
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   stage?: Maybe<Scalars['String']>;
@@ -6434,6 +6796,8 @@ export type Mutation = {
   createReview?: Maybe<CreateReviewPayload>;
   /** Creates a single `ReviewAssignment`. */
   createReviewAssignment?: Maybe<CreateReviewAssignmentPayload>;
+  /** Creates a single `ReviewDecision`. */
+  createReviewDecision?: Maybe<CreateReviewDecisionPayload>;
   /** Creates a single `ReviewQuestionAssignment`. */
   createReviewQuestionAssignment?: Maybe<CreateReviewQuestionAssignmentPayload>;
   /** Creates a single `ReviewResponse`. */
@@ -6524,6 +6888,10 @@ export type Mutation = {
   updateReviewAssignmentByNodeId?: Maybe<UpdateReviewAssignmentPayload>;
   /** Updates a single `ReviewAssignment` using a unique key and a patch. */
   updateReviewAssignment?: Maybe<UpdateReviewAssignmentPayload>;
+  /** Updates a single `ReviewDecision` using its globally unique id and a patch. */
+  updateReviewDecisionByNodeId?: Maybe<UpdateReviewDecisionPayload>;
+  /** Updates a single `ReviewDecision` using a unique key and a patch. */
+  updateReviewDecision?: Maybe<UpdateReviewDecisionPayload>;
   /** Updates a single `ReviewQuestionAssignment` using its globally unique id and a patch. */
   updateReviewQuestionAssignmentByNodeId?: Maybe<UpdateReviewQuestionAssignmentPayload>;
   /** Updates a single `ReviewQuestionAssignment` using a unique key and a patch. */
@@ -6640,6 +7008,10 @@ export type Mutation = {
   deleteReviewAssignmentByNodeId?: Maybe<DeleteReviewAssignmentPayload>;
   /** Deletes a single `ReviewAssignment` using a unique key. */
   deleteReviewAssignment?: Maybe<DeleteReviewAssignmentPayload>;
+  /** Deletes a single `ReviewDecision` using its globally unique id. */
+  deleteReviewDecisionByNodeId?: Maybe<DeleteReviewDecisionPayload>;
+  /** Deletes a single `ReviewDecision` using a unique key. */
+  deleteReviewDecision?: Maybe<DeleteReviewDecisionPayload>;
   /** Deletes a single `ReviewQuestionAssignment` using its globally unique id. */
   deleteReviewQuestionAssignmentByNodeId?: Maybe<DeleteReviewQuestionAssignmentPayload>;
   /** Deletes a single `ReviewQuestionAssignment` using a unique key. */
@@ -6786,6 +7158,12 @@ export type MutationCreateReviewArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateReviewAssignmentArgs = {
   input: CreateReviewAssignmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateReviewDecisionArgs = {
+  input: CreateReviewDecisionInput;
 };
 
 
@@ -7056,6 +7434,18 @@ export type MutationUpdateReviewAssignmentByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateReviewAssignmentArgs = {
   input: UpdateReviewAssignmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateReviewDecisionByNodeIdArgs = {
+  input: UpdateReviewDecisionByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateReviewDecisionArgs = {
+  input: UpdateReviewDecisionInput;
 };
 
 
@@ -7404,6 +7794,18 @@ export type MutationDeleteReviewAssignmentByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteReviewAssignmentArgs = {
   input: DeleteReviewAssignmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteReviewDecisionByNodeIdArgs = {
+  input: DeleteReviewDecisionByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteReviewDecisionArgs = {
+  input: DeleteReviewDecisionInput;
 };
 
 
@@ -10087,7 +10489,10 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -10178,8 +10583,11 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   id?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -10270,8 +10678,11 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   id?: Maybe<Scalars['Int']>;
   assignerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -10424,8 +10835,11 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   id?: Maybe<Scalars['Int']>;
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -10547,6 +10961,7 @@ export type UpdateReviewOnReviewForReviewApplicationIdFkeyPatch = {
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
@@ -10582,8 +10997,11 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -10629,6 +11047,7 @@ export type UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch = {
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
@@ -10837,6 +11256,7 @@ export type UpdateReviewOnReviewForReviewReviewerIdFkeyPatch = {
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
@@ -11293,6 +11713,7 @@ export type UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch = {
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
@@ -11350,12 +11771,15 @@ export type ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingRevi
 export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  decision?: Maybe<ReviewResponseDecision>;
+  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewResponseId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
+  review_reponse_link_id?: Maybe<ReviewResponseReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
 };
 
@@ -11528,8 +11952,11 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -11605,12 +12032,15 @@ export type ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignm
 export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  decision?: Maybe<ReviewResponseDecision>;
+  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
+  review_reponse_link_id?: Maybe<ReviewResponseReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
 };
 
@@ -11684,12 +12114,56 @@ export type ReviewResponseOnReviewResponseForReviewResponseApplicationResponseId
 export type UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  decision?: Maybe<ReviewResponseDecision>;
+  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
+  reviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
+  review_reponse_link_id?: Maybe<ReviewResponseReviewResponseIdFkeyInput>;
+  reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `reviewResponse` in the `ReviewResponseInput` mutation. */
+export type ReviewResponseReviewResponseIdFkeyInput = {
+  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
+  connectById?: Maybe<ReviewResponseReviewResponsePkeyConnect>;
+  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ReviewResponseNodeIdConnect>;
+  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
+  deleteById?: Maybe<ReviewResponseReviewResponsePkeyDelete>;
+  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ReviewResponseNodeIdDelete>;
+  /** The primary key(s) and patch data for `reviewResponse` for the far side of the relationship. */
+  updateById?: Maybe<ReviewResponseOnReviewResponseForReviewResponseReviewResponseIdFkeyUsingReviewResponsePkeyUpdate>;
+  /** The primary key(s) and patch data for `reviewResponse` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewResponseOnReviewResponseForReviewResponseReviewResponseIdFkeyNodeIdUpdate>;
+  /** A `ReviewResponseInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewResponseReviewResponseIdFkeyReviewResponseCreateInput>;
+};
+
+/** The fields on `reviewResponse` to look up the row to update. */
+export type ReviewResponseOnReviewResponseForReviewResponseReviewResponseIdFkeyUsingReviewResponsePkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewResponse` being updated. */
+  patch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `reviewResponse` being updated. */
+export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
+  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  status?: Maybe<ReviewResponseStatus>;
+  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
+  applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
+  review_reponse_link_id?: Maybe<ReviewResponseReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
 };
 
@@ -11729,6 +12203,106 @@ export type UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `reviewDecision` in the `ReviewInput` mutation. */
+export type ReviewDecisionReviewIdFkeyInverseInput = {
+  /** Flag indicating whether all other `reviewDecision` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `reviewDecision` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewDecisionReviewDecisionPkeyConnect>>;
+  /** The primary key(s) for `reviewDecision` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewDecisionNodeIdConnect>>;
+  /** The primary key(s) for `reviewDecision` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewDecisionReviewDecisionPkeyDelete>>;
+  /** The primary key(s) for `reviewDecision` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewDecisionNodeIdDelete>>;
+  /** The primary key(s) and patch data for `reviewDecision` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewDecisionOnReviewDecisionForReviewDecisionReviewIdFkeyUsingReviewDecisionPkeyUpdate>>;
+  /** The primary key(s) and patch data for `reviewDecision` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ReviewOnReviewDecisionForReviewDecisionReviewIdFkeyNodeIdUpdate>>;
+  /** A `ReviewDecisionInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewDecisionReviewIdFkeyReviewDecisionCreateInput>>;
+};
+
+/** The fields on `reviewDecision` to look up the row to connect. */
+export type ReviewDecisionReviewDecisionPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type ReviewDecisionNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `reviewDecision` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `reviewDecision` to look up the row to delete. */
+export type ReviewDecisionReviewDecisionPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type ReviewDecisionNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `reviewDecision` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `reviewDecision` to look up the row to update. */
+export type ReviewDecisionOnReviewDecisionForReviewDecisionReviewIdFkeyUsingReviewDecisionPkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewDecision` being updated. */
+  patch: UpdateReviewDecisionOnReviewDecisionForReviewDecisionReviewIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `reviewDecision` being updated. */
+export type UpdateReviewDecisionOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  decision?: Maybe<Decision>;
+  comment?: Maybe<Scalars['String']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `review` in the `ReviewDecisionInput` mutation. */
+export type ReviewDecisionReviewIdFkeyInput = {
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectById?: Maybe<ReviewReviewPkeyConnect>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ReviewNodeIdConnect>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteById?: Maybe<ReviewReviewPkeyDelete>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ReviewNodeIdDelete>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateById?: Maybe<ReviewOnReviewDecisionForReviewDecisionReviewIdFkeyUsingReviewPkeyUpdate>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewDecisionOnReviewDecisionForReviewDecisionReviewIdFkeyNodeIdUpdate>;
+  /** A `ReviewInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewDecisionReviewIdFkeyReviewCreateInput>;
+};
+
+/** The fields on `review` to look up the row to update. */
+export type ReviewOnReviewDecisionForReviewDecisionReviewIdFkeyUsingReviewPkeyUpdate = {
+  /** An object where the defined keys will be set on the `review` being updated. */
+  patch: UpdateReviewOnReviewDecisionForReviewDecisionReviewIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `review` being updated. */
+export type UpdateReviewOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
@@ -11827,6 +12401,7 @@ export type UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyP
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
@@ -12212,6 +12787,7 @@ export type ReviewPatch = {
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
@@ -12227,6 +12803,7 @@ export type ReviewStatusHistoryReviewIdFkeyReviewCreateInput = {
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
@@ -12259,6 +12836,57 @@ export type ReviewStatusHistoryReviewIdFkeyReviewStatusHistoryCreateInput = {
 };
 
 /** The globally unique `ID` look up for the row to update. */
+export type ReviewDecisionOnReviewDecisionForReviewDecisionReviewIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `review` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `review` being updated. */
+  patch: ReviewPatch;
+};
+
+/** The `review` to be created by this mutation. */
+export type ReviewDecisionReviewIdFkeyReviewCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewOnReviewDecisionForReviewDecisionReviewIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewDecision` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `reviewDecision` being updated. */
+  patch: ReviewDecisionPatch;
+};
+
+/** Represents an update to a `ReviewDecision`. Fields that are set will be updated. */
+export type ReviewDecisionPatch = {
+  id?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  decision?: Maybe<Decision>;
+  comment?: Maybe<Scalars['String']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
+};
+
+/** The `reviewDecision` to be created by this mutation. */
+export type ReviewDecisionReviewIdFkeyReviewDecisionCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  decision?: Maybe<Decision>;
+  comment?: Maybe<Scalars['String']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
 export type ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `review` to be connected. */
   nodeId: Scalars['ID'];
@@ -12277,12 +12905,13 @@ export type ReviewResponseReviewIdFkeyReviewCreateInput = {
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate = {
+export type ReviewResponseOnReviewResponseForReviewResponseReviewResponseIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `reviewResponse` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `reviewResponse` being updated. */
@@ -12293,26 +12922,56 @@ export type ApplicationResponseOnReviewResponseForReviewResponseApplicationRespo
 export type ReviewResponsePatch = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  decision?: Maybe<ReviewResponseDecision>;
+  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewResponseId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  status?: Maybe<ReviewResponseStatus>;
+  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
+  applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
+  review_reponse_link_id?: Maybe<ReviewResponseReviewResponseIdFkeyInput>;
+  reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
+};
+
+/** The `reviewResponse` to be created by this mutation. */
+export type ReviewResponseReviewResponseIdFkeyReviewResponseCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
+  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
+  review_reponse_link_id?: Maybe<ReviewResponseReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewResponse` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `reviewResponse` being updated. */
+  patch: ReviewResponsePatch;
 };
 
 /** The `reviewResponse` to be created by this mutation. */
 export type ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  decision?: Maybe<ReviewResponseDecision>;
+  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
+  reviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
+  review_reponse_link_id?: Maybe<ReviewResponseReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
 };
 
@@ -12350,12 +13009,15 @@ export type ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuest
 export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  decision?: Maybe<ReviewResponseDecision>;
+  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
+  review_reponse_link_id?: Maybe<ReviewResponseReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
 };
 
@@ -12400,8 +13062,11 @@ export type ReviewAssignmentPatch = {
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -12416,8 +13081,11 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -12521,12 +13189,15 @@ export type ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate = {
 export type ReviewResponseReviewIdFkeyReviewResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  decision?: Maybe<ReviewResponseDecision>;
+  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewResponseId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
+  review_reponse_link_id?: Maybe<ReviewResponseReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
 };
 
@@ -12549,6 +13220,7 @@ export type NotificationReviewIdFkeyReviewCreateInput = {
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
@@ -12764,6 +13436,7 @@ export type ReviewReviewerIdFkeyReviewCreateInput = {
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
@@ -12880,6 +13553,7 @@ export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
@@ -12898,8 +13572,11 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -12926,6 +13603,7 @@ export type ReviewApplicationIdFkeyReviewCreateInput = {
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
@@ -12981,8 +13659,11 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   id?: Maybe<Scalars['Int']>;
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -13232,8 +13913,11 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   id?: Maybe<Scalars['Int']>;
   assignerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -13289,8 +13973,11 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   id?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -13347,7 +14034,10 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -15092,6 +15782,7 @@ export type ReviewInput = {
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
@@ -15135,8 +15826,11 @@ export type ReviewAssignmentInput = {
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
+  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -15170,6 +15864,45 @@ export type CreateReviewAssignmentPayload = {
 /** The output of our create `ReviewAssignment` mutation. */
 export type CreateReviewAssignmentPayloadReviewAssignmentEdgeArgs = {
   orderBy?: Maybe<Array<ReviewAssignmentsOrderBy>>;
+};
+
+/** All input for the create `ReviewDecision` mutation. */
+export type CreateReviewDecisionInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewDecision` to be created by this mutation. */
+  reviewDecision: ReviewDecisionInput;
+};
+
+/** An input for mutations affecting `ReviewDecision` */
+export type ReviewDecisionInput = {
+  id?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  decision?: Maybe<Decision>;
+  comment?: Maybe<Scalars['String']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
+};
+
+/** The output of our create `ReviewDecision` mutation. */
+export type CreateReviewDecisionPayload = {
+  __typename?: 'CreateReviewDecisionPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewDecision` that was created by this mutation. */
+  reviewDecision?: Maybe<ReviewDecision>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Review` that is related to this `ReviewDecision`. */
+  review?: Maybe<Review>;
+  /** An edge for our `ReviewDecision`. May be used by Relay 1. */
+  reviewDecisionEdge?: Maybe<ReviewDecisionsEdge>;
+};
+
+
+/** The output of our create `ReviewDecision` mutation. */
+export type CreateReviewDecisionPayloadReviewDecisionEdgeArgs = {
+  orderBy?: Maybe<Array<ReviewDecisionsOrderBy>>;
 };
 
 /** All input for the create `ReviewQuestionAssignment` mutation. */
@@ -15225,13 +15958,16 @@ export type CreateReviewResponseInput = {
 export type ReviewResponseInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  decision?: Maybe<ReviewResponseDecision>;
+  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
+  review_reponse_link_id?: Maybe<ReviewResponseReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
 };
 
@@ -15248,6 +15984,8 @@ export type CreateReviewResponsePayload = {
   reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ApplicationResponse` that is related to this `ReviewResponse`. */
   applicationResponse?: Maybe<ApplicationResponse>;
+  /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
+  review_reponse_link_id?: Maybe<ReviewResponse>;
   /** Reads a single `Review` that is related to this `ReviewResponse`. */
   review?: Maybe<Review>;
   /** An edge for our `ReviewResponse`. May be used by Relay 1. */
@@ -16389,6 +17127,46 @@ export type UpdateReviewAssignmentInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `updateReviewDecisionByNodeId` mutation. */
+export type UpdateReviewDecisionByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ReviewDecision` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `ReviewDecision` being updated. */
+  patch: ReviewDecisionPatch;
+};
+
+/** The output of our update `ReviewDecision` mutation. */
+export type UpdateReviewDecisionPayload = {
+  __typename?: 'UpdateReviewDecisionPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewDecision` that was updated by this mutation. */
+  reviewDecision?: Maybe<ReviewDecision>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Review` that is related to this `ReviewDecision`. */
+  review?: Maybe<Review>;
+  /** An edge for our `ReviewDecision`. May be used by Relay 1. */
+  reviewDecisionEdge?: Maybe<ReviewDecisionsEdge>;
+};
+
+
+/** The output of our update `ReviewDecision` mutation. */
+export type UpdateReviewDecisionPayloadReviewDecisionEdgeArgs = {
+  orderBy?: Maybe<Array<ReviewDecisionsOrderBy>>;
+};
+
+/** All input for the `updateReviewDecision` mutation. */
+export type UpdateReviewDecisionInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `ReviewDecision` being updated. */
+  patch: ReviewDecisionPatch;
+  id: Scalars['Int'];
+};
+
 /** All input for the `updateReviewQuestionAssignmentByNodeId` mutation. */
 export type UpdateReviewQuestionAssignmentByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -16454,6 +17232,8 @@ export type UpdateReviewResponsePayload = {
   reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ApplicationResponse` that is related to this `ReviewResponse`. */
   applicationResponse?: Maybe<ApplicationResponse>;
+  /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
+  review_reponse_link_id?: Maybe<ReviewResponse>;
   /** Reads a single `Review` that is related to this `ReviewResponse`. */
   review?: Maybe<Review>;
   /** An edge for our `ReviewResponse`. May be used by Relay 1. */
@@ -17511,6 +18291,43 @@ export type DeleteReviewAssignmentInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `deleteReviewDecisionByNodeId` mutation. */
+export type DeleteReviewDecisionByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ReviewDecision` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `ReviewDecision` mutation. */
+export type DeleteReviewDecisionPayload = {
+  __typename?: 'DeleteReviewDecisionPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewDecision` that was deleted by this mutation. */
+  reviewDecision?: Maybe<ReviewDecision>;
+  deletedReviewDecisionNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Review` that is related to this `ReviewDecision`. */
+  review?: Maybe<Review>;
+  /** An edge for our `ReviewDecision`. May be used by Relay 1. */
+  reviewDecisionEdge?: Maybe<ReviewDecisionsEdge>;
+};
+
+
+/** The output of our delete `ReviewDecision` mutation. */
+export type DeleteReviewDecisionPayloadReviewDecisionEdgeArgs = {
+  orderBy?: Maybe<Array<ReviewDecisionsOrderBy>>;
+};
+
+/** All input for the `deleteReviewDecision` mutation. */
+export type DeleteReviewDecisionInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
 /** All input for the `deleteReviewQuestionAssignmentByNodeId` mutation. */
 export type DeleteReviewQuestionAssignmentByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -17572,6 +18389,8 @@ export type DeleteReviewResponsePayload = {
   reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ApplicationResponse` that is related to this `ReviewResponse`. */
   applicationResponse?: Maybe<ApplicationResponse>;
+  /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
+  review_reponse_link_id?: Maybe<ReviewResponse>;
   /** Reads a single `Review` that is related to this `ReviewResponse`. */
   review?: Maybe<Review>;
   /** An edge for our `ReviewResponse`. May be used by Relay 1. */
@@ -18208,36 +19027,6 @@ export type GetApplicationQuery = (
   )> }
 );
 
-export type GetApplicationStatusQueryVariables = Exact<{
-  serial: Scalars['String'];
-}>;
-
-
-export type GetApplicationStatusQuery = (
-  { __typename?: 'Query' }
-  & { applicationBySerial?: Maybe<(
-    { __typename?: 'Application' }
-    & Pick<Application, 'status'>
-    & { template?: Maybe<(
-      { __typename?: 'Template' }
-      & Pick<Template, 'submissionMessage'>
-      & { templateStages: (
-        { __typename?: 'TemplateStagesConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'TemplateStage' }
-          & TemplateStageFragment
-        )>> }
-      ) }
-    )> }
-  )>, applicationStageStatusAlls?: Maybe<(
-    { __typename?: 'ApplicationStageStatusAllsConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'ApplicationStageStatusAll' }
-      & StageFragment
-    )>> }
-  )> }
-);
-
 export type GetApplicationsListQueryVariables = Exact<{
   filters?: Maybe<ApplicationListFilter>;
   sortFields?: Maybe<Array<ApplicationListsOrderBy>>;
@@ -18318,7 +19107,7 @@ export type GetReviewQuery = (
       { __typename?: 'ReviewResponsesConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'ReviewResponse' }
-        & Pick<ReviewResponse, 'id' | 'comment' | 'decision'>
+        & Pick<ReviewResponse, 'id' | 'comment' | 'reviewResponseDecision'>
         & { applicationResponse?: Maybe<(
           { __typename?: 'ApplicationResponse' }
           & Pick<ApplicationResponse, 'id'>
@@ -18774,7 +19563,7 @@ export type UpdateResponseMutationResult = Apollo.MutationResult<UpdateResponseM
 export type UpdateResponseMutationOptions = Apollo.BaseMutationOptions<UpdateResponseMutation, UpdateResponseMutationVariables>;
 export const UpdateReviewResponseDocument = gql`
     mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String) {
-  updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment}}) {
+  updateReviewResponse(input: {id: $id, patch: {reviewResponseDecision: $decision, comment: $comment}}) {
     clientMutationId
   }
 }
@@ -18876,53 +19665,6 @@ export function useGetApplicationLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetApplicationQueryHookResult = ReturnType<typeof useGetApplicationQuery>;
 export type GetApplicationLazyQueryHookResult = ReturnType<typeof useGetApplicationLazyQuery>;
 export type GetApplicationQueryResult = Apollo.QueryResult<GetApplicationQuery, GetApplicationQueryVariables>;
-export const GetApplicationStatusDocument = gql`
-    query getApplicationStatus($serial: String!) {
-  applicationBySerial(serial: $serial) {
-    status
-    template {
-      submissionMessage
-      templateStages {
-        nodes {
-          ...TemplateStage
-        }
-      }
-    }
-  }
-  applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true}) {
-    nodes {
-      ...Stage
-    }
-  }
-}
-    ${TemplateStageFragmentDoc}
-${StageFragmentDoc}`;
-
-/**
- * __useGetApplicationStatusQuery__
- *
- * To run a query within a React component, call `useGetApplicationStatusQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetApplicationStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetApplicationStatusQuery({
- *   variables: {
- *      serial: // value for 'serial'
- *   },
- * });
- */
-export function useGetApplicationStatusQuery(baseOptions?: Apollo.QueryHookOptions<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>) {
-        return Apollo.useQuery<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>(GetApplicationStatusDocument, baseOptions);
-      }
-export function useGetApplicationStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>) {
-          return Apollo.useLazyQuery<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>(GetApplicationStatusDocument, baseOptions);
-        }
-export type GetApplicationStatusQueryHookResult = ReturnType<typeof useGetApplicationStatusQuery>;
-export type GetApplicationStatusLazyQueryHookResult = ReturnType<typeof useGetApplicationStatusLazyQuery>;
-export type GetApplicationStatusQueryResult = Apollo.QueryResult<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>;
 export const GetApplicationsListDocument = gql`
     query getApplicationsList($filters: ApplicationListFilter, $sortFields: [ApplicationListsOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!) {
   applicationLists(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch) {
@@ -19049,7 +19791,7 @@ export const GetReviewDocument = gql`
       nodes {
         id
         comment
-        decision
+        reviewResponseDecision
         applicationResponse {
           id
         }

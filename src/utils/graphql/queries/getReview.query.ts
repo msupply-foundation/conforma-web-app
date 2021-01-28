@@ -12,7 +12,7 @@ export default gql`
         nodes {
           id
           comment
-          decision
+          reviewResponseDecision
           applicationResponse {
             id
           }
