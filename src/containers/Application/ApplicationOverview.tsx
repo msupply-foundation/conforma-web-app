@@ -14,7 +14,7 @@ import buildSectionsStructure from '../../utils/helpers/application/buildSection
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
-import useUpdateApplication from '../../utils/hooks/useUpdateApplication'
+import useSubmitApplication from '../../utils/hooks/useSubmitApplication'
 import { useUserState } from '../../contexts/UserState'
 import {
   ApplicationElementStates,
@@ -23,8 +23,7 @@ import {
   User,
 } from '../../utils/types'
 import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/application/revalidateAll'
-import { useUpdateResponseMutation } from '../../utils/generated/graphql'
-import useGetApplicationStatus from '../../utils/hooks/useGetApplicationStatus'
+import { ApplicationStatus, useUpdateResponseMutation } from '../../utils/generated/graphql'
 import messages from '../../utils/messages'
 
 const ApplicationOverview: React.FC = () => {
@@ -38,15 +37,12 @@ const ApplicationOverview: React.FC = () => {
 
   const { query, push } = useRouter()
   const { serialNumber } = query
-  const { error, loading, templateSections, isApplicationLoaded } = useLoadApplication({
-    serialNumber: serialNumber as string,
-  })
-
-  const { error: statusError, loading: statusLoading, appStatus } = useGetApplicationStatus({
-    serialNumber: serialNumber as string,
-    isApplicationLoaded,
-    networkFetch: true,
-  })
+  const { error, loading, application, templateSections, isApplicationLoaded } = useLoadApplication(
+    {
+      serialNumber: serialNumber as string,
+      networkFetch: true,
+    }
+  )
 
   const {
     error: responsesError,
@@ -58,7 +54,7 @@ const ApplicationOverview: React.FC = () => {
     isApplicationLoaded,
   })
 
-  const { error: submitError, processing, submitted, submit } = useUpdateApplication({
+  const { error: submitError, processing, submitted, submit } = useSubmitApplication({
     serialNumber: serialNumber as string,
   })
 
@@ -66,8 +62,9 @@ const ApplicationOverview: React.FC = () => {
 
   useEffect(() => {
     // Fully re-validate on page load
-    if (!appStatus) return
-    if (appStatus?.status !== 'DRAFT' && appStatus?.status !== 'CHANGES_REQUIRED') {
+    if (!isApplicationLoaded) return
+    const status = application?.stage?.status
+    if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired) {
       // Show summary, even if it no longer validates, as it would
       // have been valid when submitted.
       setIsRevalidated(true)
@@ -76,7 +73,7 @@ const ApplicationOverview: React.FC = () => {
     if (isApplicationLoaded && elementsState && responsesByCode) {
       revalidateAndUpdate().then(() => setIsRevalidated(true))
     }
-  }, [responsesByCode, elementsState, appStatus])
+  }, [responsesByCode, elementsState, application])
 
   useEffect(() => {
     if (!responsesLoading && elementsState && responsesByCode) {
@@ -137,26 +134,26 @@ const ApplicationOverview: React.FC = () => {
     }
   }
 
-  return error || statusError ? (
-    <Message error header={strings.ERROR_APPLICATION_OVERVIEW} list={[error, statusError]} />
-  ) : loading || statusLoading || responsesLoading ? (
+  return error || responsesError ? (
+    <Message error header={strings.ERROR_APPLICATION_OVERVIEW} list={[error, responsesError]} />
+  ) : loading || responsesLoading ? (
     <Loading />
   ) : submitError ? (
     <Message error header={strings.ERROR_APPLICATION_SUBMIT} list={[submitError]} />
-  ) : serialNumber && appStatus && sectionsPages && isRevalidated ? (
+  ) : serialNumber && application && sectionsPages && isRevalidated ? (
     <Container>
       <Header as="h1" content={strings.TITLE_APPLICATION_SUBMIT} />
       <Form>
         {sectionsPages.map((sectionPages) => (
           <SectionSummary
-            key={`SecSummary_${sectionPages.section.code}`}
+            key={`ApplicationSection_${sectionPages.section.code}`}
             sectionPages={sectionPages}
             serialNumber={serialNumber}
             allResponses={responsesByCode || {}}
-            canEdit={appStatus.status === 'DRAFT'}
+            canEdit={application.stage?.status === 'DRAFT'}
           />
         ))}
-        {appStatus.status === 'DRAFT' ? (
+        {application.stage?.status === 'DRAFT' ? (
           <Button content={strings.BUTTON_APPLICATION_SUBMIT} onClick={handleSubmit} />
         ) : null}
         <ModalWarning showModal={showModal} />

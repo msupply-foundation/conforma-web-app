@@ -18017,6 +18017,8 @@ export type CreateApplicationMutationVariables = Exact<{
   name: Scalars['String'];
   serial: Scalars['String'];
   templateId: Scalars['Int'];
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
   outcome?: Maybe<ApplicationOutcome>;
   trigger?: Maybe<Trigger>;
   sections?: Maybe<Array<ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput>>;
@@ -18030,6 +18032,7 @@ export type CreateApplicationMutation = (
     { __typename?: 'CreateApplicationPayload' }
     & { application?: Maybe<(
       { __typename?: 'Application' }
+      & Pick<Application, 'userId' | 'orgId'>
       & { template?: Maybe<(
         { __typename?: 'Template' }
         & { templateSections: (
@@ -18078,6 +18081,24 @@ export type CreateUserMutation = (
     & { user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
+    )> }
+  )> }
+);
+
+export type UpdateReviewMutationVariables = Exact<{
+  reviewId: Scalars['Int'];
+  trigger?: Maybe<Trigger>;
+  reviewResponses?: Maybe<Array<ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate>>;
+}>;
+
+
+export type UpdateReviewMutation = (
+  { __typename?: 'Mutation' }
+  & { updateReview?: Maybe<(
+    { __typename?: 'UpdateReviewPayload' }
+    & { review?: Maybe<(
+      { __typename?: 'Review' }
+      & Pick<Review, 'id'>
     )> }
   )> }
 );
@@ -18295,7 +18316,7 @@ export type GetReviewQuery = (
     { __typename?: 'Review' }
     & { reviewer?: Maybe<(
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'username'>
+      & Pick<User, 'id' | 'firstName' | 'lastName'>
     )>, reviewResponses: (
       { __typename?: 'ReviewResponsesConnection' }
       & { nodes: Array<Maybe<(
@@ -18520,9 +18541,11 @@ export const TemplateStageFragmentDoc = gql`
 }
     `;
 export const CreateApplicationDocument = gql`
-    mutation createApplication($name: String!, $serial: String!, $templateId: Int!, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE, $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!], $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]) {
-  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, isActive: true, outcome: $outcome, trigger: $trigger, applicationSectionsUsingId: {create: $sections}, applicationResponsesUsingId: {create: $responses}}}) {
+    mutation createApplication($name: String!, $serial: String!, $templateId: Int!, $userId: Int, $orgId: Int, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE, $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!], $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]) {
+  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, userId: $userId, orgId: $orgId, isActive: true, outcome: $outcome, trigger: $trigger, applicationSectionsUsingId: {create: $sections}, applicationResponsesUsingId: {create: $responses}}}) {
     application {
+      userId
+      orgId
       ...Application
       template {
         ...Template
@@ -18556,6 +18579,8 @@ export type CreateApplicationMutationFn = Apollo.MutationFunction<CreateApplicat
  *      name: // value for 'name'
  *      serial: // value for 'serial'
  *      templateId: // value for 'templateId'
+ *      userId: // value for 'userId'
+ *      orgId: // value for 'orgId'
  *      outcome: // value for 'outcome'
  *      trigger: // value for 'trigger'
  *      sections: // value for 'sections'
@@ -18642,6 +18667,42 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const UpdateReviewDocument = gql`
+    mutation updateReview($reviewId: Int!, $trigger: Trigger = ON_REVIEW_SUBMIT, $reviewResponses: [ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate!]) {
+  updateReview(input: {id: $reviewId, patch: {trigger: $trigger, reviewResponsesUsingId: {updateById: $reviewResponses}}}) {
+    review {
+      id
+    }
+  }
+}
+    `;
+export type UpdateReviewMutationFn = Apollo.MutationFunction<UpdateReviewMutation, UpdateReviewMutationVariables>;
+
+/**
+ * __useUpdateReviewMutation__
+ *
+ * To run a mutation, you first call `useUpdateReviewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateReviewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateReviewMutation, { data, loading, error }] = useUpdateReviewMutation({
+ *   variables: {
+ *      reviewId: // value for 'reviewId'
+ *      trigger: // value for 'trigger'
+ *      reviewResponses: // value for 'reviewResponses'
+ *   },
+ * });
+ */
+export function useUpdateReviewMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReviewMutation, UpdateReviewMutationVariables>) {
+        return Apollo.useMutation<UpdateReviewMutation, UpdateReviewMutationVariables>(UpdateReviewDocument, baseOptions);
+      }
+export type UpdateReviewMutationHookResult = ReturnType<typeof useUpdateReviewMutation>;
+export type UpdateReviewMutationResult = Apollo.MutationResult<UpdateReviewMutation>;
+export type UpdateReviewMutationOptions = Apollo.BaseMutationOptions<UpdateReviewMutation, UpdateReviewMutationVariables>;
 export const UpdateApplicationDocument = gql`
     mutation updateApplication($serial: String!, $applicationTrigger: Trigger = ON_APPLICATION_SUBMIT, $responses: [ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationResponsePkeyUpdate!]) {
   updateApplicationBySerial(input: {serial: $serial, patch: {trigger: $applicationTrigger, applicationResponsesUsingId: {updateById: $responses}}}) {
@@ -18783,7 +18844,7 @@ export const GetApplicationDocument = gql`
       }
     }
   }
-  applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true}) {
+  applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true, statusIsCurrent: true}) {
     nodes {
       ...Stage
     }
@@ -18988,7 +19049,8 @@ export const GetReviewDocument = gql`
   review(id: $reviewId) {
     reviewer {
       id
-      username
+      firstName
+      lastName
     }
     reviewResponses {
       nodes {

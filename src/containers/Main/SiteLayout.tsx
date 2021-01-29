@@ -27,6 +27,7 @@ import ApplicationOverview from '../Application/ApplicationOverview'
 import ApplicationSubmission from '../Application/ApplicationSubmission'
 import UserArea from '../User/UserArea'
 import ListWrapper from '../List/ListWrapper'
+import ReviewSubmission from '../../components/Review/ReviewSubmission'
 
 const SiteLayout: React.FC = () => {
   return (
@@ -68,6 +69,9 @@ const SiteLayout: React.FC = () => {
         </Route>
         <Route exact path="/application/:serialNumber/review/:reviewId">
           <ReviewPageWrapper />
+        </Route>
+        <Route exact path="/application/:serialNumber/review/:reviewId/submission">
+          <ReviewSubmission />
         </Route>
         <Route exact path="/application/:serialNumber/consolidation/">
           <NoMatch />
