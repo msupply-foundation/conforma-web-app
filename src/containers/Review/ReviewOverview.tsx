@@ -59,8 +59,8 @@ const ReviewOverview: React.FC = () => {
     if (review) {
       const { id, status } = review
       if (
-        review.status === ReviewStatus.ReviewPending ||
-        review.status === ReviewStatus.ChangesRequired
+        review.status === ReviewStatus.Pending ||
+        review.status === ReviewStatus.ChangesRequested
       ) {
         return (
           <Button as={Link} to={`/application/${serialNumber}/review/${id}`}>

@@ -46,7 +46,7 @@ const buildSectionsStructure = ({
             element,
             response,
           }
-          if (!reviewResponses) return elementState
+          if (!response || !reviewResponses) return elementState
           const reviewResponse = getReviewResponse(response, reviewResponses)
           if (reviewResponse) reviewInSection = true
           return {
@@ -85,13 +85,15 @@ const getReviewResponse = (response: ResponseFull | null, reviewResponses: Revie
         return response.id === applicationResponse?.id
       })
     : undefined
-  return reviewResponse
-    ? {
-        id: reviewResponse.id,
-        decision: reviewResponse.decision ? reviewResponse.decision : undefined,
-        comment: reviewResponse.comment ? reviewResponse.comment : '',
-      }
-    : undefined
+
+  if (reviewResponse) {
+    const { id, reviewResponseDecision: decision, comment } = reviewResponse
+    return {
+      id,
+      decision: decision ? decision : undefined,
+      comment: comment ? comment : '',
+    }
+  } else return undefined
 }
 
 export default buildSectionsStructure
