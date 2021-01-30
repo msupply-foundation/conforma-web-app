@@ -87,7 +87,7 @@ const getReviewResponse = (response: ResponseFull | null, reviewResponses: Revie
     : undefined
 
   if (reviewResponse) {
-    const { id, reviewResponseDecision: decision, comment } = reviewResponse
+    const { id, decision, comment } = reviewResponse
     return {
       id,
       decision: decision ? decision : undefined,
