@@ -35,7 +35,6 @@ export {
   LooseString,
   PageElementsStatuses,
   ProgressInApplication,
-  ProgressInSection,
   ProgressInPage,
   ProgressStatus,
   ResponseFull,
@@ -194,7 +193,6 @@ type LooseString = string | null | undefined
 interface PageElementsStatuses {
   [code: string]: ProgressStatus
 }
-
 interface ProgressInPage {
   pageNumber: number
   status: ProgressStatus
@@ -202,19 +200,16 @@ interface ProgressInPage {
   isActive: boolean
 }
 
-interface ProgressInSection {
+type ProgressInApplication = {
   code: string
   title: string
   status?: ProgressStatus
   canNavigate: boolean
   isActive: boolean
   pages: ProgressInPage[]
-}
-
-type ProgressInApplication = ProgressInSection[]
+}[]
 
 type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
-
 interface ResponseFull {
   id: number
   text: string | null | undefined

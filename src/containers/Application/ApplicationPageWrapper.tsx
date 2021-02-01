@@ -31,7 +31,6 @@ import {
   ApplicationStage,
   ElementState,
   ProgressInApplication,
-  ProgressInSection,
   ProgressStatus,
   ResponsesByCode,
   TemplateSectionPayload,
@@ -289,6 +288,8 @@ const getPageHasRequiredQuestions = (elements: ElementState[]): boolean =>
   )
 
 async function processRedirect(appState: any) {
+  console.log('Redirect')
+
   // All logic for re-directing/configuring page based on application state, permissions, roles, etc. should go here.
   const {
     stage,
@@ -305,10 +306,18 @@ async function processRedirect(appState: any) {
   } = appState
   if (status !== 'DRAFT') {
     replace(`/application/${serialNumber}/summary`)
+    console.log('SUBMITTED')
+
     return
   }
+  console.log('Status is', status, 'Section', sectionCode, 'page', page)
+
   if (!sectionCode || !page) {
+    console.log('Will revalidate...')
+
     const revalidate = await revalidateAll(elementsState, responsesByCode, currentUser as User)
+
+    console.log('revalidate result', revalidate)
 
     if (revalidate.validityFailures.length > 0) {
       const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
@@ -385,31 +394,30 @@ function buildProgressInApplication({
     const isPreviousSectionValid = previousSectionStatus === PROGRESS_STATUS.VALID
     previousPageStatus = previousSectionStatus
 
-    const progressInSection: ProgressInSection = {
+    // Run each page using strict validation mode for linear application with visited pages
+    const pages = pageNumbers.map((pageNumber) => {
+      const pageValidationMode = validationMode || getPageValidationMode(pageNumber, section.index)
+
+      const status = getPageStatus(section.index, pageNumber, pageValidationMode)
+      previousPageStatus = status // Update new previous page for next iteration
+
+      return {
+        pageNumber,
+        canNavigate: isLinear ? isPreviousPageValid(pageNumber, section.index) : true,
+        isActive: isCurrentPage(pageNumber, section.index),
+        status,
+      }
+    })
+
+    const progressInSection = {
       code: section.code,
       title: section.title,
       canNavigate: !isLinear || section.index <= currentSection || isPreviousSectionValid,
       isActive: section.index === currentSection,
-
-      // Run each page using strict validation mode for linear application with visited pages
-      pages: pageNumbers.map((pageNumber) => {
-        const pageValidationMode =
-          validationMode || getPageValidationMode(pageNumber, section.index)
-
-        const status = getPageStatus(section.index, pageNumber, pageValidationMode)
-        previousPageStatus = status // Update new previous page for next iteration
-
-        return {
-          pageNumber,
-          canNavigate: isLinear ? isPreviousPageValid(pageNumber, section.index) : true,
-          isActive: isCurrentPage(pageNumber, section.index),
-          status,
-        }
-      }),
+      status: getCombinedStatus(pages.map(({ status }) => status)),
+      pages,
     }
-    progressInSection.status = getCombinedStatus(
-      progressInSection.pages.map(({ status }) => status)
-    )
+
     previousSectionStatus = progressInSection.status
 
     return progressInSection
