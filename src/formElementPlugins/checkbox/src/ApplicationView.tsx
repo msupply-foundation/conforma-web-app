@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Checkbox, Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
+import strings from '../constants'
 
 interface Checkbox {
   label: string
@@ -114,3 +115,4 @@ const createTextString = (checkboxes: Checkbox[]) =>
     .reduce((output, cb) => {
       return output + (output === '' ? cb.text : ', ' + cb.text)
     }, '')
+    .replace(/^$/, `*${strings.LABEL_SUMMMARY_NOTHING_SELECTED}*`)
