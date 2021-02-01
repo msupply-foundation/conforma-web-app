@@ -115,4 +115,4 @@ const createTextString = (checkboxes: Checkbox[]) =>
     .reduce((output, cb) => {
       return output + (output === '' ? cb.text : ', ' + cb.text)
     }, '')
-    .replace(/^$/, `*${strings.LABEL_SUMMMARY_NOTHING_SELECTED}*`)
+    .replace(/^$/, `*<${strings.LABEL_SUMMMARY_NOTHING_SELECTED}>*`)
