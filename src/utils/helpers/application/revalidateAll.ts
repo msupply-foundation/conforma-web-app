@@ -83,20 +83,23 @@ export const revalidateAll = async ({
       }, [])
     : []
 
+  const progress = {
+    total: filteredQuestions.length,
+    done: resultArray.filter((_, index) => {
+      const code = filteredQuestions[index]
+      return !responsesByCode[code]?.text ||
+        responsesByCode[code].text === null ||
+        responsesByCode[code].text === ''
+        ? false
+        : true
+    }).length,
+    invalid: resultArray.some((element) => !element.isValid),
+  }
+
   return {
     allValid: strictResultArray.every((element) => element.isValid),
     validityFailures,
-    progress: {
-      total: filteredQuestions.length,
-      done: resultArray.filter((element, index) => {
-        const code = filteredQuestions[index]
-        return !responsesByCode[code]?.text ||
-          responsesByCode[code].text === null ||
-          responsesByCode[code].text === ''
-          ? false
-          : true
-      }).length,
-    },
+    progress,
   }
 }
 

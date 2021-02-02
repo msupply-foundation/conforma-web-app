@@ -108,7 +108,7 @@ const ApplicationPageWrapper: React.FC = () => {
       } else if (!sectionCode || !page) {
         if (templateType?.startMessage) setLoadStart(true)
         else {
-          console.log('No start message configured! Should display start page?')
+          // TODO: No start message configured! Should display start page?
           // Temporarly redirects to first section/page
           const firstSection = templateSections[0].code
           replace(`/application/${serialNumber}/${firstSection}/Page1`)

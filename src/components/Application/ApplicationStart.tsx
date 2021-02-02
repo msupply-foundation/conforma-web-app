@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Button, Divider, Grid, Header, List, Progress, Segment } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import { TemplateType, EvaluatorParameters, SectionsProgress } from '../../utils/types'
@@ -40,13 +40,13 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
 
   const findFirstImcompleteSection = () => {
     const firstIncompleteSection = Object.entries(sectionsProgress)
+      .filter(([_, section]) => section.progress)
       .sort(([aKey], [bKey]) => (aKey < bKey ? -1 : 1))
       .find(([_, section]) => !section.progress.completed || section.progress.invalid)
 
     if (firstIncompleteSection) {
       const [index, section] = firstIncompleteSection
       setFirstIncomplete(section.info.code)
-      console.log('Set first', section.info.code)
     }
   }
 
@@ -81,16 +81,13 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
             <List divided relaxed="very">
               {sectionsProgress &&
                 Object.entries(sectionsProgress).map(([_, { info, progress, link }]) => {
-                  console.log('code', info.code, 'link', link)
-
-                  const { total, done, completed, invalid } = progress
                   return (
                     <List.Item
                       key={`list-item-${info.code}`}
                       children={
                         <Grid>
                           <Grid.Column width={1}>
-                            {completed ? (
+                            {progress?.completed ? (
                               <List.Icon color="green" name="check circle" />
                             ) : (
                               <List.Icon name="circle outline" />
@@ -100,17 +97,17 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
                             <p>{info.title}</p>
                           </Grid.Column>
                           <Grid.Column width={3}>
-                            {done > 0 && total > 0 && (
+                            {progress && progress.done > 0 && progress.total > 0 && (
                               <Progress
-                                percent={(100 * done) / total}
+                                percent={(100 * progress.done) / progress.total}
                                 size="tiny"
-                                success={!invalid}
-                                error={invalid}
+                                success={!progress.invalid}
+                                error={progress.invalid}
                               />
                             )}
                           </Grid.Column>
                           <Grid.Column width={2}>
-                            {info.code === firstIncomplete && (
+                            {progress && info.code === firstIncomplete && (
                               <Button
                                 as={Link}
                                 to={link}

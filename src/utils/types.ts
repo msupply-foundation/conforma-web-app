@@ -359,6 +359,7 @@ interface RevalidateResult {
   progress: {
     total: number
     done: number
+    invalid: boolean
   }
 }
 
