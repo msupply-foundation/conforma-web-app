@@ -5,6 +5,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { Header, Message } from 'semantic-ui-react'
 import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
 import useCreateApplication from '../../utils/hooks/useCreateApplication'
+import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
 import { SectionsProgress } from '../../utils/types'
 
@@ -24,6 +25,10 @@ const ApplicationCreate: React.FC = () => {
   } = useLoadTemplate({
     templateCode: type as string,
   })
+
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   // If template has no start message, go straight to first page of new application
   useEffect(() => {
@@ -56,6 +61,8 @@ const ApplicationCreate: React.FC = () => {
       name: `Test application of ${templateType.name}`,
       serial: serialNumber,
       templateId: templateType.id,
+      userId: currentUser?.userId,
+      orgId: currentUser?.organisation?.orgId,
       templateSections: templateSections.map((section) => {
         return { templateSectionId: section.id }
       }),
