@@ -42,7 +42,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
     const firstIncompleteSection = Object.entries(sectionsProgress)
       .filter(([_, section]) => section.progress)
       .sort(([aKey], [bKey]) => (aKey < bKey ? -1 : 1))
-      .find(([_, section]) => !section.progress.completed || section.progress.invalid)
+      .find(([_, section]) => !section.progress.completed || !section.progress.valid)
 
     if (firstIncompleteSection) {
       const [index, section] = firstIncompleteSection
@@ -101,16 +101,17 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
                               <Progress
                                 percent={(100 * progress.done) / progress.total}
                                 size="tiny"
-                                success={!progress.invalid}
-                                error={progress.invalid}
+                                success={progress.valid}
+                                error={!progress.valid}
                               />
                             )}
                           </Grid.Column>
                           <Grid.Column width={2}>
                             {progress && info.code === firstIncomplete && (
                               <Button
+                                color="blue"
                                 as={Link}
-                                to={link}
+                                to={link} // TODO: Link not working - page doesn't refresh!
                                 content={strings.BUTTON_APPLICATION_RESUME}
                               />
                             )}

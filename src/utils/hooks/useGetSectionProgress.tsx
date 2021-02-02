@@ -41,7 +41,7 @@ const useGetSectionsProgress = ({
       })
 
       const { progress } = validate
-      const { total, done, invalid } = progress
+      const { total, done, valid } = progress
 
       sectionsProgress = {
         ...sectionsProgress,
@@ -50,8 +50,8 @@ const useGetSectionsProgress = ({
             title,
             code,
           },
-          progress: { total, done, invalid, completed: total === done && !invalid },
-          link: getLinkToSection(invalid, validate.validityFailures),
+          progress: { total, done, valid, completed: total === done && valid },
+          link: getLinkToSection(valid, validate.validityFailures),
         },
       }
       setSections(sectionsProgress)

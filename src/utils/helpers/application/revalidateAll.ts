@@ -93,7 +93,7 @@ export const revalidateAll = async ({
         ? false
         : true
     }).length,
-    invalid: resultArray.some((element) => !element.isValid),
+    valid: resultArray.every((element) => element.isValid),
   }
 
   return {

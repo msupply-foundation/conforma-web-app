@@ -281,7 +281,7 @@ interface SectionsProgress {
     progress: {
       total: number
       done: number
-      invalid?: boolean
+      valid: boolean
       completed?: boolean
     }
   }
@@ -359,7 +359,7 @@ interface RevalidateResult {
   progress: {
     total: number
     done: number
-    invalid: boolean
+    valid: boolean
   }
 }
 
