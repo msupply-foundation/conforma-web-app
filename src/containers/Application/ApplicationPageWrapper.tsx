@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { Loading, ProgressBar, ModalWarning, NoMatch } from '../../components'
+import { Loading, ProgressBar, ModalWarning, NoMatch, ApplicationStart } from '../../components'
 import {
   Button,
   ButtonProps,
@@ -23,7 +23,7 @@ import validatePage, {
   PROGRESS_STATUS,
 } from '../../utils/helpers/application/validatePage'
 import getPageElements from '../../utils/helpers/application/getPageElements'
-import { revalidateAll, getFirstErrorLocation } from '../../utils/helpers/application/revalidateAll'
+import { revalidateAll } from '../../utils/helpers/application/revalidateAll'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
 import {
@@ -34,11 +34,13 @@ import {
   ProgressStatus,
   ResponsesByCode,
   TemplateSectionPayload,
+  TemplateType,
   User,
   ValidationMode,
 } from '../../utils/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
 import getPreviousPage from '../../utils/helpers/application/getPreviousPage'
+import useGetSectionsProgress from '../../utils/hooks/useGetSectionProgress'
 
 const ApplicationPageWrapper: React.FC = () => {
   const {
@@ -53,13 +55,21 @@ const ApplicationPageWrapper: React.FC = () => {
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
   const [forceValidation, setForceValidation] = useState<boolean>(false)
   const [showModal, setShowModal] = useState<ModalProps>({ open: false })
+  const [loadStart, setLoadStart] = useState(false)
   const {
     userState: { currentUser },
   } = useUserState()
   const { query, push, replace } = useRouter()
-  const { mode, serialNumber, sectionCode, page } = query
+  const { serialNumber, sectionCode, page } = query
 
-  const { error, loading, application, templateSections, isApplicationReady } = useLoadApplication({
+  const {
+    error,
+    loading,
+    application,
+    templateType,
+    templateSections,
+    isApplicationReady,
+  } = useLoadApplication({
     serialNumber: serialNumber as string,
     networkFetch: true,
   })
@@ -74,29 +84,38 @@ const ApplicationPageWrapper: React.FC = () => {
     isApplicationReady,
   })
 
+  const { sections } = useGetSectionsProgress({
+    loadStart,
+    currentUser: currentUser as User,
+    templateSections,
+    elementsState,
+    responsesByCode,
+  })
+
   const [responseMutation] = useUpdateResponseMutation()
 
   // Wait for application to be loaded to:
   // 1 - ProcessRedirect: Will redirect to summary in case application is SUBMITTED
-  // 2 - Set the current section state of the application
+  // 2 - Set hook to load sections progerss in the start page (if startMessage exisinting), OR
+  // 3 - Set the current section state of the application
   useEffect(() => {
     if (elementsState && responsesByCode && isApplicationReady) {
-      const stage = application?.stage as ApplicationStage
-      processRedirect({
-        ...stage,
-        serialNumber,
-        sectionCode,
-        page,
-        templateSections,
-        push,
-        replace,
-        elementsState,
-        responsesByCode,
-        currentUser,
-      })
-
-      if (sectionCode && page)
-        setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
+      const stage = application?.stage
+      console.log('Check if need to redirect')
+      const { status } = stage as ApplicationStage
+      if (status !== 'DRAFT') {
+        replace(`/application/${serialNumber}/summary`)
+        console.log('SUBMITTED', status)
+      } else if (!sectionCode || !page) {
+        console.log('DRAFT status?', status, ' Section', sectionCode, ' page', page)
+        if (templateType?.startMessage) setLoadStart(true)
+        else {
+          console.log('No start message configured! Should display start page?')
+          // Temporarly redirects to first section/page
+          const firstSection = templateSections[0].code
+          replace(`/application/${serialNumber}/${firstSection}/Page1`)
+        }
+      } else setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
     }
   }, [elementsState, responsesByCode, sectionCode, page, isApplicationReady])
 
@@ -215,6 +234,8 @@ const ApplicationPageWrapper: React.FC = () => {
     <NoMatch />
   ) : loading || responsesLoading ? (
     <Loading />
+  ) : loadStart && sections ? (
+    <ApplicationStart template={templateType as TemplateType} sectionsProgress={sections} />
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
       <ModalWarning showModal={showModal} />
@@ -286,52 +307,6 @@ const getPageHasRequiredQuestions = (elements: ElementState[]): boolean =>
     ({ isRequired, isVisible, category }) =>
       category === TemplateElementCategory.Question && isRequired && isVisible
   )
-
-async function processRedirect(appState: any) {
-  console.log('Redirect')
-
-  // All logic for re-directing/configuring page based on application state, permissions, roles, etc. should go here.
-  const {
-    stage,
-    status,
-    serialNumber,
-    sectionCode,
-    page,
-    templateSections,
-    push,
-    replace,
-    elementsState,
-    responsesByCode,
-    currentUser,
-  } = appState
-  if (status !== 'DRAFT') {
-    replace(`/application/${serialNumber}/summary`)
-    console.log('SUBMITTED')
-
-    return
-  }
-  console.log('Status is', status, 'Section', sectionCode, 'page', page)
-
-  if (!sectionCode || !page) {
-    console.log('Will revalidate...')
-
-    const revalidate = await revalidateAll(elementsState, responsesByCode, currentUser as User)
-
-    console.log('revalidate result', revalidate)
-
-    if (revalidate.validityFailures.length > 0) {
-      const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
-        revalidate.validityFailures,
-        elementsState as ApplicationElementStates
-      )
-      push(`/application/${serialNumber}/${firstErrorSectionCode}/Page${firstErrorPage}`)
-    } else {
-      const firstSection = templateSections[0].code
-      replace(`/application/${serialNumber}/${firstSection}/Page1`)
-    }
-  }
-}
-
 interface buildProgressInApplicationProps {
   elementsState: ApplicationElementStates | undefined
   responses: ResponsesByCode | undefined

@@ -71,6 +71,10 @@ export const revalidateAll = async (
   return {
     allValid: strictResultArray.every((element) => element.isValid),
     validityFailures,
+    progress: {
+      total: elementCodes.length,
+      done: resultArray.filter(({ isValid }) => isValid).length,
+    },
   }
 }
 

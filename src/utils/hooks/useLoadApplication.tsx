@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   Application,
   ApplicationStageStatusAll,
+  Template,
   TemplateStage,
   useGetApplicationQuery,
   useGetApplicationStatusQuery,
@@ -12,11 +13,13 @@ import {
   ApplicationDetails,
   ApplicationStages,
   TemplateSectionPayload,
+  TemplateType,
   UseGetApplicationProps,
 } from '../types'
 
 const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
   const [application, setApplication] = useState<ApplicationDetails>()
+  const [templateType, setTemplateType] = useState<TemplateType>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
   const [appStages, setAppStages] = useState<ApplicationStages>()
   const [isApplicationReady, setIsApplicationReady] = useState(false)
@@ -68,6 +71,15 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
       setApplication(applicationDetails)
 
+      const { id, code, name, startMessage } = application.template as Template
+
+      setTemplateType({
+        id,
+        code,
+        name: name as string,
+        startMessage: startMessage ? startMessage : undefined,
+      })
+
       const sections = getApplicationSections(application.applicationSections)
       setSections(sections)
 
@@ -87,7 +99,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   }, [data, loading])
 
   useEffect(() => {
-    if (application) {
+    if (isApplicationLoaded && application && !isTriggerProcessing) {
       if (!statusData?.applicationStageStatusAlls?.nodes) {
         setApplicationError('No status found')
         return
@@ -118,6 +130,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     loading: loading || statusLoading || isTriggerProcessing,
     application,
     appStages,
+    templateType,
     templateSections,
     isApplicationReady,
   }

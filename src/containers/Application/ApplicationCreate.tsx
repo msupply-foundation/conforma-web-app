@@ -6,6 +6,7 @@ import { Header, Message } from 'semantic-ui-react'
 import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
 import useCreateApplication from '../../utils/hooks/useCreateApplication'
 import strings from '../../utils/constants'
+import { SectionsProgress } from '../../utils/types'
 
 const ApplicationCreate: React.FC = () => {
   const { applicationState, setApplicationState } = useApplicationState()
@@ -75,7 +76,13 @@ const ApplicationCreate: React.FC = () => {
   ) : templateType && templateSections ? (
     <ApplicationStart
       template={templateType}
-      sections={templateSections}
+      sectionsProgress={templateSections.reduce(
+        (sectionsProgress: SectionsProgress, { code, title, index }) => ({
+          ...sectionsProgress,
+          [index]: { info: { title, code }, link: `/application/${serialNumber}/${code}/Page1` },
+        }),
+        []
+      )}
       handleClick={() => handleCreate()}
     />
   ) : (

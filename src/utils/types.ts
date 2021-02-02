@@ -46,10 +46,11 @@ export {
   ReviewerResponsesPayload,
   SectionElementStates,
   SectionDetails,
+  SectionsProgress,
   SectionStructure,
   StageAndStatus,
   TemplateSectionPayload,
-  TemplateTypePayload,
+  TemplateType,
   TemplateElementState,
   TemplatePermissions,
   TemplatesDetails,
@@ -273,6 +274,19 @@ interface SectionDetails {
   code: string
 }
 
+interface SectionsProgress {
+  [index: string]: {
+    info: SectionDetails
+    link: string
+    progress?: {
+      total: number
+      done: number
+      invalid: boolean
+      completed: boolean
+    }
+  }
+}
+
 type SectionStructure = SectionElementStates[]
 
 interface StageAndStatus {
@@ -295,7 +309,7 @@ interface TemplateSectionPayload {
   totalPages: number
 }
 
-interface TemplateTypePayload {
+interface TemplateType {
   id: number
   name: string
   code: string
@@ -342,6 +356,10 @@ interface ValidityFailure {
 interface RevalidateResult {
   allValid: boolean
   validityFailures: ValidityFailure[]
+  progress: {
+    total: number
+    done: number
+  }
 }
 
 interface UseGetApplicationProps {

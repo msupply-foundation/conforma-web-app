@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Divider, Header, Icon, List, Message, Segment } from 'semantic-ui-react'
+import { Button, Divider, Header, List, Segment } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import { TemplateTypePayload, TemplateSectionPayload, EvaluatorParameters } from '../../utils/types'
+import { TemplateType, EvaluatorParameters, SectionsProgress } from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
 export interface ApplicationStartProps {
-  template: TemplateTypePayload
-  sections: TemplateSectionPayload[]
-  handleClick: () => void
+  template: TemplateType
+  sectionsProgress: SectionsProgress
+  handleClick?: () => void
 }
 
-const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
-  const { template, sections, handleClick } = props
+const ApplicationStart: React.FC<ApplicationStartProps> = ({
+  template,
+  sectionsProgress,
+  handleClick,
+}) => {
   const { name, code, startMessage } = template
   const [startMessageEvaluated, setStartMessageEvaluated] = useState('')
   const {
@@ -61,19 +64,21 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
             <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
             <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
             <List divided relaxed>
-              {sections &&
-                sections.map((section) => (
-                  <List.Item key={`list-item-${section.code}`}>
+              {sectionsProgress &&
+                Object.entries(sectionsProgress).map(([index, { info, progress }]) => (
+                  <List.Item key={`list-item-${info.code}`}>
                     <List.Icon name="circle outline" />
-                    <List.Content>{section.title}</List.Content>
+                    <List.Content>{info.title}</List.Content>
                   </List.Item>
                 ))}
             </List>
             <Divider />
             <Markdown text={startMessageEvaluated} semanticComponent="Message" info />
-            <Button color="blue" onClick={handleClick}>
-              {strings.BUTTON_APPLICATION_START}
-            </Button>
+            {handleClick && (
+              <Button color="blue" onClick={handleClick}>
+                {strings.BUTTON_APPLICATION_START}
+              </Button>
+            )}
           </Segment>
         )}
       </Segment>
