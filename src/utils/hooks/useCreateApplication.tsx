@@ -6,6 +6,8 @@ export interface createApplicationProps {
   serial: string
   name: string
   templateId: number
+  userId?: number
+  orgId?: number
   templateSections: { templateSectionId: number }[]
   templateResponses: { templateElementId: number }[]
 }
@@ -33,6 +35,8 @@ const useCreateApplication = ({ onCompleted }: useCreateApplicationProps) => {
     serial,
     name,
     templateId,
+    userId,
+    orgId,
     templateSections,
     templateResponses,
   }: createApplicationProps) => {
@@ -42,6 +46,8 @@ const useCreateApplication = ({ onCompleted }: useCreateApplicationProps) => {
         name,
         serial,
         templateId,
+        userId,
+        orgId,
         sections: templateSections,
         responses: templateResponses,
       },
