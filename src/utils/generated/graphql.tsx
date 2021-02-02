@@ -2046,10 +2046,6 @@ export type TemplateSectionFilter = {
   code?: Maybe<StringFilter>;
   /** Filter by the object’s `index` field. */
   index?: Maybe<IntFilter>;
-  /** Filter by the object’s `templatePermissions` relation. */
-  templatePermissions?: Maybe<TemplateSectionToManyTemplatePermissionFilter>;
-  /** Some related `templatePermissions` exist. */
-  templatePermissionsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `templateElementsBySectionId` relation. */
   templateElementsBySectionId?: Maybe<TemplateSectionToManyTemplateElementFilter>;
   /** Some related `templateElementsBySectionId` exist. */
@@ -2070,520 +2066,145 @@ export type TemplateSectionFilter = {
   not?: Maybe<TemplateSectionFilter>;
 };
 
-/** A filter to be used against many `TemplatePermission` object types. All fields are combined with a logical ‘and.’ */
-export type TemplateSectionToManyTemplatePermissionFilter = {
-  /** Every related `TemplatePermission` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<TemplatePermissionFilter>;
-  /** Some related `TemplatePermission` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<TemplatePermissionFilter>;
-  /** No related `TemplatePermission` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<TemplatePermissionFilter>;
+/** A filter to be used against many `TemplateElement` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateSectionToManyTemplateElementFilter = {
+  /** Every related `TemplateElement` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<TemplateElementFilter>;
+  /** Some related `TemplateElement` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<TemplateElementFilter>;
+  /** No related `TemplateElement` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<TemplateElementFilter>;
 };
 
-/** A filter to be used against `TemplatePermission` object types. All fields are combined with a logical ‘and.’ */
-export type TemplatePermissionFilter = {
+/** A filter to be used against `TemplateElement` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateElementFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `permissionNameId` field. */
-  permissionNameId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateId` field. */
-  templateId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateSectionId` field. */
-  templateSectionId?: Maybe<IntFilter>;
-  /** Filter by the object’s `restrictions` field. */
-  restrictions?: Maybe<JsonFilter>;
-  /** Filter by the object’s `permissionName` relation. */
-  permissionName?: Maybe<PermissionNameFilter>;
-  /** A related `permissionName` exists. */
-  permissionNameExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `template` relation. */
-  template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `templateSection` relation. */
-  templateSection?: Maybe<TemplateSectionFilter>;
-  /** A related `templateSection` exists. */
-  templateSectionExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<TemplatePermissionFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<TemplatePermissionFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<TemplatePermissionFilter>;
-};
-
-/** A filter to be used against `PermissionName` object types. All fields are combined with a logical ‘and.’ */
-export type PermissionNameFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `name` field. */
-  name?: Maybe<StringFilter>;
-  /** Filter by the object’s `permissionPolicyId` field. */
-  permissionPolicyId?: Maybe<IntFilter>;
-  /** Filter by the object’s `permissionJoins` relation. */
-  permissionJoins?: Maybe<PermissionNameToManyPermissionJoinFilter>;
-  /** Some related `permissionJoins` exist. */
-  permissionJoinsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `templatePermissions` relation. */
-  templatePermissions?: Maybe<PermissionNameToManyTemplatePermissionFilter>;
-  /** Some related `templatePermissions` exist. */
-  templatePermissionsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `permissionPolicy` relation. */
-  permissionPolicy?: Maybe<PermissionPolicyFilter>;
-  /** A related `permissionPolicy` exists. */
-  permissionPolicyExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<PermissionNameFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<PermissionNameFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<PermissionNameFilter>;
-};
-
-/** A filter to be used against many `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
-export type PermissionNameToManyPermissionJoinFilter = {
-  /** Every related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<PermissionJoinFilter>;
-  /** Some related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<PermissionJoinFilter>;
-  /** No related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<PermissionJoinFilter>;
-};
-
-/** A filter to be used against `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
-export type PermissionJoinFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `userOrganisationId` field. */
-  userOrganisationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `permissionNameId` field. */
-  permissionNameId?: Maybe<IntFilter>;
-  /** Filter by the object’s `user` relation. */
-  user?: Maybe<UserFilter>;
-  /** A related `user` exists. */
-  userExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `userOrganisation` relation. */
-  userOrganisation?: Maybe<UserOrganisationFilter>;
-  /** A related `userOrganisation` exists. */
-  userOrganisationExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `permissionName` relation. */
-  permissionName?: Maybe<PermissionNameFilter>;
-  /** A related `permissionName` exists. */
-  permissionNameExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<PermissionJoinFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<PermissionJoinFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<PermissionJoinFilter>;
-};
-
-/** A filter to be used against `User` object types. All fields are combined with a logical ‘and.’ */
-export type UserFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `firstName` field. */
-  firstName?: Maybe<StringFilter>;
-  /** Filter by the object’s `lastName` field. */
-  lastName?: Maybe<StringFilter>;
-  /** Filter by the object’s `username` field. */
-  username?: Maybe<StringFilter>;
-  /** Filter by the object’s `email` field. */
-  email?: Maybe<StringFilter>;
-  /** Filter by the object’s `dateOfBirth` field. */
-  dateOfBirth?: Maybe<DateFilter>;
-  /** Filter by the object’s `passwordHash` field. */
-  passwordHash?: Maybe<StringFilter>;
-  /** Filter by the object’s `userOrganisations` relation. */
-  userOrganisations?: Maybe<UserToManyUserOrganisationFilter>;
-  /** Some related `userOrganisations` exist. */
-  userOrganisationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `permissionJoins` relation. */
-  permissionJoins?: Maybe<UserToManyPermissionJoinFilter>;
-  /** Some related `permissionJoins` exist. */
-  permissionJoinsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applications` relation. */
-  applications?: Maybe<UserToManyApplicationFilter>;
-  /** Some related `applications` exist. */
-  applicationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewAssignmentsByAssignerId` relation. */
-  reviewAssignmentsByAssignerId?: Maybe<UserToManyReviewAssignmentFilter>;
-  /** Some related `reviewAssignmentsByAssignerId` exist. */
-  reviewAssignmentsByAssignerIdExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewedReviewAssignments` relation. */
-  reviewedReviewAssignments?: Maybe<UserToManyReviewAssignmentFilter>;
-  /** Some related `reviewedReviewAssignments` exist. */
-  reviewedReviewAssignmentsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewedReviews` relation. */
-  reviewedReviews?: Maybe<UserToManyReviewFilter>;
-  /** Some related `reviewedReviews` exist. */
-  reviewedReviewsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `files` relation. */
-  files?: Maybe<UserToManyFileFilter>;
-  /** Some related `files` exist. */
-  filesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `notifications` relation. */
-  notifications?: Maybe<UserToManyNotificationFilter>;
-  /** Some related `notifications` exist. */
-  notificationsExist?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<UserFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<UserFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<UserFilter>;
-};
-
-/** A filter to be used against Date fields. All fields are combined with a logical ‘and.’ */
-export type DateFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<Scalars['Date']>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<Scalars['Date']>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<Scalars['Date']>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<Scalars['Date']>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<Scalars['Date']>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<Scalars['Date']>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<Scalars['Date']>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<Scalars['Date']>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<Scalars['Date']>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<Scalars['Date']>;
-};
-
-
-/** A filter to be used against many `UserOrganisation` object types. All fields are combined with a logical ‘and.’ */
-export type UserToManyUserOrganisationFilter = {
-  /** Every related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<UserOrganisationFilter>;
-  /** Some related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<UserOrganisationFilter>;
-  /** No related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<UserOrganisationFilter>;
-};
-
-/** A filter to be used against `UserOrganisation` object types. All fields are combined with a logical ‘and.’ */
-export type UserOrganisationFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `organisationId` field. */
-  organisationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `userRole` field. */
-  userRole?: Maybe<StringFilter>;
-  /** Filter by the object’s `permissionJoins` relation. */
-  permissionJoins?: Maybe<UserOrganisationToManyPermissionJoinFilter>;
-  /** Some related `permissionJoins` exist. */
-  permissionJoinsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `user` relation. */
-  user?: Maybe<UserFilter>;
-  /** A related `user` exists. */
-  userExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `organisation` relation. */
-  organisation?: Maybe<OrganisationFilter>;
-  /** A related `organisation` exists. */
-  organisationExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<UserOrganisationFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<UserOrganisationFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<UserOrganisationFilter>;
-};
-
-/** A filter to be used against many `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
-export type UserOrganisationToManyPermissionJoinFilter = {
-  /** Every related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<PermissionJoinFilter>;
-  /** Some related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<PermissionJoinFilter>;
-  /** No related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<PermissionJoinFilter>;
-};
-
-/** A filter to be used against `Organisation` object types. All fields are combined with a logical ‘and.’ */
-export type OrganisationFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `name` field. */
-  name?: Maybe<StringFilter>;
-  /** Filter by the object’s `licenceNumber` field. */
-  licenceNumber?: Maybe<StringFilter>;
-  /** Filter by the object’s `address` field. */
-  address?: Maybe<StringFilter>;
-  /** Filter by the object’s `userOrganisations` relation. */
-  userOrganisations?: Maybe<OrganisationToManyUserOrganisationFilter>;
-  /** Some related `userOrganisations` exist. */
-  userOrganisationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationsByOrgId` relation. */
-  applicationsByOrgId?: Maybe<OrganisationToManyApplicationFilter>;
-  /** Some related `applicationsByOrgId` exist. */
-  applicationsByOrgIdExist?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<OrganisationFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<OrganisationFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<OrganisationFilter>;
-};
-
-/** A filter to be used against many `UserOrganisation` object types. All fields are combined with a logical ‘and.’ */
-export type OrganisationToManyUserOrganisationFilter = {
-  /** Every related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<UserOrganisationFilter>;
-  /** Some related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<UserOrganisationFilter>;
-  /** No related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<UserOrganisationFilter>;
-};
-
-/** A filter to be used against many `Application` object types. All fields are combined with a logical ‘and.’ */
-export type OrganisationToManyApplicationFilter = {
-  /** Every related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ApplicationFilter>;
-  /** Some related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ApplicationFilter>;
-  /** No related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ApplicationFilter>;
-};
-
-/** A filter to be used against many `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
-export type UserToManyPermissionJoinFilter = {
-  /** Every related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<PermissionJoinFilter>;
-  /** Some related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<PermissionJoinFilter>;
-  /** No related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<PermissionJoinFilter>;
-};
-
-/** A filter to be used against many `Application` object types. All fields are combined with a logical ‘and.’ */
-export type UserToManyApplicationFilter = {
-  /** Every related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ApplicationFilter>;
-  /** Some related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ApplicationFilter>;
-  /** No related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ApplicationFilter>;
-};
-
-/** A filter to be used against many `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type UserToManyReviewAssignmentFilter = {
-  /** Every related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewAssignmentFilter>;
-  /** Some related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewAssignmentFilter>;
-  /** No related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewAssignmentFilter>;
-};
-
-/** A filter to be used against `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewAssignmentFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `assignerId` field. */
-  assignerId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewerId` field. */
-  reviewerId?: Maybe<IntFilter>;
-  /** Filter by the object’s `stageId` field. */
-  stageId?: Maybe<IntFilter>;
-  /** Filter by the object’s `status` field. */
-  status?: Maybe<ReviewAssignmentStatusFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `availableTemplateSectionIds` field. */
-  availableTemplateSectionIds?: Maybe<IntListFilter>;
-  /** Filter by the object’s `trigger` field. */
-  trigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `timeCreated` field. */
-  timeCreated?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `level` field. */
-  level?: Maybe<IntFilter>;
-  /** Filter by the object’s `canMakeOverallDecision` field. */
-  canMakeOverallDecision?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `reviews` relation. */
-  reviews?: Maybe<ReviewAssignmentToManyReviewFilter>;
-  /** Some related `reviews` exist. */
-  reviewsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `sectionId` field. */
+  sectionId?: Maybe<IntFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `index` field. */
+  index?: Maybe<IntFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: Maybe<StringFilter>;
+  /** Filter by the object’s `category` field. */
+  category?: Maybe<TemplateElementCategoryFilter>;
+  /** Filter by the object’s `elementTypePluginCode` field. */
+  elementTypePluginCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `visibilityCondition` field. */
+  visibilityCondition?: Maybe<JsonFilter>;
+  /** Filter by the object’s `isRequired` field. */
+  isRequired?: Maybe<JsonFilter>;
+  /** Filter by the object’s `isEditable` field. */
+  isEditable?: Maybe<JsonFilter>;
+  /** Filter by the object’s `validation` field. */
+  validation?: Maybe<JsonFilter>;
+  /** Filter by the object’s `validationMessage` field. */
+  validationMessage?: Maybe<StringFilter>;
+  /** Filter by the object’s `parameters` field. */
+  parameters?: Maybe<JsonFilter>;
+  /** Filter by the object’s `applicationResponses` relation. */
+  applicationResponses?: Maybe<TemplateElementToManyApplicationResponseFilter>;
+  /** Some related `applicationResponses` exist. */
+  applicationResponsesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewQuestionAssignments` relation. */
-  reviewQuestionAssignments?: Maybe<ReviewAssignmentToManyReviewQuestionAssignmentFilter>;
+  reviewQuestionAssignments?: Maybe<TemplateElementToManyReviewQuestionAssignmentFilter>;
   /** Some related `reviewQuestionAssignments` exist. */
   reviewQuestionAssignmentsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `assigner` relation. */
-  assigner?: Maybe<UserFilter>;
-  /** A related `assigner` exists. */
-  assignerExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewer` relation. */
-  reviewer?: Maybe<UserFilter>;
-  /** A related `reviewer` exists. */
-  reviewerExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `stage` relation. */
-  stage?: Maybe<TemplateStageFilter>;
-  /** A related `stage` exists. */
-  stageExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `section` relation. */
+  section?: Maybe<TemplateSectionFilter>;
+  /** A related `section` exists. */
+  sectionExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewAssignmentFilter>>;
+  and?: Maybe<Array<TemplateElementFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewAssignmentFilter>>;
+  or?: Maybe<Array<TemplateElementFilter>>;
   /** Negates the expression. */
-  not?: Maybe<ReviewAssignmentFilter>;
+  not?: Maybe<TemplateElementFilter>;
 };
 
-/** A filter to be used against ReviewAssignmentStatus fields. All fields are combined with a logical ‘and.’ */
-export type ReviewAssignmentStatusFilter = {
+/** A filter to be used against TemplateElementCategory fields. All fields are combined with a logical ‘and.’ */
+export type TemplateElementCategoryFilter = {
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
   isNull?: Maybe<Scalars['Boolean']>;
   /** Equal to the specified value. */
-  equalTo?: Maybe<ReviewAssignmentStatus>;
+  equalTo?: Maybe<TemplateElementCategory>;
   /** Not equal to the specified value. */
-  notEqualTo?: Maybe<ReviewAssignmentStatus>;
+  notEqualTo?: Maybe<TemplateElementCategory>;
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<ReviewAssignmentStatus>;
+  distinctFrom?: Maybe<TemplateElementCategory>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<ReviewAssignmentStatus>;
+  notDistinctFrom?: Maybe<TemplateElementCategory>;
   /** Included in the specified list. */
-  in?: Maybe<Array<ReviewAssignmentStatus>>;
+  in?: Maybe<Array<TemplateElementCategory>>;
   /** Not included in the specified list. */
-  notIn?: Maybe<Array<ReviewAssignmentStatus>>;
+  notIn?: Maybe<Array<TemplateElementCategory>>;
   /** Less than the specified value. */
-  lessThan?: Maybe<ReviewAssignmentStatus>;
+  lessThan?: Maybe<TemplateElementCategory>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<ReviewAssignmentStatus>;
+  lessThanOrEqualTo?: Maybe<TemplateElementCategory>;
   /** Greater than the specified value. */
-  greaterThan?: Maybe<ReviewAssignmentStatus>;
+  greaterThan?: Maybe<TemplateElementCategory>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<ReviewAssignmentStatus>;
+  greaterThanOrEqualTo?: Maybe<TemplateElementCategory>;
 };
 
-export enum ReviewAssignmentStatus {
-  Available = 'AVAILABLE',
-  NotAvailable = 'NOT_AVAILABLE',
-  Assigned = 'ASSIGNED',
-  AvailableForSelfAssignment = 'AVAILABLE_FOR_SELF_ASSIGNMENT'
+export enum TemplateElementCategory {
+  Question = 'QUESTION',
+  Information = 'INFORMATION'
 }
 
-/** A filter to be used against Int List fields. All fields are combined with a logical ‘and.’ */
-export type IntListFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Contains the specified list of values. */
-  contains?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Contained by the specified list of values. */
-  containedBy?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Overlaps the specified list of values. */
-  overlaps?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Any array item is equal to the specified value. */
-  anyEqualTo?: Maybe<Scalars['Int']>;
-  /** Any array item is not equal to the specified value. */
-  anyNotEqualTo?: Maybe<Scalars['Int']>;
-  /** Any array item is less than the specified value. */
-  anyLessThan?: Maybe<Scalars['Int']>;
-  /** Any array item is less than or equal to the specified value. */
-  anyLessThanOrEqualTo?: Maybe<Scalars['Int']>;
-  /** Any array item is greater than the specified value. */
-  anyGreaterThan?: Maybe<Scalars['Int']>;
-  /** Any array item is greater than or equal to the specified value. */
-  anyGreaterThanOrEqualTo?: Maybe<Scalars['Int']>;
+/** A filter to be used against many `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateElementToManyApplicationResponseFilter = {
+  /** Every related `ApplicationResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ApplicationResponseFilter>;
+  /** Some related `ApplicationResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ApplicationResponseFilter>;
+  /** No related `ApplicationResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ApplicationResponseFilter>;
 };
 
-/** A filter to be used against many `Review` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewAssignmentToManyReviewFilter = {
-  /** Every related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewFilter>;
-  /** Some related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewFilter>;
-  /** No related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewFilter>;
-};
-
-/** A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewFilter = {
+/** A filter to be used against `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationResponseFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewAssignmentId` field. */
-  reviewAssignmentId?: Maybe<IntFilter>;
-  /** Filter by the object’s `trigger` field. */
-  trigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `templateElementId` field. */
+  templateElementId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewerId` field. */
-  reviewerId?: Maybe<IntFilter>;
-  /** Filter by the object’s `level` field. */
-  level?: Maybe<IntFilter>;
-  /** Filter by the object’s `canMakeOverallDecision` field. */
-  canMakeOverallDecision?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `status` field. */
-  status?: Maybe<StringFilter>;
+  /** Filter by the object’s `value` field. */
+  value?: Maybe<JsonFilter>;
+  /** Filter by the object’s `isValid` field. */
+  isValid?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `timeCreated` field. */
+  timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
-  reviewResponses?: Maybe<ReviewToManyReviewResponseFilter>;
+  reviewResponses?: Maybe<ApplicationResponseToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
   reviewResponsesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewDecisions` relation. */
-  reviewDecisions?: Maybe<ReviewToManyReviewDecisionFilter>;
-  /** Some related `reviewDecisions` exist. */
-  reviewDecisionsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewStatusHistories` relation. */
-  reviewStatusHistories?: Maybe<ReviewToManyReviewStatusHistoryFilter>;
-  /** Some related `reviewStatusHistories` exist. */
-  reviewStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `notifications` relation. */
-  notifications?: Maybe<ReviewToManyNotificationFilter>;
-  /** Some related `notifications` exist. */
-  notificationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewAssignment` relation. */
-  reviewAssignment?: Maybe<ReviewAssignmentFilter>;
-  /** A related `reviewAssignment` exists. */
-  reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `files` relation. */
+  files?: Maybe<ApplicationResponseToManyFileFilter>;
+  /** Some related `files` exist. */
+  filesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `templateElement` relation. */
+  templateElement?: Maybe<TemplateElementFilter>;
+  /** A related `templateElement` exists. */
+  templateElementExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
   /** A related `application` exists. */
   applicationExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewer` relation. */
-  reviewer?: Maybe<UserFilter>;
-  /** A related `reviewer` exists. */
-  reviewerExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewFilter>>;
+  and?: Maybe<Array<ApplicationResponseFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewFilter>>;
+  or?: Maybe<Array<ApplicationResponseFilter>>;
   /** Negates the expression. */
-  not?: Maybe<ReviewFilter>;
+  not?: Maybe<ApplicationResponseFilter>;
 };
 
 /** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewToManyReviewResponseFilter = {
+export type ApplicationResponseToManyReviewResponseFilter = {
   /** Every related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   every?: Maybe<ReviewResponseFilter>;
   /** Some related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -2750,253 +2371,207 @@ export type ReviewQuestionAssignmentToManyReviewResponseFilter = {
   none?: Maybe<ReviewResponseFilter>;
 };
 
-/** A filter to be used against `TemplateElement` object types. All fields are combined with a logical ‘and.’ */
-export type TemplateElementFilter = {
+/** A filter to be used against `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewAssignmentFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `sectionId` field. */
-  sectionId?: Maybe<IntFilter>;
-  /** Filter by the object’s `code` field. */
-  code?: Maybe<StringFilter>;
-  /** Filter by the object’s `index` field. */
-  index?: Maybe<IntFilter>;
-  /** Filter by the object’s `title` field. */
-  title?: Maybe<StringFilter>;
-  /** Filter by the object’s `category` field. */
-  category?: Maybe<TemplateElementCategoryFilter>;
-  /** Filter by the object’s `elementTypePluginCode` field. */
-  elementTypePluginCode?: Maybe<StringFilter>;
-  /** Filter by the object’s `visibilityCondition` field. */
-  visibilityCondition?: Maybe<JsonFilter>;
-  /** Filter by the object’s `isRequired` field. */
-  isRequired?: Maybe<JsonFilter>;
-  /** Filter by the object’s `isEditable` field. */
-  isEditable?: Maybe<JsonFilter>;
-  /** Filter by the object’s `validation` field. */
-  validation?: Maybe<JsonFilter>;
-  /** Filter by the object’s `validationMessage` field. */
-  validationMessage?: Maybe<StringFilter>;
-  /** Filter by the object’s `parameters` field. */
-  parameters?: Maybe<JsonFilter>;
-  /** Filter by the object’s `applicationResponses` relation. */
-  applicationResponses?: Maybe<TemplateElementToManyApplicationResponseFilter>;
-  /** Some related `applicationResponses` exist. */
-  applicationResponsesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewQuestionAssignments` relation. */
-  reviewQuestionAssignments?: Maybe<TemplateElementToManyReviewQuestionAssignmentFilter>;
-  /** Some related `reviewQuestionAssignments` exist. */
-  reviewQuestionAssignmentsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `section` relation. */
-  section?: Maybe<TemplateSectionFilter>;
-  /** A related `section` exists. */
-  sectionExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<TemplateElementFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<TemplateElementFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<TemplateElementFilter>;
-};
-
-/** A filter to be used against TemplateElementCategory fields. All fields are combined with a logical ‘and.’ */
-export type TemplateElementCategoryFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<TemplateElementCategory>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<TemplateElementCategory>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<TemplateElementCategory>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<TemplateElementCategory>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<TemplateElementCategory>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<TemplateElementCategory>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<TemplateElementCategory>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<TemplateElementCategory>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<TemplateElementCategory>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<TemplateElementCategory>;
-};
-
-export enum TemplateElementCategory {
-  Question = 'QUESTION',
-  Information = 'INFORMATION'
-}
-
-/** A filter to be used against many `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
-export type TemplateElementToManyApplicationResponseFilter = {
-  /** Every related `ApplicationResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ApplicationResponseFilter>;
-  /** Some related `ApplicationResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ApplicationResponseFilter>;
-  /** No related `ApplicationResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ApplicationResponseFilter>;
-};
-
-/** A filter to be used against `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationResponseFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateElementId` field. */
-  templateElementId?: Maybe<IntFilter>;
+  /** Filter by the object’s `assignerId` field. */
+  assignerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewerId` field. */
+  reviewerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageId` field. */
+  stageId?: Maybe<IntFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<ReviewAssignmentStatusFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `value` field. */
-  value?: Maybe<JsonFilter>;
-  /** Filter by the object’s `isValid` field. */
-  isValid?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `availableTemplateSectionIds` field. */
+  availableTemplateSectionIds?: Maybe<IntListFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `timeCreated` field. */
   timeCreated?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `reviewResponses` relation. */
-  reviewResponses?: Maybe<ApplicationResponseToManyReviewResponseFilter>;
-  /** Some related `reviewResponses` exist. */
-  reviewResponsesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `files` relation. */
-  files?: Maybe<ApplicationResponseToManyFileFilter>;
-  /** Some related `files` exist. */
-  filesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `templateElement` relation. */
-  templateElement?: Maybe<TemplateElementFilter>;
-  /** A related `templateElement` exists. */
-  templateElementExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `level` field. */
+  level?: Maybe<IntFilter>;
+  /** Filter by the object’s `isLastLevel` field. */
+  isLastLevel?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `reviews` relation. */
+  reviews?: Maybe<ReviewAssignmentToManyReviewFilter>;
+  /** Some related `reviews` exist. */
+  reviewsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewQuestionAssignments` relation. */
+  reviewQuestionAssignments?: Maybe<ReviewAssignmentToManyReviewQuestionAssignmentFilter>;
+  /** Some related `reviewQuestionAssignments` exist. */
+  reviewQuestionAssignmentsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `assigner` relation. */
+  assigner?: Maybe<UserFilter>;
+  /** A related `assigner` exists. */
+  assignerExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewer` relation. */
+  reviewer?: Maybe<UserFilter>;
+  /** A related `reviewer` exists. */
+  reviewerExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `stage` relation. */
+  stage?: Maybe<TemplateStageFilter>;
+  /** A related `stage` exists. */
+  stageExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
   /** A related `application` exists. */
   applicationExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ApplicationResponseFilter>>;
+  and?: Maybe<Array<ReviewAssignmentFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ApplicationResponseFilter>>;
+  or?: Maybe<Array<ReviewAssignmentFilter>>;
   /** Negates the expression. */
-  not?: Maybe<ApplicationResponseFilter>;
+  not?: Maybe<ReviewAssignmentFilter>;
+};
+
+/** A filter to be used against ReviewAssignmentStatus fields. All fields are combined with a logical ‘and.’ */
+export type ReviewAssignmentStatusFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<ReviewAssignmentStatus>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<ReviewAssignmentStatus>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<ReviewAssignmentStatus>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<ReviewAssignmentStatus>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<ReviewAssignmentStatus>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<ReviewAssignmentStatus>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<ReviewAssignmentStatus>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<ReviewAssignmentStatus>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<ReviewAssignmentStatus>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<ReviewAssignmentStatus>;
+};
+
+export enum ReviewAssignmentStatus {
+  Available = 'AVAILABLE',
+  NotAvailable = 'NOT_AVAILABLE',
+  Assigned = 'ASSIGNED',
+  AvailableForSelfAssignment = 'AVAILABLE_FOR_SELF_ASSIGNMENT'
+}
+
+/** A filter to be used against Int List fields. All fields are combined with a logical ‘and.’ */
+export type IntListFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Contains the specified list of values. */
+  contains?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Contained by the specified list of values. */
+  containedBy?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Overlaps the specified list of values. */
+  overlaps?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Any array item is equal to the specified value. */
+  anyEqualTo?: Maybe<Scalars['Int']>;
+  /** Any array item is not equal to the specified value. */
+  anyNotEqualTo?: Maybe<Scalars['Int']>;
+  /** Any array item is less than the specified value. */
+  anyLessThan?: Maybe<Scalars['Int']>;
+  /** Any array item is less than or equal to the specified value. */
+  anyLessThanOrEqualTo?: Maybe<Scalars['Int']>;
+  /** Any array item is greater than the specified value. */
+  anyGreaterThan?: Maybe<Scalars['Int']>;
+  /** Any array item is greater than or equal to the specified value. */
+  anyGreaterThanOrEqualTo?: Maybe<Scalars['Int']>;
+};
+
+/** A filter to be used against many `Review` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewAssignmentToManyReviewFilter = {
+  /** Every related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewFilter>;
+  /** Some related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewFilter>;
+  /** No related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewFilter>;
+};
+
+/** A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewerId` field. */
+  reviewerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `level` field. */
+  level?: Maybe<IntFilter>;
+  /** Filter by the object’s `isLastLevel` field. */
+  isLastLevel?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<StringFilter>;
+  /** Filter by the object’s `reviewResponses` relation. */
+  reviewResponses?: Maybe<ReviewToManyReviewResponseFilter>;
+  /** Some related `reviewResponses` exist. */
+  reviewResponsesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewDecisions` relation. */
+  reviewDecisions?: Maybe<ReviewToManyReviewDecisionFilter>;
+  /** Some related `reviewDecisions` exist. */
+  reviewDecisionsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewStatusHistories` relation. */
+  reviewStatusHistories?: Maybe<ReviewToManyReviewStatusHistoryFilter>;
+  /** Some related `reviewStatusHistories` exist. */
+  reviewStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `notifications` relation. */
+  notifications?: Maybe<ReviewToManyNotificationFilter>;
+  /** Some related `notifications` exist. */
+  notificationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewAssignment` relation. */
+  reviewAssignment?: Maybe<ReviewAssignmentFilter>;
+  /** A related `reviewAssignment` exists. */
+  reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** A related `application` exists. */
+  applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewer` relation. */
+  reviewer?: Maybe<UserFilter>;
+  /** A related `reviewer` exists. */
+  reviewerExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ReviewFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ReviewFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ReviewFilter>;
 };
 
 /** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationResponseToManyReviewResponseFilter = {
+export type ReviewToManyReviewResponseFilter = {
   /** Every related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   every?: Maybe<ReviewResponseFilter>;
   /** Some related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: Maybe<ReviewResponseFilter>;
   /** No related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ReviewResponseFilter>;
-};
-
-/** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationResponseToManyFileFilter = {
-  /** Every related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<FileFilter>;
-  /** Some related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<FileFilter>;
-  /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<FileFilter>;
-};
-
-/** A filter to be used against `File` object types. All fields are combined with a logical ‘and.’ */
-export type FileFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `originalFilename` field. */
-  originalFilename?: Maybe<StringFilter>;
-  /** Filter by the object’s `path` field. */
-  path?: Maybe<StringFilter>;
-  /** Filter by the object’s `mimetype` field. */
-  mimetype?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationResponseId` field. */
-  applicationResponseId?: Maybe<IntFilter>;
-  /** Filter by the object’s `notificationsByDocumentId` relation. */
-  notificationsByDocumentId?: Maybe<FileToManyNotificationFilter>;
-  /** Some related `notificationsByDocumentId` exist. */
-  notificationsByDocumentIdExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `user` relation. */
-  user?: Maybe<UserFilter>;
-  /** A related `user` exists. */
-  userExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationResponse` relation. */
-  applicationResponse?: Maybe<ApplicationResponseFilter>;
-  /** A related `applicationResponse` exists. */
-  applicationResponseExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<FileFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<FileFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<FileFilter>;
-};
-
-/** A filter to be used against many `Notification` object types. All fields are combined with a logical ‘and.’ */
-export type FileToManyNotificationFilter = {
-  /** Every related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<NotificationFilter>;
-  /** Some related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<NotificationFilter>;
-  /** No related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<NotificationFilter>;
-};
-
-/** A filter to be used against `Notification` object types. All fields are combined with a logical ‘and.’ */
-export type NotificationFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewId` field. */
-  reviewId?: Maybe<IntFilter>;
-  /** Filter by the object’s `subject` field. */
-  subject?: Maybe<StringFilter>;
-  /** Filter by the object’s `message` field. */
-  message?: Maybe<StringFilter>;
-  /** Filter by the object’s `documentId` field. */
-  documentId?: Maybe<IntFilter>;
-  /** Filter by the object’s `isRead` field. */
-  isRead?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `user` relation. */
-  user?: Maybe<UserFilter>;
-  /** A related `user` exists. */
-  userExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `review` relation. */
-  review?: Maybe<ReviewFilter>;
-  /** A related `review` exists. */
-  reviewExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `document` relation. */
-  document?: Maybe<FileFilter>;
-  /** A related `document` exists. */
-  documentExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<NotificationFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<NotificationFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<NotificationFilter>;
-};
-
-/** A filter to be used against many `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type TemplateElementToManyReviewQuestionAssignmentFilter = {
-  /** Every related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewQuestionAssignmentFilter>;
-  /** Some related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewQuestionAssignmentFilter>;
-  /** No related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewQuestionAssignmentFilter>;
 };
 
 /** A filter to be used against many `ReviewDecision` object types. All fields are combined with a logical ‘and.’ */
@@ -3144,44 +2719,247 @@ export type ReviewToManyNotificationFilter = {
   none?: Maybe<NotificationFilter>;
 };
 
-/** A filter to be used against many `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewAssignmentToManyReviewQuestionAssignmentFilter = {
-  /** Every related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewQuestionAssignmentFilter>;
-  /** Some related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewQuestionAssignmentFilter>;
-  /** No related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewQuestionAssignmentFilter>;
+/** A filter to be used against `Notification` object types. All fields are combined with a logical ‘and.’ */
+export type NotificationFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewId` field. */
+  reviewId?: Maybe<IntFilter>;
+  /** Filter by the object’s `subject` field. */
+  subject?: Maybe<StringFilter>;
+  /** Filter by the object’s `message` field. */
+  message?: Maybe<StringFilter>;
+  /** Filter by the object’s `documentId` field. */
+  documentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `isRead` field. */
+  isRead?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `user` relation. */
+  user?: Maybe<UserFilter>;
+  /** A related `user` exists. */
+  userExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** A related `application` exists. */
+  applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `review` relation. */
+  review?: Maybe<ReviewFilter>;
+  /** A related `review` exists. */
+  reviewExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `document` relation. */
+  document?: Maybe<FileFilter>;
+  /** A related `document` exists. */
+  documentExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<NotificationFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<NotificationFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<NotificationFilter>;
 };
 
-/** A filter to be used against many `Review` object types. All fields are combined with a logical ‘and.’ */
-export type UserToManyReviewFilter = {
-  /** Every related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewFilter>;
-  /** Some related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewFilter>;
-  /** No related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewFilter>;
+/** A filter to be used against `User` object types. All fields are combined with a logical ‘and.’ */
+export type UserFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `firstName` field. */
+  firstName?: Maybe<StringFilter>;
+  /** Filter by the object’s `lastName` field. */
+  lastName?: Maybe<StringFilter>;
+  /** Filter by the object’s `username` field. */
+  username?: Maybe<StringFilter>;
+  /** Filter by the object’s `email` field. */
+  email?: Maybe<StringFilter>;
+  /** Filter by the object’s `dateOfBirth` field. */
+  dateOfBirth?: Maybe<DateFilter>;
+  /** Filter by the object’s `passwordHash` field. */
+  passwordHash?: Maybe<StringFilter>;
+  /** Filter by the object’s `userOrganisations` relation. */
+  userOrganisations?: Maybe<UserToManyUserOrganisationFilter>;
+  /** Some related `userOrganisations` exist. */
+  userOrganisationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `permissionJoins` relation. */
+  permissionJoins?: Maybe<UserToManyPermissionJoinFilter>;
+  /** Some related `permissionJoins` exist. */
+  permissionJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applications` relation. */
+  applications?: Maybe<UserToManyApplicationFilter>;
+  /** Some related `applications` exist. */
+  applicationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewAssignmentsByAssignerId` relation. */
+  reviewAssignmentsByAssignerId?: Maybe<UserToManyReviewAssignmentFilter>;
+  /** Some related `reviewAssignmentsByAssignerId` exist. */
+  reviewAssignmentsByAssignerIdExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewedReviewAssignments` relation. */
+  reviewedReviewAssignments?: Maybe<UserToManyReviewAssignmentFilter>;
+  /** Some related `reviewedReviewAssignments` exist. */
+  reviewedReviewAssignmentsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewedReviews` relation. */
+  reviewedReviews?: Maybe<UserToManyReviewFilter>;
+  /** Some related `reviewedReviews` exist. */
+  reviewedReviewsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `files` relation. */
+  files?: Maybe<UserToManyFileFilter>;
+  /** Some related `files` exist. */
+  filesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `notifications` relation. */
+  notifications?: Maybe<UserToManyNotificationFilter>;
+  /** Some related `notifications` exist. */
+  notificationsExist?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<UserFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<UserFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<UserFilter>;
 };
 
-/** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
-export type UserToManyFileFilter = {
-  /** Every related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<FileFilter>;
-  /** Some related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<FileFilter>;
-  /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<FileFilter>;
+/** A filter to be used against Date fields. All fields are combined with a logical ‘and.’ */
+export type DateFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Scalars['Date']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Scalars['Date']>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Scalars['Date']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Scalars['Date']>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<Scalars['Date']>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<Scalars['Date']>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Scalars['Date']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Scalars['Date']>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Scalars['Date']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Scalars['Date']>;
 };
 
-/** A filter to be used against many `Notification` object types. All fields are combined with a logical ‘and.’ */
-export type UserToManyNotificationFilter = {
-  /** Every related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<NotificationFilter>;
-  /** Some related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<NotificationFilter>;
-  /** No related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<NotificationFilter>;
+
+/** A filter to be used against many `UserOrganisation` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyUserOrganisationFilter = {
+  /** Every related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<UserOrganisationFilter>;
+  /** Some related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<UserOrganisationFilter>;
+  /** No related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<UserOrganisationFilter>;
+};
+
+/** A filter to be used against `UserOrganisation` object types. All fields are combined with a logical ‘and.’ */
+export type UserOrganisationFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `organisationId` field. */
+  organisationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `userRole` field. */
+  userRole?: Maybe<StringFilter>;
+  /** Filter by the object’s `permissionJoins` relation. */
+  permissionJoins?: Maybe<UserOrganisationToManyPermissionJoinFilter>;
+  /** Some related `permissionJoins` exist. */
+  permissionJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `user` relation. */
+  user?: Maybe<UserFilter>;
+  /** A related `user` exists. */
+  userExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `organisation` relation. */
+  organisation?: Maybe<OrganisationFilter>;
+  /** A related `organisation` exists. */
+  organisationExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<UserOrganisationFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<UserOrganisationFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<UserOrganisationFilter>;
+};
+
+/** A filter to be used against many `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
+export type UserOrganisationToManyPermissionJoinFilter = {
+  /** Every related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<PermissionJoinFilter>;
+  /** Some related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<PermissionJoinFilter>;
+  /** No related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<PermissionJoinFilter>;
+};
+
+/** A filter to be used against `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
+export type PermissionJoinFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `userOrganisationId` field. */
+  userOrganisationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `permissionNameId` field. */
+  permissionNameId?: Maybe<IntFilter>;
+  /** Filter by the object’s `user` relation. */
+  user?: Maybe<UserFilter>;
+  /** A related `user` exists. */
+  userExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `userOrganisation` relation. */
+  userOrganisation?: Maybe<UserOrganisationFilter>;
+  /** A related `userOrganisation` exists. */
+  userOrganisationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `permissionName` relation. */
+  permissionName?: Maybe<PermissionNameFilter>;
+  /** A related `permissionName` exists. */
+  permissionNameExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<PermissionJoinFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<PermissionJoinFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<PermissionJoinFilter>;
+};
+
+/** A filter to be used against `PermissionName` object types. All fields are combined with a logical ‘and.’ */
+export type PermissionNameFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `permissionPolicyId` field. */
+  permissionPolicyId?: Maybe<IntFilter>;
+  /** Filter by the object’s `permissionJoins` relation. */
+  permissionJoins?: Maybe<PermissionNameToManyPermissionJoinFilter>;
+  /** Some related `permissionJoins` exist. */
+  permissionJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `templatePermissions` relation. */
+  templatePermissions?: Maybe<PermissionNameToManyTemplatePermissionFilter>;
+  /** Some related `templatePermissions` exist. */
+  templatePermissionsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `permissionPolicy` relation. */
+  permissionPolicy?: Maybe<PermissionPolicyFilter>;
+  /** A related `permissionPolicy` exists. */
+  permissionPolicyExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<PermissionNameFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<PermissionNameFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<PermissionNameFilter>;
+};
+
+/** A filter to be used against many `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
+export type PermissionNameToManyPermissionJoinFilter = {
+  /** Every related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<PermissionJoinFilter>;
+  /** Some related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<PermissionJoinFilter>;
+  /** No related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<PermissionJoinFilter>;
 };
 
 /** A filter to be used against many `TemplatePermission` object types. All fields are combined with a logical ‘and.’ */
@@ -3192,6 +2970,36 @@ export type PermissionNameToManyTemplatePermissionFilter = {
   some?: Maybe<TemplatePermissionFilter>;
   /** No related `TemplatePermission` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<TemplatePermissionFilter>;
+};
+
+/** A filter to be used against `TemplatePermission` object types. All fields are combined with a logical ‘and.’ */
+export type TemplatePermissionFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `permissionNameId` field. */
+  permissionNameId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `level` field. */
+  level?: Maybe<IntFilter>;
+  /** Filter by the object’s `restrictions` field. */
+  restrictions?: Maybe<JsonFilter>;
+  /** Filter by the object’s `permissionName` relation. */
+  permissionName?: Maybe<PermissionNameFilter>;
+  /** A related `permissionName` exists. */
+  permissionNameExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `template` relation. */
+  template?: Maybe<TemplateFilter>;
+  /** A related `template` exists. */
+  templateExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<TemplatePermissionFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<TemplatePermissionFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<TemplatePermissionFilter>;
 };
 
 /** A filter to be used against `PermissionPolicy` object types. All fields are combined with a logical ‘and.’ */
@@ -3262,14 +3070,190 @@ export type PermissionPolicyToManyPermissionNameFilter = {
   none?: Maybe<PermissionNameFilter>;
 };
 
-/** A filter to be used against many `TemplateElement` object types. All fields are combined with a logical ‘and.’ */
-export type TemplateSectionToManyTemplateElementFilter = {
-  /** Every related `TemplateElement` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<TemplateElementFilter>;
-  /** Some related `TemplateElement` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<TemplateElementFilter>;
-  /** No related `TemplateElement` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<TemplateElementFilter>;
+/** A filter to be used against `Organisation` object types. All fields are combined with a logical ‘and.’ */
+export type OrganisationFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `licenceNumber` field. */
+  licenceNumber?: Maybe<StringFilter>;
+  /** Filter by the object’s `address` field. */
+  address?: Maybe<StringFilter>;
+  /** Filter by the object’s `userOrganisations` relation. */
+  userOrganisations?: Maybe<OrganisationToManyUserOrganisationFilter>;
+  /** Some related `userOrganisations` exist. */
+  userOrganisationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationsByOrgId` relation. */
+  applicationsByOrgId?: Maybe<OrganisationToManyApplicationFilter>;
+  /** Some related `applicationsByOrgId` exist. */
+  applicationsByOrgIdExist?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<OrganisationFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<OrganisationFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<OrganisationFilter>;
+};
+
+/** A filter to be used against many `UserOrganisation` object types. All fields are combined with a logical ‘and.’ */
+export type OrganisationToManyUserOrganisationFilter = {
+  /** Every related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<UserOrganisationFilter>;
+  /** Some related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<UserOrganisationFilter>;
+  /** No related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<UserOrganisationFilter>;
+};
+
+/** A filter to be used against many `Application` object types. All fields are combined with a logical ‘and.’ */
+export type OrganisationToManyApplicationFilter = {
+  /** Every related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ApplicationFilter>;
+  /** Some related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ApplicationFilter>;
+  /** No related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ApplicationFilter>;
+};
+
+/** A filter to be used against many `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyPermissionJoinFilter = {
+  /** Every related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<PermissionJoinFilter>;
+  /** Some related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<PermissionJoinFilter>;
+  /** No related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<PermissionJoinFilter>;
+};
+
+/** A filter to be used against many `Application` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyApplicationFilter = {
+  /** Every related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ApplicationFilter>;
+  /** Some related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ApplicationFilter>;
+  /** No related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ApplicationFilter>;
+};
+
+/** A filter to be used against many `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyReviewAssignmentFilter = {
+  /** Every related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewAssignmentFilter>;
+  /** Some related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewAssignmentFilter>;
+  /** No related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewAssignmentFilter>;
+};
+
+/** A filter to be used against many `Review` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyReviewFilter = {
+  /** Every related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewFilter>;
+  /** Some related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewFilter>;
+  /** No related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewFilter>;
+};
+
+/** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyFileFilter = {
+  /** Every related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<FileFilter>;
+  /** Some related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<FileFilter>;
+  /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<FileFilter>;
+};
+
+/** A filter to be used against `File` object types. All fields are combined with a logical ‘and.’ */
+export type FileFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `originalFilename` field. */
+  originalFilename?: Maybe<StringFilter>;
+  /** Filter by the object’s `path` field. */
+  path?: Maybe<StringFilter>;
+  /** Filter by the object’s `mimetype` field. */
+  mimetype?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationResponseId` field. */
+  applicationResponseId?: Maybe<IntFilter>;
+  /** Filter by the object’s `notificationsByDocumentId` relation. */
+  notificationsByDocumentId?: Maybe<FileToManyNotificationFilter>;
+  /** Some related `notificationsByDocumentId` exist. */
+  notificationsByDocumentIdExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `user` relation. */
+  user?: Maybe<UserFilter>;
+  /** A related `user` exists. */
+  userExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** A related `application` exists. */
+  applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationResponse` relation. */
+  applicationResponse?: Maybe<ApplicationResponseFilter>;
+  /** A related `applicationResponse` exists. */
+  applicationResponseExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<FileFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<FileFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<FileFilter>;
+};
+
+/** A filter to be used against many `Notification` object types. All fields are combined with a logical ‘and.’ */
+export type FileToManyNotificationFilter = {
+  /** Every related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<NotificationFilter>;
+  /** Some related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<NotificationFilter>;
+  /** No related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<NotificationFilter>;
+};
+
+/** A filter to be used against many `Notification` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyNotificationFilter = {
+  /** Every related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<NotificationFilter>;
+  /** Some related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<NotificationFilter>;
+  /** No related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<NotificationFilter>;
+};
+
+/** A filter to be used against many `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewAssignmentToManyReviewQuestionAssignmentFilter = {
+  /** Every related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewQuestionAssignmentFilter>;
+  /** Some related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewQuestionAssignmentFilter>;
+  /** No related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewQuestionAssignmentFilter>;
+};
+
+/** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationResponseToManyFileFilter = {
+  /** Every related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<FileFilter>;
+  /** Some related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<FileFilter>;
+  /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<FileFilter>;
+};
+
+/** A filter to be used against many `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateElementToManyReviewQuestionAssignmentFilter = {
+  /** Every related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewQuestionAssignmentFilter>;
+  /** Some related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewQuestionAssignmentFilter>;
+  /** No related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewQuestionAssignmentFilter>;
 };
 
 /** A filter to be used against many `ApplicationSection` object types. All fields are combined with a logical ‘and.’ */
@@ -4347,8 +4331,10 @@ export enum TemplatePermissionsOrderBy {
   PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
-  TemplateSectionIdAsc = 'TEMPLATE_SECTION_ID_ASC',
-  TemplateSectionIdDesc = 'TEMPLATE_SECTION_ID_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
+  LevelAsc = 'LEVEL_ASC',
+  LevelDesc = 'LEVEL_DESC',
   RestrictionsAsc = 'RESTRICTIONS_ASC',
   RestrictionsDesc = 'RESTRICTIONS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -4363,8 +4349,10 @@ export type TemplatePermissionCondition = {
   permissionNameId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateSectionId` field. */
-  templateSectionId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageNumber` field. */
+  stageNumber?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `level` field. */
+  level?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `restrictions` field. */
   restrictions?: Maybe<Scalars['JSON']>;
 };
@@ -4389,186 +4377,153 @@ export type TemplatePermission = Node & {
   id: Scalars['Int'];
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   /** Reads a single `PermissionName` that is related to this `TemplatePermission`. */
   permissionName?: Maybe<PermissionName>;
   /** Reads a single `Template` that is related to this `TemplatePermission`. */
   template?: Maybe<Template>;
-  /** Reads a single `TemplateSection` that is related to this `TemplatePermission`. */
-  templateSection?: Maybe<TemplateSection>;
 };
 
-export type TemplateSection = Node & {
-  __typename?: 'TemplateSection';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  templateId?: Maybe<Scalars['Int']>;
-  title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  index?: Maybe<Scalars['Int']>;
-  /** Reads a single `Template` that is related to this `TemplateSection`. */
-  template?: Maybe<Template>;
-  /** Reads and enables pagination through a set of `TemplatePermission`. */
-  templatePermissions: TemplatePermissionsConnection;
-  /** Reads and enables pagination through a set of `TemplateElement`. */
-  templateElementsBySectionId: TemplateElementsConnection;
-  /** Reads and enables pagination through a set of `ApplicationSection`. */
-  applicationSections: ApplicationSectionsConnection;
+/** A `TemplatePermission` edge in the connection. */
+export type TemplatePermissionsEdge = {
+  __typename?: 'TemplatePermissionsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `TemplatePermission` at the end of the edge. */
+  node?: Maybe<TemplatePermission>;
 };
 
-
-export type TemplateSectionTemplatePermissionsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<TemplatePermissionsOrderBy>>;
-  condition?: Maybe<TemplatePermissionCondition>;
-  filter?: Maybe<TemplatePermissionFilter>;
+/** A `PermissionJoin` edge in the connection. */
+export type PermissionJoinsEdge = {
+  __typename?: 'PermissionJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `PermissionJoin` at the end of the edge. */
+  node?: Maybe<PermissionJoin>;
 };
 
-
-export type TemplateSectionTemplateElementsBySectionIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<TemplateElementsOrderBy>>;
-  condition?: Maybe<TemplateElementCondition>;
-  filter?: Maybe<TemplateElementFilter>;
+/** A `UserOrganisation` edge in the connection. */
+export type UserOrganisationsEdge = {
+  __typename?: 'UserOrganisationsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `UserOrganisation` at the end of the edge. */
+  node?: Maybe<UserOrganisation>;
 };
 
-
-export type TemplateSectionApplicationSectionsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ApplicationSectionsOrderBy>>;
-  condition?: Maybe<ApplicationSectionCondition>;
-  filter?: Maybe<ApplicationSectionFilter>;
-};
-
-/** Methods to use when ordering `TemplateElement`. */
-export enum TemplateElementsOrderBy {
+/** Methods to use when ordering `ReviewAssignment`. */
+export enum ReviewAssignmentsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  SectionIdAsc = 'SECTION_ID_ASC',
-  SectionIdDesc = 'SECTION_ID_DESC',
-  CodeAsc = 'CODE_ASC',
-  CodeDesc = 'CODE_DESC',
-  IndexAsc = 'INDEX_ASC',
-  IndexDesc = 'INDEX_DESC',
-  TitleAsc = 'TITLE_ASC',
-  TitleDesc = 'TITLE_DESC',
-  CategoryAsc = 'CATEGORY_ASC',
-  CategoryDesc = 'CATEGORY_DESC',
-  ElementTypePluginCodeAsc = 'ELEMENT_TYPE_PLUGIN_CODE_ASC',
-  ElementTypePluginCodeDesc = 'ELEMENT_TYPE_PLUGIN_CODE_DESC',
-  VisibilityConditionAsc = 'VISIBILITY_CONDITION_ASC',
-  VisibilityConditionDesc = 'VISIBILITY_CONDITION_DESC',
-  IsRequiredAsc = 'IS_REQUIRED_ASC',
-  IsRequiredDesc = 'IS_REQUIRED_DESC',
-  IsEditableAsc = 'IS_EDITABLE_ASC',
-  IsEditableDesc = 'IS_EDITABLE_DESC',
-  ValidationAsc = 'VALIDATION_ASC',
-  ValidationDesc = 'VALIDATION_DESC',
-  ValidationMessageAsc = 'VALIDATION_MESSAGE_ASC',
-  ValidationMessageDesc = 'VALIDATION_MESSAGE_DESC',
-  ParametersAsc = 'PARAMETERS_ASC',
-  ParametersDesc = 'PARAMETERS_DESC',
+  AssignerIdAsc = 'ASSIGNER_ID_ASC',
+  AssignerIdDesc = 'ASSIGNER_ID_DESC',
+  ReviewerIdAsc = 'REVIEWER_ID_ASC',
+  ReviewerIdDesc = 'REVIEWER_ID_DESC',
+  StageIdAsc = 'STAGE_ID_ASC',
+  StageIdDesc = 'STAGE_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  AvailableTemplateSectionIdsAsc = 'AVAILABLE_TEMPLATE_SECTION_IDS_ASC',
+  AvailableTemplateSectionIdsDesc = 'AVAILABLE_TEMPLATE_SECTION_IDS_DESC',
+  TriggerAsc = 'TRIGGER_ASC',
+  TriggerDesc = 'TRIGGER_DESC',
+  TimeCreatedAsc = 'TIME_CREATED_ASC',
+  TimeCreatedDesc = 'TIME_CREATED_DESC',
+  LevelAsc = 'LEVEL_ASC',
+  LevelDesc = 'LEVEL_DESC',
+  IsLastLevelAsc = 'IS_LAST_LEVEL_ASC',
+  IsLastLevelDesc = 'IS_LAST_LEVEL_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** A condition to be used against `TemplateElement` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type TemplateElementCondition = {
+/** A condition to be used against `ReviewAssignment` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ReviewAssignmentCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `sectionId` field. */
-  sectionId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `code` field. */
-  code?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `index` field. */
-  index?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `title` field. */
-  title?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `category` field. */
-  category?: Maybe<TemplateElementCategory>;
-  /** Checks for equality with the object’s `elementTypePluginCode` field. */
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `visibilityCondition` field. */
-  visibilityCondition?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `isRequired` field. */
-  isRequired?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `isEditable` field. */
-  isEditable?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `validation` field. */
-  validation?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `validationMessage` field. */
-  validationMessage?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `parameters` field. */
-  parameters?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `assignerId` field. */
+  assignerId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewerId` field. */
+  reviewerId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageId` field. */
+  stageId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: Maybe<ReviewAssignmentStatus>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `availableTemplateSectionIds` field. */
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Checks for equality with the object’s `trigger` field. */
+  trigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `timeCreated` field. */
+  timeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `level` field. */
+  level?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `isLastLevel` field. */
+  isLastLevel?: Maybe<Scalars['Boolean']>;
 };
 
-/** A connection to a list of `TemplateElement` values. */
-export type TemplateElementsConnection = {
-  __typename?: 'TemplateElementsConnection';
-  /** A list of `TemplateElement` objects. */
-  nodes: Array<Maybe<TemplateElement>>;
-  /** A list of edges which contains the `TemplateElement` and cursor to aid in pagination. */
-  edges: Array<TemplateElementsEdge>;
+/** A connection to a list of `ReviewAssignment` values. */
+export type ReviewAssignmentsConnection = {
+  __typename?: 'ReviewAssignmentsConnection';
+  /** A list of `ReviewAssignment` objects. */
+  nodes: Array<Maybe<ReviewAssignment>>;
+  /** A list of edges which contains the `ReviewAssignment` and cursor to aid in pagination. */
+  edges: Array<ReviewAssignmentsEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `TemplateElement` you could get from the connection. */
+  /** The count of *all* `ReviewAssignment` you could get from the connection. */
   totalCount: Scalars['Int'];
 };
 
-export type TemplateElement = Node & {
-  __typename?: 'TemplateElement';
+export type ReviewAssignment = Node & {
+  __typename?: 'ReviewAssignment';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  sectionId?: Maybe<Scalars['Int']>;
-  code: Scalars['String'];
-  index?: Maybe<Scalars['Int']>;
-  title?: Maybe<Scalars['String']>;
-  category?: Maybe<TemplateElementCategory>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
-  isRequired?: Maybe<Scalars['JSON']>;
-  isEditable?: Maybe<Scalars['JSON']>;
-  validation?: Maybe<Scalars['JSON']>;
-  validationMessage?: Maybe<Scalars['String']>;
-  parameters?: Maybe<Scalars['JSON']>;
-  /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
-  section?: Maybe<TemplateSection>;
-  /** Reads and enables pagination through a set of `ApplicationResponse`. */
-  applicationResponses: ApplicationResponsesConnection;
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewAssignmentStatus>;
+  applicationId?: Maybe<Scalars['Int']>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  trigger?: Maybe<Trigger>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
+  /** Reads a single `User` that is related to this `ReviewAssignment`. */
+  assigner?: Maybe<User>;
+  /** Reads a single `User` that is related to this `ReviewAssignment`. */
+  reviewer?: Maybe<User>;
+  /** Reads a single `TemplateStage` that is related to this `ReviewAssignment`. */
+  stage?: Maybe<TemplateStage>;
+  /** Reads a single `Application` that is related to this `ReviewAssignment`. */
+  application?: Maybe<Application>;
+  /** Reads and enables pagination through a set of `Review`. */
+  reviews: ReviewsConnection;
   /** Reads and enables pagination through a set of `ReviewQuestionAssignment`. */
   reviewQuestionAssignments: ReviewQuestionAssignmentsConnection;
 };
 
 
-export type TemplateElementApplicationResponsesArgs = {
+export type ReviewAssignmentReviewsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ApplicationResponsesOrderBy>>;
-  condition?: Maybe<ApplicationResponseCondition>;
-  filter?: Maybe<ApplicationResponseFilter>;
+  orderBy?: Maybe<Array<ReviewsOrderBy>>;
+  condition?: Maybe<ReviewCondition>;
+  filter?: Maybe<ReviewFilter>;
 };
 
 
-export type TemplateElementReviewQuestionAssignmentsArgs = {
+export type ReviewAssignmentReviewQuestionAssignmentsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -4579,76 +4534,88 @@ export type TemplateElementReviewQuestionAssignmentsArgs = {
   filter?: Maybe<ReviewQuestionAssignmentFilter>;
 };
 
-/** Methods to use when ordering `ApplicationResponse`. */
-export enum ApplicationResponsesOrderBy {
+/** Methods to use when ordering `Review`. */
+export enum ReviewsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
-  TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
+  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
+  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
+  TriggerAsc = 'TRIGGER_ASC',
+  TriggerDesc = 'TRIGGER_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  ValueAsc = 'VALUE_ASC',
-  ValueDesc = 'VALUE_DESC',
-  IsValidAsc = 'IS_VALID_ASC',
-  IsValidDesc = 'IS_VALID_DESC',
-  TimeCreatedAsc = 'TIME_CREATED_ASC',
-  TimeCreatedDesc = 'TIME_CREATED_DESC',
+  ReviewerIdAsc = 'REVIEWER_ID_ASC',
+  ReviewerIdDesc = 'REVIEWER_ID_DESC',
+  LevelAsc = 'LEVEL_ASC',
+  LevelDesc = 'LEVEL_DESC',
+  IsLastLevelAsc = 'IS_LAST_LEVEL_ASC',
+  IsLastLevelDesc = 'IS_LAST_LEVEL_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** A condition to be used against `ApplicationResponse` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ApplicationResponseCondition = {
+/** A condition to be used against `Review` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ReviewCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateElementId` field. */
-  templateElementId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `trigger` field. */
+  trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `value` field. */
-  value?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `isValid` field. */
-  isValid?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `timeCreated` field. */
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `reviewerId` field. */
+  reviewerId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `level` field. */
+  level?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `isLastLevel` field. */
+  isLastLevel?: Maybe<Scalars['Boolean']>;
 };
 
-/** A connection to a list of `ApplicationResponse` values. */
-export type ApplicationResponsesConnection = {
-  __typename?: 'ApplicationResponsesConnection';
-  /** A list of `ApplicationResponse` objects. */
-  nodes: Array<Maybe<ApplicationResponse>>;
-  /** A list of edges which contains the `ApplicationResponse` and cursor to aid in pagination. */
-  edges: Array<ApplicationResponsesEdge>;
+/** A connection to a list of `Review` values. */
+export type ReviewsConnection = {
+  __typename?: 'ReviewsConnection';
+  /** A list of `Review` objects. */
+  nodes: Array<Maybe<Review>>;
+  /** A list of edges which contains the `Review` and cursor to aid in pagination. */
+  edges: Array<ReviewsEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `ApplicationResponse` you could get from the connection. */
+  /** The count of *all* `Review` you could get from the connection. */
   totalCount: Scalars['Int'];
 };
 
-export type ApplicationResponse = Node & {
-  __typename?: 'ApplicationResponse';
+export type Review = Node & {
+  __typename?: 'Review';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  templateElementId?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
-  value?: Maybe<Scalars['JSON']>;
-  isValid?: Maybe<Scalars['Boolean']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
-  /** Reads a single `TemplateElement` that is related to this `ApplicationResponse`. */
-  templateElement?: Maybe<TemplateElement>;
-  /** Reads a single `Application` that is related to this `ApplicationResponse`. */
+  reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
+  /** Reads a single `ReviewAssignment` that is related to this `Review`. */
+  reviewAssignment?: Maybe<ReviewAssignment>;
+  /** Reads a single `Application` that is related to this `Review`. */
   application?: Maybe<Application>;
+  /** Reads a single `User` that is related to this `Review`. */
+  reviewer?: Maybe<User>;
   /** Reads and enables pagination through a set of `ReviewResponse`. */
   reviewResponses: ReviewResponsesConnection;
-  /** Reads and enables pagination through a set of `File`. */
-  files: FilesConnection;
+  /** Reads and enables pagination through a set of `ReviewDecision`. */
+  reviewDecisions: ReviewDecisionsConnection;
+  /** Reads and enables pagination through a set of `ReviewStatusHistory`. */
+  reviewStatusHistories: ReviewStatusHistoriesConnection;
+  /** Reads and enables pagination through a set of `Notification`. */
+  notifications: NotificationsConnection;
+  status?: Maybe<Scalars['String']>;
 };
 
 
-export type ApplicationResponseReviewResponsesArgs = {
+export type ReviewReviewResponsesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -4660,15 +4627,39 @@ export type ApplicationResponseReviewResponsesArgs = {
 };
 
 
-export type ApplicationResponseFilesArgs = {
+export type ReviewReviewDecisionsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<FilesOrderBy>>;
-  condition?: Maybe<FileCondition>;
-  filter?: Maybe<FileFilter>;
+  orderBy?: Maybe<Array<ReviewDecisionsOrderBy>>;
+  condition?: Maybe<ReviewDecisionCondition>;
+  filter?: Maybe<ReviewDecisionFilter>;
+};
+
+
+export type ReviewReviewStatusHistoriesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewStatusHistoriesOrderBy>>;
+  condition?: Maybe<ReviewStatusHistoryCondition>;
+  filter?: Maybe<ReviewStatusHistoryFilter>;
+};
+
+
+export type ReviewNotificationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<NotificationsOrderBy>>;
+  condition?: Maybe<NotificationCondition>;
+  filter?: Maybe<NotificationFilter>;
 };
 
 /** Methods to use when ordering `ReviewResponse`. */
@@ -4795,49 +4786,45 @@ export type ReviewQuestionAssignmentReviewResponsesArgs = {
   filter?: Maybe<ReviewResponseFilter>;
 };
 
-export type ReviewAssignment = Node & {
-  __typename?: 'ReviewAssignment';
+export type TemplateElement = Node & {
+  __typename?: 'TemplateElement';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  assignerId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewAssignmentStatus>;
-  applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
-  level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
-  /** Reads a single `User` that is related to this `ReviewAssignment`. */
-  assigner?: Maybe<User>;
-  /** Reads a single `User` that is related to this `ReviewAssignment`. */
-  reviewer?: Maybe<User>;
-  /** Reads a single `TemplateStage` that is related to this `ReviewAssignment`. */
-  stage?: Maybe<TemplateStage>;
-  /** Reads a single `Application` that is related to this `ReviewAssignment`. */
-  application?: Maybe<Application>;
-  /** Reads and enables pagination through a set of `Review`. */
-  reviews: ReviewsConnection;
+  sectionId?: Maybe<Scalars['Int']>;
+  code: Scalars['String'];
+  index?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  category?: Maybe<TemplateElementCategory>;
+  elementTypePluginCode?: Maybe<Scalars['String']>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
+  isRequired?: Maybe<Scalars['JSON']>;
+  isEditable?: Maybe<Scalars['JSON']>;
+  validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
+  parameters?: Maybe<Scalars['JSON']>;
+  /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
+  section?: Maybe<TemplateSection>;
+  /** Reads and enables pagination through a set of `ApplicationResponse`. */
+  applicationResponses: ApplicationResponsesConnection;
   /** Reads and enables pagination through a set of `ReviewQuestionAssignment`. */
   reviewQuestionAssignments: ReviewQuestionAssignmentsConnection;
 };
 
 
-export type ReviewAssignmentReviewsArgs = {
+export type TemplateElementApplicationResponsesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewsOrderBy>>;
-  condition?: Maybe<ReviewCondition>;
-  filter?: Maybe<ReviewFilter>;
+  orderBy?: Maybe<Array<ApplicationResponsesOrderBy>>;
+  condition?: Maybe<ApplicationResponseCondition>;
+  filter?: Maybe<ApplicationResponseFilter>;
 };
 
 
-export type ReviewAssignmentReviewQuestionAssignmentsArgs = {
+export type TemplateElementReviewQuestionAssignmentsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -4848,88 +4835,260 @@ export type ReviewAssignmentReviewQuestionAssignmentsArgs = {
   filter?: Maybe<ReviewQuestionAssignmentFilter>;
 };
 
-/** Methods to use when ordering `Review`. */
-export enum ReviewsOrderBy {
+export type TemplateSection = Node & {
+  __typename?: 'TemplateSection';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  templateId?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
+  /** Reads a single `Template` that is related to this `TemplateSection`. */
+  template?: Maybe<Template>;
+  /** Reads and enables pagination through a set of `TemplateElement`. */
+  templateElementsBySectionId: TemplateElementsConnection;
+  /** Reads and enables pagination through a set of `ApplicationSection`. */
+  applicationSections: ApplicationSectionsConnection;
+};
+
+
+export type TemplateSectionTemplateElementsBySectionIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<TemplateElementsOrderBy>>;
+  condition?: Maybe<TemplateElementCondition>;
+  filter?: Maybe<TemplateElementFilter>;
+};
+
+
+export type TemplateSectionApplicationSectionsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ApplicationSectionsOrderBy>>;
+  condition?: Maybe<ApplicationSectionCondition>;
+  filter?: Maybe<ApplicationSectionFilter>;
+};
+
+/** Methods to use when ordering `TemplateElement`. */
+export enum TemplateElementsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
-  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
-  TriggerAsc = 'TRIGGER_ASC',
-  TriggerDesc = 'TRIGGER_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  ReviewerIdAsc = 'REVIEWER_ID_ASC',
-  ReviewerIdDesc = 'REVIEWER_ID_DESC',
-  LevelAsc = 'LEVEL_ASC',
-  LevelDesc = 'LEVEL_DESC',
-  CanMakeOverallDecisionAsc = 'CAN_MAKE_OVERALL_DECISION_ASC',
-  CanMakeOverallDecisionDesc = 'CAN_MAKE_OVERALL_DECISION_DESC',
+  SectionIdAsc = 'SECTION_ID_ASC',
+  SectionIdDesc = 'SECTION_ID_DESC',
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  IndexAsc = 'INDEX_ASC',
+  IndexDesc = 'INDEX_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
+  CategoryAsc = 'CATEGORY_ASC',
+  CategoryDesc = 'CATEGORY_DESC',
+  ElementTypePluginCodeAsc = 'ELEMENT_TYPE_PLUGIN_CODE_ASC',
+  ElementTypePluginCodeDesc = 'ELEMENT_TYPE_PLUGIN_CODE_DESC',
+  VisibilityConditionAsc = 'VISIBILITY_CONDITION_ASC',
+  VisibilityConditionDesc = 'VISIBILITY_CONDITION_DESC',
+  IsRequiredAsc = 'IS_REQUIRED_ASC',
+  IsRequiredDesc = 'IS_REQUIRED_DESC',
+  IsEditableAsc = 'IS_EDITABLE_ASC',
+  IsEditableDesc = 'IS_EDITABLE_DESC',
+  ValidationAsc = 'VALIDATION_ASC',
+  ValidationDesc = 'VALIDATION_DESC',
+  ValidationMessageAsc = 'VALIDATION_MESSAGE_ASC',
+  ValidationMessageDesc = 'VALIDATION_MESSAGE_DESC',
+  ParametersAsc = 'PARAMETERS_ASC',
+  ParametersDesc = 'PARAMETERS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** A condition to be used against `Review` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ReviewCondition = {
+/** A condition to be used against `TemplateElement` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type TemplateElementCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewAssignmentId` field. */
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `trigger` field. */
-  trigger?: Maybe<Trigger>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewerId` field. */
-  reviewerId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `level` field. */
-  level?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `canMakeOverallDecision` field. */
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `sectionId` field. */
+  sectionId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `code` field. */
+  code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `index` field. */
+  index?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `title` field. */
+  title?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `category` field. */
+  category?: Maybe<TemplateElementCategory>;
+  /** Checks for equality with the object’s `elementTypePluginCode` field. */
+  elementTypePluginCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `visibilityCondition` field. */
+  visibilityCondition?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `isRequired` field. */
+  isRequired?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `isEditable` field. */
+  isEditable?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `validation` field. */
+  validation?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `validationMessage` field. */
+  validationMessage?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `parameters` field. */
+  parameters?: Maybe<Scalars['JSON']>;
 };
 
-/** A connection to a list of `Review` values. */
-export type ReviewsConnection = {
-  __typename?: 'ReviewsConnection';
-  /** A list of `Review` objects. */
-  nodes: Array<Maybe<Review>>;
-  /** A list of edges which contains the `Review` and cursor to aid in pagination. */
-  edges: Array<ReviewsEdge>;
+/** A connection to a list of `TemplateElement` values. */
+export type TemplateElementsConnection = {
+  __typename?: 'TemplateElementsConnection';
+  /** A list of `TemplateElement` objects. */
+  nodes: Array<Maybe<TemplateElement>>;
+  /** A list of edges which contains the `TemplateElement` and cursor to aid in pagination. */
+  edges: Array<TemplateElementsEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `Review` you could get from the connection. */
+  /** The count of *all* `TemplateElement` you could get from the connection. */
   totalCount: Scalars['Int'];
 };
 
-export type Review = Node & {
-  __typename?: 'Review';
+/** A `TemplateElement` edge in the connection. */
+export type TemplateElementsEdge = {
+  __typename?: 'TemplateElementsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `TemplateElement` at the end of the edge. */
+  node?: Maybe<TemplateElement>;
+};
+
+/** Methods to use when ordering `ApplicationSection`. */
+export enum ApplicationSectionsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  TemplateSectionIdAsc = 'TEMPLATE_SECTION_ID_ASC',
+  TemplateSectionIdDesc = 'TEMPLATE_SECTION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `ApplicationSection` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ApplicationSectionCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateSectionId` field. */
+  templateSectionId?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `ApplicationSection` values. */
+export type ApplicationSectionsConnection = {
+  __typename?: 'ApplicationSectionsConnection';
+  /** A list of `ApplicationSection` objects. */
+  nodes: Array<Maybe<ApplicationSection>>;
+  /** A list of edges which contains the `ApplicationSection` and cursor to aid in pagination. */
+  edges: Array<ApplicationSectionsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ApplicationSection` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type ApplicationSection = Node & {
+  __typename?: 'ApplicationSection';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
-  /** Reads a single `ReviewAssignment` that is related to this `Review`. */
-  reviewAssignment?: Maybe<ReviewAssignment>;
-  /** Reads a single `Application` that is related to this `Review`. */
+  templateSectionId?: Maybe<Scalars['Int']>;
+  /** Reads a single `Application` that is related to this `ApplicationSection`. */
   application?: Maybe<Application>;
-  /** Reads a single `User` that is related to this `Review`. */
-  reviewer?: Maybe<User>;
+  /** Reads a single `TemplateSection` that is related to this `ApplicationSection`. */
+  templateSection?: Maybe<TemplateSection>;
+};
+
+/** A `ApplicationSection` edge in the connection. */
+export type ApplicationSectionsEdge = {
+  __typename?: 'ApplicationSectionsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ApplicationSection` at the end of the edge. */
+  node?: Maybe<ApplicationSection>;
+};
+
+/** Methods to use when ordering `ApplicationResponse`. */
+export enum ApplicationResponsesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
+  TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  ValueAsc = 'VALUE_ASC',
+  ValueDesc = 'VALUE_DESC',
+  IsValidAsc = 'IS_VALID_ASC',
+  IsValidDesc = 'IS_VALID_DESC',
+  TimeCreatedAsc = 'TIME_CREATED_ASC',
+  TimeCreatedDesc = 'TIME_CREATED_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `ApplicationResponse` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ApplicationResponseCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateElementId` field. */
+  templateElementId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `value` field. */
+  value?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `isValid` field. */
+  isValid?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `timeCreated` field. */
+  timeCreated?: Maybe<Scalars['Datetime']>;
+};
+
+/** A connection to a list of `ApplicationResponse` values. */
+export type ApplicationResponsesConnection = {
+  __typename?: 'ApplicationResponsesConnection';
+  /** A list of `ApplicationResponse` objects. */
+  nodes: Array<Maybe<ApplicationResponse>>;
+  /** A list of edges which contains the `ApplicationResponse` and cursor to aid in pagination. */
+  edges: Array<ApplicationResponsesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ApplicationResponse` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type ApplicationResponse = Node & {
+  __typename?: 'ApplicationResponse';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  templateElementId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  value?: Maybe<Scalars['JSON']>;
+  isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
+  /** Reads a single `TemplateElement` that is related to this `ApplicationResponse`. */
+  templateElement?: Maybe<TemplateElement>;
+  /** Reads a single `Application` that is related to this `ApplicationResponse`. */
+  application?: Maybe<Application>;
   /** Reads and enables pagination through a set of `ReviewResponse`. */
   reviewResponses: ReviewResponsesConnection;
-  /** Reads and enables pagination through a set of `ReviewDecision`. */
-  reviewDecisions: ReviewDecisionsConnection;
-  /** Reads and enables pagination through a set of `ReviewStatusHistory`. */
-  reviewStatusHistories: ReviewStatusHistoriesConnection;
-  /** Reads and enables pagination through a set of `Notification`. */
-  notifications: NotificationsConnection;
-  status?: Maybe<Scalars['String']>;
+  /** Reads and enables pagination through a set of `File`. */
+  files: FilesConnection;
 };
 
 
-export type ReviewReviewResponsesArgs = {
+export type ApplicationResponseReviewResponsesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -4941,31 +5100,92 @@ export type ReviewReviewResponsesArgs = {
 };
 
 
-export type ReviewReviewDecisionsArgs = {
+export type ApplicationResponseFilesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewDecisionsOrderBy>>;
-  condition?: Maybe<ReviewDecisionCondition>;
-  filter?: Maybe<ReviewDecisionFilter>;
+  orderBy?: Maybe<Array<FilesOrderBy>>;
+  condition?: Maybe<FileCondition>;
+  filter?: Maybe<FileFilter>;
+};
+
+/** Methods to use when ordering `File`. */
+export enum FilesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  OriginalFilenameAsc = 'ORIGINAL_FILENAME_ASC',
+  OriginalFilenameDesc = 'ORIGINAL_FILENAME_DESC',
+  PathAsc = 'PATH_ASC',
+  PathDesc = 'PATH_DESC',
+  MimetypeAsc = 'MIMETYPE_ASC',
+  MimetypeDesc = 'MIMETYPE_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
+  ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `File` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type FileCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `originalFilename` field. */
+  originalFilename?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `path` field. */
+  path?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `mimetype` field. */
+  mimetype?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationResponseId` field. */
+  applicationResponseId?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `File` values. */
+export type FilesConnection = {
+  __typename?: 'FilesConnection';
+  /** A list of `File` objects. */
+  nodes: Array<Maybe<File>>;
+  /** A list of edges which contains the `File` and cursor to aid in pagination. */
+  edges: Array<FilesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `File` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type File = Node & {
+  __typename?: 'File';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  userId?: Maybe<Scalars['Int']>;
+  originalFilename?: Maybe<Scalars['String']>;
+  path?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  /** Reads a single `User` that is related to this `File`. */
+  user?: Maybe<User>;
+  /** Reads a single `Application` that is related to this `File`. */
+  application?: Maybe<Application>;
+  /** Reads a single `ApplicationResponse` that is related to this `File`. */
+  applicationResponse?: Maybe<ApplicationResponse>;
+  /** Reads and enables pagination through a set of `Notification`. */
+  notificationsByDocumentId: NotificationsConnection;
 };
 
 
-export type ReviewReviewStatusHistoriesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewStatusHistoriesOrderBy>>;
-  condition?: Maybe<ReviewStatusHistoryCondition>;
-  filter?: Maybe<ReviewStatusHistoryFilter>;
-};
-
-
-export type ReviewNotificationsArgs = {
+export type FileNotificationsByDocumentIdArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -4974,6 +5194,165 @@ export type ReviewNotificationsArgs = {
   orderBy?: Maybe<Array<NotificationsOrderBy>>;
   condition?: Maybe<NotificationCondition>;
   filter?: Maybe<NotificationFilter>;
+};
+
+/** Methods to use when ordering `Notification`. */
+export enum NotificationsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  ReviewIdAsc = 'REVIEW_ID_ASC',
+  ReviewIdDesc = 'REVIEW_ID_DESC',
+  SubjectAsc = 'SUBJECT_ASC',
+  SubjectDesc = 'SUBJECT_DESC',
+  MessageAsc = 'MESSAGE_ASC',
+  MessageDesc = 'MESSAGE_DESC',
+  DocumentIdAsc = 'DOCUMENT_ID_ASC',
+  DocumentIdDesc = 'DOCUMENT_ID_DESC',
+  IsReadAsc = 'IS_READ_ASC',
+  IsReadDesc = 'IS_READ_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `Notification` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type NotificationCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewId` field. */
+  reviewId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `subject` field. */
+  subject?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `message` field. */
+  message?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `documentId` field. */
+  documentId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `isRead` field. */
+  isRead?: Maybe<Scalars['Boolean']>;
+};
+
+/** A connection to a list of `Notification` values. */
+export type NotificationsConnection = {
+  __typename?: 'NotificationsConnection';
+  /** A list of `Notification` objects. */
+  nodes: Array<Maybe<Notification>>;
+  /** A list of edges which contains the `Notification` and cursor to aid in pagination. */
+  edges: Array<NotificationsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Notification` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type Notification = Node & {
+  __typename?: 'Notification';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  userId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  subject?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  documentId?: Maybe<Scalars['Int']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  /** Reads a single `User` that is related to this `Notification`. */
+  user?: Maybe<User>;
+  /** Reads a single `Application` that is related to this `Notification`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Review` that is related to this `Notification`. */
+  review?: Maybe<Review>;
+  /** Reads a single `File` that is related to this `Notification`. */
+  document?: Maybe<File>;
+};
+
+/** A `Notification` edge in the connection. */
+export type NotificationsEdge = {
+  __typename?: 'NotificationsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Notification` at the end of the edge. */
+  node?: Maybe<Notification>;
+};
+
+/** A `File` edge in the connection. */
+export type FilesEdge = {
+  __typename?: 'FilesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `File` at the end of the edge. */
+  node?: Maybe<File>;
+};
+
+/** A `ApplicationResponse` edge in the connection. */
+export type ApplicationResponsesEdge = {
+  __typename?: 'ApplicationResponsesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ApplicationResponse` at the end of the edge. */
+  node?: Maybe<ApplicationResponse>;
+};
+
+/** Methods to use when ordering `ReviewQuestionAssignment`. */
+export enum ReviewQuestionAssignmentsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
+  TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
+  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
+  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `ReviewQuestionAssignment` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ReviewQuestionAssignmentCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateElementId` field. */
+  templateElementId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `ReviewQuestionAssignment` values. */
+export type ReviewQuestionAssignmentsConnection = {
+  __typename?: 'ReviewQuestionAssignmentsConnection';
+  /** A list of `ReviewQuestionAssignment` objects. */
+  nodes: Array<Maybe<ReviewQuestionAssignment>>;
+  /** A list of edges which contains the `ReviewQuestionAssignment` and cursor to aid in pagination. */
+  edges: Array<ReviewQuestionAssignmentsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ReviewQuestionAssignment` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ReviewQuestionAssignment` edge in the connection. */
+export type ReviewQuestionAssignmentsEdge = {
+  __typename?: 'ReviewQuestionAssignmentsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewQuestionAssignment` at the end of the edge. */
+  node?: Maybe<ReviewQuestionAssignment>;
+};
+
+/** A `ReviewResponse` edge in the connection. */
+export type ReviewResponsesEdge = {
+  __typename?: 'ReviewResponsesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewResponse` at the end of the edge. */
+  node?: Maybe<ReviewResponse>;
 };
 
 /** Methods to use when ordering `ReviewDecision`. */
@@ -5108,126 +5487,6 @@ export type ReviewStatusHistoriesEdge = {
   node?: Maybe<ReviewStatusHistory>;
 };
 
-/** Methods to use when ordering `Notification`. */
-export enum NotificationsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  UserIdAsc = 'USER_ID_ASC',
-  UserIdDesc = 'USER_ID_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  ReviewIdAsc = 'REVIEW_ID_ASC',
-  ReviewIdDesc = 'REVIEW_ID_DESC',
-  SubjectAsc = 'SUBJECT_ASC',
-  SubjectDesc = 'SUBJECT_DESC',
-  MessageAsc = 'MESSAGE_ASC',
-  MessageDesc = 'MESSAGE_DESC',
-  DocumentIdAsc = 'DOCUMENT_ID_ASC',
-  DocumentIdDesc = 'DOCUMENT_ID_DESC',
-  IsReadAsc = 'IS_READ_ASC',
-  IsReadDesc = 'IS_READ_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `Notification` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type NotificationCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `userId` field. */
-  userId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewId` field. */
-  reviewId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `subject` field. */
-  subject?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `message` field. */
-  message?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `documentId` field. */
-  documentId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `isRead` field. */
-  isRead?: Maybe<Scalars['Boolean']>;
-};
-
-/** A connection to a list of `Notification` values. */
-export type NotificationsConnection = {
-  __typename?: 'NotificationsConnection';
-  /** A list of `Notification` objects. */
-  nodes: Array<Maybe<Notification>>;
-  /** A list of edges which contains the `Notification` and cursor to aid in pagination. */
-  edges: Array<NotificationsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Notification` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type Notification = Node & {
-  __typename?: 'Notification';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  userId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  subject?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  documentId?: Maybe<Scalars['Int']>;
-  isRead?: Maybe<Scalars['Boolean']>;
-  /** Reads a single `User` that is related to this `Notification`. */
-  user?: Maybe<User>;
-  /** Reads a single `Application` that is related to this `Notification`. */
-  application?: Maybe<Application>;
-  /** Reads a single `Review` that is related to this `Notification`. */
-  review?: Maybe<Review>;
-  /** Reads a single `File` that is related to this `Notification`. */
-  document?: Maybe<File>;
-};
-
-export type File = Node & {
-  __typename?: 'File';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  userId?: Maybe<Scalars['Int']>;
-  originalFilename?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  /** Reads a single `User` that is related to this `File`. */
-  user?: Maybe<User>;
-  /** Reads a single `Application` that is related to this `File`. */
-  application?: Maybe<Application>;
-  /** Reads a single `ApplicationResponse` that is related to this `File`. */
-  applicationResponse?: Maybe<ApplicationResponse>;
-  /** Reads and enables pagination through a set of `Notification`. */
-  notificationsByDocumentId: NotificationsConnection;
-};
-
-
-export type FileNotificationsByDocumentIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<NotificationsOrderBy>>;
-  condition?: Maybe<NotificationCondition>;
-  filter?: Maybe<NotificationFilter>;
-};
-
-/** A `Notification` edge in the connection. */
-export type NotificationsEdge = {
-  __typename?: 'NotificationsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `Notification` at the end of the edge. */
-  node?: Maybe<Notification>;
-};
-
 /** A `Review` edge in the connection. */
 export type ReviewsEdge = {
   __typename?: 'ReviewsEdge';
@@ -5235,292 +5494,6 @@ export type ReviewsEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `Review` at the end of the edge. */
   node?: Maybe<Review>;
-};
-
-/** Methods to use when ordering `ReviewQuestionAssignment`. */
-export enum ReviewQuestionAssignmentsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
-  TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
-  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
-  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `ReviewQuestionAssignment` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ReviewQuestionAssignmentCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateElementId` field. */
-  templateElementId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewAssignmentId` field. */
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-/** A connection to a list of `ReviewQuestionAssignment` values. */
-export type ReviewQuestionAssignmentsConnection = {
-  __typename?: 'ReviewQuestionAssignmentsConnection';
-  /** A list of `ReviewQuestionAssignment` objects. */
-  nodes: Array<Maybe<ReviewQuestionAssignment>>;
-  /** A list of edges which contains the `ReviewQuestionAssignment` and cursor to aid in pagination. */
-  edges: Array<ReviewQuestionAssignmentsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ReviewQuestionAssignment` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `ReviewQuestionAssignment` edge in the connection. */
-export type ReviewQuestionAssignmentsEdge = {
-  __typename?: 'ReviewQuestionAssignmentsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewQuestionAssignment` at the end of the edge. */
-  node?: Maybe<ReviewQuestionAssignment>;
-};
-
-/** A `ReviewResponse` edge in the connection. */
-export type ReviewResponsesEdge = {
-  __typename?: 'ReviewResponsesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewResponse` at the end of the edge. */
-  node?: Maybe<ReviewResponse>;
-};
-
-/** Methods to use when ordering `File`. */
-export enum FilesOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  UserIdAsc = 'USER_ID_ASC',
-  UserIdDesc = 'USER_ID_DESC',
-  OriginalFilenameAsc = 'ORIGINAL_FILENAME_ASC',
-  OriginalFilenameDesc = 'ORIGINAL_FILENAME_DESC',
-  PathAsc = 'PATH_ASC',
-  PathDesc = 'PATH_DESC',
-  MimetypeAsc = 'MIMETYPE_ASC',
-  MimetypeDesc = 'MIMETYPE_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
-  ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `File` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type FileCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `userId` field. */
-  userId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `originalFilename` field. */
-  originalFilename?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `path` field. */
-  path?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `mimetype` field. */
-  mimetype?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `applicationResponseId` field. */
-  applicationResponseId?: Maybe<Scalars['Int']>;
-};
-
-/** A connection to a list of `File` values. */
-export type FilesConnection = {
-  __typename?: 'FilesConnection';
-  /** A list of `File` objects. */
-  nodes: Array<Maybe<File>>;
-  /** A list of edges which contains the `File` and cursor to aid in pagination. */
-  edges: Array<FilesEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `File` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `File` edge in the connection. */
-export type FilesEdge = {
-  __typename?: 'FilesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `File` at the end of the edge. */
-  node?: Maybe<File>;
-};
-
-/** A `ApplicationResponse` edge in the connection. */
-export type ApplicationResponsesEdge = {
-  __typename?: 'ApplicationResponsesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ApplicationResponse` at the end of the edge. */
-  node?: Maybe<ApplicationResponse>;
-};
-
-/** A `TemplateElement` edge in the connection. */
-export type TemplateElementsEdge = {
-  __typename?: 'TemplateElementsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `TemplateElement` at the end of the edge. */
-  node?: Maybe<TemplateElement>;
-};
-
-/** Methods to use when ordering `ApplicationSection`. */
-export enum ApplicationSectionsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  TemplateSectionIdAsc = 'TEMPLATE_SECTION_ID_ASC',
-  TemplateSectionIdDesc = 'TEMPLATE_SECTION_ID_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `ApplicationSection` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ApplicationSectionCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateSectionId` field. */
-  templateSectionId?: Maybe<Scalars['Int']>;
-};
-
-/** A connection to a list of `ApplicationSection` values. */
-export type ApplicationSectionsConnection = {
-  __typename?: 'ApplicationSectionsConnection';
-  /** A list of `ApplicationSection` objects. */
-  nodes: Array<Maybe<ApplicationSection>>;
-  /** A list of edges which contains the `ApplicationSection` and cursor to aid in pagination. */
-  edges: Array<ApplicationSectionsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ApplicationSection` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type ApplicationSection = Node & {
-  __typename?: 'ApplicationSection';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  applicationId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
-  /** Reads a single `Application` that is related to this `ApplicationSection`. */
-  application?: Maybe<Application>;
-  /** Reads a single `TemplateSection` that is related to this `ApplicationSection`. */
-  templateSection?: Maybe<TemplateSection>;
-};
-
-/** A `ApplicationSection` edge in the connection. */
-export type ApplicationSectionsEdge = {
-  __typename?: 'ApplicationSectionsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ApplicationSection` at the end of the edge. */
-  node?: Maybe<ApplicationSection>;
-};
-
-/** A `TemplatePermission` edge in the connection. */
-export type TemplatePermissionsEdge = {
-  __typename?: 'TemplatePermissionsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `TemplatePermission` at the end of the edge. */
-  node?: Maybe<TemplatePermission>;
-};
-
-/** A `PermissionJoin` edge in the connection. */
-export type PermissionJoinsEdge = {
-  __typename?: 'PermissionJoinsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `PermissionJoin` at the end of the edge. */
-  node?: Maybe<PermissionJoin>;
-};
-
-/** A `UserOrganisation` edge in the connection. */
-export type UserOrganisationsEdge = {
-  __typename?: 'UserOrganisationsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `UserOrganisation` at the end of the edge. */
-  node?: Maybe<UserOrganisation>;
-};
-
-/** Methods to use when ordering `ReviewAssignment`. */
-export enum ReviewAssignmentsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  AssignerIdAsc = 'ASSIGNER_ID_ASC',
-  AssignerIdDesc = 'ASSIGNER_ID_DESC',
-  ReviewerIdAsc = 'REVIEWER_ID_ASC',
-  ReviewerIdDesc = 'REVIEWER_ID_DESC',
-  StageIdAsc = 'STAGE_ID_ASC',
-  StageIdDesc = 'STAGE_ID_DESC',
-  StatusAsc = 'STATUS_ASC',
-  StatusDesc = 'STATUS_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  AvailableTemplateSectionIdsAsc = 'AVAILABLE_TEMPLATE_SECTION_IDS_ASC',
-  AvailableTemplateSectionIdsDesc = 'AVAILABLE_TEMPLATE_SECTION_IDS_DESC',
-  TriggerAsc = 'TRIGGER_ASC',
-  TriggerDesc = 'TRIGGER_DESC',
-  TimeCreatedAsc = 'TIME_CREATED_ASC',
-  TimeCreatedDesc = 'TIME_CREATED_DESC',
-  LevelAsc = 'LEVEL_ASC',
-  LevelDesc = 'LEVEL_DESC',
-  CanMakeOverallDecisionAsc = 'CAN_MAKE_OVERALL_DECISION_ASC',
-  CanMakeOverallDecisionDesc = 'CAN_MAKE_OVERALL_DECISION_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `ReviewAssignment` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ReviewAssignmentCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `assignerId` field. */
-  assignerId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewerId` field. */
-  reviewerId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `stageId` field. */
-  stageId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `status` field. */
-  status?: Maybe<ReviewAssignmentStatus>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `availableTemplateSectionIds` field. */
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Checks for equality with the object’s `trigger` field. */
-  trigger?: Maybe<Trigger>;
-  /** Checks for equality with the object’s `timeCreated` field. */
-  timeCreated?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `level` field. */
-  level?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `canMakeOverallDecision` field. */
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
-};
-
-/** A connection to a list of `ReviewAssignment` values. */
-export type ReviewAssignmentsConnection = {
-  __typename?: 'ReviewAssignmentsConnection';
-  /** A list of `ReviewAssignment` objects. */
-  nodes: Array<Maybe<ReviewAssignment>>;
-  /** A list of edges which contains the `ReviewAssignment` and cursor to aid in pagination. */
-  edges: Array<ReviewAssignmentsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ReviewAssignment` you could get from the connection. */
-  totalCount: Scalars['Int'];
 };
 
 /** A `ReviewAssignment` edge in the connection. */
@@ -8426,7 +8399,6 @@ export type UpdateTemplateSectionOnTemplateSectionForTemplateSectionTemplateIdFk
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -8527,11 +8499,11 @@ export type TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateI
 export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `permissionName` in the `TemplatePermissionInput` mutation. */
@@ -9233,11 +9205,11 @@ export type TemplatePermissionOnTemplatePermissionForTemplatePermissionPermissio
 export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `template` in the `TemplatePermissionInput` mutation. */
@@ -10292,83 +10264,6 @@ export type UpdateTemplateSectionOnTemplateElementForTemplateElementSectionIdFke
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
-  templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
-  applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `templatePermission` in the `TemplateSectionInput` mutation. */
-export type TemplatePermissionTemplateSectionIdFkeyInverseInput = {
-  /** Flag indicating whether all other `templatePermission` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `templatePermission` for the far side of the relationship. */
-  connectById?: Maybe<Array<TemplatePermissionTemplatePermissionPkeyConnect>>;
-  /** The primary key(s) for `templatePermission` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<TemplatePermissionNodeIdConnect>>;
-  /** The primary key(s) for `templatePermission` for the far side of the relationship. */
-  deleteById?: Maybe<Array<TemplatePermissionTemplatePermissionPkeyDelete>>;
-  /** The primary key(s) for `templatePermission` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<TemplatePermissionNodeIdDelete>>;
-  /** The primary key(s) and patch data for `templatePermission` for the far side of the relationship. */
-  updateById?: Maybe<Array<TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplatePermissionPkeyUpdate>>;
-  /** The primary key(s) and patch data for `templatePermission` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate>>;
-  /** A `TemplatePermissionInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<TemplatePermissionTemplateSectionIdFkeyTemplatePermissionCreateInput>>;
-};
-
-/** The fields on `templatePermission` to look up the row to update. */
-export type TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplatePermissionPkeyUpdate = {
-  /** An object where the defined keys will be set on the `templatePermission` being updated. */
-  patch: UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `templatePermission` being updated. */
-export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  permissionNameId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  restrictions?: Maybe<Scalars['JSON']>;
-  permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
-  templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `templateSection` in the `TemplatePermissionInput` mutation. */
-export type TemplatePermissionTemplateSectionIdFkeyInput = {
-  /** The primary key(s) for `templateSection` for the far side of the relationship. */
-  connectById?: Maybe<TemplateSectionTemplateSectionPkeyConnect>;
-  /** The primary key(s) for `templateSection` for the far side of the relationship. */
-  connectByNodeId?: Maybe<TemplateSectionNodeIdConnect>;
-  /** The primary key(s) for `templateSection` for the far side of the relationship. */
-  deleteById?: Maybe<TemplateSectionTemplateSectionPkeyDelete>;
-  /** The primary key(s) for `templateSection` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<TemplateSectionNodeIdDelete>;
-  /** The primary key(s) and patch data for `templateSection` for the far side of the relationship. */
-  updateById?: Maybe<TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate>;
-  /** The primary key(s) and patch data for `templateSection` for the far side of the relationship. */
-  updateByNodeId?: Maybe<TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate>;
-  /** A `TemplateSectionInput` object that will be created and connected to this object. */
-  create?: Maybe<TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput>;
-};
-
-/** The fields on `templateSection` to look up the row to update. */
-export type TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate = {
-  /** An object where the defined keys will be set on the `templateSection` being updated. */
-  patch: UpdateTemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `templateSection` being updated. */
-export type UpdateTemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  index?: Maybe<Scalars['Int']>;
-  templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -10573,7 +10468,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -10670,7 +10565,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -10767,7 +10662,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -10926,7 +10821,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -11045,7 +10940,7 @@ export type UpdateReviewOnReviewForReviewApplicationIdFkeyPatch = {
   trigger?: Maybe<Trigger>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -11092,7 +10987,7 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -11135,7 +11030,7 @@ export type UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -11346,7 +11241,7 @@ export type UpdateReviewOnReviewForReviewReviewerIdFkeyPatch = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -11805,7 +11700,7 @@ export type UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -12055,7 +11950,7 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -12299,7 +12194,7 @@ export type UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -12400,7 +12295,7 @@ export type UpdateReviewOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -12501,7 +12396,7 @@ export type UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyP
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -12889,7 +12784,7 @@ export type ReviewPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -12907,7 +12802,7 @@ export type ReviewStatusHistoryReviewIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -12960,7 +12855,7 @@ export type ReviewDecisionReviewIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -13013,7 +12908,7 @@ export type ReviewResponseReviewIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -13181,7 +13076,7 @@ export type ReviewAssignmentPatch = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -13202,7 +13097,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -13334,7 +13229,7 @@ export type NotificationReviewIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -13552,7 +13447,7 @@ export type ReviewReviewerIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -13671,7 +13566,7 @@ export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -13701,7 +13596,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -13725,7 +13620,7 @@ export type ReviewApplicationIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -13792,7 +13687,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -14048,7 +13943,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -14110,7 +14005,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -14172,7 +14067,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -14335,7 +14230,6 @@ export type UpdateTemplateSectionOnApplicationSectionForApplicationSectionTempla
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -14356,7 +14250,6 @@ export type TemplateSectionPatch = {
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -14369,7 +14262,6 @@ export type ApplicationSectionTemplateSectionIdFkeyTemplateSectionCreateInput = 
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -14400,58 +14292,6 @@ export type ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `templateSection` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `templateSection` being updated. */
-  patch: TemplateSectionPatch;
-};
-
-/** The `templateSection` to be created by this mutation. */
-export type TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  index?: Maybe<Scalars['Int']>;
-  templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
-  templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
-  applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `templatePermission` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `templatePermission` being updated. */
-  patch: TemplatePermissionPatch;
-};
-
-/** Represents an update to a `TemplatePermission`. Fields that are set will be updated. */
-export type TemplatePermissionPatch = {
-  id?: Maybe<Scalars['Int']>;
-  permissionNameId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
-  restrictions?: Maybe<Scalars['JSON']>;
-  permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
-  templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
-};
-
-/** The `templatePermission` to be created by this mutation. */
-export type TemplatePermissionTemplateSectionIdFkeyTemplatePermissionCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  permissionNameId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  restrictions?: Maybe<Scalars['JSON']>;
-  permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
-  templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
 export type TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `templateSection` to be connected. */
   nodeId: Scalars['ID'];
@@ -14467,7 +14307,6 @@ export type TemplateElementSectionIdFkeyTemplateSectionCreateInput = {
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -14839,15 +14678,27 @@ export type PermissionNameOnTemplatePermissionForTemplatePermissionPermissionNam
   patch: TemplatePermissionPatch;
 };
 
+/** Represents an update to a `TemplatePermission`. Fields that are set will be updated. */
+export type TemplatePermissionPatch = {
+  id?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  restrictions?: Maybe<Scalars['JSON']>;
+  permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
+  templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
+};
+
 /** The `templatePermission` to be created by this mutation. */
 export type TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
 };
 
 /** The fields on `permissionName` to look up the row to update. */
@@ -15193,11 +15044,11 @@ export type TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeI
 export type TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -15241,7 +15092,6 @@ export type TemplateSectionTemplateIdFkeyTemplateSectionCreateInput = {
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -15935,7 +15785,7 @@ export type ReviewInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -15990,7 +15840,7 @@ export type ReviewAssignmentInput = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -16345,11 +16195,11 @@ export type TemplatePermissionInput = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
 };
 
 /** The output of our create `TemplatePermission` mutation. */
@@ -16365,8 +16215,6 @@ export type CreateTemplatePermissionPayload = {
   permissionName?: Maybe<PermissionName>;
   /** Reads a single `Template` that is related to this `TemplatePermission`. */
   template?: Maybe<Template>;
-  /** Reads a single `TemplateSection` that is related to this `TemplatePermission`. */
-  templateSection?: Maybe<TemplateSection>;
   /** An edge for our `TemplatePermission`. May be used by Relay 1. */
   templatePermissionEdge?: Maybe<TemplatePermissionsEdge>;
 };
@@ -16393,7 +16241,6 @@ export type TemplateSectionInput = {
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -17605,8 +17452,6 @@ export type UpdateTemplatePermissionPayload = {
   permissionName?: Maybe<PermissionName>;
   /** Reads a single `Template` that is related to this `TemplatePermission`. */
   template?: Maybe<Template>;
-  /** Reads a single `TemplateSection` that is related to this `TemplatePermission`. */
-  templateSection?: Maybe<TemplateSection>;
   /** An edge for our `TemplatePermission`. May be used by Relay 1. */
   templatePermissionEdge?: Maybe<TemplatePermissionsEdge>;
 };
@@ -18754,8 +18599,6 @@ export type DeleteTemplatePermissionPayload = {
   permissionName?: Maybe<PermissionName>;
   /** Reads a single `Template` that is related to this `TemplatePermission`. */
   template?: Maybe<Template>;
-  /** Reads a single `TemplateSection` that is related to this `TemplatePermission`. */
-  templateSection?: Maybe<TemplateSection>;
   /** An edge for our `TemplatePermission`. May be used by Relay 1. */
   templatePermissionEdge?: Maybe<TemplatePermissionsEdge>;
 };
@@ -19012,6 +18855,8 @@ export type CreateApplicationMutationVariables = Exact<{
   name: Scalars['String'];
   serial: Scalars['String'];
   templateId: Scalars['Int'];
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
   outcome?: Maybe<ApplicationOutcome>;
   trigger?: Maybe<Trigger>;
   sections?: Maybe<Array<ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput>>;
@@ -19025,6 +18870,7 @@ export type CreateApplicationMutation = (
     { __typename?: 'CreateApplicationPayload' }
     & { application?: Maybe<(
       { __typename?: 'Application' }
+      & Pick<Application, 'userId' | 'orgId'>
       & { template?: Maybe<(
         { __typename?: 'Template' }
         & { templateSections: (
@@ -19529,9 +19375,11 @@ export const TemplateStageFragmentDoc = gql`
 }
     `;
 export const CreateApplicationDocument = gql`
-    mutation createApplication($name: String!, $serial: String!, $templateId: Int!, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE, $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!], $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]) {
-  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, isActive: true, outcome: $outcome, trigger: $trigger, applicationSectionsUsingId: {create: $sections}, applicationResponsesUsingId: {create: $responses}}}) {
+    mutation createApplication($name: String!, $serial: String!, $templateId: Int!, $userId: Int, $orgId: Int, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE, $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!], $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]) {
+  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, userId: $userId, orgId: $orgId, isActive: true, outcome: $outcome, trigger: $trigger, applicationSectionsUsingId: {create: $sections}, applicationResponsesUsingId: {create: $responses}}}) {
     application {
+      userId
+      orgId
       ...Application
       template {
         ...Template
@@ -19565,6 +19413,8 @@ export type CreateApplicationMutationFn = Apollo.MutationFunction<CreateApplicat
  *      name: // value for 'name'
  *      serial: // value for 'serial'
  *      templateId: // value for 'templateId'
+ *      userId: // value for 'userId'
+ *      orgId: // value for 'orgId'
  *      outcome: // value for 'outcome'
  *      trigger: // value for 'trigger'
  *      sections: // value for 'sections'
