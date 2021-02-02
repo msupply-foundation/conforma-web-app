@@ -278,10 +278,11 @@ interface SectionsProgress {
   [index: string]: {
     info: SectionDetails
     link: string
-    progress?: {
+    progress: {
       total: number
       done: number
-      invalid: boolean
+      invalid?: boolean
+      completed?: boolean
     }
   }
 }
