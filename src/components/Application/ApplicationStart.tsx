@@ -65,7 +65,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
             <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
             <List divided relaxed>
               {sectionsProgress &&
-                Object.entries(sectionsProgress).map(([index, { info, progress }]) => (
+                Object.entries(sectionsProgress).map(([_, { info, progress }]) => (
                   <List.Item key={`list-item-${info.code}`}>
                     <List.Icon name="circle outline" />
                     <List.Content>{info.title}</List.Content>

@@ -84,12 +84,13 @@ const ApplicationPageWrapper: React.FC = () => {
     isApplicationReady,
   })
 
-  const { sections } = useGetSectionsProgress({
+  const { sections, isLoadingProgress } = useGetSectionsProgress({
     loadStart,
     currentUser: currentUser as User,
-    templateSections,
-    elementsState,
-    responsesByCode,
+    serialNumber,
+    templateSections: templateSections as TemplateSectionPayload[],
+    elementsState: elementsState as ApplicationElementStates,
+    responsesByCode: responsesByCode as ResponsesByCode,
   })
 
   const [responseMutation] = useUpdateResponseMutation()
@@ -101,13 +102,10 @@ const ApplicationPageWrapper: React.FC = () => {
   useEffect(() => {
     if (elementsState && responsesByCode && isApplicationReady) {
       const stage = application?.stage
-      console.log('Check if need to redirect')
       const { status } = stage as ApplicationStage
       if (status !== 'DRAFT') {
         replace(`/application/${serialNumber}/summary`)
-        console.log('SUBMITTED', status)
       } else if (!sectionCode || !page) {
-        console.log('DRAFT status?', status, ' Section', sectionCode, ' page', page)
         if (templateType?.startMessage) setLoadStart(true)
         else {
           console.log('No start message configured! Should display start page?')
@@ -210,11 +208,11 @@ const ApplicationPageWrapper: React.FC = () => {
 
   const handleSummaryClick = async () => {
     setSummaryButtonClicked(false)
-    const revalidate = await revalidateAll(
-      elementsState as ApplicationElementStates,
-      responsesByCode as ResponsesByCode,
-      currentUser as User
-    )
+    const revalidate = await revalidateAll({
+      elementsState: elementsState as ApplicationElementStates,
+      responsesByCode: responsesByCode as ResponsesByCode,
+      currentUser: currentUser as User,
+    })
 
     // Update database if validity changed
     revalidate.validityFailures.forEach((changedElement) => {
@@ -232,7 +230,7 @@ const ApplicationPageWrapper: React.FC = () => {
 
   return error || responsesError ? (
     <NoMatch />
-  ) : loading || responsesLoading ? (
+  ) : loading || responsesLoading || (loadStart && isLoadingProgress) ? (
     <Loading />
   ) : loadStart && sections ? (
     <ApplicationStart template={templateType as TemplateType} sectionsProgress={sections} />

@@ -7,23 +7,38 @@ import {
 } from '../../types'
 import validate from '../../../formElementPlugins/defaultValidate'
 
-export const revalidateAll = async (
-  elementsState: ApplicationElementStates,
-  responsesByCode: ResponsesByCode,
-  currentUser: User,
+interface RevalidateAllProps {
+  elementsState: ApplicationElementStates
+  responsesByCode: ResponsesByCode
+  currentUser: User
+  sectionCode?: string
+  strict?: boolean
+  shouldUpdateDatabase?: boolean
+}
+export const revalidateAll = async ({
+  elementsState,
+  responsesByCode,
+  currentUser,
+  sectionCode,
   strict = true,
-  shouldUpdateDatabase = true
-): Promise<RevalidateResult> => {
-  const elementCodes = Object.keys(elementsState).filter(
+  shouldUpdateDatabase = true,
+}: RevalidateAllProps): Promise<RevalidateResult> => {
+  // Filter section (when runnin per sections)
+  const elementCodes = sectionCode
+    ? Object.keys(elementsState).filter((key) => elementsState[key].sectionCode === sectionCode)
+    : Object.keys(elementsState)
+
+  // Now filter only questions, visible and which ones should be valid
+  const filteredQuestions = elementCodes.filter(
     (key) =>
       responsesByCode && // Typescript requires this
       elementsState[key].category === 'QUESTION' &&
       elementsState[key].isVisible === true &&
       // Strict/Loose validation logic:
-      ((strict && elementsState[key].isRequired) || responsesByCode[key]?.isValid !== null)
+      (elementsState[key].isRequired || responsesByCode[key]?.isValid !== null)
   )
 
-  const validationExpressions = elementCodes.map((code) => {
+  const validationExpressions = filteredQuestions.map((code) => {
     const thisResponse = responsesByCode
       ? responsesByCode[code]?.text
         ? responsesByCode[code]?.text
@@ -44,7 +59,7 @@ export const revalidateAll = async (
 
   // Also make empty responses invalid for required questions
   const strictResultArray = resultArray.map((element, index) => {
-    const code = elementCodes[index]
+    const code = filteredQuestions[index]
     return elementsState[code].isRequired &&
       (!responsesByCode[code]?.text ||
         responsesByCode[code].text === null ||
@@ -54,7 +69,7 @@ export const revalidateAll = async (
   })
 
   const validityFailures: ValidityFailure[] = shouldUpdateDatabase
-    ? elementCodes.reduce((validityFailures: ValidityFailure[], code, index) => {
+    ? filteredQuestions.reduce((validityFailures: ValidityFailure[], code, index) => {
         if (!strictResultArray[index].isValid)
           return [
             ...validityFailures,
@@ -72,8 +87,15 @@ export const revalidateAll = async (
     allValid: strictResultArray.every((element) => element.isValid),
     validityFailures,
     progress: {
-      total: elementCodes.length,
-      done: resultArray.filter(({ isValid }) => isValid).length,
+      total: filteredQuestions.length,
+      done: resultArray.filter((element, index) => {
+        const code = filteredQuestions[index]
+        return !responsesByCode[code]?.text ||
+          responsesByCode[code].text === null ||
+          responsesByCode[code].text === ''
+          ? false
+          : true
+      }).length,
     },
   }
 }

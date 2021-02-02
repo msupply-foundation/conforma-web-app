@@ -282,7 +282,6 @@ interface SectionsProgress {
       total: number
       done: number
       invalid: boolean
-      completed: boolean
     }
   }
 }

@@ -86,11 +86,11 @@ const ApplicationOverview: React.FC = () => {
   }, [elementsState, responsesLoading])
 
   const revalidateAndUpdate = async () => {
-    const revalidate = await revalidateAll(
-      elementsState as ApplicationElementStates,
-      responsesByCode as ResponsesByCode,
-      currentUser as User
-    )
+    const revalidate = await revalidateAll({
+      elementsState: elementsState as ApplicationElementStates,
+      responsesByCode: responsesByCode as ResponsesByCode,
+      currentUser: currentUser as User,
+    })
 
     // Update database if validity changed
     revalidate.validityFailures.forEach((changedElement) => {
