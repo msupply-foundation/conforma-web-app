@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Divider, Grid, Header, List, Progress, Segment } from 'semantic-ui-react'
+import { Button, Divider, Grid, Header, List, Progress, Segment, Sticky } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import { TemplateType, EvaluatorParameters, SectionsProgress } from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
@@ -11,15 +11,18 @@ export interface ApplicationStartProps {
   template: TemplateType
   sectionsProgress: SectionsProgress
   handleClick?: () => void
+  setSummaryButtonClicked?: () => void
 }
 
 const ApplicationStart: React.FC<ApplicationStartProps> = ({
   template,
   sectionsProgress,
   handleClick,
+  setSummaryButtonClicked,
 }) => {
   const { name, code, startMessage } = template
   const [startMessageEvaluated, setStartMessageEvaluated] = useState('')
+  const [isApplicationCompleted, setIsApplicationCompleted] = useState(false)
   const [firstIncomplete, setFirstIncomplete] = useState<string>()
   const {
     userState: { currentUser },
@@ -35,7 +38,12 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
       setStartMessageEvaluated(result)
     )
 
-    findFirstImcompleteSection()
+    const isApplicationCompleted = Object.values(sectionsProgress).every(
+      ({ progress }) => progress?.completed
+    )
+    if (!isApplicationCompleted) findFirstImcompleteSection()
+
+    setIsApplicationCompleted(isApplicationCompleted)
   }, [startMessage, currentUser])
 
   const findFirstImcompleteSection = () => {
@@ -132,6 +140,18 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
           </Segment>
         )}
       </Segment>
+      {isApplicationCompleted && (
+        <Sticky
+          pushing
+          style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
+        >
+          <Segment basic textAlign="right">
+            <Button color="blue" onClick={setSummaryButtonClicked}>
+              {strings.BUTTON_SUMMARY}
+            </Button>
+          </Segment>
+        </Sticky>
+      )}
     </Segment.Group>
   ) : (
     <ApplicationSelectType />

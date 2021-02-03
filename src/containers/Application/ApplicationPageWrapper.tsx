@@ -233,7 +233,11 @@ const ApplicationPageWrapper: React.FC = () => {
   ) : loading || responsesLoading || (loadStart && isLoadingProgress) ? (
     <Loading />
   ) : loadStart && sections ? (
-    <ApplicationStart template={templateType as TemplateType} sectionsProgress={sections} />
+    <ApplicationStart
+      template={templateType as TemplateType}
+      sectionsProgress={sections}
+      setSummaryButtonClicked={() => setSummaryButtonClicked(true)}
+    />
   ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
       <ModalWarning showModal={showModal} />
