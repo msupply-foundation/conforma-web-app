@@ -351,7 +351,7 @@ interface RevalidateResult {
 
 interface UseGetApplicationProps {
   serialNumber: string
-  isApplicationLoaded?: boolean
+  isApplicationReady?: boolean
   networkFetch?: boolean
 }
 

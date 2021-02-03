@@ -30,6 +30,7 @@ export default {
   LABEL_ASSIGNED_TO_YOU: 'Assigned to you',
   LABEL_ASSIGNED_TO_OTHER: 'Assigned to another reviewer',
   LABEL_COMMENT: 'Add comment',
+  LABEL_LOADING: 'Loading...',
   LABEL_LOGIN_PASSWORD: 'Password',
   LABEL_LOGIN_USERNAME: 'Username',
   LABEL_LOG_IN: 'Log in',

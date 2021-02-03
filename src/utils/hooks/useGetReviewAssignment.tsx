@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { ApolloError } from '@apollo/client'
 import {
   ApplicationResponse,
   Review,
@@ -19,14 +18,14 @@ interface UseGetReviewAssignmentProps {
 const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssignmentProps) => {
   const [assignment, setAssignment] = useState<AssignmentDetails | undefined>()
   const [assignedSections, setAssignedSections] = useState<string[] | undefined>()
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [assignmentError, setAssignmentError] = useState<string>()
 
   const {
     error: applicationError,
+    loading: applicationLoading,
     application,
     templateSections,
-    isApplicationLoaded,
+    isApplicationReady,
   } = useLoadApplication({ serialNumber })
 
   const { data, loading: apolloLoading, error: apolloError } = useGetReviewAssignmentQuery({
@@ -35,27 +34,16 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
       applicationId: application?.id,
       stageId: application?.stage?.id,
     },
-    skip: !isApplicationLoaded,
+    skip: !isApplicationReady,
   })
 
   useEffect(() => {
-    if (applicationError) {
-      const error = applicationError as ApolloError
-      setError(error.message)
-      return
-    }
-
-    if (apolloError) {
-      setError(apolloError.message)
-      return
-    }
-
     if (data && data.reviewAssignments) {
       const reviewerAssignments = data.reviewAssignments.nodes as ReviewAssignment[]
 
       // Should have only 1 review assignment per applicaton, stage and reviewer
       if (reviewerAssignments.length === 0) {
-        setError('No assignments in this review')
+        setAssignmentError('No assignments in this review')
         return
       }
 
@@ -95,9 +83,8 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
           []
         ),
       })
-      setLoading(false)
     }
-  }, [data, applicationError, apolloError])
+  }, [data])
 
   useEffect(() => {
     if (assignment && templateSections) {
@@ -113,8 +100,8 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
   }, [assignment])
 
   return {
-    error,
-    loading,
+    error: apolloError ? (apolloError.message as string) : applicationError || assignmentError,
+    loading: applicationLoading || apolloLoading,
     application,
     assignment,
     assignedSections,

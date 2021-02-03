@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Header, Icon, Label, List, Message, Segment } from 'semantic-ui-react'
-import { Loading } from '../../components'
+import { Loading, NoMatch } from '../../components'
 import strings from '../../utils/constants'
 import { EvaluatorParameters } from '../../utils/types'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -20,7 +20,7 @@ const ApplicationSubmission: React.FC = () => {
   const { query, push } = useRouter()
   const { serialNumber } = query
 
-  const { error, loading, application, appStages, isApplicationLoaded } = useLoadApplication({
+  const { error, loading, application, appStages, isApplicationReady } = useLoadApplication({
     serialNumber: serialNumber as string,
     networkFetch: true,
   })
@@ -36,17 +36,17 @@ const ApplicationSubmission: React.FC = () => {
   }, [appStages, currentUser])
 
   useEffect(() => {
-    if (!isApplicationLoaded) return
+    if (!isApplicationReady) return
     const status = application?.stage?.status
     // Check if application is in Draft or Changes required status and redirect to the summary page
-    // Note: The summary page has its own redirection logic to ay specific page (with invalid items).
+    // Note: The summary page has its own redirection logic to a specific page (with invalid items).
     if (status === ApplicationStatus.Draft || status === ApplicationStatus.ChangesRequired) {
       push(`/application/${serialNumber}/summary`)
     }
-  }, [isApplicationLoaded])
+  }, [isApplicationReady])
 
   return error ? (
-    <Message error header={strings.ERROR_APPLICATION_SUBMISSION} list={[error]} />
+    <NoMatch />
   ) : loading ? (
     <Loading />
   ) : serialNumber && appStages ? (
