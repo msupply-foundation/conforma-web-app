@@ -45,7 +45,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
       .find(([_, section]) => !section.progress.completed || !section.progress.valid)
 
     if (firstIncompleteSection) {
-      const [index, section] = firstIncompleteSection
+      const [_, section] = firstIncompleteSection
       setFirstIncomplete(section.info.code)
     }
   }

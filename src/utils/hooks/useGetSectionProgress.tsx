@@ -28,6 +28,13 @@ const useGetSectionsProgress = ({
   const [sections, setSections] = useState<SectionsProgress>()
   const [isLoadingProgress, setIsLoadingProgress] = useState(false)
 
+  useEffect(() => {
+    if (loadStart && currentUser && templateSections && elementsState && responsesByCode) {
+      setIsLoadingProgress(true)
+      runScanSectionProgress()
+    }
+  }, [loadStart])
+
   async function runScanSectionProgress() {
     let sectionsProgress: SectionsProgress = {}
     templateSections.forEach(async ({ code, title, index }) => {
@@ -49,17 +56,18 @@ const useGetSectionsProgress = ({
             title,
             code,
           },
-          progress: { total, done, valid, completed: total === done && valid },
-          link: getLinkToSection(validityFailures),
+          progress: { total, done, valid, completed: valid && total === done },
+          link: !(total === done && valid) ? getLinkToSection(validityFailures) : undefined,
         },
       }
+
       setSections(sectionsProgress)
+      if (templateSections.length === Object.keys(sectionsProgress).length)
+        setIsLoadingProgress(false)
     })
   }
 
   const getLinkToSection = (validityFailures: any): string => {
-    console.log('validity', validityFailures)
-
     const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
       validityFailures,
       elementsState
@@ -68,13 +76,6 @@ const useGetSectionsProgress = ({
     const page = firstErrorPage ? firstErrorPage : 1
     return `/application/${serialNumber}/${section}/Page${page}`
   }
-
-  useEffect(() => {
-    if (loadStart && currentUser && templateSections && elementsState && responsesByCode) {
-      setIsLoadingProgress(true)
-      runScanSectionProgress().then(() => setIsLoadingProgress(false))
-    }
-  }, [loadStart])
 
   return {
     sections,
