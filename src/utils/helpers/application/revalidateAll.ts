@@ -13,7 +13,6 @@ interface RevalidateAllProps {
   currentUser: User
   sectionCode?: string
   strict?: boolean
-  shouldUpdateDatabase?: boolean
 }
 export const revalidateAll = async ({
   elementsState,
@@ -21,7 +20,6 @@ export const revalidateAll = async ({
   currentUser,
   sectionCode,
   strict = true,
-  shouldUpdateDatabase = true,
 }: RevalidateAllProps): Promise<RevalidateResult> => {
   // Filter section (when runnin per sections)
   const elementCodes = sectionCode
@@ -68,20 +66,21 @@ export const revalidateAll = async ({
       : element
   })
 
-  const validityFailures: ValidityFailure[] = shouldUpdateDatabase
-    ? filteredQuestions.reduce((validityFailures: ValidityFailure[], code, index) => {
-        if (!strictResultArray[index].isValid)
-          return [
-            ...validityFailures,
-            {
-              id: (responsesByCode && responsesByCode[code].id) || 0,
-              isValid: false,
-              code,
-            },
-          ]
-        else return validityFailures
-      }, [])
-    : []
+  const validityFailures: ValidityFailure[] = filteredQuestions.reduce(
+    (validityFailures: ValidityFailure[], code, index) => {
+      if (!strictResultArray[index].isValid)
+        return [
+          ...validityFailures,
+          {
+            id: (responsesByCode && responsesByCode[code].id) || 0,
+            isValid: false,
+            code,
+          },
+        ]
+      else return validityFailures
+    },
+    []
+  )
 
   const progress = {
     total: filteredQuestions.length,

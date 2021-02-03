@@ -37,10 +37,9 @@ const useGetSectionsProgress = ({
         currentUser,
         sectionCode: code,
         strict: false, // Do we still need this flag?
-        shouldUpdateDatabase: false,
       })
 
-      const { progress } = validate
+      const { progress, validityFailures } = validate
       const { total, done, valid } = progress
 
       sectionsProgress = {
@@ -51,24 +50,23 @@ const useGetSectionsProgress = ({
             code,
           },
           progress: { total, done, valid, completed: total === done && valid },
-          link: getLinkToSection(valid, validate.validityFailures),
+          link: getLinkToSection(validityFailures),
         },
       }
       setSections(sectionsProgress)
     })
   }
 
-  const getLinkToSection = (valid: boolean, validityFailures: any): string => {
-    if (valid) {
-      const firstSection = templateSections[0].code
-      return `/application/${serialNumber}/${firstSection}/Page1`
-    } else {
-      const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
-        validityFailures,
-        elementsState
-      )
-      return `/application/${serialNumber}/${firstErrorSectionCode}/Page${firstErrorPage}`
-    }
+  const getLinkToSection = (validityFailures: any): string => {
+    console.log('validity', validityFailures)
+
+    const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
+      validityFailures,
+      elementsState
+    )
+    const section = firstErrorSectionCode ? firstErrorSectionCode : templateSections[0].code
+    const page = firstErrorPage ? firstErrorPage : 1
+    return `/application/${serialNumber}/${section}/Page${page}`
   }
 
   useEffect(() => {
