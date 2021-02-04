@@ -34,7 +34,6 @@ import {
   ProgressStatus,
   ResponsesByCode,
   TemplateSectionPayload,
-  TemplateType,
   User,
   ValidationMode,
 } from '../../utils/types'
@@ -66,7 +65,7 @@ const ApplicationPageWrapper: React.FC = () => {
     error,
     loading,
     application,
-    templateType,
+    template,
     templateSections,
     isApplicationReady,
   } = useLoadApplication({
@@ -106,7 +105,7 @@ const ApplicationPageWrapper: React.FC = () => {
       if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired) {
         replace(`/application/${serialNumber}/summary`)
       } else if (!sectionCode || !page) {
-        if (templateType?.startMessage) setLoadStart(true)
+        if (template?.startMessage) setLoadStart(true)
         else {
           // Redirects to first section/page if not Start Message defined
           const firstSection = templateSections[0].code
@@ -231,9 +230,9 @@ const ApplicationPageWrapper: React.FC = () => {
     <NoMatch />
   ) : loading || responsesLoading || (loadStart && isLoadingProgress) ? (
     <Loading />
-  ) : loadStart && sections ? (
+  ) : loadStart && template && sections ? (
     <ApplicationStart
-      template={templateType as TemplateType}
+      template={template}
       sectionsProgress={sections}
       setSummaryButtonClicked={() => setSummaryButtonClicked(true)}
     />

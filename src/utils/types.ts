@@ -50,7 +50,7 @@ export {
   SectionStructure,
   StageAndStatus,
   TemplateSectionPayload,
-  TemplateType,
+  TemplateDetails,
   TemplateElementState,
   TemplatePermissions,
   TemplatesDetails,
@@ -309,7 +309,7 @@ interface TemplateSectionPayload {
   totalPages: number
 }
 
-interface TemplateType {
+interface TemplateDetails {
   id: number
   name: string
   code: string

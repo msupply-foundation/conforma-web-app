@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Divider, Grid, Header, List, Progress, Segment, Sticky } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import { TemplateType, EvaluatorParameters, SectionsProgress } from '../../utils/types'
+import { EvaluatorParameters, SectionsProgress, TemplateDetails } from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
 export interface ApplicationStartProps {
-  template: TemplateType
+  template: TemplateDetails
   sectionsProgress: SectionsProgress
   handleClick?: () => void
   setSummaryButtonClicked?: () => void
@@ -47,13 +47,13 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
   }, [startMessage, currentUser])
 
   const findFirstIncompleteSection = () => {
-    const firstIncompleteSection = Object.entries(sectionsProgress)
+    const firstIncompleteLocation = Object.entries(sectionsProgress)
       .filter(([_, section]) => section.progress)
       .sort(([aKey], [bKey]) => (aKey < bKey ? -1 : 1))
       .find(([_, section]) => !section.progress.completed || !section.progress.valid)
 
-    if (firstIncompleteSection) {
-      const [_, section] = firstIncompleteSection
+    if (firstIncompleteLocation) {
+      const [_, section] = firstIncompleteLocation
       setFirstIncomplete(section.info.code)
     }
   }

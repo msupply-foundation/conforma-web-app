@@ -12,14 +12,14 @@ import { getApplicationSections } from '../helpers/application/getSectionsPayloa
 import {
   ApplicationDetails,
   ApplicationStages,
+  TemplateDetails,
   TemplateSectionPayload,
-  TemplateType,
   UseGetApplicationProps,
 } from '../types'
 
 const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
   const [application, setApplication] = useState<ApplicationDetails>()
-  const [templateType, setTemplateType] = useState<TemplateType>()
+  const [template, setTemplate] = useState<TemplateDetails>()
   const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
   const [appStages, setAppStages] = useState<ApplicationStages>()
   const [isApplicationReady, setIsApplicationReady] = useState(false)
@@ -73,7 +73,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
       const { id, code, name, startMessage } = application.template as Template
 
-      setTemplateType({
+      setTemplate({
         id,
         code,
         name: name as string,
@@ -130,7 +130,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     loading: loading || statusLoading || isTriggerProcessing,
     application,
     appStages,
-    templateType,
+    template,
     templateSections,
     isApplicationReady,
   }

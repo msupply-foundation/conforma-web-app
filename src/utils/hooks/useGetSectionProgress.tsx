@@ -56,7 +56,9 @@ const useGetSectionsProgress = ({
             code,
           },
           progress: { total, done, valid, completed: valid && total === done },
-          link: !(total === done && valid) ? getLinkToSection(validityFailures) : undefined,
+          link: !(total === done && valid)
+            ? getLinkToInProgressLocation(validityFailures)
+            : undefined,
         },
       }
 
@@ -66,7 +68,7 @@ const useGetSectionsProgress = ({
     })
   }
 
-  const getLinkToSection = (validityFailures: any): string => {
+  const getLinkToInProgressLocation = (validityFailures: any): string => {
     const { firstErrorSectionCode, firstErrorPage } = getFirstErrorLocation(
       validityFailures,
       elementsState
