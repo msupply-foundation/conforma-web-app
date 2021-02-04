@@ -41,12 +41,12 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
     const isApplicationCompleted = Object.values(sectionsProgress).every(
       ({ progress }) => progress?.completed
     )
-    if (!isApplicationCompleted) findFirstImcompleteSection()
+    if (!isApplicationCompleted) findFirstIncompleteSection()
 
     setIsApplicationCompleted(isApplicationCompleted)
   }, [startMessage, currentUser])
 
-  const findFirstImcompleteSection = () => {
+  const findFirstIncompleteSection = () => {
     const firstIncompleteSection = Object.entries(sectionsProgress)
       .filter(([_, section]) => section.progress)
       .sort(([aKey], [bKey]) => (aKey < bKey ? -1 : 1))

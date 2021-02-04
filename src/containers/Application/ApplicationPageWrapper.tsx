@@ -11,7 +11,7 @@ import {
   Segment,
   Sticky,
 } from 'semantic-ui-react'
-import { useUpdateResponseMutation } from '../../utils/generated/graphql'
+import { ApplicationStatus, useUpdateResponseMutation } from '../../utils/generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
 import { useApplicationState } from '../../contexts/ApplicationState'
@@ -97,19 +97,18 @@ const ApplicationPageWrapper: React.FC = () => {
 
   // Wait for application to be loaded to:
   // 1 - ProcessRedirect: Will redirect to summary in case application is SUBMITTED
-  // 2 - Set hook to load sections progerss in the start page (if startMessage exisinting), OR
+  // 2 - Set hook to load sections progress in the start page (if startMessage existing), OR
   // 3 - Set the current section state of the application
   useEffect(() => {
     if (elementsState && responsesByCode && isApplicationReady) {
       const stage = application?.stage
       const { status } = stage as ApplicationStage
-      if (status !== 'DRAFT') {
+      if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired) {
         replace(`/application/${serialNumber}/summary`)
       } else if (!sectionCode || !page) {
         if (templateType?.startMessage) setLoadStart(true)
         else {
-          // TODO: No start message configured! Should display start page?
-          // Temporarly redirects to first section/page
+          // Redirects to first section/page if not Start Message defined
           const firstSection = templateSections[0].code
           replace(`/application/${serialNumber}/${firstSection}/Page1`)
         }
