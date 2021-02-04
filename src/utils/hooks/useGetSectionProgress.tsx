@@ -43,7 +43,6 @@ const useGetSectionsProgress = ({
         responsesByCode,
         currentUser,
         sectionCode: code,
-        strict: false, // Do we still need this flag?
       })
 
       const { progress, validityFailures } = validate
