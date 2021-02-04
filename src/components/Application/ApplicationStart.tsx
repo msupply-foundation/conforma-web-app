@@ -2,21 +2,21 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Divider, Grid, Header, List, Progress, Segment, Sticky } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import { EvaluatorParameters, SectionsProgress, TemplateDetails } from '../../utils/types'
+import { EvaluatorParameters, SectionDetails, TemplateDetails } from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
 export interface ApplicationStartProps {
   template: TemplateDetails
-  sectionsProgress: SectionsProgress
+  sections: SectionDetails[]
   handleClick?: () => void
   setSummaryButtonClicked?: () => void
 }
 
 const ApplicationStart: React.FC<ApplicationStartProps> = ({
   template,
-  sectionsProgress,
+  sections,
   handleClick,
   setSummaryButtonClicked,
 }) => {
@@ -38,7 +38,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
       setStartMessageEvaluated(result)
     )
 
-    const isApplicationCompleted = Object.values(sectionsProgress).every(
+    const isApplicationCompleted = Object.values(sections).every(
       ({ progress }) => progress?.completed
     )
     if (!isApplicationCompleted) findFirstIncompleteSection()
@@ -47,14 +47,14 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
   }, [startMessage, currentUser])
 
   const findFirstIncompleteSection = () => {
-    const firstIncompleteLocation = Object.entries(sectionsProgress)
+    const firstIncompleteLocation = Object.entries(sections)
       .filter(([_, section]) => section.progress)
       .sort(([aKey], [bKey]) => (aKey < bKey ? -1 : 1))
-      .find(([_, section]) => !section.progress.completed || !section.progress.valid)
+      .find(([_, section]) => !section.progress?.completed || !section.progress.valid)
 
     if (firstIncompleteLocation) {
       const [_, section] = firstIncompleteLocation
-      setFirstIncomplete(section.info.code)
+      setFirstIncomplete(section.code)
     }
   }
 
@@ -87,11 +87,11 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
             <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
             <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
             <List divided relaxed="very">
-              {sectionsProgress &&
-                Object.entries(sectionsProgress).map(([_, { info, progress, link }]) => {
+              {sections &&
+                Object.entries(sections).map(([_, { code: sectionCode, progress, title }]) => {
                   return (
                     <List.Item
-                      key={`list-item-${info.code}`}
+                      key={`list-item-${sectionCode}`}
                       children={
                         <Grid>
                           <Grid.Column width={1}>
@@ -102,7 +102,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
                             )}
                           </Grid.Column>
                           <Grid.Column width={10}>
-                            <p>{info.title}</p>
+                            <p>{title}</p>
                           </Grid.Column>
                           <Grid.Column width={3}>
                             {progress && progress.done > 0 && progress.total > 0 && (
@@ -115,11 +115,11 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
                             )}
                           </Grid.Column>
                           <Grid.Column width={2}>
-                            {progress && info.code === firstIncomplete && (
+                            {progress && sectionCode === firstIncomplete && (
                               <Button
                                 color="blue"
                                 as={Link}
-                                to={link} // TODO: Link not working - page doesn't refresh!
+                                //to={link} // TODO: Link not working - page doesn't refresh!
                                 content={strings.BUTTON_APPLICATION_RESUME}
                               />
                             )}

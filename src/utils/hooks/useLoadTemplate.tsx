@@ -5,8 +5,8 @@ import {
   TemplateSection,
   useGetTemplateQuery,
 } from '../generated/graphql'
-import { getTemplateSections } from '../helpers/application/getSectionsPayload'
-import { TemplateDetails, TemplateSectionPayload } from '../types'
+import { getTemplateSections } from '../helpers/application/getSectionsDetails'
+import { SectionDetails, TemplateDetails } from '../types'
 
 interface useLoadTemplateProps {
   templateCode: string
@@ -15,8 +15,8 @@ interface useLoadTemplateProps {
 const useLoadTemplate = (props: useLoadTemplateProps) => {
   const { templateCode } = props
   const [template, setTemplate] = useState<TemplateDetails>()
-  const [templateSections, setTemplateSections] = useState<TemplateSectionPayload[] | null>(null)
-  const [templateElementsIds, setElementsIds] = useState<number[]>([])
+  const [sections, setSections] = useState<SectionDetails[] | null>(null)
+  const [elementsIds, setElementsIds] = useState<number[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -56,7 +56,7 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
     })
 
     const sections = getTemplateSections(templateSections)
-    setTemplateSections(sections)
+    setSections(sections)
 
     const elements = [] as number[]
 
@@ -75,9 +75,9 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
     loading,
     apolloError,
     error,
-    templateType: template,
-    templateSections,
-    templateElementsIds,
+    template,
+    sections,
+    elementsIds,
   }
 }
 

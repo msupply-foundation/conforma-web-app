@@ -33,7 +33,7 @@ import {
   ProgressInApplication,
   ProgressStatus,
   ResponsesByCode,
-  TemplateSectionPayload,
+  SectionDetails,
   User,
   ValidationMode,
 } from '../../utils/types'
@@ -49,7 +49,7 @@ const ApplicationPageWrapper: React.FC = () => {
     setApplicationState,
   } = useApplicationState()
   const [summaryButtonClicked, setSummaryButtonClicked] = useState(false)
-  const [currentSection, setCurrentSection] = useState<TemplateSectionPayload>()
+  const [currentSection, setCurrentSection] = useState<SectionDetails>()
   const [pageElements, setPageElements] = useState<ElementState[]>([])
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
   const [forceValidation, setForceValidation] = useState<boolean>(false)
@@ -66,7 +66,7 @@ const ApplicationPageWrapper: React.FC = () => {
     loading,
     application,
     template,
-    templateSections,
+    sections,
     isApplicationReady,
   } = useLoadApplication({
     serialNumber: serialNumber as string,
@@ -83,13 +83,11 @@ const ApplicationPageWrapper: React.FC = () => {
     isApplicationReady,
   })
 
-  const { sections, isLoadingProgress } = useGetSectionsProgress({
-    loadStart,
-    currentUser: currentUser as User,
-    serialNumber,
-    templateSections: templateSections as TemplateSectionPayload[],
-    elementsState: elementsState as ApplicationElementStates,
-    responsesByCode: responsesByCode as ResponsesByCode,
+  const { sectionsProgress, isLoadingProgress } = useGetSectionsProgress({
+    currentUser,
+    sections,
+    elementsState,
+    responsesByCode,
   })
 
   const [responseMutation] = useUpdateResponseMutation()
@@ -108,10 +106,10 @@ const ApplicationPageWrapper: React.FC = () => {
         if (template?.startMessage) setLoadStart(true)
         else {
           // Redirects to first section/page if not Start Message defined
-          const firstSection = templateSections[0].code
+          const firstSection = sections[0].code
           replace(`/application/${serialNumber}/${firstSection}/Page1`)
         }
-      } else setCurrentSection(templateSections.find(({ code }) => code === sectionCode))
+      } else setCurrentSection(sections.find(({ code }) => code === sectionCode))
     }
   }, [elementsState, responsesByCode, sectionCode, page, isApplicationReady])
 
@@ -132,7 +130,7 @@ const ApplicationPageWrapper: React.FC = () => {
     const progressStructure = buildProgressInApplication({
       elementsState,
       responses: responsesByCode,
-      templateSections,
+      sections: sections,
       isLinear: application?.isLinear as boolean,
       currentSection: currentSection.index,
       currentPage: Number(page),
@@ -149,7 +147,7 @@ const ApplicationPageWrapper: React.FC = () => {
   }, [responsesLoading, currentSection, page, elementsState])
 
   const defaultCurrentPage = {
-    section: currentSection as TemplateSectionPayload,
+    section: currentSection as SectionDetails,
     page: Number(page),
   }
 
@@ -230,13 +228,13 @@ const ApplicationPageWrapper: React.FC = () => {
     <NoMatch />
   ) : loading || responsesLoading || (loadStart && isLoadingProgress) ? (
     <Loading />
-  ) : loadStart && template && sections ? (
+  ) : loadStart && template && sectionsProgress ? (
     <ApplicationStart
       template={template}
-      sectionsProgress={sections}
+      sections={sectionsProgress}
       setSummaryButtonClicked={() => setSummaryButtonClicked(true)}
     />
-  ) : application && templateSections && serialNumber && currentSection && responsesByCode ? (
+  ) : application && sections && serialNumber && currentSection && responsesByCode ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
       <ModalWarning showModal={showModal} />
       <Header textAlign="center">
@@ -260,7 +258,7 @@ const ApplicationPageWrapper: React.FC = () => {
               serialNumber={serialNumber as string}
               progressStructure={progressInApplication}
               currentSectionPage={{ sectionIndex: currentSection.index, currentPage: Number(page) }}
-              getPreviousPage={(props) => getPreviousPage({ templateSections, ...props })}
+              getPreviousPage={(props) => getPreviousPage({ sections: sections, ...props })}
               validateElementsInPage={validateElementsInPage}
             />
           )}
@@ -275,7 +273,7 @@ const ApplicationPageWrapper: React.FC = () => {
               forceValidation={forceValidation}
             />
             <NavigationBox
-              templateSections={templateSections}
+              sections={sections}
               currentSection={currentSection}
               serialNumber={serialNumber}
               currentPage={Number(page as string)}
@@ -310,7 +308,7 @@ const getPageHasRequiredQuestions = (elements: ElementState[]): boolean =>
 interface buildProgressInApplicationProps {
   elementsState: ApplicationElementStates | undefined
   responses: ResponsesByCode | undefined
-  templateSections: TemplateSectionPayload[]
+  sections: SectionDetails[]
   isLinear: boolean
   currentSection: number
   currentPage: number
@@ -320,7 +318,7 @@ interface buildProgressInApplicationProps {
 function buildProgressInApplication({
   elementsState,
   responses,
-  templateSections,
+  sections,
   isLinear,
   currentSection,
   currentPage,
@@ -362,7 +360,7 @@ function buildProgressInApplication({
   const getPageValidationMode = (pageNumber: number, sectionIndex: number) =>
     isLinear && isPreviousPageValid(pageNumber, sectionIndex) ? 'STRICT' : 'LOOSE'
 
-  return templateSections.map((section) => {
+  return sections.map((section) => {
     // Create an array with all pages in each section
     const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
 

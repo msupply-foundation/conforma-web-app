@@ -8,19 +8,19 @@ import {
   useGetApplicationStatusQuery,
 } from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
-import { getApplicationSections } from '../helpers/application/getSectionsPayload'
+import { getApplicationSections } from '../helpers/application/getSectionsDetails'
 import {
   ApplicationDetails,
   ApplicationStages,
+  SectionDetails,
   TemplateDetails,
-  TemplateSectionPayload,
   UseGetApplicationProps,
 } from '../types'
 
 const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
   const [application, setApplication] = useState<ApplicationDetails>()
   const [template, setTemplate] = useState<TemplateDetails>()
-  const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
+  const [sections, setSections] = useState<SectionDetails[]>([])
   const [appStages, setAppStages] = useState<ApplicationStages>()
   const [isApplicationReady, setIsApplicationReady] = useState(false)
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
@@ -131,7 +131,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     application,
     appStages,
     template,
-    templateSections,
+    sections,
     isApplicationReady,
   }
 }

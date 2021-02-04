@@ -3,13 +3,14 @@ import {
   ApplicationElementStates,
   ResponseFull,
   ResponsesByCode,
+  SectionDetails,
   SectionStructure,
-  TemplateSectionPayload,
+  // TemplateSectionPayload,
 } from '../../types'
 import getPageElements from './getPageElements'
 
 interface BuildSectionsStructureProps {
-  templateSections: TemplateSectionPayload[]
+  sections: SectionDetails[]
   elementsState: ApplicationElementStates
   responsesByCode: ResponsesByCode
   reviewResponses?: ReviewResponse[]
@@ -17,7 +18,7 @@ interface BuildSectionsStructureProps {
 }
 
 const buildSectionsStructure = ({
-  templateSections,
+  sections,
   elementsState,
   responsesByCode,
   reviewResponses,
@@ -25,8 +26,8 @@ const buildSectionsStructure = ({
 }: BuildSectionsStructureProps): SectionStructure => {
   // Create the sections and pages structure to display each section's element
   // Will also add the responses for each element, and can add reviews if received by props
-  return templateSections
-    .sort((a, b) => a.index - b.index)
+  return sections
+    .sort(({ index: aIndex }, { index: bIndex }) => aIndex - bIndex)
     .map((section) => {
       let reviewInSection = false
       const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
@@ -60,10 +61,7 @@ const buildSectionsStructure = ({
       }, {})
 
       const sectionState = {
-        section: {
-          title: section.title,
-          code: section.code,
-        },
+        section,
         pages,
       }
 

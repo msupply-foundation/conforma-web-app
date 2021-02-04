@@ -37,7 +37,7 @@ const ApplicationOverview: React.FC = () => {
 
   const { query, push } = useRouter()
   const { serialNumber } = query
-  const { error, loading, application, templateSections, isApplicationReady } = useLoadApplication({
+  const { error, loading, application, sections, isApplicationReady } = useLoadApplication({
     serialNumber: serialNumber as string,
     networkFetch: true,
   })
@@ -76,7 +76,7 @@ const ApplicationOverview: React.FC = () => {
   useEffect(() => {
     if (!responsesLoading && elementsState && responsesByCode) {
       const sectionsStructure = buildSectionsStructure({
-        templateSections,
+        sections,
         elementsState,
         responsesByCode,
       })

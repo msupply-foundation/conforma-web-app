@@ -25,14 +25,11 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
   const [isReviewLoaded, setIsReviewLoaded] = useState(false)
   const [reviewError, setReviewError] = useState<string>()
 
-  const {
-    error: applicationError,
-    application,
-    templateSections,
-    isApplicationReady,
-  } = useLoadApplication({
-    serialNumber,
-  })
+  const { error: applicationError, application, sections, isApplicationReady } = useLoadApplication(
+    {
+      serialNumber,
+    }
+  )
 
   const { error: responsesError, responsesByCode, elementsState } = useGetResponsesAndElementState({
     serialNumber,
@@ -73,7 +70,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
       const reviewResponses = data.review.reviewResponses.nodes as ReviewResponse[]
       const reviewer = data.review.reviewer as User
       const sectionsStructure = buildSectionsStructure({
-        templateSections,
+        sections,
         elementsState,
         responsesByCode,
         reviewResponses,

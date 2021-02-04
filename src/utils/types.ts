@@ -46,10 +46,9 @@ export {
   ReviewerResponsesPayload,
   SectionElementStates,
   SectionDetails,
-  SectionsProgress,
+  SectionProgress,
   SectionStructure,
   StageAndStatus,
-  TemplateSectionPayload,
   TemplateDetails,
   TemplateElementState,
   TemplatePermissions,
@@ -92,7 +91,6 @@ interface ApplicationStage {
 interface ApplicationStageMap {
   [key: string]: ApplicationStage
 }
-
 interface ApplicationStages {
   stages: StageDetails[]
   submissionMessage: string
@@ -270,21 +268,19 @@ interface SectionElementStates {
 }
 
 interface SectionDetails {
-  title: string
+  id: number
+  index: number
   code: string
+  title: string
+  totalPages: number
+  progress?: SectionProgress
 }
 
-interface SectionsProgress {
-  [index: string]: {
-    info: SectionDetails
-    link: string
-    progress: {
-      total: number
-      done: number
-      valid: boolean
-      completed?: boolean
-    }
-  }
+interface SectionProgress {
+  total: number
+  done: number
+  valid: boolean
+  completed?: boolean
 }
 
 type SectionStructure = SectionElementStates[]
