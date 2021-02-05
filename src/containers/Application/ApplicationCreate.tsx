@@ -73,7 +73,11 @@ const ApplicationCreate: React.FC = () => {
   ) : loading || processing ? (
     <Loading />
   ) : template && sections ? (
-    <ApplicationStart template={template} sections={sections} handleClick={() => handleCreate()} />
+    <ApplicationStart
+      template={template}
+      sections={sections}
+      startApplication={() => handleCreate()}
+    />
   ) : (
     <Header as="h2" icon="exclamation circle" content="No template found!" />
   )

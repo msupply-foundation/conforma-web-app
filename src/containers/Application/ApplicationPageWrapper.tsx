@@ -33,6 +33,7 @@ import {
   ProgressInApplication,
   ProgressStatus,
   ResponsesByCode,
+  ResumeSection,
   SectionDetails,
   User,
   ValidationMode,
@@ -48,13 +49,13 @@ const ApplicationPageWrapper: React.FC = () => {
     },
     setApplicationState,
   } = useApplicationState()
-  const [summaryButtonClicked, setSummaryButtonClicked] = useState(false)
   const [currentSection, setCurrentSection] = useState<SectionDetails>()
   const [pageElements, setPageElements] = useState<ElementState[]>([])
   const [progressInApplication, setProgressInApplication] = useState<ProgressInApplication>()
   const [forceValidation, setForceValidation] = useState<boolean>(false)
   const [showModal, setShowModal] = useState<ModalProps>({ open: false })
   const [loadStart, setLoadStart] = useState(false)
+  const [summaryButtonClicked, setSummaryButtonClicked] = useState(false)
   const {
     userState: { currentUser },
   } = useUserState()
@@ -224,14 +225,20 @@ const ApplicationPageWrapper: React.FC = () => {
     else push(`/application/${serialNumber}/summary`)
   }
 
+  const handleResumeClick = ({ sectionCode, page }: ResumeSection) => {
+    setLoadStart(false)
+    replace(`/application/${serialNumber}/${sectionCode}/Page${page}`)
+  }
+
   return error || responsesError ? (
     <NoMatch />
   ) : loading || responsesLoading || (loadStart && isLoadingProgress) ? (
     <Loading />
-  ) : loadStart && template && sectionsProgress ? (
+  ) : loadStart && serialNumber && template && sectionsProgress ? (
     <ApplicationStart
       template={template}
       sections={sectionsProgress}
+      resumeApplication={handleResumeClick}
       setSummaryButtonClicked={() => setSummaryButtonClicked(true)}
     />
   ) : application && sections && serialNumber && currentSection && responsesByCode ? (

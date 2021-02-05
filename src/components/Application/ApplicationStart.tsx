@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { Button, Divider, Grid, Header, List, Progress, Segment, Sticky } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import { EvaluatorParameters, SectionDetails, TemplateDetails } from '../../utils/types'
+import {
+  EvaluatorParameters,
+  ResumeSection,
+  SectionDetails,
+  TemplateDetails,
+} from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
-export interface ApplicationStartProps {
+export interface ApplicationStartProps extends RouteComponentProps {
   template: TemplateDetails
   sections: SectionDetails[]
-  handleClick?: () => void
+  resumeApplication?: (props: ResumeSection) => void
+  startApplication?: () => void
   setSummaryButtonClicked?: () => void
 }
 
 const ApplicationStart: React.FC<ApplicationStartProps> = ({
   template,
   sections,
-  handleClick,
+  resumeApplication,
+  startApplication,
   setSummaryButtonClicked,
 }) => {
   const { name, code, startMessage } = template
@@ -115,13 +122,15 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
                             )}
                           </Grid.Column>
                           <Grid.Column width={2}>
-                            {progress && sectionCode === firstIncomplete && (
+                            {resumeApplication && progress && sectionCode === firstIncomplete && (
                               <Button
                                 color="blue"
-                                as={Link}
-                                //to={link} // TODO: Link not working - page doesn't refresh!
-                                content={strings.BUTTON_APPLICATION_RESUME}
-                              />
+                                onClick={() =>
+                                  resumeApplication({ sectionCode, page: progress.linkedPage })
+                                }
+                              >
+                                {strings.BUTTON_APPLICATION_RESUME}
+                              </Button>
                             )}
                           </Grid.Column>
                         </Grid>
@@ -132,8 +141,8 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
             </List>
             <Divider />
             <Markdown text={startMessageEvaluated} semanticComponent="Message" info />
-            {handleClick && (
-              <Button color="blue" onClick={handleClick}>
+            {startApplication && (
+              <Button color="blue" onClick={startApplication}>
                 {strings.BUTTON_APPLICATION_START}
               </Button>
             )}
@@ -158,4 +167,4 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
   )
 }
 
-export default ApplicationStart
+export default withRouter(ApplicationStart)

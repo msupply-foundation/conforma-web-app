@@ -82,23 +82,29 @@ export const revalidateAll = async ({
     []
   )
 
-  const progress = {
-    total: filteredQuestions.length,
-    done: resultArray.filter((_, index) => {
-      const code = filteredQuestions[index]
-      return !responsesByCode[code]?.text ||
-        responsesByCode[code].text === null ||
-        responsesByCode[code].text === ''
-        ? false
-        : true
-    }).length,
-    valid: resultArray.every((element) => element.isValid),
-  }
+  // Build progress (used for section progress)
+  const total = filteredQuestions.length
+  const done = resultArray.filter((_, index) => {
+    const code = filteredQuestions[index]
+    return !responsesByCode[code]?.text ||
+      responsesByCode[code].text === null ||
+      responsesByCode[code].text === ''
+      ? false
+      : true
+  }).length
+  const valid = resultArray.every((element) => element.isValid)
+  const firstErrorLocation = getFirstErrorLocation(validityFailures, elementsState)
 
   return {
     allValid: strictResultArray.every((element) => element.isValid),
     validityFailures,
-    progress,
+    progress: {
+      total,
+      done,
+      completed: done === total,
+      valid,
+      linkedPage: firstErrorLocation.firstErrorPage,
+    },
   }
 }
 

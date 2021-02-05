@@ -36,13 +36,10 @@ const updateSectionsProgress = async ({
 
   Promise.all(validatePromises).then((values) => {
     const sectionsProgress: SectionDetails[] = []
-    values.forEach(({ progress, validityFailures }, index) => {
-      const { total, done, valid } = progress
-
+    values.forEach(({ progress }, index) => {
       sectionsProgress.push({
         ...sections[index],
-        progress: { total, done, valid, completed: valid && total === done },
-        // link?
+        progress,
       })
     })
     setSections(sectionsProgress)

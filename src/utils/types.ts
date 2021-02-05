@@ -40,6 +40,7 @@ export {
   ResponseFull,
   ResponsePayload,
   ResponsesByCode,
+  ResumeSection,
   ReviewDetails,
   ReviewQuestion,
   ReviewQuestionDecision,
@@ -228,6 +229,11 @@ interface ResponsesByCode {
   [key: string]: ResponseFull
 }
 
+interface ResumeSection {
+  sectionCode: string
+  page: number
+}
+
 interface ReviewDetails {
   id: number
   status: string
@@ -279,8 +285,9 @@ interface SectionDetails {
 interface SectionProgress {
   total: number
   done: number
+  completed: boolean
   valid: boolean
-  completed?: boolean
+  linkedPage: number
 }
 
 type SectionStructure = SectionElementStates[]
