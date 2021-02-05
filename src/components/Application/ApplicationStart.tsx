@@ -46,7 +46,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
     )
 
     const isApplicationCompleted = Object.values(sections).every(
-      ({ progress }) => progress?.completed
+      ({ progress }) => progress?.completed && progress.valid
     )
     if (!isApplicationCompleted) findFirstIncompleteSection()
 
