@@ -1,15 +1,26 @@
 import React, { useEffect } from 'react'
-import { Button, Card, Container, Header, List, Message, Segment } from 'semantic-ui-react'
+import {
+  Button,
+  Grid,
+  Header,
+  Icon,
+  Label,
+  List,
+  Message,
+  Progress,
+  Segment,
+} from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
 import useGetReviewAssignment from '../../utils/hooks/useGetReviewAssignment'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { Link } from 'react-router-dom'
 import { ReviewStatus } from '../../utils/generated/graphql'
-import { AssignmentDetails } from '../../utils/types'
+import { AssignmentDetails, SectionDetails } from '../../utils/types'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import { useUserState } from '../../contexts/UserState'
 
+// TODO: Rename to ReviewStart
 const ReviewOverview: React.FC = () => {
   const {
     push,
@@ -19,7 +30,7 @@ const ReviewOverview: React.FC = () => {
     userState: { currentUser },
   } = useUserState()
 
-  const { error, loading, application, assignment, assignedSections } = useGetReviewAssignment({
+  const { error, loading, application, assignment, sectionsAssigned } = useGetReviewAssignment({
     reviewerId: currentUser?.userId as number,
     serialNumber,
   })
@@ -55,6 +66,31 @@ const ReviewOverview: React.FC = () => {
     })
   }
 
+  const getProgresOrLabel = ({ assigned, progress }: SectionDetails) => {
+    if (assigned) {
+      if (progress && progress.done > 0 && progress.total > 0) {
+        return (
+          <Progress
+            percent={(100 * progress.done) / progress.total}
+            size="tiny"
+            success={progress.valid}
+            error={!progress.valid}
+          />
+        )
+      } else {
+        if (!assignment?.review) {
+          return (
+            <Segment vertical>
+              <Icon name="circle" size="mini" color="blue" />
+              <Label basic>{strings.LABEL_ASSIGNED_TO_YOU}</Label>
+            </Segment>
+          )
+        }
+        return null
+      }
+    } else return <p>{strings.LABEL_ASSIGNED_TO_OTHER}</p>
+  }
+
   const getActionButton = ({ review }: AssignmentDetails) => {
     if (review) {
       const { id, status } = review
@@ -83,41 +119,60 @@ const ReviewOverview: React.FC = () => {
   ) : loading ? (
     <Loading />
   ) : application && assignment ? (
-    <Container>
-      <Card fluid>
-        <Card.Content>
-          <Card.Header>{application.name}</Card.Header>
-          <Card.Description>
-            This is the Overview/Start page for Reviews of Application {serialNumber}.
-          </Card.Description>
-        </Card.Content>
-        <Card.Content extra>
-          <a
-            href={
-              'https://github.com/openmsupply/application-manager-web-app/issues/200#issuecomment-741432161'
-            }
-          >
-            Click here for explanation.
-          </a>
-        </Card.Content>
-      </Card>
-      {assignedSections && (
-        <Segment>
-          <Header as="h5">Sections assigned to you:</Header>
-          <List>
-            {assignedSections.map((section) => (
-              <List.Item key={`ReviewSection_${section}`}>{section}</List.Item>
-            ))}
-          </List>
-        </Segment>
-      )}
-      {getActionButton(assignment)}
-      {createReviewError && (
-        <Message error header={strings.ERROR_REVIEW_OVERVIEW}>
-          {createReviewError}
-        </Message>
-      )}
-    </Container>
+    <Segment.Group>
+      <Segment textAlign="center">
+        <Label color="blue">{strings.STAGE_PLACEHOLDER}</Label>
+        <Header content={application.name} subheader={strings.DATE_APPLICATION_PLACEHOLDER} />
+        <Header
+          as="h3"
+          color="grey"
+          content={strings.TITLE_REVIEW_SUMMARY}
+          subheader={strings.SUBTITLE_REVIEW}
+        />
+      </Segment>
+      <Segment
+        style={{
+          backgroundColor: 'white',
+          padding: 10,
+          margin: '0px 50px',
+          minHeight: 500,
+          flex: 1,
+        }}
+      >
+        <List divided relaxed="very">
+          {sectionsAssigned &&
+            sectionsAssigned.map((section) => {
+              const { code: sectionCode, progress, title } = section
+              return (
+                <List.Item
+                  key={`list-item-${sectionCode}`}
+                  children={
+                    <Grid>
+                      <Grid.Column width={10}>
+                        <p>{title}</p>
+                      </Grid.Column>
+                      <Grid.Column width={4}>{getProgresOrLabel(section)}</Grid.Column>
+                      <Grid.Column width={2}>
+                        {progress && (
+                          <Button color="blue">{strings.BUTTON_APPLICATION_RESUME}</Button>
+                        )}
+                      </Grid.Column>
+                    </Grid>
+                  }
+                ></List.Item>
+              )
+            })}
+        </List>
+        {getActionButton(assignment)}
+      </Segment>
+      <Segment>
+        {createReviewError && (
+          <Message error header={strings.ERROR_REVIEW_OVERVIEW}>
+            {createReviewError}
+          </Message>
+        )}
+      </Segment>
+    </Segment.Group>
   ) : (
     <Message error content={strings.ERROR_REVIEW_OVERVIEW} />
   )

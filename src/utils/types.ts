@@ -280,6 +280,7 @@ interface SectionDetails {
   title: string
   totalPages: number
   progress?: SectionProgress
+  assigned?: boolean
 }
 
 interface SectionProgress {

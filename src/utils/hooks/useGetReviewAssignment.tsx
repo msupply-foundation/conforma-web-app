@@ -6,7 +6,7 @@ import {
   useGetReviewAssignmentQuery,
 } from '../generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
-import { AssignmentDetails } from '../types'
+import { AssignmentDetails, SectionDetails } from '../types'
 import { getAssignedSections, getAssignedQuestions } from '../helpers/review/getAssignedElements'
 
 interface UseGetReviewAssignmentProps {
@@ -15,8 +15,8 @@ interface UseGetReviewAssignmentProps {
 }
 
 const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssignmentProps) => {
-  const [assignment, setAssignment] = useState<AssignmentDetails | undefined>()
-  const [assignedSections, setAssignedSections] = useState<string[] | undefined>()
+  const [assignment, setAssignment] = useState<AssignmentDetails>()
+  const [sectionsAssigned, setSectionsAssigned] = useState<SectionDetails[]>()
   const [assignmentError, setAssignmentError] = useState<string>()
 
   const {
@@ -65,8 +65,12 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
 
   useEffect(() => {
     if (assignment && sections) {
-      const assignedSections = getAssignedSections({ assignment, sections })
-      setAssignedSections(assignedSections)
+      const myAssignedSections = getAssignedSections({ assignment, sections })
+      const sectionsAssigned = sections.map((section) => {
+        const { title } = section
+        return { ...section, assigned: myAssignedSections.includes(title) }
+      })
+      setSectionsAssigned(sectionsAssigned)
     }
   }, [assignment])
 
@@ -75,7 +79,7 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
     loading: applicationLoading || apolloLoading,
     application,
     assignment,
-    assignedSections,
+    sectionsAssigned,
   }
 }
 
