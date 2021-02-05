@@ -131,7 +131,7 @@ interface ContextListState {
 }
 
 interface CurrentPage {
-  section: TemplateSectionPayload
+  section: SectionDetails
   page: number
 }
 
@@ -297,14 +297,6 @@ interface StageDetails {
   description?: string
 }
 
-interface TemplateSectionPayload {
-  id: number
-  code: string
-  title: string
-  index: number
-  totalPages: number
-}
-
 interface TemplateDetails {
   id: number
   name: string
@@ -352,11 +344,7 @@ interface ValidityFailure {
 interface RevalidateResult {
   allValid: boolean
   validityFailures: ValidityFailure[]
-  progress: {
-    total: number
-    done: number
-    valid: boolean
-  }
+  progress: SectionProgress
 }
 
 interface UseGetApplicationProps {

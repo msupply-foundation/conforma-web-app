@@ -5,7 +5,6 @@ import {
   ResponsesByCode,
   SectionDetails,
   SectionStructure,
-  // TemplateSectionPayload,
 } from '../../types'
 import getPageElements from './getPageElements'
 
