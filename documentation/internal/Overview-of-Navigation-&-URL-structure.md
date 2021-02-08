@@ -184,7 +184,7 @@ This page will have mutations to `create review`, `self-assign review assignment
 
 Specific Review or Consolidation page. Assigned Reviewer(s) can mark questions as "Conform"/"Non-conform" or "Agree"/"Disagree" for consolidation and add comments. Reveiew Decision can also be made ![Review Decision Back End Repo Wiki]https://github.com/openmsupply/application-manager-server/wiki/Database-Schema-Review-And-Consolidation#review-decision)
 
-This diagram is also useful for this URL `Review and Consolidation URL Flow` ![Diagrams Back End Repo Wiki]https://github.com/openmsupply/application-manager-server/wiki/Database-Schema-Review-And-Consolidation#diagram)
+This diagram is also useful for this URL `Review and Consolidation URL Flow` ![Diagrams Back End Repo Wiki](https://github.com/openmsupply/application-manager-server/wiki/Database-Schema-Review-And-Consolidation#diagram)
 
 ---
 
