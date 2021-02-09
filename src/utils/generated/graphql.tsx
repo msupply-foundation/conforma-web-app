@@ -48,6 +48,8 @@ export type Query = Node & {
   applicationStageHistories?: Maybe<ApplicationStageHistoriesConnection>;
   /** Reads and enables pagination through a set of `ApplicationStageStatusAll`. */
   applicationStageStatusAlls?: Maybe<ApplicationStageStatusAllsConnection>;
+  /** Reads and enables pagination through a set of `ApplicationStageStatusLatest`. */
+  applicationStageStatusLatests?: Maybe<ApplicationStageStatusLatestsConnection>;
   /** Reads and enables pagination through a set of `ApplicationStatusHistory`. */
   applicationStatusHistories?: Maybe<ApplicationStatusHistoriesConnection>;
   /** Reads and enables pagination through a set of `ApplicationTriggerState`. */
@@ -320,6 +322,19 @@ export type QueryApplicationStageStatusAllsArgs = {
   orderBy?: Maybe<Array<ApplicationStageStatusAllsOrderBy>>;
   condition?: Maybe<ApplicationStageStatusAllCondition>;
   filter?: Maybe<ApplicationStageStatusAllFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationStageStatusLatestsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ApplicationStageStatusLatestsOrderBy>>;
+  condition?: Maybe<ApplicationStageStatusLatestCondition>;
+  filter?: Maybe<ApplicationStageStatusLatestFilter>;
 };
 
 
@@ -2406,8 +2421,8 @@ export type ReviewAssignmentFilter = {
   status?: Maybe<ReviewAssignmentStatusFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `availableTemplateSectionIds` field. */
-  availableTemplateSectionIds?: Maybe<IntListFilter>;
+  /** Filter by the object’s `allowedTemplateSectionIds` field. */
+  allowedTemplateSectionIds?: Maybe<IntListFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `timeCreated` field. */
@@ -4449,8 +4464,8 @@ export enum ReviewAssignmentsOrderBy {
   StatusDesc = 'STATUS_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  AvailableTemplateSectionIdsAsc = 'AVAILABLE_TEMPLATE_SECTION_IDS_ASC',
-  AvailableTemplateSectionIdsDesc = 'AVAILABLE_TEMPLATE_SECTION_IDS_DESC',
+  AllowedTemplateSectionIdsAsc = 'ALLOWED_TEMPLATE_SECTION_IDS_ASC',
+  AllowedTemplateSectionIdsDesc = 'ALLOWED_TEMPLATE_SECTION_IDS_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
   TimeCreatedAsc = 'TIME_CREATED_ASC',
@@ -4477,8 +4492,8 @@ export type ReviewAssignmentCondition = {
   status?: Maybe<ReviewAssignmentStatus>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `availableTemplateSectionIds` field. */
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Checks for equality with the object’s `allowedTemplateSectionIds` field. */
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `timeCreated` field. */
@@ -4512,7 +4527,7 @@ export type ReviewAssignment = Node & {
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -5898,7 +5913,9 @@ export enum ApplicationListsOrderBy {
   OutcomeAsc = 'OUTCOME_ASC',
   OutcomeDesc = 'OUTCOME_DESC',
   LastActiveDateAsc = 'LAST_ACTIVE_DATE_ASC',
-  LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC'
+  LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC',
+  IsFullyAssignedLevel_1Asc = 'IS_FULLY_ASSIGNED_LEVEL_1_ASC',
+  IsFullyAssignedLevel_1Desc = 'IS_FULLY_ASSIGNED_LEVEL_1_DESC'
 }
 
 /** A condition to be used against `ApplicationList` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -5931,6 +5948,8 @@ export type ApplicationListCondition = {
   outcome?: Maybe<ApplicationOutcome>;
   /** Checks for equality with the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `isFullyAssignedLevel1` field. */
+  isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `ApplicationList` object types. All fields are combined with a logical ‘and.’ */
@@ -5963,6 +5982,8 @@ export type ApplicationListFilter = {
   outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Filter by the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `isFullyAssignedLevel1` field. */
+  isFullyAssignedLevel1?: Maybe<BooleanFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationListFilter>>;
   /** Checks for any expressions in this list. */
@@ -6000,6 +6021,7 @@ export type ApplicationList = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
 };
 
 /** A `ApplicationList` edge in the connection. */
@@ -6166,6 +6188,163 @@ export type ApplicationStageStatusAllsEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `ApplicationStageStatusAll` at the end of the edge. */
   node?: Maybe<ApplicationStageStatusAll>;
+};
+
+/** Methods to use when ordering `ApplicationStageStatusLatest`. */
+export enum ApplicationStageStatusLatestsOrderBy {
+  Natural = 'NATURAL',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  SerialAsc = 'SERIAL_ASC',
+  SerialDesc = 'SERIAL_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  OrgIdAsc = 'ORG_ID_ASC',
+  OrgIdDesc = 'ORG_ID_DESC',
+  StageIdAsc = 'STAGE_ID_ASC',
+  StageIdDesc = 'STAGE_ID_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
+  StageAsc = 'STAGE_ASC',
+  StageDesc = 'STAGE_DESC',
+  StageHistoryIdAsc = 'STAGE_HISTORY_ID_ASC',
+  StageHistoryIdDesc = 'STAGE_HISTORY_ID_DESC',
+  StageHistoryTimeCreatedAsc = 'STAGE_HISTORY_TIME_CREATED_ASC',
+  StageHistoryTimeCreatedDesc = 'STAGE_HISTORY_TIME_CREATED_DESC',
+  StageIsCurrentAsc = 'STAGE_IS_CURRENT_ASC',
+  StageIsCurrentDesc = 'STAGE_IS_CURRENT_DESC',
+  StatusHistoryIdAsc = 'STATUS_HISTORY_ID_ASC',
+  StatusHistoryIdDesc = 'STATUS_HISTORY_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  StatusHistoryTimeCreatedAsc = 'STATUS_HISTORY_TIME_CREATED_ASC',
+  StatusHistoryTimeCreatedDesc = 'STATUS_HISTORY_TIME_CREATED_DESC',
+  StatusIsCurrentAsc = 'STATUS_IS_CURRENT_ASC',
+  StatusIsCurrentDesc = 'STATUS_IS_CURRENT_DESC'
+}
+
+/** A condition to be used against `ApplicationStageStatusLatest` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ApplicationStageStatusLatestCondition = {
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `serial` field. */
+  serial?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `orgId` field. */
+  orgId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageId` field. */
+  stageId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageNumber` field. */
+  stageNumber?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stage` field. */
+  stage?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `stageHistoryId` field. */
+  stageHistoryId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageHistoryTimeCreated` field. */
+  stageHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `stageIsCurrent` field. */
+  stageIsCurrent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `statusHistoryId` field. */
+  statusHistoryId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: Maybe<ApplicationStatus>;
+  /** Checks for equality with the object’s `statusHistoryTimeCreated` field. */
+  statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `statusIsCurrent` field. */
+  statusIsCurrent?: Maybe<Scalars['Boolean']>;
+};
+
+/** A filter to be used against `ApplicationStageStatusLatest` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationStageStatusLatestFilter = {
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `serial` field. */
+  serial?: Maybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `orgId` field. */
+  orgId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageId` field. */
+  stageId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `stage` field. */
+  stage?: Maybe<StringFilter>;
+  /** Filter by the object’s `stageHistoryId` field. */
+  stageHistoryId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageHistoryTimeCreated` field. */
+  stageHistoryTimeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `stageIsCurrent` field. */
+  stageIsCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `statusHistoryId` field. */
+  statusHistoryId?: Maybe<IntFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<ApplicationStatusFilter>;
+  /** Filter by the object’s `statusHistoryTimeCreated` field. */
+  statusHistoryTimeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `statusIsCurrent` field. */
+  statusIsCurrent?: Maybe<BooleanFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ApplicationStageStatusLatestFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ApplicationStageStatusLatestFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ApplicationStageStatusLatestFilter>;
+};
+
+/** A connection to a list of `ApplicationStageStatusLatest` values. */
+export type ApplicationStageStatusLatestsConnection = {
+  __typename?: 'ApplicationStageStatusLatestsConnection';
+  /** A list of `ApplicationStageStatusLatest` objects. */
+  nodes: Array<Maybe<ApplicationStageStatusLatest>>;
+  /** A list of edges which contains the `ApplicationStageStatusLatest` and cursor to aid in pagination. */
+  edges: Array<ApplicationStageStatusLatestsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ApplicationStageStatusLatest` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type ApplicationStageStatusLatest = {
+  __typename?: 'ApplicationStageStatusLatest';
+  applicationId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  stage?: Maybe<Scalars['String']>;
+  stageHistoryId?: Maybe<Scalars['Int']>;
+  stageHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
+  stageIsCurrent?: Maybe<Scalars['Boolean']>;
+  statusHistoryId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ApplicationStatus>;
+  statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
+  statusIsCurrent?: Maybe<Scalars['Boolean']>;
+};
+
+/** A `ApplicationStageStatusLatest` edge in the connection. */
+export type ApplicationStageStatusLatestsEdge = {
+  __typename?: 'ApplicationStageStatusLatestsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ApplicationStageStatusLatest` at the end of the edge. */
+  node?: Maybe<ApplicationStageStatusLatest>;
 };
 
 /** Methods to use when ordering `ApplicationTriggerState`. */
@@ -10529,7 +10708,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -10626,7 +10805,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -10723,7 +10902,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -10882,7 +11061,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   reviewerId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -11048,7 +11227,7 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -12011,7 +12190,7 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -13137,7 +13316,7 @@ export type ReviewAssignmentPatch = {
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -13158,7 +13337,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -13657,7 +13836,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -13748,7 +13927,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -14004,7 +14183,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -14066,7 +14245,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -14128,7 +14307,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -15923,7 +16102,7 @@ export type ReviewAssignmentInput = {
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
