@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react'
 import {
-  ApplicationResponse,
   Review,
   ReviewAssignment,
   ReviewQuestionAssignment,
-  TemplateElement,
   useGetReviewAssignmentQuery,
 } from '../generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
-import { AssignmentDetails, ReviewQuestion } from '../types'
+import { AssignmentDetails } from '../types'
+import { getAssignedSections, getAssignedQuestions } from '../helpers/review/getAssignedElements'
 
 interface UseGetReviewAssignmentProps {
   reviewerId: number
@@ -24,7 +23,7 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
     error: applicationError,
     loading: applicationLoading,
     application,
-    templateSections,
+    sections,
     isApplicationReady,
   } = useLoadApplication({ serialNumber })
 
@@ -53,49 +52,21 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
       // Should have only 1 review per application, stage and reviewer
       const review = reviews.length > 0 ? reviews[0] : undefined
 
-      const questionsAssignments = currentAssignment.reviewQuestionAssignments
+      const reviewQuestions = currentAssignment.reviewQuestionAssignments
         .nodes as ReviewQuestionAssignment[]
 
       setAssignment({
         id: currentAssignment.id,
         review: review ? { id: review.id, status: review.status as string } : undefined,
-        questions: questionsAssignments.reduce(
-          (validQuestionAssignments: ReviewQuestion[], questionAssignment) => {
-            const { templateElement } = questionAssignment
-            const { code, section, applicationResponses } = templateElement as TemplateElement
-            const currentResponse =
-              applicationResponses.nodes.length > 0
-                ? (applicationResponses.nodes[0] as ApplicationResponse)
-                : undefined
-
-            // Check if assigned question is valid to include in array
-            if (!currentResponse) return validQuestionAssignments
-
-            return [
-              ...validQuestionAssignments,
-              {
-                code,
-                responseId: currentResponse.id,
-                sectionIndex: section?.index as number,
-              },
-            ]
-          },
-          []
-        ),
+        questions: getAssignedQuestions({ reviewQuestions }),
       })
     }
   }, [data])
 
   useEffect(() => {
-    if (assignment && templateSections) {
-      const sections = assignment.questions.reduce((sections: string[], { sectionIndex }) => {
-        const templateSection = templateSections.find(({ index }) => index === sectionIndex)
-        if (templateSection) {
-          if (!sections.includes(templateSection.title)) sections.push(templateSection.title)
-        }
-        return sections
-      }, [])
-      setAssignedSections(sections)
+    if (assignment && sections) {
+      const assignedSections = getAssignedSections({ assignment, sections })
+      setAssignedSections(assignedSections)
     }
   }, [assignment])
 

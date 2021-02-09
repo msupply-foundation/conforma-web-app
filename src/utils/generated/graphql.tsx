@@ -110,6 +110,7 @@ export type Query = Node & {
   file?: Maybe<File>;
   notification?: Maybe<Notification>;
   organisation?: Maybe<Organisation>;
+  organisationByName?: Maybe<Organisation>;
   permissionJoin?: Maybe<PermissionJoin>;
   permissionName?: Maybe<PermissionName>;
   permissionNameByName?: Maybe<PermissionName>;
@@ -135,6 +136,8 @@ export type Query = Node & {
   jwtGetBoolean?: Maybe<Scalars['Boolean']>;
   jwtGetText?: Maybe<Scalars['String']>;
   reviewApplicationId?: Maybe<Scalars['Int']>;
+  reviewIsLastLevel?: Maybe<Scalars['Boolean']>;
+  reviewLevel?: Maybe<Scalars['Int']>;
   reviewReviewerId?: Maybe<Scalars['Int']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
@@ -718,6 +721,12 @@ export type QueryOrganisationArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryOrganisationByNameArgs = {
+  name: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryPermissionJoinArgs = {
   id: Scalars['Int'];
 };
@@ -863,6 +872,18 @@ export type QueryJwtGetTextArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewApplicationIdArgs = {
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewIsLastLevelArgs = {
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewLevelArgs = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
 };
 
@@ -2864,10 +2885,6 @@ export type UserOrganisationFilter = {
   organisationId?: Maybe<IntFilter>;
   /** Filter by the object’s `userRole` field. */
   userRole?: Maybe<StringFilter>;
-  /** Filter by the object’s `permissionJoins` relation. */
-  permissionJoins?: Maybe<UserOrganisationToManyPermissionJoinFilter>;
-  /** Some related `permissionJoins` exist. */
-  permissionJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -2884,8 +2901,48 @@ export type UserOrganisationFilter = {
   not?: Maybe<UserOrganisationFilter>;
 };
 
+/** A filter to be used against `Organisation` object types. All fields are combined with a logical ‘and.’ */
+export type OrganisationFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `licenceNumber` field. */
+  licenceNumber?: Maybe<StringFilter>;
+  /** Filter by the object’s `address` field. */
+  address?: Maybe<StringFilter>;
+  /** Filter by the object’s `userOrganisations` relation. */
+  userOrganisations?: Maybe<OrganisationToManyUserOrganisationFilter>;
+  /** Some related `userOrganisations` exist. */
+  userOrganisationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `permissionJoins` relation. */
+  permissionJoins?: Maybe<OrganisationToManyPermissionJoinFilter>;
+  /** Some related `permissionJoins` exist. */
+  permissionJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationsByOrgId` relation. */
+  applicationsByOrgId?: Maybe<OrganisationToManyApplicationFilter>;
+  /** Some related `applicationsByOrgId` exist. */
+  applicationsByOrgIdExist?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<OrganisationFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<OrganisationFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<OrganisationFilter>;
+};
+
+/** A filter to be used against many `UserOrganisation` object types. All fields are combined with a logical ‘and.’ */
+export type OrganisationToManyUserOrganisationFilter = {
+  /** Every related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<UserOrganisationFilter>;
+  /** Some related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<UserOrganisationFilter>;
+  /** No related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<UserOrganisationFilter>;
+};
+
 /** A filter to be used against many `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
-export type UserOrganisationToManyPermissionJoinFilter = {
+export type OrganisationToManyPermissionJoinFilter = {
   /** Every related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   every?: Maybe<PermissionJoinFilter>;
   /** Some related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -2900,18 +2957,18 @@ export type PermissionJoinFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `userId` field. */
   userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `userOrganisationId` field. */
-  userOrganisationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `organisationId` field. */
+  organisationId?: Maybe<IntFilter>;
   /** Filter by the object’s `permissionNameId` field. */
   permissionNameId?: Maybe<IntFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
   userExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `userOrganisation` relation. */
-  userOrganisation?: Maybe<UserOrganisationFilter>;
-  /** A related `userOrganisation` exists. */
-  userOrganisationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `organisation` relation. */
+  organisation?: Maybe<OrganisationFilter>;
+  /** A related `organisation` exists. */
+  organisationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `permissionName` relation. */
   permissionName?: Maybe<PermissionNameFilter>;
   /** A related `permissionName` exists. */
@@ -3068,42 +3125,6 @@ export type PermissionPolicyToManyPermissionNameFilter = {
   some?: Maybe<PermissionNameFilter>;
   /** No related `PermissionName` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<PermissionNameFilter>;
-};
-
-/** A filter to be used against `Organisation` object types. All fields are combined with a logical ‘and.’ */
-export type OrganisationFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `name` field. */
-  name?: Maybe<StringFilter>;
-  /** Filter by the object’s `licenceNumber` field. */
-  licenceNumber?: Maybe<StringFilter>;
-  /** Filter by the object’s `address` field. */
-  address?: Maybe<StringFilter>;
-  /** Filter by the object’s `userOrganisations` relation. */
-  userOrganisations?: Maybe<OrganisationToManyUserOrganisationFilter>;
-  /** Some related `userOrganisations` exist. */
-  userOrganisationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationsByOrgId` relation. */
-  applicationsByOrgId?: Maybe<OrganisationToManyApplicationFilter>;
-  /** Some related `applicationsByOrgId` exist. */
-  applicationsByOrgIdExist?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<OrganisationFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<OrganisationFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<OrganisationFilter>;
-};
-
-/** A filter to be used against many `UserOrganisation` object types. All fields are combined with a logical ‘and.’ */
-export type OrganisationToManyUserOrganisationFilter = {
-  /** Every related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<UserOrganisationFilter>;
-  /** Some related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<UserOrganisationFilter>;
-  /** No related `UserOrganisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<UserOrganisationFilter>;
 };
 
 /** A filter to be used against many `Application` object types. All fields are combined with a logical ‘and.’ */
@@ -4033,20 +4054,6 @@ export type UserOrganisation = Node & {
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `UserOrganisation`. */
   organisation?: Maybe<Organisation>;
-  /** Reads and enables pagination through a set of `PermissionJoin`. */
-  permissionJoins: PermissionJoinsConnection;
-};
-
-
-export type UserOrganisationPermissionJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<PermissionJoinsOrderBy>>;
-  condition?: Maybe<PermissionJoinCondition>;
-  filter?: Maybe<PermissionJoinFilter>;
 };
 
 export type Organisation = Node & {
@@ -4059,6 +4066,8 @@ export type Organisation = Node & {
   address?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
+  /** Reads and enables pagination through a set of `PermissionJoin`. */
+  permissionJoins: PermissionJoinsConnection;
   /** Reads and enables pagination through a set of `Application`. */
   applicationsByOrgId: ApplicationsConnection;
 };
@@ -4076,6 +4085,18 @@ export type OrganisationUserOrganisationsArgs = {
 };
 
 
+export type OrganisationPermissionJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<PermissionJoinsOrderBy>>;
+  condition?: Maybe<PermissionJoinCondition>;
+  filter?: Maybe<PermissionJoinFilter>;
+};
+
+
 export type OrganisationApplicationsByOrgIdArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -4087,75 +4108,6 @@ export type OrganisationApplicationsByOrgIdArgs = {
   filter?: Maybe<ApplicationFilter>;
 };
 
-/** Methods to use when ordering `Application`. */
-export enum ApplicationsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  TemplateIdAsc = 'TEMPLATE_ID_ASC',
-  TemplateIdDesc = 'TEMPLATE_ID_DESC',
-  UserIdAsc = 'USER_ID_ASC',
-  UserIdDesc = 'USER_ID_DESC',
-  OrgIdAsc = 'ORG_ID_ASC',
-  OrgIdDesc = 'ORG_ID_DESC',
-  SerialAsc = 'SERIAL_ASC',
-  SerialDesc = 'SERIAL_DESC',
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC',
-  OutcomeAsc = 'OUTCOME_ASC',
-  OutcomeDesc = 'OUTCOME_DESC',
-  IsActiveAsc = 'IS_ACTIVE_ASC',
-  IsActiveDesc = 'IS_ACTIVE_DESC',
-  TriggerAsc = 'TRIGGER_ASC',
-  TriggerDesc = 'TRIGGER_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `Application` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ApplicationCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateId` field. */
-  templateId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `userId` field. */
-  userId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `orgId` field. */
-  orgId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `serial` field. */
-  serial?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `outcome` field. */
-  outcome?: Maybe<ApplicationOutcome>;
-  /** Checks for equality with the object’s `isActive` field. */
-  isActive?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `trigger` field. */
-  trigger?: Maybe<Trigger>;
-};
-
-/** A connection to a list of `Application` values. */
-export type ApplicationsConnection = {
-  __typename?: 'ApplicationsConnection';
-  /** A list of `Application` objects. */
-  nodes: Array<Maybe<Application>>;
-  /** A list of edges which contains the `Application` and cursor to aid in pagination. */
-  edges: Array<ApplicationsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Application` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Application` edge in the connection. */
-export type ApplicationsEdge = {
-  __typename?: 'ApplicationsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `Application` at the end of the edge. */
-  node?: Maybe<Application>;
-};
-
 /** Methods to use when ordering `PermissionJoin`. */
 export enum PermissionJoinsOrderBy {
   Natural = 'NATURAL',
@@ -4163,8 +4115,8 @@ export enum PermissionJoinsOrderBy {
   IdDesc = 'ID_DESC',
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC',
-  UserOrganisationIdAsc = 'USER_ORGANISATION_ID_ASC',
-  UserOrganisationIdDesc = 'USER_ORGANISATION_ID_DESC',
+  OrganisationIdAsc = 'ORGANISATION_ID_ASC',
+  OrganisationIdDesc = 'ORGANISATION_ID_DESC',
   PermissionNameIdAsc = 'PERMISSION_NAME_ID_ASC',
   PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -4177,8 +4129,8 @@ export type PermissionJoinCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `userOrganisationId` field. */
-  userOrganisationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `organisationId` field. */
+  organisationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `permissionNameId` field. */
   permissionNameId?: Maybe<Scalars['Int']>;
 };
@@ -4202,12 +4154,12 @@ export type PermissionJoin = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   userId?: Maybe<Scalars['Int']>;
-  userOrganisationId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   /** Reads a single `User` that is related to this `PermissionJoin`. */
   user?: Maybe<User>;
-  /** Reads a single `UserOrganisation` that is related to this `PermissionJoin`. */
-  userOrganisation?: Maybe<UserOrganisation>;
+  /** Reads a single `Organisation` that is related to this `PermissionJoin`. */
+  organisation?: Maybe<Organisation>;
   /** Reads a single `PermissionName` that is related to this `PermissionJoin`. */
   permissionName?: Maybe<PermissionName>;
 };
@@ -4402,6 +4354,75 @@ export type PermissionJoinsEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `PermissionJoin` at the end of the edge. */
   node?: Maybe<PermissionJoin>;
+};
+
+/** Methods to use when ordering `Application`. */
+export enum ApplicationsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  OrgIdAsc = 'ORG_ID_ASC',
+  OrgIdDesc = 'ORG_ID_DESC',
+  SerialAsc = 'SERIAL_ASC',
+  SerialDesc = 'SERIAL_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  OutcomeAsc = 'OUTCOME_ASC',
+  OutcomeDesc = 'OUTCOME_DESC',
+  IsActiveAsc = 'IS_ACTIVE_ASC',
+  IsActiveDesc = 'IS_ACTIVE_DESC',
+  TriggerAsc = 'TRIGGER_ASC',
+  TriggerDesc = 'TRIGGER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `Application` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ApplicationCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `orgId` field. */
+  orgId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `serial` field. */
+  serial?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `outcome` field. */
+  outcome?: Maybe<ApplicationOutcome>;
+  /** Checks for equality with the object’s `isActive` field. */
+  isActive?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `trigger` field. */
+  trigger?: Maybe<Trigger>;
+};
+
+/** A connection to a list of `Application` values. */
+export type ApplicationsConnection = {
+  __typename?: 'ApplicationsConnection';
+  /** A list of `Application` objects. */
+  nodes: Array<Maybe<Application>>;
+  /** A list of edges which contains the `Application` and cursor to aid in pagination. */
+  edges: Array<ApplicationsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Application` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Application` edge in the connection. */
+export type ApplicationsEdge = {
+  __typename?: 'ApplicationsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Application` at the end of the edge. */
+  node?: Maybe<Application>;
 };
 
 /** A `UserOrganisation` edge in the connection. */
@@ -6876,6 +6897,8 @@ export type Mutation = {
   updateOrganisationByNodeId?: Maybe<UpdateOrganisationPayload>;
   /** Updates a single `Organisation` using a unique key and a patch. */
   updateOrganisation?: Maybe<UpdateOrganisationPayload>;
+  /** Updates a single `Organisation` using a unique key and a patch. */
+  updateOrganisationByName?: Maybe<UpdateOrganisationPayload>;
   /** Updates a single `PermissionJoin` using its globally unique id and a patch. */
   updatePermissionJoinByNodeId?: Maybe<UpdatePermissionJoinPayload>;
   /** Updates a single `PermissionJoin` using a unique key and a patch. */
@@ -6998,6 +7021,8 @@ export type Mutation = {
   deleteOrganisationByNodeId?: Maybe<DeleteOrganisationPayload>;
   /** Deletes a single `Organisation` using a unique key. */
   deleteOrganisation?: Maybe<DeleteOrganisationPayload>;
+  /** Deletes a single `Organisation` using a unique key. */
+  deleteOrganisationByName?: Maybe<DeleteOrganisationPayload>;
   /** Deletes a single `PermissionJoin` using its globally unique id. */
   deletePermissionJoinByNodeId?: Maybe<DeletePermissionJoinPayload>;
   /** Deletes a single `PermissionJoin` using a unique key. */
@@ -7390,6 +7415,12 @@ export type MutationUpdateOrganisationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateOrganisationByNameArgs = {
+  input: UpdateOrganisationByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePermissionJoinByNodeIdArgs = {
   input: UpdatePermissionJoinByNodeIdInput;
 };
@@ -7752,6 +7783,12 @@ export type MutationDeleteOrganisationByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteOrganisationArgs = {
   input: DeleteOrganisationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteOrganisationByNameArgs = {
+  input: DeleteOrganisationByNameInput;
 };
 
 
@@ -8732,9 +8769,9 @@ export type PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyU
 export type UpdatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  userOrganisationId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
-  userOrganisationToUserOrganisationId?: Maybe<PermissionJoinUserOrganisationIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
 };
 
@@ -8876,7 +8913,6 @@ export type UpdateUserOrganisationOnUserOrganisationForUserOrganisationUserIdFke
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `UserOrganisationInput` mutation. */
@@ -8959,70 +8995,45 @@ export type PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermis
 /** An object where the defined keys will be set on the `permissionJoin` being updated. */
 export type UpdatePermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  userOrganisationId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
-  userOrganisationToUserOrganisationId?: Maybe<PermissionJoinUserOrganisationIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
 };
 
-/** Input for the nested mutation of `userOrganisation` in the `PermissionJoinInput` mutation. */
-export type PermissionJoinUserOrganisationIdFkeyInput = {
-  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
-  connectById?: Maybe<UserOrganisationUserOrganisationPkeyConnect>;
-  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
-  connectByNodeId?: Maybe<UserOrganisationNodeIdConnect>;
-  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
-  deleteById?: Maybe<UserOrganisationUserOrganisationPkeyDelete>;
-  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<UserOrganisationNodeIdDelete>;
-  /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
-  updateById?: Maybe<UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyUsingUserOrganisationPkeyUpdate>;
-  /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
-  updateByNodeId?: Maybe<PermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyNodeIdUpdate>;
-  /** A `UserOrganisationInput` object that will be created and connected to this object. */
-  create?: Maybe<PermissionJoinUserOrganisationIdFkeyUserOrganisationCreateInput>;
-};
-
-/** The fields on `userOrganisation` to look up the row to update. */
-export type UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyUsingUserOrganisationPkeyUpdate = {
-  /** An object where the defined keys will be set on the `userOrganisation` being updated. */
-  patch: UpdateUserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `userOrganisation` being updated. */
-export type UpdateUserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  organisationId?: Maybe<Scalars['Int']>;
-  userRole?: Maybe<Scalars['String']>;
-  userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `organisation` in the `UserOrganisationInput` mutation. */
-export type UserOrganisationOrganisationIdFkeyInput = {
+/** Input for the nested mutation of `organisation` in the `PermissionJoinInput` mutation. */
+export type PermissionJoinOrganisationIdFkeyInput = {
   /** The primary key(s) for `organisation` for the far side of the relationship. */
   connectById?: Maybe<OrganisationOrganisationPkeyConnect>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  connectByName?: Maybe<OrganisationOrganisationNameKeyConnect>;
   /** The primary key(s) for `organisation` for the far side of the relationship. */
   connectByNodeId?: Maybe<OrganisationNodeIdConnect>;
   /** The primary key(s) for `organisation` for the far side of the relationship. */
   deleteById?: Maybe<OrganisationOrganisationPkeyDelete>;
   /** The primary key(s) for `organisation` for the far side of the relationship. */
+  deleteByName?: Maybe<OrganisationOrganisationNameKeyDelete>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
   deleteByNodeId?: Maybe<OrganisationNodeIdDelete>;
   /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
-  updateById?: Maybe<OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate>;
+  updateById?: Maybe<OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate>;
   /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
-  updateByNodeId?: Maybe<UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate>;
+  updateByName?: Maybe<OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingOrganisationNameKeyUpdate>;
+  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
+  updateByNodeId?: Maybe<PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate>;
   /** A `OrganisationInput` object that will be created and connected to this object. */
-  create?: Maybe<UserOrganisationOrganisationIdFkeyOrganisationCreateInput>;
+  create?: Maybe<PermissionJoinOrganisationIdFkeyOrganisationCreateInput>;
 };
 
 /** The fields on `organisation` to look up the row to connect. */
 export type OrganisationOrganisationPkeyConnect = {
   id: Scalars['Int'];
+};
+
+/** The fields on `organisation` to look up the row to connect. */
+export type OrganisationOrganisationNameKeyConnect = {
+  name: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -9036,6 +9047,11 @@ export type OrganisationOrganisationPkeyDelete = {
   id: Scalars['Int'];
 };
 
+/** The fields on `organisation` to look up the row to delete. */
+export type OrganisationOrganisationNameKeyDelete = {
+  name: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to delete. */
 export type OrganisationNodeIdDelete = {
   /** The globally unique `ID` which identifies a single `organisation` to be deleted. */
@@ -9043,19 +9059,20 @@ export type OrganisationNodeIdDelete = {
 };
 
 /** The fields on `organisation` to look up the row to update. */
-export type OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate = {
+export type OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate = {
   /** An object where the defined keys will be set on the `organisation` being updated. */
-  patch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
+  patch: UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyPatch;
   id: Scalars['Int'];
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
-export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch = {
+export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
 };
 
@@ -9093,11 +9110,52 @@ export type UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganisat
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
-/** Input for the nested mutation of `permissionJoin` in the `UserOrganisationInput` mutation. */
-export type PermissionJoinUserOrganisationIdFkeyInverseInput = {
+/** Input for the nested mutation of `organisation` in the `UserOrganisationInput` mutation. */
+export type UserOrganisationOrganisationIdFkeyInput = {
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  connectById?: Maybe<OrganisationOrganisationPkeyConnect>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  connectByName?: Maybe<OrganisationOrganisationNameKeyConnect>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  connectByNodeId?: Maybe<OrganisationNodeIdConnect>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  deleteById?: Maybe<OrganisationOrganisationPkeyDelete>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  deleteByName?: Maybe<OrganisationOrganisationNameKeyDelete>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<OrganisationNodeIdDelete>;
+  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
+  updateById?: Maybe<OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate>;
+  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
+  updateByName?: Maybe<OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationNameKeyUpdate>;
+  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
+  updateByNodeId?: Maybe<UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate>;
+  /** A `OrganisationInput` object that will be created and connected to this object. */
+  create?: Maybe<UserOrganisationOrganisationIdFkeyOrganisationCreateInput>;
+};
+
+/** The fields on `organisation` to look up the row to update. */
+export type OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `organisation` being updated. */
+  patch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `organisation` being updated. */
+export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  licenceNumber?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `permissionJoin` in the `OrganisationInput` mutation. */
+export type PermissionJoinOrganisationIdFkeyInverseInput = {
   /** Flag indicating whether all other `permissionJoin` records that match this relationship should be removed. */
   deleteOthers?: Maybe<Scalars['Boolean']>;
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
@@ -9109,27 +9167,27 @@ export type PermissionJoinUserOrganisationIdFkeyInverseInput = {
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<PermissionJoinNodeIdDelete>>;
   /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
-  updateById?: Maybe<Array<PermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyUsingPermissionJoinPkeyUpdate>>;
+  updateById?: Maybe<Array<PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinPkeyUpdate>>;
   /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyNodeIdUpdate>>;
+  updateByNodeId?: Maybe<Array<OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate>>;
   /** A `PermissionJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<PermissionJoinUserOrganisationIdFkeyPermissionJoinCreateInput>>;
+  create?: Maybe<Array<PermissionJoinOrganisationIdFkeyPermissionJoinCreateInput>>;
 };
 
 /** The fields on `permissionJoin` to look up the row to update. */
-export type PermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyUsingPermissionJoinPkeyUpdate = {
+export type PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinPkeyUpdate = {
   /** An object where the defined keys will be set on the `permissionJoin` being updated. */
-  patch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch;
+  patch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyPatch;
   id: Scalars['Int'];
 };
 
 /** An object where the defined keys will be set on the `permissionJoin` being updated. */
-export type UpdatePermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch = {
+export type UpdatePermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
-  userOrganisationToUserOrganisationId?: Maybe<PermissionJoinUserOrganisationIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
 };
 
@@ -9792,13 +9850,19 @@ export type ApplicationOrgIdFkeyInput = {
   /** The primary key(s) for `organisation` for the far side of the relationship. */
   connectById?: Maybe<OrganisationOrganisationPkeyConnect>;
   /** The primary key(s) for `organisation` for the far side of the relationship. */
+  connectByName?: Maybe<OrganisationOrganisationNameKeyConnect>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
   connectByNodeId?: Maybe<OrganisationNodeIdConnect>;
   /** The primary key(s) for `organisation` for the far side of the relationship. */
   deleteById?: Maybe<OrganisationOrganisationPkeyDelete>;
   /** The primary key(s) for `organisation` for the far side of the relationship. */
+  deleteByName?: Maybe<OrganisationOrganisationNameKeyDelete>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
   deleteByNodeId?: Maybe<OrganisationNodeIdDelete>;
   /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
   updateById?: Maybe<OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationPkeyUpdate>;
+  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
+  updateByName?: Maybe<OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationNameKeyUpdate>;
   /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
   updateByNodeId?: Maybe<ApplicationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate>;
   /** A `OrganisationInput` object that will be created and connected to this object. */
@@ -9819,6 +9883,7 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
 };
 
@@ -14508,6 +14573,13 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
+/** The fields on `organisation` to look up the row to update. */
+export type OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `organisation` being updated. */
+  patch: UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch;
+  name: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `organisation` to be connected. */
@@ -14523,6 +14595,7 @@ export type OrganisationPatch = {
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
 };
 
@@ -14533,6 +14606,7 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
 };
 
@@ -14737,7 +14811,7 @@ export type PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput = {
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyNodeIdUpdate = {
+export type OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `permissionJoin` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `permissionJoin` being updated. */
@@ -14748,21 +14822,47 @@ export type UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdF
 export type PermissionJoinPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  userOrganisationId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
-  userOrganisationToUserOrganisationId?: Maybe<PermissionJoinUserOrganisationIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
 };
 
 /** The `permissionJoin` to be created by this mutation. */
-export type PermissionJoinUserOrganisationIdFkeyPermissionJoinCreateInput = {
+export type PermissionJoinOrganisationIdFkeyPermissionJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
-  userOrganisationToUserOrganisationId?: Maybe<PermissionJoinUserOrganisationIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
+};
+
+/** The fields on `organisation` to look up the row to update. */
+export type OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `organisation` being updated. */
+  patch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `organisation` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `organisation` being updated. */
+  patch: OrganisationPatch;
+};
+
+/** The `organisation` to be created by this mutation. */
+export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  licenceNumber?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -14781,7 +14881,6 @@ export type UserOrganisationPatch = {
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** The `userOrganisation` to be created by this mutation. */
@@ -14791,11 +14890,17 @@ export type UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput = {
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
+};
+
+/** The fields on `organisation` to look up the row to update. */
+export type OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingOrganisationNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `organisation` being updated. */
+  patch: UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyPatch;
+  name: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate = {
+export type PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `organisation` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -14803,32 +14908,14 @@ export type UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdF
 };
 
 /** The `organisation` to be created by this mutation. */
-export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
+export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type PermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `userOrganisation` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `userOrganisation` being updated. */
-  patch: UserOrganisationPatch;
-};
-
-/** The `userOrganisation` to be created by this mutation. */
-export type PermissionJoinUserOrganisationIdFkeyUserOrganisationCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  organisationId?: Maybe<Scalars['Int']>;
-  userRole?: Maybe<Scalars['String']>;
-  userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -14842,10 +14929,10 @@ export type UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate = {
 /** The `permissionJoin` to be created by this mutation. */
 export type PermissionJoinUserIdFkeyPermissionJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  userOrganisationId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
-  userOrganisationToUserOrganisationId?: Maybe<PermissionJoinUserOrganisationIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
 };
 
@@ -14898,7 +14985,6 @@ export type UserOrganisationUserIdFkeyUserOrganisationCreateInput = {
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** The fields on `user` to look up the row to update. */
@@ -14947,9 +15033,9 @@ export type PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyN
 export type PermissionJoinPermissionNameIdFkeyPermissionJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  userOrganisationId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
-  userOrganisationToUserOrganisationId?: Maybe<PermissionJoinUserOrganisationIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
 };
 
@@ -15626,6 +15712,7 @@ export type OrganisationInput = {
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
 };
 
@@ -15660,10 +15747,10 @@ export type CreatePermissionJoinInput = {
 export type PermissionJoinInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  userOrganisationId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
-  userOrganisationToUserOrganisationId?: Maybe<PermissionJoinUserOrganisationIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
 };
 
@@ -15678,8 +15765,8 @@ export type CreatePermissionJoinPayload = {
   query?: Maybe<Query>;
   /** Reads a single `User` that is related to this `PermissionJoin`. */
   user?: Maybe<User>;
-  /** Reads a single `UserOrganisation` that is related to this `PermissionJoin`. */
-  userOrganisation?: Maybe<UserOrganisation>;
+  /** Reads a single `Organisation` that is related to this `PermissionJoin`. */
+  organisation?: Maybe<Organisation>;
   /** Reads a single `PermissionName` that is related to this `PermissionJoin`. */
   permissionName?: Maybe<PermissionName>;
   /** An edge for our `PermissionJoin`. May be used by Relay 1. */
@@ -16408,7 +16495,6 @@ export type UserOrganisationInput = {
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** The output of our create `UserOrganisation` mutation. */
@@ -16922,6 +17008,15 @@ export type UpdateOrganisationInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `updateOrganisationByName` mutation. */
+export type UpdateOrganisationByNameInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Organisation` being updated. */
+  patch: OrganisationPatch;
+  name: Scalars['String'];
+};
+
 /** All input for the `updatePermissionJoinByNodeId` mutation. */
 export type UpdatePermissionJoinByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -16943,8 +17038,8 @@ export type UpdatePermissionJoinPayload = {
   query?: Maybe<Query>;
   /** Reads a single `User` that is related to this `PermissionJoin`. */
   user?: Maybe<User>;
-  /** Reads a single `UserOrganisation` that is related to this `PermissionJoin`. */
-  userOrganisation?: Maybe<UserOrganisation>;
+  /** Reads a single `Organisation` that is related to this `PermissionJoin`. */
+  organisation?: Maybe<Organisation>;
   /** Reads a single `PermissionName` that is related to this `PermissionJoin`. */
   permissionName?: Maybe<PermissionName>;
   /** An edge for our `PermissionJoin`. May be used by Relay 1. */
@@ -18108,6 +18203,13 @@ export type DeleteOrganisationInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `deleteOrganisationByName` mutation. */
+export type DeleteOrganisationByNameInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
 /** All input for the `deletePermissionJoinByNodeId` mutation. */
 export type DeletePermissionJoinByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -18128,8 +18230,8 @@ export type DeletePermissionJoinPayload = {
   query?: Maybe<Query>;
   /** Reads a single `User` that is related to this `PermissionJoin`. */
   user?: Maybe<User>;
-  /** Reads a single `UserOrganisation` that is related to this `PermissionJoin`. */
-  userOrganisation?: Maybe<UserOrganisation>;
+  /** Reads a single `Organisation` that is related to this `PermissionJoin`. */
+  organisation?: Maybe<Organisation>;
   /** Reads a single `PermissionName` that is related to this `PermissionJoin`. */
   permissionName?: Maybe<PermissionName>;
   /** An edge for our `PermissionJoin`. May be used by Relay 1. */
