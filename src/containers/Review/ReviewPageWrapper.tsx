@@ -13,6 +13,7 @@ import useSubmitReview from '../../utils/hooks/useSubmitReview'
 import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
 import validateReview from '../../utils/helpers/review/validateReview'
 import listReviewResponses from '../../utils/helpers/review/listReviewerResponses'
+import { REVIEW_STATUS } from '../../utils/data/reviewStatus'
 
 const decisionAreaInitialState = { open: false, review: null, summaryViewProps: null }
 
@@ -31,7 +32,14 @@ const ReviewPageWrapper: React.FC = () => {
   const [reviewerResponses, setReviewerResponses] = useState<ReviewQuestionDecision[]>([])
 
   // Will wait for trigger to run that will set the Review status as DRAFT (after creation)
-  const { error, loading, applicationName, responsesByCode, reviewSections } = useLoadReview({
+  const {
+    error,
+    loading,
+    applicationName,
+    responsesByCode,
+    reviewSections,
+    reviewStatus,
+  } = useLoadReview({
     reviewId: Number(reviewId),
     serialNumber,
   })
@@ -140,7 +148,7 @@ const ReviewPageWrapper: React.FC = () => {
                 reviewSection={reviewSection}
                 updateResponses={updateResponses}
                 setDecisionArea={openDecisionArea}
-                canEdit={true} // TODO: Check Review status
+                canEdit={(reviewStatus as string) === REVIEW_STATUS.DRAFT}
                 showError={reviewSection.section === invalidSection}
               />
             )
@@ -153,13 +161,15 @@ const ReviewPageWrapper: React.FC = () => {
             marginRight: '10%',
           }}
         >
-          <Button
-            size="medium"
-            color={invalidSection ? 'red' : 'blue'}
-            loading={updating}
-            content={strings.BUTTON_REVIEW_SUBMIT}
-            onClick={submitReviewHandler}
-          />
+          {(reviewStatus as string) === REVIEW_STATUS.DRAFT && (
+            <Button
+              size="medium"
+              color={invalidSection ? 'red' : 'blue'}
+              loading={updating}
+              content={strings.BUTTON_REVIEW_SUBMIT}
+              onClick={submitReviewHandler}
+            />
+          )}
           {invalidSection && <p>{messages.REVIEW_SUBMIT_FAIL}</p>}
         </Segment>
       </Segment.Group>

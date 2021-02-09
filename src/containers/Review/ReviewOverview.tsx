@@ -19,7 +19,8 @@ import { ReviewStatus } from '../../utils/generated/graphql'
 import { AssignmentDetails, SectionDetails } from '../../utils/types'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import { useUserState } from '../../contexts/UserState'
-import getReviewStartLabel, { REVIEW_STATUS } from '../../utils/helpers/review/getReviewStartLabel'
+import getReviewStartLabel from '../../utils/helpers/review/getReviewStartLabel'
+import { REVIEW_STATUS } from '../../utils/data/reviewStatus'
 
 // TODO: Rename to ReviewStart
 const ReviewOverview: React.FC = () => {
@@ -111,7 +112,7 @@ const ReviewOverview: React.FC = () => {
 
   const displayStatus = () => {
     const status = assignment?.review?.status as string
-    switch (status as REVIEW_STATUS) {
+    switch (status) {
       case REVIEW_STATUS.DRAFT:
         return <Label color="brown" content={status} />
       case REVIEW_STATUS.CHANGES_REQUESTED:

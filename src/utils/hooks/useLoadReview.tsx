@@ -95,6 +95,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     applicationName,
     isReviewReady,
     reviewSections,
+    reviewStatus,
     responsesByCode,
     loading: loading || statusLoading || isTriggerProcessing,
     error: error
