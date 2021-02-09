@@ -2,22 +2,25 @@ import { useEffect, useState } from 'react'
 import {
   Application,
   ApplicationStageStatusAll,
+  Template,
   TemplateStage,
   useGetApplicationQuery,
   useGetApplicationStatusQuery,
 } from '../../utils/generated/graphql'
 import useTriggerProcessing from '../../utils/hooks/useTriggerProcessing'
-import { getApplicationSections } from '../helpers/application/getSectionsPayload'
+import { getApplicationSections } from '../helpers/application/getSectionsDetails'
 import {
   ApplicationDetails,
   ApplicationStages,
-  TemplateSectionPayload,
+  SectionDetails,
+  TemplateDetails,
   UseGetApplicationProps,
 } from '../types'
 
 const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
   const [application, setApplication] = useState<ApplicationDetails>()
-  const [templateSections, setSections] = useState<TemplateSectionPayload[]>([])
+  const [template, setTemplate] = useState<TemplateDetails>()
+  const [sections, setSections] = useState<SectionDetails[]>([])
   const [appStages, setAppStages] = useState<ApplicationStages>()
   const [isApplicationReady, setIsApplicationReady] = useState(false)
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
@@ -68,6 +71,15 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
       setApplication(applicationDetails)
 
+      const { id, code, name, startMessage } = application.template as Template
+
+      setTemplate({
+        id,
+        code,
+        name: name as string,
+        startMessage: startMessage ? startMessage : undefined,
+      })
+
       const sections = getApplicationSections(application.applicationSections)
       setSections(sections)
 
@@ -87,7 +99,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   }, [data, loading])
 
   useEffect(() => {
-    if (application) {
+    if (isApplicationLoaded && application && !isTriggerProcessing) {
       if (!statusData?.applicationStageStatusAlls?.nodes) {
         setApplicationError('No status found')
         return
@@ -118,7 +130,8 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     loading: loading || statusLoading || isTriggerProcessing,
     application,
     appStages,
-    templateSections,
+    template,
+    sections,
     isApplicationReady,
   }
 }

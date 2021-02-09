@@ -7,14 +7,27 @@ import {
 } from '../../types'
 import validate from '../../../formElementPlugins/defaultValidate'
 
-export const revalidateAll = async (
-  elementsState: ApplicationElementStates,
-  responsesByCode: ResponsesByCode,
-  currentUser: User,
+interface RevalidateAllProps {
+  elementsState: ApplicationElementStates
+  responsesByCode: ResponsesByCode
+  currentUser: User
+  sectionCode?: string
+  strict?: boolean
+}
+export const revalidateAll = async ({
+  elementsState,
+  responsesByCode,
+  currentUser,
+  sectionCode,
   strict = true,
-  shouldUpdateDatabase = true
-): Promise<RevalidateResult> => {
-  const elementCodes = Object.keys(elementsState).filter(
+}: RevalidateAllProps): Promise<RevalidateResult> => {
+  // Filter section (when runnin per sections)
+  const elementCodes = sectionCode
+    ? Object.keys(elementsState).filter((key) => elementsState[key].sectionCode === sectionCode)
+    : Object.keys(elementsState)
+
+  // Now filter only questions, visible and which ones should be valid
+  const filteredQuestions = elementCodes.filter(
     (key) =>
       responsesByCode && // Typescript requires this
       elementsState[key].category === 'QUESTION' &&
@@ -23,7 +36,7 @@ export const revalidateAll = async (
       ((strict && elementsState[key].isRequired) || responsesByCode[key]?.isValid !== null)
   )
 
-  const validationExpressions = elementCodes.map((code) => {
+  const validationExpressions = filteredQuestions.map((code) => {
     const thisResponse = responsesByCode
       ? responsesByCode[code]?.text
         ? responsesByCode[code]?.text
@@ -44,7 +57,7 @@ export const revalidateAll = async (
 
   // Also make empty responses invalid for required questions
   const strictResultArray = resultArray.map((element, index) => {
-    const code = elementCodes[index]
+    const code = filteredQuestions[index]
     return elementsState[code].isRequired &&
       (!responsesByCode[code]?.text ||
         responsesByCode[code].text === null ||
@@ -53,24 +66,45 @@ export const revalidateAll = async (
       : element
   })
 
-  const validityFailures: ValidityFailure[] = shouldUpdateDatabase
-    ? elementCodes.reduce((validityFailures: ValidityFailure[], code, index) => {
-        if (!strictResultArray[index].isValid)
-          return [
-            ...validityFailures,
-            {
-              id: (responsesByCode && responsesByCode[code].id) || 0,
-              isValid: false,
-              code,
-            },
-          ]
-        else return validityFailures
-      }, [])
-    : []
+  const validityFailures: ValidityFailure[] = filteredQuestions.reduce(
+    (validityFailures: ValidityFailure[], code, index) => {
+      if (!strictResultArray[index].isValid)
+        return [
+          ...validityFailures,
+          {
+            id: (responsesByCode && responsesByCode[code].id) || 0,
+            isValid: false,
+            code,
+          },
+        ]
+      else return validityFailures
+    },
+    []
+  )
+
+  // Build progress (used for section progress)
+  const total = filteredQuestions.length
+  const done = resultArray.filter((_, index) => {
+    const code = filteredQuestions[index]
+    return !responsesByCode[code]?.text ||
+      responsesByCode[code].text === null ||
+      responsesByCode[code].text === ''
+      ? false
+      : true
+  }).length
+  const valid = resultArray.every((element) => element.isValid)
+  const firstErrorLocation = getFirstErrorLocation(validityFailures, elementsState)
 
   return {
     allValid: strictResultArray.every((element) => element.isValid),
     validityFailures,
+    progress: {
+      total,
+      done,
+      completed: done === total,
+      valid,
+      linkedPage: firstErrorLocation.firstErrorPage,
+    },
   }
 }
 

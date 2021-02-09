@@ -35,22 +35,22 @@ export {
   LooseString,
   PageElementsStatuses,
   ProgressInApplication,
-  ProgressInSection,
   ProgressInPage,
   ProgressStatus,
   ResponseFull,
   ResponsePayload,
   ResponsesByCode,
+  ResumeSection,
   ReviewDetails,
   ReviewQuestion,
   ReviewQuestionDecision,
   ReviewerResponsesPayload,
   SectionElementStates,
   SectionDetails,
+  SectionProgress,
   SectionStructure,
   StageAndStatus,
-  TemplateSectionPayload,
-  TemplateTypePayload,
+  TemplateDetails,
   TemplateElementState,
   TemplatePermissions,
   TemplatesDetails,
@@ -92,7 +92,6 @@ interface ApplicationStage {
 interface ApplicationStageMap {
   [key: string]: ApplicationStage
 }
-
 interface ApplicationStages {
   stages: StageDetails[]
   submissionMessage: string
@@ -133,7 +132,7 @@ interface ContextListState {
 }
 
 interface CurrentPage {
-  section: TemplateSectionPayload
+  section: SectionDetails
   page: number
 }
 
@@ -194,7 +193,6 @@ type LooseString = string | null | undefined
 interface PageElementsStatuses {
   [code: string]: ProgressStatus
 }
-
 interface ProgressInPage {
   pageNumber: number
   status: ProgressStatus
@@ -202,19 +200,16 @@ interface ProgressInPage {
   isActive: boolean
 }
 
-interface ProgressInSection {
+type ProgressInApplication = {
   code: string
   title: string
   status?: ProgressStatus
   canNavigate: boolean
   isActive: boolean
   pages: ProgressInPage[]
-}
-
-type ProgressInApplication = ProgressInSection[]
+}[]
 
 type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
-
 interface ResponseFull {
   id: number
   text: string | null | undefined
@@ -232,6 +227,11 @@ interface ResponsePayload {
 
 interface ResponsesByCode {
   [key: string]: ResponseFull
+}
+
+interface ResumeSection {
+  sectionCode: string
+  page: number
 }
 
 interface ReviewDetails {
@@ -274,8 +274,20 @@ interface SectionElementStates {
 }
 
 interface SectionDetails {
-  title: string
+  id: number
+  index: number
   code: string
+  title: string
+  totalPages: number
+  progress?: SectionProgress
+}
+
+interface SectionProgress {
+  total: number
+  done: number
+  completed: boolean
+  valid: boolean
+  linkedPage: number
 }
 
 type SectionStructure = SectionElementStates[]
@@ -292,15 +304,7 @@ interface StageDetails {
   description?: string
 }
 
-interface TemplateSectionPayload {
-  id: number
-  code: string
-  title: string
-  index: number
-  totalPages: number
-}
-
-interface TemplateTypePayload {
+interface TemplateDetails {
   id: number
   name: string
   code: string
@@ -347,6 +351,7 @@ interface ValidityFailure {
 interface RevalidateResult {
   allValid: boolean
   validityFailures: ValidityFailure[]
+  progress: SectionProgress
 }
 
 interface UseGetApplicationProps {

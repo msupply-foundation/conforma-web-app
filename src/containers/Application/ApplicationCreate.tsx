@@ -14,14 +14,7 @@ const ApplicationCreate: React.FC = () => {
   const { push, query } = useRouter()
   const { type } = query
 
-  const {
-    apolloError,
-    error,
-    loading,
-    templateType,
-    templateSections,
-    templateElementsIds,
-  } = useLoadTemplate({
+  const { apolloError, error, loading, template, sections, elementsIds } = useLoadTemplate({
     templateCode: type as string,
   })
 
@@ -31,14 +24,14 @@ const ApplicationCreate: React.FC = () => {
 
   // If template has no start message, go straight to first page of new application
   useEffect(() => {
-    if (templateType && !templateType.startMessage) handleCreate()
-  }, [templateType])
+    if (template && !template.startMessage) handleCreate()
+  }, [template])
 
   const { processing, error: creationError, create } = useCreateApplication({
     onCompleted: () => {
-      if (serialNumber && templateSections && templateSections.length > 0) {
+      if (serialNumber && sections && sections.length > 0) {
         // Call Application page on first section
-        const firstSection = templateSections[0].code
+        const firstSection = sections[0].code
         // The pageNumber starts in 1 when is a new application
         push(`${serialNumber}/${firstSection}/Page1`)
       }
@@ -48,7 +41,7 @@ const ApplicationCreate: React.FC = () => {
   const handleCreate = () => {
     setApplicationState({ type: 'reset' })
 
-    if (!templateType || !templateSections) {
+    if (!template || !sections) {
       console.log('Problem to create application - unexpected parameters')
       return
     }
@@ -57,15 +50,15 @@ const ApplicationCreate: React.FC = () => {
     setApplicationState({ type: 'setSerialNumber', serialNumber })
 
     create({
-      name: `Test application of ${templateType.name}`,
+      name: `Test application of ${template.name}`,
       serial: serialNumber,
-      templateId: templateType.id,
+      templateId: template.id,
       userId: currentUser?.userId,
       orgId: currentUser?.organisation?.orgId,
-      templateSections: templateSections.map((section) => {
+      templateSections: sections.map((section) => {
         return { templateSectionId: section.id }
       }),
-      templateResponses: templateElementsIds.map((id) => {
+      templateResponses: elementsIds.map((id) => {
         return { templateElementId: id }
       }),
     })
@@ -79,11 +72,11 @@ const ApplicationCreate: React.FC = () => {
     />
   ) : loading || processing ? (
     <Loading />
-  ) : templateType && templateSections ? (
+  ) : template && sections ? (
     <ApplicationStart
-      template={templateType}
-      sections={templateSections}
-      handleClick={() => handleCreate()}
+      template={template}
+      sections={sections}
+      startApplication={() => handleCreate()}
     />
   ) : (
     <Header as="h2" icon="exclamation circle" content="No template found!" />
