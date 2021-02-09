@@ -19,7 +19,7 @@ import { ReviewStatus } from '../../utils/generated/graphql'
 import { AssignmentDetails, SectionDetails } from '../../utils/types'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import { useUserState } from '../../contexts/UserState'
-import getReviewStartLabel from '../../utils/helpers/review/getReviewStartLabel'
+import getReviewStartLabel, { REVIEW_STATUS } from '../../utils/helpers/review/getReviewStartLabel'
 
 // TODO: Rename to ReviewStart
 const ReviewOverview: React.FC = () => {
@@ -109,6 +109,24 @@ const ReviewOverview: React.FC = () => {
     )
   }
 
+  const displayStatus = () => {
+    const status = assignment?.review?.status as string
+    switch (status as REVIEW_STATUS) {
+      case REVIEW_STATUS.DRAFT:
+        return <Label color="brown" content={status} />
+      case REVIEW_STATUS.CHANGES_REQUESTED:
+        return <Label color="red" content={status} />
+      case REVIEW_STATUS.LOCKED:
+      case REVIEW_STATUS.SUBMITTED:
+        return <Label color="grey" content={status} />
+      case REVIEW_STATUS.PENDING:
+        return <Label color="yellow" content={status} />
+
+      default:
+        return <Label content={status} />
+    }
+  }
+
   return error ? (
     <NoMatch />
   ) : loading ? (
@@ -117,6 +135,7 @@ const ReviewOverview: React.FC = () => {
     <Segment.Group>
       <Segment textAlign="center">
         <Label color="blue">{strings.STAGE_PLACEHOLDER}</Label>
+        {displayStatus()}
         <Header content={application.name} subheader={strings.DATE_APPLICATION_PLACEHOLDER} />
         <Header
           as="h3"

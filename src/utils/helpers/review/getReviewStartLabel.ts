@@ -1,4 +1,3 @@
-import constants from '../../constants'
 import strings from '../../constants'
 
 export enum REVIEW_STATUS {
