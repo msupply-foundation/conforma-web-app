@@ -2,6 +2,7 @@ import {
   ApplicationList,
   PermissionPolicyType,
   ReviewResponseDecision,
+  ReviewStatus,
   TemplateElement,
   TemplateElementCategory,
 } from './generated/graphql'
@@ -236,7 +237,7 @@ interface ResumeSection {
 
 interface ReviewDetails {
   id: number
-  status: string
+  status: ReviewStatus
 }
 
 interface ReviewerDetails {

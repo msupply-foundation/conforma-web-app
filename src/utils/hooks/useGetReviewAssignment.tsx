@@ -3,6 +3,7 @@ import {
   Review,
   ReviewAssignment,
   ReviewQuestionAssignment,
+  ReviewStatus,
   useGetReviewAssignmentQuery,
 } from '../generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
@@ -57,7 +58,7 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
 
       setAssignment({
         id: currentAssignment.id,
-        review: review ? { id: review.id, status: review.status as string } : undefined,
+        review: review ? { id: review.id, status: review.status as ReviewStatus } : undefined,
         questions: getAssignedQuestions({ reviewQuestions }),
       })
     }

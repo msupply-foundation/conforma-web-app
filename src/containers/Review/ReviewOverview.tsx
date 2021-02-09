@@ -77,35 +77,43 @@ const ReviewOverview: React.FC = () => {
             error={!progress.valid}
           />
         )
-      } else {
-        if (!assignment?.review) {
-          return (
-            <Segment vertical>
-              <Icon name="circle" size="mini" color="blue" />
-              <Label basic>{strings.LABEL_ASSIGNED_TO_YOU}</Label>
-            </Segment>
-          )
-        }
-        return null
-      }
+      } else if (!assignment?.review) {
+        return (
+          <Segment vertical>
+            <Icon name="circle" size="mini" color="blue" />
+            <Label basic>{strings.LABEL_ASSIGNED_TO_YOU}</Label>
+          </Segment>
+        )
+      } else return <Label basic>MISSING PROGRESS... TODO</Label>
     } else return <p>{strings.LABEL_ASSIGNED_TO_OTHER}</p>
   }
 
   const getActionButton = ({ review }: AssignmentDetails) => {
     if (review) {
-      const { id, status } = review
-      if (
-        review.status === ReviewStatus.Pending ||
-        review.status === ReviewStatus.ChangesRequested
-      ) {
-        return (
-          <Button as={Link} to={`/application/${serialNumber}/review/${id}`}>
-            {strings.BUTTON_REVIEW_CONTINUE}
-          </Button>
-        )
+      const getLabel = (status: string) => {
+        // TODO: Not use strings here - use the type
+        switch (status) {
+          case 'Draft':
+            return strings.BUTTON_REVIEW_CONTINUE
+          case 'Pending':
+            return strings.BUTTON_REVIEW_RE_REVIEW
+          case 'ChangesRequested':
+            return strings.BUTTON_REVIEW_MAKE_UPDATES
+          case 'Submitted' || 'Locked':
+            return strings.BUTTON_REVIEW_VIEW
+          default:
+            return status
+        }
       }
-      console.log(`Problem with review id ${id} status: ${status}`)
-      return null
+
+      const { id, status } = review
+      return (
+        <Button
+          as={Link}
+          to={`/application/${serialNumber}/review/${id}`}
+          content={getLabel(status)}
+        />
+      )
     }
     return (
       <Button loading={processing} onClick={handleCreate}>
