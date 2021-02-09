@@ -4,7 +4,7 @@ import { DecisionArea, Loading, NoMatch, ReviewSection } from '../../components'
 import { DecisionAreaState, ReviewQuestionDecision, SectionDetails, User } from '../../utils/types'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ReviewResponseDecision } from '../../utils/generated/graphql'
+import { ReviewResponseDecision, ReviewStatus } from '../../utils/generated/graphql'
 import strings from '../../utils/constants'
 import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import { useUserState } from '../../contexts/UserState'
@@ -13,7 +13,6 @@ import useSubmitReview from '../../utils/hooks/useSubmitReview'
 import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
 import validateReview from '../../utils/helpers/review/validateReview'
 import listReviewResponses from '../../utils/helpers/review/listReviewerResponses'
-import { REVIEW_STATUS } from '../../utils/data/reviewStatus'
 
 const decisionAreaInitialState = { open: false, review: null, summaryViewProps: null }
 
@@ -34,7 +33,7 @@ const ReviewPageWrapper: React.FC = () => {
   // Will wait for trigger to run that will set the Review status as DRAFT (after creation)
   const {
     error,
-    loading,
+    isReviewReady,
     applicationName,
     responsesByCode,
     reviewSections,
@@ -94,8 +93,6 @@ const ReviewPageWrapper: React.FC = () => {
     if (!currentUser || !reviewSections) return false
     const { userId } = currentUser as User
     const invalidSection = validateReview({ userId, reviewSections })
-    console.log(invalidSection)
-
     setInvalidSection(invalidSection)
     return invalidSection === undefined
   }
@@ -121,7 +118,7 @@ const ReviewPageWrapper: React.FC = () => {
 
   return error ? (
     <NoMatch />
-  ) : loading ? (
+  ) : !isReviewReady ? (
     <Loading />
   ) : reviewSections && responsesByCode ? (
     <>
@@ -148,7 +145,7 @@ const ReviewPageWrapper: React.FC = () => {
                 reviewSection={reviewSection}
                 updateResponses={updateResponses}
                 setDecisionArea={openDecisionArea}
-                canEdit={(reviewStatus as string) === REVIEW_STATUS.DRAFT}
+                canEdit={reviewStatus === ReviewStatus.Draft}
                 showError={reviewSection.section === invalidSection}
               />
             )
@@ -161,7 +158,7 @@ const ReviewPageWrapper: React.FC = () => {
             marginRight: '10%',
           }}
         >
-          {(reviewStatus as string) === REVIEW_STATUS.DRAFT && (
+          {reviewStatus === ReviewStatus.Draft && (
             <Button
               size="medium"
               color={invalidSection ? 'red' : 'blue'}

@@ -126,7 +126,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                               )}
                             </Grid.Column>
                           </Grid.Row>
-                          {review && review.decision && (
+                          {review && canEdit && review.decision && (
                             <Grid.Row>
                               <Card fluid>
                                 <Card.Content>
