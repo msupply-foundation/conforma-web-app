@@ -44,6 +44,8 @@ const ReviewOverview: React.FC = () => {
   }, [assignment])
 
   const { processing, error: createReviewError, create } = useCreateReview({
+    reviewerId: currentUser?.userId as number,
+    serialNumber,
     onCompleted: (id: number) => {
       if (serialNumber) {
         // Call Review page after creation
