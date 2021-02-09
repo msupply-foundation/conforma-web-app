@@ -19,6 +19,7 @@ import { ReviewStatus } from '../../utils/generated/graphql'
 import { AssignmentDetails, SectionDetails } from '../../utils/types'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import { useUserState } from '../../contexts/UserState'
+import getReviewStartLabel from '../../utils/helpers/review/getReviewStartLabel'
 
 // TODO: Rename to ReviewStart
 const ReviewOverview: React.FC = () => {
@@ -92,28 +93,12 @@ const ReviewOverview: React.FC = () => {
 
   const getActionButton = ({ review }: AssignmentDetails) => {
     if (review) {
-      const getLabel = (status: string) => {
-        // TODO: Not use strings here - use the type
-        switch (status) {
-          case 'Draft':
-            return strings.BUTTON_REVIEW_CONTINUE
-          case 'Pending':
-            return strings.BUTTON_REVIEW_RE_REVIEW
-          case 'ChangesRequested':
-            return strings.BUTTON_REVIEW_MAKE_UPDATES
-          case 'Submitted' || 'Locked':
-            return strings.BUTTON_REVIEW_VIEW
-          default:
-            return status
-        }
-      }
-
       const { id, status } = review
       return (
         <Button
           as={Link}
           to={`/application/${serialNumber}/review/${id}`}
-          content={getLabel(status)}
+          content={getReviewStartLabel(status)}
         />
       )
     }
