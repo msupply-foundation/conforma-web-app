@@ -81,14 +81,14 @@ const ListWrapper: React.FC = () => {
             <Grid.Column width={3}>
               <Search
                 // size="large"
-                placeholder="Search Applications"
+                placeholder={strings.PLACEHOLDER_SEARCH}
                 onSearchChange={handleSearchChange}
                 open={false}
                 value={searchText}
               />
             </Grid.Column>
             <Grid.Column textAlign="left" verticalAlign="middle">
-              <Button content={'Clear search'} onClick={() => setSearchText('')} />
+              <Button content={strings.BUTTON_CLEAR_SEARCH} onClick={() => setSearchText('')} />
             </Grid.Column>
             <Grid.Column textAlign="right" verticalAlign="middle" floated="right">
               <Button
