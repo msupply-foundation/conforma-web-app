@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Container, List, Label, Segment, Button, Form } from 'semantic-ui-react'
+import { Container, List, Label, Segment, Button, Form, Search, Grid } from 'semantic-ui-react'
 import { Loading, FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useListApplications from '../../utils/hooks/useListApplications'
@@ -20,7 +20,7 @@ const ListWrapper: React.FC = () => {
     userState: { templatePermissions },
   } = useUserState()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
-  const [searchText, setSearchText] = useState('')
+  const [searchText, setSearchText] = useState(query?.search)
   const [applicationsRows, setApplicationsRows] = useState<ApplicationList[] | undefined>()
   const { error, loading, applications } = useListApplications(query)
 
@@ -76,22 +76,29 @@ const ListWrapper: React.FC = () => {
             <List.Item key={`ApplicationList-parameter-${value}`} content={key + ' : ' + value} />
           ))}
         </List>
-        <Button
-          as={Link}
-          to={`/application/new?type=${type}`}
-          content={strings.BUTTON_APPLICATION_NEW}
-        />
-        {/* <Form>
-          <Form.Group> */}
-        <Form.Input
-          placeholder="Search"
-          name="search"
-          value={searchText}
-          icon="search"
-          onChange={handleSearchChange}
-        />
-        {/* </Form.Group>
-        </Form> */}
+        <Grid columns={3} style={{ marginTop: '5px' }}>
+          <Grid.Row>
+            <Grid.Column width={3}>
+              <Search
+                // size="large"
+                placeholder="Search Applications"
+                onSearchChange={handleSearchChange}
+                open={false}
+                value={searchText}
+              />
+            </Grid.Column>
+            <Grid.Column textAlign="left" verticalAlign="middle">
+              <Button content={'Clear search'} onClick={() => setSearchText('')} />
+            </Grid.Column>
+            <Grid.Column textAlign="right" verticalAlign="middle" floated="right">
+              <Button
+                as={Link}
+                to={`/application/new?type=${type}`}
+                content={strings.BUTTON_APPLICATION_NEW}
+              />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </Segment>
       {columns && applicationsRows && (
         <ApplicationsList columns={columns} applications={applicationsRows} />
