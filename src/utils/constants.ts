@@ -1,5 +1,6 @@
 export default {
   BUTTON_APPLICATION_NEW: 'New application',
+  BUTTON_APPLICATION_RESUME: 'Resume',
   BUTTON_APPLICATION_START: 'Get started',
   BUTTON_APPLICATION_SUBMIT: 'Submit application',
   BUTTON_BACK_DASHBOARD: 'Back to dashboard',
@@ -30,6 +31,7 @@ export default {
   LABEL_ASSIGNED_TO_YOU: 'Assigned to you',
   LABEL_ASSIGNED_TO_OTHER: 'Assigned to another reviewer',
   LABEL_COMMENT: 'Add comment',
+  LABEL_LOADING: 'Loading...',
   LABEL_LOGIN_PASSWORD: 'Password',
   LABEL_LOGIN_USERNAME: 'Username',
   LABEL_LOG_IN: 'Log in',

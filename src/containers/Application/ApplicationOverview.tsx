@@ -8,7 +8,7 @@ import {
   Message,
   ModalProps,
 } from 'semantic-ui-react'
-import { SectionSummary, Loading, ModalWarning } from '../../components'
+import { SectionSummary, Loading, ModalWarning, NoMatch } from '../../components'
 import strings from '../../utils/constants'
 import buildSectionsStructure from '../../utils/helpers/application/buildSectionsStructure'
 import useGetResponsesAndElementState from '../../utils/hooks/useGetResponsesAndElementState'
@@ -37,12 +37,10 @@ const ApplicationOverview: React.FC = () => {
 
   const { query, push } = useRouter()
   const { serialNumber } = query
-  const { error, loading, application, templateSections, isApplicationLoaded } = useLoadApplication(
-    {
-      serialNumber: serialNumber as string,
-      networkFetch: true,
-    }
-  )
+  const { error, loading, application, sections, isApplicationReady } = useLoadApplication({
+    serialNumber: serialNumber as string,
+    networkFetch: true,
+  })
 
   const {
     error: responsesError,
@@ -51,7 +49,7 @@ const ApplicationOverview: React.FC = () => {
     elementsState,
   } = useGetResponsesAndElementState({
     serialNumber: serialNumber as string,
-    isApplicationLoaded,
+    isApplicationReady,
   })
 
   const { error: submitError, processing, submitted, submit } = useSubmitApplication({
@@ -62,7 +60,7 @@ const ApplicationOverview: React.FC = () => {
 
   useEffect(() => {
     // Fully re-validate on page load
-    if (!isApplicationLoaded) return
+    if (!isApplicationReady) return
     const status = application?.stage?.status
     if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired) {
       // Show summary, even if it no longer validates, as it would
@@ -70,7 +68,7 @@ const ApplicationOverview: React.FC = () => {
       setIsRevalidated(true)
       return
     }
-    if (isApplicationLoaded && elementsState && responsesByCode) {
+    if (elementsState && responsesByCode) {
       revalidateAndUpdate().then(() => setIsRevalidated(true))
     }
   }, [responsesByCode, elementsState, application])
@@ -78,7 +76,7 @@ const ApplicationOverview: React.FC = () => {
   useEffect(() => {
     if (!responsesLoading && elementsState && responsesByCode) {
       const sectionsStructure = buildSectionsStructure({
-        templateSections,
+        sections,
         elementsState,
         responsesByCode,
       })
@@ -88,11 +86,11 @@ const ApplicationOverview: React.FC = () => {
   }, [elementsState, responsesLoading])
 
   const revalidateAndUpdate = async () => {
-    const revalidate = await revalidateAll(
-      elementsState as ApplicationElementStates,
-      responsesByCode as ResponsesByCode,
-      currentUser as User
-    )
+    const revalidate = await revalidateAll({
+      elementsState: elementsState as ApplicationElementStates,
+      responsesByCode: responsesByCode as ResponsesByCode,
+      currentUser: currentUser as User,
+    })
 
     // Update database if validity changed
     revalidate.validityFailures.forEach((changedElement) => {
@@ -135,7 +133,7 @@ const ApplicationOverview: React.FC = () => {
   }
 
   return error || responsesError ? (
-    <Message error header={strings.ERROR_APPLICATION_OVERVIEW} list={[error, responsesError]} />
+    <NoMatch />
   ) : loading || responsesLoading ? (
     <Loading />
   ) : submitError ? (

@@ -42,11 +42,7 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
       },
     },
     // Prevents returned HTML from being wrapped in <p></p> tags
-    noParagraph: {
-      paragraph: ({ node: { children } }: any) => {
-        return <span>{children?.[0]?.value}</span>
-      },
-    },
+    noParagraph: { paragraph: 'span' },
   }
 
   const renderer = semanticComponent ? renderers[semanticComponent] : null

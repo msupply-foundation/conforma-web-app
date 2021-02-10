@@ -26,7 +26,7 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
       return (
         <Segment basic textAlign="center">
           <Progress size="tiny" />
-          <Link to={`/application/${serial}/summary`}>{ACTIONS.EDIT_DRAFT}</Link>
+          <Link to={`/application/${serial}`}>{ACTIONS.EDIT_DRAFT}</Link>
           <Icon name="trash alternate outline" style={{ marginLeft: 10 }} />
         </Segment>
       )

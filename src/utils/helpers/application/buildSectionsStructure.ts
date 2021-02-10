@@ -3,13 +3,13 @@ import {
   ApplicationElementStates,
   ResponseFull,
   ResponsesByCode,
+  SectionDetails,
   SectionStructure,
-  TemplateSectionPayload,
 } from '../../types'
 import getPageElements from './getPageElements'
 
 interface BuildSectionsStructureProps {
-  templateSections: TemplateSectionPayload[]
+  sections: SectionDetails[]
   elementsState: ApplicationElementStates
   responsesByCode: ResponsesByCode
   reviewResponses?: ReviewResponse[]
@@ -17,7 +17,7 @@ interface BuildSectionsStructureProps {
 }
 
 const buildSectionsStructure = ({
-  templateSections,
+  sections,
   elementsState,
   responsesByCode,
   reviewResponses,
@@ -25,8 +25,8 @@ const buildSectionsStructure = ({
 }: BuildSectionsStructureProps): SectionStructure => {
   // Create the sections and pages structure to display each section's element
   // Will also add the responses for each element, and can add reviews if received by props
-  return templateSections
-    .sort((a, b) => a.index - b.index)
+  return sections
+    .sort(({ index: aIndex }, { index: bIndex }) => aIndex - bIndex)
     .map((section) => {
       let reviewInSection = false
       const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
@@ -46,7 +46,7 @@ const buildSectionsStructure = ({
             element,
             response,
           }
-          if (!reviewResponses) return elementState
+          if (!response || !reviewResponses) return elementState
           const reviewResponse = getReviewResponse(response, reviewResponses)
           if (reviewResponse) reviewInSection = true
           return {
@@ -60,10 +60,7 @@ const buildSectionsStructure = ({
       }, {})
 
       const sectionState = {
-        section: {
-          title: section.title,
-          code: section.code,
-        },
+        section,
         pages,
       }
 
@@ -85,13 +82,15 @@ const getReviewResponse = (response: ResponseFull | null, reviewResponses: Revie
         return response.id === applicationResponse?.id
       })
     : undefined
-  return reviewResponse
-    ? {
-        id: reviewResponse.id,
-        decision: reviewResponse.decision ? reviewResponse.decision : undefined,
-        comment: reviewResponse.comment ? reviewResponse.comment : '',
-      }
-    : undefined
+
+  if (reviewResponse) {
+    const { id, decision, comment } = reviewResponse
+    return {
+      id,
+      decision: decision ? decision : undefined,
+      comment: comment ? comment : '',
+    }
+  } else return undefined
 }
 
 export default buildSectionsStructure

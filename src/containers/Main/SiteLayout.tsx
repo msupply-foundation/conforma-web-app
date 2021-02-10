@@ -19,6 +19,7 @@ import {
   TemplateList,
   TemplateNew,
   Template,
+  ApplicationStart,
 } from '../../components'
 import { ApplicationCreate, ApplicationPageWrapper } from '../Application'
 import { ReviewOverview, ReviewPageWrapper } from '../Review'

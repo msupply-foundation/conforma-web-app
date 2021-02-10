@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Header, Label, Message, Segment } from 'semantic-ui-react'
-import { DecisionArea, Loading, ReviewSection } from '../../components'
+import { DecisionArea, Loading, NoMatch, ReviewSection } from '../../components'
 import { DecisionAreaState, ReviewQuestionDecision, SectionDetails, User } from '../../utils/types'
 import useLoadReview from '../../utils/hooks/useLoadReview'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -54,7 +54,7 @@ const ReviewPageWrapper: React.FC = () => {
 
   // Keep array with all review responses from current Reviewer
   useEffect(() => {
-    if (!currentUser) return
+    if (!currentUser || !reviewSections) return
     const { userId } = currentUser
     const reviewerResponseDecisions = listReviewResponses({ userId, reviewSections })
     setReviewerResponses(reviewerResponseDecisions)
@@ -83,6 +83,7 @@ const ReviewPageWrapper: React.FC = () => {
   }
 
   const validateReviewHandler = (): boolean => {
+    if (!currentUser || !reviewSections) return false
     const { userId } = currentUser as User
     const invalidSection = validateReview({ userId, reviewSections })
     console.log(invalidSection)
@@ -111,7 +112,7 @@ const ReviewPageWrapper: React.FC = () => {
   }
 
   return error ? (
-    <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
+    <NoMatch />
   ) : loading ? (
     <Loading />
   ) : reviewSections && responsesByCode ? (

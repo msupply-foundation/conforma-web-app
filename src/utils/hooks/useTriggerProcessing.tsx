@@ -3,31 +3,46 @@ import { useGetTriggersQuery } from '../../utils/generated/graphql'
 
 type TriggerType = 'applicationTrigger' | 'reviewAssignmentTrigger' | 'reviewTrigger'
 
-interface TriggerQueryProps {
-  serialNumber?: string
-  reviewAssignmentId?: number
-  reviewId?: number
-  triggerType?: TriggerType
+interface TriggerApplication {
+  isApplicationLoaded: boolean
+  serialNumber: string
 }
+interface TriggerReview {
+  isReviewLoaded: boolean
+  reviewId: number
+}
+interface TriggerAssignment {
+  reviewAssignmentId: number
+}
+type TriggerQueryProps = { triggerType?: TriggerType } & (
+  | TriggerApplication
+  | TriggerReview
+  | TriggerAssignment
+)
 
-const useTriggerProcessing = ({
-  serialNumber,
-  reviewAssignmentId,
-  reviewId,
-  triggerType,
-}: TriggerQueryProps) => {
+const useTriggerProcessing = ({ triggerType, ...props }: TriggerQueryProps) => {
   const [isProcessing, setIsProcessing] = useState(true)
-  const [triggerError, setTriggerError] = useState(false)
-
-  // Ensure at least one the primary identifiers is provided
-  if (!serialNumber && !reviewAssignmentId && !reviewId) {
-    console.log('INVALID QUERY')
-    setIsProcessing(false)
-    setTriggerError(true)
-  }
+  const [triggerError, setTriggerError] = useState<string>()
 
   // If triggerType not provided, infer it from the supplied ID
-  const inferredTriggerType = inferTriggerType(triggerType, serialNumber, reviewAssignmentId)
+  const inferredTriggerType = inferTriggerType(triggerType, props)
+
+  if (!inferredTriggerType) {
+    setIsProcessing(false)
+    setTriggerError('Invalid trigger type')
+  }
+
+  const { serialNumber, isApplicationLoaded } = props as TriggerApplication
+  const { reviewAssignmentId } = props as TriggerAssignment
+  const { reviewId, isReviewLoaded } = props as TriggerReview
+
+  // Skip processing the trigger using one of the following flags (depending on trigger type)
+  let skipTrigger =
+    isApplicationLoaded !== undefined
+      ? !isApplicationLoaded
+        ? isReviewLoaded !== undefined
+        : !isReviewLoaded
+      : true
 
   const { data, loading, error } = useGetTriggersQuery({
     variables: {
@@ -36,35 +51,35 @@ const useTriggerProcessing = ({
       reviewId,
     },
     pollInterval: 500,
-    skip: !isProcessing,
+    skip: skipTrigger && !isProcessing,
     fetchPolicy: 'no-cache',
   })
 
   useEffect((): any => {
     const triggers = data?.applicationTriggerStates?.nodes?.[0]
     if (triggers) {
-      if (triggers[inferredTriggerType] === null) setIsProcessing(false)
+      if (triggers[inferredTriggerType as TriggerType] === null) setIsProcessing(false)
     }
-    if (error) {
-      setIsProcessing(false)
-      setTriggerError(true)
-    }
-  }, [data, loading, error])
+  }, [data, loading, skipTrigger])
 
-  return { triggerProcessing: isProcessing, error: error || triggerError }
+  return {
+    isTriggerProcessing: isProcessing,
+    error: error ? (error.message as string) : triggerError,
+  }
 }
 export default useTriggerProcessing
 
 function inferTriggerType(
   triggerType: TriggerType | undefined,
-  serial: string | undefined,
-  reviewAssignmentId: number | undefined
-): TriggerType {
+  receivedProps: TriggerApplication | TriggerReview | TriggerAssignment
+): TriggerType | null {
   return triggerType
     ? triggerType
-    : serial
+    : (receivedProps as TriggerApplication)
     ? 'applicationTrigger'
-    : reviewAssignmentId
+    : (receivedProps as TriggerAssignment)
     ? 'reviewAssignmentTrigger'
-    : 'reviewTrigger'
+    : (receivedProps as TriggerReview)
+    ? 'reviewTrigger'
+    : null
 }

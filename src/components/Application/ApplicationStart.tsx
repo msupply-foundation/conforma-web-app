@@ -1,22 +1,36 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, Divider, Header, Icon, List, Message, Segment } from 'semantic-ui-react'
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
+import { Button, Divider, Grid, Header, List, Progress, Segment, Sticky } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import { TemplateTypePayload, TemplateSectionPayload, EvaluatorParameters } from '../../utils/types'
+import {
+  EvaluatorParameters,
+  ResumeSection,
+  SectionDetails,
+  TemplateDetails,
+} from '../../utils/types'
 import ApplicationSelectType from './ApplicationSelectType'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
-export interface ApplicationStartProps {
-  template: TemplateTypePayload
-  sections: TemplateSectionPayload[]
-  handleClick: () => void
+export interface ApplicationStartProps extends RouteComponentProps {
+  template: TemplateDetails
+  sections: SectionDetails[]
+  resumeApplication?: (props: ResumeSection) => void
+  startApplication?: () => void
+  setSummaryButtonClicked?: () => void
 }
 
-const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
-  const { template, sections, handleClick } = props
+const ApplicationStart: React.FC<ApplicationStartProps> = ({
+  template,
+  sections,
+  resumeApplication,
+  startApplication,
+  setSummaryButtonClicked,
+}) => {
   const { name, code, startMessage } = template
   const [startMessageEvaluated, setStartMessageEvaluated] = useState('')
+  const [isApplicationCompleted, setIsApplicationCompleted] = useState(false)
+  const [firstIncomplete, setFirstIncomplete] = useState<string>()
   const {
     userState: { currentUser },
   } = useUserState()
@@ -30,7 +44,26 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
     evaluate(startMessage || '', evaluatorParams).then((result: any) =>
       setStartMessageEvaluated(result)
     )
+
+    const isApplicationCompleted = Object.values(sections).every(
+      ({ progress }) => progress?.completed && progress.valid
+    )
+    if (!isApplicationCompleted) findFirstIncompleteSection()
+
+    setIsApplicationCompleted(isApplicationCompleted)
   }, [startMessage, currentUser])
+
+  const findFirstIncompleteSection = () => {
+    const firstIncompleteLocation = Object.entries(sections)
+      .filter(([_, section]) => section.progress)
+      .sort(([aKey], [bKey]) => (aKey < bKey ? -1 : 1))
+      .find(([_, section]) => !section.progress?.completed || !section.progress.valid)
+
+    if (firstIncompleteLocation) {
+      const [_, section] = firstIncompleteLocation
+      setFirstIncomplete(section.code)
+    }
+  }
 
   return template ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
@@ -60,27 +93,78 @@ const ApplicationStart: React.FC<ApplicationStartProps> = (props) => {
           <Segment basic>
             <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
             <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
-            <List divided relaxed>
+            <List divided relaxed="very">
               {sections &&
-                sections.map((section) => (
-                  <List.Item key={`list-item-${section.code}`}>
-                    <List.Icon name="circle outline" />
-                    <List.Content>{section.title}</List.Content>
-                  </List.Item>
-                ))}
+                Object.entries(sections).map(([_, { code: sectionCode, progress, title }]) => {
+                  return (
+                    <List.Item
+                      key={`list-item-${sectionCode}`}
+                      children={
+                        <Grid>
+                          <Grid.Column width={1}>
+                            {progress?.completed ? (
+                              <List.Icon color="green" name="check circle" />
+                            ) : (
+                              <List.Icon name="circle outline" />
+                            )}
+                          </Grid.Column>
+                          <Grid.Column width={10}>
+                            <p>{title}</p>
+                          </Grid.Column>
+                          <Grid.Column width={3}>
+                            {progress && progress.done > 0 && progress.total > 0 && (
+                              <Progress
+                                percent={(100 * progress.done) / progress.total}
+                                size="tiny"
+                                success={progress.valid}
+                                error={!progress.valid}
+                              />
+                            )}
+                          </Grid.Column>
+                          <Grid.Column width={2}>
+                            {resumeApplication && progress && sectionCode === firstIncomplete && (
+                              <Button
+                                color="blue"
+                                onClick={() =>
+                                  resumeApplication({ sectionCode, page: progress.linkedPage })
+                                }
+                              >
+                                {strings.BUTTON_APPLICATION_RESUME}
+                              </Button>
+                            )}
+                          </Grid.Column>
+                        </Grid>
+                      }
+                    ></List.Item>
+                  )
+                })}
             </List>
             <Divider />
             <Markdown text={startMessageEvaluated} semanticComponent="Message" info />
-            <Button color="blue" onClick={handleClick}>
-              {strings.BUTTON_APPLICATION_START}
-            </Button>
+            {startApplication && (
+              <Button color="blue" onClick={startApplication}>
+                {strings.BUTTON_APPLICATION_START}
+              </Button>
+            )}
           </Segment>
         )}
       </Segment>
+      {isApplicationCompleted && (
+        <Sticky
+          pushing
+          style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
+        >
+          <Segment basic textAlign="right">
+            <Button color="blue" onClick={setSummaryButtonClicked}>
+              {strings.BUTTON_SUMMARY}
+            </Button>
+          </Segment>
+        </Sticky>
+      )}
     </Segment.Group>
   ) : (
     <ApplicationSelectType />
   )
 }
 
-export default ApplicationStart
+export default withRouter(ApplicationStart)

@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { ButtonProps, Container, Label, ModalProps } from 'semantic-ui-react'
+import { Container, Label } from 'semantic-ui-react'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { CurrentPage, TemplateSectionPayload } from '../../utils/types'
-import messages from '../../utils/messages'
+import { CurrentPage, SectionDetails } from '../../utils/types'
 import strings from '../../utils/constants'
 
 interface NavigationBoxProps {
-  templateSections: TemplateSectionPayload[]
-  currentSection: TemplateSectionPayload
+  sections: SectionDetails[]
+  currentSection: SectionDetails
   serialNumber: string
   currentPage: number
   validateElementsInPage: (props?: CurrentPage) => boolean
@@ -16,7 +15,7 @@ interface NavigationBoxProps {
 }
 
 const NavigationBox: React.FC<NavigationBoxProps> = ({
-  templateSections,
+  sections: templateSections,
   currentSection,
   serialNumber,
   currentPage,

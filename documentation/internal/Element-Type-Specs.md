@@ -152,6 +152,47 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 
 ---
 
+### Checkboxes
+
+- **type/code**: `checkbox`
+- **category**: `Question`
+
+_One or more checkboxes, any number of which can be selected/toggled_
+
+#### Input parameters
+
+- **label\***: `string` -- as above
+- **description\***: `string` -- as above [Optional]
+- **checkboxes\***: `array[string | checkbox]` -- an array of labels, one per checkbox. For more complexity, an array of Checkbox objects can be provided with the following properties:
+
+  ```
+   {
+     label: <string> - text to display next to checkbox (Can be empty string but not omitted)
+     text: <string> - value to store in Response "text" field and shown in Summary View. Will be same as label if omitted.
+     key: <string | number> - unique code used as key/property name for Response object. Defaults to numerical index of array if omitted
+     selected: <boolean> - initial state of checkbox
+   }
+  ```
+
+- **type**: `string` -- Can be "toggle" to display as a toggle switch, or "slider" to display as a slider switch (defaults to regular checkbox).
+- **layout**: `string` -- if "inline", displays checkboxes horizontally in rows. Useful if there are a lot of checkboxes.
+
+#### Response type
+
+```
+{
+  text: <string> -- comma separated list of all selected checkbox "text" values, shown in Summary view (or Review)
+  values: {
+            <key-name-1> : { text: <text value>, isSelected: <boolean>}
+            <key-name-2> : { text: <text value>, isSelected: <boolean>}
+            ... for all checkbox keys
+          }
+}
+
+```
+
+---
+
 ### Page Break
 
 - **type/code**: `pageBreak`
