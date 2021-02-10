@@ -18,7 +18,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({ columns, applicatio
         <Table.Header>
           <Table.Row>
             {columns.map(({ headerName }) => (
-              <Table.HeaderCell key={`ApplicationList-header-${headerName}`}>
+              <Table.HeaderCell key={`ApplicationList-header-${headerName}`} sorted={undefined}>
                 {headerName}
               </Table.HeaderCell>
             ))}
