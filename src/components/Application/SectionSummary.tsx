@@ -25,8 +25,6 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
     setIsOpen(!isOpen)
   }
 
-  console.log('pages', pages)
-
   return (
     <Accordion styled fluid>
       <Segment.Group size="large">
@@ -50,8 +48,6 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
                 {elements.map(({ element, response }) => {
                   const { category, isEditable } = element
                   const pageCode = pageName?.replace(' ', '')
-                  console.log('element', element)
-                  console.log('response', response)
                   return (
                     <Segment key={`SectionSummary_${element.code}`}>
                       <Grid columns={2} verticalAlign="middle">
