@@ -10,7 +10,7 @@ interface NavigationBoxProps {
   currentSection: SectionDetails
   serialNumber: string
   currentPage: number
-  validateElementsInPage: (props?: CurrentPage) => boolean
+  validateElementsInPage: (props: CurrentPage) => boolean
   openModal: () => void
 }
 
@@ -62,7 +62,7 @@ const NavigationBox: React.FC<NavigationBoxProps> = ({
     const page = nextPage > currentSection.totalPages ? 1 : nextPage
 
     // Check if previous page (related to next) is valid
-    const status = validateElementsInPage()
+    const status = validateElementsInPage({ section: currentSection, page: currentPage })
 
     if (!status) openModal()
     else sendToPage(section.code, page)

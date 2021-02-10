@@ -1,96 +1,69 @@
-import { ReviewResponse, User } from '../../generated/graphql'
 import {
   ApplicationElementStates,
-  ResponseFull,
   ResponsesByCode,
   SectionDetails,
-  SectionStructure,
+  SectionsStructure,
 } from '../../types'
-import getPageElements from './getPageElements'
+import { getPageElements } from './getPageElements'
 
 interface BuildSectionsStructureProps {
   sections: SectionDetails[]
   elementsState: ApplicationElementStates
   responsesByCode: ResponsesByCode
-  reviewResponses?: ReviewResponse[]
-  reviewer?: User
 }
 
-const buildSectionsStructure = ({
+export const buildSectionsStructure = ({
   sections,
   elementsState,
   responsesByCode,
-  reviewResponses,
-  reviewer,
-}: BuildSectionsStructureProps): SectionStructure => {
+}: BuildSectionsStructureProps): SectionsStructure => {
   // Create the sections and pages structure to display each section's element
   // Will also add the responses for each element, and can add reviews if received by props
-  return sections
-    .sort(({ index: aIndex }, { index: bIndex }) => aIndex - bIndex)
-    .map((section) => {
-      let reviewInSection = false
-      const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
-      const pages = pageNumbers.reduce((pages, pageNumber) => {
-        const elements = getPageElements({
-          elementsState,
-          sectionIndex: section.index,
-          pageNumber,
-        })
-        if (elements.length === 0) return pages
+  return sections.reduce((sectionsStructure: SectionsStructure, section) => {
+    const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
+    const pages = pageNumbers.reduce((pages, pageNumber) => {
+      const elements = getPageElements({
+        elementsState,
+        sectionIndex: section.index,
+        pageNumber,
+      })
+      if (elements.length === 0) return pages
 
-        // Will build the array of elements in a page
-        // with response OR response & reviewResponse
-        const elementsFull = elements.map((element) => {
-          const response = getResponse(element.code, responsesByCode)
-          const elementState = {
-            element,
-            response,
-          }
-          if (!response || !reviewResponses) return elementState
-          const reviewResponse = getReviewResponse(response, reviewResponses)
-          if (reviewResponse) reviewInSection = true
-          return {
-            ...elementState,
-            review: reviewResponse,
-          }
-        })
+      // Will build the array of elements
+      const elementsFull = elements.map((element) => {
+        const response = getResponse(element.code, responsesByCode)
+        const elementState = {
+          element,
+          response,
+        }
+        return elementState
+      })
 
-        const pageName = `Page ${pageNumber}`
-        return { ...pages, [pageName]: elementsFull }
-      }, {})
+      const pageName = `Page ${pageNumber}`
+      return { ...pages, [pageName]: elementsFull }
+    }, {})
 
-      const sectionState = {
-        section,
+    return {
+      ...sectionsStructure,
+      [section.code]: {
+        details: section,
         pages,
-      }
-
-      if (!reviewer || !reviewInSection) return sectionState
-      const { id, firstName, lastName } = reviewer as User
-      return {
-        ...sectionState,
-        assigned: { id, firstName: firstName as string, lastName: lastName as string },
-      }
-    })
+      },
+    }
+  }, {})
 }
 
 const getResponse = (code: string, responsesByCode: ResponsesByCode) =>
   responsesByCode && responsesByCode[code] ? responsesByCode[code] : null
 
-const getReviewResponse = (response: ResponseFull | null, reviewResponses: ReviewResponse[]) => {
-  const reviewResponse = response
-    ? reviewResponses.find(({ applicationResponse }) => {
-        return response.id === applicationResponse?.id
-      })
-    : undefined
-
-  if (reviewResponse) {
-    const { id, decision, comment } = reviewResponse
+export const buildTemplateSectionsStructure = (sections: SectionDetails[]) => {
+  return sections.reduce((sectionsStructure: SectionsStructure, section) => {
     return {
-      id,
-      decision: decision ? decision : undefined,
-      comment: comment ? comment : '',
+      ...sectionsStructure,
+      [section.code]: {
+        details: section,
+        pages: {},
+      },
     }
-  } else return undefined
+  }, {})
 }
-
-export default buildSectionsStructure

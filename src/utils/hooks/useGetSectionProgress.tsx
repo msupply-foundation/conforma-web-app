@@ -1,43 +1,58 @@
 import { useState, useEffect } from 'react'
 import updateSectionsProgress from '../helpers/application/updateSectionsProgress'
-import { ApplicationElementStates, ResponsesByCode, SectionDetails, User } from '../types'
+import {
+  ApplicationElementStates,
+  EvaluatedSections,
+  ResponsesByCode,
+  SectionsStructure,
+  User,
+} from '../types'
 
 interface UseGetSectionProgressProps {
   currentUser: User | null
-  sections: SectionDetails[] | undefined
-  elementsState: ApplicationElementStates | undefined
-  responsesByCode: ResponsesByCode | undefined
+  sectionsStructure?: SectionsStructure
+  elementsState?: ApplicationElementStates
+  responsesByCode?: ResponsesByCode
+  isStructureLoaded: boolean
 }
 
 const useGetSectionsProgress = ({
   currentUser,
-  sections,
+  sectionsStructure,
   elementsState,
   responsesByCode,
+  isStructureLoaded,
 }: UseGetSectionProgressProps) => {
-  const [sectionsProgress, setSectionsProgress] = useState<SectionDetails[]>()
-  const [isLoadingProgress, setIsLoadingProgress] = useState(false)
+  const [evaluatedSections, setEvaluatedSections] = useState<EvaluatedSections>()
+  const [isProcessing, setIsProcessing] = useState(false)
 
-  const isDoneOrProcessing = sectionsProgress || isLoadingProgress
+  const isDoneOrProcessing = evaluatedSections !== undefined || isProcessing
 
-  if (!isDoneOrProcessing && currentUser && elementsState && responsesByCode && sections) {
-    setIsLoadingProgress(true)
+  if (
+    !isDoneOrProcessing &&
+    isStructureLoaded &&
+    currentUser &&
+    elementsState &&
+    responsesByCode &&
+    sectionsStructure
+  ) {
+    setIsProcessing(true)
     updateSectionsProgress({
       currentUser,
       elementsState,
       responsesByCode,
-      sections,
-      setSections: setSectionsProgress,
+      sections: sectionsStructure,
+      setSections: setEvaluatedSections,
     })
   }
 
   useEffect(() => {
-    if (sectionsProgress) setIsLoadingProgress(false)
-  }, [sectionsProgress])
+    if (evaluatedSections !== undefined) setIsProcessing(false)
+  }, [evaluatedSections])
 
   return {
-    sectionsProgress,
-    isLoadingProgress,
+    evaluatedSections,
+    isProcessing,
   }
 }
 

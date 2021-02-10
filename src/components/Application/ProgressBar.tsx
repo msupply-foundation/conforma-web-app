@@ -10,17 +10,12 @@ import { useApplicationState } from '../../contexts/ApplicationState'
 import strings from '../../utils/constants'
 import { useRouter } from '../../utils/hooks/useRouter'
 
-interface SectionPage {
-  sectionIndex: number
-  currentPage: number
-}
-
 interface ProgressBarProps {
   serialNumber: string
-  currentSectionPage?: SectionPage
+  currentPage: CurrentPage
   progressStructure: ProgressInApplication
   getPreviousPage: (props: { sectionCode: string; pageNumber: number }) => CurrentPage | undefined
-  validateElementsInPage: (props?: CurrentPage) => boolean
+  validateElementsInPage: (props: CurrentPage) => boolean
 }
 
 interface ClickedLinkParameters {
@@ -33,7 +28,7 @@ interface ClickedLinkParameters {
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   serialNumber,
-  currentSectionPage,
+  currentPage,
   progressStructure,
   getPreviousPage,
   validateElementsInPage,
@@ -63,7 +58,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     const { canNavigate, sectionCode, pageNumber, code, pageOrSection } = clickedLinkParameters
     setProgressLinkClicked(false)
     if (pageOrSection === 'page') {
-      if (canNavigate || validateElementsInPage())
+      if (canNavigate || validateElementsInPage({ ...currentPage }))
         push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
     } else {
       if (canNavigate || isPreviousPageIsValid(code as string, 1))
@@ -172,7 +167,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         {strings.TITLE_INTRODUCTION}
       </Header>
       <Accordion
-        activeIndex={currentSectionPage ? currentSectionPage.sectionIndex : 0} //TODO: Change to get active from structure
+        // activeIndex={currentSectionPage ? currentSectionPage.sectionIndex : 0} //TODO: Change to get active from structure
         panels={sectionList()}
       />
     </Sticky>
