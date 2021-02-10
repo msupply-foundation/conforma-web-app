@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Container, List, Label, Segment, Button } from 'semantic-ui-react'
+import { Container, List, Label, Segment, Button, Form } from 'semantic-ui-react'
 import { Loading, FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useListApplications from '../../utils/hooks/useListApplications'
@@ -14,12 +14,13 @@ import ApplicationsList from '../../components/List/ApplicationsList'
 import { ApplicationList } from '../../utils/generated/graphql'
 
 const ListWrapper: React.FC = () => {
-  const { query, push } = useRouter()
+  const { query, push, history, queryString, restoreKebabCaseKeys } = useRouter()
   const { type, userRole } = query
   const {
     userState: { templatePermissions },
   } = useUserState()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
+  const [searchText, setSearchText] = useState('')
   const [applicationsRows, setApplicationsRows] = useState<ApplicationList[] | undefined>()
   const { error, loading, applications } = useListApplications(query)
 
@@ -40,6 +41,13 @@ const ListWrapper: React.FC = () => {
     }
   }, [loading, applications])
 
+  useEffect(() => {
+    const newQuery = { ...query }
+    if (searchText === '') delete newQuery.search
+    else newQuery.search = searchText
+    history.push({ search: queryString.stringify(restoreKebabCaseKeys(newQuery), { sort: false }) })
+  }, [searchText])
+
   const redirectToDefault = () => {
     const redirectType = type || Object.keys(templatePermissions)[0]
     const redirectUserRole = userRole || getDefaultUserRole(templatePermissions, redirectType)
@@ -48,6 +56,10 @@ const ListWrapper: React.FC = () => {
     else {
       // To-Do: Show 404 if no default found
     }
+  }
+
+  const handleSearchChange = (e: any) => {
+    setSearchText(e.target.value)
   }
 
   return error ? (
@@ -69,6 +81,17 @@ const ListWrapper: React.FC = () => {
           to={`/application/new?type=${type}`}
           content={strings.BUTTON_APPLICATION_NEW}
         />
+        {/* <Form>
+          <Form.Group> */}
+        <Form.Input
+          placeholder="Search"
+          name="search"
+          value={searchText}
+          icon="search"
+          onChange={handleSearchChange}
+        />
+        {/* </Form.Group>
+        </Form> */}
       </Segment>
       {columns && applicationsRows && (
         <ApplicationsList columns={columns} applications={applicationsRows} />
