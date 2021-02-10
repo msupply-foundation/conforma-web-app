@@ -70,9 +70,12 @@ export function useRouter(): RouterResult {
         ...queryFilters,
         ...params,
       },
-      queryString, // query parsing/stringify functions
+
+      // query parsing/stringify functions
+      queryString,
       replaceKebabCaseKeys,
       restoreKebabCaseKeys,
+
       // Include match, location, history objects so we have
       // access to extra React Router functionality if needed.
       params,
