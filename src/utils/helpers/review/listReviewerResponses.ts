@@ -9,7 +9,9 @@ import { ReviewerResponsesPayload, ReviewQuestionDecision } from '../../types'
  * @param reviewSections All reviews responses and elements of application
  */
 const listReviewResponses = ({ userId, reviewSections }: ReviewerResponsesPayload) => {
-  const assignedSections = reviewSections.filter(({ assigned }) => assigned?.id === userId)
+  const assignedSections = Object.values(reviewSections).filter(
+    ({ assigned }) => assigned?.id === userId
+  )
   return assignedSections.reduce(
     (reviewerResponseDecisions: ReviewQuestionDecision[], { pages }) => {
       Object.entries(pages).forEach(([pageName, elements]) => {

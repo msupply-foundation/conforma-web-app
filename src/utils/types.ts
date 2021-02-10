@@ -30,10 +30,12 @@ export {
   ElementPluginParameters,
   ElementState,
   ElementsActivityState,
+  EvaluatedSections,
   EvaluatorParameters,
   DecisionAreaState,
   IGraphQLConnection,
   LooseString,
+  PageElements,
   PageElementsStatuses,
   ProgressInApplication,
   ProgressInPage,
@@ -46,10 +48,10 @@ export {
   ReviewQuestion,
   ReviewQuestionDecision,
   ReviewerResponsesPayload,
-  SectionElementStates,
+  SectionState,
   SectionDetails,
   SectionProgress,
-  SectionStructure,
+  SectionsStructure,
   StageAndStatus,
   TemplateDetails,
   TemplateElementState,
@@ -181,7 +183,10 @@ interface IGraphQLConnection {
   fetch: Function
   endpoint: string
 }
-
+interface EvaluatedSections {
+  sectionsWithProgress: SectionsStructure
+  elementsToUpdate: ValidityFailure[]
+}
 interface EvaluatorParameters {
   objects?: object
   pgConnection?: any // Any, because not likely to be used in front-end
@@ -190,6 +195,12 @@ interface EvaluatorParameters {
 }
 
 type LooseString = string | null | undefined
+
+type PageElements = {
+  element: ElementState
+  response: ResponseFull | null
+  review?: ReviewQuestionDecision
+}[]
 
 interface PageElementsStatuses {
   [code: string]: ProgressStatus
@@ -259,31 +270,15 @@ interface ReviewQuestionDecision {
 
 interface ReviewerResponsesPayload {
   userId: number
-  reviewSections: SectionStructure
+  reviewSections: SectionsStructure
 }
-
-interface SectionElementStates {
-  section: SectionDetails
-  assigned?: ReviewerDetails
-  pages: {
-    [pageName: string]: {
-      element: ElementState
-      response: ResponseFull | null
-      review?: ReviewQuestionDecision
-    }[]
-  }
-}
-
 interface SectionDetails {
   id: number
   index: number
   code: string
   title: string
   totalPages: number
-  progress?: SectionProgress
-  assigned?: boolean
 }
-
 interface SectionProgress {
   total: number
   done: number
@@ -291,9 +286,17 @@ interface SectionProgress {
   valid: boolean
   linkedPage: number
 }
-
-type SectionStructure = SectionElementStates[]
-
+interface SectionState {
+  details: SectionDetails
+  progress?: SectionProgress
+  assigned?: ReviewerDetails
+  pages: {
+    [pageName: string]: PageElements
+  }
+}
+interface SectionsStructure {
+  [code: string]: SectionState
+}
 interface StageAndStatus {
   stageId: number | undefined
   stage: string
@@ -352,14 +355,19 @@ interface ValidityFailure {
 
 interface RevalidateResult {
   allValid: boolean
-  validityFailures: ValidityFailure[]
   progress: SectionProgress
+  sectionCode?: string
+  validityFailures: ValidityFailure[]
 }
 
 interface UseGetApplicationProps {
   serialNumber: string
-  isApplicationReady?: boolean
+  currentUser: User
+  sectionCode?: string
+  page?: number
   networkFetch?: boolean
+  isApplicationReady?: boolean
+  setApplicationState?: Function
 }
 
 interface User {

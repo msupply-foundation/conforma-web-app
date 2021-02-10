@@ -15,10 +15,10 @@ const validateReview = ({
   userId,
   reviewSections,
 }: ReviewerResponsesPayload): SectionDetails | undefined => {
-  const invalidSection = reviewSections?.find((reviewSection) => {
-    const { assigned, pages } = reviewSection
+  const invalidSection = Object.values(reviewSections).find((section) => {
+    const { assigned, pages } = section
     if (assigned?.id !== userId) return false
-    const validPages = Object.entries(pages).filter(([pageName, elements]) => {
+    const validPages = Object.entries(pages).filter(([_, elements]) => {
       // TODO: Create utility function to filter out all INFORMATION elements when checking for status
       const questions = elements.filter(
         ({ element }) => element.category === TemplateElementCategory.Question
@@ -31,7 +31,7 @@ const validateReview = ({
     // If all pages are valid then the section is valid
     if (Object.keys(validPages).length < Object.keys(pages).length) return true
   })
-  return invalidSection ? invalidSection.section : undefined
+  return invalidSection ? invalidSection.details : undefined
 }
 
 export default validateReview

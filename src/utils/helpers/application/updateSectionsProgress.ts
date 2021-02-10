@@ -1,10 +1,10 @@
-import { promises } from 'fs'
 import {
   ApplicationElementStates,
   ResponsesByCode,
   RevalidateResult,
-  SectionDetails,
+  SectionsStructure,
   User,
+  ValidityFailure,
 } from '../../types'
 import { revalidateAll } from './revalidateAll'
 
@@ -12,8 +12,11 @@ interface GetSectionsProgressProps {
   currentUser: User
   elementsState: ApplicationElementStates
   responsesByCode: ResponsesByCode
-  sections: SectionDetails[]
-  setSections: (sections: SectionDetails[]) => void
+  sections: SectionsStructure
+  setSections: (props: {
+    sectionsWithProgress: SectionsStructure
+    elementsToUpdate: ValidityFailure[]
+  }) => void
 }
 
 const updateSectionsProgress = async ({
@@ -24,7 +27,7 @@ const updateSectionsProgress = async ({
   setSections,
 }: GetSectionsProgressProps) => {
   const validatePromises: Promise<RevalidateResult>[] = []
-  sections.forEach(async ({ code }) => {
+  Object.keys(sections).forEach(async (code) => {
     const validate = revalidateAll({
       elementsState,
       responsesByCode,
@@ -35,14 +38,17 @@ const updateSectionsProgress = async ({
   })
 
   Promise.all(validatePromises).then((values) => {
-    const sectionsProgress: SectionDetails[] = []
-    values.forEach(({ progress }, index) => {
-      sectionsProgress.push({
-        ...sections[index],
-        progress,
-      })
+    const elementsToUpdate: ValidityFailure[] = []
+    values.forEach(({ validityFailures, sectionCode, progress }) => {
+      if (sectionCode) sections[sectionCode].progress = progress
+      else console.log('Problem to add progress to section', sectionCode)
+
+      validityFailures.forEach((changedElement) => elementsToUpdate.push(changedElement))
     })
-    setSections(sectionsProgress)
+    setSections({
+      sectionsWithProgress: sections,
+      elementsToUpdate,
+    })
   })
 }
 

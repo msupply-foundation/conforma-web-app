@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Grid, Header, Segment, Accordion, Icon } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
+import strings from '../../utils/constants'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
-import { ResponsesByCode, SectionElementStates } from '../../utils/types'
+import { ResponsesByCode, SectionState } from '../../utils/types'
 
 interface SectionSummaryProps {
-  sectionPages: SectionElementStates
+  sectionPages: SectionState
   serialNumber: string
   allResponses: ResponsesByCode
   canEdit: boolean
@@ -18,7 +19,7 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
   allResponses,
   canEdit,
 }) => {
-  const { section, pages } = sectionPages
+  const { details: section, pages } = sectionPages
   const [isOpen, setIsOpen] = useState(true)
 
   const handleClick = () => {
@@ -64,12 +65,11 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
                               isEditable &&
                               canEdit && (
                                 <Button
+                                  content={strings.BUTTON_SUMMARY_EDIT}
                                   size="small"
                                   as={Link}
                                   to={`/application/${serialNumber}/${section.code}/${pageCode}`}
-                                >
-                                  Edit
-                                </Button>
+                                />
                               )}
                           </Grid.Column>
                         </Grid.Row>
