@@ -20,8 +20,6 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
 
   const { SummaryView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
-  console.log('SummaryView', SummaryView)
-
   const dynamicParameters = config?.dynamicParameters
   const dynamicExpressions =
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
