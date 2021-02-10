@@ -3,34 +3,12 @@ import {
   ReviewQuestionAssignment,
   TemplateElement,
 } from '../../generated/graphql'
-import { AssignmentDetails, ReviewQuestion, SectionDetails } from '../../types'
-
-interface GetAssignedSectionsProps {
-  assignment: AssignmentDetails
-  sections: SectionDetails[]
-}
-
+import { ReviewQuestion } from '../../types'
 interface GetAssignedQuestionsProps {
   reviewQuestions: ReviewQuestionAssignment[]
 }
 
-export const getAssignedSections = ({
-  assignment,
-  sections,
-}: GetAssignedSectionsProps): Array<string> => {
-  const assignedSections = assignment.questions.reduce(
-    (assignedSections: Set<string>, { sectionIndex }) => {
-      const foundSection = sections.find(({ index }) => index === sectionIndex)
-      if (foundSection) assignedSections.add(foundSection.title)
-      return assignedSections
-    },
-    new Set([])
-  )
-
-  return Array.from(assignedSections)
-}
-
-export const getAssignedQuestions = ({ reviewQuestions }: GetAssignedQuestionsProps) => {
+const getAssignedQuestions = ({ reviewQuestions }: GetAssignedQuestionsProps) => {
   const assignedQuestions = reviewQuestions.reduce(
     (validQuestionAssignments: ReviewQuestion[], questionAssignment) => {
       const { templateElement } = questionAssignment
@@ -56,3 +34,5 @@ export const getAssignedQuestions = ({ reviewQuestions }: GetAssignedQuestionsPr
   )
   return assignedQuestions
 }
+
+export default getAssignedQuestions
