@@ -5,7 +5,7 @@ interface GetElementsInStructureProps {
   sectionCode: string
   page: number
 }
-export const getElementsInStructure = ({
+export const getPageElementsInStructure = ({
   sectionsStructure,
   sectionCode,
   page,

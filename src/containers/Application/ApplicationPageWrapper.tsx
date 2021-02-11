@@ -29,7 +29,7 @@ import {
 } from '../../utils/types'
 import getPreviousPage from '../../utils/helpers/application/getPreviousPage'
 import useLoadSectionsStructure from '../../utils/hooks/useLoadSectionsStructure'
-import { getElementsInStructure } from '../../utils/helpers/application/getElementsInStructure'
+import { getPageElementsInStructure } from '../../utils/helpers/application/getElementsInStructure'
 import useRevalidateApplication from '../../utils/hooks/useRevalidateApplication'
 import checkIsCompleted from '../../utils/helpers/application/checkIsCompleted'
 
@@ -82,6 +82,14 @@ const ApplicationPageWrapper: React.FC = () => {
 
   const [responseMutation] = useUpdateResponseMutation()
 
+  // Flag to run validation over application after changes to sections structure
+  useEffect(() => {
+    if (sectionsStructure) {
+      setSections(sectionsStructure)
+      setIsRevalidated(false)
+    }
+  }, [sectionsStructure])
+
   // Wait for application to be loaded to:
   // 1 - ProcessRedirect: Will redirect to summary in case application is SUBMITTED
   // 2 - Set hook to load sections progress in the start page (if startMessage existing), OR
@@ -90,7 +98,6 @@ const ApplicationPageWrapper: React.FC = () => {
     if (!isApplicationReady || !validatedSections) return
     const { sectionsWithProgress } = validatedSections
     setSections(sectionsWithProgress)
-    console.log(sectionsWithProgress)
 
     const stage = application?.stage
     const { status } = stage as ApplicationStage
@@ -103,11 +110,15 @@ const ApplicationPageWrapper: React.FC = () => {
     }
   }, [sectionCode, page, isApplicationReady, validatedSections])
 
-  // Wait for loading (and evaluating elements and responses)
-  // or a change of section/page to rebuild the progress bar
+  // Wait for loading (and validation of all responses) or
+  // changes of section/page to rebuild the progress bar
   useEffect(() => {
-    if (!sectionsStructure || !sectionCode || !page) return
-    const elements = getElementsInStructure({ sectionsStructure, sectionCode, page: Number(page) })
+    if (!sections || !sectionCode || !page) return
+    const elements = getPageElementsInStructure({
+      sectionsStructure: sections,
+      sectionCode,
+      page: Number(page),
+    })
     setPageElements(elements)
   }, [isApplicationReady, currentSection, page])
 
@@ -164,7 +175,7 @@ const ApplicationPageWrapper: React.FC = () => {
   }
 
   const handleValidatePage = ({ section, page: currentPage }: CurrentPage) => {
-    const foundSection = sectionsStructure && sectionsStructure[section.code]
+    const foundSection = sections && sections[section.code]
     if (!foundSection) {
       console.log('Problem during validation', section)
       return false
