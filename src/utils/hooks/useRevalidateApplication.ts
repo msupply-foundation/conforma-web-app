@@ -36,7 +36,6 @@ const useRevalidateApplication = ({
 
   useEffect(() => {
     if (!isRevalidated && evaluatedSections !== undefined) {
-      console.log('isRevalidated')
       setIsRevalidated(true)
     }
   }, [isRevalidated, evaluatedSections])
