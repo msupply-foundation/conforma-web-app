@@ -6,7 +6,6 @@ import {
   ButtonProps,
   Grid,
   Header,
-  Label,
   Message,
   ModalProps,
   Segment,
@@ -41,6 +40,7 @@ const ApplicationPageWrapper: React.FC = () => {
   const [showModal, setShowModal] = useState<ModalProps>({ open: false })
   const [loadStart, setLoadStart] = useState(false)
   const [summaryButtonClicked, setSummaryButtonClicked] = useState(false)
+  const [sections, setEvaluatedSections] = useState<SectionsStructure>()
 
   const { query, push, replace } = useRouter()
   const { serialNumber, sectionCode, page } = query
@@ -89,18 +89,19 @@ const ApplicationPageWrapper: React.FC = () => {
   // 2 - Set hook to load sections progress in the start page (if startMessage existing), OR
   // 3 - Set the current section state of the application
   useEffect(() => {
-    if (isApplicationReady && sectionsStructure) {
-      const stage = application?.stage
-      const { status } = stage as ApplicationStage
-      if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired) {
-        replace(`/application/${serialNumber}/summary`)
-      } else if (!sectionCode || !page) {
-        if (template?.startMessage) setLoadStart(true)
-        // Redirects to first section/page if not Start Message defined
-        else replace(`/application/${serialNumber}/${currentSection?.code}/Page1`)
-      }
+    if (!isApplicationReady || !evaluatedSections) return
+    const { sectionsWithProgress } = evaluatedSections as EvaluatedSections
+    setEvaluatedSections(sectionsWithProgress)
+    const stage = application?.stage
+    const { status } = stage as ApplicationStage
+    if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired) {
+      replace(`/application/${serialNumber}/summary`)
+    } else if (!sectionCode || !page) {
+      if (template?.startMessage) setLoadStart(true)
+      // Redirects to first section/page if not Start Message defined
+      else replace(`/application/${serialNumber}/${currentSection?.code}/Page1`)
     }
-  }, [sectionCode, page, isApplicationReady, sectionsStructure])
+  }, [sectionCode, page, isApplicationReady, evaluatedSections])
 
   // Wait for loading (and evaluating elements and responses)
   // or a change of section/page to rebuild the progress bar
@@ -176,25 +177,20 @@ const ApplicationPageWrapper: React.FC = () => {
   }
 
   const getSectionDetails = () =>
-    Object.values(sectionsStructure as SectionsStructure).map(({ details: section }) => section)
+    Object.values(sections as SectionsStructure).map(({ details: section }) => section)
 
   return error ? (
     <NoMatch />
-  ) : !isApplicationReady || isProcessing ? (
+  ) : !isApplicationReady || isProcessing || !isRevalidated ? (
     <Loading />
-  ) : sectionsStructure && loadStart && template ? (
+  ) : sections && loadStart && template ? (
     <ApplicationStart
       template={template}
-      sections={sectionsStructure}
+      sections={sections}
       resumeApplication={handleResumeClick}
       setSummaryButtonClicked={() => setSummaryButtonClicked(true)}
     />
-  ) : application &&
-    pageElements &&
-    allResponses &&
-    sectionsStructure &&
-    serialNumber &&
-    currentSection ? (
+  ) : application && pageElements && allResponses && sections && serialNumber && currentSection ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
       <ModalWarning showModal={showModal} />
       <Header textAlign="center">

@@ -69,14 +69,13 @@ const useLoadSectionsStructure = ({
   // After building the structure set the current section/page
   useEffect(() => {
     if (!sectionsStructure) return
-
     const foundSection = sections.find(({ code }) => code === sectionCode)
     if (foundSection) setCurrentSection(foundSection)
     else {
       const firstSection = sectionsStructure[Object.keys(sectionsStructure)[0]]
       setCurrentSection(firstSection.details)
     }
-  }, [sectionsStructure])
+  }, [sectionsStructure, sectionCode, page])
 
   // ------------ Temporary code: Getting current structure to display progress per page
   useEffect(() => {
