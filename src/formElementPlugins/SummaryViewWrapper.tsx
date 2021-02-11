@@ -67,7 +67,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
 
   return (
     <ErrorBoundary pluginCode={pluginCode}>
-      <React.Suspense fallback="Loading">
+      <React.Suspense fallback="Loading Plugin">
         {parametersLoaded && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
       </React.Suspense>
     </ErrorBoundary>
