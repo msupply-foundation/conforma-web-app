@@ -7,7 +7,7 @@ import strings from '../../utils/constants'
 import getDefaultUserRole from '../../utils/helpers/list/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/list/mapColumnsByRole'
-import { ColumnDetails } from '../../utils/types'
+import { ColumnDetails, SortQuery } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
@@ -20,7 +20,8 @@ const ListWrapper: React.FC = () => {
     userState: { templatePermissions },
   } = useUserState()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
-  const [searchText, setSearchText] = useState(query?.search)
+  const [searchText, setSearchText] = useState<string>(query?.search)
+  const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
   const [applicationsRows, setApplicationsRows] = useState<ApplicationList[] | undefined>()
   const { error, loading, applications } = useListApplications(query)
 
@@ -48,6 +49,17 @@ const ListWrapper: React.FC = () => {
     history.push({ search: queryString.stringify(restoreKebabCaseKeys(newQuery), { sort: false }) })
   }, [searchText])
 
+  useEffect(() => {
+    const newQuery = { ...query }
+    if (Object.keys(sortQuery).length === 0) delete newQuery.sortBy
+    else
+      newQuery.sortBy = `${sortQuery.sortColumn}${
+        sortQuery.sortDirection === 'ascending' ? ':asc' : ''
+      }`
+    history.push({ search: queryString.stringify(restoreKebabCaseKeys(newQuery), { sort: false }) })
+    console.log('Sort Query', sortQuery)
+  }, [sortQuery])
+
   const redirectToDefault = () => {
     const redirectType = type || Object.keys(templatePermissions)[0]
     const redirectUserRole = userRole || getDefaultUserRole(templatePermissions, redirectType)
@@ -60,6 +72,22 @@ const ListWrapper: React.FC = () => {
 
   const handleSearchChange = (e: any) => {
     setSearchText(e.target.value)
+  }
+
+  const handleSort = (sortName: string) => {
+    const { sortColumn, sortDirection } = sortQuery
+    switch (true) {
+      case sortName === sortColumn && sortDirection === 'descending':
+        setSortQuery({ sortColumn: sortName, sortDirection: 'ascending' })
+        break
+      case sortName === sortColumn && sortDirection === 'ascending':
+        setSortQuery({})
+        break
+      default:
+        // Clicked on a new column
+        setSortQuery({ sortColumn: sortName, sortDirection: 'descending' })
+        break
+    }
   }
 
   return error ? (
@@ -101,10 +129,24 @@ const ListWrapper: React.FC = () => {
         </Grid>
       </Segment>
       {columns && applicationsRows && (
-        <ApplicationsList columns={columns} applications={applicationsRows} />
+        <ApplicationsList
+          columns={columns}
+          applications={applicationsRows}
+          sortQuery={sortQuery}
+          handleSort={handleSort}
+        />
       )}
     </Container>
   )
 }
 
 export default ListWrapper
+
+const getInitialSortQuery = (query: string): SortQuery => {
+  if (!query) return {}
+  const [sortColumn, direction] = query.split(':')
+  return {
+    sortColumn,
+    sortDirection: direction === 'asc' ? 'ascending' : 'descending',
+  }
+}

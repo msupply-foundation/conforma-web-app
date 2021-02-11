@@ -2,14 +2,21 @@ import React from 'react'
 import { Table, Message } from 'semantic-ui-react'
 import { ApplicationList } from '../../utils/generated/graphql'
 import messages from '../../utils/messages'
-import { ApplicationDetails, ColumnDetails } from '../../utils/types'
+import { ApplicationDetails, ColumnDetails, SortQuery } from '../../utils/types'
 
 interface ApplicationsListProps {
   columns: Array<ColumnDetails>
   applications: Array<ApplicationList>
+  sortQuery: SortQuery
+  handleSort: Function
 }
 
-const ApplicationsList: React.FC<ApplicationsListProps> = ({ columns, applications }) => {
+const ApplicationsList: React.FC<ApplicationsListProps> = ({
+  columns,
+  applications,
+  sortQuery: { sortColumn, sortDirection },
+  handleSort,
+}) => {
   return (
     // TODO: Create function on click (of a pre-defined group of sortable columns) in the header.
     // After a click on the header the URL updates and a new query to GraphQL using sorted columns
@@ -17,8 +24,12 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({ columns, applicatio
       <Table sortable stackable selectable>
         <Table.Header>
           <Table.Row>
-            {columns.map(({ headerName }) => (
-              <Table.HeaderCell key={`ApplicationList-header-${headerName}`} sorted={undefined}>
+            {columns.map(({ headerName, sortName }) => (
+              <Table.HeaderCell
+                key={`ApplicationList-header-${headerName}`}
+                sorted={sortColumn === sortName ? sortDirection : undefined}
+                onClick={() => handleSort(sortName)}
+              >
                 {headerName}
               </Table.HeaderCell>
             ))}

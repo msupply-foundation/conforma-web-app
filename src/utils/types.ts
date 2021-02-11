@@ -66,6 +66,7 @@ export {
   Organisation,
   LoginPayload,
   BasicStringObject,
+  SortQuery,
 }
 
 interface ApplicationDetails {
@@ -113,7 +114,7 @@ interface CellProps {
 
 interface ColumnDetails {
   headerName: string
-  filters: Array<string>
+  sortName: string
   ColumnComponent: React.FunctionComponent<any>
 }
 
@@ -391,4 +392,9 @@ interface LoginPayload {
 
 type UserRoles = {
   [role in USER_ROLES]: Array<PermissionPolicyType>
+}
+
+interface SortQuery {
+  sortColumn?: string
+  sortDirection?: 'ascending' | 'descending'
 }
