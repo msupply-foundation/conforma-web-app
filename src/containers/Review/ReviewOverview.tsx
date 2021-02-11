@@ -22,7 +22,6 @@ import { useUserState } from '../../contexts/UserState'
 import getReviewStartLabel from '../../utils/helpers/review/getReviewStartLabel'
 import { REVIEW_STATUS } from '../../utils/data/reviewStatus'
 
-// TODO: Rename to ReviewStart
 const ReviewOverview: React.FC = () => {
   const {
     push,

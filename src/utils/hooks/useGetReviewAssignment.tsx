@@ -88,7 +88,7 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
 
       if (sectionsStructure && review) {
         const reviewResponses = review.reviewResponses.nodes as ReviewResponse[]
-        const reviewer = review.reviewer as User
+        const reviewer = currentAssignment.reviewer as User
         const sectionsWithReviews = updateSectionsReviews({
           sectionsStructure,
           reviewResponses,
@@ -97,7 +97,7 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
         setSectionsAssigned(sectionsWithReviews)
       }
     }
-  }, [data])
+  }, [data, sectionsStructure])
 
   return {
     error: apolloError ? (apolloError.message as string) : applicationError || assignmentError,

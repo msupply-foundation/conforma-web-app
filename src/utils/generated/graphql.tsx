@@ -19474,7 +19474,13 @@ export type GetReviewAssignmentQuery = (
             & { section?: Maybe<(
               { __typename?: 'TemplateSection' }
               & Pick<TemplateSection, 'id' | 'index'>
-            )> }
+            )>, applicationResponses: (
+              { __typename?: 'ApplicationResponsesConnection' }
+              & { nodes: Array<Maybe<(
+                { __typename?: 'ApplicationResponse' }
+                & Pick<ApplicationResponse, 'id'>
+              )>> }
+            ) }
           )> }
         )>> }
       ) }
@@ -20232,6 +20238,11 @@ export const GetReviewAssignmentDocument = gql`
             section {
               id
               index
+            }
+            applicationResponses(condition: {applicationId: $applicationId}) {
+              nodes {
+                id
+              }
             }
           }
         }

@@ -39,6 +39,11 @@ export default gql`
                 id
                 index
               }
+              applicationResponses(condition: { applicationId: $applicationId }) {
+                nodes {
+                  id
+                }
+              }
             }
           }
         }
