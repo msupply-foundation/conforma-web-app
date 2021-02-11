@@ -52,16 +52,21 @@ const ApplicationOverview: React.FC = () => {
     currentUser: currentUser as User,
   })
 
+  const waitSubmissionCompletion = async () => {
+    // TODO: Needs to be fixed
+    await submit()
+    if (currentUser?.username === strings.USER_NONREGISTERED) {
+      logout()
+    }
+    push(`/application/${serialNumber}/submission`)
+  }
+
   useEffect(() => {
     if (!isSubmittedClicked || !evaluatedSections) return
     const { sectionsWithProgress, elementsToUpdate } = evaluatedSections as EvaluatedSections
     const { isCompleted, firstIncompleteLocation } = checkIsCompleted(sectionsWithProgress)
     if (isCompleted) {
-      submit() // TODO: Check if needs to run sync ?
-      if (currentUser?.username === strings.USER_NONREGISTERED) {
-        logout()
-      }
-      push(`/application/${serialNumber}/submission`)
+      waitSubmissionCompletion()
     } else {
       elementsToUpdate.forEach((updateElement) =>
         responseMutation({ variables: { ...updateElement } })
