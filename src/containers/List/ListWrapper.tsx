@@ -14,7 +14,7 @@ import ApplicationsList from '../../components/List/ApplicationsList'
 import { ApplicationList } from '../../utils/generated/graphql'
 
 const ListWrapper: React.FC = () => {
-  const { query, push, history, queryString, restoreKebabCaseKeys } = useRouter()
+  const { query, push, history, queryString, restoreKebabCaseKeys, updateQuery } = useRouter()
   const { type, userRole } = query
   const {
     userState: { templatePermissions },
@@ -43,21 +43,16 @@ const ListWrapper: React.FC = () => {
   }, [loading, applications])
 
   useEffect(() => {
-    const newQuery = { ...query }
-    if (searchText === '') delete newQuery.search
-    else newQuery.search = searchText
-    history.push({ search: queryString.stringify(restoreKebabCaseKeys(newQuery), { sort: false }) })
+    updateQuery({ search: searchText })
   }, [searchText])
 
   useEffect(() => {
-    const newQuery = { ...query }
-    if (Object.keys(sortQuery).length === 0) delete newQuery.sortBy
-    else
-      newQuery.sortBy = `${sortQuery.sortColumn}${
-        sortQuery.sortDirection === 'ascending' ? ':asc' : ''
-      }`
-    history.push({ search: queryString.stringify(restoreKebabCaseKeys(newQuery), { sort: false }) })
-    console.log('Sort Query', sortQuery)
+    const { sortColumn, sortDirection } = sortQuery
+    updateQuery({
+      sortBy: sortColumn
+        ? `${sortColumn}${sortDirection === 'ascending' ? ':asc' : ''}`
+        : undefined,
+    })
   }, [sortQuery])
 
   const redirectToDefault = () => {
