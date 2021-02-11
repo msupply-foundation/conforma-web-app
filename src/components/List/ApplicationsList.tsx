@@ -2,7 +2,7 @@ import React from 'react'
 import { Table, Message } from 'semantic-ui-react'
 import { ApplicationList } from '../../utils/generated/graphql'
 import messages from '../../utils/messages'
-import { ApplicationDetails, ColumnDetails, SortQuery } from '../../utils/types'
+import { ColumnDetails, SortQuery } from '../../utils/types'
 
 interface ApplicationsListProps {
   columns: Array<ColumnDetails>

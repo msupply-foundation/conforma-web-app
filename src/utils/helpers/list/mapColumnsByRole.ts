@@ -9,7 +9,7 @@ import {
   SerialNumberCell,
   StageCell,
   StatusCell,
-} from '../../../components/List'
+} from '../../../components/List/Cells'
 import { APPLICATION_COLUMNS, USER_ROLES } from '../../data'
 import COLUMNS_PER_ROLE from '../../data/columnsPerUserRole'
 import { ColumnDetails } from '../../types'
