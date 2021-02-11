@@ -42,11 +42,11 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
           </Grid>
         </Accordion.Title>
         <Accordion.Content active={isOpen}>
-          {Object.entries(pages).map(([pageName, elements]) => (
+          {Object.entries(pages).map(([pageName, { state }]) => (
             <Segment key={`SectionSummary_${pageName}`}>
               <p>{pageName}</p>
               <Segment.Group>
-                {elements.map(({ element, response }) => {
+                {state.map(({ element, response }) => {
                   const { category, isEditable } = element
                   const pageCode = pageName?.replace(' ', '')
                   return (

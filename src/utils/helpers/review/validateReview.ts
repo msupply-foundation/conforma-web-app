@@ -18,9 +18,9 @@ const validateReview = ({
   const invalidSection = Object.values(reviewSections).find((section) => {
     const { assigned, pages } = section
     if (assigned?.id !== userId) return false
-    const validPages = Object.entries(pages).filter(([_, elements]) => {
+    const validPages = Object.entries(pages).filter(([_, { state }]) => {
       // TODO: Create utility function to filter out all INFORMATION elements when checking for status
-      const questions = elements.filter(
+      const questions = state.filter(
         ({ element }) => element.category === TemplateElementCategory.Question
       )
       return (

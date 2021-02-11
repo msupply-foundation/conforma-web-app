@@ -1,27 +1,27 @@
 import React from 'react'
 import { Form, Header, Label, Segment } from 'semantic-ui-react'
 import { ApplicationViewWrapper } from '../../formElementPlugins'
-import { PageElements, ResponsesByCode } from '../../utils/types'
+import { Page, ResponsesByCode } from '../../utils/types'
 import strings from '../../utils/constants'
 
 interface ElementsBoxProps {
   sectionTitle: string
   responsesByCode: ResponsesByCode
-  pageElements: PageElements
+  page?: Page
   forceValidation: boolean
 }
 
 const ElementsBox: React.FC<ElementsBoxProps> = ({
   sectionTitle,
   responsesByCode,
-  pageElements,
+  page,
   forceValidation,
 }) => {
-  return pageElements ? (
+  return page ? (
     <Segment vertical style={{ marginBottom: 20 }}>
       <Header content={sectionTitle} />
       <Form>
-        {pageElements.map(({ element }) => {
+        {page.state.map(({ element }) => {
           const {
             code,
             pluginCode,

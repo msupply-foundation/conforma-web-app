@@ -14,9 +14,9 @@ const listReviewResponses = ({ userId, reviewSections }: ReviewerResponsesPayloa
   )
   return assignedSections.reduce(
     (reviewerResponseDecisions: ReviewQuestionDecision[], { pages }) => {
-      Object.entries(pages).forEach(([pageName, elements]) => {
+      Object.entries(pages).forEach(([pageName, { state }]) => {
         // TODO: Create utility function to filter out all INFORMATION elements when checking for status
-        const questions = elements.filter(
+        const questions = state.filter(
           ({ element }) => element.category === TemplateElementCategory.Question
         )
         questions.forEach(({ review }) => {

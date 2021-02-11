@@ -30,7 +30,7 @@ export const buildSectionsStructure = ({
       if (elements.length === 0) return pages
 
       // Will build the array of elements
-      const elementsFull = elements.map((element) => {
+      const state = elements.map((element) => {
         const response = getResponse(element.code, responsesByCode)
         const elementState = {
           element,
@@ -40,7 +40,7 @@ export const buildSectionsStructure = ({
       })
 
       const pageName = `Page ${pageNumber}`
-      return { ...pages, [pageName]: elementsFull }
+      return { ...pages, [pageName]: { number: pageNumber, state } }
     }, {})
 
     return {

@@ -23,7 +23,7 @@ import {
   ApplicationStage,
   CurrentPage,
   EvaluatedSections,
-  PageElements,
+  Page,
   ResumeSection,
   SectionsStructure,
   User,
@@ -36,7 +36,7 @@ import checkIsCompleted from '../../utils/helpers/application/checkIsCompleted'
 
 const ApplicationPageWrapper: React.FC = () => {
   const [isRevalidated, setIsRevalidated] = useState(false)
-  const [pageElements, setPageElements] = useState<PageElements>()
+  const [pageElements, setPageElements] = useState<Page>()
   const [showModal, setShowModal] = useState<ModalProps>({ open: false })
   const [loadStart, setLoadStart] = useState(false)
   const [summaryButtonClicked, setSummaryButtonClicked] = useState(false)
@@ -106,7 +106,7 @@ const ApplicationPageWrapper: React.FC = () => {
   // or a change of section/page to rebuild the progress bar
   useEffect(() => {
     if (!sectionsStructure || !sectionCode || !page) return
-    const elements = getElementsInStructure({ sectionsStructure, sectionCode, page })
+    const elements = getElementsInStructure({ sectionsStructure, sectionCode, page: Number(page) })
     setPageElements(elements)
   }, [isApplicationReady, currentSection, page])
 
@@ -165,14 +165,19 @@ const ApplicationPageWrapper: React.FC = () => {
   const handleValidatePage = ({ section, page: currentPage }: CurrentPage) => {
     const foundSection = sectionsStructure && sectionsStructure[section.code]
     if (!foundSection) {
-      console.log('Problem during validation', section, currentPage)
+      console.log('Problem during validation', section)
       return false
     }
-    const pageStatuses = getPageElementsStatuses(
-      foundSection.pages['Page ' + currentPage] as PageElements
-    )
-    const statuses = Object.values(pageStatuses)
-    return application?.isLinear ? getCombinedStatus(statuses) === PROGRESS_STATUS.VALID : true
+    const foundPage = Object.values(foundSection.pages).find(({ number }) => number === currentPage)
+    if (!foundPage) {
+      console.log('Problem during validation', currentPage)
+      return false
+    }
+    const pageStatuses = getPageElementsStatuses(foundPage.state)
+
+    return application?.isLinear
+      ? getCombinedStatus(Object.values(pageStatuses)) === PROGRESS_STATUS.VALID
+      : true
   }
 
   const getSectionDetails = () =>
@@ -225,7 +230,7 @@ const ApplicationPageWrapper: React.FC = () => {
             <ElementsBox
               sectionTitle={currentSection.title}
               responsesByCode={allResponses}
-              pageElements={pageElements}
+              page={pageElements}
               forceValidation={true} // TODO: Check if still needed
             />
             <NavigationBox

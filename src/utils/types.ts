@@ -35,6 +35,7 @@ export {
   DecisionAreaState,
   IGraphQLConnection,
   LooseString,
+  Page,
   PageElements,
   PageElementsStatuses,
   ProgressStatus,
@@ -194,6 +195,11 @@ interface EvaluatorParameters {
 
 type LooseString = string | null | undefined
 
+interface Page {
+  number: number
+  state: PageElements
+}
+
 type PageElements = {
   element: ElementState
   response: ResponseFull | null
@@ -274,7 +280,7 @@ interface SectionState {
   progress?: SectionProgress
   assigned?: ReviewerDetails
   pages: {
-    [pageName: string]: PageElements
+    [pageName: string]: Page
   }
 }
 interface SectionsStructure {

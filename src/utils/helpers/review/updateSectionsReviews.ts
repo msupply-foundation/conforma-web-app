@@ -11,17 +11,17 @@ const updateSectionsReviews = ({
   reviewResponses,
   reviewer,
 }: UpdateSectionsReviewsProps): SectionsStructure => {
-  Object.entries(sectionsStructure).forEach(([code, section]) => {
+  Object.entries(sectionsStructure).forEach(([code, { pages }]) => {
     let reviewInSection = false
-    Object.entries(section.pages).forEach(([number, page]) => {
+    Object.entries(pages).forEach(([name, { number, state }]) => {
       const pageWithReviews: PageElements = []
-      page.forEach((elementsState) => {
+      state.forEach((elementsState) => {
         const { response } = elementsState
         const reviewResponse = response ? getReviewResponse(response, reviewResponses) : undefined
         pageWithReviews.push({ ...elementsState, review: reviewResponse })
         if (reviewResponse) reviewInSection = true
       })
-      sectionsStructure[code].pages[number] = pageWithReviews
+      sectionsStructure[code].pages[name] = { number, state: pageWithReviews }
     })
     if (reviewInSection) {
       const { id, firstName, lastName } = reviewer
