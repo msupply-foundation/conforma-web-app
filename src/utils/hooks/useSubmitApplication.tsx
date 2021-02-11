@@ -59,7 +59,6 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
   const submit = () => {
     setSubmitted(true)
     setProcessing(true)
-    // TO-DO: Whole Application Validity Check here (Use Nicole's validatePage method)
   }
 
   return {

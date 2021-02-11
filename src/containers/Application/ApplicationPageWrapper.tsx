@@ -64,7 +64,6 @@ const ApplicationPageWrapper: React.FC = () => {
     sectionsStructure,
     currentSection,
     isApplicationReady,
-    progressInApplication,
   } = useLoadSectionsStructure({
     serialNumber: serialNumber as string,
     currentUser: currentUser as User,
@@ -207,22 +206,19 @@ const ApplicationPageWrapper: React.FC = () => {
         }}
       >
         <Grid.Column width={4}>
-          {!progressInApplication ? (
-            <Loading />
-          ) : (
-            <ProgressBar
-              serialNumber={serialNumber as string}
-              progressStructure={progressInApplication}
-              currentPage={{ section: currentSection, page: Number(page) }}
-              getPreviousPage={(props) =>
-                getPreviousPage({
-                  sections: getSectionDetails(),
-                  ...props,
-                })
-              }
-              validateElementsInPage={handleValidatePage}
-            />
-          )}
+          <ProgressBar
+            serialNumber={serialNumber as string}
+            current={{ section: currentSection, page: Number(page) }}
+            isLinear={application.isLinear}
+            sections={sections}
+            getPreviousPage={(props) =>
+              getPreviousPage({
+                sections: getSectionDetails(),
+                ...props,
+              })
+            }
+            validateElementsInPage={handleValidatePage}
+          />
         </Grid.Column>
         <Grid.Column width={10} stretched>
           <Segment basic>

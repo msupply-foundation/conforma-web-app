@@ -37,8 +37,6 @@ export {
   LooseString,
   PageElements,
   PageElementsStatuses,
-  ProgressInApplication,
-  ProgressInPage,
   ProgressStatus,
   ResponseFull,
   ResponsePayload,
@@ -205,21 +203,6 @@ type PageElements = {
 interface PageElementsStatuses {
   [code: string]: ProgressStatus
 }
-interface ProgressInPage {
-  pageNumber: number
-  status: ProgressStatus
-  canNavigate: boolean
-  isActive: boolean
-}
-
-type ProgressInApplication = {
-  code: string
-  title: string
-  status?: ProgressStatus
-  canNavigate: boolean
-  isActive: boolean
-  pages: ProgressInPage[]
-}[]
 
 type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
 interface ResponseFull {
