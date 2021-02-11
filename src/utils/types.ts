@@ -30,7 +30,7 @@ export {
   ElementPluginParameters,
   ElementState,
   ElementsActivityState,
-  EvaluatedSections,
+  ValidatedSections as EvaluatedSections,
   EvaluatorParameters,
   DecisionAreaState,
   IGraphQLConnection,
@@ -56,9 +56,9 @@ export {
   TemplateElementState,
   TemplatePermissions,
   TemplatesDetails,
-  ValidationMode,
   ValidateFunction,
   ValidateObject,
+  ValidatedSections,
   ValidityFailure,
   RevalidateResult,
   UseGetApplicationProps,
@@ -181,10 +181,6 @@ interface DecisionAreaState {
 interface IGraphQLConnection {
   fetch: Function
   endpoint: string
-}
-interface EvaluatedSections {
-  sectionsWithProgress: SectionsStructure
-  elementsToUpdate: ValidityFailure[]
 }
 interface EvaluatorParameters {
   objects?: object
@@ -334,8 +330,10 @@ interface ValidateObject {
   validate: ValidateFunction
 }
 
-type ValidationMode = 'STRICT' | 'LOOSE'
-
+interface ValidatedSections {
+  sectionsWithProgress: SectionsStructure
+  elementsToUpdate: ValidityFailure[]
+}
 interface ValidityFailure {
   id: number
   isValid: boolean

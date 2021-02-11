@@ -23,6 +23,7 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
   const [applicationSubmitMutation] = useUpdateApplicationMutation({
     onCompleted: () => {
       setProcessing(false)
+      console.log('Finished submission')
     },
     onError: (submissionError) => {
       setProcessing(false)

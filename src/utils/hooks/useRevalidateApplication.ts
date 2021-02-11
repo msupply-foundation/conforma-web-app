@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
-import { SectionsStructure, User } from '../types'
+import { useEffect, useState } from 'react'
+import updateSectionsProgress from '../helpers/application/updateSectionsProgress'
+import { ValidatedSections, SectionsStructure, User } from '../types'
 import useGetResponsesAndElementState from './useGetResponsesAndElementState'
-import useGetSectionsProgress from './useGetSectionProgress'
 
 interface UseRevalidateApplicationProps {
   serialNumber: string
@@ -19,30 +19,45 @@ const useRevalidateApplication = ({
   isRevalidated,
   setIsRevalidated,
 }: UseRevalidateApplicationProps) => {
-  const { error, responsesByCode, elementsState } = useGetResponsesAndElementState({
+  const [validatedSections, setValidatedSections] = useState<ValidatedSections>()
+  const [isProcessing, setIsProcessing] = useState(false)
+
+  const { error, loading, responsesByCode, elementsState } = useGetResponsesAndElementState({
     serialNumber,
     currentUser,
     isApplicationReady,
   })
 
-  // Run evaluation on each section to check progress (and validity)
-  const { evaluatedSections, isProcessing } = useGetSectionsProgress({
-    currentUser,
-    sectionsStructure,
-    elementsState,
-    responsesByCode,
-    isStructureLoaded: !isRevalidated,
-  })
+  const isDoneOrProcessing = !loading || isProcessing || validatedSections !== undefined
+
+  if (
+    !isDoneOrProcessing &&
+    !isRevalidated &&
+    currentUser &&
+    elementsState &&
+    responsesByCode &&
+    sectionsStructure
+  ) {
+    setIsProcessing(true)
+    updateSectionsProgress({
+      currentUser,
+      elementsState,
+      responsesByCode,
+      sections: sectionsStructure,
+      setSections: setValidatedSections,
+    })
+  }
 
   useEffect(() => {
-    if (!isRevalidated && evaluatedSections !== undefined) {
+    if (!isRevalidated && validatedSections !== undefined) {
+      setIsProcessing(false)
       setIsRevalidated(true)
     }
-  }, [isRevalidated, evaluatedSections])
+  }, [isRevalidated, validatedSections])
 
   return {
     error,
-    evaluatedSections,
+    validatedSections,
     isProcessing,
   }
 }

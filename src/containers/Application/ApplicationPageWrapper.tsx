@@ -40,7 +40,7 @@ const ApplicationPageWrapper: React.FC = () => {
   const [showModal, setShowModal] = useState<ModalProps>({ open: false })
   const [loadStart, setLoadStart] = useState(false)
   const [summaryButtonClicked, setSummaryButtonClicked] = useState(false)
-  const [sections, setEvaluatedSections] = useState<SectionsStructure>()
+  const [sections, setSections] = useState<SectionsStructure>()
 
   const { query, push, replace } = useRouter()
   const { serialNumber, sectionCode, page } = query
@@ -72,7 +72,7 @@ const ApplicationPageWrapper: React.FC = () => {
     setApplicationState,
   })
 
-  const { evaluatedSections, isProcessing } = useRevalidateApplication({
+  const { validatedSections, isProcessing } = useRevalidateApplication({
     serialNumber: serialNumber as string,
     currentUser: currentUser as User,
     sectionsStructure: sectionsStructure as SectionsStructure,
@@ -88,9 +88,11 @@ const ApplicationPageWrapper: React.FC = () => {
   // 2 - Set hook to load sections progress in the start page (if startMessage existing), OR
   // 3 - Set the current section state of the application
   useEffect(() => {
-    if (!isApplicationReady || !evaluatedSections) return
-    const { sectionsWithProgress } = evaluatedSections as EvaluatedSections
-    setEvaluatedSections(sectionsWithProgress)
+    if (!isApplicationReady || !validatedSections) return
+    const { sectionsWithProgress } = validatedSections as EvaluatedSections
+    setSections(sectionsWithProgress)
+    console.log(sectionsWithProgress)
+
     const stage = application?.stage
     const { status } = stage as ApplicationStage
     if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired) {
@@ -100,7 +102,7 @@ const ApplicationPageWrapper: React.FC = () => {
       // Redirects to first section/page if not Start Message defined
       else replace(`/application/${serialNumber}/${currentSection?.code}/Page1`)
     }
-  }, [sectionCode, page, isApplicationReady, evaluatedSections])
+  }, [sectionCode, page, isApplicationReady, validatedSections])
 
   // Wait for loading (and evaluating elements and responses)
   // or a change of section/page to rebuild the progress bar
@@ -122,8 +124,8 @@ const ApplicationPageWrapper: React.FC = () => {
   // Run after Summary button is clicked -> will wait for evaluation hook to run
   // and redict to summary page if all questions are valid or show modal
   useEffect(() => {
-    if (!summaryButtonClicked || !evaluatedSections) return
-    const { sectionsWithProgress, elementsToUpdate } = evaluatedSections as EvaluatedSections
+    if (!summaryButtonClicked || !validatedSections) return
+    const { sectionsWithProgress, elementsToUpdate } = validatedSections as EvaluatedSections
     const { isCompleted, firstIncompleteLocation } = checkIsCompleted(sectionsWithProgress)
     if (isCompleted) {
       setSummaryButtonClicked(false)
@@ -146,7 +148,7 @@ const ApplicationPageWrapper: React.FC = () => {
         onClose: () => setShowModal({ open: false }),
       })
     }
-  }, [summaryButtonClicked, evaluatedSections, isRevalidated])
+  }, [summaryButtonClicked, validatedSections, isRevalidated])
 
   const openModal = () => {
     setShowModal({

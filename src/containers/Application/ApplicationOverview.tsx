@@ -15,7 +15,6 @@ import checkIsCompleted from '../../utils/helpers/application/checkIsCompleted'
 const ApplicationOverview: React.FC = () => {
   const [isRevalidated, setIsRevalidated] = useState(false)
   const [isSubmittedClicked, setIsSubmittedClicked] = useState(false)
-  const [isProcessingSubmission, setIsProcessingSubmission] = useState(false)
   const [showModal, setShowModal] = useState<ModalProps>({ open: false })
   const { query, push } = useRouter()
   const { serialNumber } = query
@@ -36,7 +35,7 @@ const ApplicationOverview: React.FC = () => {
     networkFetch: true,
   })
 
-  const { evaluatedSections, isProcessing } = useRevalidateApplication({
+  const { validatedSections, isProcessing } = useRevalidateApplication({
     serialNumber: serialNumber as string,
     currentUser: currentUser as User,
     sectionsStructure: sectionsStructure as SectionsStructure,
@@ -62,8 +61,8 @@ const ApplicationOverview: React.FC = () => {
   }
 
   useEffect(() => {
-    if (!isSubmittedClicked || !evaluatedSections) return
-    const { sectionsWithProgress, elementsToUpdate } = evaluatedSections as EvaluatedSections
+    if (!isSubmittedClicked || !validatedSections) return
+    const { sectionsWithProgress, elementsToUpdate } = validatedSections as EvaluatedSections
     const { isCompleted, firstIncompleteLocation } = checkIsCompleted(sectionsWithProgress)
     if (isCompleted) {
       waitSubmissionCompletion()
@@ -85,11 +84,11 @@ const ApplicationOverview: React.FC = () => {
         onClose: () => setShowModal({ open: false }),
       })
     }
-  }, [evaluatedSections, isProcessingSubmission, isRevalidated])
+  }, [isSubmittedClicked, validatedSections, isRevalidated])
 
   const handleSubmit = () => {
+    setIsRevalidated(false)
     setIsSubmittedClicked(true)
-    setIsProcessingSubmission(true)
   }
 
   return error ? (

@@ -27,7 +27,7 @@ const updateSectionsProgress = async ({
   setSections,
 }: GetSectionsProgressProps) => {
   const validatePromises: Promise<RevalidateResult>[] = []
-  Object.keys(sections).forEach(async (code) => {
+  Object.keys(sections).forEach((code) => {
     const validate = revalidateAll({
       elementsState,
       responsesByCode,
@@ -42,7 +42,6 @@ const updateSectionsProgress = async ({
     values.forEach(({ validityFailures, sectionCode, progress }) => {
       if (sectionCode) sections[sectionCode].progress = progress
       else console.log('Problem to add progress to section', sectionCode)
-
       validityFailures.forEach((changedElement) => elementsToUpdate.push(changedElement))
     })
     setSections({
