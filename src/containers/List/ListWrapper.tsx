@@ -14,7 +14,7 @@ import ApplicationsList from '../../components/List/ApplicationsList'
 import { ApplicationList } from '../../utils/generated/graphql'
 
 const ListWrapper: React.FC = () => {
-  const { query, push, history, queryString, restoreKebabCaseKeys, updateQuery } = useRouter()
+  const { query, push, updateQuery } = useRouter()
   const { type, userRole } = query
   const {
     userState: { templatePermissions },

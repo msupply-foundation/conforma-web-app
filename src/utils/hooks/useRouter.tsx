@@ -9,9 +9,6 @@ interface RouterResult {
   push: (path: string) => void
   query: BasicStringObject
   updateQuery: Function
-  queryString: any
-  replaceKebabCaseKeys: Function
-  restoreKebabCaseKeys: Function
   replace: (path: string) => void
   match: match
   history: any
@@ -20,26 +17,28 @@ interface RouterResult {
 }
 
 /**
- * @function: replaceKebabCaseKeys
- * For each filter key in the query (which will use snake-case: e.g. user-role)
- * will convert to camelCase (e.g userRole) before returning query to components.
+ * @function: replaceKebabCaseKeys / restoreKebabCaseKeys
+ * For each filter key in the query, converts from kebab-case to camelCase
+ * or vice-versa.
  * - @param parsedQuery - URL query after parsed to object
- * - @returns Object with all query {key: value} with keys in camelCase format.
+ * - @returns Object with all query {key: value} with keys in
+ * camelCase/kebab-case format.
  */
 const replaceKebabCaseKeys = (parsedQuery: { [key: string]: any }) => {
-  if (Object.keys(parsedQuery).length === 0) return parsedQuery
-  const replacedKeys = Object.keys(parsedQuery).map((key) => {
-    const convertedKey = key.replace(/-([a-z])/g, (_, w) => w.toUpperCase())
-    return [[convertedKey], parsedQuery[key]]
-  })
-  return Object.fromEntries(replacedKeys)
+  return replaceObjectKeys(parsedQuery, (key: string) =>
+    key.replace(/-([a-z])/g, (_, w) => w.toUpperCase())
+  )
 }
-
 const restoreKebabCaseKeys = (parsedQuery: { [key: string]: any }) => {
-  if (Object.keys(parsedQuery).length === 0) return parsedQuery
-  const replacedKeys = Object.keys(parsedQuery).map((key) => {
-    const convertedKey = key.replace(/([a-z])([A-Z])/g, (_, w1, w2) => `${w1}-${w2.toLowerCase()}`)
-    return [[convertedKey], parsedQuery[key]]
+  return replaceObjectKeys(parsedQuery, (key: string) =>
+    key.replace(/([a-z])([A-Z])/g, (_, w1, w2) => `${w1}-${w2.toLowerCase()}`)
+  )
+}
+const replaceObjectKeys = (object: { [key: string]: any }, replacementFunction: Function) => {
+  if (Object.keys(object).length === 0) return object
+  const replacedKeys = Object.keys(object).map((key) => {
+    const convertedKey = replacementFunction(key)
+    return [[convertedKey], object[key]]
   })
   return Object.fromEntries(replacedKeys)
 }
@@ -85,11 +84,6 @@ export function useRouter(): RouterResult {
         ...params,
       },
       updateQuery,
-
-      // query parsing/stringify functions
-      queryString,
-      replaceKebabCaseKeys,
-      restoreKebabCaseKeys,
 
       // Include match, location, history objects so we have
       // access to extra React Router functionality if needed.
