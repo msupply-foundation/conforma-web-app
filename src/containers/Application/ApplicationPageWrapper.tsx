@@ -90,8 +90,6 @@ const ApplicationPageWrapper: React.FC = () => {
   // 3 - Set the current section state of the application
   useEffect(() => {
     if (isApplicationReady && sectionsStructure) {
-      console.log('Ready', sectionsStructure)
-
       const stage = application?.stage
       const { status } = stage as ApplicationStage
       if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired) {
@@ -179,19 +177,6 @@ const ApplicationPageWrapper: React.FC = () => {
 
   const getSectionDetails = () =>
     Object.values(sectionsStructure as SectionsStructure).map(({ details: section }) => section)
-
-  console.log(
-    'isApplicationReady',
-    isApplicationReady,
-    'isProcessing',
-    isProcessing,
-    'sectionsStructure',
-    sectionsStructure,
-    'loadStart',
-    loadStart,
-    'template',
-    template
-  )
 
   return error ? (
     <NoMatch />
