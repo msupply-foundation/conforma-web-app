@@ -48,6 +48,8 @@ const useRevalidateApplication = ({
     })
   }
 
+  // TODO: Needs to set validatedSections to undefined at some point?
+
   useEffect(() => {
     if (!isRevalidated && validatedSections !== undefined) {
       setIsProcessing(false)

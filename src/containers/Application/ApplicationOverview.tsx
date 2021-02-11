@@ -5,16 +5,18 @@ import strings from '../../utils/constants'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useSubmitApplication from '../../utils/hooks/useSubmitApplication'
 import { useUserState } from '../../contexts/UserState'
-import { EvaluatedSections, SectionsStructure, User } from '../../utils/types'
-import { useUpdateResponseMutation } from '../../utils/generated/graphql'
+import { SectionsStructure, User } from '../../utils/types'
+import { ApplicationStatus, useUpdateResponseMutation } from '../../utils/generated/graphql'
 import messages from '../../utils/messages'
 import useLoadSectionsStructure from '../../utils/hooks/useLoadSectionsStructure'
 import useRevalidateApplication from '../../utils/hooks/useRevalidateApplication'
 import checkIsCompleted from '../../utils/helpers/application/checkIsCompleted'
+import { getResponsesInStrucutre } from '../../utils/helpers/application/getElementsInStructure'
 
 const ApplicationOverview: React.FC = () => {
   const [isRevalidated, setIsRevalidated] = useState(false)
   const [isSubmittedClicked, setIsSubmittedClicked] = useState(false)
+  const [sections, setSections] = useState<SectionsStructure>()
   const [showModal, setShowModal] = useState<ModalProps>({ open: false })
   const { query, push } = useRouter()
   const { serialNumber } = query
@@ -44,6 +46,14 @@ const ApplicationOverview: React.FC = () => {
     setIsRevalidated,
   })
 
+  // Update sectionStructure with progress after validation runs
+  useEffect(() => {
+    if (!isApplicationReady || !validatedSections) return
+    const { sectionsWithProgress } = validatedSections
+    setSections(sectionsWithProgress)
+    console.log(sectionsWithProgress)
+  }, [isApplicationReady, validatedSections])
+
   const [responseMutation] = useUpdateResponseMutation()
 
   const { error: submitError, processing, submitted, submit } = useSubmitApplication({
@@ -51,21 +61,20 @@ const ApplicationOverview: React.FC = () => {
     currentUser: currentUser as User,
   })
 
-  const waitSubmissionCompletion = async () => {
-    // TODO: Needs to be fixed
-    await submit()
-    if (currentUser?.username === strings.USER_NONREGISTERED) {
-      logout()
-    }
-    push(`/application/${serialNumber}/submission`)
+  // Prior to run the submit mutation needs to re-run validation
+  const handleSubmit = () => {
+    setIsRevalidated(false)
+    setIsSubmittedClicked(true)
   }
 
+  // After validation runs will wither run submit mutation or show modal linked to the invalid page
   useEffect(() => {
     if (!isSubmittedClicked || !validatedSections) return
-    const { sectionsWithProgress, elementsToUpdate } = validatedSections as EvaluatedSections
+    const { sectionsWithProgress, elementsToUpdate } = validatedSections
     const { isCompleted, firstIncompleteLocation } = checkIsCompleted(sectionsWithProgress)
     if (isCompleted) {
-      waitSubmissionCompletion()
+      const responses = getResponsesInStrucutre(sectionsWithProgress)
+      submit(responses)
     } else {
       elementsToUpdate.forEach((updateElement) =>
         responseMutation({ variables: { ...updateElement } })
@@ -86,10 +95,17 @@ const ApplicationOverview: React.FC = () => {
     }
   }, [isSubmittedClicked, validatedSections, isRevalidated])
 
-  const handleSubmit = () => {
-    setIsRevalidated(false)
-    setIsSubmittedClicked(true)
-  }
+  // Finally change to Submission page after submission mutation ends
+  useEffect(() => {
+    if (submitted && !isProcessing) {
+      if (currentUser?.username === strings.USER_NONREGISTERED) {
+        logout()
+      }
+      console.log('Called the next Page')
+
+      push(`/application/${serialNumber}/submission`)
+    }
+  }, [submitted, isProcessing])
 
   return error ? (
     <NoMatch />
@@ -97,21 +113,25 @@ const ApplicationOverview: React.FC = () => {
     <Loading />
   ) : submitError ? (
     <Message error header={strings.ERROR_APPLICATION_SUBMIT} list={[submitError]} />
-  ) : serialNumber && application && sectionsStructure && isRevalidated ? (
+  ) : serialNumber && application && sections && isRevalidated ? (
     <Container>
       <Header as="h1" content={strings.TITLE_APPLICATION_SUBMIT} />
       <Form>
-        {Object.values(sectionsStructure).map((sectionPages) => (
+        {Object.values(sections).map((sectionPages) => (
           <SectionSummary
             key={`ApplicationSection_${sectionPages.details.code}`}
             sectionPages={sectionPages}
             serialNumber={serialNumber}
             allResponses={allResponses || {}}
-            canEdit={application.stage?.status === 'DRAFT'}
+            canEdit={application.stage?.status === ApplicationStatus.Draft}
           />
         ))}
-        {application.stage?.status === 'DRAFT' ? (
-          <Button content={strings.BUTTON_APPLICATION_SUBMIT} onClick={handleSubmit} />
+        {application.stage?.status === ApplicationStatus.Draft ? (
+          <Button
+            content={strings.BUTTON_APPLICATION_SUBMIT}
+            loading={processing}
+            onClick={handleSubmit}
+          />
         ) : null}
         <ModalWarning showModal={showModal} />
       </Form>

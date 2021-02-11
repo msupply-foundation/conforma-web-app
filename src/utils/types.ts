@@ -30,7 +30,6 @@ export {
   ElementPluginParameters,
   ElementState,
   ElementsActivityState,
-  ValidatedSections as EvaluatedSections,
   EvaluatorParameters,
   DecisionAreaState,
   IGraphQLConnection,

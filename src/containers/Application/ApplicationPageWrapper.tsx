@@ -22,7 +22,6 @@ import messages from '../../utils/messages'
 import {
   ApplicationStage,
   CurrentPage,
-  EvaluatedSections,
   Page,
   ResumeSection,
   SectionsStructure,
@@ -89,7 +88,7 @@ const ApplicationPageWrapper: React.FC = () => {
   // 3 - Set the current section state of the application
   useEffect(() => {
     if (!isApplicationReady || !validatedSections) return
-    const { sectionsWithProgress } = validatedSections as EvaluatedSections
+    const { sectionsWithProgress } = validatedSections
     setSections(sectionsWithProgress)
     console.log(sectionsWithProgress)
 
@@ -125,7 +124,7 @@ const ApplicationPageWrapper: React.FC = () => {
   // and redict to summary page if all questions are valid or show modal
   useEffect(() => {
     if (!summaryButtonClicked || !validatedSections) return
-    const { sectionsWithProgress, elementsToUpdate } = validatedSections as EvaluatedSections
+    const { sectionsWithProgress, elementsToUpdate } = validatedSections
     const { isCompleted, firstIncompleteLocation } = checkIsCompleted(sectionsWithProgress)
     if (isCompleted) {
       setSummaryButtonClicked(false)
