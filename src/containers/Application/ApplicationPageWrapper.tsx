@@ -7,6 +7,7 @@ import {
   Grid,
   Header,
   Message,
+  MessageProps,
   ModalProps,
   Segment,
   Sticky,
@@ -134,35 +135,30 @@ const ApplicationPageWrapper: React.FC = () => {
   // and redict to summary page if all questions are valid or show modal
   useEffect(() => {
     if (!summaryButtonClicked || !validatedSections) return
+    setSummaryButtonClicked(false)
     const { sectionsWithProgress, elementsToUpdate } = validatedSections
     const { isCompleted, firstIncompleteLocation } = checkIsCompleted(sectionsWithProgress)
     if (isCompleted) {
-      setSummaryButtonClicked(false)
       push(`/application/${serialNumber}/summary`)
     } else {
       elementsToUpdate.forEach((updateElement) =>
         responseMutation({ variables: { ...updateElement } })
       )
-      setShowModal({
-        open: true,
-        ...messages.SUBMISSION_FAIL,
-        onClick: () => {
-          if (firstIncompleteLocation) {
-            const code = firstIncompleteLocation
-            const { progress } = sectionsWithProgress[code]
-            push(`/application/${serialNumber}/${code}/Page${progress?.linkedPage || 1}`)
-          }
-          setShowModal({ open: false })
-        },
-        onClose: () => setShowModal({ open: false }),
-      })
+      if (firstIncompleteLocation) {
+        const code = firstIncompleteLocation
+        const { progress } = sectionsWithProgress[code]
+        push(`/application/${serialNumber}/${code}/Page${progress?.linkedPage || 1}`)
+      }
+      openModal(messages.SUBMISSION_FAIL)
     }
   }, [summaryButtonClicked, validatedSections, isRevalidated])
 
-  const openModal = () => {
+  const openModal = ({ title, message, option }: MessageProps) => {
     setShowModal({
       open: true,
-      ...messages.VALIDATION_FAIL,
+      title,
+      message,
+      option,
       onClick: (event: any, data: ButtonProps) => setShowModal({ open: false }),
       onClose: () => setShowModal({ open: false }),
     })
