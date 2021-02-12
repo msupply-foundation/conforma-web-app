@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Pagination, Dropdown, Grid } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
+import strings from '../../utils/constants'
 
 interface PaginationProps {
   totalCount: number
@@ -18,7 +19,7 @@ const PaginationBar: React.FC<PaginationProps> = ({ totalCount }) => {
     updateQuery({ page: calculateNewPage(page, perPage, totalCount, value), perPage: value })
 
   return (
-    <Grid celled>
+    <Grid container>
       <Grid.Row>
         <Grid.Column width={5} floated="right">
           {totalCount > perPage && (
@@ -32,26 +33,26 @@ const PaginationBar: React.FC<PaginationProps> = ({ totalCount }) => {
           )}
         </Grid.Column>
       </Grid.Row>
-      <Grid.Row verticalAlign="middle">
+      <Grid.Row>
         <Grid.Column textAlign="right" width={6} floated="right">
-          <p>Applications per page:</p>
-          {/* </Grid.Column> */}
-          {/* <Grid.Column floated="right" width={1}> */}
-          <Dropdown
-            selection
-            compact
-            floated="right"
-            options={[
-              { key: 2, text: '2', value: 2 },
-              { key: 5, text: '5', value: 5 },
-              { key: 10, text: '10', value: 10 },
-              { key: 20, text: '20', value: 20 },
-              { key: 50, text: '50', value: 50 },
-            ]}
-            value={perPage}
-            onChange={handlePerPageChange}
-            style={{ minWidth: 20 }}
-          />
+          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+            <span style={{ padding: 5 }}>{`${strings.LABEL_LIST_PER_PAGE}:`}</span>
+            <Dropdown
+              selection
+              compact
+              floated="right"
+              options={[
+                { key: 2, text: '2', value: 2 },
+                { key: 5, text: '5', value: 5 },
+                { key: 10, text: '10', value: 10 },
+                { key: 20, text: '20', value: 20 },
+                { key: 50, text: '50', value: 50 },
+              ]}
+              value={perPage}
+              onChange={handlePerPageChange}
+              style={{ minWidth: 20 }}
+            />
+          </div>
         </Grid.Column>
       </Grid.Row>
     </Grid>
