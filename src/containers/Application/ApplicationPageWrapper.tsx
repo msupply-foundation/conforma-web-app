@@ -27,7 +27,6 @@ import {
   SectionsStructure,
   User,
 } from '../../utils/types'
-import getPreviousPage from '../../utils/helpers/application/getPreviousPage'
 import useLoadSectionsStructure from '../../utils/hooks/useLoadSectionsStructure'
 import { getPageElementsInStructure } from '../../utils/helpers/application/getElementsInStructure'
 import useRevalidateApplication from '../../utils/hooks/useRevalidateApplication'
@@ -40,6 +39,7 @@ const ApplicationPageWrapper: React.FC = () => {
   const [loadStart, setLoadStart] = useState(false)
   const [summaryButtonClicked, setSummaryButtonClicked] = useState(false)
   const [sections, setSections] = useState<SectionsStructure>()
+  const [strictMode, setStrictMode] = useState(false)
 
   const { query, push, replace } = useRouter()
   const { serialNumber, sectionCode, page } = query
@@ -126,7 +126,6 @@ const ApplicationPageWrapper: React.FC = () => {
   // and only proceed when button is clicked AND responses are ready
   useEffect(() => {
     if (areTimestampsInSequence && summaryButtonClicked) {
-      // handleSummaryClick()
       setIsRevalidated(false)
     }
   }, [areTimestampsInSequence, summaryButtonClicked])
@@ -228,12 +227,6 @@ const ApplicationPageWrapper: React.FC = () => {
             current={{ section: currentSection, page: Number(page) }}
             isLinear={application.isLinear}
             sections={sections}
-            getPreviousPage={(props) =>
-              getPreviousPage({
-                sections: getSectionDetails(),
-                ...props,
-              })
-            }
             validateElementsInPage={handleValidatePage}
           />
         </Grid.Column>

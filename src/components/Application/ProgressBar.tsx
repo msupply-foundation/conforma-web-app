@@ -12,22 +12,20 @@ import strings from '../../utils/constants'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { getCombinedStatus } from '../../utils/helpers/application/validatePage'
 import { getPageElementsStatuses } from '../../utils/helpers/application/getPageElements'
+import getPreviousPage from '../../utils/helpers/application/getPreviousPage'
 
 interface ProgressBarProps {
   serialNumber: string
   current: CurrentPage
   isLinear: boolean
   sections: SectionsStructure
-  getPreviousPage: (props: { sectionCode: string; pageNumber: number }) => CurrentPage | undefined
   validateElementsInPage: (props: CurrentPage) => boolean
 }
 
 interface ClickedLinkParameters {
   canNavigate: boolean
-  sectionCode?: string
+  sectionCode: string
   pageNumber?: number
-  code?: string
-  pageOrSection?: 'page' | 'section'
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
@@ -35,7 +33,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   current,
   isLinear,
   sections,
-  getPreviousPage,
   validateElementsInPage,
 }) => {
   const { push } = useRouter()
@@ -51,9 +48,13 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     pageNumber: 0,
   })
 
+  const getSectionDetails = () =>
+    Object.values(sections as SectionsStructure).map(({ details: section }) => section)
+
   const isPreviousPageIsValid = (sectionCode: string, pageNumber: number) => {
-    const previousPage = getPreviousPage({ sectionCode, pageNumber })
-    return previousPage && validateElementsInPage(previousPage)
+    const sections = getSectionDetails()
+    const previousPage = getPreviousPage({ sections, sectionCode, pageNumber })
+    return previousPage ? validateElementsInPage(previousPage) : true // First page
   }
 
   // Make sure all responses are up-to-date (areTimestampsInSequence)
@@ -65,15 +66,20 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   }, [areTimestampsInSequence, progressLinkClicked])
 
   const handleLinkClick = async () => {
-    const { canNavigate, sectionCode, pageNumber, code, pageOrSection } = clickedLinkParameters
+    const { canNavigate, sectionCode, pageNumber } = clickedLinkParameters
     setProgressLinkClicked(false)
-    if (pageOrSection === 'page') {
-      if (canNavigate || validateElementsInPage({ ...current }))
-        push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
-    } else {
-      if (canNavigate || isPreviousPageIsValid(code as string, 1))
-        push(`/application/${serialNumber}/${code}/Page${1}`)
-    }
+    const page = pageNumber ? pageNumber : 1
+    if (canNavigate || isPreviousPageIsValid(sectionCode, page))
+      push(`/application/${serialNumber}/${sectionCode}/Page${page}`)
+  }
+
+  const changeTo = (sectionCode: string, pageNumber?: number) => {
+    setClickedLinkParameters({
+      canNavigate: !isLinear,
+      sectionCode,
+      pageNumber,
+    })
+    setProgressLinkClicked(true)
   }
 
   const getPageIndicator = (pageState: PageElements) => {
@@ -88,19 +94,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       INCOMPLETE: <Icon name="circle outline" />,
     }
     return status ? indicator[pageStatus] : null
-  }
-
-  const redirectToPage = (sectionCode: string, pageNumber: number) => {
-    // TODO
-    {
-      setClickedLinkParameters({
-        canNavigate: true,
-        sectionCode,
-        pageNumber,
-        pageOrSection: 'page',
-      })
-      setProgressLinkClicked(true)
-    }
   }
 
   const pageList = (
@@ -120,7 +113,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
               active={isActivePage(sectionCode, number)}
               as="a"
               key={`ProgressSection_${sectionCode}_${number}`}
-              onClick={() => redirectToPage(sectionCode, number)}
+              onClick={() => changeTo(sectionCode, number)}
             >
               {getPageIndicator(state)}
               {pageName}
@@ -143,19 +136,11 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     if (completed && !valid) return <Icon name="exclamation circle" color="red" size="large" />
   }
 
-  const redirectToSection = (code: string) => {
-    // TODO
-    setClickedLinkParameters({
-      canNavigate: true,
-      code,
-      pageOrSection: 'section',
-    })
-    setProgressLinkClicked(true)
-  }
-
   const sectionList = () => {
     const isActiveSection = (sectionCode: string) => current.section.code === sectionCode
-    const isDisabled = (index: number) => isLinear && current.section.index < index
+    const isDisabled = (code: string, index: number) => {
+      return isLinear && current.section.index < index && !isPreviousPageIsValid(code, 1)
+    }
 
     return Object.values(sections).map(({ details, progress, pages }) => {
       const stepNumber = details.index + 1
@@ -169,14 +154,14 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
                 {getSectionIndicator(progress, stepNumber)}
               </Grid.Column>
               <Grid.Column width={12} textAlign="left" verticalAlign="middle">
-                <Header as={isActiveSection(code) ? 'h3' : 'h4'} disabled={isDisabled(index)}>
+                <Header as={isActiveSection(code) ? 'h3' : 'h4'} disabled={isDisabled(code, index)}>
                   {title}
                 </Header>
               </Grid.Column>
             </Grid>
           ),
         },
-        onTitleClick: () => redirectToSection(code),
+        onTitleClick: () => changeTo(code),
         content: {
           content: pages ? pageList(code, pages) : null,
         },
