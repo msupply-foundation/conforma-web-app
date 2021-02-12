@@ -1,11 +1,8 @@
 import React from 'react'
 import { Button, List } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
 import { useRouter } from '../utils/hooks/useRouter'
 
 const FilterList: React.FC = () => {
-  const { pathname } = useRouter()
-
   const { updateQuery } = useRouter()
 
   return (
@@ -28,7 +25,6 @@ const FilterList: React.FC = () => {
         <Button
           key={`app-list-button-reset`}
           content="Reset query"
-          // as={Link} to={pathname}
           onClick={() => updateQuery({ status: '', stage: '' })}
         />
       </List.Item>

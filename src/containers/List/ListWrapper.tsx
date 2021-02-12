@@ -15,7 +15,7 @@ import PaginationBar from '../../components/List/Pagination'
 import { ApplicationList } from '../../utils/generated/graphql'
 
 const ListWrapper: React.FC = () => {
-  const { query, push, updateQuery } = useRouter()
+  const { query, updateQuery } = useRouter()
   const { type, userRole } = query
   const {
     userState: { templatePermissions },
@@ -27,15 +27,18 @@ const ListWrapper: React.FC = () => {
   const { error, loading, applications, applicationCount } = useListApplications(query)
 
   useEffect(() => {
-    if (templatePermissions) {
-      if (!type || !userRole) redirectToDefault()
-      else {
-        setApplicationsRows(undefined)
-        const columns = mapColumnsByRole(userRole as USER_ROLES)
-        setColumns(columns)
-      }
+    if (!templatePermissions) return
+    if (!type || !userRole) redirectToDefault()
+  }, [templatePermissions])
+
+  useEffect(() => {
+    if (!type || !userRole) redirectToDefault()
+    else {
+      setApplicationsRows(undefined)
+      const columns = mapColumnsByRole(userRole as USER_ROLES)
+      setColumns(columns)
     }
-  }, [templatePermissions, type, userRole])
+  }, [applications, query])
 
   useEffect(() => {
     if (!loading && applications) {
@@ -86,10 +89,9 @@ const ListWrapper: React.FC = () => {
     }
   }
 
+  console.log('loading', loading)
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
-  ) : loading ? (
-    <Loading />
   ) : (
     <Container>
       <FilterList />
@@ -124,13 +126,18 @@ const ListWrapper: React.FC = () => {
           </Grid.Row>
         </Grid>
       </Segment>
-      {columns && applicationsRows && (
-        <ApplicationsList
-          columns={columns}
-          applications={applicationsRows}
-          sortQuery={sortQuery}
-          handleSort={handleSort}
-        />
+      {loading ? (
+        <Loading />
+      ) : (
+        columns &&
+        applicationsRows && (
+          <ApplicationsList
+            columns={columns}
+            applications={applicationsRows}
+            sortQuery={sortQuery}
+            handleSort={handleSort}
+          />
+        )
       )}
       <PaginationBar totalCount={applicationCount} />
     </Container>

@@ -7,7 +7,6 @@ import { BasicStringObject } from '../types'
 const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicStringObject) => {
   const [applications, setApplications] = useState<ApplicationList[]>([])
   const [applicationCount, setApplicationCount] = useState<number>(0)
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   const filters = buildFilter(queryFilters)
@@ -16,8 +15,7 @@ const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicSt
     page ? Number(page) : 1,
     perPage ? Number(perPage) : undefined
   )
-
-  const { data, error: applicationsError } = useGetApplicationsListQuery({
+  const { data, loading, error: applicationsError } = useGetApplicationsListQuery({
     variables: { filters, sortFields, paginationOffset, numberToFetch },
     fetchPolicy: 'network-only',
   })
@@ -31,7 +29,6 @@ const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicSt
       const applicationsList = data?.applicationLists?.nodes
       setApplications(applicationsList as ApplicationList[])
       setApplicationCount(data?.applicationLists?.totalCount)
-      setLoading(false)
     }
   }, [data, applicationsError])
 
