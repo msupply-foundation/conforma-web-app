@@ -60,7 +60,7 @@ const ListWrapper: React.FC = () => {
     const redirectType = type || Object.keys(templatePermissions)[0]
     const redirectUserRole = userRole || getDefaultUserRole(templatePermissions, redirectType)
     if (redirectType && redirectUserRole)
-      push(`/applications?type=${redirectType}&user-role=${redirectUserRole}`)
+      updateQuery({ type: redirectType, userRole: redirectUserRole })
     else {
       // To-Do: Show 404 if no default found
     }
@@ -132,13 +132,7 @@ const ListWrapper: React.FC = () => {
           handleSort={handleSort}
         />
       )}
-      {/* <Grid columns={1}>
-        <Grid.Row>
-          <Grid.Column width={5} floated="right"> */}
       <PaginationBar totalCount={applicationCount} />
-      {/* </Grid.Column>
-        </Grid.Row>
-      </Grid> */}
     </Container>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Pagination, Dropdown, Grid } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
@@ -24,10 +24,10 @@ const PaginationBar: React.FC<PaginationProps> = ({ totalCount }) => {
         <Grid.Column width={5} floated="right">
           {totalCount > perPage && (
             <Pagination
+              // totalPages={15} // Enable this to test more pages
               totalPages={Math.ceil(totalCount / perPage)}
               activePage={page}
               onPageChange={handlePageChange}
-              // style={{ marginBottom: '10px' }}
               floated="right"
             />
           )}
@@ -42,6 +42,7 @@ const PaginationBar: React.FC<PaginationProps> = ({ totalCount }) => {
               compact
               floated="right"
               options={[
+                // TO-DO: change these to more useful values for production
                 { key: 2, text: '2', value: 2 },
                 { key: 5, text: '5', value: 5 },
                 { key: 10, text: '10', value: 10 },
