@@ -27,7 +27,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
             {columns.map(({ headerName, sortName }) => (
               <Table.HeaderCell
                 key={`ApplicationList-header-${headerName}`}
-                sorted={sortColumn === sortName ? sortDirection : undefined}
+                sorted={sortName && sortColumn === sortName ? sortDirection : undefined}
                 onClick={() => handleSort(sortName)}
               >
                 {headerName}
