@@ -18,40 +18,43 @@ const PaginationBar: React.FC<PaginationProps> = ({ totalCount }) => {
     updateQuery({ page: calculateNewPage(page, perPage, totalCount, value), perPage: value })
 
   return (
-    <div>
-      {/* <Grid.Row>
-          <Grid.Column width={5} floated="right"> */}
-      {totalCount > perPage && (
-        <Pagination
-          totalPages={Math.ceil(totalCount / perPage)}
-          activePage={page}
-          onPageChange={handlePageChange}
-          // style={{ marginBottom: '10px' }}
-          floated="right"
-        />
-      )}
-      {/* </Grid.Column>
-        </Grid.Row> */}
-      {/* <Grid.Row verticalAlign="middle"> */}
-      {/* <Grid.Column textAlign="right" width={6} floated="right"> */}
-      <p>Applications per page:</p>
-      {/* </Grid.Column>
-          <Grid.Column floated="right" width={1}> */}
-      <Dropdown
-        selection
-        compact
-        options={[
-          { key: 2, text: '2', value: 2 },
-          { key: 5, text: '5', value: 5 },
-          { key: 10, text: '10', value: 10 },
-          { key: 20, text: '20', value: 20 },
-          { key: 50, text: '50', value: 50 },
-        ]}
-        value={perPage}
-        onChange={handlePerPageChange}
-        style={{ minWidth: 20 }}
-      />
-    </div>
+    <Grid celled>
+      <Grid.Row>
+        <Grid.Column width={5} floated="right">
+          {totalCount > perPage && (
+            <Pagination
+              totalPages={Math.ceil(totalCount / perPage)}
+              activePage={page}
+              onPageChange={handlePageChange}
+              // style={{ marginBottom: '10px' }}
+              floated="right"
+            />
+          )}
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row verticalAlign="middle">
+        <Grid.Column textAlign="right" width={6} floated="right">
+          <p>Applications per page:</p>
+          {/* </Grid.Column> */}
+          {/* <Grid.Column floated="right" width={1}> */}
+          <Dropdown
+            selection
+            compact
+            floated="right"
+            options={[
+              { key: 2, text: '2', value: 2 },
+              { key: 5, text: '5', value: 5 },
+              { key: 10, text: '10', value: 10 },
+              { key: 20, text: '20', value: 20 },
+              { key: 50, text: '50', value: 50 },
+            ]}
+            value={perPage}
+            onChange={handlePerPageChange}
+            style={{ minWidth: 20 }}
+          />
+        </Grid.Column>
+      </Grid.Row>
+    </Grid>
   )
 }
 
