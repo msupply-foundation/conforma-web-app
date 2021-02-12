@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   ReviewResponse,
   ReviewStatus,
+  ReviewStatusHistory,
   useGetReviewQuery,
   useGetReviewStatusQuery,
   User,
@@ -50,7 +51,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     // triggerType: 'reviewTrigger',
   })
 
-  const { data: statusData, error: statusError, loading: statusLoading } = useGetReviewStatusQuery({
+  const { data: statusData, error: statusError } = useGetReviewStatusQuery({
     variables: {
       reviewId,
     },
@@ -84,10 +85,11 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
 
   useEffect(() => {
     if (!statusData) return
-    const statuses = statusData?.reviewStatusHistories?.nodes as ReviewStatus[]
+    const statuses = statusData?.reviewStatusHistories?.nodes as ReviewStatusHistory[]
     if (statuses.length > 1) console.log('More than one status resulted for 1 review!')
-    const status = statuses[0] // Should only have one result
-    setReviewStatus(status)
+
+    const { status } = statuses[0] // Should only have one result
+    setReviewStatus(status as ReviewStatus)
     setIsReviewReady(true)
   }, [statusData])
 
@@ -95,8 +97,8 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     applicationName,
     isReviewReady,
     reviewSections,
+    reviewStatus,
     responsesByCode,
-    loading: loading || statusLoading || isTriggerProcessing,
     error: error
       ? (error.message as string)
       : statusError
