@@ -11,6 +11,7 @@ import { ColumnDetails, SortQuery } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
+import PaginationBar from '../../components/List/Pagination'
 import { ApplicationList } from '../../utils/generated/graphql'
 
 const ListWrapper: React.FC = () => {
@@ -23,7 +24,7 @@ const ListWrapper: React.FC = () => {
   const [searchText, setSearchText] = useState<string>(query?.search)
   const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
   const [applicationsRows, setApplicationsRows] = useState<ApplicationList[] | undefined>()
-  const { error, loading, applications } = useListApplications(query)
+  const { error, loading, applications, applicationCount } = useListApplications(query)
 
   useEffect(() => {
     if (templatePermissions) {
@@ -131,6 +132,13 @@ const ListWrapper: React.FC = () => {
           handleSort={handleSort}
         />
       )}
+      {/* <Grid columns={1}>
+        <Grid.Row>
+          <Grid.Column width={5} floated="right"> */}
+      <PaginationBar totalCount={applicationCount} />
+      {/* </Grid.Column>
+        </Grid.Row>
+      </Grid> */}
     </Container>
   )
 }

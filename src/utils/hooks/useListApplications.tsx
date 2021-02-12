@@ -6,6 +6,7 @@ import { BasicStringObject } from '../types'
 
 const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicStringObject) => {
   const [applications, setApplications] = useState<ApplicationList[]>([])
+  const [applicationCount, setApplicationCount] = useState<number>(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -29,6 +30,7 @@ const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicSt
     if (data?.applicationLists) {
       const applicationsList = data?.applicationLists?.nodes
       setApplications(applicationsList as ApplicationList[])
+      setApplicationCount(data?.applicationLists?.totalCount)
       setLoading(false)
     }
   }, [data, applicationsError])
@@ -37,6 +39,7 @@ const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicSt
     error,
     loading,
     applications,
+    applicationCount,
   }
 }
 
