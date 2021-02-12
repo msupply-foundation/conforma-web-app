@@ -38,7 +38,7 @@ const allColumns: { [key in APPLICATION_COLUMNS]: ColumnDetails } = {
   },
   DEADLINE_DATE: {
     headerName: 'Deadline date',
-    sortName: 'deadline-date', // Not yet implemented
+    sortName: '', // Not yet implemented
     ColumnComponent: DeadlineCell,
   },
   APPLICATION_NAME: {
