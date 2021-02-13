@@ -3,10 +3,11 @@ import {
   Review,
   ReviewAssignment,
   ReviewQuestionAssignment,
+  ReviewStatus,
   useGetReviewAssignmentQuery,
 } from '../generated/graphql'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
-import { AssignmentDetails } from '../types'
+import { AssignmentDetails, SectionDetails } from '../types'
 import { getAssignedSections, getAssignedQuestions } from '../helpers/review/getAssignedElements'
 
 interface UseGetReviewAssignmentProps {
@@ -15,8 +16,8 @@ interface UseGetReviewAssignmentProps {
 }
 
 const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssignmentProps) => {
-  const [assignment, setAssignment] = useState<AssignmentDetails | undefined>()
-  const [assignedSections, setAssignedSections] = useState<string[] | undefined>()
+  const [assignment, setAssignment] = useState<AssignmentDetails>()
+  const [sectionsAssigned, setSectionsAssigned] = useState<SectionDetails[]>()
   const [assignmentError, setAssignmentError] = useState<string>()
 
   const {
@@ -46,6 +47,9 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
         return
       }
 
+      // TODO: There might be cases when we have more than one assignemnt to the same reviewer
+      // in that case we would be displaying 2 different actions OR considering to add a reviewer
+      // level to the URL so we can show separated pages for the Review and consolidation.
       const currentAssignment = reviewerAssignments[0]
       const reviews = currentAssignment.reviews.nodes as Review[]
 
@@ -57,7 +61,7 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
 
       setAssignment({
         id: currentAssignment.id,
-        review: review ? { id: review.id, status: review.status as string } : undefined,
+        review: review ? { id: review.id, status: review.status as ReviewStatus } : undefined,
         questions: getAssignedQuestions({ reviewQuestions }),
       })
     }
@@ -65,8 +69,12 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
 
   useEffect(() => {
     if (assignment && sections) {
-      const assignedSections = getAssignedSections({ assignment, sections })
-      setAssignedSections(assignedSections)
+      const myAssignedSections = getAssignedSections({ assignment, sections })
+      const sectionsAssigned = sections.map((section) => {
+        const { title } = section
+        return { ...section, assigned: myAssignedSections.includes(title) }
+      })
+      setSectionsAssigned(sectionsAssigned)
     }
   }, [assignment])
 
@@ -75,7 +83,7 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
     loading: applicationLoading || apolloLoading,
     application,
     assignment,
-    assignedSections,
+    sectionsAssigned,
   }
 }
 

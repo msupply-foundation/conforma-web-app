@@ -153,11 +153,38 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                               </Card.Content>
                             </Card>
                           </Grid.Row>
-                        )}
-                      </Grid>
-                    </Segment>
-                  )
-                })}
+                          {review && canEdit && review.decision && (
+                            <Grid.Row>
+                              <Card fluid>
+                                <Card.Content>
+                                  <Grid>
+                                    <Grid.Row>
+                                      <Grid.Column width="10">
+                                        <Card.Header>{review.decision}</Card.Header>
+                                        <Card.Description>{review.comment}</Card.Description>
+                                        {assigned && (
+                                          <Card.Meta>{`${assigned.firstName} ${assigned.lastName}`}</Card.Meta>
+                                        )}
+                                      </Grid.Column>
+                                      <Grid.Column width="2">
+                                        <Icon
+                                          name="pencil square"
+                                          color="blue"
+                                          style={{ minWidth: 100 }}
+                                          onClick={() => setDecisionArea(review, summaryViewProps)}
+                                        />
+                                      </Grid.Column>
+                                    </Grid.Row>
+                                  </Grid>
+                                </Card.Content>
+                              </Card>
+                            </Grid.Row>
+                          )}
+                        </Grid>
+                      </Segment>
+                    )
+                  }
+                )}
                 {reviewsNumber > 0 && (
                   <Button
                     color="blue"

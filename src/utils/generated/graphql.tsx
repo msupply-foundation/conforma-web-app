@@ -20211,7 +20211,7 @@ export const GetReviewAssignmentDocument = gql`
               id
               index
             }
-            applicationResponses {
+            applicationResponses(condition: {applicationId: $applicationId}) {
               nodes {
                 id
               }
