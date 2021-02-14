@@ -89,7 +89,6 @@ const ListWrapper: React.FC = () => {
     }
   }
 
-  console.log('loading', loading)
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
   ) : (
