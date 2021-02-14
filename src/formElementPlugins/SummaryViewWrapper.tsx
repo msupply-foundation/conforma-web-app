@@ -47,7 +47,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
             <Markdown text={combinedParams.label} semanticComponent="noParagraph" />
           </label>
         )}
-        <Input fluid readOnly transparent value={response ? response?.text : ''} />
+        <Markdown text={(response ? response?.text : '') as string} />
       </Form.Field>
     )
   }
