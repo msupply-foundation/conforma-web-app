@@ -28,27 +28,19 @@ const useRevalidateApplication = ({
     isApplicationReady,
   })
 
-  const isDoneOrProcessing = !loading || isProcessing || validatedSections !== undefined
-
-  if (
-    !isDoneOrProcessing &&
-    !isRevalidated &&
-    currentUser &&
-    elementsState &&
-    responsesByCode &&
-    sectionsStructure
-  ) {
-    setIsProcessing(true)
-    updateSectionsProgress({
-      currentUser,
-      elementsState,
-      responsesByCode,
-      sections: sectionsStructure,
-      setSections: setValidatedSections,
-    })
-  }
-
-  // TODO: Needs to set validatedSections to undefined at some point?
+  useEffect(() => {
+    if (loading || isProcessing || isRevalidated) return
+    if (currentUser && elementsState && responsesByCode && sectionsStructure) {
+      setIsProcessing(true)
+      updateSectionsProgress({
+        currentUser,
+        elementsState,
+        responsesByCode,
+        sections: sectionsStructure,
+        setSections: setValidatedSections,
+      })
+    }
+  }, [loading, isProcessing, isRevalidated, sectionsStructure])
 
   useEffect(() => {
     if (!isRevalidated && validatedSections !== undefined) {
