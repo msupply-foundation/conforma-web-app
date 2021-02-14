@@ -10,7 +10,7 @@ import {
 import { useApplicationState } from '../../contexts/ApplicationState'
 import strings from '../../utils/constants'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { getCombinedStatus } from '../../utils/helpers/application/validatePage'
+import { getCombinedStatus, getPageStatus } from '../../utils/helpers/application/validatePage'
 import { getPageElementsStatuses } from '../../utils/helpers/application/getPageElements'
 import getPreviousPage from '../../utils/helpers/application/getPreviousPage'
 
@@ -83,17 +83,13 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   }
 
   const getPageIndicator = (pageState: PageElements) => {
-    const pageStatuses = getPageElementsStatuses(pageState)
-
-    const statuses = Object.values(pageStatuses)
-    const pageStatus = getCombinedStatus(statuses)
-
+    const pageStatus = getPageStatus(pageState)
     const indicator = {
       VALID: <Icon name="check circle" color="green" />,
       NOT_VALID: <Icon name="exclamation circle" color="red" />,
       INCOMPLETE: <Icon name="circle outline" />,
     }
-    return status ? indicator[pageStatus] : null
+    return pageStatus ? indicator[pageStatus] : null
   }
 
   const pageList = (
@@ -108,6 +104,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     return (
       <List style={{ paddingLeft: '50px' }} link>
         {Object.entries(pages).map(([pageName, { number, state }]) => {
+          console.log('Section', sectionCode, ' page', pageName)
+
           return (
             <List.Item
               active={isActivePage(sectionCode, number)}
