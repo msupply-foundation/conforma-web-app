@@ -86,7 +86,6 @@ const ApplicationPageWrapper: React.FC = () => {
   // Flag to run validation over application after changes to sections structure
   useEffect(() => {
     if (sectionsStructure) {
-      setSections(sectionsStructure)
       setIsRevalidated(false)
     }
   }, [sectionsStructure])
@@ -121,7 +120,7 @@ const ApplicationPageWrapper: React.FC = () => {
       page: Number(page),
     })
     setPageElements(elements)
-  }, [isApplicationReady, currentSection, page])
+  }, [sections, sectionCode, page])
 
   // Make sure all responses are up-to-date (areTimestampsInSequence)
   // and only proceed when button is clicked AND responses are ready
@@ -192,7 +191,7 @@ const ApplicationPageWrapper: React.FC = () => {
 
   return error ? (
     <NoMatch />
-  ) : !isApplicationReady || isProcessing || !isRevalidated ? (
+  ) : !isApplicationReady || isProcessing || !sections ? (
     <Loading />
   ) : sections && loadStart && template ? (
     <ApplicationStart
@@ -201,7 +200,7 @@ const ApplicationPageWrapper: React.FC = () => {
       resumeApplication={handleResumeClick}
       setSummaryButtonClicked={() => setSummaryButtonClicked(true)}
     />
-  ) : application && pageElements && allResponses && sections && serialNumber && currentSection ? (
+  ) : application && pageElements && allResponses && serialNumber && currentSection ? (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
       <ModalWarning showModal={showModal} />
       <Header textAlign="center">
