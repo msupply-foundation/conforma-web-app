@@ -30,6 +30,7 @@ const useLoadReview = ({ reviewId, isApplicationReady, sectionsStructure }: UseL
       reviewId,
     },
     skip: !isApplicationReady,
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
