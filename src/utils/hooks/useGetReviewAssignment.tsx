@@ -14,6 +14,7 @@ import { AssignmentDetails, SectionDetails, SectionsStructure, User as UserType 
 import getAssignedQuestions from '../helpers/review/getAssignedQuestions'
 import { useUserState } from '../../contexts/UserState'
 import updateSectionsReviews from '../helpers/review/updateSectionsReviews'
+import updateAssignedSections from '../helpers/review/updateAssignedSections'
 
 interface UseGetReviewAssignmentProps {
   reviewerId: number
@@ -86,15 +87,26 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
         questions: getAssignedQuestions({ reviewQuestions }),
       })
 
-      if (sectionsStructure && review) {
-        const reviewResponses = review.reviewResponses.nodes as ReviewResponse[]
-        const reviewer = currentAssignment.reviewer as User
-        const sectionsWithReviews = updateSectionsReviews({
-          sectionsStructure,
-          reviewResponses,
-          reviewer,
-        })
-        setSectionsAssigned(sectionsWithReviews)
+      const reviewer = currentAssignment.reviewer as User
+
+      if (sectionsStructure) {
+        if (review) {
+          const reviewResponses = review.reviewResponses.nodes as ReviewResponse[]
+          const sectionsWithReviews = updateSectionsReviews({
+            sectionsStructure,
+            reviewResponses,
+            reviewer,
+          })
+          setSectionsAssigned(sectionsWithReviews)
+        } else {
+          // No review started
+          const assignedSections = updateAssignedSections({
+            sectionsStructure: sectionsStructure as SectionsStructure,
+            assignedQuestions: getAssignedQuestions({ reviewQuestions }),
+            reviewer,
+          })
+          setSectionsAssigned(assignedSections)
+        }
       }
     }
   }, [data, sectionsStructure])
