@@ -12,6 +12,17 @@ interface BuildSectionsStructureProps {
   responsesByCode: ResponsesByCode
 }
 
+/**
+ * @function buildSectionsStructure
+ * Create the sections structure object to be used
+ * in displaying each sections and its pages on either
+ * an application or review pages. The strucutre is
+ * defined by the SectionStructure type.
+ * @param sections Array with all sections details
+ * @param elementsState object with all elements in application
+ * @param responsesByCode object with each response by element code
+ * @returns Object of complete sections structure
+ */
 export const buildSectionsStructure = ({
   sections,
   elementsState,

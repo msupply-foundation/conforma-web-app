@@ -5,6 +5,7 @@ import { SectionsStructure } from '../../types'
  * Return if all sections in sections structure are completed
  * if any section is missing responses returns link to section & page
  * @param sectionsStructure - Complete structure of sections
+ * @returns Object with isCompleted flag and firstIncompleted section
  */
 export const checkSectionsProgress = (sectionsStructure: SectionsStructure) => {
   const isCompleted = Object.values(sectionsStructure).every(
