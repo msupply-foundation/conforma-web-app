@@ -11,7 +11,7 @@ import { useUserState } from '../../contexts/UserState'
 import messages from '../../utils/messages'
 import useSubmitReview from '../../utils/hooks/useSubmitReview'
 import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
-import validateReview from '../../utils/helpers/review/validateReview'
+import { validateReview } from '../../utils/helpers/validation/validateReview'
 import listReviewResponses from '../../utils/helpers/review/listReviewerResponses'
 
 const decisionAreaInitialState = { open: false, review: null, summaryViewProps: null }

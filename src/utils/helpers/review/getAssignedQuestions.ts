@@ -8,6 +8,12 @@ interface GetAssignedQuestionsProps {
   reviewQuestions: ReviewQuestionAssignment[]
 }
 
+/**
+ * @function getAssignedQuestions
+ * Returns array of type ReviewQuestion from retrieved
+ * assigned questions to one Reviewer in GraphQL type ReviewQuestionsAssigment
+ * @param reviewQuestions GraphQL array of assigned questions
+ */
 const getAssignedQuestions = ({ reviewQuestions }: GetAssignedQuestionsProps) => {
   const assignedQuestions = reviewQuestions.reduce(
     (validQuestionAssignments: ReviewQuestion[], questionAssignment) => {

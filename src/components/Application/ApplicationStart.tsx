@@ -12,7 +12,7 @@ import ApplicationSelectType from './ApplicationSelectType'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
-import checkIsCompleted from '../../utils/helpers/application/checkIsCompleted'
+import { checkSectionsProgress } from '../../utils/helpers/structure/checkSectionsProgress'
 export interface ApplicationStartProps extends RouteComponentProps {
   template: TemplateDetails
   sections: SectionsStructure
@@ -46,7 +46,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
       setStartMessageEvaluated(result)
     )
 
-    const { isCompleted, firstIncompleteLocation } = checkIsCompleted(sections)
+    const { isCompleted, firstIncompleteLocation } = checkSectionsProgress(sections)
     setIsApplicationCompleted(isCompleted)
     if (firstIncompleteLocation) setFirstIncomplete(firstIncompleteLocation)
   }, [startMessage, currentUser])

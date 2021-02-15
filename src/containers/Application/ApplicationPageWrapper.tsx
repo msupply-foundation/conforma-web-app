@@ -16,8 +16,11 @@ import { ApplicationStatus, useUpdateResponseMutation } from '../../utils/genera
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { useUserState } from '../../contexts/UserState'
 import { ElementsBox, NavigationBox } from './'
-import { getCombinedStatus, PROGRESS_STATUS } from '../../utils/helpers/application/validatePage'
-import { getPageElementsStatuses } from '../../utils/helpers/application/getPageElements'
+import {
+  getCombinedStatus,
+  getPageElementsStatuses,
+  PROGRESS_STATUS,
+} from '../../utils/helpers/validation/validatePage'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
 import {
@@ -29,9 +32,9 @@ import {
   User,
 } from '../../utils/types'
 import useLoadSectionsStructure from '../../utils/hooks/useLoadSectionsStructure'
-import { getPageElementsInStructure } from '../../utils/helpers/application/getElementsInStructure'
 import useRevalidateApplication from '../../utils/hooks/useRevalidateApplication'
-import checkIsCompleted from '../../utils/helpers/application/checkIsCompleted'
+import { getPageElementsInStructure } from '../../utils/helpers/structure/getElementsInStructure'
+import { checkSectionsProgress } from '../../utils/helpers/structure/checkSectionsProgress'
 
 const ApplicationPageWrapper: React.FC = () => {
   const [isRevalidated, setIsRevalidated] = useState(false)
@@ -40,7 +43,6 @@ const ApplicationPageWrapper: React.FC = () => {
   const [loadStart, setLoadStart] = useState(false)
   const [summaryButtonClicked, setSummaryButtonClicked] = useState(false)
   const [sections, setSections] = useState<SectionsStructure>()
-  const [strictMode, setStrictMode] = useState(false)
 
   const { query, push, replace } = useRouter()
   const { serialNumber, sectionCode, page } = query
@@ -136,7 +138,7 @@ const ApplicationPageWrapper: React.FC = () => {
     if (!summaryButtonClicked || !validatedSections) return
     setSummaryButtonClicked(false)
     const { sectionsWithProgress, elementsToUpdate } = validatedSections
-    const { isCompleted, firstIncompleteLocation } = checkIsCompleted(sectionsWithProgress)
+    const { isCompleted, firstIncompleteLocation } = checkSectionsProgress(sectionsWithProgress)
     if (isCompleted) {
       push(`/application/${serialNumber}/summary`)
     } else {

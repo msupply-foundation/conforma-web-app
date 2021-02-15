@@ -6,7 +6,7 @@ import {
   User,
   ValidityFailure,
 } from '../../types'
-import { revalidateAll } from './revalidateAll'
+import { revalidateAll } from '../validation/revalidateAll'
 
 interface GetSectionsProgressProps {
   currentUser: User
@@ -19,6 +19,14 @@ interface GetSectionsProgressProps {
   }) => void
 }
 
+/**
+ * @function updateSectionsProgress
+ * Update sections strucutre to add progress on each section.
+ * After the setions structure is built (by useLoadSectionsStructure)
+ * this utility function runs revalidateAll and retrieve each section
+ * progress to display in the UI of a Application in Draft/Changes required.
+ * @param param0
+ */
 const updateSectionsProgress = async ({
   currentUser,
   elementsState,

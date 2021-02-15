@@ -1,6 +1,12 @@
 import { SectionsStructure } from '../../types'
 
-const checkIsCompleted = (sectionsStructure: SectionsStructure) => {
+/**
+ * @function checkSectionsProgress
+ * Return if all sections in sections structure are completed
+ * if any section is missing responses returns link to section & page
+ * @param sectionsStructure - Complete structure of sections
+ */
+export const checkSectionsProgress = (sectionsStructure: SectionsStructure) => {
   const isCompleted = Object.values(sectionsStructure).every(
     ({ progress }) => progress?.completed && progress.valid
   )
@@ -24,5 +30,3 @@ const findFirstIncompleteSection = (sectionsStructure: SectionsStructure) => {
     return section.details.code
   }
 }
-
-export default checkIsCompleted

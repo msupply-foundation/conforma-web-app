@@ -13,7 +13,7 @@ import useLoadSectionsStructure from '../../utils/hooks/useLoadSectionsStructure
 import { AssignmentDetails, SectionDetails, SectionsStructure, User as UserType } from '../types'
 import getAssignedQuestions from '../helpers/review/getAssignedQuestions'
 import { useUserState } from '../../contexts/UserState'
-import updateSectionsReviews from '../helpers/review/updateSectionsReviews'
+import updateSectionsReviews from '../helpers/structure/updateSectionsReviews'
 
 interface UseGetReviewAssignmentProps {
   reviewerId: number

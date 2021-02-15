@@ -1,8 +1,12 @@
 import strings from '../../constants'
 import { REVIEW_STATUS } from '../../data/reviewStatus'
 
+/**
+ * @function getReviewStartLabel
+ * Get label string of option to display on Review start page
+ * @param status Current status of review
+ */
 const getReviewStartLabel = (status: string) => {
-  // TODO: Not use strings here - use the type
   switch (status as REVIEW_STATUS) {
     case REVIEW_STATUS.DRAFT:
       return strings.BUTTON_REVIEW_CONTINUE

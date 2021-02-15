@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import updateSectionsProgress from '../helpers/application/updateSectionsProgress'
+import updateSectionsProgress from '../helpers/structure/updateSectionsProgress'
 import { ValidatedSections, SectionsStructure, User } from '../types'
 import useGetResponsesAndElementState from './useGetResponsesAndElementState'
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { buildSectionsStructure } from '../helpers/application/buildSectionsStructure'
+import { buildSectionsStructure } from '../helpers/structure/buildSectionsStructure'
 import { SectionDetails, SectionsStructure, UseGetApplicationProps } from '../types'
 import useGetResponsesAndElementState from './useGetResponsesAndElementState'
 import useLoadApplication from './useLoadApplication'

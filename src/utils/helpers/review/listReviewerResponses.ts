@@ -12,21 +12,20 @@ const listReviewResponses = ({ userId, reviewSections }: ReviewerResponsesPayloa
   const assignedSections = Object.values(reviewSections).filter(
     ({ assigned }) => assigned?.id === userId
   )
-  return assignedSections.reduce(
-    (reviewerResponseDecisions: ReviewQuestionDecision[], { pages }) => {
-      Object.entries(pages).forEach(([pageName, { state }]) => {
-        // TODO: Create utility function to filter out all INFORMATION elements when checking for status
-        const questions = state.filter(
-          ({ element }) => element.category === TemplateElementCategory.Question
-        )
-        questions.forEach(({ review }) => {
-          if (review?.decision) reviewerResponseDecisions.push(review)
-        })
-      })
-      return reviewerResponseDecisions
-    },
-    []
-  )
+  const listReviewResponses: ReviewQuestionDecision[] = []
+  assignedSections.forEach(({ pages }) => {
+    const sectionReviewResponses: ReviewQuestionDecision[] = []
+    Object.values(pages).forEach(({ state }) => {
+      // TODO: Create utility function to filter out all INFORMATION elements when checking for status
+      const pageReviewResponses = state
+        .filter(({ element }) => element.category === TemplateElementCategory.Question)
+        .filter(({ review }) => review?.decision !== undefined)
+        .map(({ review }) => review as ReviewQuestionDecision)
+      sectionReviewResponses.concat(pageReviewResponses)
+    })
+    listReviewResponses.concat(sectionReviewResponses)
+  })
+  return listReviewResponses
 }
 
 export default listReviewResponses

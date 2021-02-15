@@ -4,7 +4,7 @@ import {
   SectionDetails,
   SectionsStructure,
 } from '../../types'
-import { getPageElements } from './getPageElements'
+import { getPageElements } from '../application/getPageElements'
 
 interface BuildSectionsStructureProps {
   sections: SectionDetails[]
