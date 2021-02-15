@@ -68,8 +68,6 @@ const ReviewPageWrapper: React.FC = () => {
   // Keep array with all review responses from current Reviewer
   useEffect(() => {
     if (!currentUser || !reviewSections) return
-    console.log('Reset list of reviews')
-
     const { userId } = currentUser
     const reviewerResponseDecisions = listReviewResponses({ userId, reviewSections })
     setReviewerResponses(reviewerResponseDecisions)
