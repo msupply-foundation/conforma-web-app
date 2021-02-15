@@ -15,8 +15,8 @@ import useGetReviewAssignment from '../../utils/hooks/useGetReviewAssignment'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { Link } from 'react-router-dom'
-import { ReviewStatus } from '../../utils/generated/graphql'
-import { AssignmentDetails, SectionState } from '../../utils/types'
+import { ReviewResponseDecision, ReviewStatus } from '../../utils/generated/graphql'
+import { AssignmentDetails, Page, SectionProgress, SectionState } from '../../utils/types'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import { useUserState } from '../../contexts/UserState'
 import getReviewStartLabel from '../../utils/helpers/review/getReviewStartLabel'
@@ -69,7 +69,22 @@ const ReviewOverview: React.FC = () => {
     })
   }
 
-  const getProgresOrLabel = ({ assigned, progress }: SectionState) => {
+  const getProgressTitle = (progress: SectionProgress, pages: { [pageName: string]: Page }) => {
+    if (progress.valid) {
+      return progress.completed ? strings.LABEL_REVIEW_COMPLETE : ''
+    }
+    let declinedResponses = 0
+    Object.values(pages).forEach(({ state }) => {
+      declinedResponses += state.filter(
+        ({ review }) => review?.decision === ReviewResponseDecision.Decline
+      ).length
+    })
+    return declinedResponses > 0
+      ? strings.LABEL_REVIEW_DECLINED.replace('%1', declinedResponses.toString())
+      : ''
+  }
+
+  const getProgresOrLabel = ({ assigned, progress, pages }: SectionState) => {
     if (assigned) {
       if (progress && progress.done > 0 && progress.total > 0) {
         return (
@@ -78,6 +93,7 @@ const ReviewOverview: React.FC = () => {
             size="tiny"
             success={progress.valid}
             error={!progress.valid}
+            label={getProgressTitle(progress, pages)}
           />
         )
       } else if (!assignment?.review) {
@@ -87,7 +103,7 @@ const ReviewOverview: React.FC = () => {
             <Label basic>{strings.LABEL_ASSIGNED_TO_YOU}</Label>
           </Segment>
         )
-      } else return <Label basic>MISSING PROGRESS... TODO</Label>
+      } else return null
     } else return <p>{strings.LABEL_ASSIGNED_TO_OTHER}</p>
   }
 
@@ -156,7 +172,7 @@ const ReviewOverview: React.FC = () => {
         <List divided relaxed="very">
           {sectionsAssigned &&
             Object.entries(sectionsAssigned).map(([sectionCode, sectionState]) => {
-              const { details, progress } = sectionState
+              const { details } = sectionState
               return (
                 <List.Item
                   key={`list-item-${sectionCode}`}
@@ -165,11 +181,8 @@ const ReviewOverview: React.FC = () => {
                       <Grid.Column width={10}>
                         <p>{details.title}</p>
                       </Grid.Column>
-                      <Grid.Column width={4}>{getProgresOrLabel(sectionState)}</Grid.Column>
-                      <Grid.Column width={2}>
-                        {progress && (
-                          <Button color="blue">{strings.BUTTON_APPLICATION_RESUME}</Button>
-                        )}
+                      <Grid.Column width={4} textAlign="center">
+                        {getProgresOrLabel(sectionState)}
                       </Grid.Column>
                     </Grid>
                   }
