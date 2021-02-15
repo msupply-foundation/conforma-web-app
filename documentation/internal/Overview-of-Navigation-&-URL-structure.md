@@ -176,21 +176,15 @@ Example: [https://balsamiq.cloud/scs7giw/ponj59g/rD5AC](https://balsamiq.cloud/s
 
 ## `/application/[serialNum]/review`
 
-Overview/Start page for reviews associated with specific Application. User will see different content depending on permissions. For Reviewers who have assigned content to review, they will have the option to "Start" review, which will create a Review in the database and re-direct to the specific review page.
+Overview/Start page for reviews of application and reviews of reviews (consolidation). User will see different content depending on review assignments and their respective review. For Reviewers who have assigned content to review, they will have the option to "Start" review, which will create a Review in the database and re-direct to the specific review page. For existing reviews with pending status, slightly different UI will be presented and instead of "Start", "Continue" button will be shown.
+
+This page will have mutations to `create review`, `self-assign review assignment`, `create review responses`. Logic for these is best described in diagrams, `Response Flow` and `Review and Consolidation URL Flow` ![Diagrams Back End Repo Wiki]https://github.com/openmsupply/application-manager-server/wiki/Database-Schema-Review-And-Consolidation#diagram)
 
 ## `/application/[serialNum]/review/[reviewId]`
 
-Specific Review page. Assigned Reviewer(s) can mark questions as "Conform" or "Non-conform" and add comments.
+Specific Review or Consolidation page. Assigned Reviewer(s) can mark questions as "Conform"/"Non-conform" or "Agree"/"Disagree" for consolidation and add comments. Review Decision can also be made ![Review Decision Back End Repo Wiki](https://github.com/openmsupply/application-manager-server/wiki/Database-Schema-Review-And-Consolidation#review-decision)
 
----
-
-## `/application/[serialNum]/consolidation`
-
-Consolidation page. Shows all reviews relevant to current stage. Consolidator can start consolidation.
-
-## `/application/[serialNum]/consolidation/[consolidateId]`
-
-Specific Consolidation page. Further details TBC.
+This diagram is also useful for this URL `Review and Consolidation URL Flow` ![Diagrams Back End Repo Wiki](https://github.com/openmsupply/application-manager-server/wiki/Database-Schema-Review-And-Consolidation#diagram)
 
 ---
 

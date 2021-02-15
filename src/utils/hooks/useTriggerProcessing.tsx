@@ -29,7 +29,7 @@ const useTriggerProcessing = ({ triggerType, ...props }: TriggerQueryProps) => {
 
   if (!inferredTriggerType) {
     setIsProcessing(false)
-    setTriggerError('Type not defined')
+    setTriggerError('Invalid trigger type')
   }
 
   const { serialNumber, isApplicationLoaded } = props as TriggerApplication

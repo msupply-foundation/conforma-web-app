@@ -60,8 +60,11 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
       return undefined
     }
 
-    const currentAssignment = reviewerAssignments[0]
-    const reviews = currentAssignment.reviews.nodes as Review[]
+      // TODO: There might be cases when we have more than one assignemnt to the same reviewer
+      // in that case we would be displaying 2 different actions OR considering to add a reviewer
+      // level to the URL so we can show separated pages for the Review and consolidation.
+      const currentAssignment = reviewerAssignments[0]
+      const reviews = currentAssignment.reviews.nodes as Review[]
 
     // Should have only 1 review per application, stage and reviewer
     const review = reviews.length > 0 ? reviews[0] : undefined
