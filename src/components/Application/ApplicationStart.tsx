@@ -112,7 +112,7 @@ const ApplicationStart: React.FC<ApplicationStartProps> = ({
                               <Button
                                 color="blue"
                                 onClick={() =>
-                                  resumeApplication({ sectionCode, page: progress.linkedPage })
+                                  resumeApplication({ sectionCode, page: progress.linkedPage || 1 })
                                 }
                               >
                                 {strings.BUTTON_APPLICATION_RESUME}

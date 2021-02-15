@@ -45,6 +45,7 @@ export {
   ReviewDetails,
   ReviewQuestion,
   ReviewQuestionDecision,
+  ReviewerDetails,
   ReviewerResponsesPayload,
   SectionState,
   SectionDetails,
@@ -268,7 +269,7 @@ interface SectionProgress {
   done: number
   completed: boolean
   valid: boolean
-  linkedPage: number
+  linkedPage?: number
 }
 interface SectionState {
   details: SectionDetails

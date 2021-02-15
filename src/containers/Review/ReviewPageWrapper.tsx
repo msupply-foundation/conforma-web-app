@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Header, Label, Message, Segment } from 'semantic-ui-react'
+import { Button, Container, Header, Label, Message, Segment } from 'semantic-ui-react'
 import { DecisionArea, Loading, NoMatch, ReviewSection } from '../../components'
 import { DecisionAreaState, ReviewQuestionDecision, SectionDetails, User } from '../../utils/types'
 import useLoadReview from '../../utils/hooks/useLoadReview'
@@ -13,6 +13,7 @@ import useSubmitReview from '../../utils/hooks/useSubmitReview'
 import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
 import validateReview from '../../utils/helpers/review/validateReview'
 import listReviewResponses from '../../utils/helpers/review/listReviewerResponses'
+import useLoadSectionsStructure from '../../utils/hooks/useLoadSectionsStructure'
 
 const decisionAreaInitialState = { open: false, review: null, summaryViewProps: null }
 
@@ -30,17 +31,22 @@ const ReviewPageWrapper: React.FC = () => {
   const [invalidSection, setInvalidSection] = useState<SectionDetails>()
   const [reviewerResponses, setReviewerResponses] = useState<ReviewQuestionDecision[]>([])
 
-  // Will wait for trigger to run that will set the Review status as DRAFT (after creation)
   const {
-    error,
-    isReviewReady,
-    applicationName,
+    error: structureError,
+    application,
     allResponses,
-    reviewSections,
-    reviewStatus,
-  } = useLoadReview({
+    sectionsStructure,
+    isApplicationReady,
+  } = useLoadSectionsStructure({
+    serialNumber: serialNumber as string,
+    currentUser: currentUser as User,
+  })
+
+  // Will wait for trigger to run that will set the Review status as DRAFT (after creation)
+  const { error, loading, reviewSections, reviewStatus } = useLoadReview({
     reviewId: Number(reviewId),
-    serialNumber,
+    isApplicationReady,
+    sectionsStructure,
   })
 
   const { updateReviewResponse, error: updateError, updating } = useUpdateReviewResponse({
@@ -62,6 +68,8 @@ const ReviewPageWrapper: React.FC = () => {
   // Keep array with all review responses from current Reviewer
   useEffect(() => {
     if (!currentUser || !reviewSections) return
+    console.log('Reset list of reviews')
+
     const { userId } = currentUser
     const reviewerResponseDecisions = listReviewResponses({ userId, reviewSections })
     setReviewerResponses(reviewerResponseDecisions)
@@ -99,7 +107,7 @@ const ReviewPageWrapper: React.FC = () => {
 
   const submitResponseHandler = () => {
     if (review) {
-      const { id, comment, decision } = review
+      const { comment, decision } = review
       if (decision === ReviewResponseDecision.Decline && comment === '')
         setReviewProblem(messages.REVIEW_RESUBMIT_COMMENT)
       else {
@@ -110,8 +118,6 @@ const ReviewPageWrapper: React.FC = () => {
     }
   }
 
-  console.log(reviewSections)
-
   const submitReviewHandler = () => {
     if (validateReviewHandler() && !updating && !processing) {
       submit(reviewerResponses)
@@ -120,14 +126,14 @@ const ReviewPageWrapper: React.FC = () => {
 
   return error ? (
     <NoMatch />
-  ) : !isReviewReady ? (
+  ) : loading ? (
     <Loading />
-  ) : reviewSections && allResponses ? (
-    <>
+  ) : application && reviewSections && allResponses ? (
+    <Container>
       <Segment.Group>
         <Segment textAlign="center">
           <Label color="blue">{strings.STAGE_PLACEHOLDER}</Label>
-          <Header content={applicationName} subheader={strings.DATE_APPLICATION_PLACEHOLDER} />
+          <Header content={application.name} subheader={strings.DATE_APPLICATION_PLACEHOLDER} />
           <Header
             as="h3"
             color="grey"
@@ -179,7 +185,7 @@ const ReviewPageWrapper: React.FC = () => {
         problemMessage={reviewProblem}
         setProblemMessage={setReviewProblem}
       />
-    </>
+    </Container>
   ) : (
     <Message error header={strings.ERROR_REVIEW_PAGE} />
   )

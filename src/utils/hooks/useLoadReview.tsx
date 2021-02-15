@@ -7,82 +7,80 @@ import {
   useGetReviewStatusQuery,
   User,
 } from '../generated/graphql'
-import { SectionsStructure, User as UserType } from '../types'
+import { SectionsStructure } from '../types'
 import useTriggerProcessing from './useTriggerProcessing'
-import { useUserState } from '../../contexts/UserState'
-import useLoadSectionsStructure from './useLoadSectionsStructure'
 import updateSectionsReviews from '../helpers/review/updateSectionsReviews'
 
 interface UseLoadReviewProps {
   reviewId: number
-  serialNumber: string
+  isApplicationReady: boolean
+  sectionsStructure?: SectionsStructure
 }
 
-const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
-  const [applicationName, setApplicationName] = useState<string>('')
+const useLoadReview = ({ reviewId, isApplicationReady, sectionsStructure }: UseLoadReviewProps) => {
   const [reviewSections, setReviewSections] = useState<SectionsStructure>()
   const [reviewStatus, setReviewStatus] = useState<ReviewStatus>()
-  const [isReviewReady, setIsReviewReady] = useState(false)
-  const [isReviewLoaded, setIsReviewLoaded] = useState(false)
+  const [reviewResponses, setReviewResponses] = useState<ReviewResponse[]>()
+  const [reviewer, setReviewer] = useState<User>()
   const [reviewError, setReviewError] = useState<string>()
-  const {
-    userState: { currentUser },
-  } = useUserState()
+  const [isProcessingProgress, setIsProcessingProgress] = useState(false)
 
-  const {
-    error: structureError,
-    application,
-    allResponses,
-    sectionsStructure,
-    isApplicationReady,
-  } = useLoadSectionsStructure({
-    serialNumber: serialNumber as string,
-    currentUser: currentUser as UserType,
-  })
-
-  const { data, error, loading } = useGetReviewQuery({
+  const { data, error, loading: reviewLoading } = useGetReviewQuery({
     variables: {
       reviewId,
     },
     skip: !isApplicationReady,
-    fetchPolicy: 'network-only',
   })
 
+  useEffect(() => {
+    if (reviewLoading) {
+      setReviewSections(undefined)
+      setIsProcessingProgress(true)
+    }
+  }, [reviewLoading])
+
   const { error: triggerError, isTriggerProcessing } = useTriggerProcessing({
-    isReviewLoaded: isReviewReady,
+    isReviewLoaded: !reviewLoading,
     reviewId,
     // triggerType: 'reviewTrigger',
   })
 
-  const { data: statusData, error: statusError } = useGetReviewStatusQuery({
+  const { data: statusData, error: statusError, loading: loadingStatus } = useGetReviewStatusQuery({
     variables: {
       reviewId,
     },
-    skip: !isReviewLoaded || isTriggerProcessing,
+    skip: reviewLoading || isTriggerProcessing,
     fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
     if (!data) return
 
-    if (!loading && !data?.review) {
+    if (!reviewLoading && !data?.review) {
       setReviewError('No review found')
     }
+    setReviewSections(undefined)
+    setIsProcessingProgress(true)
 
-    if (application) setApplicationName(application.name)
     if (data?.review?.reviewResponses && sectionsStructure && isApplicationReady) {
       const reviewResponses = data.review.reviewResponses.nodes as ReviewResponse[]
       const reviewer = data.review.reviewer as User
-      const reviewStructure = updateSectionsReviews({
-        sectionsStructure,
-        reviewResponses,
-        reviewer,
-      })
-
-      setReviewSections(reviewStructure)
-      setIsReviewLoaded(true)
+      setReviewResponses(reviewResponses)
+      setReviewer(reviewer)
     }
-  }, [data, isApplicationReady])
+  }, [data])
+
+  useEffect(() => {
+    if (!isProcessingProgress || !sectionsStructure || !reviewResponses || !reviewer) return
+    const reviewStructure = updateSectionsReviews({
+      sectionsStructure,
+      reviewResponses,
+      reviewer,
+    })
+
+    setReviewSections(reviewStructure)
+    setIsProcessingProgress(false)
+  }, [reviewResponses, reviewer])
 
   useEffect(() => {
     if (!statusData) return
@@ -91,20 +89,17 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
 
     const { status } = statuses[0] // Should only have one result
     setReviewStatus(status as ReviewStatus)
-    setIsReviewReady(true)
   }, [statusData])
 
   return {
-    applicationName,
-    isReviewReady,
-    reviewSections,
+    loading: reviewLoading && loadingStatus && isTriggerProcessing && isProcessingProgress,
+    reviewSections: sectionsStructure || reviewSections,
     reviewStatus,
-    allResponses,
     error: error
       ? (error.message as string)
       : statusError
       ? (statusError.message as string)
-      : structureError || reviewError || triggerError,
+      : reviewError || triggerError,
   }
 }
 

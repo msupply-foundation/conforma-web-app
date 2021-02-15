@@ -9,6 +9,7 @@ import {
   Label,
   Segment,
   Accordion,
+  Progress,
 } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
@@ -39,15 +40,27 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
   canEdit,
   showError,
 }) => {
-  const { assigned, details: section, pages } = reviewSection
+  const { assigned, details: section, pages, progress } = reviewSection
   const [isOpen, setIsOpen] = useState(false)
 
-  const showSectionAssignment = assignedToYou ? (
+  const showProgresss = assignedToYou ? (
+    progress && progress.done > 0 && progress.total > 0 ? (
+      <Progress
+        percent={(100 * progress.done) / progress.total}
+        size="tiny"
+        success={progress.valid}
+        error={!progress.valid}
+      />
+    ) : (
+      <Segment vertical>
+        <Icon name="circle" size="mini" color="blue" />
+        <Label basic>{strings.LABEL_ASSIGNED_TO_YOU}</Label>
+      </Segment>
+    )
+  ) : (
     <Label style={{ backgroundColor: 'WhiteSmoke', color: 'Blue' }}>
       {strings.LABEL_ASSIGNED_TO_YOU}
     </Label>
-  ) : (
-    <Label style={{ backgroundColor: 'WhiteSmoke' }}>{strings.LABEL_ASSIGNED_TO_OTHER}</Label>
   )
 
   const handleClick = () => {
@@ -78,7 +91,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                 )}
               </Grid.Column>
               <Grid.Column width={3}>
-                <Container textAlign="right">{showSectionAssignment}</Container>
+                <Container textAlign="right">{showProgresss}</Container>
               </Grid.Column>
               <Grid.Column width={1}>
                 <Icon name={isOpen ? 'angle up' : 'angle down'} size="large" />

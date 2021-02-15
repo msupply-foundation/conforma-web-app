@@ -20,7 +20,7 @@ const useUpdateReviewResponse = ({ reviewId, serialNumber }: UseUpdateReviewResp
     refetchQueries: [
       {
         query: getReviewQuery,
-        variables: { reviewId: Number(reviewId), serialNumber },
+        variables: { reviewId: Number(reviewId) },
       },
     ],
   })
