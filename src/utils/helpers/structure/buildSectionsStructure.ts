@@ -16,7 +16,7 @@ interface BuildSectionsStructureProps {
  * @function buildSectionsStructure
  * Create the sections structure object to be used
  * in displaying each sections and its pages on either
- * an application or review pages. The strucutre is
+ * an application or review pages. The structure is
  * defined by the SectionStructure type.
  * @param sections Array with all sections details
  * @param elementsState object with all elements in application

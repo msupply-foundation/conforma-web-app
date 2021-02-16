@@ -12,7 +12,7 @@ interface UpdateSectionsReviewsProps {
  * Update section structure to add review to each PageState elements.
  * After the sections structure is built (by useLoadSectionsStructure)
  * this utility function combines reviewResponses in the structure
- * correct location of related response and element.
+ * with correct location of related response and element.
  * @param sectionsStructure Complete original structure of sections
  * @param reviewResponses Array of review_responses for current review
  * @param reviewer User owner of current review
