@@ -9,7 +9,8 @@ interface GetElementsInStructureProps {
 /**
  * @function getPageElementsInStructure
  * Get array of objects with elements, responses and reviews from
- * the sections strucutre corresponding to the section and page received
+ * the sections structure corresponding to the section and page received
+ * ```
  * @param sectionsStructure Complete structure of sections
  * @param sectionCode Code of section to get array of elements
  * @param page Number of page to get array of elements
