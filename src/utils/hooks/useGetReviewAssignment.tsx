@@ -10,10 +10,10 @@ import {
   User,
 } from '../generated/graphql'
 import useLoadSectionsStructure from '../../utils/hooks/useLoadSectionsStructure'
-import { AssignmentDetails, SectionDetails, SectionsStructure, User as UserType } from '../types'
+import { AssignmentDetails, SectionsStructure, User as UserType } from '../types'
 import getAssignedQuestions from '../helpers/review/getAssignedQuestions'
 import { useUserState } from '../../contexts/UserState'
-import updateSectionsReviews from '../helpers/review/updateSectionsReviews'
+import updateSectionsReviews from '../helpers/structure/updateSectionsReviews'
 import updateAssignedSections from '../helpers/review/updateAssignedSections'
 
 interface UseGetReviewAssignmentProps {
@@ -61,6 +61,9 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
       return undefined
     }
 
+    // TODO: There might be cases when we have more than one assignemnt to the same reviewer
+    // in that case we would be displaying 2 different actions OR considering to add a reviewer
+    // level to the URL so we can show separated pages for the Review and consolidation.
     const currentAssignment = reviewerAssignments[0]
     const reviews = currentAssignment.reviews.nodes as Review[]
 

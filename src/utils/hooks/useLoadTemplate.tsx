@@ -5,7 +5,7 @@ import {
   TemplateSection,
   useGetTemplateQuery,
 } from '../generated/graphql'
-import { buildTemplateSectionsStructure } from '../helpers/application/buildSectionsStructure'
+import { buildTemplateSectionsStructure } from '../helpers/structure/buildSectionsStructure'
 import { getTemplateSections } from '../helpers/application/getSectionsDetails'
 import { SectionsStructure, TemplateDetails } from '../types'
 

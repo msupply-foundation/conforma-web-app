@@ -9,7 +9,7 @@ import {
 } from '../generated/graphql'
 import { SectionsStructure } from '../types'
 import useTriggerProcessing from './useTriggerProcessing'
-import updateSectionsReviews from '../helpers/review/updateSectionsReviews'
+import updateSectionsReviews from '../helpers/structure/updateSectionsReviews'
 
 interface UseLoadReviewProps {
   reviewId: number

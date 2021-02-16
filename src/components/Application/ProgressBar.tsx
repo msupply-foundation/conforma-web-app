@@ -10,8 +10,7 @@ import {
 import { useApplicationState } from '../../contexts/ApplicationState'
 import strings from '../../utils/constants'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { getCombinedStatus, getPageStatus } from '../../utils/helpers/application/validatePage'
-import { getPageElementsStatuses } from '../../utils/helpers/application/getPageElements'
+import { validatePage } from '../../utils/helpers/validation/validatePage'
 import getPreviousPage from '../../utils/helpers/application/getPreviousPage'
 
 interface ProgressBarProps {
@@ -83,7 +82,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   }
 
   const getPageIndicator = (pageState: PageElements) => {
-    const pageStatus = getPageStatus(pageState)
+    const pageStatus = validatePage(pageState)
     const indicator = {
       VALID: <Icon name="check circle" color="green" />,
       NOT_VALID: <Icon name="exclamation circle" color="red" />,
@@ -104,8 +103,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     return (
       <List style={{ paddingLeft: '50px' }} link>
         {Object.entries(pages).map(([pageName, { number, state }]) => {
-          console.log('Section', sectionCode, ' page', pageName)
-
           return (
             <List.Item
               active={isActivePage(sectionCode, number)}

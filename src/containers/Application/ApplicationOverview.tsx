@@ -10,8 +10,8 @@ import { ApplicationStatus, useUpdateResponseMutation } from '../../utils/genera
 import messages from '../../utils/messages'
 import useLoadSectionsStructure from '../../utils/hooks/useLoadSectionsStructure'
 import useRevalidateApplication from '../../utils/hooks/useRevalidateApplication'
-import checkIsCompleted from '../../utils/helpers/application/checkIsCompleted'
-import { getResponsesInStrucutre } from '../../utils/helpers/application/getElementsInStructure'
+import { checkSectionsProgress } from '../../utils/helpers/structure/checkSectionsProgress'
+import { getResponsesInStrucutre } from '../../utils/helpers/structure/getElementsInStructure'
 
 const ApplicationOverview: React.FC = () => {
   const [isRevalidated, setIsRevalidated] = useState(false)
@@ -71,7 +71,7 @@ const ApplicationOverview: React.FC = () => {
   useEffect(() => {
     if (!isSubmittedClicked || !validatedSections) return
     const { sectionsWithProgress, elementsToUpdate } = validatedSections
-    const { isCompleted, firstIncompleteLocation } = checkIsCompleted(sectionsWithProgress)
+    const { isCompleted, firstIncompleteLocation } = checkSectionsProgress(sectionsWithProgress)
     if (isCompleted) {
       const responses = getResponsesInStrucutre(sectionsWithProgress)
       submit(responses)
@@ -101,8 +101,6 @@ const ApplicationOverview: React.FC = () => {
       if (currentUser?.username === strings.USER_NONREGISTERED) {
         logout()
       }
-      console.log('Called the next Page')
-
       push(`/application/${serialNumber}/submission`)
     }
   }, [submitted, isProcessing])

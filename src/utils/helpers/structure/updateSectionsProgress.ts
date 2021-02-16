@@ -6,7 +6,7 @@ import {
   User,
   ValidityFailure,
 } from '../../types'
-import { revalidateAll } from './revalidateAll'
+import { revalidateAll } from '../validation/revalidateAll'
 
 interface GetSectionsProgressProps {
   currentUser: User
@@ -19,6 +19,19 @@ interface GetSectionsProgressProps {
   }) => void
 }
 
+/**
+ * @function updateSectionsProgress
+ * Update sections structure and add the progress on each section.
+ * After the sections structure is built (by useLoadSectionsStructure)
+ * this utility function runs revalidateAll and retrieve each section
+ * progress to be displayed in the UI for an application.
+ * @param currentUser applicant user used to run validation
+ * @param elementsState object with all elements in application
+ * @param responsesByCode object with each response by element code
+ * @param sectionsStructure Complete structure of sections
+ * @param setSections Function to set new state of sections' structure
+ * and array of elements to be updated if any validation failed
+ */
 const updateSectionsProgress = async ({
   currentUser,
   elementsState,
@@ -41,7 +54,7 @@ const updateSectionsProgress = async ({
     const elementsToUpdate: ValidityFailure[] = []
     values.forEach(({ validityFailures, sectionCode, progress }) => {
       if (sectionCode) sections[sectionCode].progress = progress
-      else console.log('Problem to add progress to section', sectionCode)
+      else console.log('Problem adding progress to section', sectionCode)
       validityFailures.forEach((changedElement) => elementsToUpdate.push(changedElement))
     })
     setSections({

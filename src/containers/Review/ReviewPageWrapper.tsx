@@ -8,12 +8,12 @@ import { ReviewResponseDecision, ReviewStatus } from '../../utils/generated/grap
 import strings from '../../utils/constants'
 import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import { useUserState } from '../../contexts/UserState'
-import messages from '../../utils/messages'
 import useSubmitReview from '../../utils/hooks/useSubmitReview'
 import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
-import validateReview from '../../utils/helpers/review/validateReview'
-import listReviewResponses from '../../utils/helpers/review/listReviewerResponses'
 import useLoadSectionsStructure from '../../utils/hooks/useLoadSectionsStructure'
+import { validateReview } from '../../utils/helpers/validation/validateReview'
+import listReviewResponses from '../../utils/helpers/review/listReviewResponses'
+import messages from '../../utils/messages'
 
 const decisionAreaInitialState = { open: false, review: null, summaryViewProps: null }
 

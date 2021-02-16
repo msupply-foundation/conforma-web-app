@@ -6,6 +6,18 @@ interface UpdateSectionsReviewsProps {
   reviewResponses: ReviewResponse[]
   reviewer: User
 }
+
+/**
+ * @function updateSectionsReviews
+ * Update section structure to add review to each PageState elements.
+ * After the sections structure is built (by useLoadSectionsStructure)
+ * this utility function combines reviewResponses in the structure
+ * with correct location of related response and element.
+ * @param sectionsStructure Complete original structure of sections
+ * @param reviewResponses Array of review_responses for current review
+ * @param reviewer User owner of current review
+ * @returns Structure with reviews and assiged sections of reviewer
+ */
 const updateSectionsReviews = ({
   sectionsStructure,
   reviewResponses,

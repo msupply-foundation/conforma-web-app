@@ -43,6 +43,7 @@ export {
   ResponsesByCode,
   ResumeSection,
   ReviewDetails,
+  ReviewProgressStatus,
   ReviewQuestion,
   ReviewQuestionDecision,
   ReviewerDetails,
@@ -241,6 +242,8 @@ interface ReviewerDetails {
   firstName: string
   lastName: string
 }
+
+type ReviewProgressStatus = 'NOT_COMPLETED' | 'DECLINED' | 'APPROVED'
 
 interface ReviewQuestion {
   code: string
