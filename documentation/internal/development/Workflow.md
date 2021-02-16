@@ -1,6 +1,6 @@
 _This should help Front-end developers understand the flow of how React components and GraphQL calls interact and the current project structure._
 
-# Project Structure
+# Project Workflow
 
 We have a few rules to maintain our structure comprehensive. This rules may change with time, and we should keep this file up-to-date with the current ones. Check the rules in each section below.
 Inside the `/src` folder all files used for the Front-end are distribuited in the following structure:
@@ -101,7 +101,7 @@ _What is a mutation?_ Something to be posted to the GraphQL server. Has some def
 
 #### helpers
 
-Add here any methods that can be used in other places - that aren't hooks or compnents itselves.
+Add here any methods that can be used in other places - that aren't hooks or components itselves.
 
 #### hooks
 
@@ -151,9 +151,7 @@ We are using 2 options for local states:
 
 ##### Example of local state
 
-**TODO**: Rename ApplicationPage => ApplicationPageWrapper (if we decide that we want to keep the wrapper thingy).
-
-**To be created** => In ApplicationPageWrapper:
+In ApplicationPageWrapper:
 
 - List of all questions and responses
 
