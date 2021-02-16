@@ -18,8 +18,8 @@ interface RevalidateAllProps {
 /**
  * @function revalidateAll
  * Run validation on each response (for question elements) in application
- * using promises and some validation method - or the defaultValidation
- * that uses the evaluationExpression for dynamic evaluations.
+ * using promises and the defaultValidation method which
+ * uses the evaluationExpression for dynamic evaluations.
  * Will also build a progress object for each section.
  * @param elementsState object with all elements in application
  * @param responsesByCode object with each response by element code
