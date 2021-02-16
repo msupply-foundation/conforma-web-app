@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
   Button,
   Grid,
@@ -19,8 +19,7 @@ import { ReviewResponseDecision } from '../../utils/generated/graphql'
 import { AssignmentDetails, Page, SectionProgress, SectionState } from '../../utils/types'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import { useUserState } from '../../contexts/UserState'
-import getReviewStartLabel from '../../utils/helpers/review/getReviewStartLabel'
-import { REVIEW_STATUS } from '../../utils/data/reviewStatus'
+import { getStartLabel, getStatusLabel } from '../../utils/helpers/review/getReviewLabels'
 
 const ReviewOverview: React.FC = () => {
   const {
@@ -102,13 +101,11 @@ const ReviewOverview: React.FC = () => {
   const getActionButton = ({ review }: AssignmentDetails) => {
     if (review) {
       const { id, status } = review
-      console.log('status', status)
-
       return (
         <Button
           as={Link}
           to={`/application/${serialNumber}/review/${id}`}
-          content={getReviewStartLabel(status)}
+          content={getStartLabel(status)}
         />
       )
     }
@@ -119,24 +116,6 @@ const ReviewOverview: React.FC = () => {
     )
   }
 
-  const displayStatus = () => {
-    const status = assignment?.review?.status as string
-    switch (status) {
-      case REVIEW_STATUS.DRAFT:
-        return <Label color="brown" content={status} />
-      case REVIEW_STATUS.CHANGES_REQUESTED:
-        return <Label color="red" content={status} />
-      case REVIEW_STATUS.LOCKED:
-      case REVIEW_STATUS.SUBMITTED:
-        return <Label color="grey" content={status} />
-      case REVIEW_STATUS.PENDING:
-        return <Label color="yellow" content={status} />
-
-      default:
-        return <Label content={status} />
-    }
-  }
-
   return error ? (
     <NoMatch />
   ) : loading ? (
@@ -145,7 +124,7 @@ const ReviewOverview: React.FC = () => {
     <Segment.Group>
       <Segment textAlign="center">
         <Label color="blue">{strings.STAGE_PLACEHOLDER}</Label>
-        {displayStatus()}
+        <StatusComponent assignment={assignment} />
         <Header content={application.name} subheader={strings.DATE_APPLICATION_PLACEHOLDER} />
         <Header
           as="h3"
@@ -197,6 +176,13 @@ const ReviewOverview: React.FC = () => {
   ) : (
     <Message error content={strings.ERROR_REVIEW_OVERVIEW} />
   )
+}
+
+const StatusComponent: React.FC<{ assignment: AssignmentDetails }> = ({ assignment }) => {
+  const status = getStatusLabel(assignment)
+  if (!status) return null
+  const { color, label } = status
+  return <Label color={color} content={label} />
 }
 
 export default ReviewOverview

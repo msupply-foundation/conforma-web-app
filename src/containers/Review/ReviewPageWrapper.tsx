@@ -122,6 +122,8 @@ const ReviewPageWrapper: React.FC = () => {
     }
   }
 
+  console.log('reviewStatus', reviewStatus, ReviewStatus.Draft)
+
   return error ? (
     <NoMatch />
   ) : loading ? (
