@@ -1,22 +1,11 @@
 import React from 'react'
-import {
-  Button,
-  Grid,
-  Header,
-  Icon,
-  Label,
-  List,
-  Message,
-  Progress,
-  Segment,
-} from 'semantic-ui-react'
-import { Loading, NoMatch } from '../../components'
+import { Button, Grid, Header, Label, List, Message, Segment } from 'semantic-ui-react'
+import { Loading, NoMatch, ReviewProgress } from '../../components'
 import useGetReviewAssignment from '../../utils/hooks/useGetReviewAssignment'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { Link } from 'react-router-dom'
-import { ReviewResponseDecision } from '../../utils/generated/graphql'
-import { AssignmentDetails, Page, SectionProgress, SectionState } from '../../utils/types'
+import { AssignmentDetails } from '../../utils/types'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import { useUserState } from '../../contexts/UserState'
 import { getStartLabel, getStatusLabel } from '../../utils/helpers/review/getReviewLabels'
@@ -58,44 +47,6 @@ const ReviewOverview: React.FC = () => {
         applicationResponseId: responseId,
       })),
     })
-  }
-
-  const getProgressTitle = (progress: SectionProgress, pages: { [pageName: string]: Page }) => {
-    if (progress.valid) {
-      return progress.completed ? strings.LABEL_REVIEW_COMPLETE : ''
-    }
-    let declinedResponses = 0
-    Object.values(pages).forEach(({ state }) => {
-      declinedResponses += state.filter(
-        ({ review }) => review?.decision === ReviewResponseDecision.Decline
-      ).length
-    })
-    return declinedResponses > 0
-      ? strings.LABEL_REVIEW_DECLINED.replace('%1', declinedResponses.toString())
-      : ''
-  }
-
-  const getProgresOrLabel = ({ assigned, progress, pages }: SectionState) => {
-    if (assigned) {
-      if (progress && progress.done > 0 && progress.total > 0) {
-        return (
-          <Progress
-            percent={(100 * progress.done) / progress.total}
-            size="tiny"
-            success={progress.valid}
-            error={!progress.valid}
-            label={getProgressTitle(progress, pages)}
-          />
-        )
-      } else if (!assignment?.review) {
-        return (
-          <Segment vertical>
-            <Icon name="circle" size="mini" color="blue" />
-            <Label basic>{strings.LABEL_ASSIGNED_TO_YOU}</Label>
-          </Segment>
-        )
-      } else return null
-    } else return <p>{strings.LABEL_ASSIGNED_TO_OTHER}</p>
   }
 
   const getActionButton = ({ review }: AssignmentDetails) => {
@@ -155,7 +106,7 @@ const ReviewOverview: React.FC = () => {
                         <p>{details.title}</p>
                       </Grid.Column>
                       <Grid.Column width={4} textAlign="center">
-                        {getProgresOrLabel(sectionState)}
+                        <ReviewProgress {...sectionState} />
                       </Grid.Column>
                     </Grid>
                   }

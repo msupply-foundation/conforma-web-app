@@ -1,26 +1,15 @@
 import React, { useState } from 'react'
-import {
-  Button,
-  Card,
-  Container,
-  Grid,
-  Header,
-  Icon,
-  Label,
-  Segment,
-  Accordion,
-  Progress,
-} from 'semantic-ui-react'
+import { Button, Card, Container, Grid, Header, Icon, Segment, Accordion } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import strings from '../../utils/constants'
 import { ReviewResponseDecision, TemplateElementCategory } from '../../utils/generated/graphql'
 import messages from '../../utils/messages'
 import { ReviewQuestionDecision, ResponsesByCode, SectionState } from '../../utils/types'
+import ReviewProgress from './Progress'
 
 interface ReviewSectionProps {
   allResponses: ResponsesByCode
-  assignedToYou: boolean
   reviewSection: SectionState
   updateResponses: (props: ReviewQuestionDecision[]) => void
   setDecisionArea: (
@@ -33,35 +22,14 @@ interface ReviewSectionProps {
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({
   allResponses,
-  assignedToYou,
   reviewSection,
   updateResponses,
   setDecisionArea,
   canEdit,
   showError,
 }) => {
-  const { assigned, details: section, pages, progress } = reviewSection
+  const { assigned, details: section, pages } = reviewSection
   const [isOpen, setIsOpen] = useState(false)
-
-  const showProgresss = assignedToYou ? (
-    progress && progress.done > 0 && progress.total > 0 ? (
-      <Progress
-        percent={(100 * progress.done) / progress.total}
-        size="tiny"
-        success={progress.valid}
-        error={!progress.valid}
-      />
-    ) : (
-      <Segment vertical>
-        <Icon name="circle" size="mini" color="blue" />
-        <Label basic>{strings.LABEL_ASSIGNED_TO_YOU}</Label>
-      </Segment>
-    )
-  ) : (
-    <Label style={{ backgroundColor: 'WhiteSmoke', color: 'Blue' }}>
-      {strings.LABEL_ASSIGNED_TO_YOU}
-    </Label>
-  )
 
   const handleClick = () => {
     setIsOpen(!isOpen)
@@ -91,7 +59,9 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                 )}
               </Grid.Column>
               <Grid.Column width={3}>
-                <Container textAlign="right">{showProgresss}</Container>
+                <Container textAlign="right">
+                  <ReviewProgress {...reviewSection} />
+                </Container>
               </Grid.Column>
               <Grid.Column width={1}>
                 <Icon name={isOpen ? 'angle up' : 'angle down'} size="large" />

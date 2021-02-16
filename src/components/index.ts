@@ -13,7 +13,7 @@ import Home from './Home'
 import Login from '../containers/User/Login'
 import Loading from './Loading'
 import { AppMenu, Footer, ModalWarning } from './Main'
-import { DecisionArea, ReviewSection } from './Review'
+import { DecisionArea, ReviewProgress, ReviewSection } from './Review'
 import TemplateList from './TemplateList'
 import TemplateNew from './TemplateNew'
 import Template from './Template'
@@ -50,6 +50,7 @@ export {
   ProgressBar,
   Product,
   ProductList,
+  ReviewProgress,
   ReviewSection,
   Organisation,
   OrgMemberEdit,

@@ -122,8 +122,6 @@ const ReviewPageWrapper: React.FC = () => {
     }
   }
 
-  console.log('reviewStatus', reviewStatus, ReviewStatus.Draft)
-
   return error ? (
     <NoMatch />
   ) : loading ? (
@@ -142,22 +140,17 @@ const ReviewPageWrapper: React.FC = () => {
           />
         </Segment>
         <Segment basic>
-          {Object.entries(reviewSections).map(([code, section]) => {
-            const { userId } = currentUser as User
-            const assignedToYou = section.assigned?.id === userId
-            return (
-              <ReviewSection
-                key={`Review_${code}`}
-                allResponses={allResponses}
-                assignedToYou={assignedToYou}
-                reviewSection={section}
-                updateResponses={updateResponses}
-                setDecisionArea={openDecisionArea}
-                canEdit={reviewStatus === ReviewStatus.Draft}
-                showError={section.details === invalidSection}
-              />
-            )
-          })}
+          {Object.entries(reviewSections).map(([code, section]) => (
+            <ReviewSection
+              key={`Review_${code}`}
+              allResponses={allResponses}
+              reviewSection={section}
+              updateResponses={updateResponses}
+              setDecisionArea={openDecisionArea}
+              canEdit={reviewStatus === ReviewStatus.Draft}
+              showError={section.details === invalidSection}
+            />
+          ))}
         </Segment>
         <Segment
           basic
