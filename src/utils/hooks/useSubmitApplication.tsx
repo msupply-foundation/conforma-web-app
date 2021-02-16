@@ -10,7 +10,6 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
   const [applicationSubmitMutation] = useUpdateApplicationMutation({
     onCompleted: () => {
       setProcessing(false)
-      console.log('Finished submission')
     },
     onError: (submissionError) => {
       setProcessing(false)
@@ -21,9 +20,10 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
   const submit = (responses: ResponseFull[]) => {
     setSubmitted(true)
     setProcessing(true)
-    const responsesPatch = responses.map((response) => {
-      return { id: response.id, patch: { value: response.text } } // TODO: Check if passing text for value is ok
+    const responsesPatch = responses.map(({ id, ...response }) => {
+      return { id, patch: { value: response } }
     })
+
     // Send Application in one-block mutation to update Application + Responses
     applicationSubmitMutation({
       variables: {
