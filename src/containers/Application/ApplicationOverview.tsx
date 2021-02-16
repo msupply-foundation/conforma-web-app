@@ -101,8 +101,6 @@ const ApplicationOverview: React.FC = () => {
       if (currentUser?.username === strings.USER_NONREGISTERED) {
         logout()
       }
-      console.log('Called the next Page')
-
       push(`/application/${serialNumber}/submission`)
     }
   }, [submitted, isProcessing])

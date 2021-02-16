@@ -110,8 +110,6 @@ const ReviewPageWrapper: React.FC = () => {
     }
   }
 
-  console.log(reviewSections)
-
   const submitReviewHandler = () => {
     if (validateReviewHandler() && !updating && !processing) {
       submit(reviewerResponses)

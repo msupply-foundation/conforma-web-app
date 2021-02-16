@@ -103,8 +103,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     return (
       <List style={{ paddingLeft: '50px' }} link>
         {Object.entries(pages).map(([pageName, { number, state }]) => {
-          console.log('Section', sectionCode, ' page', pageName)
-
           return (
             <List.Item
               active={isActivePage(sectionCode, number)}
