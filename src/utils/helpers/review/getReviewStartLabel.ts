@@ -1,5 +1,6 @@
 import strings from '../../constants'
 import { REVIEW_STATUS } from '../../data/reviewStatus'
+import { ReviewStatus } from '../../generated/graphql'
 
 /**
  * @function getReviewStartLabel
@@ -7,7 +8,7 @@ import { REVIEW_STATUS } from '../../data/reviewStatus'
  * @param status Current status of review
  */
 const getReviewStartLabel = (status: string) => {
-  switch (status as REVIEW_STATUS) {
+  switch (status) {
     case REVIEW_STATUS.DRAFT:
       return strings.BUTTON_REVIEW_CONTINUE
     case REVIEW_STATUS.PENDING:

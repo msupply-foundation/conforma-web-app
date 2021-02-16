@@ -15,7 +15,6 @@ import useGetReviewAssignment from '../../utils/hooks/useGetReviewAssignment'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { Link } from 'react-router-dom'
-import { ReviewStatus } from '../../utils/generated/graphql'
 import { AssignmentDetails, SectionState } from '../../utils/types'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import { useUserState } from '../../contexts/UserState'
@@ -35,14 +34,6 @@ const ReviewOverview: React.FC = () => {
     reviewerId: currentUser?.userId as number,
     serialNumber,
   })
-
-  useEffect(() => {
-    if (assignment && assignment.review) {
-      const { id, status } = assignment.review
-      if (status === ReviewStatus.Submitted || status === ReviewStatus.Draft)
-        push(`/application/${serialNumber}/review/${id}`)
-    }
-  }, [assignment])
 
   const { processing, error: createReviewError, create } = useCreateReview({
     reviewerId: currentUser?.userId as number,
@@ -94,6 +85,8 @@ const ReviewOverview: React.FC = () => {
   const getActionButton = ({ review }: AssignmentDetails) => {
     if (review) {
       const { id, status } = review
+      console.log('status', status)
+
       return (
         <Button
           as={Link}
