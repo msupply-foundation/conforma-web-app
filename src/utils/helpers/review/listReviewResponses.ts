@@ -21,9 +21,9 @@ const listReviewResponses = ({ userId, reviewSections }: ReviewerResponsesPayloa
         .filter(({ element }) => element.category === TemplateElementCategory.Question)
         .filter(({ review }) => review?.decision !== undefined)
         .map(({ review }) => review as ReviewQuestionDecision)
-      sectionReviewResponses.concat(pageReviewResponses)
+      sectionReviewResponses.push(...pageReviewResponses)
     })
-    listReviewResponses.concat(sectionReviewResponses)
+    listReviewResponses.push(...sectionReviewResponses)
   })
   return listReviewResponses
 }
