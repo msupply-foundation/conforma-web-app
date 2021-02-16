@@ -12,7 +12,7 @@ import messages from '../../utils/messages'
 import useSubmitReview from '../../utils/hooks/useSubmitReview'
 import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
 import { validateReview } from '../../utils/helpers/validation/validateReview'
-import listReviewResponses from '../../utils/helpers/review/listReviewerResponses'
+import listReviewResponses from '../../utils/helpers/review/listReviewResponses'
 
 const decisionAreaInitialState = { open: false, review: null, summaryViewProps: null }
 
