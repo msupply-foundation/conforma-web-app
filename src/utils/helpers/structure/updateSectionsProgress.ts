@@ -21,7 +21,7 @@ interface GetSectionsProgressProps {
 
 /**
  * @function updateSectionsProgress
- * Update sections strucutre and add the progress on each section.
+ * Update sections structure and add the progress on each section.
  * After the sections structure is built (by useLoadSectionsStructure)
  * this utility function runs revalidateAll and retrieve each section
  * progress to be displayed in the UI for an application.
