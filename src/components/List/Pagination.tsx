@@ -2,6 +2,7 @@ import React from 'react'
 import { Pagination, Dropdown, Grid } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
+import config from '../../config.json'
 
 interface PaginationProps {
   totalCount: number
@@ -41,14 +42,11 @@ const PaginationBar: React.FC<PaginationProps> = ({ totalCount }) => {
               selection
               compact
               floated="right"
-              options={[
-                // TO-DO: change these to more useful values for production
-                { key: 2, text: '2', value: 2 },
-                { key: 5, text: '5', value: 5 },
-                { key: 10, text: '10', value: 10 },
-                { key: 20, text: '20', value: 20 },
-                { key: 50, text: '50', value: 50 },
-              ]}
+              options={config.paginationPresets.map((value: number) => ({
+                key: value,
+                text: String(value),
+                value,
+              }))}
               value={perPage}
               onChange={handlePerPageChange}
               style={{ minWidth: 20 }}
