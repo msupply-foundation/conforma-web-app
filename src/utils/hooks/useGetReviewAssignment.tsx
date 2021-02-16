@@ -3,6 +3,7 @@ import {
   GetReviewAssignmentQuery,
   Review,
   ReviewAssignment,
+  ReviewAssignmentStatus,
   ReviewQuestionAssignment,
   ReviewResponse,
   ReviewStatus,
@@ -86,6 +87,7 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
 
       setAssignment({
         id: currentAssignment.id,
+        status: currentAssignment.status as ReviewAssignmentStatus,
         review: review ? { id: review.id, status: review.status as ReviewStatus } : undefined,
         questions: getAssignedQuestions({ reviewQuestions }),
       })

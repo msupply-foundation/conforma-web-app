@@ -8,6 +8,7 @@ export default gql`
       nodes {
         id
         applicationId
+        status
         reviewer {
           id
           username

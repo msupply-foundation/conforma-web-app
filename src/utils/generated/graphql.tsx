@@ -19443,7 +19443,7 @@ export type GetReviewAssignmentQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'applicationId' | 'stageId'>
+      & Pick<ReviewAssignment, 'id' | 'applicationId' | 'status' | 'stageId'>
       & { reviewer?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'id' | 'username' | 'firstName' | 'lastName'>
@@ -20209,6 +20209,7 @@ export const GetReviewAssignmentDocument = gql`
     nodes {
       id
       applicationId
+      status
       reviewer {
         id
         username

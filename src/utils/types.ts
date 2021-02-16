@@ -1,6 +1,7 @@
 import {
   ApplicationList,
   PermissionPolicyType,
+  ReviewAssignmentStatus,
   ReviewResponseDecision,
   ReviewStatus,
   TemplateElement,
@@ -102,6 +103,7 @@ interface ApplicationStages {
 
 interface AssignmentDetails {
   id: number
+  status: ReviewAssignmentStatus
   review?: ReviewDetails
   questions: ReviewQuestion[]
 }
