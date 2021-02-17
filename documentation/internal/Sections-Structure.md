@@ -12,6 +12,12 @@ A few hooks are used to build and update the sections structure. This structure 
 
 ## Flow diagrams
 
+![legend](images/Sections-Structure-legend.png)
+
 ### Application
 
-![ApplicationFlow](images/Development_Structure_ApplicationFlow.png)
+![ApplicationFlow](images/Sections-Structure-Application-Flow.png)
+
+### Review
+
+![ReviewFlow](images/Sections-Structure-Review-Flow.png)
