@@ -8,27 +8,12 @@ export default gql`
       nodes {
         id
         applicationId
-        reviewer {
-          id
-          username
-          firstName
-          lastName
-        }
+        reviewerId
         stageId
         reviews {
           nodes {
             id
             status
-            reviewResponses {
-              nodes {
-                id
-                comment
-                decision
-                applicationResponse {
-                  id
-                }
-              }
-            }
           }
         }
         reviewQuestionAssignments {
@@ -39,7 +24,7 @@ export default gql`
                 id
                 index
               }
-              applicationResponses(condition: { applicationId: $applicationId }) {
+              applicationResponses {
                 nodes {
                   id
                 }

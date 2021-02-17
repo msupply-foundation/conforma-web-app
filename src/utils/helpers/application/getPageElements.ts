@@ -1,15 +1,12 @@
 import { ApplicationElementStates } from '../../types'
+
 interface GetPageElementsProps {
   elementsState: ApplicationElementStates
   sectionIndex: number
   pageNumber: number
 }
 
-export const getPageElements = ({
-  elementsState,
-  sectionIndex,
-  pageNumber,
-}: GetPageElementsProps) => {
+const getPageElements = ({ elementsState, sectionIndex, pageNumber }: GetPageElementsProps) => {
   const result = Object.values(elementsState)
     .filter(({ isVisible }) => isVisible)
     .filter((element) => sectionIndex === element.sectionIndex && pageNumber === element.page)
@@ -17,3 +14,5 @@ export const getPageElements = ({
 
   return result
 }
+
+export default getPageElements

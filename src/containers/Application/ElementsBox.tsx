@@ -1,27 +1,30 @@
+import { stripIgnoredCharacters } from 'graphql'
 import React from 'react'
 import { Form, Header, Label, Segment } from 'semantic-ui-react'
 import { ApplicationViewWrapper } from '../../formElementPlugins'
-import { Page, ResponsesByCode } from '../../utils/types'
 import strings from '../../utils/constants'
+import { ElementState, ResponsesByCode } from '../../utils/types'
 
 interface ElementsBoxProps {
   sectionTitle: string
   responsesByCode: ResponsesByCode
-  page?: Page
+  elements: ElementState[]
+  anyRequiredQuestions: boolean
   forceValidation: boolean
 }
 
 const ElementsBox: React.FC<ElementsBoxProps> = ({
   sectionTitle,
   responsesByCode,
-  page,
+  elements,
+  anyRequiredQuestions,
   forceValidation,
 }) => {
-  return page ? (
+  return elements ? (
     <Segment vertical style={{ marginBottom: 20 }}>
       <Header content={sectionTitle} />
       <Form>
-        {page.state.map(({ element }) => {
+        {elements.map((element) => {
           const {
             code,
             pluginCode,
@@ -51,6 +54,7 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
             />
           )
         })}
+        {anyRequiredQuestions && <p>(*) Required questions</p>}
       </Form>
     </Segment>
   ) : (

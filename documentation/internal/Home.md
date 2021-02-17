@@ -7,9 +7,5 @@ Please see [ReadMe](../__README.md) for information about maintaining this docum
 - [Setup](setup/Setup.md)
 - [Overview of Navigation/URL structure](Overview-of-Navigation-&-URL-structure.md)
 - [Filters for Applications](Filters-for-Applications.md)
-
-### Development
-
-- [Workflow](Development-Workflow.md)
-- [Sections Strucutre](Development-Sections-Structure.md)
+- [Development workflow](Development-Workflow.md)
 - [Back-end Docs](https://github.com/openmsupply/application-manager-server/wiki)

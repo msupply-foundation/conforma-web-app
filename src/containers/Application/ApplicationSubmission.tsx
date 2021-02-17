@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Header, Icon, Label, List, Message, Segment } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
 import strings from '../../utils/constants'
-import { EvaluatorParameters, User } from '../../utils/types'
+import { EvaluatorParameters } from '../../utils/types'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
@@ -22,7 +22,6 @@ const ApplicationSubmission: React.FC = () => {
 
   const { error, loading, application, appStages, isApplicationReady } = useLoadApplication({
     serialNumber: serialNumber as string,
-    currentUser: currentUser as User,
     networkFetch: true,
   })
 

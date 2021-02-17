@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
   Application,
-  ApplicationSection,
   ApplicationStageStatusAll,
   Template,
   TemplateStage,
@@ -81,8 +80,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         startMessage: startMessage ? startMessage : undefined,
       })
 
-      const applicationSection = application.applicationSections.nodes as ApplicationSection[]
-      const sections = getApplicationSections(applicationSection)
+      const sections = getApplicationSections(application.applicationSections)
       setSections(sections)
 
       const templateStages = application.template?.templateStages.nodes as TemplateStage[]

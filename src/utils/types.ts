@@ -2,7 +2,6 @@ import {
   ApplicationList,
   PermissionPolicyType,
   ReviewResponseDecision,
-  ReviewStatus,
   TemplateElement,
   TemplateElementCategory,
 } from './generated/graphql'
@@ -34,31 +33,30 @@ export {
   DecisionAreaState,
   IGraphQLConnection,
   LooseString,
-  Page,
-  PageElements,
   PageElementsStatuses,
+  ProgressInApplication,
+  ProgressInPage,
   ProgressStatus,
   ResponseFull,
   ResponsePayload,
   ResponsesByCode,
   ResumeSection,
   ReviewDetails,
-  ReviewProgressStatus,
   ReviewQuestion,
   ReviewQuestionDecision,
   ReviewerResponsesPayload,
-  SectionState,
+  SectionElementStates,
   SectionDetails,
   SectionProgress,
-  SectionsStructure,
+  SectionStructure,
   StageAndStatus,
   TemplateDetails,
   TemplateElementState,
   TemplatePermissions,
   TemplatesDetails,
+  ValidationMode,
   ValidateFunction,
   ValidateObject,
-  ValidatedSections,
   ValidityFailure,
   RevalidateResult,
   UseGetApplicationProps,
@@ -183,6 +181,7 @@ interface IGraphQLConnection {
   fetch: Function
   endpoint: string
 }
+
 interface EvaluatorParameters {
   objects?: object
   pgConnection?: any // Any, because not likely to be used in front-end
@@ -192,20 +191,24 @@ interface EvaluatorParameters {
 
 type LooseString = string | null | undefined
 
-interface Page {
-  number: number
-  state: PageElements
-}
-
-type PageElements = {
-  element: ElementState
-  response: ResponseFull | null
-  review?: ReviewQuestionDecision
-}[]
-
 interface PageElementsStatuses {
   [code: string]: ProgressStatus
 }
+interface ProgressInPage {
+  pageNumber: number
+  status: ProgressStatus
+  canNavigate: boolean
+  isActive: boolean
+}
+
+type ProgressInApplication = {
+  code: string
+  title: string
+  status?: ProgressStatus
+  canNavigate: boolean
+  isActive: boolean
+  pages: ProgressInPage[]
+}[]
 
 type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
 interface ResponseFull {
@@ -234,7 +237,7 @@ interface ResumeSection {
 
 interface ReviewDetails {
   id: number
-  status: ReviewStatus
+  status: string
 }
 
 interface ReviewerDetails {
@@ -242,8 +245,6 @@ interface ReviewerDetails {
   firstName: string
   lastName: string
 }
-
-type ReviewProgressStatus = 'NOT_COMPLETED' | 'DECLINED' | 'APPROVED'
 
 interface ReviewQuestion {
   code: string
@@ -258,15 +259,30 @@ interface ReviewQuestionDecision {
 
 interface ReviewerResponsesPayload {
   userId: number
-  reviewSections: SectionsStructure
+  reviewSections: SectionStructure
 }
+
+interface SectionElementStates {
+  section: SectionDetails
+  assigned?: ReviewerDetails
+  pages: {
+    [pageName: string]: {
+      element: ElementState
+      response: ResponseFull | null
+      review?: ReviewQuestionDecision
+    }[]
+  }
+}
+
 interface SectionDetails {
   id: number
   index: number
   code: string
   title: string
   totalPages: number
+  progress?: SectionProgress
 }
+
 interface SectionProgress {
   total: number
   done: number
@@ -274,17 +290,9 @@ interface SectionProgress {
   valid: boolean
   linkedPage: number
 }
-interface SectionState {
-  details: SectionDetails
-  progress?: SectionProgress
-  assigned?: ReviewerDetails
-  pages: {
-    [pageName: string]: Page
-  }
-}
-interface SectionsStructure {
-  [code: string]: SectionState
-}
+
+type SectionStructure = SectionElementStates[]
+
 interface StageAndStatus {
   stageId: number | undefined
   stage: string
@@ -333,10 +341,8 @@ interface ValidateObject {
   validate: ValidateFunction
 }
 
-interface ValidatedSections {
-  sectionsWithProgress: SectionsStructure
-  elementsToUpdate: ValidityFailure[]
-}
+type ValidationMode = 'STRICT' | 'LOOSE'
+
 interface ValidityFailure {
   id: number
   isValid: boolean
@@ -345,19 +351,14 @@ interface ValidityFailure {
 
 interface RevalidateResult {
   allValid: boolean
-  progress: SectionProgress
-  sectionCode?: string
   validityFailures: ValidityFailure[]
+  progress: SectionProgress
 }
 
 interface UseGetApplicationProps {
   serialNumber: string
-  currentUser: User
-  sectionCode?: string
-  page?: number
-  networkFetch?: boolean
   isApplicationReady?: boolean
-  setApplicationState?: Function
+  networkFetch?: boolean
 }
 
 interface User {

@@ -15,12 +15,12 @@ import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import strings from '../../utils/constants'
 import { ReviewResponseDecision, TemplateElementCategory } from '../../utils/generated/graphql'
 import messages from '../../utils/messages'
-import { ReviewQuestionDecision, ResponsesByCode, SectionState } from '../../utils/types'
+import { ReviewQuestionDecision, ResponsesByCode, SectionElementStates } from '../../utils/types'
 
 interface ReviewSectionProps {
   allResponses: ResponsesByCode
   assignedToYou: boolean
-  reviewSection: SectionState
+  reviewSection: SectionElementStates
   updateResponses: (props: ReviewQuestionDecision[]) => void
   setDecisionArea: (
     review: ReviewQuestionDecision,
@@ -39,7 +39,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
   canEdit,
   showError,
 }) => {
-  const { assigned, details: section, pages } = reviewSection
+  const { assigned, section, pages } = reviewSection
   const [isOpen, setIsOpen] = useState(false)
 
   const showSectionAssignment = assignedToYou ? (
@@ -87,8 +87,8 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
           </Grid>
         </Accordion.Title>
         <Accordion.Content active={isOpen}>
-          {Object.entries(pages).map(([pageName, { state }]) => {
-            const elementsToReview = state
+          {Object.entries(pages).map(([pageName, elements]) => {
+            const elementsToReview = elements
               .filter(({ review }) => review && review.decision === undefined)
               .map(({ review }) => review as ReviewQuestionDecision)
             const reviewsNumber = elementsToReview.length
@@ -97,7 +97,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                 <Header as="h3" style={{ color: 'DarkGrey' }}>
                   {pageName}
                 </Header>
-                {state.map(({ element, response, review }) => {
+                {elements.map(({ element, response, review }) => {
                   const { category } = element
                   const summaryViewProps = {
                     element,
@@ -126,7 +126,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                               )}
                             </Grid.Column>
                           </Grid.Row>
-                          {review && canEdit && review.decision && (
+                          {review && review.decision && (
                             <Grid.Row>
                               <Card fluid>
                                 <Card.Content>

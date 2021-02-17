@@ -2,12 +2,11 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Grid, Header, Segment, Accordion, Icon } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../formElementPlugins'
-import strings from '../../utils/constants'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
-import { ResponsesByCode, SectionState } from '../../utils/types'
+import { ResponsesByCode, SectionElementStates } from '../../utils/types'
 
 interface SectionSummaryProps {
-  sectionPages: SectionState
+  sectionPages: SectionElementStates
   serialNumber: string
   allResponses: ResponsesByCode
   canEdit: boolean
@@ -19,7 +18,7 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
   allResponses,
   canEdit,
 }) => {
-  const { details: section, pages } = sectionPages
+  const { section, pages } = sectionPages
   const [isOpen, setIsOpen] = useState(true)
 
   const handleClick = () => {
@@ -42,11 +41,11 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
           </Grid>
         </Accordion.Title>
         <Accordion.Content active={isOpen}>
-          {Object.entries(pages).map(([pageName, { state }]) => (
+          {Object.entries(pages).map(([pageName, elements]) => (
             <Segment key={`SectionSummary_${pageName}`}>
               <p>{pageName}</p>
               <Segment.Group>
-                {state.map(({ element, response }) => {
+                {elements.map(({ element, response }) => {
                   const { category, isEditable } = element
                   const pageCode = pageName?.replace(' ', '')
                   return (
@@ -65,11 +64,12 @@ const SectionSummary: React.FC<SectionSummaryProps> = ({
                               isEditable &&
                               canEdit && (
                                 <Button
-                                  content={strings.BUTTON_SUMMARY_EDIT}
                                   size="small"
                                   as={Link}
                                   to={`/application/${serialNumber}/${section.code}/${pageCode}`}
-                                />
+                                >
+                                  Edit
+                                </Button>
                               )}
                           </Grid.Column>
                         </Grid.Row>

@@ -2,16 +2,15 @@ import { useEffect, useState } from 'react'
 import {
   ReviewResponse,
   ReviewStatus,
-  ReviewStatusHistory,
   useGetReviewQuery,
   useGetReviewStatusQuery,
   User,
 } from '../generated/graphql'
-import { SectionsStructure, User as UserType } from '../types'
+import { SectionStructure } from '../types'
+import useLoadApplication from './useLoadApplication'
+import useGetResponsesAndElementState from './useGetResponsesAndElementState'
 import useTriggerProcessing from './useTriggerProcessing'
-import { useUserState } from '../../contexts/UserState'
-import useLoadSectionsStructure from './useLoadSectionsStructure'
-import updateSectionsReviews from '../helpers/structure/updateSectionsReviews'
+import buildSectionsStructure from '../helpers/application/buildSectionsStructure'
 
 interface UseLoadReviewProps {
   reviewId: number
@@ -20,31 +19,28 @@ interface UseLoadReviewProps {
 
 const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
   const [applicationName, setApplicationName] = useState<string>('')
-  const [reviewSections, setReviewSections] = useState<SectionsStructure>()
+  const [reviewSections, setReviewSections] = useState<SectionStructure>()
   const [reviewStatus, setReviewStatus] = useState<ReviewStatus>()
   const [isReviewReady, setIsReviewReady] = useState(false)
   const [isReviewLoaded, setIsReviewLoaded] = useState(false)
   const [reviewError, setReviewError] = useState<string>()
-  const {
-    userState: { currentUser },
-  } = useUserState()
 
-  const {
-    error: structureError,
-    application,
-    allResponses,
-    sectionsStructure,
+  const { error: applicationError, application, sections, isApplicationReady } = useLoadApplication(
+    {
+      serialNumber,
+    }
+  )
+
+  const { error: responsesError, responsesByCode, elementsState } = useGetResponsesAndElementState({
+    serialNumber,
     isApplicationReady,
-  } = useLoadSectionsStructure({
-    serialNumber: serialNumber as string,
-    currentUser: currentUser as UserType,
   })
 
   const { data, error, loading } = useGetReviewQuery({
     variables: {
       reviewId,
     },
-    skip: !isApplicationReady,
+    skip: !isApplicationReady || !elementsState,
     fetchPolicy: 'network-only',
   })
 
@@ -54,7 +50,7 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     // triggerType: 'reviewTrigger',
   })
 
-  const { data: statusData, error: statusError } = useGetReviewStatusQuery({
+  const { data: statusData, error: statusError, loading: statusLoading } = useGetReviewStatusQuery({
     variables: {
       reviewId,
     },
@@ -70,27 +66,28 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     }
 
     if (application) setApplicationName(application.name)
-    if (data?.review?.reviewResponses && sectionsStructure && isApplicationReady) {
+    if (data?.review?.reviewResponses && elementsState && responsesByCode) {
       const reviewResponses = data.review.reviewResponses.nodes as ReviewResponse[]
       const reviewer = data.review.reviewer as User
-      const reviewStructure = updateSectionsReviews({
-        sectionsStructure,
+      const sectionsStructure = buildSectionsStructure({
+        sections,
+        elementsState,
+        responsesByCode,
         reviewResponses,
         reviewer,
       })
 
-      setReviewSections(reviewStructure)
+      setReviewSections(sectionsStructure)
       setIsReviewLoaded(true)
     }
-  }, [data, isApplicationReady])
+  }, [data])
 
   useEffect(() => {
     if (!statusData) return
-    const statuses = statusData?.reviewStatusHistories?.nodes as ReviewStatusHistory[]
+    const statuses = statusData?.reviewStatusHistories?.nodes as ReviewStatus[]
     if (statuses.length > 1) console.log('More than one status resulted for 1 review!')
-
-    const { status } = statuses[0] // Should only have one result
-    setReviewStatus(status as ReviewStatus)
+    const status = statuses[0] // Should only have one result
+    setReviewStatus(status)
     setIsReviewReady(true)
   }, [statusData])
 
@@ -98,13 +95,13 @@ const useLoadReview = ({ reviewId, serialNumber }: UseLoadReviewProps) => {
     applicationName,
     isReviewReady,
     reviewSections,
-    reviewStatus,
-    allResponses,
+    responsesByCode,
+    loading: loading || statusLoading || isTriggerProcessing,
     error: error
       ? (error.message as string)
       : statusError
       ? (statusError.message as string)
-      : structureError || reviewError || triggerError,
+      : applicationError || responsesError || reviewError || triggerError,
   }
 }
 
