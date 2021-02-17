@@ -48,6 +48,7 @@ interface SummaryViewProps {
   parameters: BasicObject
   response: ResponseFull | null
   Markdown: any
+  DefaultSummaryView: React.FC
 }
 
 interface SummaryViewWrapperProps {
