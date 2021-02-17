@@ -1,23 +1,22 @@
 import { LabelProps } from 'semantic-ui-react'
 import strings from '../../constants'
-import { REVIEW_STATUS } from '../../data/reviewStatus'
-import { ReviewAssignmentStatus } from '../../generated/graphql'
-import { AssignmentDetails, ReviewDetails } from '../../types'
+import { ReviewAssignmentStatus, ReviewStatus } from '../../generated/graphql'
+import { AssignmentDetails } from '../../types'
 
 /**
  * @function getStartLabel
  * Get label string of option to display on Review start page
  * @param status Current status of review
  */
-export const getStartLabel = (status: string) => {
+export const getStartLabel = (status: ReviewStatus) => {
   switch (status) {
-    case REVIEW_STATUS.DRAFT:
+    case ReviewStatus.Draft:
       return strings.BUTTON_REVIEW_CONTINUE
-    case REVIEW_STATUS.PENDING:
+    case ReviewStatus.Pending:
       return strings.BUTTON_REVIEW_RE_REVIEW
-    case REVIEW_STATUS.CHANGES_REQUESTED:
+    case ReviewStatus.ChangesRequested:
       return strings.BUTTON_REVIEW_MAKE_UPDATES
-    case REVIEW_STATUS.SUBMITTED || REVIEW_STATUS.LOCKED:
+    case ReviewStatus.Submitted || ReviewStatus.Locked:
       return strings.BUTTON_REVIEW_VIEW
     default:
       return status
@@ -37,15 +36,15 @@ export const getStatusLabel = (assignment: AssignmentDetails): LabelProps | unde
 
   // Would get here if assignmentStatus is Assigned or AvailableForSelfAssignment
   if (!review?.status) return { color: 'red', label: strings.LABEL_REVIEW_NOT_STARTED }
-  const status = review.status as string
+  const { status } = review
   switch (status) {
-    case REVIEW_STATUS.DRAFT:
+    case ReviewStatus.Draft:
       return { color: 'brown', label: status }
-    case REVIEW_STATUS.PENDING:
+    case ReviewStatus.Pending:
       return { color: 'yellow', label: status }
-    case REVIEW_STATUS.CHANGES_REQUESTED:
+    case ReviewStatus.ChangesRequested:
       return { color: 'red', label: status }
-    case REVIEW_STATUS.SUBMITTED || REVIEW_STATUS.LOCKED:
+    case ReviewStatus.Submitted || ReviewStatus.Locked:
       return { label: status }
     default:
       return { label: status }
