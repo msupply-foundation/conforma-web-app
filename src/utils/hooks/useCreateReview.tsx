@@ -5,6 +5,7 @@ import {
   Review,
   useCreateReviewMutation,
 } from '../../utils/generated/graphql'
+import getReviewAssignmentQuery from '../graphql/queries/getReviewAssignment.query'
 
 export interface CreateReviewProps {
   reviewAssigmentId: number
@@ -12,10 +13,12 @@ export interface CreateReviewProps {
 }
 
 interface UseCreateReviewProps {
+  reviewerId: number
+  serialNumber: string
   onCompleted: (id: number) => void
 }
 
-const useCreateReview = ({ onCompleted }: UseCreateReviewProps) => {
+const useCreateReview = ({ reviewerId, serialNumber, onCompleted }: UseCreateReviewProps) => {
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState<ApolloError | undefined>()
 
@@ -29,6 +32,12 @@ const useCreateReview = ({ onCompleted }: UseCreateReviewProps) => {
       setProcessing(false)
       setError(error)
     },
+    refetchQueries: [
+      {
+        query: getReviewAssignmentQuery,
+        variables: { reviewerId, serialNumber },
+      },
+    ],
   })
 
   const createReview = ({ reviewAssigmentId, applicationResponses }: CreateReviewProps) => {
