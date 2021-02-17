@@ -179,7 +179,7 @@ How to use:
    - Response value: string | null
 
 4. The two object evaluated elements and the Q&R are passed to `ElementsBox`.
-5. The `ElementsBox` passes each related element to the `ApplicationViewWrapper`. Question elements would also receive the Q&R object (the map of all responses in the application) and the mutation to update the response `onFieldChage`. It should only update to the server and CACHE if the response is valid.
+5. The `ElementsBox` passes each related element to the `ApplicationViewWrapper`. Question elements would also receive the Q&R object (the map of all responses in the application) and the mutation to update the response `onFieldChange`. It should only update to the server and CACHE if the response is valid.
 6. The `ApplicationPage` will update the elements and Q&R object when the **elements' query and responses** gets triggerd by a new mutation of one of the elements' valid response on the current application.
 
 ![states diagram](images/Development-Workflow-States.png)
