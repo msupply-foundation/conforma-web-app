@@ -17,6 +17,8 @@ export default {
   BUTTON_REVIEW_VIEW: 'View review',
   BUTTON_SUMMARY: 'Review & Summary',
   BUTTON_SUBMIT: 'Submit',
+  BUTTON_CLEAR_SEARCH: 'Clear Search',
+  PLACEHOLDER_SEARCH: 'Search Applications',
   DATE_APPLICATION_PLACEHOLDER: '31/12/2020',
   ERROR_APPLICATION_CREATE: 'Problem to load application creation page',
   ERROR_APPLICATION_ELEMENTS: 'Elements area cannot be displayed',
