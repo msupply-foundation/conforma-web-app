@@ -88,7 +88,6 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
         </Accordion.Title>
         <Accordion.Content active={isOpen}>
           {Object.entries(pages).map(([pageName, elements]) => {
-            console.log('elements', elements)
             const elementsToReview = elements
               .filter(({ review }) => review && review.decision === undefined)
               .map(({ review }) => review as ReviewQuestionDecision)
@@ -105,53 +104,27 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                     response,
                     allResponses,
                   }
-                  // if (category === TemplateElementCategory.Question) {
-                  return (
-                    <Segment key={`ReviewElement_${element.code}`}>
-                      <Grid columns={2} verticalAlign="middle">
-                        <Grid.Row>
-                          <Grid.Column>
-                            <SummaryViewWrapper {...summaryViewProps} />
-                          </Grid.Column>
-                          <Grid.Column>
-                            {review && canEdit && (
-                              <Container textAlign="right">
-                                {review?.decision === undefined && (
-                                  <Button
-                                    size="small"
-                                    onClick={() => setDecisionArea(review, summaryViewProps)}
-                                    content={strings.BUTTON_REVIEW_RESPONSE}
-                                  />
-                                )}
-                              </Container>
-                            )}
-                          </Grid.Column>
-                        </Grid.Row>
-                        {review && review.decision && (
+                  if (category === TemplateElementCategory.Question) {
+                    return (
+                      <Segment key={`ReviewElement_${element.code}`}>
+                        <Grid columns={2} verticalAlign="middle">
                           <Grid.Row>
-                            <Card fluid>
-                              <Card.Content>
-                                <Grid>
-                                  <Grid.Row>
-                                    <Grid.Column width="10">
-                                      <Card.Header>{review.decision}</Card.Header>
-                                      <Card.Description>{review.comment}</Card.Description>
-                                      {assigned && (
-                                        <Card.Meta>{`${assigned.firstName} ${assigned.lastName}`}</Card.Meta>
-                                      )}
-                                    </Grid.Column>
-                                    <Grid.Column width="2">
-                                      <Icon
-                                        name="pencil square"
-                                        color="blue"
-                                        style={{ minWidth: 100 }}
-                                        onClick={() => setDecisionArea(review, summaryViewProps)}
-                                      />
-                                    </Grid.Column>
-                                  </Grid.Row>
-                                </Grid>
-                              </Card.Content>
-                            </Card>
+                            <Grid.Column>
+                              <SummaryViewWrapper {...summaryViewProps} />
+                            </Grid.Column>
+                            <Grid.Column>
+                              {review && canEdit && (
+                                <Container textAlign="right">
+                                  {review?.decision === undefined && (
+                                    <Button
+                                      size="small"
+                                      onClick={() => setDecisionArea(review, summaryViewProps)}
+                                      content={strings.BUTTON_REVIEW_RESPONSE}
+                                    />
+                                  )}
+                                </Container>
+                              )}
+                            </Grid.Column>
                           </Grid.Row>
                           {review && canEdit && review.decision && (
                             <Grid.Row>
@@ -184,7 +157,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                       </Segment>
                     )
                   }
-                )}
+                })}
                 {reviewsNumber > 0 && (
                   <Button
                     color="blue"
