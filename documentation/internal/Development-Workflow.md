@@ -35,7 +35,7 @@ Inside the `/src` folder all files used for the Front-end are distribuited in th
 
 #### Example
 
-![ApplicationPage example](images/Development_Workflow_ApplicationPage_components.png)
+![ApplicationPage example](images/Development-Workflow-ApplicationPage.png)
 
 ### contexts
 
@@ -182,7 +182,7 @@ How to use:
 5. The `ElementsBox` passes each related element to the `ApplicationViewWrapper`. Question elements would also receive the Q&R object (the map of all responses in the application) and the mutation to update the response `onFieldChage`. It should only update to the server and CACHE if the response is valid.
 6. The `ApplicationPage` will update the elements and Q&R object when the **elements' query and responses** gets triggerd by a new mutation of one of the elements' valid response on the current application.
 
-![states diagram](images/Development_Workflow_states.png)
+![states diagram](images/Development-Workflow-States.png)
 
 ##### Example of context state
 
@@ -202,7 +202,7 @@ This context area is used between components to share a few states:
 
 Process of creating one Application, going through each page until reach the summary page where the user can submit.
 
-![development_workflow_applications](images/Development_workflow_applications.png)
+![development_workflow_applications](images/Development-Workflow-Applications.png)
 
 ---
 
