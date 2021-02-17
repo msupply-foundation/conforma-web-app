@@ -85,7 +85,6 @@ const ReviewOverview: React.FC = () => {
   const getActionButton = ({ review }: AssignmentDetails) => {
     if (review) {
       const { id, status } = review
-      console.log('status', status)
 
       return (
         <Button
