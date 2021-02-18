@@ -34,11 +34,10 @@ const ListWrapper: React.FC = () => {
   useEffect(() => {
     if (!type || !userRole) redirectToDefault()
     else {
-      setApplicationsRows(undefined)
       const columns = mapColumnsByRole(userRole as USER_ROLES)
       setColumns(columns)
     }
-  }, [applications, query])
+  }, [query])
 
   useEffect(() => {
     if (!loading && applications) {
