@@ -11,5 +11,5 @@ Please see [ReadMe](../__README.md) for information about maintaining this docum
 ### Development
 
 - [Workflow](Development-Workflow.md)
-- [Sections Strucutre](Development-Sections-Structure.md)
+- [Sections Strucutre](Sections-Structure.md)
 - [Back-end Docs](https://github.com/openmsupply/application-manager-server/wiki)
