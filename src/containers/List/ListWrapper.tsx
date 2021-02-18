@@ -29,15 +29,11 @@ const ListWrapper: React.FC = () => {
   useEffect(() => {
     if (!templatePermissions) return
     if (!type || !userRole) redirectToDefault()
-  }, [templatePermissions])
-
-  useEffect(() => {
-    if (!type || !userRole) redirectToDefault()
     else {
       const columns = mapColumnsByRole(userRole as USER_ROLES)
       setColumns(columns)
     }
-  }, [query])
+  }, [query, templatePermissions])
 
   useEffect(() => {
     if (!loading && applications) {
