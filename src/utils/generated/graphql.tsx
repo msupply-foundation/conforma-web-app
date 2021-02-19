@@ -19659,12 +19659,26 @@ export type GetReviewAssignmentQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'applicationId' | 'reviewerId' | 'stageId'>
-      & { reviews: (
+      & Pick<ReviewAssignment, 'id' | 'applicationId' | 'stageId'>
+      & { reviewer?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username' | 'firstName' | 'lastName'>
+      )>, reviews: (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'Review' }
           & Pick<Review, 'id' | 'status'>
+          & { reviewResponses: (
+            { __typename?: 'ReviewResponsesConnection' }
+            & { nodes: Array<Maybe<(
+              { __typename?: 'ReviewResponse' }
+              & Pick<ReviewResponse, 'id' | 'comment' | 'decision'>
+              & { applicationResponse?: Maybe<(
+                { __typename?: 'ApplicationResponse' }
+                & Pick<ApplicationResponse, 'id'>
+              )> }
+            )>> }
+          ) }
         )>> }
       ), reviewQuestionAssignments: (
         { __typename?: 'ReviewQuestionAssignmentsConnection' }
@@ -20411,12 +20425,27 @@ export const GetReviewAssignmentDocument = gql`
     nodes {
       id
       applicationId
-      reviewerId
+      reviewer {
+        id
+        username
+        firstName
+        lastName
+      }
       stageId
       reviews {
         nodes {
           id
           status
+          reviewResponses {
+            nodes {
+              id
+              comment
+              decision
+              applicationResponse {
+                id
+              }
+            }
+          }
         }
       }
       reviewQuestionAssignments {
@@ -20427,7 +20456,7 @@ export const GetReviewAssignmentDocument = gql`
               id
               index
             }
-            applicationResponses {
+            applicationResponses(condition: {applicationId: $applicationId}) {
               nodes {
                 id
               }
