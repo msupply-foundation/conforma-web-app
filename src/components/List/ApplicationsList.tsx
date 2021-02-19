@@ -37,12 +37,6 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {/* <Table.Row>
-            <Table.Cell colSpan={columns.length} textAlign="center">
-              <Loading />
-            </Table.Cell>
-          </Table.Row> */}
-
           {loading ? (
             <Table.Row colSpan={columns.length} textAlign="center">
               <Table.Cell colSpan={columns.length} textAlign="center">
