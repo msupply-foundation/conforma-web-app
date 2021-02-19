@@ -120,18 +120,14 @@ const ListWrapper: React.FC = () => {
           </Grid.Row>
         </Grid>
       </Segment>
-      {loading ? (
-        <Loading />
-      ) : (
-        columns &&
-        applicationsRows && (
-          <ApplicationsList
-            columns={columns}
-            applications={applicationsRows}
-            sortQuery={sortQuery}
-            handleSort={handleSort}
-          />
-        )
+      {columns && applicationsRows && (
+        <ApplicationsList
+          columns={columns}
+          applications={applicationsRows}
+          sortQuery={sortQuery}
+          handleSort={handleSort}
+          loading={loading}
+        />
       )}
       <PaginationBar totalCount={applicationCount} />
     </Container>
