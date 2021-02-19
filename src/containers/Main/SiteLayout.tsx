@@ -19,7 +19,6 @@ import {
   TemplateList,
   TemplateNew,
   Template,
-  ApplicationStart,
 } from '../../components'
 import { ApplicationCreate, ApplicationPageWrapper } from '../Application'
 import { ReviewOverview, ReviewPageWrapper } from '../Review'
@@ -29,6 +28,7 @@ import ApplicationSubmission from '../Application/ApplicationSubmission'
 import UserArea from '../User/UserArea'
 import ListWrapper from '../List/ListWrapper'
 import ReviewSubmission from '../../components/Review/ReviewSubmission'
+import ApplicationWrapper from '../Application/ApplicationWrapper'
 
 const SiteLayout: React.FC = () => {
   return (
@@ -43,6 +43,9 @@ const SiteLayout: React.FC = () => {
         </Route>
         <Route exact path="/applications">
           <ListWrapper />
+        </Route>
+        <Route path="/application-new">
+          <ApplicationWrapper />
         </Route>
         <Route exact path="/application/new">
           <ApplicationProvider>
@@ -65,6 +68,7 @@ const SiteLayout: React.FC = () => {
         <Route exact path="/application/:serialNumber/summary">
           <ApplicationOverview />
         </Route>
+
         <Route exact path="/application/:serialNumber/review">
           <ReviewOverview />
         </Route>
