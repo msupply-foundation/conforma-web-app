@@ -5,8 +5,9 @@ import {
   TemplateSection,
   useGetTemplateQuery,
 } from '../generated/graphql'
+import { buildTemplateSectionsStructure } from '../helpers/structure/buildSectionsStructure'
 import { getTemplateSections } from '../helpers/application/getSectionsDetails'
-import { SectionDetails, TemplateDetails } from '../types'
+import { SectionsStructure, TemplateDetails } from '../types'
 
 interface useLoadTemplateProps {
   templateCode: string
@@ -15,7 +16,7 @@ interface useLoadTemplateProps {
 const useLoadTemplate = (props: useLoadTemplateProps) => {
   const { templateCode } = props
   const [template, setTemplate] = useState<TemplateDetails>()
-  const [sections, setSections] = useState<SectionDetails[] | null>(null)
+  const [sectionsStructure, setSectionsStructure] = useState<SectionsStructure>()
   const [elementsIds, setElementsIds] = useState<number[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -46,7 +47,7 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
       return
     }
 
-    const { id, code, name, startMessage, templateSections } = template
+    const { id, code, name, startMessage } = template
 
     setTemplate({
       id,
@@ -55,12 +56,14 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
       startMessage: startMessage ? startMessage : undefined,
     })
 
+    const templateSections = template.templateSections.nodes as TemplateSection[]
     const sections = getTemplateSections(templateSections)
-    setSections(sections)
+    const sectionsStructure = buildTemplateSectionsStructure(sections)
+    setSectionsStructure(sectionsStructure)
 
     const elements = [] as number[]
 
-    templateSections.nodes.forEach((section) => {
+    templateSections.forEach((section) => {
       const { templateElementsBySectionId } = section as TemplateSection
       templateElementsBySectionId.nodes.forEach((element) => {
         if (element?.id && element.category === 'QUESTION') elements.push(element.id)
@@ -76,7 +79,7 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
     apolloError,
     error,
     template,
-    sections,
+    sectionsStructure,
     elementsIds,
   }
 }
