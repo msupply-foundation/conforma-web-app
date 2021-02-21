@@ -11,10 +11,11 @@ import { ColumnDetails, SortQuery } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
+import PaginationBar from '../../components/List/Pagination'
 import { ApplicationList } from '../../utils/generated/graphql'
 
 const ListWrapper: React.FC = () => {
-  const { query, push, updateQuery } = useRouter()
+  const { query, updateQuery } = useRouter()
   const { type, userRole } = query
   const {
     userState: { templatePermissions },
@@ -23,18 +24,16 @@ const ListWrapper: React.FC = () => {
   const [searchText, setSearchText] = useState<string>(query?.search)
   const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
   const [applicationsRows, setApplicationsRows] = useState<ApplicationList[] | undefined>()
-  const { error, loading, applications } = useListApplications(query)
+  const { error, loading, applications, applicationCount } = useListApplications(query)
 
   useEffect(() => {
-    if (templatePermissions) {
-      if (!type || !userRole) redirectToDefault()
-      else {
-        setApplicationsRows(undefined)
-        const columns = mapColumnsByRole(userRole as USER_ROLES)
-        setColumns(columns)
-      }
+    if (!templatePermissions) return
+    if (!type || !userRole) redirectToDefault()
+    else {
+      const columns = mapColumnsByRole(userRole as USER_ROLES)
+      setColumns(columns)
     }
-  }, [templatePermissions, type, userRole])
+  }, [query, templatePermissions])
 
   useEffect(() => {
     if (!loading && applications) {
@@ -59,7 +58,7 @@ const ListWrapper: React.FC = () => {
     const redirectType = type || Object.keys(templatePermissions)[0]
     const redirectUserRole = userRole || getDefaultUserRole(templatePermissions, redirectType)
     if (redirectType && redirectUserRole)
-      push(`/applications?type=${redirectType}&user-role=${redirectUserRole}`)
+      updateQuery({ type: redirectType, userRole: redirectUserRole })
     else {
       // To-Do: Show 404 if no default found
     }
@@ -87,8 +86,6 @@ const ListWrapper: React.FC = () => {
 
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
-  ) : loading ? (
-    <Loading />
   ) : (
     <Container>
       <FilterList />
@@ -129,8 +126,10 @@ const ListWrapper: React.FC = () => {
           applications={applicationsRows}
           sortQuery={sortQuery}
           handleSort={handleSort}
+          loading={loading}
         />
       )}
+      <PaginationBar totalCount={applicationCount} />
     </Container>
   )
 }
