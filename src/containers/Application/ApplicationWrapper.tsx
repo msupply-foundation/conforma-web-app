@@ -7,6 +7,7 @@ import { useUserState } from '../../contexts/UserState'
 import useLoadApplication from '../../utils/hooks/useLoadApplicationNEW'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { FullStructure, User } from '../../utils/types'
+import { ApplicationHome } from './'
 
 const ApplicationWrapper: React.FC = () => {
   const { pathname, query } = useRouter()
@@ -26,7 +27,7 @@ const ApplicationWrapper: React.FC = () => {
   ) : structure ? (
     <Switch>
       <Route exact path="/applicationNEW/:serialNumber">
-        <ApplicationStartNew serialNumber={serialNumber} structure={structure} />
+        <ApplicationHome structure={structure} />
       </Route>
       <Route exact path="/applicationNEW/:serialNumber/:sectionCode/Page:page">
         <ApplicationPageNew serialNumber={serialNumber} structure={structure} />

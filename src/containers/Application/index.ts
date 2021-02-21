@@ -2,5 +2,14 @@ import ApplicationCreate from './ApplicationCreate'
 import ApplicationPageWrapper from './ApplicationPageWrapper'
 import ElementsBox from './ElementsBox'
 import NavigationBox from './NavigationBox'
+import ApplicationWrapper from './ApplicationWrapper'
+import ApplicationHome from './ApplicationHome'
 
-export { ApplicationCreate, ApplicationPageWrapper, ElementsBox, NavigationBox }
+export {
+  ApplicationCreate,
+  ApplicationPageWrapper,
+  ApplicationHome,
+  ApplicationWrapper,
+  ElementsBox,
+  NavigationBox,
+}
