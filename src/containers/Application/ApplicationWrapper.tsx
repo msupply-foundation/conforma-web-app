@@ -27,16 +27,16 @@ const ApplicationWrapper: React.FC = () => {
   ) : structure ? (
     <Switch>
       <Route exact path="/applicationNEW/:serialNumber">
-        <ApplicationHome structure={structure} />
+        <ApplicationStartNEW serialNumber={serialNumber} structure={structure} />
       </Route>
       <Route exact path="/applicationNEW/:serialNumber/:sectionCode/Page:page">
-        <ApplicationPageNew serialNumber={serialNumber} structure={structure} />
+        <ApplicationPageNEW serialNumber={serialNumber} structure={structure} />
       </Route>
       <Route exact path="/applicationNEW/:serialNumber/summary">
-        <ApplicationSummaryNew serialNumber={serialNumber} structure={structure} />
+        <ApplicationSummaryNEW serialNumber={serialNumber} structure={structure} />
       </Route>
       <Route exact path="/applicationNEW/:serialNumber/submission">
-        <ApplicationSubmissionNew serialNumber={serialNumber} structure={structure} />
+        <ApplicationSubmissionNEW serialNumber={serialNumber} structure={structure} />
       </Route>
       <Route>
         <NoMatch />
@@ -50,19 +50,19 @@ interface ApplicationProps {
   structure: FullStructure
 }
 
-const ApplicationStartNew: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
+const ApplicationStartNEW: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
   return <Header>START PAGE</Header>
 }
 
-const ApplicationPageNew: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
+const ApplicationPageNEW: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
   return <Header>IN PROGRESS PAGE</Header>
 }
 
-const ApplicationSummaryNew: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
+const ApplicationSummaryNEW: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
   return <Header>SUMMARY PAGE</Header>
 }
 
-const ApplicationSubmissionNew: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
+const ApplicationSubmissionNEW: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
   return <Header>SUBMISSION PAGE</Header>
 }
 
