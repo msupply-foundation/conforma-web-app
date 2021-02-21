@@ -19539,6 +19539,47 @@ export type GetApplicationQuery = (
   )> }
 );
 
+export type GetApplicationNewQueryVariables = Exact<{
+  serial: Scalars['String'];
+}>;
+
+
+export type GetApplicationNewQuery = (
+  { __typename?: 'Query' }
+  & { applicationBySerial?: Maybe<(
+    { __typename?: 'Application' }
+    & { template?: Maybe<(
+      { __typename?: 'Template' }
+      & { templateStages: (
+        { __typename?: 'TemplateStagesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'TemplateStage' }
+          & TemplateStageFragment
+        )>> }
+      ) }
+      & TemplateFragment
+    )>, applicationSections: (
+      { __typename?: 'ApplicationSectionsConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ApplicationSection' }
+        & Pick<ApplicationSection, 'id'>
+        & { templateSection?: Maybe<(
+          { __typename?: 'TemplateSection' }
+          & { templateElementsBySectionId: (
+            { __typename?: 'TemplateElementsConnection' }
+            & { nodes: Array<Maybe<(
+              { __typename?: 'TemplateElement' }
+              & ElementFragment
+            )>> }
+          ) }
+          & SectionFragment
+        )> }
+      )>> }
+    ) }
+    & ApplicationFragment
+  )> }
+);
+
 export type GetApplicationStatusQueryVariables = Exact<{
   serial: Scalars['String'];
 }>;
@@ -20221,6 +20262,64 @@ export function useGetApplicationLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetApplicationQueryHookResult = ReturnType<typeof useGetApplicationQuery>;
 export type GetApplicationLazyQueryHookResult = ReturnType<typeof useGetApplicationLazyQuery>;
 export type GetApplicationQueryResult = Apollo.QueryResult<GetApplicationQuery, GetApplicationQueryVariables>;
+export const GetApplicationNewDocument = gql`
+    query getApplicationNew($serial: String!) {
+  applicationBySerial(serial: $serial) {
+    ...Application
+    template {
+      ...Template
+      templateStages {
+        nodes {
+          ...TemplateStage
+        }
+      }
+    }
+    applicationSections {
+      nodes {
+        id
+        templateSection {
+          ...Section
+          templateElementsBySectionId {
+            nodes {
+              ...Element
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    ${ApplicationFragmentDoc}
+${TemplateFragmentDoc}
+${TemplateStageFragmentDoc}
+${SectionFragmentDoc}
+${ElementFragmentDoc}`;
+
+/**
+ * __useGetApplicationNewQuery__
+ *
+ * To run a query within a React component, call `useGetApplicationNewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetApplicationNewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetApplicationNewQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *   },
+ * });
+ */
+export function useGetApplicationNewQuery(baseOptions?: Apollo.QueryHookOptions<GetApplicationNewQuery, GetApplicationNewQueryVariables>) {
+        return Apollo.useQuery<GetApplicationNewQuery, GetApplicationNewQueryVariables>(GetApplicationNewDocument, baseOptions);
+      }
+export function useGetApplicationNewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApplicationNewQuery, GetApplicationNewQueryVariables>) {
+          return Apollo.useLazyQuery<GetApplicationNewQuery, GetApplicationNewQueryVariables>(GetApplicationNewDocument, baseOptions);
+        }
+export type GetApplicationNewQueryHookResult = ReturnType<typeof useGetApplicationNewQuery>;
+export type GetApplicationNewLazyQueryHookResult = ReturnType<typeof useGetApplicationNewLazyQuery>;
+export type GetApplicationNewQueryResult = Apollo.QueryResult<GetApplicationNewQuery, GetApplicationNewQueryVariables>;
 export const GetApplicationStatusDocument = gql`
     query getApplicationStatus($serial: String!) {
   applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true, statusIsCurrent: true}) {

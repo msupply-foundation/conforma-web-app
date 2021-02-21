@@ -26,12 +26,13 @@ export {
   ContextApplicationState,
   ContextListState,
   CurrentPage,
+  DecisionAreaState,
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
   ElementsActivityState,
   EvaluatorParameters,
-  DecisionAreaState,
+  FullStructure,
   IGraphQLConnection,
   LooseString,
   Page,
@@ -138,6 +139,11 @@ interface CurrentPage {
   section: SectionDetails
   page: number
 }
+interface DecisionAreaState {
+  open: boolean
+  review: ReviewQuestionDecision | null
+  summaryViewProps: SummaryViewWrapperProps | null
+}
 
 type ElementPluginParameterValue = string | number | string[] | IQueryNode
 
@@ -173,21 +179,22 @@ interface ElementsActivityState {
   areTimestampsInSequence: boolean
 }
 
-interface DecisionAreaState {
-  open: boolean
-  review: ReviewQuestionDecision | null
-  summaryViewProps: SummaryViewWrapperProps | null
-}
-
-interface IGraphQLConnection {
-  fetch: Function
-  endpoint: string
-}
 interface EvaluatorParameters {
   objects?: object
   pgConnection?: any // Any, because not likely to be used in front-end
   graphQLConnection?: IGraphQLConnection
   APIfetch?: Function
+}
+
+interface FullStructure {
+  info: ApplicationDetails
+  sections: SectionsStructure
+  stages: ApplicationStages
+}
+
+interface IGraphQLConnection {
+  fetch: Function
+  endpoint: string
 }
 
 type LooseString = string | null | undefined
