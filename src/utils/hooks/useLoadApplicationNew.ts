@@ -13,7 +13,7 @@ import {
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import useTriggerProcessing from './useTriggerProcessing'
 import { getApplicationSections } from '../helpers/application/getSectionsDetails'
-import { buildSectionsStructure } from '../helpers/structure/buildSectionsStructureNew'
+import { buildSectionsStructure } from '../helpers/structure/buildSectionsStructureNEW'
 import {
   Application,
   ApplicationSection,
@@ -22,7 +22,7 @@ import {
   TemplateStage,
   useGetApplicationNewQuery,
   useGetApplicationStatusQuery,
-} from '../../utils/generated/graphql'
+} from '../generated/graphql'
 
 const useLoadApplication = ({
   currentUser,
@@ -38,25 +38,26 @@ const useLoadApplication = ({
     variables: {
       serial: serialNumber,
     },
-    pollInterval: 500,
-    skip: isLoading,
+    // pollInterval: 500,
+    // skip: isLoading,
     fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
   })
 
-  const { error: triggerError, isTriggerProcessing } = useTriggerProcessing({
-    isApplicationLoaded: data !== undefined,
-    serialNumber,
-    // triggerType: 'applicationTrigger',
-  })
+  // const { error: triggerError, isTriggerProcessing } = useTriggerProcessing({
+  //   isApplicationLoaded: data !== undefined,
+  //   serialNumber,
+  //   // triggerType: 'applicationTrigger',
+  // })
 
-  const { data: statusData, error: statusError } = useGetApplicationStatusQuery({
-    variables: { serial: serialNumber },
-    skip: isTriggerProcessing,
-    fetchPolicy: 'network-only',
-  })
+  // const { data: statusData, error: statusError } = useGetApplicationStatusQuery({
+  //   variables: { serial: serialNumber },
+  //   skip: isTriggerProcessing,
+  //   fetchPolicy: 'network-only',
+  // })
 
   useEffect(() => {
-    if (!data || !statusData || isTriggerProcessing) return
+    // if (!data || !statusData || isTriggerProcessing) return
+    if (!data) return
     const application = data.applicationBySerial as Application
 
     if (!application) {
@@ -124,10 +125,12 @@ const useLoadApplication = ({
         setIsLoading(false)
       }
     )
-  }, [data, statusData, isTriggerProcessing])
+    // }, [data, statusData, isTriggerProcessing])
+  }, [data])
 
   return {
-    error: structureError || error?.message || statusError?.message || triggerError,
+    // error: structureError || error?.message || statusError?.message || triggerError,
+    error: structureError || error?.message,
     isLoading,
     structure,
     template,
