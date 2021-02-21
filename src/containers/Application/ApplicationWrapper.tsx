@@ -7,19 +7,19 @@ import { NoMatch } from '../../components'
 const ApplicationWrapper: React.FC = () => {
   return (
     <Switch>
-      <Route exact path="/application_new/new">
+      <Route exact path="/applicationNEW/new">
         <ApplicationCreateNew />
       </Route>
-      <Route exact path="/application_new/:serialNumber">
+      <Route exact path="/applicationNEW/:serialNumber">
         <ApplicationStartNew />
       </Route>
-      <Route exact path="/application_new/:serialNumber/:sectionCode/Page:page">
+      <Route exact path="/applicationNEW/:serialNumber/:sectionCode/Page:page">
         <ApplicationPageNew />
       </Route>
-      <Route exact path="/application_new/:serialNumber/summary">
+      <Route exact path="/applicationNEW/:serialNumber/summary">
         <ApplicationSummaryNew />
       </Route>
-      <Route exact path="/application_new/:serialNumber/submission">
+      <Route exact path="/applicationNEW/:serialNumber/submission">
         <ApplicationSubmissionNew />
       </Route>
       <Route>
