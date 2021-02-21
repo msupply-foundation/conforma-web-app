@@ -26,16 +26,16 @@ const ApplicationWrapper: React.FC = () => {
   ) : structure ? (
     <Switch>
       <Route exact path="/applicationNEW/:serialNumber">
-        <ApplicationStartNEW serialNumber={serialNumber} structure={structure} />
+        <ApplicationStartNEW structure={structure} />
       </Route>
       <Route exact path="/applicationNEW/:serialNumber/:sectionCode/Page:page">
-        <ApplicationPageNEW serialNumber={serialNumber} structure={structure} />
+        <ApplicationPageNEW structure={structure} />
       </Route>
       <Route exact path="/applicationNEW/:serialNumber/summary">
-        <ApplicationSummaryNEW serialNumber={serialNumber} structure={structure} />
+        <ApplicationSummaryNEW structure={structure} />
       </Route>
       <Route exact path="/applicationNEW/:serialNumber/submission">
-        <ApplicationSubmissionNEW serialNumber={serialNumber} structure={structure} />
+        <ApplicationSubmissionNEW structure={structure} />
       </Route>
       <Route>
         <NoMatch />
@@ -45,23 +45,22 @@ const ApplicationWrapper: React.FC = () => {
 }
 
 interface ApplicationProps {
-  serialNumber: string
   structure: FullStructure
 }
 
-const ApplicationStartNEW: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
+const ApplicationStartNEW: React.FC<ApplicationProps> = ({ structure }) => {
   return <Header>START PAGE</Header>
 }
 
-const ApplicationPageNEW: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
+const ApplicationPageNEW: React.FC<ApplicationProps> = ({ structure }) => {
   return <Header>IN PROGRESS PAGE</Header>
 }
 
-const ApplicationSummaryNEW: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
+const ApplicationSummaryNEW: React.FC<ApplicationProps> = ({ structure }) => {
   return <Header>SUMMARY PAGE</Header>
 }
 
-const ApplicationSubmissionNEW: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
+const ApplicationSubmissionNEW: React.FC<ApplicationProps> = ({ structure }) => {
   return <Header>SUBMISSION PAGE</Header>
 }
 
