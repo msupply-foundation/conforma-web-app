@@ -27,7 +27,7 @@ const ApplicationWrapper: React.FC = () => {
   ) : structure ? (
     <Switch>
       <Route exact path="/applicationNEW/:serialNumber">
-        <ApplicationStartNEW serialNumber={serialNumber} structure={structure} />
+        <ApplicationHome structure={structure} />
       </Route>
       <Route exact path="/applicationNEW/:serialNumber/:sectionCode/Page:page">
         <ApplicationPageNEW serialNumber={serialNumber} structure={structure} />
@@ -48,10 +48,6 @@ const ApplicationWrapper: React.FC = () => {
 interface ApplicationProps {
   serialNumber: string
   structure: FullStructure
-}
-
-const ApplicationStartNEW: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
-  return <Header>START PAGE</Header>
 }
 
 const ApplicationPageNEW: React.FC<ApplicationProps> = ({ serialNumber, structure }) => {
