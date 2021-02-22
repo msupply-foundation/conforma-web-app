@@ -144,7 +144,6 @@ const useGetResponsesAndElementState = ({
     return evaluatedElement
   }
 
-  console.log('RBC', responsesByCode)
   return {
     error: apolloError ? (apolloError.message as string) : responsesError,
     loading,
