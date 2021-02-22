@@ -1,6 +1,6 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import { Header } from 'semantic-ui-react'
+import { Header, Message } from 'semantic-ui-react'
 
 import { Loading, NoMatch } from '../../components'
 import { useUserState } from '../../contexts/UserState'
@@ -8,6 +8,7 @@ import useLoadApplication from '../../utils/hooks/useLoadApplicationNEW'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { FullStructure, User } from '../../utils/types'
 import { ApplicationHome } from './'
+import strings from '../../utils/constants'
 
 const ApplicationWrapper: React.FC = () => {
   const { pathname, query } = useRouter()
@@ -22,7 +23,9 @@ const ApplicationWrapper: React.FC = () => {
     networkFetch: true,
   })
 
-  return isLoading ? (
+  return error ? (
+    <Message error header={strings.ERROR_APPLICATION_PAGE} />
+  ) : isLoading ? (
     <Loading />
   ) : structure ? (
     <Switch>
@@ -42,7 +45,9 @@ const ApplicationWrapper: React.FC = () => {
         <NoMatch />
       </Route>
     </Switch>
-  ) : null
+  ) : (
+    <NoMatch />
+  )
 }
 
 interface ApplicationProps {

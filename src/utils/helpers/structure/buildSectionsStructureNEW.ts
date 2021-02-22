@@ -1,14 +1,7 @@
-import {
-  ApplicationElementStates,
-  ResponsesByCode,
-  SectionDetails,
-  SectionsStructure,
-} from '../../types'
-import { getPageElements } from '../application/getPageElements'
-
+import { ElementBase, SectionDetails, SectionsStructureNEW } from '../../types'
 interface BuildSectionsStructureProps {
   sections: SectionDetails[]
-  elementsState: ApplicationElementStates
+  baseElements: ElementBase[]
 }
 
 /**
@@ -18,20 +11,20 @@ interface BuildSectionsStructureProps {
  * an application or review pages. The structure is
  * defined by the SectionStructure type.
  * @param sections Array with all sections details
- * @param elementsState object with all elements in application
+ * @param baseElements Array with all elements in application
  * @returns Object of complete sections structure
  */
 export const buildSectionsStructure = ({
   sections,
-  elementsState,
-}: BuildSectionsStructureProps): SectionsStructure => {
+  baseElements,
+}: BuildSectionsStructureProps): SectionsStructureNEW => {
   // Create the sections and pages structure to display each section's element
   // Will also add the responses for each element, and can add reviews if received by props
-  return sections.reduce((sectionsStructure: SectionsStructure, section) => {
+  return sections.reduce((sectionsStructure: SectionsStructureNEW, section) => {
     const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
     const pages = pageNumbers.reduce((pages, pageNumber) => {
       const elements = getPageElements({
-        elementsState,
+        baseElements,
         sectionIndex: section.index,
         pageNumber,
       })
@@ -54,8 +47,23 @@ export const buildSectionsStructure = ({
   }, {})
 }
 
+interface GetPageElementsProps {
+  baseElements: ElementBase[]
+  sectionIndex: number
+  pageNumber: number
+}
+
+const getPageElements = ({ baseElements, sectionIndex, pageNumber }: GetPageElementsProps) => {
+  const result = baseElements
+    // .filter(({ isVisible }) => isVisible)
+    .filter((element) => sectionIndex === element.sectionIndex && pageNumber === element.page)
+    .sort((a, b) => a.elementIndex - b.elementIndex)
+
+  return result
+}
+
 export const buildTemplateSectionsStructure = (sections: SectionDetails[]) => {
-  return sections.reduce((sectionsStructure: SectionsStructure, section) => {
+  return sections.reduce((sectionsStructure: SectionsStructureNEW, section) => {
     return {
       ...sectionsStructure,
       [section.code]: {
