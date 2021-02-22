@@ -12,7 +12,6 @@ import { ValidationState } from '../formElementPlugins/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SummaryViewWrapperProps } from '../formElementPlugins/types'
 import { APPLICATION_COLUMNS, USER_ROLES } from './data'
-import { DateTime } from 'luxon'
 
 export {
   ApplicationDetails,
@@ -29,9 +28,11 @@ export {
   CurrentPage,
   DecisionAreaState,
   ElementBase,
+  ElementBaseNEW,
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
+  ElementStateNEW,
   ElementsActivityState,
   EvaluatorParameters,
   FullStructure,
@@ -62,6 +63,7 @@ export {
   StageAndStatus,
   TemplateDetails,
   TemplateElementState,
+  TemplateElementStateNEW,
   TemplatePermissions,
   TemplatesDetails,
   ValidateFunction,
@@ -173,7 +175,28 @@ interface ElementBase {
   parameters: any
 }
 
+interface ElementBaseNEW {
+  id: number
+  code: string
+  title: string
+  pluginCode: string
+  sectionIndex: number
+  sectionCode: string
+  elementIndex: number
+  page: number
+  category: TemplateElementCategory
+  validationExpression: IQueryNode
+  validationMessage: string | null
+  parameters: any
+}
+
 interface ElementState extends ElementBase {
+  isEditable: boolean
+  isRequired: boolean
+  isVisible: boolean
+}
+
+interface ElementStateNEW extends ElementBaseNEW {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
@@ -223,7 +246,7 @@ interface PageNEW {
 }
 
 type PageElement = {
-  element: ElementBase | ElementState
+  element: ElementBaseNEW | ElementStateNEW
   response: ResponseFull | null
   review?: ReviewQuestionDecision
 }
@@ -241,7 +264,7 @@ interface ResponseFull {
   reference?: any // Not yet decided how to represent
   isValid?: boolean | null
   hash?: string
-  timeCreated?: DateTime
+  timeCreated?: Date
   customValidation?: ValidationState
 }
 
@@ -347,6 +370,12 @@ interface TemplateElementState extends ElementBase {
   visibilityCondition: IQueryNode
   isEditable: IQueryNode
   // isValid: boolean | null
+}
+
+interface TemplateElementStateNEW extends ElementBaseNEW {
+  isRequiredExpression: IQueryNode
+  isVisibleExpression: IQueryNode
+  isEditableExpression: IQueryNode
 }
 
 interface TemplatePermissions {

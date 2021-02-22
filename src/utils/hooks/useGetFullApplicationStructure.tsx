@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import {
-  ElementState,
+  ElementStateNEW,
   FullStructure,
   PageElement,
   ResponseFull,
   ResponsesByCode,
-  TemplateElementState,
+  TemplateElementStateNEW,
 } from '../types'
-import { useGetAllResponsesQuery } from '../generated/graphql'
+import { ApplicationResponse, useGetAllResponsesQuery } from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 
@@ -43,15 +43,11 @@ const useGetFullApplicationStructure = (structure: FullStructure) => {
 
     // Build responses by code (and only keep latest)
     const responseObject: any = {}
-    const responseArray = data?.applicationBySerial?.applicationResponses?.nodes
-    responseArray?.forEach((response: any) => {
-      const {
-        id,
-        isValid,
-        value,
-        templateElement: { code },
-        timeCreated,
-      } = response
+    const responseArray = data?.applicationBySerial?.applicationResponses
+      ?.nodes as ApplicationResponse[]
+    responseArray?.forEach((response) => {
+      const { id, isValid, value, templateElement, timeCreated } = response
+      const code = templateElement?.code as string
       if (!(code in responseObject) || timeCreated > responseObject[code].timeCreated)
         responseObject[code] = {
           id,
@@ -65,7 +61,7 @@ const useGetFullApplicationStructure = (structure: FullStructure) => {
 
     // Note: Flattened elements are evaluated IN-PLACE, so structure can be
     // updated with evaluated elements and responses without re-building
-    // structure again
+    // structure
     evaluateElements(flattenedElements.map((elem: PageElement) => elem.element)).then((result) => {
       result.forEach((evaluatedElement, index) => {
         flattenedElements[index].element = evaluatedElement
@@ -77,23 +73,23 @@ const useGetFullApplicationStructure = (structure: FullStructure) => {
     })
   }, [data])
 
-  async function evaluateElements(elements: TemplateElementState[]) {
-    const promiseArray: Promise<ElementState>[] = []
+  async function evaluateElements(elements: TemplateElementStateNEW[]) {
+    const promiseArray: Promise<ElementStateNEW>[] = []
     elements.forEach((element) => {
       promiseArray.push(evaluateSingleElement(element))
     })
     return await Promise.all(promiseArray)
   }
 
-  async function evaluateSingleElement(element: TemplateElementState): Promise<ElementState> {
+  async function evaluateSingleElement(element: TemplateElementStateNEW): Promise<ElementStateNEW> {
     const evaluationParameters = {
       objects: { responses: responsesByCode, currentUser },
       // TO-DO: Also send org objects etc.
       // graphQLConnection: TO-DO
     }
-    const isEditable = evaluateExpression(element.isEditable, evaluationParameters)
-    const isRequired = evaluateExpression(element.isRequired, evaluationParameters)
-    const isVisible = evaluateExpression(element.visibilityCondition, evaluationParameters)
+    const isEditable = evaluateExpression(element.isEditableExpression, evaluationParameters)
+    const isRequired = evaluateExpression(element.isRequiredExpression, evaluationParameters)
+    const isVisible = evaluateExpression(element.isVisibleExpression, evaluationParameters)
     const results = await Promise.all([isEditable, isRequired, isVisible])
     const evaluatedElement = {
       ...element,
