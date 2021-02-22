@@ -26,5 +26,10 @@ export default gql`
         }
       }
     }
+    applicationTriggerStates(condition: { serial: $serial }, first: 1) {
+      nodes {
+        applicationTrigger
+      }
+    }
   }
 `

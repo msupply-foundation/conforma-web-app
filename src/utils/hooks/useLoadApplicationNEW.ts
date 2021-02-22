@@ -19,26 +19,43 @@ import {
   useGetApplicationNewQuery,
 } from '../generated/graphql'
 
+const MAX_REFETCH = 10
+
 const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
   const [isLoading, setIsLoading] = useState(true)
   const [structureError, setStructureError] = useState('')
   const [structure, setFullStructure] = useState<FullStructure>()
   const [template, setTemplate] = useState<TemplateDetails>()
+  const [refetchAttempts, setRefetchAttempts] = useState(0)
 
-  const { data, error } = useGetApplicationNewQuery({
+  const { data, loading, error, refetch } = useGetApplicationNewQuery({
     variables: {
       serial: serialNumber,
     },
     fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
+    notifyOnNetworkStatusChange: true,
   })
 
   useEffect(() => {
-    if (!data) return
+    if (!data || loading) return
     const application = data.applicationBySerial as Application
 
-    if (!application) {
+    if (!application || !application.template) {
       setIsLoading(false)
       return
+    }
+
+    // Checking if trigger is running before loading current status
+    if (data.applicationTriggerStates?.nodes) {
+      const triggerResult = data.applicationTriggerStates?.nodes
+      if (!triggerResult.every((result) => result === null) && refetchAttempts < MAX_REFETCH) {
+        setTimeout(() => {
+          console.log('Will refetch loadApplication', refetchAttempts) // TODO: Remove log
+          setRefetchAttempts(refetchAttempts + 1)
+          refetch()
+        }, 500)
+        return
+      }
     }
 
     const { id, code, name, startMessage } = application.template as Template
@@ -98,7 +115,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       sections: buildSectionsStructure({ sections, baseElements }),
     })
     setIsLoading(false)
-  }, [data])
+  }, [data, loading])
 
   return {
     error: structureError || error?.message,

@@ -19577,6 +19577,12 @@ export type GetApplicationNewQuery = (
       )>> }
     ) }
     & ApplicationFragment
+  )>, applicationTriggerStates?: Maybe<(
+    { __typename?: 'ApplicationTriggerStatesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ApplicationTriggerState' }
+      & Pick<ApplicationTriggerState, 'applicationTrigger'>
+    )>> }
   )> }
 );
 
@@ -20286,6 +20292,11 @@ export const GetApplicationNewDocument = gql`
           }
         }
       }
+    }
+  }
+  applicationTriggerStates(condition: {serial: $serial}, first: 1) {
+    nodes {
+      applicationTrigger
     }
   }
 }
