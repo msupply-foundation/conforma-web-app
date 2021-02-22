@@ -24,11 +24,11 @@ import {
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
 import {
-  ApplicationStage,
   CurrentPage,
   Page,
   ResumeSection,
   SectionsStructure,
+  StageAndStatus,
   User,
 } from '../../utils/types'
 import useLoadSectionsStructure from '../../utils/hooks/useLoadSectionsStructure'
@@ -101,8 +101,7 @@ const ApplicationPageWrapper: React.FC = () => {
     const { sectionsWithProgress } = validatedSections
     setSections(sectionsWithProgress)
 
-    const stage = application?.stage
-    const { status } = stage as ApplicationStage
+    const { status } = application?.current as StageAndStatus
     if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired) {
       replace(`/application/${serialNumber}/summary`)
     } else if (!sectionCode || !page) {

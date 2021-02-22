@@ -1,5 +1,6 @@
 import {
   ApplicationList,
+  ApplicationStatus,
   PermissionPolicyType,
   ReviewResponseDecision,
   ReviewStatus,
@@ -88,7 +89,7 @@ interface ApplicationDetails {
   name: string
   outcome: string
   isLinear: boolean
-  stage?: ApplicationStage
+  current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
 }
 
 interface ApplicationElementStates {
@@ -98,13 +99,12 @@ interface ApplicationElementStates {
 interface ApplicationStage {
   id: number
   name: string
-  status: string
-  date: Date
 }
 
 interface ApplicationStageMap {
   [key: string]: ApplicationStage
 }
+
 interface ApplicationStages {
   stages: StageDetails[]
   submissionMessage: string
@@ -347,9 +347,9 @@ interface SectionsStructureNEW {
   [code: string]: SectionStateNEW
 }
 interface StageAndStatus {
-  stageId: number | undefined
-  stage: string
-  status: string
+  stage: ApplicationStage
+  status: ApplicationStatus
+  date: Date
 }
 
 interface StageDetails {
