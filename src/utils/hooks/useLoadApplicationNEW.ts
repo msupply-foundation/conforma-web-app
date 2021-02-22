@@ -44,7 +44,8 @@ const useLoadApplication = ({
     const application = data.applicationBySerial as Application
 
     if (!application) {
-      setStructureError('No application found')
+      setIsLoading(false)
+      return
     }
 
     const { id, code, name, startMessage } = application.template as Template
