@@ -10,8 +10,9 @@ import { FullStructure, User } from '../../utils/types'
 import strings from '../../utils/constants'
 
 const ApplicationWrapper: React.FC = () => {
-  const { pathname, query } = useRouter()
+  const { match, query } = useRouter()
   const { serialNumber } = query
+  const { path } = match
   const {
     userState: { currentUser },
   } = useUserState()
@@ -28,16 +29,16 @@ const ApplicationWrapper: React.FC = () => {
     <Loading />
   ) : structure ? (
     <Switch>
-      <Route exact path="/applicationNEW/:serialNumber">
+      <Route exact path={path}>
         <ApplicationStartNEW structure={structure} />
       </Route>
-      <Route exact path="/applicationNEW/:serialNumber/:sectionCode/Page:page">
+      <Route exact path={`${path}/:sectionCode/Page:page`}>
         <ApplicationPageNEW structure={structure} />
       </Route>
-      <Route exact path="/applicationNEW/:serialNumber/summary">
+      <Route exact path={`${path}/summary`}>
         <ApplicationSummaryNEW structure={structure} />
       </Route>
-      <Route exact path="/applicationNEW/:serialNumber/submission">
+      <Route exact path={`${path}/summary/submission`}>
         <ApplicationSubmissionNEW structure={structure} />
       </Route>
       <Route>
