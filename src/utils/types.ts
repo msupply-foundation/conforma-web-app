@@ -27,6 +27,7 @@ export {
   ContextListState,
   CurrentPage,
   DecisionAreaState,
+  ElementBase,
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
@@ -37,6 +38,8 @@ export {
   LooseString,
   Page,
   PageElements,
+  PageNEW,
+  PageElementsNEW,
   PageElementsStatuses,
   ProgressStatus,
   ResponseFull,
@@ -52,6 +55,8 @@ export {
   SectionDetails,
   SectionProgress,
   SectionsStructure,
+  SectionStateNEW,
+  SectionsStructureNEW,
   StageAndStatus,
   TemplateDetails,
   TemplateElementState,
@@ -188,7 +193,7 @@ interface EvaluatorParameters {
 
 interface FullStructure {
   info: ApplicationDetails
-  sections: SectionsStructure
+  sections: SectionsStructureNEW
   stages: ApplicationStages
 }
 
@@ -206,6 +211,17 @@ interface Page {
 
 type PageElements = {
   element: ElementState
+  response: ResponseFull | null
+  review?: ReviewQuestionDecision
+}[]
+
+interface PageNEW {
+  number: number
+  state: PageElementsNEW
+}
+
+type PageElementsNEW = {
+  element: ElementBase | ElementState
   response: ResponseFull | null
   review?: ReviewQuestionDecision
 }[]
@@ -291,6 +307,17 @@ interface SectionState {
 }
 interface SectionsStructure {
   [code: string]: SectionState
+}
+interface SectionStateNEW {
+  details: SectionDetails
+  progress?: SectionProgress
+  assigned?: ReviewerDetails
+  pages: {
+    [pageName: string]: PageNEW
+  }
+}
+interface SectionsStructureNEW {
+  [code: string]: SectionStateNEW
 }
 interface StageAndStatus {
   stageId: number | undefined
