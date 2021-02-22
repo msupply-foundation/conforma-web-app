@@ -26,16 +26,20 @@ export {
   ContextApplicationState,
   ContextListState,
   CurrentPage,
+  DecisionAreaState,
+  ElementBase,
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
   ElementsActivityState,
   EvaluatorParameters,
-  DecisionAreaState,
+  FullStructure,
   IGraphQLConnection,
   LooseString,
   Page,
   PageElements,
+  PageNEW,
+  PageElementsNEW,
   PageElementsStatuses,
   ProgressStatus,
   ResponseFull,
@@ -51,6 +55,8 @@ export {
   SectionDetails,
   SectionProgress,
   SectionsStructure,
+  SectionStateNEW,
+  SectionsStructureNEW,
   StageAndStatus,
   TemplateDetails,
   TemplateElementState,
@@ -138,6 +144,11 @@ interface CurrentPage {
   section: SectionDetails
   page: number
 }
+interface DecisionAreaState {
+  open: boolean
+  review: ReviewQuestionDecision | null
+  summaryViewProps: SummaryViewWrapperProps | null
+}
 
 type ElementPluginParameterValue = string | number | string[] | IQueryNode
 
@@ -173,21 +184,22 @@ interface ElementsActivityState {
   areTimestampsInSequence: boolean
 }
 
-interface DecisionAreaState {
-  open: boolean
-  review: ReviewQuestionDecision | null
-  summaryViewProps: SummaryViewWrapperProps | null
-}
-
-interface IGraphQLConnection {
-  fetch: Function
-  endpoint: string
-}
 interface EvaluatorParameters {
   objects?: object
   pgConnection?: any // Any, because not likely to be used in front-end
   graphQLConnection?: IGraphQLConnection
   APIfetch?: Function
+}
+
+interface FullStructure {
+  info: ApplicationDetails
+  sections: SectionsStructureNEW
+  stages: ApplicationStages
+}
+
+interface IGraphQLConnection {
+  fetch: Function
+  endpoint: string
 }
 
 type LooseString = string | null | undefined
@@ -199,6 +211,17 @@ interface Page {
 
 type PageElements = {
   element: ElementState
+  response: ResponseFull | null
+  review?: ReviewQuestionDecision
+}[]
+
+interface PageNEW {
+  number: number
+  state: PageElementsNEW
+}
+
+type PageElementsNEW = {
+  element: ElementBase | ElementState
   response: ResponseFull | null
   review?: ReviewQuestionDecision
 }[]
@@ -284,6 +307,17 @@ interface SectionState {
 }
 interface SectionsStructure {
   [code: string]: SectionState
+}
+interface SectionStateNEW {
+  details: SectionDetails
+  progress?: SectionProgress
+  assigned?: ReviewerDetails
+  pages: {
+    [pageName: string]: PageNEW
+  }
+}
+interface SectionsStructureNEW {
+  [code: string]: SectionStateNEW
 }
 interface StageAndStatus {
   stageId: number | undefined

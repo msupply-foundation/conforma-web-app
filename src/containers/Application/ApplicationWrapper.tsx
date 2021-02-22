@@ -1,51 +1,72 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import { Header } from 'semantic-ui-react'
+import { Header, Message } from 'semantic-ui-react'
 
-import { NoMatch } from '../../components'
+import { Loading, NoMatch } from '../../components'
+import { useUserState } from '../../contexts/UserState'
+import useLoadApplication from '../../utils/hooks/useLoadApplicationNEW'
+import { useRouter } from '../../utils/hooks/useRouter'
+import { FullStructure, User } from '../../utils/types'
+import strings from '../../utils/constants'
 
 const ApplicationWrapper: React.FC = () => {
-  return (
+  const { match, query } = useRouter()
+  const { serialNumber } = query
+  const { path } = match
+  const {
+    userState: { currentUser },
+  } = useUserState()
+
+  const { error, isLoading, structure, template } = useLoadApplication({
+    serialNumber,
+    currentUser: currentUser as User,
+    networkFetch: true,
+  })
+
+  return error ? (
+    <Message error header={strings.ERROR_APPLICATION_PAGE} />
+  ) : isLoading ? (
+    <Loading />
+  ) : structure ? (
     <Switch>
-      <Route exact path="/applicationNEW/new">
-        <ApplicationCreateNew />
+      <Route exact path={path}>
+        <ApplicationStartNEW structure={structure} />
       </Route>
-      <Route exact path="/applicationNEW/:serialNumber">
-        <ApplicationStartNew />
+      <Route exact path={`${path}/:sectionCode/Page:page`}>
+        <ApplicationPageNEW structure={structure} />
       </Route>
-      <Route exact path="/applicationNEW/:serialNumber/:sectionCode/Page:page">
-        <ApplicationPageNew />
+      <Route exact path={`${path}/summary`}>
+        <ApplicationSummaryNEW structure={structure} />
       </Route>
-      <Route exact path="/applicationNEW/:serialNumber/summary">
-        <ApplicationSummaryNew />
-      </Route>
-      <Route exact path="/applicationNEW/:serialNumber/submission">
-        <ApplicationSubmissionNew />
+      <Route exact path={`${path}/summary/submission`}>
+        <ApplicationSubmissionNEW structure={structure} />
       </Route>
       <Route>
         <NoMatch />
       </Route>
     </Switch>
+  ) : (
+    <NoMatch />
   )
 }
 
-const ApplicationCreateNew: React.FC = () => {
-  return <Header>CREATE PAGE</Header>
+interface ApplicationProps {
+  structure: FullStructure
 }
 
-const ApplicationStartNew: React.FC = () => {
+const ApplicationStartNEW: React.FC<ApplicationProps> = ({ structure }) => {
   return <Header>START PAGE</Header>
 }
 
-const ApplicationPageNew: React.FC = () => {
+const ApplicationPageNEW: React.FC<ApplicationProps> = ({ structure }) => {
   return <Header>IN PROGRESS PAGE</Header>
 }
 
-const ApplicationSummaryNew: React.FC = () => {
+const ApplicationSummaryNEW: React.FC<ApplicationProps> = ({ structure }) => {
   return <Header>SUMMARY PAGE</Header>
 }
 
-const ApplicationSubmissionNew: React.FC = () => {
+const ApplicationSubmissionNEW: React.FC<ApplicationProps> = ({ structure }) => {
   return <Header>SUBMISSION PAGE</Header>
 }
 
