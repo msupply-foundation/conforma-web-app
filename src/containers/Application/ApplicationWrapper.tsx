@@ -23,8 +23,6 @@ const ApplicationWrapper: React.FC = () => {
     networkFetch: true,
   })
 
-  console.log('structure', structure)
-
   return error ? (
     <Message error header={strings.ERROR_APPLICATION_PAGE} />
   ) : isLoading ? (

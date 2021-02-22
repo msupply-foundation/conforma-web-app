@@ -18,6 +18,10 @@ const useGetFullApplicationStructure = (structure: FullStructure) => {
   const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>({})
   const [isLoading, setIsLoading] = useState(true)
 
+  const newStructure = { ...structure } // This MIGHT need to be deep-copied
+
+  console.log('New Structure', newStructure)
+
   console.log('Serial', serial)
 
   const networkFetch = true
@@ -59,12 +63,24 @@ const useGetFullApplicationStructure = (structure: FullStructure) => {
 
     console.log('Responses', responseObject)
 
-    // Evaluate visibility, editable, required for each element
+    const flattenedElements = flattenStructureElements(newStructure)
 
-    // Compile all
+    console.log('Flattened', flattenedElements)
+
+    setResponsesByCode(responseObject)
   }, [data])
 
   return { fullStructure: 'Just for now', error: false, isLoading: false, responsesByCode: 'Temp' }
 }
 
 export default useGetFullApplicationStructure
+
+const flattenStructureElements = (structure: FullStructure) => {
+  const flattened: any = []
+  Object.keys(structure.sections).forEach((section) => {
+    Object.keys(structure.sections[section].pages).forEach((page) => {
+      flattened.push(...structure.sections[section].pages[page].state)
+    })
+  })
+  return flattened
+}
