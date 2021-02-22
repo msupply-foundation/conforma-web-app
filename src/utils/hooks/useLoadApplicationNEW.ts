@@ -11,7 +11,6 @@ import {
   User,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import useTriggerProcessing from './useTriggerProcessing'
 import { getApplicationSections } from '../helpers/application/getSectionsDetails'
 import { buildSectionsStructure } from '../helpers/structure/buildSectionsStructureNEW'
 import {
@@ -21,7 +20,6 @@ import {
   TemplateElement,
   TemplateStage,
   useGetApplicationNewQuery,
-  useGetApplicationStatusQuery,
 } from '../generated/graphql'
 
 const useLoadApplication = ({
@@ -30,7 +28,7 @@ const useLoadApplication = ({
   networkFetch,
 }: UseGetApplicationProps) => {
   const [isLoading, setIsLoading] = useState(true)
-  const [structureError, setStrucutreError] = useState('')
+  const [structureError, setStructureError] = useState('')
   const [structure, setFullStructure] = useState<FullStructure>()
   const [template, setTemplate] = useState<TemplateDetails>()
 
@@ -38,30 +36,15 @@ const useLoadApplication = ({
     variables: {
       serial: serialNumber,
     },
-    // pollInterval: 500,
-    // skip: isLoading,
     fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
   })
 
-  // const { error: triggerError, isTriggerProcessing } = useTriggerProcessing({
-  //   isApplicationLoaded: data !== undefined,
-  //   serialNumber,
-  //   // triggerType: 'applicationTrigger',
-  // })
-
-  // const { data: statusData, error: statusError } = useGetApplicationStatusQuery({
-  //   variables: { serial: serialNumber },
-  //   skip: isTriggerProcessing,
-  //   fetchPolicy: 'network-only',
-  // })
-
   useEffect(() => {
-    // if (!data || !statusData || isTriggerProcessing) return
     if (!data) return
     const application = data.applicationBySerial as Application
 
     if (!application) {
-      setStrucutreError('No application found')
+      setStructureError('No application found')
     }
 
     const { id, code, name, startMessage } = application.template as Template
@@ -98,11 +81,11 @@ const useLoadApplication = ({
 
     const templateElements = [] as TemplateElementState[]
     application.applicationSections.nodes.forEach((sectionNode) => {
-      let count = 1
+      let pageCount = 1
       const elementsInSection = sectionNode?.templateSection?.templateElementsBySectionId
         ?.nodes as TemplateElement[]
       elementsInSection.forEach((element) => {
-        if (element.elementTypePluginCode === 'pageBreak') count++
+        if (element.elementTypePluginCode === 'pageBreak') pageCount++
         else
           templateElements.push({
             ...element,
@@ -110,7 +93,7 @@ const useLoadApplication = ({
             sectionIndex: sectionNode?.templateSection?.index,
             sectionCode: sectionNode?.templateSection?.code,
             elementIndex: element.index,
-            page: count,
+            page: pageCount,
           } as TemplateElementState)
       })
     })
@@ -125,11 +108,9 @@ const useLoadApplication = ({
         setIsLoading(false)
       }
     )
-    // }, [data, statusData, isTriggerProcessing])
   }, [data])
 
   return {
-    // error: structureError || error?.message || statusError?.message || triggerError,
     error: structureError || error?.message,
     isLoading,
     structure,
