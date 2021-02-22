@@ -19583,6 +19583,12 @@ export type GetApplicationNewQuery = (
       { __typename?: 'ApplicationTriggerState' }
       & Pick<ApplicationTriggerState, 'applicationTrigger'>
     )>> }
+  )>, applicationStageStatusAlls?: Maybe<(
+    { __typename?: 'ApplicationStageStatusAllsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ApplicationStageStatusAll' }
+      & StageFragment
+    )>> }
   )> }
 );
 
@@ -20299,12 +20305,18 @@ export const GetApplicationNewDocument = gql`
       applicationTrigger
     }
   }
+  applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true, statusIsCurrent: true}) {
+    nodes {
+      ...Stage
+    }
+  }
 }
     ${ApplicationFragmentDoc}
 ${TemplateFragmentDoc}
 ${TemplateStageFragmentDoc}
 ${SectionFragmentDoc}
-${ElementFragmentDoc}`;
+${ElementFragmentDoc}
+${StageFragmentDoc}`;
 
 /**
  * __useGetApplicationNewQuery__

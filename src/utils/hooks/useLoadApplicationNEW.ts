@@ -13,6 +13,8 @@ import { buildSectionsStructure } from '../helpers/structure/buildSectionsStruct
 import {
   Application,
   ApplicationSection,
+  ApplicationStageStatusAll,
+  ApplicationStatus,
   Template,
   TemplateElement,
   TemplateStage,
@@ -40,7 +42,10 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     if (!data || loading) return
     const application = data.applicationBySerial as Application
 
-    if (!application || !application.template) {
+    if (!application || !application.template) setStructureError('No application/template found')
+    if (!data.applicationStageStatusAlls?.nodes) setStructureError('No status found')
+
+    if (structureError) {
       setIsLoading(false)
       return
     }
@@ -81,6 +86,10 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       submissionMessage: application.template?.submissionMessage as string,
     }
 
+    const stages = data.applicationStageStatusAlls?.nodes as ApplicationStageStatusAll[]
+    if (stages.length > 1) console.log('StageStatusAll More than one results for 1 application!')
+    const { stageId, stage, status, statusHistoryTimeCreated } = stages[0] // Should only have one result
+
     const applicationDetails: ApplicationDetails = {
       id: application.id,
       type: application.template?.name as string,
@@ -88,6 +97,13 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       serial: application.serial as string,
       name: application.name as string,
       outcome: application.outcome as string,
+      stage: {
+        id: stageId as number,
+        name: stage as string,
+        status: status as string,
+        date: statusHistoryTimeCreated.split('T')[0],
+      },
+      status: status as ApplicationStatus,
     }
 
     const baseElements: ElementBase[] = []

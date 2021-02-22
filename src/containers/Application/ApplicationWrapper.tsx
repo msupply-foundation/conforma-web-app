@@ -54,6 +54,8 @@ interface ApplicationProps {
 }
 
 const ApplicationStartNEW: React.FC<ApplicationProps> = ({ structure }) => {
+  console.log('Structure', structure)
+
   return <Header>START PAGE</Header>
 }
 

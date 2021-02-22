@@ -1,5 +1,6 @@
 import {
   ApplicationList,
+  ApplicationStatus,
   PermissionPolicyType,
   ReviewResponseDecision,
   ReviewStatus,
@@ -85,6 +86,7 @@ interface ApplicationDetails {
   outcome: string
   isLinear: boolean
   stage?: ApplicationStage
+  status?: ApplicationStatus
 }
 
 interface ApplicationElementStates {
