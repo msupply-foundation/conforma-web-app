@@ -90,7 +90,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       submissionMessage: application.template?.submissionMessage as string,
     }
 
-    const stages = data.applicationStageStatusAlls?.nodes as ApplicationStageStatusAll[]
+    const stages = data.applicationStageStatusLatests?.nodes as ApplicationStageStatusAll[]
     if (stages.length > 1) console.log('StageStatusAll More than one results for 1 application!')
     const { stageId, stage, status, statusHistoryTimeCreated } = stages[0] // Should only have one result
 
@@ -101,13 +101,14 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       serial: application.serial as string,
       name: application.name as string,
       outcome: application.outcome as string,
-      stage: {
-        id: stageId as number,
-        name: stage as string,
-        status: status as string,
-        date: statusHistoryTimeCreated.split('T')[0],
+      current: {
+        stage: {
+          id: stageId as number,
+          name: stage as string,
+        },
+        status: status as ApplicationStatus,
+        date: statusHistoryTimeCreated.split('T')[0] as Date,
       },
-      status: status as ApplicationStatus,
     }
 
     const baseElements: ElementBase[] = []

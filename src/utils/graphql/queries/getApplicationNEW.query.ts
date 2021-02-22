@@ -26,9 +26,7 @@ export default gql`
         }
       }
     }
-    applicationStageStatusAlls(
-      condition: { serial: $serial, stageIsCurrent: true, statusIsCurrent: true }
-    ) {
+    applicationStageStatusLatests(condition: { serial: $serial }) {
       nodes {
         ...Stage
       }

@@ -51,7 +51,6 @@ const ApplicationOverview: React.FC = () => {
     if (!isApplicationReady || !validatedSections) return
     const { sectionsWithProgress } = validatedSections
     setSections(sectionsWithProgress)
-    console.log(sectionsWithProgress)
   }, [isApplicationReady, validatedSections])
 
   const [responseMutation] = useUpdateResponseMutation()
@@ -121,10 +120,10 @@ const ApplicationOverview: React.FC = () => {
             sectionPages={sectionPages}
             serialNumber={serialNumber}
             allResponses={allResponses || {}}
-            canEdit={application.stage?.status === ApplicationStatus.Draft}
+            canEdit={application.current?.status === ApplicationStatus.Draft}
           />
         ))}
-        {application.stage?.status === ApplicationStatus.Draft ? (
+        {application.current?.status === ApplicationStatus.Draft ? (
           <Button
             content={strings.BUTTON_APPLICATION_SUBMIT}
             loading={processing}

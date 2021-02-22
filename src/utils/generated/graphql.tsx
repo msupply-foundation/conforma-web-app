@@ -19333,8 +19333,8 @@ export type SectionFragment = (
 );
 
 export type StageFragment = (
-  { __typename?: 'ApplicationStageStatusAll' }
-  & Pick<ApplicationStageStatusAll, 'serial' | 'stageHistoryId' | 'stage' | 'stageId' | 'stageNumber' | 'status' | 'statusHistoryTimeCreated'>
+  { __typename?: 'ApplicationStageStatusLatest' }
+  & Pick<ApplicationStageStatusLatest, 'stage' | 'stageId' | 'status' | 'statusHistoryTimeCreated'>
 );
 
 export type TemplateFragment = (
@@ -19577,10 +19577,10 @@ export type GetApplicationNewQuery = (
       )>> }
     ) }
     & ApplicationFragment
-  )>, applicationStageStatusAlls?: Maybe<(
-    { __typename?: 'ApplicationStageStatusAllsConnection' }
+  )>, applicationStageStatusLatests?: Maybe<(
+    { __typename?: 'ApplicationStageStatusLatestsConnection' }
     & { nodes: Array<Maybe<(
-      { __typename?: 'ApplicationStageStatusAll' }
+      { __typename?: 'ApplicationStageStatusLatest' }
       & StageFragment
     )>> }
   )> }
@@ -19597,7 +19597,7 @@ export type GetApplicationStatusQuery = (
     { __typename?: 'ApplicationStageStatusAllsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationStageStatusAll' }
-      & StageFragment
+      & Pick<ApplicationStageStatusAll, 'stage' | 'stageId' | 'status' | 'statusHistoryTimeCreated'>
     )>> }
   )> }
 );
@@ -19905,12 +19905,9 @@ export const SectionFragmentDoc = gql`
 }
     `;
 export const StageFragmentDoc = gql`
-    fragment Stage on ApplicationStageStatusAll {
-  serial
-  stageHistoryId
+    fragment Stage on ApplicationStageStatusLatest {
   stage
   stageId
-  stageNumber
   status
   statusHistoryTimeCreated
 }
@@ -20295,7 +20292,7 @@ export const GetApplicationNewDocument = gql`
       }
     }
   }
-  applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true, statusIsCurrent: true}) {
+  applicationStageStatusLatests(condition: {serial: $serial}) {
     nodes {
       ...Stage
     }
@@ -20337,11 +20334,14 @@ export const GetApplicationStatusDocument = gql`
     query getApplicationStatus($serial: String!) {
   applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true, statusIsCurrent: true}) {
     nodes {
-      ...Stage
+      stage
+      stageId
+      status
+      statusHistoryTimeCreated
     }
   }
 }
-    ${StageFragmentDoc}`;
+    `;
 
 /**
  * __useGetApplicationStatusQuery__

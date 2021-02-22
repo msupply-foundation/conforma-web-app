@@ -38,7 +38,7 @@ const ApplicationSubmission: React.FC = () => {
 
   useEffect(() => {
     if (!isApplicationReady) return
-    const status = application?.stage?.status
+    const status = application?.current?.status
     // Check if application is in Draft or Changes required status and redirect to the summary page
     // Note: The summary page has its own redirection logic to a specific page (with invalid items).
     if (status === ApplicationStatus.Draft || status === ApplicationStatus.ChangesRequired) {
