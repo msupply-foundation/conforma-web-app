@@ -19325,7 +19325,11 @@ export type ElementFragment = (
 
 export type ResponseFragment = (
   { __typename?: 'ApplicationResponse' }
-  & Pick<ApplicationResponse, 'id' | 'value' | 'isValid'>
+  & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'templateElementId' | 'timeCreated'>
+  & { templateElement?: Maybe<(
+    { __typename?: 'TemplateElement' }
+    & Pick<TemplateElement, 'code'>
+  )> }
 );
 
 export type SectionFragment = (
@@ -19490,6 +19494,25 @@ export type UpdateReviewResponseMutation = (
   & { updateReviewResponse?: Maybe<(
     { __typename?: 'UpdateReviewResponsePayload' }
     & Pick<UpdateReviewResponsePayload, 'clientMutationId'>
+  )> }
+);
+
+export type GetAllResponsesQueryVariables = Exact<{
+  serial: Scalars['String'];
+}>;
+
+
+export type GetAllResponsesQuery = (
+  { __typename?: 'Query' }
+  & { applicationBySerial?: Maybe<(
+    { __typename?: 'Application' }
+    & { applicationResponses: (
+      { __typename?: 'ApplicationResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ApplicationResponse' }
+        & ResponseFragment
+      )>> }
+    ) }
   )> }
 );
 
@@ -19886,8 +19909,13 @@ export const ElementFragmentDoc = gql`
 export const ResponseFragmentDoc = gql`
     fragment Response on ApplicationResponse {
   id
-  value
   isValid
+  value
+  templateElement {
+    code
+  }
+  templateElementId
+  timeCreated
 }
     `;
 export const SectionFragmentDoc = gql`
@@ -20199,6 +20227,43 @@ export function useUpdateReviewResponseMutation(baseOptions?: Apollo.MutationHoo
 export type UpdateReviewResponseMutationHookResult = ReturnType<typeof useUpdateReviewResponseMutation>;
 export type UpdateReviewResponseMutationResult = Apollo.MutationResult<UpdateReviewResponseMutation>;
 export type UpdateReviewResponseMutationOptions = Apollo.BaseMutationOptions<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>;
+export const GetAllResponsesDocument = gql`
+    query getAllResponses($serial: String!) {
+  applicationBySerial(serial: $serial) {
+    applicationResponses {
+      nodes {
+        ...Response
+      }
+    }
+  }
+}
+    ${ResponseFragmentDoc}`;
+
+/**
+ * __useGetAllResponsesQuery__
+ *
+ * To run a query within a React component, call `useGetAllResponsesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllResponsesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllResponsesQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *   },
+ * });
+ */
+export function useGetAllResponsesQuery(baseOptions?: Apollo.QueryHookOptions<GetAllResponsesQuery, GetAllResponsesQueryVariables>) {
+        return Apollo.useQuery<GetAllResponsesQuery, GetAllResponsesQueryVariables>(GetAllResponsesDocument, baseOptions);
+      }
+export function useGetAllResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllResponsesQuery, GetAllResponsesQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllResponsesQuery, GetAllResponsesQueryVariables>(GetAllResponsesDocument, baseOptions);
+        }
+export type GetAllResponsesQueryHookResult = ReturnType<typeof useGetAllResponsesQuery>;
+export type GetAllResponsesLazyQueryHookResult = ReturnType<typeof useGetAllResponsesLazyQuery>;
+export type GetAllResponsesQueryResult = Apollo.QueryResult<GetAllResponsesQuery, GetAllResponsesQueryVariables>;
 export const GetApplicationDocument = gql`
     query getApplication($serial: String!) {
   applicationBySerial(serial: $serial) {

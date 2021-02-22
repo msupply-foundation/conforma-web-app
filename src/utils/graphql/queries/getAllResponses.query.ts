@@ -6,6 +6,7 @@ export default gql`
       applicationResponses {
         nodes {
           ...Response
+        }
       }
     }
   }
