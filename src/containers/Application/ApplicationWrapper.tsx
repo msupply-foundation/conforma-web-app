@@ -24,7 +24,7 @@ const ApplicationWrapper: React.FC = () => {
   })
 
   return error ? (
-    <Message error header={strings.ERROR_APPLICATION_PAGE} />
+    <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   ) : isLoading ? (
     <Loading />
   ) : structure ? (

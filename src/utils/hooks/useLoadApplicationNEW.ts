@@ -20,6 +20,7 @@ import {
   TemplateStage,
   useGetApplicationNewQuery,
 } from '../generated/graphql'
+import messages from '../messages'
 
 const MAX_REFETCH = 10
 
@@ -48,19 +49,23 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     }
 
     if (!application.template) {
-      setStructureError('No template found')
+      setStructureError(messages.APPLICATION_MISSING_TEMPLATE)
       return
     }
 
     // Checking if trigger is running before loading current status
-    if (application.trigger !== null && refetchAttempts < MAX_REFETCH) {
-      setTimeout(() => {
-        console.log('Will refetch loadApplication', refetchAttempts) // TODO: Remove log
-        setRefetchAttempts(refetchAttempts + 1)
-        refetch()
-      }, 500)
+    if (application.trigger === null) {
+      setRefetchAttempts(0)
+    } else {
+      if (refetchAttempts < MAX_REFETCH) {
+        setTimeout(() => {
+          console.log('Will refetch loadApplication', refetchAttempts) // TODO: Remove log
+          setRefetchAttempts(refetchAttempts + 1)
+          refetch()
+        }, 500)
+      } else setStructureError(messages.APPLICATION_TRIGGER_RUNNING)
       return
-    } else setRefetchAttempts(0)
+    }
 
     const { id, code, name, startMessage } = application.template as Template
 
