@@ -12,6 +12,7 @@ import { ValidationState } from '../formElementPlugins/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SummaryViewWrapperProps } from '../formElementPlugins/types'
 import { APPLICATION_COLUMNS, USER_ROLES } from './data'
+import { DateTime } from 'luxon'
 
 export {
   ApplicationDetails,
@@ -39,6 +40,7 @@ export {
   Page,
   PageElements,
   PageNEW,
+  PageElement,
   PageElementsNEW,
   PageElementsStatuses,
   ProgressStatus,
@@ -220,12 +222,13 @@ interface PageNEW {
   state: PageElementsNEW
 }
 
-type PageElementsNEW = {
+type PageElement = {
   element: ElementBase | ElementState
   response: ResponseFull | null
   review?: ReviewQuestionDecision
-}[]
+}
 
+type PageElementsNEW = PageElement[]
 interface PageElementsStatuses {
   [code: string]: ProgressStatus
 }
@@ -238,6 +241,7 @@ interface ResponseFull {
   reference?: any // Not yet decided how to represent
   isValid?: boolean | null
   hash?: string
+  timeCreated?: DateTime
   customValidation?: ValidationState
 }
 

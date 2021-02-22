@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
+import React from 'react'
 import { FullStructure } from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 
@@ -12,9 +11,12 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure }) => {
     structure
   )
 
+  console.log('isLoading', isLoading)
+  console.log('FULL STRUCTURE', fullStructure)
+  console.log('responsesByCode', responsesByCode)
+  console.log('isLoading', isLoading)
+
   return <p>START PAGE</p>
 }
-
-// const
 
 export default ApplicationHome
