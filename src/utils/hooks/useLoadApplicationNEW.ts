@@ -79,7 +79,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       const elementsInSection = sectionNode?.templateSection?.templateElementsBySectionId
         ?.nodes as TemplateElement[]
       elementsInSection.forEach((element) => {
-        console.log('element', element)
         if (element.elementTypePluginCode === 'pageBreak') pageCount++
         else
           baseElements.push({

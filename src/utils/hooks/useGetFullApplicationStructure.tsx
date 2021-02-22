@@ -11,7 +11,7 @@ import { ApplicationResponse, useGetAllResponsesQuery } from '../generated/graph
 import { useUserState } from '../../contexts/UserState'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 
-const useGetFullApplicationStructure = (structure: FullStructure) => {
+const useGetFullApplicationStructure = (structure: FullStructure, firstRunValidation = true) => {
   const {
     info: { serial },
   } = structure
@@ -21,6 +21,7 @@ const useGetFullApplicationStructure = (structure: FullStructure) => {
   const [fullStructure, setFullStructure] = useState<FullStructure>()
   const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>({})
   const [isLoading, setIsLoading] = useState(true)
+  const [firstRunProcessValidation] = useState(firstRunValidation)
 
   const newStructure = { ...structure } // This MIGHT need to be deep-copied
 
