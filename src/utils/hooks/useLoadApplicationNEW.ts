@@ -53,17 +53,14 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     }
 
     // Checking if trigger is running before loading current status
-    if (data.applicationTriggerStates?.nodes) {
-      const triggerResult = data.applicationTriggerStates?.nodes
-      if (!triggerResult.every((result) => result === null) && refetchAttempts < MAX_REFETCH) {
-        setTimeout(() => {
-          console.log('Will refetch loadApplication', refetchAttempts) // TODO: Remove log
-          setRefetchAttempts(refetchAttempts + 1)
-          refetch()
-        }, 500)
-        return
-      }
-    }
+    if (application.trigger !== null && refetchAttempts < MAX_REFETCH) {
+      setTimeout(() => {
+        console.log('Will refetch loadApplication', refetchAttempts) // TODO: Remove log
+        setRefetchAttempts(refetchAttempts + 1)
+        refetch()
+      }, 500)
+      return
+    } else setRefetchAttempts(0)
 
     const { id, code, name, startMessage } = application.template as Template
 
