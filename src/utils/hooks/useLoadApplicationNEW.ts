@@ -42,11 +42,13 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     if (!data || loading) return
     const application = data.applicationBySerial as Application
 
-    if (!application || !application.template) setStructureError('No application/template found')
-    if (!data.applicationStageStatusAlls?.nodes) setStructureError('No status found')
-
-    if (structureError) {
+    if (!application) {
       setIsLoading(false)
+      return
+    }
+
+    if (!application.template) {
+      setStructureError('No template found')
       return
     }
 
@@ -135,7 +137,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
   return {
     error: structureError || error?.message,
-    isLoading,
+    isLoading: loading || isLoading,
     structure,
     template,
   }

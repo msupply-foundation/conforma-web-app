@@ -26,11 +26,6 @@ export default gql`
         }
       }
     }
-    applicationTriggerStates(condition: { serial: $serial }, first: 1) {
-      nodes {
-        applicationTrigger
-      }
-    }
     applicationStageStatusAlls(
       condition: { serial: $serial, stageIsCurrent: true, statusIsCurrent: true }
     ) {

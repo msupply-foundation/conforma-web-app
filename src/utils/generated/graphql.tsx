@@ -1618,7 +1618,6 @@ export enum Trigger {
   OnReviewSubmit = 'ON_REVIEW_SUBMIT',
   OnReviewStart = 'ON_REVIEW_START',
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
-  OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnScheduleTime = 'ON_SCHEDULE_TIME',
   Processing = 'PROCESSING',
@@ -2500,7 +2499,7 @@ export type ReviewAssignmentStatusFilter = {
 
 export enum ReviewAssignmentStatus {
   Available = 'AVAILABLE',
-  SelfAssignedByAnother = 'SELF_ASSIGNED_BY_ANOTHER',
+  NotAvailable = 'NOT_AVAILABLE',
   Assigned = 'ASSIGNED',
   AvailableForSelfAssignment = 'AVAILABLE_FOR_SELF_ASSIGNMENT'
 }
@@ -4523,7 +4522,7 @@ export type ReviewAssignment = Node & {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status: ReviewAssignmentStatus;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -13463,7 +13462,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status: ReviewAssignmentStatus;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -13965,7 +13964,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status: ReviewAssignmentStatus;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -14059,7 +14058,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status: ReviewAssignmentStatus;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -14318,7 +14317,7 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status: ReviewAssignmentStatus;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -14388,7 +14387,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status: ReviewAssignmentStatus;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -14453,7 +14452,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status: ReviewAssignmentStatus;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -14519,7 +14518,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status: ReviewAssignmentStatus;
+  status?: Maybe<ReviewAssignmentStatus>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
@@ -16309,7 +16308,7 @@ export type ReviewAssignmentInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status: ReviewAssignmentStatus;
+  status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -19315,7 +19314,7 @@ export type AddNewUserFragment = (
 
 export type ApplicationFragment = (
   { __typename?: 'Application' }
-  & Pick<Application, 'id' | 'serial' | 'name' | 'outcome'>
+  & Pick<Application, 'id' | 'serial' | 'name' | 'outcome' | 'trigger'>
 );
 
 export type ElementFragment = (
@@ -19578,12 +19577,6 @@ export type GetApplicationNewQuery = (
       )>> }
     ) }
     & ApplicationFragment
-  )>, applicationTriggerStates?: Maybe<(
-    { __typename?: 'ApplicationTriggerStatesConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'ApplicationTriggerState' }
-      & Pick<ApplicationTriggerState, 'applicationTrigger'>
-    )>> }
   )>, applicationStageStatusAlls?: Maybe<(
     { __typename?: 'ApplicationStageStatusAllsConnection' }
     & { nodes: Array<Maybe<(
@@ -19877,6 +19870,7 @@ export const ApplicationFragmentDoc = gql`
   serial
   name
   outcome
+  trigger
 }
     `;
 export const ElementFragmentDoc = gql`
@@ -20299,11 +20293,6 @@ export const GetApplicationNewDocument = gql`
           }
         }
       }
-    }
-  }
-  applicationTriggerStates(condition: {serial: $serial}, first: 1) {
-    nodes {
-      applicationTrigger
     }
   }
   applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true, statusIsCurrent: true}) {
