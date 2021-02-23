@@ -154,6 +154,7 @@ const useGetFullApplicationStructure = ({
       shouldProcessValidation || firstRunProcessValidation
         ? evaluateExpressionWithFallBack(element.validationExpression, evaluationParameters, false)
         : new Promise(() => responseObject[element.code]?.isValid)
+    setFirstRunProcessValidation(false)
     const results = await Promise.all([isEditable, isRequired, isVisible, isValid])
     const evaluatedElement = {
       ...element,
