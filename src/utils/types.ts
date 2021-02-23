@@ -20,6 +20,7 @@ export {
   ApplicationStageMap,
   ApplicationStages,
   AssignmentDetails,
+  Applications,
   CellProps,
   ColumnDetails,
   ColumnsPerRole,
@@ -111,6 +112,11 @@ interface AssignmentDetails {
   review?: ReviewDetails
   questions: ReviewQuestion[]
 }
+
+type Applications = {
+  application: ApplicationList
+  expanded: boolean
+}[]
 
 interface BasicStringObject {
   [key: string]: string

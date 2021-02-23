@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { Container, List, Label, Segment, Button, Search, Grid } from 'semantic-ui-react'
-import { Loading, FilterList } from '../../components'
+import { FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useListApplications from '../../utils/hooks/useListApplications'
 import strings from '../../utils/constants'
 import getDefaultUserRole from '../../utils/helpers/list/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/list/mapColumnsByRole'
-import { ColumnDetails, SortQuery } from '../../utils/types'
+import { Applications, ColumnDetails, SortQuery } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
 import PaginationBar from '../../components/List/Pagination'
-import { ApplicationList } from '../../utils/generated/graphql'
 
 const ListWrapper: React.FC = () => {
   const { query, updateQuery } = useRouter()
@@ -23,7 +22,9 @@ const ListWrapper: React.FC = () => {
   const [columns, setColumns] = useState<ColumnDetails[]>([])
   const [searchText, setSearchText] = useState<string>(query?.search)
   const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
-  const [applicationsRows, setApplicationsRows] = useState<ApplicationList[] | undefined>()
+  const [applicationsRows, setApplicationsRows] = useState<Applications | undefined>()
+  const [reloadTable, setReloadTable] = useState(false)
+
   const { error, loading, applications, applicationCount } = useListApplications(query)
 
   useEffect(() => {
@@ -37,7 +38,7 @@ const ListWrapper: React.FC = () => {
 
   useEffect(() => {
     if (!loading && applications) {
-      setApplicationsRows(applications)
+      setApplicationsRows(applications.map((application) => ({ application, expanded: false })))
     }
   }, [loading, applications])
 
@@ -84,6 +85,24 @@ const ListWrapper: React.FC = () => {
     }
   }
 
+  const handleExpansion = (serialNumber: string) => {
+    if (!applicationsRows) return
+    const findApplication = applicationsRows.find(
+      ({ application }) => application.serial === serialNumber
+    )
+    if (findApplication) {
+      const { expanded } = findApplication
+      findApplication.expanded = !expanded
+    }
+    setApplicationsRows(applicationsRows)
+    setReloadTable(true)
+  }
+
+  // After reloading the table once
+  useEffect(() => {
+    if (reloadTable) setReloadTable(false)
+  }, [reloadTable])
+
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
   ) : (
@@ -126,7 +145,9 @@ const ListWrapper: React.FC = () => {
           applications={applicationsRows}
           sortQuery={sortQuery}
           handleSort={handleSort}
+          handleExpansion={handleExpansion}
           loading={loading}
+          reload={reloadTable}
         />
       )}
       <PaginationBar totalCount={applicationCount} />
