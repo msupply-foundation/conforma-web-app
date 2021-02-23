@@ -36,6 +36,7 @@ const useGetFullApplicationStructure = ({
   const [firstRunProcessValidation, setFirstRunProcessValidation] = useState(
     firstRunValidation || true
   )
+  const [lastValidationTimestamp, setLastValidationTimestamp] = useState<Date>()
 
   const newStructure = { ...structure } // This MIGHT need to be deep-copied
 
@@ -88,8 +89,9 @@ const useGetFullApplicationStructure = ({
     // Note: Flattened elements are evaluated IN-PLACE, so structure can be
     // updated with evaluated elements and responses without re-building
     // structure
-    evaluateElements(
+    evaluateAndValidateElements(
       flattenedElements.map((elem: PageElement) => elem.element),
+      responseObject,
       evaluationParameters
     ).then((result) => {
       result.forEach((evaluatedElement, index) => {
@@ -102,15 +104,16 @@ const useGetFullApplicationStructure = ({
     })
   }, [data, error, loading])
 
-  async function evaluateElements(
+  async function evaluateAndValidateElements(
     elements: TemplateElementStateNEW[],
+    responseObject: ResponsesByCode,
     evaluationParameters: EvaluatorParameters
   ) {
-    const promiseArray: Promise<ElementStateNEW>[] = []
+    const elementPromiseArray: Promise<ElementStateNEW>[] = []
     elements.forEach((element) => {
-      promiseArray.push(evaluateSingleElement(element, evaluationParameters))
+      elementPromiseArray.push(evaluateSingleElement(element, responseObject, evaluationParameters))
     })
-    return await Promise.all(promiseArray)
+    return await Promise.all(elementPromiseArray)
   }
 
   const evaluateExpressionWithFallBack = (
@@ -129,6 +132,7 @@ const useGetFullApplicationStructure = ({
 
   async function evaluateSingleElement(
     element: TemplateElementStateNEW,
+    responseObject: ResponsesByCode,
     evaluationParameters: EvaluatorParameters
   ): Promise<ElementStateNEW> {
     const isEditable = evaluateExpressionWithFallBack(
@@ -146,13 +150,19 @@ const useGetFullApplicationStructure = ({
       evaluationParameters,
       true
     )
-    const results = await Promise.all([isEditable, isRequired, isVisible])
+    const isValid =
+      shouldProcessValidation || firstRunProcessValidation
+        ? evaluateExpressionWithFallBack(element.validationExpression, evaluationParameters, false)
+        : new Promise(() => responseObject[element.code]?.isValid)
+    const results = await Promise.all([isEditable, isRequired, isVisible, isValid])
     const evaluatedElement = {
       ...element,
       isEditable: results[0] as boolean,
       isRequired: results[1] as boolean,
       isVisible: results[2] as boolean,
     }
+    // Update isValid field in Response, in-place
+    if (responseObject[element.code]) responseObject[element.code].isValid = results[3] as boolean
     return evaluatedElement
   }
 

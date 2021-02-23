@@ -32,9 +32,9 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
 
     // Re-direct based on application status and progress
     if (structure.info.current?.status === ApplicationStatus.ChangesRequired)
-      push(`/application/${structure.info.serial}`)
+      push(`/applicationNEW/${structure.info.serial}`)
     if (structure.info.current?.status !== ApplicationStatus.Draft)
-      push(`/application/${structure.info.serial}/summary`)
+      push(`/applicationNEW/${structure.info.serial}/summary`)
 
     // TO-DO: Redirect based on Progress (wait till Progress calculation is done)
   }, [structure])
