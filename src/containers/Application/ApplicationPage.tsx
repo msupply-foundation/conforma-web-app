@@ -59,11 +59,11 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         }}
       >
         <Grid.Column width={4}>
-          <ProgressBar structure={structure} />
+          <ProgressBar structure={fullStructure as FullStructure} />
         </Grid.Column>
         <Grid.Column width={10} stretched>
           <Segment basic>
-            <PageElements structure={structure} responses={responsesByCode} />
+            <PageElements structure={fullStructure as FullStructure} responses={responsesByCode} />
             <NavigationBox />
           </Segment>
         </Grid.Column>
