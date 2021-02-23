@@ -100,6 +100,7 @@ const useGetFullApplicationStructure = ({
       })
       if (shouldProcessValidation || firstRunProcessValidation)
         setLastValidationTimestamp(Date.now())
+      generateProgressStructure(newStructure) // To-Do
       setFirstRunProcessValidation(false)
       setFullStructure(newStructure)
       setResponsesByCode(responseObject)
@@ -189,4 +190,10 @@ const flattenStructureElements = (structure: FullStructure) => {
     })
   })
   return flattened
+}
+
+const generateProgressStructure = (structure: FullStructure) => {
+  // TO-DO:
+  // Calculate all Progress objects and update structure in-place
+  // Shouldn't return anything
 }
