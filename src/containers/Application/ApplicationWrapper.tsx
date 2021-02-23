@@ -55,10 +55,6 @@ interface ApplicationProps {
   structure: FullStructure
 }
 
-const ApplicationPageNEW: React.FC<ApplicationProps> = ({ structure }) => {
-  return <Header>IN PROGRESS PAGE</Header>
-}
-
 const ApplicationSummaryNEW: React.FC<ApplicationProps> = ({ structure }) => {
   return <Header>SUMMARY PAGE</Header>
 }
