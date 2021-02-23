@@ -36,7 +36,7 @@ const useGetFullApplicationStructure = ({
   const [firstRunProcessValidation, setFirstRunProcessValidation] = useState(
     firstRunValidation || true
   )
-  const [lastValidationTimestamp, setLastValidationTimestamp] = useState<Date>()
+  const [lastValidationTimestamp, setLastValidationTimestamp] = useState<number>()
 
   const newStructure = { ...structure } // This MIGHT need to be deep-copied
 
@@ -156,6 +156,7 @@ const useGetFullApplicationStructure = ({
         : new Promise(() => responseObject[element.code]?.isValid)
     setFirstRunProcessValidation(false)
     const results = await Promise.all([isEditable, isRequired, isVisible, isValid])
+    if (shouldProcessValidation || firstRunProcessValidation) setLastValidationTimestamp(Date.now())
     const evaluatedElement = {
       ...element,
       isEditable: results[0] as boolean,
