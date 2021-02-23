@@ -21,6 +21,7 @@ import {
   useGetApplicationNewQuery,
 } from '../generated/graphql'
 import messages from '../messages'
+import { DateTime } from 'luxon'
 
 const MAX_REFETCH = 10
 
@@ -107,7 +108,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           name: stage as string,
         },
         status: status as ApplicationStatus,
-        date: statusHistoryTimeCreated.split('T')[0] as Date,
+        date: DateTime.fromISO(statusHistoryTimeCreated),
       },
     }
 

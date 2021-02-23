@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon'
 import { useEffect, useState } from 'react'
 import {
   Application,
@@ -119,7 +120,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
             name: stage as string,
           },
           status: status as ApplicationStatus,
-          date: statusHistoryTimeCreated.split('T')[0] as Date,
+          date: DateTime.fromISO(statusHistoryTimeCreated),
         },
       })
       setIsApplicationReady(true)
