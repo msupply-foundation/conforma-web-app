@@ -98,6 +98,9 @@ const useGetFullApplicationStructure = ({
         flattenedElements[index].element = evaluatedElement
         flattenedElements[index].response = responseObject[evaluatedElement.code]
       })
+      if (shouldProcessValidation || firstRunProcessValidation)
+        setLastValidationTimestamp(Date.now())
+      setFirstRunProcessValidation(false)
       setFullStructure(newStructure)
       setResponsesByCode(responseObject)
       setIsLoading(false)
@@ -154,9 +157,8 @@ const useGetFullApplicationStructure = ({
       shouldProcessValidation || firstRunProcessValidation
         ? evaluateExpressionWithFallBack(element.validationExpression, evaluationParameters, false)
         : new Promise(() => responseObject[element.code]?.isValid)
-    setFirstRunProcessValidation(false)
     const results = await Promise.all([isEditable, isRequired, isVisible, isValid])
-    if (shouldProcessValidation || firstRunProcessValidation) setLastValidationTimestamp(Date.now())
+
     const evaluatedElement = {
       ...element,
       isEditable: results[0] as boolean,
