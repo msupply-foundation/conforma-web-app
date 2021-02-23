@@ -23,7 +23,7 @@ const useGetFullApplicationStructure = (structure: FullStructure, firstRunValida
   const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>({})
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(false)
-  const [firstRunProcessValidation] = useState(firstRunValidation)
+  const [firstRunProcessValidation, setfirstRunProcessValidation] = useState(firstRunValidation)
 
   const newStructure = { ...structure } // This MIGHT need to be deep-copied
 
@@ -33,8 +33,7 @@ const useGetFullApplicationStructure = (structure: FullStructure, firstRunValida
       serial,
     },
     skip: !serial,
-    // To-do: figure out why "network-only" throws error
-    fetchPolicy: networkFetch ? 'no-cache' : 'cache-first',
+    fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
   })
 
   useEffect(() => {
