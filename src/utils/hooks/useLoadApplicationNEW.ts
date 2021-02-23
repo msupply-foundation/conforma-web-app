@@ -21,6 +21,7 @@ import {
   useGetApplicationNewQuery,
 } from '../generated/graphql'
 import messages from '../messages'
+import { DateTime } from 'luxon'
 
 const MAX_REFETCH = 10
 
@@ -43,6 +44,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     if (!data || loading) return
     const application = data.applicationBySerial as Application
 
+    // No unexpected error - just a application not accessible to user (Show 404 page)
     if (!application) {
       setIsLoading(false)
       return
@@ -52,6 +54,9 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       setStructureError(messages.APPLICATION_MISSING_TEMPLATE)
       return
     }
+
+    // Building the structure...
+    setIsLoading(true)
 
     // Checking if trigger is running before loading current status
     if (application.trigger === null) {
@@ -107,7 +112,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           name: stage as string,
         },
         status: status as ApplicationStatus,
-        date: statusHistoryTimeCreated.split('T')[0] as Date,
+        date: DateTime.fromISO(statusHistoryTimeCreated),
       },
     }
 

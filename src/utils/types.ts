@@ -13,6 +13,7 @@ import { ValidationState } from '../formElementPlugins/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SummaryViewWrapperProps } from '../formElementPlugins/types'
 import { APPLICATION_COLUMNS, USER_ROLES } from './data'
+import { DateTime } from 'luxon'
 
 export {
   ApplicationDetails,
@@ -349,7 +350,7 @@ interface SectionsStructureNEW {
 interface StageAndStatus {
   stage: ApplicationStage
   status: ApplicationStatus
-  date: Date
+  date: DateTime
 }
 
 interface StageDetails {
