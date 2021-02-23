@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
   ElementStateNEW,
+  EvaluatorParameters,
   FullStructure,
   PageElement,
   ResponsesByCode,
@@ -9,6 +10,7 @@ import {
 import { ApplicationResponse, useGetAllResponsesQuery } from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
 import evaluateExpression from '@openmsupply/expression-evaluator'
+import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
 const useGetFullApplicationStructure = (structure: FullStructure, firstRunValidation = true) => {
   const {
@@ -89,7 +91,10 @@ const useGetFullApplicationStructure = (structure: FullStructure, firstRunValida
     })
   }, [data, error, loading])
 
-  async function evaluateElements(elements: TemplateElementStateNEW[], evaluationParameters: any) {
+  async function evaluateElements(
+    elements: TemplateElementStateNEW[],
+    evaluationParameters: EvaluatorParameters
+  ) {
     const promiseArray: Promise<ElementStateNEW>[] = []
     elements.forEach((element) => {
       promiseArray.push(evaluateSingleElement(element, evaluationParameters))
@@ -98,8 +103,8 @@ const useGetFullApplicationStructure = (structure: FullStructure, firstRunValida
   }
 
   const evaluateExpressionWithFallBack = (
-    expression: any,
-    evaluationParameters: any,
+    expression: IQueryNode,
+    evaluationParameters: EvaluatorParameters,
     fallBackValue: any
   ) =>
     new Promise(async (resolve) => {
