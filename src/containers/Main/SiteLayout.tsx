@@ -20,7 +20,7 @@ import {
   TemplateNew,
   Template,
 } from '../../components'
-import { ApplicationCreate, ApplicationPageWrapper } from '../Application'
+import { ApplicationCreate, ApplicationPageWrapper, ApplicationWrapper } from '../Application'
 import { ReviewOverview, ReviewPageWrapper } from '../Review'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import ApplicationOverview from '../Application/ApplicationOverview'
@@ -28,7 +28,6 @@ import ApplicationSubmission from '../Application/ApplicationSubmission'
 import UserArea from '../User/UserArea'
 import ListWrapper from '../List/ListWrapper'
 import ReviewSubmission from '../../components/Review/ReviewSubmission'
-import ApplicationWrapper from '../Application/ApplicationWrapper'
 
 const SiteLayout: React.FC = () => {
   return (

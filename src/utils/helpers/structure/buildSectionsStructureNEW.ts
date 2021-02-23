@@ -1,7 +1,7 @@
-import { ElementBase, SectionDetails, SectionsStructureNEW } from '../../types'
+import { ElementBaseNEW, SectionDetails, SectionsStructureNEW } from '../../types'
 interface BuildSectionsStructureProps {
   sections: SectionDetails[]
-  baseElements: ElementBase[]
+  baseElements: ElementBaseNEW[]
 }
 
 /**
@@ -48,7 +48,7 @@ export const buildSectionsStructure = ({
 }
 
 interface GetPageElementsProps {
-  baseElements: ElementBase[]
+  baseElements: ElementBaseNEW[]
   sectionIndex: number
   pageNumber: number
 }

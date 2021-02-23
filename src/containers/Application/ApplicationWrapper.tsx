@@ -7,6 +7,7 @@ import { useUserState } from '../../contexts/UserState'
 import useLoadApplication from '../../utils/hooks/useLoadApplicationNEW'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { FullStructure, User } from '../../utils/types'
+import { ApplicationHome } from './'
 import strings from '../../utils/constants'
 
 const ApplicationWrapper: React.FC = () => {
@@ -30,7 +31,7 @@ const ApplicationWrapper: React.FC = () => {
   ) : structure ? (
     <Switch>
       <Route exact path={path}>
-        <ApplicationStartNEW structure={structure} />
+        <ApplicationHome structure={structure} />
       </Route>
       <Route exact path={`${path}/:sectionCode/Page:page`}>
         <ApplicationPageNEW structure={structure} />
@@ -52,10 +53,6 @@ const ApplicationWrapper: React.FC = () => {
 
 interface ApplicationProps {
   structure: FullStructure
-}
-
-const ApplicationStartNEW: React.FC<ApplicationProps> = ({ structure }) => {
-  return <Header>START PAGE</Header>
 }
 
 const ApplicationPageNEW: React.FC<ApplicationProps> = ({ structure }) => {

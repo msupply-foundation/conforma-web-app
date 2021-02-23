@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import {
   ApplicationDetails,
   ApplicationStages,
-  ElementBase,
+  ElementBaseNEW,
   FullStructure,
   TemplateDetails,
-  TemplateElementState,
+  TemplateElementStateNEW,
   UseGetApplicationProps,
 } from '../types'
 import { getApplicationSections } from '../helpers/application/getSectionsDetails'
@@ -73,7 +73,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       outcome: application.outcome as string,
     }
 
-    const baseElements: ElementBase[] = []
+    const baseElements: ElementBaseNEW[] = []
     application.applicationSections.nodes.forEach((sectionNode) => {
       let pageCount = 1
       const elementsInSection = sectionNode?.templateSection?.templateElementsBySectionId
@@ -82,13 +82,20 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         if (element.elementTypePluginCode === 'pageBreak') pageCount++
         else
           baseElements.push({
-            ...element,
+            // ...element,
+            code: element.code,
             pluginCode: element.elementTypePluginCode,
             sectionIndex: sectionNode?.templateSection?.index,
             sectionCode: sectionNode?.templateSection?.code,
             elementIndex: element.index,
             page: pageCount,
-          } as TemplateElementState)
+            isEditableExpression: element.isEditable,
+            isRequiredExpression: element.isRequired,
+            isVisibleExpression: element.visibilityCondition,
+            parameters: element.parameters,
+            validationExpression: element.validation,
+            validationMessage: element.validationMessage,
+          } as TemplateElementStateNEW)
       })
     })
 

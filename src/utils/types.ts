@@ -28,9 +28,11 @@ export {
   CurrentPage,
   DecisionAreaState,
   ElementBase,
+  ElementBaseNEW,
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
+  ElementStateNEW,
   ElementsActivityState,
   EvaluatorParameters,
   FullStructure,
@@ -39,6 +41,7 @@ export {
   Page,
   PageElements,
   PageNEW,
+  PageElement,
   PageElementsNEW,
   PageElementsStatuses,
   ProgressStatus,
@@ -60,6 +63,7 @@ export {
   StageAndStatus,
   TemplateDetails,
   TemplateElementState,
+  TemplateElementStateNEW,
   TemplatePermissions,
   TemplatesDetails,
   ValidateFunction,
@@ -171,7 +175,28 @@ interface ElementBase {
   parameters: any
 }
 
+interface ElementBaseNEW {
+  id: number
+  code: string
+  title: string
+  pluginCode: string
+  sectionIndex: number
+  sectionCode: string
+  elementIndex: number
+  page: number
+  category: TemplateElementCategory
+  validationExpression: IQueryNode
+  validationMessage: string | null
+  parameters: any
+}
+
 interface ElementState extends ElementBase {
+  isEditable: boolean
+  isRequired: boolean
+  isVisible: boolean
+}
+
+interface ElementStateNEW extends ElementBaseNEW {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
@@ -220,12 +245,13 @@ interface PageNEW {
   state: PageElementsNEW
 }
 
-type PageElementsNEW = {
-  element: ElementBase | ElementState
+type PageElement = {
+  element: ElementBaseNEW | ElementStateNEW
   response: ResponseFull | null
   review?: ReviewQuestionDecision
-}[]
+}
 
+type PageElementsNEW = PageElement[]
 interface PageElementsStatuses {
   [code: string]: ProgressStatus
 }
@@ -238,6 +264,7 @@ interface ResponseFull {
   reference?: any // Not yet decided how to represent
   isValid?: boolean | null
   hash?: string
+  timeCreated?: Date
   customValidation?: ValidationState
 }
 
@@ -343,6 +370,12 @@ interface TemplateElementState extends ElementBase {
   visibilityCondition: IQueryNode
   isEditable: IQueryNode
   // isValid: boolean | null
+}
+
+interface TemplateElementStateNEW extends ElementBaseNEW {
+  isRequiredExpression: IQueryNode
+  isVisibleExpression: IQueryNode
+  isEditableExpression: IQueryNode
 }
 
 interface TemplatePermissions {
