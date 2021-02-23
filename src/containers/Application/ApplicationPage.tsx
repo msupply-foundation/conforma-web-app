@@ -17,9 +17,9 @@ interface ApplicationProps {
 
 const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   const [isStrictPage, setIsStrictPage] = useState(null)
-  const { error, isLoading, fullStructure, responsesByCode } = useGetFullApplicationStructure(
-    structure
-  )
+  const { error, isLoading, fullStructure, responsesByCode } = useGetFullApplicationStructure({
+    structure,
+  })
   const {
     userState: { currentUser },
   } = useUserState()

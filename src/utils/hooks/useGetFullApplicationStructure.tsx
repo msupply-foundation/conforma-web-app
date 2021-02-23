@@ -12,7 +12,17 @@ import { useUserState } from '../../contexts/UserState'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 
-const useGetFullApplicationStructure = (structure: FullStructure, firstRunValidation = true) => {
+interface useGetFullApplicationStructureProps {
+  structure: FullStructure
+  shouldProcessValidation?: boolean
+  firstRunValidation?: boolean
+}
+
+const useGetFullApplicationStructure = ({
+  structure,
+  shouldProcessValidation,
+  firstRunValidation,
+}: useGetFullApplicationStructureProps) => {
   const {
     info: { serial },
   } = structure
@@ -23,7 +33,9 @@ const useGetFullApplicationStructure = (structure: FullStructure, firstRunValida
   const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>({})
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(false)
-  const [firstRunProcessValidation] = useState(firstRunValidation)
+  const [firstRunProcessValidation, setFirstRunProcessValidation] = useState(
+    firstRunValidation || true
+  )
 
   const newStructure = { ...structure } // This MIGHT need to be deep-copied
 
