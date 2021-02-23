@@ -8,7 +8,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, NoMatch } from '../../components'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
-import { Button, Grid, Header, Segment, Sticky } from 'semantic-ui-react'
+import { Button, Grid, Header, Message, Segment, Sticky } from 'semantic-ui-react'
 
 interface ApplicationProps {
   structure: FullStructure
@@ -39,7 +39,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     // TO-DO: Redirect based on Progress (wait till Progress calculation is done)
   }, [structure])
 
-  if (error) return <NoMatch />
+  if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (isLoading) return <Loading />
 
   return (
