@@ -172,9 +172,10 @@ const useGetFullApplicationStructure = ({
 
   return {
     fullStructure,
+    responsesByCode,
     error: isError ? error : false,
     isLoading: loading || isLoading,
-    responsesByCode,
+    lastValidationTimestamp,
   }
 }
 

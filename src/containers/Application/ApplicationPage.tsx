@@ -40,7 +40,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   }, [structure])
 
   if (error) return <NoMatch />
-  if (isLoading) return <Loading />
+  if (!fullStructure) return <Loading />
 
   return (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
