@@ -45,8 +45,7 @@ const useGetFullApplicationStructure = ({
       serial,
     },
     skip: !serial,
-    // To-do: figure out why "network-only" throws error
-    fetchPolicy: networkFetch ? 'no-cache' : 'cache-first',
+    fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
   })
 
   useEffect(() => {

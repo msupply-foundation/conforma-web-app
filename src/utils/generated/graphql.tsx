@@ -19506,6 +19506,7 @@ export type GetAllResponsesQuery = (
   { __typename?: 'Query' }
   & { applicationBySerial?: Maybe<(
     { __typename?: 'Application' }
+    & Pick<Application, 'id' | 'serial'>
     & { applicationResponses: (
       { __typename?: 'ApplicationResponsesConnection' }
       & { nodes: Array<Maybe<(
@@ -20234,6 +20235,8 @@ export type UpdateReviewResponseMutationOptions = Apollo.BaseMutationOptions<Upd
 export const GetAllResponsesDocument = gql`
     query getAllResponses($serial: String!) {
   applicationBySerial(serial: $serial) {
+    id
+    serial
     applicationResponses {
       nodes {
         ...Response
