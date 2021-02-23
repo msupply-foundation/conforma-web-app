@@ -21,6 +21,7 @@ const useGetFullApplicationStructure = (structure: FullStructure, firstRunValida
   const [fullStructure, setFullStructure] = useState<FullStructure>()
   const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>({})
   const [isLoading, setIsLoading] = useState(true)
+  const [isError, setIsError] = useState(false)
   const [firstRunProcessValidation] = useState(firstRunValidation)
 
   const newStructure = { ...structure } // This MIGHT need to be deep-copied
@@ -34,11 +35,17 @@ const useGetFullApplicationStructure = (structure: FullStructure, firstRunValida
     // To-do: figure out why "network-only" throws error
     fetchPolicy: networkFetch ? 'no-cache' : 'cache-first',
   })
-  interface ResponseObject {
-    [key: string]: ResponseFull
-  }
 
   useEffect(() => {
+    if (loading) {
+      return
+    }
+
+    if (error) {
+      setIsError(true)
+      return
+    }
+
     if (!data) return
     setIsLoading(true)
 
@@ -60,10 +67,19 @@ const useGetFullApplicationStructure = (structure: FullStructure, firstRunValida
 
     const flattenedElements = flattenStructureElements(newStructure)
 
+    const evaluationParameters = {
+      objects: { responses: responseObject, currentUser },
+      // TO-DO: Also send org objects etc.
+      // graphQLConnection: TO-DO
+    }
+
     // Note: Flattened elements are evaluated IN-PLACE, so structure can be
     // updated with evaluated elements and responses without re-building
     // structure
-    evaluateElements(flattenedElements.map((elem: PageElement) => elem.element)).then((result) => {
+    evaluateElements(
+      flattenedElements.map((elem: PageElement) => elem.element),
+      evaluationParameters
+    ).then((result) => {
       result.forEach((evaluatedElement, index) => {
         flattenedElements[index].element = evaluatedElement
         flattenedElements[index].response = responseObject[evaluatedElement.code]
@@ -72,25 +88,49 @@ const useGetFullApplicationStructure = (structure: FullStructure, firstRunValida
       setResponsesByCode(responseObject)
       setIsLoading(false)
     })
-  }, [data])
+  }, [data, error, loading])
 
-  async function evaluateElements(elements: TemplateElementStateNEW[]) {
+  async function evaluateElements(elements: TemplateElementStateNEW[], evaluationParameters: any) {
     const promiseArray: Promise<ElementStateNEW>[] = []
     elements.forEach((element) => {
-      promiseArray.push(evaluateSingleElement(element))
+      promiseArray.push(evaluateSingleElement(element, evaluationParameters))
     })
     return await Promise.all(promiseArray)
   }
 
-  async function evaluateSingleElement(element: TemplateElementStateNEW): Promise<ElementStateNEW> {
-    const evaluationParameters = {
-      objects: { responses: responsesByCode, currentUser },
-      // TO-DO: Also send org objects etc.
-      // graphQLConnection: TO-DO
-    }
-    const isEditable = evaluateExpression(element.isEditableExpression, evaluationParameters)
-    const isRequired = evaluateExpression(element.isRequiredExpression, evaluationParameters)
-    const isVisible = evaluateExpression(element.isVisibleExpression, evaluationParameters)
+  const evaluateExpressionWithFallBack = (
+    expression: any,
+    evaluationParameters: any,
+    fallBackValue: any
+  ) =>
+    new Promise(async (resolve) => {
+      try {
+        resolve(await evaluateExpression(expression, evaluationParameters))
+      } catch (e) {
+        console.log(e)
+        resolve(fallBackValue)
+      }
+    })
+
+  async function evaluateSingleElement(
+    element: TemplateElementStateNEW,
+    evaluationParameters: any
+  ): Promise<ElementStateNEW> {
+    const isEditable = evaluateExpressionWithFallBack(
+      element.isEditableExpression,
+      evaluationParameters,
+      true
+    )
+    const isRequired = evaluateExpressionWithFallBack(
+      element.isRequiredExpression,
+      evaluationParameters,
+      false
+    )
+    const isVisible = evaluateExpressionWithFallBack(
+      element.isVisibleExpression,
+      evaluationParameters,
+      true
+    )
     const results = await Promise.all([isEditable, isRequired, isVisible])
     const evaluatedElement = {
       ...element,
@@ -101,7 +141,12 @@ const useGetFullApplicationStructure = (structure: FullStructure, firstRunValida
     return evaluatedElement
   }
 
-  return { fullStructure, error, isLoading: loading || isLoading, responsesByCode }
+  return {
+    fullStructure,
+    error: isError ? error : false,
+    isLoading: loading || isLoading,
+    responsesByCode,
+  }
 }
 
 export default useGetFullApplicationStructure
