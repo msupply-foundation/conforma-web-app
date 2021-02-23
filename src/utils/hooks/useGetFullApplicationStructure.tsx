@@ -3,7 +3,6 @@ import {
   ElementStateNEW,
   FullStructure,
   PageElement,
-  ResponseFull,
   ResponsesByCode,
   TemplateElementStateNEW,
 } from '../types'
