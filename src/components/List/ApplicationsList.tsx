@@ -1,5 +1,5 @@
-import React from 'react'
-import { Table, Message } from 'semantic-ui-react'
+import React, { useEffect, useState } from 'react'
+import { Table, Message, Segment } from 'semantic-ui-react'
 import { ApplicationList } from '../../utils/generated/graphql'
 import messages from '../../utils/messages'
 import { ColumnDetails, SortQuery } from '../../utils/types'
@@ -20,6 +20,16 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   handleSort,
   loading,
 }) => {
+  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set())
+  const handleClick = (index: number) => {
+    if (expandedRows.has(index)) expandedRows.delete(index)
+    else expandedRows.add(index)
+    setExpandedRows(expandedRows)
+  }
+
+  useEffect(() => {
+    console.log(expandedRows)
+  }, [expandedRows])
   return (
     <>
       <Table sortable stackable selectable>
@@ -45,13 +55,27 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
             </Table.Row>
           ) : (
             applications.map((application, index) => (
-              <Table.Row key={`ApplicationList-application-${application.serial}`}>
-                {columns.map(({ headerName, ColumnComponent }) => (
-                  <Table.Cell key={`ApplicationList-row${index}-${headerName}`}>
-                    <ColumnComponent application={application} />
+              <>
+                <Table.Row
+                  key={`ApplicationList-application-${application.serial}`}
+                  onClick={() => handleClick(index)}
+                >
+                  {columns.map(({ headerName, ColumnComponent }) => (
+                    <Table.Cell key={`ApplicationList-row-${index}-${headerName}`}>
+                      <ColumnComponent application={application} />
+                    </Table.Cell>
+                  ))}
+                  <Table.Cell icon="angle down" />
+                </Table.Row>
+                <Table.Row
+                  key={`ApplicationList-application-${application.serial}-sections`}
+                  colSpan={columns.length}
+                >
+                  <Table.Cell colSpan={columns.length}>
+                    <Segment color="grey" />
                   </Table.Cell>
-                ))}
-              </Table.Row>
+                </Table.Row>
+              </>
             ))
           )}
         </Table.Body>
