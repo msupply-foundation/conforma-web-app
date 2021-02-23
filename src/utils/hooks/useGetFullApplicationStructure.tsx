@@ -118,7 +118,7 @@ const useGetFullApplicationStructure = (structure: FullStructure, firstRunValida
 
   async function evaluateSingleElement(
     element: TemplateElementStateNEW,
-    evaluationParameters: any
+    evaluationParameters: EvaluatorParameters
   ): Promise<ElementStateNEW> {
     const isEditable = evaluateExpressionWithFallBack(
       element.isEditableExpression,
