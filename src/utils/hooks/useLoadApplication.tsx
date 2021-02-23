@@ -1,8 +1,10 @@
+import { DateTime } from 'luxon'
 import { useEffect, useState } from 'react'
 import {
   Application,
   ApplicationSection,
   ApplicationStageStatusAll,
+  ApplicationStatus,
   Template,
   TemplateStage,
   useGetApplicationQuery,
@@ -112,11 +114,13 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       const { stageId, stage, status, statusHistoryTimeCreated } = stages[0] // Should only have one result
       setApplication({
         ...application,
-        stage: {
-          id: stageId as number,
-          name: stage as string,
-          status: status as string,
-          date: statusHistoryTimeCreated.split('T')[0],
+        current: {
+          stage: {
+            id: stageId as number,
+            name: stage as string,
+          },
+          status: status as ApplicationStatus,
+          date: DateTime.fromISO(statusHistoryTimeCreated),
         },
       })
       setIsApplicationReady(true)

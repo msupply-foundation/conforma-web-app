@@ -44,7 +44,7 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
     variables: {
       reviewerId,
       applicationId: application?.id,
-      stageId: application?.stage?.id,
+      stageId: application?.current?.stage.id,
     },
     skip: !isApplicationReady,
   })

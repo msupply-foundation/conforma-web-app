@@ -1,5 +1,6 @@
 import {
   ApplicationList,
+  ApplicationStatus,
   PermissionPolicyType,
   ReviewResponseDecision,
   ReviewStatus,
@@ -12,6 +13,7 @@ import { ValidationState } from '../formElementPlugins/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SummaryViewWrapperProps } from '../formElementPlugins/types'
 import { APPLICATION_COLUMNS, USER_ROLES } from './data'
+import { DateTime } from 'luxon'
 
 export {
   ApplicationDetails,
@@ -88,7 +90,7 @@ interface ApplicationDetails {
   name: string
   outcome: string
   isLinear: boolean
-  stage?: ApplicationStage
+  current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
 }
 
 interface ApplicationElementStates {
@@ -98,13 +100,12 @@ interface ApplicationElementStates {
 interface ApplicationStage {
   id: number
   name: string
-  status: string
-  date: Date
 }
 
 interface ApplicationStageMap {
   [key: string]: ApplicationStage
 }
+
 interface ApplicationStages {
   stages: StageDetails[]
   submissionMessage: string
@@ -347,9 +348,9 @@ interface SectionsStructureNEW {
   [code: string]: SectionStateNEW
 }
 interface StageAndStatus {
-  stageId: number | undefined
-  stage: string
-  status: string
+  stage: ApplicationStage
+  status: ApplicationStatus
+  date: DateTime
 }
 
 interface StageDetails {
