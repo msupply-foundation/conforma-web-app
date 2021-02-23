@@ -1,10 +1,9 @@
 import React, { Fragment } from 'react'
-import { Table, Message } from 'semantic-ui-react'
+import { Table, Message, Segment } from 'semantic-ui-react'
 import { ApplicationList } from '../../utils/generated/graphql'
 import messages from '../../utils/messages'
 import { Applications, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
-import Sections from './Sections'
 
 interface ApplicationsListProps {
   columns: Array<ColumnDetails>
@@ -118,7 +117,7 @@ const SectionsExpandedRow: React.FC<SectionsExpandedRowProps> = ({ application, 
   return (
     <Table.Row key={`ApplicationList-application-${serial}-sections`} colSpan={colSpan}>
       <Table.Cell colSpan={colSpan}>
-        <Sections />
+        <Segment color="grey">TODO: SECTIONS</Segment>
       </Table.Cell>
     </Table.Row>
   )
