@@ -16,41 +16,30 @@ const calculateCompleted = (totalSum: number, doneRequired: number, doneNonRequi
   return totalSum === totalDone
 }
 
-const getSectionProgress = (pages: PageNEW[]): Progress => {
-  return pages.reduce((sectionProgress: Progress, { progress }) => {
-    if (!progress) return sectionProgress
-    let {
-      doneNonRequired,
-      doneRequired,
-      completed,
-      totalNonRequired,
-      totalRequired,
-      totalSum,
-      valid,
-    } = sectionProgress
-    doneNonRequired += progress.doneNonRequired || 0
-    totalNonRequired += progress.totalNonRequired || 0
-    doneRequired += progress.doneRequired || 0
-    totalRequired += progress.totalRequired || 0
-    totalSum = totalRequired + doneNonRequired
-    completed = calculateCompleted(totalSum, doneRequired, doneNonRequired)
-    if (!progress.valid) valid = false
-    return {
-      doneNonRequired,
-      doneRequired,
-      completed,
-      totalNonRequired,
-      totalRequired,
-      totalSum,
-      valid,
-    }
-  }, initialProgress)
-}
+const getSectionProgress = (pages: PageNEW[]): Progress =>
+  pages.reduce(
+    (sectionProgress: Progress, { progress }) => {
+      if (!progress) return sectionProgress
+      sectionProgress.doneNonRequired += progress.doneNonRequired || 0
+      sectionProgress.totalNonRequired += progress.totalNonRequired || 0
+      sectionProgress.doneRequired += progress.doneRequired || 0
+      sectionProgress.totalRequired += progress.totalRequired || 0
+      sectionProgress.totalSum = sectionProgress.totalRequired + sectionProgress.doneNonRequired
+      sectionProgress.completed = calculateCompleted(
+        sectionProgress.totalSum,
+        sectionProgress.doneRequired,
+        sectionProgress.doneNonRequired
+      )
+      if (!progress.valid) sectionProgress.valid = false
+      return sectionProgress
+    },
+    { ...initialProgress }
+  )
 
 export const generateResponsesProgress = (structure: FullStructure) => {
   Object.values(structure.sections).forEach((section) => {
     Object.values(section.pages).forEach((page) => {
-      page.progress = Object.assign({}, initialProgress)
+      page.progress = { ...initialProgress }
       page.state
         .filter(({ element }) => {
           const { category, isVisible, isEditable } = element as ElementStateNEW
@@ -75,6 +64,8 @@ export const generateResponsesProgress = (structure: FullStructure) => {
         })
     })
     section.progress = getSectionProgress(Object.values(section.pages))
+    console.log('section', section.details.code, 'progress', section.progress)
+
     section.invalidPage =
       Object.values(section.pages).find(({ progress }) => progress && !progress.valid)?.number ||
       undefined
