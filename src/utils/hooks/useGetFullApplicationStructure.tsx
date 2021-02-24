@@ -82,6 +82,7 @@ const useGetFullApplicationStructure = ({
 
     const evaluationParameters = {
       objects: { responses: responseObject, currentUser },
+      APIfetch: fetch,
       // TO-DO: Also send org objects etc.
       // graphQLConnection: TO-DO
     }
