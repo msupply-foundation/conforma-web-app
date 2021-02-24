@@ -18,6 +18,7 @@ import { DateTime } from 'luxon'
 export {
   ApplicationDetails,
   ApplicationElementStates,
+  ApplicationListRow,
   ApplicationStage,
   ApplicationStageMap,
   ApplicationStages,
@@ -95,6 +96,10 @@ interface ApplicationDetails {
 
 interface ApplicationElementStates {
   [key: string]: ElementState
+}
+
+interface ApplicationListRow extends ApplicationList {
+  isExpanded: boolean
 }
 
 interface ApplicationStage {
