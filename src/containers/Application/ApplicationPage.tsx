@@ -46,6 +46,9 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   const handleChangeToPage = (sectionCode: string, pageNumber: number) => {
     if (!structure.info.isLinear)
       push(`/applicationNEW/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
+
+    // TODO: Use validationMethod to check if can change to page OR
+    // Would display modal (?) and current page with strict validation
   }
 
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
