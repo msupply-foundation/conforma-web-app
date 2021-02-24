@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { FullStructure, ResponsesByCode, ElementStateNEW } from '../../utils/types'
+import {
+  FullStructure,
+  ResponsesByCode,
+  ElementStateNEW,
+  MethodToCallOnRevalidation,
+  SectionAndPage,
+} from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { useUserState } from '../../contexts/UserState'
@@ -14,16 +20,11 @@ interface ApplicationProps {
   structure: FullStructure
   responses?: ResponsesByCode
 }
-// TODO move to shared types if used elsewhere
-type SectionAndPage = { sectionCode: string; pageName: string } | null
 
-interface MethodToCallOnRevalidation {
-  (firstInvalidPage: SectionAndPage): void
-}
-
-const getFirstInvalidPage: (
-  fullStructure: FullStructure | undefined
-) => { sectionCode: string; pageName: string } | null = (fullStructure) => {
+const getFirstInvalidPage: (fullStructure: FullStructure) => SectionAndPage | null = (
+  fullStructure
+) => {
+  // TODO implement, should rely on .progress
   // return { sectionCode: 'S1', pageName: 'Page 2' }
   return null
 }
@@ -44,7 +45,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     state: { isLastElementUpdateProcessed, elementUpdatedTimestamp },
   } = useFormElementUpdateTracker()
 
-  const [strictSectionPage, setStrictSectionPage] = useState<SectionAndPage>(null)
+  const [strictSectionPage, setStrictSectionPage] = useState<SectionAndPage | null>(null)
   const [revalidationState, setRevalidationState] = useState<RevalidationState>({
     methodToCallOnRevalidation: null,
     shouldProcessValidation: false,
@@ -82,13 +83,13 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       revalidationState.methodToCallOnRevalidation &&
       (fullStructure?.lastValidationTimestamp || 0) > revalidationState.lastRevalidationRequest
     ) {
-      const lastValidPage = getFirstInvalidPage(fullStructure)
+      const firstInvalidPage = getFirstInvalidPage(fullStructure)
       setRevalidationState({
         ...revalidationState,
         methodToCallOnRevalidation: null,
         shouldProcessValidation: false,
       })
-      if (lastValidPage != null) setStrictSectionPage(lastValidPage)
+      if (firstInvalidPage != null) setStrictSectionPage(firstInvalidPage)
       // TODO hide loading modal
     }
   }, [revalidationState, fullStructure])
