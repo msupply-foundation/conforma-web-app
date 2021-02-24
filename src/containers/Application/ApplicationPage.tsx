@@ -82,7 +82,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       revalidationState.methodToCallOnRevalidation &&
       (fullStructure?.lastValidationTimestamp || 0) > revalidationState.lastRevalidationRequest
     ) {
-      const lastValidPage = getFirstInvalidPage(fullStructure)
+      const firstInvalidPage = getFirstInvalidPage(fullStructure)
       setRevalidationState({
         ...revalidationState,
         methodToCallOnRevalidation: null,
