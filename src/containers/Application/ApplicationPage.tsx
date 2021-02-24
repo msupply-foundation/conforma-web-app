@@ -4,7 +4,7 @@ import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicat
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { Loading, NoMatch } from '../../components'
+import { Loading } from '../../components'
 import strings from '../../utils/constants'
 import { Button, Grid, Header, Message, Segment, Sticky } from 'semantic-ui-react'
 import { PageElements } from '../../components/Application'
@@ -18,7 +18,7 @@ interface ApplicationProps {
 type SectionAndPage = { sectionCode: string; pageName: string } | null
 
 interface MethodToCallOnRevalidation {
-  (firstInvalidPage: SectionAndPage): null
+  (firstInvalidPage: SectionAndPage): void
 }
 
 const getFirstInvalidPage: (
