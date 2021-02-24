@@ -64,8 +64,6 @@ export const generateResponsesProgress = (structure: FullStructure) => {
         })
     })
     section.progress = getSectionProgress(Object.values(section.pages))
-    console.log('section', section.details.code, 'progress', section.progress)
-
     section.invalidPage =
       Object.values(section.pages).find(({ progress }) => progress && !progress.valid)?.number ||
       undefined
