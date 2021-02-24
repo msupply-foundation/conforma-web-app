@@ -23,8 +23,9 @@ interface MethodToCallOnRevalidation {
 
 const getFirstInvalidPage: (
   fullStructure: FullStructure | undefined
-) => { sectionCode: string; pageName: string } | null = (fullStructure) => {
+) => SectionAndPage | undefined = (fullStructure) => {
   // TODO implement, should rely on .progress
+
   // return { sectionCode: 'S1', pageName: 'Page 2' }
   return null
 }
@@ -83,7 +84,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       revalidationState.methodToCallOnRevalidation &&
       (fullStructure?.lastValidationTimestamp || 0) > revalidationState.lastRevalidationRequest
     ) {
-      const lastValidPage = getFirstInvalidPage(fullStructure)
+      const firstInvalidPage = getFirstInvalidPage(fullStructure)
       setRevalidationState({
         ...revalidationState,
         methodToCallOnRevalidation: null,
