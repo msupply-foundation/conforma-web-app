@@ -43,6 +43,11 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     // TO-DO: Redirect based on Progress (wait till Progress calculation is done)
   }, [structure])
 
+  const handleChangeToPage = (sectionCode: string, pageNumber: number) => {
+    if (!structure.info.isLinear)
+      push(`/applicationNEW/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
+  }
+
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (!fullStructure) return <Loading />
 
@@ -63,7 +68,11 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         }}
       >
         <Grid.Column width={4}>
-          <ProgressBarNEW structure={fullStructure} current={{ sectionCode, page: Number(page) }} />
+          <ProgressBarNEW
+            structure={fullStructure}
+            current={{ sectionCode, page: Number(page) }}
+            changePage={handleChangeToPage}
+          />
         </Grid.Column>
         <Grid.Column width={10} stretched>
           <Segment basic>

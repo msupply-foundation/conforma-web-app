@@ -5,13 +5,14 @@ import { FullStructure, PageNEW, Progress } from '../../utils/types'
 
 interface ProgressBarProps {
   structure: FullStructure
+  changePage: (sectionCode: string, pageNumber: number) => void
   current: {
     sectionCode: string
     page: number
   }
 }
 
-const ProgressBarNEW: React.FC<ProgressBarProps> = ({ structure, current }) => {
+const ProgressBarNEW: React.FC<ProgressBarProps> = ({ structure, changePage, current }) => {
   const {
     info: { isLinear },
     sections,
@@ -34,7 +35,7 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({ structure, current }) => {
           as: 'a',
           icon: progress ? getIndicator(progress) : null,
           content: pageName,
-          onClick: () => console.log('Click on Page', number, 'Section', sectionCode),
+          onClick: () => changePage(sectionCode, number),
         }))}
       />
     )
@@ -91,7 +92,7 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({ structure, current }) => {
           // </div>
         ),
       },
-      onTitleClick: () => console.log('Click on Section', index),
+      onTitleClick: () => changePage(code, 1),
       content: {
         content: getPageList(code, pages),
       },
