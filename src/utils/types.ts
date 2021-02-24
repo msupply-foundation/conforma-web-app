@@ -81,6 +81,7 @@ export {
   LoginPayload,
   BasicStringObject,
   SortQuery,
+  ContextFormElementUpdateTrackerState,
 }
 
 interface ApplicationDetails {
@@ -133,6 +134,12 @@ interface ColumnDetails {
 
 type ColumnsPerRole = {
   [role in USER_ROLES]: Array<APPLICATION_COLUMNS>
+}
+
+interface ContextFormElementUpdateTrackerState {
+  elementEnteredTimestamp: number
+  elementUpdatedTimestamp: number
+  isLastElementUpdateProcessed: boolean
 }
 
 interface ContextApplicationState {
@@ -218,9 +225,11 @@ interface EvaluatorParameters {
 }
 
 interface FullStructure {
+  lastValidationTimestamp?: number
   info: ApplicationDetails
   sections: SectionsStructureNEW
   stages: ApplicationStages
+  responsesByCode?: ResponsesByCode
 }
 
 interface IGraphQLConnection {
