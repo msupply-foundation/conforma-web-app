@@ -243,7 +243,7 @@ type PageElements = {
 
 interface PageNEW {
   number: number
-  progress?: Progress
+  progress: Progress
   state: PageElement[]
 }
 
