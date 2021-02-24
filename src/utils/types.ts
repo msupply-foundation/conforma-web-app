@@ -478,6 +478,10 @@ interface SortQuery {
 
 type SectionAndPage = { sectionCode: string; pageName: string }
 
+interface SetStrictSectionPage {
+  (sectionAndPage: SectionAndPage | null): void
+}
+
 interface MethodToCallOnRevalidation {
-  (firstInvalidPage: SectionAndPage | null): void
+  (firstInvalidPage: SectionAndPage | null, setStrictSectionPage: SetStrictSectionPage): void
 }
