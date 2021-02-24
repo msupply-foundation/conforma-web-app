@@ -61,7 +61,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   })
 
   const currentSection = query.sectionCode
-  const currentPage = `Page${query.page}`
+  const currentPage = `Page ${query.page}`
 
   /* Method to pass to progress bar, next button and submit button  to cause revalidation before aciton can be proceeded
      Should always be called on submit, but only be called on next or progress bar navigation when isLinear */
