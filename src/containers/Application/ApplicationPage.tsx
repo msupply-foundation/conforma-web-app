@@ -137,8 +137,8 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
                 elements={getCurrentPageElements(fullStructure, currentSection, currentPage)}
                 responsesByCode={fullStructure.responsesByCode}
                 isStrictPage={
-                  currentSection === (strictSectionPage?.sectionCode || '') &&
-                  currentPage === (strictSectionPage?.pageName || '')
+                  currentSection === strictSectionPage?.sectionCode &&
+                  currentPage === strictSectionPage?.pageName
                 }
                 isEditable
               />
