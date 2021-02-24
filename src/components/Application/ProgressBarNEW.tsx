@@ -50,8 +50,13 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({ structure, current }) => {
       ) : (
         <Icon name="circle outline" />
       )
-    if (completed && valid) return <Icon name="check circle" color="green" size="large" />
-    if (completed && !valid) return <Icon name="exclamation circle" color="red" size="large" />
+    return (
+      <Icon
+        name={valid ? 'check circle' : 'exclamation circle'}
+        color={valid ? 'green' : 'red'}
+        size={step ? 'large' : 'small'}
+      />
+    )
   }
 
   const isSectionDisabled = (index: number) => {
