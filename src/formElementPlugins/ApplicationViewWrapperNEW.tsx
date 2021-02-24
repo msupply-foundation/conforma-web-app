@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
-import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
+import { ApplicationViewWrapperPropsNEW, PluginComponents, ValidationState } from './types'
 import { useApplicationState } from '../contexts/ApplicationState'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
 import {
@@ -16,7 +16,7 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 import { Form } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 
-const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
+const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props) => {
   const {
     code,
     pluginCode,
@@ -25,11 +25,12 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     isVisible,
     isEditable,
     isRequired,
+    isValid,
+    isStrictPage,
     validationExpression,
     validationMessage,
     currentResponse,
     allResponses,
-    forceValidation,
   } = props
 
   const [responseMutation] = useUpdateResponseMutation()
@@ -38,8 +39,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const {
     userState: { currentUser },
   } = useUserState()
+  const [value, setValue] = useState<any>(initialValue?.text)
   const [validationState, setValidationState] = useState<ValidationState>({
-    isValid: null,
+    isValid,
   })
   const [evaluatedParameters, setEvaluatedParameters] = useState({})
 
@@ -51,7 +53,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const dynamicParameters = config?.dynamicParameters
   const dynamicExpressions =
     dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
-  const [value, setValue] = useState<any>(initialValue?.text)
 
   // Update dynamic parameters when responses change
   useEffect(() => {
@@ -65,25 +66,24 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }, [allResponses])
 
   useEffect(() => {
-    if (forceValidation) onUpdate(currentResponse?.text)
-  }, [currentResponse, forceValidation])
+    onUpdate(currentResponse?.text)
+  }, [currentResponse])
 
   const onUpdate = async (value: LooseString) => {
     const responses = { thisResponse: value, ...allResponses }
 
-    if (!validationExpression || value === undefined) {
-      setValidationState({ isValid: true } as ValidationState)
-      return { isValid: true }
-    }
-
-    const validationResult: ValidationState = await validate(
+    const newValidationState = await calculateValidationState({
       validationExpression,
-      validationMessage as string,
-      { objects: { responses, currentUser }, APIfetch: fetch }
-    )
-    setValidationState(validationResult)
+      validationMessage,
+      isRequired,
+      isStrictPage,
+      responses,
+      evaluationParameters: { objects: { responses, currentUser }, APIfetch: fetch },
+    })
 
-    return validationResult
+    setValidationState(newValidationState)
+
+    return newValidationState
   }
 
   const onSave = async (jsonValue: ResponseFull) => {
@@ -147,10 +147,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       value={value}
       setValue={setValue}
       setIsActive={setIsActive}
+      isEditable={isEditable}
       Markdown={Markdown}
       validationState={validationState || { isValid: true }}
       validate={validate}
-      // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
       getDefaultIndex={getDefaultIndex}
     />
   )
@@ -203,4 +203,25 @@ export async function evaluateDynamicParameters(
     evaluatedParameters[fields[i]] = evaluatedExpressions[i]
   }
   return evaluatedParameters
+}
+
+async function calculateValidationState({
+  validationExpression,
+  validationMessage,
+  isRequired,
+  isStrictPage,
+  responses,
+  evaluationParameters,
+}: any) {
+  const validationResult = validationExpression
+    ? await validate(validationExpression, validationMessage as string, evaluationParameters)
+    : { isValid: true }
+  if (!validationResult.isValid) return validationResult
+  if (
+    isRequired &&
+    isStrictPage &&
+    (responses.thisResponse === undefined || responses.thisResponse === null)
+  )
+    return { isValid: false, validationMessage }
+  return { isValid: true }
 }

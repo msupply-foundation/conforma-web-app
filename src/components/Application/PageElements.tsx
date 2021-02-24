@@ -42,7 +42,7 @@ const PageElements: React.FC<PageElementProps> = ({
             validationMessage,
           } = element
           const response = responsesByCode?.[code]
-          //   const isValid = response.isValid
+          const isValid = response?.isValid
           return (
             <ApplicationViewWrapper
               key={`question_${code}`}
@@ -53,11 +53,12 @@ const PageElements: React.FC<PageElementProps> = ({
               isVisible={isVisible}
               isEditable={isEditable}
               isRequired={isRequired}
+              isValid={isValid || true}
+              isStrictPage={true}
               validationExpression={validationExpression}
               validationMessage={validationMessage}
               allResponses={responsesByCode}
               currentResponse={response}
-              forceValidation={false} // Remove this
             />
           )
         })}

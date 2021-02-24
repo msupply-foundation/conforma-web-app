@@ -44,7 +44,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   }, [structure])
 
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
-  if (!fullStructure) return <Loading />
+  if (!fullStructure || !responsesByCode) return <Loading />
 
   return (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
