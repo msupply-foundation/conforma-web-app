@@ -174,7 +174,7 @@ const useGetFullApplicationStructure = ({
             currentEvaluationParameters,
             false
           )
-        : new Promise(() => responseObject[element.code]?.isValid)
+        : async () => responseObject[element.code]?.isValid
     const results = await Promise.all([isEditable, isRequired, isVisible, isValid])
 
     const evaluatedElement = {

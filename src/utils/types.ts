@@ -273,7 +273,6 @@ interface ResponsePayload {
   applicationId: number
   templateQuestions: TemplateElement[]
 }
-
 interface ResponsesByCode {
   [key: string]: ResponseFull
 }

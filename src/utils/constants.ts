@@ -63,4 +63,5 @@ export default {
   SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you',
   SUBTITLE_SUBMISSION_STEPS: 'It will be going through the following stages before approval',
   USER_NONREGISTERED: 'nonRegistered',
+  VALIDATION_REQUIRED_ERROR: 'Field is required',
 }

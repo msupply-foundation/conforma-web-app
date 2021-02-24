@@ -15,6 +15,8 @@ import validate from './defaultValidate'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { Form } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
+import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import strings from '../utils/constants'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props) => {
   const {
@@ -71,7 +73,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
 
   const onUpdate = async (value: LooseString) => {
     const responses = { thisResponse: value, ...allResponses }
-
     const newValidationState = await calculateValidationState({
       validationExpression,
       validationMessage,
@@ -80,9 +81,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
       responses,
       evaluationParameters: { objects: { responses, currentUser }, APIfetch: fetch },
     })
-
     setValidationState(newValidationState)
-
     return newValidationState
   }
 
@@ -178,7 +177,7 @@ const getDefaultIndex = (defaultOption: string | number, options: string[]) => {
   } else return options.indexOf(defaultOption)
 }
 
-export function extractDynamicExpressions(fields: string[], parameters: ElementPluginParameters) {
+const extractDynamicExpressions = (fields: string[], parameters: ElementPluginParameters) => {
   const expressionObject: ElementPluginParameters = {}
   fields.forEach((field) => {
     expressionObject[field] = parameters[field]
@@ -186,10 +185,10 @@ export function extractDynamicExpressions(fields: string[], parameters: ElementP
   return expressionObject
 }
 
-export async function evaluateDynamicParameters(
+const evaluateDynamicParameters = async (
   dynamicExpressions: ElementPluginParameters,
   evaluatorParameters: EvaluatorParameters
-) {
+) => {
   if (!dynamicExpressions) return {}
   const fields = Object.keys(dynamicExpressions)
   const expressions = Object.values(
@@ -205,14 +204,21 @@ export async function evaluateDynamicParameters(
   return evaluatedParameters
 }
 
-async function calculateValidationState({
+const calculateValidationState = async ({
   validationExpression,
   validationMessage,
   isRequired,
   isStrictPage,
   responses,
   evaluationParameters,
-}: any) {
+}: {
+  validationExpression: IQueryNode | undefined
+  validationMessage: string | null | undefined
+  isRequired: boolean | undefined
+  isStrictPage: boolean | undefined
+  responses: any // thisResponse field makes it not "ResponsesByCode"
+  evaluationParameters: EvaluatorParameters
+}) => {
   const validationResult = validationExpression
     ? await validate(validationExpression, validationMessage as string, evaluationParameters)
     : { isValid: true }
@@ -222,6 +228,9 @@ async function calculateValidationState({
     isStrictPage &&
     (responses.thisResponse === undefined || responses.thisResponse === null)
   )
-    return { isValid: false, validationMessage }
+    return {
+      isValid: false,
+      validationMessage: validationMessage || strings.VALIDATION_REQUIRED_ERROR,
+    }
   return { isValid: true }
 }
