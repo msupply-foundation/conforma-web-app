@@ -59,7 +59,6 @@ export {
   SectionState,
   SectionDetails,
   SectionProgress,
-  SectionProgressNEW,
   SectionsStructure,
   SectionStateNEW,
   SectionsStructureNEW,
@@ -244,7 +243,7 @@ type PageElements = {
 
 interface PageNEW {
   number: number
-  progress: Progress
+  progress?: Progress
   state: PageElement[]
 }
 
@@ -338,11 +337,6 @@ interface SectionProgress {
   linkedPage: number
 }
 
-interface SectionProgressNEW {
-  state: Progress
-  linkedPage: number
-}
-
 interface SectionState {
   details: SectionDetails
   progress?: SectionProgress
@@ -356,7 +350,8 @@ interface SectionsStructure {
 }
 interface SectionStateNEW {
   details: SectionDetails
-  progress?: SectionProgressNEW
+  invalidPage?: number
+  progress?: Progress
   assigned?: ReviewerDetails
   pages: {
     [pageName: string]: PageNEW
