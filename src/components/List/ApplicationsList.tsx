@@ -1,18 +1,16 @@
 import React, { Fragment } from 'react'
 import { Table, Message, Segment } from 'semantic-ui-react'
-import { ApplicationList } from '../../utils/generated/graphql'
 import messages from '../../utils/messages'
-import { Applications, ColumnDetails, SortQuery } from '../../utils/types'
+import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
 
 interface ApplicationsListProps {
   columns: Array<ColumnDetails>
-  applications: Applications
+  applications: ApplicationListRow[]
   sortQuery: SortQuery
   handleSort: Function
-  handleExpansion: (serialNumber: string) => void
+  handleExpansion: (row: ApplicationListRow) => void
   loading: boolean
-  reload: boolean
 }
 
 const ApplicationsList: React.FC<ApplicationsListProps> = ({
@@ -22,7 +20,6 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   handleSort,
   handleExpansion,
   loading,
-  reload,
 }) => {
   return (
     <>
@@ -48,22 +45,23 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
               </Table.Cell>
             </Table.Row>
           ) : (
-            (applications || reload) &&
-            applications.map(({ application, expanded }, index) => {
+            applications.map((application, index) => {
+              const { isExpanded } = application
               const rowProps = {
+                index,
                 columns,
                 application,
-                index,
                 handleExpansion,
               }
               const sectionsProps = {
+                index,
                 application,
                 colSpan: columns.length + 1,
               }
               return (
                 <Fragment key={`ApplicationList-application-${index}`}>
                   <ApplicationRow {...rowProps} />
-                  {expanded && <SectionsExpandedRow {...sectionsProps} />}
+                  {isExpanded && <SectionsExpandedRow {...sectionsProps} />}
                 </Fragment>
               )
             })
@@ -79,43 +77,45 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
 }
 
 interface ApplicationRowProps {
-  columns: Array<ColumnDetails>
-  application: ApplicationList
   index: number
-  handleExpansion: (serialNumber: string) => void
+  columns: Array<ColumnDetails>
+  application: ApplicationListRow
+  handleExpansion: (row: ApplicationListRow) => void
 }
 
 const ApplicationRow: React.FC<ApplicationRowProps> = ({
+  index,
   columns,
   application,
-  index,
   handleExpansion,
-}) => {
-  const { serial } = application
-  return (
-    <Table.Row
-      key={`ApplicationList-application-${serial}`}
-      onClick={() => handleExpansion(serial as string)}
-    >
-      {columns.map(({ headerName, ColumnComponent }) => (
-        <Table.Cell key={`ApplicationList-row-${index}-${headerName}`}>
-          <ColumnComponent application={application} />
-        </Table.Cell>
-      ))}
-      <Table.Cell icon="angle down" collapsing />
-    </Table.Row>
-  )
-}
+}) => (
+  <Table.Row
+    key={`ApplicationList-application-${index}`}
+    onClick={() => handleExpansion(application)}
+  >
+    {columns.map(({ headerName, ColumnComponent }) => (
+      <Table.Cell key={`ApplicationList-row-${index}-${headerName}`}>
+        <ColumnComponent application={application} />
+      </Table.Cell>
+    ))}
+    <Table.Cell icon="angle down" collapsing />
+  </Table.Row>
+)
 
 interface SectionsExpandedRowProps {
-  application: ApplicationList
+  application: ApplicationListRow
+  index: number
   colSpan: number
 }
 
-const SectionsExpandedRow: React.FC<SectionsExpandedRowProps> = ({ application, colSpan }) => {
+const SectionsExpandedRow: React.FC<SectionsExpandedRowProps> = ({
+  application,
+  index,
+  colSpan,
+}) => {
   const { serial } = application
   return (
-    <Table.Row key={`ApplicationList-application-${serial}-sections`} colSpan={colSpan}>
+    <Table.Row key={`ApplicationList-application-${index}-sections`} colSpan={colSpan}>
       <Table.Cell colSpan={colSpan}>
         <Segment color="grey">TODO: SECTIONS</Segment>
       </Table.Cell>

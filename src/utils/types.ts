@@ -16,11 +16,11 @@ import { APPLICATION_COLUMNS, USER_ROLES } from './data'
 export {
   ApplicationDetails,
   ApplicationElementStates,
+  ApplicationListRow,
   ApplicationStage,
   ApplicationStageMap,
   ApplicationStages,
   AssignmentDetails,
-  Applications,
   CellProps,
   ColumnDetails,
   ColumnsPerRole,
@@ -92,6 +92,10 @@ interface ApplicationElementStates {
   [key: string]: ElementState
 }
 
+interface ApplicationListRow extends ApplicationList {
+  isExpanded: boolean
+}
+
 interface ApplicationStage {
   id: number
   name: string
@@ -112,11 +116,6 @@ interface AssignmentDetails {
   review?: ReviewDetails
   questions: ReviewQuestion[]
 }
-
-type Applications = {
-  application: ApplicationList
-  expanded: boolean
-}[]
 
 interface BasicStringObject {
   [key: string]: string

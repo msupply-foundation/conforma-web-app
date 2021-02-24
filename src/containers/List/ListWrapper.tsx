@@ -7,7 +7,7 @@ import strings from '../../utils/constants'
 import getDefaultUserRole from '../../utils/helpers/list/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/list/mapColumnsByRole'
-import { Applications, ColumnDetails, SortQuery } from '../../utils/types'
+import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
@@ -22,8 +22,7 @@ const ListWrapper: React.FC = () => {
   const [columns, setColumns] = useState<ColumnDetails[]>([])
   const [searchText, setSearchText] = useState<string>(query?.search)
   const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
-  const [applicationsRows, setApplicationsRows] = useState<Applications | undefined>()
-  const [reloadTable, setReloadTable] = useState(false)
+  const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>()
 
   const { error, loading, applications, applicationCount } = useListApplications(query)
 
@@ -38,7 +37,9 @@ const ListWrapper: React.FC = () => {
 
   useEffect(() => {
     if (!loading && applications) {
-      setApplicationsRows(applications.map((application) => ({ application, expanded: false })))
+      setApplicationsRows(
+        applications.map((application) => ({ ...application, isExpanded: false }))
+      )
     }
   }, [loading, applications])
 
@@ -85,23 +86,11 @@ const ListWrapper: React.FC = () => {
     }
   }
 
-  const handleExpansion = (serialNumber: string) => {
+  const handleExpansion = (application: ApplicationListRow) => {
     if (!applicationsRows) return
-    const findApplication = applicationsRows.find(
-      ({ application }) => application.serial === serialNumber
-    )
-    if (findApplication) {
-      const { expanded } = findApplication
-      findApplication.expanded = !expanded
-    }
-    setApplicationsRows(applicationsRows)
-    setReloadTable(true)
+    application.isExpanded = !application.isExpanded // updates in place inside applicationRows
+    setApplicationsRows([...applicationsRows]) // triggers re-render
   }
-
-  // After reloading the table once
-  useEffect(() => {
-    if (reloadTable) setReloadTable(false)
-  }, [reloadTable])
 
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
@@ -147,7 +136,6 @@ const ListWrapper: React.FC = () => {
           handleSort={handleSort}
           handleExpansion={handleExpansion}
           loading={loading}
-          reload={reloadTable}
         />
       )}
       <PaginationBar totalCount={applicationCount} />
