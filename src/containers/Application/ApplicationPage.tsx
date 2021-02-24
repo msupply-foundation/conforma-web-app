@@ -9,6 +9,7 @@ import { Loading, NoMatch } from '../../components'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
 import { Button, Grid, Header, Message, Segment, Sticky } from 'semantic-ui-react'
+import ProgressBarNEW from '../../components/Application/ProgressBarNEW'
 
 interface ApplicationProps {
   structure: FullStructure
@@ -23,7 +24,10 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   const {
     userState: { currentUser },
   } = useUserState()
-  const { push } = useRouter()
+  const {
+    query: { sectionCode, page },
+    push,
+  } = useRouter()
 
   console.log('Structure', fullStructure)
 
@@ -59,7 +63,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         }}
       >
         <Grid.Column width={4}>
-          <ProgressBar structure={fullStructure as FullStructure} />
+          <ProgressBarNEW structure={fullStructure} current={{ sectionCode, page: Number(page) }} />
         </Grid.Column>
         <Grid.Column width={10} stretched>
           <Segment basic>
@@ -82,11 +86,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       </Sticky>
     </Segment.Group>
   )
-}
-
-const ProgressBar: React.FC<ApplicationProps> = ({ structure }) => {
-  // Placeholder -- to be replaced with new component
-  return <p>Progress Bar here</p>
 }
 
 const PageElements: React.FC<ApplicationProps> = ({ structure, responses }) => {
