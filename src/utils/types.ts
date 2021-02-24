@@ -82,6 +82,8 @@ export {
   BasicStringObject,
   SortQuery,
   ContextFormElementUpdateTrackerState,
+  MethodToCallOnRevalidation,
+  SectionAndPage,
 }
 
 interface ApplicationDetails {
@@ -472,4 +474,10 @@ type UserRoles = {
 interface SortQuery {
   sortColumn?: string
   sortDirection?: 'ascending' | 'descending'
+}
+
+type SectionAndPage = { sectionCode: string; pageName: string }
+
+interface MethodToCallOnRevalidation {
+  (firstInvalidPage: SectionAndPage | null): void
 }
