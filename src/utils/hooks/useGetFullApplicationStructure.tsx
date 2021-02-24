@@ -83,6 +83,7 @@ const useGetFullApplicationStructure = ({
 
     const evaluationParameters = {
       objects: { responses: responseObject, currentUser },
+      APIfetch: fetch,
       // TO-DO: Also send org objects etc.
       // graphQLConnection: TO-DO
     }
@@ -140,24 +141,40 @@ const useGetFullApplicationStructure = ({
     responseObject: ResponsesByCode,
     evaluationParameters: EvaluatorParameters
   ): Promise<ElementStateNEW> {
+    const responses = { ...evaluationParameters.objects?.responses }
+    const currentEvaluationParameters = {
+      ...evaluationParameters,
+      objects: {
+        ...evaluationParameters.objects,
+        responses: {
+          ...evaluationParameters.objects?.responses,
+          thisResponse: responses?.[element.code]?.text,
+        },
+      },
+    }
+
     const isEditable = evaluateExpressionWithFallBack(
       element.isEditableExpression,
-      evaluationParameters,
+      currentEvaluationParameters,
       true
     )
     const isRequired = evaluateExpressionWithFallBack(
       element.isRequiredExpression,
-      evaluationParameters,
+      currentEvaluationParameters,
       false
     )
     const isVisible = evaluateExpressionWithFallBack(
       element.isVisibleExpression,
-      evaluationParameters,
+      currentEvaluationParameters,
       true
     )
     const isValid =
       shouldProcessValidation || firstRunProcessValidation
-        ? evaluateExpressionWithFallBack(element.validationExpression, evaluationParameters, false)
+        ? evaluateExpressionWithFallBack(
+            element.validationExpression,
+            currentEvaluationParameters,
+            false
+          )
         : new Promise(() => responseObject[element.code]?.isValid)
     const results = await Promise.all([isEditable, isRequired, isVisible, isValid])
 
