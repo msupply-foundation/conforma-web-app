@@ -31,7 +31,7 @@ const useGetFullApplicationStructure = ({
     userState: { currentUser },
   } = useUserState()
   const [fullStructure, setFullStructure] = useState<FullStructure>()
-  const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>({})
+  const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>()
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(false)
   const [firstRunProcessValidation, setFirstRunProcessValidation] = useState(
@@ -175,7 +175,7 @@ const useGetFullApplicationStructure = ({
             currentEvaluationParameters,
             false
           )
-        : new Promise(() => responseObject[element.code]?.isValid)
+        : async () => responseObject[element.code]?.isValid
     const results = await Promise.all([isEditable, isRequired, isVisible, isValid])
 
     const evaluatedElement = {
