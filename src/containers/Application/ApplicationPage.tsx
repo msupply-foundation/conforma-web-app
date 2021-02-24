@@ -21,9 +21,7 @@ interface ApplicationProps {
   responses?: ResponsesByCode
 }
 
-const getFirstInvalidPage: (fullStructure: FullStructure) => SectionAndPage | null = (
-  fullStructure
-) => {
+const getFirstInvalidPage = ( fullStructure: FullStructure ):  SectionAndPage | null => {
   // TODO implement, should rely on .progress
   // return { sectionCode: 'S1', pageName: 'Page 2' }
   return null
