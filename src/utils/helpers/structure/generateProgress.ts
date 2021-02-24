@@ -1,6 +1,6 @@
 import { ElementStateNEW, FullStructure, Progress } from '../../types'
 
-const generateProgressInStructure = (structure: FullStructure) => {
+export const generateResponsesProgress = (structure: FullStructure) => {
   Object.entries(structure.sections).forEach(([code, section]) => {
     Object.entries(section.pages).forEach(([pageName, page]) => {
       const progress: Progress = {
@@ -30,5 +30,3 @@ const generateProgressInStructure = (structure: FullStructure) => {
     })
   })
 }
-
-export default generateProgressInStructure

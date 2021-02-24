@@ -11,7 +11,7 @@ import { ApplicationResponse, useGetAllResponsesQuery } from '../generated/graph
 import { useUserState } from '../../contexts/UserState'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
-import generateProgressInStructure from '../helpers/structure/generateProgressInStructure'
+import { generateResponsesProgress } from '../helpers/structure/generateProgress'
 
 interface useGetFullApplicationStructureProps {
   structure: FullStructure
@@ -101,7 +101,7 @@ const useGetFullApplicationStructure = ({
       })
       if (shouldProcessValidation || firstRunProcessValidation)
         setLastValidationTimestamp(Date.now())
-      generateProgressInStructure(newStructure) // To-Do
+      generateResponsesProgress(newStructure) // Progress for Applicant
       setFirstRunProcessValidation(false)
       setFullStructure(newStructure)
       setResponsesByCode(responseObject)
