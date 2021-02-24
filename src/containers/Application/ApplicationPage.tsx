@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FullStructure, ResponsesByCode } from '../../utils/types'
+import { FullStructure, ResponsesByCode, ElementStateNEW } from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { useApplicationState } from '../../contexts/ApplicationState'
@@ -10,6 +10,7 @@ import strings from '../../utils/constants'
 import messages from '../../utils/messages'
 import { Button, Grid, Header, Message, Segment, Sticky } from 'semantic-ui-react'
 import ProgressBarNEW from '../../components/Application/ProgressBarNEW'
+import { PageElements } from '../../components/Application'
 
 interface ApplicationProps {
   structure: FullStructure
@@ -17,7 +18,7 @@ interface ApplicationProps {
 }
 
 const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
-  const [isStrictPage, setIsStrictPage] = useState(null)
+  const [strictSectionPage, setStrictSectionPage] = useState({ section: null, page: null })
   const { error, isLoading, fullStructure, responsesByCode } = useGetFullApplicationStructure({
     structure,
   })
@@ -28,6 +29,9 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     query: { sectionCode, page },
     push,
   } = useRouter()
+
+  const currentSection = sectionCode
+  const currentPage = `Page ${page}`
 
   console.log('Structure', fullStructure)
 
@@ -52,7 +56,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   }
 
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
-  if (!fullStructure) return <Loading />
+  if (!fullStructure || !responsesByCode) return <Loading />
 
   return (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
@@ -79,7 +83,18 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         </Grid.Column>
         <Grid.Column width={10} stretched>
           <Segment basic>
-            <PageElements structure={fullStructure as FullStructure} responses={responsesByCode} />
+            <Segment vertical style={{ marginBottom: 20 }}>
+              <Header content={fullStructure.sections[currentSection].details.title} />
+              <PageElements
+                elements={getCurrentPageElements(fullStructure, currentSection, currentPage)}
+                responsesByCode={responsesByCode}
+                isStrictPage={
+                  currentSection === strictSectionPage?.section &&
+                  currentPage === strictSectionPage?.page
+                }
+                isEditable
+              />
+            </Segment>
             <NavigationBox />
           </Segment>
         </Grid.Column>
@@ -100,14 +115,15 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   )
 }
 
-const PageElements: React.FC<ApplicationProps> = ({ structure, responses }) => {
-  // Placeholder -- to be replaced with new component
-  return <p>Page Elements go here</p>
-}
-
 const NavigationBox: React.FC = () => {
   // Placeholder -- to be replaced with new component
   return <p>Navigation Buttons</p>
 }
 
 export default ApplicationPage
+
+const getCurrentPageElements = (structure: FullStructure, section: string, page: string) => {
+  return structure.sections[section].pages[page].state.map(
+    (item) => item.element
+  ) as ElementStateNEW[]
+}
