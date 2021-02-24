@@ -65,7 +65,7 @@ export const generateResponsesProgress = (structure: FullStructure) => {
             if (isRequired) progress.doneRequired++
             else progress.doneNonRequired++
           }
-          if (response !== null && !response?.isValid) progress.valid = false
+          if (typeof response !== 'undefined' && response?.isValid == false) progress.valid = false
           progress.totalSum = progress.totalRequired + progress.doneNonRequired
           progress.completed = calculateCompleted(
             progress.totalSum,
