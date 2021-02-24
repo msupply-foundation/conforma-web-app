@@ -14,7 +14,7 @@ interface ApplicationProps {
   structure: FullStructure
   responses?: ResponsesByCode
 }
-
+// TODO move to shared types if used elsewhere
 type SectionAndPage = { sectionCode: string; pageName: string } | null
 
 interface MethodToCallOnRevalidation {
