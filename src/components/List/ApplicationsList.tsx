@@ -26,11 +26,12 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
       <Table sortable stackable selectable>
         <Table.Header>
           <Table.Row>
-            {columns.map(({ headerName, sortName }) => (
+            {columns.map(({ headerName, sortName }, index) => (
               <Table.HeaderCell
                 key={`ApplicationList-header-${headerName}`}
                 sorted={sortName && sortColumn === sortName ? sortDirection : undefined}
                 onClick={() => handleSort(sortName)}
+                colSpan={index === columns.length - 1 ? 2 : 1} // Set last column to fill last column (expansion)
               >
                 {headerName}
               </Table.HeaderCell>
