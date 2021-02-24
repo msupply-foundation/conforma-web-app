@@ -7,7 +7,7 @@ import { useUserState } from '../../contexts/UserState'
 import useLoadApplication from '../../utils/hooks/useLoadApplicationNEW'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { FullStructure, User } from '../../utils/types'
-import { ApplicationHome } from './'
+import { ApplicationHome, ApplicationPage } from './'
 import strings from '../../utils/constants'
 
 const ApplicationWrapper: React.FC = () => {
@@ -34,7 +34,7 @@ const ApplicationWrapper: React.FC = () => {
         <ApplicationHome structure={structure} />
       </Route>
       <Route exact path={`${path}/:sectionCode/Page:page`}>
-        <ApplicationPageNEW structure={structure} />
+        <ApplicationPage structure={structure} />
       </Route>
       <Route exact path={`${path}/summary`}>
         <ApplicationSummaryNEW structure={structure} />
@@ -53,10 +53,6 @@ const ApplicationWrapper: React.FC = () => {
 
 interface ApplicationProps {
   structure: FullStructure
-}
-
-const ApplicationPageNEW: React.FC<ApplicationProps> = ({ structure }) => {
-  return <Header>IN PROGRESS PAGE</Header>
 }
 
 const ApplicationSummaryNEW: React.FC<ApplicationProps> = ({ structure }) => {
