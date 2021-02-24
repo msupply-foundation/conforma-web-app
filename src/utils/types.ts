@@ -211,7 +211,7 @@ interface ElementsActivityState {
 }
 
 interface EvaluatorParameters {
-  objects?: object
+  objects?: { [key: string]: any }
   pgConnection?: any // Any, because not likely to be used in front-end
   graphQLConnection?: IGraphQLConnection
   APIfetch?: Function
