@@ -84,12 +84,13 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       (fullStructure?.lastValidationTimestamp || 0) > revalidationState.lastRevalidationRequest
     ) {
       const firstInvalidPage = getFirstInvalidPage(fullStructure)
+
       setRevalidationState({
         ...revalidationState,
         methodToCallOnRevalidation: null,
         shouldProcessValidation: false,
       })
-      if (firstInvalidPage != null) setStrictSectionPage(firstInvalidPage)
+      revalidationState.methodToCallOnRevalidation(firstInvalidPage, setStrictSectionPage)
       // TODO hide loading modal
     }
   }, [revalidationState, fullStructure])
