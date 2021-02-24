@@ -19,23 +19,25 @@ const PageElements: React.FC<PageElementProps> = ({
   isEditable,
   isReview,
 }) => {
-  if (isEditable && !isReview)
-    // Applicant Editable application
-    return (
-      <Form>
-        {elements.map((element) => {
-          const {
-            code,
-            pluginCode,
-            parameters,
-            isVisible,
-            isRequired,
-            isEditable,
-            validationExpression,
-            validationMessage,
-          } = element
-          const response = responsesByCode?.[code]
-          const isValid = response?.isValid
+  // Applicant Editable application
+  return (
+    <Form>
+      {elements.map((element) => {
+        const {
+          code,
+          pluginCode,
+          parameters,
+          isVisible,
+          isRequired,
+          isEditable,
+          validationExpression,
+          validationMessage,
+        } = element
+        const response = responsesByCode?.[code]
+        const isValid = response?.isValid
+
+        // Regular application view
+        if (isEditable && !isReview)
           return (
             <ApplicationViewWrapper
               key={`question_${code}`}
@@ -54,49 +56,13 @@ const PageElements: React.FC<PageElementProps> = ({
               currentResponse={response}
             />
           )
-        })}
-      </Form>
-    )
-  //   if (!isEditable && !isReview)
-  //     // Summary View
-  //     return (
-  //       <Form>
-  //         {elements.map((element) => {
-  //           const {
-  //             code,
-  //             pluginCode,
-  //             parameters,
-  //             isVisible,
-  //             isRequired,
-  //             isEditable,
-  //             validationExpression,
-  //             validationMessage,
-  //           } = element
-  //           const response = responsesByCode?.[code]
-  //           const isValid = response?.isValid
-  //           return (
-  //             <SummaryViewWrapper
-  //               key={`question_${code}`}
-  //               code={code}
-  //               initialValue={response}
-  //               pluginCode={pluginCode}
-  //               parameters={parameters}
-  //               isVisible={isVisible}
-  //               isEditable={isEditable}
-  //               isRequired={isRequired}
-  //               isValid={isValid || true}
-  //               isStrictPage={true}
-  //               validationExpression={validationExpression}
-  //               validationMessage={validationMessage}
-  //               allResponses={responsesByCode}
-  //               currentResponse={response}
-  //             />
-  //           )
-  //         })}
-  //       </Form>
-  //     )
-  // Review Page
-  else return <p> Nothing to see here</p>
+        // Summary Page
+        if (!isEditable && !isReview) return <p>Summary View</p>
+        // Review Page
+        if (isReview) return <p>Review Elements</p>
+      })}
+    </Form>
+  )
 }
 
 export default PageElements
