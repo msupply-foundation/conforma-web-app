@@ -30,7 +30,7 @@ const useGetFullApplicationStructure = ({
     userState: { currentUser },
   } = useUserState()
   const [fullStructure, setFullStructure] = useState<FullStructure>()
-  const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>({})
+  const [responsesByCode, setResponsesByCode] = useState<ResponsesByCode>()
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(false)
   const [firstRunProcessValidation, setFirstRunProcessValidation] = useState(
