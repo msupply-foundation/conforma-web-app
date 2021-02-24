@@ -23,7 +23,7 @@ interface MethodToCallOnRevalidation {
 
 const getFirstInvalidPage: (
   fullStructure: FullStructure | undefined
-) => { sectionCode: string; pageName: string } | null = (fullStructure) => {
+): SectionAndPage | undefined = (fullStructure) => {
   // return { sectionCode: 'S1', pageName: 'Page 2' }
   return null
 }
