@@ -225,11 +225,11 @@ interface EvaluatorParameters {
 }
 
 interface FullStructure {
-  lastValidationTimestamp: number
+  lastValidationTimestamp?: number
   info: ApplicationDetails
   sections: SectionsStructureNEW
   stages: ApplicationStages
-  responsesByCode: ResponsesByCode
+  responsesByCode?: ResponsesByCode
 }
 
 interface IGraphQLConnection {
