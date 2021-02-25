@@ -62,7 +62,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   const currentSection = query.sectionCode
   const currentPage = `Page ${query.page}`
 
-  /* Method to pass to progress bar, next button and submit button  to cause revalidation before aciton can be proceeded
+  /* Method to pass to progress bar, next button and submit button to cause revalidation before action can be proceeded
      Should always be called on submit, but only be called on next or progress bar navigation when isLinear */
   // TODO may rename if we want to display loading modal ?
   const requestRevalidation = (methodToCall: MethodToCallOnRevalidation) => {
