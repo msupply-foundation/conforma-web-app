@@ -38,18 +38,18 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   console.log('Structure', fullStructure)
 
   useEffect(() => {
-    if (!structure && !fullStructure) return
+    if (!fullStructure) return
 
     // Re-direct based on application status
-    if (structure.info.current?.status === ApplicationStatus.ChangesRequired)
-      push(`/applicationNEW/${structure.info.serial}`)
+    if (fullStructure.info.current?.status === ApplicationStatus.ChangesRequired)
+      push(`/applicationNEW/${fullStructure.info.serial}`)
     if (structure.info.current?.status !== ApplicationStatus.Draft)
       push(`/applicationNEW/${structure.info.serial}/summary`)
 
     // Re-direct if trying to access page higher than allowed
-    if (!structure.info.isLinear) return
-    const firstInvalidSectionIndex = structure.info?.firstInvalidPageStrict?.sectionIndex
-    const firstInvalidPageNum = structure.info?.firstInvalidPageStrict?.pageNumber
+    if (!fullStructure.info.isLinear) return
+    const firstInvalidSectionIndex = fullStructure.info?.firstInvalidPageStrict?.sectionIndex
+    const firstInvalidPageNum = fullStructure.info?.firstInvalidPageStrict?.pageNumber
     if (
       firstInvalidSectionIndex != null &&
       firstInvalidPageNum != null &&
