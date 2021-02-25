@@ -1,3 +1,3 @@
-import { SectionsProgress } from './SectionsProgress'
+import SectionsProgress from './SectionsProgress'
 
 export { SectionsProgress }

@@ -1,11 +1,12 @@
 import React from 'react'
-import { FullStructure, TemplateDetails } from '../../utils/types'
+import { FullStructure, SectionAndPage, TemplateDetails } from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { ApplicationHeader, Loading } from '../../components'
 import { Button, Divider, Header, Message, Segment } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import { useUserState } from '../../contexts/UserState'
 import SectionsProgress from '../../components/Sections/SectionsProgress'
+import { useRouter } from '../../utils/hooks/useRouter'
 
 interface ApplicationProps {
   structure: FullStructure
@@ -13,6 +14,10 @@ interface ApplicationProps {
 }
 
 const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) => {
+  const {
+    query: { serialNumber },
+    push,
+  } = useRouter()
   const {
     userState: { currentUser },
   } = useUserState()
@@ -22,12 +27,16 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
 
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
+  const handleResumeClick = ({ sectionCode, pageName }: SectionAndPage) => {
+    push(`/applicationNEW/${serialNumber}/${sectionCode}/${pageName}`)
+  }
+
   const HomeMain: React.FC = () => {
     return (
       <Segment>
         <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
         <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
-        <SectionsProgress sections={fullStructure.sections} />
+        <SectionsProgress sections={fullStructure.sections} resumeApplication={handleResumeClick} />
         <Divider />
       </Segment>
     )
