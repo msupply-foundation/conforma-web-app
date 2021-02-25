@@ -1,12 +1,5 @@
 import { TemplateElementCategory } from '../../generated/graphql'
-import {
-  ElementStateNEW,
-  FullStructure,
-  PageNEW,
-  Progress,
-  SectionAndPage,
-  SectionStateNEW,
-} from '../../types'
+import { ElementStateNEW, FullStructure, PageNEW, Progress } from '../../types'
 
 const initialProgress = {
   doneNonRequired: 0,
@@ -99,12 +92,19 @@ export const generateResponsesProgress = (structure: FullStructure) => {
     section.progress = getSectionProgress(Object.values(section.pages))
   })
   structure.info.firstInvalidPage = firstInvalidSectionCode
-    ? { sectionCode: firstInvalidSectionCode, pageName: `Page ${firstInvalidPageInSection}` }
+    ? {
+        sectionCode: firstInvalidSectionCode,
+        pageName: `Page ${firstInvalidPageInSection}`,
+        sectionIndex: firstInvalidSectionIndex,
+        pageNumber: firstInvalidPageInSection,
+      }
     : null
   structure.info.firstInvalidPageStrict = firstInvalidSectionCodeStrict
     ? {
         sectionCode: firstInvalidSectionCodeStrict,
         pageName: `Page ${firstInvalidPageInSectionStrict}`,
+        sectionIndex: firstInvalidSectionIndexStrict,
+        pageNumber: firstInvalidPageInSectionStrict,
       }
     : null
 }

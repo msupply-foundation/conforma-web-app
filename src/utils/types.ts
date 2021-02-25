@@ -485,4 +485,9 @@ interface SortQuery {
   sortDirection?: 'ascending' | 'descending'
 }
 
-type SectionAndPage = { sectionCode: string; pageName: string } | null
+type SectionAndPage = {
+  sectionCode: string
+  pageName: string
+  sectionIndex?: number
+  pageNumber?: number
+} | null

@@ -32,20 +32,36 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
 
   const currentSection = sectionCode
   const currentPage = `Page ${page}`
+  const currentSectionIndex = structure.sections[currentSection].details.index
+  const currentPageNumber = structure.sections[currentSection].pages[currentPage].number
 
   console.log('Structure', fullStructure)
 
   useEffect(() => {
-    if (!structure) return
+    if (!structure && !fullStructure) return
 
-    // Re-direct based on application status and progress
+    // Re-direct based on application status
     if (structure.info.current?.status === ApplicationStatus.ChangesRequired)
       push(`/applicationNEW/${structure.info.serial}`)
     if (structure.info.current?.status !== ApplicationStatus.Draft)
       push(`/applicationNEW/${structure.info.serial}/summary`)
 
-    // TO-DO: Redirect based on Progress (wait till Progress calculation is done)
-  }, [structure])
+    // Re-direct if trying to access page higher than allowed
+    if (!structure.info.isLinear) return
+    const firstInvalidSectionIndex = structure.info?.firstInvalidPageStrict?.sectionIndex
+    const firstInvalidPageNum = structure.info?.firstInvalidPageStrict?.pageNumber
+    if (
+      firstInvalidSectionIndex != null &&
+      firstInvalidPageNum != null &&
+      (currentSectionIndex > firstInvalidSectionIndex ||
+        (currentSectionIndex >= firstInvalidSectionIndex &&
+          currentPageNumber > firstInvalidPageNum))
+    ) {
+      push(
+        `/applicationNEW/${structure.info.serial}/${structure.info.firstInvalidPageStrict?.sectionCode}/Page${structure.info.firstInvalidPageStrict?.pageNumber}`
+      )
+    }
+  }, [structure, fullStructure])
 
   const handleChangeToPage = (sectionCode: string, pageNumber: number) => {
     if (!structure.info.isLinear)
