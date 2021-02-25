@@ -37,9 +37,6 @@ const getSectionProgress = (pages: PageNEW[]): Progress =>
   )
 
 export const generateResponsesProgress = (structure: FullStructure) => {
-  let firstInvalidSectionCode = ''
-  let firstInvalidSectionIndex = Infinity
-  let firstInvalidPageInSection = Infinity
   let firstInvalidSectionCodeStrict = ''
   let firstInvalidSectionIndexStrict = Infinity
   let firstInvalidPageInSectionStrict = Infinity
@@ -69,20 +66,9 @@ export const generateResponsesProgress = (structure: FullStructure) => {
           )
         })
       if (
-        !page.progress.valid &&
-        section.details.index <= firstInvalidSectionIndex &&
-        page.number < firstInvalidPageInSection
-      ) {
-        firstInvalidPageInSection = page.number
-        firstInvalidSectionIndex = section.details.index
-        firstInvalidSectionCode = section.details.code
-        firstInvalidPageInSectionStrict = page.number
-        firstInvalidSectionIndexStrict = section.details.index
-        firstInvalidSectionCodeStrict = section.details.code
-      } else if (
-        page.progress.doneRequired < page.progress.totalRequired &&
         section.details.index <= firstInvalidSectionIndexStrict &&
-        page.number < firstInvalidPageInSectionStrict
+        page.number < firstInvalidPageInSectionStrict &&
+        (!page.progress.valid || page.progress.doneRequired < page.progress.totalRequired)
       ) {
         firstInvalidPageInSectionStrict = page.number
         firstInvalidSectionIndexStrict = section.details.index
@@ -91,14 +77,6 @@ export const generateResponsesProgress = (structure: FullStructure) => {
     })
     section.progress = getSectionProgress(Object.values(section.pages))
   })
-  structure.info.firstInvalidPage = firstInvalidSectionCode
-    ? {
-        sectionCode: firstInvalidSectionCode,
-        pageName: `Page ${firstInvalidPageInSection}`,
-        sectionIndex: firstInvalidSectionIndex,
-        pageNumber: firstInvalidPageInSection,
-      }
-    : null
   structure.info.firstInvalidPageStrict = firstInvalidSectionCodeStrict
     ? {
         sectionCode: firstInvalidSectionCodeStrict,

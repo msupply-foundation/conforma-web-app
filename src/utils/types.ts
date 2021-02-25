@@ -93,7 +93,6 @@ interface ApplicationDetails {
   outcome: string
   isLinear: boolean
   current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
-  firstInvalidPage?: SectionAndPage | null
   firstInvalidPageStrict?: SectionAndPage | null
 }
 
