@@ -61,7 +61,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         `/applicationNEW/${structure.info.serial}/${structure.info.firstInvalidPageStrict?.sectionCode}/Page${structure.info.firstInvalidPageStrict?.pageNumber}`
       )
     }
-  }, [structure, fullStructure])
+  }, [structure, fullStructure, sectionCode, page])
 
   const handleChangeToPage = (sectionCode: string, pageNumber: number) => {
     if (!structure.info.isLinear)
