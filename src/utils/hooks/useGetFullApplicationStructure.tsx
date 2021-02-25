@@ -15,14 +15,14 @@ import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 interface useGetFullApplicationStructureProps {
   structure: FullStructure
   shouldRevalidate?: boolean
-  revalidateAfterTimestamp?: number
+  minRefetchTimestampForRevalidation?: number
   firstRunValidation?: boolean
 }
 
 const useGetFullApplicationStructure = ({
   structure,
   shouldRevalidate = false,
-  revalidateAfterTimestamp = 0,
+  minRefetchTimestampForRevalidation = 0,
   firstRunValidation = true,
 }: useGetFullApplicationStructureProps) => {
   const {
@@ -66,7 +66,8 @@ const useGetFullApplicationStructure = ({
     if (!data) return
 
     const isDataUpToDate = lastProcessedTimestamp > lastRefetchedTimestamp
-    const shouldRevalidationWaitForRefetech = revalidateAfterTimestamp > lastRefetchedTimestamp
+    const shouldRevalidationWaitForRefetech =
+      minRefetchTimestampForRevalidation > lastRefetchedTimestamp
     const shouldRevalidateThisRun = shouldRevalidate && !shouldRevalidationWaitForRefetech
 
     if (isDataUpToDate && !shouldRevalidateThisRun) return
@@ -120,7 +121,7 @@ const useGetFullApplicationStructure = ({
       setFirstRunProcessValidation(false)
       setFullStructure(newStructure)
     })
-  }, [lastRefetchedTimestamp, shouldRevalidate, revalidateAfterTimestamp, error])
+  }, [lastRefetchedTimestamp, shouldRevalidate, minRefetchTimestampForRevalidation, error])
 
   async function evaluateAndValidateElements(
     elements: TemplateElementStateNEW[],
