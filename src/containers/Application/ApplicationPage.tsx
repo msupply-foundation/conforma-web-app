@@ -21,7 +21,7 @@ interface ApplicationProps {
   responses?: ResponsesByCode
 }
 
-const getFirstInvalidPage = ( fullStructure: FullStructure ):  SectionAndPage | null => {
+const getFirstInvalidPage = (fullStructure: FullStructure): SectionAndPage | null => {
   // TODO implement, should rely on .progress
   // return { sectionCode: 'S1', pageName: 'Page 2' }
   return null
@@ -92,8 +92,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       // TODO hide loading modal
     }
   }, [revalidationState, fullStructure])
-
-  console.log('Structure', fullStructure)
 
   useEffect(() => {
     if (!structure) return
