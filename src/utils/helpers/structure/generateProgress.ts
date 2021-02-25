@@ -1,5 +1,12 @@
 import { TemplateElementCategory } from '../../generated/graphql'
-import { ElementStateNEW, FullStructure, PageNEW, Progress } from '../../types'
+import {
+  ElementStateNEW,
+  FullStructure,
+  PageNEW,
+  Progress,
+  SectionAndPage,
+  SectionStateNEW,
+} from '../../types'
 
 const initialProgress = {
   doneNonRequired: 0,
@@ -37,6 +44,12 @@ const getSectionProgress = (pages: PageNEW[]): Progress =>
   )
 
 export const generateResponsesProgress = (structure: FullStructure) => {
+  let firstInvalidSectionCode = ''
+  let firstInvalidSectionIndex = Infinity
+  let firstInvalidPageInSection = Infinity
+  let firstInvalidSectionCodeStrict = ''
+  let firstInvalidSectionIndexStrict = Infinity
+  let firstInvalidPageInSectionStrict = Infinity
   Object.values(structure.sections).forEach((section) => {
     Object.values(section.pages).forEach((page) => {
       page.progress = { ...initialProgress }
@@ -62,10 +75,36 @@ export const generateResponsesProgress = (structure: FullStructure) => {
             progress.doneNonRequired
           )
         })
+      if (
+        !page.progress.valid &&
+        section.details.index <= firstInvalidSectionIndex &&
+        page.number < firstInvalidPageInSection
+      ) {
+        firstInvalidPageInSection = page.number
+        firstInvalidSectionIndex = section.details.index
+        firstInvalidSectionCode = section.details.code
+        firstInvalidPageInSectionStrict = page.number
+        firstInvalidSectionIndexStrict = section.details.index
+        firstInvalidSectionCodeStrict = section.details.code
+      } else if (
+        page.progress.doneRequired < page.progress.totalRequired &&
+        section.details.index <= firstInvalidSectionIndexStrict &&
+        page.number < firstInvalidPageInSectionStrict
+      ) {
+        firstInvalidPageInSectionStrict = page.number
+        firstInvalidSectionIndexStrict = section.details.index
+        firstInvalidSectionCodeStrict = section.details.code
+      }
     })
     section.progress = getSectionProgress(Object.values(section.pages))
-    section.invalidPage =
-      Object.values(section.pages).find(({ progress }) => progress && !progress.valid)?.number ||
-      undefined
   })
+  structure.info.firstInvalidPage = firstInvalidSectionCode
+    ? { sectionCode: firstInvalidSectionCode, pageName: `Page ${firstInvalidPageInSection}` }
+    : null
+  structure.info.firstInvalidPageStrict = firstInvalidSectionCodeStrict
+    ? {
+        sectionCode: firstInvalidSectionCodeStrict,
+        pageName: `Page ${firstInvalidPageInSectionStrict}`,
+      }
+    : null
 }

@@ -82,6 +82,7 @@ export {
   LoginPayload,
   BasicStringObject,
   SortQuery,
+  SectionAndPage,
 }
 
 interface ApplicationDetails {
@@ -92,6 +93,8 @@ interface ApplicationDetails {
   outcome: string
   isLinear: boolean
   current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
+  firstInvalidPage?: SectionAndPage | null
+  firstInvalidPageStrict?: SectionAndPage | null
 }
 
 interface ApplicationElementStates {
@@ -354,7 +357,6 @@ interface SectionsStructure {
 }
 interface SectionStateNEW {
   details: SectionDetails
-  invalidPage?: number
   progress?: Progress
   assigned?: ReviewerDetails
   pages: {
@@ -482,3 +484,5 @@ interface SortQuery {
   sortColumn?: string
   sortDirection?: 'ascending' | 'descending'
 }
+
+type SectionAndPage = { sectionCode: string; pageName: string } | null
