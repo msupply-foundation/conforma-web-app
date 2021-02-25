@@ -13,6 +13,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading } from '../../components'
 import strings from '../../utils/constants'
 import { Button, Grid, Header, Message, Segment, Sticky } from 'semantic-ui-react'
+import ProgressBarNEW from '../../components/Application/ProgressBarNEW'
 import { PageElements } from '../../components/Application'
 import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
 
@@ -39,7 +40,10 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   const {
     userState: { currentUser },
   } = useUserState()
-  const { push, query } = useRouter()
+  const {
+    query: { sectionCode, page },
+    push,
+  } = useRouter()
 
   const {
     state: { isLastElementUpdateProcessed, elementUpdatedTimestamp },
@@ -61,8 +65,8 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     revalidateAfterTimestamp,
   })
 
-  const currentSection = query.sectionCode
-  const currentPage = `Page ${query.page}`
+  const currentSection = sectionCode
+  const currentPage = `Page ${page}`
 
   /* Method to pass to progress bar, next button and submit button  to cause revalidation before aciton can be proceeded
      Should always be called on submit, but only be called on next or progress bar navigation when isLinear */
@@ -109,6 +113,14 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     // TO-DO: Redirect based on Progress (wait till Progress calculation is done)
   }, [structure])
 
+  const handleChangeToPage = (sectionCode: string, pageNumber: number) => {
+    if (!structure.info.isLinear)
+      push(`/applicationNEW/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
+
+    // TODO: Use validationMethod to check if can change to page OR
+    // Would display modal (?) and current page with strict validation
+  }
+
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
@@ -129,7 +141,11 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         }}
       >
         <Grid.Column width={4}>
-          <ProgressBar structure={fullStructure as FullStructure} />
+          <ProgressBarNEW
+            structure={fullStructure}
+            current={{ sectionCode, page: Number(page) }}
+            changePage={handleChangeToPage}
+          />
         </Grid.Column>
         <Grid.Column width={10} stretched>
           <Segment basic>
@@ -163,11 +179,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       </Sticky>
     </Segment.Group>
   )
-}
-
-const ProgressBar: React.FC<ApplicationProps> = ({ structure }) => {
-  // Placeholder -- to be replaced with new component
-  return <p>Progress Bar here</p>
 }
 
 const NavigationBox: React.FC = () => {
