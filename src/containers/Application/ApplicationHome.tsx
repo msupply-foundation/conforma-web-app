@@ -18,7 +18,6 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
   const {
     query: { serialNumber },
     push,
-    replace,
   } = useRouter()
   const {
     userState: { currentUser },
@@ -32,7 +31,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     if (!fullStructure) return
     const { status } = fullStructure.info.current as StageAndStatus
     if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired)
-      replace(`/application/${serialNumber}/summary`)
+      push(`/application/${serialNumber}/summary`)
   }, [fullStructure])
 
   const handleResumeClick = ({ sectionCode, pageName }: SectionAndPage) => {
