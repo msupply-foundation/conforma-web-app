@@ -1,5 +1,5 @@
 import { TemplateElementCategory } from '../../generated/graphql'
-import { ElementStateNEW, FullStructure, PageNEW, Progress } from '../../types'
+import { ElementStateNEW, FullStructure, PageNEW, Progress, SectionStateNEW } from '../../types'
 
 const initialProgress = {
   doneNonRequired: 0,
@@ -40,6 +40,17 @@ export const generateResponsesProgress = (structure: FullStructure) => {
   let firstInvalidSectionCodeStrict = ''
   let firstInvalidSectionIndexStrict = Infinity
   let firstInvalidPageInSectionStrict = Infinity
+  const updateFirstInvalid = (section: SectionStateNEW, page: PageNEW) => {
+    if (
+      section.details.index <= firstInvalidSectionIndexStrict &&
+      page.number < firstInvalidPageInSectionStrict &&
+      (!page.progress.valid || page.progress.doneRequired < page.progress.totalRequired)
+    ) {
+      firstInvalidPageInSectionStrict = page.number
+      firstInvalidSectionIndexStrict = section.details.index
+      firstInvalidSectionCodeStrict = section.details.code
+    }
+  }
   Object.values(structure.sections).forEach((section) => {
     Object.values(section.pages).forEach((page) => {
       page.progress = { ...initialProgress }
@@ -65,15 +76,7 @@ export const generateResponsesProgress = (structure: FullStructure) => {
             progress.doneNonRequired
           )
         })
-      if (
-        section.details.index <= firstInvalidSectionIndexStrict &&
-        page.number < firstInvalidPageInSectionStrict &&
-        (!page.progress.valid || page.progress.doneRequired < page.progress.totalRequired)
-      ) {
-        firstInvalidPageInSectionStrict = page.number
-        firstInvalidSectionIndexStrict = section.details.index
-        firstInvalidSectionCodeStrict = section.details.code
-      }
+      updateFirstInvalid(section, page)
     })
     section.progress = getSectionProgress(Object.values(section.pages))
   })
