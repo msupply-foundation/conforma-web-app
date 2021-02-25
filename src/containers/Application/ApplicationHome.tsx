@@ -48,6 +48,11 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     ({ progress }) => progress?.completed && progress.valid
   )
 
+  const canUserEdit = () => {
+    const { status } = fullStructure.info.current as StageAndStatus
+    return status === ApplicationStatus.Draft ? true : false
+  }
+
   const HomeMain: React.FC = () => {
     return (
       <>
@@ -55,6 +60,8 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
           <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
           <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
           <SectionsProgress
+            canEdit={canUserEdit()}
+            changes={{ state: true, label: 'Update' }}
             sections={fullStructure.sections}
             resumeApplication={handleResumeClick}
           />
