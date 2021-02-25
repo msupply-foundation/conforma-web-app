@@ -16,6 +16,19 @@ interface ApplicationProps {
 }
 
 const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
+  const { push, query } = useRouter()
+  const { error, fullStructure } = useGetFullApplicationStructure({
+    structure,
+  })
+
+  useEffect(() => {
+    if (!fullStructure) return
+
+    // Re-direct if application is not valid
+    if (!fullStructure.info.valid) push(`/applicationNEW/${structure.info.serial}`) // Go to first invalid page
+  }, [fullStructure])
+
+  if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   return <Header>SUMMARY PAGE</Header>
 }
 

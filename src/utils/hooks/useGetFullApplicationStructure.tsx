@@ -7,7 +7,11 @@ import {
   ResponsesByCode,
   TemplateElementStateNEW,
 } from '../types'
-import { ApplicationResponse, useGetAllResponsesQuery } from '../generated/graphql'
+import {
+  ApplicationResponse,
+  ApplicationStatus,
+  useGetAllResponsesQuery,
+} from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
@@ -34,7 +38,9 @@ const useGetFullApplicationStructure = ({
   } = useUserState()
   const [fullStructure, setFullStructure] = useState<FullStructure>()
   const [isError, setIsError] = useState(false)
-  const [firstRunProcessValidation, setFirstRunProcessValidation] = useState(firstRunValidation)
+  const [firstRunProcessValidation, setFirstRunProcessValidation] = useState(
+    firstRunValidation && structure.info.current?.status === ApplicationStatus.Draft
+  )
 
   const [lastRefetchedTimestamp, setLastRefetchedTimestamp] = useState<number>(0)
   const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState<number>(0)
