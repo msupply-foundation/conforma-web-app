@@ -30,10 +30,9 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     push,
   } = useRouter()
 
-  const currentSection = sectionCode
+  const pageNum = Number(page)
   const currentPage = `Page ${page}`
-  const currentSectionIndex = structure.sections[currentSection].details.index
-  const currentPageNumber = structure.sections[currentSection].pages[currentPage].number
+  const currentSectionIndex = structure.sections[sectionCode].details.index
 
   console.log('Structure', fullStructure)
 
@@ -47,20 +46,20 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       push(`/applicationNEW/${structure.info.serial}/summary`)
 
     // Re-direct if trying to access page higher than allowed
-    if (!fullStructure.info.isLinear) return
-    const firstInvalidSectionIndex = fullStructure.info?.firstInvalidPageStrict?.sectionIndex
-    const firstInvalidPageNum = fullStructure.info?.firstInvalidPageStrict?.pageNumber
-    if (
-      firstInvalidSectionIndex != null &&
-      firstInvalidPageNum != null &&
-      (currentSectionIndex > firstInvalidSectionIndex ||
-        (currentSectionIndex >= firstInvalidSectionIndex &&
-          currentPageNumber > firstInvalidPageNum))
-    ) {
-      push(
-        `/applicationNEW/${structure.info.serial}/${structure.info.firstInvalidPageStrict?.sectionCode}/Page${structure.info.firstInvalidPageStrict?.pageNumber}`
-      )
-    }
+    // if (!fullStructure.info.isLinear) return
+    // const firstInvalidSectionIndex = fullStructure.info?.firstInvalidPageStrict?.sectionIndex
+    // const firstInvalidPageNum = fullStructure.info?.firstInvalidPageStrict?.pageNumber
+    // if (
+    //   firstInvalidSectionIndex != null &&
+    //   firstInvalidPageNum != null &&
+    //   (currentSectionIndex > firstInvalidSectionIndex ||
+    //     (currentSectionIndex >= firstInvalidSectionIndex &&
+    //       currentPageNumber > firstInvalidPageNum))
+    // ) {
+    //   push(
+    //     `/applicationNEW/${structure.info.serial}/${structure.info.firstInvalidPageStrict?.sectionCode}/Page${structure.info.firstInvalidPageStrict?.pageNumber}`
+    //   )
+    // }
   }, [structure, fullStructure, sectionCode, page])
 
   const handleChangeToPage = (sectionCode: string, pageNumber: number) => {
@@ -100,12 +99,12 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         <Grid.Column width={10} stretched>
           <Segment basic>
             <Segment vertical style={{ marginBottom: 20 }}>
-              <Header content={fullStructure.sections[currentSection].details.title} />
+              <Header content={fullStructure.sections[sectionCode].details.title} />
               <PageElements
-                elements={getCurrentPageElements(fullStructure, currentSection, currentPage)}
+                elements={getCurrentPageElements(fullStructure, sectionCode, pageNum)}
                 responsesByCode={responsesByCode}
                 isStrictPage={
-                  currentSection === strictSectionPage?.section &&
+                  sectionCode === strictSectionPage?.section &&
                   currentPage === strictSectionPage?.page
                 }
                 isEditable
@@ -138,7 +137,7 @@ const NavigationBox: React.FC = () => {
 
 export default ApplicationPage
 
-const getCurrentPageElements = (structure: FullStructure, section: string, page: string) => {
+const getCurrentPageElements = (structure: FullStructure, section: string, page: number) => {
   return structure.sections[section].pages[page].state.map(
     (item) => item.element
   ) as ElementStateNEW[]

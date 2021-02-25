@@ -9,6 +9,7 @@ const initialProgress = {
   totalRequired: 0,
   totalSum: 0,
   valid: true,
+  firstIncompletePage: Infinity,
 }
 
 const calculateCompleted = (totalSum: number, doneRequired: number, doneNonRequired: number) => {
@@ -16,9 +17,9 @@ const calculateCompleted = (totalSum: number, doneRequired: number, doneNonRequi
   return totalSum === totalDone
 }
 
-const getSectionProgress = (pages: PageNEW[]): Progress =>
-  pages.reduce(
-    (sectionProgress: Progress, { progress }) => {
+const getSectionProgress = (pages: PageNEW[]): Progress => {
+  const sectionProgress = pages.reduce(
+    (sectionProgress: Progress, { number, progress }) => {
       if (!progress) return sectionProgress
       sectionProgress.doneNonRequired += progress.doneNonRequired || 0
       sectionProgress.totalNonRequired += progress.totalNonRequired || 0
@@ -31,27 +32,38 @@ const getSectionProgress = (pages: PageNEW[]): Progress =>
         sectionProgress.doneNonRequired
       )
       if (!progress.valid) sectionProgress.valid = false
+      if (
+        sectionProgress.firstIncompletePage &&
+        number < sectionProgress.firstIncompletePage &&
+        (!progress.valid || progress.doneRequired < progress.totalRequired)
+      )
+        sectionProgress.firstIncompletePage = number
       return sectionProgress
     },
     { ...initialProgress }
   )
+  if (sectionProgress.firstIncompletePage === Infinity) sectionProgress.firstIncompletePage = null
+  return sectionProgress
+}
 
 export const generateResponsesProgress = (structure: FullStructure) => {
-  let firstInvalidSectionCodeStrict = ''
-  let firstInvalidSectionIndexStrict = Infinity
-  let firstInvalidPageInSectionStrict = Infinity
+  let firstIncompleteSectionCode = ''
+  let firstIncompleteSectionIndex = Infinity
+  let firstIncompletePageInSection = Infinity
+  let firstIncompletePageThisSection = Infinity
   const updateFirstInvalid = (section: SectionStateNEW, page: PageNEW) => {
     if (
-      section.details.index <= firstInvalidSectionIndexStrict &&
-      page.number < firstInvalidPageInSectionStrict &&
+      section.details.index <= firstIncompleteSectionIndex &&
+      page.number < firstIncompletePageInSection &&
       (!page.progress.valid || page.progress.doneRequired < page.progress.totalRequired)
     ) {
-      firstInvalidPageInSectionStrict = page.number
-      firstInvalidSectionIndexStrict = section.details.index
-      firstInvalidSectionCodeStrict = section.details.code
+      firstIncompletePageInSection = page.number
+      firstIncompleteSectionIndex = section.details.index
+      firstIncompleteSectionCode = section.details.code
     }
   }
   Object.values(structure.sections).forEach((section) => {
+    firstIncompletePageThisSection = Infinity
     Object.values(section.pages).forEach((page) => {
       page.progress = { ...initialProgress }
       page.state
@@ -80,12 +92,12 @@ export const generateResponsesProgress = (structure: FullStructure) => {
     })
     section.progress = getSectionProgress(Object.values(section.pages))
   })
-  structure.info.firstInvalidPageStrict = firstInvalidSectionCodeStrict
+  structure.info.firstIncompletePage = firstIncompleteSectionCode
     ? {
-        sectionCode: firstInvalidSectionCodeStrict,
-        pageName: `Page ${firstInvalidPageInSectionStrict}`,
-        sectionIndex: firstInvalidSectionIndexStrict,
-        pageNumber: firstInvalidPageInSectionStrict,
+        sectionCode: firstIncompleteSectionCode,
+        pageName: `Page ${firstIncompletePageInSection}`,
+        sectionIndex: firstIncompleteSectionIndex,
+        pageNumber: firstIncompletePageInSection,
       }
     : null
 }
