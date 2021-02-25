@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Divider, Header, Message, Segment, Sticky } from 'semantic-ui-react'
-import { FullStructure, SectionAndPage, TemplateDetails } from '../../utils/types'
+import { FullStructure, SectionAndPage, StageAndStatus, TemplateDetails } from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { ApplicationHeader, Loading } from '../../components'
 import strings from '../../utils/constants'
 import { useUserState } from '../../contexts/UserState'
 import SectionsProgress from '../../components/Sections/SectionsProgress'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { ApplicationStatus } from '../../utils/generated/graphql'
 
 interface ApplicationProps {
   structure: FullStructure
@@ -17,6 +18,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
   const {
     query: { serialNumber },
     push,
+    replace,
   } = useRouter()
   const {
     userState: { currentUser },
@@ -25,6 +27,13 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
   const { error, fullStructure } = useGetFullApplicationStructure({
     structure,
   })
+
+  useEffect(() => {
+    if (!fullStructure) return
+    const { status } = fullStructure.info.current as StageAndStatus
+    if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired)
+      replace(`/application/${serialNumber}/summary`)
+  }, [fullStructure])
 
   const handleResumeClick = ({ sectionCode, pageName }: SectionAndPage) => {
     push(`/applicationNEW/${serialNumber}/${sectionCode}/${pageName}`)
