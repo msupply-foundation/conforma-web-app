@@ -82,6 +82,7 @@ export {
   LoginPayload,
   BasicStringObject,
   SortQuery,
+  SectionAndPage,
 }
 
 interface ApplicationDetails {
@@ -92,6 +93,7 @@ interface ApplicationDetails {
   outcome: string
   isLinear: boolean
   current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
+  firstIncompletePage?: SectionAndPage | null
 }
 
 interface ApplicationElementStates {
@@ -248,6 +250,7 @@ type PageElements = {
 
 interface PageNEW {
   number: number
+  name: string
   progress: Progress
   state: PageElement[]
 }
@@ -270,6 +273,7 @@ interface Progress {
   totalNonRequired: number
   totalSum: number
   valid: boolean
+  firstIncompletePage: number | null
 }
 
 type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
@@ -354,11 +358,10 @@ interface SectionsStructure {
 }
 interface SectionStateNEW {
   details: SectionDetails
-  invalidPage?: number
   progress?: Progress
   assigned?: ReviewerDetails
   pages: {
-    [pageName: string]: PageNEW
+    [pageNum: number]: PageNEW
   }
 }
 interface SectionsStructureNEW {
@@ -482,3 +485,8 @@ interface SortQuery {
   sortColumn?: string
   sortDirection?: 'ascending' | 'descending'
 }
+
+type SectionAndPage = {
+  sectionCode: string
+  pageNumber: number
+} | null

@@ -30,22 +30,37 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     push,
   } = useRouter()
 
-  const currentSection = sectionCode
-  const currentPage = `Page ${page}`
+  const pageNum = Number(page)
+  const sectionIndex = structure.sections[sectionCode].details.index
 
   console.log('Structure', fullStructure)
 
   useEffect(() => {
-    if (!structure) return
+    if (!fullStructure) return
 
-    // Re-direct based on application status and progress
-    if (structure.info.current?.status === ApplicationStatus.ChangesRequired)
-      push(`/applicationNEW/${structure.info.serial}`)
+    // Re-direct based on application status
+    if (fullStructure.info.current?.status === ApplicationStatus.ChangesRequired)
+      push(`/applicationNEW/${fullStructure.info.serial}`)
     if (structure.info.current?.status !== ApplicationStatus.Draft)
-      push(`/applicationNEW/${structure.info.serial}/summary`)
+      push(`/applicationNEW/${fullStructure.info.serial}/summary`)
 
-    // TO-DO: Redirect based on Progress (wait till Progress calculation is done)
-  }, [structure])
+    // Re-direct if trying to access page higher than allowed
+    if (!fullStructure.info.isLinear || !fullStructure.info?.firstIncompletePage) return
+    const {
+      sectionCode: firstIncompleteSectionCode,
+      pageNumber: firstIncompletePageNum,
+    } = fullStructure.info?.firstIncompletePage
+    const firstIncompleteSectionIndex =
+      fullStructure.sections[firstIncompleteSectionCode].details.index
+    if (
+      sectionIndex > firstIncompleteSectionIndex ||
+      (sectionIndex >= firstIncompleteSectionIndex && pageNum > firstIncompletePageNum)
+    ) {
+      push(
+        `/applicationNEW/${structure.info.serial}/${firstIncompleteSectionCode}/Page${firstIncompletePageNum}`
+      )
+    }
+  }, [structure, fullStructure, sectionCode, page])
 
   const handleChangeToPage = (sectionCode: string, pageNumber: number) => {
     if (!structure.info.isLinear)
@@ -84,13 +99,12 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         <Grid.Column width={10} stretched>
           <Segment basic>
             <Segment vertical style={{ marginBottom: 20 }}>
-              <Header content={fullStructure.sections[currentSection].details.title} />
+              <Header content={fullStructure.sections[sectionCode].details.title} />
               <PageElements
-                elements={getCurrentPageElements(fullStructure, currentSection, currentPage)}
+                elements={getCurrentPageElements(fullStructure, sectionCode, pageNum)}
                 responsesByCode={responsesByCode}
                 isStrictPage={
-                  currentSection === strictSectionPage?.section &&
-                  currentPage === strictSectionPage?.page
+                  sectionCode === strictSectionPage?.section && pageNum === strictSectionPage?.page
                 }
                 isEditable
               />
@@ -122,7 +136,7 @@ const NavigationBox: React.FC = () => {
 
 export default ApplicationPage
 
-const getCurrentPageElements = (structure: FullStructure, section: string, page: string) => {
+const getCurrentPageElements = (structure: FullStructure, section: string, page: number) => {
   return structure.sections[section].pages[page].state.map(
     (item) => item.element
   ) as ElementStateNEW[]
