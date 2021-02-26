@@ -1,29 +1,58 @@
 import React from 'react'
 import { Accordion, Container, Grid, Header, Icon, Label, List, Sticky } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import { FullStructure, PageNEW, Progress } from '../../utils/types'
+import checkPageIsAccessible from '../../utils/helpers/structure/checkPageIsAccessible'
+import { useRouter } from '../../utils/hooks/useRouter'
+import {
+  FullStructure,
+  MethodRevalidate,
+  MethodToCallProps,
+  PageNEW,
+  Progress,
+} from '../../utils/types'
 
 interface ProgressBarProps {
   structure: FullStructure
-  changePage: (sectionCode: string, pageNumber: number) => void
-  current: {
-    sectionCode: string
-    page: number
-  }
+  requestRevalidation: MethodRevalidate
 }
 
-const ProgressBarNEW: React.FC<ProgressBarProps> = ({ structure, changePage, current }) => {
+const ProgressBarNEW: React.FC<ProgressBarProps> = ({ structure, requestRevalidation }) => {
   const {
     info: { isLinear },
     sections,
   } = structure
 
-  const activeIndex =
-    Object.values(sections).findIndex(({ details }) => details.code === current.sectionCode) || 0
+  const {
+    query: { sectionCode: currentSectionCode, page },
+    push,
+  } = useRouter()
 
-  const getPageList = (sectionCode: string, pages: { [pageName: string]: PageNEW }) => {
+  const activeIndex =
+    Object.values(sections).findIndex(({ details }) => details.code === currentSectionCode) || 0
+
+  const handleChangeToPage = (sectionCode: string, pageNumber: number) => {
+    if (!structure.info.isLinear)
+      push(`/applicationNEW/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
+
+    // Use validationMethod to check if can change to page (on linear application) OR
+    // display current page with strict validation
+    requestRevalidation(({ firstIncompletePage, setStrictSectionPage }: MethodToCallProps) => {
+      if (
+        firstIncompletePage &&
+        checkPageIsAccessible({
+          fullStructure: structure,
+          firstIncomplete: firstIncompletePage,
+          current: { sectionCode, pageNumber },
+        })
+      ) {
+        push(`/applicationNEW/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
+      } else setStrictSectionPage(firstIncompletePage)
+    })
+  }
+
+  const getPageList = (sectionCode: string, pages: { [pageNumber: string]: PageNEW }) => {
     const isActivePage = (sectionCode: string, pageNumber: number) =>
-      current.sectionCode === sectionCode && current.page === pageNumber
+      currentSectionCode === sectionCode && Number(page) === pageNumber
 
     return (
       <List
@@ -35,7 +64,7 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({ structure, changePage, cur
           as: 'a',
           icon: progress ? getIndicator(progress) : null,
           content: pageName,
-          onClick: () => changePage(sectionCode, Number(number)),
+          onClick: () => handleChangeToPage(sectionCode, Number(number)),
         }))}
       />
     )
@@ -60,13 +89,6 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({ structure, changePage, cur
     )
   }
 
-  const isSectionDisabled = (index: number) => {
-    const currentSection = Object.values(sections).findIndex(
-      ({ details }) => details.code === current.sectionCode
-    )
-    return isLinear && currentSection < index
-  }
-
   const sectionsList = Object.values(sections).map(({ details, progress, pages }, index) => {
     const stepNumber = index + 1
     const { code, title } = details
@@ -79,9 +101,7 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({ structure, changePage, cur
               {progress && getIndicator(progress, stepNumber)}
             </Grid.Column>
             <Grid.Column width={12} textAlign="left" verticalAlign="middle">
-              <Header as="h4" disabled={isSectionDisabled(index)}>
-                {title}
-              </Header>
+              <Header as="h4">{title}</Header>
             </Grid.Column>
           </Grid>
 
@@ -92,7 +112,7 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({ structure, changePage, cur
           // </div>
         ),
       },
-      onTitleClick: () => changePage(code, 1),
+      onTitleClick: () => handleChangeToPage(code, 1),
       content: {
         content: getPageList(code, pages),
       },

@@ -3,8 +3,9 @@ import {
   FullStructure,
   ResponsesByCode,
   ElementStateNEW,
-  MethodToCallOnRevalidation,
   SectionAndPage,
+  MethodRevalidate,
+  MethodToCallProps,
 } from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { ApplicationStatus } from '../../utils/generated/graphql'
@@ -16,10 +17,15 @@ import { Button, Grid, Header, Message, Segment, Sticky } from 'semantic-ui-reac
 import ProgressBarNEW from '../../components/Application/ProgressBarNEW'
 import { PageElements } from '../../components/Application'
 import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
+import checkPageIsAccessible from '../../utils/helpers/structure/checkPageIsAccessible'
 
 interface ApplicationProps {
   structure: FullStructure
   responses?: ResponsesByCode
+}
+
+interface MethodToCall {
+  (props: MethodToCallProps): void
 }
 
 const getFirstInvalidPage = (fullStructure: FullStructure): SectionAndPage | null => {
@@ -29,7 +35,7 @@ const getFirstInvalidPage = (fullStructure: FullStructure): SectionAndPage | nul
 }
 
 interface RevalidationState {
-  methodToCallOnRevalidation: MethodToCallOnRevalidation | null
+  methodToCallOnRevalidation: MethodToCall | null
   shouldProcessValidation: boolean
   lastRevalidationRequest: number
 }
@@ -44,7 +50,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   } = useRouter()
 
   const pageNumber = Number(page)
-  const sectionIndex = structure.sections[sectionCode].details.index
 
   const {
     state: { isLastElementUpdateProcessed, elementUpdatedTimestamp },
@@ -69,7 +74,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   /* Method to pass to progress bar, next button and submit button to cause revalidation before action can be proceeded
      Should always be called on submit, but only be called on next or progress bar navigation when isLinear */
   // TODO may rename if we want to display loading modal ?
-  const requestRevalidation = (methodToCall: MethodToCallOnRevalidation) => {
+  const requestRevalidation: MethodRevalidate = (methodToCall) => {
     setRevalidationState({
       methodToCallOnRevalidation: methodToCall,
       shouldProcessValidation: true,
@@ -92,7 +97,10 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         methodToCallOnRevalidation: null,
         shouldProcessValidation: false,
       })
-      revalidationState.methodToCallOnRevalidation(firstInvalidPage, setStrictSectionPage)
+      revalidationState.methodToCallOnRevalidation({
+        firstIncompletePage: fullStructure.info.firstIncompletePage,
+        setStrictSectionPage,
+      })
       // TODO hide loading modal
     }
   }, [revalidationState, fullStructure])
@@ -108,29 +116,13 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
 
     // Re-direct if trying to access page higher than allowed
     if (!fullStructure.info.isLinear || !fullStructure.info?.firstIncompletePage) return
-    const {
-      sectionCode: firstIncompleteSectionCode,
-      pageNumber: firstIncompletePageNum,
-    } = fullStructure.info?.firstIncompletePage
-    const firstIncompleteSectionIndex =
-      fullStructure.sections[firstIncompleteSectionCode].details.index
-    if (
-      sectionIndex > firstIncompleteSectionIndex ||
-      (sectionIndex >= firstIncompleteSectionIndex && pageNumber > firstIncompletePageNum)
-    ) {
-      push(
-        `/applicationNEW/${structure.info.serial}/${firstIncompleteSectionCode}/Page${firstIncompletePageNum}`
-      )
+    const firstIncomplete = fullStructure.info?.firstIncompletePage
+    const current = { sectionCode, pageNumber }
+    if (!checkPageIsAccessible({ fullStructure, firstIncomplete, current })) {
+      const { sectionCode, pageNumber } = firstIncomplete
+      push(`/applicationNEW/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
     }
   }, [structure, fullStructure, sectionCode, page])
-
-  const handleChangeToPage = (sectionCode: string, pageNumber: number) => {
-    if (!structure.info.isLinear)
-      push(`/applicationNEW/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
-
-    // TODO: Use validationMethod to check if can change to page OR
-    // Would display modal (?) and current page with strict validation
-  }
 
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
@@ -152,11 +144,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         }}
       >
         <Grid.Column width={4}>
-          <ProgressBarNEW
-            structure={fullStructure}
-            current={{ sectionCode, page: Number(page) }}
-            changePage={handleChangeToPage}
-          />
+          <ProgressBarNEW structure={fullStructure} requestRevalidation={requestRevalidation} />
         </Grid.Column>
         <Grid.Column width={10} stretched>
           <Segment basic>

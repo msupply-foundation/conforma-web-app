@@ -42,7 +42,8 @@ export {
   FullStructure,
   IGraphQLConnection,
   LooseString,
-  MethodToCallOnRevalidation,
+  MethodRevalidate,
+  MethodToCallProps,
   Page,
   PageElements,
   PageNEW,
@@ -96,7 +97,7 @@ interface ApplicationDetails {
   outcome: string
   isLinear: boolean
   current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
-  firstIncompletePage?: SectionAndPage | null
+  firstIncompletePage: SectionAndPage | null
 }
 
 interface ApplicationElementStates {
@@ -248,8 +249,13 @@ interface IGraphQLConnection {
 
 type LooseString = string | null | undefined
 
-interface MethodToCallOnRevalidation {
-  (firstInvalidPage: SectionAndPage | null, setStrictSectionPage: SetStrictSectionPage): void
+interface MethodRevalidate {
+  (methodToCall: (props: MethodToCallProps) => void): void
+}
+
+interface MethodToCallProps {
+  firstIncompletePage: SectionAndPage | null
+  setStrictSectionPage: SetStrictSectionPage
 }
 
 interface Page {
