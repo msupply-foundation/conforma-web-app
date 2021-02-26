@@ -46,6 +46,7 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({
     // display current page with strict validation
     requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
       if (!firstStrictInvalidPage) {
+        setStrictSectionPage(null)
         push(`/applicationNEW/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
         return
       }
@@ -55,9 +56,10 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({
           firstIncomplete: firstStrictInvalidPage,
           current: { sectionCode, pageNumber },
         })
-      )
+      ) {
+        setStrictSectionPage(null)
         push(`/applicationNEW/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
-      else {
+      } else {
         setStrictSectionPage(firstStrictInvalidPage)
         push(
           `/applicationNEW/${structure.info.serial}/${firstStrictInvalidPage.sectionCode}/Page${firstStrictInvalidPage.pageNumber}`
