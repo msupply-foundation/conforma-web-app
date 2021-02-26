@@ -28,12 +28,6 @@ interface MethodToCall {
   (props: MethodToCallProps): void
 }
 
-const getFirstInvalidPage = (fullStructure: FullStructure): SectionAndPage | null => {
-  // TODO implement, should rely on .progress
-  // return { sectionCode: 'S1', pageName: 'Page 2' }
-  return null
-}
-
 interface RevalidationState {
   methodToCallOnRevalidation: MethodToCall | null
   shouldProcessValidation: boolean
@@ -52,7 +46,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   const pageNumber = Number(page)
 
   const {
-    state: { isLastElementUpdateProcessed, elementUpdatedTimestamp },
+    state: { isLastElementUpdateProcessed, elementUpdatedTimestamp, wasElementChange },
   } = useFormElementUpdateTracker()
 
   const [strictSectionPage, setStrictSectionPage] = useState<SectionAndPage | null>(null)
@@ -63,7 +57,8 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   })
 
   const shouldRevalidate = isLastElementUpdateProcessed && revalidationState.shouldProcessValidation
-  const minRefetchTimestampForRevalidation = shouldRevalidate ? elementUpdatedTimestamp : 0
+  const minRefetchTimestampForRevalidation =
+    shouldRevalidate && wasElementChange ? elementUpdatedTimestamp : 0
 
   const { error, fullStructure } = useGetFullApplicationStructure({
     structure,
@@ -90,15 +85,13 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       revalidationState.methodToCallOnRevalidation &&
       (fullStructure?.lastValidationTimestamp || 0) > revalidationState.lastRevalidationRequest
     ) {
-      const firstInvalidPage = getFirstInvalidPage(fullStructure)
-
       setRevalidationState({
         ...revalidationState,
         methodToCallOnRevalidation: null,
         shouldProcessValidation: false,
       })
       revalidationState.methodToCallOnRevalidation({
-        firstIncompletePage: fullStructure.info.firstIncompletePage,
+        firstStrictInvalidPage: fullStructure.info.firstStrictInvalidPage,
         setStrictSectionPage,
       })
       // TODO hide loading modal
@@ -115,8 +108,8 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       push(`/applicationNEW/${fullStructure.info.serial}/summary`)
 
     // Re-direct if trying to access page higher than allowed
-    if (!fullStructure.info.isLinear || !fullStructure.info?.firstIncompletePage) return
-    const firstIncomplete = fullStructure.info?.firstIncompletePage
+    if (!fullStructure.info.isLinear || !fullStructure.info?.firstStrictInvalidPage) return
+    const firstIncomplete = fullStructure.info?.firstStrictInvalidPage
     const current = { sectionCode, pageNumber }
     if (!checkPageIsAccessible({ fullStructure, firstIncomplete, current })) {
       const { sectionCode, pageNumber } = firstIncomplete
@@ -144,7 +137,11 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         }}
       >
         <Grid.Column width={4}>
-          <ProgressBarNEW structure={fullStructure} requestRevalidation={requestRevalidation} />
+          <ProgressBarNEW
+            structure={fullStructure}
+            requestRevalidation={requestRevalidation}
+            strictSectionPage={strictSectionPage}
+          />
         </Grid.Column>
         <Grid.Column width={10} stretched>
           <Segment basic>

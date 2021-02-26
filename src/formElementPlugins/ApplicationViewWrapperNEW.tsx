@@ -70,7 +70,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
 
   useEffect(() => {
     onUpdate(currentResponse?.text)
-  }, [currentResponse])
+  }, [currentResponse, isStrictPage])
 
   const onUpdate = async (value: LooseString) => {
     const responses = { thisResponse: value, ...allResponses }
@@ -99,8 +99,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
           },
         })
       setUpdateTrackerState({
-        type: 'setElementTimestamp',
-        timestampType: 'elementUpdatedTimestamp',
+        type: 'setElementUpdated',
+        textValue: jsonValue?.text || '',
       })
     } else {
       // Save response for plugins with internal validation
@@ -115,8 +115,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
         },
       })
       setUpdateTrackerState({
-        type: 'setElementTimestamp',
-        timestampType: 'elementUpdatedTimestamp',
+        type: 'setElementUpdated',
+        textValue: jsonValue?.text || '',
       })
     }
   }
@@ -124,8 +124,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
   const setIsActive = () => {
     // Tells application state that a plugin field is in focus
     setUpdateTrackerState({
-      type: 'setElementTimestamp',
-      timestampType: 'elementEnteredTimestamp',
+      type: 'setElementUpdated',
+      textValue: value || '',
     })
   }
 
@@ -217,11 +217,8 @@ const calculateValidationState = async ({
     ? await validate(validationExpression, validationMessage as string, evaluationParameters)
     : { isValid: true }
   if (!validationResult.isValid) return validationResult
-  if (
-    isRequired &&
-    isStrictPage &&
-    (responses.thisResponse === undefined || responses.thisResponse === null)
-  )
+  // !responses.thisResponse, check for null, undefined, empty string
+  if (isRequired && isStrictPage && !responses.thisResponse)
     return {
       isValid: false,
       validationMessage: validationMessage || strings.VALIDATION_REQUIRED_ERROR,
