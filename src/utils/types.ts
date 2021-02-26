@@ -27,6 +27,7 @@ export {
   ColumnDetails,
   ColumnsPerRole,
   ContextApplicationState,
+  ContextFormElementUpdateTrackerState,
   ContextListState,
   CurrentPage,
   DecisionAreaState,
@@ -41,6 +42,7 @@ export {
   FullStructure,
   IGraphQLConnection,
   LooseString,
+  MethodToCallOnRevalidation,
   Page,
   PageElements,
   PageNEW,
@@ -57,12 +59,14 @@ export {
   ReviewQuestion,
   ReviewQuestionDecision,
   ReviewerResponsesPayload,
+  SectionAndPage,
   SectionState,
   SectionDetails,
   SectionProgress,
   SectionsStructure,
   SectionStateNEW,
   SectionsStructureNEW,
+  SortQuery,
   StageAndStatus,
   TemplateDetails,
   TemplateElementState,
@@ -81,7 +85,6 @@ export {
   Organisation,
   LoginPayload,
   BasicStringObject,
-  SortQuery,
 }
 
 interface ApplicationDetails {
@@ -138,6 +141,12 @@ interface ColumnDetails {
 
 type ColumnsPerRole = {
   [role in USER_ROLES]: Array<APPLICATION_COLUMNS>
+}
+
+interface ContextFormElementUpdateTrackerState {
+  elementEnteredTimestamp: number
+  elementUpdatedTimestamp: number
+  isLastElementUpdateProcessed: boolean
 }
 
 interface ContextApplicationState {
@@ -223,9 +232,11 @@ interface EvaluatorParameters {
 }
 
 interface FullStructure {
+  lastValidationTimestamp?: number
   info: ApplicationDetails
   sections: SectionsStructureNEW
   stages: ApplicationStages
+  responsesByCode?: ResponsesByCode
 }
 
 interface IGraphQLConnection {
@@ -481,4 +492,14 @@ type UserRoles = {
 interface SortQuery {
   sortColumn?: string
   sortDirection?: 'ascending' | 'descending'
+}
+
+type SectionAndPage = { sectionCode: string; pageName: string }
+
+interface SetStrictSectionPage {
+  (sectionAndPage: SectionAndPage | null): void
+}
+
+interface MethodToCallOnRevalidation {
+  (firstInvalidPage: SectionAndPage | null, setStrictSectionPage: SetStrictSectionPage): void
 }
