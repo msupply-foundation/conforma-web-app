@@ -488,7 +488,5 @@ interface SortQuery {
 
 type SectionAndPage = {
   sectionCode: string
-  pageName: string
-  sectionIndex?: number
-  pageNumber?: number
+  pageNumber: number
 } | null

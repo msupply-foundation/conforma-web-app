@@ -29,13 +29,13 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({ structure, changePage, cur
       <List
         link
         style={{ paddingLeft: '50px' }}
-        items={Object.entries(pages).map(([pageName, { number, progress }]) => ({
+        items={Object.entries(pages).map(([number, { name: pageName, progress }]) => ({
           key: `ProgressSection_${sectionCode}_${number}`,
-          active: isActivePage(sectionCode, number),
+          active: isActivePage(sectionCode, Number(number)),
           as: 'a',
           icon: progress ? getIndicator(progress) : null,
           content: pageName,
-          onClick: () => changePage(sectionCode, number),
+          onClick: () => changePage(sectionCode, Number(number)),
         }))}
       />
     )

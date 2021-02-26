@@ -50,7 +50,6 @@ export const generateResponsesProgress = (structure: FullStructure) => {
   let firstIncompleteSectionCode = ''
   let firstIncompleteSectionIndex = Infinity
   let firstIncompletePageInSection = Infinity
-  let firstIncompletePageThisSection = Infinity
   const updateFirstInvalid = (section: SectionStateNEW, page: PageNEW) => {
     if (
       section.details.index <= firstIncompleteSectionIndex &&
@@ -63,7 +62,6 @@ export const generateResponsesProgress = (structure: FullStructure) => {
     }
   }
   Object.values(structure.sections).forEach((section) => {
-    firstIncompletePageThisSection = Infinity
     Object.values(section.pages).forEach((page) => {
       page.progress = { ...initialProgress }
       page.state
@@ -95,8 +93,6 @@ export const generateResponsesProgress = (structure: FullStructure) => {
   structure.info.firstIncompletePage = firstIncompleteSectionCode
     ? {
         sectionCode: firstIncompleteSectionCode,
-        pageName: `Page ${firstIncompletePageInSection}`,
-        sectionIndex: firstIncompleteSectionIndex,
         pageNumber: firstIncompletePageInSection,
       }
     : null

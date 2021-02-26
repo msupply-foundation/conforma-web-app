@@ -31,8 +31,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   } = useRouter()
 
   const pageNum = Number(page)
-  const currentPage = `Page ${page}`
-  const currentSectionIndex = structure.sections[sectionCode].details.index
+  const sectionIndex = structure.sections[sectionCode].details.index
 
   console.log('Structure', fullStructure)
 
@@ -46,20 +45,21 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       push(`/applicationNEW/${structure.info.serial}/summary`)
 
     // Re-direct if trying to access page higher than allowed
-    // if (!fullStructure.info.isLinear) return
-    // const firstInvalidSectionIndex = fullStructure.info?.firstInvalidPageStrict?.sectionIndex
-    // const firstInvalidPageNum = fullStructure.info?.firstInvalidPageStrict?.pageNumber
-    // if (
-    //   firstInvalidSectionIndex != null &&
-    //   firstInvalidPageNum != null &&
-    //   (currentSectionIndex > firstInvalidSectionIndex ||
-    //     (currentSectionIndex >= firstInvalidSectionIndex &&
-    //       currentPageNumber > firstInvalidPageNum))
-    // ) {
-    //   push(
-    //     `/applicationNEW/${structure.info.serial}/${structure.info.firstInvalidPageStrict?.sectionCode}/Page${structure.info.firstInvalidPageStrict?.pageNumber}`
-    //   )
-    // }
+    if (!fullStructure.info.isLinear || !fullStructure.info?.firstIncompletePage) return
+    const {
+      sectionCode: firstIncompleteSectionCode,
+      pageNumber: firstIncompletePageNum,
+    } = fullStructure.info?.firstIncompletePage
+    const firstIncompleteSectionIndex =
+      fullStructure.sections[firstIncompleteSectionCode].details.index
+    if (
+      sectionIndex > firstIncompleteSectionIndex ||
+      (sectionIndex >= firstIncompleteSectionIndex && pageNum > firstIncompletePageNum)
+    ) {
+      push(
+        `/applicationNEW/${structure.info.serial}/${firstIncompleteSectionCode}/Page${firstIncompletePageNum}`
+      )
+    }
   }, [structure, fullStructure, sectionCode, page])
 
   const handleChangeToPage = (sectionCode: string, pageNumber: number) => {
@@ -104,8 +104,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
                 elements={getCurrentPageElements(fullStructure, sectionCode, pageNum)}
                 responsesByCode={responsesByCode}
                 isStrictPage={
-                  sectionCode === strictSectionPage?.section &&
-                  currentPage === strictSectionPage?.page
+                  sectionCode === strictSectionPage?.section && pageNum === strictSectionPage?.page
                 }
                 isEditable
               />
