@@ -28,6 +28,13 @@ export default gql`
         status
         outcome
         lastActiveDate
+        numberOfAssignedNotStartedReviews
+        numberOfAssignedReviews
+        numberOfChangesRequestedReviews
+        numberOfDraftReviews
+        numberOfReviewsSelfAssignedBySomeoneElse
+        numberOfSelfAssignableReviews
+        numberOfSubmittedReviews
       }
       # Use the page and count info for rendering Pagination UI
       pageInfo {

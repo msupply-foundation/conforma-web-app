@@ -80,6 +80,8 @@ export type Query = Node & {
   reviewResponses?: Maybe<ReviewResponsesConnection>;
   /** Reads and enables pagination through a set of `ReviewStatusHistory`. */
   reviewStatusHistories?: Maybe<ReviewStatusHistoriesConnection>;
+  /** Reads and enables pagination through a set of `ReviewStatusList`. */
+  reviewStatusLists?: Maybe<ReviewStatusListsConnection>;
   /** Reads and enables pagination through a set of `Template`. */
   templates?: Maybe<TemplatesConnection>;
   /** Reads and enables pagination through a set of `TemplateAction`. */
@@ -530,6 +532,19 @@ export type QueryReviewStatusHistoriesArgs = {
   orderBy?: Maybe<Array<ReviewStatusHistoriesOrderBy>>;
   condition?: Maybe<ReviewStatusHistoryCondition>;
   filter?: Maybe<ReviewStatusHistoryFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewStatusListsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewStatusListsOrderBy>>;
+  condition?: Maybe<ReviewStatusListCondition>;
+  filter?: Maybe<ReviewStatusListFilter>;
 };
 
 
@@ -1618,6 +1633,7 @@ export enum Trigger {
   OnReviewSubmit = 'ON_REVIEW_SUBMIT',
   OnReviewStart = 'ON_REVIEW_START',
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
+  OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnScheduleTime = 'ON_SCHEDULE_TIME',
   Processing = 'PROCESSING',
@@ -2499,7 +2515,7 @@ export type ReviewAssignmentStatusFilter = {
 
 export enum ReviewAssignmentStatus {
   Available = 'AVAILABLE',
-  NotAvailable = 'NOT_AVAILABLE',
+  SelfAssignedByAnother = 'SELF_ASSIGNED_BY_ANOTHER',
   Assigned = 'ASSIGNED',
   AvailableForSelfAssignment = 'AVAILABLE_FOR_SELF_ASSIGNMENT'
 }
@@ -4522,7 +4538,7 @@ export type ReviewAssignment = Node & {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewAssignmentStatus>;
+  status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -5923,7 +5939,25 @@ export enum ApplicationListsOrderBy {
   LastActiveDateAsc = 'LAST_ACTIVE_DATE_ASC',
   LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC',
   IsFullyAssignedLevel_1Asc = 'IS_FULLY_ASSIGNED_LEVEL_1_ASC',
-  IsFullyAssignedLevel_1Desc = 'IS_FULLY_ASSIGNED_LEVEL_1_DESC'
+  IsFullyAssignedLevel_1Desc = 'IS_FULLY_ASSIGNED_LEVEL_1_DESC',
+  NumberOfSelfAssignableReviewsAsc = 'NUMBER_OF_SELF_ASSIGNABLE_REVIEWS_ASC',
+  NumberOfSelfAssignableReviewsDesc = 'NUMBER_OF_SELF_ASSIGNABLE_REVIEWS_DESC',
+  NumberOfAssignedReviewsAsc = 'NUMBER_OF_ASSIGNED_REVIEWS_ASC',
+  NumberOfAssignedReviewsDesc = 'NUMBER_OF_ASSIGNED_REVIEWS_DESC',
+  NumberOfAssignedNotStartedReviewsAsc = 'NUMBER_OF_ASSIGNED_NOT_STARTED_REVIEWS_ASC',
+  NumberOfAssignedNotStartedReviewsDesc = 'NUMBER_OF_ASSIGNED_NOT_STARTED_REVIEWS_DESC',
+  NumberOfReviewsSelfAssignedBySomeoneElseAsc = 'NUMBER_OF_REVIEWS_SELF_ASSIGNED_BY_SOMEONE_ELSE_ASC',
+  NumberOfReviewsSelfAssignedBySomeoneElseDesc = 'NUMBER_OF_REVIEWS_SELF_ASSIGNED_BY_SOMEONE_ELSE_DESC',
+  NumberOfDraftReviewsAsc = 'NUMBER_OF_DRAFT_REVIEWS_ASC',
+  NumberOfDraftReviewsDesc = 'NUMBER_OF_DRAFT_REVIEWS_DESC',
+  NumberOfSubmittedReviewsAsc = 'NUMBER_OF_SUBMITTED_REVIEWS_ASC',
+  NumberOfSubmittedReviewsDesc = 'NUMBER_OF_SUBMITTED_REVIEWS_DESC',
+  NumberOfChangesRequestedReviewsAsc = 'NUMBER_OF_CHANGES_REQUESTED_REVIEWS_ASC',
+  NumberOfChangesRequestedReviewsDesc = 'NUMBER_OF_CHANGES_REQUESTED_REVIEWS_DESC',
+  ReviewerIdAsc = 'REVIEWER_ID_ASC',
+  ReviewerIdDesc = 'REVIEWER_ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC'
 }
 
 /** A condition to be used against `ApplicationList` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -5958,7 +5992,26 @@ export type ApplicationListCondition = {
   lastActiveDate?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `isFullyAssignedLevel1` field. */
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `numberOfSelfAssignableReviews` field. */
+  numberOfSelfAssignableReviews?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `numberOfAssignedReviews` field. */
+  numberOfAssignedReviews?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `numberOfAssignedNotStartedReviews` field. */
+  numberOfAssignedNotStartedReviews?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `numberOfReviewsSelfAssignedBySomeoneElse` field. */
+  numberOfReviewsSelfAssignedBySomeoneElse?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `numberOfDraftReviews` field. */
+  numberOfDraftReviews?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `numberOfSubmittedReviews` field. */
+  numberOfSubmittedReviews?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `numberOfChangesRequestedReviews` field. */
+  numberOfChangesRequestedReviews?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `reviewerId` field. */
+  reviewerId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
 };
+
 
 /** A filter to be used against `ApplicationList` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationListFilter = {
@@ -5992,12 +6045,56 @@ export type ApplicationListFilter = {
   lastActiveDate?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `isFullyAssignedLevel1` field. */
   isFullyAssignedLevel1?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `numberOfSelfAssignableReviews` field. */
+  numberOfSelfAssignableReviews?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `numberOfAssignedReviews` field. */
+  numberOfAssignedReviews?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `numberOfAssignedNotStartedReviews` field. */
+  numberOfAssignedNotStartedReviews?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `numberOfReviewsSelfAssignedBySomeoneElse` field. */
+  numberOfReviewsSelfAssignedBySomeoneElse?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `numberOfDraftReviews` field. */
+  numberOfDraftReviews?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `numberOfSubmittedReviews` field. */
+  numberOfSubmittedReviews?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `numberOfChangesRequestedReviews` field. */
+  numberOfChangesRequestedReviews?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `reviewerId` field. */
+  reviewerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationListFilter>>;
   /** Checks for any expressions in this list. */
   or?: Maybe<Array<ApplicationListFilter>>;
   /** Negates the expression. */
   not?: Maybe<ApplicationListFilter>;
+};
+
+/** A filter to be used against BigInt fields. All fields are combined with a logical ‘and.’ */
+export type BigIntFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Scalars['BigInt']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Scalars['BigInt']>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Scalars['BigInt']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Scalars['BigInt']>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<Scalars['BigInt']>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<Scalars['BigInt']>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Scalars['BigInt']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Scalars['BigInt']>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Scalars['BigInt']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Scalars['BigInt']>;
 };
 
 /** A connection to a list of `ApplicationList` values. */
@@ -6030,6 +6127,15 @@ export type ApplicationList = {
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
+  numberOfSelfAssignableReviews?: Maybe<Scalars['BigInt']>;
+  numberOfAssignedReviews?: Maybe<Scalars['BigInt']>;
+  numberOfAssignedNotStartedReviews?: Maybe<Scalars['BigInt']>;
+  numberOfReviewsSelfAssignedBySomeoneElse?: Maybe<Scalars['BigInt']>;
+  numberOfDraftReviews?: Maybe<Scalars['BigInt']>;
+  numberOfSubmittedReviews?: Maybe<Scalars['BigInt']>;
+  numberOfChangesRequestedReviews?: Maybe<Scalars['BigInt']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
 };
 
 /** A `ApplicationList` edge in the connection. */
@@ -6660,6 +6766,114 @@ export type PermissionPoliciesEdge = {
   node?: Maybe<PermissionPolicy>;
 };
 
+/** Methods to use when ordering `ReviewStatusList`. */
+export enum ReviewStatusListsOrderBy {
+  Natural = 'NATURAL',
+  NumberOfSelfAssignableReviewsAsc = 'NUMBER_OF_SELF_ASSIGNABLE_REVIEWS_ASC',
+  NumberOfSelfAssignableReviewsDesc = 'NUMBER_OF_SELF_ASSIGNABLE_REVIEWS_DESC',
+  NumberOfAssignedReviewsAsc = 'NUMBER_OF_ASSIGNED_REVIEWS_ASC',
+  NumberOfAssignedReviewsDesc = 'NUMBER_OF_ASSIGNED_REVIEWS_DESC',
+  NumberOfAssignedNotStartedReviewsAsc = 'NUMBER_OF_ASSIGNED_NOT_STARTED_REVIEWS_ASC',
+  NumberOfAssignedNotStartedReviewsDesc = 'NUMBER_OF_ASSIGNED_NOT_STARTED_REVIEWS_DESC',
+  NumberOfReviewsSelfAssignedBySomeoneElseAsc = 'NUMBER_OF_REVIEWS_SELF_ASSIGNED_BY_SOMEONE_ELSE_ASC',
+  NumberOfReviewsSelfAssignedBySomeoneElseDesc = 'NUMBER_OF_REVIEWS_SELF_ASSIGNED_BY_SOMEONE_ELSE_DESC',
+  NumberOfDraftReviewsAsc = 'NUMBER_OF_DRAFT_REVIEWS_ASC',
+  NumberOfDraftReviewsDesc = 'NUMBER_OF_DRAFT_REVIEWS_DESC',
+  NumberOfSubmittedReviewsAsc = 'NUMBER_OF_SUBMITTED_REVIEWS_ASC',
+  NumberOfSubmittedReviewsDesc = 'NUMBER_OF_SUBMITTED_REVIEWS_DESC',
+  NumberOfChangesRequestedReviewsAsc = 'NUMBER_OF_CHANGES_REQUESTED_REVIEWS_ASC',
+  NumberOfChangesRequestedReviewsDesc = 'NUMBER_OF_CHANGES_REQUESTED_REVIEWS_DESC',
+  ReviewerIdAsc = 'REVIEWER_ID_ASC',
+  ReviewerIdDesc = 'REVIEWER_ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC'
+}
+
+/** A condition to be used against `ReviewStatusList` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ReviewStatusListCondition = {
+  /** Checks for equality with the object’s `numberOfSelfAssignableReviews` field. */
+  numberOfSelfAssignableReviews?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `numberOfAssignedReviews` field. */
+  numberOfAssignedReviews?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `numberOfAssignedNotStartedReviews` field. */
+  numberOfAssignedNotStartedReviews?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `numberOfReviewsSelfAssignedBySomeoneElse` field. */
+  numberOfReviewsSelfAssignedBySomeoneElse?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `numberOfDraftReviews` field. */
+  numberOfDraftReviews?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `numberOfSubmittedReviews` field. */
+  numberOfSubmittedReviews?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `numberOfChangesRequestedReviews` field. */
+  numberOfChangesRequestedReviews?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `reviewerId` field. */
+  reviewerId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `ReviewStatusList` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewStatusListFilter = {
+  /** Filter by the object’s `numberOfSelfAssignableReviews` field. */
+  numberOfSelfAssignableReviews?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `numberOfAssignedReviews` field. */
+  numberOfAssignedReviews?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `numberOfAssignedNotStartedReviews` field. */
+  numberOfAssignedNotStartedReviews?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `numberOfReviewsSelfAssignedBySomeoneElse` field. */
+  numberOfReviewsSelfAssignedBySomeoneElse?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `numberOfDraftReviews` field. */
+  numberOfDraftReviews?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `numberOfSubmittedReviews` field. */
+  numberOfSubmittedReviews?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `numberOfChangesRequestedReviews` field. */
+  numberOfChangesRequestedReviews?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `reviewerId` field. */
+  reviewerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ReviewStatusListFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ReviewStatusListFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ReviewStatusListFilter>;
+};
+
+/** A connection to a list of `ReviewStatusList` values. */
+export type ReviewStatusListsConnection = {
+  __typename?: 'ReviewStatusListsConnection';
+  /** A list of `ReviewStatusList` objects. */
+  nodes: Array<Maybe<ReviewStatusList>>;
+  /** A list of edges which contains the `ReviewStatusList` and cursor to aid in pagination. */
+  edges: Array<ReviewStatusListsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ReviewStatusList` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type ReviewStatusList = {
+  __typename?: 'ReviewStatusList';
+  numberOfSelfAssignableReviews?: Maybe<Scalars['BigInt']>;
+  numberOfAssignedReviews?: Maybe<Scalars['BigInt']>;
+  numberOfAssignedNotStartedReviews?: Maybe<Scalars['BigInt']>;
+  numberOfReviewsSelfAssignedBySomeoneElse?: Maybe<Scalars['BigInt']>;
+  numberOfDraftReviews?: Maybe<Scalars['BigInt']>;
+  numberOfSubmittedReviews?: Maybe<Scalars['BigInt']>;
+  numberOfChangesRequestedReviews?: Maybe<Scalars['BigInt']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+};
+
+/** A `ReviewStatusList` edge in the connection. */
+export type ReviewStatusListsEdge = {
+  __typename?: 'ReviewStatusListsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewStatusList` at the end of the edge. */
+  node?: Maybe<ReviewStatusList>;
+};
+
 /** Methods to use when ordering `Template`. */
 export enum TemplatesOrderBy {
   Natural = 'NATURAL',
@@ -6975,7 +7189,6 @@ export type UserOrgJoinsEdge = {
   /** The `UserOrgJoin` at the end of the edge. */
   node?: Maybe<UserOrgJoin>;
 };
-
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
@@ -13462,7 +13675,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewAssignmentStatus>;
+  status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -13964,7 +14177,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewAssignmentStatus>;
+  status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -14058,7 +14271,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewAssignmentStatus>;
+  status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -14317,7 +14530,7 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewAssignmentStatus>;
+  status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -14387,7 +14600,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewAssignmentStatus>;
+  status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -14452,7 +14665,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewAssignmentStatus>;
+  status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -14518,7 +14731,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewAssignmentStatus>;
+  status: ReviewAssignmentStatus;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
@@ -16308,7 +16521,7 @@ export type ReviewAssignmentInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewAssignmentStatus>;
+  status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -19641,7 +19854,7 @@ export type GetApplicationsListQuery = (
     & Pick<ApplicationListsConnection, 'totalCount'>
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationList' }
-      & Pick<ApplicationList, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'applicant' | 'applicantFirstName' | 'applicantLastName' | 'applicantUsername' | 'orgName' | 'stage' | 'status' | 'outcome' | 'lastActiveDate'>
+      & Pick<ApplicationList, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'applicant' | 'applicantFirstName' | 'applicantLastName' | 'applicantUsername' | 'orgName' | 'stage' | 'status' | 'outcome' | 'lastActiveDate' | 'numberOfAssignedNotStartedReviews' | 'numberOfAssignedReviews' | 'numberOfChangesRequestedReviews' | 'numberOfDraftReviews' | 'numberOfReviewsSelfAssignedBySomeoneElse' | 'numberOfSelfAssignableReviews' | 'numberOfSubmittedReviews'>
     )>>, pageInfo: (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
@@ -20454,6 +20667,13 @@ export const GetApplicationsListDocument = gql`
       status
       outcome
       lastActiveDate
+      numberOfAssignedNotStartedReviews
+      numberOfAssignedReviews
+      numberOfChangesRequestedReviews
+      numberOfDraftReviews
+      numberOfReviewsSelfAssignedBySomeoneElse
+      numberOfSelfAssignableReviews
+      numberOfSubmittedReviews
     }
     pageInfo {
       hasPreviousPage
