@@ -27,6 +27,7 @@ export {
   ColumnDetails,
   ColumnsPerRole,
   ContextApplicationState,
+  ContextFormElementUpdateTrackerState,
   ContextListState,
   CurrentPage,
   DecisionAreaState,
@@ -41,6 +42,7 @@ export {
   FullStructure,
   IGraphQLConnection,
   LooseString,
+  MethodToCallOnRevalidation,
   Page,
   PageElements,
   PageNEW,
@@ -57,12 +59,15 @@ export {
   ReviewQuestion,
   ReviewQuestionDecision,
   ReviewerResponsesPayload,
+  SectionAndPage,
   SectionState,
   SectionDetails,
   SectionProgress,
   SectionsStructure,
   SectionStateNEW,
   SectionsStructureNEW,
+  SetStrictSectionPage,
+  SortQuery,
   StageAndStatus,
   TemplateDetails,
   TemplateElementState,
@@ -81,8 +86,6 @@ export {
   Organisation,
   LoginPayload,
   BasicStringObject,
-  SortQuery,
-  SectionAndPage,
 }
 
 interface ApplicationDetails {
@@ -140,6 +143,12 @@ interface ColumnDetails {
 
 type ColumnsPerRole = {
   [role in USER_ROLES]: Array<APPLICATION_COLUMNS>
+}
+
+interface ContextFormElementUpdateTrackerState {
+  elementEnteredTimestamp: number
+  elementUpdatedTimestamp: number
+  isLastElementUpdateProcessed: boolean
 }
 
 interface ContextApplicationState {
@@ -225,9 +234,11 @@ interface EvaluatorParameters {
 }
 
 interface FullStructure {
+  lastValidationTimestamp?: number
   info: ApplicationDetails
   sections: SectionsStructureNEW
   stages: ApplicationStages
+  responsesByCode?: ResponsesByCode
 }
 
 interface IGraphQLConnection {
@@ -236,6 +247,10 @@ interface IGraphQLConnection {
 }
 
 type LooseString = string | null | undefined
+
+interface MethodToCallOnRevalidation {
+  (firstInvalidPage: SectionAndPage | null, setStrictSectionPage: SetStrictSectionPage): void
+}
 
 interface Page {
   number: number
@@ -330,6 +345,12 @@ interface ReviewerResponsesPayload {
   userId: number
   reviewSections: SectionsStructure
 }
+
+type SectionAndPage = {
+  sectionCode: string
+  pageNumber: number
+} | null
+
 interface SectionDetails {
   id: number
   index: number
@@ -367,6 +388,16 @@ interface SectionStateNEW {
 interface SectionsStructureNEW {
   [code: string]: SectionStateNEW
 }
+
+interface SetStrictSectionPage {
+  (sectionAndPage: SectionAndPage | null): void
+}
+
+interface SortQuery {
+  sortColumn?: string
+  sortDirection?: 'ascending' | 'descending'
+}
+
 interface StageAndStatus {
   stage: ApplicationStage
   status: ApplicationStatus
@@ -480,13 +511,3 @@ interface LoginPayload {
 type UserRoles = {
   [role in USER_ROLES]: Array<PermissionPolicyType>
 }
-
-interface SortQuery {
-  sortColumn?: string
-  sortDirection?: 'ascending' | 'descending'
-}
-
-type SectionAndPage = {
-  sectionCode: string
-  pageNumber: number
-} | null
