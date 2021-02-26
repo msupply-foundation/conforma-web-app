@@ -42,7 +42,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     if (fullStructure.info.current?.status === ApplicationStatus.ChangesRequired)
       push(`/applicationNEW/${fullStructure.info.serial}`)
     if (structure.info.current?.status !== ApplicationStatus.Draft)
-      push(`/applicationNEW/${structure.info.serial}/summary`)
+      push(`/applicationNEW/${fullStructure.info.serial}/summary`)
 
     // Re-direct if trying to access page higher than allowed
     if (!fullStructure.info.isLinear || !fullStructure.info?.firstIncompletePage) return
