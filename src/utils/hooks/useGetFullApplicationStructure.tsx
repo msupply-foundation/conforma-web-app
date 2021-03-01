@@ -220,7 +220,7 @@ const flattenStructureElements = (structure: FullStructure) => {
   const flattened: any = []
   Object.keys(structure.sections).forEach((section) => {
     Object.keys(structure.sections[section].pages).forEach((page) => {
-      flattened.push(...structure.sections[section].pages[page].state)
+      flattened.push(...structure.sections[section].pages[Number(page)].state)
     })
   })
   return flattened

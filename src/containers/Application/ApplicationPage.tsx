@@ -3,8 +3,9 @@ import {
   FullStructure,
   ResponsesByCode,
   ElementStateNEW,
-  MethodToCallOnRevalidation,
   SectionAndPage,
+  MethodRevalidate,
+  MethodToCallProps,
 } from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { ApplicationStatus } from '../../utils/generated/graphql'
@@ -13,12 +14,18 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading } from '../../components'
 import strings from '../../utils/constants'
 import { Button, Grid, Header, Message, Segment, Sticky } from 'semantic-ui-react'
+import ProgressBarNEW from '../../components/Application/ProgressBarNEW'
 import { PageElements } from '../../components/Application'
 import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
+import checkPageIsAccessible from '../../utils/helpers/structure/checkPageIsAccessible'
 
 interface ApplicationProps {
   structure: FullStructure
   responses?: ResponsesByCode
+}
+
+interface MethodToCall {
+  (props: MethodToCallProps): void
 }
 
 const getFirstInvalidPage = (fullStructure: FullStructure): SectionAndPage | null => {
@@ -28,7 +35,7 @@ const getFirstInvalidPage = (fullStructure: FullStructure): SectionAndPage | nul
 }
 
 interface RevalidationState {
-  methodToCallOnRevalidation: MethodToCallOnRevalidation | null
+  methodToCallOnRevalidation: MethodToCall | null
   shouldProcessValidation: boolean
   lastRevalidationRequest: number
 }
@@ -37,7 +44,12 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   const {
     userState: { currentUser },
   } = useUserState()
-  const { push, query } = useRouter()
+  const {
+    query: { sectionCode, page },
+    push,
+  } = useRouter()
+
+  const pageNumber = Number(page)
 
   const {
     state: { isLastElementUpdateProcessed, elementUpdatedTimestamp },
@@ -59,13 +71,10 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     minRefetchTimestampForRevalidation,
   })
 
-  const currentSection = query.sectionCode
-  const currentPage = `Page ${query.page}`
-
   /* Method to pass to progress bar, next button and submit button to cause revalidation before action can be proceeded
      Should always be called on submit, but only be called on next or progress bar navigation when isLinear */
   // TODO may rename if we want to display loading modal ?
-  const requestRevalidation = (methodToCall: MethodToCallOnRevalidation) => {
+  const requestRevalidation: MethodRevalidate = (methodToCall) => {
     setRevalidationState({
       methodToCallOnRevalidation: methodToCall,
       shouldProcessValidation: true,
@@ -88,22 +97,32 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         methodToCallOnRevalidation: null,
         shouldProcessValidation: false,
       })
-      revalidationState.methodToCallOnRevalidation(firstInvalidPage, setStrictSectionPage)
+      revalidationState.methodToCallOnRevalidation({
+        firstIncompletePage: fullStructure.info.firstIncompletePage,
+        setStrictSectionPage,
+      })
       // TODO hide loading modal
     }
   }, [revalidationState, fullStructure])
 
   useEffect(() => {
-    if (!structure) return
+    if (!fullStructure) return
 
-    // Re-direct based on application status and progress
-    if (structure.info.current?.status === ApplicationStatus.ChangesRequired)
-      push(`/applicationNEW/${structure.info.serial}`)
+    // Re-direct based on application status
+    if (fullStructure.info.current?.status === ApplicationStatus.ChangesRequired)
+      push(`/applicationNEW/${fullStructure.info.serial}`)
     if (structure.info.current?.status !== ApplicationStatus.Draft)
-      push(`/applicationNEW/${structure.info.serial}/summary`)
+      push(`/applicationNEW/${fullStructure.info.serial}/summary`)
 
-    // TO-DO: Redirect based on Progress (wait till Progress calculation is done)
-  }, [structure])
+    // Re-direct if trying to access page higher than allowed
+    if (!fullStructure.info.isLinear || !fullStructure.info?.firstIncompletePage) return
+    const firstIncomplete = fullStructure.info?.firstIncompletePage
+    const current = { sectionCode, pageNumber }
+    if (!checkPageIsAccessible({ fullStructure, firstIncomplete, current })) {
+      const { sectionCode, pageNumber } = firstIncomplete
+      push(`/applicationNEW/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
+    }
+  }, [structure, fullStructure, sectionCode, page])
 
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
@@ -125,18 +144,18 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         }}
       >
         <Grid.Column width={4}>
-          <ProgressBar structure={fullStructure as FullStructure} />
+          <ProgressBarNEW structure={fullStructure} requestRevalidation={requestRevalidation} />
         </Grid.Column>
         <Grid.Column width={10} stretched>
           <Segment basic>
             <Segment vertical style={{ marginBottom: 20 }}>
-              <Header content={fullStructure.sections[currentSection].details.title} />
+              <Header content={fullStructure.sections[sectionCode].details.title} />
               <PageElements
-                elements={getCurrentPageElements(fullStructure, currentSection, currentPage)}
+                elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
                 responsesByCode={fullStructure.responsesByCode}
                 isStrictPage={
-                  currentSection === strictSectionPage?.sectionCode &&
-                  currentPage === strictSectionPage?.pageName
+                  sectionCode === strictSectionPage?.sectionCode &&
+                  pageNumber === strictSectionPage?.pageNumber
                 }
                 isEditable
               />
@@ -161,11 +180,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   )
 }
 
-const ProgressBar: React.FC<ApplicationProps> = ({ structure }) => {
-  // Placeholder -- to be replaced with new component
-  return <p>Progress Bar here</p>
-}
-
 const NavigationBox: React.FC = () => {
   // Placeholder -- to be replaced with new component
   return <p>Navigation Buttons</p>
@@ -173,7 +187,7 @@ const NavigationBox: React.FC = () => {
 
 export default ApplicationPage
 
-const getCurrentPageElements = (structure: FullStructure, section: string, page: string) => {
+const getCurrentPageElements = (structure: FullStructure, section: string, page: number) => {
   return structure.sections[section].pages[page].state.map(
     (item) => item.element
   ) as ElementStateNEW[]

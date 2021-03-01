@@ -42,7 +42,8 @@ export {
   FullStructure,
   IGraphQLConnection,
   LooseString,
-  MethodToCallOnRevalidation,
+  MethodRevalidate,
+  MethodToCallProps,
   Page,
   PageElements,
   PageNEW,
@@ -66,6 +67,7 @@ export {
   SectionsStructure,
   SectionStateNEW,
   SectionsStructureNEW,
+  SetStrictSectionPage,
   SortQuery,
   StageAndStatus,
   TemplateDetails,
@@ -95,6 +97,7 @@ interface ApplicationDetails {
   outcome: string
   isLinear: boolean
   current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
+  firstIncompletePage: SectionAndPage | null
 }
 
 interface ApplicationElementStates {
@@ -246,6 +249,15 @@ interface IGraphQLConnection {
 
 type LooseString = string | null | undefined
 
+interface MethodRevalidate {
+  (methodToCall: (props: MethodToCallProps) => void): void
+}
+
+interface MethodToCallProps {
+  firstIncompletePage: SectionAndPage | null
+  setStrictSectionPage: SetStrictSectionPage
+}
+
 interface Page {
   number: number
   state: PageElements
@@ -259,6 +271,7 @@ type PageElements = {
 
 interface PageNEW {
   number: number
+  name: string
   progress: Progress
   state: PageElement[]
 }
@@ -281,6 +294,7 @@ interface Progress {
   totalNonRequired: number
   totalSum: number
   valid: boolean
+  firstIncompletePage: number | null
 }
 
 type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
@@ -337,6 +351,12 @@ interface ReviewerResponsesPayload {
   userId: number
   reviewSections: SectionsStructure
 }
+
+type SectionAndPage = {
+  sectionCode: string
+  pageNumber: number
+} | null
+
 interface SectionDetails {
   id: number
   index: number
@@ -365,16 +385,25 @@ interface SectionsStructure {
 }
 interface SectionStateNEW {
   details: SectionDetails
-  invalidPage?: number
   progress?: Progress
   assigned?: ReviewerDetails
   pages: {
-    [pageName: string]: PageNEW
+    [pageNum: number]: PageNEW
   }
 }
 interface SectionsStructureNEW {
   [code: string]: SectionStateNEW
 }
+
+interface SetStrictSectionPage {
+  (sectionAndPage: SectionAndPage | null): void
+}
+
+interface SortQuery {
+  sortColumn?: string
+  sortDirection?: 'ascending' | 'descending'
+}
+
 interface StageAndStatus {
   stage: ApplicationStage
   status: ApplicationStatus
@@ -487,19 +516,4 @@ interface LoginPayload {
 
 type UserRoles = {
   [role in USER_ROLES]: Array<PermissionPolicyType>
-}
-
-interface SortQuery {
-  sortColumn?: string
-  sortDirection?: 'ascending' | 'descending'
-}
-
-type SectionAndPage = { sectionCode: string; pageName: string }
-
-interface SetStrictSectionPage {
-  (sectionAndPage: SectionAndPage | null): void
-}
-
-interface MethodToCallOnRevalidation {
-  (firstInvalidPage: SectionAndPage | null, setStrictSectionPage: SetStrictSectionPage): void
 }

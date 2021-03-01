@@ -70,6 +70,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         serial: application.serial as string,
         name: application.name as string,
         outcome: application.outcome as string,
+        firstIncompletePage: null, // Added for new FullStructure
       }
 
       setApplication(applicationDetails)
