@@ -216,9 +216,7 @@ const calculateValidationState = async ({
   const validationResult = validationExpression
     ? await validate(validationExpression, validationMessage as string, evaluationParameters)
     : { isValid: true }
-  console.log(responses, isRequired && isStrictPage && !responses?.thisResponse, {
-    validationMessage: validationMessage || strings.VALIDATION_REQUIRED_ERROR,
-  })
+
   if (!validationResult.isValid) return validationResult
   // !responses.thisResponse, check for null, undefined, empty string
   if (isRequired && isStrictPage && !responses?.thisResponse)
