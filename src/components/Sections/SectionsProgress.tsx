@@ -6,19 +6,21 @@ import strings from '../../utils/constants'
 interface SectionsProgressProps {
   canEdit: boolean
   changes?: { state: boolean; label: string }
+  firstStrictInvalidPage: SectionAndPage | null
   sections: SectionsStructureNEW
   resumeApplication: (location: SectionAndPage) => void
 }
 
 interface SectionActionProps {
   sectionCode: string
-  invalidPage?: number
+  firstStrictInvalidPage: SectionAndPage | null
   progress?: ProgressType
 }
 
 const SectionsProgress: React.FC<SectionsProgressProps> = ({
   canEdit,
   changes = { state: false, label: '' },
+  firstStrictInvalidPage,
   sections,
   resumeApplication,
 }) => {
@@ -50,21 +52,37 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
     ) : null
   }
 
-  const SectionAction: React.FC<SectionActionProps> = ({ sectionCode, invalidPage, progress }) => {
+  const SectionAction: React.FC<SectionActionProps> = ({
+    sectionCode,
+    firstStrictInvalidPage,
+    progress,
+  }) => {
     return (
       <Grid.Column style={{ minWidth: 100, padding: 0 }} width={2}>
         {canEdit ? (
-          sectionCode === firstIncomplete?.sectionCode ? (
-            <Button color="blue" onClick={() => resumeApplication(firstIncomplete)}>
+          firstStrictInvalidPage && sectionCode === firstStrictInvalidPage.sectionCode ? (
+            <Button
+              color="blue"
+              onClick={() =>
+                resumeApplication({
+                  sectionCode,
+                  pageNumber: firstStrictInvalidPage.pageNumber || 1,
+                })
+              }
+            >
               {strings.BUTTON_APPLICATION_RESUME}
             </Button>
           ) : progress?.completed ? (
             <Icon name="pencil square" color="blue" style={{ minWidth: 100 }} />
           ) : null
-        ) : changes.state && invalidPage ? (
+        ) : changes.state &&
+          firstStrictInvalidPage &&
+          firstStrictInvalidPage.sectionCode === sectionCode ? (
           <Button
             color="blue"
-            onClick={() => resumeApplication({ sectionCode, pageName: `Page ${invalidPage}` })}
+            onClick={() =>
+              resumeApplication({ sectionCode, pageNumber: firstStrictInvalidPage.pageNumber })
+            }
           >
             {changes.label}
           </Button>
@@ -73,14 +91,11 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
     )
   }
 
-  // TODO: Use correct firstIncomplete sections
-  const firstIncomplete: SectionAndPage = { sectionCode: 'S1', pageNumber: 1 }
-
   return (
     <List
       divided
       relaxed="very"
-      items={Object.entries(sections).map(([sectionCode, { details, invalidPage, progress }]) => ({
+      items={Object.entries(sections).map(([sectionCode, { details, progress }]) => ({
         key: `list-item-${sectionCode}`,
         icon: progress ? getIndicator(progress) : null,
         header: (
@@ -89,7 +104,7 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
               <p>{details.title}</p>
             </Grid.Column>
             {canEdit && progress && <SectionProgress {...progress} />}
-            {<SectionAction {...{ sectionCode, invalidPage, progress }} />}
+            {<SectionAction {...{ sectionCode, firstStrictInvalidPage, progress }} />}
           </Grid>
         ),
       }))}

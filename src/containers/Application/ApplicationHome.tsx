@@ -62,6 +62,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
           <SectionsProgress
             canEdit={canUserEdit()}
             changes={{ state: true, label: 'Update' }}
+            firstStrictInvalidPage={fullStructure.info.firstStrictInvalidPage}
             sections={fullStructure.sections}
             resumeApplication={handleResumeClick}
           />

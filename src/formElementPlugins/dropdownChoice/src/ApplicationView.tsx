@@ -53,14 +53,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         onChange={handleChange}
         value={value}
         disabled={!isEditable}
-        error={
-          !validationState.isValid
-            ? {
-                content: validationState?.validationMessage,
-                pointing: 'above',
-              }
-            : null
-        }
+        error={!validationState.isValid} // From PR #384 - wasn't compiling
       />
       {validationState.isValid ? null : (
         <Label basic color="red" pointing>
