@@ -68,7 +68,7 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
   }) => {
     setIsAfterStrict(sectionCode)
     return (
-      <Grid.Column style={{ minWidth: 100, padding: 0 }} width={2}>
+      <Grid.Column style={{ minWidth: 100, padding: 0 }} verticalAlign="middle" width={2}>
         {canEdit ? (
           getIsStrictSection(sectionCode) ? (
             <Button
