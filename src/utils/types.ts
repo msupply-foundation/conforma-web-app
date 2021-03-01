@@ -358,7 +358,7 @@ interface ReviewerResponsesPayload {
 type SectionAndPage = {
   sectionCode: string
   pageNumber: number
-} | null
+}
 
 interface SectionDetails {
   id: number
