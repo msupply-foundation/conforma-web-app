@@ -24,6 +24,8 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
   sections,
   resumeApplication,
 }) => {
+  let isAfterStrict = false
+
   const getIndicator = ({ completed, valid }: ProgressType) => {
     return completed ? (
       <Icon name={valid ? 'check circle' : 'exclamation circle'} color={valid ? 'green' : 'red'} />
@@ -32,6 +34,13 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
     )
   }
 
+  const getIsStrictSection = (sectionCode: string) =>
+    sectionCode === firstStrictInvalidPage?.sectionCode
+
+  const setIsAfterStrict = (sectionCode: string) => {
+    if (!isAfterStrict)
+      isAfterStrict = firstStrictInvalidPage === null ? true : getIsStrictSection(sectionCode)
+  }
   const SectionProgress: React.FC<ProgressType> = ({
     doneRequired,
     doneNonRequired,
@@ -57,31 +66,38 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
     firstStrictInvalidPage,
     progress,
   }) => {
+    setIsAfterStrict(sectionCode)
     return (
       <Grid.Column style={{ minWidth: 100, padding: 0 }} width={2}>
         {canEdit ? (
-          firstStrictInvalidPage && sectionCode === firstStrictInvalidPage.sectionCode ? (
+          getIsStrictSection(sectionCode) ? (
             <Button
               color="blue"
               onClick={() =>
                 resumeApplication({
                   sectionCode,
-                  pageNumber: firstStrictInvalidPage.pageNumber || 1,
+                  pageNumber: firstStrictInvalidPage?.pageNumber || 1,
                 })
               }
             >
               {strings.BUTTON_APPLICATION_RESUME}
             </Button>
-          ) : progress?.completed ? (
-            <Icon name="pencil square" color="blue" style={{ minWidth: 100 }} />
+          ) : progress?.completed && isAfterStrict ? (
+            <Icon
+              name="pencil square"
+              color="blue"
+              style={{ minWidth: 100 }}
+              onClick={() => resumeApplication({ sectionCode, pageNumber: 1 })}
+            />
           ) : null
-        ) : changes.state &&
-          firstStrictInvalidPage &&
-          firstStrictInvalidPage.sectionCode === sectionCode ? (
+        ) : changes.state && getIsStrictSection(sectionCode) ? (
           <Button
             color="blue"
             onClick={() =>
-              resumeApplication({ sectionCode, pageNumber: firstStrictInvalidPage.pageNumber })
+              resumeApplication({
+                sectionCode,
+                pageNumber: firstStrictInvalidPage?.pageNumber || 1,
+              })
             }
           >
             {changes.label}
