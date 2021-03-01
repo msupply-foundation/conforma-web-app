@@ -22,9 +22,7 @@ interface ApplicationProps {
   responses?: ResponsesByCode
 }
 
-const getFirstInvalidPage: (fullStructure: FullStructure) => SectionAndPage | null = (
-  fullStructure
-) => {
+const getFirstInvalidPage = (fullStructure: FullStructure): SectionAndPage | null => {
   // TODO implement, should rely on .progress
   // return { sectionCode: 'S1', pageName: 'Page 2' }
   return null
@@ -57,12 +55,12 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   })
 
   const shouldRevalidate = isLastElementUpdateProcessed && revalidationState.shouldProcessValidation
-  const revalidateAfterTimestamp = shouldRevalidate ? elementUpdatedTimestamp : 0
+  const minRefetchTimestampForRevalidation = shouldRevalidate ? elementUpdatedTimestamp : 0
 
   const { error, fullStructure } = useGetFullApplicationStructure({
     structure,
     shouldRevalidate,
-    revalidateAfterTimestamp,
+    minRefetchTimestampForRevalidation,
   })
 
   const currentSection = sectionCode
@@ -70,7 +68,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   const currentSectionIndex = structure.sections[currentSection].details.index
   const currentPageNumber = structure.sections[currentSection].pages[currentPage].number
 
-  /* Method to pass to progress bar, next button and submit button  to cause revalidation before aciton can be proceeded
+  /* Method to pass to progress bar, next button and submit button to cause revalidation before action can be proceeded
      Should always be called on submit, but only be called on next or progress bar navigation when isLinear */
   // TODO may rename if we want to display loading modal ?
   const requestRevalidation = (methodToCall: MethodToCallOnRevalidation) => {
@@ -100,8 +98,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       // TODO hide loading modal
     }
   }, [revalidationState, fullStructure])
-
-  console.log('Structure', fullStructure)
 
   useEffect(() => {
     if (!structure && !fullStructure) return
