@@ -71,13 +71,13 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({
   const getPageList = (
     sectionCode: string,
     pages: { [pageNumber: string]: PageNEW },
-    isIsStrictSection: boolean
+    isStrictSection: boolean
   ) => {
     const isActivePage = (sectionCode: string, pageNumber: number) =>
       currentSectionCode === sectionCode && Number(page) === pageNumber
 
     const checkPageIsStrict = (pageNumber: string) =>
-      isIsStrictSection && strictSectionPage?.pageNumber === Number(pageNumber)
+      isStrictSection && strictSectionPage?.pageNumber === Number(pageNumber)
 
     return (
       <List
@@ -117,7 +117,7 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({
   }
 
   const sectionsList = Object.values(sections).map(({ details, progress, pages }, index) => {
-    const isIsStrictSection = !!strictSectionPage && strictSectionPage.sectionCode === details.code
+    const isStrictSection = !!strictSectionPage && strictSectionPage.sectionCode === details.code
 
     const stepNumber = index + 1
     const { code, title } = details
@@ -127,7 +127,7 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({
         children: (
           <Grid>
             <Grid.Column width={4} textAlign="right" verticalAlign="middle">
-              {progress && getIndicator(progress, isIsStrictSection, stepNumber)}
+              {progress && getIndicator(progress, isStrictSection, stepNumber)}
             </Grid.Column>
             <Grid.Column width={12} textAlign="left" verticalAlign="middle">
               <Header as="h4">{title}</Header>
@@ -143,7 +143,7 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({
       },
       onTitleClick: () => handleChangeToPage(code, 1),
       content: {
-        content: getPageList(code, pages, isIsStrictSection),
+        content: getPageList(code, pages, isStrictSection),
       },
     }
   })
