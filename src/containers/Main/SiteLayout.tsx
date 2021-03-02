@@ -52,7 +52,9 @@ const SiteLayout: React.FC = () => {
         {/* Application router NEW*/}
         {/* Create application new route */}
         <Route path="/applicationNEW/new">
-          <ApplicationCreateNEW />
+          <ApplicationProvider>
+            <ApplicationCreateNEW />
+          </ApplicationProvider>
         </Route>
         {/* Other application routes nested in ApplicationWrapper */}
         <Route path="/applicationNEW/:serialNumber">
