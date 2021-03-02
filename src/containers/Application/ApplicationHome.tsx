@@ -44,10 +44,6 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
 
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
-  const isCompleted = Object.values(fullStructure.sections).every(
-    ({ progress }) => progress?.completed && progress.valid
-  )
-
   const { firstStrictInvalidPage } = fullStructure.info
 
   const HomeMain: React.FC = () => {
@@ -63,7 +59,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
           />
           <Divider />
         </Segment>
-        {isCompleted && (
+        {firstStrictInvalidPage === null && (
           <Sticky
             pushing
             style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
