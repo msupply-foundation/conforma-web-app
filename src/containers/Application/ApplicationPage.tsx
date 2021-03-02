@@ -18,6 +18,7 @@ import ProgressBarNEW from '../../components/Application/ProgressBarNEW'
 import { PageElements } from '../../components/Application'
 import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
 import checkPageIsAccessible from '../../utils/helpers/structure/checkPageIsAccessible'
+import { Navigation } from '../../components'
 
 interface ApplicationProps {
   structure: FullStructure
@@ -39,7 +40,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     userState: { currentUser },
   } = useUserState()
   const {
-    query: { sectionCode, page },
+    query: { serialNumber, sectionCode, page },
     push,
   } = useRouter()
 
@@ -157,7 +158,11 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
                 isEditable
               />
             </Segment>
-            <NavigationBox />
+            <Navigation
+              current={{ sectionCode, pageNumber }}
+              sections={fullStructure.sections}
+              serialNumber={serialNumber}
+            />
           </Segment>
         </Grid.Column>
         <Grid.Column width={2} />
@@ -175,11 +180,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       </Sticky>
     </Segment.Group>
   )
-}
-
-const NavigationBox: React.FC = () => {
-  // Placeholder -- to be replaced with new component
-  return <p>Navigation Buttons</p>
 }
 
 export default ApplicationPage
