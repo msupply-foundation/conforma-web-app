@@ -4,11 +4,16 @@ import { Progress as ProgressType, SectionAndPage, SectionsStructureNEW } from '
 import strings from '../../utils/constants'
 
 interface SectionsProgressProps {
+  firstStrictInvalidPage: SectionAndPage | null
   sections: SectionsStructureNEW
   resumeApplication: (location: SectionAndPage) => void
 }
 
-const SectionsProgress: React.FC<SectionsProgressProps> = ({ sections, resumeApplication }) => {
+const SectionsProgress: React.FC<SectionsProgressProps> = ({
+  firstStrictInvalidPage,
+  sections,
+  resumeApplication,
+}) => {
   const getIndicator = ({ completed, valid }: ProgressType) => {
     return completed ? (
       <Icon name={valid ? 'check circle' : 'exclamation circle'} color={valid ? 'green' : 'red'} />
@@ -30,9 +35,6 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({ sections, resumeApp
     ) : null
   }
 
-  // TODO: Use correct firstIncomplete sections
-  const firstIncomplete: SectionAndPage = { sectionCode: 'S1', pageNumber: 1 }
-
   return (
     <List
       divided
@@ -49,11 +51,12 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({ sections, resumeApp
               {progress && getProgress(progress)}
             </Grid.Column>
             <Grid.Column style={{ minWidth: 100, padding: 0 }} width={2}>
-              {firstIncomplete && sectionCode === firstIncomplete.sectionCode && (
-                <Button color="blue" onClick={() => resumeApplication(firstIncomplete)}>
-                  {strings.BUTTON_APPLICATION_RESUME}
-                </Button>
-              )}
+              {firstStrictInvalidPage !== null &&
+                sectionCode === firstStrictInvalidPage.sectionCode && (
+                  <Button color="blue" onClick={() => resumeApplication(firstStrictInvalidPage)}>
+                    {strings.BUTTON_APPLICATION_RESUME}
+                  </Button>
+                )}
             </Grid.Column>
           </Grid>
         ),

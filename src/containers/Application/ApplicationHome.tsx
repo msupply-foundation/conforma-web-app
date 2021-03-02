@@ -48,6 +48,8 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     ({ progress }) => progress?.completed && progress.valid
   )
 
+  const { firstStrictInvalidPage } = fullStructure.info
+
   const HomeMain: React.FC = () => {
     return (
       <>
@@ -56,6 +58,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
           <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
           <SectionsProgress
             sections={fullStructure.sections}
+            firstStrictInvalidPage={firstStrictInvalidPage}
             resumeApplication={handleResumeClick}
           />
           <Divider />
