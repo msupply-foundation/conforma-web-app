@@ -31,7 +31,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     if (!fullStructure) return
     const { status } = fullStructure.info.current as StageAndStatus
     if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired)
-      push(`/application/${serialNumber}/summary`)
+      push(`/applicationNEW/${serialNumber}/summary`)
   }, [fullStructure])
 
   const handleResumeClick = ({ sectionCode, pageNumber }: SectionAndPage) => {
