@@ -1,5 +1,5 @@
 import React from 'react'
-import { Label, Segment } from 'semantic-ui-react'
+import { Button, Container, Label, Segment, Sticky } from 'semantic-ui-react'
 import { SectionAndPage, SectionDetails, SectionsStructureNEW } from '../../utils/types'
 import strings from '../../utils/constants'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -14,7 +14,6 @@ const Navigation: React.FC<NavigationProps> = ({ current, sections, serialNumber
   const { push } = useRouter()
 
   const currentSectionDetails = sections[current.sectionCode].details
-  console.log('currentSection', currentSectionDetails)
 
   const hasNextSection = Object.values(sections).find(
     ({ details: { index } }) => index > currentSectionDetails.index
@@ -79,22 +78,40 @@ const Navigation: React.FC<NavigationProps> = ({ current, sections, serialNumber
   }
 
   return (
-    <Segment.Group horizontal>
-      <Segment basic floated="left">
-        {!isFirstPage && (
-          <Label basic as="a" onClick={previousButtonHandler}>
-            {strings.BUTTON_PREVIOUS}
-          </Label>
-        )}
-      </Segment>
-      <Segment basic floated="right">
-        {!isLastPage && (
-          <Label basic as="a" onClick={nextPageButtonHandler}>
-            {strings.BUTTON_NEXT}
-          </Label>
-        )}
-      </Segment>
-    </Segment.Group>
+    <Sticky
+      pushing
+      style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
+    >
+      <Segment.Group horizontal>
+        <Segment style={{ minWidth: '50%' }}>
+          {!isFirstPage && (
+            <Button
+              basic
+              floated="left"
+              onClick={previousButtonHandler}
+              content={strings.BUTTON_PREVIOUS}
+            />
+          )}
+          {!isLastPage && (
+            <Button
+              basic
+              floated="right"
+              onClick={nextPageButtonHandler}
+              content={strings.BUTTON_NEXT}
+            />
+          )}
+        </Segment>
+        <Segment basic textAlign="center" clearing>
+          <Button
+            color="blue"
+            onClick={() => {
+              /* TO-DO */
+            }}
+            content={strings.BUTTON_SUMMARY}
+          />
+        </Segment>
+      </Segment.Group>
+    </Sticky>
   )
 }
 

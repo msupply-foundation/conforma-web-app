@@ -145,39 +145,26 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
           />
         </Grid.Column>
         <Grid.Column width={10} stretched>
-          <Segment basic>
-            <Segment vertical style={{ marginBottom: 20 }}>
-              <Header content={fullStructure.sections[sectionCode].details.title} />
-              <PageElements
-                elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
-                responsesByCode={fullStructure.responsesByCode}
-                isStrictPage={
-                  sectionCode === strictSectionPage?.sectionCode &&
-                  pageNumber === strictSectionPage?.pageNumber
-                }
-                isEditable
-              />
-            </Segment>
-            <Navigation
-              current={{ sectionCode, pageNumber }}
-              sections={fullStructure.sections}
-              serialNumber={serialNumber}
+          <Segment vertical style={{ marginBottom: 20 }}>
+            <Header content={fullStructure.sections[sectionCode].details.title} />
+            <PageElements
+              elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
+              responsesByCode={fullStructure.responsesByCode}
+              isStrictPage={
+                sectionCode === strictSectionPage?.sectionCode &&
+                pageNumber === strictSectionPage?.pageNumber
+              }
+              isEditable
             />
           </Segment>
         </Grid.Column>
         <Grid.Column width={2} />
       </Grid>
-      <Sticky
-        pushing
-        style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
-      >
-        <Segment basic textAlign="right">
-          <Button color="blue" onClick={() => {}}>
-            {/* TO-DO */}
-            {strings.BUTTON_SUMMARY}
-          </Button>
-        </Segment>
-      </Sticky>
+      <Navigation
+        current={{ sectionCode, pageNumber }}
+        sections={fullStructure.sections}
+        serialNumber={serialNumber}
+      />
     </Segment.Group>
   )
 }
