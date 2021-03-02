@@ -1,6 +1,12 @@
 import React from 'react'
-import { Button, Container, Label, Segment, Sticky } from 'semantic-ui-react'
-import { SectionAndPage, SectionDetails, SectionsStructureNEW } from '../../utils/types'
+import { Button, Segment, Sticky } from 'semantic-ui-react'
+import {
+  MethodRevalidate,
+  MethodToCallProps,
+  SectionAndPage,
+  SectionDetails,
+  SectionsStructureNEW,
+} from '../../utils/types'
 import strings from '../../utils/constants'
 import { useRouter } from '../../utils/hooks/useRouter'
 
@@ -8,9 +14,15 @@ interface NavigationProps {
   current: SectionAndPage
   sections: SectionsStructureNEW
   serialNumber: string
+  requestRevalidation: MethodRevalidate
 }
 
-const Navigation: React.FC<NavigationProps> = ({ current, sections, serialNumber }) => {
+const Navigation: React.FC<NavigationProps> = ({
+  current,
+  sections,
+  serialNumber,
+  requestRevalidation,
+}) => {
   const { push } = useRouter()
 
   const currentSectionDetails = sections[current.sectionCode].details
@@ -74,7 +86,20 @@ const Navigation: React.FC<NavigationProps> = ({ current, sections, serialNumber
 
   const nextPageButtonHandler = (_: any) => {
     const nextSectionPage = getNextSectionPage()
-    sendToPage(nextSectionPage)
+    // Use validationMethod to check if can change to page (on linear application) OR
+    // display current page with strict validation
+    requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
+      if (
+        firstStrictInvalidPage !== null &&
+        current.sectionCode === firstStrictInvalidPage.sectionCode &&
+        current.pageNumber === firstStrictInvalidPage.pageNumber
+      ) {
+        setStrictSectionPage(firstStrictInvalidPage)
+      } else {
+        setStrictSectionPage(null)
+        sendToPage(nextSectionPage)
+      }
+    })
   }
 
   return (

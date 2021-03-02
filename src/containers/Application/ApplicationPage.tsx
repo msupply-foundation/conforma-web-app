@@ -13,7 +13,7 @@ import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading } from '../../components'
 import strings from '../../utils/constants'
-import { Button, Grid, Header, Message, Segment, Sticky } from 'semantic-ui-react'
+import { Grid, Header, Message, Segment } from 'semantic-ui-react'
 import ProgressBarNEW from '../../components/Application/ProgressBarNEW'
 import { PageElements } from '../../components/Application'
 import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
@@ -164,6 +164,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         current={{ sectionCode, pageNumber }}
         sections={fullStructure.sections}
         serialNumber={serialNumber}
+        requestRevalidation={requestRevalidation}
       />
     </Segment.Group>
   )
