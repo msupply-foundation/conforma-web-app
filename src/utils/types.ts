@@ -97,7 +97,7 @@ interface ApplicationDetails {
   outcome: string
   isLinear: boolean
   current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
-  firstIncompletePage: SectionAndPage | null
+  firstStrictInvalidPage: SectionAndPage | null
 }
 
 interface ApplicationElementStates {
@@ -148,8 +148,11 @@ type ColumnsPerRole = {
 
 interface ContextFormElementUpdateTrackerState {
   elementEnteredTimestamp: number
+  elementEnteredTextValue: string
   elementUpdatedTimestamp: number
+  elementUpdatedTextValue: string
   isLastElementUpdateProcessed: boolean
+  wasElementChange: boolean
 }
 
 interface ContextApplicationState {
@@ -254,7 +257,7 @@ interface MethodRevalidate {
 }
 
 interface MethodToCallProps {
-  firstIncompletePage: SectionAndPage | null
+  firstStrictInvalidPage: SectionAndPage | null
   setStrictSectionPage: SetStrictSectionPage
 }
 
@@ -294,7 +297,7 @@ interface Progress {
   totalNonRequired: number
   totalSum: number
   valid: boolean
-  firstIncompletePage: number | null
+  firstStrictInvalidPage: number | null
 }
 
 type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'

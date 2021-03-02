@@ -9,7 +9,7 @@ const initialProgress = {
   totalRequired: 0,
   totalSum: 0,
   valid: true,
-  firstIncompletePage: Infinity,
+  firstStrictInvalidPage: Infinity,
 }
 
 const calculateCompleted = (totalSum: number, doneRequired: number, doneNonRequired: number) => {
@@ -33,30 +33,31 @@ const getSectionProgress = (pages: PageNEW[]): Progress => {
       )
       if (!progress.valid) sectionProgress.valid = false
       if (
-        sectionProgress.firstIncompletePage &&
-        number < sectionProgress.firstIncompletePage &&
+        sectionProgress.firstStrictInvalidPage &&
+        number < sectionProgress.firstStrictInvalidPage &&
         (!progress.valid || progress.doneRequired < progress.totalRequired)
       )
-        sectionProgress.firstIncompletePage = number
+        sectionProgress.firstStrictInvalidPage = number
       return sectionProgress
     },
     { ...initialProgress }
   )
-  if (sectionProgress.firstIncompletePage === Infinity) sectionProgress.firstIncompletePage = null
+  if (sectionProgress.firstStrictInvalidPage === Infinity)
+    sectionProgress.firstStrictInvalidPage = null
   return sectionProgress
 }
 
 export const generateResponsesProgress = (structure: FullStructure) => {
   let firstIncompleteSectionCode = ''
   let firstIncompleteSectionIndex = Infinity
-  let firstIncompletePageInSection = Infinity
+  let firstStrictInvalidPageInSection = Infinity
   const updateFirstInvalid = (section: SectionStateNEW, page: PageNEW) => {
     if (
       section.details.index <= firstIncompleteSectionIndex &&
-      page.number < firstIncompletePageInSection &&
+      page.number < firstStrictInvalidPageInSection &&
       (!page.progress.valid || page.progress.doneRequired < page.progress.totalRequired)
     ) {
-      firstIncompletePageInSection = page.number
+      firstStrictInvalidPageInSection = page.number
       firstIncompleteSectionIndex = section.details.index
       firstIncompleteSectionCode = section.details.code
     }
@@ -90,10 +91,10 @@ export const generateResponsesProgress = (structure: FullStructure) => {
     })
     section.progress = getSectionProgress(Object.values(section.pages))
   })
-  structure.info.firstIncompletePage = firstIncompleteSectionCode
+  structure.info.firstStrictInvalidPage = firstIncompleteSectionCode
     ? {
         sectionCode: firstIncompleteSectionCode,
-        pageNumber: firstIncompletePageInSection,
+        pageNumber: firstStrictInvalidPageInSection,
       }
     : null
 }

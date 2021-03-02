@@ -1,12 +1,15 @@
 import React, { createContext, useContext, useReducer } from 'react'
 import { ContextFormElementUpdateTrackerState } from '../utils/types'
 
-type TimestampType = 'elementEnteredTimestamp' | 'elementUpdatedTimestamp'
-
-export type UpdateAction = {
-  type: 'setElementTimestamp'
-  timestampType: TimestampType
-}
+export type UpdateAction =
+  | {
+      type: 'setElementEntered'
+      textValue: string
+    }
+  | {
+      type: 'setElementUpdated'
+      textValue: string
+    }
 
 type FormElementUpdateTrackerProps = { children: React.ReactNode }
 
@@ -15,14 +18,31 @@ type FormElementUpdateTrackerProps = { children: React.ReactNode }
 // straight away
 const reducer = (state: ContextFormElementUpdateTrackerState, action: UpdateAction) => {
   switch (action.type) {
-    case 'setElementTimestamp':
-      const newState = { ...state, [action.timestampType]: Date.now() }
-
+    case 'setElementUpdated': {
+      const newState = {
+        ...state,
+        elementUpdatedTimestamp: Date.now(),
+        elementUpdatedTextValue: action.textValue,
+      }
       return {
         ...newState,
         isLastElementUpdateProcessed:
-          newState.elementEnteredTimestamp <= newState.elementUpdatedTimestamp,
+          newState.elementUpdatedTimestamp >= newState.elementEnteredTimestamp,
+        wasValueChange: newState.elementUpdatedTextValue !== newState.elementEnteredTextValue,
       }
+    }
+    case 'setElementEntered': {
+      const newState = {
+        ...state,
+        elementEnteredTimestamp: Date.now(),
+        elementEnteredTextValue: action.textValue,
+      }
+
+      return {
+        ...newState,
+        isLastElementUpdateProcessed: false,
+      }
+    }
     default:
       return state
   }
@@ -32,6 +52,9 @@ const initialState: ContextFormElementUpdateTrackerState = {
   isLastElementUpdateProcessed: true,
   elementEnteredTimestamp: Date.now(),
   elementUpdatedTimestamp: Date.now(),
+  elementEnteredTextValue: '',
+  elementUpdatedTextValue: '',
+  wasElementChange: false,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
