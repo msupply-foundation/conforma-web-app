@@ -86,7 +86,6 @@ const useGetFullApplicationStructure = ({
       setLastProcessedTimestamp(Date.now())
       setFirstRunProcessValidation(false)
       setFullStructure(newStructure)
-      console.log({ newStructure })
     })
   }, [lastRefetchedTimestamp, shouldRevalidate, minRefetchTimestampForRevalidation, error])
 
