@@ -114,6 +114,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         status: status as ApplicationStatus,
         date: DateTime.fromISO(statusHistoryTimeCreated),
       },
+      firstStrictInvalidPage: null,
     }
 
     const baseElements: ElementBaseNEW[] = []

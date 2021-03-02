@@ -34,8 +34,8 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
       push(`/application/${serialNumber}/summary`)
   }, [fullStructure])
 
-  const handleResumeClick = ({ sectionCode, pageName }: SectionAndPage) => {
-    push(`/applicationNEW/${serialNumber}/${sectionCode}/${pageName}`)
+  const handleResumeClick = ({ sectionCode, pageNumber }: SectionAndPage) => {
+    push(`/applicationNEW/${serialNumber}/${sectionCode}/Page${pageNumber}`)
   }
 
   const handleSummaryClicked = () => {

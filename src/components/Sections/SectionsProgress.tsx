@@ -31,7 +31,7 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({ sections, resumeApp
   }
 
   // TODO: Use correct firstIncomplete sections
-  const firstIncomplete: SectionAndPage = { sectionCode: 'S1', pageName: 'Page1' }
+  const firstIncomplete: SectionAndPage = { sectionCode: 'S1', pageNumber: 1 }
 
   return (
     <List

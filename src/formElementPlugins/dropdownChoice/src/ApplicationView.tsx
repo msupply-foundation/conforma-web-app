@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Dropdown, Header } from 'semantic-ui-react'
+import { Dropdown, Header, Label } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
@@ -53,7 +53,20 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         onChange={handleChange}
         value={value}
         disabled={!isEditable}
+        error={
+          !validationState.isValid
+            ? {
+                content: validationState?.validationMessage,
+                pointing: 'above',
+              }
+            : null
+        }
       />
+      {validationState.isValid ? null : (
+        <Label basic color="red" pointing>
+          {validationState?.validationMessage}
+        </Label>
+      )}
     </>
   )
 }
