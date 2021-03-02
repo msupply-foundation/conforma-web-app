@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Label, Segment } from 'semantic-ui-react'
+import { Label, Segment } from 'semantic-ui-react'
 import { SectionAndPage, SectionDetails, SectionsStructureNEW } from '../../utils/types'
 import strings from '../../utils/constants'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -28,7 +28,7 @@ const Navigation: React.FC<NavigationProps> = ({ current, sections, serialNumber
 
   const getPreviousSectionPage = (): SectionAndPage => {
     const { sectionCode, pageNumber } = current
-    if (pageNumber >= 1) return { sectionCode, pageNumber: pageNumber - 1 }
+    if (pageNumber > 1) return { sectionCode, pageNumber: pageNumber - 1 }
     else {
       const previousSectionDetails = Object.values(sections).reduce(
         (previousSection: SectionDetails, { details: { code, index } }) => {
@@ -65,7 +65,7 @@ const Navigation: React.FC<NavigationProps> = ({ current, sections, serialNumber
 
   const sendToPage = (sectionPage: SectionAndPage) => {
     const { sectionCode, pageNumber } = sectionPage
-    push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
+    push(`/applicationNEW/${serialNumber}/${sectionCode}/Page${pageNumber}`)
   }
 
   const previousButtonHandler = (_: any) => {
@@ -79,25 +79,22 @@ const Navigation: React.FC<NavigationProps> = ({ current, sections, serialNumber
   }
 
   return (
-    <Container>
-      <Segment.Group>
-        <Segment basic floated="left">
-          {!isFirstPage && (
-            <Label basic as="a" onClick={previousButtonHandler}>
-              {strings.BUTTON_PREVIOUS}
-            </Label>
-          )}
-        </Segment>
-        <Segment basic floated="right">
-          {!isLastPage && (
-            <Label basic as="a" onClick={nextPageButtonHandler}>
-              {strings.BUTTON_NEXT}
-            </Label>
-          )}
-        </Segment>
-      </Segment.Group>
-      {/* TODO: Add "Summary & Review" button and Stick component */}
-    </Container>
+    <Segment.Group horizontal>
+      <Segment basic floated="left">
+        {!isFirstPage && (
+          <Label basic as="a" onClick={previousButtonHandler}>
+            {strings.BUTTON_PREVIOUS}
+          </Label>
+        )}
+      </Segment>
+      <Segment basic floated="right">
+        {!isLastPage && (
+          <Label basic as="a" onClick={nextPageButtonHandler}>
+            {strings.BUTTON_NEXT}
+          </Label>
+        )}
+      </Segment>
+    </Segment.Group>
   )
 }
 
