@@ -1,12 +1,5 @@
 import { useState, useEffect } from 'react'
-import {
-  ElementStateNEW,
-  EvaluatorParameters,
-  FullStructure,
-  PageElement,
-  ResponsesByCode,
-  TemplateElementStateNEW,
-} from '../types'
+import { FullStructure } from '../types'
 import {
   ApplicationResponse,
   ApplicationStatus,
