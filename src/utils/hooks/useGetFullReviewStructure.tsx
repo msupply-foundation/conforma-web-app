@@ -10,6 +10,7 @@ import {
 import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
 import { useUserState } from '../../contexts/UserState'
 import addOwnedReviewResponse from '../helpers/structure/addOwnedReviewResponse'
+import addElementsById from '../helpers/structure/addElementsById'
 
 interface useGetFullApplicationStructureProps {
   structure: FullStructure
@@ -54,7 +55,7 @@ const useGetFullReviewStructure = ({
         isValid: false,
       },
     }).then((evaluatedStructure: FullStructure) => {
-      let newStructure = evaluatedStructure
+      let newStructure: FullStructure = addElementsById(evaluatedStructure)
 
       // here we add reviewless review repsonses
       // generate indications of reviewless review response (numbe of non conform etc.)

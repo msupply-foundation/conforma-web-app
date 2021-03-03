@@ -34,6 +34,7 @@ export {
   DecisionAreaState,
   ElementBase,
   ElementBaseNEW,
+  ElementsById,
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
@@ -239,7 +240,10 @@ interface EvaluatorParameters {
   APIfetch?: Function
 }
 
+type ElementsById = { [templateElementId: string]: PageElement }
+
 interface FullStructure {
+  elementsById?: ElementsById
   lastValidationTimestamp?: number
   info: ApplicationDetails
   sections: SectionsStructureNEW
