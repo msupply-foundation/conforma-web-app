@@ -28,10 +28,10 @@ const ApplicationWrapper: React.FC = () => {
     <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   ) : isLoading ? (
     <Loading />
-  ) : structure ? (
+  ) : structure && template ? (
     <Switch>
       <Route exact path={path}>
-        <ApplicationHome structure={structure} />
+        <ApplicationHome structure={structure} template={template} />
       </Route>
       <Route exact path={`${path}/:sectionCode/Page:page`}>
         <ApplicationPage structure={structure} />

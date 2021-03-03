@@ -13,9 +13,8 @@ import {
   useGetAllResponsesQuery,
 } from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
-import evaluateExpression from '@openmsupply/expression-evaluator'
-import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { generateResponsesProgress } from '../helpers/structure/generateProgress'
+import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
 
 interface useGetFullApplicationStructureProps {
   structure: FullStructure
@@ -45,11 +44,9 @@ const useGetFullApplicationStructure = ({
   const [lastRefetchedTimestamp, setLastRefetchedTimestamp] = useState<number>(0)
   const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState<number>(0)
 
-  const newStructure = { ...structure } // This MIGHT need to be deep-copied
-
   const networkFetch = true // To-DO: make this conditional
 
-  const { data, error, loading } = useGetAllResponsesQuery({
+  const { data, error } = useGetAllResponsesQuery({
     variables: {
       serial,
     },
@@ -79,140 +76,31 @@ const useGetFullApplicationStructure = ({
 
     if (isDataUpToDate && !shouldRevalidateThisRun) return
 
-    // Build responses by code (and only keep latest)
-    const responseObject: any = {}
-    const responseArray = data?.applicationBySerial?.applicationResponses
-      ?.nodes as ApplicationResponse[]
-    responseArray?.forEach((response) => {
-      const { id, isValid, value, templateElement, timeCreated } = response
-      const code = templateElement?.code as string
-      if (!(code in responseObject) || timeCreated > responseObject[code].timeCreated)
-        responseObject[code] = {
-          id,
-          isValid,
-          timeCreated,
-          ...value,
-        }
-    })
+    const shouldDoValidation = shouldRevalidateThisRun || firstRunProcessValidation
 
-    const flattenedElements = flattenStructureElements(newStructure)
-
-    const evaluationParameters = {
-      objects: { responses: responseObject, currentUser },
-      APIfetch: fetch,
-      // TO-DO: Also send org objects etc.
-      // graphQLConnection: TO-DO
-    }
-
-    // Note: Flattened elements are evaluated IN-PLACE, so structure can be
-    // updated with evaluated elements and responses without re-building
-    // structure
-    evaluateAndValidateElements(
-      flattenedElements.map((elem: PageElement) => elem.element),
-      responseObject,
-      evaluationParameters,
-      shouldRevalidateThisRun || firstRunProcessValidation
-    ).then((result) => {
-      result.forEach((evaluatedElement, index) => {
-        flattenedElements[index].element = evaluatedElement
-        flattenedElements[index].response = responseObject[evaluatedElement.code]
-      })
-
-      if (shouldRevalidateThisRun || firstRunProcessValidation) {
+    addEvaluatedResponsesToStructure({
+      structure,
+      applicationResponses: data?.applicationBySerial?.applicationResponses
+        ?.nodes as ApplicationResponse[],
+      currentUser,
+      evaluationOptions: {
+        isEditable: true,
+        isVisible: true,
+        isRequired: true,
+        isValid: shouldDoValidation,
+      },
+    }).then((newStructure: FullStructure) => {
+      if (shouldDoValidation) {
         newStructure.lastValidationTimestamp = Date.now()
       }
 
-      newStructure.responsesByCode = responseObject
-
-      generateResponsesProgress(newStructure) // Progress for Applicant
+      generateResponsesProgress(newStructure)
 
       setLastProcessedTimestamp(Date.now())
       setFirstRunProcessValidation(false)
       setFullStructure(newStructure)
     })
   }, [lastRefetchedTimestamp, shouldRevalidate, minRefetchTimestampForRevalidation, error])
-
-  async function evaluateAndValidateElements(
-    elements: TemplateElementStateNEW[],
-    responseObject: ResponsesByCode,
-    evaluationParameters: EvaluatorParameters,
-    shouldValidate: boolean
-  ) {
-    const elementPromiseArray: Promise<ElementStateNEW>[] = []
-    elements.forEach((element) => {
-      elementPromiseArray.push(
-        evaluateSingleElement(element, responseObject, evaluationParameters, shouldValidate)
-      )
-    })
-    return await Promise.all(elementPromiseArray)
-  }
-
-  const evaluateExpressionWithFallBack = (
-    expression: IQueryNode,
-    evaluationParameters: EvaluatorParameters,
-    fallBackValue: any
-  ) =>
-    new Promise(async (resolve) => {
-      try {
-        resolve(await evaluateExpression(expression, evaluationParameters))
-      } catch (e) {
-        console.log(e)
-        resolve(fallBackValue)
-      }
-    })
-
-  async function evaluateSingleElement(
-    element: TemplateElementStateNEW,
-    responseObject: ResponsesByCode,
-    evaluationParameters: EvaluatorParameters,
-    shouldValidate: boolean
-  ): Promise<ElementStateNEW> {
-    const responses = { ...evaluationParameters.objects?.responses }
-    const currentEvaluationParameters = {
-      ...evaluationParameters,
-      objects: {
-        ...evaluationParameters.objects,
-        responses: {
-          ...evaluationParameters.objects?.responses,
-          thisResponse: responses?.[element.code]?.text,
-        },
-      },
-    }
-
-    const isEditable = evaluateExpressionWithFallBack(
-      element.isEditableExpression,
-      currentEvaluationParameters,
-      true
-    )
-    const isRequired = evaluateExpressionWithFallBack(
-      element.isRequiredExpression,
-      currentEvaluationParameters,
-      false
-    )
-    const isVisible = evaluateExpressionWithFallBack(
-      element.isVisibleExpression,
-      currentEvaluationParameters,
-      true
-    )
-    const isValid = shouldValidate
-      ? evaluateExpressionWithFallBack(
-          element.validationExpression,
-          currentEvaluationParameters,
-          false
-        )
-      : async () => responseObject[element.code]?.isValid
-    const results = await Promise.all([isEditable, isRequired, isVisible, isValid])
-
-    const evaluatedElement = {
-      ...element,
-      isEditable: results[0] as boolean,
-      isRequired: results[1] as boolean,
-      isVisible: results[2] as boolean,
-    }
-    // Update isValid field in Response, in-place
-    if (responseObject[element.code]) responseObject[element.code].isValid = results[3] as boolean
-    return evaluatedElement
-  }
 
   return {
     fullStructure,
@@ -221,13 +109,3 @@ const useGetFullApplicationStructure = ({
 }
 
 export default useGetFullApplicationStructure
-
-const flattenStructureElements = (structure: FullStructure) => {
-  const flattened: any = []
-  Object.keys(structure.sections).forEach((section) => {
-    Object.keys(structure.sections[section].pages).forEach((page) => {
-      flattened.push(...structure.sections[section].pages[page].state)
-    })
-  })
-  return flattened
-}

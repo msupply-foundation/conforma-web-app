@@ -3,8 +3,9 @@ import {
   FullStructure,
   ResponsesByCode,
   ElementStateNEW,
-  MethodToCallOnRevalidation,
   SectionAndPage,
+  MethodRevalidate,
+  MethodToCallProps,
 } from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { ApplicationStatus } from '../../utils/generated/graphql'
@@ -16,20 +17,19 @@ import { Button, Grid, Header, Message, Segment, Sticky } from 'semantic-ui-reac
 import ProgressBarNEW from '../../components/Application/ProgressBarNEW'
 import { PageElements } from '../../components/Application'
 import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
+import checkPageIsAccessible from '../../utils/helpers/structure/checkPageIsAccessible'
 
 interface ApplicationProps {
   structure: FullStructure
   responses?: ResponsesByCode
 }
 
-const getFirstInvalidPage = (fullStructure: FullStructure): SectionAndPage | null => {
-  // TODO implement, should rely on .progress
-  // return { sectionCode: 'S1', pageName: 'Page 2' }
-  return null
+interface MethodToCall {
+  (props: MethodToCallProps): void
 }
 
 interface RevalidationState {
-  methodToCallOnRevalidation: MethodToCallOnRevalidation | null
+  methodToCallOnRevalidation: MethodToCall | null
   shouldProcessValidation: boolean
   lastRevalidationRequest: number
 }
@@ -43,8 +43,10 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     push,
   } = useRouter()
 
+  const pageNumber = Number(page)
+
   const {
-    state: { isLastElementUpdateProcessed, elementUpdatedTimestamp },
+    state: { isLastElementUpdateProcessed, elementUpdatedTimestamp, wasElementChange },
   } = useFormElementUpdateTracker()
 
   const [strictSectionPage, setStrictSectionPage] = useState<SectionAndPage | null>(null)
@@ -55,7 +57,8 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   })
 
   const shouldRevalidate = isLastElementUpdateProcessed && revalidationState.shouldProcessValidation
-  const minRefetchTimestampForRevalidation = shouldRevalidate ? elementUpdatedTimestamp : 0
+  const minRefetchTimestampForRevalidation =
+    shouldRevalidate && wasElementChange ? elementUpdatedTimestamp : 0
 
   const { error, fullStructure } = useGetFullApplicationStructure({
     structure,
@@ -63,15 +66,10 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     minRefetchTimestampForRevalidation,
   })
 
-  const currentSection = sectionCode
-  const currentPage = `Page ${page}`
-  const currentSectionIndex = structure.sections[currentSection].details.index
-  const currentPageNumber = structure.sections[currentSection].pages[currentPage].number
-
   /* Method to pass to progress bar, next button and submit button to cause revalidation before action can be proceeded
      Should always be called on submit, but only be called on next or progress bar navigation when isLinear */
   // TODO may rename if we want to display loading modal ?
-  const requestRevalidation = (methodToCall: MethodToCallOnRevalidation) => {
+  const requestRevalidation: MethodRevalidate = (methodToCall) => {
     setRevalidationState({
       methodToCallOnRevalidation: methodToCall,
       shouldProcessValidation: true,
@@ -87,51 +85,37 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
       revalidationState.methodToCallOnRevalidation &&
       (fullStructure?.lastValidationTimestamp || 0) > revalidationState.lastRevalidationRequest
     ) {
-      const firstInvalidPage = getFirstInvalidPage(fullStructure)
-
       setRevalidationState({
         ...revalidationState,
         methodToCallOnRevalidation: null,
         shouldProcessValidation: false,
       })
-      revalidationState.methodToCallOnRevalidation(firstInvalidPage, setStrictSectionPage)
+      revalidationState.methodToCallOnRevalidation({
+        firstStrictInvalidPage: fullStructure.info.firstStrictInvalidPage,
+        setStrictSectionPage,
+      })
       // TODO hide loading modal
     }
   }, [revalidationState, fullStructure])
 
   useEffect(() => {
-    if (!structure && !fullStructure) return
+    if (!fullStructure) return
 
     // Re-direct based on application status
-    if (structure.info.current?.status === ApplicationStatus.ChangesRequired)
-      push(`/applicationNEW/${structure.info.serial}`)
+    if (fullStructure.info.current?.status === ApplicationStatus.ChangesRequired)
+      push(`/applicationNEW/${fullStructure.info.serial}`)
     if (structure.info.current?.status !== ApplicationStatus.Draft)
-      push(`/applicationNEW/${structure.info.serial}/summary`)
+      push(`/applicationNEW/${fullStructure.info.serial}/summary`)
 
     // Re-direct if trying to access page higher than allowed
-    if (!structure.info.isLinear) return
-    const firstInvalidSectionIndex = structure.info?.firstInvalidPageStrict?.sectionIndex
-    const firstInvalidPageNum = structure.info?.firstInvalidPageStrict?.pageNumber
-    if (
-      firstInvalidSectionIndex != null &&
-      firstInvalidPageNum != null &&
-      (currentSectionIndex > firstInvalidSectionIndex ||
-        (currentSectionIndex >= firstInvalidSectionIndex &&
-          currentPageNumber > firstInvalidPageNum))
-    ) {
-      push(
-        `/applicationNEW/${structure.info.serial}/${structure.info.firstInvalidPageStrict?.sectionCode}/Page${structure.info.firstInvalidPageStrict?.pageNumber}`
-      )
+    if (!fullStructure.info.isLinear || !fullStructure.info?.firstStrictInvalidPage) return
+    const firstIncomplete = fullStructure.info?.firstStrictInvalidPage
+    const current = { sectionCode, pageNumber }
+    if (!checkPageIsAccessible({ fullStructure, firstIncomplete, current })) {
+      const { sectionCode, pageNumber } = firstIncomplete
+      push(`/applicationNEW/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
     }
   }, [structure, fullStructure, sectionCode, page])
-
-  const handleChangeToPage = (sectionCode: string, pageNumber: number) => {
-    if (!structure.info.isLinear)
-      push(`/applicationNEW/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
-
-    // TODO: Use validationMethod to check if can change to page OR
-    // Would display modal (?) and current page with strict validation
-  }
 
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
@@ -155,20 +139,20 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
         <Grid.Column width={4}>
           <ProgressBarNEW
             structure={fullStructure}
-            current={{ sectionCode, page: Number(page) }}
-            changePage={handleChangeToPage}
+            requestRevalidation={requestRevalidation}
+            strictSectionPage={strictSectionPage}
           />
         </Grid.Column>
         <Grid.Column width={10} stretched>
           <Segment basic>
             <Segment vertical style={{ marginBottom: 20 }}>
-              <Header content={fullStructure.sections[currentSection].details.title} />
+              <Header content={fullStructure.sections[sectionCode].details.title} />
               <PageElements
-                elements={getCurrentPageElements(fullStructure, currentSection, currentPage)}
+                elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
                 responsesByCode={fullStructure.responsesByCode}
                 isStrictPage={
-                  currentSection === strictSectionPage?.sectionCode &&
-                  currentPage === strictSectionPage?.pageName
+                  sectionCode === strictSectionPage?.sectionCode &&
+                  pageNumber === strictSectionPage?.pageNumber
                 }
                 isEditable
               />
@@ -200,7 +184,7 @@ const NavigationBox: React.FC = () => {
 
 export default ApplicationPage
 
-const getCurrentPageElements = (structure: FullStructure, section: string, page: string) => {
+const getCurrentPageElements = (structure: FullStructure, section: string, page: number) => {
   return structure.sections[section].pages[page].state.map(
     (item) => item.element
   ) as ElementStateNEW[]
