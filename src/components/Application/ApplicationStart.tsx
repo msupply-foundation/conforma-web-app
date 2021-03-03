@@ -21,6 +21,8 @@ export interface ApplicationStartProps extends RouteComponentProps {
   setSummaryButtonClicked?: () => void
 }
 
+//TODO: Remove this
+
 const ApplicationStart: React.FC<ApplicationStartProps> = ({
   template,
   sections,
