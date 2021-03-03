@@ -19,6 +19,7 @@ export {
   ApplicationDetails,
   ApplicationElementStates,
   ApplicationListRow,
+  ApplicationProps,
   ApplicationStage,
   ApplicationStageMap,
   ApplicationStages,
@@ -106,6 +107,11 @@ interface ApplicationElementStates {
 
 interface ApplicationListRow extends ApplicationList {
   isExpanded: boolean
+}
+
+interface ApplicationProps {
+  structure: FullStructure
+  responses?: ResponsesByCode
 }
 
 interface ApplicationStage {

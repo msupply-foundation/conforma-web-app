@@ -6,6 +6,7 @@ import {
   SectionAndPage,
   MethodRevalidate,
   MethodToCallProps,
+  ApplicationProps,
 } from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { ApplicationStatus } from '../../utils/generated/graphql'
@@ -18,11 +19,6 @@ import ProgressBarNEW from '../../components/Application/ProgressBarNEW'
 import { PageElements } from '../../components/Application'
 import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
 import checkPageIsAccessible from '../../utils/helpers/structure/checkPageIsAccessible'
-
-interface ApplicationProps {
-  structure: FullStructure
-  responses?: ResponsesByCode
-}
 
 interface MethodToCall {
   (props: MethodToCallProps): void
