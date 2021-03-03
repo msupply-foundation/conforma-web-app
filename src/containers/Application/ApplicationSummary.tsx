@@ -25,8 +25,8 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
   useEffect(() => {
     if (!fullStructure) return
     // Re-direct if application is not valid
-    if (fullStructure.info.firstInvalidPageStrict) {
-      const { sectionCode, pageNumber } = fullStructure.info.firstInvalidPageStrict
+    if (fullStructure.info.firstStrictInvalidPage) {
+      const { sectionCode, pageNumber } = fullStructure.info.firstStrictInvalidPage
       push(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
     }
   }, [fullStructure])
@@ -35,12 +35,16 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
 
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (!fullStructure) return <Loading />
-  const { sections } = fullStructure
+  const { sections, responsesByCode } = fullStructure
   return (
     <Container>
       <Header as="h1" content={strings.TITLE_APPLICATION_SUBMIT} />
       {Object.values(sections).map((section) => (
-        <SectionWrapper key={`ApplicationSection_${section.details.code}`} pages={section.pages} />
+        <SectionWrapper
+          key={`ApplicationSection_${section.details.code}`}
+          pages={section.pages}
+          responsesByCode={responsesByCode}
+        />
       ))}
       {/* {Object.values(sections).map((sectionPages) => (
         <SectionSummary
