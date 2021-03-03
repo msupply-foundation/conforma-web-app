@@ -99,6 +99,7 @@ interface ApplicationDetails {
   isLinear: boolean
   current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
   firstStrictInvalidPage: SectionAndPage | null
+  submissionMessage?: string // TODO: Change to compulsory after re-structure is finished
 }
 
 interface ApplicationElementStates {
@@ -247,7 +248,7 @@ interface FullStructure {
   lastValidationTimestamp?: number
   info: ApplicationDetails
   sections: SectionsStructureNEW
-  stages: ApplicationStages
+  stages: StageDetails[]
   responsesByCode?: ResponsesByCode
 }
 
