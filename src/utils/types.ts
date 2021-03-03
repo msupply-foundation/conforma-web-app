@@ -2,6 +2,7 @@ import {
   ApplicationList,
   ApplicationStatus,
   PermissionPolicyType,
+  ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
   TemplateElement,
@@ -40,6 +41,7 @@ export {
   ElementsActivityState,
   EvaluatorParameters,
   FullStructure,
+  GroupedReviewResponses,
   IGraphQLConnection,
   LooseString,
   MethodRevalidate,
@@ -245,6 +247,10 @@ interface FullStructure {
   responsesByCode?: ResponsesByCode
 }
 
+type GroupedReviewResponses = {
+  [templateElementId: string]: ReviewResponse[]
+}
+
 interface IGraphQLConnection {
   fetch: Function
   endpoint: string
@@ -282,6 +288,8 @@ interface PageNEW {
 type PageElement = {
   element: ElementBaseNEW | ElementStateNEW
   response: ResponseFull | null
+  latestCurrentReviewResponse?: ReviewResponse
+  latestPreviousReviewResponse?: ReviewResponse
   review?: ReviewQuestionDecision
 }
 
