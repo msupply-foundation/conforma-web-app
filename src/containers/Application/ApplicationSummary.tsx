@@ -24,12 +24,10 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
   useEffect(() => {
     if (!fullStructure) return
     // Re-direct if application is not valid
-    if (fullStructure.info.firstInvalidPage) {
-      const sectionCode = fullStructure.info.firstInvalidPageStrict?.sectionCode
-      const pageNumber = fullStructure.info.firstInvalidPageStrict?.pageNumber
-
+    if (fullStructure.info.firstInvalidPageStrict) {
+      const { sectionCode, pageNumber } = fullStructure.info.firstInvalidPageStrict
       push(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
-    } // Go to first invalid page
+    }
   }, [fullStructure])
 
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
