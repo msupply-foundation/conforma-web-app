@@ -7,6 +7,7 @@ import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { Link } from 'react-router-dom'
+import { ApplicationStatus } from '../../utils/generated/graphql'
 
 const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
   const [submissionMessageEvaluated, setSubmissionMessageEvaluated] = useState('')
@@ -19,9 +20,17 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
     push,
   } = useRouter()
   const {
-    info: { submissionMessage, type },
+    info: { current, submissionMessage, type },
     stages,
   } = structure
+
+  // Check if application not submitted and redirect to the summary page
+  // Note: The summary page has its own redirection logic to a specific page (with invalid items).
+  if (
+    current?.status === ApplicationStatus.Draft ||
+    current?.status === ApplicationStatus.ChangesRequired
+  )
+    push(`/applicationNEW/${serialNumber}/summary`)
 
   const evaluatorParams: EvaluatorParameters = {
     objects: { currentUser },
@@ -30,16 +39,6 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
   evaluate(submissionMessage || '', evaluatorParams).then((result: any) =>
     setSubmissionMessageEvaluated(result)
   )
-
-  // useEffect(() => {
-  //   if (!isApplicationReady) return
-  //   const status = application?.current?.status
-  //   // Check if application is in Draft or Changes required status and redirect to the summary page
-  //   // Note: The summary page has its own redirection logic to a specific page (with invalid items).
-  //   if (status === ApplicationStatus.Draft || status === ApplicationStatus.ChangesRequired) {
-  //     push(`/application/${serialNumber}/summary`)
-  //   }
-  // }, [isApplicationReady])
 
   return (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
