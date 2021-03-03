@@ -31,7 +31,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     if (!fullStructure) return
     const { status } = fullStructure.info.current as StageAndStatus
     if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired)
-      push(`/application/${serialNumber}/summary`)
+      push(`/applicationNEW/${serialNumber}/summary`)
   }, [fullStructure])
 
   const handleResumeClick = ({ sectionCode, pageNumber }: SectionAndPage) => {
@@ -44,14 +44,13 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
 
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
-  const isCompleted = Object.values(fullStructure.sections).every(
-    ({ progress }) => progress?.completed && progress.valid
-  )
 
   const canUserEdit = () => {
     const { status } = fullStructure.info.current as StageAndStatus
     return status === ApplicationStatus.Draft ? true : false
   }
+
+  const { firstStrictInvalidPage } = fullStructure.info
 
   const HomeMain: React.FC = () => {
     return (
@@ -62,13 +61,13 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
           <SectionsProgress
             canEdit={canUserEdit()}
             changes={{ state: true, label: 'Update' }}
-            firstStrictInvalidPage={fullStructure.info.firstStrictInvalidPage}
             sections={fullStructure.sections}
+            firstStrictInvalidPage={firstStrictInvalidPage}
             resumeApplication={handleResumeClick}
           />
           <Divider />
         </Segment>
-        {isCompleted && (
+        {firstStrictInvalidPage === null && (
           <Sticky
             pushing
             style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
