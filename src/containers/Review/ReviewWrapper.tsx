@@ -5,11 +5,16 @@ import { NoMatch } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { FullStructure } from '../../utils/types'
 
-const ReviewWrapper: React.FC = () => {
+interface ReviewWrapperProps {
+  structure: FullStructure
+}
+
+const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   const {
     match: { path },
-    query: { reviewId },
   } = useRouter()
+
+  console.log('Strcture', structure)
 
   return (
     <Switch>
@@ -29,11 +34,7 @@ const ReviewWrapper: React.FC = () => {
   )
 }
 
-interface ReviewHomeProps {
-  fullStructure?: FullStructure
-}
-
-const ReviewHomeNEW: React.FC<ReviewHomeProps> = ({ fullStructure }) => {
+const ReviewHomeNEW: React.FC = () => {
   return <Header>REVIEW HOME PAGE</Header>
 }
 

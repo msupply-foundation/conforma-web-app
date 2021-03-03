@@ -45,7 +45,7 @@ const ApplicationWrapper: React.FC = () => {
         <ApplicationSubmissionNEW structure={structure} />
       </Route>
       <Route path={`${path}/review`}>
-        <ReviewWrapper />
+        <ReviewWrapper structure={structure} />
       </Route>
       <Route>
         <NoMatch />
