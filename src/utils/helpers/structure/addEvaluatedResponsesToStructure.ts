@@ -1,6 +1,6 @@
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
-import { ApplicationResponse } from '../../generated/graphql'
+import { ApplicationResponse, ReviewResponse } from '../../generated/graphql'
 import {
   ElementStateNEW,
   EvaluatorParameters,
@@ -40,17 +40,22 @@ const addEvaluatedResponsesToStructure = async ({
 
   // Build responses by code (and only keep latest)
   const responseObject: any = {}
+  const reviewResponses: { [templateElementId: string]: ReviewResponse } = {}
 
   applicationResponses?.forEach((response) => {
-    const { id, isValid, value, templateElement, timeCreated } = response
+    const { id, isValid, value, templateElement, templateElementId, timeCreated } = response
     const code = templateElement?.code as string
-    if (!(code in responseObject) || timeCreated > responseObject[code].timeCreated)
+    if (!(code in responseObject) || timeCreated > responseObject[code].timeCreated) {
       responseObject[code] = {
         id,
         isValid,
         timeCreated,
         ...value,
       }
+
+      if (response.reviewResponses.nodes.length === 0) return
+      reviewResponses[templateElementId || ''] = response.reviewResponses.nodes[0] as ReviewResponse
+    }
   })
 
   const flattenedElements = flattenStructureElements(newStructure)
@@ -65,8 +70,11 @@ const addEvaluatedResponsesToStructure = async ({
     evaluationOptions
   )
   results.forEach((evaluatedElement, index) => {
-    flattenedElements[index].element = evaluatedElement
-    flattenedElements[index].response = responseObject[evaluatedElement.code]
+    const flattenedElement = flattenedElements[index]
+    flattenedElement.element = evaluatedElement
+    flattenedElement.response = responseObject[evaluatedElement.code]
+    if (flattenedElement.response)
+      flattenedElement.response.reviewResponse = reviewResponses[flattenedElement.element.id]
   })
   newStructure.responsesByCode = responseObject
   return newStructure

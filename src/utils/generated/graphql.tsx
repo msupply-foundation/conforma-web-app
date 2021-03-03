@@ -19789,6 +19789,7 @@ export type GetReviewAssignmentQuery = (
 
 export type GetReviewNewQueryVariables = Exact<{
   reviewAssignmentId: Scalars['Int'];
+  userId: Scalars['Int'];
 }>;
 
 
@@ -19799,7 +19800,7 @@ export type GetReviewNewQuery = (
     & Pick<ReviewAssignment, 'id'>
     & { application?: Maybe<(
       { __typename?: 'Application' }
-      & Pick<Application, 'id'>
+      & Pick<Application, 'id' | 'serial'>
       & { applicationResponses: (
         { __typename?: 'ApplicationResponsesConnection' }
         & { nodes: Array<Maybe<(
@@ -20749,15 +20750,16 @@ export type GetReviewAssignmentQueryHookResult = ReturnType<typeof useGetReviewA
 export type GetReviewAssignmentLazyQueryHookResult = ReturnType<typeof useGetReviewAssignmentLazyQuery>;
 export type GetReviewAssignmentQueryResult = Apollo.QueryResult<GetReviewAssignmentQuery, GetReviewAssignmentQueryVariables>;
 export const GetReviewNewDocument = gql`
-    query getReviewNew($reviewAssignmentId: Int!) {
+    query getReviewNew($reviewAssignmentId: Int!, $userId: Int!) {
   reviewAssignment(id: $reviewAssignmentId) {
     id
     application {
       id
+      serial
       applicationResponses {
         nodes {
           ...Response
-          reviewResponses {
+          reviewResponses(orderBy: TIME_CREATED_DESC, filter: {or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
             nodes {
               ...reviewResponseFragment
             }
@@ -20793,6 +20795,7 @@ ${ReviewResponseFragmentFragmentDoc}`;
  * const { data, loading, error } = useGetReviewNewQuery({
  *   variables: {
  *      reviewAssignmentId: // value for 'reviewAssignmentId'
+ *      userId: // value for 'userId'
  *   },
  * });
  */

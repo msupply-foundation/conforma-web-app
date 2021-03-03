@@ -30,6 +30,7 @@ const useGetFullReviewStructure = ({
   const { data, error } = useGetReviewNewQuery({
     variables: {
       reviewAssignmentId: reviewAssignment.id,
+      userId: currentUser?.userId || 0,
     },
   })
 
