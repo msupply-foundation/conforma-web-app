@@ -1,9 +1,9 @@
 import { ReviewResponse } from '../../generated/graphql'
 import { FullStructure } from '../../types'
 import addElementsById from './addElementsById'
-import getSortedGroupedReviewResponses from './getGroupedReviewResponses'
+import getGroupedReviewResponses from './getGroupedReviewResponses'
 
-const addLatestOwnedtReviewResponse = ({
+const addOwnedReviewResponse = ({
   structure,
   sortedReviewResponses,
 }: {
@@ -13,19 +13,17 @@ const addLatestOwnedtReviewResponse = ({
   const newStructure = addElementsById(structure)
   const { elementsById } = newStructure
 
-  const groupedReviewResponses = getSortedGroupedReviewResponses(sortedReviewResponses)
+  const groupedReviewResponses = getGroupedReviewResponses(sortedReviewResponses)
 
   Object.entries(groupedReviewResponses).forEach(([templateElementId, responseGroup]) => {
     const element = elementsById[templateElementId]
     if (!element) return
 
-    element.latestOwnedtReviewResponse = responseGroup[0]
+    element.latestOwnedReviewResponse = responseGroup[0]
     if (responseGroup.length === 1) return
-
-    element.previousReviewResponse = responseGroup[1]
   })
 
   return newStructure
 }
 
-export default addLatestOwnedtReviewResponse
+export default addOwnedReviewResponse
