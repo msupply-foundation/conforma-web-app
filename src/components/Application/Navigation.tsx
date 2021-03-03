@@ -27,31 +27,30 @@ const Navigation: React.FC<NavigationProps> = ({
 
   const currentSectionDetails = sections[current.sectionCode].details
 
-  const hasNextSection = Object.values(sections).find(
-    ({ details: { index } }) => index > currentSectionDetails.index
-  )
-  const hasPreviousSection = Object.values(sections).find(
-    ({ details: { index } }) => index < currentSectionDetails.index
-  )
+  const nextSection = (): SectionDetails | null => {
+    const nextSections = Object.values(sections)
+      .filter(({ details: { index } }) => index > currentSectionDetails.index)
+      .sort(({ details: { index: aIndex } }, { details: { index: bIndex } }) => aIndex - bIndex)
+    return nextSections.length > 0 ? nextSections[0].details : null
+  }
 
-  const isFirstPage = current.pageNumber - 1 === 0 && !hasPreviousSection
-  const isLastPage = current.pageNumber + 1 > currentSectionDetails.totalPages && !hasNextSection
+  const previousSection = (): SectionDetails | null => {
+    const previousSections = Object.values(sections)
+      .filter(({ details: { index } }) => index < currentSectionDetails.index)
+      .sort(({ details: { index: aIndex } }, { details: { index: bIndex } }) => bIndex - aIndex)
+    return previousSections.length > 0 ? previousSections[0].details : null
+  }
+
+  const isFirstPage = current.pageNumber - 1 === 0 && previousSection() == null
+  const isLastPage =
+    current.pageNumber + 1 > currentSectionDetails.totalPages && nextSection() == null
 
   const getPreviousSectionPage = (): SectionAndPage => {
     const { sectionCode, pageNumber } = current
     if (pageNumber > 1) return { sectionCode, pageNumber: pageNumber - 1 }
-    else {
-      const previousSectionDetails = Object.values(sections).reduce(
-        (previousSection: SectionDetails, { details: { code, index } }) => {
-          if (index < previousSection.index) return sections[code].details
-          return previousSection
-        },
-        currentSectionDetails
-      )
-      return {
-        sectionCode: previousSectionDetails.code,
-        pageNumber: previousSectionDetails.totalPages,
-      }
+    return {
+      sectionCode: (previousSection() as SectionDetails).code,
+      pageNumber: (previousSection() as SectionDetails).totalPages,
     }
   }
 
@@ -59,18 +58,9 @@ const Navigation: React.FC<NavigationProps> = ({
     const { sectionCode, pageNumber } = current
     if (pageNumber < currentSectionDetails.totalPages)
       return { sectionCode, pageNumber: pageNumber + 1 }
-    else {
-      const nextSectionDetails = Object.values(sections).reduce(
-        (nextSection: SectionDetails, { details: { code, index } }) => {
-          if (index > nextSection.index) return sections[code].details
-          return nextSection
-        },
-        currentSectionDetails
-      )
-      return {
-        sectionCode: nextSectionDetails.code,
-        pageNumber: 1,
-      }
+    return {
+      sectionCode: (nextSection() as SectionDetails).code,
+      pageNumber: 1,
     }
   }
 
