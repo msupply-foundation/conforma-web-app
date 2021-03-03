@@ -22,7 +22,7 @@ export {
   ApplicationProps,
   ApplicationStage,
   ApplicationStageMap,
-  ApplicationStages,
+  ApplicationStages, // TODO: Remove this
   AssignmentDetails,
   CellProps,
   ColumnDetails,
