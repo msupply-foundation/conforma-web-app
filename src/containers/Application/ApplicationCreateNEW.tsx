@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Divider, Header, Message, Segment } from 'semantic-ui-react'
 import evaluate from '@openmsupply/expression-evaluator'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
-import { ApplicationHeader, Loading } from '../../components'
+import { ApplicationHeader, ApplicationSelectType, Loading } from '../../components'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { useUserState } from '../../contexts/UserState'
 import useCreateApplication from '../../utils/hooks/useCreateApplication'
@@ -24,7 +24,7 @@ const ApplicationCreateNEW: React.FC = () => {
   const [startMessageEvaluated, setStartMessageEvaluated] = useState('')
 
   const { error, loading, template, sections, elementsIds } = useLoadTemplate({
-    templateCode: type as string,
+    templateCode: type,
   })
 
   const {
@@ -84,10 +84,19 @@ const ApplicationCreateNEW: React.FC = () => {
     })
   }
 
-  if (!template || !sections) return <Loading />
+  if (error || creationError)
+    return (
+      <Message
+        error
+        title={strings.ERROR_APPLICATION_CREATE}
+        list={[error, creationError?.message]}
+      />
+    )
+
+  if (loading) return <Loading />
 
   const CreateComponent: React.FC = () => {
-    return (
+    return sections ? (
       <Segment basic>
         <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
         <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
@@ -98,21 +107,18 @@ const ApplicationCreateNEW: React.FC = () => {
           {strings.BUTTON_APPLICATION_START}
         </Button>
       </Segment>
-    )
+    ) : null
   }
 
-  return error ? (
-    <Message
-      error
-      title={strings.ERROR_APPLICATION_CREATE}
-      list={[error, creationError?.message]}
-    />
-  ) : (
+  return template ? (
     <ApplicationHeader
       template={template}
       currentUser={currentUser}
       ChildComponent={CreateComponent}
     />
+  ) : (
+    // TODO
+    <ApplicationSelectType />
   )
 }
 

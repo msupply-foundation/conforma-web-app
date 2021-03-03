@@ -9,29 +9,29 @@ import { getTemplateSections } from '../helpers/application/getSectionsDetails'
 import { SectionDetails, TemplateDetails } from '../types'
 
 interface useLoadTemplateProps {
-  templateCode: string
+  templateCode?: string
 }
 
-const useLoadTemplate = (props: useLoadTemplateProps) => {
-  const { templateCode } = props
+const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
   const [template, setTemplate] = useState<TemplateDetails>()
   const [sections, setSectionsDetails] = useState<SectionDetails[]>()
   const [elementsIds, setElementsIds] = useState<number[]>([])
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   const { data, loading: apolloLoading, error: apolloError } = useGetTemplateQuery({
     variables: {
-      code: templateCode,
+      code: templateCode || '',
     },
+    skip: !templateCode,
   })
 
   useEffect(() => {
-    // Check that only one tempalte matched
+    if (!data) return
+
+    // Check that only one template matched
     let error = checkForTemplateErrors(data)
     if (error) {
       setError(error)
-      setLoading(false)
       return
     }
 
@@ -40,7 +40,6 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
     error = checkForTemplatSectionErrors(template)
     if (error) {
       setError(error)
-      setLoading(false)
       return
     }
 
@@ -66,12 +65,10 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
       })
     })
     setElementsIds(elements)
-
-    setLoading(false)
   }, [data])
 
   return {
-    loading: apolloLoading || loading,
+    loading: apolloLoading,
     error: apolloError?.message || error,
     template,
     sections,
@@ -80,17 +77,15 @@ const useLoadTemplate = (props: useLoadTemplateProps) => {
 }
 
 function checkForTemplateErrors(data: GetTemplateQuery | undefined) {
-  if (data?.templates?.nodes?.length === null) return 'Unexpected template result'
   const numberOfTemplates = data?.templates?.nodes.length as number
-  if (numberOfTemplates === 0) return 'Template not found'
+  if (!numberOfTemplates || numberOfTemplates === 0) return 'Template not found'
   if (numberOfTemplates > 1) return 'More then one template found'
   return null
 }
 
 function checkForTemplatSectionErrors(template: Template) {
-  if (template?.templateSections?.nodes === null) return 'Unexpected template section result'
   const numberOfSections = template?.templateSections?.nodes.length as number
-  if (numberOfSections === 0) return 'No template sections'
+  if (!numberOfSections || numberOfSections === 0) return 'No template sections'
   return null
 }
 
