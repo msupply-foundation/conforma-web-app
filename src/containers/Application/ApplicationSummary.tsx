@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { FullStructure, ResponsesByCode, ElementStateNEW } from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { ApplicationStatus } from '../../utils/generated/graphql'
-import { useApplicationState } from '../../contexts/ApplicationState'
-import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, NoMatch } from '../../components'
 import { SectionWrapper } from '../../components/Application'
 import strings from '../../utils/constants'
-import messages from '../../utils/messages'
-import { Button, Grid, Header, Message, Segment, Sticky, Container, Form } from 'semantic-ui-react'
-import { PageElements } from '../../components/Application'
+import { Button, Header, Message, Container } from 'semantic-ui-react'
 
 interface ApplicationProps {
   structure: FullStructure
