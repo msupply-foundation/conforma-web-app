@@ -17,10 +17,10 @@ const ReviewWrapper: React.FC = () => {
         <ReviewHomeNEW />
       </Route>
       <Route exact path={`${path}/:reviewId`}>
-        <ReviewPageNEW reviewId={Number(reviewId)} />
+        <ReviewPageNEW />
       </Route>
       <Route exact path={`${path}/:reviewId/summary`}>
-        <ReviewSummaryNEW reviewId={Number(reviewId)} />
+        <ReviewSummaryNEW />
       </Route>
       <Route>
         <NoMatch />
@@ -37,16 +37,12 @@ const ReviewHomeNEW: React.FC<ReviewHomeProps> = ({ fullStructure }) => {
   return <Header>REVIEW HOME PAGE</Header>
 }
 
-interface ReviewProps {
-  reviewId: number
-}
-
-const ReviewPageNEW: React.FC<ReviewProps> = ({ reviewId }) => {
+const ReviewPageNEW: React.FC = () => {
   return <Header>REVIEW PAGE</Header>
 }
 
 // To be used in case the decision step is in a separated page...
-const ReviewSummaryNEW: React.FC<ReviewProps> = ({ reviewId }) => {
+const ReviewSummaryNEW: React.FC = () => {
   return <Header>REVIEW SUMMARY PAGE</Header>
 }
 
