@@ -1,13 +1,7 @@
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import { Accordion, Segment, Grid, Header, Icon } from 'semantic-ui-react'
 import { PageElements } from '.'
-import {
-  PageElement,
-  PageNEW,
-  ResponsesByCode,
-  ElementStateNEW,
-  SectionStateNEW,
-} from '../../utils/types'
+import { ResponsesByCode, ElementStateNEW, SectionStateNEW } from '../../utils/types'
 
 interface SectionProps {
   section: SectionStateNEW
