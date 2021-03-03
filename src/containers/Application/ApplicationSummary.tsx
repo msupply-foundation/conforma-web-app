@@ -6,9 +6,10 @@ import { useApplicationState } from '../../contexts/ApplicationState'
 import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, NoMatch } from '../../components'
+import { SectionWrapper } from '../../components/Application'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
-import { Button, Grid, Header, Message, Segment, Sticky } from 'semantic-ui-react'
+import { Button, Grid, Header, Message, Segment, Sticky, Container, Form } from 'semantic-ui-react'
 import { PageElements } from '../../components/Application'
 
 interface ApplicationProps {
@@ -30,9 +31,36 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
     }
   }, [fullStructure])
 
+  console.log('fullStructure', fullStructure)
+
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (!fullStructure) return <Loading />
-  return <Header>SUMMARY PAGE</Header>
+  const { sections } = fullStructure
+  return (
+    <Container>
+      <Header as="h1" content={strings.TITLE_APPLICATION_SUBMIT} />
+      {Object.values(sections).map((section) => (
+        <SectionWrapper key={`ApplicationSection_${section.details.code}`} pages={section.pages} />
+      ))}
+      {/* {Object.values(sections).map((sectionPages) => (
+        <SectionSummary
+          key={`ApplicationSection_${sectionPages.details.code}`}
+          sectionPages={sectionPages}
+          serialNumber={serialNumber}
+          allResponses={allResponses || {}}
+          canEdit={application.current?.status === ApplicationStatus.Draft}
+        />
+      ))} */}
+      {/* {application.current?.status === ApplicationStatus.Draft ? (
+          <Button
+            content={strings.BUTTON_APPLICATION_SUBMIT}
+            loading={processing}
+            onClick={handleSubmit}
+          />
+        ) : null} */}
+      {/* <ModalWarning showModal={showModal} /> */}
+    </Container>
+  )
 }
 
 export default ApplicationSummary
