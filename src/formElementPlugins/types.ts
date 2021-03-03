@@ -1,6 +1,6 @@
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { TemplateElement } from '../utils/generated/graphql'
-import { ElementState, ResponseFull, ResponsesByCode } from '../utils/types'
+import { ElementState, ElementStateNEW, ResponseFull, ResponsesByCode } from '../utils/types'
 
 interface OnUpdateApplicationView {
   (updateObject: { value?: any; isValid: boolean | undefined }): void
@@ -74,6 +74,11 @@ interface SummaryViewWrapperProps {
   response: ResponseFull | null
   allResponses: ResponsesByCode
 }
+interface SummaryViewWrapperPropsNEW {
+  element: ElementStateNEW
+  response: ResponseFull | null
+  allResponses: ResponsesByCode
+}
 
 interface OnUpdateTemplateWrapperView {
   (updateObject: { [key: string]: any }): void
@@ -128,6 +133,7 @@ export {
   ValidationState,
   TemplateViewWrapperProps,
   SummaryViewWrapperProps,
+  SummaryViewWrapperPropsNEW,
   SummaryViewProps,
   PluginConfig,
   PluginManifest,

@@ -31,37 +31,29 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
     }
   }, [fullStructure])
 
+  const handleSubmit = () => {}
+
   console.log('fullStructure', fullStructure)
 
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (!fullStructure) return <Loading />
-  const { sections, responsesByCode } = fullStructure
+  const { sections, responsesByCode, info } = fullStructure
   return (
     <Container>
       <Header as="h1" content={strings.TITLE_APPLICATION_SUBMIT} />
       {Object.values(sections).map((section) => (
         <SectionWrapper
           key={`ApplicationSection_${section.details.code}`}
-          pages={section.pages}
-          responsesByCode={responsesByCode}
+          section={section}
+          responsesByCode={responsesByCode as ResponsesByCode}
+          serial={info.serial}
+          isSummary
+          canEdit={info.current?.status === ApplicationStatus.Draft}
         />
       ))}
-      {/* {Object.values(sections).map((sectionPages) => (
-        <SectionSummary
-          key={`ApplicationSection_${sectionPages.details.code}`}
-          sectionPages={sectionPages}
-          serialNumber={serialNumber}
-          allResponses={allResponses || {}}
-          canEdit={application.current?.status === ApplicationStatus.Draft}
-        />
-      ))} */}
-      {/* {application.current?.status === ApplicationStatus.Draft ? (
-          <Button
-            content={strings.BUTTON_APPLICATION_SUBMIT}
-            loading={processing}
-            onClick={handleSubmit}
-          />
-        ) : null} */}
+      {info.current?.status === ApplicationStatus.Draft ? (
+        <Button content={strings.BUTTON_APPLICATION_SUBMIT} onClick={handleSubmit} />
+      ) : null}
       {/* <ModalWarning showModal={showModal} /> */}
     </Container>
   )
