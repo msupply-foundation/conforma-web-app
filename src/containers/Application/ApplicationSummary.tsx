@@ -66,7 +66,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
       <Header as="h1" content={strings.TITLE_APPLICATION_SUBMIT} />
       {Object.values(sections).map((section) => (
         <SectionWrapper
-          key={`ApplicationSection_${section.details.code}`}
+          key={`ApplicationSection_${section.details.id}`}
           section={section}
           responsesByCode={responsesByCode as ResponsesByCode}
           serial={info.serial}
