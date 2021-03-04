@@ -39,7 +39,7 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
 
   const setIsAfterStrict = (sectionCode: string) => {
     if (!isAfterStrict)
-      isAfterStrict = firstStrictInvalidPage === null ? true : getIsStrictSection(sectionCode)
+      isAfterStrict = firstStrictInvalidPage === null || getIsStrictSection(sectionCode)
   }
   const SectionProgress: React.FC<ProgressType> = ({
     doneRequired,
