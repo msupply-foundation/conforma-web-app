@@ -12,6 +12,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 
 interface NavigationProps {
   current: SectionAndPage
+  isLinear: boolean
   sections: SectionsStructureNEW
   serialNumber: string
   requestRevalidation: MethodRevalidate
@@ -19,6 +20,7 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({
   current,
+  isLinear,
   sections,
   serialNumber,
   requestRevalidation,
@@ -72,6 +74,11 @@ const Navigation: React.FC<NavigationProps> = ({
 
   const nextPageButtonHandler = (_: any) => {
     const nextSectionPage = getNextSectionPage()
+    if (!isLinear) {
+      sendToPage(nextSectionPage)
+      return
+    }
+
     // Use validationMethod to check if can change to page (on linear application) OR
     // display current page with strict validation
     requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
