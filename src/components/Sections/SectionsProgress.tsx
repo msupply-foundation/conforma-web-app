@@ -13,7 +13,6 @@ interface SectionsProgressProps {
 
 interface SectionActionProps {
   sectionCode: string
-  firstStrictInvalidPage: SectionAndPage | null
   progress?: ProgressType
 }
 
@@ -24,7 +23,7 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
   sections,
   resumeApplication,
 }) => {
-  let isBeforeStrict = false
+  let isBeforeStrict = true
 
   const getIndicator = ({ completed, valid }: ProgressType) => {
     return completed ? (
@@ -54,52 +53,51 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
     ) : null
   }
 
-  const SectionAction: React.FC<SectionActionProps> = ({
-    sectionCode,
-    firstStrictInvalidPage,
-    progress,
-  }) => {
+  const SectionAction: React.FC<SectionActionProps> = ({ sectionCode, progress }) => {
     const isStrictSection = sectionCode === firstStrictInvalidPage?.sectionCode
     isBeforeStrict = isBeforeStrict ? firstStrictInvalidPage === null || !isStrictSection : false
 
-    return (
-      <Grid.Column style={{ minWidth: 100, padding: 0 }} verticalAlign="middle" width={2}>
-        {canEdit ? (
-          isStrictSection ? (
-            <Button
-              color="blue"
-              onClick={() =>
-                resumeApplication({
-                  sectionCode,
-                  pageNumber: firstStrictInvalidPage?.pageNumber || 1,
-                })
-              }
-            >
-              {strings.BUTTON_APPLICATION_RESUME}
-            </Button>
-          ) : progress?.completed && isBeforeStrict ? (
-            <Icon
-              name="pencil square"
-              color="blue"
-              style={{ minWidth: 100 }}
-              onClick={() => resumeApplication({ sectionCode, pageNumber: 1 })}
-            />
-          ) : null
-        ) : changes.state && isStrictSection ? (
-          <Button
-            color="blue"
-            onClick={() =>
-              resumeApplication({
-                sectionCode,
-                pageNumber: firstStrictInvalidPage?.pageNumber || 1,
-              })
-            }
-          >
-            {changes.label}
-          </Button>
-        ) : null}
-      </Grid.Column>
-    )
+    if (!canEdit) return null
+
+    if (isStrictSection)
+      return (
+        <Button
+          color="blue"
+          content={strings.BUTTON_APPLICATION_RESUME}
+          onClick={() =>
+            resumeApplication({
+              sectionCode,
+              pageNumber: firstStrictInvalidPage?.pageNumber || 1,
+            })
+          }
+        />
+      )
+
+    if (progress?.completed && isBeforeStrict)
+      return (
+        <Icon
+          name="pencil square"
+          color="blue"
+          style={{ minWidth: 100 }}
+          onClick={() => resumeApplication({ sectionCode, pageNumber: 1 })}
+        />
+      )
+
+    if (changes.state)
+      return (
+        <Button
+          color="blue"
+          content={changes.label}
+          onClick={() =>
+            resumeApplication({
+              sectionCode,
+              pageNumber: firstStrictInvalidPage?.pageNumber || 1,
+            })
+          }
+        />
+      )
+
+    return null
   }
 
   return (
@@ -115,7 +113,9 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
               <p>{details.title}</p>
             </Grid.Column>
             {canEdit && progress && <SectionProgress {...progress} />}
-            {<SectionAction {...{ sectionCode, firstStrictInvalidPage, progress }} />}
+            <Grid.Column style={{ minWidth: 100, padding: 0 }} verticalAlign="middle" width={2}>
+              <SectionAction {...{ sectionCode, progress }} />
+            </Grid.Column>
           </Grid>
         ),
       }))}

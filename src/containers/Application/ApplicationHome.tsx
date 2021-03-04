@@ -45,7 +45,6 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
 
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
-
   const canUserEdit = () => {
     const { status } = fullStructure.info.current as StageAndStatus
     return status === ApplicationStatus.Draft ? true : false
@@ -61,7 +60,6 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
           <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
           <SectionsProgress
             canEdit={canUserEdit()}
-            changes={{ state: true, label: 'Update' }}
             sections={fullStructure.sections}
             firstStrictInvalidPage={firstStrictInvalidPage}
             resumeApplication={handleResumeClick}
