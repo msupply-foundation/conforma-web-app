@@ -62,7 +62,7 @@ const SiteLayout: React.FC = () => {
             <ApplicationWrapper />
           </FormElementUpdateTrackerProvider>
         </Route>
-        {/* Application current routes */}
+        {/* Application current routes - to be removed */}
         <Route exact path="/application/new">
           <ApplicationProvider>
             <ApplicationCreate />
@@ -84,7 +84,7 @@ const SiteLayout: React.FC = () => {
         <Route exact path="/application/:serialNumber/summary">
           <ApplicationOverview />
         </Route>
-        {/* Review */}
+        {/* Review current routes - to be removed */}
         <Route exact path="/application/:serialNumber/review">
           <ReviewOverview />
         </Route>
@@ -100,6 +100,7 @@ const SiteLayout: React.FC = () => {
         <Route exact path="/application/:serialNumber/consolidation/:consolidationId">
           <NoMatch />
         </Route>
+        {/* End of Review routes */}
         <Route exact path="/application/:serialNumber/approval">
           <Approval />
         </Route>

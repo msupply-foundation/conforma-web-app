@@ -9,11 +9,13 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { FullStructure, User } from '../../utils/types'
 import { ApplicationHome, ApplicationPage } from './'
 import strings from '../../utils/constants'
+import { ReviewWrapper } from '../Review'
 
 const ApplicationWrapper: React.FC = () => {
-  const { match, query } = useRouter()
-  const { serialNumber } = query
-  const { path } = match
+  const {
+    match: { path },
+    query: { serialNumber },
+  } = useRouter()
   const {
     userState: { currentUser },
   } = useUserState()
@@ -41,6 +43,9 @@ const ApplicationWrapper: React.FC = () => {
       </Route>
       <Route exact path={`${path}/summary/submission`}>
         <ApplicationSubmissionNEW structure={structure} />
+      </Route>
+      <Route path={`${path}/review`}>
+        <ReviewWrapper structure={structure} />
       </Route>
       <Route>
         <NoMatch />
