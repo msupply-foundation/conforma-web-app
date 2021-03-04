@@ -29,8 +29,6 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
 
   const handleSubmit = () => {}
 
-  console.log('fullStructure', fullStructure)
-
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (!fullStructure) return <Loading />
   const { sections, responsesByCode, info } = fullStructure
