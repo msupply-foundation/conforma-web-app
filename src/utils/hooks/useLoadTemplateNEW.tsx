@@ -14,8 +14,6 @@ interface useLoadTemplateProps {
 
 const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
   const [template, setTemplate] = useState<TemplateDetails>()
-  const [sections, setSectionsDetails] = useState<SectionDetails[]>()
-  const [elementsIds, setElementsIds] = useState<number[]>([])
   const [error, setError] = useState('')
 
   const { data, loading: apolloLoading, error: apolloError } = useGetTemplateQuery({
@@ -44,35 +42,31 @@ const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
     }
 
     const { id, code, name, startMessage } = template
+    const templateSections = template.templateSections.nodes as TemplateSection[]
+    const sections = getTemplateSections(templateSections)
+    const elementsIds: number[] = []
+
+    templateSections.forEach((section) => {
+      const { templateElementsBySectionId } = section as TemplateSection
+      templateElementsBySectionId.nodes.forEach((element) => {
+        if (element?.id && element.category === 'QUESTION') elementsIds.push(element.id)
+      })
+    })
 
     setTemplate({
       id,
       code,
       name: name as string,
+      elementsIds,
+      sections,
       startMessage: startMessage ? startMessage : undefined,
     })
-
-    const templateSections = template.templateSections.nodes as TemplateSection[]
-    const sections = getTemplateSections(templateSections)
-    setSectionsDetails(sections)
-
-    const elements = [] as number[]
-
-    templateSections.forEach((section) => {
-      const { templateElementsBySectionId } = section as TemplateSection
-      templateElementsBySectionId.nodes.forEach((element) => {
-        if (element?.id && element.category === 'QUESTION') elements.push(element.id)
-      })
-    })
-    setElementsIds(elements)
   }, [data])
 
   return {
     loading: apolloLoading,
     error: apolloError?.message || error,
     template,
-    sections,
-    elementsIds,
   }
 }
 

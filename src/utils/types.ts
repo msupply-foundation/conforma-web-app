@@ -423,6 +423,8 @@ interface TemplateDetails {
   id: number
   name: string
   code: string
+  elementsIds?: number[] // TODO: Change to not optional after re-structure
+  sections?: SectionDetails[] // TODO: Change to not optional after re-structure
   startMessage?: string
 }
 

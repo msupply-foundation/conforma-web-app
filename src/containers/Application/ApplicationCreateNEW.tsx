@@ -23,7 +23,7 @@ const ApplicationCreateNEW: React.FC = () => {
   } = useRouter()
   const [startMessageEvaluated, setStartMessageEvaluated] = useState('')
 
-  const { error, loading, template, sections, elementsIds } = useLoadTemplate({
+  const { error, loading, template } = useLoadTemplate({
     templateCode: type,
   })
 
@@ -39,9 +39,9 @@ const ApplicationCreateNEW: React.FC = () => {
 
   const { processing, error: creationError, create } = useCreateApplication({
     onCompleted: () => {
-      if (serialNumber && sections && sections.length > 0) {
+      if (serialNumber && template?.sections && template?.sections.length > 0) {
         // Call Application page on first section
-        const firstSection = sections[0].code
+        const firstSection = template.sections[0].code
         // The pageNumber starts in 1 when is a new application
         push(`${serialNumber}/${firstSection}/Page1`)
       }
@@ -61,13 +61,15 @@ const ApplicationCreateNEW: React.FC = () => {
   const handleCreate = (_?: any) => {
     setApplicationState({ type: 'reset' })
 
-    if (!template || !sections) {
+    if (!template?.sections) {
       console.log('Problem to create application - unexpected parameters')
       return
     }
     // TODO: New issue to generate serial - should be done in server?
     const serialNumber = Math.round(Math.random() * 10000).toString()
     setApplicationState({ type: 'setSerialNumber', serialNumber })
+
+    const { name, elementsIds, sections } = template
 
     create({
       name: template.name,
@@ -78,7 +80,7 @@ const ApplicationCreateNEW: React.FC = () => {
       templateSections: sections.map(({ id }) => {
         return { templateSectionId: id }
       }),
-      templateResponses: elementsIds.map((id) => {
+      templateResponses: (elementsIds as number[]).map((id) => {
         return { templateElementId: id }
       }),
     })
@@ -96,11 +98,11 @@ const ApplicationCreateNEW: React.FC = () => {
   if (loading) return <Loading />
 
   const CreateComponent: React.FC = () => {
-    return sections ? (
+    return template?.sections ? (
       <Segment basic>
         <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
         <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
-        <SectionsList sections={sections} />
+        <SectionsList sections={template.sections} />
         <Divider />
         <Markdown text={startMessageEvaluated} semanticComponent="Message" info />
         <Button color="blue" loading={processing} onClick={handleCreate}>
