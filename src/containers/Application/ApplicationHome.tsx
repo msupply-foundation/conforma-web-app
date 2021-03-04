@@ -19,7 +19,6 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
   const {
     query: { serialNumber },
     push,
-    replace,
   } = useRouter()
   const {
     userState: { currentUser },
@@ -41,7 +40,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
   }
 
   const handleSummaryClicked = () => {
-    replace(`/applicationNEW/${serialNumber}/summary`)
+    push(`/applicationNEW/${serialNumber}/summary`)
   }
 
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
