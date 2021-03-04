@@ -331,7 +331,6 @@ interface ResponseFull {
   timeCreated?: Date
   reviewResponse?: ReviewResponse
   customValidation?: ValidationState
-  reviewResponse?: ReviewResponse
 }
 
 interface ResponsePayload {
