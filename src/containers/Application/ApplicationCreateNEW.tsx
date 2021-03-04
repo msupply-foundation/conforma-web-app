@@ -97,7 +97,7 @@ const ApplicationCreateNEW: React.FC = () => {
 
   if (loading) return <Loading />
 
-  const CreateComponent: React.FC = () => {
+  const NewApplicationInfo: React.FC = () => {
     return template?.sections ? (
       <Segment basic>
         <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
@@ -116,7 +116,7 @@ const ApplicationCreateNEW: React.FC = () => {
     <ApplicationHeader
       template={template}
       currentUser={currentUser}
-      ChildComponent={CreateComponent}
+      ChildComponent={NewApplicationInfo}
     />
   ) : (
     // TODO
