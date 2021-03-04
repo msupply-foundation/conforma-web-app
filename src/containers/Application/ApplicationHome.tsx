@@ -8,6 +8,7 @@ import { useUserState } from '../../contexts/UserState'
 import SectionsProgress from '../../components/Sections/SectionsProgress'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationStatus } from '../../utils/generated/graphql'
+import { Link } from 'react-router-dom'
 
 interface ApplicationProps {
   structure: FullStructure
@@ -44,6 +45,8 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
 
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
+  const canUserEdit = fullStructure.info?.current?.status === ApplicationStatus.Draft
+
   const { firstStrictInvalidPage } = fullStructure.info
 
   const HomeMain: React.FC = () => {
@@ -53,19 +56,20 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
           <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
           <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
           <SectionsProgress
+            canEdit={canUserEdit}
             sections={fullStructure.sections}
             firstStrictInvalidPage={firstStrictInvalidPage}
             resumeApplication={handleResumeClick}
           />
           <Divider />
         </Segment>
-        {firstStrictInvalidPage === null && (
+        {!firstStrictInvalidPage && (
           <Sticky
             pushing
             style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
           >
             <Segment basic textAlign="right">
-              <Button color="blue" onClick={handleSummaryClicked}>
+              <Button as={Link} color="blue" onClick={handleSummaryClicked}>
                 {strings.BUTTON_SUMMARY}
               </Button>
             </Segment>
