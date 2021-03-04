@@ -245,6 +245,10 @@ interface EvaluatorParameters {
 
 type ElementsById = { [templateElementId: string]: PageElement }
 
+interface ReviewInfo {
+  status: ReviewStatus
+}
+
 interface FullStructure {
   elementsById?: ElementsById
   lastValidationTimestamp?: number
@@ -253,6 +257,7 @@ interface FullStructure {
   stages: ApplicationStages
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
+  reviewInfo?: ReviewInfo
   canSubmitReviewAs?: ReviewResponseDecision | null
 }
 

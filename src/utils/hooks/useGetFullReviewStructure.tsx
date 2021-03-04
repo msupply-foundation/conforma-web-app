@@ -6,6 +6,7 @@ import {
   ReviewResponse,
   useGetReviewNewQuery,
   ReviewQuestionAssignment,
+  ReviewStatus,
 } from '../generated/graphql'
 import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
 import { useUserState } from '../../contexts/UserState'
@@ -80,6 +81,10 @@ const useGetFullReviewStructure = ({
           structure: newStructure,
           sortedReviewResponses: review?.reviewResponses.nodes as ReviewResponse[], // Sorted in useGetReviewNewQuery
         })
+
+        newStructure.reviewInfo = {
+          status: review.status as ReviewStatus,
+        }
       }
 
       generateReviewProgress(newStructure)

@@ -19828,7 +19828,7 @@ export type GetReviewNewQuery = (
       { __typename?: 'ReviewsConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'Review' }
-        & Pick<Review, 'id'>
+        & Pick<Review, 'id' | 'status'>
         & { reviewResponses: (
           { __typename?: 'ReviewResponsesConnection' }
           & { nodes: Array<Maybe<(
@@ -20791,6 +20791,7 @@ export const GetReviewNewDocument = gql`
     reviews {
       nodes {
         id
+        status
         reviewResponses(orderBy: TIME_CREATED_DESC) {
           nodes {
             ...reviewResponseFragment

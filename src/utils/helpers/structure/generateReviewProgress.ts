@@ -41,7 +41,7 @@ const generateReviewValidity = (newStructure: FullStructure) => {
 
   const sums = getSums(pages)
 
-  let firstIncompleteReviewPage: SectionAndPage = null
+  let firstIncompleteReviewPage
 
   if (sums.doneNoneConform === 0 && sums.totalReviewable > sums.doneConform) {
     const firstIncomplete = pages.find(
