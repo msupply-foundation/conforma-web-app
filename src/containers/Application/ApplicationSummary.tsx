@@ -17,7 +17,7 @@ interface ApplicationProps {
 const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
   const { replace, push } = useRouter()
   const [shouldRevalidate, setShouldRevalidate] = useState(false)
-  const [isValidated, setIsValidated] = useState(false)
+  const [isRevalidated, setIsRevalidated] = useState(false)
   const {
     userState: { currentUser },
   } = useUserState()
@@ -38,7 +38,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
       const { sectionCode, pageNumber } = fullStructure.info.firstStrictInvalidPage
       replace(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
     }
-    if (shouldRevalidate) setIsValidated(true)
+    if (shouldRevalidate) setIsRevalidated(true)
   }, [fullStructure])
 
   const handleSubmit = () => {
@@ -50,7 +50,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
     // and revalidation has completed successfully
     if (!fullStructure?.responsesByCode) return
     submit(Object.values(fullStructure?.responsesByCode))
-  }, [isValidated])
+  }, [isRevalidated])
 
   useEffect(() => {
     if (submitted) push(`/applicationNEW/${fullStructure?.info.serial}/submission`)
