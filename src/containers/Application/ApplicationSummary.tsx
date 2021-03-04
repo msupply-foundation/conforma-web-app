@@ -13,7 +13,7 @@ interface ApplicationProps {
 }
 
 const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
-  const { push } = useRouter()
+  const { replace } = useRouter()
   const { error, fullStructure } = useGetFullApplicationStructure({
     structure,
   })
@@ -23,7 +23,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
     // Re-direct if application is not valid
     if (fullStructure.info.firstStrictInvalidPage) {
       const { sectionCode, pageNumber } = fullStructure.info.firstStrictInvalidPage
-      push(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
+      replace(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
     }
   }, [fullStructure])
 

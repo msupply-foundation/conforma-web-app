@@ -28,21 +28,22 @@ interface ApplicationViewWrapperProps {
 }
 
 interface ApplicationViewWrapperPropsNEW {
-  code: string
-  pluginCode: string // TODO: Create type OR use existing from graphql
-  isVisible: boolean
-  isEditable: boolean
-  isRequired: boolean
-  isValid: boolean
+  // code: string
+  element: ElementStateNEW
+  // pluginCode: string // TODO: Create type OR use existing from graphql
+  // isVisible: boolean
+  // isEditable: boolean
+  // isRequired: boolean
+  // isValid: boolean
   isStrictPage: boolean | undefined
-  parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement)
-  validationExpression: IQueryNode
-  validationMessage: string | null
+  // // parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement)
+  // validationExpression: IQueryNode
+  // validationMessage: string | null
   allResponses: ResponsesByCode
   currentResponse: ResponseFull | null
   // applicationState,
   // graphQLclient
-  initialValue: any // Could be a primative or an object with any shape
+  // initialValue: any // Could be a primative or an object with any shape
 }
 
 type ValidationState = {
