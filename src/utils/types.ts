@@ -378,7 +378,7 @@ interface ReviewerResponsesPayload {
 type SectionAndPage = {
   sectionCode: string
   pageNumber: number
-} | null
+}
 
 interface SectionDetails {
   id: number
@@ -547,4 +547,17 @@ interface LoginPayload {
 
 type UserRoles = {
   [role in USER_ROLES]: Array<PermissionPolicyType>
+}
+
+interface SortQuery {
+  sortColumn?: string
+  sortDirection?: 'ascending' | 'descending'
+}
+
+interface SetStrictSectionPage {
+  (sectionAndPage: SectionAndPage | null): void
+}
+
+interface MethodToCallOnRevalidation {
+  (firstInvalidPage: SectionAndPage | null, setStrictSectionPage: SetStrictSectionPage): void
 }
