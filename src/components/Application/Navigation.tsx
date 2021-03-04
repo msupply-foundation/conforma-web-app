@@ -67,12 +67,12 @@ const Navigation: React.FC<NavigationProps> = ({
     push(`/applicationNEW/${serialNumber}/${sectionCode}/Page${pageNumber}`)
   }
 
-  const previousButtonHandler = (_: any) => {
+  const previousButtonHandler = () => {
     const previousSectionPage = getPreviousSectionPage()
     sendToPage(previousSectionPage)
   }
 
-  const nextPageButtonHandler = (_: any) => {
+  const nextPageButtonHandler = () => {
     const nextSectionPage = getNextSectionPage()
     if (!isLinear) {
       sendToPage(nextSectionPage)
