@@ -322,6 +322,7 @@ interface ResponseFull {
   hash?: string
   timeCreated?: Date
   customValidation?: ValidationState
+  reviewResponse?: ReviewResponse
 }
 
 interface ResponsePayload {
