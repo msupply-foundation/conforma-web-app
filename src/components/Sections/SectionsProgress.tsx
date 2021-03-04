@@ -24,7 +24,7 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
   sections,
   resumeApplication,
 }) => {
-  let isAfterStrict = false
+  let isBeforeStrict = false
 
   const getIndicator = ({ completed, valid }: ProgressType) => {
     return completed ? (
@@ -34,13 +34,6 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
     )
   }
 
-  const getIsStrictSection = (sectionCode: string) =>
-    sectionCode === firstStrictInvalidPage?.sectionCode
-
-  const setIsAfterStrict = (sectionCode: string) => {
-    if (!isAfterStrict)
-      isAfterStrict = firstStrictInvalidPage === null || getIsStrictSection(sectionCode)
-  }
   const SectionProgress: React.FC<ProgressType> = ({
     doneRequired,
     doneNonRequired,
@@ -66,11 +59,13 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
     firstStrictInvalidPage,
     progress,
   }) => {
-    setIsAfterStrict(sectionCode)
+    const isStrictSection = sectionCode === firstStrictInvalidPage?.sectionCode
+    isBeforeStrict = isBeforeStrict ? firstStrictInvalidPage === null || !isStrictSection : false
+
     return (
       <Grid.Column style={{ minWidth: 100, padding: 0 }} verticalAlign="middle" width={2}>
         {canEdit ? (
-          getIsStrictSection(sectionCode) ? (
+          isStrictSection ? (
             <Button
               color="blue"
               onClick={() =>
@@ -82,7 +77,7 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
             >
               {strings.BUTTON_APPLICATION_RESUME}
             </Button>
-          ) : progress?.completed && isAfterStrict ? (
+          ) : progress?.completed && isBeforeStrict ? (
             <Icon
               name="pencil square"
               color="blue"
@@ -90,7 +85,7 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
               onClick={() => resumeApplication({ sectionCode, pageNumber: 1 })}
             />
           ) : null
-        ) : changes.state && getIsStrictSection(sectionCode) ? (
+        ) : changes.state && isStrictSection ? (
           <Button
             color="blue"
             onClick={() =>
