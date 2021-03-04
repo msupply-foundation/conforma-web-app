@@ -19498,7 +19498,10 @@ export type UpdateReviewResponseMutation = (
   { __typename?: 'Mutation' }
   & { updateReviewResponse?: Maybe<(
     { __typename?: 'UpdateReviewResponsePayload' }
-    & Pick<UpdateReviewResponsePayload, 'clientMutationId'>
+    & { reviewResponse?: Maybe<(
+      { __typename?: 'ReviewResponse' }
+      & ReviewResponseFragmentFragment
+    )> }
   )> }
 );
 
@@ -19787,6 +19790,32 @@ export type GetReviewAssignmentQuery = (
   )> }
 );
 
+export type GetReviewAssingmentTestQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type GetReviewAssingmentTestQuery = (
+  { __typename?: 'Query' }
+  & { reviewAssignment?: Maybe<(
+    { __typename?: 'ReviewAssignment' }
+    & Pick<ReviewAssignment, 'id'>
+    & { reviews: (
+      { __typename?: 'ReviewsConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'Review' }
+        & Pick<Review, 'id' | 'status'>
+      )>> }
+    ), reviewQuestionAssignments: (
+      { __typename?: 'ReviewQuestionAssignmentsConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ReviewQuestionAssignment' }
+        & Pick<ReviewQuestionAssignment, 'templateElementId'>
+      )>> }
+    ) }
+  )> }
+);
+
 export type GetReviewNewQueryVariables = Exact<{
   reviewAssignmentId: Scalars['Int'];
   userId: Scalars['Int'];
@@ -19798,7 +19827,13 @@ export type GetReviewNewQuery = (
   & { reviewAssignment?: Maybe<(
     { __typename?: 'ReviewAssignment' }
     & Pick<ReviewAssignment, 'id'>
-    & { application?: Maybe<(
+    & { reviewQuestionAssignments: (
+      { __typename?: 'ReviewQuestionAssignmentsConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ReviewQuestionAssignment' }
+        & Pick<ReviewQuestionAssignment, 'id' | 'templateElementId' | 'reviewAssignmentId'>
+      )>> }
+    ), application?: Maybe<(
       { __typename?: 'Application' }
       & Pick<Application, 'id' | 'serial'>
       & { applicationResponses: (
@@ -20272,10 +20307,12 @@ export type UpdateResponseMutationOptions = Apollo.BaseMutationOptions<UpdateRes
 export const UpdateReviewResponseDocument = gql`
     mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String) {
   updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment}}) {
-    clientMutationId
+    reviewResponse {
+      ...reviewResponseFragment
+    }
   }
 }
-    `;
+    ${ReviewResponseFragmentFragmentDoc}`;
 export type UpdateReviewResponseMutationFn = Apollo.MutationFunction<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>;
 
 /**
@@ -20753,10 +20790,61 @@ export function useGetReviewAssignmentLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetReviewAssignmentQueryHookResult = ReturnType<typeof useGetReviewAssignmentQuery>;
 export type GetReviewAssignmentLazyQueryHookResult = ReturnType<typeof useGetReviewAssignmentLazyQuery>;
 export type GetReviewAssignmentQueryResult = Apollo.QueryResult<GetReviewAssignmentQuery, GetReviewAssignmentQueryVariables>;
+export const GetReviewAssingmentTestDocument = gql`
+    query getReviewAssingmentTest($id: Int!) {
+  reviewAssignment(id: $id) {
+    id
+    reviews {
+      nodes {
+        id
+        status
+      }
+    }
+    reviewQuestionAssignments {
+      nodes {
+        templateElementId
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetReviewAssingmentTestQuery__
+ *
+ * To run a query within a React component, call `useGetReviewAssingmentTestQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReviewAssingmentTestQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReviewAssingmentTestQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetReviewAssingmentTestQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewAssingmentTestQuery, GetReviewAssingmentTestQueryVariables>) {
+        return Apollo.useQuery<GetReviewAssingmentTestQuery, GetReviewAssingmentTestQueryVariables>(GetReviewAssingmentTestDocument, baseOptions);
+      }
+export function useGetReviewAssingmentTestLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewAssingmentTestQuery, GetReviewAssingmentTestQueryVariables>) {
+          return Apollo.useLazyQuery<GetReviewAssingmentTestQuery, GetReviewAssingmentTestQueryVariables>(GetReviewAssingmentTestDocument, baseOptions);
+        }
+export type GetReviewAssingmentTestQueryHookResult = ReturnType<typeof useGetReviewAssingmentTestQuery>;
+export type GetReviewAssingmentTestLazyQueryHookResult = ReturnType<typeof useGetReviewAssingmentTestLazyQuery>;
+export type GetReviewAssingmentTestQueryResult = Apollo.QueryResult<GetReviewAssingmentTestQuery, GetReviewAssingmentTestQueryVariables>;
 export const GetReviewNewDocument = gql`
     query getReviewNew($reviewAssignmentId: Int!, $userId: Int!) {
   reviewAssignment(id: $reviewAssignmentId) {
     id
+    reviewQuestionAssignments {
+      nodes {
+        id
+        templateElementId
+        reviewAssignmentId
+      }
+    }
     application {
       id
       serial

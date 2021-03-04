@@ -1,6 +1,5 @@
 import { ReviewResponse } from '../../generated/graphql'
 import { FullStructure } from '../../types'
-import addElementsById from './addElementsById'
 import getGroupedReviewResponses from './getGroupedReviewResponses'
 
 const addOwnedReviewResponse = ({

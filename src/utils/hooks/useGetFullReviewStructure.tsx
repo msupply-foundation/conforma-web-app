@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react'
-import { FullStructure } from '../types'
+import { FullStructure, PageNEW, SectionsStructureNEW, SectionStateNEW } from '../types'
 import {
   ApplicationResponse,
   Review,
-  ReviewAssignment,
   ReviewResponse,
   useGetReviewNewQuery,
+  ReviewQuestionAssignment,
 } from '../generated/graphql'
 import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
 import { useUserState } from '../../contexts/UserState'
 import addOwnedReviewResponse from '../helpers/structure/addOwnedReviewResponse'
 import addElementsById from '../helpers/structure/addElementsById'
+import generateReviewProgress from '../helpers/structure/generateReviewProgress'
 
 interface useGetFullReviewStructureProps {
   structure: FullStructure
@@ -22,6 +23,7 @@ const useGetFullReviewStructure = ({
   reviewAssignmentId,
 }: useGetFullReviewStructureProps) => {
   const [fullStructure, setFullStructure] = useState<FullStructure>()
+  const [structureError, setStructureError] = useState('')
 
   const {
     userState: { currentUser },
@@ -39,9 +41,12 @@ const useGetFullReviewStructure = ({
 
     if (!data) return
 
+    const reviewAssignment = data.reviewAssignment
+    if (!reviewAssignment) return setStructureError('Cannot find review Assignemnt')
+
     addEvaluatedResponsesToStructure({
       structure,
-      applicationResponses: data?.reviewAssignment?.application?.applicationResponses
+      applicationResponses: reviewAssignment.application?.applicationResponses
         ?.nodes as ApplicationResponse[],
       currentUser,
       evaluationOptions: {
@@ -53,15 +58,22 @@ const useGetFullReviewStructure = ({
     }).then((evaluatedStructure: FullStructure) => {
       let newStructure: FullStructure = addElementsById(evaluatedStructure)
 
+      const reviewQuestionAssignments = reviewAssignment.reviewQuestionAssignments?.nodes
+      if (reviewQuestionAssignments)
+        newStructure = addIsAssigned(
+          newStructure,
+          reviewQuestionAssignments as ReviewQuestionAssignment[]
+        )
+
       // here we add reviewless review repsonses
       // generate indications of reviewless review response (numbe of non conform etc.)
 
       // There will always just be one review assignment linked to a review. (since review is related to reviewAssignment, many to one relation is created)
-      const review = data?.reviewAssignment?.reviews?.nodes[0] as Review
-      if ((data.reviewAssignment?.reviews?.nodes?.length || 0) > 0)
+      const review = reviewAssignment.reviews?.nodes[0] as Review
+      if ((reviewAssignment.reviews?.nodes?.length || 0) > 0)
         console.error(
           'More then one review associated with reviewAssignment with id',
-          data.reviewAssignment?.id
+          reviewAssignment.id
         )
       if (review) {
         newStructure = addOwnedReviewResponse({
@@ -70,16 +82,32 @@ const useGetFullReviewStructure = ({
         })
       }
 
-      // Generate review progress
-
+      generateReviewProgress(newStructure)
+      // generateConsolidationProgress
       setFullStructure(newStructure)
     })
   }, [data, error])
 
   return {
     fullStructure,
-    error: error?.message,
+    error: structureError || error?.message,
   }
+}
+
+const addIsAssigned = (
+  newStructure: FullStructure,
+  reviewQuestionAssignments: ReviewQuestionAssignment[]
+) => {
+  reviewQuestionAssignments.forEach((questionAssignment) => {
+    if (!questionAssignment) return
+
+    const assignedElement = newStructure?.elementsById?.[questionAssignment.templateElementId || '']
+    if (!assignedElement) return
+
+    assignedElement.isAssigned = true
+  })
+
+  return newStructure
 }
 
 export default useGetFullReviewStructure

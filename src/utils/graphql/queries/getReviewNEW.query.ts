@@ -6,6 +6,11 @@ export default gql`
   query getReviewNew($reviewAssignmentId: Int!, $userId: Int!) {
     reviewAssignment(id: $reviewAssignmentId) {
       id
+      reviewQuestionAssignments {
+        nodes {
+          ...ReviewQuestionAssignment
+        }
+      }
       application {
         id
         serial

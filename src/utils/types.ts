@@ -2,6 +2,7 @@ import {
   ApplicationList,
   ApplicationStatus,
   PermissionPolicyType,
+  ReviewDecision,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
@@ -15,6 +16,7 @@ import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SummaryViewWrapperProps } from '../formElementPlugins/types'
 import { APPLICATION_COLUMNS, USER_ROLES } from './data'
 import { DateTime } from 'luxon'
+import reviewResponse from './graphql/fragments/reviewResponse'
 
 export {
   ApplicationDetails,
@@ -60,6 +62,7 @@ export {
   ResumeSection,
   ReviewDetails,
   ReviewProgressStatus,
+  ReviewProgress,
   ReviewQuestion,
   ReviewQuestionDecision,
   ReviewerResponsesPayload,
@@ -249,6 +252,8 @@ interface FullStructure {
   sections: SectionsStructureNEW
   stages: ApplicationStages
   responsesByCode?: ResponsesByCode
+  firstIncompleteReviewPage?: SectionAndPage
+  canSubmitReviewAs?: ReviewResponseDecision | null
 }
 
 type GroupedReviewResponses = {
@@ -284,16 +289,19 @@ type PageElements = {
 
 interface PageNEW {
   number: number
+  sectionCode: string
   name: string
   progress: Progress
+  reviewProgress?: ReviewProgress
   state: PageElement[]
 }
 
 type PageElement = {
-  element: ElementBaseNEW | ElementStateNEW
+  element: ElementStateNEW
   response: ResponseFull | null
   latestOwnedReviewResponse?: ReviewResponse
   review?: ReviewQuestionDecision
+  isAssigned?: boolean
 }
 
 interface PageElementsStatuses {
@@ -321,6 +329,7 @@ interface ResponseFull {
   isValid?: boolean | null
   hash?: string
   timeCreated?: Date
+  reviewResponse?: ReviewResponse
   customValidation?: ValidationState
   reviewResponse?: ReviewResponse
 }
@@ -398,9 +407,17 @@ interface SectionState {
 interface SectionsStructure {
   [code: string]: SectionState
 }
+
+interface ReviewProgress {
+  totalReviewable: number
+  doneConform: number
+  doneNoneConform: number
+}
+
 interface SectionStateNEW {
   details: SectionDetails
   progress?: Progress
+  reviewProgress?: ReviewProgress
   assigned?: ReviewerDetails
   pages: {
     [pageNum: number]: PageNEW
