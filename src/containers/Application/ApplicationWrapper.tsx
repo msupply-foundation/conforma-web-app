@@ -41,7 +41,7 @@ const ApplicationWrapper: React.FC = () => {
       <Route exact path={`${path}/summary`}>
         <ApplicationSummary structure={structure} />
       </Route>
-      <Route exact path={`${path}/summary/submission`}>
+      <Route exact path={`${path}/submission`}>
         <ApplicationSubmissionNEW structure={structure} />
       </Route>
       <Route path={`${path}/review`}>

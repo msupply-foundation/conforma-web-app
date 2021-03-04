@@ -53,11 +53,8 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
   }, [isValidated])
 
   useEffect(() => {
-    console.log('Submitted', submitted)
-    if (submitted) push(`/application/${fullStructure?.info.serial}/submission`)
+    if (submitted) push(`/applicationNEW/${fullStructure?.info.serial}/submission`)
   }, [submitted])
-
-  console.log('fullStructure', fullStructure)
 
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (submitError)
