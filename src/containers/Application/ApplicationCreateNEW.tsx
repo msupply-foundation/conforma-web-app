@@ -10,7 +10,7 @@ import useLoadTemplate from '../../utils/hooks/useLoadTemplateNEW'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { EvaluatorParameters } from '../../utils/types'
-import SectionsList from '../../components/Sections/SectionsList'
+import { SectionsList } from '../../components/Application/Sections'
 
 const ApplicationCreateNEW: React.FC = () => {
   const {
