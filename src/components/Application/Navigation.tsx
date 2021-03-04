@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Segment, Sticky } from 'semantic-ui-react'
+import { Button, Grid, Sticky } from 'semantic-ui-react'
 import {
   MethodRevalidate,
   MethodToCallProps,
@@ -100,35 +100,35 @@ const Navigation: React.FC<NavigationProps> = ({
       pushing
       style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
     >
-      <Segment.Group horizontal>
-        <Segment style={{ minWidth: '50%' }}>
-          {!isFirstPage && (
+      <Grid container>
+        <Grid.Row verticalAlign="middle">
+          <Grid.Column width={5}>
             <Button
               basic
-              floated="left"
               onClick={previousButtonHandler}
               content={strings.BUTTON_PREVIOUS}
+              style={{ display: isFirstPage ? 'none' : 'inline-block' }}
             />
-          )}
-          {!isLastPage && (
+          </Grid.Column>
+          <Grid.Column width={5}>
             <Button
               basic
-              floated="right"
               onClick={nextPageButtonHandler}
               content={strings.BUTTON_NEXT}
+              style={{ display: isLastPage ? 'none' : 'inline-block' }}
             />
-          )}
-        </Segment>
-        <Segment basic textAlign="center" clearing>
-          <Button
-            color="blue"
-            onClick={() => {
-              /* TO-DO */
-            }}
-            content={strings.BUTTON_SUMMARY}
-          />
-        </Segment>
-      </Segment.Group>
+          </Grid.Column>
+          <Grid.Column width={5}>
+            <Button
+              color="blue"
+              onClick={() => {
+                /* TO-DO */
+              }}
+              content={strings.BUTTON_SUMMARY}
+            />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     </Sticky>
   )
 }
