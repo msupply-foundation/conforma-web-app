@@ -22,6 +22,7 @@ const useGetFullApplicationStructure = ({
   minRefetchTimestampForRevalidation = 0,
   firstRunValidation = true,
 }: useGetFullApplicationStructureProps) => {
+  console.log('shouldRevalidate', shouldRevalidate)
   const {
     info: { serial },
   } = structure
