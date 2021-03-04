@@ -37,7 +37,7 @@ const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
 
     const template = data?.templates?.nodes[0] as Template
 
-    error = checkForTemplatSectionErrors(template)
+    error = checkForTemplateSectionErrors(template)
     if (error) {
       setError(error)
       return
@@ -83,7 +83,7 @@ function checkForTemplateErrors(data: GetTemplateQuery | undefined) {
   return null
 }
 
-function checkForTemplatSectionErrors(template: Template) {
+function checkForTemplateSectionErrors(template: Template) {
   const numberOfSections = template?.templateSections?.nodes.length as number
   if (!numberOfSections || numberOfSections === 0) return 'No template sections'
   return null
