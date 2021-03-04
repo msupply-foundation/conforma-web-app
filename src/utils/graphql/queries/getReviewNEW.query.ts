@@ -8,7 +8,8 @@ export default gql`
       id
       reviewQuestionAssignments {
         nodes {
-          ...ReviewQuestionAssignment
+          id
+          templateElementId
         }
       }
       application {
