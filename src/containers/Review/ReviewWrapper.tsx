@@ -33,7 +33,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   return (
     <Switch>
       <Route exact path={path}>
-        <ReviewHomeNEW assignments={assignments} />
+        <ReviewHomeNEW assignments={assignments} structure={structure} />
       </Route>
       <Route exact path={`${path}/:reviewId`}>
         <ReviewPageNEW />
@@ -50,9 +50,10 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
 
 interface ReviewHomeProps {
   assignments: AssignmentDetailsNEW[]
+  structure: FullStructure
 }
 
-const ReviewHomeNEW: React.FC<ReviewHomeProps> = ({ assignments }) => {
+const ReviewHomeNEW: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
   console.log(assignments) // To be continued in #379
   return <Header>REVIEW HOME PAGE</Header>
 }
