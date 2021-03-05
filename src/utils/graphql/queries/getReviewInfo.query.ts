@@ -6,12 +6,6 @@ export default gql`
       nodes {
         id
         timeCreated
-        reviewer {
-          id
-          username
-          firstName
-          lastName
-        }
         reviews {
           nodes {
             id
