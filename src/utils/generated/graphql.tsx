@@ -19802,7 +19802,7 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'timeCreated'>
+      & Pick<ReviewAssignment, 'id' | 'status' | 'timeCreated'>
       & { reviews: (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
@@ -20788,9 +20788,10 @@ export type GetReviewAssignmentLazyQueryHookResult = ReturnType<typeof useGetRev
 export type GetReviewAssignmentQueryResult = Apollo.QueryResult<GetReviewAssignmentQuery, GetReviewAssignmentQueryVariables>;
 export const GetReviewInfoDocument = gql`
     query getReviewInfo($reviewerId: Int!, $applicationId: Int) {
-  reviewAssignments(condition: {reviewerId: $reviewerId, applicationId: $applicationId}) {
+  reviewAssignments(condition: {reviewerId: $reviewerId, applicationId: $applicationId}, orderBy: TIME_CREATED_DESC) {
     nodes {
       id
+      status
       timeCreated
       reviews {
         nodes {
