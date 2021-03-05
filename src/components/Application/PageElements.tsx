@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
+import { ElementStateNEW, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
 import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapperNEW'
 import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
 import { Form, Grid, Segment, Button, Card, Icon, Label } from 'semantic-ui-react'
@@ -54,35 +54,38 @@ const PageElements: React.FC<PageElementProps> = ({
       </Form>
     )
 
+  const getSummaryViewProps = (element: ElementStateNEW) => ({
+    element,
+    response: responsesByCode?.[element.code],
+    allResponses: responsesByCode,
+  })
   // Summary Page
   if (isSummary) {
     const { sectionCode, pageNumber } = sectionAndPage as SectionAndPage
     return (
       <Form>
         <Segment.Group>
-          {elements.map(({ element }) => (
-            <Segment key={`question_${element.code}`}>
-              <Grid columns="equal">
-                <Grid.Column floated="left">
-                  <SummaryViewWrapperNEW
-                    element={element}
-                    response={responsesByCode?.[element.code]}
-                    allResponses={responsesByCode}
-                  />
-                </Grid.Column>
-                {element.category === TemplateElementCategory.Question && canEdit && (
-                  <Grid.Column width={3} floated="right">
-                    <Button
-                      content={strings.BUTTON_SUMMARY_EDIT}
-                      size="small"
-                      as={Link}
-                      to={`/application/${serial}/${sectionCode}/Page${pageNumber}`}
-                    />
+          {elements.map(({ element }) => {
+            return (
+              <Segment key={`question_${element.code}`}>
+                <Grid columns="equal">
+                  <Grid.Column floated="left">
+                    <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
                   </Grid.Column>
-                )}
-              </Grid>
-            </Segment>
-          ))}
+                  {element.category === TemplateElementCategory.Question && canEdit && (
+                    <Grid.Column width={3} floated="right">
+                      <Button
+                        content={strings.BUTTON_SUMMARY_EDIT}
+                        size="small"
+                        as={Link}
+                        to={`/application/${serial}/${sectionCode}/Page${pageNumber}`}
+                      />
+                    </Grid.Column>
+                  )}
+                </Grid>
+              </Segment>
+            )
+          })}
         </Segment.Group>
       </Form>
     )
@@ -93,29 +96,22 @@ const PageElements: React.FC<PageElementProps> = ({
     return (
       <Form>
         <Segment.Group>
-          {elements.map(({ element, thisReviewLatestResponse }) => {
-            const summaryViewProps: SummaryViewWrapperPropsNEW = {
-              element,
-              response: responsesByCode?.[element.code],
-              allResponses: responsesByCode,
-            }
-            return (
-              <Segment key={`question_${element.id}`}>
-                <Grid columns="equal">
-                  <Grid.Column floated="left">
-                    <SummaryViewWrapperNEW {...summaryViewProps} />
-                  </Grid.Column>
-                  <Grid.Column floated="right" textAlign="right">
-                    <ReviewButton reviewResponse={thisReviewLatestResponse as ReviewResponse} />
-                  </Grid.Column>
-                </Grid>
-                <ReviewResponseComponent
-                  reviewResponse={thisReviewLatestResponse as ReviewResponse}
-                  summaryViewProps={summaryViewProps}
-                />
-              </Segment>
-            )
-          })}
+          {elements.map(({ element, thisReviewLatestResponse }) => (
+            <Segment key={`question_${element.id}`}>
+              <Grid columns="equal">
+                <Grid.Column floated="left">
+                  <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
+                </Grid.Column>
+                <Grid.Column floated="right" textAlign="right">
+                  <ReviewButton reviewResponse={thisReviewLatestResponse as ReviewResponse} />
+                </Grid.Column>
+              </Grid>
+              <ReviewResponseComponent
+                reviewResponse={thisReviewLatestResponse as ReviewResponse}
+                summaryViewProps={getSummaryViewProps(element)}
+              />
+            </Segment>
+          ))}
         </Segment.Group>
       </Form>
     )
