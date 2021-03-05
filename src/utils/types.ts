@@ -2,6 +2,7 @@ import {
   ApplicationList,
   ApplicationStatus,
   PermissionPolicyType,
+  ReviewAssignmentStatus,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
@@ -141,6 +142,8 @@ interface AssignmentDetails {
 
 interface AssignmentDetailsNEW {
   id: number
+  status: ReviewAssignmentStatus
+  timeCreated: DateTime
   review: ReviewDetails | null
   totalAssignedQuestions: number
 }

@@ -30,24 +30,25 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
           reviewAssignment.id
         )
 
-      const stage = reviewAssignment.stage
+      const { id, status, stage, timeCreated } = reviewAssignment
 
       // Extra field just to use in initial example - might conflict with future queries
       // to get reviewQuestionAssignment
       const totalAssignedQuestions = reviewAssignment.reviewQuestionAssignments.totalCount
 
-      const { id, status, timeCreated } = review
-
       return {
-        id: reviewAssignment.id,
+        id,
         review: review
           ? {
-              id,
-              status: status as ReviewStatus,
-              timeCreated,
+              id: review.id,
+              status: review.status as ReviewStatus,
+              timeCreated: review.timeCreated,
               stage: { id: stage?.id as number, name: stage?.title as string },
             }
           : null,
+        status,
+        stage,
+        timeCreated,
         totalAssignedQuestions,
       }
     })
