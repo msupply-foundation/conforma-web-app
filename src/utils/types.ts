@@ -2,7 +2,6 @@ import {
   ApplicationList,
   ApplicationStatus,
   PermissionPolicyType,
-  ReviewDecision,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
@@ -16,7 +15,6 @@ import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SummaryViewWrapperProps } from '../formElementPlugins/types'
 import { APPLICATION_COLUMNS, USER_ROLES } from './data'
 import { DateTime } from 'luxon'
-import reviewResponse from './graphql/fragments/reviewResponse'
 
 export {
   ApplicationDetails,
