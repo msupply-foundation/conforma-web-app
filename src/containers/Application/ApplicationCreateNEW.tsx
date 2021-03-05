@@ -95,7 +95,7 @@ const ApplicationCreateNEW: React.FC = () => {
       />
     )
 
-  if (loading) return <Loading />
+  if (loading || !template?.startMessage) return <Loading />
 
   const NewApplicationInfo: React.FC = () => {
     return template?.sections ? (
