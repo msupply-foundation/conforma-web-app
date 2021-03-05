@@ -128,6 +128,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           baseElements.push({
             // ...element,
             category: element.category,
+            id: element.id,
             code: element.code,
             pluginCode: element.elementTypePluginCode,
             sectionIndex: sectionNode?.templateSection?.index,

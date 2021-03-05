@@ -2,6 +2,7 @@ import {
   ApplicationList,
   ApplicationStatus,
   PermissionPolicyType,
+  ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
   TemplateElement,
@@ -33,6 +34,7 @@ export {
   DecisionAreaState,
   ElementBase,
   ElementBaseNEW,
+  ElementsById,
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
@@ -40,6 +42,7 @@ export {
   ElementsActivityState,
   EvaluatorParameters,
   FullStructure,
+  GroupedReviewResponses,
   IGraphQLConnection,
   LooseString,
   MethodRevalidate,
@@ -237,12 +240,19 @@ interface EvaluatorParameters {
   APIfetch?: Function
 }
 
+type ElementsById = { [templateElementId: string]: PageElement }
+
 interface FullStructure {
+  elementsById?: ElementsById
   lastValidationTimestamp?: number
   info: ApplicationDetails
   sections: SectionsStructureNEW
   stages: ApplicationStages
   responsesByCode?: ResponsesByCode
+}
+
+type GroupedReviewResponses = {
+  [templateElementId: string]: ReviewResponse[]
 }
 
 interface IGraphQLConnection {
@@ -282,6 +292,7 @@ interface PageNEW {
 type PageElement = {
   element: ElementBaseNEW | ElementStateNEW
   response: ResponseFull | null
+  thisReviewLatestResponse?: ReviewResponse
   review?: ReviewQuestionDecision
 }
 
@@ -311,6 +322,7 @@ interface ResponseFull {
   hash?: string
   timeCreated?: Date
   customValidation?: ValidationState
+  reviewResponse?: ReviewResponse
 }
 
 interface ResponsePayload {
