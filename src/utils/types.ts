@@ -292,7 +292,7 @@ interface PageNEW {
 type PageElement = {
   element: ElementBaseNEW | ElementStateNEW
   response: ResponseFull | null
-  latestOwnedReviewResponse?: ReviewResponse
+  thisReviewLatestResponse?: ReviewResponse
   review?: ReviewQuestionDecision
 }
 

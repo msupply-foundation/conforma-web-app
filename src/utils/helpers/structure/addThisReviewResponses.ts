@@ -3,7 +3,7 @@ import { FullStructure } from '../../types'
 import addElementsById from './addElementsById'
 import getGroupedReviewResponses from './getGroupedReviewResponses'
 
-const addOwnReviewResponse = ({
+const addThisReviewResponses = ({
   structure,
   sortedReviewResponses,
 }: {
@@ -20,11 +20,11 @@ const addOwnReviewResponse = ({
     const element = elementsById[templateElementId]
     if (!element) return
 
-    element.latestOwnedReviewResponse = responseGroup[0]
+    element.thisReviewLatestResponse = responseGroup[0]
     if (responseGroup.length === 1) return
   })
 
   return structure
 }
 
-export default addOwnReviewResponse
+export default addThisReviewResponses
