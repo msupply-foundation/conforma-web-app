@@ -135,13 +135,13 @@ interface ApplicationStages {
 
 interface AssignmentDetails {
   id: number
-  review: ReviewDetails | null
+  review?: ReviewDetails
   questions: ReviewQuestion[]
 }
 
 interface AssignmentDetailsNEW {
   id: number
-  review?: ReviewDetails
+  review: ReviewDetails | null
   totalAssignedQuestions: number
 }
 
