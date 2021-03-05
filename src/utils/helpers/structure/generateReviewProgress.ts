@@ -45,9 +45,9 @@ const generateReviewValidity = (newStructure: FullStructure) => {
 
   if (sums.doneNoneConform === 0 && sums.totalReviewable > sums.doneConform) {
     const firstIncomplete = pages.find(
-      (page) =>
-        page.reviewProgress?.totalReviewable !==
-        (page.reviewProgress?.doneConform || 0) + (page.reviewProgress?.doneNoneConform || 0)
+      ({ reviewProgress }) =>
+        reviewProgress?.totalReviewable !==
+        (reviewProgress?.doneConform || 0) + (reviewProgress?.doneNoneConform || 0)
     )
 
     if (!firstIncomplete) return
