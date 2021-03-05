@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FullStructure, ResponseFull, ResponsesByCode, User } from '../../utils/types'
+import { FullStructure, ResponsesByCode, User } from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import useSubmitApplication from '../../utils/hooks/useSubmitApplication'
 import { useUserState } from '../../contexts/UserState'
