@@ -40,12 +40,14 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
 
       return {
         id: reviewAssignment.id,
-        review: {
-          id,
-          status: status as ReviewStatus,
-          timeCreated,
-          stage: { id: stage?.id as number, name: stage?.title as string },
-        },
+        review: review
+          ? {
+              id,
+              status: status as ReviewStatus,
+              timeCreated,
+              stage: { id: stage?.id as number, name: stage?.title as string },
+            }
+          : null,
         totalAssignedQuestions,
       }
     })
