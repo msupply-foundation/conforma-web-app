@@ -13,6 +13,7 @@ import strings from '../../utils/constants'
 import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructure'
 import SectionWrapper from '../../components/Application/SectionWrapper'
 import React from 'react'
+import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivation'
 
 const ReviewPage: React.FC<{ reviewAssignment: ReviewAssignment; structure: FullStructure }> = ({
   reviewAssignment,
@@ -21,6 +22,10 @@ const ReviewPage: React.FC<{ reviewAssignment: ReviewAssignment; structure: Full
   const { fullStructure, error } = useGetFullReviewStructure({
     reviewAssignmentId: reviewAssignment.id,
     structure,
+  })
+
+  const { isSectionActive, toggleSection } = useQuerySectionActivation({
+    defaultActiveSectionCodes: [],
   })
 
   if (error) return <NoMatch />
@@ -43,6 +48,8 @@ const ReviewPage: React.FC<{ reviewAssignment: ReviewAssignment; structure: Full
           {Object.values(sections).map((section) => (
             <SectionWrapper
               key={`ApplicationSection_${section.details.id}`}
+              isActive={isSectionActive(section.details.code)}
+              toggleSection={toggleSection(section.details.code)}
               section={section}
               extraSectionTitleContent={(section: SectionStateNEW) => (
                 <SectionProgress section={section} />

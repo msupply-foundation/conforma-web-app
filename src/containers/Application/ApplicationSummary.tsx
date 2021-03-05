@@ -7,6 +7,7 @@ import { Loading, NoMatch } from '../../components'
 import { SectionWrapper } from '../../components/Application'
 import strings from '../../utils/constants'
 import { Button, Header, Message, Container } from 'semantic-ui-react'
+import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivation'
 
 interface ApplicationProps {
   structure: FullStructure
@@ -16,6 +17,9 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
   const { replace } = useRouter()
   const { error, fullStructure } = useGetFullApplicationStructure({
     structure,
+  })
+  const { isSectionActive, toggleSection } = useQuerySectionActivation({
+    defaultActiveSectionCodes: Object.keys(structure.sections),
   })
 
   useEffect(() => {
@@ -38,6 +42,8 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
       {Object.values(sections).map((section) => (
         <SectionWrapper
           key={`ApplicationSection_${section.details.id}`}
+          isActive={isSectionActive(section.details.code)}
+          toggleSection={toggleSection(section.details.code)}
           section={section}
           responsesByCode={responsesByCode as ResponsesByCode}
           serial={info.serial}
