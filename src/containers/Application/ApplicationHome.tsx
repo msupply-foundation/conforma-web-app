@@ -5,7 +5,7 @@ import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicat
 import { ApplicationHeader, Loading } from '../../components'
 import strings from '../../utils/constants'
 import { useUserState } from '../../contexts/UserState'
-import SectionsProgress from '../../components/Sections/SectionsProgress'
+import { SectionsProgress } from '../../components/Application/Sections'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { Link } from 'react-router-dom'
@@ -45,6 +45,8 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
 
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
+  const canUserEdit = fullStructure.info?.current?.status === ApplicationStatus.Draft
+
   const { firstStrictInvalidPage } = fullStructure.info
 
   const HomeMain: React.FC = () => {
@@ -54,6 +56,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
           <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
           <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
           <SectionsProgress
+            canEdit={canUserEdit}
             sections={fullStructure.sections}
             firstStrictInvalidPage={firstStrictInvalidPage}
             resumeApplication={handleResumeClick}

@@ -29,8 +29,6 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
 
   const handleSubmit = () => {}
 
-  console.log('fullStructure', fullStructure)
-
   if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (!fullStructure) return <Loading />
   const { sections, responsesByCode, info } = fullStructure
@@ -39,7 +37,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
       <Header as="h1" content={strings.TITLE_APPLICATION_SUBMIT} />
       {Object.values(sections).map((section) => (
         <SectionWrapper
-          key={`ApplicationSection_${section.details.code}`}
+          key={`ApplicationSection_${section.details.id}`}
           section={section}
           responsesByCode={responsesByCode as ResponsesByCode}
           serial={info.serial}
