@@ -11,6 +11,7 @@ export default gql`
             id
             status
             timeCreated
+            level
           }
         }
         stage {
