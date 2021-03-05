@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
-import { Accordion, Segment, Grid, Header, Icon } from 'semantic-ui-react'
+import { Accordion, Segment, Grid, Header, Icon, Button } from 'semantic-ui-react'
 import { PageElements } from '.'
-import { ResponsesByCode, ElementStateNEW, SectionStateNEW } from '../../utils/types'
+import { ReviewResponse } from '../../utils/generated/graphql'
+import { ResponsesByCode, ElementStateNEW, SectionStateNEW, PageNEW } from '../../utils/types'
 
 interface SectionProps {
   section: SectionStateNEW
+  extraSectionTitleContent: (section: SectionStateNEW) => React.ReactNode
+  extraPageContent: (page: PageNEW) => React.ReactNode
   responsesByCode: ResponsesByCode
   isReview?: boolean
   serial: string
@@ -15,6 +18,8 @@ interface SectionProps {
 const SectionWrapper: React.FC<SectionProps> = ({
   section,
   responsesByCode,
+  extraSectionTitleContent,
+  extraPageContent,
   isReview,
   serial,
   isSummary,
@@ -31,15 +36,16 @@ const SectionWrapper: React.FC<SectionProps> = ({
     <Accordion styled fluid>
       <Segment.Group size="large">
         <Accordion.Title active={isOpen} onClick={handleClick}>
-          <Grid>
-            <Grid.Row>
-              <Grid.Column width={15}>
-                <Header as="h2" content={details.title} />
-              </Grid.Column>
-              <Grid.Column width={1}>
-                <Icon name={isOpen ? 'angle up' : 'angle down'} size="large" />
-              </Grid.Column>
-            </Grid.Row>
+          <Grid columns="equal">
+            <Grid.Column floated="left">
+              <Header as="h2" content={details.title} />
+            </Grid.Column>
+            <Grid.Column floated="right" textAlign="right">
+              {extraSectionTitleContent(section)}
+            </Grid.Column>
+            <Grid.Column floated="right" textAlign="right" width={1}>
+              <Icon name={isOpen ? 'angle up' : 'angle down'} size="large" />
+            </Grid.Column>
           </Grid>
         </Accordion.Title>
         <Accordion.Content active={isOpen}>
@@ -47,7 +53,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
             <Segment key={`Page_${page.number}`}>
               <p>{page.name}</p>
               <PageElements
-                elements={page.state.map((elemState) => elemState.element) as ElementStateNEW[]}
+                elements={page.state}
                 responsesByCode={responsesByCode}
                 isReview={isReview}
                 serial={serial}
@@ -55,6 +61,8 @@ const SectionWrapper: React.FC<SectionProps> = ({
                 isSummary={isSummary}
                 canEdit={canEdit}
               />
+
+              {extraPageContent(page)}
             </Segment>
           ))}
         </Accordion.Content>

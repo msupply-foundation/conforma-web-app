@@ -42,6 +42,7 @@ export default gql`
       reviews {
         nodes {
           id
+          status
           reviewResponses(orderBy: TIME_CREATED_DESC) {
             nodes {
               ...reviewResponseFragment

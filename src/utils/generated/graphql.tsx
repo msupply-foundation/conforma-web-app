@@ -19498,7 +19498,10 @@ export type UpdateReviewResponseMutation = (
   { __typename?: 'Mutation' }
   & { updateReviewResponse?: Maybe<(
     { __typename?: 'UpdateReviewResponsePayload' }
-    & Pick<UpdateReviewResponsePayload, 'clientMutationId'>
+    & { reviewResponse?: Maybe<(
+      { __typename?: 'ReviewResponse' }
+      & ReviewResponseFragmentFragment
+    )> }
   )> }
 );
 
@@ -19825,7 +19828,7 @@ export type GetReviewNewQuery = (
       { __typename?: 'ReviewsConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'Review' }
-        & Pick<Review, 'id'>
+        & Pick<Review, 'id' | 'status'>
         & { reviewResponses: (
           { __typename?: 'ReviewResponsesConnection' }
           & { nodes: Array<Maybe<(
@@ -20278,10 +20281,12 @@ export type UpdateResponseMutationOptions = Apollo.BaseMutationOptions<UpdateRes
 export const UpdateReviewResponseDocument = gql`
     mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String) {
   updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment}}) {
-    clientMutationId
+    reviewResponse {
+      ...reviewResponseFragment
+    }
   }
 }
-    `;
+    ${ReviewResponseFragmentFragmentDoc}`;
 export type UpdateReviewResponseMutationFn = Apollo.MutationFunction<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>;
 
 /**
@@ -20786,6 +20791,7 @@ export const GetReviewNewDocument = gql`
     reviews {
       nodes {
         id
+        status
         reviewResponses(orderBy: TIME_CREATED_DESC) {
           nodes {
             ...reviewResponseFragment
