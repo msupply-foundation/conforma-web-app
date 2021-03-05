@@ -6,6 +6,7 @@ import { useUserState } from '../../contexts/UserState'
 import useGetReviewInfo from '../../utils/hooks/useGetReviewInfo'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
+import strings from '../../utils/constants'
 
 interface ReviewWrapperProps {
   structure: FullStructure
@@ -24,7 +25,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     userId: currentUser?.userId as number,
   })
 
-  if (error) return <Message error />
+  if (error) return <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
 
   if (loading) return <Loading />
 

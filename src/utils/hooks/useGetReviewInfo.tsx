@@ -11,6 +11,7 @@ interface UseGetReviewInfoProps {
 
 const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
   const [assignments, setAssignments] = useState<AssignmentDetailsNEW[]>()
+  const [isFetching, setIsFetching] = useState(true)
   const [fetchingError, setFetchingError] = useState('')
   const [refetchAttempts, setRefetchAttempts] = useState(0)
 
@@ -23,12 +24,19 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
   })
 
   useEffect(() => {
-    if (!data) return
-
+    if (!data || loading) return
     const reviewAssigments = data.reviewAssignments?.nodes as ReviewAssignment[]
+
+    // Current user has no assignments
+    if (!reviewAssigments) {
+      setIsFetching(false)
+      return
+    }
+
     const reviews: Review[] = reviewAssigments.map(({ reviews }) => reviews.nodes[0] as Review)
 
-    // Checking if any review trigger is running before returning assignments
+    // Checking if any of reviews trigger is running before refetching assignments
+    // This is done to get latest status for reviews (afte trigger finishes to run)
     if (reviews.every(({ trigger }) => trigger === null)) {
       setRefetchAttempts(0)
     } else {
@@ -73,13 +81,13 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
         totalAssignedQuestions,
       }
     })
-
     setAssignments(assignments)
-  }, [data])
+    setIsFetching(false)
+  }, [data, loading])
 
   return {
     error: fetchingError || error?.message,
-    loading,
+    loading: loading || isFetching,
     assignments,
   }
 }
