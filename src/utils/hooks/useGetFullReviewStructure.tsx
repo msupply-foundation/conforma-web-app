@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FullStructure, PageNEW, SectionsStructureNEW, SectionStateNEW } from '../types'
+import { FullStructure } from '../types'
 import {
   ApplicationResponse,
   Review,
