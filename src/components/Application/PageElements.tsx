@@ -93,7 +93,7 @@ const PageElements: React.FC<PageElementProps> = ({
     return (
       <Form>
         <Segment.Group>
-          {elements.map(({ element, latestOwnedReviewResponse }) => {
+          {elements.map(({ element, thisReviewLatestResponse }) => {
             const summaryViewProps: SummaryViewWrapperPropsNEW = {
               element,
               response: responsesByCode?.[element.code],
@@ -106,11 +106,11 @@ const PageElements: React.FC<PageElementProps> = ({
                     <SummaryViewWrapperNEW {...summaryViewProps} />
                   </Grid.Column>
                   <Grid.Column floated="right" textAlign="right">
-                    <ReviewButton reviewResponse={latestOwnedReviewResponse as ReviewResponse} />
+                    <ReviewButton reviewResponse={thisReviewLatestResponse as ReviewResponse} />
                   </Grid.Column>
                 </Grid>
                 <ReviewResponseComponent
-                  reviewResponse={latestOwnedReviewResponse as ReviewResponse}
+                  reviewResponse={thisReviewLatestResponse as ReviewResponse}
                   summaryViewProps={summaryViewProps}
                 />
               </Segment>

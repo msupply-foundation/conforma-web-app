@@ -75,7 +75,7 @@ const SectionProgress: React.FC<{ section: SectionStateNEW }> = ({ section }) =>
 const MassApprovalButton: React.FC<{ page: PageNEW }> = ({ page }) => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
 
-  const reviewResponses = page.state.map((element) => element.latestOwnedReviewResponse)
+  const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)
 
   const responsesToReview = reviewResponses.filter(
     (reviewResponse) => reviewResponse && !reviewResponse?.decision
