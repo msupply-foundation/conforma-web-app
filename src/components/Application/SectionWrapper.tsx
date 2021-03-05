@@ -6,8 +6,8 @@ import { ResponsesByCode, ElementStateNEW, SectionStateNEW, PageNEW } from '../.
 
 interface SectionProps {
   section: SectionStateNEW
-  extraSectionTitleContent: (section: SectionStateNEW) => React.ReactNode
-  extraPageContent: (page: PageNEW) => React.ReactNode
+  extraSectionTitleContent?: (section: SectionStateNEW) => React.ReactNode
+  extraPageContent?: (page: PageNEW) => React.ReactNode
   responsesByCode: ResponsesByCode
   isReview?: boolean
   serial: string
@@ -41,7 +41,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
               <Header as="h2" content={details.title} />
             </Grid.Column>
             <Grid.Column floated="right" textAlign="right">
-              {extraSectionTitleContent(section)}
+              {extraSectionTitleContent && extraSectionTitleContent(section)}
             </Grid.Column>
             <Grid.Column floated="right" textAlign="right" width={1}>
               <Icon name={isOpen ? 'angle up' : 'angle down'} size="large" />
@@ -62,7 +62,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
                 canEdit={canEdit}
               />
 
-              {extraPageContent(page)}
+              {extraPageContent && extraPageContent(page)}
             </Segment>
           ))}
         </Accordion.Content>
