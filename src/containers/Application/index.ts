@@ -6,6 +6,7 @@ import ApplicationWrapper from './ApplicationWrapper'
 import ApplicationHome from './ApplicationHome'
 import ApplicationSubmission from './ApplicationSubmissionNEW'
 import ApplicationPage from './ApplicationPage'
+import ApplicationSummary from './ApplicationSummary'
 
 export {
   ApplicationCreate,
@@ -13,6 +14,7 @@ export {
   ApplicationHome,
   ApplicationPage,
   ApplicationSubmission,
+  ApplicationSummary,
   ApplicationWrapper,
   ElementsBox,
   NavigationBox,
