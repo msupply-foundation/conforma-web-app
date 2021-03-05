@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
   ApplicationDetails,
-  ApplicationStages,
   ElementBaseNEW,
   FullStructure,
   TemplateDetails,
