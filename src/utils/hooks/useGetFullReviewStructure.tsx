@@ -53,12 +53,11 @@ const useGetFullReviewStructure = ({
     }).then((evaluatedStructure: FullStructure) => {
       let newStructure: FullStructure = addElementsById(evaluatedStructure)
 
-      // here we add reviewless review repsonses
-      // generate indications of reviewless review response (numbe of non conform etc.)
+      // here we add responses from other review (not from this review assignmnet)
 
       // There will always just be one review assignment linked to a review. (since review is related to reviewAssignment, many to one relation is created)
       const review = data?.reviewAssignment?.reviews?.nodes[0] as Review
-      if ((data.reviewAssignment?.reviews?.nodes?.length || 0) > 0)
+      if ((data.reviewAssignment?.reviews?.nodes?.length || 0) > 1)
         console.error(
           'More then one review associated with reviewAssignment with id',
           data.reviewAssignment?.id
