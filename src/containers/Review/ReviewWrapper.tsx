@@ -1,9 +1,11 @@
 import React from 'react'
 import { Route, Switch } from 'react-router'
-import { Header } from 'semantic-ui-react'
-import { NoMatch } from '../../components'
+import { Header, Message } from 'semantic-ui-react'
+import { Loading, NoMatch } from '../../components'
+import { useUserState } from '../../contexts/UserState'
+import useGetReviewInfo from '../../utils/hooks/useGetReviewInfo'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { FullStructure } from '../../utils/types'
+import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
 
 interface ReviewWrapperProps {
   structure: FullStructure
@@ -13,13 +15,25 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   const {
     match: { path },
   } = useRouter()
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
-  console.log('Strcture', structure)
+  const { error, loading, assignments } = useGetReviewInfo({
+    applicationId: structure.info.id,
+    userId: currentUser?.userId as number,
+  })
+
+  if (error) return <Message error />
+
+  if (loading) return <Loading />
+
+  if (!assignments || assignments.length === 0) return <NoMatch />
 
   return (
     <Switch>
       <Route exact path={path}>
-        <ReviewHomeNEW />
+        <ReviewHomeNEW assignments={assignments} />
       </Route>
       <Route exact path={`${path}/:reviewId`}>
         <ReviewPageNEW />
@@ -34,7 +48,12 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   )
 }
 
-const ReviewHomeNEW: React.FC = () => {
+interface ReviewHomeProps {
+  assignments: AssignmentDetailsNEW[]
+}
+
+const ReviewHomeNEW: React.FC<ReviewHomeProps> = ({ assignments }) => {
+  console.log(assignments) // To be continued in #379
   return <Header>REVIEW HOME PAGE</Header>
 }
 

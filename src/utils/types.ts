@@ -23,6 +23,7 @@ export {
   ApplicationStageMap,
   ApplicationStages,
   AssignmentDetails,
+  AssignmentDetailsNEW,
   CellProps,
   ColumnDetails,
   ColumnsPerRole,
@@ -126,6 +127,12 @@ interface AssignmentDetails {
   id: number
   review?: ReviewDetails
   questions: ReviewQuestion[]
+}
+
+interface AssignmentDetailsNEW {
+  id: number
+  review?: ReviewDetails
+  totalAssignedQuestions: number
 }
 
 interface BasicStringObject {
@@ -329,6 +336,8 @@ interface ResumeSection {
 interface ReviewDetails {
   id: number
   status: ReviewStatus
+  timeCreated?: DateTime
+  stage?: ApplicationStage
 }
 
 interface ReviewerDetails {
