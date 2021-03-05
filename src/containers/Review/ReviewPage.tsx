@@ -3,6 +3,7 @@ import { Loading, NoMatch } from '../../components'
 import { FullStructure, PageNEW, ResponsesByCode, SectionStateNEW } from '../../utils/types'
 
 import {
+  ReviewAssignment,
   ReviewResponseDecision,
   ReviewStatus,
   useUpdateReviewResponseMutation,
@@ -13,15 +14,18 @@ import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructu
 import SectionWrapper from '../../components/Application/SectionWrapper'
 import React from 'react'
 
-const ReviewPage: React.FC<{ reviewAssignmentId: number; structure: FullStructure }> = ({
-  reviewAssignmentId,
+const ReviewPage: React.FC<{ reviewAssignment: ReviewAssignment; structure: FullStructure }> = ({
+  reviewAssignment,
   structure,
 }) => {
-  const { fullStructure, error } = useGetFullReviewStructure({ reviewAssignmentId, structure })
+  const { fullStructure, error } = useGetFullReviewStructure({
+    reviewAssignmentId: reviewAssignment.id,
+    structure,
+  })
 
   if (error) return <NoMatch />
   if (!fullStructure) return <Loading />
-  const { sections, responsesByCode, info, reviewInfo } = fullStructure
+  const { sections, responsesByCode, info } = fullStructure
   return (
     <>
       <Segment.Group>
@@ -47,7 +51,7 @@ const ReviewPage: React.FC<{ reviewAssignmentId: number; structure: FullStructur
               responsesByCode={responsesByCode as ResponsesByCode}
               serial={info.serial}
               isReview
-              canEdit={reviewInfo?.status === ReviewStatus.Draft}
+              canEdit={reviewAssignment.reviews.nodes[0]?.status === ReviewStatus.Draft}
             />
           ))}
         </Segment>
