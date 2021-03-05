@@ -1,5 +1,7 @@
 import { gql } from '@apollo/client'
 
+// TODO: Remove this
+
 export default gql`
   query getReviewAssignment($reviewerId: Int!, $applicationId: Int, $stageId: Int) {
     reviewAssignments(

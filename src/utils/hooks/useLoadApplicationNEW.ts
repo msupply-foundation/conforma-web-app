@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
   ApplicationDetails,
-  ApplicationStages,
   ElementBaseNEW,
   FullStructure,
   TemplateDetails,
@@ -68,7 +67,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           setRefetchAttempts(refetchAttempts + 1)
           refetch()
         }, 500)
-      } else setStructureError(messages.APPLICATION_TRIGGER_RUNNING)
+      } else setStructureError(messages.TRIGGER_RUNNING)
       return
     }
 

@@ -1,9 +1,14 @@
 import React from 'react'
 import { Route, Switch } from 'react-router'
-import { Header } from 'semantic-ui-react'
-import { NoMatch } from '../../components'
+import { Header, Message } from 'semantic-ui-react'
+import { Loading, NoMatch } from '../../components'
+import { useUserState } from '../../contexts/UserState'
+import useGetReviewInfo from '../../utils/hooks/useGetReviewInfo'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { FullStructure } from '../../utils/types'
+import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
+import strings from '../../utils/constants'
+import ReviewPageWrapper from './ReviewPageWrapper'
+import ReviewPageWrapperNEW from './ReviewPageWrapperNEW'
 
 interface ReviewWrapperProps {
   structure: FullStructure
@@ -13,19 +18,28 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   const {
     match: { path },
   } = useRouter()
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
-  console.log('Strcture', structure)
+  const { error, loading, assignments } = useGetReviewInfo({
+    applicationId: structure.info.id,
+    userId: currentUser?.userId as number,
+  })
+
+  if (error) return <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
+
+  if (loading) return <Loading />
+
+  if (!assignments || assignments.length === 0) return <NoMatch />
 
   return (
     <Switch>
       <Route exact path={path}>
-        <ReviewHomeNEW />
+        <ReviewHomeNEW assignments={assignments} structure={structure} />
       </Route>
       <Route exact path={`${path}/:reviewId`}>
-        <ReviewPageNEW />
-      </Route>
-      <Route exact path={`${path}/:reviewId/summary`}>
-        <ReviewSummaryNEW />
+        <ReviewPageWrapperNEW {...{ structure, reviewAssignments: assignments }} />
       </Route>
       <Route>
         <NoMatch />
@@ -34,17 +48,14 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   )
 }
 
-const ReviewHomeNEW: React.FC = () => {
+interface ReviewHomeProps {
+  assignments: AssignmentDetailsNEW[]
+  structure: FullStructure
+}
+
+const ReviewHomeNEW: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
+  console.log(assignments) // To be continued in #379
   return <Header>REVIEW HOME PAGE</Header>
-}
-
-const ReviewPageNEW: React.FC = () => {
-  return <Header>REVIEW PAGE</Header>
-}
-
-// To be used in case the decision step is in a separated page...
-const ReviewSummaryNEW: React.FC = () => {
-  return <Header>REVIEW SUMMARY PAGE</Header>
 }
 
 export default ReviewWrapper
