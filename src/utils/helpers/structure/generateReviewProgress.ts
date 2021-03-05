@@ -73,13 +73,14 @@ const getSums = (elements: PageNEW[]) => {
     doneNoneConform: 0,
   }
 
-  return elements.reduce(
-    (sum, element) => ({
-      totalReviewable: sum.totalReviewable + (element?.reviewProgress?.totalReviewable || 0),
-      doneConform: sum.doneConform + (element?.reviewProgress?.doneConform || 0),
-      doneNoneConform: sum.doneNoneConform + (element?.reviewProgress?.doneNoneConform || 0),
+return elements.reduce(
+    (sum, { reviewProgress }) => ({
+      totalReviewable: sum.totalReviewable + (reviewProgress?.totalReviewable || 0),
+      doneConform: sum.doneConform + (reviewProgress?.doneConform || 0),
+      doneNoneConform: sum.doneNoneConform + (reviewProgress?.doneNoneConform || 0),
     }),
     initial
+  )
   )
 }
 
