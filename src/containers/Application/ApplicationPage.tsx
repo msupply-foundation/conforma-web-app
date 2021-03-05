@@ -158,7 +158,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
                 sectionCode === strictSectionPage?.sectionCode &&
                 pageNumber === strictSectionPage?.pageNumber
               }
-              isEditable
+              canEdit
             />
           </Segment>
         </Grid.Column>

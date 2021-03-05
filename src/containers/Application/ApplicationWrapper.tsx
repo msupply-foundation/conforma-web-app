@@ -7,7 +7,7 @@ import { useUserState } from '../../contexts/UserState'
 import useLoadApplication from '../../utils/hooks/useLoadApplicationNEW'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { FullStructure, User } from '../../utils/types'
-import { ApplicationHome, ApplicationPage } from './'
+import { ApplicationHome, ApplicationPage, ApplicationSummary } from './'
 import strings from '../../utils/constants'
 import { ReviewWrapper } from '../Review'
 
@@ -39,7 +39,7 @@ const ApplicationWrapper: React.FC = () => {
         <ApplicationPage structure={structure} />
       </Route>
       <Route exact path={`${path}/summary`}>
-        <ApplicationSummaryNEW structure={structure} />
+        <ApplicationSummary structure={structure} />
       </Route>
       <Route exact path={`${path}/summary/submission`}>
         <ApplicationSubmissionNEW structure={structure} />
@@ -58,10 +58,6 @@ const ApplicationWrapper: React.FC = () => {
 
 interface ApplicationProps {
   structure: FullStructure
-}
-
-const ApplicationSummaryNEW: React.FC<ApplicationProps> = ({ structure }) => {
-  return <Header>SUMMARY PAGE</Header>
 }
 
 const ApplicationSubmissionNEW: React.FC<ApplicationProps> = ({ structure }) => {
