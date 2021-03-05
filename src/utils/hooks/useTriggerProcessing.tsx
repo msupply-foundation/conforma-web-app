@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useGetTriggersQuery } from '../../utils/generated/graphql'
 
+// TODO: Remove this
+
 type TriggerType = 'applicationTrigger' | 'reviewAssignmentTrigger' | 'reviewTrigger'
 
 interface TriggerApplication {
