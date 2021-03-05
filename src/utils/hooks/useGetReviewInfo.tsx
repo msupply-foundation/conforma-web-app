@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { AssignmentDetailsNEW } from '../types'
 import { Review, ReviewAssignment, ReviewStatus, useGetReviewInfoQuery } from '../generated/graphql'
+import messages from '../messages'
 
+const MAX_REFETCH = 10
 interface UseGetReviewInfoProps {
   applicationId: number
   userId: number
@@ -9,18 +11,37 @@ interface UseGetReviewInfoProps {
 
 const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
   const [assignments, setAssignments] = useState<AssignmentDetailsNEW[]>()
+  const [fetchingError, setFetchingError] = useState('')
+  const [refetchAttempts, setRefetchAttempts] = useState(0)
 
-  const { data, loading, error } = useGetReviewInfoQuery({
+  const { data, loading, error, refetch } = useGetReviewInfoQuery({
     variables: {
       reviewerId: userId,
       applicationId,
     },
+    notifyOnNetworkStatusChange: true,
   })
 
   useEffect(() => {
     if (!data) return
 
     const reviewAssigments = data.reviewAssignments?.nodes as ReviewAssignment[]
+    const reviews: Review[] = reviewAssigments.map(({ reviews }) => reviews.nodes[0] as Review)
+
+    // Checking if any review trigger is running before returning assignments
+    if (reviews.every(({ trigger }) => trigger === null)) {
+      setRefetchAttempts(0)
+    } else {
+      if (refetchAttempts < MAX_REFETCH) {
+        setTimeout(() => {
+          console.log('Will refetch getReviewInfo', refetchAttempts) // TODO: Remove log
+          setRefetchAttempts(refetchAttempts + 1)
+          refetch()
+        }, 500)
+      } else setFetchingError(messages.TRIGGER_RUNNING)
+      return
+    }
+
     const assignments: AssignmentDetailsNEW[] = reviewAssigments.map((reviewAssignment) => {
       // There will always just be one review assignment linked to a review.
       const review = reviewAssignment.reviews.nodes[0] as Review
@@ -57,7 +78,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
   }, [data])
 
   return {
-    error: error?.message,
+    error: fetchingError || error?.message,
     loading,
     assignments,
   }

@@ -19807,7 +19807,7 @@ export type GetReviewInfoQuery = (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'Review' }
-          & Pick<Review, 'id' | 'status' | 'timeCreated' | 'level'>
+          & Pick<Review, 'id' | 'level' | 'status' | 'timeCreated' | 'trigger'>
         )>> }
       ), stage?: Maybe<(
         { __typename?: 'TemplateStage' }
@@ -20796,9 +20796,10 @@ export const GetReviewInfoDocument = gql`
       reviews {
         nodes {
           id
+          level
           status
           timeCreated
-          level
+          trigger
         }
       }
       stage {

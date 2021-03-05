@@ -13,9 +13,10 @@ export default gql`
         reviews {
           nodes {
             id
+            level
             status
             timeCreated
-            level
+            trigger
           }
         }
         stage {
