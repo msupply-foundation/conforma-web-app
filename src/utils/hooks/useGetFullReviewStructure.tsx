@@ -100,7 +100,7 @@ const addIsAssigned = (
   reviewQuestionAssignments.forEach((questionAssignment) => {
     if (!questionAssignment) return
 
-    const assignedElement = newStructure?.elementsById?.[questionAssignment.templateElementId || '']
+    const assignedElement = newStructure?.elementsById?.[questionAssignment.templateElementId as number]
     if (!assignedElement) return
 
     assignedElement.isAssigned = true
