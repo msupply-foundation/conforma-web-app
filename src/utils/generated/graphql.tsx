@@ -2533,6 +2533,8 @@ export type ReviewFilter = {
   isLastLevel?: Maybe<BooleanFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ReviewStatusFilter>;
+  /** Filter by the object’s `timeCreated` field. */
+  timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
   reviewResponses?: Maybe<ReviewToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
@@ -4648,6 +4650,7 @@ export type Review = Node & {
   /** Reads and enables pagination through a set of `Notification`. */
   notifications: NotificationsConnection;
   status?: Maybe<ReviewStatus>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
 };
 
 
@@ -19775,6 +19778,39 @@ export type GetReviewAssignmentQuery = (
   )> }
 );
 
+export type GetReviewInfoQueryVariables = Exact<{
+  reviewerId: Scalars['Int'];
+  applicationId?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetReviewInfoQuery = (
+  { __typename?: 'Query' }
+  & { reviewAssignments?: Maybe<(
+    { __typename?: 'ReviewAssignmentsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ReviewAssignment' }
+      & Pick<ReviewAssignment, 'id' | 'timeCreated'>
+      & { reviewer?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username' | 'firstName' | 'lastName'>
+      )>, reviews: (
+        { __typename?: 'ReviewsConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'Review' }
+          & Pick<Review, 'id' | 'status' | 'timeCreated'>
+        )>> }
+      ), stage?: Maybe<(
+        { __typename?: 'TemplateStage' }
+        & Pick<TemplateStage, 'title' | 'id'>
+      )>, reviewQuestionAssignments: (
+        { __typename?: 'ReviewQuestionAssignmentsConnection' }
+        & Pick<ReviewQuestionAssignmentsConnection, 'totalCount'>
+      ) }
+    )>> }
+  )> }
+);
+
 export type GetReviewStatusQueryVariables = Exact<{
   reviewId: Scalars['Int'];
 }>;
@@ -20676,6 +20712,63 @@ export function useGetReviewAssignmentLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetReviewAssignmentQueryHookResult = ReturnType<typeof useGetReviewAssignmentQuery>;
 export type GetReviewAssignmentLazyQueryHookResult = ReturnType<typeof useGetReviewAssignmentLazyQuery>;
 export type GetReviewAssignmentQueryResult = Apollo.QueryResult<GetReviewAssignmentQuery, GetReviewAssignmentQueryVariables>;
+export const GetReviewInfoDocument = gql`
+    query getReviewInfo($reviewerId: Int!, $applicationId: Int) {
+  reviewAssignments(condition: {reviewerId: $reviewerId, applicationId: $applicationId}) {
+    nodes {
+      id
+      timeCreated
+      reviewer {
+        id
+        username
+        firstName
+        lastName
+      }
+      reviews {
+        nodes {
+          id
+          status
+          timeCreated
+        }
+      }
+      stage {
+        title
+        id
+      }
+      reviewQuestionAssignments {
+        totalCount
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetReviewInfoQuery__
+ *
+ * To run a query within a React component, call `useGetReviewInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReviewInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReviewInfoQuery({
+ *   variables: {
+ *      reviewerId: // value for 'reviewerId'
+ *      applicationId: // value for 'applicationId'
+ *   },
+ * });
+ */
+export function useGetReviewInfoQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewInfoQuery, GetReviewInfoQueryVariables>) {
+        return Apollo.useQuery<GetReviewInfoQuery, GetReviewInfoQueryVariables>(GetReviewInfoDocument, baseOptions);
+      }
+export function useGetReviewInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewInfoQuery, GetReviewInfoQueryVariables>) {
+          return Apollo.useLazyQuery<GetReviewInfoQuery, GetReviewInfoQueryVariables>(GetReviewInfoDocument, baseOptions);
+        }
+export type GetReviewInfoQueryHookResult = ReturnType<typeof useGetReviewInfoQuery>;
+export type GetReviewInfoLazyQueryHookResult = ReturnType<typeof useGetReviewInfoLazyQuery>;
+export type GetReviewInfoQueryResult = Apollo.QueryResult<GetReviewInfoQuery, GetReviewInfoQueryVariables>;
 export const GetReviewStatusDocument = gql`
     query getReviewStatus($reviewId: Int!) {
   reviewStatusHistories(condition: {isCurrent: true, reviewId: $reviewId}) {
