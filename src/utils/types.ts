@@ -22,9 +22,10 @@ export {
   ApplicationDetails,
   ApplicationElementStates,
   ApplicationListRow,
+  ApplicationProps,
   ApplicationStage,
   ApplicationStageMap,
-  ApplicationStages,
+  ApplicationStages, // TODO: Remove this
   AssignmentDetails,
   CellProps,
   ColumnDetails,
@@ -104,6 +105,7 @@ interface ApplicationDetails {
   isLinear: boolean
   current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
   firstStrictInvalidPage: SectionAndPage | null
+  submissionMessage?: string // TODO: Change to compulsory after re-structure is finished
 }
 
 interface ApplicationElementStates {
@@ -112,6 +114,11 @@ interface ApplicationElementStates {
 
 interface ApplicationListRow extends ApplicationList {
   isExpanded: boolean
+}
+
+interface ApplicationProps {
+  structure: FullStructure
+  responses?: ResponsesByCode
 }
 
 interface ApplicationStage {
@@ -250,7 +257,7 @@ interface FullStructure {
   lastValidationTimestamp?: number
   info: ApplicationDetails
   sections: SectionsStructureNEW
-  stages: ApplicationStages
+  stages: StageDetails[]
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
   canSubmitReviewAs?: ReviewResponseDecision | null
@@ -451,6 +458,8 @@ interface TemplateDetails {
   id: number
   name: string
   code: string
+  elementsIds?: number[] // TODO: Change to not optional after re-structure
+  sections?: SectionDetails[] // TODO: Change to not optional after re-structure
   startMessage?: string
 }
 
