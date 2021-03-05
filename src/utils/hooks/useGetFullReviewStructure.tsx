@@ -80,10 +80,6 @@ const useGetFullReviewStructure = ({
           structure: newStructure,
           sortedReviewResponses: review?.reviewResponses.nodes as ReviewResponse[], // Sorted in useGetReviewNewQuery
         })
-
-        newStructure.reviewInfo = {
-          status: review.status as ReviewStatus,
-        }
       }
 
       generateReviewProgress(newStructure)
