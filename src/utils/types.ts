@@ -2,6 +2,7 @@ import {
   ApplicationList,
   ApplicationStatus,
   PermissionPolicyType,
+  ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
   TemplateElement,
@@ -19,9 +20,10 @@ export {
   ApplicationDetails,
   ApplicationElementStates,
   ApplicationListRow,
+  ApplicationProps,
   ApplicationStage,
   ApplicationStageMap,
-  ApplicationStages,
+  ApplicationStages, // TODO: Remove this
   AssignmentDetails,
   AssignmentDetailsNEW,
   CellProps,
@@ -34,6 +36,7 @@ export {
   DecisionAreaState,
   ElementBase,
   ElementBaseNEW,
+  ElementsById,
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
@@ -41,6 +44,7 @@ export {
   ElementsActivityState,
   EvaluatorParameters,
   FullStructure,
+  GroupedReviewResponses,
   IGraphQLConnection,
   LooseString,
   MethodRevalidate,
@@ -99,6 +103,7 @@ interface ApplicationDetails {
   isLinear: boolean
   current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
   firstStrictInvalidPage: SectionAndPage | null
+  submissionMessage?: string // TODO: Change to compulsory after re-structure is finished
 }
 
 interface ApplicationElementStates {
@@ -107,6 +112,11 @@ interface ApplicationElementStates {
 
 interface ApplicationListRow extends ApplicationList {
   isExpanded: boolean
+}
+
+interface ApplicationProps {
+  structure: FullStructure
+  responses?: ResponsesByCode
 }
 
 interface ApplicationStage {
@@ -244,12 +254,19 @@ interface EvaluatorParameters {
   APIfetch?: Function
 }
 
+type ElementsById = { [templateElementId: string]: PageElement }
+
 interface FullStructure {
+  elementsById?: ElementsById
   lastValidationTimestamp?: number
   info: ApplicationDetails
   sections: SectionsStructureNEW
-  stages: ApplicationStages
+  stages: StageDetails[]
   responsesByCode?: ResponsesByCode
+}
+
+type GroupedReviewResponses = {
+  [templateElementId: string]: ReviewResponse[]
 }
 
 interface IGraphQLConnection {
@@ -289,6 +306,7 @@ interface PageNEW {
 type PageElement = {
   element: ElementBaseNEW | ElementStateNEW
   response: ResponseFull | null
+  thisReviewLatestResponse?: ReviewResponse
   review?: ReviewQuestionDecision
 }
 
@@ -318,6 +336,7 @@ interface ResponseFull {
   hash?: string
   timeCreated?: Date
   customValidation?: ValidationState
+  reviewResponse?: ReviewResponse
 }
 
 interface ResponsePayload {
@@ -432,6 +451,8 @@ interface TemplateDetails {
   id: number
   name: string
   code: string
+  elementsIds?: number[] // TODO: Change to not optional after re-structure
+  sections?: SectionDetails[] // TODO: Change to not optional after re-structure
   startMessage?: string
 }
 
@@ -528,4 +549,17 @@ interface LoginPayload {
 
 type UserRoles = {
   [role in USER_ROLES]: Array<PermissionPolicyType>
+}
+
+interface SortQuery {
+  sortColumn?: string
+  sortDirection?: 'ascending' | 'descending'
+}
+
+interface SetStrictSectionPage {
+  (sectionAndPage: SectionAndPage | null): void
+}
+
+interface MethodToCallOnRevalidation {
+  (firstInvalidPage: SectionAndPage | null, setStrictSectionPage: SetStrictSectionPage): void
 }

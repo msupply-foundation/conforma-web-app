@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { FullStructure } from '../types'
-import { ApplicationResponse, useGetAllResponsesQuery } from '../generated/graphql'
+import {
+  ApplicationResponse,
+  ApplicationStatus,
+  useGetAllResponsesQuery,
+} from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
 import { generateResponsesProgress } from '../helpers/structure/generateProgress'
 import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
@@ -25,8 +29,9 @@ const useGetFullApplicationStructure = ({
     userState: { currentUser },
   } = useUserState()
   const [fullStructure, setFullStructure] = useState<FullStructure>()
-  const [isError, setIsError] = useState(false)
-  const [firstRunProcessValidation, setFirstRunProcessValidation] = useState(firstRunValidation)
+  const [firstRunProcessValidation, setFirstRunProcessValidation] = useState(
+    firstRunValidation && structure.info.current?.status === ApplicationStatus.Draft
+  )
 
   const [lastRefetchedTimestamp, setLastRefetchedTimestamp] = useState<number>(0)
   const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState<number>(0)
@@ -49,10 +54,7 @@ const useGetFullApplicationStructure = ({
   }, [data])
 
   useEffect(() => {
-    if (error) {
-      setIsError(true)
-      return
-    }
+    if (error) return
 
     if (!data) return
 
@@ -91,7 +93,7 @@ const useGetFullApplicationStructure = ({
 
   return {
     fullStructure,
-    error: isError ? error : false,
+    error: error?.message,
   }
 }
 

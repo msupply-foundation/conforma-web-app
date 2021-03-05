@@ -6,6 +6,7 @@ import {
   SectionAndPage,
   MethodRevalidate,
   MethodToCallProps,
+  ApplicationProps,
 } from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { ApplicationStatus } from '../../utils/generated/graphql'
@@ -19,11 +20,6 @@ import { PageElements } from '../../components/Application'
 import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
 import checkPageIsAccessible from '../../utils/helpers/structure/checkPageIsAccessible'
 import { Navigation } from '../../components'
-
-interface ApplicationProps {
-  structure: FullStructure
-  responses?: ResponsesByCode
-}
 
 interface MethodToCall {
   (props: MethodToCallProps): void
@@ -158,7 +154,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
                 sectionCode === strictSectionPage?.sectionCode &&
                 pageNumber === strictSectionPage?.pageNumber
               }
-              isEditable
+              canEdit
             />
           </Segment>
         </Grid.Column>

@@ -19335,6 +19335,11 @@ export type ResponseFragment = (
   )> }
 );
 
+export type ReviewResponseFragmentFragment = (
+  { __typename?: 'ReviewResponse' }
+  & Pick<ReviewResponse, 'applicationResponseId' | 'decision' | 'comment' | 'id' | 'status' | 'timeCreated'>
+);
+
 export type SectionFragment = (
   { __typename?: 'TemplateSection' }
   & Pick<TemplateSection, 'id' | 'title' | 'index' | 'code'>
@@ -19514,6 +19519,13 @@ export type GetAllResponsesQuery = (
       { __typename?: 'ApplicationResponsesConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'ApplicationResponse' }
+        & { reviewResponses: (
+          { __typename?: 'ReviewResponsesConnection' }
+          & { nodes: Array<Maybe<(
+            { __typename?: 'ReviewResponse' }
+            & ReviewResponseFragmentFragment
+          )>> }
+        ) }
         & ResponseFragment
       )>> }
     ) }
@@ -19808,6 +19820,55 @@ export type GetReviewInfoQuery = (
   )> }
 );
 
+export type GetReviewNewQueryVariables = Exact<{
+  reviewAssignmentId: Scalars['Int'];
+  userId: Scalars['Int'];
+}>;
+
+
+export type GetReviewNewQuery = (
+  { __typename?: 'Query' }
+  & { reviewAssignment?: Maybe<(
+    { __typename?: 'ReviewAssignment' }
+    & Pick<ReviewAssignment, 'id'>
+    & { application?: Maybe<(
+      { __typename?: 'Application' }
+      & Pick<Application, 'id' | 'serial'>
+      & { applicationResponses: (
+        { __typename?: 'ApplicationResponsesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ApplicationResponse' }
+          & { reviewResponses: (
+            { __typename?: 'ReviewResponsesConnection' }
+            & { nodes: Array<Maybe<(
+              { __typename?: 'ReviewResponse' }
+              & ReviewResponseFragmentFragment
+            )>> }
+          ) }
+          & ResponseFragment
+        )>> }
+      ) }
+    )>, reviews: (
+      { __typename?: 'ReviewsConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'Review' }
+        & Pick<Review, 'id'>
+        & { reviewResponses: (
+          { __typename?: 'ReviewResponsesConnection' }
+          & { nodes: Array<Maybe<(
+            { __typename?: 'ReviewResponse' }
+            & { applicationResponse?: Maybe<(
+              { __typename?: 'ApplicationResponse' }
+              & Pick<ApplicationResponse, 'templateElementId'>
+            )> }
+            & ReviewResponseFragmentFragment
+          )>> }
+        ) }
+      )>> }
+    ) }
+  )> }
+);
+
 export type GetReviewStatusQueryVariables = Exact<{
   reviewId: Scalars['Int'];
 }>;
@@ -19956,6 +20017,16 @@ export const ResponseFragmentDoc = gql`
     code
   }
   templateElementId
+  timeCreated
+}
+    `;
+export const ReviewResponseFragmentFragmentDoc = gql`
+    fragment reviewResponseFragment on ReviewResponse {
+  applicationResponseId
+  decision
+  comment
+  id
+  status
   timeCreated
 }
     `;
@@ -20273,11 +20344,17 @@ export const GetAllResponsesDocument = gql`
     applicationResponses {
       nodes {
         ...Response
+        reviewResponses {
+          nodes {
+            ...reviewResponseFragment
+          }
+        }
       }
     }
   }
 }
-    ${ResponseFragmentDoc}`;
+    ${ResponseFragmentDoc}
+${ReviewResponseFragmentFragmentDoc}`;
 
 /**
  * __useGetAllResponsesQuery__
@@ -20760,6 +20837,68 @@ export function useGetReviewInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetReviewInfoQueryHookResult = ReturnType<typeof useGetReviewInfoQuery>;
 export type GetReviewInfoLazyQueryHookResult = ReturnType<typeof useGetReviewInfoLazyQuery>;
 export type GetReviewInfoQueryResult = Apollo.QueryResult<GetReviewInfoQuery, GetReviewInfoQueryVariables>;
+export const GetReviewNewDocument = gql`
+    query getReviewNew($reviewAssignmentId: Int!, $userId: Int!) {
+  reviewAssignment(id: $reviewAssignmentId) {
+    id
+    application {
+      id
+      serial
+      applicationResponses {
+        nodes {
+          ...Response
+          reviewResponses(orderBy: TIME_CREATED_DESC, filter: {or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
+            nodes {
+              ...reviewResponseFragment
+            }
+          }
+        }
+      }
+    }
+    reviews {
+      nodes {
+        id
+        reviewResponses(orderBy: TIME_CREATED_DESC) {
+          nodes {
+            ...reviewResponseFragment
+            applicationResponse {
+              templateElementId
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    ${ResponseFragmentDoc}
+${ReviewResponseFragmentFragmentDoc}`;
+
+/**
+ * __useGetReviewNewQuery__
+ *
+ * To run a query within a React component, call `useGetReviewNewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReviewNewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReviewNewQuery({
+ *   variables: {
+ *      reviewAssignmentId: // value for 'reviewAssignmentId'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetReviewNewQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewNewQuery, GetReviewNewQueryVariables>) {
+        return Apollo.useQuery<GetReviewNewQuery, GetReviewNewQueryVariables>(GetReviewNewDocument, baseOptions);
+      }
+export function useGetReviewNewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewNewQuery, GetReviewNewQueryVariables>) {
+          return Apollo.useLazyQuery<GetReviewNewQuery, GetReviewNewQueryVariables>(GetReviewNewDocument, baseOptions);
+        }
+export type GetReviewNewQueryHookResult = ReturnType<typeof useGetReviewNewQuery>;
+export type GetReviewNewLazyQueryHookResult = ReturnType<typeof useGetReviewNewLazyQuery>;
+export type GetReviewNewQueryResult = Apollo.QueryResult<GetReviewNewQuery, GetReviewNewQueryVariables>;
 export const GetReviewStatusDocument = gql`
     query getReviewStatus($reviewId: Int!) {
   reviewStatusHistories(condition: {isCurrent: true, reviewId: $reviewId}) {
