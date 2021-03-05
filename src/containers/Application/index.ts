@@ -1,4 +1,5 @@
 import ApplicationCreate from './ApplicationCreate'
+import ApplicationCreateNEW from './ApplicationCreateNEW'
 import ApplicationPageWrapper from './ApplicationPageWrapper'
 import ElementsBox from './ElementsBox'
 import NavigationBox from './NavigationBox'
@@ -9,6 +10,7 @@ import ApplicationSummary from './ApplicationSummary'
 
 export {
   ApplicationCreate,
+  ApplicationCreateNEW,
   ApplicationPageWrapper,
   ApplicationHome,
   ApplicationPage,
