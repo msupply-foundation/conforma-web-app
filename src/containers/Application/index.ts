@@ -5,6 +5,7 @@ import ElementsBox from './ElementsBox'
 import NavigationBox from './NavigationBox'
 import ApplicationWrapper from './ApplicationWrapper'
 import ApplicationHome from './ApplicationHome'
+import ApplicationSubmission from './ApplicationSubmissionNEW'
 import ApplicationPage from './ApplicationPage'
 import ApplicationSummary from './ApplicationSummary'
 
@@ -14,6 +15,7 @@ export {
   ApplicationPageWrapper,
   ApplicationHome,
   ApplicationPage,
+  ApplicationSubmission,
   ApplicationSummary,
   ApplicationWrapper,
   ElementsBox,
