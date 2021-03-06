@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Accordion, Segment, Grid, Header, Icon, Button } from 'semantic-ui-react'
 import { PageElements } from '.'
 import { ReviewResponse } from '../../utils/generated/graphql'
@@ -9,6 +9,7 @@ interface SectionProps {
   section: SectionStateNEW
   extraSectionTitleContent?: (section: SectionStateNEW) => React.ReactNode
   extraPageContent?: (page: PageNEW) => React.ReactNode
+  scrollableAttachment?: (page: PageNEW) => React.ReactNode
   responsesByCode: ResponsesByCode
   isReview?: boolean
   serial: string
@@ -28,6 +29,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
   isReview,
   serial,
   isSummary,
+  scrollableAttachment,
   canEdit,
 }) => {
   const { details, pages } = section
@@ -51,6 +53,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
         <Accordion.Content active={isActive}>
           {Object.values(pages).map((page) => (
             <Segment key={`Page_${page.number}`}>
+              {scrollableAttachment && scrollableAttachment(page)}
               <p>{page.name}</p>
               <PageElements
                 elements={page.state}

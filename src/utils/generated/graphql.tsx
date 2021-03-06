@@ -2533,8 +2533,6 @@ export type ReviewFilter = {
   isLastLevel?: Maybe<BooleanFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ReviewStatusFilter>;
-  /** Filter by the object’s `timeCreated` field. */
-  timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
   reviewResponses?: Maybe<ReviewToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
@@ -4650,7 +4648,6 @@ export type Review = Node & {
   /** Reads and enables pagination through a set of `Notification`. */
   notifications: NotificationsConnection;
   status?: Maybe<ReviewStatus>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
 };
 
 
@@ -19445,7 +19442,7 @@ export type UpdateReviewMutation = (
     { __typename?: 'UpdateReviewPayload' }
     & { review?: Maybe<(
       { __typename?: 'Review' }
-      & Pick<Review, 'id'>
+      & Pick<Review, 'id' | 'trigger'>
     )> }
   )> }
 );
@@ -19805,12 +19802,12 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'status' | 'timeCreated'>
+      & Pick<ReviewAssignment, 'id' | 'status' | 'timeCreated' | 'level'>
       & { reviews: (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'Review' }
-          & Pick<Review, 'id' | 'level' | 'status' | 'timeCreated' | 'trigger'>
+          & Pick<Review, 'id' | 'level' | 'status' | 'trigger'>
         )>> }
       ), stage?: Maybe<(
         { __typename?: 'TemplateStage' }
@@ -20204,6 +20201,7 @@ export const UpdateReviewDocument = gql`
   updateReview(input: {id: $reviewId, patch: {trigger: $trigger, reviewResponsesUsingId: {updateById: $reviewResponses}}}) {
     review {
       id
+      trigger
     }
   }
 }
@@ -20804,12 +20802,12 @@ export const GetReviewInfoDocument = gql`
       id
       status
       timeCreated
+      level
       reviews {
         nodes {
           id
           level
           status
-          timeCreated
           trigger
         }
       }

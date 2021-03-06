@@ -24,7 +24,9 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
   })
 
   useEffect(() => {
-    if (!data || loading) return
+    if (loading) return setIsFetching(true)
+
+    if (!data) return
     const reviewAssigments = data.reviewAssignments?.nodes as ReviewAssignment[]
 
     // Current user has no assignments
@@ -34,10 +36,9 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
     }
 
     const reviews: Review[] = reviewAssigments.map(({ reviews }) => reviews.nodes[0] as Review)
-
     // Checking if any of reviews trigger is running before refetching assignments
     // This is done to get latest status for reviews (afte trigger finishes to run)
-    if (reviews.every(({ trigger }) => trigger === null)) {
+    if (reviews.every((review) => !review || review?.trigger === null)) {
       setRefetchAttempts(0)
     } else {
       if (refetchAttempts < MAX_REFETCH) {
@@ -59,7 +60,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
           reviewAssignment.id
         )
 
-      const { id, status, stage, timeCreated } = reviewAssignment
+      const { id, status, stage, timeCreated, level } = reviewAssignment
 
       // Extra field just to use in initial example - might conflict with future queries
       // to get reviewQuestionAssignment
@@ -71,12 +72,12 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
           ? {
               id: review.id,
               status: review.status as ReviewStatus,
-              timeCreated: review.timeCreated,
               stage: { id: stage?.id as number, name: stage?.title as string },
             }
           : null,
         status,
         stage,
+        level: level || 1,
         timeCreated,
         totalAssignedQuestions,
       }

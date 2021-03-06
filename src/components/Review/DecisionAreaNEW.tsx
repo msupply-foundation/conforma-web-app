@@ -30,8 +30,8 @@ const DecisionAreaNEW: React.FC<DecisionAreaProps> = ({
   useEffect(() => {
     if (toggle != previousToggle) {
       setReview(reviewResponse)
-      setIsOpen(true)
       setPreviousToggle(toggle)
+      setIsOpen(true)
     }
   }, [toggle])
 

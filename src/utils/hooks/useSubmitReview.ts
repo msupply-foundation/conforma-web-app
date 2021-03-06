@@ -18,10 +18,10 @@ const useSubmitReview = ({ reviewId }: UseSubmitReviewProps) => {
     },
   })
 
-  const submit = (reviewerResponses: ReviewQuestionDecision[]) => {
+  const submit = async (reviewerResponses: ReviewQuestionDecision[]) => {
     setSubmitted(true)
     setProcessing(true)
-    submitReviewMutation({
+    return await submitReviewMutation({
       variables: {
         reviewId,
         reviewResponses: reviewerResponses.map(({ id, decision, comment }) => ({

@@ -145,6 +145,7 @@ interface AssignmentDetailsNEW {
   id: number
   status: ReviewAssignmentStatus
   timeCreated: DateTime
+  level: number
   review: ReviewDetails | null
   totalAssignedQuestions: number
 }
@@ -383,8 +384,8 @@ interface ReviewQuestion {
 }
 interface ReviewQuestionDecision {
   id: number
-  comment: string
-  decision: ReviewResponseDecision | undefined
+  comment?: string | null
+  decision?: ReviewResponseDecision | null
 }
 
 interface ReviewerResponsesPayload {

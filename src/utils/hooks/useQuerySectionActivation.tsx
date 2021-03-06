@@ -11,8 +11,8 @@ const joinOrNone = (stringArray: string[]) =>
 // defaultActiveSectionCodes is an array of section codes to set active by default that's if ?activeSection is undefined, can be empty
 
 // returns two methods
-type ToggleSection = (sectionCode: string) => void
-type IsSectionActive = (sectionCode: string) => void
+type ToggleSection = (sectionCode: string) => () => void
+type IsSectionActive = (sectionCode: string) => boolean
 
 const useQuerySectionActivation = ({
   defaultActiveSectionCodes,

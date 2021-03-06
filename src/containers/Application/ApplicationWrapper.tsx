@@ -9,7 +9,6 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { FullStructure, User } from '../../utils/types'
 import { ApplicationHome, ApplicationPage, ApplicationSubmission, ApplicationSummary } from './'
 import strings from '../../utils/constants'
-import ReviewPageWrapperTest from '../../components/Review/ReviewPageWrapperTest'
 import { ReviewWrapper } from '../Review'
 
 const ApplicationWrapper: React.FC = () => {
@@ -44,9 +43,6 @@ const ApplicationWrapper: React.FC = () => {
       </Route>
       <Route exact path={`${path}/submission`}>
         <ApplicationSubmission structure={structure} />
-      </Route>
-      <Route exact path={`${path}/reviewTest`}>
-        <ReviewPageWrapperTest structure={structure} />
       </Route>
       <Route path={`${path}/review`}>
         <ReviewWrapper structure={structure} />

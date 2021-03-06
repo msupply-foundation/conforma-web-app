@@ -1,9 +1,10 @@
 import React from 'react'
-import { Route } from 'react-router'
+import { Route, Switch } from 'react-router'
 import { Header } from 'semantic-ui-react'
 import { NoMatch } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
+import ReviewPage from './ReviewPage'
 
 const ReviewPageWrapperNEW: React.FC<{
   structure: FullStructure
@@ -17,30 +18,29 @@ const ReviewPageWrapperNEW: React.FC<{
     (reviewAssignment) => reviewAssignment?.review?.id === Number(reviewId)
   )
 
+  console.log(reviewAssignment, reviewAssignments)
   if (!reviewAssignment) return <NoMatch />
-
+  console.log('here')
   // Pass through structure and reviewAssignments
   return (
     <>
-      <Route exact path={`${path}/:reviewId/summary`}>
-        <ReviewSummaryNEW />
-      </Route>
-      <Route exact path={`${path}/:reviewId`}>
-        <ReviewPage />
-      </Route>
-      <Route>
-        <NoMatch />
-      </Route>
+      <Switch>
+        <Route exact path={`${path}/summary`}>
+          <ReviewSummaryNEW />
+        </Route>
+        <Route exact path={path}>
+          <ReviewPage {...{ structure, reviewAssignment }} />
+        </Route>
+        <Route>
+          <NoMatch />
+        </Route>
+      </Switch>
     </>
   )
 }
 
 // To be used in case the decision step is in a separated page...
 const ReviewSummaryNEW: React.FC = () => {
-  return <Header>REVIEW SUMMARY PAGE</Header>
-}
-
-const ReviewPage: React.FC = () => {
   return <Header>REVIEW SUMMARY PAGE</Header>
 }
 
