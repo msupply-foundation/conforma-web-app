@@ -58,7 +58,7 @@ const useGetFullReviewStructure = ({
     }).then((evaluatedStructure: FullStructure) => {
       // This is usefull for linking assignments to elements
       let newStructure: FullStructure = addElementsById(evaluatedStructure)
-      // This is usefull for generating progress
+      // This is usefull for generating progress (maybe also usefull downstream, but dont' want too refactor too much at this stage)
       newStructure = addSortedSectionsAndPages(newStructure)
 
       const reviewQuestionAssignments = reviewAssignment.reviewQuestionAssignments?.nodes
