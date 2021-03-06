@@ -123,7 +123,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
   const setIsActive = () => {
     // Tells application state that a plugin field is in focus
     setUpdateTrackerState({
-      type: 'setElementUpdated',
+      type: 'setElementEntered',
       textValue: value || '',
     })
   }
