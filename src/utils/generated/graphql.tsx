@@ -19802,12 +19802,12 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'status' | 'timeCreated'>
+      & Pick<ReviewAssignment, 'id' | 'level' | 'status' | 'timeCreated'>
       & { reviews: (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'Review' }
-          & Pick<Review, 'id' | 'level' | 'status' | 'timeCreated' | 'trigger'>
+          & Pick<Review, 'id' | 'status' | 'timeCreated' | 'trigger'>
         )>> }
       ), stage?: Maybe<(
         { __typename?: 'TemplateStage' }
@@ -20791,12 +20791,12 @@ export const GetReviewInfoDocument = gql`
   reviewAssignments(condition: {reviewerId: $reviewerId, applicationId: $applicationId}, orderBy: TIME_CREATED_DESC) {
     nodes {
       id
+      level
       status
       timeCreated
       reviews {
         nodes {
           id
-          level
           status
           timeCreated
           trigger
