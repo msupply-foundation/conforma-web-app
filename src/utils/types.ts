@@ -415,7 +415,7 @@ interface SectionsStructure {
 interface ReviewProgress {
   totalReviewable: number
   doneConform: number
-  doneNoneConform: number
+  doneNonConform: number
 }
 
 interface SectionStateNEW {
