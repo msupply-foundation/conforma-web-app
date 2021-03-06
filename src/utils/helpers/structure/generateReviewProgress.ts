@@ -3,10 +3,8 @@ import { ReviewResponseDecision } from '../../generated/graphql'
 import { FullStructure, SectionStateNEW, PageNEW } from '../../types'
 
 const generateReviewProgress = (newStructure: FullStructure) => {
-  Object.values(newStructure.sections).forEach((section) => {
-    Object.values(section.pages).forEach(generatePageReviewProgress)
-    generateSectionReviewProgress(section)
-  })
+  newStructure?.sortedPages?.forEach(generatePageReviewProgress)
+  newStructure?.sortedSections?.forEach(generateSectionReviewProgress)
 
   generateReviewValidity(newStructure)
 }
@@ -32,19 +30,13 @@ const generatePageReviewProgress = (page: PageNEW) => {
 }
 
 const generateReviewValidity = (newStructure: FullStructure) => {
-  // TODO would prefer sorted pages and sorted sections available in structure
-  const pages = Object.values(newStructure.sections)
-    .sort((s1, s2) => s1.details.index - s2.details.index)
-    .map((section) => Object.values(section.pages))
-    .flat()
-    .sort((p1, p2) => p1.number - p2.number)
-
-  const sums = getSums(pages)
+  const sortedPages = newStructure?.sortedPages || []
+  const sums = getSums(sortedPages)
 
   let firstIncompleteReviewPage
 
   if (sums.doneNonConform === 0 && sums.totalReviewable > sums.doneConform) {
-    const firstIncomplete = pages.find(
+    const firstIncomplete = sortedPages.find(
       ({ reviewProgress }) =>
         reviewProgress?.totalReviewable !==
         (reviewProgress?.doneConform || 0) + (reviewProgress?.doneNonConform || 0)

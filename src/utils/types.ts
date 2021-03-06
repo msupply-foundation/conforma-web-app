@@ -259,6 +259,8 @@ interface FullStructure {
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
   canSubmitReviewAs?: ReviewResponseDecision | null
+  sortedSections?: SectionStateNEW[]
+  sortedPages?: PageNEW[]
 }
 
 type GroupedReviewResponses = {
