@@ -33,7 +33,6 @@ const useQuerySectionActivation = ({
 
   let currentActiveSections: string[] = []
   try {
-    console.log(activeSections.split(','))
     if (activeSections !== 'none') currentActiveSections = activeSections.split(',')
   } catch (e) {
     currentActiveSections = []

@@ -18,9 +18,7 @@ const ReviewPageWrapperNEW: React.FC<{
     (reviewAssignment) => reviewAssignment?.review?.id === Number(reviewId)
   )
 
-  console.log(reviewAssignment, reviewAssignments)
   if (!reviewAssignment) return <NoMatch />
-  console.log('here')
   // Pass through structure and reviewAssignments
   return (
     <>
