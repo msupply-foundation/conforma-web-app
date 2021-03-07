@@ -44,7 +44,7 @@ const ReviewPage: React.FC<{
   if (error) return <NoMatch />
   if (!fullStructure) return <Loading />
   const { sections, responsesByCode, info } = fullStructure
-  console.log(fullStructure)
+
   return (
     <>
       <Segment.Group>

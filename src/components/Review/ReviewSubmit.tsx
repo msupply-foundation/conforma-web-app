@@ -31,13 +31,12 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
 
   return (
     <>
-      {
-        <ReviewComment
-          isEditable={thisReview?.status == ReviewStatus.Draft}
-          initialComment={reviewDecision?.comment || ''}
-          reviewDecisionId={Number(reviewDecision?.id)}
-        />
-      }
+      <ReviewComment
+        isEditable={thisReview?.status == ReviewStatus.Draft}
+        initialComment={reviewDecision?.comment || ''}
+        reviewDecisionId={Number(reviewDecision?.id)}
+      />
+
       <ReviewDecision
         decisionOptions={decisionOptions}
         setDecision={setDecision}
@@ -90,7 +89,6 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
   setDecision,
   isDecisionError,
 }) => {
-  console.log({ isDecisionError })
   return (
     <Form>
       {decisionOptions
@@ -160,7 +158,6 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
 
     // Check DECISION was made
     const decisionError = getAndSetDecisionError()
-    console.log({ decisionError })
     if (decisionError) {
       const message = messages.REVIEW_DECISION_SET_FAIL
       showWarning(message, () => {})

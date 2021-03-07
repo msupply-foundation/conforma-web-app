@@ -72,5 +72,4 @@ export default {
   [Decision.Conform]: 'Conform',
   [Decision.NonConform]: 'Non Conform',
   [Decision.NoDecision]: '',
-  SELECT_DECISION: 'Select Decision',
 }

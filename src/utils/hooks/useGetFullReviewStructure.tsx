@@ -80,7 +80,7 @@ const useGetFullReviewStructure = ({
           structure: newStructure,
           sortedReviewResponses: review?.reviewResponses.nodes as ReviewResponse[], // Sorted in useGetReviewNewQuery
         })
-        console.log(review)
+
         // TODO talk to team and decide if we should put everything in full structure (join all of required info from reviewAssignment ?)
         newStructure.thisReview = {
           id: review.id,
