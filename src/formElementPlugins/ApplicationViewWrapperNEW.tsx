@@ -80,6 +80,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
       isStrictPage,
       responses,
       evaluationParameters: { objects: { responses, currentUser }, APIfetch: fetch },
+      currentResponse,
     })
     setValidationState(newValidationState)
     return newValidationState
@@ -205,6 +206,7 @@ const calculateValidationState = async ({
   isStrictPage,
   responses,
   evaluationParameters,
+  currentResponse,
 }: {
   validationExpression: IQueryNode | undefined
   validationMessage: string | null | undefined
@@ -212,12 +214,13 @@ const calculateValidationState = async ({
   isStrictPage: boolean | undefined
   responses: any // thisResponse field makes it not "ResponsesByCode"
   evaluationParameters: EvaluatorParameters
+  currentResponse: ResponseFull | null
 }) => {
   const validationResult = validationExpression
     ? await validate(validationExpression, validationMessage as string, evaluationParameters)
     : { isValid: true }
 
-  if (!validationResult.isValid) return validationResult
+  if (!validationResult.isValid && currentResponse?.text !== undefined) return validationResult
   // !responses.thisResponse, check for null, undefined, empty string
   if (isRequired && isStrictPage && !responses?.thisResponse)
     return {
