@@ -1,16 +1,19 @@
-import React, { useState } from 'react'
-import { Button, Header, Icon, Label, List, Message, Segment } from 'semantic-ui-react'
-import evaluate from '@openmsupply/expression-evaluator'
+import React from 'react'
+import { Button, Header, Icon, Label, List, Segment } from 'semantic-ui-react'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
-import { ApplicationProps, EvaluatorParameters } from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { Link } from 'react-router-dom'
 import { ApplicationStatus } from '../../utils/generated/graphql'
+import { FullStructure } from '../../utils/types'
 
-const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
-  const [submissionMessageEvaluated, setSubmissionMessageEvaluated] = useState('')
+interface SubmissionProps {
+  structure: FullStructure
+  submissionMessage?: string
+}
+
+const ApplicationSubmission: React.FC<SubmissionProps> = ({ structure, submissionMessage }) => {
   const {
     userState: { currentUser },
   } = useUserState()
@@ -20,7 +23,7 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
     push,
   } = useRouter()
   const {
-    info: { current, submissionMessage, type },
+    info: { current, type },
     stages,
   } = structure
 
@@ -31,14 +34,6 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
     current?.status === ApplicationStatus.ChangesRequired
   )
     push(`/applicationNEW/${serialNumber}/summary`)
-
-  const evaluatorParams: EvaluatorParameters = {
-    objects: { currentUser },
-    APIfetch: fetch,
-  }
-  evaluate(submissionMessage || '', evaluatorParams).then((result: any) =>
-    setSubmissionMessageEvaluated(result)
-  )
 
   return (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
@@ -59,7 +54,7 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
           <Icon name="clock outline" color="blue" size="huge" />
           {strings.LABEL_PROCESSING}
         </Header>
-        <Markdown text={submissionMessageEvaluated} />
+        {submissionMessage && <Markdown text={submissionMessage} />}
         <Segment basic textAlign="left" style={{ margin: '50px 50px', padding: 10 }}>
           <Header as="h5">{strings.SUBTITLE_SUBMISSION_STEPS}</Header>
           <List>

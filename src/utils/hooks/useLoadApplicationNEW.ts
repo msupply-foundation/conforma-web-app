@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
   ApplicationDetails,
-  ApplicationStages,
   ElementBaseNEW,
   FullStructure,
   TemplateDetails,
@@ -22,11 +21,18 @@ import {
 } from '../generated/graphql'
 import messages from '../messages'
 import { DateTime } from 'luxon'
+import useEvaluateMessage from './useEvaluateMessage'
 
 const MAX_REFETCH = 10
 
-const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
+const useLoadApplication = ({
+  currentUser,
+  serialNumber,
+  networkFetch,
+}: UseGetApplicationProps) => {
   const [isLoading, setIsLoading] = useState(true)
+  const [message, setMessage] = useState<string>()
+  const [shouldEvaluate, setShouldEvaluate] = useState(true)
   const [structureError, setStructureError] = useState('')
   const [structure, setFullStructure] = useState<FullStructure>()
   const [template, setTemplate] = useState<TemplateDetails>()
@@ -38,6 +44,12 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     },
     fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
     notifyOnNetworkStatusChange: true,
+  })
+
+  const { evaluatedMessage, isMessageEvaluated } = useEvaluateMessage({
+    currentUser,
+    message,
+    shouldEvaluate,
   })
 
   useEffect(() => {
@@ -72,14 +84,16 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       return
     }
 
-    const { id, code, name, startMessage } = application.template as Template
+    const { id, code, name, isLinear, submissionMessage } = application.template as Template
 
     setTemplate({
       id,
       code,
       name: name as string,
-      startMessage: startMessage ? startMessage : undefined,
     })
+
+    if (!submissionMessage) setShouldEvaluate(false)
+    else setMessage(submissionMessage)
 
     const applicationSection = application.applicationSections.nodes as ApplicationSection[]
     const sections = getApplicationSections(applicationSection)
@@ -90,8 +104,8 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     const applicationDetails: ApplicationDetails = {
       id: application.id,
-      type: application.template?.name as string,
-      isLinear: application.template?.isLinear as boolean,
+      type: name as string,
+      isLinear: isLinear as boolean,
       serial: application.serial as string,
       name: application.name as string,
       outcome: application.outcome as string,
@@ -104,7 +118,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         date: DateTime.fromISO(statusHistoryTimeCreated),
       },
       firstStrictInvalidPage: null,
-      submissionMessage: application.template?.submissionMessage as string,
     }
 
     const baseElements: ElementBaseNEW[] = []
@@ -152,6 +165,8 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   return {
     error: structureError || error?.message,
     isLoading: loading || isLoading,
+    isMessageEvaluated,
+    submissionMessage: evaluatedMessage,
     structure,
     template,
   }

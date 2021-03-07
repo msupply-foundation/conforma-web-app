@@ -6,14 +6,18 @@ import {
   useGetTemplateQuery,
 } from '../generated/graphql'
 import { getTemplateSections } from '../helpers/application/getSectionsDetails'
-import { SectionDetails, TemplateDetails } from '../types'
+import { TemplateDetails, User } from '../types'
+import useEvaluateMessage from './useEvaluateMessage'
 
 interface useLoadTemplateProps {
+  currentUser: User
   templateCode?: string
 }
 
-const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
+const useLoadTemplate = ({ currentUser, templateCode }: useLoadTemplateProps) => {
   const [template, setTemplate] = useState<TemplateDetails>()
+  const [message, setMessage] = useState<string>()
+  const [shouldEvaluate, setShouldEvaluate] = useState(true)
   const [error, setError] = useState('')
 
   const { data, loading: apolloLoading, error: apolloError } = useGetTemplateQuery({
@@ -21,6 +25,12 @@ const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
       code: templateCode || '',
     },
     skip: !templateCode,
+  })
+
+  const { evaluatedMessage, isMessageEvaluated } = useEvaluateMessage({
+    currentUser,
+    message,
+    shouldEvaluate,
   })
 
   useEffect(() => {
@@ -42,6 +52,10 @@ const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
     }
 
     const { id, code, name, startMessage } = template
+
+    if (startMessage === null) setShouldEvaluate(false)
+    else setMessage(startMessage)
+
     const templateSections = template.templateSections.nodes as TemplateSection[]
     const sections = getTemplateSections(templateSections)
     const elementsIds: number[] = []
@@ -59,13 +73,14 @@ const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
       name: name as string,
       elementsIds,
       sections,
-      startMessage: startMessage ? startMessage : undefined,
     })
   }, [data])
 
   return {
     loading: apolloLoading,
     error: apolloError?.message || error,
+    isMessageEvaluated,
+    startMessage: evaluatedMessage,
     template,
   }
 }

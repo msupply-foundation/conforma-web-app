@@ -1,12 +1,11 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import { Header, Message } from 'semantic-ui-react'
-
+import { Message } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import useLoadApplication from '../../utils/hooks/useLoadApplicationNEW'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { FullStructure, User } from '../../utils/types'
+import { User } from '../../utils/types'
 import { ApplicationHome, ApplicationPage, ApplicationSubmission, ApplicationSummary } from './'
 import strings from '../../utils/constants'
 import { ReviewWrapper } from '../Review'
@@ -20,7 +19,14 @@ const ApplicationWrapper: React.FC = () => {
     userState: { currentUser },
   } = useUserState()
 
-  const { error, isLoading, structure, template } = useLoadApplication({
+  const {
+    error,
+    isLoading,
+    isMessageEvaluated,
+    submissionMessage,
+    structure,
+    template,
+  } = useLoadApplication({
     serialNumber,
     currentUser: currentUser as User,
     networkFetch: true,
@@ -28,7 +34,7 @@ const ApplicationWrapper: React.FC = () => {
 
   return error ? (
     <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
-  ) : isLoading ? (
+  ) : isLoading || !isMessageEvaluated ? (
     <Loading />
   ) : structure && template ? (
     <Switch>
@@ -42,7 +48,7 @@ const ApplicationWrapper: React.FC = () => {
         <ApplicationSummary structure={structure} />
       </Route>
       <Route exact path={`${path}/submission`}>
-        <ApplicationSubmission structure={structure} />
+        <ApplicationSubmission structure={structure} submissionMessage={submissionMessage} />
       </Route>
       <Route path={`${path}/review`}>
         <ReviewWrapper structure={structure} />
