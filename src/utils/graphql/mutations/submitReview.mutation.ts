@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  mutation updateReview(
+  mutation submitReview(
     $reviewId: Int!
     $trigger: Trigger = ON_REVIEW_SUBMIT
     $reviewResponses: [ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate!]

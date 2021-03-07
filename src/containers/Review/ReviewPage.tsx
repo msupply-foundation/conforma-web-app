@@ -10,6 +10,7 @@ import {
 
 import {
   ReviewResponseDecision,
+  ReviewResponseStatus,
   ReviewStatus,
   useUpdateReviewResponseMutation,
 } from '../../utils/generated/graphql'
@@ -23,7 +24,7 @@ import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivati
 import useScrollableAttachments, {
   ScrollableAttachment,
 } from '../../utils/hooks/useScrollableAttachments'
-import ReviewSubmitButton from '../../components/Review/ReviewSubmitButton'
+import ReviewSubmit from '../../components/Review/ReviewSubmit'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetailsNEW
@@ -43,6 +44,7 @@ const ReviewPage: React.FC<{
   if (error) return <NoMatch />
   if (!fullStructure) return <Loading />
   const { sections, responsesByCode, info } = fullStructure
+  console.log(fullStructure)
   return (
     <>
       <Segment.Group>
@@ -87,7 +89,7 @@ const ReviewPage: React.FC<{
             marginRight: '10%',
           }}
         >
-          <ReviewSubmitButton
+          <ReviewSubmit
             structure={fullStructure}
             reviewAssignment={reviewAssignment}
             scrollTo={scrollTo}
@@ -124,6 +126,8 @@ const MassApprovalButton: React.FC<{ page: PageNEW }> = ({ page }) => {
   }
 
   if (responsesToReview.length === 0) return null
+  if (responsesToReview.some((response) => response?.status !== ReviewResponseStatus.Draft))
+    return null
 
   return <Button onClick={massApprove}>{`Approve (${responsesToReview.length})`}</Button>
 }

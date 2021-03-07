@@ -6,6 +6,7 @@ export default gql`
   query getReviewNew($reviewAssignmentId: Int!, $userId: Int!) {
     reviewAssignment(id: $reviewAssignmentId) {
       id
+      isLastLevel
       reviewQuestionAssignments {
         nodes {
           id
@@ -43,6 +44,13 @@ export default gql`
         nodes {
           id
           status
+          reviewDecisions {
+            nodes {
+              id
+              comment
+              decision
+            }
+          }
           reviewResponses(orderBy: TIME_CREATED_DESC) {
             nodes {
               ...reviewResponseFragment

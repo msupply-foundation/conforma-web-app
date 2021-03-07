@@ -1,8 +1,10 @@
 import {
   ApplicationList,
   ApplicationStatus,
+  Decision,
   PermissionPolicyType,
   ReviewAssignmentStatus,
+  ReviewDecision,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
@@ -67,6 +69,7 @@ export {
   ReviewQuestion,
   ReviewQuestionDecision,
   ReviewerResponsesPayload,
+  ReviewState,
   SectionAndPage,
   SectionState,
   SectionDetails,
@@ -261,7 +264,16 @@ interface EvaluatorParameters {
 
 type ElementsById = { [templateElementId: string]: PageElement }
 
+interface ReviewState {
+  id: number
+  level: number
+  status: ReviewStatus | null | undefined
+  isLastLevel: boolean
+  reviewDecision?: ReviewDecision | null
+}
+
 interface FullStructure {
+  thisReview?: ReviewState
   elementsById?: ElementsById
   lastValidationTimestamp?: number
   info: ApplicationDetails
@@ -269,7 +281,7 @@ interface FullStructure {
   stages: StageDetails[]
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
-  canSubmitReviewAs?: ReviewResponseDecision | null
+  canSubmitReviewAs?: Decision | null
 }
 
 type GroupedReviewResponses = {

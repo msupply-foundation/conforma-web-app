@@ -1,4 +1,4 @@
-import { ReviewResponseDecision } from '../../generated/graphql'
+import { Decision, ReviewResponseDecision } from '../../generated/graphql'
 
 import { FullStructure, SectionStateNEW, PageNEW } from '../../types'
 
@@ -62,7 +62,7 @@ const generateReviewValidity = (newStructure: FullStructure) => {
   if (firstIncompleteReviewPage) newStructure.canSubmitReviewAs === null
   else
     newStructure.canSubmitReviewAs =
-      sums.doneNoneConform === 0 ? ReviewResponseDecision.Approve : ReviewResponseDecision.Decline
+      sums.doneNoneConform === 0 ? Decision.Conform : Decision.NonConform
 }
 // Simple helper that will iterate over elements and sum up all of the values for keys
 // returning an object of keys with sums

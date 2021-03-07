@@ -11,6 +11,7 @@ export default gql`
         status
         timeCreated
         level
+        isLastLevel
         reviews {
           nodes {
             id

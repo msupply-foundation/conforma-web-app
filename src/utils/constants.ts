@@ -1,3 +1,5 @@
+import { Decision } from './generated/graphql'
+
 export default {
   BUTTON_APPLICATION_NEW: 'New application',
   BUTTON_APPLICATION_RESUME: 'Resume',
@@ -14,6 +16,7 @@ export default {
   BUTTON_REVIEW_RE_REVIEW: 'Review updates',
   BUTTON_REVIEW_RESPONSE: 'Review',
   BUTTON_REVIEW_SUBMIT: 'Submit review',
+  BUTTON_REVIEW_VIEW_SUBMISSION: 'View Submission',
   BUTTON_REVIEW_START: 'Start review',
   BUTTON_REVIEW_VIEW: 'View review',
   BUTTON_SUMMARY: 'Review & Summary',
@@ -64,4 +67,10 @@ export default {
   SUBTITLE_SUBMISSION_STEPS: 'It will be going through the following stages before approval',
   USER_NONREGISTERED: 'nonRegistered',
   VALIDATION_REQUIRED_ERROR: 'Field is required',
+  [Decision.ListOfQuestions]: 'List Of Questions',
+  [Decision.ChangesRequested]: 'Changes Requested',
+  [Decision.Conform]: 'Conform',
+  [Decision.NonConform]: 'Non Conform',
+  [Decision.NoDecision]: '',
+  SELECT_DECISION: 'Select Decision',
 }

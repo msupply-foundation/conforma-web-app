@@ -2629,8 +2629,8 @@ export type ReviewDecisionFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewId` field. */
   reviewId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewDecision` field. */
-  reviewDecision?: Maybe<DecisionFilter>;
+  /** Filter by the object’s `decision` field. */
+  decision?: Maybe<DecisionFilter>;
   /** Filter by the object’s `comment` field. */
   comment?: Maybe<StringFilter>;
   /** Filter by the object’s `timeCreated` field. */
@@ -2677,7 +2677,8 @@ export enum Decision {
   ListOfQuestions = 'LIST_OF_QUESTIONS',
   Conform = 'CONFORM',
   NonConform = 'NON_CONFORM',
-  ChangesRequested = 'CHANGES_REQUESTED'
+  ChangesRequested = 'CHANGES_REQUESTED',
+  NoDecision = 'NO_DECISION'
 }
 
 /** A filter to be used against many `ReviewStatusHistory` object types. All fields are combined with a logical ‘and.’ */
@@ -5398,8 +5399,8 @@ export enum ReviewDecisionsOrderBy {
   IdDesc = 'ID_DESC',
   ReviewIdAsc = 'REVIEW_ID_ASC',
   ReviewIdDesc = 'REVIEW_ID_DESC',
-  ReviewDecisionAsc = 'REVIEW_DECISION_ASC',
-  ReviewDecisionDesc = 'REVIEW_DECISION_DESC',
+  DecisionAsc = 'DECISION_ASC',
+  DecisionDesc = 'DECISION_DESC',
   CommentAsc = 'COMMENT_ASC',
   CommentDesc = 'COMMENT_DESC',
   TimeCreatedAsc = 'TIME_CREATED_ASC',
@@ -5414,8 +5415,8 @@ export type ReviewDecisionCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewId` field. */
   reviewId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewDecision` field. */
-  reviewDecision?: Maybe<Decision>;
+  /** Checks for equality with the object’s `decision` field. */
+  decision?: Maybe<Decision>;
   /** Checks for equality with the object’s `comment` field. */
   comment?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `timeCreated` field. */
@@ -5441,7 +5442,7 @@ export type ReviewDecision = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   reviewId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   /** Reads a single `Review` that is related to this `ReviewDecision`. */
@@ -12623,7 +12624,7 @@ export type ReviewDecisionOnReviewDecisionForReviewDecisionReviewIdFkeyUsingRevi
 /** An object where the defined keys will be set on the `reviewDecision` being updated. */
 export type UpdateReviewDecisionOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
@@ -13244,7 +13245,7 @@ export type ReviewOnReviewDecisionForReviewDecisionReviewIdFkeyNodeIdUpdate = {
 export type ReviewDecisionPatch = {
   id?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
@@ -13253,7 +13254,7 @@ export type ReviewDecisionPatch = {
 /** The `reviewDecision` to be created by this mutation. */
 export type ReviewDecisionReviewIdFkeyReviewDecisionCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
@@ -16366,7 +16367,7 @@ export type CreateReviewDecisionInput = {
 export type ReviewDecisionInput = {
   id?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
@@ -19429,14 +19430,14 @@ export type CreateUserMutation = (
   )> }
 );
 
-export type UpdateReviewMutationVariables = Exact<{
+export type SubmitReviewMutationVariables = Exact<{
   reviewId: Scalars['Int'];
   trigger?: Maybe<Trigger>;
   reviewResponses?: Maybe<Array<ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate>>;
 }>;
 
 
-export type UpdateReviewMutation = (
+export type SubmitReviewMutation = (
   { __typename?: 'Mutation' }
   & { updateReview?: Maybe<(
     { __typename?: 'UpdateReviewPayload' }
@@ -19483,6 +19484,40 @@ export type UpdateResponseMutation = (
         & ElementFragment
       )> }
       & ResponseFragment
+    )> }
+  )> }
+);
+
+export type UpdateReviewMutationVariables = Exact<{
+  reviewId: Scalars['Int'];
+  reviewPatch: ReviewPatch;
+}>;
+
+
+export type UpdateReviewMutation = (
+  { __typename?: 'Mutation' }
+  & { updateReview?: Maybe<(
+    { __typename?: 'UpdateReviewPayload' }
+    & { review?: Maybe<(
+      { __typename?: 'Review' }
+      & Pick<Review, 'id' | 'trigger'>
+    )> }
+  )> }
+);
+
+export type UpdateReviewDecisionMutationVariables = Exact<{
+  reviewDecisionId: Scalars['Int'];
+  data: ReviewDecisionPatch;
+}>;
+
+
+export type UpdateReviewDecisionMutation = (
+  { __typename?: 'Mutation' }
+  & { updateReviewDecision?: Maybe<(
+    { __typename?: 'UpdateReviewDecisionPayload' }
+    & { reviewDecision?: Maybe<(
+      { __typename?: 'ReviewDecision' }
+      & Pick<ReviewDecision, 'id' | 'decision' | 'comment'>
     )> }
   )> }
 );
@@ -19770,6 +19805,7 @@ export type GetReviewAssignmentQuery = (
         { __typename?: 'ReviewQuestionAssignmentsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'ReviewQuestionAssignment' }
+          & Pick<ReviewQuestionAssignment, 'id'>
           & { templateElement?: Maybe<(
             { __typename?: 'TemplateElement' }
             & Pick<TemplateElement, 'code'>
@@ -19802,7 +19838,7 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'status' | 'timeCreated' | 'level'>
+      & Pick<ReviewAssignment, 'id' | 'status' | 'timeCreated' | 'level' | 'isLastLevel'>
       & { reviews: (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
@@ -19830,7 +19866,7 @@ export type GetReviewNewQuery = (
   { __typename?: 'Query' }
   & { reviewAssignment?: Maybe<(
     { __typename?: 'ReviewAssignment' }
-    & Pick<ReviewAssignment, 'id'>
+    & Pick<ReviewAssignment, 'id' | 'isLastLevel'>
     & { reviewQuestionAssignments: (
       { __typename?: 'ReviewQuestionAssignmentsConnection' }
       & { nodes: Array<Maybe<(
@@ -19859,7 +19895,13 @@ export type GetReviewNewQuery = (
       & { nodes: Array<Maybe<(
         { __typename?: 'Review' }
         & Pick<Review, 'id' | 'status'>
-        & { reviewResponses: (
+        & { reviewDecisions: (
+          { __typename?: 'ReviewDecisionsConnection' }
+          & { nodes: Array<Maybe<(
+            { __typename?: 'ReviewDecision' }
+            & Pick<ReviewDecision, 'id' | 'comment' | 'decision'>
+          )>> }
+        ), reviewResponses: (
           { __typename?: 'ReviewResponsesConnection' }
           & { nodes: Array<Maybe<(
             { __typename?: 'ReviewResponse' }
@@ -20125,7 +20167,7 @@ export type CreateApplicationMutationResult = Apollo.MutationResult<CreateApplic
 export type CreateApplicationMutationOptions = Apollo.BaseMutationOptions<CreateApplicationMutation, CreateApplicationMutationVariables>;
 export const CreateReviewDocument = gql`
     mutation createReview($reviewAssigmentId: Int!, $trigger: Trigger = ON_REVIEW_CREATE, $applicationResponses: [ReviewResponseReviewIdFkeyReviewResponseCreateInput!]) {
-  createReview(input: {review: {reviewAssignmentId: $reviewAssigmentId, trigger: $trigger, reviewResponsesUsingId: {create: $applicationResponses}}}) {
+  createReview(input: {review: {reviewAssignmentId: $reviewAssigmentId, trigger: $trigger, reviewDecisionsUsingId: {create: {decision: NO_DECISION}}, reviewResponsesUsingId: {create: $applicationResponses}}}) {
     review {
       id
     }
@@ -20196,8 +20238,8 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
-export const UpdateReviewDocument = gql`
-    mutation updateReview($reviewId: Int!, $trigger: Trigger = ON_REVIEW_SUBMIT, $reviewResponses: [ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate!]) {
+export const SubmitReviewDocument = gql`
+    mutation submitReview($reviewId: Int!, $trigger: Trigger = ON_REVIEW_SUBMIT, $reviewResponses: [ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate!]) {
   updateReview(input: {id: $reviewId, patch: {trigger: $trigger, reviewResponsesUsingId: {updateById: $reviewResponses}}}) {
     review {
       id
@@ -20206,20 +20248,20 @@ export const UpdateReviewDocument = gql`
   }
 }
     `;
-export type UpdateReviewMutationFn = Apollo.MutationFunction<UpdateReviewMutation, UpdateReviewMutationVariables>;
+export type SubmitReviewMutationFn = Apollo.MutationFunction<SubmitReviewMutation, SubmitReviewMutationVariables>;
 
 /**
- * __useUpdateReviewMutation__
+ * __useSubmitReviewMutation__
  *
- * To run a mutation, you first call `useUpdateReviewMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateReviewMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSubmitReviewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubmitReviewMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateReviewMutation, { data, loading, error }] = useUpdateReviewMutation({
+ * const [submitReviewMutation, { data, loading, error }] = useSubmitReviewMutation({
  *   variables: {
  *      reviewId: // value for 'reviewId'
  *      trigger: // value for 'trigger'
@@ -20227,12 +20269,12 @@ export type UpdateReviewMutationFn = Apollo.MutationFunction<UpdateReviewMutatio
  *   },
  * });
  */
-export function useUpdateReviewMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReviewMutation, UpdateReviewMutationVariables>) {
-        return Apollo.useMutation<UpdateReviewMutation, UpdateReviewMutationVariables>(UpdateReviewDocument, baseOptions);
+export function useSubmitReviewMutation(baseOptions?: Apollo.MutationHookOptions<SubmitReviewMutation, SubmitReviewMutationVariables>) {
+        return Apollo.useMutation<SubmitReviewMutation, SubmitReviewMutationVariables>(SubmitReviewDocument, baseOptions);
       }
-export type UpdateReviewMutationHookResult = ReturnType<typeof useUpdateReviewMutation>;
-export type UpdateReviewMutationResult = Apollo.MutationResult<UpdateReviewMutation>;
-export type UpdateReviewMutationOptions = Apollo.BaseMutationOptions<UpdateReviewMutation, UpdateReviewMutationVariables>;
+export type SubmitReviewMutationHookResult = ReturnType<typeof useSubmitReviewMutation>;
+export type SubmitReviewMutationResult = Apollo.MutationResult<SubmitReviewMutation>;
+export type SubmitReviewMutationOptions = Apollo.BaseMutationOptions<SubmitReviewMutation, SubmitReviewMutationVariables>;
 export const UpdateApplicationDocument = gql`
     mutation updateApplication($serial: String!, $applicationTrigger: Trigger = ON_APPLICATION_SUBMIT, $responses: [ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationResponsePkeyUpdate!]) {
   updateApplicationBySerial(input: {serial: $serial, patch: {trigger: $applicationTrigger, applicationResponsesUsingId: {updateById: $responses}}}) {
@@ -20309,6 +20351,79 @@ export function useUpdateResponseMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateResponseMutationHookResult = ReturnType<typeof useUpdateResponseMutation>;
 export type UpdateResponseMutationResult = Apollo.MutationResult<UpdateResponseMutation>;
 export type UpdateResponseMutationOptions = Apollo.BaseMutationOptions<UpdateResponseMutation, UpdateResponseMutationVariables>;
+export const UpdateReviewDocument = gql`
+    mutation updateReview($reviewId: Int!, $reviewPatch: ReviewPatch!) {
+  updateReview(input: {id: $reviewId, patch: $reviewPatch}) {
+    review {
+      id
+      trigger
+    }
+  }
+}
+    `;
+export type UpdateReviewMutationFn = Apollo.MutationFunction<UpdateReviewMutation, UpdateReviewMutationVariables>;
+
+/**
+ * __useUpdateReviewMutation__
+ *
+ * To run a mutation, you first call `useUpdateReviewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateReviewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateReviewMutation, { data, loading, error }] = useUpdateReviewMutation({
+ *   variables: {
+ *      reviewId: // value for 'reviewId'
+ *      reviewPatch: // value for 'reviewPatch'
+ *   },
+ * });
+ */
+export function useUpdateReviewMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReviewMutation, UpdateReviewMutationVariables>) {
+        return Apollo.useMutation<UpdateReviewMutation, UpdateReviewMutationVariables>(UpdateReviewDocument, baseOptions);
+      }
+export type UpdateReviewMutationHookResult = ReturnType<typeof useUpdateReviewMutation>;
+export type UpdateReviewMutationResult = Apollo.MutationResult<UpdateReviewMutation>;
+export type UpdateReviewMutationOptions = Apollo.BaseMutationOptions<UpdateReviewMutation, UpdateReviewMutationVariables>;
+export const UpdateReviewDecisionDocument = gql`
+    mutation updateReviewDecision($reviewDecisionId: Int!, $data: ReviewDecisionPatch!) {
+  updateReviewDecision(input: {id: $reviewDecisionId, patch: $data}) {
+    reviewDecision {
+      id
+      decision
+      comment
+    }
+  }
+}
+    `;
+export type UpdateReviewDecisionMutationFn = Apollo.MutationFunction<UpdateReviewDecisionMutation, UpdateReviewDecisionMutationVariables>;
+
+/**
+ * __useUpdateReviewDecisionMutation__
+ *
+ * To run a mutation, you first call `useUpdateReviewDecisionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateReviewDecisionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateReviewDecisionMutation, { data, loading, error }] = useUpdateReviewDecisionMutation({
+ *   variables: {
+ *      reviewDecisionId: // value for 'reviewDecisionId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateReviewDecisionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReviewDecisionMutation, UpdateReviewDecisionMutationVariables>) {
+        return Apollo.useMutation<UpdateReviewDecisionMutation, UpdateReviewDecisionMutationVariables>(UpdateReviewDecisionDocument, baseOptions);
+      }
+export type UpdateReviewDecisionMutationHookResult = ReturnType<typeof useUpdateReviewDecisionMutation>;
+export type UpdateReviewDecisionMutationResult = Apollo.MutationResult<UpdateReviewDecisionMutation>;
+export type UpdateReviewDecisionMutationOptions = Apollo.BaseMutationOptions<UpdateReviewDecisionMutation, UpdateReviewDecisionMutationVariables>;
 export const UpdateReviewResponseDocument = gql`
     mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String) {
   updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment}}) {
@@ -20749,6 +20864,7 @@ export const GetReviewAssignmentDocument = gql`
       }
       reviewQuestionAssignments {
         nodes {
+          id
           templateElement {
             code
             section {
@@ -20803,6 +20919,7 @@ export const GetReviewInfoDocument = gql`
       status
       timeCreated
       level
+      isLastLevel
       reviews {
         nodes {
           id
@@ -20853,6 +20970,7 @@ export const GetReviewNewDocument = gql`
     query getReviewNew($reviewAssignmentId: Int!, $userId: Int!) {
   reviewAssignment(id: $reviewAssignmentId) {
     id
+    isLastLevel
     reviewQuestionAssignments {
       nodes {
         id
@@ -20877,6 +20995,13 @@ export const GetReviewNewDocument = gql`
       nodes {
         id
         status
+        reviewDecisions {
+          nodes {
+            id
+            comment
+            decision
+          }
+        }
         reviewResponses(orderBy: TIME_CREATED_DESC) {
           nodes {
             ...reviewResponseFragment

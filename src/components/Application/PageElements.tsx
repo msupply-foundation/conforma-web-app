@@ -7,13 +7,12 @@ import { Form, Grid, Segment, Button, Card, Icon, Label } from 'semantic-ui-reac
 import strings from '../../utils/constants'
 import {
   ReviewResponse,
-  ReviewResponseDecision,
+  ReviewResponseStatus,
   TemplateElementCategory,
-  useUpdateReviewResponseMutation,
 } from '../../utils/generated/graphql'
 
-import DecisionAreaNEW from '../Review/DecisionAreaNEW'
 import { SummaryViewWrapperPropsNEW } from '../../formElementPlugins/types'
+import DecisionAreaNEW from '../Review/modals/DecisionAreaNEW'
 
 interface PageElementProps {
   elements: PageElement[]
@@ -137,13 +136,15 @@ const ReviewResponseComponent: React.FC<{
         <Grid.Column floated="left">
           {`${reviewResponse?.decision}${reviewResponse?.comment || ''}`}
         </Grid.Column>
-        <Grid.Column floated="right" textAlign="right">
-          <Icon
-            name="pencil"
-            color="blue"
-            onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
-          />
-        </Grid.Column>
+        {reviewResponse.status === ReviewResponseStatus.Draft && (
+          <Grid.Column floated="right" textAlign="right">
+            <Icon
+              name="pencil"
+              color="blue"
+              onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
+            />
+          </Grid.Column>
+        )}
       </Grid>
       <DecisionAreaNEW
         reviewResponse={reviewResponse}
@@ -162,6 +163,7 @@ const ReviewButton: React.FC<{
 
   if (!reviewResponse) return null
   if (reviewResponse?.decision) return null
+  if (reviewResponse.status !== ReviewResponseStatus.Draft) return null
 
   return (
     <>

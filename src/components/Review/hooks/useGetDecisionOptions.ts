@@ -1,0 +1,111 @@
+import { useState, useEffect } from 'react'
+import { Decision, ReviewStatus } from '../../../utils/generated/graphql'
+import { ReviewState } from '../../../utils/types'
+import strings from '../../../utils/constants'
+
+type DecisionOption = {
+  code: Decision
+  title: string
+  isVisible: boolean
+  value: boolean
+}
+
+const initilDecisionOptions: DecisionOption[] = [
+  {
+    code: Decision.ListOfQuestions,
+    title: strings[Decision.ListOfQuestions],
+    isVisible: false,
+    value: false,
+  },
+  {
+    code: Decision.NonConform,
+    title: strings[Decision.NonConform],
+    isVisible: false,
+    value: false,
+  },
+  {
+    code: Decision.Conform,
+    title: strings[Decision.Conform],
+    isVisible: false,
+    value: false,
+  },
+  {
+    code: Decision.ChangesRequested,
+    title: strings[Decision.ChangesRequested],
+    isVisible: false,
+    value: false,
+  },
+]
+
+// hook used to manage state of options shown in review submit, as per type definition below
+type UseGetDecisionOptions = (
+  canSubmitReviewAs: Decision | null | undefined,
+  thisReview: ReviewState | null | undefined
+) => {
+  decisionOptions: DecisionOption[]
+  getDecision: () => Decision
+  setDecision: (decision: Decision) => void
+  getAndSetDecisionError: () => boolean // may set decision error, which is reset automatically
+  isDecisionError: boolean
+}
+
+const useGetDecisionOptions: UseGetDecisionOptions = (canSubmitReviewAs, thisReview) => {
+  const [decisionOptions, setDecisionOptions] = useState<DecisionOption[]>(initilDecisionOptions)
+  const [isDecisionError, setIsDecisionError] = useState(false)
+
+  const isDraft = thisReview?.status === ReviewStatus.Draft
+  const decisionInStructure = thisReview?.reviewDecision?.decision || Decision.NoDecision
+  const reviewerNeedsToMakeDecision = thisReview?.isLastLevel || (thisReview?.level || 0) > 1
+
+  useEffect(() => {
+    setIsDecisionError(false)
+    setDecisionOptions(
+      decisionOptions.map((option) => {
+        let isVisible = false
+        let value = false
+
+        if (!isDraft) {
+          isVisible = value = option.code === decisionInStructure
+        } else if (canSubmitReviewAs !== Decision.NonConform || !reviewerNeedsToMakeDecision) {
+          isVisible = value = option.code === canSubmitReviewAs
+        } else {
+          isVisible =
+            option.code === Decision.NonConform || option.code === Decision.ListOfQuestions
+          value = false
+        }
+
+        return {
+          ...option,
+          isVisible,
+          value,
+        }
+      })
+    )
+  }, [canSubmitReviewAs, thisReview])
+
+  const getDecision = () =>
+    decisionOptions.find((option) => option.value)?.code || Decision.NoDecision
+
+  const setDecision = (decision: Decision) => {
+    if (decision === Decision.NonConform || decision == Decision.ListOfQuestions)
+      setIsDecisionError(false)
+    setDecisionOptions(
+      decisionOptions.map((option) => ({ ...option, value: option.code === decision }))
+    )
+  }
+
+  const getAndSetDecisionError = () => {
+    console.log(reviewerNeedsToMakeDecision)
+    if (!reviewerNeedsToMakeDecision) return true
+    const isDecisionError =
+      canSubmitReviewAs === Decision.NonConform && getDecision() === Decision.NoDecision
+
+    setIsDecisionError(isDecisionError)
+    return isDecisionError
+  }
+
+  return { decisionOptions, getDecision, setDecision, getAndSetDecisionError, isDecisionError }
+}
+
+export default useGetDecisionOptions
+export { DecisionOption }

@@ -6,7 +6,6 @@ import {
   ReviewResponse,
   useGetReviewNewQuery,
   ReviewQuestionAssignment,
-  ReviewStatus,
 } from '../generated/graphql'
 import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
 import { useUserState } from '../../contexts/UserState'
@@ -60,17 +59,18 @@ const useGetFullReviewStructure = ({
       let newStructure: FullStructure = addElementsById(evaluatedStructure)
 
       const reviewQuestionAssignments = reviewAssignment.reviewQuestionAssignments?.nodes
-      if (reviewQuestionAssignments)
+      if (reviewQuestionAssignments) {
         newStructure = addIsAssigned(
           newStructure,
           reviewQuestionAssignments as ReviewQuestionAssignment[]
         )
+      }
 
       // here we add responses from other review (not from this review assignmnet)
 
       // There will always just be one review assignment linked to a review. (since review is related to reviewAssignment, many to one relation is created)
-      const review = data?.reviewAssignment?.reviews?.nodes[0] as Review
-      if ((data.reviewAssignment?.reviews?.nodes?.length || 0) > 1)
+      const review = reviewAssignment?.reviews?.nodes[0] as Review
+      if ((reviewAssignment?.reviews?.nodes?.length || 0) > 1)
         console.error(
           'More then one review associated with reviewAssignment with id',
           reviewAssignment.id
@@ -80,6 +80,15 @@ const useGetFullReviewStructure = ({
           structure: newStructure,
           sortedReviewResponses: review?.reviewResponses.nodes as ReviewResponse[], // Sorted in useGetReviewNewQuery
         })
+        console.log(review)
+        // TODO talk to team and decide if we should put everything in full structure (join all of required info from reviewAssignment ?)
+        newStructure.thisReview = {
+          id: review.id,
+          level: review.level || 1,
+          status: review.status,
+          isLastLevel: !!reviewAssignment.isLastLevel,
+          reviewDecision: review?.reviewDecisions?.nodes[0],
+        }
       }
 
       generateReviewProgress(newStructure)
