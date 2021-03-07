@@ -85,9 +85,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         disabled={!isEditable}
         type={masked ? 'password' : undefined}
         error={
-          !internalValidation.isValid &&
-          validationState.isValid !== null &&
-          currentResponse?.text !== undefined
+          !internalValidation.isValid && validationState.isValid !== null
             ? {
                 content: validationMessageInternal,
                 pointing: 'above',
