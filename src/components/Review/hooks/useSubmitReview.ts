@@ -1,16 +1,22 @@
+import { FetchResult } from '@apollo/client'
 import {
   Decision,
   ReviewPatch,
   useUpdateReviewMutation,
   ReviewResponseStatus,
   Trigger,
+  UpdateReviewMutation,
 } from '../../../utils/generated/graphql'
 import { FullStructure } from '../../../utils/types'
 
+// below type is constructred by using suggestion
+type promiseReturnType = Promise<
+  FetchResult<UpdateReviewMutation, Record<string, any>, Record<string, any>>
+>
 // hook used to submit review, , as per type definition below (returns promise that resolve with mutation result data)
 type UseSubmitReview = (
   reviewId: number
-) => (structure: FullStructure, decision: Decision) => Promise<void>
+) => (structure: FullStructure, decision: Decision) => promiseReturnType
 
 type ConstructReviewPatch = (structure: FullStructure, decision: Decision) => ReviewPatch
 
@@ -52,14 +58,13 @@ const useSubmitReview: UseSubmitReview = (reviewId) => {
     }
   }
 
-  const submitReview = async (structure: FullStructure, decision: Decision) => {
+  const submitReview = async (structure: FullStructure, decision: Decision) =>
     updateReview({
       variables: {
         reviewId: reviewId,
         reviewPatch: constructReviewPatch(structure, decision),
       },
     })
-  }
 
   return submitReview
 }
