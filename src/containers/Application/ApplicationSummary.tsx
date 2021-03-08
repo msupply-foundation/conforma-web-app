@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { ApplicationProps, FullStructure, ResponsesByCode, User } from '../../utils/types'
+import {
+  ApplicationProps,
+  FullStructure,
+  MethodToCallProps,
+  ResponsesByCode,
+  User,
+} from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import useSubmitApplication from '../../utils/hooks/useSubmitApplication'
 import { useUserState } from '../../contexts/UserState'
@@ -10,17 +16,16 @@ import { SectionWrapper } from '../../components/Application'
 import strings from '../../utils/constants'
 import { Button, Header, Message, Container } from 'semantic-ui-react'
 
-const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
+const ApplicationSummary: React.FC<ApplicationProps> = ({
+  structure: fullStructure,
+  requestRevalidation,
+}) => {
   const { replace, push } = useRouter()
-  const [shouldRevalidate, setShouldRevalidate] = useState(false)
-  const [isRevalidated, setIsRevalidated] = useState(false)
+  // const [shouldRevalidate, setShouldRevalidate] = useState(false)
+  // const [isRevalidated, setIsRevalidated] = useState(false)
   const {
     userState: { currentUser },
   } = useUserState()
-  const { error, fullStructure } = useGetFullApplicationStructure({
-    structure,
-    shouldRevalidate,
-  })
 
   const { error: submitError, processing, submitted, submit } = useSubmitApplication({
     serialNumber: fullStructure?.info.serial as string,
@@ -28,31 +33,34 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
   })
 
   useEffect(() => {
-    if (!fullStructure || submitted) return
+    if (!fullStructure) return
     // Re-direct if application is not valid
     if (fullStructure.info.firstStrictInvalidPage) {
       const { sectionCode, pageNumber } = fullStructure.info.firstStrictInvalidPage
       replace(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
     }
-    if (shouldRevalidate) setIsRevalidated(true)
+    // if (shouldRevalidate) setIsRevalidated(true)
   }, [fullStructure])
 
   const handleSubmit = () => {
-    setShouldRevalidate(true)
+    // setShouldRevalidate(true)
+    requestRevalidation &&
+      requestRevalidation(
+        async ({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
+          if (firstStrictInvalidPage) {
+            const { sectionCode, pageNumber } = firstStrictInvalidPage
+            setStrictSectionPage(firstStrictInvalidPage)
+            replace(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
+          } else {
+            console.log('Submitting...')
+            fullStructure?.responsesByCode &&
+              (await submit(Object.values(fullStructure?.responsesByCode)))
+            push(`/applicationNEW/${fullStructure?.info.serial}/submission`)
+          }
+        }
+      )
   }
 
-  useEffect(() => {
-    // This should only run after user has clicked Submit
-    // and revalidation has completed successfully
-    if (!fullStructure?.responsesByCode) return
-    submit(Object.values(fullStructure?.responsesByCode))
-  }, [isRevalidated])
-
-  useEffect(() => {
-    if (submitted) push(`/applicationNEW/${fullStructure?.info.serial}/submission`)
-  }, [submitted])
-
-  if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (submitError)
     return <Message error header={strings.ERROR_APPLICATION_SUBMIT} list={[submitError]} />
   if (!fullStructure || processing) return <Loading />

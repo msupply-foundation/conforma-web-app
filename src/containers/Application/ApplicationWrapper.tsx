@@ -32,6 +32,7 @@ const ApplicationWrapper: React.FC = () => {
     networkFetch: true,
   })
 
+  console.log('isLoading', isLoading)
   return error ? (
     <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   ) : isLoading ? (

@@ -21,19 +21,9 @@ import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTra
 import checkPageIsAccessible from '../../utils/helpers/structure/checkPageIsAccessible'
 import { Navigation } from '../../components'
 
-interface MethodToCall {
-  (props: MethodToCallProps): void
-}
-
-interface RevalidationState {
-  methodToCallOnRevalidation: MethodToCall | null
-  shouldProcessValidation: boolean
-  lastRevalidationRequest: number
-}
-
 const ApplicationPage: React.FC<ApplicationProps> = ({
   structure: fullStructure,
-  revalidate,
+  requestRevalidation,
   strictSectionPage,
 }) => {
   const {
@@ -45,59 +35,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   } = useRouter()
 
   const pageNumber = Number(page)
-
-  const {
-    state: { isLastElementUpdateProcessed, elementUpdatedTimestamp, wasElementChanged },
-  } = useFormElementUpdateTracker()
-
-  // const [strictSectionPage, setStrictSectionPage] = useState<SectionAndPage | null>(null)
-  const [revalidationState, setRevalidationState] = useState<RevalidationState>({
-    methodToCallOnRevalidation: null,
-    shouldProcessValidation: false,
-    lastRevalidationRequest: Date.now(),
-  })
-
-  // const shouldRevalidate = isLastElementUpdateProcessed && revalidationState.shouldProcessValidation
-  // const minRefetchTimestampForRevalidation =
-  //   shouldRevalidate && wasElementChanged ? elementUpdatedTimestamp : 0
-
-  // const { error, fullStructure } = useGetFullApplicationStructure({
-  //   structure,
-  //   shouldRevalidate,
-  //   minRefetchTimestampForRevalidation,
-  // })
-
-  /* Method to pass to progress bar, next button and submit button to cause revalidation before action can be proceeded
-     Should always be called on submit, but only be called on next or progress bar navigation when isLinear */
-  // TODO may rename if we want to display loading modal ?
-  const requestRevalidation: MethodRevalidate = (methodToCall) => {
-    setRevalidationState({
-      methodToCallOnRevalidation: methodToCall,
-      shouldProcessValidation: true,
-      lastRevalidationRequest: Date.now(),
-    })
-    // TODO show loading modal ?
-  }
-
-  // // Revalidation Effect
-  // useEffect(() => {
-  //   if (
-  //     fullStructure &&
-  //     revalidationState.methodToCallOnRevalidation &&
-  //     (fullStructure?.lastValidationTimestamp || 0) > revalidationState.lastRevalidationRequest
-  //   ) {
-  //     setRevalidationState({
-  //       ...revalidationState,
-  //       methodToCallOnRevalidation: null,
-  //       shouldProcessValidation: false,
-  //     })
-  //     revalidationState.methodToCallOnRevalidation({
-  //       firstStrictInvalidPage: fullStructure.info.firstStrictInvalidPage,
-  //       setStrictSectionPage,
-  //     })
-  //     // TODO hide loading modal
-  //   }
-  // }, [revalidationState, fullStructure])
 
   useEffect(() => {
     if (!fullStructure) return
@@ -143,8 +80,8 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
         <Grid.Column width={4}>
           <ProgressBarNEW
             structure={fullStructure}
-            requestRevalidation={requestRevalidation}
-            strictSectionPage={strictSectionPage}
+            requestRevalidation={requestRevalidation as MethodRevalidate}
+            strictSectionPage={strictSectionPage as SectionAndPage}
           />
         </Grid.Column>
         <Grid.Column width={10} stretched>
@@ -168,7 +105,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
         isLinear={isLinear}
         sections={fullStructure.sections}
         serialNumber={serialNumber}
-        requestRevalidation={requestRevalidation}
+        requestRevalidation={requestRevalidation as MethodRevalidate}
       />
     </Segment.Group>
   )

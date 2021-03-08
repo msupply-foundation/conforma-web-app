@@ -15,6 +15,8 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
     userState: { currentUser },
   } = useUserState()
 
+  console.log('Submission page!')
+
   const {
     query: { serialNumber },
     push,
@@ -26,6 +28,7 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
 
   // Check if application not submitted and redirect to the summary page
   // Note: The summary page has its own redirection logic to a specific page (with invalid items).
+  // console.log('current', current)
   if (
     current?.status === ApplicationStatus.Draft ||
     current?.status === ApplicationStatus.ChangesRequired

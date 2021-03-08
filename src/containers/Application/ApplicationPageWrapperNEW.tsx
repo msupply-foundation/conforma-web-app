@@ -73,14 +73,14 @@ const ApplicationPageWrapperNEW: React.FC<ApplicationProps> = ({ structure }) =>
       revalidationState.methodToCallOnRevalidation &&
       (fullStructure?.lastValidationTimestamp || 0) > revalidationState.lastRevalidationRequest
     ) {
+      revalidationState.methodToCallOnRevalidation({
+        firstStrictInvalidPage: fullStructure.info.firstStrictInvalidPage,
+        setStrictSectionPage,
+      })
       setRevalidationState({
         ...revalidationState,
         methodToCallOnRevalidation: null,
         shouldProcessValidation: false,
-      })
-      revalidationState.methodToCallOnRevalidation({
-        firstStrictInvalidPage: fullStructure.info.firstStrictInvalidPage,
-        setStrictSectionPage,
       })
       // TODO hide loading modal
     }
@@ -95,14 +95,14 @@ const ApplicationPageWrapperNEW: React.FC<ApplicationProps> = ({ structure }) =>
       <Route exact path={`${path}/:sectionCode/Page:page`}>
         <ApplicationPage
           structure={fullStructure}
-          revalidate={requestRevalidation}
+          requestRevalidation={requestRevalidation as MethodRevalidate}
           strictSectionPage={strictSectionPage}
         />
       </Route>
       <Route exact path={`${path}/summary`}>
         <ApplicationSummary
           structure={fullStructure}
-          revalidate={requestRevalidation}
+          requestRevalidation={requestRevalidation}
           strictSectionPage={strictSectionPage}
         />
       </Route>

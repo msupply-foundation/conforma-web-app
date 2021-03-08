@@ -115,7 +115,7 @@ interface ApplicationListRow extends ApplicationList {
 
 interface ApplicationProps {
   structure: FullStructure
-  revalidate?: MethodRevalidate
+  requestRevalidation?: MethodRevalidate
   strictSectionPage?: SectionAndPage | null
 }
 

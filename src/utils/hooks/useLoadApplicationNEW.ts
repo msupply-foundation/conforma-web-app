@@ -40,8 +40,16 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     notifyOnNetworkStatusChange: true,
   })
 
+  console.log('Reloading application...')
+  console.log('Status', structure?.info?.current?.status)
+
   useEffect(() => {
-    if (!data || loading) return
+    if (loading) {
+      setIsLoading(true)
+      return
+    }
+    if (!data) return
+    // if (!data || loading) return
     const application = data.applicationBySerial as Application
 
     // No unexpected error - just a application not accessible to user (Show 404 page)
@@ -59,6 +67,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     setIsLoading(true)
 
     // Checking if trigger is running before loading current status
+    console.log('Trigger', application.trigger)
     if (application.trigger === null) {
       setRefetchAttempts(0)
     } else {
