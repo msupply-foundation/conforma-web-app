@@ -20,7 +20,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     userState: { currentUser },
   } = useUserState()
 
-  const { error: submitError, processing, submitted, submit } = useSubmitApplication({
+  const { error: submitError, processing, submit } = useSubmitApplication({
     serialNumber: fullStructure?.info.serial as string,
     currentUser: currentUser as User,
   })
