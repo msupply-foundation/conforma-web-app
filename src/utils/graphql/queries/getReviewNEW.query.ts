@@ -13,7 +13,7 @@ export default gql`
           nodes {
             ...Response
             reviewResponses(
-              orderBy: TIME_CREATED_DESC
+              orderBy: TIME_UPDATED_DESC
               filter: {
                 or: [
                   { status: { equalTo: SUBMITTED } }
@@ -36,7 +36,7 @@ export default gql`
       reviews {
         nodes {
           id
-          reviewResponses(orderBy: TIME_CREATED_DESC) {
+          reviewResponses(orderBy: TIME_UPDATED_DESC) {
             nodes {
               ...reviewResponseFragment
               applicationResponse {

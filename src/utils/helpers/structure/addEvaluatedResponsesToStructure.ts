@@ -42,13 +42,13 @@ const addEvaluatedResponsesToStructure = async ({
   const reviewResponses: { [templateElementId: string]: ReviewResponse } = {}
 
   applicationResponses?.forEach((response) => {
-    const { id, isValid, value, templateElement, templateElementId, timeCreated } = response
+    const { id, isValid, value, templateElement, templateElementId, timeUpdated } = response
     const code = templateElement?.code as string
-    if (!(code in responseObject) || timeCreated > responseObject[code].timeCreated) {
+    if (!(code in responseObject) || timeUpdated > responseObject[code].timeCreated) {
       responseObject[code] = {
         id,
         isValid,
-        timeCreated,
+        timeUpdated,
         ...value,
       }
 

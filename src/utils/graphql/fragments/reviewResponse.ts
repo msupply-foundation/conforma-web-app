@@ -7,6 +7,6 @@ export default gql`
     comment
     id
     status
-    timeCreated
+    timeUpdated
   }
 `
