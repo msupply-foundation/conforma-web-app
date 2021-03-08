@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FullStructure, ResponsesByCode, User } from '../../utils/types'
+import { ApplicationProps, FullStructure, ResponsesByCode, User } from '../../utils/types'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import useSubmitApplication from '../../utils/hooks/useSubmitApplication'
 import { useUserState } from '../../contexts/UserState'
@@ -9,10 +9,6 @@ import { Loading } from '../../components'
 import { SectionWrapper } from '../../components/Application'
 import strings from '../../utils/constants'
 import { Button, Header, Message, Container } from 'semantic-ui-react'
-
-interface ApplicationProps {
-  structure: FullStructure
-}
 
 const ApplicationSummary: React.FC<ApplicationProps> = ({ structure }) => {
   const { replace, push } = useRouter()

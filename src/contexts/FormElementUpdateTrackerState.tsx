@@ -28,7 +28,7 @@ const reducer = (state: ContextFormElementUpdateTrackerState, action: UpdateActi
         ...newState,
         isLastElementUpdateProcessed:
           newState.elementUpdatedTimestamp >= newState.elementEnteredTimestamp,
-        wasValueChange: newState.elementUpdatedTextValue !== newState.elementEnteredTextValue,
+        wasValueChanged: newState.elementUpdatedTextValue !== newState.elementEnteredTextValue,
       }
     }
     case 'setElementEntered': {
@@ -54,7 +54,7 @@ const initialState: ContextFormElementUpdateTrackerState = {
   elementUpdatedTimestamp: Date.now(),
   elementEnteredTextValue: '',
   elementUpdatedTextValue: '',
-  wasElementChange: false,
+  wasElementChanged: false,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code

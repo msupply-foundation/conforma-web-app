@@ -31,7 +31,11 @@ interface RevalidationState {
   lastRevalidationRequest: number
 }
 
-const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
+const ApplicationPage: React.FC<ApplicationProps> = ({
+  structure: fullStructure,
+  revalidate,
+  strictSectionPage,
+}) => {
   const {
     userState: { currentUser },
   } = useUserState()
@@ -43,25 +47,25 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
   const pageNumber = Number(page)
 
   const {
-    state: { isLastElementUpdateProcessed, elementUpdatedTimestamp, wasElementChange },
+    state: { isLastElementUpdateProcessed, elementUpdatedTimestamp, wasElementChanged },
   } = useFormElementUpdateTracker()
 
-  const [strictSectionPage, setStrictSectionPage] = useState<SectionAndPage | null>(null)
+  // const [strictSectionPage, setStrictSectionPage] = useState<SectionAndPage | null>(null)
   const [revalidationState, setRevalidationState] = useState<RevalidationState>({
     methodToCallOnRevalidation: null,
     shouldProcessValidation: false,
     lastRevalidationRequest: Date.now(),
   })
 
-  const shouldRevalidate = isLastElementUpdateProcessed && revalidationState.shouldProcessValidation
-  const minRefetchTimestampForRevalidation =
-    shouldRevalidate && wasElementChange ? elementUpdatedTimestamp : 0
+  // const shouldRevalidate = isLastElementUpdateProcessed && revalidationState.shouldProcessValidation
+  // const minRefetchTimestampForRevalidation =
+  //   shouldRevalidate && wasElementChanged ? elementUpdatedTimestamp : 0
 
-  const { error, fullStructure } = useGetFullApplicationStructure({
-    structure,
-    shouldRevalidate,
-    minRefetchTimestampForRevalidation,
-  })
+  // const { error, fullStructure } = useGetFullApplicationStructure({
+  //   structure,
+  //   shouldRevalidate,
+  //   minRefetchTimestampForRevalidation,
+  // })
 
   /* Method to pass to progress bar, next button and submit button to cause revalidation before action can be proceeded
      Should always be called on submit, but only be called on next or progress bar navigation when isLinear */
@@ -75,25 +79,25 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     // TODO show loading modal ?
   }
 
-  // Revalidation Effect
-  useEffect(() => {
-    if (
-      fullStructure &&
-      revalidationState.methodToCallOnRevalidation &&
-      (fullStructure?.lastValidationTimestamp || 0) > revalidationState.lastRevalidationRequest
-    ) {
-      setRevalidationState({
-        ...revalidationState,
-        methodToCallOnRevalidation: null,
-        shouldProcessValidation: false,
-      })
-      revalidationState.methodToCallOnRevalidation({
-        firstStrictInvalidPage: fullStructure.info.firstStrictInvalidPage,
-        setStrictSectionPage,
-      })
-      // TODO hide loading modal
-    }
-  }, [revalidationState, fullStructure])
+  // // Revalidation Effect
+  // useEffect(() => {
+  //   if (
+  //     fullStructure &&
+  //     revalidationState.methodToCallOnRevalidation &&
+  //     (fullStructure?.lastValidationTimestamp || 0) > revalidationState.lastRevalidationRequest
+  //   ) {
+  //     setRevalidationState({
+  //       ...revalidationState,
+  //       methodToCallOnRevalidation: null,
+  //       shouldProcessValidation: false,
+  //     })
+  //     revalidationState.methodToCallOnRevalidation({
+  //       firstStrictInvalidPage: fullStructure.info.firstStrictInvalidPage,
+  //       setStrictSectionPage,
+  //     })
+  //     // TODO hide loading modal
+  //   }
+  // }, [revalidationState, fullStructure])
 
   useEffect(() => {
     if (!fullStructure) return
@@ -101,7 +105,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     // Re-direct based on application status
     if (fullStructure.info.current?.status === ApplicationStatus.ChangesRequired)
       push(`/applicationNEW/${fullStructure.info.serial}`)
-    if (structure.info.current?.status !== ApplicationStatus.Draft)
+    if (fullStructure.info.current?.status !== ApplicationStatus.Draft)
       push(`/applicationNEW/${fullStructure.info.serial}/summary`)
 
     // Re-direct if trying to access page higher than allowed
@@ -110,11 +114,10 @@ const ApplicationPage: React.FC<ApplicationProps> = ({ structure }) => {
     const current = { sectionCode, pageNumber }
     if (!checkPageIsAccessible({ fullStructure, firstIncomplete, current })) {
       const { sectionCode, pageNumber } = firstIncomplete
-      push(`/applicationNEW/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
+      push(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
     }
-  }, [structure, fullStructure, sectionCode, page])
+  }, [fullStructure, sectionCode, page])
 
-  if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
   const {
