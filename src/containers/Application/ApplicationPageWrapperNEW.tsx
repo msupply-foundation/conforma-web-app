@@ -3,9 +3,6 @@ import { Switch, Route } from 'react-router-dom'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, NoMatch } from '../../components'
 import {
-  FullStructure,
-  ResponsesByCode,
-  ElementStateNEW,
   SectionAndPage,
   MethodRevalidate,
   MethodToCallProps,
@@ -30,7 +27,6 @@ interface RevalidationState {
 const ApplicationPageWrapperNEW: React.FC<ApplicationProps> = ({ structure }) => {
   const {
     match: { path },
-    query: { serialNumber, sectionCode, page },
   } = useRouter()
 
   const {

@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  ApplicationProps,
-  FullStructure,
-  MethodToCallProps,
-  ResponsesByCode,
-  User,
-} from '../../utils/types'
-import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
+import { ApplicationProps, MethodToCallProps, ResponsesByCode, User } from '../../utils/types'
 import useSubmitApplication from '../../utils/hooks/useSubmitApplication'
 import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
@@ -21,8 +14,8 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
   requestRevalidation,
 }) => {
   const { replace, push } = useRouter()
-  // const [shouldRevalidate, setShouldRevalidate] = useState(false)
-  // const [isRevalidated, setIsRevalidated] = useState(false)
+  const [error, setError] = useState(false)
+
   const {
     userState: { currentUser },
   } = useUserState()
@@ -39,11 +32,9 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
       const { sectionCode, pageNumber } = fullStructure.info.firstStrictInvalidPage
       replace(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
     }
-    // if (shouldRevalidate) setIsRevalidated(true)
   }, [fullStructure])
 
   const handleSubmit = () => {
-    // setShouldRevalidate(true)
     requestRevalidation &&
       requestRevalidation(
         async ({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
@@ -53,15 +44,19 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
             replace(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
           } else {
             console.log('Submitting...')
-            fullStructure?.responsesByCode &&
-              (await submit(Object.values(fullStructure?.responsesByCode)))
-            push(`/applicationNEW/${fullStructure?.info.serial}/submission`)
+            try {
+              fullStructure?.responsesByCode &&
+                (await submit(Object.values(fullStructure?.responsesByCode)))
+              push(`/applicationNEW/${fullStructure?.info.serial}/submission`)
+            } catch {
+              setError(true)
+            }
           }
         }
       )
   }
 
-  if (submitError)
+  if (submitError || error)
     return <Message error header={strings.ERROR_APPLICATION_SUBMIT} list={[submitError]} />
   if (!fullStructure || processing) return <Loading />
   const { sections, responsesByCode, info } = fullStructure
