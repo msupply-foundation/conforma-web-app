@@ -54,6 +54,14 @@ export default gql`
           reviewResponses(orderBy: TIME_CREATED_DESC) {
             nodes {
               ...reviewResponseFragment
+              originalResponseId
+              originalResponse {
+                applicationResponse {
+                  templateElementId
+                  id
+                }
+                decision
+              }
               applicationResponse {
                 templateElementId
               }
