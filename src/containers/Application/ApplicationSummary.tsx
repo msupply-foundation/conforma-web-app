@@ -43,7 +43,6 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
             setStrictSectionPage(firstStrictInvalidPage)
             replace(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
           } else {
-            console.log('Submitting...')
             try {
               fullStructure?.responsesByCode &&
                 (await submit(Object.values(fullStructure?.responsesByCode)))
