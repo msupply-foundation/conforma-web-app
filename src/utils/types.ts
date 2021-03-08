@@ -115,7 +115,8 @@ interface ApplicationListRow extends ApplicationList {
 
 interface ApplicationProps {
   structure: FullStructure
-  responses?: ResponsesByCode
+  requestRevalidation?: MethodRevalidate
+  strictSectionPage?: SectionAndPage | null
 }
 
 interface ApplicationStage {
@@ -162,7 +163,7 @@ interface ContextFormElementUpdateTrackerState {
   elementUpdatedTimestamp: number
   elementUpdatedTextValue: string
   isLastElementUpdateProcessed: boolean
-  wasElementChange: boolean
+  wasElementChanged: boolean
 }
 
 interface ContextApplicationState {
