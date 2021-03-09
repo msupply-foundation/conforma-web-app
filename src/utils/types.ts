@@ -2,6 +2,7 @@ import {
   ApplicationList,
   ApplicationStatus,
   PermissionPolicyType,
+  ReviewAssignmentStatus,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
@@ -25,6 +26,7 @@ export {
   ApplicationStageMap,
   ApplicationStages, // TODO: Remove this
   AssignmentDetails,
+  AssignmentDetailsNEW,
   CellProps,
   ColumnDetails,
   ColumnsPerRole,
@@ -61,6 +63,7 @@ export {
   ResumeSection,
   ReviewDetails,
   ReviewProgressStatus,
+  ReviewProgress,
   ReviewQuestion,
   ReviewQuestionDecision,
   ReviewerResponsesPayload,
@@ -115,7 +118,8 @@ interface ApplicationListRow extends ApplicationList {
 
 interface ApplicationProps {
   structure: FullStructure
-  responses?: ResponsesByCode
+  requestRevalidation?: MethodRevalidate
+  strictSectionPage?: SectionAndPage | null
 }
 
 interface ApplicationStage {
@@ -136,6 +140,14 @@ interface AssignmentDetails {
   id: number
   review?: ReviewDetails
   questions: ReviewQuestion[]
+}
+
+interface AssignmentDetailsNEW {
+  id: number
+  status: ReviewAssignmentStatus
+  timeCreated: DateTime
+  review: ReviewDetails | null
+  totalAssignedQuestions: number
 }
 
 interface BasicStringObject {
@@ -162,7 +174,7 @@ interface ContextFormElementUpdateTrackerState {
   elementUpdatedTimestamp: number
   elementUpdatedTextValue: string
   isLastElementUpdateProcessed: boolean
-  wasElementChange: boolean
+  wasElementChanged: boolean
 }
 
 interface ContextApplicationState {
@@ -256,6 +268,10 @@ interface FullStructure {
   sections: SectionsStructureNEW
   stages: StageDetails[]
   responsesByCode?: ResponsesByCode
+  firstIncompleteReviewPage?: SectionAndPage
+  canSubmitReviewAs?: ReviewResponseDecision | null
+  sortedSections?: SectionStateNEW[]
+  sortedPages?: PageNEW[]
 }
 
 type GroupedReviewResponses = {
@@ -291,16 +307,19 @@ type PageElements = {
 
 interface PageNEW {
   number: number
+  sectionCode: string
   name: string
   progress: Progress
+  reviewProgress?: ReviewProgress
   state: PageElement[]
 }
 
 type PageElement = {
-  element: ElementBaseNEW | ElementStateNEW
+  element: ElementStateNEW
   response: ResponseFull | null
   thisReviewLatestResponse?: ReviewResponse
   review?: ReviewQuestionDecision
+  isAssigned?: boolean
 }
 
 interface PageElementsStatuses {
@@ -328,8 +347,8 @@ interface ResponseFull {
   isValid?: boolean | null
   hash?: string
   timeCreated?: Date
-  customValidation?: ValidationState
   reviewResponse?: ReviewResponse
+  customValidation?: ValidationState
 }
 
 interface ResponsePayload {
@@ -348,6 +367,8 @@ interface ResumeSection {
 interface ReviewDetails {
   id: number
   status: ReviewStatus
+  timeCreated?: DateTime
+  stage?: ApplicationStage
 }
 
 interface ReviewerDetails {
@@ -405,9 +426,17 @@ interface SectionState {
 interface SectionsStructure {
   [code: string]: SectionState
 }
+
+interface ReviewProgress {
+  totalReviewable: number
+  doneConform: number
+  doneNonConform: number
+}
+
 interface SectionStateNEW {
   details: SectionDetails
   progress?: Progress
+  reviewProgress?: ReviewProgress
   assigned?: ReviewerDetails
   pages: {
     [pageNum: number]: PageNEW

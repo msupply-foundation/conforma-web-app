@@ -15,6 +15,7 @@ import getAssignedQuestions from '../helpers/review/getAssignedQuestions'
 import { useUserState } from '../../contexts/UserState'
 import updateSectionsReviews from '../helpers/structure/updateSectionsReviews'
 
+// TODO: Remove this
 interface UseGetReviewAssignmentProps {
   reviewerId: number
   serialNumber: string

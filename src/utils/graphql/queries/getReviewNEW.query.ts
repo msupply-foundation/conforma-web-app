@@ -6,6 +6,12 @@ export default gql`
   query getReviewNew($reviewAssignmentId: Int!, $userId: Int!) {
     reviewAssignment(id: $reviewAssignmentId) {
       id
+      reviewQuestionAssignments {
+        nodes {
+          id
+          templateElementId
+        }
+      }
       application {
         id
         serial
@@ -36,6 +42,7 @@ export default gql`
       reviews {
         nodes {
           id
+          status
           reviewResponses(orderBy: TIME_CREATED_DESC) {
             nodes {
               ...reviewResponseFragment

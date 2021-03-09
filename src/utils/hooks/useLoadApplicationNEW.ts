@@ -53,7 +53,12 @@ const useLoadApplication = ({
   })
 
   useEffect(() => {
-    if (!data || loading) return
+    if (loading) {
+      setIsLoading(true)
+      return
+    }
+    if (!data) return
+
     const application = data.applicationBySerial as Application
 
     // No unexpected error - just a application not accessible to user (Show 404 page)
@@ -80,7 +85,7 @@ const useLoadApplication = ({
           setRefetchAttempts(refetchAttempts + 1)
           refetch()
         }, 500)
-      } else setStructureError(messages.APPLICATION_TRIGGER_RUNNING)
+      } else setStructureError(messages.TRIGGER_RUNNING)
       return
     }
 

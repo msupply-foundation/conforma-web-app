@@ -10,6 +10,7 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
   const [applicationSubmitMutation] = useUpdateApplicationMutation({
     onCompleted: () => {
       setProcessing(false)
+      setSubmitted(true)
     },
     onError: (submissionError) => {
       setProcessing(false)
@@ -17,15 +18,14 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
     },
   })
 
-  const submit = (responses: ResponseFull[]) => {
-    setSubmitted(true)
+  const submit = async (responses: ResponseFull[]) => {
     setProcessing(true)
     const responsesPatch = responses.map(({ id, ...response }) => {
       return { id, patch: { value: response } }
     })
 
     // Send Application in one-block mutation to update Application + Responses
-    applicationSubmitMutation({
+    await applicationSubmitMutation({
       variables: {
         serial: serialNumber,
         responses: responsesPatch,
