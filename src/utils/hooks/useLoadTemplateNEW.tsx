@@ -5,8 +5,11 @@ import {
   TemplateSection,
   useGetTemplateQuery,
 } from '../generated/graphql'
+import evaluate from '@openmsupply/expression-evaluator'
+import { useUserState } from '../../contexts/UserState'
+import { EvaluatorParameters } from '../../utils/types'
 import { getTemplateSections } from '../helpers/application/getSectionsDetails'
-import { SectionDetails, TemplateDetails } from '../types'
+import { TemplateDetails } from '../types'
 
 interface useLoadTemplateProps {
   templateCode?: string
@@ -16,6 +19,10 @@ const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
   const [template, setTemplate] = useState<TemplateDetails>()
   const [error, setError] = useState('')
 
+  const {
+    userState: { currentUser },
+  } = useUserState()
+
   const { data, loading: apolloLoading, error: apolloError } = useGetTemplateQuery({
     variables: {
       code: templateCode || '',
@@ -24,7 +31,7 @@ const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
   })
 
   useEffect(() => {
-    if (!data) return
+    if (!data || !currentUser) return
 
     // Check that only one template matched
     let error = checkForTemplateErrors(data)
@@ -53,15 +60,21 @@ const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
       })
     })
 
-    setTemplate({
-      id,
-      code,
-      name: name as string,
-      elementsIds,
-      sections,
-      startMessage: startMessage ? startMessage : undefined,
+    const evaluatorParams: EvaluatorParameters = {
+      objects: { currentUser },
+      APIfetch: fetch,
+    }
+    evaluate(template?.startMessage || '', evaluatorParams).then((startMessage: any) => {
+      setTemplate({
+        id,
+        code,
+        name: name as string,
+        elementsIds,
+        sections,
+        startMessage,
+      })
     })
-  }, [data])
+  }, [data, currentUser])
 
   return {
     loading: apolloLoading,
