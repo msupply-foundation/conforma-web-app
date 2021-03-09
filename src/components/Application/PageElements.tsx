@@ -1,14 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ElementStateNEW, ResponsesByCode, SectionAndPage } from '../../utils/types'
+import { ElementStateNEW, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
 import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapperNEW'
 import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
-import { Form, Grid, Segment, Button } from 'semantic-ui-react'
+import { Form, Grid, Segment, Button, Icon } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import { TemplateElementCategory } from '../../utils/generated/graphql'
+import { ReviewResponse, TemplateElementCategory } from '../../utils/generated/graphql'
+
+import DecisionAreaNEW from '../Review/DecisionAreaNEW'
+import { SummaryViewWrapperPropsNEW } from '../../formElementPlugins/types'
 
 interface PageElementProps {
-  elements: ElementStateNEW[]
+  elements: PageElement[]
   responsesByCode: ResponsesByCode
   isStrictPage?: boolean
   canEdit?: boolean
@@ -32,7 +35,7 @@ const PageElements: React.FC<PageElementProps> = ({
   if (canEdit && !isReview && !isSummary)
     return (
       <Form>
-        {elements.map((element) => {
+        {elements.map(({ element }) => {
           return (
             <ApplicationViewWrapper
               key={`question_${element.code}`}
@@ -46,37 +49,38 @@ const PageElements: React.FC<PageElementProps> = ({
       </Form>
     )
 
+  const getSummaryViewProps = (element: ElementStateNEW) => ({
+    element,
+    response: responsesByCode?.[element.code],
+    allResponses: responsesByCode,
+  })
   // Summary Page
   if (isSummary) {
     const { sectionCode, pageNumber } = sectionAndPage as SectionAndPage
     return (
       <Form>
         <Segment.Group>
-          {elements.map((element) => (
-            <Segment key={`question_${element.code}`}>
-              <Grid columns={2} verticalAlign="middle">
-                <Grid.Row>
-                  <Grid.Column width={13}>
-                    <SummaryViewWrapperNEW
-                      element={element}
-                      response={responsesByCode?.[element.code]}
-                      allResponses={responsesByCode}
-                    />
+          {elements.map(({ element }) => {
+            return (
+              <Segment key={`question_${element.code}`}>
+                <Grid columns="equal">
+                  <Grid.Column floated="left">
+                    <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
                   </Grid.Column>
-                  <Grid.Column width={3}>
-                    {element.category === TemplateElementCategory.Question && canEdit && (
+                  {element.category === TemplateElementCategory.Question && canEdit && (
+                    <Grid.Column floated="right" textAlign="right">
                       <Button
                         content={strings.BUTTON_SUMMARY_EDIT}
                         size="small"
                         as={Link}
                         to={`/application/${serial}/${sectionCode}/Page${pageNumber}`}
                       />
-                    )}
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
-            </Segment>
-          ))}
+                    </Grid.Column>
+                  )}
+                </Grid>
+              </Segment>
+            )
+          })}
         </Segment.Group>
       </Form>
     )
@@ -86,13 +90,91 @@ const PageElements: React.FC<PageElementProps> = ({
   if (isReview)
     return (
       <Form>
-        {elements.map((element) => {
-          return <p>Review Element</p>
-        })}
+        <Segment.Group>
+          {elements.map(({ element, thisReviewLatestResponse }) => (
+            <Segment key={`question_${element.id}`}>
+              <Grid columns="equal">
+                <Grid.Column floated="left">
+                  <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
+                </Grid.Column>
+                {thisReviewLatestResponse && (
+                  <Grid.Column floated="right" textAlign="right">
+                    <ReviewButton
+                      reviewResponse={thisReviewLatestResponse as ReviewResponse}
+                      summaryViewProps={getSummaryViewProps(element)}
+                    />
+                  </Grid.Column>
+                )}
+              </Grid>
+              <ReviewResponseComponent
+                reviewResponse={thisReviewLatestResponse as ReviewResponse}
+                summaryViewProps={getSummaryViewProps(element)}
+              />
+            </Segment>
+          ))}
+        </Segment.Group>
       </Form>
     )
 
   return null
+}
+
+const ReviewResponseComponent: React.FC<{
+  reviewResponse: ReviewResponse
+  summaryViewProps: SummaryViewWrapperPropsNEW
+}> = ({ reviewResponse, summaryViewProps }) => {
+  const [toggleDecisionArea, setToggleDecisionArea] = useState(false)
+
+  if (!reviewResponse) return null
+  if (!reviewResponse?.decision) return null
+
+  return (
+    <>
+      <Grid columns="equal">
+        <Grid.Column floated="left">
+          <p>{reviewResponse?.decision}</p>
+          <p>{reviewResponse?.comment || ''}</p>
+        </Grid.Column>
+        <Grid.Column floated="right" textAlign="right">
+          <Icon
+            name="pencil"
+            color="blue"
+            onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
+          />
+        </Grid.Column>
+      </Grid>
+      <DecisionAreaNEW
+        reviewResponse={reviewResponse}
+        toggle={toggleDecisionArea}
+        summaryViewProps={summaryViewProps}
+      />
+    </>
+  )
+}
+
+const ReviewButton: React.FC<{
+  reviewResponse: ReviewResponse
+  summaryViewProps: SummaryViewWrapperPropsNEW
+}> = ({ reviewResponse, summaryViewProps }) => {
+  const [toggleDecisionArea, setToggleDecisionArea] = useState(false)
+
+  if (!reviewResponse) return null
+  if (reviewResponse?.decision) return null
+
+  return (
+    <>
+      <Button
+        content={strings.BUTTON_REVIEW_RESPONSE}
+        size="small"
+        onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
+      />
+      <DecisionAreaNEW
+        reviewResponse={reviewResponse}
+        toggle={toggleDecisionArea}
+        summaryViewProps={summaryViewProps}
+      />
+    </>
+  )
 }
 
 export default PageElements

@@ -114,7 +114,5 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
 export default ApplicationPage
 
 const getCurrentPageElements = (structure: FullStructure, section: string, page: number) => {
-  return structure.sections[section].pages[page].state.map(
-    (item) => item.element
-  ) as ElementStateNEW[]
+  return structure.sections[section].pages[page].state
 }

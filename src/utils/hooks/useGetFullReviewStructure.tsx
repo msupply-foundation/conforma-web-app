@@ -6,6 +6,7 @@ import {
   ReviewResponse,
   useGetReviewNewQuery,
   ReviewQuestionAssignment,
+  ReviewStatus,
 } from '../generated/graphql'
 import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
 import { useUserState } from '../../contexts/UserState'
