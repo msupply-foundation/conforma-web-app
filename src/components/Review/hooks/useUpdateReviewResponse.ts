@@ -37,7 +37,7 @@ const computeVisibility = (reviewResponse: ReviewResponse | undefined) => {
   if (!reviewResponse)
     return ReviewResponseRecommendedApplicantVisibility.OriginalResponseNotVisibleToApplicant
 
-  const isLevelOne = reviewResponse.originalResponseId === reviewResponse.id
+  const isLevelOne = reviewResponse.originalReviewResponseId === reviewResponse.id
 
   if (isLevelOne) {
     if (reviewResponse.decision === ReviewResponseDecision.Decline)
@@ -48,7 +48,7 @@ const computeVisibility = (reviewResponse: ReviewResponse | undefined) => {
   // consolidator
   if (
     reviewResponse.decision === ReviewResponseDecision.Agree &&
-    reviewResponse.originalResponse?.decision === ReviewResponseDecision.Decline
+    reviewResponse.originalReviewResponse?.decision === ReviewResponseDecision.Decline
   )
     return ReviewResponseRecommendedApplicantVisibility.OriginalResponseVisibleToApplicant
   return ReviewResponseRecommendedApplicantVisibility.OriginalResponseNotVisibleToApplicant
