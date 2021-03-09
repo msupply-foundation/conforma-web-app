@@ -1,16 +1,13 @@
-import { FetchResult } from '@apollo/client'
 import {
   ReviewResponse,
   ReviewResponseDecision,
   ReviewResponseRecommendedApplicantVisibility,
-  UpdateReviewResponseMutation,
   useUpdateReviewResponseMutation,
 } from '../../../utils/generated/graphql'
 
-// below type is constructred by using suggestion
-type promiseReturnType = Promise<
-  FetchResult<UpdateReviewResponseMutation, Record<string, any>, Record<string, any>>
->
+// below lines are used to get return type of the function that is returned by useUpdateReviewResponseMutation
+type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewResponseMutation>
+type promiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 
 // hook used to update review response, comment and decision, use as per type definition belo
 // also computes and updates recommendedApplicantVisibility
