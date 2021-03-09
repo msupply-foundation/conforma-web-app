@@ -25,8 +25,9 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     serialNumber: fullStructure?.info.serial as string,
     currentUser: currentUser as User,
   })
+
   const { isSectionActive, toggleSection } = useQuerySectionActivation({
-    defaultActiveSectionCodes: Object.keys(structure.sections),
+    defaultActiveSectionCodes: Object.keys(fullStructure?.sections),
   })
 
   useEffect(() => {
