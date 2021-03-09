@@ -39,7 +39,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
 
     // Checking if any of reviews trigger is running before refetching assignments
     // This is done to get latest status for reviews (afte trigger finishes to run)
-    if (reviews.length === 0 || reviews.every(({ trigger }) => trigger === null)) {
+    if (reviews.every((review) => !review || review?.trigger === null)) {
       setRefetchAttempts(0)
     } else {
       if (refetchAttempts < MAX_REFETCH) {
