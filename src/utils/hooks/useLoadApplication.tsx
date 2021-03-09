@@ -20,6 +20,8 @@ import {
   UseGetApplicationProps,
 } from '../types'
 
+// TODO: Remove this
+
 const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
   const [application, setApplication] = useState<ApplicationDetails>()
   const [template, setTemplate] = useState<TemplateDetails>()

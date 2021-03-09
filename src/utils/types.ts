@@ -2,6 +2,7 @@ import {
   ApplicationList,
   ApplicationStatus,
   PermissionPolicyType,
+  ReviewAssignmentStatus,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
@@ -25,6 +26,7 @@ export {
   ApplicationStageMap,
   ApplicationStages, // TODO: Remove this
   AssignmentDetails,
+  AssignmentDetailsNEW,
   CellProps,
   ColumnDetails,
   ColumnsPerRole,
@@ -116,7 +118,8 @@ interface ApplicationListRow extends ApplicationList {
 
 interface ApplicationProps {
   structure: FullStructure
-  responses?: ResponsesByCode
+  requestRevalidation?: MethodRevalidate
+  strictSectionPage?: SectionAndPage | null
 }
 
 interface ApplicationStage {
@@ -137,6 +140,14 @@ interface AssignmentDetails {
   id: number
   review?: ReviewDetails
   questions: ReviewQuestion[]
+}
+
+interface AssignmentDetailsNEW {
+  id: number
+  status: ReviewAssignmentStatus
+  timeCreated: DateTime
+  review: ReviewDetails | null
+  totalAssignedQuestions: number
 }
 
 interface BasicStringObject {
@@ -163,7 +174,7 @@ interface ContextFormElementUpdateTrackerState {
   elementUpdatedTimestamp: number
   elementUpdatedTextValue: string
   isLastElementUpdateProcessed: boolean
-  wasElementChange: boolean
+  wasElementChanged: boolean
 }
 
 interface ContextApplicationState {
@@ -259,6 +270,8 @@ interface FullStructure {
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
   canSubmitReviewAs?: ReviewResponseDecision | null
+  sortedSections?: SectionStateNEW[]
+  sortedPages?: PageNEW[]
 }
 
 type GroupedReviewResponses = {
@@ -354,6 +367,8 @@ interface ResumeSection {
 interface ReviewDetails {
   id: number
   status: ReviewStatus
+  timeCreated?: DateTime
+  stage?: ApplicationStage
 }
 
 interface ReviewerDetails {
@@ -415,7 +430,7 @@ interface SectionsStructure {
 interface ReviewProgress {
   totalReviewable: number
   doneConform: number
-  doneNoneConform: number
+  doneNonConform: number
 }
 
 interface SectionStateNEW {
