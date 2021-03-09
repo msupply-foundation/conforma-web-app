@@ -72,7 +72,7 @@ const ReviewPage: React.FC<{ reviewAssignment: ReviewAssignment; structure: Full
 const SectionProgress: React.FC<{ section: SectionStateNEW }> = ({ section }) => {
   const reviewProgress = section.reviewProgress
   return (
-    <>{`t: ${reviewProgress?.totalReviewable} dC: ${reviewProgress?.doneConform} dNC:  ${reviewProgress?.doneNoneConform} `}</>
+    <>{`t: ${reviewProgress?.totalReviewable} dC: ${reviewProgress?.doneConform} dNC:  ${reviewProgress?.doneNonConform} `}</>
   )
 }
 
