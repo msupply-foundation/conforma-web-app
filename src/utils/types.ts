@@ -118,7 +118,8 @@ interface ApplicationListRow extends ApplicationList {
 
 interface ApplicationProps {
   structure: FullStructure
-  responses?: ResponsesByCode
+  requestRevalidation?: MethodRevalidate
+  strictSectionPage?: SectionAndPage | null
 }
 
 interface ApplicationStage {
@@ -174,7 +175,7 @@ interface ContextFormElementUpdateTrackerState {
   elementUpdatedTimestamp: number
   elementUpdatedTextValue: string
   isLastElementUpdateProcessed: boolean
-  wasElementChange: boolean
+  wasElementChanged: boolean
 }
 
 interface ContextApplicationState {
@@ -270,6 +271,8 @@ interface FullStructure {
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
   canSubmitReviewAs?: ReviewResponseDecision | null
+  sortedSections?: SectionStateNEW[]
+  sortedPages?: PageNEW[]
 }
 
 type GroupedReviewResponses = {
@@ -428,7 +431,7 @@ interface SectionsStructure {
 interface ReviewProgress {
   totalReviewable: number
   doneConform: number
-  doneNoneConform: number
+  doneNonConform: number
 }
 
 interface SectionStateNEW {

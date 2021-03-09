@@ -1,13 +1,13 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import { Header, Message } from 'semantic-ui-react'
+import { Message } from 'semantic-ui-react'
 
 import { Loading, NoMatch } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import useLoadApplication from '../../utils/hooks/useLoadApplicationNEW'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { FullStructure, User } from '../../utils/types'
-import { ApplicationHome, ApplicationPage, ApplicationSubmission, ApplicationSummary } from './'
+import { User } from '../../utils/types'
+import { ApplicationHome, ApplicationSubmission, ApplicationPageWrapperNEW } from './'
 import strings from '../../utils/constants'
 import { ReviewWrapper } from '../Review'
 
@@ -32,23 +32,17 @@ const ApplicationWrapper: React.FC = () => {
     <Loading />
   ) : structure && template ? (
     <Switch>
+      <Route path={`${path}/review`}>
+        <ReviewWrapper structure={structure} />
+      </Route>
       <Route exact path={path}>
         <ApplicationHome structure={structure} template={template} />
-      </Route>
-      <Route exact path={`${path}/:sectionCode/Page:page`}>
-        <ApplicationPage structure={structure} />
-      </Route>
-      <Route exact path={`${path}/summary`}>
-        <ApplicationSummary structure={structure} />
       </Route>
       <Route exact path={`${path}/submission`}>
         <ApplicationSubmission structure={structure} />
       </Route>
-      <Route path={`${path}/review`}>
-        <ReviewWrapper structure={structure} />
-      </Route>
       <Route>
-        <NoMatch />
+        <ApplicationPageWrapperNEW structure={structure} />
       </Route>
     </Switch>
   ) : (

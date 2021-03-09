@@ -26,6 +26,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
     if (loading) return setIsFetching(true)
 
     if (!data) return
+
     const reviewAssigments = data.reviewAssignments?.nodes as ReviewAssignment[]
 
     // Current user has no assignments

@@ -2533,6 +2533,8 @@ export type ReviewFilter = {
   isLastLevel?: Maybe<BooleanFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ReviewStatusFilter>;
+  /** Filter by the object’s `timeCreated` field. */
+  timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
   reviewResponses?: Maybe<ReviewToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
@@ -4648,6 +4650,7 @@ export type Review = Node & {
   /** Reads and enables pagination through a set of `Notification`. */
   notifications: NotificationsConnection;
   status?: Maybe<ReviewStatus>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
 };
 
 
@@ -19802,12 +19805,12 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'status' | 'timeCreated' | 'level'>
+      & Pick<ReviewAssignment, 'id' | 'level' | 'status' | 'timeCreated'>
       & { reviews: (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'Review' }
-          & Pick<Review, 'id' | 'level' | 'status' | 'trigger'>
+          & Pick<Review, 'id' | 'status' | 'trigger'>
         )>> }
       ), stage?: Maybe<(
         { __typename?: 'TemplateStage' }
@@ -20800,13 +20803,13 @@ export const GetReviewInfoDocument = gql`
   reviewAssignments(condition: {reviewerId: $reviewerId, applicationId: $applicationId}, orderBy: TIME_CREATED_DESC) {
     nodes {
       id
+      level
       status
       timeCreated
       level
       reviews {
         nodes {
           id
-          level
           status
           trigger
         }

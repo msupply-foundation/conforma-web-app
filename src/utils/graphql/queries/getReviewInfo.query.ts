@@ -8,13 +8,13 @@ export default gql`
     ) {
       nodes {
         id
+        level
         status
         timeCreated
         level
         reviews {
           nodes {
             id
-            level
             status
             trigger
           }
