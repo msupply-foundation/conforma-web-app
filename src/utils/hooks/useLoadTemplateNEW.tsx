@@ -18,7 +18,6 @@ interface useLoadTemplateProps {
 const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
   const [template, setTemplate] = useState<TemplateDetails>()
   const [error, setError] = useState('')
-
   const {
     userState: { currentUser },
   } = useUserState()
