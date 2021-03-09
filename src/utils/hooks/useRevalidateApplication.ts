@@ -3,6 +3,7 @@ import updateSectionsProgress from '../helpers/structure/updateSectionsProgress'
 import { ValidatedSections, SectionsStructure, User } from '../types'
 import useGetResponsesAndElementState from './useGetResponsesAndElementState'
 
+// TODO: Remove this
 interface UseRevalidateApplicationProps {
   serialNumber: string
   currentUser: User

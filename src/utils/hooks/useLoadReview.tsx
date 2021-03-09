@@ -13,6 +13,7 @@ import { useUserState } from '../../contexts/UserState'
 import useLoadSectionsStructure from './useLoadSectionsStructure'
 import updateSectionsReviews from '../helpers/structure/updateSectionsReviews'
 
+// TODO: Remove this
 interface UseLoadReviewProps {
   reviewId: number
   serialNumber: string
