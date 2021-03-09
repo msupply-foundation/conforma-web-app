@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import {
   ApplicationDetails,
-  ApplicationStages,
   ElementBaseNEW,
   FullStructure,
   TemplateDetails,
   TemplateElementStateNEW,
   UseGetApplicationProps,
 } from '../types'
+import evaluate from '@openmsupply/expression-evaluator'
+import { useUserState } from '../../contexts/UserState'
+import { EvaluatorParameters } from '../../utils/types'
 import { getApplicationSections } from '../helpers/application/getSectionsDetails'
 import { buildSectionsStructure } from '../helpers/structure/buildSectionsStructureNEW'
 import {
@@ -31,6 +33,9 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   const [structure, setFullStructure] = useState<FullStructure>()
   const [template, setTemplate] = useState<TemplateDetails>()
   const [refetchAttempts, setRefetchAttempts] = useState(0)
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   const { data, loading, error, refetch } = useGetApplicationNewQuery({
     variables: {
@@ -41,7 +46,12 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   })
 
   useEffect(() => {
-    if (!data || loading) return
+    if (loading) {
+      setIsLoading(true)
+      return
+    }
+    if (!data) return
+
     const application = data.applicationBySerial as Application
 
     // No unexpected error - just a application not accessible to user (Show 404 page)
@@ -68,7 +78,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           setRefetchAttempts(refetchAttempts + 1)
           refetch()
         }, 500)
-      } else setStructureError(messages.APPLICATION_TRIGGER_RUNNING)
+      } else setStructureError(messages.TRIGGER_RUNNING)
       return
     }
 
@@ -104,7 +114,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         date: DateTime.fromISO(statusHistoryTimeCreated),
       },
       firstStrictInvalidPage: null,
-      submissionMessage: application.template?.submissionMessage as string,
     }
 
     const baseElements: ElementBaseNEW[] = []
@@ -137,16 +146,24 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     const templateStages = application.template?.templateStages.nodes as TemplateStage[]
 
-    setFullStructure({
-      info: applicationDetails,
-      stages: templateStages.map((stage) => ({
-        number: stage.number as number,
-        title: stage.title as string,
-        description: stage.description ? stage.description : undefined,
-      })),
-      sections: buildSectionsStructure({ sections, baseElements }),
-    })
-    setIsLoading(false)
+    const evaluatorParams: EvaluatorParameters = {
+      objects: { currentUser },
+      APIfetch: fetch,
+    }
+    evaluate(application.template?.submissionMessage || '', evaluatorParams).then(
+      (submissionMessage: any) => {
+        setFullStructure({
+          info: { ...applicationDetails, submissionMessage },
+          stages: templateStages.map((stage) => ({
+            number: stage.number as number,
+            title: stage.title as string,
+            description: stage.description ? stage.description : undefined,
+          })),
+          sections: buildSectionsStructure({ sections, baseElements }),
+        })
+        setIsLoading(false)
+      }
+    )
   }, [data, loading])
 
   return {

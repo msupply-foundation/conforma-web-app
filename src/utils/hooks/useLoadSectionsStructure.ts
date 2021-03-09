@@ -4,6 +4,8 @@ import { SectionDetails, SectionsStructure, UseGetApplicationProps } from '../ty
 import useGetResponsesAndElementState from './useGetResponsesAndElementState'
 import useLoadApplication from './useLoadApplication'
 
+// TODO: Remove this
+
 const useLoadSectionsStructure = ({
   serialNumber,
   currentUser,

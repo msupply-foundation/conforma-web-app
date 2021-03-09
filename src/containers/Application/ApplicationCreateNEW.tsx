@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Button, Divider, Header, Message, Segment } from 'semantic-ui-react'
-import evaluate from '@openmsupply/expression-evaluator'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { ApplicationHeader, ApplicationSelectType, Loading } from '../../components'
 import { useApplicationState } from '../../contexts/ApplicationState'
@@ -9,7 +8,6 @@ import useCreateApplication from '../../utils/hooks/useCreateApplication'
 import useLoadTemplate from '../../utils/hooks/useLoadTemplateNEW'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
-import { EvaluatorParameters } from '../../utils/types'
 import { SectionsList } from '../../components/Application/Sections'
 
 const ApplicationCreateNEW: React.FC = () => {
@@ -21,7 +19,6 @@ const ApplicationCreateNEW: React.FC = () => {
     push,
     query: { type },
   } = useRouter()
-  const [startMessageEvaluated, setStartMessageEvaluated] = useState('')
 
   const { error, loading, template } = useLoadTemplate({
     templateCode: type,
@@ -34,7 +31,6 @@ const ApplicationCreateNEW: React.FC = () => {
   // If template has no start message, go straight to first page of new application
   useEffect(() => {
     if (template && !template.startMessage) handleCreate()
-    else evaluateMessage()
   }, [template])
 
   const { processing, error: creationError, create } = useCreateApplication({
@@ -47,16 +43,6 @@ const ApplicationCreateNEW: React.FC = () => {
       }
     },
   })
-
-  const evaluateMessage = async () => {
-    const evaluatorParams: EvaluatorParameters = {
-      objects: { currentUser },
-      APIfetch: fetch,
-    }
-    evaluate(template?.startMessage || '', evaluatorParams).then((result: any) =>
-      setStartMessageEvaluated(result)
-    )
-  }
 
   const handleCreate = (_?: any) => {
     setApplicationState({ type: 'reset' })
@@ -72,7 +58,7 @@ const ApplicationCreateNEW: React.FC = () => {
     const { name, elementsIds, sections } = template
 
     create({
-      name: template.name,
+      name,
       serial: serialNumber,
       templateId: template.id,
       userId: currentUser?.userId,
@@ -104,7 +90,7 @@ const ApplicationCreateNEW: React.FC = () => {
         <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
         <SectionsList sections={template.sections} />
         <Divider />
-        <Markdown text={startMessageEvaluated} semanticComponent="Message" info />
+        <Markdown text={template.startMessage || ''} semanticComponent="Message" info />
         <Button color="blue" loading={processing} onClick={handleCreate}>
           {strings.BUTTON_APPLICATION_START}
         </Button>

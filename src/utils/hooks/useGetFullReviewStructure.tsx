@@ -3,14 +3,16 @@ import { FullStructure } from '../types'
 import {
   ApplicationResponse,
   Review,
-  ReviewAssignment,
   ReviewResponse,
   useGetReviewNewQuery,
+  ReviewQuestionAssignment,
+  ReviewStatus,
 } from '../generated/graphql'
 import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
 import { useUserState } from '../../contexts/UserState'
 import addThisReviewResponses from '../helpers/structure/addThisReviewResponses'
 import addElementsById from '../helpers/structure/addElementsById'
+import generateReviewProgress from '../helpers/structure/generateReviewProgress'
 
 interface useGetFullReviewStructureProps {
   structure: FullStructure
@@ -22,6 +24,7 @@ const useGetFullReviewStructure = ({
   reviewAssignmentId,
 }: useGetFullReviewStructureProps) => {
   const [fullStructure, setFullStructure] = useState<FullStructure>()
+  const [structureError, setStructureError] = useState('')
 
   const {
     userState: { currentUser },
@@ -39,9 +42,12 @@ const useGetFullReviewStructure = ({
 
     if (!data) return
 
+    const reviewAssignment = data.reviewAssignment
+    if (!reviewAssignment) return setStructureError('Cannot find review Assignemnt')
+
     addEvaluatedResponsesToStructure({
       structure,
-      applicationResponses: data?.reviewAssignment?.application?.applicationResponses
+      applicationResponses: reviewAssignment.application?.applicationResponses
         ?.nodes as ApplicationResponse[],
       currentUser,
       evaluationOptions: {
@@ -51,7 +57,17 @@ const useGetFullReviewStructure = ({
         isValid: false,
       },
     }).then((evaluatedStructure: FullStructure) => {
+      // This is usefull for linking assignments to elements
       let newStructure: FullStructure = addElementsById(evaluatedStructure)
+      // This is usefull for generating progress (maybe also usefull downstream, but dont' want too refactor too much at this stage)
+      newStructure = addSortedSectionsAndPages(newStructure)
+
+      const reviewQuestionAssignments = reviewAssignment.reviewQuestionAssignments?.nodes
+      if (reviewQuestionAssignments)
+        newStructure = addIsAssigned(
+          newStructure,
+          reviewQuestionAssignments as ReviewQuestionAssignment[]
+        )
 
       // here we add responses from other review (not from this review assignmnet)
 
@@ -60,7 +76,7 @@ const useGetFullReviewStructure = ({
       if ((data.reviewAssignment?.reviews?.nodes?.length || 0) > 1)
         console.error(
           'More then one review associated with reviewAssignment with id',
-          data.reviewAssignment?.id
+          reviewAssignment.id
         )
       if (review) {
         newStructure = addThisReviewResponses({
@@ -69,16 +85,46 @@ const useGetFullReviewStructure = ({
         })
       }
 
-      // Generate review progress
-
+      generateReviewProgress(newStructure)
+      // generateConsolidationProgress
       setFullStructure(newStructure)
     })
   }, [data, error])
 
   return {
     fullStructure,
-    error: error?.message,
+    error: structureError || error?.message,
   }
+}
+
+const addSortedSectionsAndPages = (newStructure: FullStructure): FullStructure => {
+  const sortedSections = Object.values(newStructure.sections).sort(
+    (sectionOne, sectionTwo) => sectionOne.details.index - sectionTwo.details.index
+  )
+  const sortedPages = sortedSections
+    .map((section) =>
+      Object.values(section.pages).sort((pageOne, pageTwo) => pageOne.number - pageTwo.number)
+    )
+    .flat()
+
+  return { ...newStructure, sortedPages, sortedSections }
+}
+
+const addIsAssigned = (
+  newStructure: FullStructure,
+  reviewQuestionAssignments: ReviewQuestionAssignment[]
+) => {
+  reviewQuestionAssignments.forEach((questionAssignment) => {
+    if (!questionAssignment) return
+
+    const assignedElement =
+      newStructure?.elementsById?.[questionAssignment.templateElementId as number]
+    if (!assignedElement) return
+
+    assignedElement.isAssigned = true
+  })
+
+  return newStructure
 }
 
 export default useGetFullReviewStructure

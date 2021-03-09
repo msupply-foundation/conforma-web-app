@@ -95,6 +95,15 @@ const Navigation: React.FC<NavigationProps> = ({
     })
   }
 
+  const summaryButtonHandler = () => {
+    requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
+      if (firstStrictInvalidPage) {
+        setStrictSectionPage(firstStrictInvalidPage)
+        sendToPage(firstStrictInvalidPage)
+      } else push(`/applicationNEW/${serialNumber}/summary`)
+    })
+  }
+
   return (
     <Sticky
       pushing
@@ -119,13 +128,7 @@ const Navigation: React.FC<NavigationProps> = ({
             />
           </Grid.Column>
           <Grid.Column width={5}>
-            <Button
-              color="blue"
-              onClick={() => {
-                /* TO-DO */
-              }}
-              content={strings.BUTTON_SUMMARY}
-            />
+            <Button color="blue" onClick={summaryButtonHandler} content={strings.BUTTON_SUMMARY} />
           </Grid.Column>
         </Grid.Row>
       </Grid>
