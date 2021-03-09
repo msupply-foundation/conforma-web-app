@@ -7,6 +7,9 @@ import {
   TemplateElementStateNEW,
   UseGetApplicationProps,
 } from '../types'
+import evaluate from '@openmsupply/expression-evaluator'
+import { useUserState } from '../../contexts/UserState'
+import { EvaluatorParameters } from '../../utils/types'
 import { getApplicationSections } from '../helpers/application/getSectionsDetails'
 import { buildSectionsStructure } from '../helpers/structure/buildSectionsStructureNEW'
 import {
@@ -30,6 +33,9 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   const [structure, setFullStructure] = useState<FullStructure>()
   const [template, setTemplate] = useState<TemplateDetails>()
   const [refetchAttempts, setRefetchAttempts] = useState(0)
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   const { data, loading, error, refetch } = useGetApplicationNewQuery({
     variables: {
@@ -108,7 +114,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         date: DateTime.fromISO(statusHistoryTimeCreated),
       },
       firstStrictInvalidPage: null,
-      submissionMessage: application.template?.submissionMessage as string,
     }
 
     const baseElements: ElementBaseNEW[] = []
@@ -141,16 +146,24 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     const templateStages = application.template?.templateStages.nodes as TemplateStage[]
 
-    setFullStructure({
-      info: applicationDetails,
-      stages: templateStages.map((stage) => ({
-        number: stage.number as number,
-        title: stage.title as string,
-        description: stage.description ? stage.description : undefined,
-      })),
-      sections: buildSectionsStructure({ sections, baseElements }),
-    })
-    setIsLoading(false)
+    const evaluatorParams: EvaluatorParameters = {
+      objects: { currentUser },
+      APIfetch: fetch,
+    }
+    evaluate(application.template?.submissionMessage || '', evaluatorParams).then(
+      (submissionMessage: any) => {
+        setFullStructure({
+          info: { ...applicationDetails, submissionMessage },
+          stages: templateStages.map((stage) => ({
+            number: stage.number as number,
+            title: stage.title as string,
+            description: stage.description ? stage.description : undefined,
+          })),
+          sections: buildSectionsStructure({ sections, baseElements }),
+        })
+        setIsLoading(false)
+      }
+    )
   }, [data, loading])
 
   return {

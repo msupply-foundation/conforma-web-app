@@ -9,6 +9,6 @@ export default gql`
       code
     }
     templateElementId
-    timeCreated
+    timeUpdated
   }
 `
