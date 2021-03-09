@@ -19831,7 +19831,13 @@ export type GetReviewNewQuery = (
   & { reviewAssignment?: Maybe<(
     { __typename?: 'ReviewAssignment' }
     & Pick<ReviewAssignment, 'id'>
-    & { application?: Maybe<(
+    & { reviewQuestionAssignments: (
+      { __typename?: 'ReviewQuestionAssignmentsConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ReviewQuestionAssignment' }
+        & Pick<ReviewQuestionAssignment, 'id' | 'templateElementId'>
+      )>> }
+    ), application?: Maybe<(
       { __typename?: 'Application' }
       & Pick<Application, 'id' | 'serial'>
       & { applicationResponses: (
@@ -20844,6 +20850,12 @@ export const GetReviewNewDocument = gql`
     query getReviewNew($reviewAssignmentId: Int!, $userId: Int!) {
   reviewAssignment(id: $reviewAssignmentId) {
     id
+    reviewQuestionAssignments {
+      nodes {
+        id
+        templateElementId
+      }
+    }
     application {
       id
       serial
