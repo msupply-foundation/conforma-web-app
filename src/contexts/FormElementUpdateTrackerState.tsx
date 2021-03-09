@@ -20,7 +20,6 @@ const reducer = (
   state: ContextFormElementUpdateTrackerState,
   action: UpdateAction
 ): ContextFormElementUpdateTrackerState => {
-  console.log(state, action)
   switch (action.type) {
     case 'setElementUpdated': {
       const newState = {
