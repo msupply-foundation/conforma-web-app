@@ -383,6 +383,7 @@ type ReviewProgressStatus = 'NOT_COMPLETED' | 'DECLINED' | 'APPROVED'
 interface ReviewQuestion {
   code: string
   responseId: number
+  id: number
   sectionIndex: number
 }
 interface ReviewQuestionDecision {
