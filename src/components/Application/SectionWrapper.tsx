@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { Accordion, Segment, Grid, Header, Icon, Button } from 'semantic-ui-react'
+import React from 'react'
+import { Accordion, Segment, Grid, Header, Icon } from 'semantic-ui-react'
 import { PageElements } from '.'
-import { ReviewResponse } from '../../utils/generated/graphql'
-import { useRouter } from '../../utils/hooks/useRouter'
-import { ResponsesByCode, ElementStateNEW, SectionStateNEW, PageNEW } from '../../utils/types'
+import { ResponsesByCode, SectionStateNEW, PageNEW } from '../../utils/types'
 
 interface SectionProps {
   section: SectionStateNEW

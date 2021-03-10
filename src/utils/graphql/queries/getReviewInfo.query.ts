@@ -8,6 +8,7 @@ export default gql`
     ) {
       nodes {
         id
+        level
         status
         timeCreated
         level
@@ -15,9 +16,9 @@ export default gql`
         reviews {
           nodes {
             id
-            level
             status
             trigger
+            timeCreated
           }
         }
         stage {
@@ -26,6 +27,9 @@ export default gql`
         }
         reviewQuestionAssignments {
           totalCount
+          nodes {
+            id
+          }
         }
       }
     }

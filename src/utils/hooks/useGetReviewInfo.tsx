@@ -20,12 +20,17 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
       reviewerId: userId,
       applicationId,
     },
+    notifyOnNetworkStatusChange: true,
+    // if this is removed, there might be an infinite loading when looking at a review for the frist time, after clearing cache
+    // it's either this or removing 'totalCount' in `reviewQuestionAssignments` from this query
+    nextFetchPolicy: 'network-only',
   })
 
   useEffect(() => {
     if (loading) return setIsFetching(true)
 
     if (!data) return
+
     const reviewAssigments = data.reviewAssignments?.nodes as ReviewAssignment[]
 
     // Current user has no assignments
@@ -71,6 +76,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
           ? {
               id: review.id,
               status: review.status as ReviewStatus,
+              timeCreated: review.timeCreated,
               stage: { id: stage?.id as number, name: stage?.title as string },
             }
           : null,

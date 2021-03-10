@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
-import { Button, Header, Icon, Label, List, Message, Segment } from 'semantic-ui-react'
-import evaluate from '@openmsupply/expression-evaluator'
+import React from 'react'
+import { Button, Header, Icon, Label, List, Segment } from 'semantic-ui-react'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
-import { ApplicationProps, EvaluatorParameters } from '../../utils/types'
+import { ApplicationProps } from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
@@ -10,7 +9,6 @@ import { Link } from 'react-router-dom'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 
 const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
-  const [submissionMessageEvaluated, setSubmissionMessageEvaluated] = useState('')
   const {
     userState: { currentUser },
   } = useUserState()
@@ -32,14 +30,6 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
   )
     push(`/applicationNEW/${serialNumber}/summary`)
 
-  const evaluatorParams: EvaluatorParameters = {
-    objects: { currentUser },
-    APIfetch: fetch,
-  }
-  evaluate(submissionMessage || '', evaluatorParams).then((result: any) =>
-    setSubmissionMessageEvaluated(result)
-  )
-
   return (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
       <Header textAlign="center">
@@ -59,7 +49,7 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
           <Icon name="clock outline" color="blue" size="huge" />
           {strings.LABEL_PROCESSING}
         </Header>
-        <Markdown text={submissionMessageEvaluated} />
+        <Markdown text={submissionMessage || ''} />
         <Segment basic textAlign="left" style={{ margin: '50px 50px', padding: 10 }}>
           <Header as="h5">{strings.SUBTITLE_SUBMISSION_STEPS}</Header>
           <List>

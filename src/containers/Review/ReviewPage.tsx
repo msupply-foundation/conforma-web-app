@@ -68,7 +68,7 @@ const ReviewPage: React.FC<{
               extraSectionTitleContent={(section: SectionStateNEW) => (
                 <SectionProgress section={section} />
               )}
-              extraPageContent={(page: PageNEW) => <MassApprovalButton page={page} />}
+              extraPageContent={(page: PageNEW) => <ApproveAllButton page={page} />}
               scrollableAttachment={(page: PageNEW) => (
                 <ScrollableAttachment
                   code={`${section.details.code}P${page.number}`}
@@ -103,11 +103,11 @@ const ReviewPage: React.FC<{
 const SectionProgress: React.FC<{ section: SectionStateNEW }> = ({ section }) => {
   const reviewProgress = section.reviewProgress
   return (
-    <>{`t: ${reviewProgress?.totalReviewable} dC: ${reviewProgress?.doneConform} dNC:  ${reviewProgress?.doneNoneConform} `}</>
+    <>{`t: ${reviewProgress?.totalReviewable} dC: ${reviewProgress?.doneConform} dNC:  ${reviewProgress?.doneNonConform} `}</>
   )
 }
 
-const MassApprovalButton: React.FC<{ page: PageNEW }> = ({ page }) => {
+const ApproveAllButton: React.FC<{ page: PageNEW }> = ({ page }) => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
 
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)
@@ -129,7 +129,11 @@ const MassApprovalButton: React.FC<{ page: PageNEW }> = ({ page }) => {
   if (responsesToReview.some((response) => response?.status !== ReviewResponseStatus.Draft))
     return null
 
-  return <Button onClick={massApprove}>{`Approve (${responsesToReview.length})`}</Button>
+  return (
+    <Button
+      onClick={massApprove}
+    >{`${strings.BUTTON_REVIEW_APPROVE_ALL} (${responsesToReview.length})`}</Button>
+  )
 }
 
 export default ReviewPage
