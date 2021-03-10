@@ -26,6 +26,9 @@ export default gql`
         }
         reviewQuestionAssignments {
           totalCount
+          nodes {
+            id
+          }
         }
       }
     }
