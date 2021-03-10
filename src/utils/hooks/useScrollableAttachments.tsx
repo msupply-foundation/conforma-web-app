@@ -8,7 +8,7 @@ type AttachedScrollables = {
 // two methos are expose:
 type AddScrollable = (code: string, scrollableRef: ScrollableRef) => void
 type ScrollTo = (code: string) => void
-// use in combination with ScrollavelAttachment (check ReviewPage for example)
+// use in combination with ScrollableAttachment (check ReviewPage for example)
 // add scrollable
 // <ScrollableAttachment code={'somecode'} addScrollable={addScrollable}/>
 // scroll to scrollable
