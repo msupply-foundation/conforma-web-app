@@ -17,6 +17,7 @@ export default gql`
             id
             status
             trigger
+            timeCreated
           }
         }
         stage {
