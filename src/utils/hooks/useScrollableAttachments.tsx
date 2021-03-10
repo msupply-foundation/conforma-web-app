@@ -21,7 +21,7 @@ const useScrollableAttachments = () => {
 
   const scrollTo: ScrollTo = (code) => {
     const scrollable = attachedScrollabes[code]
-    if (scrollable) scrollable.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    if (scrollable) scrollable.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   return {
