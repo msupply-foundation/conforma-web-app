@@ -16,7 +16,7 @@ export default {
   REVIEW_LEVEL1_SUBMISSION_FAIL: {
     title: 'Problem submitting review',
     message:
-      'Please mark all reviewable questions to non conform or at least one to non conform before submission',
+      'Please mark all reviewable questions to conform or at least one to non conform before submission',
     option: 'OK',
   },
   REDIRECT_TO_REGISTRATION: 'Re-directing to user registration application...',
