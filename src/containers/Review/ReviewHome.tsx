@@ -24,14 +24,14 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
 
   return (
     <>
-      {fullApplicationStructure.sortedSections?.map((section) => (
-        <Segment key={section.details.id}>
-          <Header>{section.details.title}</Header>
+      {fullApplicationStructure.sortedSections?.map(({ details: { id, title } }) => (
+        <Segment key={id}>
+          <Header>{title}</Header>
           {assignments.map((assignment) => (
             <ReviewSectionAssignment
               {...{
                 key: assignment.id,
-                sectionId: section.details.id,
+                sectionId: id,
                 assignment,
                 fullApplicationStructure,
               }}
