@@ -21,6 +21,9 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
       applicationId,
     },
     notifyOnNetworkStatusChange: true,
+    // if this is removed, there might be an infinite loading when looking at a review for the frist time, after clearing cache
+    // it's either this or removing 'totalCount' in `reviewQuestionAssignments` from this query
+    nextFetchPolicy: 'network-only',
   })
 
   useEffect(() => {
