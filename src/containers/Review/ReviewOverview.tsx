@@ -56,8 +56,9 @@ const ReviewOverview: React.FC = () => {
 
     create({
       reviewAssigmentId: assignment.id,
-      applicationResponses: assignment.questions.map(({ responseId }) => ({
+      applicationResponses: assignment.questions.map(({ responseId, id }) => ({
         applicationResponseId: responseId,
+        reviewQuestionAssignmentId: id,
       })),
     })
   }
