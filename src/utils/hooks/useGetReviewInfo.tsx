@@ -20,6 +20,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
       reviewerId: userId,
       applicationId,
     },
+    notifyOnNetworkStatusChange: true,
   })
 
   useEffect(() => {
