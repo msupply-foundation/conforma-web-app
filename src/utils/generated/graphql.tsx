@@ -20250,6 +20250,10 @@ export type GetReviewInfoQuery = (
       )>, reviewQuestionAssignments: (
         { __typename?: 'ReviewQuestionAssignmentsConnection' }
         & Pick<ReviewQuestionAssignmentsConnection, 'totalCount'>
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ReviewQuestionAssignment' }
+          & Pick<ReviewQuestionAssignment, 'id'>
+        )>> }
       ) }
     )>> }
   )> }
@@ -21253,6 +21257,9 @@ export const GetReviewInfoDocument = gql`
       }
       reviewQuestionAssignments {
         totalCount
+        nodes {
+          id
+        }
       }
     }
   }
