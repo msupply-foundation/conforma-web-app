@@ -34,6 +34,7 @@ const useGetFullReviewStructure = ({
       reviewAssignmentId,
       userId: currentUser?.userId as number,
     },
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {

@@ -24,7 +24,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
     // if this is removed, there might be an infinite loading when looking at a review for the frist time, after clearing cache
     // it's either this or removing 'totalCount' in `reviewQuestionAssignments` from this query
     // ended up removing totalCount from query and keeping this as nextFetchPolicy (was still seeing glitched with totalCount and had "can't update unmounted component error")
-    nextFetchPolicy: 'network-only',
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
