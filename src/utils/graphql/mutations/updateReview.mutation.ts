@@ -10,7 +10,7 @@ export default gql`
           nodes {
             id
             decision
-            timeCreated
+            timeUpdated
           }
         }
       }

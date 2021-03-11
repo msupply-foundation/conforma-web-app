@@ -19935,6 +19935,13 @@ export type UpdateReviewMutation = (
     & { review?: Maybe<(
       { __typename?: 'Review' }
       & Pick<Review, 'id' | 'trigger'>
+      & { reviewDecisions: (
+        { __typename?: 'ReviewDecisionsConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ReviewDecision' }
+          & Pick<ReviewDecision, 'id' | 'decision' | 'timeUpdated'>
+        )>> }
+      ) }
     )> }
   )> }
 );
@@ -20284,7 +20291,6 @@ export type GetReviewInfoQuery = (
         & Pick<TemplateStage, 'title' | 'id'>
       )>, reviewQuestionAssignments: (
         { __typename?: 'ReviewQuestionAssignmentsConnection' }
-        & Pick<ReviewQuestionAssignmentsConnection, 'totalCount'>
         & { nodes: Array<Maybe<(
           { __typename?: 'ReviewQuestionAssignment' }
           & Pick<ReviewQuestionAssignment, 'id'>
@@ -20795,6 +20801,13 @@ export const UpdateReviewDocument = gql`
     review {
       id
       trigger
+      reviewDecisions {
+        nodes {
+          id
+          decision
+          timeUpdated
+        }
+      }
     }
   }
 }
@@ -21372,7 +21385,6 @@ export const GetReviewInfoDocument = gql`
         id
       }
       reviewQuestionAssignments {
-        totalCount
         nodes {
           id
         }
