@@ -44,7 +44,6 @@ const useGetFullReviewStructure = ({
   })
 
   useEffect(() => {
-    console.log(fullApplicationStructure)
     if (error) return
 
     if (!data) return
