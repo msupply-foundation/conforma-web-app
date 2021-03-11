@@ -20243,7 +20243,7 @@ export type GetReviewInfoQuery = (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'Review' }
-          & Pick<Review, 'id' | 'status' | 'trigger'>
+          & Pick<Review, 'id' | 'status' | 'trigger' | 'timeCreated'>
         )>> }
       ), stage?: Maybe<(
         { __typename?: 'TemplateStage' }
@@ -20251,6 +20251,10 @@ export type GetReviewInfoQuery = (
       )>, reviewQuestionAssignments: (
         { __typename?: 'ReviewQuestionAssignmentsConnection' }
         & Pick<ReviewQuestionAssignmentsConnection, 'totalCount'>
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ReviewQuestionAssignment' }
+          & Pick<ReviewQuestionAssignment, 'id'>
+        )>> }
       ) }
     )>> }
   )> }
@@ -21230,6 +21234,7 @@ export const GetReviewInfoDocument = gql`
           id
           status
           trigger
+          timeCreated
         }
       }
       stage {
@@ -21238,6 +21243,9 @@ export const GetReviewInfoDocument = gql`
       }
       reviewQuestionAssignments {
         totalCount
+        nodes {
+          id
+        }
       }
     }
   }

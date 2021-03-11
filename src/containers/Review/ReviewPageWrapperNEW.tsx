@@ -34,8 +34,7 @@ const ReviewPageWrapperNEW: React.FC<{
   )
 
   if (!reviewAssignment) return <NoMatch />
-  // Pass through structure and reviewAssignments
-
+  // Pass through structure and reviewAssignment associated to review
   return (
     <>
       <Switch>

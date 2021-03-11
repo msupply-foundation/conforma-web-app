@@ -17,6 +17,7 @@ export default gql`
             id
             status
             trigger
+            timeCreated
           }
         }
         stage {
@@ -25,6 +26,9 @@ export default gql`
         }
         reviewQuestionAssignments {
           totalCount
+          nodes {
+            id
+          }
         }
       }
     }

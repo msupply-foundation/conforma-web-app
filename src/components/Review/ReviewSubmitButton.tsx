@@ -8,11 +8,12 @@ import useSubmitReview from '../../utils/hooks/useSubmitReview'
 import messages from '../../utils/messages'
 import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
 
-const ReviewSubmitButton: React.FC<{
+interface ReviewSubmitButtonProps {
   structure: FullStructure
   reviewAssignment: AssignmentDetailsNEW
   scrollTo: (code: string) => void
-}> = ({ scrollTo, structure, reviewAssignment }) => {
+}
+const ReviewSubmitButton: React.FC<ReviewSubmitButtonProps> = ({ scrollTo, structure, reviewAssignment }) => {
   const {
     location: { pathname },
     replace,
