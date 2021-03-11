@@ -8,6 +8,7 @@ import {
   ReviewStatus,
   TemplateElement,
   TemplateElementCategory,
+  TemplateStage,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
@@ -144,11 +145,12 @@ interface AssignmentDetails {
 
 interface AssignmentDetailsNEW {
   id: number
-  status: ReviewAssignmentStatus
+  status: ReviewAssignmentStatus | null
   timeCreated: DateTime
   level: number
   review: ReviewDetails | null
   totalAssignedQuestions: number
+  stage: ApplicationStage
 }
 
 interface BasicStringObject {
@@ -369,7 +371,7 @@ interface ReviewDetails {
   id: number
   status: ReviewStatus
   timeCreated?: DateTime
-  stage?: ApplicationStage
+  stage: ApplicationStage
 }
 
 interface ReviewerDetails {

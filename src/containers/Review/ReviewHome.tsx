@@ -22,12 +22,17 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
 
   if (!fullApplicationStructure) return <Loading />
 
+  // i think we would group by stage, and current stage would be the expanded one, for now using latest stage
+  const currentStageAssignments = assignments.filter(
+    (assignment) => assignment.stage.id === fullApplicationStructure.info.current?.stage.id
+  )
+
   return (
     <>
       {fullApplicationStructure.sortedSections?.map(({ details: { id, title } }) => (
         <Segment key={id}>
           <Header>{title}</Header>
-          {assignments.map((assignment) => (
+          {currentStageAssignments.map((assignment) => (
             <ReviewSectionAssignment
               {...{
                 key: assignment.id,
