@@ -35,8 +35,6 @@ const useGetFullReviewStructure = ({
     fullApplicationStructure?.sortedSections?.map((section) => section.details.id) ||
     []
 
-  console.log({ sectionIds })
-
   const { data, error } = useGetReviewNewQuery({
     variables: {
       reviewAssignmentId,
