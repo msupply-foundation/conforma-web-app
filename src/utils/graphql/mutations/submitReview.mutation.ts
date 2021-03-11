@@ -14,6 +14,7 @@ export default gql`
     ) {
       review {
         id
+        trigger
       }
     }
   }

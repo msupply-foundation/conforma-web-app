@@ -97,14 +97,12 @@ const PageElements: React.FC<PageElementProps> = ({
                 <Grid.Column floated="left">
                   <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
                 </Grid.Column>
-                {thisReviewLatestResponse && (
-                  <Grid.Column floated="right" textAlign="right">
-                    <ReviewButton
-                      reviewResponse={thisReviewLatestResponse as ReviewResponse}
-                      summaryViewProps={getSummaryViewProps(element)}
-                    />
-                  </Grid.Column>
-                )}
+                <Grid.Column floated="right" textAlign="right">
+                  <ReviewButton
+                    reviewResponse={thisReviewLatestResponse as ReviewResponse}
+                    summaryViewProps={getSummaryViewProps(element)}
+                  />
+                </Grid.Column>
               </Grid>
               <ReviewResponseComponent
                 reviewResponse={thisReviewLatestResponse as ReviewResponse}

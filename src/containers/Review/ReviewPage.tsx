@@ -1,9 +1,14 @@
 import { Button, Header, Label, Segment } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
-import { FullStructure, PageNEW, ResponsesByCode, SectionStateNEW } from '../../utils/types'
+import {
+  AssignmentDetailsNEW,
+  FullStructure,
+  PageNEW,
+  ResponsesByCode,
+  SectionStateNEW,
+} from '../../utils/types'
 
 import {
-  ReviewAssignment,
   ReviewResponseDecision,
   ReviewStatus,
   useUpdateReviewResponseMutation,
@@ -13,15 +18,27 @@ import strings from '../../utils/constants'
 import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructure'
 import SectionWrapper from '../../components/Application/SectionWrapper'
 import React from 'react'
+import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivation'
 
-const ReviewPage: React.FC<{ reviewAssignment: ReviewAssignment; structure: FullStructure }> = ({
-  reviewAssignment,
-  structure,
-}) => {
+import useScrollableAttachments, {
+  ScrollableAttachment,
+} from '../../utils/hooks/useScrollableAttachments'
+import ReviewSubmitButton from '../../components/Review/ReviewSubmitButton'
+
+const ReviewPage: React.FC<{
+  reviewAssignment: AssignmentDetailsNEW
+  structure: FullStructure
+}> = ({ reviewAssignment, structure }) => {
   const { fullStructure, error } = useGetFullReviewStructure({
     reviewAssignmentId: reviewAssignment.id,
     structure,
   })
+
+  const { isSectionActive, toggleSection } = useQuerySectionActivation({
+    defaultActiveSectionCodes: [],
+  })
+
+  const { addScrollable, scrollTo } = useScrollableAttachments()
 
   if (error) return <NoMatch />
   if (!fullStructure) return <Loading />
@@ -43,15 +60,23 @@ const ReviewPage: React.FC<{ reviewAssignment: ReviewAssignment; structure: Full
           {Object.values(sections).map((section) => (
             <SectionWrapper
               key={`ApplicationSection_${section.details.id}`}
+              isActive={isSectionActive(section.details.code)}
+              toggleSection={toggleSection(section.details.code)}
               section={section}
               extraSectionTitleContent={(section: SectionStateNEW) => (
                 <SectionProgress section={section} />
               )}
               extraPageContent={(page: PageNEW) => <ApproveAllButton page={page} />}
+              scrollableAttachment={(page: PageNEW) => (
+                <ScrollableAttachment
+                  code={`${section.details.code}P${page.number}`}
+                  addScrollabe={addScrollable}
+                />
+              )}
               responsesByCode={responsesByCode as ResponsesByCode}
               serial={info.serial}
               isReview
-              canEdit={reviewAssignment.reviews.nodes[0]?.status === ReviewStatus.Draft}
+              canEdit={reviewAssignment?.review?.status === ReviewStatus.Draft}
             />
           ))}
         </Segment>
@@ -62,7 +87,11 @@ const ReviewPage: React.FC<{ reviewAssignment: ReviewAssignment; structure: Full
             marginRight: '10%',
           }}
         >
-          Submit Button
+          <ReviewSubmitButton
+            structure={fullStructure}
+            reviewAssignment={reviewAssignment}
+            scrollTo={scrollTo}
+          />
         </Segment>
       </Segment.Group>
     </>

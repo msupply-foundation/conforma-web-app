@@ -21,10 +21,14 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
       applicationId,
     },
     notifyOnNetworkStatusChange: true,
+    // if this is removed, there might be an infinite loading when looking at a review for the frist time, after clearing cache
+    // it's either this or removing 'totalCount' in `reviewQuestionAssignments` from this query
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
     if (loading) return setIsFetching(true)
+
     if (!data) return
 
     const reviewAssigments = data.reviewAssignments?.nodes as ReviewAssignment[]
@@ -36,7 +40,6 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
     }
 
     const reviews: Review[] = reviewAssigments.map(({ reviews }) => reviews.nodes[0] as Review)
-
     // Checking if any of reviews trigger is running before refetching assignments
     // This is done to get latest status for reviews (afte trigger finishes to run)
     if (reviews.every((review) => !review || review?.trigger === null)) {
@@ -61,7 +64,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
           reviewAssignment.id
         )
 
-      const { id, status, stage, timeCreated } = reviewAssignment
+      const { id, status, stage, timeCreated, level } = reviewAssignment
 
       // Extra field just to use in initial example - might conflict with future queries
       // to get reviewQuestionAssignment
@@ -79,6 +82,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
           : null,
         status,
         stage,
+        level: level || 1,
         timeCreated,
         totalAssignedQuestions,
       }

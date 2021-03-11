@@ -8,6 +8,7 @@ import { Loading } from '../../components'
 import { SectionWrapper } from '../../components/Application'
 import strings from '../../utils/constants'
 import { Button, Header, Message, Container } from 'semantic-ui-react'
+import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivation'
 
 const ApplicationSummary: React.FC<ApplicationProps> = ({
   structure: fullStructure,
@@ -23,6 +24,10 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
   const { error: submitError, processing, submit } = useSubmitApplication({
     serialNumber: fullStructure?.info.serial as string,
     currentUser: currentUser as User,
+  })
+
+  const { isSectionActive, toggleSection } = useQuerySectionActivation({
+    defaultActiveSectionCodes: Object.keys(fullStructure?.sections),
   })
 
   useEffect(() => {
@@ -65,6 +70,8 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
       {Object.values(sections).map((section) => (
         <SectionWrapper
           key={`ApplicationSection_${section.details.id}`}
+          isActive={isSectionActive(section.details.code)}
+          toggleSection={toggleSection(section.details.code)}
           section={section}
           responsesByCode={responsesByCode as ResponsesByCode}
           serial={info.serial}

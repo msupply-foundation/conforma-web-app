@@ -7,6 +7,8 @@ import useGetReviewInfo from '../../utils/hooks/useGetReviewInfo'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
 import strings from '../../utils/constants'
+import ReviewPageWrapper from './ReviewPageWrapper'
+import ReviewPageWrapperNEW from './ReviewPageWrapperNEW'
 
 interface ReviewWrapperProps {
   structure: FullStructure
@@ -37,10 +39,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
         <ReviewHomeNEW assignments={assignments} structure={structure} />
       </Route>
       <Route exact path={`${path}/:reviewId`}>
-        <ReviewPageNEW />
-      </Route>
-      <Route exact path={`${path}/:reviewId/summary`}>
-        <ReviewSummaryNEW />
+        <ReviewPageWrapperNEW {...{ structure, reviewAssignments: assignments }} />
       </Route>
       <Route>
         <NoMatch />
@@ -57,15 +56,6 @@ interface ReviewHomeProps {
 const ReviewHomeNEW: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
   console.log(assignments) // To be continued in #379
   return <Header>REVIEW HOME PAGE</Header>
-}
-
-const ReviewPageNEW: React.FC = () => {
-  return <Header>REVIEW PAGE</Header>
-}
-
-// To be used in case the decision step is in a separated page...
-const ReviewSummaryNEW: React.FC = () => {
-  return <Header>REVIEW SUMMARY PAGE</Header>
 }
 
 export default ReviewWrapper

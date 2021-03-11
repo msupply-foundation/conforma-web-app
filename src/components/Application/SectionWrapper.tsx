@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Accordion, Segment, Grid, Header, Icon } from 'semantic-ui-react'
 import { PageElements } from '.'
 import { ResponsesByCode, SectionStateNEW, PageNEW } from '../../utils/types'
@@ -7,34 +7,35 @@ interface SectionProps {
   section: SectionStateNEW
   extraSectionTitleContent?: (section: SectionStateNEW) => React.ReactNode
   extraPageContent?: (page: PageNEW) => React.ReactNode
+  scrollableAttachment?: (page: PageNEW) => React.ReactNode
   responsesByCode: ResponsesByCode
   isReview?: boolean
   serial: string
   isSummary?: boolean
+  isActive: boolean
+  toggleSection: () => void
   canEdit?: boolean
 }
 
 const SectionWrapper: React.FC<SectionProps> = ({
   section,
   responsesByCode,
+  isActive,
+  toggleSection,
   extraSectionTitleContent,
   extraPageContent,
   isReview,
   serial,
   isSummary,
+  scrollableAttachment,
   canEdit,
 }) => {
-  const [isOpen, setIsOpen] = useState(true)
-
   const { details, pages } = section
 
-  const handleClick = () => {
-    setIsOpen(!isOpen)
-  }
   return (
     <Accordion styled fluid>
       <Segment.Group size="large">
-        <Accordion.Title active={isOpen} onClick={handleClick}>
+        <Accordion.Title active={isActive} onClick={toggleSection}>
           <Grid columns="equal">
             <Grid.Column floated="left">
               <Header as="h2" content={details.title} />
@@ -43,13 +44,14 @@ const SectionWrapper: React.FC<SectionProps> = ({
               {extraSectionTitleContent && extraSectionTitleContent(section)}
             </Grid.Column>
             <Grid.Column floated="right" textAlign="right" width={1}>
-              <Icon name={isOpen ? 'angle up' : 'angle down'} size="large" />
+              <Icon name={isActive ? 'angle up' : 'angle down'} size="large" />
             </Grid.Column>
           </Grid>
         </Accordion.Title>
-        <Accordion.Content active={isOpen}>
+        <Accordion.Content active={isActive}>
           {Object.values(pages).map((page) => (
             <Segment key={`Page_${page.number}`}>
+              {scrollableAttachment && scrollableAttachment(page)}
               <p>{page.name}</p>
               <PageElements
                 elements={page.state}

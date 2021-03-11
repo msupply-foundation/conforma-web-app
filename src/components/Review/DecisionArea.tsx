@@ -79,7 +79,7 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
             <TextArea
               rows={6}
               style={{ width: '100%' }}
-              value={review.comment}
+              value={review.comment || ''}
               onChange={handleUpdateComment}
             />
           </Segment>
