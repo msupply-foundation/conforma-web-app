@@ -26,7 +26,6 @@ export default gql`
           id
         }
         reviewQuestionAssignments {
-          totalCount
           nodes {
             id
           }

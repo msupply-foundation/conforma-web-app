@@ -151,7 +151,6 @@ interface AssignmentDetailsNEW {
   timeCreated: DateTime
   level: number
   review: ReviewDetails | null
-  totalAssignedQuestions: number
 }
 
 interface BasicStringObject {

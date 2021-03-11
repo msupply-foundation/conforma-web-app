@@ -23,6 +23,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
     notifyOnNetworkStatusChange: true,
     // if this is removed, there might be an infinite loading when looking at a review for the frist time, after clearing cache
     // it's either this or removing 'totalCount' in `reviewQuestionAssignments` from this query
+    // ended up removing totalCount from query and keeping this as nextFetchPolicy (was still seeing glitched with totalCount and had "can't update unmounted component error")
     nextFetchPolicy: 'network-only',
   })
 
@@ -68,8 +69,6 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
 
       // Extra field just to use in initial example - might conflict with future queries
       // to get reviewQuestionAssignment
-      const totalAssignedQuestions = reviewAssignment.reviewQuestionAssignments.totalCount
-
       return {
         id,
         review: review
@@ -84,7 +83,6 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
         stage,
         level: level || 1,
         timeCreated,
-        totalAssignedQuestions,
       }
     })
     setAssignments(assignments)
