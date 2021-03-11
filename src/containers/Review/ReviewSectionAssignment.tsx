@@ -1,6 +1,7 @@
 import React from 'react'
-import { Segment } from 'semantic-ui-react'
+import { Message, Segment } from 'semantic-ui-react'
 import { NoMatch, Loading } from '../../components'
+import strings from '../../utils/constants'
 import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructure'
 import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
 
@@ -17,7 +18,7 @@ const ReviewSectionAssignment: React.FC<{
     filteredSectionIds: [sectionId],
   })
 
-  if (error) return <NoMatch />
+  if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
   if (!fullReviewStructure) return <Loading />
 
   const info = {

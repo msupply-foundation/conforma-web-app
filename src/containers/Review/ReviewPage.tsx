@@ -1,4 +1,4 @@
-import { Button, Header, Label, Segment } from 'semantic-ui-react'
+import { Button, Header, Label, Message, Segment } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
 import {
   AssignmentDetailsNEW,
@@ -40,7 +40,7 @@ const ReviewPage: React.FC<{
 
   const { addScrollable, scrollTo } = useScrollableAttachments()
 
-  if (error) return <NoMatch />
+  if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
   if (!fullReviewStructure) return <Loading />
   const { sections, responsesByCode, info } = fullReviewStructure
   return (
