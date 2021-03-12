@@ -7,30 +7,31 @@ const SectionProgress: React.FC<SectionStateNEW> = ({ assigned, reviewProgress }
   const getProgressTitle = ({ doneNonConform, doneConform, totalReviewable }: ReviewProgress) => {
     if (doneNonConform > 0)
       return strings.LABEL_REVIEW_DECLINED.replace('%1', doneNonConform.toString())
-    else if (doneConform === totalReviewable) return strings.LABEL_REVIEW_COMPLETE
+    else if (doneConform === totalReviewable) return strings.LABEL_REVIEW_COMPLETED
     return null
   }
 
-  return assigned?.current ? (
-    reviewProgress && reviewProgress.totalReviewable > 0 ? (
+  if (assigned?.current && reviewProgress) {
+    const { doneNonConform, doneConform, totalReviewable } = reviewProgress
+    return doneConform + doneNonConform > 0 && totalReviewable > 0 ? (
       <Progress
-        percent={
-          (100 * (reviewProgress.doneConform + reviewProgress.doneNonConform)) /
-          reviewProgress.totalReviewable
-        }
+        style={{ width: 150, display: 'inline-flex' }}
+        percent={(100 * (doneConform + doneNonConform)) / totalReviewable}
         size="tiny"
-        success={reviewProgress.doneNonConform === 0}
-        error={reviewProgress.doneNonConform > 0}
+        success={doneNonConform === 0}
+        error={doneNonConform > 0}
         label={getProgressTitle(reviewProgress)}
       />
     ) : (
-      <Segment vertical>
-        <Icon name="circle" size="mini" color="blue" />
-        <Label basic>{strings.LABEL_ASSIGNED_TO_YOU}</Label>
-      </Segment>
+      <Label
+        basic
+        icon={<Icon name="circle" size="mini" color="blue" />}
+        content={strings.LABEL_ASSIGNED_TO_YOU}
+      />
     )
-  ) : (
-    <Label style={{ backgroundColor: 'WhiteSmoke', color: 'Blue' }}>
+  }
+  return (
+    <Label style={{ backgroundColor: 'White', color: 'Black' }}>
       {strings.LABEL_ASSIGNED_TO_OTHER}
     </Label>
   )
