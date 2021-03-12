@@ -1,39 +1,46 @@
 import { useState, useEffect } from 'react'
 import { FullStructure } from '../types'
 import {
-  ApplicationResponse,
   Review,
   ReviewResponse,
   ReviewQuestionAssignment,
   useGetReviewNewQuery,
   User,
 } from '../generated/graphql'
-import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
 import { useUserState } from '../../contexts/UserState'
 import addThisReviewResponses from '../helpers/structure/addThisReviewResponses'
 import addElementsById from '../helpers/structure/addElementsById'
 import generateReviewProgress from '../helpers/structure/generateReviewProgress'
 
 interface useGetFullReviewStructureProps {
-  structure: FullStructure
+  fullApplicationStructure: FullStructure
   reviewAssignmentId: number
+  filteredSectionIds?: number[]
 }
 
 const useGetFullReviewStructure = ({
-  structure,
+  fullApplicationStructure,
   reviewAssignmentId,
+  filteredSectionIds,
 }: useGetFullReviewStructureProps) => {
-  const [fullStructure, setFullStructure] = useState<FullStructure>()
+  const [fullReviewStructure, setFullReviewStructure] = useState<FullStructure>()
   const [structureError, setStructureError] = useState('')
 
   const {
     userState: { currentUser },
   } = useUserState()
 
+  // filter by all sections if sections are not supplied
+  const sectionIds =
+    filteredSectionIds ||
+    fullApplicationStructure?.sortedSections?.map((section) => section.details.id) ||
+    []
+
   const { data, error } = useGetReviewNewQuery({
     variables: {
       reviewAssignmentId,
       userId: currentUser?.userId as number,
+      sectionIds,
     },
     fetchPolicy: 'network-only',
   })
@@ -44,83 +51,54 @@ const useGetFullReviewStructure = ({
     if (!data) return
 
     const reviewAssignment = data.reviewAssignment
-    if (!reviewAssignment) return setStructureError('Cannot find review Assignemnt')
+    if (!reviewAssignment) return setStructureError('Cannot find review Assignment')
 
-    addEvaluatedResponsesToStructure({
-      structure,
-      applicationResponses: reviewAssignment.application?.applicationResponses
-        ?.nodes as ApplicationResponse[],
-      currentUser,
-      evaluationOptions: {
-        isEditable: false,
-        isVisible: true,
-        isRequired: false,
-        isValid: false,
-      },
-    }).then((evaluatedStructure: FullStructure) => {
-      // This is usefull for linking assignments to elements
-      let newStructure: FullStructure = addElementsById(evaluatedStructure)
-      // This is usefull for generating progress (maybe also usefull downstream, but dont' want too refactor too much at this stage)
-      newStructure = addSortedSectionsAndPages(newStructure)
+    // This is usefull for linking assignments to elements
+    let newStructure: FullStructure = addElementsById(fullApplicationStructure)
 
-      const { reviewQuestionAssignments, reviewer } = reviewAssignment
-      if (reviewQuestionAssignments)
-        newStructure = addIsAssigned(
-          newStructure,
-          reviewQuestionAssignments.nodes as ReviewQuestionAssignment[],
-          reviewer as User
-        )
+    const { reviewQuestionAssignments, reviewer } = reviewAssignment
+    if (reviewQuestionAssignments)
+      newStructure = addIsAssigned(
+        newStructure,
+        reviewQuestionAssignments.nodes as ReviewQuestionAssignment[],
+        reviewer as User
+      )
+    
+    // here we add responses from other review (not from this review assignmnet)
 
-      // here we add responses from other review (not from this review assignmnet)
+    // There will always just be one review assignment linked to a review. (since review is related to reviewAssignment, many to one relation is created)
+    const review = data?.reviewAssignment?.reviews?.nodes[0] as Review
+    if ((data.reviewAssignment?.reviews?.nodes?.length || 0) > 1)
+      console.error(
+        'More then one review associated with reviewAssignment with id',
+        reviewAssignment.id
+      )
+    if (review) {
+      newStructure = addThisReviewResponses({
+        structure: newStructure,
+        sortedReviewResponses: review?.reviewResponses.nodes as ReviewResponse[], // Sorted in useGetReviewNewQuery
+      })
 
-      // There will always just be one review assignment linked to a review. (since review is related to reviewAssignment, many to one relation is created)
-      const review = reviewAssignment?.reviews?.nodes[0] as Review
-      if ((reviewAssignment?.reviews?.nodes?.length || 0) > 1)
-        console.error(
-          'More then one review associated with reviewAssignment with id',
-          reviewAssignment.id
-        )
-      if (review) {
-        newStructure = addThisReviewResponses({
-          structure: newStructure,
-          sortedReviewResponses: review?.reviewResponses.nodes as ReviewResponse[], // Sorted in useGetReviewNewQuery
-        })
-
-        // TODO talk to team and decide if we should put everything in full structure (join all of required info from reviewAssignment ?)
-        newStructure.thisReview = {
-          id: review.id,
-          level: review.level || 1,
-          status: review.status,
-          isLastLevel: !!reviewAssignment.isLastLevel,
-          reviewDecision: review?.reviewDecisions?.nodes[0],
-        }
+      // TODO talk to team and decide if we should put everything in full structure (join all of required info from reviewAssignment ?)
+      newStructure.thisReview = {
+        id: review.id,
+        level: review.level || 1,
+        status: review.status,
+        isLastLevel: !!reviewAssignment.isLastLevel,
+        reviewDecision: review?.reviewDecisions?.nodes[0],
       }
+    }
 
-      generateReviewProgress(newStructure)
-      // generateConsolidationProgress
-      setFullStructure(newStructure)
-    })
+    generateReviewProgress(newStructure)
+    // generateConsolidationProgress
+    setFullReviewStructure(newStructure)
   }, [data, error])
 
   return {
-    fullStructure,
+    fullReviewStructure,
     error: structureError || error?.message,
   }
 }
-
-const addSortedSectionsAndPages = (newStructure: FullStructure): FullStructure => {
-  const sortedSections = Object.values(newStructure.sections).sort(
-    (sectionOne, sectionTwo) => sectionOne.details.index - sectionTwo.details.index
-  )
-  const sortedPages = sortedSections
-    .map((section) =>
-      Object.values(section.pages).sort((pageOne, pageTwo) => pageOne.number - pageTwo.number)
-    )
-    .flat()
-
-  return { ...newStructure, sortedPages, sortedSections }
-}
-
 const addIsAssigned = (
   newStructure: FullStructure,
   reviewQuestionAssignments: ReviewQuestionAssignment[],

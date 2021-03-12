@@ -65,26 +65,35 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
           reviewAssignment.id
         )
 
-      const { id, status, stage, timeCreated, level } = reviewAssignment
+      const { id, status, stage: assignmentStage, timeCreated, level } = reviewAssignment
 
       // Extra field just to use in initial example - might conflict with future queries
       // to get reviewQuestionAssignment
-      return {
+
+      const totalAssignedQuestions = reviewAssignment.reviewQuestionAssignments.nodes.length
+
+      const stage = { id: assignmentStage?.id as number, name: assignmentStage?.title as string }
+
+      const assignment: AssignmentDetailsNEW = {
         id,
         review: review
           ? {
               id: review.id,
               status: review.status as ReviewStatus,
               timeCreated: review.timeCreated,
-              stage: { id: stage?.id as number, name: stage?.title as string },
+              stage,
             }
           : null,
         status,
         stage,
         level: level || 1,
+        totalAssignedQuestions,
         timeCreated,
       }
+
+      return assignment
     })
+
     setAssignments(assignments)
     setIsFetching(false)
   }, [data, loading])
