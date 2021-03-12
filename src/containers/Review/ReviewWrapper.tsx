@@ -1,14 +1,14 @@
 import React from 'react'
 import { Route, Switch } from 'react-router'
-import { Header, Message } from 'semantic-ui-react'
+import { Message } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import useGetReviewInfo from '../../utils/hooks/useGetReviewInfo'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
+import { FullStructure } from '../../utils/types'
 import strings from '../../utils/constants'
-import ReviewPageWrapper from './ReviewPageWrapper'
 import ReviewPageWrapperNEW from './ReviewPageWrapperNEW'
+import ReviewHome from './ReviewHome'
 
 interface ReviewWrapperProps {
   structure: FullStructure
@@ -22,6 +22,8 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     userState: { currentUser },
   } = useUserState()
 
+  // I think we need an option to selecte review assgnments where
+  // userId is reviewerId or assignerId or both or not match it at all (just by row level permission restrictions)
   const { error, loading, assignments } = useGetReviewInfo({
     applicationId: structure.info.id,
     userId: currentUser?.userId as number,
@@ -36,7 +38,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   return (
     <Switch>
       <Route exact path={path}>
-        <ReviewHomeNEW assignments={assignments} structure={structure} />
+        <ReviewHome assignments={assignments} structure={structure} />
       </Route>
       <Route exact path={`${path}/:reviewId`}>
         <ReviewPageWrapperNEW {...{ structure, reviewAssignments: assignments }} />
@@ -46,16 +48,6 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       </Route>
     </Switch>
   )
-}
-
-interface ReviewHomeProps {
-  assignments: AssignmentDetailsNEW[]
-  structure: FullStructure
-}
-
-const ReviewHomeNEW: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
-  console.log(assignments) // To be continued in #379
-  return <Header>REVIEW HOME PAGE</Header>
 }
 
 export default ReviewWrapper

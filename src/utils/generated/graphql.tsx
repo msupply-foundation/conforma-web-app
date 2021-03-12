@@ -20303,6 +20303,7 @@ export type GetReviewInfoQuery = (
 export type GetReviewNewQueryVariables = Exact<{
   reviewAssignmentId: Scalars['Int'];
   userId: Scalars['Int'];
+  sectionIds?: Maybe<Array<Scalars['Int']>>;
 }>;
 
 
@@ -20317,24 +20318,7 @@ export type GetReviewNewQuery = (
         { __typename?: 'ReviewQuestionAssignment' }
         & Pick<ReviewQuestionAssignment, 'id' | 'templateElementId'>
       )>> }
-    ), application?: Maybe<(
-      { __typename?: 'Application' }
-      & Pick<Application, 'id' | 'serial'>
-      & { applicationResponses: (
-        { __typename?: 'ApplicationResponsesConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'ApplicationResponse' }
-          & { reviewResponses: (
-            { __typename?: 'ReviewResponsesConnection' }
-            & { nodes: Array<Maybe<(
-              { __typename?: 'ReviewResponse' }
-              & ReviewResponseFragmentFragment
-            )>> }
-          ) }
-          & ResponseFragment
-        )>> }
-      ) }
-    )>, reviews: (
+    ), reviews: (
       { __typename?: 'ReviewsConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'Review' }
@@ -21421,7 +21405,7 @@ export type GetReviewInfoQueryHookResult = ReturnType<typeof useGetReviewInfoQue
 export type GetReviewInfoLazyQueryHookResult = ReturnType<typeof useGetReviewInfoLazyQuery>;
 export type GetReviewInfoQueryResult = Apollo.QueryResult<GetReviewInfoQuery, GetReviewInfoQueryVariables>;
 export const GetReviewNewDocument = gql`
-    query getReviewNew($reviewAssignmentId: Int!, $userId: Int!) {
+    query getReviewNew($reviewAssignmentId: Int!, $userId: Int!, $sectionIds: [Int!]) {
   reviewAssignment(id: $reviewAssignmentId) {
     id
     isLastLevel
@@ -21431,21 +21415,7 @@ export const GetReviewNewDocument = gql`
         templateElementId
       }
     }
-    application {
-      id
-      serial
-      applicationResponses {
-        nodes {
-          ...Response
-          reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
-            nodes {
-              ...reviewResponseFragment
-            }
-          }
-        }
-      }
-    }
-    reviews {
+    reviews(filter: {or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {reviewer: {id: {equalTo: $userId}}}]}]}) {
       nodes {
         id
         status
@@ -21456,7 +21426,7 @@ export const GetReviewNewDocument = gql`
             decision
           }
         }
-        reviewResponses(orderBy: TIME_UPDATED_DESC) {
+        reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {templateElement: {section: {id: {in: $sectionIds}}}}) {
           nodes {
             ...reviewResponseFragment
             applicationResponse {
@@ -21468,8 +21438,7 @@ export const GetReviewNewDocument = gql`
     }
   }
 }
-    ${ResponseFragmentDoc}
-${ReviewResponseFragmentFragmentDoc}`;
+    ${ReviewResponseFragmentFragmentDoc}`;
 
 /**
  * __useGetReviewNewQuery__
@@ -21485,6 +21454,7 @@ ${ReviewResponseFragmentFragmentDoc}`;
  *   variables: {
  *      reviewAssignmentId: // value for 'reviewAssignmentId'
  *      userId: // value for 'userId'
+ *      sectionIds: // value for 'sectionIds'
  *   },
  * });
  */

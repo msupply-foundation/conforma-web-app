@@ -16,10 +16,10 @@ const generateSectionReviewProgress = (section: SectionStateNEW) => {
 const generatePageReviewProgress = (page: PageNEW) => {
   const totalReviewable = page.state.filter((element) => element.isAssigned)
   const doneConform = totalReviewable.filter(
-    (element) => element.response?.reviewResponse?.decision === ReviewResponseDecision.Approve
+    (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Approve
   )
   const doneNonConform = totalReviewable.filter(
-    (element) => element.response?.reviewResponse?.decision === ReviewResponseDecision.Decline
+    (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Decline
   )
 
   page.reviewProgress = {
