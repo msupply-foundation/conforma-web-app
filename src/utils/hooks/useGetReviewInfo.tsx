@@ -70,7 +70,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
       // Extra field just to use in initial example - might conflict with future queries
       // to get reviewQuestionAssignment
 
-      const totalAssignedQuestions = reviewAssignment.reviewQuestionAssignments.totalCount
+      const totalAssignedQuestions = reviewAssignment.reviewQuestionAssignments.nodes.length
 
       const stage = { id: assignmentStage?.id as number, name: assignmentStage?.title as string }
 
@@ -87,6 +87,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
         status,
         stage,
         level: level || 1,
+        totalAssignedQuestions,
         timeCreated,
       }
 
