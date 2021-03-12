@@ -20311,7 +20311,10 @@ export type GetReviewNewQuery = (
   & { reviewAssignment?: Maybe<(
     { __typename?: 'ReviewAssignment' }
     & Pick<ReviewAssignment, 'id' | 'isLastLevel'>
-    & { reviewQuestionAssignments: (
+    & { reviewer?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstName' | 'lastName'>
+    )>, reviewQuestionAssignments: (
       { __typename?: 'ReviewQuestionAssignmentsConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'ReviewQuestionAssignment' }
@@ -21425,6 +21428,11 @@ export const GetReviewNewDocument = gql`
   reviewAssignment(id: $reviewAssignmentId) {
     id
     isLastLevel
+    reviewer {
+      id
+      firstName
+      lastName
+    }
     reviewQuestionAssignments {
       nodes {
         id

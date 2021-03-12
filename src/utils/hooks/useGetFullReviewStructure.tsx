@@ -4,8 +4,9 @@ import {
   ApplicationResponse,
   Review,
   ReviewResponse,
-  useGetReviewNewQuery,
   ReviewQuestionAssignment,
+  useGetReviewNewQuery,
+  User,
 } from '../generated/graphql'
 import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
 import { useUserState } from '../../contexts/UserState'
@@ -62,13 +63,13 @@ const useGetFullReviewStructure = ({
       // This is usefull for generating progress (maybe also usefull downstream, but dont' want too refactor too much at this stage)
       newStructure = addSortedSectionsAndPages(newStructure)
 
-      const reviewQuestionAssignments = reviewAssignment.reviewQuestionAssignments?.nodes
-      if (reviewQuestionAssignments) {
+      const { reviewQuestionAssignments, reviewer } = reviewAssignment
+      if (reviewQuestionAssignments)
         newStructure = addIsAssigned(
           newStructure,
-          reviewQuestionAssignments as ReviewQuestionAssignment[]
+          reviewQuestionAssignments.nodes as ReviewQuestionAssignment[],
+          reviewer as User
         )
-      }
 
       // here we add responses from other review (not from this review assignmnet)
 
@@ -122,7 +123,8 @@ const addSortedSectionsAndPages = (newStructure: FullStructure): FullStructure =
 
 const addIsAssigned = (
   newStructure: FullStructure,
-  reviewQuestionAssignments: ReviewQuestionAssignment[]
+  reviewQuestionAssignments: ReviewQuestionAssignment[],
+  reviewer: User
 ) => {
   reviewQuestionAssignments.forEach((questionAssignment) => {
     if (!questionAssignment) return
@@ -132,6 +134,15 @@ const addIsAssigned = (
     if (!assignedElement) return
 
     assignedElement.isAssigned = true
+    // Check if section already assigned and set assigned user otherwise
+    const section = newStructure.sections[assignedElement.element.sectionCode]
+    if (!section.assigned)
+      section.assigned = {
+        id: reviewer.id,
+        firstName: reviewer.firstName as string,
+        lastName: reviewer.lastName as string,
+        current: true,
+      }
   })
 
   return newStructure

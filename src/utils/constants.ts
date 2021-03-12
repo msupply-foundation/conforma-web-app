@@ -50,6 +50,8 @@ export default {
   LABEL_PROCESSING: 'Processing...',
   LABEL_REVIEW: 'Review',
   LABEL_REVIEW_APPROVE: 'Approve',
+  LABEL_REVIEW_COMPLETE: 'Complete',
+  LABEL_REVIEW_DECLINED: '(%1) declined',
   LABEL_REVIEW_RESSUBMIT: 'Request a resubmission',
   LABEL_WELCOME: 'Welcome to IRIMS Application Manager',
   LINK_LOGIN_USER: 'Create new account',

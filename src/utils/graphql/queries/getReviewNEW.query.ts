@@ -7,6 +7,11 @@ export default gql`
     reviewAssignment(id: $reviewAssignmentId) {
       id
       isLastLevel
+      reviewer {
+        id
+        firstName
+        lastName
+      }
       reviewQuestionAssignments {
         nodes {
           id

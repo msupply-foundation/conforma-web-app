@@ -41,6 +41,7 @@ const updateSectionsReviews = ({
         id,
         firstName: firstName as string,
         lastName: lastName as string,
+        current: true,
       }
     }
   })

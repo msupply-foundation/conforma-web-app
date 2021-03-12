@@ -387,6 +387,7 @@ interface ReviewerDetails {
   id: number
   firstName: string
   lastName: string
+  current: boolean
 }
 
 type ReviewProgressStatus = 'NOT_COMPLETED' | 'DECLINED' | 'APPROVED'
