@@ -9,7 +9,7 @@ import getReviewAssignmentQuery from '../graphql/queries/getReviewAssignment.que
 
 export interface CreateReviewProps {
   reviewAssigmentId: number
-  applicationResponses: { applicationResponseId: number }[]
+  applicationResponses: { applicationResponseId: number; reviewQuestionAssignmentId: number }[]
 }
 
 interface UseCreateReviewProps {

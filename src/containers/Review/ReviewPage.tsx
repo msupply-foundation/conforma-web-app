@@ -1,4 +1,4 @@
-import { Button, Header, Label, Segment } from 'semantic-ui-react'
+import { Button, Header, Label, Message, Segment } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
 import {
   AssignmentDetailsNEW,
@@ -27,11 +27,11 @@ import ReviewSubmitButton from '../../components/Review/ReviewSubmitButton'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetailsNEW
-  structure: FullStructure
-}> = ({ reviewAssignment, structure }) => {
-  const { fullStructure, error } = useGetFullReviewStructure({
+  fullApplicationStructure: FullStructure
+}> = ({ reviewAssignment, fullApplicationStructure }) => {
+  const { fullReviewStructure, error } = useGetFullReviewStructure({
     reviewAssignmentId: reviewAssignment.id,
-    structure,
+    fullApplicationStructure,
   })
 
   const { isSectionActive, toggleSection } = useQuerySectionActivation({
@@ -40,15 +40,18 @@ const ReviewPage: React.FC<{
 
   const { addScrollable, scrollTo } = useScrollableAttachments()
 
-  if (error) return <NoMatch />
-  if (!fullStructure) return <Loading />
-  const { sections, responsesByCode, info } = fullStructure
+  if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
+  if (!fullReviewStructure) return <Loading />
+  const { sections, responsesByCode, info } = fullReviewStructure
   return (
     <>
       <Segment.Group>
         <Segment textAlign="center">
           <Label color="blue">{strings.STAGE_PLACEHOLDER}</Label>
-          <Header content={structure.info.name} subheader={strings.DATE_APPLICATION_PLACEHOLDER} />
+          <Header
+            content={fullApplicationStructure.info.name}
+            subheader={strings.DATE_APPLICATION_PLACEHOLDER}
+          />
           <Header
             as="h3"
             color="grey"
@@ -88,7 +91,7 @@ const ReviewPage: React.FC<{
           }}
         >
           <ReviewSubmitButton
-            structure={fullStructure}
+            structure={fullReviewStructure}
             reviewAssignment={reviewAssignment}
             scrollTo={scrollTo}
           />
