@@ -24,7 +24,7 @@ import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivati
 import useScrollableAttachments, {
   ScrollableAttachment,
 } from '../../utils/hooks/useScrollableAttachments'
-import ReviewSubmit from '../../components/Review/ReviewSubmit'
+import ReviewSubmit from './ReviewSubmit'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetailsNEW

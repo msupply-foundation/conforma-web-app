@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Decision, ReviewStatus } from '../../../utils/generated/graphql'
-import { ReviewState } from '../../../utils/types'
-import strings from '../../../utils/constants'
+import { Decision, ReviewStatus } from '../generated/graphql'
+import { ReviewState } from '../types'
+import strings from '../constants'
 
 type DecisionOption = {
   code: Decision
@@ -95,7 +95,6 @@ const useGetDecisionOptions: UseGetDecisionOptions = (canSubmitReviewAs, thisRev
   }
 
   const getAndSetDecisionError = () => {
-    console.log(reviewerNeedsToMakeDecision)
     if (!reviewerNeedsToMakeDecision) return true
     const isDecisionError =
       canSubmitReviewAs === Decision.NonConform && getDecision() === Decision.NoDecision

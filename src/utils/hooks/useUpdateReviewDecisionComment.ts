@@ -1,4 +1,4 @@
-import { useUpdateReviewDecisionMutation } from '../../../utils/generated/graphql'
+import { useUpdateReviewDecisionMutation } from '../generated/graphql'
 
 // below lines are used to get return type of the function that is returned by useUpdateReviewDecisionMutation
 type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewDecisionMutation>

@@ -1,11 +1,11 @@
 import {
+  useUpdateReviewMutation,
   Decision,
   ReviewPatch,
-  useUpdateReviewMutation,
   ReviewResponseStatus,
   Trigger,
-} from '../../../utils/generated/graphql'
-import { FullStructure } from '../../../utils/types'
+} from '../generated/graphql'
+import { FullStructure } from '../types'
 
 // below lines are used to get return type of the function that is returned by useUpdateReviewMutation
 type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewMutation>
