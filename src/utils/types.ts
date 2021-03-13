@@ -382,7 +382,7 @@ interface ResumeSection {
 interface ReviewDetails {
   id: number
   status: ReviewStatus
-  timeCreated?: DateTime
+  timeStatusCreated?: DateTime
   stage: ApplicationStage
 }
 

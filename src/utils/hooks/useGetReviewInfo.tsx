@@ -80,7 +80,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
           ? {
               id: review.id,
               status: review.status as ReviewStatus,
-              timeCreated: review.timeCreated,
+              timeStatusCreated: review.timeStatusCreated,
               stage,
             }
           : null,

@@ -2590,8 +2590,8 @@ export type ReviewFilter = {
   isLastLevel?: Maybe<BooleanFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ReviewStatusFilter>;
-  /** Filter by the object’s `timeCreated` field. */
-  timeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `timeStatusCreated` field. */
+  timeStatusCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
   reviewResponses?: Maybe<ReviewToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
@@ -4719,7 +4719,7 @@ export type Review = Node & {
   notifications: NotificationsConnection;
   latestDecision?: Maybe<ReviewDecision>;
   status?: Maybe<ReviewStatus>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeStatusCreated?: Maybe<Scalars['Datetime']>;
 };
 
 
@@ -20284,7 +20284,7 @@ export type GetReviewInfoQuery = (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'Review' }
-          & Pick<Review, 'id' | 'status' | 'trigger' | 'timeCreated'>
+          & Pick<Review, 'id' | 'status' | 'timeStatusCreated' | 'trigger'>
         )>> }
       ), stage?: Maybe<(
         { __typename?: 'TemplateStage' }
@@ -21363,8 +21363,8 @@ export const GetReviewInfoDocument = gql`
         nodes {
           id
           status
+          timeStatusCreated
           trigger
-          timeCreated
         }
       }
       stage {

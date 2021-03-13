@@ -17,8 +17,8 @@ export default gql`
           nodes {
             id
             status
+            timeStatusCreated
             trigger
-            timeCreated
           }
         }
         stage {
