@@ -1,17 +1,27 @@
 import React from 'react'
-import { Message, Segment } from 'semantic-ui-react'
-import { NoMatch, Loading } from '../../components'
+import { Grid, Message } from 'semantic-ui-react'
+import { Loading } from '../../components'
+import ReviewSectionRowAction from '../../components/Review/ReviewSectionRowAction'
+import ReviewSectionRowAssigned from '../../components/Review/ReviewSectionRowAssigned'
+import ReviewSectionRowLastDate from '../../components/Review/ReviewSectionRowLastAction'
+import ReviewSectionRowProgress from '../../components/Review/ReviewSectionRowProgress'
 import strings from '../../utils/constants'
 import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructure'
-import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
+import { AssignmentDetailsNEW, FullStructure, ReviewSectionComponentProps } from '../../utils/types'
 
 // Component renders a line for review assignment within a section
 // to be used in ReviewHome and Expansions
-const ReviewSectionAssignment: React.FC<{
+type ReviewSectionRowProps = {
   sectionId: number
   assignment: AssignmentDetailsNEW
   fullApplicationStructure: FullStructure
-}> = ({ sectionId, assignment, fullApplicationStructure }) => {
+}
+
+const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
+  sectionId,
+  assignment,
+  fullApplicationStructure,
+}) => {
   const { fullReviewStructure, error } = useGetFullReviewStructure({
     reviewAssignment: assignment,
     fullApplicationStructure,
@@ -20,22 +30,34 @@ const ReviewSectionAssignment: React.FC<{
 
   if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
   if (!fullReviewStructure) return <Loading />
+  const section = fullReviewStructure.sortedSections?.find(
+    (section) => section.details.id === sectionId
+  )
+  if (!section) return null
 
-  const info = {
-    level: assignment.level,
-    // action: 'to be implemented',
-    // progress is just an example (would depend)
-    progress: fullReviewStructure.sortedSections?.find(
-      (section) => section.details.id === sectionId
-    )?.reviewProgress,
-    // reviewer: 'to be implemented'
+  const thisReview = fullReviewStructure?.thisReview
+  const isAssignedToCurrentUser = !!section?.reviewAction?.isAssignedToCurrentUser
+
+  const props: ReviewSectionComponentProps = {
+    section,
+    assignment,
+    thisReview,
+    isAssignedToCurrentUser,
+    action: section?.reviewAction?.action || 'unknown',
   }
 
   return (
-    <Segment>
-      <pre>{JSON.stringify(info, null, '  ')}</pre>
-    </Segment>
+    <>
+      {section?.reviewAction?.isReviewable && (
+        <Grid columns="equal" verticalAlign="middle">
+          <ReviewSectionRowAssigned {...props} />
+          <ReviewSectionRowLastDate {...props} />
+          <ReviewSectionRowProgress {...props} />
+          <ReviewSectionRowAction {...props} />
+        </Grid>
+      )}{' '}
+    </>
   )
 }
 
-export default ReviewSectionAssignment
+export default ReviewSectionRow
