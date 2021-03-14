@@ -26,7 +26,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = ({
         return <p>In Review</p>
       }
       case 'canView': {
-        if (isAssignedToCurrentUser) return <Link to={`${reviewSectionLink}`}>strings.VIEW</Link>
+        if (isAssignedToCurrentUser) return <Link to={`${reviewSectionLink}`}>{strings.VIEW}</Link>
         else return <Link to={`${reviewSectionLink}`}>{strings.VIEW}</Link>
       }
 

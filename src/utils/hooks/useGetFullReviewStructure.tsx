@@ -70,7 +70,6 @@ const useGetFullReviewStructure = ({
     generateReviewProgress(newStructure)
 
     const sections = getFilteredSections(sectionIds, newStructure.sortedSections || [])
-    console.log(sections)
     generateReviewSectionActions({
       sections,
       reviewAssignment,
