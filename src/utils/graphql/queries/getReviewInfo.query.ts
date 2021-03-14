@@ -19,6 +19,12 @@ export default gql`
             status
             trigger
             timeCreated
+            reviewDecisions {
+              nodes {
+                id
+                decision
+              }
+            }
           }
         }
         stage {
