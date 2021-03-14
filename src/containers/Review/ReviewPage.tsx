@@ -52,7 +52,7 @@ const ReviewPage: React.FC<{
 
   // TODO decide how to handle this, and localise if not deleted
   if (
-    reviewAssignment?.review?.id !== currentUser?.userId &&
+    reviewAssignment?.reviewer?.id !== currentUser?.userId &&
     fullReviewStructure?.thisReview?.status !== ReviewStatus.Submitted
   )
     return <Header>Review in Progress</Header>

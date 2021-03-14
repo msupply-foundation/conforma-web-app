@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Grid } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ReviewSectionComponentProps } from '../../utils/types'
 import strings from '../../utils/constants'
@@ -15,7 +15,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = ({
     location: { pathname },
   } = useRouter()
 
-  const reviewPath = `${pathname}/${thisReview?.id}`
+  const reviewPath = `${pathname}${thisReview?.id}`
   const reviewSectionLink = `${reviewPath}?activeSections=${details.code}`
 
   const getContent = () => {
