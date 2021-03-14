@@ -1,11 +1,6 @@
 import { useState, useEffect } from 'react'
-import { FullStructure } from '../types'
-import {
-  Review,
-  ReviewResponse,
-  useGetReviewNewQuery,
-  ReviewQuestionAssignment,
-} from '../generated/graphql'
+import { AssignmentDetailsNEW, FullStructure } from '../types'
+import { Review, ReviewResponse, useGetReviewResponsesQuery } from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
 import addThisReviewResponses from '../helpers/structure/addThisReviewResponses'
 import addElementsById from '../helpers/structure/addElementsById'
@@ -13,17 +8,16 @@ import generateReviewProgress from '../helpers/structure/generateReviewProgress'
 
 interface useGetFullReviewStructureProps {
   fullApplicationStructure: FullStructure
-  reviewAssignmentId: number
+  reviewAssignment: AssignmentDetailsNEW
   filteredSectionIds?: number[]
 }
 
 const useGetFullReviewStructure = ({
   fullApplicationStructure,
-  reviewAssignmentId,
+  reviewAssignment,
   filteredSectionIds,
 }: useGetFullReviewStructureProps) => {
   const [fullReviewStructure, setFullReviewStructure] = useState<FullStructure>()
-  const [structureError, setStructureError] = useState('')
 
   const {
     userState: { currentUser },
@@ -35,9 +29,9 @@ const useGetFullReviewStructure = ({
     fullApplicationStructure?.sortedSections?.map((section) => section.details.id) ||
     []
 
-  const { data, error } = useGetReviewNewQuery({
+  const { data, error } = useGetReviewResponsesQuery({
     variables: {
-      reviewAssignmentId,
+      reviewAssignmentId: reviewAssignment.id as number,
       userId: currentUser?.userId as number,
       sectionIds,
     },
@@ -49,19 +43,10 @@ const useGetFullReviewStructure = ({
 
     if (!data) return
 
-    const reviewAssignment = data.reviewAssignment
-
-    if (!reviewAssignment) return setStructureError('Cannot find review Assignment')
-
     // This is usefull for linking assignments to elements
     let newStructure: FullStructure = addElementsById(fullApplicationStructure)
 
-    const reviewQuestionAssignments = reviewAssignment.reviewQuestionAssignments?.nodes
-    if (reviewQuestionAssignments)
-      newStructure = addIsAssigned(
-        newStructure,
-        reviewQuestionAssignments as ReviewQuestionAssignment[]
-      )
+    newStructure = addIsAssigned(newStructure, reviewAssignment.assignedTemplateElementIds)
 
     // here we add responses from other review (not from this review assignmnet)
 
@@ -79,13 +64,7 @@ const useGetFullReviewStructure = ({
       })
 
       // TODO talk to team and decide if we should put everything in full structure (join all of required info from reviewAssignment ?)
-      newStructure.thisReview = {
-        id: review.id,
-        level: review.level || 1,
-        status: review.status,
-        isLastLevel: !!reviewAssignment.isLastLevel,
-        reviewDecision: review?.reviewDecisions?.nodes[0],
-      }
+      newStructure.thisReview = reviewAssignment.review
     }
 
     generateReviewProgress(newStructure)
@@ -95,18 +74,12 @@ const useGetFullReviewStructure = ({
 
   return {
     fullReviewStructure,
-    error: structureError || error?.message,
+    error: error?.message,
   }
 }
-const addIsAssigned = (
-  newStructure: FullStructure,
-  reviewQuestionAssignments: ReviewQuestionAssignment[]
-) => {
-  reviewQuestionAssignments.forEach((questionAssignment) => {
-    if (!questionAssignment) return
-
-    const assignedElement =
-      newStructure?.elementsById?.[questionAssignment.templateElementId as number]
+const addIsAssigned = (newStructure: FullStructure, assignedTemplateElementIds: number[]) => {
+  assignedTemplateElementIds.forEach((templateElementId) => {
+    const assignedElement = newStructure?.elementsById?.[templateElementId]
     if (!assignedElement) return
 
     assignedElement.isAssigned = true

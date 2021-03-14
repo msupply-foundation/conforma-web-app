@@ -31,7 +31,7 @@ const ReviewPage: React.FC<{
   fullApplicationStructure: FullStructure
 }> = ({ reviewAssignment, fullApplicationStructure }) => {
   const { fullReviewStructure, error } = useGetFullReviewStructure({
-    reviewAssignmentId: reviewAssignment.id,
+    reviewAssignment,
     fullApplicationStructure,
   })
 

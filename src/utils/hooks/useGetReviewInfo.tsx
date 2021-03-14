@@ -69,8 +69,11 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
 
       // Extra field just to use in initial example - might conflict with future queries
       // to get reviewQuestionAssignment
-
-      const totalAssignedQuestions = reviewAssignment.reviewQuestionAssignments.nodes.length
+      const reviewQustionAssignments = reviewAssignment.reviewQuestionAssignments.nodes
+      const totalAssignedQuestions = reviewQustionAssignments.length
+      const assignedTemplateElementIds = reviewQustionAssignments.map(
+        (reviewQuestionAssignment) => reviewQuestionAssignment?.templateElementId as number
+      )
 
       const stage = { id: assignmentStage?.id as number, name: assignmentStage?.title as string }
 
@@ -81,13 +84,17 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
               id: review.id,
               status: review.status as ReviewStatus,
               timeStatusCreated: review.timeStatusCreated,
+              isLastLevel: !!review?.isLastLevel,
+              level: review.level || 0,
               stage,
+              reviewDecision: review.reviewDecisions.nodes[0], // this will be the latest, sorted in query
             }
           : null,
         status,
         stage,
         level: level || 1,
         totalAssignedQuestions,
+        assignedTemplateElementIds,
         timeCreated,
       }
 

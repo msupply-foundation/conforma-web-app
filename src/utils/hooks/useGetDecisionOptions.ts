@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Decision, ReviewStatus } from '../generated/graphql'
-import { ReviewState } from '../types'
 import strings from '../constants'
+import { ReviewDetails } from '../types'
 
 type DecisionOption = {
   code: Decision
@@ -39,8 +39,8 @@ const initilDecisionOptions: DecisionOption[] = [
 
 // hook used to manage state of options shown in review submit, as per type definition below
 type UseGetDecisionOptions = (
-  canSubmitReviewAs: Decision | null | undefined,
-  thisReview: ReviewState | null | undefined
+  canSubmitReviewAs?: Decision | null,
+  thisReview?: ReviewDetails | null
 ) => {
   decisionOptions: DecisionOption[]
   getDecision: () => Decision

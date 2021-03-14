@@ -10,7 +10,6 @@ import {
   ReviewStatus,
   TemplateElement,
   TemplateElementCategory,
-  TemplateStage,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
@@ -70,7 +69,6 @@ export {
   ReviewQuestion,
   ReviewQuestionDecision,
   ReviewerResponsesPayload,
-  ReviewState,
   SectionAndPage,
   SectionState,
   SectionDetails,
@@ -154,6 +152,7 @@ interface AssignmentDetailsNEW {
   review: ReviewDetails | null
   totalAssignedQuestions: number
   stage: ApplicationStage
+  assignedTemplateElementIds: number[]
 }
 
 interface BasicStringObject {
@@ -267,16 +266,8 @@ interface EvaluatorParameters {
 
 type ElementsById = { [templateElementId: string]: PageElement }
 
-interface ReviewState {
-  id: number
-  level: number
-  status: ReviewStatus | null | undefined
-  isLastLevel: boolean
-  reviewDecision?: ReviewDecision | null
-}
-
 interface FullStructure {
-  thisReview?: ReviewState
+  thisReview?: ReviewDetails | null
   elementsById?: ElementsById
   lastValidationTimestamp?: number
   info: ApplicationDetails
@@ -384,6 +375,9 @@ interface ReviewDetails {
   status: ReviewStatus
   timeStatusCreated?: DateTime
   stage: ApplicationStage
+  isLastLevel: boolean
+  level: number
+  reviewDecision?: ReviewDecision | null
 }
 
 interface ReviewerDetails {

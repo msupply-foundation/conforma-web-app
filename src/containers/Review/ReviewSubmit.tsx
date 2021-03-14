@@ -33,7 +33,6 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
     <>
       <ReviewComment
         isEditable={thisReview?.status == ReviewStatus.Draft}
-        initialComment={reviewDecision?.comment || ''}
         reviewDecisionId={Number(reviewDecision?.id)}
       />
 
