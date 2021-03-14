@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Decision, ReviewStatus } from '../../../utils/generated/graphql'
-import { ReviewState } from '../../../utils/types'
-import strings from '../../../utils/constants'
+import { Decision, ReviewStatus } from '../generated/graphql'
+import strings from '../constants'
+import { ReviewDetails } from '../types'
 
 type DecisionOption = {
   code: Decision
@@ -39,8 +39,8 @@ const initilDecisionOptions: DecisionOption[] = [
 
 // hook used to manage state of options shown in review submit, as per type definition below
 type UseGetDecisionOptions = (
-  canSubmitReviewAs: Decision | null | undefined,
-  thisReview: ReviewState | null | undefined
+  canSubmitReviewAs?: Decision | null,
+  thisReview?: ReviewDetails | null
 ) => {
   decisionOptions: DecisionOption[]
   getDecision: () => Decision
@@ -63,15 +63,21 @@ const useGetDecisionOptions: UseGetDecisionOptions = (canSubmitReviewAs, thisRev
       decisionOptions.map((option) => {
         let isVisible = false
         let value = false
-
+        // if review is NOT DRAFT then use decision from DB (and make it the only on visible)
         if (!isDraft) {
           isVisible = value = option.code === decisionInStructure
-        } else if (canSubmitReviewAs !== Decision.NonConform || !reviewerNeedsToMakeDecision) {
-          isVisible = value = option.code === canSubmitReviewAs
-        } else {
+        }
+        // if review IS DRAFT and can can submit review with non conform decision and reviewer has
+        // ability to make a decsion, present them with NonConform or LOQ, both unchecked
+        if (isDraft && canSubmitReviewAs === Decision.NonConform && reviewerNeedsToMakeDecision) {
           isVisible =
             option.code === Decision.NonConform || option.code === Decision.ListOfQuestions
           value = false
+        }
+        // if review IS DRAFT and other then non conform decision or reviewer can't make a decision
+        // then use computed decision for the state of review
+        else {
+          isVisible = value = option.code === canSubmitReviewAs
         }
 
         return {
@@ -95,7 +101,6 @@ const useGetDecisionOptions: UseGetDecisionOptions = (canSubmitReviewAs, thisRev
   }
 
   const getAndSetDecisionError = () => {
-    console.log(reviewerNeedsToMakeDecision)
     if (!reviewerNeedsToMakeDecision) return true
     const isDecisionError =
       canSubmitReviewAs === Decision.NonConform && getDecision() === Decision.NoDecision

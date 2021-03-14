@@ -5,11 +5,11 @@ import {
   ReviewResponse,
   ReviewResponseDecision,
   useUpdateReviewResponseMutation,
-} from '../../../utils/generated/graphql'
-import strings from '../../../utils/constants'
-import messages from '../../../utils/messages'
-import SummaryViewWrapperNEW from '../../../formElementPlugins/SummaryViewWrapperNEW'
-import { SummaryViewWrapperPropsNEW } from '../../../formElementPlugins/types'
+} from '../../utils/generated/graphql'
+import strings from '../../utils/constants'
+import messages from '../../utils/messages'
+import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
+import { SummaryViewWrapperPropsNEW } from '../../formElementPlugins/types'
 
 interface DecisionAreaProps {
   reviewResponse: ReviewResponse

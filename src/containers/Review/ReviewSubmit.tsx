@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
-import { Button, Checkbox, Form, ModalProps, TextArea } from 'semantic-ui-react'
-import { ModalWarning } from '..'
+import { Button, ModalProps } from 'semantic-ui-react'
+import { ModalWarning } from '../../components'
+import ReviewComment from '../../components/Review/ReviewComment'
+import ReviewDecision from '../../components/Review/ReviewDecision'
 import strings from '../../utils/constants'
 import { Decision, ReviewStatus } from '../../utils/generated/graphql'
+import useGetDecisionOptions from '../../utils/hooks/useGetDecisionOptions'
 import { useRouter } from '../../utils/hooks/useRouter'
-
+import useSubmitReviewNEW from '../../utils/hooks/useSubmitReviewNEW'
 import messages from '../../utils/messages'
 import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
-import useGetDecisionOptions, { DecisionOption } from './hooks/useGetDecisionOptions'
-import useSubmitReview from './hooks/useSubmitReview'
-import useUpdateReviewDecisionComment from './hooks/useUpdateReviewDecisionComment'
 
 type ReviewSubmitProps = {
   structure: FullStructure
@@ -33,7 +33,6 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
     <>
       <ReviewComment
         isEditable={thisReview?.status == ReviewStatus.Draft}
-        initialComment={reviewDecision?.comment || ''}
         reviewDecisionId={Number(reviewDecision?.id)}
       />
 
@@ -48,64 +47,6 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
         getAndSetDecisionError={getAndSetDecisionError}
       />
     </>
-  )
-}
-
-type ReviewCommentProps = {
-  initialComment: string
-  reviewDecisionId: number
-  isEditable: boolean
-}
-
-const ReviewComment: React.FC<ReviewCommentProps> = ({
-  reviewDecisionId,
-  initialComment,
-  isEditable,
-}) => {
-  const submitComment = useUpdateReviewDecisionComment(reviewDecisionId)
-  const [comment, setComment] = useState(initialComment)
-
-  if (!isEditable) return <p>{comment}</p>
-
-  return (
-    <Form>
-      <TextArea
-        defaultValue={initialComment}
-        onChange={(_, { value }) => setComment(String(value))}
-        onBlur={() => submitComment(comment)}
-      />
-    </Form>
-  )
-}
-
-type ReviewDecisionProps = {
-  decisionOptions: DecisionOption[]
-  setDecision: (decision: Decision) => void
-  isDecisionError: boolean
-}
-
-const ReviewDecision: React.FC<ReviewDecisionProps> = ({
-  decisionOptions,
-  setDecision,
-  isDecisionError,
-}) => {
-  return (
-    <Form>
-      {decisionOptions
-        .filter((option) => option.isVisible)
-        .map((option) => (
-          <Form.Field error={isDecisionError} key={option.code}>
-            <Checkbox
-              radio
-              label={option.title}
-              name={option.title}
-              value={option.code}
-              checked={option.value}
-              onChange={() => setDecision(option.code)}
-            />
-          </Form.Field>
-        ))}
-    </Form>
   )
 }
 
@@ -127,7 +68,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   } = useRouter()
 
   const [showWarningModal, setShowWarningModal] = useState<ModalProps>({ open: false })
-  const submitReview = useSubmitReview(Number(structure.thisReview?.id))
+  const submitReview = useSubmitReviewNEW(Number(structure.thisReview?.id))
 
   const showWarning = (message: {}, action: () => void) => {
     setShowWarningModal({
@@ -202,5 +143,4 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     </>
   )
 }
-
 export default ReviewSubmit

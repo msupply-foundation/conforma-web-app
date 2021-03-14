@@ -12,7 +12,7 @@ import {
 } from '../../utils/generated/graphql'
 
 import { SummaryViewWrapperPropsNEW } from '../../formElementPlugins/types'
-import DecisionAreaNEW from '../Review/modals/DecisionAreaNEW'
+import DecisionAreaNEW from '../Review/DecisionAreaNEW'
 
 interface PageElementProps {
   elements: PageElement[]

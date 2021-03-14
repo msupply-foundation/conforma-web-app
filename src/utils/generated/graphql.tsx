@@ -19946,13 +19946,13 @@ export type UpdateReviewMutation = (
   )> }
 );
 
-export type UpdateReviewDecisionMutationVariables = Exact<{
+export type UpdateReviewDecisionCommentMutationVariables = Exact<{
   reviewDecisionId: Scalars['Int'];
-  data: ReviewDecisionPatch;
+  comment: Scalars['String'];
 }>;
 
 
-export type UpdateReviewDecisionMutation = (
+export type UpdateReviewDecisionCommentMutation = (
   { __typename?: 'Mutation' }
   & { updateReviewDecision?: Maybe<(
     { __typename?: 'UpdateReviewDecisionPayload' }
@@ -20267,6 +20267,19 @@ export type GetReviewAssignmentQuery = (
   )> }
 );
 
+export type GetReviewDecisionCommentQueryVariables = Exact<{
+  reviewDecisionId: Scalars['Int'];
+}>;
+
+
+export type GetReviewDecisionCommentQuery = (
+  { __typename?: 'Query' }
+  & { reviewDecision?: Maybe<(
+    { __typename?: 'ReviewDecision' }
+    & Pick<ReviewDecision, 'id' | 'comment'>
+  )> }
+);
+
 export type GetReviewInfoQueryVariables = Exact<{
   reviewerId: Scalars['Int'];
   applicationId?: Maybe<Scalars['Int']>;
@@ -20280,11 +20293,21 @@ export type GetReviewInfoQuery = (
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
       & Pick<ReviewAssignment, 'id' | 'level' | 'status' | 'timeCreated' | 'isLastLevel'>
-      & { reviews: (
+      & { reviewer?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'firstName' | 'lastName'>
+      )>, reviews: (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'Review' }
-          & Pick<Review, 'id' | 'status' | 'timeStatusCreated' | 'trigger'>
+          & Pick<Review, 'id' | 'status' | 'timeStatusCreated' | 'trigger' | 'isLastLevel'>
+          & { reviewDecisions: (
+            { __typename?: 'ReviewDecisionsConnection' }
+            & { nodes: Array<Maybe<(
+              { __typename?: 'ReviewDecision' }
+              & Pick<ReviewDecision, 'id' | 'decision'>
+            )>> }
+          ) }
         )>> }
       ), stage?: Maybe<(
         { __typename?: 'TemplateStage' }
@@ -20293,52 +20316,37 @@ export type GetReviewInfoQuery = (
         { __typename?: 'ReviewQuestionAssignmentsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'ReviewQuestionAssignment' }
-          & Pick<ReviewQuestionAssignment, 'id'>
+          & Pick<ReviewQuestionAssignment, 'id' | 'templateElementId'>
         )>> }
       ) }
     )>> }
   )> }
 );
 
-export type GetReviewNewQueryVariables = Exact<{
+export type GetReviewResponsesQueryVariables = Exact<{
   reviewAssignmentId: Scalars['Int'];
   userId: Scalars['Int'];
   sectionIds?: Maybe<Array<Scalars['Int']>>;
 }>;
 
 
-export type GetReviewNewQuery = (
+export type GetReviewResponsesQuery = (
   { __typename?: 'Query' }
   & { reviewAssignment?: Maybe<(
     { __typename?: 'ReviewAssignment' }
-    & Pick<ReviewAssignment, 'id' | 'isLastLevel'>
-    & { reviewer?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstName' | 'lastName'>
-    )>, reviewQuestionAssignments: (
-      { __typename?: 'ReviewQuestionAssignmentsConnection' }
-      & { nodes: Array<Maybe<(
-        { __typename?: 'ReviewQuestionAssignment' }
-        & Pick<ReviewQuestionAssignment, 'id' | 'templateElementId'>
-      )>> }
-    ), reviews: (
+    & Pick<ReviewAssignment, 'id'>
+    & { reviews: (
       { __typename?: 'ReviewsConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'Review' }
-        & Pick<Review, 'id' | 'status'>
-        & { reviewDecisions: (
-          { __typename?: 'ReviewDecisionsConnection' }
-          & { nodes: Array<Maybe<(
-            { __typename?: 'ReviewDecision' }
-            & Pick<ReviewDecision, 'id' | 'comment' | 'decision'>
-          )>> }
-        ), reviewResponses: (
+        & Pick<Review, 'id'>
+        & { reviewResponses: (
           { __typename?: 'ReviewResponsesConnection' }
           & { nodes: Array<Maybe<(
             { __typename?: 'ReviewResponse' }
             & { applicationResponse?: Maybe<(
               { __typename?: 'ApplicationResponse' }
-              & Pick<ApplicationResponse, 'templateElementId'>
+              & Pick<ApplicationResponse, 'id' | 'templateElementId'>
             )> }
             & ReviewResponseFragmentFragment
           )>> }
@@ -20825,9 +20833,9 @@ export function useUpdateReviewMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateReviewMutationHookResult = ReturnType<typeof useUpdateReviewMutation>;
 export type UpdateReviewMutationResult = Apollo.MutationResult<UpdateReviewMutation>;
 export type UpdateReviewMutationOptions = Apollo.BaseMutationOptions<UpdateReviewMutation, UpdateReviewMutationVariables>;
-export const UpdateReviewDecisionDocument = gql`
-    mutation updateReviewDecision($reviewDecisionId: Int!, $data: ReviewDecisionPatch!) {
-  updateReviewDecision(input: {id: $reviewDecisionId, patch: $data}) {
+export const UpdateReviewDecisionCommentDocument = gql`
+    mutation updateReviewDecisionComment($reviewDecisionId: Int!, $comment: String!) {
+  updateReviewDecision(input: {id: $reviewDecisionId, patch: {comment: $comment}}) {
     reviewDecision {
       id
       decision
@@ -20836,32 +20844,32 @@ export const UpdateReviewDecisionDocument = gql`
   }
 }
     `;
-export type UpdateReviewDecisionMutationFn = Apollo.MutationFunction<UpdateReviewDecisionMutation, UpdateReviewDecisionMutationVariables>;
+export type UpdateReviewDecisionCommentMutationFn = Apollo.MutationFunction<UpdateReviewDecisionCommentMutation, UpdateReviewDecisionCommentMutationVariables>;
 
 /**
- * __useUpdateReviewDecisionMutation__
+ * __useUpdateReviewDecisionCommentMutation__
  *
- * To run a mutation, you first call `useUpdateReviewDecisionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateReviewDecisionMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateReviewDecisionCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateReviewDecisionCommentMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateReviewDecisionMutation, { data, loading, error }] = useUpdateReviewDecisionMutation({
+ * const [updateReviewDecisionCommentMutation, { data, loading, error }] = useUpdateReviewDecisionCommentMutation({
  *   variables: {
  *      reviewDecisionId: // value for 'reviewDecisionId'
- *      data: // value for 'data'
+ *      comment: // value for 'comment'
  *   },
  * });
  */
-export function useUpdateReviewDecisionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReviewDecisionMutation, UpdateReviewDecisionMutationVariables>) {
-        return Apollo.useMutation<UpdateReviewDecisionMutation, UpdateReviewDecisionMutationVariables>(UpdateReviewDecisionDocument, baseOptions);
+export function useUpdateReviewDecisionCommentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReviewDecisionCommentMutation, UpdateReviewDecisionCommentMutationVariables>) {
+        return Apollo.useMutation<UpdateReviewDecisionCommentMutation, UpdateReviewDecisionCommentMutationVariables>(UpdateReviewDecisionCommentDocument, baseOptions);
       }
-export type UpdateReviewDecisionMutationHookResult = ReturnType<typeof useUpdateReviewDecisionMutation>;
-export type UpdateReviewDecisionMutationResult = Apollo.MutationResult<UpdateReviewDecisionMutation>;
-export type UpdateReviewDecisionMutationOptions = Apollo.BaseMutationOptions<UpdateReviewDecisionMutation, UpdateReviewDecisionMutationVariables>;
+export type UpdateReviewDecisionCommentMutationHookResult = ReturnType<typeof useUpdateReviewDecisionCommentMutation>;
+export type UpdateReviewDecisionCommentMutationResult = Apollo.MutationResult<UpdateReviewDecisionCommentMutation>;
+export type UpdateReviewDecisionCommentMutationOptions = Apollo.BaseMutationOptions<UpdateReviewDecisionCommentMutation, UpdateReviewDecisionCommentMutationVariables>;
 export const UpdateReviewResponseDocument = gql`
     mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String) {
   updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment}}) {
@@ -21349,6 +21357,40 @@ export function useGetReviewAssignmentLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetReviewAssignmentQueryHookResult = ReturnType<typeof useGetReviewAssignmentQuery>;
 export type GetReviewAssignmentLazyQueryHookResult = ReturnType<typeof useGetReviewAssignmentLazyQuery>;
 export type GetReviewAssignmentQueryResult = Apollo.QueryResult<GetReviewAssignmentQuery, GetReviewAssignmentQueryVariables>;
+export const GetReviewDecisionCommentDocument = gql`
+    query getReviewDecisionComment($reviewDecisionId: Int!) {
+  reviewDecision(id: $reviewDecisionId) {
+    id
+    comment
+  }
+}
+    `;
+
+/**
+ * __useGetReviewDecisionCommentQuery__
+ *
+ * To run a query within a React component, call `useGetReviewDecisionCommentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReviewDecisionCommentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReviewDecisionCommentQuery({
+ *   variables: {
+ *      reviewDecisionId: // value for 'reviewDecisionId'
+ *   },
+ * });
+ */
+export function useGetReviewDecisionCommentQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewDecisionCommentQuery, GetReviewDecisionCommentQueryVariables>) {
+        return Apollo.useQuery<GetReviewDecisionCommentQuery, GetReviewDecisionCommentQueryVariables>(GetReviewDecisionCommentDocument, baseOptions);
+      }
+export function useGetReviewDecisionCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewDecisionCommentQuery, GetReviewDecisionCommentQueryVariables>) {
+          return Apollo.useLazyQuery<GetReviewDecisionCommentQuery, GetReviewDecisionCommentQueryVariables>(GetReviewDecisionCommentDocument, baseOptions);
+        }
+export type GetReviewDecisionCommentQueryHookResult = ReturnType<typeof useGetReviewDecisionCommentQuery>;
+export type GetReviewDecisionCommentLazyQueryHookResult = ReturnType<typeof useGetReviewDecisionCommentLazyQuery>;
+export type GetReviewDecisionCommentQueryResult = Apollo.QueryResult<GetReviewDecisionCommentQuery, GetReviewDecisionCommentQueryVariables>;
 export const GetReviewInfoDocument = gql`
     query getReviewInfo($reviewerId: Int!, $applicationId: Int) {
   reviewAssignments(condition: {reviewerId: $reviewerId, applicationId: $applicationId}, orderBy: TIME_CREATED_DESC) {
@@ -21359,12 +21401,24 @@ export const GetReviewInfoDocument = gql`
       timeCreated
       level
       isLastLevel
+      reviewer {
+        id
+        firstName
+        lastName
+      }
       reviews {
         nodes {
           id
           status
           timeStatusCreated
           trigger
+          isLastLevel
+          reviewDecisions(orderBy: TIME_UPDATED_DESC) {
+            nodes {
+              id
+              decision
+            }
+          }
         }
       }
       stage {
@@ -21374,6 +21428,7 @@ export const GetReviewInfoDocument = gql`
       reviewQuestionAssignments {
         nodes {
           id
+          templateElementId
         }
       }
     }
@@ -21407,37 +21462,18 @@ export function useGetReviewInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetReviewInfoQueryHookResult = ReturnType<typeof useGetReviewInfoQuery>;
 export type GetReviewInfoLazyQueryHookResult = ReturnType<typeof useGetReviewInfoLazyQuery>;
 export type GetReviewInfoQueryResult = Apollo.QueryResult<GetReviewInfoQuery, GetReviewInfoQueryVariables>;
-export const GetReviewNewDocument = gql`
-    query getReviewNew($reviewAssignmentId: Int!, $userId: Int!, $sectionIds: [Int!]) {
+export const GetReviewResponsesDocument = gql`
+    query getReviewResponses($reviewAssignmentId: Int!, $userId: Int!, $sectionIds: [Int!]) {
   reviewAssignment(id: $reviewAssignmentId) {
     id
-    isLastLevel
-    reviewer {
-      id
-      firstName
-      lastName
-    }
-    reviewQuestionAssignments {
-      nodes {
-        id
-        templateElementId
-      }
-    }
     reviews(filter: {or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {reviewer: {id: {equalTo: $userId}}}]}]}) {
       nodes {
         id
-        status
-        reviewDecisions {
-          nodes {
-            id
-            comment
-            decision
-          }
-        }
         reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {templateElement: {section: {id: {in: $sectionIds}}}}) {
           nodes {
             ...reviewResponseFragment
             applicationResponse {
+              id
               templateElementId
             }
           }
@@ -21449,16 +21485,16 @@ export const GetReviewNewDocument = gql`
     ${ReviewResponseFragmentFragmentDoc}`;
 
 /**
- * __useGetReviewNewQuery__
+ * __useGetReviewResponsesQuery__
  *
- * To run a query within a React component, call `useGetReviewNewQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetReviewNewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetReviewResponsesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReviewResponsesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetReviewNewQuery({
+ * const { data, loading, error } = useGetReviewResponsesQuery({
  *   variables: {
  *      reviewAssignmentId: // value for 'reviewAssignmentId'
  *      userId: // value for 'userId'
@@ -21466,15 +21502,15 @@ export const GetReviewNewDocument = gql`
  *   },
  * });
  */
-export function useGetReviewNewQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewNewQuery, GetReviewNewQueryVariables>) {
-        return Apollo.useQuery<GetReviewNewQuery, GetReviewNewQueryVariables>(GetReviewNewDocument, baseOptions);
+export function useGetReviewResponsesQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewResponsesQuery, GetReviewResponsesQueryVariables>) {
+        return Apollo.useQuery<GetReviewResponsesQuery, GetReviewResponsesQueryVariables>(GetReviewResponsesDocument, baseOptions);
       }
-export function useGetReviewNewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewNewQuery, GetReviewNewQueryVariables>) {
-          return Apollo.useLazyQuery<GetReviewNewQuery, GetReviewNewQueryVariables>(GetReviewNewDocument, baseOptions);
+export function useGetReviewResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewResponsesQuery, GetReviewResponsesQueryVariables>) {
+          return Apollo.useLazyQuery<GetReviewResponsesQuery, GetReviewResponsesQueryVariables>(GetReviewResponsesDocument, baseOptions);
         }
-export type GetReviewNewQueryHookResult = ReturnType<typeof useGetReviewNewQuery>;
-export type GetReviewNewLazyQueryHookResult = ReturnType<typeof useGetReviewNewLazyQuery>;
-export type GetReviewNewQueryResult = Apollo.QueryResult<GetReviewNewQuery, GetReviewNewQueryVariables>;
+export type GetReviewResponsesQueryHookResult = ReturnType<typeof useGetReviewResponsesQuery>;
+export type GetReviewResponsesLazyQueryHookResult = ReturnType<typeof useGetReviewResponsesLazyQuery>;
+export type GetReviewResponsesQueryResult = Apollo.QueryResult<GetReviewResponsesQuery, GetReviewResponsesQueryVariables>;
 export const GetReviewStatusDocument = gql`
     query getReviewStatus($reviewId: Int!) {
   reviewStatusHistories(condition: {isCurrent: true, reviewId: $reviewId}) {

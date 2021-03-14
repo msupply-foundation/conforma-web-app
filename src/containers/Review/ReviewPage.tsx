@@ -24,14 +24,15 @@ import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivati
 import useScrollableAttachments, {
   ScrollableAttachment,
 } from '../../utils/hooks/useScrollableAttachments'
-import { ReviewSubmit, SectionProgress } from '../../components/Review'
+import { SectionProgress } from '../../components/Review'
+import ReviewSubmit from './ReviewSubmit'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetailsNEW
   fullApplicationStructure: FullStructure
 }> = ({ reviewAssignment, fullApplicationStructure }) => {
   const { fullReviewStructure, error } = useGetFullReviewStructure({
-    reviewAssignmentId: reviewAssignment.id,
+    reviewAssignment,
     fullApplicationStructure,
   })
 
