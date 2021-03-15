@@ -1,15 +1,18 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState, useRef } from 'react'
 import { Button, Form, Label, Image } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
-import { getImage } from '../../../utils/helpers/fetchMethods'
 import strings from '../constants'
+import config from '../../../config.json'
+import { Link } from 'react-router-dom'
 
 interface FileInfo {
   filename: string
+  fileUrl: string
+  thumbnailUrl: string
   mimetype: string
-  fileUrl: string | number
-  thumbnailUrl: boolean
 }
+
+const host = config.serverREST
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   code,
@@ -26,13 +29,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 }) => {
   const { label, description, fileCountLimit, fileExtensions, fileSizeLimit } = parameters
 
-  getImage('/file?uid=qsHimW1hrZ7YAxlcN4h8M&thumbnail=true').then((result) =>
-    console.log('result', result)
-  )
+  const fileInputRef = useRef<any>(null)
 
-  const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>(initialValue.files)
+  // getImage('/file?uid=qsHimW1hrZ7YAxlcN4h8M&thumbnail=true').then((result) =>
+  //   console.log('result', result)
+  // )
 
-  console.log('uploadedFiles', uploadedFiles)
+  const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>(initialValue?.files || [])
+
+  // console.log('uploadedFiles', uploadedFiles)
   // console.log('initialValue', initialValue)
 
   // useEffect(() => {
@@ -42,45 +47,43 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   //   })
   // }, [uploadedFiles])
 
+  const onChangeHandler = (e: any) => {
+    console.log(e.target.files)
+  }
+
   return (
     <>
       <label>
         <Markdown text={label} semanticComponent="noParagraph" />
       </label>
       <Markdown text={description} />
-      <Button primary>Click to upload</Button>
+      <div>
+        <input
+          type="file"
+          ref={fileInputRef}
+          hidden
+          name="file-upload"
+          onChange={onChangeHandler}
+        />
+        <Button primary onClick={() => fileInputRef?.current?.click()}>
+          Click to upload
+        </Button>
+      </div>
       {uploadedFiles.map((file) => {
         console.log(file.filename)
         return (
           <Fragment key={file.filename}>
-            <Label>{file.filename}</Label>
-            <Image src={getImage(file.filename)}></Image>
+            <Label>
+              <a href={host + file.fileUrl} target="_blank">
+                {file.filename}
+              </a>
+            </Label>
+            <a href={host + file.fileUrl} target="_blank">
+              <Image src={host + file.thumbnailUrl}></Image>
+            </a>
           </Fragment>
         )
       })}
-      {/* {checkboxElements.map((cb: Checkbox, index: number) => {
-        return layout === 'inline' ? (
-          <Checkbox
-            label={cb.label}
-            checked={cb.selected}
-            onChange={toggle}
-            index={index}
-            toggle={type === 'toggle'}
-            slider={type === 'slider'}
-          />
-        ) : (
-          <Form.Field key={`${index}_${cb.label}`} disabled={!isEditable}>
-            <Checkbox
-              label={cb.label}
-              checked={cb.selected}
-              onChange={toggle}
-              index={index}
-              toggle={type === 'toggle'}
-              slider={type === 'slider'}
-            />
-          </Form.Field>
-        )
-      })} */}
     </>
   )
 }

@@ -32,19 +32,3 @@ export async function getRequest(endpointUrl: string, headers: object = {}) {
     throw err
   }
 }
-
-export async function getImage(endpointUrl: string, headers: object = {}) {
-  try {
-    const response = await fetch(endpointUrl, {
-      method: 'GET',
-      // cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json',
-        ...headers,
-      },
-    })
-    return response.blob()
-  } catch (err) {
-    throw err
-  }
-}
