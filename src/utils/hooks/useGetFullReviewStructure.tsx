@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { AssignmentDetailsNEW, FullStructure } from '../types'
-import { Review, ReviewResponse, useGetReviewResponsesQuery } from '../generated/graphql'
+import { Review, ReviewResponse, useGetReviewResponsesQuery, User } from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
 import addThisReviewResponses from '../helpers/structure/addThisReviewResponses'
 import addElementsById from '../helpers/structure/addElementsById'
@@ -46,7 +46,11 @@ const useGetFullReviewStructure = ({
     // This is usefull for linking assignments to elements
     let newStructure: FullStructure = addElementsById(fullApplicationStructure)
 
-    newStructure = addIsAssigned(newStructure, reviewAssignment.assignedTemplateElementIds)
+    newStructure = addIsAssigned(
+      newStructure,
+      reviewAssignment.assignedTemplateElementIds,
+      reviewAssignment.reviewer
+    )
 
     // here we add responses from other review (not from this review assignmnet)
 
@@ -77,12 +81,27 @@ const useGetFullReviewStructure = ({
     error: error?.message,
   }
 }
-const addIsAssigned = (newStructure: FullStructure, assignedTemplateElementIds: number[]) => {
+
+const addIsAssigned = (
+  newStructure: FullStructure,
+  assignedTemplateElementIds: number[],
+  reviewer: User
+) => {
   assignedTemplateElementIds.forEach((templateElementId) => {
     const assignedElement = newStructure?.elementsById?.[templateElementId]
+
     if (!assignedElement) return
 
     assignedElement.isAssigned = true
+    // Check if section already assigned and set assigned user otherwise
+    const section = newStructure.sections[assignedElement.element.sectionCode]
+    if (!section.assigned)
+      section.assigned = {
+        id: reviewer.id,
+        firstName: reviewer.firstName as string,
+        lastName: reviewer.lastName as string,
+        current: true,
+      }
   })
 
   return newStructure

@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 import { AssignmentDetailsNEW } from '../types'
-import { Review, ReviewAssignment, ReviewStatus, useGetReviewInfoQuery } from '../generated/graphql'
+import {
+  Review,
+  ReviewAssignment,
+  ReviewStatus,
+  useGetReviewInfoQuery,
+  User,
+} from '../generated/graphql'
 import messages from '../messages'
 
 const MAX_REFETCH = 10
@@ -65,7 +71,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
           reviewAssignment.id
         )
 
-      const { id, status, stage: assignmentStage, timeCreated, level } = reviewAssignment
+      const { id, status, stage: assignmentStage, timeCreated, level, reviewer } = reviewAssignment
 
       // Extra field just to use in initial example - might conflict with future queries
       // to get reviewQuestionAssignment
@@ -92,6 +98,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
           : null,
         status,
         stage,
+        reviewer: reviewer as User,
         level: level || 1,
         totalAssignedQuestions,
         assignedTemplateElementIds,

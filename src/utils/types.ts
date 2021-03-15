@@ -10,6 +10,7 @@ import {
   ReviewStatus,
   TemplateElement,
   TemplateElementCategory,
+  User as GraphQLUser,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
@@ -151,6 +152,7 @@ interface AssignmentDetailsNEW {
   timeCreated: DateTime
   level: number
   review: ReviewDetails | null
+  reviewer: GraphQLUser
   totalAssignedQuestions: number
   stage: ApplicationStage
   assignedTemplateElementIds: number[]
@@ -393,6 +395,7 @@ interface ReviewerDetails {
   id: number
   firstName: string
   lastName: string
+  current: boolean
 }
 
 type ReviewProgressStatus = 'NOT_COMPLETED' | 'DECLINED' | 'APPROVED'

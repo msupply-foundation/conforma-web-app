@@ -20463,7 +20463,10 @@ export type GetReviewInfoQuery = (
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
       & Pick<ReviewAssignment, 'id' | 'level' | 'status' | 'timeCreated' | 'isLastLevel'>
-      & { reviews: (
+      & { reviewer?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'firstName' | 'lastName'>
+      )>, reviews: (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'Review' }
@@ -21570,6 +21573,11 @@ export const GetReviewInfoDocument = gql`
       timeCreated
       level
       isLastLevel
+      reviewer {
+        id
+        firstName
+        lastName
+      }
       reviews {
         nodes {
           id
