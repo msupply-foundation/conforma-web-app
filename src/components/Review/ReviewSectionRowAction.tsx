@@ -15,7 +15,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = ({
     location: { pathname },
   } = useRouter()
 
-  const reviewPath = `${pathname}${thisReview?.id}`
+  const reviewPath = `${pathname}/${thisReview?.id}`
   const reviewSectionLink = `${reviewPath}?activeSections=${details.code}`
 
   const getContent = () => {
