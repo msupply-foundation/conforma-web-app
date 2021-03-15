@@ -11,11 +11,11 @@ type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 
 // hook used to update review response, comment and decision, use as per type definition below
 // also computes and updates recommendedApplicantVisibility
-type useUpdateReviewResponse = (
+type UseUpdateReviewResponse = (
   reviewResponseId: number
 ) => (reviewResponse: ReviewResponse) => PromiseReturnType
 
-const useUpdateReviewResponse: useUpdateReviewResponse = (reviewResponseId) => {
+const useUpdateReviewResponse: UseUpdateReviewResponse = (reviewResponseId) => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
 
   return async (reviewResponse) =>
