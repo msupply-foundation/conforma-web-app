@@ -6,7 +6,7 @@ import strings from '../../utils/constants'
 import messages from '../../utils/messages'
 import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
 import { SummaryViewWrapperPropsNEW } from '../../formElementPlugins/types'
-import useUpdateReviewResponse from './hooks/useUpdateReviewResponse'
+import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponseNEW'
 
 interface DecisionAreaProps {
   reviewResponse: ReviewResponse

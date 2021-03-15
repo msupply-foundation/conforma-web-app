@@ -3,7 +3,7 @@ import {
   ReviewResponseDecision,
   ReviewResponseRecommendedApplicantVisibility,
   useUpdateReviewResponseMutation,
-} from '../../../utils/generated/graphql'
+} from '../generated/graphql'
 
 // below lines are used to get return type of the function that is returned by useUpdateReviewResponseMutation
 type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewResponseMutation>
