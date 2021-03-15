@@ -3,10 +3,8 @@ import { Decision, ReviewResponseDecision } from '../../generated/graphql'
 import { FullStructure, SectionStateNEW, PageNEW } from '../../types'
 
 const generateReviewProgress = (newStructure: FullStructure) => {
-  Object.values(newStructure.sections).forEach((section) => {
-    Object.values(section.pages).forEach(generatePageReviewProgress)
-    generateSectionReviewProgress(section)
-  })
+  newStructure?.sortedPages?.forEach(generatePageReviewProgress)
+  newStructure?.sortedSections?.forEach(generateSectionReviewProgress)
 
   generateReviewValidity(newStructure)
 }
@@ -18,36 +16,30 @@ const generateSectionReviewProgress = (section: SectionStateNEW) => {
 const generatePageReviewProgress = (page: PageNEW) => {
   const totalReviewable = page.state.filter((element) => element.isAssigned)
   const doneConform = totalReviewable.filter(
-    (element) => element.response?.reviewResponse?.decision === ReviewResponseDecision.Approve
+    (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Approve
   )
-  const doneNoneConform = totalReviewable.filter(
-    (element) => element.response?.reviewResponse?.decision === ReviewResponseDecision.Decline
+  const doneNonConform = totalReviewable.filter(
+    (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Decline
   )
 
   page.reviewProgress = {
     totalReviewable: totalReviewable.length,
     doneConform: doneConform.length,
-    doneNoneConform: doneNoneConform.length,
+    doneNonConform: doneNonConform.length,
   }
 }
 
 const generateReviewValidity = (newStructure: FullStructure) => {
-  // TODO would prefer sorted pages and sorted sections available in structure
-  const pages = Object.values(newStructure.sections)
-    .sort((s1, s2) => s1.details.index - s2.details.index)
-    .map((section) => Object.values(section.pages))
-    .flat()
-    .sort((p1, p2) => p1.number - p2.number)
-
-  const sums = getSums(pages)
+  const sortedPages = newStructure?.sortedPages || []
+  const sums = getSums(sortedPages)
 
   let firstIncompleteReviewPage
 
-  if (sums.doneNoneConform === 0 && sums.totalReviewable > sums.doneConform) {
-    const firstIncomplete = pages.find(
+  if (sums.doneNonConform === 0 && sums.totalReviewable > sums.doneConform) {
+    const firstIncomplete = sortedPages.find(
       ({ reviewProgress }) =>
         reviewProgress?.totalReviewable !==
-        (reviewProgress?.doneConform || 0) + (reviewProgress?.doneNoneConform || 0)
+        (reviewProgress?.doneConform || 0) + (reviewProgress?.doneNonConform || 0)
     )
 
     if (!firstIncomplete) return
@@ -62,7 +54,7 @@ const generateReviewValidity = (newStructure: FullStructure) => {
   if (firstIncompleteReviewPage) newStructure.canSubmitReviewAs === null
   else
     newStructure.canSubmitReviewAs =
-      sums.doneNoneConform === 0 ? Decision.Conform : Decision.NonConform
+      sums.doneNonConform === 0 ? Decision.Conform : Decision.NonConform
 }
 // Simple helper that will iterate over elements and sum up all of the values for keys
 // returning an object of keys with sums
@@ -70,14 +62,14 @@ const getSums = (elements: PageNEW[]) => {
   const initial = {
     totalReviewable: 0,
     doneConform: 0,
-    doneNoneConform: 0,
+    doneNonConform: 0,
   }
 
   return elements.reduce(
     (sum, { reviewProgress }) => ({
       totalReviewable: sum.totalReviewable + (reviewProgress?.totalReviewable || 0),
       doneConform: sum.doneConform + (reviewProgress?.doneConform || 0),
-      doneNoneConform: sum.doneNoneConform + (reviewProgress?.doneNoneConform || 0),
+      doneNonConform: sum.doneNonConform + (reviewProgress?.doneNonConform || 0),
     }),
     initial
   )

@@ -7,6 +7,9 @@ import {
   TemplateElementStateNEW,
   UseGetApplicationProps,
 } from '../types'
+import evaluate from '@openmsupply/expression-evaluator'
+import { useUserState } from '../../contexts/UserState'
+import { EvaluatorParameters } from '../../utils/types'
 import { getApplicationSections } from '../helpers/application/getSectionsDetails'
 import { buildSectionsStructure } from '../helpers/structure/buildSectionsStructureNEW'
 import {
@@ -30,6 +33,9 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   const [structure, setFullStructure] = useState<FullStructure>()
   const [template, setTemplate] = useState<TemplateDetails>()
   const [refetchAttempts, setRefetchAttempts] = useState(0)
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   const { data, loading, error, refetch } = useGetApplicationNewQuery({
     variables: {
@@ -40,7 +46,12 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   })
 
   useEffect(() => {
-    if (!data || loading) return
+    if (loading) {
+      setIsLoading(true)
+      return
+    }
+    if (!data) return
+
     const application = data.applicationBySerial as Application
 
     // No unexpected error - just a application not accessible to user (Show 404 page)
@@ -103,7 +114,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         date: DateTime.fromISO(statusHistoryTimeCreated),
       },
       firstStrictInvalidPage: null,
-      submissionMessage: application.template?.submissionMessage as string,
     }
 
     const baseElements: ElementBaseNEW[] = []
@@ -136,16 +146,28 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     const templateStages = application.template?.templateStages.nodes as TemplateStage[]
 
-    setFullStructure({
-      info: applicationDetails,
-      stages: templateStages.map((stage) => ({
-        number: stage.number as number,
-        title: stage.title as string,
-        description: stage.description ? stage.description : undefined,
-      })),
-      sections: buildSectionsStructure({ sections, baseElements }),
-    })
-    setIsLoading(false)
+    const evaluatorParams: EvaluatorParameters = {
+      objects: { currentUser },
+      APIfetch: fetch,
+    }
+    evaluate(application.template?.submissionMessage || '', evaluatorParams).then(
+      (submissionMessage: any) => {
+        let newStructure: FullStructure = {
+          info: { ...applicationDetails, submissionMessage },
+          stages: templateStages.map((stage) => ({
+            number: stage.number as number,
+            title: stage.title as string,
+            description: stage.description ? stage.description : undefined,
+          })),
+          sections: buildSectionsStructure({ sections, baseElements }),
+        }
+        // This is usefull for generating progress (maybe also usefull downstream, but dont' want too refactor too much at this stage)
+        newStructure = addSortedSectionsAndPages(newStructure)
+
+        setFullStructure(newStructure)
+        setIsLoading(false)
+      }
+    )
   }, [data, loading])
 
   return {
@@ -154,6 +176,19 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     structure,
     template,
   }
+}
+
+const addSortedSectionsAndPages = (newStructure: FullStructure): FullStructure => {
+  const sortedSections = Object.values(newStructure.sections).sort(
+    (sectionOne, sectionTwo) => sectionOne.details.index - sectionTwo.details.index
+  )
+  const sortedPages = sortedSections
+    .map((section) =>
+      Object.values(section.pages).sort((pageOne, pageTwo) => pageOne.number - pageTwo.number)
+    )
+    .flat()
+
+  return { ...newStructure, sortedPages, sortedSections }
 }
 
 export default useLoadApplication

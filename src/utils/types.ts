@@ -37,6 +37,7 @@ export {
   ContextListState,
   CurrentPage,
   DecisionAreaState,
+  DecisionOption,
   ElementBase,
   ElementBaseNEW,
   ElementsById,
@@ -69,7 +70,6 @@ export {
   ReviewQuestion,
   ReviewQuestionDecision,
   ReviewerResponsesPayload,
-  ReviewState,
   SectionAndPage,
   SectionState,
   SectionDetails,
@@ -121,7 +121,8 @@ interface ApplicationListRow extends ApplicationList {
 
 interface ApplicationProps {
   structure: FullStructure
-  responses?: ResponsesByCode
+  requestRevalidation?: MethodRevalidate
+  strictSectionPage?: SectionAndPage | null
 }
 
 interface ApplicationStage {
@@ -146,11 +147,13 @@ interface AssignmentDetails {
 
 interface AssignmentDetailsNEW {
   id: number
-  status: ReviewAssignmentStatus
+  status: ReviewAssignmentStatus | null
   timeCreated: DateTime
   level: number
   review: ReviewDetails | null
   totalAssignedQuestions: number
+  stage: ApplicationStage
+  assignedTemplateElementIds: number[]
 }
 
 interface BasicStringObject {
@@ -177,7 +180,7 @@ interface ContextFormElementUpdateTrackerState {
   elementUpdatedTimestamp: number
   elementUpdatedTextValue: string
   isLastElementUpdateProcessed: boolean
-  wasElementChange: boolean
+  wasElementChanged: boolean
 }
 
 interface ContextApplicationState {
@@ -194,6 +197,14 @@ interface CurrentPage {
   section: SectionDetails
   page: number
 }
+
+type DecisionOption = {
+  code: Decision
+  title: string
+  isVisible: boolean
+  value: boolean
+}
+
 interface DecisionAreaState {
   open: boolean
   review: ReviewQuestionDecision | null
@@ -264,16 +275,8 @@ interface EvaluatorParameters {
 
 type ElementsById = { [templateElementId: string]: PageElement }
 
-interface ReviewState {
-  id: number
-  level: number
-  status: ReviewStatus | null | undefined
-  isLastLevel: boolean
-  reviewDecision?: ReviewDecision | null
-}
-
 interface FullStructure {
-  thisReview?: ReviewState
+  thisReview?: ReviewDetails | null
   elementsById?: ElementsById
   lastValidationTimestamp?: number
   info: ApplicationDetails
@@ -282,6 +285,8 @@ interface FullStructure {
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
   canSubmitReviewAs?: Decision | null
+  sortedSections?: SectionStateNEW[]
+  sortedPages?: PageNEW[]
 }
 
 type GroupedReviewResponses = {
@@ -377,8 +382,11 @@ interface ResumeSection {
 interface ReviewDetails {
   id: number
   status: ReviewStatus
-  timeCreated?: DateTime
-  stage?: ApplicationStage
+  timeStatusCreated?: DateTime
+  stage: ApplicationStage
+  isLastLevel: boolean
+  level: number
+  reviewDecision?: ReviewDecision | null
 }
 
 interface ReviewerDetails {
@@ -392,6 +400,7 @@ type ReviewProgressStatus = 'NOT_COMPLETED' | 'DECLINED' | 'APPROVED'
 interface ReviewQuestion {
   code: string
   responseId: number
+  id: number
   sectionIndex: number
 }
 interface ReviewQuestionDecision {
@@ -440,7 +449,7 @@ interface SectionsStructure {
 interface ReviewProgress {
   totalReviewable: number
   doneConform: number
-  doneNoneConform: number
+  doneNonConform: number
 }
 
 interface SectionStateNEW {

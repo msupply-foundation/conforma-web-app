@@ -20,12 +20,18 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
       reviewerId: userId,
       applicationId,
     },
+    notifyOnNetworkStatusChange: true,
+    // if this is removed, there might be an infinite loading when looking at a review for the frist time, after clearing cache
+    // it's either this or removing 'totalCount' in `reviewQuestionAssignments` from this query
+    // ended up removing totalCount from query and keeping this as nextFetchPolicy (was still seeing glitched with totalCount and had "can't update unmounted component error")
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
     if (loading) return setIsFetching(true)
 
     if (!data) return
+
     const reviewAssigments = data.reviewAssignments?.nodes as ReviewAssignment[]
 
     // Current user has no assignments
@@ -59,28 +65,42 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
           reviewAssignment.id
         )
 
-      const { id, status, stage, timeCreated, level } = reviewAssignment
+      const { id, status, stage: assignmentStage, timeCreated, level } = reviewAssignment
 
       // Extra field just to use in initial example - might conflict with future queries
       // to get reviewQuestionAssignment
-      const totalAssignedQuestions = reviewAssignment.reviewQuestionAssignments.totalCount
+      const reviewQustionAssignments = reviewAssignment.reviewQuestionAssignments.nodes
+      const totalAssignedQuestions = reviewQustionAssignments.length
+      const assignedTemplateElementIds = reviewQustionAssignments.map(
+        (reviewQuestionAssignment) => reviewQuestionAssignment?.templateElementId as number
+      )
 
-      return {
+      const stage = { id: assignmentStage?.id as number, name: assignmentStage?.title as string }
+
+      const assignment: AssignmentDetailsNEW = {
         id,
         review: review
           ? {
               id: review.id,
               status: review.status as ReviewStatus,
-              stage: { id: stage?.id as number, name: stage?.title as string },
+              timeStatusCreated: review.timeStatusCreated,
+              isLastLevel: !!review?.isLastLevel,
+              level: review.level || 0,
+              stage,
+              reviewDecision: review.reviewDecisions.nodes[0], // this will be the latest, sorted in query
             }
           : null,
         status,
         stage,
         level: level || 1,
-        timeCreated,
         totalAssignedQuestions,
+        assignedTemplateElementIds,
+        timeCreated,
       }
+
+      return assignment
     })
+
     setAssignments(assignments)
     setIsFetching(false)
   }, [data, loading])

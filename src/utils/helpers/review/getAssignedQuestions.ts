@@ -23,12 +23,13 @@ const getAssignedQuestions = ({ reviewQuestions }: GetAssignedQuestionsProps) =>
     })
     .map((questionAssignment) => {
       // Map each review_response to ReviewQuestion object
-      const { templateElement } = questionAssignment
+      const { templateElement, id } = questionAssignment
       const { code, section, applicationResponses } = templateElement as TemplateElement
       return {
         code,
         responseId: (applicationResponses.nodes[0] as ApplicationResponse).id,
         sectionIndex: section?.index as number,
+        id,
       }
     })
   return assignedQuestions

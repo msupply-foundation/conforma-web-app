@@ -1,11 +1,11 @@
 import {
+  useUpdateReviewMutation,
   Decision,
   ReviewPatch,
-  useUpdateReviewMutation,
   ReviewResponseStatus,
   Trigger,
-} from '../../../utils/generated/graphql'
-import { FullStructure } from '../../../utils/types'
+} from '../generated/graphql'
+import { FullStructure } from '../types'
 
 // below lines are used to get return type of the function that is returned by useUpdateReviewMutation
 type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewMutation>
@@ -25,7 +25,7 @@ const useSubmitReview: UseSubmitReview = (reviewId) => {
       (element) => element.thisReviewLatestResponse
     )
 
-    const reviewResponsesPatch = reviewResponses.map(({ thisReviewLatestResponse }) => ({
+    const reviewResponsesPatches = reviewResponses.map(({ thisReviewLatestResponse }) => ({
       patch: {
         decision: thisReviewLatestResponse?.decision,
         comment: thisReviewLatestResponse?.comment,
@@ -48,7 +48,7 @@ const useSubmitReview: UseSubmitReview = (reviewId) => {
     return {
       trigger: Trigger.OnReviewSubmit,
       reviewResponsesUsingId: {
-        updateById: reviewResponsesPatch,
+        updateById: reviewResponsesPatches,
       },
       reviewDecisionsUsingId: {
         updateById: [reviewDecisionPatch],

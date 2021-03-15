@@ -16,7 +16,10 @@ type FormElementUpdateTrackerProps = { children: React.ReactNode }
 // TODO will have to think about storing elementEnteredTimestamp and elementUpdatedTimestamp by element code/application
 // think of a use case where API query take a long time, and focus is changed to another field and submit is pressed
 // straight away
-const reducer = (state: ContextFormElementUpdateTrackerState, action: UpdateAction) => {
+const reducer = (
+  state: ContextFormElementUpdateTrackerState,
+  action: UpdateAction
+): ContextFormElementUpdateTrackerState => {
   switch (action.type) {
     case 'setElementUpdated': {
       const newState = {
@@ -28,7 +31,7 @@ const reducer = (state: ContextFormElementUpdateTrackerState, action: UpdateActi
         ...newState,
         isLastElementUpdateProcessed:
           newState.elementUpdatedTimestamp >= newState.elementEnteredTimestamp,
-        wasValueChange: newState.elementUpdatedTextValue !== newState.elementEnteredTextValue,
+        wasElementChanged: newState.elementUpdatedTextValue !== newState.elementEnteredTextValue,
       }
     }
     case 'setElementEntered': {
@@ -54,7 +57,7 @@ const initialState: ContextFormElementUpdateTrackerState = {
   elementUpdatedTimestamp: Date.now(),
   elementEnteredTextValue: '',
   elementUpdatedTextValue: '',
-  wasElementChange: false,
+  wasElementChanged: false,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code

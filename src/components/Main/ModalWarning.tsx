@@ -6,11 +6,11 @@ interface ModalWarningProps {
 }
 
 const ModalWarning: React.FC<ModalWarningProps> = ({ showModal }) => {
-  const { title, message, option, onClick } = showModal
+  const { title, message, option, onClick, ...semanticModalProps } = showModal
 
   // TOOD: Use more props from ModalProps for more general configuration of modal (e.g. Shorthand for different actions)
   return (
-    <Modal basic size="small" {...showModal}>
+    <Modal basic size="small" {...semanticModalProps}>
       <Header icon>
         <Icon name="exclamation triangle" />
         {title}

@@ -1,5 +1,5 @@
-import { Button, Header, Label, Segment } from 'semantic-ui-react'
-import { Loading, NoMatch } from '../../components'
+import { Button, Header, Label, Message, Segment } from 'semantic-ui-react'
+import { Loading } from '../../components'
 import {
   AssignmentDetailsNEW,
   FullStructure,
@@ -24,15 +24,15 @@ import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivati
 import useScrollableAttachments, {
   ScrollableAttachment,
 } from '../../utils/hooks/useScrollableAttachments'
-import ReviewSubmit from '../../components/Review/ReviewSubmit'
+import ReviewSubmit from './ReviewSubmit'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetailsNEW
-  structure: FullStructure
-}> = ({ reviewAssignment, structure }) => {
-  const { fullStructure, error } = useGetFullReviewStructure({
-    reviewAssignmentId: reviewAssignment.id,
-    structure,
+  fullApplicationStructure: FullStructure
+}> = ({ reviewAssignment, fullApplicationStructure }) => {
+  const { fullReviewStructure, error } = useGetFullReviewStructure({
+    reviewAssignment,
+    fullApplicationStructure,
   })
 
   const { isSectionActive, toggleSection } = useQuerySectionActivation({
@@ -41,16 +41,18 @@ const ReviewPage: React.FC<{
 
   const { addScrollable, scrollTo } = useScrollableAttachments()
 
-  if (error) return <NoMatch />
-  if (!fullStructure) return <Loading />
-  const { sections, responsesByCode, info } = fullStructure
-
+  if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
+  if (!fullReviewStructure) return <Loading />
+  const { sections, responsesByCode, info } = fullReviewStructure
   return (
     <>
       <Segment.Group>
         <Segment textAlign="center">
           <Label color="blue">{strings.STAGE_PLACEHOLDER}</Label>
-          <Header content={structure.info.name} subheader={strings.DATE_APPLICATION_PLACEHOLDER} />
+          <Header
+            content={fullApplicationStructure.info.name}
+            subheader={strings.DATE_APPLICATION_PLACEHOLDER}
+          />
           <Header
             as="h3"
             color="grey"
@@ -68,7 +70,7 @@ const ReviewPage: React.FC<{
               extraSectionTitleContent={(section: SectionStateNEW) => (
                 <SectionProgress section={section} />
               )}
-              extraPageContent={(page: PageNEW) => <MassApprovalButton page={page} />}
+              extraPageContent={(page: PageNEW) => <ApproveAllButton page={page} />}
               scrollableAttachment={(page: PageNEW) => (
                 <ScrollableAttachment
                   code={`${section.details.code}P${page.number}`}
@@ -90,7 +92,7 @@ const ReviewPage: React.FC<{
           }}
         >
           <ReviewSubmit
-            structure={fullStructure}
+            structure={fullReviewStructure}
             reviewAssignment={reviewAssignment}
             scrollTo={scrollTo}
           />
@@ -103,11 +105,11 @@ const ReviewPage: React.FC<{
 const SectionProgress: React.FC<{ section: SectionStateNEW }> = ({ section }) => {
   const reviewProgress = section.reviewProgress
   return (
-    <>{`t: ${reviewProgress?.totalReviewable} dC: ${reviewProgress?.doneConform} dNC:  ${reviewProgress?.doneNoneConform} `}</>
+    <>{`t: ${reviewProgress?.totalReviewable} dC: ${reviewProgress?.doneConform} dNC:  ${reviewProgress?.doneNonConform} `}</>
   )
 }
 
-const MassApprovalButton: React.FC<{ page: PageNEW }> = ({ page }) => {
+const ApproveAllButton: React.FC<{ page: PageNEW }> = ({ page }) => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
 
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)
@@ -129,7 +131,11 @@ const MassApprovalButton: React.FC<{ page: PageNEW }> = ({ page }) => {
   if (responsesToReview.some((response) => response?.status !== ReviewResponseStatus.Draft))
     return null
 
-  return <Button onClick={massApprove}>{`Approve (${responsesToReview.length})`}</Button>
+  return (
+    <Button
+      onClick={massApprove}
+    >{`${strings.BUTTON_REVIEW_APPROVE_ALL} (${responsesToReview.length})`}</Button>
+  )
 }
 
 export default ReviewPage

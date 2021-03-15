@@ -14,6 +14,7 @@ interface useGetFullApplicationStructureProps {
   shouldRevalidate?: boolean
   minRefetchTimestampForRevalidation?: number
   firstRunValidation?: boolean
+  shouldCalculateProgress?: boolean
 }
 
 const useGetFullApplicationStructure = ({
@@ -21,6 +22,7 @@ const useGetFullApplicationStructure = ({
   shouldRevalidate = false,
   minRefetchTimestampForRevalidation = 0,
   firstRunValidation = true,
+  shouldCalculateProgress = true,
 }: useGetFullApplicationStructureProps) => {
   const {
     info: { serial },
@@ -82,8 +84,7 @@ const useGetFullApplicationStructure = ({
       if (shouldDoValidation) {
         newStructure.lastValidationTimestamp = Date.now()
       }
-
-      generateResponsesProgress(newStructure)
+      if (shouldCalculateProgress) generateResponsesProgress(newStructure)
 
       setLastProcessedTimestamp(Date.now())
       setFirstRunProcessValidation(false)

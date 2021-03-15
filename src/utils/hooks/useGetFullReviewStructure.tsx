@@ -1,39 +1,41 @@
 import { useState, useEffect } from 'react'
-import { FullStructure } from '../types'
-import {
-  ApplicationResponse,
-  Review,
-  ReviewResponse,
-  useGetReviewNewQuery,
-  ReviewQuestionAssignment,
-} from '../generated/graphql'
-import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
+import { AssignmentDetailsNEW, FullStructure } from '../types'
+import { Review, ReviewResponse, useGetReviewResponsesQuery } from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
 import addThisReviewResponses from '../helpers/structure/addThisReviewResponses'
 import addElementsById from '../helpers/structure/addElementsById'
 import generateReviewProgress from '../helpers/structure/generateReviewProgress'
 
 interface useGetFullReviewStructureProps {
-  structure: FullStructure
-  reviewAssignmentId: number
+  fullApplicationStructure: FullStructure
+  reviewAssignment: AssignmentDetailsNEW
+  filteredSectionIds?: number[]
 }
 
 const useGetFullReviewStructure = ({
-  structure,
-  reviewAssignmentId,
+  fullApplicationStructure,
+  reviewAssignment,
+  filteredSectionIds,
 }: useGetFullReviewStructureProps) => {
-  const [fullStructure, setFullStructure] = useState<FullStructure>()
-  const [structureError, setStructureError] = useState('')
+  const [fullReviewStructure, setFullReviewStructure] = useState<FullStructure>()
 
   const {
     userState: { currentUser },
   } = useUserState()
 
-  const { data, error } = useGetReviewNewQuery({
+  // filter by all sections if sections are not supplied
+  const sectionIds =
+    filteredSectionIds ||
+    fullApplicationStructure?.sortedSections?.map((section) => section.details.id) ||
+    []
+
+  const { data, error } = useGetReviewResponsesQuery({
     variables: {
-      reviewAssignmentId,
+      reviewAssignmentId: reviewAssignment.id as number,
       userId: currentUser?.userId as number,
+      sectionIds,
     },
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
@@ -41,77 +43,43 @@ const useGetFullReviewStructure = ({
 
     if (!data) return
 
-    const reviewAssignment = data.reviewAssignment
-    if (!reviewAssignment) return setStructureError('Cannot find review Assignemnt')
+    // This is usefull for linking assignments to elements
+    let newStructure: FullStructure = addElementsById(fullApplicationStructure)
 
-    addEvaluatedResponsesToStructure({
-      structure,
-      applicationResponses: reviewAssignment.application?.applicationResponses
-        ?.nodes as ApplicationResponse[],
-      currentUser,
-      evaluationOptions: {
-        isEditable: false,
-        isVisible: true,
-        isRequired: false,
-        isValid: false,
-      },
-    }).then((evaluatedStructure: FullStructure) => {
-      let newStructure: FullStructure = addElementsById(evaluatedStructure)
+    newStructure = addIsAssigned(newStructure, reviewAssignment.assignedTemplateElementIds)
 
-      const reviewQuestionAssignments = reviewAssignment.reviewQuestionAssignments?.nodes
-      if (reviewQuestionAssignments) {
-        newStructure = addIsAssigned(
-          newStructure,
-          reviewQuestionAssignments as ReviewQuestionAssignment[]
-        )
-      }
+    // here we add responses from other review (not from this review assignmnet)
 
-      // here we add responses from other review (not from this review assignmnet)
+    // There will always just be one review assignment linked to a review. (since review is related to reviewAssignment, many to one relation is created)
+    const review = data?.reviewAssignment?.reviews?.nodes[0] as Review
+    if ((data.reviewAssignment?.reviews?.nodes?.length || 0) > 1)
+      console.error(
+        'More then one review associated with reviewAssignment with id',
+        reviewAssignment.id
+      )
+    if (review) {
+      newStructure = addThisReviewResponses({
+        structure: newStructure,
+        sortedReviewResponses: review?.reviewResponses.nodes as ReviewResponse[], // Sorted in useGetReviewNewQuery
+      })
 
-      // There will always just be one review assignment linked to a review. (since review is related to reviewAssignment, many to one relation is created)
-      const review = reviewAssignment?.reviews?.nodes[0] as Review
-      if ((reviewAssignment?.reviews?.nodes?.length || 0) > 1)
-        console.error(
-          'More then one review associated with reviewAssignment with id',
-          reviewAssignment.id
-        )
-      if (review) {
-        newStructure = addThisReviewResponses({
-          structure: newStructure,
-          sortedReviewResponses: review?.reviewResponses.nodes as ReviewResponse[], // Sorted in useGetReviewNewQuery
-        })
+      // TODO talk to team and decide if we should put everything in full structure (join all of required info from reviewAssignment ?)
+      newStructure.thisReview = reviewAssignment.review
+    }
 
-        // TODO talk to team and decide if we should put everything in full structure (join all of required info from reviewAssignment ?)
-        newStructure.thisReview = {
-          id: review.id,
-          level: review.level || 1,
-          status: review.status,
-          isLastLevel: !!reviewAssignment.isLastLevel,
-          reviewDecision: review?.reviewDecisions?.nodes[0],
-        }
-      }
-
-      generateReviewProgress(newStructure)
-      // generateConsolidationProgress
-      setFullStructure(newStructure)
-    })
+    generateReviewProgress(newStructure)
+    // generateConsolidationProgress
+    setFullReviewStructure(newStructure)
   }, [data, error])
 
   return {
-    fullStructure,
-    error: structureError || error?.message,
+    fullReviewStructure,
+    error: error?.message,
   }
 }
-
-const addIsAssigned = (
-  newStructure: FullStructure,
-  reviewQuestionAssignments: ReviewQuestionAssignment[]
-) => {
-  reviewQuestionAssignments.forEach((questionAssignment) => {
-    if (!questionAssignment) return
-
-    const assignedElement =
-      newStructure?.elementsById?.[questionAssignment.templateElementId as number]
+const addIsAssigned = (newStructure: FullStructure, assignedTemplateElementIds: number[]) => {
+  assignedTemplateElementIds.forEach((templateElementId) => {
+    const assignedElement = newStructure?.elementsById?.[templateElementId]
     if (!assignedElement) return
 
     assignedElement.isAssigned = true

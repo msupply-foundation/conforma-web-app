@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Header, Modal, Radio, Segment, TextArea } from 'semantic-ui-react'
 
-import { ReviewResponse, ReviewResponseDecision } from '../../../utils/generated/graphql'
-import strings from '../../../utils/constants'
-import messages from '../../../utils/messages'
-import SummaryViewWrapperNEW from '../../../formElementPlugins/SummaryViewWrapperNEW'
-import { SummaryViewWrapperPropsNEW } from '../../../formElementPlugins/types'
-import useUpdateReviewResponse from '../hooks/useUpdateReviewResponse'
+import { ReviewResponse, ReviewResponseDecision } from '../../utils/generated/graphql'
+import strings from '../../utils/constants'
+import messages from '../../utils/messages'
+import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
+import { SummaryViewWrapperPropsNEW } from '../../formElementPlugins/types'
+import useUpdateReviewResponse from './hooks/useUpdateReviewResponse'
 
 interface DecisionAreaProps {
   reviewResponse: ReviewResponse
