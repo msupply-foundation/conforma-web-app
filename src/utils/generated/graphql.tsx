@@ -21079,10 +21079,10 @@ export const GetAllResponsesDocument = gql`
   applicationBySerial(serial: $serial) {
     id
     serial
-    applicationResponses {
+    applicationResponses(orderBy: TIME_UPDATED_DESC) {
       nodes {
         ...Response
-        reviewResponses {
+        reviewResponses(condition: {isVisibleToApplicant: true}) {
           nodes {
             ...reviewResponseFragment
           }
