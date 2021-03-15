@@ -24,6 +24,7 @@ import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivati
 import useScrollableAttachments, {
   ScrollableAttachment,
 } from '../../utils/hooks/useScrollableAttachments'
+import { SectionProgress } from '../../components/Review'
 import ReviewSubmit from './ReviewSubmit'
 
 const ReviewPage: React.FC<{
@@ -68,7 +69,7 @@ const ReviewPage: React.FC<{
               toggleSection={toggleSection(section.details.code)}
               section={section}
               extraSectionTitleContent={(section: SectionStateNEW) => (
-                <SectionProgress section={section} />
+                <SectionProgress {...section} />
               )}
               extraPageContent={(page: PageNEW) => <ApproveAllButton page={page} />}
               scrollableAttachment={(page: PageNEW) => (
@@ -99,13 +100,6 @@ const ReviewPage: React.FC<{
         </Segment>
       </Segment.Group>
     </>
-  )
-}
-
-const SectionProgress: React.FC<{ section: SectionStateNEW }> = ({ section }) => {
-  const reviewProgress = section.reviewProgress
-  return (
-    <>{`t: ${reviewProgress?.totalReviewable} dC: ${reviewProgress?.doneConform} dNC:  ${reviewProgress?.doneNonConform} `}</>
   )
 }
 

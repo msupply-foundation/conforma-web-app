@@ -13,6 +13,11 @@ export default gql`
         timeCreated
         level
         isLastLevel
+        reviewer {
+          id
+          firstName
+          lastName
+        }
         reviews {
           nodes {
             id
