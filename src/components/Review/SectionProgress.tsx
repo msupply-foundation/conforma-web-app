@@ -1,12 +1,11 @@
 import React from 'react'
-import { Icon, Label, Progress, Segment } from 'semantic-ui-react'
+import { Icon, Label, Progress } from 'semantic-ui-react'
 import { ReviewProgress, SectionProgress, SectionStateNEW } from '../../utils/types'
 import strings from '../../utils/constants'
 
 const SectionProgress: React.FC<SectionStateNEW> = ({ assigned, reviewProgress }) => {
   const getProgressTitle = ({ doneNonConform, doneConform, totalReviewable }: ReviewProgress) => {
-    if (doneNonConform > 0)
-      return strings.LABEL_REVIEW_DECLINED.replace('%1', doneNonConform.toString())
+    if (doneNonConform > 0) return `(${doneNonConform}) ${strings.LABEL_REVIEW_DECLINED}`
     else if (doneConform === totalReviewable) return strings.LABEL_REVIEW_COMPLETED
     return null
   }
