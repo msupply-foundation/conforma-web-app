@@ -37,6 +37,7 @@ export {
   ContextListState,
   CurrentPage,
   DecisionAreaState,
+  DecisionOption,
   ElementBase,
   ElementBaseNEW,
   ElementsById,
@@ -196,6 +197,14 @@ interface CurrentPage {
   section: SectionDetails
   page: number
 }
+
+type DecisionOption = {
+  code: Decision
+  title: string
+  isVisible: boolean
+  value: boolean
+}
+
 interface DecisionAreaState {
   open: boolean
   review: ReviewQuestionDecision | null

@@ -1,14 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Decision, ReviewStatus } from '../generated/graphql'
 import strings from '../constants'
-import { ReviewDetails } from '../types'
-
-type DecisionOption = {
-  code: Decision
-  title: string
-  isVisible: boolean
-  value: boolean
-}
+import { DecisionOption, ReviewDetails } from '../types'
 
 const initilDecisionOptions: DecisionOption[] = [
   {
@@ -113,4 +106,3 @@ const useGetDecisionOptions: UseGetDecisionOptions = (canSubmitReviewAs, thisRev
 }
 
 export default useGetDecisionOptions
-export { DecisionOption }
