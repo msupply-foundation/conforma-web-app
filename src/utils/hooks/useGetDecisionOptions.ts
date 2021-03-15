@@ -67,7 +67,7 @@ const useGetDecisionOptions: UseGetDecisionOptions = (canSubmitReviewAs, thisRev
         if (!isDraft) {
           isVisible = value = option.code === decisionInStructure
         }
-        // if review IS DRAFT and can can submit review with non conform decision and reviewer has
+        // if review IS DRAFT, can submit review with non conform decision and reviewer has
         // ability to make a decsion, present them with NonConform or LOQ, both unchecked
         if (isDraft && canSubmitReviewAs === Decision.NonConform && reviewerNeedsToMakeDecision) {
           isVisible =
