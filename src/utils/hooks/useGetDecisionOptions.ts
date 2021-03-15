@@ -63,7 +63,7 @@ const useGetDecisionOptions: UseGetDecisionOptions = (canSubmitReviewAs, thisRev
       decisionOptions.map((option) => {
         let isVisible = false
         let value = false
-        // if review is NOT DRAFT then use decision from DB (and make it the only on visible)
+        // if review is NOT DRAFT then use decision from DB (and make it the only one visible)
         if (!isDraft) {
           isVisible = value = option.code === decisionInStructure
         }
