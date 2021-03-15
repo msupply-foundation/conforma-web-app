@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { AssignmentDetailsNEW, FullStructure, SectionStateNEW } from '../types'
-import { ReviewResponse, useGetReviewResponsesQuery } from '../generated/graphql'
+import {
+  ReviewQuestionAssignment,
+  ReviewResponse,
+  useGetReviewResponsesQuery,
+} from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
 import addThisReviewResponses from '../helpers/structure/addThisReviewResponses'
 import addElementsById from '../helpers/structure/addElementsById'
@@ -52,7 +56,7 @@ const useGetFullReviewStructure = ({
     newStructure = addElementsById(newStructure)
     newStructure = addSortedSectionsAndPages(newStructure)
 
-    newStructure = addIsAssigned(newStructure, reviewAssignment.assignedTemplateElementIds)
+    newStructure = addIsAssigned(newStructure, reviewAssignment.reviewQuestionAssignments)
 
     // here we add responses from other review (not from this review assignmnet)
 
@@ -106,13 +110,17 @@ const getFilteredSections = (sectionIds: number[], sections: SectionStateNEW[]) 
   )
 }
 
-const addIsAssigned = (newStructure: FullStructure, assignedTemplateElementIds: number[]) => {
-  assignedTemplateElementIds.forEach((templateElementId) => {
-    const assignedElement = newStructure?.elementsById?.[templateElementId]
+const addIsAssigned = (
+  newStructure: FullStructure,
+  reviewQuestionAssignment: ReviewQuestionAssignment[]
+) => {
+  reviewQuestionAssignment.forEach(({ templateElementId, id }) => {
+    const assignedElement = newStructure?.elementsById?.[templateElementId || '']
 
     if (!assignedElement) return
 
     assignedElement.isAssigned = true
+    assignedElement.assignmentId = id
   })
   return newStructure
 }

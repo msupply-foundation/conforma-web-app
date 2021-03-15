@@ -6,19 +6,25 @@ import {
   useCreateReviewMutation,
 } from '../../utils/generated/graphql'
 import getReviewAssignmentQuery from '../graphql/queries/getReviewAssignment.query'
+import { FullStructure } from '../types'
 
 export interface CreateReviewProps {
-  reviewAssigmentId: number
   applicationResponses: { applicationResponseId: number; reviewQuestionAssignmentId: number }[]
 }
 
 interface UseCreateReviewProps {
   reviewerId: number
+  reviewAssigmentId: number
   serialNumber: string
   onCompleted: (id: number) => void
 }
 
-const useCreateReview = ({ reviewerId, serialNumber, onCompleted }: UseCreateReviewProps) => {
+const useCreateReview = ({
+  reviewerId,
+  serialNumber,
+  onCompleted,
+  reviewAssigmentId,
+}: UseCreateReviewProps) => {
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState<ApolloError | undefined>()
 
@@ -40,7 +46,24 @@ const useCreateReview = ({ reviewerId, serialNumber, onCompleted }: UseCreateRev
     ],
   })
 
-  const createReview = ({ reviewAssigmentId, applicationResponses }: CreateReviewProps) => {
+  const createReviewFromStructure = async (structure: FullStructure) => {
+    const elements = Object.values(structure?.elementsById || {})
+    const reviewableElements = elements.filter((element) => element?.isAssigned)
+
+    const applicationResponses = reviewableElements.map((element) => ({
+      applicationResponseId: element.response?.id || 0,
+      reviewQuestionAssignmentId: element.assignmentId,
+    }))
+
+    return await createReviewMutation({
+      variables: {
+        reviewAssigmentId,
+        applicationResponses,
+      },
+    })
+  }
+
+  const createReview = ({ applicationResponses }: CreateReviewProps) => {
     setProcessing(true)
     createReviewMutation({
       variables: {
@@ -53,6 +76,7 @@ const useCreateReview = ({ reviewerId, serialNumber, onCompleted }: UseCreateRev
   return {
     processing,
     error,
+    createReviewFromStructure,
     create: createReview,
   }
 }

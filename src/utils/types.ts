@@ -5,6 +5,7 @@ import {
   PermissionPolicyType,
   ReviewAssignmentStatus,
   ReviewDecision,
+  ReviewQuestionAssignment,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
@@ -157,7 +158,7 @@ interface AssignmentDetailsNEW {
   reviewer: GraphQLUser
   totalAssignedQuestions: number
   stage: ApplicationStage
-  assignedTemplateElementIds: number[]
+  reviewQuestionAssignments: ReviewQuestionAssignment[]
 }
 
 interface BasicStringObject {
@@ -330,6 +331,7 @@ type PageElement = {
   response: ResponseFull | null
   thisReviewLatestResponse?: ReviewResponse
   review?: ReviewQuestionDecision
+  assignmentId: number
   isAssigned?: boolean
 }
 
@@ -376,6 +378,7 @@ interface ResumeSection {
 }
 
 type ReviewSectionComponentProps = {
+  fullStructure: FullStructure
   section: SectionStateNEW
   assignment: AssignmentDetailsNEW
   thisReview?: ReviewDetails | null
