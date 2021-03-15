@@ -19938,7 +19938,7 @@ export type ResponseFragment = (
 
 export type ReviewResponseFragmentFragment = (
   { __typename?: 'ReviewResponse' }
-  & Pick<ReviewResponse, 'applicationResponseId' | 'decision' | 'comment' | 'id' | 'status' | 'timeUpdated'>
+  & Pick<ReviewResponse, 'applicationResponseId' | 'decision' | 'comment' | 'id' | 'status' | 'timeUpdated' | 'originalReviewResponseId'>
 );
 
 export type SectionFragment = (
@@ -20682,6 +20682,7 @@ export const ReviewResponseFragmentFragmentDoc = gql`
   id
   status
   timeUpdated
+  originalReviewResponseId
 }
     `;
 export const SectionFragmentDoc = gql`
@@ -21079,10 +21080,10 @@ export const GetAllResponsesDocument = gql`
   applicationBySerial(serial: $serial) {
     id
     serial
-    applicationResponses {
+    applicationResponses(orderBy: TIME_UPDATED_DESC) {
       nodes {
         ...Response
-        reviewResponses {
+        reviewResponses(condition: {isVisibleToApplicant: true}) {
           nodes {
             ...reviewResponseFragment
           }
