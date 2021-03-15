@@ -25,7 +25,7 @@ const useSubmitReview: UseSubmitReview = (reviewId) => {
       (element) => element.thisReviewLatestResponse
     )
 
-    const reviewResponsesPatch = reviewResponses.map(({ thisReviewLatestResponse }) => ({
+    const reviewResponsesPatches = reviewResponses.map(({ thisReviewLatestResponse }) => ({
       patch: {
         decision: thisReviewLatestResponse?.decision,
         comment: thisReviewLatestResponse?.comment,
@@ -47,7 +47,7 @@ const useSubmitReview: UseSubmitReview = (reviewId) => {
     return {
       trigger: Trigger.OnReviewSubmit,
       reviewResponsesUsingId: {
-        updateById: reviewResponsesPatch,
+        updateById: reviewResponsesPatches,
       },
       reviewDecisionsUsingId: {
         updateById: [reviewDecisionPatch],
