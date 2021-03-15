@@ -1,13 +1,20 @@
 import { useState, useEffect } from 'react'
-import { FullStructure } from '../types'
+import { FullStructure, PageNEW, SectionStateNEW } from '../types'
 import {
   ApplicationResponse,
   ApplicationStatus,
+  ReviewResponseDecision,
   useGetAllResponsesQuery,
 } from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
 import { generateResponsesProgress } from '../helpers/structure/generateProgress'
 import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
+import addElementsById from '../helpers/structure/addElementsById'
+import deepEqual from 'deep-equal'
+import generateApplicantChangesRequestedProgress from '../helpers/structure/generateApplicantChangesRequestedProgress'
+import addSortedSectionsAndPages from '../helpers/structure/addSortedSectionsAndPages'
+import addApplicationResponses from '../helpers/structure/addApplicationResponses'
+import addApplicantChangeRequestStatusToElement from '../helpers/structure/addApplicantChangeRequestStatusToElement'
 
 interface useGetFullApplicationStructureProps {
   structure: FullStructure
@@ -68,11 +75,12 @@ const useGetFullApplicationStructure = ({
     if (isDataUpToDate && !shouldRevalidateThisRun) return
 
     const shouldDoValidation = shouldRevalidateThisRun || firstRunProcessValidation
+    const applicationResponses = data?.applicationBySerial?.applicationResponses
+      ?.nodes as ApplicationResponse[]
 
     addEvaluatedResponsesToStructure({
       structure,
-      applicationResponses: data?.applicationBySerial?.applicationResponses
-        ?.nodes as ApplicationResponse[],
+      applicationResponses,
       currentUser,
       evaluationOptions: {
         isEditable: true,
@@ -84,10 +92,22 @@ const useGetFullApplicationStructure = ({
       if (shouldDoValidation) {
         newStructure.lastValidationTimestamp = Date.now()
       }
-      if (shouldCalculateProgress) generateResponsesProgress(newStructure)
+
+      newStructure = addElementsById(newStructure)
+      newStructure = addSortedSectionsAndPages(newStructure)
+
+      if (shouldCalculateProgress) {
+        // even thought response is already added to element, we need to Latest and Previous applicaiton response
+        addApplicationResponses(newStructure, applicationResponses)
+        addApplicantChangeRequestStatusToElement(newStructure)
+        generateResponsesProgress(newStructure)
+        generateApplicantChangesRequestedProgress(newStructure)
+      }
 
       setLastProcessedTimestamp(Date.now())
       setFirstRunProcessValidation(false)
+
+      console.log(newStructure)
       setFullStructure(newStructure)
     })
   }, [lastRefetchedTimestamp, shouldRevalidate, minRefetchTimestampForRevalidation, error])
