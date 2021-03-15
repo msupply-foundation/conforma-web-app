@@ -7,13 +7,13 @@ import {
 
 // below lines are used to get return type of the function that is returned by useUpdateReviewResponseMutation
 type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewResponseMutation>
-type promiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
+type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 
 // hook used to update review response, comment and decision, use as per type definition belo
 // also computes and updates recommendedApplicantVisibility
 type useUpdateReviewResponse = (
   reviewResponseId: number
-) => (reviewResponse: ReviewResponse) => promiseReturnType
+) => (reviewResponse: ReviewResponse) => PromiseReturnType
 
 const useUpdateReviewResponse: useUpdateReviewResponse = (reviewResponseId) => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
