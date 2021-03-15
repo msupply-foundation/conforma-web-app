@@ -1,14 +1,15 @@
 import {
   ApplicationList,
   ApplicationStatus,
+  Decision,
   PermissionPolicyType,
   ReviewAssignmentStatus,
+  ReviewDecision,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
   TemplateElement,
   TemplateElementCategory,
-  TemplateStage,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
@@ -36,6 +37,7 @@ export {
   ContextListState,
   CurrentPage,
   DecisionAreaState,
+  DecisionOption,
   ElementBase,
   ElementBaseNEW,
   ElementsById,
@@ -151,6 +153,7 @@ interface AssignmentDetailsNEW {
   review: ReviewDetails | null
   totalAssignedQuestions: number
   stage: ApplicationStage
+  assignedTemplateElementIds: number[]
 }
 
 interface BasicStringObject {
@@ -194,6 +197,14 @@ interface CurrentPage {
   section: SectionDetails
   page: number
 }
+
+type DecisionOption = {
+  code: Decision
+  title: string
+  isVisible: boolean
+  value: boolean
+}
+
 interface DecisionAreaState {
   open: boolean
   review: ReviewQuestionDecision | null
@@ -265,6 +276,7 @@ interface EvaluatorParameters {
 type ElementsById = { [templateElementId: string]: PageElement }
 
 interface FullStructure {
+  thisReview?: ReviewDetails | null
   elementsById?: ElementsById
   lastValidationTimestamp?: number
   info: ApplicationDetails
@@ -272,7 +284,7 @@ interface FullStructure {
   stages: StageDetails[]
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
-  canSubmitReviewAs?: ReviewResponseDecision | null
+  canSubmitReviewAs?: Decision | null
   sortedSections?: SectionStateNEW[]
   sortedPages?: PageNEW[]
 }
@@ -372,6 +384,9 @@ interface ReviewDetails {
   status: ReviewStatus
   timeStatusCreated?: DateTime
   stage: ApplicationStage
+  isLastLevel: boolean
+  level: number
+  reviewDecision?: ReviewDecision | null
 }
 
 interface ReviewerDetails {

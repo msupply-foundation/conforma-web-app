@@ -1,5 +1,5 @@
 import { Button, Header, Label, Message, Segment } from 'semantic-ui-react'
-import { Loading, NoMatch } from '../../components'
+import { Loading } from '../../components'
 import {
   AssignmentDetailsNEW,
   FullStructure,
@@ -10,6 +10,7 @@ import {
 
 import {
   ReviewResponseDecision,
+  ReviewResponseStatus,
   ReviewStatus,
   useUpdateReviewResponseMutation,
 } from '../../utils/generated/graphql'
@@ -23,14 +24,14 @@ import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivati
 import useScrollableAttachments, {
   ScrollableAttachment,
 } from '../../utils/hooks/useScrollableAttachments'
-import ReviewSubmitButton from '../../components/Review/ReviewSubmitButton'
+import ReviewSubmit from './ReviewSubmit'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetailsNEW
   fullApplicationStructure: FullStructure
 }> = ({ reviewAssignment, fullApplicationStructure }) => {
   const { fullReviewStructure, error } = useGetFullReviewStructure({
-    reviewAssignmentId: reviewAssignment.id,
+    reviewAssignment,
     fullApplicationStructure,
   })
 
@@ -90,7 +91,7 @@ const ReviewPage: React.FC<{
             marginRight: '10%',
           }}
         >
-          <ReviewSubmitButton
+          <ReviewSubmit
             structure={fullReviewStructure}
             reviewAssignment={reviewAssignment}
             scrollTo={scrollTo}
@@ -127,6 +128,8 @@ const ApproveAllButton: React.FC<{ page: PageNEW }> = ({ page }) => {
   }
 
   if (responsesToReview.length === 0) return null
+  if (responsesToReview.some((response) => response?.status !== ReviewResponseStatus.Draft))
+    return null
 
   return (
     <Button

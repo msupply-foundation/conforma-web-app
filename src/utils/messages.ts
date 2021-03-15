@@ -19,6 +19,11 @@ export default {
       'Please mark all reviewable questions to conform or at least one to non conform before submission',
     option: 'OK',
   },
+  REVIEW_DECISION_SET_FAIL: {
+    title: 'Problem submitting review',
+    message: 'Please choose decision of List Of Question or Non Conformity',
+    option: 'OK',
+  },
   REDIRECT_TO_REGISTRATION: 'Re-directing to user registration application...',
   REVIEW_COMPLETE_SECTION: 'Please complete this section',
   REVIEW_SUBMIT_FAIL: 'Not all sections have been reviewed',

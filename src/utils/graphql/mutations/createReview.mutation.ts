@@ -11,6 +11,7 @@ export default gql`
         review: {
           reviewAssignmentId: $reviewAssigmentId
           trigger: $trigger
+          reviewDecisionsUsingId: { create: { decision: NO_DECISION } }
           reviewResponsesUsingId: { create: $applicationResponses }
         }
       }

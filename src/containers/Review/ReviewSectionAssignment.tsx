@@ -13,7 +13,7 @@ const ReviewSectionAssignment: React.FC<{
   fullApplicationStructure: FullStructure
 }> = ({ sectionId, assignment, fullApplicationStructure }) => {
   const { fullReviewStructure, error } = useGetFullReviewStructure({
-    reviewAssignmentId: assignment.id,
+    reviewAssignment: assignment,
     fullApplicationStructure,
     filteredSectionIds: [sectionId],
   })
