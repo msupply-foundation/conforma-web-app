@@ -36,6 +36,7 @@ export default {
   ERROR_APPLICATION_SUBMIT: 'Problem submitting application',
   ERROR_APPLICATIONS_LIST: 'Problem loading applications list',
   ERROR_REVIEW_APPLICATION: 'Problem loading application for review',
+  ERROR_GENERIC: 'Something went wrong',
   ERROR_REVIEW_PAGE: 'Problem loading review',
   ERROR_REVIEW_OVERVIEW: 'Problem loading review homepage',
   ERROR_LOGIN_PASSWORD: 'Oops! Problem with username or password',

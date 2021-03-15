@@ -17,7 +17,7 @@ const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEdita
   const { data, error } = useGetReviewDecisionCommentQuery({ variables: { reviewDecisionId } })
   const [comment, setComment] = useState('')
 
-  if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
+  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
 
   if (!data) return <Loading />
 

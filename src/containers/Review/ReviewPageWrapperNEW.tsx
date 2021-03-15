@@ -24,7 +24,7 @@ const ReviewPageWrapperNEW: React.FC<{
     shouldCalculateProgress: false,
   })
 
-  if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
+  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
 
   if (!fullApplicationStructure) return <Loading />
 

@@ -28,7 +28,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     filteredSectionIds: [sectionId],
   })
 
-  if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
+  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!fullReviewStructure) return <Loading />
   const section = fullReviewStructure.sortedSections?.find(
     (section) => section.details.id === sectionId
@@ -39,6 +39,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   const isAssignedToCurrentUser = !!section?.reviewAction?.isAssignedToCurrentUser
 
   const props: ReviewSectionComponentProps = {
+    fullStructure: fullReviewStructure,
     section,
     assignment,
     thisReview,
