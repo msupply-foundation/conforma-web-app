@@ -27,7 +27,7 @@ interface FileError {
 }
 
 const host = config.serverREST
-const uploadEndpoint = '/upload'
+const { uploadEndpoint } = config
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   code,
@@ -43,6 +43,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   initialValue,
 }) => {
   const { label, description, fileCountLimit, fileExtensions, fileSizeLimit } = parameters
+
+  // These values required for file upload query parameters:
   const {
     userState: { currentUser },
   } = useUserState()
@@ -50,6 +52,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     query: { serialNumber },
   } = useRouter()
   const application_response_id = initialValue.id
+
   const [fileData, setFileData] = useState<(FileInfo | FileLoading | FileError)[]>(
     initialValue?.files || []
   )
@@ -102,8 +105,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setFileData([...newFileData])
     files.forEach(async (file: any) => {
       const result: any = await uploadFile(file)
-      const index = fileData.findIndex((f: any) => f.filename === file.filename)
-      console.log('index', index)
+      const index = newFileData.findIndex((f: any) => f.filename === file.name)
       if (result.success) {
         newFileData[index] = result.fileData[0]
       } else {
