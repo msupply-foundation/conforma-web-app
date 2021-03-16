@@ -65,6 +65,7 @@ export default {
   TITLE_NO_ORGANISATION: 'No Organisation',
   TITLE_DETAILS: 'Details',
   TITLE_INTRODUCTION: 'Introduction',
+  TITLE_REVIEW_DECISION: 'Submitted decision',
   TITLE_REVIEW_SUMMARY: 'Review Summary',
   TITLE_STEPS: 'Steps to complete',
   STAGE_PLACEHOLDER: 'Assessment',

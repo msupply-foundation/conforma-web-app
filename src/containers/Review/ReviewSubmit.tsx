@@ -39,6 +39,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
         decisionOptions={decisionOptions}
         setDecision={setDecision}
         isDecisionError={isDecisionError}
+        isEditable={thisReview?.status == ReviewStatus.Draft}
       />
       <ReviewSubmitButton
         {...props}
