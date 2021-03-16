@@ -1,10 +1,12 @@
 import React from 'react'
 import { Grid, Message } from 'semantic-ui-react'
 import { Loading } from '../../components'
-import ReviewSectionRowAction from '../../components/Review/ReviewSectionRowAction'
-import ReviewSectionRowAssigned from '../../components/Review/ReviewSectionRowAssigned'
-import ReviewSectionRowLastActionDate from '../../components/Review/ReviewSectionRowLastActionDate'
-import ReviewSectionRowProgress from '../../components/Review/ReviewSectionRowProgress'
+import {
+  ReviewSectionRowAssigned,
+  ReviewSectionRowLastActionDate,
+  ReviewSectionRowProgress,
+  ReviewSectionRowAction,
+} from '../../components/Review'
 import strings from '../../utils/constants'
 import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructure'
 import {
