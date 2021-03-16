@@ -40,6 +40,7 @@ export default {
   ERROR_REVIEW_APPLICATION: 'Problem loading application for review',
   ERROR_REVIEW_PAGE: 'Problem loading review',
   ERROR_REVIEW_OVERVIEW: 'Problem loading review homepage',
+  ERROR_REVIEW_SECTION_ROW: 'Problem loading review section row',
   ERROR_LOGIN_PASSWORD: 'Oops! Problem with username or password',
   LABEL_APPLICATIONS: 'applications',
   LABEL_ASSIGNED_TO_YOU: 'Assigned to you',
