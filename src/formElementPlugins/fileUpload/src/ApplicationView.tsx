@@ -5,6 +5,8 @@ import strings from '../constants'
 import config from '../../../config.json'
 import { Link } from 'react-router-dom'
 import { Loading } from '../../../components'
+import { useUserState } from '../../../contexts/UserState'
+import { useRouter } from '../../../utils/hooks/useRouter'
 
 interface FileInfo {
   filename: string
@@ -27,10 +29,6 @@ interface FileError {
 const host = config.serverREST
 const uploadEndpoint = '/upload'
 
-const user_id = 1
-const application_serial = '7633'
-const application_response_id = 1000
-
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   code,
   parameters,
@@ -45,12 +43,17 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   initialValue,
 }) => {
   const { label, description, fileCountLimit, fileExtensions, fileSizeLimit } = parameters
-
-  const fileInputRef = useRef<any>(null)
-
+  const {
+    userState: { currentUser },
+  } = useUserState()
+  const {
+    query: { serialNumber },
+  } = useRouter()
+  const application_response_id = initialValue.id
   const [fileData, setFileData] = useState<(FileInfo | FileLoading | FileError)[]>(
     initialValue?.files || []
   )
+  const fileInputRef = useRef<any>(null)
 
   useEffect(() => {
     // Only store files that aren't error or loading
@@ -164,19 +167,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       })}
     </>
   )
+  async function uploadFile(file: any) {
+    const fileData = new FormData()
+    await fileData.append('file', file)
+    const response = await fetch(
+      `${host}${uploadEndpoint}?user_id=${currentUser?.userId}&application_serial=${serialNumber}&application_response_id=${application_response_id}`,
+      { method: 'POST', body: fileData }
+    )
+    return await response.json()
+  }
 }
 
 export default ApplicationView
-
-const uploadFile = async (file: any) => {
-  const fileData = new FormData()
-  await fileData.append('file', file)
-  const response = await fetch(
-    `${host}${uploadEndpoint}?user_id=${user_id}&application_serial=${application_serial}&application_response_id=${application_response_id}`,
-    { method: 'POST', body: fileData }
-  )
-  return await response.json()
-}
 
 const createTextString = (files: FileInfo[]) =>
   files.reduce(
