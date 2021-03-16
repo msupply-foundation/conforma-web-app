@@ -1,9 +1,10 @@
 import React, { Fragment, useEffect, useState, useRef } from 'react'
-import { Button, Form, Label, Image } from 'semantic-ui-react'
+import { Button, Form, Icon, Label, Image } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import strings from '../constants'
 import config from '../../../config.json'
 import { Link } from 'react-router-dom'
+import { Loading } from '../../../components'
 
 interface FileInfo {
   filename: string
@@ -12,7 +13,23 @@ interface FileInfo {
   mimetype: string
 }
 
+interface FileLoading {
+  filename: string
+  loading: boolean
+}
+
+interface FileError {
+  filename: string
+  error: boolean
+  errorMessage: string
+}
+
 const host = config.serverREST
+const uploadEndpoint = '/upload'
+
+const user_id = 1
+const application_serial = '7633'
+const application_response_id = 1000
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   code,
@@ -31,24 +48,69 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const fileInputRef = useRef<any>(null)
 
-  // getImage('/file?uid=qsHimW1hrZ7YAxlcN4h8M&thumbnail=true').then((result) =>
-  //   console.log('result', result)
-  // )
+  const [fileData, setFileData] = useState<(FileInfo | FileLoading | FileError)[]>(
+    initialValue?.files || []
+  )
 
-  const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>(initialValue?.files || [])
+  useEffect(() => {
+    // Only store files that aren't error or loading
+    const validFiles = fileData.filter((file) => 'fileUrl' in file)
+    onSave({
+      text: createTextString(validFiles as FileInfo[]),
+      files: validFiles,
+    })
+  }, [fileData])
 
-  // console.log('uploadedFiles', uploadedFiles)
-  // console.log('initialValue', initialValue)
+  const handleFiles = async (e: any) => {
+    const newFileData: any = [...fileData]
+    const files: any[] = Array.from(e.target.files)
 
-  // useEffect(() => {
-  //   onSave({
-  //     text: createTextString(uploadedFiles as FileInfo[]),
-  //     values: uploadedFiles,
-  //   })
-  // }, [uploadedFiles])
+    for (const file of files) {
+      if (newFileData.length >= fileCountLimit) {
+        newFileData.push({ filename: file.name, error: true, errorMessage: 'Too many files!' })
+        continue
+      }
+      if (fileData.map((f: any) => f.filename).includes(file.name)) {
+        newFileData.push({
+          filename: file.name,
+          error: true,
+          errorMessage: 'File already uploaded',
+        })
+        continue
+      }
+      if (file.size > fileSizeLimit * 1000) {
+        newFileData.push({
+          filename: file.name,
+          error: true,
+          errorMessage: 'File too big',
+        })
+        continue
+      }
+      if (fileExtensions && !fileExtensions.includes(file.name.split('.').pop().toLowerCase())) {
+        newFileData.push({
+          filename: file.name,
+          error: true,
+          errorMessage: 'File type not permitted',
+        })
+        continue
+      }
+      // Keep the index so we know which array element to update after upload
+      file.index = newFileData.push({ filename: file.name, loading: true }) - 1
+    }
+    setFileData([...newFileData])
+    files.forEach(async (file: any) => {
+      const result: any = await uploadFile(file)
+      if (result.success) {
+        newFileData[file.index] = result.fileData[0]
+      } else {
+        newFileData[file.index] = { filename: file.name, error: true }
+      }
+      setFileData([...newFileData])
+    })
+  }
 
-  const onChangeHandler = (e: any) => {
-    console.log(e.target.files)
+  const handleDelete = async (filename: string) => {
+    setFileData(fileData.filter((file) => file.filename !== filename))
   }
 
   return (
@@ -63,14 +125,29 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           ref={fileInputRef}
           hidden
           name="file-upload"
-          onChange={onChangeHandler}
+          multiple={fileCountLimit > 1}
+          onChange={handleFiles}
         />
-        <Button primary onClick={() => fileInputRef?.current?.click()}>
-          Click to upload
+        <Button primary disabled={!isEditable} onClick={() => fileInputRef?.current?.click()}>
+          {fileData.length === 0 ? 'Click to upload' : 'Upload another'}
         </Button>
       </div>
-      {uploadedFiles.map((file) => {
-        console.log(file.filename)
+      {fileData.map((file) => {
+        if ('error' in file)
+          return (
+            <Fragment key={file.filename}>
+              <Label>{file.filename}</Label>
+              <p>{file.errorMessage}</p>
+              <p onClick={() => handleDelete(file.filename)}>Delete</p>
+            </Fragment>
+          )
+        if ('loading' in file)
+          return (
+            <Fragment key={file.filename}>
+              <Label>{file.filename}</Label>
+              <Loading />
+            </Fragment>
+          )
         return (
           <Fragment key={file.filename}>
             <Label>
@@ -79,8 +156,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
               </a>
             </Label>
             <a href={host + file.fileUrl} target="_blank">
-              <Image src={host + file.thumbnailUrl}></Image>
+              <Image src={host + file.thumbnailUrl} />
             </a>
+            <p onClick={() => handleDelete(file.filename)}>Delete</p>
           </Fragment>
         )
       })}
@@ -90,35 +168,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
 export default ApplicationView
 
-const getInitialState = (initialValue: any, checkboxes: FileInfo[]) => {
-  // Returns a consistent array of Checkbox objects, regardless of input structure
-  // const { values: initValues } = initialValue
-  // return (
-  //   checkboxes
-  //     .map((cb: Checkbox, index: number) => {
-  //       if (typeof cb === 'string' || typeof cb === 'number')
-  //         return { label: String(cb), text: String(cb), key: index, selected: false }
-  //       else
-  //         return {
-  //           label: cb.label,
-  //           text: cb?.text || cb.label,
-  //           key: cb?.key || index,
-  //           selected: cb?.selected || false,
-  //         }
-  //     })
-  //     // Replaces with any already-selected values from database
-  //     .map((cb) => ({
-  //       ...cb,
-  //       selected: initValues?.[cb.key] ? initValues[cb.key].selected : cb.selected,
-  //     }))
-  // )
-  return []
+const uploadFile = async (file: any) => {
+  const fileData = new FormData()
+  await fileData.append('file', file)
+  const response = await fetch(
+    `${host}${uploadEndpoint}?user_id=${user_id}&application_serial=${application_serial}&application_response_id=${application_response_id}`,
+    { method: 'POST', body: fileData }
+  )
+  return await response.json()
 }
 
 const createTextString = (files: FileInfo[]) =>
-  // files
-  //   .reduce((output, file) => {
-  //     return output + (output === '' ? file.text : ', ' + file.text)
-  //   }, '')
-  //   .replace(/^$/, `*<${strings.LABEL_SUMMMARY_NOTHING_SELECTED}>*`)
-  'Some text here'
+  files.reduce(
+    (output, file) => output + (output === '' ? file.filename : ', ' + file.filename),
+    ''
+  )
