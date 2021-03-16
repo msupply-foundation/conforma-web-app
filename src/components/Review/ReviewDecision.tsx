@@ -43,10 +43,13 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
   if (visibleOptions.length > 1) console.log('More than one decision option selected')
   const selectedOption = visibleOptions[0]
   return (
-    <Message>
-      <Message.Header>{strings.TITLE_REVIEW_DECISION}</Message.Header>
-      {selectedOption.title}
-    </Message>
+    <Message
+      compact
+      attached="top"
+      icon="calendar check outline"
+      header={strings.TITLE_REVIEW_DECISION}
+      content={selectedOption.title}
+    />
   )
 }
 
