@@ -70,11 +70,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
     for (const file of files) {
       if (newFileData.length >= fileCountLimit) {
-        newFileData.push({ filename: file.name, error: true, errorMessage: 'Too many files!' })
+        newFileData.unshift({ filename: file.name, error: true, errorMessage: 'Too many files!' })
         continue
       }
       if (fileData.map((f: any) => f.filename).includes(file.name)) {
-        newFileData.push({
+        newFileData.unshift({
           filename: file.name,
           error: true,
           errorMessage: 'File already uploaded',
@@ -82,7 +82,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         continue
       }
       if (file.size > fileSizeLimit * 1000) {
-        newFileData.push({
+        newFileData.unshift({
           filename: file.name,
           error: true,
           errorMessage: 'File too big',
@@ -90,23 +90,24 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         continue
       }
       if (fileExtensions && !fileExtensions.includes(file.name.split('.').pop().toLowerCase())) {
-        newFileData.push({
+        newFileData.unshift({
           filename: file.name,
           error: true,
           errorMessage: 'File type not permitted',
         })
         continue
       }
-      // Keep the index so we know which array element to update after upload
-      file.index = newFileData.push({ filename: file.name, loading: true }) - 1
+      newFileData.push({ filename: file.name, loading: true })
     }
     setFileData([...newFileData])
     files.forEach(async (file: any) => {
       const result: any = await uploadFile(file)
+      const index = fileData.findIndex((f: any) => f.filename === file.filename)
+      console.log('index', index)
       if (result.success) {
-        newFileData[file.index] = result.fileData[0]
+        newFileData[index] = result.fileData[0]
       } else {
-        newFileData[file.index] = { filename: file.name, error: true }
+        newFileData[index] = { filename: file.name, error: true }
       }
       setFileData([...newFileData])
     })
