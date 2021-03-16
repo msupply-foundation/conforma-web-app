@@ -20,6 +20,9 @@ import {
   TemplateNew,
   Template,
 } from '../../components'
+
+import { LookupTableListWrapper } from '../../LookupTable'
+
 import {
   ApplicationCreate,
   ApplicationCreateNEW,
@@ -145,6 +148,9 @@ const SiteLayout: React.FC = () => {
         </Route>
         <Route exact path="/products/:productId">
           <Product />
+        </Route>
+        <Route path="/lookup-tables">
+          <LookupTableListWrapper />
         </Route>
         <Route>
           <NoMatch />
