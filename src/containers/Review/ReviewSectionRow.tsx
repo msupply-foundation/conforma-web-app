@@ -7,7 +7,12 @@ import ReviewSectionRowLastDate from '../../components/Review/ReviewSectionRowLa
 import ReviewSectionRowProgress from '../../components/Review/ReviewSectionRowProgress'
 import strings from '../../utils/constants'
 import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructure'
-import { AssignmentDetailsNEW, FullStructure, ReviewSectionComponentProps } from '../../utils/types'
+import {
+  AssignmentDetailsNEW,
+  FullStructure,
+  ReviewAction,
+  ReviewSectionComponentProps,
+} from '../../utils/types'
 
 // Component renders a line for review assignment within a section
 // to be used in ReviewHome and Expansions
@@ -43,7 +48,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     assignment,
     thisReview,
     isAssignedToCurrentUser,
-    action: section?.reviewAction?.action || 'unknown',
+    action: section?.reviewAction?.action || ReviewAction.unknown,
   }
 
   return (

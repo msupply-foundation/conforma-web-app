@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Grid } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ReviewSectionComponentProps } from '../../utils/types'
+import { ReviewAction, ReviewSectionComponentProps } from '../../utils/types'
 import strings from '../../utils/constants'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = ({
@@ -20,17 +20,17 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = ({
 
   const getContent = () => {
     switch (action) {
-      case 'canContinue': {
+      case ReviewAction.canContinue: {
         if (isAssignedToCurrentUser) return <Link to={reviewSectionLink}>{strings.CONTINUE}</Link>
 
         return <p>In Review</p>
       }
-      case 'canView': {
+      case ReviewAction.canView: {
         if (isAssignedToCurrentUser) return <Link to={`${reviewSectionLink}`}>{strings.VIEW}</Link>
         else return <Link to={`${reviewSectionLink}`}>{strings.VIEW}</Link>
       }
 
-      case 'canStartReview': {
+      case ReviewAction.canStartReview: {
         if (isAssignedToCurrentUser) return strings.START
 
         return null
