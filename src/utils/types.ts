@@ -466,14 +466,14 @@ interface ReviewProgress {
   doneNonConform: number
 }
 enum ReviewAction {
-  canContinue,
-  canView,
-  canReReview,
-  canSelfAssign,
-  canStartReview,
-  canContinueLocked,
-  canUpdate,
-  unknown,
+  canContinue = 'CAN_CONTINUE',
+  canView = 'CAN_VIEW',
+  canReReview = 'CAN_RE_REVIEW',
+  canSelfAssign = 'CAN_SELF_ASSIGN',
+  canStartReview = 'CAN_START_REVIEW',
+  canContinueLocked = 'CAN_CONTINUE_LOCKED',
+  canUpdate = 'CAN_UPDATE',
+  unknown = 'UNKNOWN',
 }
 
 interface SectionStateNEW {
