@@ -1,5 +1,16 @@
-import React, { Fragment, useEffect, useState, useRef } from 'react'
-import { Button, Form, Icon, Label, Image } from 'semantic-ui-react'
+import React, { useEffect, useState, useRef } from 'react'
+import {
+  Button,
+  Form,
+  Icon,
+  Grid,
+  Card,
+  List,
+  Label,
+  Image,
+  Segment,
+  Loader,
+} from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import strings from '../constants'
 import config from '../../../config.json'
@@ -59,6 +70,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const fileInputRef = useRef<any>(null)
 
   useEffect(() => {
+    console.log('Files', fileData)
     // Only store files that aren't error or loading
     const validFiles = fileData.filter((file) => 'fileUrl' in file)
     onSave({
@@ -104,6 +116,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     }
     setFileData([...newFileData])
     files.forEach(async (file: any) => {
+      if ('error' in file) return
       const result: any = await uploadFile(file)
       const index = newFileData.findIndex((f: any) => f.filename === file.name)
       if (result.success) {
@@ -125,7 +138,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Markdown text={label} semanticComponent="noParagraph" />
       </label>
       <Markdown text={description} />
-      <div>
+      <Segment.Group>
         <input
           type="file"
           ref={fileInputRef}
@@ -134,40 +147,92 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           multiple={fileCountLimit > 1}
           onChange={handleFiles}
         />
-        <Button primary disabled={!isEditable} onClick={() => fileInputRef?.current?.click()}>
-          {fileData.length === 0 ? 'Click to upload' : 'Upload another'}
-        </Button>
-      </div>
-      {fileData.map((file) => {
-        if ('error' in file)
-          return (
-            <Fragment key={file.filename}>
-              <Label>{file.filename}</Label>
-              <p>{file.errorMessage}</p>
-              <p onClick={() => handleDelete(file.filename)}>Delete</p>
-            </Fragment>
-          )
-        if ('loading' in file)
-          return (
-            <Fragment key={file.filename}>
-              <Label>{file.filename}</Label>
-              <Loading />
-            </Fragment>
-          )
-        return (
-          <Fragment key={file.filename}>
-            <Label>
-              <a href={host + file.fileUrl} target="_blank">
-                {file.filename}
-              </a>
-            </Label>
-            <a href={host + file.fileUrl} target="_blank">
-              <Image src={host + file.thumbnailUrl} />
-            </a>
-            <p onClick={() => handleDelete(file.filename)}>Delete</p>
-          </Fragment>
-        )
-      })}
+        <Segment basic textAlign="center">
+          <Button primary disabled={!isEditable} onClick={() => fileInputRef?.current?.click()}>
+            <Icon name="upload" />
+            {fileData.length === 0 ? 'Click to upload' : 'Upload another'}
+          </Button>
+        </Segment>
+        <List horizontal verticalAlign="top">
+          {fileData.map((file) => {
+            if ('error' in file)
+              return (
+                <Card>
+                  <List.Item key={file.filename}>
+                    <Label>{file.errorMessage}</Label>
+                    <List.Content>
+                      {file.filename}
+                      <br />
+                      <a onClick={() => handleDelete(file.filename)}>Delete</a>
+                    </List.Content>
+                  </List.Item>
+                </Card>
+              )
+            if ('loading' in file)
+              return (
+                <List.Item key={file.filename} style={{ maxWidth: 200 }}>
+                  <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
+                    <Grid.Row style={{ boxShadow: 'none', marginLeft: 150 }} verticalAlign="bottom">
+                      <Icon
+                        link
+                        name="delete"
+                        circular
+                        fitted
+                        color="grey"
+                        onClick={() => handleDelete(file.filename)}
+                      />
+                    </Grid.Row>
+                    <Grid.Row
+                      centered
+                      style={{ boxShadow: 'none', height: 120 }}
+                      verticalAlign="middle"
+                    >
+                      <Loader active size="medium">
+                        Uploading
+                      </Loader>
+                    </Grid.Row>
+                    <Grid.Row centered style={{ boxShadow: 'none' }}>
+                      <p style={{ wordBreak: 'break-word' }}>{file.filename}</p>
+                    </Grid.Row>
+                  </Grid>
+                </List.Item>
+              )
+            return (
+              <List.Item key={file.filename} style={{ maxWidth: 200 }}>
+                <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
+                  <Grid.Row style={{ boxShadow: 'none', marginLeft: 150 }} verticalAlign="bottom">
+                    <Icon
+                      link
+                      name="delete"
+                      circular
+                      fitted
+                      color="grey"
+                      onClick={() => handleDelete(file.filename)}
+                    />
+                  </Grid.Row>
+                  <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
+                    <a href={host + file.fileUrl} target="_blank">
+                      <Image
+                        src={host + file.thumbnailUrl}
+                        style={{ maxHeight: '120px' }}
+                        // onMouseOver={() => console.log('Hovering')}
+                      />
+                    </a>
+                  </Grid.Row>
+                  <Grid.Row centered style={{ boxShadow: 'none' }}>
+                    <p style={{ wordBreak: 'break-word' }}>
+                      <a href={host + file.fileUrl} target="_blank">
+                        {file.filename}
+                      </a>{' '}
+                      <a onClick={() => handleDelete(file.filename)}>Delete</a>
+                    </p>
+                  </Grid.Row>
+                </Grid>
+              </List.Item>
+            )
+          })}
+        </List>
+      </Segment.Group>
     </>
   )
   async function uploadFile(file: any) {
