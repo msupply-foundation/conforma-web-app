@@ -4,7 +4,7 @@ import getSimplifiedTimeDifference from '../../utils/dateAndTime/getSimplifiedTi
 import { ReviewAction, ReviewSectionComponentProps } from '../../utils/types'
 import strings from '../../utils/constants'
 
-const ReviewSectionRowLastDate: React.FC<ReviewSectionComponentProps> = ({
+const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
   action,
   thisReview,
   assignment,
@@ -39,4 +39,4 @@ const ReviewSectionRowLastDate: React.FC<ReviewSectionComponentProps> = ({
   return <Grid.Column>{getContent()}</Grid.Column>
 }
 
-export default ReviewSectionRowLastDate
+export default ReviewSectionRowLastActionDate

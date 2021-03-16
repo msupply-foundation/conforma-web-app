@@ -3,7 +3,7 @@ import { Grid, Message } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import ReviewSectionRowAction from '../../components/Review/ReviewSectionRowAction'
 import ReviewSectionRowAssigned from '../../components/Review/ReviewSectionRowAssigned'
-import ReviewSectionRowLastDate from '../../components/Review/ReviewSectionRowLastAction'
+import ReviewSectionRowLastActionDate from '../../components/Review/ReviewSectionRowLastActionDate'
 import ReviewSectionRowProgress from '../../components/Review/ReviewSectionRowProgress'
 import strings from '../../utils/constants'
 import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructure'
@@ -56,7 +56,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
       {section?.reviewAction?.isReviewable && (
         <Grid columns="equal" verticalAlign="middle">
           <ReviewSectionRowAssigned {...props} />
-          <ReviewSectionRowLastDate {...props} />
+          <ReviewSectionRowLastActionDate {...props} />
           <ReviewSectionRowProgress {...props} />
           <ReviewSectionRowAction {...props} />
         </Grid>
