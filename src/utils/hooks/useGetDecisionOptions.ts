@@ -1,14 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Decision, ReviewStatus } from '../generated/graphql'
 import strings from '../constants'
-import { ReviewDetails } from '../types'
-
-type DecisionOption = {
-  code: Decision
-  title: string
-  isVisible: boolean
-  value: boolean
-}
+import { DecisionOption, ReviewDetails } from '../types'
 
 const initilDecisionOptions: DecisionOption[] = [
   {
@@ -62,15 +55,11 @@ const useGetDecisionOptions: UseGetDecisionOptions = (canSubmitReviewAs, thisRev
     const updatedOptions = decisionOptions.map(({ code, title }) => {
       let isVisible = false
       let value = false
-      // if review is NOT DRAFT then use decision from DB (and make it the only on visible)
+      // if review is NOT DRAFT then use decision from DB (and make it the only one visible)
       if (!isDraft) isVisible = value = code === decisionInStructure
-      // if review IS DRAFT and can can submit review with non conform decision and reviewer has
+      // if review IS DRAFT, can can submit review with non conform decision and reviewer has
       // ability to make a decsion, present them with NonConform or LOQ, both unchecked
-      else if (
-        isDraft &&
-        canSubmitReviewAs === Decision.NonConform &&
-        reviewerNeedsToMakeDecision
-      ) {
+      else if (canSubmitReviewAs === Decision.NonConform && reviewerNeedsToMakeDecision) {
         isVisible = code === Decision.NonConform || code === Decision.ListOfQuestions
         value = false
       }
@@ -112,4 +101,3 @@ const useGetDecisionOptions: UseGetDecisionOptions = (canSubmitReviewAs, thisRev
 }
 
 export default useGetDecisionOptions
-export { DecisionOption }
