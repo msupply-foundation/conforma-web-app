@@ -85,7 +85,6 @@ const useGetDecisionOptions: UseGetDecisionOptions = (canSubmitReviewAs, thisRev
         value,
       }
     })
-
     setDecisionOptions(updatedOptions)
   }, [canSubmitReviewAs, thisReview])
 
@@ -101,7 +100,7 @@ const useGetDecisionOptions: UseGetDecisionOptions = (canSubmitReviewAs, thisRev
   }
 
   const getAndSetDecisionError = () => {
-    if (!reviewerNeedsToMakeDecision) return true
+    if (!reviewerNeedsToMakeDecision) return false
     const isDecisionError =
       canSubmitReviewAs === Decision.NonConform && getDecision() === Decision.NoDecision
 
