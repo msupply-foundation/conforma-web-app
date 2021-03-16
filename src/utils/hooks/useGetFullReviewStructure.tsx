@@ -56,6 +56,11 @@ const useGetFullReviewStructure = ({
 
     // here we add responses from other review (not from this review assignmnet)
 
+    if ((data.reviewAssignment?.reviews?.nodes?.length || 0) > 1)
+      console.error(
+        'More then one review associated with reviewAssignment with id',
+        reviewAssignment.id
+      )
     // There will always just be one review assignment linked to a review. (since review is related to reviewAssignment, many to one relation is created)
     const reviewResponses = data?.reviewAssignment?.reviews?.nodes[0]?.reviewResponses.nodes
     if (reviewResponses) {
