@@ -110,6 +110,7 @@ export type Query = Node & {
   applicationStatusHistory?: Maybe<ApplicationStatusHistory>;
   elementTypePlugin?: Maybe<ElementTypePlugin>;
   file?: Maybe<File>;
+  fileByUniqueId?: Maybe<File>;
   notification?: Maybe<Notification>;
   organisation?: Maybe<Organisation>;
   organisationByName?: Maybe<Organisation>;
@@ -720,6 +721,12 @@ export type QueryElementTypePluginArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryFileArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFileByUniqueIdArgs = {
+  uniqueId: Scalars['String'];
 };
 
 
@@ -1977,10 +1984,10 @@ export type ApplicationFilter = {
   reviews?: Maybe<ApplicationToManyReviewFilter>;
   /** Some related `reviews` exist. */
   reviewsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `files` relation. */
-  files?: Maybe<ApplicationToManyFileFilter>;
-  /** Some related `files` exist. */
-  filesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `filesByApplicationSerial` relation. */
+  filesByApplicationSerial?: Maybe<ApplicationToManyFileFilter>;
+  /** Some related `filesByApplicationSerial` exist. */
+  filesByApplicationSerialExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `notifications` relation. */
   notifications?: Maybe<ApplicationToManyNotificationFilter>;
   /** Some related `notifications` exist. */
@@ -3249,18 +3256,26 @@ export type UserToManyFileFilter = {
 export type FileFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `uniqueId` field. */
+  uniqueId?: Maybe<StringFilter>;
   /** Filter by the object’s `originalFilename` field. */
   originalFilename?: Maybe<StringFilter>;
-  /** Filter by the object’s `path` field. */
-  path?: Maybe<StringFilter>;
-  /** Filter by the object’s `mimetype` field. */
-  mimetype?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationSerial` field. */
+  applicationSerial?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponseId` field. */
   applicationResponseId?: Maybe<IntFilter>;
+  /** Filter by the object’s `filePath` field. */
+  filePath?: Maybe<StringFilter>;
+  /** Filter by the object’s `thumbnailPath` field. */
+  thumbnailPath?: Maybe<StringFilter>;
+  /** Filter by the object’s `mimetype` field. */
+  mimetype?: Maybe<StringFilter>;
+  /** Filter by the object’s `submitted` field. */
+  submitted?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `notificationsByDocumentId` relation. */
   notificationsByDocumentId?: Maybe<FileToManyNotificationFilter>;
   /** Some related `notificationsByDocumentId` exist. */
@@ -3269,10 +3284,10 @@ export type FileFilter = {
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
   userExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationByApplicationSerial` relation. */
+  applicationByApplicationSerial?: Maybe<ApplicationFilter>;
+  /** A related `applicationByApplicationSerial` exists. */
+  applicationByApplicationSerialExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `applicationResponse` relation. */
   applicationResponse?: Maybe<ApplicationResponseFilter>;
   /** A related `applicationResponse` exists. */
@@ -3853,7 +3868,7 @@ export type Application = Node & {
   /** Reads and enables pagination through a set of `Review`. */
   reviews: ReviewsConnection;
   /** Reads and enables pagination through a set of `File`. */
-  files: FilesConnection;
+  filesByApplicationSerial: FilesConnection;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications: NotificationsConnection;
   stage?: Maybe<Scalars['String']>;
@@ -3922,7 +3937,7 @@ export type ApplicationReviewsArgs = {
 };
 
 
-export type ApplicationFilesArgs = {
+export type ApplicationFilesByApplicationSerialArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -5276,18 +5291,26 @@ export enum FilesOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  UserIdAsc = 'USER_ID_ASC',
-  UserIdDesc = 'USER_ID_DESC',
+  UniqueIdAsc = 'UNIQUE_ID_ASC',
+  UniqueIdDesc = 'UNIQUE_ID_DESC',
   OriginalFilenameAsc = 'ORIGINAL_FILENAME_ASC',
   OriginalFilenameDesc = 'ORIGINAL_FILENAME_DESC',
-  PathAsc = 'PATH_ASC',
-  PathDesc = 'PATH_DESC',
-  MimetypeAsc = 'MIMETYPE_ASC',
-  MimetypeDesc = 'MIMETYPE_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  ApplicationSerialAsc = 'APPLICATION_SERIAL_ASC',
+  ApplicationSerialDesc = 'APPLICATION_SERIAL_DESC',
   ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
   ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
+  FilePathAsc = 'FILE_PATH_ASC',
+  FilePathDesc = 'FILE_PATH_DESC',
+  ThumbnailPathAsc = 'THUMBNAIL_PATH_ASC',
+  ThumbnailPathDesc = 'THUMBNAIL_PATH_DESC',
+  MimetypeAsc = 'MIMETYPE_ASC',
+  MimetypeDesc = 'MIMETYPE_DESC',
+  SubmittedAsc = 'SUBMITTED_ASC',
+  SubmittedDesc = 'SUBMITTED_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -5296,18 +5319,26 @@ export enum FilesOrderBy {
 export type FileCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `userId` field. */
-  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `uniqueId` field. */
+  uniqueId?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `originalFilename` field. */
   originalFilename?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `path` field. */
-  path?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `mimetype` field. */
-  mimetype?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationSerial` field. */
+  applicationSerial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `applicationResponseId` field. */
   applicationResponseId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `filePath` field. */
+  filePath?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `thumbnailPath` field. */
+  thumbnailPath?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `mimetype` field. */
+  mimetype?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `submitted` field. */
+  submitted?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
 };
 
 /** A connection to a list of `File` values. */
@@ -5328,16 +5359,20 @@ export type File = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
+  uniqueId: Scalars['String'];
+  originalFilename: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
-  originalFilename?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  filePath: Scalars['String'];
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `File`. */
-  application?: Maybe<Application>;
+  applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
   /** Reads and enables pagination through a set of `Notification`. */
@@ -7201,6 +7236,8 @@ export type Mutation = {
   updateFileByNodeId?: Maybe<UpdateFilePayload>;
   /** Updates a single `File` using a unique key and a patch. */
   updateFile?: Maybe<UpdateFilePayload>;
+  /** Updates a single `File` using a unique key and a patch. */
+  updateFileByUniqueId?: Maybe<UpdateFilePayload>;
   /** Updates a single `Notification` using its globally unique id and a patch. */
   updateNotificationByNodeId?: Maybe<UpdateNotificationPayload>;
   /** Updates a single `Notification` using a unique key and a patch. */
@@ -7325,6 +7362,8 @@ export type Mutation = {
   deleteFileByNodeId?: Maybe<DeleteFilePayload>;
   /** Deletes a single `File` using a unique key. */
   deleteFile?: Maybe<DeleteFilePayload>;
+  /** Deletes a single `File` using a unique key. */
+  deleteFileByUniqueId?: Maybe<DeleteFilePayload>;
   /** Deletes a single `Notification` using its globally unique id. */
   deleteNotificationByNodeId?: Maybe<DeleteNotificationPayload>;
   /** Deletes a single `Notification` using a unique key. */
@@ -7703,6 +7742,12 @@ export type MutationUpdateFileArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateFileByUniqueIdArgs = {
+  input: UpdateFileByUniqueIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateNotificationByNodeIdArgs = {
   input: UpdateNotificationByNodeIdInput;
 };
@@ -8071,6 +8116,12 @@ export type MutationDeleteFileByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteFileArgs = {
   input: DeleteFileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteFileByUniqueIdArgs = {
+  input: DeleteFileByUniqueIdInput;
 };
 
 
@@ -9710,7 +9761,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -10155,7 +10206,7 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -10253,7 +10304,7 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -10364,7 +10415,7 @@ export type UpdateApplicationOnApplicationSectionForApplicationSectionApplicatio
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -10478,7 +10529,7 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -10786,7 +10837,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -11367,7 +11418,7 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -11580,33 +11631,44 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `file` in the `ApplicationInput` mutation. */
-export type FileApplicationIdFkeyInverseInput = {
+export type FileApplicationSerialFkeyInverseInput = {
   /** Flag indicating whether all other `file` records that match this relationship should be removed. */
   deleteOthers?: Maybe<Scalars['Boolean']>;
   /** The primary key(s) for `file` for the far side of the relationship. */
   connectById?: Maybe<Array<FileFilePkeyConnect>>;
   /** The primary key(s) for `file` for the far side of the relationship. */
+  connectByUniqueId?: Maybe<Array<FileFileUniqueIdKeyConnect>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<FileNodeIdConnect>>;
   /** The primary key(s) for `file` for the far side of the relationship. */
   deleteById?: Maybe<Array<FileFilePkeyDelete>>;
   /** The primary key(s) for `file` for the far side of the relationship. */
+  deleteByUniqueId?: Maybe<Array<FileFileUniqueIdKeyDelete>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<FileNodeIdDelete>>;
   /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateById?: Maybe<Array<FileOnFileForFileApplicationIdFkeyUsingFilePkeyUpdate>>;
+  updateById?: Maybe<Array<FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate>>;
   /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate>>;
+  updateByUniqueId?: Maybe<Array<FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate>>;
+  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate>>;
   /** A `FileInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<FileApplicationIdFkeyFileCreateInput>>;
+  create?: Maybe<Array<FileApplicationSerialFkeyFileCreateInput>>;
 };
 
 /** The fields on `file` to look up the row to connect. */
 export type FileFilePkeyConnect = {
   id: Scalars['Int'];
+};
+
+/** The fields on `file` to look up the row to connect. */
+export type FileFileUniqueIdKeyConnect = {
+  uniqueId: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -11620,6 +11682,11 @@ export type FileFilePkeyDelete = {
   id: Scalars['Int'];
 };
 
+/** The fields on `file` to look up the row to delete. */
+export type FileFileUniqueIdKeyDelete = {
+  uniqueId: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to delete. */
 export type FileNodeIdDelete = {
   /** The globally unique `ID` which identifies a single `file` to be deleted. */
@@ -11627,22 +11694,26 @@ export type FileNodeIdDelete = {
 };
 
 /** The fields on `file` to look up the row to update. */
-export type FileOnFileForFileApplicationIdFkeyUsingFilePkeyUpdate = {
+export type FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate = {
   /** An object where the defined keys will be set on the `file` being updated. */
-  patch: UpdateFileOnFileForFileApplicationIdFkeyPatch;
+  patch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
   id: Scalars['Int'];
 };
 
 /** An object where the defined keys will be set on the `file` being updated. */
-export type UpdateFileOnFileForFileApplicationIdFkeyPatch = {
+export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
+  uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  filePath?: Maybe<Scalars['String']>;
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -11798,13 +11869,19 @@ export type FileUserIdFkeyInverseInput = {
   /** The primary key(s) for `file` for the far side of the relationship. */
   connectById?: Maybe<Array<FileFilePkeyConnect>>;
   /** The primary key(s) for `file` for the far side of the relationship. */
+  connectByUniqueId?: Maybe<Array<FileFileUniqueIdKeyConnect>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<FileNodeIdConnect>>;
   /** The primary key(s) for `file` for the far side of the relationship. */
   deleteById?: Maybe<Array<FileFilePkeyDelete>>;
   /** The primary key(s) for `file` for the far side of the relationship. */
+  deleteByUniqueId?: Maybe<Array<FileFileUniqueIdKeyDelete>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<FileNodeIdDelete>>;
   /** The primary key(s) and patch data for `file` for the far side of the relationship. */
   updateById?: Maybe<Array<FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate>>;
+  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
+  updateByUniqueId?: Maybe<Array<FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate>>;
   /** The primary key(s) and patch data for `file` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<UserOnFileForFileUserIdFkeyNodeIdUpdate>>;
   /** A `FileInput` object that will be created and connected to this object. */
@@ -11821,19 +11898,23 @@ export type FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate = {
 /** An object where the defined keys will be set on the `file` being updated. */
 export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  filePath?: Maybe<Scalars['String']>;
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `FileInput` mutation. */
-export type FileApplicationIdFkeyInput = {
+export type FileApplicationSerialFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
@@ -11847,24 +11928,24 @@ export type FileApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateById?: Maybe<ApplicationOnFileForFileApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  updateById?: Maybe<ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySerial?: Maybe<ApplicationOnFileForFileApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  updateBySerial?: Maybe<ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateByNodeId?: Maybe<FileOnFileForFileApplicationIdFkeyNodeIdUpdate>;
+  updateByNodeId?: Maybe<FileOnFileForFileApplicationSerialFkeyNodeIdUpdate>;
   /** A `ApplicationInput` object that will be created and connected to this object. */
-  create?: Maybe<FileApplicationIdFkeyApplicationCreateInput>;
+  create?: Maybe<FileApplicationSerialFkeyApplicationCreateInput>;
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnFileForFileApplicationIdFkeyUsingApplicationPkeyUpdate = {
+export type ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnFileForFileApplicationIdFkeyPatch;
+  patch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
   id: Scalars['Int'];
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
-export type UpdateApplicationOnFileForFileApplicationIdFkeyPatch = {
+export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
@@ -11882,7 +11963,7 @@ export type UpdateApplicationOnFileForFileApplicationIdFkeyPatch = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -12092,7 +12173,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -12130,7 +12211,7 @@ export type ApplicationPatch = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -12153,7 +12234,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -13018,13 +13099,19 @@ export type NotificationDocumentIdFkeyInput = {
   /** The primary key(s) for `file` for the far side of the relationship. */
   connectById?: Maybe<FileFilePkeyConnect>;
   /** The primary key(s) for `file` for the far side of the relationship. */
+  connectByUniqueId?: Maybe<FileFileUniqueIdKeyConnect>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
   connectByNodeId?: Maybe<FileNodeIdConnect>;
   /** The primary key(s) for `file` for the far side of the relationship. */
   deleteById?: Maybe<FileFilePkeyDelete>;
   /** The primary key(s) for `file` for the far side of the relationship. */
+  deleteByUniqueId?: Maybe<FileFileUniqueIdKeyDelete>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
   deleteByNodeId?: Maybe<FileNodeIdDelete>;
   /** The primary key(s) and patch data for `file` for the far side of the relationship. */
   updateById?: Maybe<FileOnNotificationForNotificationDocumentIdFkeyUsingFilePkeyUpdate>;
+  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
+  updateByUniqueId?: Maybe<FileOnNotificationForNotificationDocumentIdFkeyUsingFileUniqueIdKeyUpdate>;
   /** The primary key(s) and patch data for `file` for the far side of the relationship. */
   updateByNodeId?: Maybe<NotificationOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate>;
   /** A `FileInput` object that will be created and connected to this object. */
@@ -13041,14 +13128,18 @@ export type FileOnNotificationForNotificationDocumentIdFkeyUsingFilePkeyUpdate =
 /** An object where the defined keys will be set on the `file` being updated. */
 export type UpdateFileOnNotificationForNotificationDocumentIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
+  uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  filePath?: Maybe<Scalars['String']>;
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -13099,13 +13190,19 @@ export type FileApplicationResponseIdFkeyInverseInput = {
   /** The primary key(s) for `file` for the far side of the relationship. */
   connectById?: Maybe<Array<FileFilePkeyConnect>>;
   /** The primary key(s) for `file` for the far side of the relationship. */
+  connectByUniqueId?: Maybe<Array<FileFileUniqueIdKeyConnect>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<FileNodeIdConnect>>;
   /** The primary key(s) for `file` for the far side of the relationship. */
   deleteById?: Maybe<Array<FileFilePkeyDelete>>;
   /** The primary key(s) for `file` for the far side of the relationship. */
+  deleteByUniqueId?: Maybe<Array<FileFileUniqueIdKeyDelete>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<FileNodeIdDelete>>;
   /** The primary key(s) and patch data for `file` for the far side of the relationship. */
   updateById?: Maybe<Array<FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate>>;
+  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
+  updateByUniqueId?: Maybe<Array<FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate>>;
   /** The primary key(s) and patch data for `file` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate>>;
   /** A `FileInput` object that will be created and connected to this object. */
@@ -13122,13 +13219,17 @@ export type FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate = {
 /** An object where the defined keys will be set on the `file` being updated. */
 export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
+  uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
+  filePath?: Maybe<Scalars['String']>;
+  thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -13214,6 +13315,13 @@ export type NotificationDocumentIdFkeyNotificationCreateInput = {
   fileToDocumentId?: Maybe<NotificationDocumentIdFkeyInput>;
 };
 
+/** The fields on `file` to look up the row to update. */
+export type FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `file` being updated. */
+  patch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
+  uniqueId: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `file` to be connected. */
@@ -13225,14 +13333,18 @@ export type ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdat
 /** Represents an update to a `File`. Fields that are set will be updated. */
 export type FilePatch = {
   id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
+  uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  filePath?: Maybe<Scalars['String']>;
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -13240,13 +13352,17 @@ export type FilePatch = {
 /** The `file` to be created by this mutation. */
 export type FileApplicationResponseIdFkeyFileCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  uniqueId: Scalars['String'];
+  originalFilename: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
-  originalFilename?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
+  applicationSerial?: Maybe<Scalars['String']>;
+  filePath: Scalars['String'];
+  thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -13287,6 +13403,13 @@ export type FileApplicationResponseIdFkeyApplicationResponseCreateInput = {
   filesUsingId?: Maybe<FileApplicationResponseIdFkeyInverseInput>;
 };
 
+/** The fields on `file` to look up the row to update. */
+export type FileOnNotificationForNotificationDocumentIdFkeyUsingFileUniqueIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `file` being updated. */
+  patch: UpdateFileOnNotificationForNotificationDocumentIdFkeyPatch;
+  uniqueId: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type NotificationOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `file` to be connected. */
@@ -13298,14 +13421,18 @@ export type NotificationOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate 
 /** The `file` to be created by this mutation. */
 export type NotificationDocumentIdFkeyFileCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  uniqueId: Scalars['String'];
+  originalFilename: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
-  originalFilename?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  filePath: Scalars['String'];
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -14126,14 +14253,14 @@ export type NotificationApplicationIdFkeyNotificationCreateInput = {
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnFileForFileApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+export type ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnFileForFileApplicationIdFkeyPatch;
+  patch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
   serial: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type FileOnFileForFileApplicationIdFkeyNodeIdUpdate = {
+export type FileOnFileForFileApplicationSerialFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `application` being updated. */
@@ -14141,7 +14268,7 @@ export type FileOnFileForFileApplicationIdFkeyNodeIdUpdate = {
 };
 
 /** The `application` to be created by this mutation. */
-export type FileApplicationIdFkeyApplicationCreateInput = {
+export type FileApplicationSerialFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
@@ -14159,8 +14286,15 @@ export type FileApplicationIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+};
+
+/** The fields on `file` to look up the row to update. */
+export type FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `file` being updated. */
+  patch: UpdateFileOnFileForFileUserIdFkeyPatch;
+  uniqueId: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -14174,13 +14308,17 @@ export type UserOnFileForFileUserIdFkeyNodeIdUpdate = {
 /** The `file` to be created by this mutation. */
 export type FileUserIdFkeyFileCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  originalFilename?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  uniqueId: Scalars['String'];
+  originalFilename: Scalars['String'];
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  filePath: Scalars['String'];
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -14278,8 +14416,15 @@ export type FileUserIdFkeyUserCreateInput = {
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
 
+/** The fields on `file` to look up the row to update. */
+export type FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `file` being updated. */
+  patch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
+  uniqueId: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
-export type ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate = {
+export type ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `file` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `file` being updated. */
@@ -14287,15 +14432,19 @@ export type ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate = {
 };
 
 /** The `file` to be created by this mutation. */
-export type FileApplicationIdFkeyFileCreateInput = {
+export type FileApplicationSerialFkeyFileCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  uniqueId: Scalars['String'];
+  originalFilename: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
-  originalFilename?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  filePath: Scalars['String'];
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -14334,7 +14483,7 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -14454,7 +14603,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -14982,7 +15131,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -15268,7 +15417,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -15325,7 +15474,7 @@ export type ApplicationSectionApplicationIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -15378,7 +15527,7 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -15442,7 +15591,7 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -15513,7 +15662,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -16163,7 +16312,7 @@ export type ApplicationInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -16410,14 +16559,18 @@ export type CreateFileInput = {
 /** An input for mutations affecting `File` */
 export type FileInput = {
   id?: Maybe<Scalars['Int']>;
+  uniqueId: Scalars['String'];
+  originalFilename: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
-  originalFilename?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  filePath: Scalars['String'];
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -16434,7 +16587,7 @@ export type CreateFilePayload = {
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `File`. */
-  application?: Maybe<Application>;
+  applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
   /** An edge for our `File`. May be used by Relay 1. */
@@ -17720,7 +17873,7 @@ export type UpdateFilePayload = {
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `File`. */
-  application?: Maybe<Application>;
+  applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
   /** An edge for our `File`. May be used by Relay 1. */
@@ -17740,6 +17893,15 @@ export type UpdateFileInput = {
   /** An object where the defined keys will be set on the `File` being updated. */
   patch: FilePatch;
   id: Scalars['Int'];
+};
+
+/** All input for the `updateFileByUniqueId` mutation. */
+export type UpdateFileByUniqueIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `File` being updated. */
+  patch: FilePatch;
+  uniqueId: Scalars['String'];
 };
 
 /** All input for the `updateNotificationByNodeId` mutation. */
@@ -18929,7 +19091,7 @@ export type DeleteFilePayload = {
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `File`. */
-  application?: Maybe<Application>;
+  applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
   /** An edge for our `File`. May be used by Relay 1. */
@@ -18947,6 +19109,13 @@ export type DeleteFileInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
+};
+
+/** All input for the `deleteFileByUniqueId` mutation. */
+export type DeleteFileByUniqueIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  uniqueId: Scalars['String'];
 };
 
 /** All input for the `deleteNotificationByNodeId` mutation. */
@@ -19769,7 +19938,7 @@ export type ResponseFragment = (
 
 export type ReviewResponseFragmentFragment = (
   { __typename?: 'ReviewResponse' }
-  & Pick<ReviewResponse, 'applicationResponseId' | 'decision' | 'comment' | 'id' | 'status' | 'timeUpdated'>
+  & Pick<ReviewResponse, 'applicationResponseId' | 'decision' | 'comment' | 'id' | 'status' | 'timeUpdated' | 'originalReviewResponseId'>
 );
 
 export type SectionFragment = (
@@ -19967,6 +20136,7 @@ export type UpdateReviewResponseMutationVariables = Exact<{
   id: Scalars['Int'];
   decision?: Maybe<ReviewResponseDecision>;
   comment?: Maybe<Scalars['String']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
 }>;
 
 
@@ -20515,6 +20685,7 @@ export const ReviewResponseFragmentFragmentDoc = gql`
   id
   status
   timeUpdated
+  originalReviewResponseId
 }
     `;
 export const SectionFragmentDoc = gql`
@@ -20871,8 +21042,8 @@ export type UpdateReviewDecisionCommentMutationHookResult = ReturnType<typeof us
 export type UpdateReviewDecisionCommentMutationResult = Apollo.MutationResult<UpdateReviewDecisionCommentMutation>;
 export type UpdateReviewDecisionCommentMutationOptions = Apollo.BaseMutationOptions<UpdateReviewDecisionCommentMutation, UpdateReviewDecisionCommentMutationVariables>;
 export const UpdateReviewResponseDocument = gql`
-    mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String) {
-  updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment}}) {
+    mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String, $recommendedApplicantVisibility: ReviewResponseRecommendedApplicantVisibility = ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT) {
+  updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment, recommendedApplicantVisibility: $recommendedApplicantVisibility}}) {
     reviewResponse {
       ...reviewResponseFragment
     }
@@ -20897,6 +21068,7 @@ export type UpdateReviewResponseMutationFn = Apollo.MutationFunction<UpdateRevie
  *      id: // value for 'id'
  *      decision: // value for 'decision'
  *      comment: // value for 'comment'
+ *      recommendedApplicantVisibility: // value for 'recommendedApplicantVisibility'
  *   },
  * });
  */
@@ -20911,10 +21083,10 @@ export const GetAllResponsesDocument = gql`
   applicationBySerial(serial: $serial) {
     id
     serial
-    applicationResponses {
+    applicationResponses(orderBy: TIME_UPDATED_DESC) {
       nodes {
         ...Response
-        reviewResponses {
+        reviewResponses(condition: {isVisibleToApplicant: true}) {
           nodes {
             ...reviewResponseFragment
           }
