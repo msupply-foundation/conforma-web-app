@@ -1,17 +1,15 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getReviewInfo($reviewerId: Int!, $applicationId: Int) {
-    reviewAssignments(
-      condition: { reviewerId: $reviewerId, applicationId: $applicationId }
-      orderBy: TIME_CREATED_DESC
-    ) {
+  query getReviewInfo($applicationId: Int) {
+    reviewAssignments(condition: { applicationId: $applicationId }, orderBy: TIME_CREATED_DESC) {
       nodes {
         id
         level
         status
         timeCreated
         level
+        reviewerId
         isLastLevel
         reviewer {
           id

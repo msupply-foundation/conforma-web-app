@@ -26,11 +26,16 @@ import useScrollableAttachments, {
 } from '../../utils/hooks/useScrollableAttachments'
 import { SectionProgress } from '../../components/Review'
 import ReviewSubmit from './ReviewSubmit'
+import { useUserState } from '../../contexts/UserState'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetailsNEW
   fullApplicationStructure: FullStructure
 }> = ({ reviewAssignment, fullApplicationStructure }) => {
+  const {
+    userState: { currentUser },
+  } = useUserState()
+
   const { fullReviewStructure, error } = useGetFullReviewStructure({
     reviewAssignment,
     fullApplicationStructure,
@@ -44,6 +49,14 @@ const ReviewPage: React.FC<{
 
   if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
   if (!fullReviewStructure) return <Loading />
+
+  // TODO decide how to handle this, and localise if not deleted
+  if (
+    reviewAssignment?.reviewer?.id !== currentUser?.userId &&
+    fullReviewStructure?.thisReview?.status !== ReviewStatus.Submitted
+  )
+    return <Header>Review in Progress</Header>
+
   const { sections, responsesByCode, info } = fullReviewStructure
   return (
     <>

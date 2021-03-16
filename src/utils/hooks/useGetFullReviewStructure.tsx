@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
-import { AssignmentDetailsNEW, FullStructure } from '../types'
-import { Review, ReviewResponse, useGetReviewResponsesQuery, User } from '../generated/graphql'
+import { AssignmentDetailsNEW, FullStructure, SectionStateNEW } from '../types'
+import { ReviewResponse, useGetReviewResponsesQuery } from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
 import addThisReviewResponses from '../helpers/structure/addThisReviewResponses'
 import addElementsById from '../helpers/structure/addElementsById'
 import generateReviewProgress from '../helpers/structure/generateReviewProgress'
+import { cloneDeep } from '@apollo/client/utilities'
+import generateReviewSectionActions from '../helpers/structure/generateReviewSectionActions'
 
 interface useGetFullReviewStructureProps {
   fullApplicationStructure: FullStructure
@@ -26,7 +28,7 @@ const useGetFullReviewStructure = ({
   // filter by all sections if sections are not supplied
   const sectionIds =
     filteredSectionIds ||
-    fullApplicationStructure?.sortedSections?.map((section) => section.details.id) ||
+    Object.values(fullApplicationStructure.sections).map((section) => section.details.id) ||
     []
 
   const { data, error } = useGetReviewResponsesQuery({
@@ -42,36 +44,45 @@ const useGetFullReviewStructure = ({
     if (error) return
 
     if (!data) return
+    // requires deep clone one we have concurrent useGetFullReviewStructure that could possibly
+    // mutate fullApplicationStructure
+    let newStructure: FullStructure = cloneDeep(fullApplicationStructure)
 
     // This is usefull for linking assignments to elements
-    let newStructure: FullStructure = addElementsById(fullApplicationStructure)
+    newStructure = addElementsById(newStructure)
+    newStructure = addSortedSectionsAndPages(newStructure)
 
-    newStructure = addIsAssigned(
-      newStructure,
-      reviewAssignment.assignedTemplateElementIds,
-      reviewAssignment.reviewer
-    )
+    newStructure = addIsAssigned(newStructure, reviewAssignment.assignedTemplateElementIds)
 
     // here we add responses from other review (not from this review assignmnet)
 
-    // There will always just be one review assignment linked to a review. (since review is related to reviewAssignment, many to one relation is created)
-    const review = data?.reviewAssignment?.reviews?.nodes[0] as Review
     if ((data.reviewAssignment?.reviews?.nodes?.length || 0) > 1)
       console.error(
         'More then one review associated with reviewAssignment with id',
         reviewAssignment.id
       )
-    if (review) {
+    // There will always just be one review assignment linked to a review. (since review is related to reviewAssignment, many to one relation is created)
+    const reviewResponses = data?.reviewAssignment?.reviews?.nodes[0]?.reviewResponses.nodes
+    if (reviewResponses) {
       newStructure = addThisReviewResponses({
         structure: newStructure,
-        sortedReviewResponses: review?.reviewResponses.nodes as ReviewResponse[], // Sorted in useGetReviewNewQuery
+        sortedReviewResponses: reviewResponses as ReviewResponse[], // Sorted in useGetReviewResponsesQuery
       })
-
-      // TODO talk to team and decide if we should put everything in full structure (join all of required info from reviewAssignment ?)
-      newStructure.thisReview = reviewAssignment.review
     }
+    // review info comes from reviewAssignment that's passed to this hook
+    newStructure.thisReview = reviewAssignment.review
 
     generateReviewProgress(newStructure)
+
+    // filter by supplied sections or by all sections if none supplied to the hook
+    const sections = getFilteredSections(sectionIds, newStructure.sortedSections || [])
+    generateReviewSectionActions({
+      sections,
+      reviewAssignment,
+      thisReview: newStructure.thisReview,
+      currentUserId: currentUser?.userId as number,
+    })
+
     // generateConsolidationProgress
     setFullReviewStructure(newStructure)
   }, [data, error])
@@ -82,28 +93,33 @@ const useGetFullReviewStructure = ({
   }
 }
 
-const addIsAssigned = (
-  newStructure: FullStructure,
-  assignedTemplateElementIds: number[],
-  reviewer: User
-) => {
+const addSortedSectionsAndPages = (newStructure: FullStructure): FullStructure => {
+  const sortedSections = Object.values(newStructure.sections).sort(
+    (sectionOne, sectionTwo) => sectionOne.details.index - sectionTwo.details.index
+  )
+  const sortedPages = sortedSections
+    .map((section) =>
+      Object.values(section.pages).sort((pageOne, pageTwo) => pageOne.number - pageTwo.number)
+    )
+    .flat()
+
+  return { ...newStructure, sortedPages, sortedSections }
+}
+
+const getFilteredSections = (sectionIds: number[], sections: SectionStateNEW[]) => {
+  return sections.filter((section) =>
+    sectionIds.find((sectionId) => section.details.id === sectionId)
+  )
+}
+
+const addIsAssigned = (newStructure: FullStructure, assignedTemplateElementIds: number[]) => {
   assignedTemplateElementIds.forEach((templateElementId) => {
     const assignedElement = newStructure?.elementsById?.[templateElementId]
 
     if (!assignedElement) return
 
     assignedElement.isAssigned = true
-    // Check if section already assigned and set assigned user otherwise
-    const section = newStructure.sections[assignedElement.element.sectionCode]
-    if (!section.assigned)
-      section.assigned = {
-        id: reviewer.id,
-        firstName: reviewer.firstName as string,
-        lastName: reviewer.lastName as string,
-        current: true,
-      }
   })
-
   return newStructure
 }
 

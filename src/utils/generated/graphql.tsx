@@ -20451,7 +20451,6 @@ export type GetReviewDecisionCommentQuery = (
 );
 
 export type GetReviewInfoQueryVariables = Exact<{
-  reviewerId: Scalars['Int'];
   applicationId?: Maybe<Scalars['Int']>;
 }>;
 
@@ -20462,7 +20461,7 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'level' | 'status' | 'timeCreated' | 'isLastLevel'>
+      & Pick<ReviewAssignment, 'id' | 'level' | 'status' | 'timeCreated' | 'reviewerId' | 'isLastLevel'>
       & { reviewer?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'id' | 'firstName' | 'lastName'>
@@ -21564,14 +21563,15 @@ export type GetReviewDecisionCommentQueryHookResult = ReturnType<typeof useGetRe
 export type GetReviewDecisionCommentLazyQueryHookResult = ReturnType<typeof useGetReviewDecisionCommentLazyQuery>;
 export type GetReviewDecisionCommentQueryResult = Apollo.QueryResult<GetReviewDecisionCommentQuery, GetReviewDecisionCommentQueryVariables>;
 export const GetReviewInfoDocument = gql`
-    query getReviewInfo($reviewerId: Int!, $applicationId: Int) {
-  reviewAssignments(condition: {reviewerId: $reviewerId, applicationId: $applicationId}, orderBy: TIME_CREATED_DESC) {
+    query getReviewInfo($applicationId: Int) {
+  reviewAssignments(condition: {applicationId: $applicationId}, orderBy: TIME_CREATED_DESC) {
     nodes {
       id
       level
       status
       timeCreated
       level
+      reviewerId
       isLastLevel
       reviewer {
         id
@@ -21620,7 +21620,6 @@ export const GetReviewInfoDocument = gql`
  * @example
  * const { data, loading, error } = useGetReviewInfoQuery({
  *   variables: {
- *      reviewerId: // value for 'reviewerId'
  *      applicationId: // value for 'applicationId'
  *   },
  * });

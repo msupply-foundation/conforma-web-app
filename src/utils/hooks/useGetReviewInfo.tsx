@@ -23,7 +23,6 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
 
   const { data, loading, error, refetch } = useGetReviewInfoQuery({
     variables: {
-      reviewerId: userId,
       applicationId,
     },
     notifyOnNetworkStatusChange: true,

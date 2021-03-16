@@ -65,12 +65,14 @@ export {
   ResponsePayload,
   ResponsesByCode,
   ResumeSection,
+  ReviewAction,
   ReviewDetails,
   ReviewProgressStatus,
   ReviewProgress,
   ReviewQuestion,
   ReviewQuestionDecision,
   ReviewerResponsesPayload,
+  ReviewSectionComponentProps,
   SectionAndPage,
   SectionState,
   SectionDetails,
@@ -149,8 +151,9 @@ interface AssignmentDetails {
 interface AssignmentDetailsNEW {
   id: number
   status: ReviewAssignmentStatus | null
-  timeCreated: DateTime
+  timeCreated: Date
   level: number
+  reviewerId?: number
   review: ReviewDetails | null
   reviewer: GraphQLUser
   totalAssignedQuestions: number
@@ -381,10 +384,18 @@ interface ResumeSection {
   page: number
 }
 
+type ReviewSectionComponentProps = {
+  section: SectionStateNEW
+  assignment: AssignmentDetailsNEW
+  thisReview?: ReviewDetails | null
+  action: ReviewAction
+  isAssignedToCurrentUser: boolean
+}
+
 interface ReviewDetails {
   id: number
   status: ReviewStatus
-  timeStatusCreated?: DateTime
+  timeStatusCreated?: Date
   stage: ApplicationStage
   isLastLevel: boolean
   level: number
@@ -454,16 +465,31 @@ interface ReviewProgress {
   doneConform: number
   doneNonConform: number
 }
+enum ReviewAction {
+  canContinue = 'CAN_CONTINUE',
+  canView = 'CAN_VIEW',
+  canReReview = 'CAN_RE_REVIEW',
+  canSelfAssign = 'CAN_SELF_ASSIGN',
+  canStartReview = 'CAN_START_REVIEW',
+  canContinueLocked = 'CAN_CONTINUE_LOCKED',
+  canUpdate = 'CAN_UPDATE',
+  unknown = 'UNKNOWN',
+}
 
 interface SectionStateNEW {
   details: SectionDetails
   progress?: Progress
   reviewProgress?: ReviewProgress
-  assigned?: ReviewerDetails
+  reviewAction?: {
+    action: ReviewAction
+    isAssignedToCurrentUser: boolean
+    isReviewable: boolean
+  }
   pages: {
     [pageNum: number]: PageNEW
   }
 }
+
 interface SectionsStructureNEW {
   [code: string]: SectionStateNEW
 }

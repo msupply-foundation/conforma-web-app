@@ -161,8 +161,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           })),
           sections: buildSectionsStructure({ sections, baseElements }),
         }
-        // This is usefull for generating progress (maybe also usefull downstream, but dont' want too refactor too much at this stage)
-        newStructure = addSortedSectionsAndPages(newStructure)
 
         setFullStructure(newStructure)
         setIsLoading(false)
@@ -176,19 +174,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     structure,
     template,
   }
-}
-
-const addSortedSectionsAndPages = (newStructure: FullStructure): FullStructure => {
-  const sortedSections = Object.values(newStructure.sections).sort(
-    (sectionOne, sectionTwo) => sectionOne.details.index - sectionTwo.details.index
-  )
-  const sortedPages = sortedSections
-    .map((section) =>
-      Object.values(section.pages).sort((pageOne, pageTwo) => pageOne.number - pageTwo.number)
-    )
-    .flat()
-
-  return { ...newStructure, sortedPages, sortedSections }
 }
 
 export default useLoadApplication
