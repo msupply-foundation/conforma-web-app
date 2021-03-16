@@ -3,6 +3,8 @@ import { FullStructure, SectionStateNEW, PageNEW } from '../../types'
 const generateApplicantChangesRequestedProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach(generatePageChangeRequestProgress)
   newStructure?.sortedSections?.forEach(generateSectionReviewProgress)
+
+  addIsChangeRequest(newStructure)
 }
 
 const generateSectionReviewProgress = (section: SectionStateNEW) => {
@@ -10,13 +12,22 @@ const generateSectionReviewProgress = (section: SectionStateNEW) => {
 }
 
 const generatePageChangeRequestProgress = (page: PageNEW) => {
-  const totalChangeRequests = page.state.filter((element) => element.isChangeRequest)
+  const totalChangeRequests = page.state.filter(
+    (element) => element.isChangeRequest && element.element.isVisible
+  )
   const doneChangeRequests = totalChangeRequests.filter((element) => element.isChanged)
 
   page.changeRequestsProgress = {
     totalChangeRequests: totalChangeRequests.length,
     doneChangeRequests: doneChangeRequests.length,
   }
+}
+
+const addIsChangeRequest = (newStructure: FullStructure) => {
+  const isPageRequest = ({ changeRequestsProgress }: PageNEW) =>
+    changeRequestsProgress?.totalChangeRequests
+
+  newStructure.info.isChangeRequest = !!newStructure?.sortedPages?.find(isPageRequest)
 }
 
 // Simple helper that will iterate over elements and sum up all of the values for keys

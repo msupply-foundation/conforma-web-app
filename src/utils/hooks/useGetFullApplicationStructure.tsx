@@ -100,8 +100,15 @@ const useGetFullApplicationStructure = ({
         // even thought response is already added to element, we need to Latest and Previous applicaiton response
         addApplicationResponses(newStructure, applicationResponses)
         addApplicantChangeRequestStatusToElement(newStructure)
-        generateResponsesProgress(newStructure)
+
         generateApplicantChangesRequestedProgress(newStructure)
+
+        // generateResponseProgress uses change statuses calculated in generateApplicantChangesRequestedProgress
+        generateResponsesProgress(newStructure)
+
+        // For change requests we treat application as not linear
+        newStructure.info.isLinear =
+          newStructure.info.isLinear && !newStructure.info.isChangeRequest
       }
 
       setLastProcessedTimestamp(Date.now())
