@@ -74,6 +74,7 @@ const useGetFullReviewStructure = ({
 
     generateReviewProgress(newStructure)
 
+    // filter by supplied sections or by all sections if none supplied to the hook
     const sections = getFilteredSections(sectionIds, newStructure.sortedSections || [])
     generateReviewSectionActions({
       sections,
