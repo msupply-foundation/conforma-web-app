@@ -21,17 +21,19 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = ({
   const getContent = () => {
     switch (action) {
       case ReviewAction.canContinue: {
-        if (isAssignedToCurrentUser) return <Link to={reviewSectionLink}>{strings.CONTINUE}</Link>
+        if (isAssignedToCurrentUser)
+          return <Link to={reviewSectionLink}>{strings.ACTION_CONTINUE}</Link>
 
         return <p>In Review</p>
       }
       case ReviewAction.canView: {
-        if (isAssignedToCurrentUser) return <Link to={`${reviewSectionLink}`}>{strings.VIEW}</Link>
-        else return <Link to={`${reviewSectionLink}`}>{strings.VIEW}</Link>
+        if (isAssignedToCurrentUser)
+          return <Link to={`${reviewSectionLink}`}>{strings.ACTION_VIEW}</Link>
+        else return <Link to={`${reviewSectionLink}`}>{strings.ACTION_VIEW}</Link>
       }
 
       case ReviewAction.canStartReview: {
-        if (isAssignedToCurrentUser) return strings.START
+        if (isAssignedToCurrentUser) return strings.ACTION_START
 
         return null
       }
