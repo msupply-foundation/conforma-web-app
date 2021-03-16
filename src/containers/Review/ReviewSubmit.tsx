@@ -35,7 +35,6 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
         isEditable={thisReview?.status == ReviewStatus.Draft}
         reviewDecisionId={Number(reviewDecision?.id)}
       />
-
       <ReviewDecision
         decisionOptions={decisionOptions}
         setDecision={setDecision}
@@ -125,15 +124,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     showWarning(message, action)
   }
 
-  if (structure.thisReview?.status !== ReviewStatus.Draft) {
-    return (
-      <>
-        <Button onClick={() => console.log('go to view submissions')}>
-          {strings.BUTTON_REVIEW_VIEW_SUBMISSION}
-        </Button>
-      </>
-    )
-  }
+  if (structure.thisReview?.status !== ReviewStatus.Draft) return null
 
   return (
     <>
