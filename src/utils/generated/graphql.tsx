@@ -19938,7 +19938,7 @@ export type ResponseFragment = (
 
 export type ReviewResponseFragmentFragment = (
   { __typename?: 'ReviewResponse' }
-  & Pick<ReviewResponse, 'applicationResponseId' | 'decision' | 'comment' | 'id' | 'status' | 'timeUpdated'>
+  & Pick<ReviewResponse, 'applicationResponseId' | 'decision' | 'comment' | 'id' | 'status' | 'timeUpdated' | 'originalReviewResponseId'>
 );
 
 export type SectionFragment = (
@@ -20136,6 +20136,7 @@ export type UpdateReviewResponseMutationVariables = Exact<{
   id: Scalars['Int'];
   decision?: Maybe<ReviewResponseDecision>;
   comment?: Maybe<Scalars['String']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
 }>;
 
 
@@ -20683,6 +20684,7 @@ export const ReviewResponseFragmentFragmentDoc = gql`
   id
   status
   timeUpdated
+  originalReviewResponseId
 }
     `;
 export const SectionFragmentDoc = gql`
@@ -21039,8 +21041,8 @@ export type UpdateReviewDecisionCommentMutationHookResult = ReturnType<typeof us
 export type UpdateReviewDecisionCommentMutationResult = Apollo.MutationResult<UpdateReviewDecisionCommentMutation>;
 export type UpdateReviewDecisionCommentMutationOptions = Apollo.BaseMutationOptions<UpdateReviewDecisionCommentMutation, UpdateReviewDecisionCommentMutationVariables>;
 export const UpdateReviewResponseDocument = gql`
-    mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String) {
-  updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment}}) {
+    mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String, $recommendedApplicantVisibility: ReviewResponseRecommendedApplicantVisibility = ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT) {
+  updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment, recommendedApplicantVisibility: $recommendedApplicantVisibility}}) {
     reviewResponse {
       ...reviewResponseFragment
     }
@@ -21065,6 +21067,7 @@ export type UpdateReviewResponseMutationFn = Apollo.MutationFunction<UpdateRevie
  *      id: // value for 'id'
  *      decision: // value for 'decision'
  *      comment: // value for 'comment'
+ *      recommendedApplicantVisibility: // value for 'recommendedApplicantVisibility'
  *   },
  * });
  */
@@ -21079,10 +21082,10 @@ export const GetAllResponsesDocument = gql`
   applicationBySerial(serial: $serial) {
     id
     serial
-    applicationResponses {
+    applicationResponses(orderBy: TIME_UPDATED_DESC) {
       nodes {
         ...Response
-        reviewResponses {
+        reviewResponses(condition: {isVisibleToApplicant: true}) {
           nodes {
             ...reviewResponseFragment
           }

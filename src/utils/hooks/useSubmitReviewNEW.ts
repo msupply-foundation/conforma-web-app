@@ -9,11 +9,11 @@ import { FullStructure } from '../types'
 
 // below lines are used to get return type of the function that is returned by useUpdateReviewMutation
 type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewMutation>
-type promiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
+type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 // hook used to submit review, , as per type definition below (returns promise that resolve with mutation result data)
 type UseSubmitReview = (
   reviewId: number
-) => (structure: FullStructure, decision: Decision) => promiseReturnType
+) => (structure: FullStructure, decision: Decision) => PromiseReturnType
 
 type ConstructReviewPatch = (structure: FullStructure, decision: Decision) => ReviewPatch
 
@@ -30,6 +30,7 @@ const useSubmitReview: UseSubmitReview = (reviewId) => {
         decision: thisReviewLatestResponse?.decision,
         comment: thisReviewLatestResponse?.comment,
         status: ReviewResponseStatus.Submitted,
+        recommendedApplicationVisibility: thisReviewLatestResponse?.recommendedApplicantVisibility,
       },
       id: Number(thisReviewLatestResponse?.id),
     }))
