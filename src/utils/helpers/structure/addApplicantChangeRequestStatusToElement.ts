@@ -18,9 +18,9 @@ const addApplicantChangeRequestStatusToElement = (structure: FullStructure) => {
     // compare with previous one
     if (previousReviewResponse?.decision === ReviewResponseDecision.Decline) {
       element.isChangeRequest = true
-      element.isChanged = deepEqual(
-        latestApplicationResponse.value,
-        previousApplicationResponse.value
+      element.isChanged = !deepEqual(
+        latestApplicationResponse?.value,
+        previousApplicationResponse?.value
       )
     }
   })
