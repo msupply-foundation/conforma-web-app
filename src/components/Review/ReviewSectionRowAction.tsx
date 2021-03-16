@@ -20,7 +20,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
     thisReview,
   } = props
 
-  const reviewPath = `${pathname}${thisReview?.id}`
+  const reviewPath = `${pathname}/${thisReview?.id}`
   const reviewSectionLink = `${reviewPath}?activeSections=${details.code}`
 
   const getContent = () => {
