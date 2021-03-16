@@ -66,7 +66,7 @@ const useGetFullReviewStructure = ({
     if (reviewResponses) {
       newStructure = addThisReviewResponses({
         structure: newStructure,
-        sortedReviewResponses: reviewResponses as ReviewResponse[], // Sorted in useGetReviewNewQuery
+        sortedReviewResponses: reviewResponses as ReviewResponse[], // Sorted in useGetReviewResponsesQuery
       })
     }
     // review info comes from reviewAssignment that's passed to this hook
