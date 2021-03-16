@@ -1,21 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
-import {
-  Button,
-  Form,
-  Icon,
-  Grid,
-  Card,
-  List,
-  Label,
-  Image,
-  Segment,
-  Loader,
-} from 'semantic-ui-react'
+import { Button, Icon, Grid, List, Label, Image, Message, Segment, Loader } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import strings from '../constants'
 import config from '../../../config.json'
 import { Link } from 'react-router-dom'
-import { Loading } from '../../../components'
 import { useUserState } from '../../../contexts/UserState'
 import { useRouter } from '../../../utils/hooks/useRouter'
 
@@ -84,32 +72,40 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const files: any[] = Array.from(e.target.files)
 
     for (const file of files) {
-      if (newFileData.length >= fileCountLimit) {
-        newFileData.unshift({ filename: file.name, error: true, errorMessage: 'Too many files!' })
-        continue
-      }
       if (fileData.map((f: any) => f.filename).includes(file.name)) {
         newFileData.unshift({
           filename: file.name,
           error: true,
-          errorMessage: 'File already uploaded',
+          errorMessage: strings.ERROR_FILE_ALREADY_UPLOADED,
         })
-        continue
-      }
-      if (file.size > fileSizeLimit * 1000) {
-        newFileData.unshift({
-          filename: file.name,
-          error: true,
-          errorMessage: 'File too big',
-        })
+        file.error = true
         continue
       }
       if (fileExtensions && !fileExtensions.includes(file.name.split('.').pop().toLowerCase())) {
         newFileData.unshift({
           filename: file.name,
           error: true,
-          errorMessage: 'File type not permitted',
+          errorMessage: strings.ERROR_FILE_TYPE_NOT_PERMITTED,
         })
+        file.error = true
+        continue
+      }
+      if (file.size > fileSizeLimit * 1000) {
+        newFileData.unshift({
+          filename: file.name,
+          error: true,
+          errorMessage: strings.ERROR_FILE_TOO_BIG,
+        })
+        file.error = true
+        continue
+      }
+      if (newFileData.length >= fileCountLimit) {
+        newFileData.unshift({
+          filename: file.name,
+          error: true,
+          errorMessage: strings.ERROR_TOO_MANY_FILES,
+        })
+        file.error = true
         continue
       }
       newFileData.push({ filename: file.name, loading: true })
@@ -150,38 +146,41 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Segment basic textAlign="center">
           <Button primary disabled={!isEditable} onClick={() => fileInputRef?.current?.click()}>
             <Icon name="upload" />
-            {fileData.length === 0 ? 'Click to upload' : 'Upload another'}
+            {fileData.length === 0 ? strings.BUTTON_CLICK_TO_UPLOAD : strings.BUTTON_UPLOAD_ANOTHER}
           </Button>
         </Segment>
         <List horizontal verticalAlign="top">
-          {fileData.map((file) => {
-            if ('error' in file)
-              return (
-                <Card>
-                  <List.Item key={file.filename}>
-                    <Label>{file.errorMessage}</Label>
-                    <List.Content>
-                      {file.filename}
-                      <br />
-                      <a onClick={() => handleDelete(file.filename)}>Delete</a>
-                    </List.Content>
-                  </List.Item>
-                </Card>
-              )
-            if ('loading' in file)
-              return (
-                <List.Item key={file.filename} style={{ maxWidth: 200 }}>
-                  <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
-                    <Grid.Row style={{ boxShadow: 'none', marginLeft: 150 }} verticalAlign="bottom">
-                      <Icon
-                        link
-                        name="delete"
-                        circular
-                        fitted
-                        color="grey"
-                        onClick={() => handleDelete(file.filename)}
-                      />
+          {fileData.map((file) => (
+            <List.Item key={file.filename} style={{ maxWidth: 150 }}>
+              <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
+                <Grid.Row style={{ boxShadow: 'none', marginLeft: 150 }} verticalAlign="bottom">
+                  <Icon
+                    link
+                    name="delete"
+                    circular
+                    fitted
+                    color="grey"
+                    onClick={() => handleDelete(file.filename)}
+                  />
+                </Grid.Row>
+                {'error' in file && (
+                  <>
+                    <Grid.Row
+                      centered
+                      style={{ boxShadow: 'none', height: 120, padding: 10 }}
+                      verticalAlign="middle"
+                    >
+                      <Message negative compact>
+                        <p>{file.errorMessage}</p>
+                      </Message>
                     </Grid.Row>
+                    <Grid.Row centered style={{ boxShadow: 'none' }}>
+                      <p style={{ wordBreak: 'break-word' }}>{file.filename}</p>
+                    </Grid.Row>
+                  </>
+                )}
+                {'loading' in file && (
+                  <>
                     <Grid.Row
                       centered
                       style={{ boxShadow: 'none', height: 120 }}
@@ -194,43 +193,27 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                     <Grid.Row centered style={{ boxShadow: 'none' }}>
                       <p style={{ wordBreak: 'break-word' }}>{file.filename}</p>
                     </Grid.Row>
-                  </Grid>
-                </List.Item>
-              )
-            return (
-              <List.Item key={file.filename} style={{ maxWidth: 200 }}>
-                <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
-                  <Grid.Row style={{ boxShadow: 'none', marginLeft: 150 }} verticalAlign="bottom">
-                    <Icon
-                      link
-                      name="delete"
-                      circular
-                      fitted
-                      color="grey"
-                      onClick={() => handleDelete(file.filename)}
-                    />
-                  </Grid.Row>
-                  <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
-                    <a href={host + file.fileUrl} target="_blank">
-                      <Image
-                        src={host + file.thumbnailUrl}
-                        style={{ maxHeight: '120px' }}
-                        // onMouseOver={() => console.log('Hovering')}
-                      />
-                    </a>
-                  </Grid.Row>
-                  <Grid.Row centered style={{ boxShadow: 'none' }}>
-                    <p style={{ wordBreak: 'break-word' }}>
+                  </>
+                )}
+                {'fileUrl' in file && (
+                  <>
+                    <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
                       <a href={host + file.fileUrl} target="_blank">
-                        {file.filename}
-                      </a>{' '}
-                      <a onClick={() => handleDelete(file.filename)}>Delete</a>
-                    </p>
-                  </Grid.Row>
-                </Grid>
-              </List.Item>
-            )
-          })}
+                        <Image src={host + file.thumbnailUrl} style={{ maxHeight: '120px' }} />
+                      </a>
+                    </Grid.Row>
+                    <Grid.Row centered style={{ boxShadow: 'none' }}>
+                      <p style={{ wordBreak: 'break-word' }}>
+                        <a href={host + file.fileUrl} target="_blank">
+                          {file.filename}
+                        </a>
+                      </p>
+                    </Grid.Row>
+                  </>
+                )}
+              </Grid>
+            </List.Item>
+          ))}
         </List>
       </Segment.Group>
     </>
