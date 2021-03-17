@@ -26,19 +26,18 @@ const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEdita
 
   if (!data) return <Loading />
 
-  const initialComment = data?.reviewDecision?.comment || ''
-
   if (!isEditable)
-    return (
+    return data?.reviewDecision?.comment ? (
       <Message
         compact
         attached="bottom"
         icon="comment outline"
         header={strings.TITLE_REVIEW_COMMENT}
-        content={initialComment}
+        content={data?.reviewDecision?.comment}
       />
-    )
+    ) : null
 
+  const initialComment = data?.reviewDecision?.comment || ''
   return (
     <Form>
       <TextArea
