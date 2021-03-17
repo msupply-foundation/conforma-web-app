@@ -1,5 +1,5 @@
 import { Button, Header, Label, Message, Segment } from 'semantic-ui-react'
-import { Loading, NoMatch } from '../../components'
+import { Loading } from '../../components'
 import {
   AssignmentDetailsNEW,
   FullStructure,
@@ -10,6 +10,7 @@ import {
 
 import {
   ReviewResponseDecision,
+  ReviewResponseStatus,
   ReviewStatus,
   useUpdateReviewResponseMutation,
 } from '../../utils/generated/graphql'
@@ -23,14 +24,20 @@ import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivati
 import useScrollableAttachments, {
   ScrollableAttachment,
 } from '../../utils/hooks/useScrollableAttachments'
-import ReviewSubmitButton from '../../components/Review/ReviewSubmitButton'
+import { SectionProgress } from '../../components/Review'
+import ReviewSubmit from './ReviewSubmit'
+import { useUserState } from '../../contexts/UserState'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetailsNEW
   fullApplicationStructure: FullStructure
 }> = ({ reviewAssignment, fullApplicationStructure }) => {
+  const {
+    userState: { currentUser },
+  } = useUserState()
+
   const { fullReviewStructure, error } = useGetFullReviewStructure({
-    reviewAssignmentId: reviewAssignment.id,
+    reviewAssignment,
     fullApplicationStructure,
   })
 
@@ -42,6 +49,14 @@ const ReviewPage: React.FC<{
 
   if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
   if (!fullReviewStructure) return <Loading />
+
+  // TODO decide how to handle this, and localise if not deleted
+  if (
+    reviewAssignment?.reviewer?.id !== currentUser?.userId &&
+    fullReviewStructure?.thisReview?.status !== ReviewStatus.Submitted
+  )
+    return <Header>Review in Progress</Header>
+
   const { sections, responsesByCode, info } = fullReviewStructure
   return (
     <>
@@ -67,7 +82,7 @@ const ReviewPage: React.FC<{
               toggleSection={toggleSection(section.details.code)}
               section={section}
               extraSectionTitleContent={(section: SectionStateNEW) => (
-                <SectionProgress section={section} />
+                <SectionProgress {...section} />
               )}
               extraPageContent={(page: PageNEW) => <ApproveAllButton page={page} />}
               scrollableAttachment={(page: PageNEW) => (
@@ -90,7 +105,7 @@ const ReviewPage: React.FC<{
             marginRight: '10%',
           }}
         >
-          <ReviewSubmitButton
+          <ReviewSubmit
             structure={fullReviewStructure}
             reviewAssignment={reviewAssignment}
             scrollTo={scrollTo}
@@ -98,13 +113,6 @@ const ReviewPage: React.FC<{
         </Segment>
       </Segment.Group>
     </>
-  )
-}
-
-const SectionProgress: React.FC<{ section: SectionStateNEW }> = ({ section }) => {
-  const reviewProgress = section.reviewProgress
-  return (
-    <>{`t: ${reviewProgress?.totalReviewable} dC: ${reviewProgress?.doneConform} dNC:  ${reviewProgress?.doneNonConform} `}</>
   )
 }
 
@@ -127,6 +135,8 @@ const ApproveAllButton: React.FC<{ page: PageNEW }> = ({ page }) => {
   }
 
   if (responsesToReview.length === 0) return null
+  if (responsesToReview.some((response) => response?.status !== ReviewResponseStatus.Draft))
+    return null
 
   return (
     <Button

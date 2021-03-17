@@ -87,7 +87,13 @@ const useGetReviewAssignment = ({ reviewerId, serialNumber }: UseGetReviewAssign
       setAssignment({
         id: currentAssignment.id,
         review: review
-          ? { id: review.id, status: review.status as ReviewStatus, stage: { id: 0, name: '' } }
+          ? {
+              id: review.id,
+              status: review.status as ReviewStatus,
+              stage: { id: 0, name: '' },
+              isLastLevel: false,
+              level: 0,
+            }
           : undefined,
         questions: getAssignedQuestions({ reviewQuestions }),
       })

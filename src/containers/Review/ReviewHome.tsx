@@ -1,10 +1,11 @@
-import React from 'react'
-import { Message, Segment, Header } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import { Message, Segment, Header, Checkbox } from 'semantic-ui-react'
 import { Loading } from '../../components'
+import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
-import ReviewSectionAssignment from './ReviewSectionAssignment'
+import ReviewSectionRow from './ReviewSectionRow'
 
 interface ReviewHomeProps {
   assignments: AssignmentDetailsNEW[]
@@ -17,31 +18,43 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
     firstRunValidation: false,
     shouldCalculateProgress: false,
   })
+  const {
+    userState: { currentUser },
+  } = useUserState()
+  // default should really be false, but for testing this is much quicker
+  const [viewAllAssignments, setViewAllAssignment] = useState<boolean>(true)
 
   if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
 
   if (!fullApplicationStructure) return <Loading />
 
-  // i think we would group by stage, and current stage would be the expanded one, for now using latest stage
-  const currentStageAssignments = assignments.filter(
-    (assignment) => assignment.stage.id === fullApplicationStructure.info.current?.stage.id
-  )
-
   return (
     <>
-      {fullApplicationStructure.sortedSections?.map(({ details: { id, title } }) => (
+      <Segment>
+        <Checkbox
+          toggle
+          label="Show All"
+          checked={viewAllAssignments}
+          onChange={() => setViewAllAssignment(!viewAllAssignments)}
+        />
+      </Segment>
+      {Object.values(fullApplicationStructure.sections).map(({ details: { id, title } }) => (
         <Segment key={id}>
           <Header>{title}</Header>
-          {currentStageAssignments.map((assignment) => (
-            <ReviewSectionAssignment
-              {...{
-                key: assignment.id,
-                sectionId: id,
-                assignment,
-                fullApplicationStructure,
-              }}
-            />
-          ))}
+          {assignments
+            .filter(
+              (assignment) => viewAllAssignments || assignment.reviewer.id === currentUser?.userId
+            )
+            .map((assignment) => (
+              <ReviewSectionRow
+                {...{
+                  key: assignment.id,
+                  sectionId: id,
+                  assignment,
+                  fullApplicationStructure,
+                }}
+              />
+            ))}
         </Segment>
       ))}
     </>

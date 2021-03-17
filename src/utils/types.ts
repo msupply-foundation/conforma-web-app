@@ -1,14 +1,16 @@
 import {
   ApplicationList,
   ApplicationStatus,
+  Decision,
   PermissionPolicyType,
   ReviewAssignmentStatus,
+  ReviewDecision,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
   TemplateElement,
   TemplateElementCategory,
-  TemplateStage,
+  User as GraphQLUser,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
@@ -36,6 +38,7 @@ export {
   ContextListState,
   CurrentPage,
   DecisionAreaState,
+  DecisionOption,
   ElementBase,
   ElementBaseNEW,
   ElementsById,
@@ -62,12 +65,14 @@ export {
   ResponsePayload,
   ResponsesByCode,
   ResumeSection,
+  ReviewAction,
   ReviewDetails,
   ReviewProgressStatus,
   ReviewProgress,
   ReviewQuestion,
   ReviewQuestionDecision,
   ReviewerResponsesPayload,
+  ReviewSectionComponentProps,
   SectionAndPage,
   SectionState,
   SectionDetails,
@@ -146,11 +151,14 @@ interface AssignmentDetails {
 interface AssignmentDetailsNEW {
   id: number
   status: ReviewAssignmentStatus | null
-  timeCreated: DateTime
+  timeCreated: Date
   level: number
+  reviewerId?: number
   review: ReviewDetails | null
+  reviewer: GraphQLUser
   totalAssignedQuestions: number
   stage: ApplicationStage
+  assignedTemplateElementIds: number[]
 }
 
 interface BasicStringObject {
@@ -194,6 +202,14 @@ interface CurrentPage {
   section: SectionDetails
   page: number
 }
+
+type DecisionOption = {
+  code: Decision
+  title: string
+  isVisible: boolean
+  value: boolean
+}
+
 interface DecisionAreaState {
   open: boolean
   review: ReviewQuestionDecision | null
@@ -265,6 +281,7 @@ interface EvaluatorParameters {
 type ElementsById = { [templateElementId: string]: PageElement }
 
 interface FullStructure {
+  thisReview?: ReviewDetails | null
   elementsById?: ElementsById
   lastValidationTimestamp?: number
   info: ApplicationDetails
@@ -272,7 +289,7 @@ interface FullStructure {
   stages: StageDetails[]
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
-  canSubmitReviewAs?: ReviewResponseDecision | null
+  canSubmitReviewAs?: Decision | null
   sortedSections?: SectionStateNEW[]
   sortedPages?: PageNEW[]
 }
@@ -368,17 +385,29 @@ interface ResumeSection {
   page: number
 }
 
+type ReviewSectionComponentProps = {
+  section: SectionStateNEW
+  assignment: AssignmentDetailsNEW
+  thisReview?: ReviewDetails | null
+  action: ReviewAction
+  isAssignedToCurrentUser: boolean
+}
+
 interface ReviewDetails {
   id: number
   status: ReviewStatus
-  timeStatusCreated?: DateTime
+  timeStatusCreated?: Date
   stage: ApplicationStage
+  isLastLevel: boolean
+  level: number
+  reviewDecision?: ReviewDecision | null
 }
 
 interface ReviewerDetails {
   id: number
   firstName: string
   lastName: string
+  current: boolean
 }
 
 type ReviewProgressStatus = 'NOT_COMPLETED' | 'DECLINED' | 'APPROVED'
@@ -437,16 +466,31 @@ interface ReviewProgress {
   doneConform: number
   doneNonConform: number
 }
+enum ReviewAction {
+  canContinue = 'CAN_CONTINUE',
+  canView = 'CAN_VIEW',
+  canReReview = 'CAN_RE_REVIEW',
+  canSelfAssign = 'CAN_SELF_ASSIGN',
+  canStartReview = 'CAN_START_REVIEW',
+  canContinueLocked = 'CAN_CONTINUE_LOCKED',
+  canUpdate = 'CAN_UPDATE',
+  unknown = 'UNKNOWN',
+}
 
 interface SectionStateNEW {
   details: SectionDetails
   progress?: Progress
   reviewProgress?: ReviewProgress
-  assigned?: ReviewerDetails
+  reviewAction?: {
+    action: ReviewAction
+    isAssignedToCurrentUser: boolean
+    isReviewable: boolean
+  }
   pages: {
     [pageNum: number]: PageNEW
   }
 }
+
 interface SectionsStructureNEW {
   [code: string]: SectionStateNEW
 }

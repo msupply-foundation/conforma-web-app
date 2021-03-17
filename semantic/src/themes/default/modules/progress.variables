@@ -29,7 +29,7 @@
   background-color @barTransitionDuration @barTransitionEasing
 ;
 @barInitialWidth: 0%;
-@barMinWidth: 2em;
+@barMinWidth: 0;
 
 /* Progress Bar Label */
 @progressWidth: auto;

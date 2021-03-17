@@ -5,10 +5,14 @@ import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrap
 import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
 import { Form, Grid, Segment, Button, Icon } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import { ReviewResponse, TemplateElementCategory } from '../../utils/generated/graphql'
+import {
+  ReviewResponse,
+  ReviewResponseStatus,
+  TemplateElementCategory,
+} from '../../utils/generated/graphql'
 
-import DecisionAreaNEW from '../Review/DecisionAreaNEW'
 import { SummaryViewWrapperPropsNEW } from '../../formElementPlugins/types'
+import DecisionAreaNEW from '../Review/DecisionAreaNEW'
 
 interface PageElementProps {
   elements: PageElement[]
@@ -135,13 +139,15 @@ const ReviewResponseComponent: React.FC<{
           <p>{reviewResponse?.decision}</p>
           <p>{reviewResponse?.comment || ''}</p>
         </Grid.Column>
-        <Grid.Column floated="right" textAlign="right">
-          <Icon
-            name="pencil"
-            color="blue"
-            onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
-          />
-        </Grid.Column>
+        {reviewResponse.status === ReviewResponseStatus.Draft && (
+          <Grid.Column floated="right" textAlign="right">
+            <Icon
+              name="pencil"
+              color="blue"
+              onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
+            />
+          </Grid.Column>
+        )}
       </Grid>
       <DecisionAreaNEW
         reviewResponse={reviewResponse}
@@ -160,6 +166,7 @@ const ReviewButton: React.FC<{
 
   if (!reviewResponse) return null
   if (reviewResponse?.decision) return null
+  if (reviewResponse.status !== ReviewResponseStatus.Draft) return null
 
   return (
     <>

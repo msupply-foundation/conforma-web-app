@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 import { AssignmentDetailsNEW } from '../types'
-import { Review, ReviewAssignment, ReviewStatus, useGetReviewInfoQuery } from '../generated/graphql'
+import {
+  Review,
+  ReviewAssignment,
+  ReviewStatus,
+  useGetReviewInfoQuery,
+  User,
+} from '../generated/graphql'
 import messages from '../messages'
 
 const MAX_REFETCH = 10
@@ -17,12 +23,12 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
 
   const { data, loading, error, refetch } = useGetReviewInfoQuery({
     variables: {
-      reviewerId: userId,
       applicationId,
     },
     notifyOnNetworkStatusChange: true,
     // if this is removed, there might be an infinite loading when looking at a review for the frist time, after clearing cache
     // it's either this or removing 'totalCount' in `reviewQuestionAssignments` from this query
+    // ended up removing totalCount from query and keeping this as nextFetchPolicy (was still seeing glitched with totalCount and had "can't update unmounted component error")
     fetchPolicy: 'network-only',
   })
 
@@ -64,11 +70,15 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
           reviewAssignment.id
         )
 
-      const { id, status, stage: assignmentStage, timeCreated, level } = reviewAssignment
+      const { id, status, stage: assignmentStage, timeCreated, level, reviewer } = reviewAssignment
 
       // Extra field just to use in initial example - might conflict with future queries
       // to get reviewQuestionAssignment
-      const totalAssignedQuestions = reviewAssignment.reviewQuestionAssignments.totalCount
+      const reviewQustionAssignments = reviewAssignment.reviewQuestionAssignments.nodes
+      const totalAssignedQuestions = reviewQustionAssignments.length
+      const assignedTemplateElementIds = reviewQustionAssignments.map(
+        (reviewQuestionAssignment) => reviewQuestionAssignment?.templateElementId as number
+      )
 
       const stage = { id: assignmentStage?.id as number, name: assignmentStage?.title as string }
 
@@ -79,14 +89,19 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
               id: review.id,
               status: review.status as ReviewStatus,
               timeStatusCreated: review.timeStatusCreated,
+              isLastLevel: !!review?.isLastLevel,
+              level: review.level || 0,
               stage,
+              reviewDecision: review.reviewDecisions.nodes[0], // this will be the latest, sorted in query
             }
           : null,
         status,
         stage,
+        reviewer: reviewer as User,
         level: level || 1,
-        timeCreated,
         totalAssignedQuestions,
+        assignedTemplateElementIds,
+        timeCreated,
       }
 
       return assignment
