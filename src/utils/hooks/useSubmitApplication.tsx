@@ -23,7 +23,10 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
       (element) => element.element.category === TemplateElementCategory.Question
     )
     const responsesPatch = elements.map(({ latestApplicationResponse }) => {
-      return { id: latestApplicationResponse.id, patch: { value: latestApplicationResponse.value } }
+      return {
+        id: latestApplicationResponse.id,
+        patch: { value: latestApplicationResponse.value || null },
+      }
     })
 
     return await applicationSubmitMutation({
