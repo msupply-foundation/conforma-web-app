@@ -66,7 +66,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }, [fileData])
 
   const handleFiles = async (e: any) => {
-    const newFileData: any = [...fileData]
+    const newFileData: (FileInfo | FileLoading | FileError)[] = [...fileData]
     const files: any[] = Array.from(e.target.files)
 
     for (const file of files) {
@@ -116,7 +116,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       if (result.success) {
         newFileData[index] = result.fileData[0]
       } else {
-        newFileData[index] = { filename: file.name, error: true }
+        newFileData[index] = {
+          filename: file.name,
+          error: true,
+          errorMessage: strings.ERROR_UPLOAD_PROBLEM,
+        }
       }
       setFileData([...newFileData])
     })
@@ -133,6 +137,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       </label>
       <Markdown text={description} />
       <Segment.Group>
+        {/* Dummy input button required, as Semantic Button can't
+        handle file input. Link between this input and Semantic
+        Button done with useRef(fileInputRef) */}
         <input
           type="file"
           ref={fileInputRef}

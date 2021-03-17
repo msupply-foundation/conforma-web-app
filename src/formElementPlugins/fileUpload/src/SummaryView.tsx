@@ -1,16 +1,5 @@
 import React from 'react'
-import {
-  Button,
-  Icon,
-  Grid,
-  Form,
-  Label,
-  Image,
-  Message,
-  Segment,
-  Loader,
-  List,
-} from 'semantic-ui-react'
+import { Grid, Form, Image, List } from 'semantic-ui-react'
 import config from '../../../config.json'
 import { SummaryViewProps } from '../../types'
 
@@ -49,20 +38,3 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
 }
 
 export default SummaryView
-
-// const DefaultSummaryView: React.FC = () => {
-//   const combinedParams = { ...parameters, ...evaluatedParameters }
-//   return (
-//     <Form.Field required={isRequired}>
-//       {parametersLoaded && (
-//         <>
-//           <label style={{ color: 'black' }}>
-//             <Markdown text={combinedParams.label} semanticComponent="noParagraph" />
-//           </label>
-//           <Markdown text={combinedParams.description} />
-//         </>
-//       )}
-//       <Markdown text={(response ? response?.text : '') as string} />
-//     </Form.Field>
-//   )
-// }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
-import { Grid, Icon, Form, Input } from 'semantic-ui-react'
+import { Form } from 'semantic-ui-react'
 import { SummaryViewWrapperPropsNEW, PluginComponents, ValidationState } from './types'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 import { ElementPluginParameters, User } from '../utils/types'
