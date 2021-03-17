@@ -2,7 +2,7 @@ import React, { ChangeEvent } from 'react'
 import { Button, Form, Icon, Modal } from 'semantic-ui-react'
 import { LookUpTableImportCsvContext } from '../contexts'
 
-const LookupTableImportCsvModal: React.FC = () => {
+const ImportCsvModal: React.FC = () => {
   const { state, dispatch } = React.useContext(LookUpTableImportCsvContext)
 
   const { uploadModalOpen: open, file, tableName } = state
@@ -70,4 +70,4 @@ const LookupTableImportCsvModal: React.FC = () => {
   )
 }
 
-export default LookupTableImportCsvModal
+export default ImportCsvModal

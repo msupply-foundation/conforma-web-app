@@ -1,7 +1,7 @@
-import LookupTableImportCsvModal from './LookupTableImportCsvModal'
+import ImportCsvModal from './ImportCsvModal'
 
 import { LookUpTableListTable, LookUpTableListMainMenu } from './list'
 
 import { LookUpTable } from './single'
 
-export { LookupTableImportCsvModal, LookUpTable, LookUpTableListTable, LookUpTableListMainMenu }
+export { ImportCsvModal, LookUpTable, LookUpTableListTable, LookUpTableListMainMenu }

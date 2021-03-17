@@ -1,12 +1,11 @@
 import React from 'react'
-import { LookupTableImportCsvModal } from '..'
+import { ImportCsvModal } from '..'
 
-// withImportCsvModal
 const withImportCsvModal = (WrappedComponent: any) => (props: any) => {
   return (
     <React.Fragment>
       <WrappedComponent {...props} />
-      <LookupTableImportCsvModal />
+      <ImportCsvModal />
     </React.Fragment>
   )
 }
