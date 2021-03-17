@@ -1,14 +1,10 @@
 import React from 'react'
-import { Button, Container, Header, Menu } from 'semantic-ui-react'
-import { LookUpTableContext } from '../../contexts/context'
+import { Button, Header, Menu } from 'semantic-ui-react'
+import { LookUpTableImportCsvContext } from '../../contexts'
+import { LookUpTableListMainMenuType } from '../../types'
 
-interface LookUpTableMainMenu {
-  headerText: string
-  subHeaderText?: string
-}
-
-const LookUpTableMainMenu: React.FC<LookUpTableMainMenu> = ({ headerText, subHeaderText = '' }) => {
-  const { dispatch } = React.useContext(LookUpTableContext)
+const MainMenu: React.FC<LookUpTableListMainMenuType> = ({ headerText, subHeaderText = '' }) => {
+  const { dispatch } = React.useContext(LookUpTableImportCsvContext)
 
   return (
     <Menu borderless secondary>
@@ -27,4 +23,4 @@ const LookUpTableMainMenu: React.FC<LookUpTableMainMenu> = ({ headerText, subHea
   )
 }
 
-export default LookUpTableMainMenu
+export default MainMenu

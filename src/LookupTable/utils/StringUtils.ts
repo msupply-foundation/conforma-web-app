@@ -4,7 +4,6 @@ const buildFieldList = (fieldMap: FieldMapType[]) =>
   fieldMap.map((a: FieldMapType) => a.fieldname).join(' ')
 
 const toCamelCase = (e: string) => {
-  console.log('toCamelCase', e)
   return e.replace(/_([a-z])/g, (g) => g[1].toUpperCase())
 }
 

@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import { Header, Message, Table } from 'semantic-ui-react'
 import { Loading } from '../../../components'
 import { FieldMapType, LookUpTableType, TableStructureType } from '../../types'
-import { WithLookUpTableStructure } from '../../hocs'
+import { withTableQueryBuilder } from '../hocs'
 
 const LookupTable: React.FC<TableStructureType> = (props) => {
   const { tableQuery, tableName, structure } = props
@@ -16,7 +16,6 @@ const LookupTable: React.FC<TableStructureType> = (props) => {
 
   useEffect(() => {
     if (!loading && !error && data[tableName]) {
-      console.log('data', data[tableName].nodes)
       setLookupTable(data[tableName].nodes)
     }
   }, [loading, data])
@@ -67,4 +66,4 @@ const LookupTable: React.FC<TableStructureType> = (props) => {
   )
 }
 
-export default WithLookUpTableStructure(LookupTable)
+export default withTableQueryBuilder(LookupTable)

@@ -2,8 +2,8 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { LookupTableListPage } from './'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { LookUpTableListProvider } from '../contexts/context'
 import LookupTablePage from './LookupTablePage'
+import { LookUpTableImportCsvProvider } from '../contexts'
 
 const LookupTableListWrapper: React.FC = () => {
   const {
@@ -11,7 +11,7 @@ const LookupTableListWrapper: React.FC = () => {
   } = useRouter()
 
   return (
-    <LookUpTableListProvider>
+    <LookUpTableImportCsvProvider>
       <Switch>
         <Route exact path={path}>
           <LookupTableListPage />
@@ -20,7 +20,7 @@ const LookupTableListWrapper: React.FC = () => {
           <LookupTablePage />
         </Route>
       </Switch>
-    </LookUpTableListProvider>
+    </LookUpTableImportCsvProvider>
   )
 }
 

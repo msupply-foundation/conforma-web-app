@@ -1,9 +1,10 @@
 import React, { ChangeEvent } from 'react'
 import { Button, Form, Icon, Modal } from 'semantic-ui-react'
-import { LookUpTableContext } from '../contexts/context'
+import { LookUpTableImportCsvContext } from '../contexts'
 
-const LookupTableUploadModal: React.FC = () => {
-  const { state, dispatch } = React.useContext(LookUpTableContext)
+const LookupTableImportCsvModal: React.FC = () => {
+  const { state, dispatch } = React.useContext(LookUpTableImportCsvContext)
+
   const { uploadModalOpen: open, file, tableName } = state
 
   const fileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -69,4 +70,4 @@ const LookupTableUploadModal: React.FC = () => {
   )
 }
 
-export default LookupTableUploadModal
+export default LookupTableImportCsvModal

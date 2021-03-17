@@ -1,4 +1,3 @@
-import { LookupTableListWrapper, LookupTableListPage } from './containers'
-import { LookupTableUploadModal } from './components'
+import { LookupTableListWrapper } from './containers'
 
-export { LookupTableUploadModal, LookupTableListWrapper, LookupTableListPage }
+export { LookupTableListWrapper }

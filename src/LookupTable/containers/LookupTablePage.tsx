@@ -5,8 +5,8 @@ import { Container, Menu, Header, Button, Icon, Divider, Message } from 'semanti
 import { Loading } from '../../components'
 import { LookUpTable } from '../components'
 import { LookUpTableType } from '../types'
-import { WithLookupTableUploadModal } from '../hocs'
 import { getLookUpTableStructureByTableId } from '../graphql'
+import { withImportCsvModal } from '../components/hocs'
 
 const LookupTablePage: React.FC = () => {
   let { lookupTableID } = useParams<{ lookupTableID: string }>()
@@ -67,4 +67,4 @@ const LookupTablePage: React.FC = () => {
   )
 }
 
-export default WithLookupTableUploadModal(LookupTablePage)
+export default withImportCsvModal(LookupTablePage)

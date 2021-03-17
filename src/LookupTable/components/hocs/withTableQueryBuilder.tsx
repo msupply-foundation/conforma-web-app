@@ -1,10 +1,10 @@
 import { gql } from '@apollo/client'
 import React from 'react'
-import { capitalizeFirstLetter, toCamelCase, buildFieldList } from '../utils'
+import { capitalizeFirstLetter, toCamelCase, buildFieldList } from '../../utils'
 
 const TABLE_NAME_PREFIX = 'lookupTable'
 
-const WithLookUpTableStructure = (WrappedComponent: any) => (props: any) => {
+const withTableQueryBuilder = (WrappedComponent: any) => (props: any) => {
   const { name: tableName, fieldMap } = props.structure
 
   const query = gql`
@@ -26,4 +26,4 @@ const WithLookUpTableStructure = (WrappedComponent: any) => (props: any) => {
   )
 }
 
-export default WithLookUpTableStructure
+export default withTableQueryBuilder
