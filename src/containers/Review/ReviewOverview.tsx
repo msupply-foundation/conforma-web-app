@@ -38,6 +38,7 @@ const ReviewOverview: React.FC = () => {
   })
 
   const { processing, error: createReviewError, create } = useCreateReview({
+    reviewAssigmentId: assignment?.id as number,
     reviewerId: currentUser?.userId as number,
     serialNumber,
     onCompleted: (id: number) => {
@@ -55,7 +56,6 @@ const ReviewOverview: React.FC = () => {
     }
 
     create({
-      reviewAssigmentId: assignment.id,
       applicationResponses: assignment.questions.map(({ responseId, id }) => ({
         applicationResponseId: responseId,
         reviewQuestionAssignmentId: id,

@@ -80,7 +80,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
   }
 
   return error ? (
-    <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
+    <Message error title={strings.ERROR_GENERIC} list={[error]} />
   ) : (
     <ApplicationHeader template={template} currentUser={currentUser} ChildComponent={HomeMain} />
   )

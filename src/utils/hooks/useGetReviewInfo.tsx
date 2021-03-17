@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { AssignmentDetailsNEW } from '../types'
+import { AssignmentDetailsNEW, ReviewQuestionDecision } from '../types'
 import {
   Review,
   ReviewAssignment,
+  ReviewQuestionAssignment,
   ReviewStatus,
   useGetReviewInfoQuery,
   User,
@@ -15,7 +16,7 @@ interface UseGetReviewInfoProps {
   userId: number
 }
 
-const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
+const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
   const [assignments, setAssignments] = useState<AssignmentDetailsNEW[]>()
   const [isFetching, setIsFetching] = useState(true)
   const [fetchingError, setFetchingError] = useState('')
@@ -74,11 +75,9 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
 
       // Extra field just to use in initial example - might conflict with future queries
       // to get reviewQuestionAssignment
-      const reviewQustionAssignments = reviewAssignment.reviewQuestionAssignments.nodes
-      const totalAssignedQuestions = reviewQustionAssignments.length
-      const assignedTemplateElementIds = reviewQustionAssignments.map(
-        (reviewQuestionAssignment) => reviewQuestionAssignment?.templateElementId as number
-      )
+      const reviewQuestionAssignments = (reviewAssignment.reviewQuestionAssignments.nodes ||
+        []) as ReviewQuestionAssignment[]
+      const totalAssignedQuestions = reviewQuestionAssignments.length
 
       const stage = { id: assignmentStage?.id as number, name: assignmentStage?.title as string }
 
@@ -100,7 +99,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
         reviewer: reviewer as User,
         level: level || 1,
         totalAssignedQuestions,
-        assignedTemplateElementIds,
+        reviewQuestionAssignments,
         timeCreated,
       }
 
