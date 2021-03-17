@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Button, Icon, Grid, List, Label, Image, Message, Segment, Loader } from 'semantic-ui-react'
+import { Button, Icon, Grid, List, Image, Message, Segment, Loader } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import strings from '../constants'
 import config from '../../../config.json'
-import { Link } from 'react-router-dom'
 import { useUserState } from '../../../contexts/UserState'
 import { useRouter } from '../../../utils/hooks/useRouter'
 
@@ -58,7 +57,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const fileInputRef = useRef<any>(null)
 
   useEffect(() => {
-    console.log('Files', fileData)
     // Only store files that aren't error or loading
     const validFiles = fileData.filter((file) => 'fileUrl' in file)
     onSave({

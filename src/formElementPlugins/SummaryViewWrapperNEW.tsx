@@ -47,9 +47,12 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperPropsNEW> = (props) => {
     return (
       <Form.Field required={isRequired}>
         {parametersLoaded && (
-          <label style={{ color: 'black' }}>
-            <Markdown text={combinedParams.label} semanticComponent="noParagraph" />
-          </label>
+          <>
+            <label style={{ color: 'black' }}>
+              <Markdown text={combinedParams.label} semanticComponent="noParagraph" />
+            </label>
+            <Markdown text={combinedParams.description} />
+          </>
         )}
         <Markdown text={(response ? response?.text : '') as string} />
       </Form.Field>
