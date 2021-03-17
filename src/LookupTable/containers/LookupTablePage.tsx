@@ -5,7 +5,7 @@ import { Container, Menu, Header, Button, Icon, Divider, Message } from 'semanti
 import { Loading } from '../../components'
 import { LookUpTable } from '../components'
 import { LookUpTableType } from '../types'
-import { getLookUpTableStructureByTableId } from '../graphql'
+import { getTableStructureId } from '../graphql'
 import { withImportCsvModal } from '../components/hocs'
 
 const LookupTablePage: React.FC = () => {
@@ -17,7 +17,7 @@ const LookupTablePage: React.FC = () => {
     fieldMap: [],
   })
 
-  const { loading, error, data } = useQuery(getLookUpTableStructureByTableId, {
+  const { loading, error, data } = useQuery(getTableStructureId, {
     skip: !lookupTableID,
     variables: { lookupTableID: Number(lookupTableID) },
     fetchPolicy: 'no-cache',

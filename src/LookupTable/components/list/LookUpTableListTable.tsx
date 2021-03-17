@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Button, Header, Icon, Message, Popup, Table } from 'semantic-ui-react'
 import { Loading } from '../../../components'
-import { getAllLookUpTableStructures } from '../../graphql'
+import { getAllTableStructures } from '../../graphql'
 import { FieldMapType, LookUpTableType } from '../../types'
 
 const TABLE_PREFIX = 'lookup_table_'
 
 const LookUpTableListTable: React.FC = () => {
-  const { loading, error, data } = useQuery(getAllLookUpTableStructures, {
+  const { loading, error, data } = useQuery(getAllTableStructures, {
     fetchPolicy: 'no-cache',
   })
 

@@ -1,4 +1,4 @@
-import getLookUpTableStructureByTableId from './getLookUpTableStructureByTableId.query'
-import getAllLookUpTableStructures from './getAllLookUpTableStructures.query'
+import getTableStructureId from './getTableStructureId.query'
+import getAllTableStructures from './getAllTableStructures.query'
 
-export { getAllLookUpTableStructures, getLookUpTableStructureByTableId }
+export { getAllTableStructures, getTableStructureId }
