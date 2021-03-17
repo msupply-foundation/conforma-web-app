@@ -28,6 +28,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   const {
     query: { serialNumber, sectionCode, page },
     push,
+    replace,
   } = useRouter()
 
   const pageNumber = Number(page)
@@ -36,10 +37,8 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
     if (!fullStructure) return
 
     // Re-direct based on application status
-    if (fullStructure.info.current?.status === ApplicationStatus.ChangesRequired)
-      push(`/applicationNEW/${fullStructure.info.serial}`)
     if (fullStructure.info.current?.status !== ApplicationStatus.Draft)
-      push(`/applicationNEW/${fullStructure.info.serial}/summary`)
+      replace(`/applicationNEW/${fullStructure.info.serial}`)
 
     // Re-direct if trying to access page higher than allowed
     if (!fullStructure.info.isLinear || !fullStructure.info?.firstStrictInvalidPage) return
