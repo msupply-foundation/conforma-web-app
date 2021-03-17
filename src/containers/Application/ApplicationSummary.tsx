@@ -21,7 +21,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     userState: { currentUser },
   } = useUserState()
 
-  const { error: submitError, processing, submit } = useSubmitApplication({
+  const { submitFromStructure } = useSubmitApplication({
     serialNumber: fullStructure?.info.serial as string,
     currentUser: currentUser as User,
   })
@@ -54,8 +54,8 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
             replace(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
           } else {
             try {
-              fullStructure?.responsesByCode &&
-                (await submit(Object.values(fullStructure?.responsesByCode)))
+              const result = await submitFromStructure(fullStructure)
+              if (result?.errors) throw new Error('Something went wong')
               push(`/applicationNEW/${fullStructure?.info.serial}/submission`)
             } catch {
               setError(true)
@@ -65,9 +65,8 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
       )
   }
 
-  if (submitError || error)
-    return <Message error header={strings.ERROR_APPLICATION_SUBMIT} list={[submitError]} />
-  if (!fullStructure || processing) return <Loading />
+  if (error) return <Message error header={strings.ERROR_APPLICATION_SUBMIT} list={[error]} />
+  if (!fullStructure) return <Loading />
   const { sections, responsesByCode, info } = fullStructure
   return (
     <Container>
