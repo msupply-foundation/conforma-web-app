@@ -5,24 +5,26 @@ const addApplicationResponses = (
   structure: FullStructure,
   applicationResponses: ApplicationResponse[]
 ) => {
-  const templateElementIsFirst: { [key: string]: boolean } = {}
-  // Application response are ordered by timestamps, so we can be sure that second response with same templateElementId is previousApplicationResponse
+  // Application response are ordered by timestamps, if we group them by template element, should be easy to get latest and previous
+  const groupedApplicationResponse: { [key: string]: ApplicationResponse[] } = {}
+  // Group Application responses by templateElement id
   applicationResponses.forEach((applicationResponse) => {
     const templateElementId = applicationResponse?.templateElementId || ''
-    const element = structure?.elementsById?.[templateElementId]
-    // if templateElement id is not found in templateElementIsFirst object, it's the first one for templateElementId
-    if (!(templateElementId in templateElementIsFirst)) {
-      templateElementIsFirst[templateElementId] = true
-      if (element) element.latestApplicationResponse = applicationResponse
-      return
-    }
-    // Previous application response with same templateElementId was the first one, so this one is previousApplicationResponse
-    if (templateElementIsFirst[templateElementId]) {
-      // turn this one to false, to not match any further
-      templateElementIsFirst[templateElementId] = false
-      if (element) element.previousApplicationResponse = applicationResponse
-    }
+    if (!groupedApplicationResponse[templateElementId])
+      groupedApplicationResponse[templateElementId] = []
+
+    groupedApplicationResponse[templateElementId].push(applicationResponse)
   })
+  // Attach latest and previous application response to element
+  Object.entries(groupedApplicationResponse).forEach(
+    ([templateElementId, groupedApplicationResponses]) => {
+      const element = structure?.elementsById?.[templateElementId]
+      if (!element) return
+
+      element.latestApplicationResponse = groupedApplicationResponses[0]
+      element.previousApplicationResponse = groupedApplicationResponses[1] // will be undefined if doesn't exist
+    }
+  )
 }
 
 export default addApplicationResponses
