@@ -44,10 +44,6 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
             </List.Item>
           ))}
       </List>
-      {/* <Markdown text={(response ? response?.text : '') as string} /> */}
-      {/* {parametersLoaded && (
-    
-  )} */}
     </Form.Field>
   )
 }

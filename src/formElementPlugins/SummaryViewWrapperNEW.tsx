@@ -34,7 +34,6 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperPropsNEW> = (props) => {
       setParametersLoaded(true)
     })
   }, [])
-
   if (
     !pluginCode ||
     !isVisible

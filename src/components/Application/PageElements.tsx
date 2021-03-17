@@ -60,27 +60,29 @@ const PageElements: React.FC<PageElementProps> = ({
     return (
       <Form>
         <Segment.Group>
-          {elements.map(({ element }) => {
-            return (
-              <Segment key={`question_${element.code}`}>
-                <Grid columns="equal">
-                  <Grid.Column floated="left">
-                    <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
-                  </Grid.Column>
-                  {element.category === TemplateElementCategory.Question && canEdit && (
-                    <Grid.Column floated="right" textAlign="right">
-                      <Button
-                        content={strings.BUTTON_SUMMARY_EDIT}
-                        size="small"
-                        as={Link}
-                        to={`/application/${serial}/${sectionCode}/Page${pageNumber}`}
-                      />
+          {elements
+            .filter(({ element }) => element.isVisible)
+            .map(({ element }) => {
+              return (
+                <Segment key={`question_${element.code}`}>
+                  <Grid columns="equal">
+                    <Grid.Column floated="left">
+                      <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
                     </Grid.Column>
-                  )}
-                </Grid>
-              </Segment>
-            )
-          })}
+                    {element.category === TemplateElementCategory.Question && canEdit && (
+                      <Grid.Column floated="right" textAlign="right">
+                        <Button
+                          content={strings.BUTTON_SUMMARY_EDIT}
+                          size="small"
+                          as={Link}
+                          to={`/application/${serial}/${sectionCode}/Page${pageNumber}`}
+                        />
+                      </Grid.Column>
+                    )}
+                  </Grid>
+                </Segment>
+              )
+            })}
         </Segment.Group>
       </Form>
     )
