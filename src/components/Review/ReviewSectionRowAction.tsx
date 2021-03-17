@@ -6,6 +6,8 @@ import { ReviewAction, ReviewSectionComponentProps } from '../../utils/types'
 import strings from '../../utils/constants'
 import { useUserState } from '../../contexts/UserState'
 import useCreateReview from '../../utils/hooks/useCreateReview'
+import useRestartReview from '../../utils/hooks/useRestartReview'
+import { ReviewStatus } from '../../utils/generated/graphql'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const {
@@ -42,6 +44,12 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
 
         return null
       }
+
+      case ReviewAction.canReReview: {
+        if (isAssignedToCurrentUser) return <ReReviewButton {...props} />
+
+        return null
+      }
       default:
         return null
     }
@@ -50,6 +58,51 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
   return <Grid.Column textAlign="right">{getContent()}</Grid.Column>
 }
 
+// RE-REVIEW button
+const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
+  fullStructure,
+  section: { details, reviewProgress },
+}) => {
+  const {
+    location: { pathname },
+    push,
+  } = useRouter()
+
+  const [restartReviewError, setRestartReviewError] = useState(false)
+  const reviewId = fullStructure.thisReview?.id
+
+  const restartReview = useRestartReview(reviewId || 0)
+
+  const restart = async () => {
+    {
+      try {
+        const result = await restartReview(fullStructure)
+        const responseCheck = result.data?.updateReview?.review?.id
+        if (!responseCheck) throw new Error('Review ID is missing from response')
+        push(`${pathname}/${reviewId}?activeSections=${details.code}`)
+      } catch (e) {
+        console.error(e)
+        return setRestartReviewError(true)
+      }
+    }
+  }
+
+  if (restartReviewError) return <Message error title={strings.ERROR_GENERIC} />
+
+  // Either need to run a mutation to re-review or just navigate to section
+  const buttonAction =
+    fullStructure.thisReview?.status == ReviewStatus.Draft
+      ? () => push(`${pathname}/${reviewId}?activeSections=${details.code}`)
+      : restart
+
+  return (
+    <Button onClick={buttonAction}>{`${strings.BUTTON_REVIEW_RE_REVIEW} (${
+      (reviewProgress?.totalNewReviewable || 0) - (reviewProgress?.doneNewReviewable || 0)
+    })`}</Button>
+  )
+}
+
+// START REVIEW button
 const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
   assignment,
   fullStructure,

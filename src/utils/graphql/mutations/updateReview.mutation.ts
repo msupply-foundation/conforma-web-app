@@ -6,7 +6,7 @@ export default gql`
       review {
         id
         trigger
-        reviewResponse {
+        reviewResponses {
           nodes {
             id
             decision
