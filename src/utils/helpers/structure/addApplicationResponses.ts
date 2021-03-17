@@ -5,11 +5,11 @@ const addApplicationResponses = (
   structure: FullStructure,
   applicationResponses: ApplicationResponse[]
 ) => {
-  const templateElementIsFirst: { [key: number]: boolean } = {}
+  const templateElementIsFirst: { [key: string]: boolean } = {}
   // Application response are ordered by timestamps, so we can be sure that second response with same templateElementId is previousApplicationResponse
   applicationResponses.forEach((applicationResponse) => {
-    const element = structure?.elementsById?.[applicationResponse?.templateElementId || '']
-    const templateElementId = applicationResponse?.templateElementId || 0
+    const templateElementId = applicationResponse?.templateElementId || ''
+    const element = structure?.elementsById?.[templateElementId]
     // if templateElement id is not found in templateElementIsFirst object, it's the first one for templateElementId
     if (!(templateElementId in templateElementIsFirst)) {
       templateElementIsFirst[templateElementId] = true
