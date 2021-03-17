@@ -13,8 +13,6 @@ const addApplicationResponses = (
     // if templateElement id is not found in templateElementIsFirst object, it's the first one for templateElementId
     if (!(templateElementId in templateElementIsFirst)) {
       templateElementIsFirst[templateElementId] = true
-      // "value" is not available in element.response (at least not in the FullResponse type itself)
-      // thus addition of latestApplicationResponse to be used in addChangeRequesStatusToElement
       if (element) element.latestApplicationResponse = applicationResponse
       return
     }
