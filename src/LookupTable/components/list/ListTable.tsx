@@ -8,7 +8,7 @@ import { FieldMapType, LookUpTableType } from '../../types'
 
 const TABLE_PREFIX = 'lookup_table_'
 
-const LookUpTableListTable: React.FC = () => {
+const ListTable: React.FC = () => {
   const { loading, error, data } = useQuery(getAllTableStructures, {
     fetchPolicy: 'no-cache',
   })
@@ -129,4 +129,4 @@ const LookUpTableListTable: React.FC = () => {
   )
 }
 
-export default LookUpTableListTable
+export default ListTable

@@ -1,4 +1,4 @@
-import LookUpTableListTable from './LookUpTableListTable'
-import LookUpTableListMainMenu from './MainMenu'
+import ListTable from './ListTable'
+import ListMainMenu from './ListMainMenu'
 
-export { LookUpTableListTable, LookUpTableListMainMenu }
+export { ListTable, ListMainMenu }

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { gql, useQuery } from '@apollo/client'
-import { NavLink, useParams } from 'react-router-dom'
-import { Container, Menu, Header, Button, Icon, Divider, Message } from 'semantic-ui-react'
+import { useQuery } from '@apollo/client'
+import { useParams } from 'react-router-dom'
+import { Container, Divider, Message } from 'semantic-ui-react'
 import { Loading } from '../../components'
-import { LookUpTable } from '../components'
+import { LookUpMainMenu, LookUpTable } from '../components/single'
 import { LookUpTableType } from '../types'
 import { getTableStructureId } from '../graphql'
 import { withImportCsvModal } from '../components/hocs'
@@ -35,30 +35,7 @@ const LookupTablePage: React.FC = () => {
     <Loading />
   ) : lookupTable.id !== 0 ? (
     <Container style={{ padding: '2em 0em' }}>
-      <Menu borderless secondary>
-        <Menu.Item>
-          <Header>
-            Lookup Table: {lookupTable.label}
-            <Header.Subheader>View individual lookup-table and its contents</Header.Subheader>
-          </Header>
-        </Menu.Item>
-        <Menu.Item position="right">
-          <Button.Group>
-            <Button icon as={NavLink} labelPosition="left" to="/lookup-tables">
-              <Icon name="arrow alternate circle left" />
-              Back
-            </Button>
-            <Button icon labelPosition="left" href="#">
-              <Icon name="upload" />
-              Import
-            </Button>
-            <Button icon labelPosition="right" href="#">
-              <Icon name="download" />
-              Export
-            </Button>
-          </Button.Group>
-        </Menu.Item>
-      </Menu>
+      <LookUpMainMenu tableName={lookupTable.label} />
       <Divider />
       <LookUpTable structure={lookupTable} />
     </Container>

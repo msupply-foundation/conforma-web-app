@@ -1,6 +1,9 @@
 import React from 'react'
 import { Container, Divider } from 'semantic-ui-react'
-import { LookUpTableListMainMenu, LookUpTableListTable } from '../components'
+import {
+  ListMainMenu as LookUpTableListMainMenu,
+  ListTable as LookUpTableListTable,
+} from '../components/list'
 
 import { withImportCsvModal } from '../components/hocs'
 
