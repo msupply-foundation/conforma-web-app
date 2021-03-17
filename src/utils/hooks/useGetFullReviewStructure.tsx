@@ -6,11 +6,14 @@ import {
   useGetReviewResponsesQuery,
 } from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
-import addThisReviewResponses from '../helpers/structure/addThisReviewResponses'
-import addElementsById from '../helpers/structure/addElementsById'
-import generateReviewProgress from '../helpers/structure/generateReviewProgress'
 import { cloneDeep } from '@apollo/client/utilities'
-import generateReviewSectionActions from '../helpers/structure/generateReviewSectionActions'
+import {
+  addElementsById,
+  addSortedSectionsAndPages,
+  addThisReviewResponses,
+  generateReviewProgress,
+  generateReviewSectionActions,
+} from '../helpers/structure'
 
 interface useGetFullReviewStructureProps {
   fullApplicationStructure: FullStructure
@@ -95,19 +98,6 @@ const useGetFullReviewStructure = ({
     fullReviewStructure,
     error: error?.message,
   }
-}
-
-const addSortedSectionsAndPages = (newStructure: FullStructure): FullStructure => {
-  const sortedSections = Object.values(newStructure.sections).sort(
-    (sectionOne, sectionTwo) => sectionOne.details.index - sectionTwo.details.index
-  )
-  const sortedPages = sortedSections
-    .map((section) =>
-      Object.values(section.pages).sort((pageOne, pageTwo) => pageOne.number - pageTwo.number)
-    )
-    .flat()
-
-  return { ...newStructure, sortedPages, sortedSections }
 }
 
 const getFilteredSections = (sectionIds: number[], sections: SectionStateNEW[]) => {
