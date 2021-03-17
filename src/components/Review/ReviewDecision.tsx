@@ -37,18 +37,15 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
       </Form>
     )
   // If review has been submitted/locked:
-  // Check if has one selected option
-  const visibleOptions = decisionOptions.filter((option) => option.isVisible)
-  if (visibleOptions.length === 0) return null // For locked status we don't show options
-  if (visibleOptions.length > 1) console.log('More than one decision option selected')
-  const selectedOption = visibleOptions[0]
+  const visibleOption = decisionOptions.find((option) => option.isVisible)
+  if (!visibleOption) return null
   return (
     <Message
       compact
       attached="top"
       icon="calendar check outline"
       header={strings.TITLE_REVIEW_DECISION}
-      content={selectedOption.title}
+      content={visibleOption.title}
     />
   )
 }
