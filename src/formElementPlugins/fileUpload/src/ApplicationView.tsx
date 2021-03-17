@@ -72,62 +72,50 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     })
   }, [uploadedFiles])
 
+  const errors = [
+    {
+      condition: (file: any) => uploadedFiles.map((f) => f.filename).includes(file.name),
+      errorMessage: strings.ERROR_FILE_ALREADY_UPLOADED,
+    },
+    {
+      condition: (file: any) =>
+        fileExtensions && !fileExtensions.includes(file.name.split('.').pop().toLowerCase()),
+      errorMessage: strings.ERROR_FILE_TYPE_NOT_PERMITTED,
+    },
+    {
+      condition: (file: any) => file.size > fileSizeLimit * 1000,
+      errorMessage: strings.ERROR_FILE_TOO_BIG,
+    },
+    {
+      condition: (file: any, newFileData: FileInfo[]) => newFileData.length >= fileCountLimit,
+      errorMessage: strings.ERROR_TOO_MANY_FILES,
+    },
+  ]
+
   const handleFiles = async (e: any) => {
     const newFileData: FileInfo[] = [...uploadedFiles]
     const files: any[] = Array.from(e.target.files)
 
     for (const file of files) {
-      if (uploadedFiles.map((f: any) => f.filename).includes(file.name)) {
+      const error = errors.find((error) => error.condition(file, newFileData))
+      if (error) {
         newFileData.unshift({
           key: nanoid(10),
           filename: file.name,
           loading: false,
           error: true,
-          errorMessage: strings.ERROR_FILE_ALREADY_UPLOADED,
+          errorMessage: error.errorMessage,
         })
         file.error = true
-        continue
+      } else {
+        const key = nanoid(10)
+        newFileData.unshift({ key, filename: file.name, loading: true, error: false })
+        file.key = key
       }
-      if (fileExtensions && !fileExtensions.includes(file.name.split('.').pop().toLowerCase())) {
-        newFileData.unshift({
-          key: nanoid(10),
-          filename: file.name,
-          loading: false,
-          error: true,
-          errorMessage: strings.ERROR_FILE_TYPE_NOT_PERMITTED,
-        })
-        file.error = true
-        continue
-      }
-      if (file.size > fileSizeLimit * 1000) {
-        newFileData.unshift({
-          key: nanoid(10),
-          filename: file.name,
-          loading: false,
-          error: true,
-          errorMessage: strings.ERROR_FILE_TOO_BIG,
-        })
-        file.error = true
-        continue
-      }
-      if (newFileData.length >= fileCountLimit) {
-        newFileData.unshift({
-          key: nanoid(10),
-          filename: file.name,
-          loading: false,
-          error: true,
-          errorMessage: strings.ERROR_TOO_MANY_FILES,
-        })
-        file.error = true
-        continue
-      }
-      const key = nanoid(10)
-      newFileData.push({ key, filename: file.name, loading: true, error: false })
-      file.key = key
     }
     setUploadedFiles([...newFileData])
     files.forEach(async (file: any) => {
-      if ('error' in file) return
+      if (file?.error) return
       const result: FileUploadServerResponse = await uploadFile(file)
       const index = newFileData.findIndex((f: any) => f.key === file.key)
       if (result.success) {
