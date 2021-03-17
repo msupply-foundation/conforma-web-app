@@ -35,11 +35,13 @@ const PageElements: React.FC<PageElementProps> = ({
   serial,
   sectionAndPage,
 }) => {
+  const visibleElements = elements.filter(({ element }) => element.isVisible)
+
   // Editable Application page
   if (canEdit && !isReview && !isSummary)
     return (
       <Form>
-        {elements.map(({ element }) => {
+        {visibleElements.map(({ element }) => {
           return (
             <ApplicationViewWrapper
               key={`question_${element.code}`}
@@ -64,7 +66,7 @@ const PageElements: React.FC<PageElementProps> = ({
     return (
       <Form>
         <Segment.Group>
-          {elements
+          {visibleElements
             .filter(({ element }) => element.isVisible)
             .map(({ element }) => {
               return (
@@ -97,7 +99,7 @@ const PageElements: React.FC<PageElementProps> = ({
     return (
       <Form>
         <Segment.Group>
-          {elements.map(({ element, thisReviewLatestResponse }) => (
+          {visibleElements.map(({ element, thisReviewLatestResponse }) => (
             <Segment key={`question_${element.id}`}>
               <Grid columns="equal">
                 <Grid.Column floated="left">
