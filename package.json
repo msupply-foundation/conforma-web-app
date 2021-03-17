@@ -24,6 +24,7 @@
     "apollo3-cache-persist": "^0.8.0",
     "graphql": "^15.3.0",
     "luxon": "^1.25.0",
+    "nanoid": "^3.1.22",
     "query-string": "^6.13.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
