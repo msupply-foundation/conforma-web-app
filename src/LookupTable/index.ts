@@ -1,3 +1,3 @@
-import { LookupTableListWrapper } from './containers'
+import { LookupTableWrapper } from './containers'
 
-export { LookupTableListWrapper }
+export { LookupTableWrapper }

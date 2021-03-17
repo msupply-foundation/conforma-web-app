@@ -21,8 +21,6 @@ import {
   Template,
 } from '../../components'
 
-import { LookupTableListWrapper } from '../../LookupTable'
-
 import {
   ApplicationCreate,
   ApplicationCreateNEW,
@@ -37,6 +35,7 @@ import UserArea from '../User/UserArea'
 import ListWrapper from '../List/ListWrapper'
 import ReviewSubmission from '../../components/Review/ReviewSubmission'
 import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpdateTrackerState'
+import { LookupTableWrapper } from '../../LookupTable'
 
 const SiteLayout: React.FC = () => {
   return (
@@ -149,8 +148,9 @@ const SiteLayout: React.FC = () => {
         <Route exact path="/products/:productId">
           <Product />
         </Route>
+        {/* Lookup Table routes wrapper */}
         <Route path="/lookup-tables">
-          <LookupTableListWrapper />
+          <LookupTableWrapper />
         </Route>
         <Route>
           <NoMatch />

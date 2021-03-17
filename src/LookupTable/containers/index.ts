@@ -1,4 +1,4 @@
-import LookupTableListWrapper from './LookupTableListWrapper'
+import LookupTableWrapper from './LookupTableWrapper'
 import LookupTableListPage from './LookupTableListPage'
 
-export { LookupTableListWrapper, LookupTableListPage }
+export { LookupTableWrapper, LookupTableListPage }
