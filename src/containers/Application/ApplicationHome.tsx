@@ -9,6 +9,7 @@ import { SectionsProgress } from '../../components/Application/Sections'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { Link } from 'react-router-dom'
+import useRestartApplication from '../../utils/hooks/useRestartApplication'
 
 interface ApplicationProps {
   structure: FullStructure
@@ -28,6 +29,8 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     structure,
   })
 
+  const restartApplication = useRestartApplication(serialNumber)
+
   useEffect(() => {
     if (!fullStructure) return
     const { status } = fullStructure.info.current as StageAndStatus
@@ -45,25 +48,29 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
 
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
-  const canUserEdit = fullStructure.info?.current?.status === ApplicationStatus.Draft
-
-  const { firstStrictInvalidPage } = fullStructure.info
+  const {
+    info: { current, isChangeRequest, firstStrictInvalidPage },
+    sections,
+  } = fullStructure
 
   const HomeMain: React.FC = () => {
     return (
       <>
+        <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
         <Segment>
           <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
           <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
           <SectionsProgress
-            canEdit={canUserEdit}
-            sections={fullStructure.sections}
+            changesRequested={isChangeRequest}
+            draftStatus={current?.status === ApplicationStatus.Draft}
+            sections={sections}
             firstStrictInvalidPage={firstStrictInvalidPage}
+            restartApplication={() => restartApplication(fullStructure)}
             resumeApplication={handleResumeClick}
           />
           <Divider />
         </Segment>
-        {!firstStrictInvalidPage && (
+        {current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage && (
           <Sticky
             pushing
             style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
@@ -84,6 +91,22 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
   ) : (
     <ApplicationHeader template={template} currentUser={currentUser} ChildComponent={HomeMain} />
   )
+}
+
+interface ChangesRequestedTitleProps {
+  status?: ApplicationStatus
+  isChangeRequest: boolean
+}
+
+const ChangesRequestedTitle: React.FC<ChangesRequestedTitleProps> = ({
+  status,
+  isChangeRequest,
+}) => {
+  return status !== ApplicationStatus.Submitted && isChangeRequest ? (
+    <Header>
+      There are issues with some of the information you supplied ... change request...
+    </Header>
+  ) : null
 }
 
 export default ApplicationHome
