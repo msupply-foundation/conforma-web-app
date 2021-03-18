@@ -1,10 +1,12 @@
 import {
   ApplicationList,
+  ApplicationResponse,
   ApplicationStatus,
   Decision,
   PermissionPolicyType,
   ReviewAssignmentStatus,
   ReviewDecision,
+  ReviewQuestionAssignment,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
@@ -109,6 +111,7 @@ interface ApplicationDetails {
   name: string
   outcome: string
   isLinear: boolean
+  isChangeRequest: boolean
   current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
   firstStrictInvalidPage: SectionAndPage | null
   submissionMessage?: string // TODO: Change to compulsory after re-structure is finished
@@ -158,7 +161,7 @@ interface AssignmentDetailsNEW {
   reviewer: GraphQLUser
   totalAssignedQuestions: number
   stage: ApplicationStage
-  assignedTemplateElementIds: number[]
+  reviewQuestionAssignments: ReviewQuestionAssignment[]
 }
 
 interface BasicStringObject {
@@ -331,15 +334,21 @@ interface PageNEW {
   name: string
   progress: Progress
   reviewProgress?: ReviewProgress
+  changeRequestsProgress?: ChangeRequestsProgress
   state: PageElement[]
 }
 
 type PageElement = {
   element: ElementStateNEW
   response: ResponseFull | null
+  previousApplicationResponse: ApplicationResponse
+  latestApplicationResponse: ApplicationResponse
   thisReviewLatestResponse?: ReviewResponse
   review?: ReviewQuestionDecision
+  assignmentId: number
   isAssigned?: boolean
+  isChangeRequest?: boolean
+  isChanged?: boolean
 }
 
 interface PageElementsStatuses {
@@ -386,6 +395,7 @@ interface ResumeSection {
 }
 
 type ReviewSectionComponentProps = {
+  fullStructure: FullStructure
   section: SectionStateNEW
   assignment: AssignmentDetailsNEW
   thisReview?: ReviewDetails | null
@@ -477,6 +487,11 @@ enum ReviewAction {
   unknown = 'UNKNOWN',
 }
 
+interface ChangeRequestsProgress {
+  totalChangeRequests: number
+  doneChangeRequests: number
+}
+
 interface SectionStateNEW {
   details: SectionDetails
   progress?: Progress
@@ -486,6 +501,8 @@ interface SectionStateNEW {
     isAssignedToCurrentUser: boolean
     isReviewable: boolean
   }
+  changeRequestsProgress?: ChangeRequestsProgress
+  assigned?: ReviewerDetails
   pages: {
     [pageNum: number]: PageNEW
   }

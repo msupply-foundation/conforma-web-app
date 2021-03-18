@@ -24,7 +24,7 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
   // default should really be false, but for testing this is much quicker
   const [viewAllAssignments, setViewAllAssignment] = useState<boolean>(true)
 
-  if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
+  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
 
   if (!fullApplicationStructure) return <Loading />
 

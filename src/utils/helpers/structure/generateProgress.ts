@@ -47,7 +47,7 @@ const getSectionProgress = (pages: PageNEW[]): Progress => {
   return sectionProgress
 }
 
-export const generateResponsesProgress = (structure: FullStructure) => {
+const generateResponsesProgress = (structure: FullStructure) => {
   let firstIncompleteSectionCode = ''
   let firstIncompleteSectionIndex = Infinity
   let firstStrictInvalidPageInSection = Infinity
@@ -70,16 +70,21 @@ export const generateResponsesProgress = (structure: FullStructure) => {
           const { category, isVisible, isEditable } = element as ElementStateNEW
           return isVisible && isEditable && category === TemplateElementCategory.Question
         })
-        .forEach(({ element, response }) => {
+        .forEach(({ element, response, isChangeRequest, isChanged }) => {
           const { progress } = page
           const { isRequired } = element as ElementStateNEW
+          const isChangeRequestNotDone = isChangeRequest && !isChanged
+
           if (isRequired) progress.totalRequired++
           else progress.totalNonRequired++
-          if (response?.text) {
+          // Considering not done change requests as not completed
+          if (response?.text && !isChangeRequestNotDone) {
             if (isRequired) progress.doneRequired++
             else progress.doneNonRequired++
           }
-          if (typeof response !== 'undefined' && response?.isValid == false) progress.valid = false
+          if (!!response?.text && response?.isValid == false) progress.valid = false
+          // Considering not done change requests as not valid
+          if (isChangeRequestNotDone) progress.valid = false
           progress.totalSum = progress.totalRequired + progress.doneNonRequired
           progress.completed = calculateCompleted(
             progress.totalSum,
@@ -98,3 +103,5 @@ export const generateResponsesProgress = (structure: FullStructure) => {
       }
     : null
 }
+
+export default generateResponsesProgress

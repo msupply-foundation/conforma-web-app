@@ -6,8 +6,15 @@ import {
   useGetAllResponsesQuery,
 } from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
-import { generateResponsesProgress } from '../helpers/structure/generateProgress'
-import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
+import {
+  addEvaluatedResponsesToStructure,
+  addElementsById,
+  addSortedSectionsAndPages,
+  addApplicationResponses,
+  addApplicantChangeRequestStatusToElement,
+  generateApplicantChangesRequestedProgress,
+  generateResponsesProgress,
+} from '../helpers/structure'
 
 interface useGetFullApplicationStructureProps {
   structure: FullStructure
@@ -68,11 +75,12 @@ const useGetFullApplicationStructure = ({
     if (isDataUpToDate && !shouldRevalidateThisRun) return
 
     const shouldDoValidation = shouldRevalidateThisRun || firstRunProcessValidation
+    const applicationResponses = data?.applicationBySerial?.applicationResponses
+      ?.nodes as ApplicationResponse[]
 
     addEvaluatedResponsesToStructure({
       structure,
-      applicationResponses: data?.applicationBySerial?.applicationResponses
-        ?.nodes as ApplicationResponse[],
+      applicationResponses,
       currentUser,
       evaluationOptions: {
         isEditable: true,
@@ -84,10 +92,28 @@ const useGetFullApplicationStructure = ({
       if (shouldDoValidation) {
         newStructure.lastValidationTimestamp = Date.now()
       }
-      if (shouldCalculateProgress) generateResponsesProgress(newStructure)
+
+      newStructure = addElementsById(newStructure)
+      newStructure = addSortedSectionsAndPages(newStructure)
+
+      if (shouldCalculateProgress) {
+        // even thought response is already added to element, we need to Latest and Previous applicaiton response
+        addApplicationResponses(newStructure, applicationResponses)
+        addApplicantChangeRequestStatusToElement(newStructure)
+
+        generateApplicantChangesRequestedProgress(newStructure)
+
+        // generateResponseProgress uses change statuses calculated in generateApplicantChangesRequestedProgress
+        generateResponsesProgress(newStructure)
+
+        // For change requests we treat application as not linear
+        newStructure.info.isLinear =
+          newStructure.info.isLinear && !newStructure.info.isChangeRequest
+      }
 
       setLastProcessedTimestamp(Date.now())
       setFirstRunProcessValidation(false)
+
       setFullStructure(newStructure)
     })
   }, [lastRefetchedTimestamp, shouldRevalidate, minRefetchTimestampForRevalidation, error])

@@ -47,7 +47,7 @@ const ReviewPage: React.FC<{
 
   const { addScrollable, scrollTo } = useScrollableAttachments()
 
-  if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
+  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!fullReviewStructure) return <Loading />
 
   // TODO decide how to handle this, and localise if not deleted
@@ -94,7 +94,10 @@ const ReviewPage: React.FC<{
               responsesByCode={responsesByCode as ResponsesByCode}
               serial={info.serial}
               isReview
-              canEdit={reviewAssignment?.review?.status === ReviewStatus.Draft}
+              canEdit={
+                reviewAssignment?.review?.status === ReviewStatus.Draft ||
+                reviewAssignment?.review?.status === ReviewStatus.Locked
+              }
             />
           ))}
         </Segment>

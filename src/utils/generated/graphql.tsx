@@ -1618,6 +1618,7 @@ export type TriggerFilter = {
 
 export enum Trigger {
   OnApplicationCreate = 'ON_APPLICATION_CREATE',
+  OnApplicationRestart = 'ON_APPLICATION_RESTART',
   OnApplicationSubmit = 'ON_APPLICATION_SUBMIT',
   OnApplicationSave = 'ON_APPLICATION_SAVE',
   OnApplicationWithdraw = 'ON_APPLICATION_WITHDRAW',
@@ -20033,6 +20034,30 @@ export type CreateUserMutation = (
   )> }
 );
 
+export type RestartApplicationMutationVariables = Exact<{
+  serial: Scalars['String'];
+  applicationPatch: ApplicationPatch;
+}>;
+
+
+export type RestartApplicationMutation = (
+  { __typename?: 'Mutation' }
+  & { updateApplicationBySerial?: Maybe<(
+    { __typename?: 'UpdateApplicationPayload' }
+    & { application?: Maybe<(
+      { __typename?: 'Application' }
+      & { applicationResponses: (
+        { __typename?: 'ApplicationResponsesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ApplicationResponse' }
+          & ResponseFragment
+        )>> }
+      ) }
+      & ApplicationFragment
+    )> }
+  )> }
+);
+
 export type SubmitReviewMutationVariables = Exact<{
   reviewId: Scalars['Int'];
   trigger?: Maybe<Trigger>;
@@ -20847,6 +20872,47 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const RestartApplicationDocument = gql`
+    mutation restartApplication($serial: String!, $applicationPatch: ApplicationPatch!) {
+  updateApplicationBySerial(input: {serial: $serial, patch: $applicationPatch}) {
+    application {
+      ...Application
+      applicationResponses {
+        nodes {
+          ...Response
+        }
+      }
+    }
+  }
+}
+    ${ApplicationFragmentDoc}
+${ResponseFragmentDoc}`;
+export type RestartApplicationMutationFn = Apollo.MutationFunction<RestartApplicationMutation, RestartApplicationMutationVariables>;
+
+/**
+ * __useRestartApplicationMutation__
+ *
+ * To run a mutation, you first call `useRestartApplicationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRestartApplicationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [restartApplicationMutation, { data, loading, error }] = useRestartApplicationMutation({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *      applicationPatch: // value for 'applicationPatch'
+ *   },
+ * });
+ */
+export function useRestartApplicationMutation(baseOptions?: Apollo.MutationHookOptions<RestartApplicationMutation, RestartApplicationMutationVariables>) {
+        return Apollo.useMutation<RestartApplicationMutation, RestartApplicationMutationVariables>(RestartApplicationDocument, baseOptions);
+      }
+export type RestartApplicationMutationHookResult = ReturnType<typeof useRestartApplicationMutation>;
+export type RestartApplicationMutationResult = Apollo.MutationResult<RestartApplicationMutation>;
+export type RestartApplicationMutationOptions = Apollo.BaseMutationOptions<RestartApplicationMutation, RestartApplicationMutationVariables>;
 export const SubmitReviewDocument = gql`
     mutation submitReview($reviewId: Int!, $trigger: Trigger = ON_REVIEW_SUBMIT, $reviewResponses: [ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate!]) {
   updateReview(input: {id: $reviewId, patch: {trigger: $trigger, reviewResponsesUsingId: {updateById: $reviewResponses}}}) {

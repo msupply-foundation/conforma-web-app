@@ -1,12 +1,19 @@
 import { useState, useEffect } from 'react'
 import { AssignmentDetailsNEW, FullStructure, SectionStateNEW } from '../types'
-import { ReviewResponse, useGetReviewResponsesQuery } from '../generated/graphql'
+import {
+  ReviewQuestionAssignment,
+  ReviewResponse,
+  useGetReviewResponsesQuery,
+} from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
-import addThisReviewResponses from '../helpers/structure/addThisReviewResponses'
-import addElementsById from '../helpers/structure/addElementsById'
-import generateReviewProgress from '../helpers/structure/generateReviewProgress'
 import { cloneDeep } from '@apollo/client/utilities'
-import generateReviewSectionActions from '../helpers/structure/generateReviewSectionActions'
+import {
+  addElementsById,
+  addSortedSectionsAndPages,
+  addThisReviewResponses,
+  generateReviewProgress,
+  generateReviewSectionActions,
+} from '../helpers/structure'
 
 interface useGetFullReviewStructureProps {
   fullApplicationStructure: FullStructure
@@ -52,7 +59,7 @@ const useGetFullReviewStructure = ({
     newStructure = addElementsById(newStructure)
     newStructure = addSortedSectionsAndPages(newStructure)
 
-    newStructure = addIsAssigned(newStructure, reviewAssignment.assignedTemplateElementIds)
+    newStructure = addIsAssigned(newStructure, reviewAssignment.reviewQuestionAssignments)
 
     // here we add responses from other review (not from this review assignmnet)
 
@@ -93,32 +100,23 @@ const useGetFullReviewStructure = ({
   }
 }
 
-const addSortedSectionsAndPages = (newStructure: FullStructure): FullStructure => {
-  const sortedSections = Object.values(newStructure.sections).sort(
-    (sectionOne, sectionTwo) => sectionOne.details.index - sectionTwo.details.index
-  )
-  const sortedPages = sortedSections
-    .map((section) =>
-      Object.values(section.pages).sort((pageOne, pageTwo) => pageOne.number - pageTwo.number)
-    )
-    .flat()
-
-  return { ...newStructure, sortedPages, sortedSections }
-}
-
 const getFilteredSections = (sectionIds: number[], sections: SectionStateNEW[]) => {
   return sections.filter((section) =>
     sectionIds.find((sectionId) => section.details.id === sectionId)
   )
 }
 
-const addIsAssigned = (newStructure: FullStructure, assignedTemplateElementIds: number[]) => {
-  assignedTemplateElementIds.forEach((templateElementId) => {
-    const assignedElement = newStructure?.elementsById?.[templateElementId]
+const addIsAssigned = (
+  newStructure: FullStructure,
+  reviewQuestionAssignment: ReviewQuestionAssignment[]
+) => {
+  reviewQuestionAssignment.forEach(({ templateElementId, id }) => {
+    const assignedElement = newStructure?.elementsById?.[templateElementId || '']
 
     if (!assignedElement) return
 
     assignedElement.isAssigned = true
+    assignedElement.assignmentId = id
   })
   return newStructure
 }
