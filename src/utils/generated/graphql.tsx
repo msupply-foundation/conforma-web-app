@@ -21269,7 +21269,7 @@ export const GetApplicationNewDocument = gql`
         id
         templateSection {
           ...Section
-          templateElementsBySectionId {
+          templateElementsBySectionId(orderBy: INDEX_ASC) {
             nodes {
               ...Element
             }
