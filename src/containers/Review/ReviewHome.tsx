@@ -17,7 +17,7 @@ type Filters = {
   selectedStage: number
 }
 
-const ALL_REVIEWERS = -1
+const ALL_REVIEWERS = 0
 
 const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
   const { error, fullStructure: fullApplicationStructure } = useGetFullApplicationStructure({
@@ -91,8 +91,8 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
 
   useEffect(() => {
     setFilters({
-      selectedReviewer: currentUser?.userId || ALL_REVIEWERS,
-      selectedStage: structure.info.current?.stage.id || 0,
+      selectedReviewer: currentUser?.userId as number,
+      selectedStage: structure.info.current?.stage.id as number,
     })
   }, [])
 
@@ -107,7 +107,7 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
       <Grid.Column floated="left">
         Show tasks for{' '}
         <Dropdown
-          options={getReviewerOptions(assignments, currentUser?.userId || 0)}
+          options={getReviewerOptions(assignments, currentUser?.userId as number)}
           value={filters?.selectedReviewer}
           onChange={changeFilters('selectedReviewer')}
         />
