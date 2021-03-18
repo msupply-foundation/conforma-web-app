@@ -11,7 +11,10 @@ import {
   TemplateElementCategory,
 } from '../../utils/generated/graphql'
 
-import { SummaryViewWrapperPropsNEW } from '../../formElementPlugins/types'
+import {
+  ApplicationViewWrapperPropsNEW,
+  SummaryViewWrapperPropsNEW,
+} from '../../formElementPlugins/types'
 import DecisionAreaNEW from '../Review/DecisionAreaNEW'
 
 interface PageElementProps {
@@ -39,16 +42,19 @@ const PageElements: React.FC<PageElementProps> = ({
   if (canEdit && !isReview && !isSummary)
     return (
       <Form>
-        {elements.map(({ element }) => {
-          return (
-            <ApplicationViewWrapper
-              key={`question_${element.code}`}
-              element={element}
-              isStrictPage={isStrictPage}
-              allResponses={responsesByCode}
-              currentResponse={responsesByCode?.[element.code]}
-            />
-          )
+        {elements.map(({ element, isChanged, previousApplicationResponse }) => {
+          const visibleReviews = previousApplicationResponse?.reviewResponses.nodes
+          const props: ApplicationViewWrapperPropsNEW = {
+            element,
+            isStrictPage,
+            isChanged: isChanged as boolean,
+            allResponses: responsesByCode,
+            currentResponse: responsesByCode?.[element.code],
+            currentReview:
+              visibleReviews?.length > 0 ? (visibleReviews[0] as ReviewResponse) : undefined,
+          }
+          // Wrapper displays response & changes requested warning for LOQ re-submission
+          return <ApplicationViewWrapper key={`question_${element.code}`} {...props} />
         })}
       </Form>
     )

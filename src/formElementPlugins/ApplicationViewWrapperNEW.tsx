@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperPropsNEW, PluginComponents, ValidationState } from './types'
-import { useApplicationState } from '../contexts/ApplicationState'
-import { useUpdateResponseMutation } from '../utils/generated/graphql'
+import { ReviewResponse, useUpdateResponseMutation } from '../utils/generated/graphql'
 import {
   EvaluatorParameters,
   LooseString,
@@ -13,14 +12,15 @@ import {
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import { Form } from 'semantic-ui-react'
+import { Feed, Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import strings from '../utils/constants'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'
+import messages from '../utils/messages'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props) => {
-  const { element, isStrictPage, currentResponse, allResponses } = props
+  const { element, isStrictPage, isChanged, currentResponse, currentReview, allResponses } = props
 
   const {
     code,
@@ -149,12 +149,62 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
     />
   )
 
+  const changesToResponseProps: ChangesToResponseWarningProps = {
+    currentReview,
+    isChanged,
+    isValid: validationState ? (validationState.isValid as boolean) : true,
+  }
+
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        {parametersReady && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
+        {parametersReady && (
+          <Form.Field style={{ paddingTop: 5, marginBottom: 0 }} required={isRequired}>
+            {PluginComponent}
+          </Form.Field>
+        )}
+        <ChangesToResponseWarning {...changesToResponseProps} />
       </React.Suspense>
     </ErrorBoundary>
+  )
+}
+
+interface ChangesToResponseWarningProps {
+  currentReview?: ReviewResponse
+  isChanged: boolean
+  isValid: boolean
+}
+
+const ChangesToResponseWarning: React.FC<ChangesToResponseWarningProps> = ({
+  currentReview,
+  isChanged,
+  isValid,
+}) => {
+  const displayResponseWarning = currentReview || (isChanged && isValid)
+
+  return (
+    <div
+      style={{
+        color: isChanged ? 'grey' : 'red',
+        minHeight: 18, // Used to keep space for warning when not displaying
+      }}
+    >
+      <Icon
+        style={{
+          display: displayResponseWarning ? 'inline-block' : 'none',
+        }}
+        name={
+          currentReview
+            ? isChanged
+              ? 'comment alternate outline'
+              : 'exclamation circle'
+            : 'info circle'
+        }
+        color={currentReview ? (isChanged ? 'grey' : 'red') : 'blue'}
+      />
+      {displayResponseWarning &&
+        (currentReview ? currentReview.comment : messages.APPLICATION_OTHER_CHANGES_MADE)}
+    </div>
   )
 }
 

@@ -53,7 +53,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
   const {
-    info: { isLinear },
+    info: { isLinear, current },
   } = fullStructure
 
   return (
@@ -89,7 +89,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
                 sectionCode === strictSectionPage?.sectionCode &&
                 pageNumber === strictSectionPage?.pageNumber
               }
-              canEdit
+              canEdit={current?.status === ApplicationStatus.Draft}
             />
           </Segment>
         </Grid.Column>
