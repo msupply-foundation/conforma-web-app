@@ -65,7 +65,10 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
             draftStatus={current?.status === ApplicationStatus.Draft}
             sections={sections}
             firstStrictInvalidPage={firstStrictInvalidPage}
-            restartApplication={() => restartApplication(fullStructure)}
+            restartApplication={async ({ sectionCode, pageNumber }) => {
+              await restartApplication(fullStructure)
+              push(`/applicationNEW/${serialNumber}/${sectionCode}/Page${pageNumber}`)
+            }}
             resumeApplication={handleResumeClick}
           />
           <Divider />

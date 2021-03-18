@@ -13,7 +13,7 @@ interface SectionsProgressProps {
   draftStatus: boolean
   firstStrictInvalidPage: SectionAndPage | null
   sections: SectionsStructureNEW
-  restartApplication: Function
+  restartApplication: (location: SectionAndPage) => void
   resumeApplication: (location: SectionAndPage) => void
 }
 
@@ -49,7 +49,6 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
           const sectionActionProps: ActionProps = {
             changeRequestsProgress,
             generalProgress: progress,
-            firstStrictInvalidPage,
             resumeApplication,
             sectionCode,
           }
@@ -126,21 +125,20 @@ const SectionProgress: React.FC<ProgressType> = ({
 interface ActionProps {
   changeRequestsProgress?: ChangeRequestsProgress
   generalProgress?: ProgressType
-  firstStrictInvalidPage: SectionAndPage | null
   resumeApplication: (location: SectionAndPage) => void
   sectionCode: string
 }
 
 type ActionChangesRequestedProps = ActionProps & {
   isDraftStatus: boolean
-  restartApplication: Function
+  restartApplication: (location: SectionAndPage) => void
 }
 
 const ActionChangesRequested: React.FC<ActionChangesRequestedProps> = (props) => {
   const {
     sectionCode,
+    generalProgress,
     changeRequestsProgress,
-    firstStrictInvalidPage,
     isDraftStatus,
     restartApplication,
     resumeApplication,
@@ -157,9 +155,12 @@ const ActionChangesRequested: React.FC<ActionChangesRequestedProps> = (props) =>
           isDraftStatus
             ? resumeApplication({
                 sectionCode,
-                pageNumber: firstStrictInvalidPage?.pageNumber || 1,
+                pageNumber: generalProgress?.firstStrictInvalidPage || 1,
               })
-            : restartApplication()
+            : restartApplication({
+                sectionCode,
+                pageNumber: generalProgress?.firstStrictInvalidPage || 1,
+              })
         }
       />
     )
@@ -175,14 +176,7 @@ type ActionGeneralProps = ActionProps & {
 
 // General is for Draft application - without changes requested (so not submitted yet)
 const ActionGeneral: React.FC<ActionGeneralProps> = (props) => {
-  const {
-    sectionCode,
-    generalProgress,
-    isStrictSection,
-    isBeforeStrict,
-    firstStrictInvalidPage,
-    resumeApplication,
-  } = props
+  const { sectionCode, generalProgress, isStrictSection, isBeforeStrict, resumeApplication } = props
   if (isStrictSection)
     return (
       <Button
@@ -191,7 +185,7 @@ const ActionGeneral: React.FC<ActionGeneralProps> = (props) => {
         onClick={() =>
           resumeApplication({
             sectionCode,
-            pageNumber: firstStrictInvalidPage?.pageNumber || 1,
+            pageNumber: generalProgress?.firstStrictInvalidPage || 1,
           })
         }
       />
