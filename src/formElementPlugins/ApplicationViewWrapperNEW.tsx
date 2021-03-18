@@ -12,7 +12,7 @@ import {
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import { Feed, Form, Icon } from 'semantic-ui-react'
+import { Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import strings from '../utils/constants'
@@ -155,15 +155,22 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
     isValid: validationState ? (validationState.isValid as boolean) : true,
   }
 
+  const displayResponseWarning = !!currentReview || (isChanged && validationState.isValid)
+
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        {parametersReady && (
-          <Form.Field style={{ paddingTop: 5, marginBottom: 0 }} required={isRequired}>
-            {PluginComponent}
-          </Form.Field>
-        )}
-        <ChangesToResponseWarning {...changesToResponseProps} />
+        <div
+          style={{
+            border: displayResponseWarning ? 'solid 1px' : 'transparent',
+            borderColor: isChanged ? 'blue' : !!currentReview ? 'red' : 'black',
+            padding: '5px',
+            margin: '5px',
+          }}
+        >
+          {parametersReady && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
+          <ChangesToResponseWarning {...changesToResponseProps} />
+        </div>
       </React.Suspense>
     </ErrorBoundary>
   )
