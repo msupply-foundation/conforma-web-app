@@ -1624,6 +1624,7 @@ export enum Trigger {
   OnApplicationWithdraw = 'ON_APPLICATION_WITHDRAW',
   OnReviewCreate = 'ON_REVIEW_CREATE',
   OnReviewSubmit = 'ON_REVIEW_SUBMIT',
+  OnReviewRestart = 'ON_REVIEW_RESTART',
   OnReviewStart = 'ON_REVIEW_START',
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
   OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
