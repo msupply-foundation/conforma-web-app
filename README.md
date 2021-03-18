@@ -26,6 +26,7 @@ Apollo client for data fetching from a GraphQL server [Application-manager-serve
 * Install dependencies (Using node >=v13.8.0):
 
 `yarn install`
+
 `cd src/formElementPlugins/ && yarn install`
 
 * Run on development mode:
