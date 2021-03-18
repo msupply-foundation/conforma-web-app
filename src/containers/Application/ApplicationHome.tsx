@@ -10,6 +10,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { Link } from 'react-router-dom'
 import useRestartApplication from '../../utils/hooks/useRestartApplication'
+import messages from '../../utils/messages'
 
 interface ApplicationProps {
   structure: FullStructure
@@ -106,9 +107,7 @@ const ChangesRequestedTitle: React.FC<ChangesRequestedTitleProps> = ({
   isChangeRequest,
 }) => {
   return status !== ApplicationStatus.Submitted && isChangeRequest ? (
-    <Header>
-      There are issues with some of the information you supplied ... change request...
-    </Header>
+    <Header content={messages.APPLICATION_CHANGES_REQUIRED} />
   ) : null
 }
 
