@@ -19960,7 +19960,7 @@ export type TemplateFragment = (
 
 export type TemplateStageFragment = (
   { __typename?: 'TemplateStage' }
-  & Pick<TemplateStage, 'number' | 'title' | 'description'>
+  & Pick<TemplateStage, 'number' | 'title' | 'id' | 'description'>
 );
 
 export type CreateApplicationMutationVariables = Exact<{
@@ -20749,6 +20749,7 @@ export const TemplateStageFragmentDoc = gql`
     fragment TemplateStage on TemplateStage {
   number
   title
+  id
   description
 }
     `;
