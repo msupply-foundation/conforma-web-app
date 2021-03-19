@@ -36,15 +36,15 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     if (!fullStructure) return
     const { status } = fullStructure.info.current as StageAndStatus
     if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired)
-      push(`/applicationNEW/${serialNumber}/summary`)
+      push(`/application/${serialNumber}/summary`)
   }, [fullStructure])
 
   const handleResumeClick = ({ sectionCode, pageNumber }: SectionAndPage) => {
-    push(`/applicationNEW/${serialNumber}/${sectionCode}/Page${pageNumber}`)
+    push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
   }
 
   const handleSummaryClicked = () => {
-    push(`/applicationNEW/${serialNumber}/summary`)
+    push(`/application/${serialNumber}/summary`)
   }
 
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
@@ -68,7 +68,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
             firstStrictInvalidPage={firstStrictInvalidPage}
             restartApplication={async ({ sectionCode, pageNumber }) => {
               await restartApplication(fullStructure)
-              push(`/applicationNEW/${serialNumber}/${sectionCode}/Page${pageNumber}`)
+              push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
             }}
             resumeApplication={handleResumeClick}
           />
