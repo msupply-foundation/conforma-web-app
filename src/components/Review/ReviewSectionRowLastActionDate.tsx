@@ -11,7 +11,6 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
 }) => {
   const getContent = () => {
-    console.log(action)
     switch (action) {
       case ReviewAction.canContinue: {
         return (
