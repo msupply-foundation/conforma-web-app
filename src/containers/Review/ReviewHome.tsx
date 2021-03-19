@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Message, Segment, Header, Checkbox, Dropdown, Grid } from 'semantic-ui-react'
+import { Message, Segment, Header, Dropdown, Grid } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
@@ -105,7 +105,7 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
   return (
     <Grid columns="equal">
       <Grid.Column floated="left">
-        Show tasks for{' '}
+        {`${strings.REVIEW_FILTER_SHOW_TASKS_FOR} `}
         <Dropdown
           options={getReviewerOptions(assignments, currentUser?.userId as number)}
           value={filters?.selectedReviewer}
@@ -138,12 +138,12 @@ const getReviewerOptions = (assignments: AssignmentDetailsNEW[], currentUserId: 
     {
       value: ALL_REVIEWERS,
       key: ALL_REVIEWERS,
-      text: 'All',
+      text: strings.REVIEW_FILTER_ALL,
     },
     {
       value: currentUserId,
       key: currentUserId,
-      text: 'Yourself',
+      text: strings.REVIEW_FILTER_YOURSELF,
     },
   ]
   assignments.forEach(({ reviewer: { id, firstName, lastName } }) => {
