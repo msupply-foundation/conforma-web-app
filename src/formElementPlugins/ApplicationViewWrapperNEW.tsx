@@ -164,8 +164,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
           style={{
             border: displayResponseWarning ? 'solid 1px' : 'transparent',
             borderColor: isChanged ? 'blue' : !!currentReview ? 'red' : 'black',
-            padding: '5px',
-            margin: '5px',
+            borderRadius: 7,
+            padding: 5,
+            margin: 5,
           }}
         >
           {parametersReady && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
