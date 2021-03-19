@@ -165,7 +165,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
             border: displayResponseWarning ? 'solid 1px' : 'transparent',
             borderColor: isChanged ? 'blue' : !!currentReview ? 'red' : 'black',
             borderRadius: 7,
-            padding: 5,
+            padding: displayResponseWarning ? 4 : 5,
             margin: 5,
           }}
         >
