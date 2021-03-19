@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { FullStructure } from '../types'
 import {
   ApplicationResponse,
+  ApplicationResponseStatus,
   ApplicationStatus,
   useGetAllResponsesQuery,
 } from '../generated/graphql'
@@ -22,6 +23,7 @@ interface useGetFullApplicationStructureProps {
   minRefetchTimestampForRevalidation?: number
   firstRunValidation?: boolean
   shouldCalculateProgress?: boolean
+  shouldGetDraftResponses?: boolean
 }
 
 const useGetFullApplicationStructure = ({
@@ -30,6 +32,7 @@ const useGetFullApplicationStructure = ({
   minRefetchTimestampForRevalidation = 0,
   firstRunValidation = true,
   shouldCalculateProgress = true,
+  shouldGetDraftResponses = true,
 }: useGetFullApplicationStructureProps) => {
   const {
     info: { serial },
@@ -50,6 +53,9 @@ const useGetFullApplicationStructure = ({
   const { data, error } = useGetAllResponsesQuery({
     variables: {
       serial,
+      responseStatuses: shouldGetDraftResponses
+        ? [ApplicationResponseStatus.Submitted, ApplicationResponseStatus.Draft]
+        : [ApplicationResponseStatus.Submitted],
     },
     skip: !serial,
     fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
