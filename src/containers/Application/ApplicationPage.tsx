@@ -89,7 +89,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
                 sectionCode === strictSectionPage?.sectionCode &&
                 pageNumber === strictSectionPage?.pageNumber
               }
-              canEdit={current?.status === ApplicationStatus.Draft}
             />
           </Segment>
         </Grid.Column>
