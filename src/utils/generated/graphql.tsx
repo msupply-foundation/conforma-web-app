@@ -20130,7 +20130,13 @@ export type UpdateReviewMutation = (
     & { review?: Maybe<(
       { __typename?: 'Review' }
       & Pick<Review, 'id' | 'trigger'>
-      & { reviewDecisions: (
+      & { reviewResponses: (
+        { __typename?: 'ReviewResponsesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ReviewResponse' }
+          & Pick<ReviewResponse, 'id' | 'decision' | 'comment'>
+        )>> }
+      ), reviewDecisions: (
         { __typename?: 'ReviewDecisionsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'ReviewDecision' }
@@ -21033,6 +21039,13 @@ export const UpdateReviewDocument = gql`
     review {
       id
       trigger
+      reviewResponses {
+        nodes {
+          id
+          decision
+          comment
+        }
+      }
       reviewDecisions {
         nodes {
           id
@@ -21704,7 +21717,7 @@ export const GetReviewResponsesDocument = gql`
     query getReviewResponses($reviewAssignmentId: Int!, $userId: Int!, $sectionIds: [Int!]) {
   reviewAssignment(id: $reviewAssignmentId) {
     id
-    reviews(filter: {or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {reviewer: {id: {equalTo: $userId}}}]}]}) {
+    reviews(filter: {or: [{status: {notEqualTo: DRAFT}}, {and: [{status: {equalTo: DRAFT}}, {reviewer: {id: {equalTo: $userId}}}]}]}) {
       nodes {
         id
         reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {templateElement: {section: {id: {in: $sectionIds}}}}) {
