@@ -6,7 +6,7 @@ export default {
   ACTION_DATE_RE_SUBMITTED: 'Re-Submitted',
   ACTION_DATE_ASSIGNED: 'Assigned',
   ACTION_DATE_REVIEW_SUBMITTED: 'Review Submitted',
-  ACTION_DATE_REVIEW_STARTED: 'Review Startted',
+  ACTION_DATE_REVIEW_STARTED: 'Review Started',
   ACTION_VIEW: 'View',
   ASSIGNED: 'assigned',
   ASSIGNED_TO: 'assigned to',
