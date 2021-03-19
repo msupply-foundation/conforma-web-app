@@ -35,12 +35,12 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
 
     // Re-direct based on application status
     if (fullStructure.info.current?.status === ApplicationStatus.ChangesRequired)
-      replace(`/applicationNEW/${fullStructure.info.serial}`)
+      replace(`/application/${fullStructure.info.serial}`)
 
     // Re-direct if application is not valid
     if (fullStructure.info.firstStrictInvalidPage) {
       const { sectionCode, pageNumber } = fullStructure.info.firstStrictInvalidPage
-      replace(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
+      replace(`/application/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
     }
   }, [fullStructure])
 
@@ -51,7 +51,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
           if (firstStrictInvalidPage) {
             const { sectionCode, pageNumber } = firstStrictInvalidPage
             setStrictSectionPage(firstStrictInvalidPage)
-            replace(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
+            replace(`/application/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
           } else {
             try {
               const result = await submitFromStructure(fullStructure)
