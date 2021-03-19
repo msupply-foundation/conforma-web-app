@@ -83,6 +83,7 @@ export default {
   REVIEW_FILTER_ALL: 'All',
   REVIEW_FILTER_YOURSELF: 'Yourself',
   REVIEW_FILTER_SHOW_TASKS_FOR: 'Show tasks for',
+  REVIEW_FILTER_STAGE: 'Stage',
   SUBTITLE_APPLICATION_STEPS:
     'The following steps will need to be completed before the form can be submitted',
   SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you',

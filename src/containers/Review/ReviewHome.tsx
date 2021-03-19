@@ -113,7 +113,7 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
         />
       </Grid.Column>
       <Grid.Column floated="right" textAlign="right">
-        STAGE{' '}
+        {`${strings.REVIEW_FILTER_STAGE} `}
         <Dropdown
           options={getStageOptions(structure, assignments)}
           value={filters?.selectedStage}
