@@ -33,7 +33,7 @@ const PageElements: React.FC<PageElementProps> = ({
   elements,
   responsesByCode,
   isStrictPage,
-  canEdit = true,
+  canEdit,
   isReview,
   isSummary,
   serial,
