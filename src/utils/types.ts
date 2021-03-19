@@ -33,6 +33,7 @@ export {
   AssignmentDetails,
   AssignmentDetailsNEW,
   CellProps,
+  ChangeRequestsProgress,
   ColumnDetails,
   ColumnsPerRole,
   ContextApplicationState,
