@@ -1,4 +1,6 @@
 export default {
+  APPLICATION_CHANGES_REQUIRED:
+    'There are issues with some of the information you supplied. Please update and resubmit the form.',
   APPLICATIONS_LIST_EMPTY: 'No applications found',
   APPLICATIONS_MISSING_USER_ROLE: 'No user role found',
   APPLICATION_MISSING_TEMPLATE: '',

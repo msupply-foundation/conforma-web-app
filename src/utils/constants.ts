@@ -48,6 +48,7 @@ export default {
   ERROR_REVIEW_SECTION_ROW: 'Problem loading review section row',
   ERROR_LOGIN_PASSWORD: 'Oops! Problem with username or password',
   LABEL_APPLICATIONS: 'applications',
+  LABEL_APPLICATION_UPDATE: 'Update',
   LABEL_ASSIGNED_TO_YOU: 'Assigned to you',
   LABEL_ASSIGNED_TO_OTHER: 'Assigned to another reviewer',
   LABEL_COMMENT: 'Add comment',
