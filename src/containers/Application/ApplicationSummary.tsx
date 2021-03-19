@@ -55,7 +55,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
           } else {
             try {
               const result = await submitFromStructure(fullStructure)
-              if (result?.errors) throw new Error('Something went wong')
+              if (result?.errors) throw new Error('Something went wrong')
               push(`/applicationNEW/${fullStructure?.info.serial}/submission`)
             } catch {
               setError(true)
