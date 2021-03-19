@@ -194,13 +194,10 @@ const ChangesToResponseWarning: React.FC<ChangesToResponseWarningProps> = ({
     <div
       style={{
         color: isChanged ? 'grey' : 'red',
-        minHeight: 18, // Used to keep space for warning when not displaying
+        visibility: displayResponseWarning ? 'visible' : 'hidden',
       }}
     >
       <Icon
-        style={{
-          display: displayResponseWarning ? 'inline-block' : 'none',
-        }}
         name={
           currentReview
             ? isChanged
@@ -210,8 +207,7 @@ const ChangesToResponseWarning: React.FC<ChangesToResponseWarningProps> = ({
         }
         color={currentReview ? (isChanged ? 'grey' : 'red') : 'blue'}
       />
-      {displayResponseWarning &&
-        (currentReview ? currentReview.comment : messages.APPLICATION_OTHER_CHANGES_MADE)}
+      {currentReview ? currentReview.comment : messages.APPLICATION_OTHER_CHANGES_MADE}
     </div>
   )
 }
