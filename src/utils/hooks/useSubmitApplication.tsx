@@ -36,7 +36,7 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
       },
     })
   }
-
+  // TODO: Remove this
   const submit = async (responses: ResponseFull[]) => {
     setProcessing(true)
     const responsesPatch = responses.map(({ id, ...response }) => {

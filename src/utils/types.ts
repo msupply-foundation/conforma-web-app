@@ -32,6 +32,7 @@ export {
   AssignmentDetails,
   AssignmentDetailsNEW,
   CellProps,
+  ChangeRequestsProgress,
   ColumnDetails,
   ColumnsPerRole,
   ContextApplicationState,
@@ -374,7 +375,8 @@ interface ResponseFull {
   optionIndex?: number
   reference?: any // Not yet decided how to represent
   isValid?: boolean | null
-  hash?: string
+  hash?: string // Used in Password plugin
+  files?: any[] // Used in FileUpload plugin
   timeCreated?: Date
   reviewResponse?: ReviewResponse
   customValidation?: ValidationState

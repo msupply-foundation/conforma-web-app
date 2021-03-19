@@ -36,11 +36,13 @@ const PageElements: React.FC<PageElementProps> = ({
   serial,
   sectionAndPage,
 }) => {
+  const visibleElements = elements.filter(({ element }) => element.isVisible)
+
   // Editable Application page
   if (canEdit && !isReview && !isSummary)
     return (
       <Form>
-        {elements.map(({ element }) => {
+        {visibleElements.map(({ element }) => {
           return (
             <ApplicationViewWrapper
               key={`question_${element.code}`}
@@ -65,27 +67,29 @@ const PageElements: React.FC<PageElementProps> = ({
     return (
       <Form>
         <Segment.Group>
-          {elements.map(({ element }) => {
-            return (
-              <Segment key={`question_${element.code}`}>
-                <Grid columns="equal">
-                  <Grid.Column floated="left">
-                    <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
-                  </Grid.Column>
-                  {element.category === TemplateElementCategory.Question && canEdit && (
-                    <Grid.Column floated="right" textAlign="right">
-                      <Button
-                        content={strings.BUTTON_SUMMARY_EDIT}
-                        size="small"
-                        as={Link}
-                        to={`/application/${serial}/${sectionCode}/Page${pageNumber}`}
-                      />
+          {visibleElements
+            .filter(({ element }) => element.isVisible)
+            .map(({ element }) => {
+              return (
+                <Segment key={`question_${element.code}`}>
+                  <Grid columns="equal">
+                    <Grid.Column floated="left">
+                      <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
                     </Grid.Column>
-                  )}
-                </Grid>
-              </Segment>
-            )
-          })}
+                    {element.category === TemplateElementCategory.Question && canEdit && (
+                      <Grid.Column floated="right" textAlign="right">
+                        <Button
+                          content={strings.BUTTON_SUMMARY_EDIT}
+                          size="small"
+                          as={Link}
+                          to={`/application/${serial}/${sectionCode}/Page${pageNumber}`}
+                        />
+                      </Grid.Column>
+                    )}
+                  </Grid>
+                </Segment>
+              )
+            })}
         </Segment.Group>
       </Form>
     )
@@ -97,7 +101,7 @@ const PageElements: React.FC<PageElementProps> = ({
     return (
       <Form>
         <Segment.Group>
-          {elements.map(
+          {visibleElements.map(
             ({
               element,
               thisReviewLatestResponse,
