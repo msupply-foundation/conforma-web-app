@@ -147,7 +147,8 @@ const getReviewerOptions = (assignments: AssignmentDetailsNEW[], currentUserId: 
     },
   ]
   assignments.forEach(({ reviewer: { id, firstName, lastName } }) => {
-    if (id === currentUserId || !id || !firstName || !lastName) return
+    if (!id || !firstName || !lastName) return
+    if (reviewerOptions.some((option) => option.key === id)) return
     reviewerOptions.push({
       value: id,
       key: id,
