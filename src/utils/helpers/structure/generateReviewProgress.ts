@@ -19,6 +19,7 @@ const isLatestReviewResponseUpToDate = (element: PageElement) =>
 const generatePageReviewProgress = (page: PageNEW) => {
   const totalReviewable = page.state.filter((element) => element.isAssigned)
 
+  console.log(totalReviewable)
   // Only consider review responses that are linked to latest application response
   const totalReviewableLinkedToLatestApplicationResponse = totalReviewable.filter(
     isLatestReviewResponseUpToDate
@@ -35,6 +36,10 @@ const generatePageReviewProgress = (page: PageNEW) => {
     (element) =>
       isLatestReviewResponseUpToDate(element) && element.thisReviewLatestResponse?.decision
   )
+
+  console.log({ doneNewReviewable })
+  console.log({ doneConform })
+  console.log({ doneNonConform })
 
   page.reviewProgress = {
     totalReviewable: totalReviewable.length,

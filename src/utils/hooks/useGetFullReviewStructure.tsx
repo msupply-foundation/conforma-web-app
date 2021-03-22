@@ -124,6 +124,7 @@ const addIsAssigned = (
     const assignedElement = newStructure?.elementsById?.[templateElementId || '']
 
     if (!assignedElement) return
+    if (!assignedElement.element.isVisible) return
 
     assignedElement.isAssigned = true
     assignedElement.assignmentId = id
