@@ -95,6 +95,10 @@ const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
 
   if (restartReviewError) return <Message error title={strings.ERROR_GENERIC} />
 
+  const reReviewCount = reReviewableCount(reviewProgress)
+
+  if (reReviewCount === 0) return
+
   // Either need to run a mutation to re-review or just navigate to section
   const buttonAction =
     fullStructure.thisReview?.status == ReviewStatus.Draft
@@ -102,9 +106,9 @@ const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
       : restart
 
   return (
-    <Button onClick={buttonAction}>{`${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewableCount(
-      reviewProgress
-    )})`}</Button>
+    <Button
+      onClick={buttonAction}
+    >{`${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewCount})`}</Button>
   )
 }
 
