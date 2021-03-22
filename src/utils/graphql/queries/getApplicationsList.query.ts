@@ -36,6 +36,7 @@ export default gql`
         reviewDraftCount
         reviewChangeRequestCount
         reviewSubmittedCount
+        reviewPendingCount
       }
       # Use the page and count info for rendering Pagination UI
       pageInfo {
