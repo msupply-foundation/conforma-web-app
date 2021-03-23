@@ -15,14 +15,17 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   getDefaultIndex,
 }) => {
-  const { label, description, options, default: defaultOption } = parameters
+  const { label, description, options, default: defaultOption, hasOther } = parameters
+
+  const allOptions = [...options]
+  if (hasOther) allOptions.push('Other')
 
   useEffect(() => {
     onUpdate(value)
     // This ensures that, if a default is specified, it gets saved on first load
     if (!value && defaultOption !== undefined) {
-      const defaultIndex = getDefaultIndex(defaultOption, options)
-      const defaultValue = options?.[defaultIndex]
+      const defaultIndex = getDefaultIndex(defaultOption, allOptions)
+      const defaultValue = allOptions?.[defaultIndex]
       onSave({
         text: defaultValue,
         optionIndex: defaultIndex,
@@ -43,7 +46,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Markdown text={label} semanticComponent="noParagraph" />
       </label>
       <Markdown text={description} />
-      {options.map((option: string, index: number) => {
+      {allOptions.map((option: string, index: number) => {
         return (
           <Form.Field key={`${index}_${option}`} disabled={!isEditable}>
             <Radio
@@ -54,6 +57,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
               onChange={handleChange}
               index={index}
             />
+            {option === 'Other' && <input placeholder="First Name" />}
           </Form.Field>
         )
       })}
