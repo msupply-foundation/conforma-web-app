@@ -7,6 +7,9 @@ import { ElementPluginParameters, User } from '../utils/types'
 import { extractDynamicExpressions, evaluateDynamicParameters } from './ApplicationViewWrapper'
 import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
+import globalConfig from '../config.json'
+
+const graphQLEndpoint = globalConfig.serverGraphQL
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperPropsNEW> = (props) => {
   const { element, response, allResponses } = props
@@ -29,6 +32,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperPropsNEW> = (props) => {
     evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
       objects: { responses: allResponses, currentUser },
       APIfetch: fetch,
+      graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     }).then((result: ElementPluginParameters) => {
       setEvaluatedParameters(result)
       setParametersLoaded(true)

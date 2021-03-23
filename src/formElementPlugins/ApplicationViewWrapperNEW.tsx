@@ -18,6 +18,9 @@ import Markdown from '../utils/helpers/semanticReactMarkdown'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import strings from '../utils/constants'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'
+import globalConfig from '../config.json'
+
+const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props) => {
   const { element, isStrictPage, currentResponse, allResponses } = props
@@ -61,6 +64,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
     evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
       objects: { responses: allResponses, currentUser },
       APIfetch: fetch,
+      graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     }).then((result: ElementPluginParameters) => {
       setEvaluatedParameters(result)
       setParametersReady(true)
@@ -79,7 +83,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
       isRequired,
       isStrictPage,
       responses,
-      evaluationParameters: { objects: { responses, currentUser }, APIfetch: fetch },
+      evaluationParameters: {
+        objects: { responses, currentUser },
+        APIfetch: fetch,
+        graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+      },
       currentResponse,
     })
     setValidationState(newValidationState)
