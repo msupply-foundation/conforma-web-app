@@ -24,6 +24,9 @@ import {
 import messages from '../messages'
 import { DateTime } from 'luxon'
 import { buildSectionsStructure } from '../helpers/structure'
+import config from '../../config.json'
+
+const graphQLEndpoint = config.serverGraphQL
 
 const MAX_REFETCH = 10
 
@@ -150,6 +153,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     const evaluatorParams: EvaluatorParameters = {
       objects: { currentUser },
       APIfetch: fetch,
+      graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     }
     evaluate(application.template?.submissionMessage || '', evaluatorParams).then(
       (submissionMessage: any) => {
