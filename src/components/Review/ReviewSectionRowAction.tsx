@@ -18,7 +18,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
     action,
     section: { details, reviewProgress },
     isAssignedToCurrentUser,
-
+    assignment,
     thisReview,
   } = props
 
@@ -68,6 +68,7 @@ const reReviewableCount = (reviewProgress?: ReviewProgress) =>
 const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
   section: { details, reviewProgress },
+  assignment,
 }) => {
   const {
     location: { pathname },
@@ -77,12 +78,16 @@ const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
   const [restartReviewError, setRestartReviewError] = useState(false)
   const reviewId = fullStructure.thisReview?.id
 
-  const restartReview = useRestartReview(reviewId || 0)
+  const restartReview = useRestartReview({
+    reviewId: reviewId || 0,
+    structure: fullStructure,
+    assignment,
+  })
 
   const restart = async () => {
     {
       try {
-        const result = await restartReview(fullStructure)
+        const result = await restartReview()
         const responseCheck = result.data?.updateReview?.review?.id
         if (!responseCheck) throw new Error('Review ID is missing from response')
         push(`${pathname}/${reviewId}?activeSections=${details.code}`)

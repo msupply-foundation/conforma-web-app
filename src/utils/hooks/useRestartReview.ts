@@ -1,17 +1,28 @@
 import { useUpdateReviewMutation, ReviewPatch, Trigger, Decision } from '../generated/graphql'
-import { FullStructure } from '../types'
+import { AssignmentDetailsNEW, FullStructure } from '../types'
+import useGetFullReviewStructure from './useGetFullReviewStructure'
 
 // below lines are used to get return type of the function that is returned by useRestartReviewMutation
 type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewMutation>
 type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 // hook used to restart a review, , as per type definition below (returns promise that resolve with mutation result data)
-type UseRestartReview = (reviewId: number) => (structure: FullStructure) => PromiseReturnType
+type UseRestartReview = (props: {
+  reviewId: number
+  structure: FullStructure
+  assignment: AssignmentDetailsNEW
+}) => () => PromiseReturnType
 
 type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch
 
 // Need to duplicate or create new review responses for all assigned questions
-const useRestartReview: UseRestartReview = (reviewId) => {
+const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment }) => {
   const [updateReview] = useUpdateReviewMutation()
+
+  const { getFullReviewStructureAsync } = useGetFullReviewStructure({
+    fullApplicationStructure: structure,
+    reviewAssignment: assignment,
+    awaitMode: true,
+  })
 
   const constructReviewPatch: ConstructReviewPatch = (structure) => {
     const elements = Object.values(structure?.elementsById || {})
@@ -44,15 +55,14 @@ const useRestartReview: UseRestartReview = (reviewId) => {
     }
   }
 
-  const submitReview = async (structure: FullStructure) =>
-    updateReview({
+  return async () => {
+    return await updateReview({
       variables: {
         reviewId: reviewId,
-        reviewPatch: constructReviewPatch(structure),
+        reviewPatch: constructReviewPatch(await getFullReviewStructureAsync()),
       },
     })
-
-  return submitReview
+  }
 }
 
 export default useRestartReview

@@ -19,14 +19,22 @@ interface useGetFullReviewStructureProps {
   fullApplicationStructure: FullStructure
   reviewAssignment: AssignmentDetailsNEW
   filteredSectionIds?: number[]
+  awaitMode?: boolean
+}
+
+interface AwaitModeResolver {
+  awaitMethod: (reslt: FullStructure | null) => void
 }
 
 const useGetFullReviewStructure = ({
   fullApplicationStructure,
   reviewAssignment,
   filteredSectionIds,
+  awaitMode = false,
 }: useGetFullReviewStructureProps) => {
   const [fullReviewStructure, setFullReviewStructure] = useState<FullStructure>()
+  const [awaitModeTrigger, setAwaitModeTrigger] = useState(awaitMode)
+  const [awaitModeResolver, setAwaitModeResolver] = useState<AwaitModeResolver | null>(null)
 
   const {
     userState: { currentUser },
@@ -45,10 +53,15 @@ const useGetFullReviewStructure = ({
       sectionIds,
     },
     fetchPolicy: 'network-only',
+    skip: awaitModeTrigger,
   })
 
   useEffect(() => {
-    if (error) return
+    if (error) {
+      console.log(error)
+      if (awaitModeResolver) awaitModeResolver.awaitMethod(null)
+      return
+    }
 
     if (!data) return
     // requires deep clone one we have concurrent useGetFullReviewStructure that could possibly
@@ -93,12 +106,27 @@ const useGetFullReviewStructure = ({
     })
 
     // generateConsolidationProgress
+    if (awaitMode && awaitModeResolver) awaitModeResolver.awaitMethod(newStructure)
     setFullReviewStructure(newStructure)
   }, [data, error])
+
+  const getFullReviewStructureAsync = () =>
+    new Promise<FullStructure>((resolve, reject) => {
+      const awaitMethod = (newStructure: FullStructure | null) => {
+        setAwaitModeTrigger(true)
+        if (!newStructure) return reject(new Error('Failed to load structure'))
+        resolve(newStructure)
+        setAwaitModeResolver(null)
+      }
+
+      setAwaitModeResolver({ awaitMethod })
+      setAwaitModeTrigger(false)
+    })
 
   return {
     fullReviewStructure,
     error: error?.message,
+    getFullReviewStructureAsync,
   }
 }
 
