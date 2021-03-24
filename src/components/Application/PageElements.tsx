@@ -45,20 +45,22 @@ const PageElements: React.FC<PageElementProps> = ({
   if (canEdit && !isReview && !isSummary)
     return (
       <Form>
-        {visibleElements.map(({ element, isChanged, previousApplicationResponse }) => {
-          const visibleReviews = previousApplicationResponse?.reviewResponses.nodes
-          const props: ApplicationViewWrapperPropsNEW = {
-            element,
-            isStrictPage,
-            isChanged: isChanged as boolean,
-            allResponses: responsesByCode,
-            currentResponse: responsesByCode?.[element.code],
-            currentReview:
-              visibleReviews?.length > 0 ? (visibleReviews[0] as ReviewResponse) : undefined,
+        {visibleElements.map(
+          ({ element, isChangeRequest, isChanged, previousApplicationResponse }) => {
+            const visibleReviews = previousApplicationResponse?.reviewResponses.nodes
+            const props: ApplicationViewWrapperPropsNEW = {
+              element,
+              isStrictPage,
+              isChanged: !!isChanged && !!isChangeRequest,
+              allResponses: responsesByCode,
+              currentResponse: responsesByCode?.[element.code],
+              currentReview:
+                visibleReviews?.length > 0 ? (visibleReviews[0] as ReviewResponse) : undefined,
+            }
+            // Wrapper displays response & changes requested warning for LOQ re-submission
+            return <ApplicationViewWrapper key={`question_${element.code}`} {...props} />
           }
-          // Wrapper displays response & changes requested warning for LOQ re-submission
-          return <ApplicationViewWrapper key={`question_${element.code}`} {...props} />
-        })}
+        )}
       </Form>
     )
 
