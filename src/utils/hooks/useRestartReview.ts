@@ -44,13 +44,17 @@ const useRestartReview: UseRestartReview = (reviewId) => {
     }
   }
 
-  const submitReview = async (structure: FullStructure) =>
-    updateReview({
+  const submitReview = async (structure: FullStructure) => {
+    const result = await updateReview({
       variables: {
         reviewId: reviewId,
         reviewPatch: constructReviewPatch(structure),
       },
     })
+
+    if (result.errors) throw new Error(result.errors.toString())
+    return result
+  }
 
   return submitReview
 }
