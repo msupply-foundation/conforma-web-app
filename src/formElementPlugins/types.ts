@@ -1,5 +1,5 @@
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
-import { TemplateElement } from '../utils/generated/graphql'
+import { ReviewResponse, TemplateElement } from '../utils/generated/graphql'
 import { ElementState, ElementStateNEW, ResponseFull, ResponsesByCode } from '../utils/types'
 
 interface OnUpdateApplicationView {
@@ -36,11 +36,13 @@ interface ApplicationViewWrapperPropsNEW {
   // isRequired: boolean
   // isValid: boolean
   isStrictPage: boolean | undefined
+  isChanged: boolean
   // // parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement)
   // validationExpression: IQueryNode
   // validationMessage: string | null
   allResponses: ResponsesByCode
   currentResponse: ResponseFull | null
+  currentReview?: ReviewResponse
   // applicationState,
   // graphQLclient
   // initialValue: any // Could be a primative or an object with any shape

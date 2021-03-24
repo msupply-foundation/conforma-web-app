@@ -28,6 +28,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   useEffect(() => {
     onUpdate(currentResponse)
+    // This ensures that, if a default is specified, it gets saved on first load
     if (!currentResponse && defaultOption !== undefined) {
       const optionIndex = getDefaultIndex(defaultOption, options)
       onSave({
