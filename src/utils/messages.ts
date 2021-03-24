@@ -4,6 +4,7 @@ export default {
   APPLICATIONS_LIST_EMPTY: 'No applications found',
   APPLICATIONS_MISSING_USER_ROLE: 'No user role found',
   APPLICATION_MISSING_TEMPLATE: '',
+  APPLICATION_OTHER_CHANGES_MADE: 'This is a new submission and will require a review.',
   LOGIN_WELCOME_SELECT_ORG: 'Welcome back, %1. Please select your organisation.',
   VALIDATION_FAIL: {
     title: 'Validation failed',
