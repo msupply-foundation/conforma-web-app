@@ -9,6 +9,8 @@ import {
   ResponsesByCode,
   User,
 } from '../../types'
+import config from '../../../config.json'
+const graphQLEndpoint = config.serverGraphQL
 
 type EvaluationOptions = {
   isRequired: boolean
@@ -122,6 +124,7 @@ async function evaluateSingleElement(
       currentUser,
     },
     APIfetch: fetch,
+    graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     // TO-DO: Also send org objects etc.
     // graphQLConnection: TO-DO
   }
