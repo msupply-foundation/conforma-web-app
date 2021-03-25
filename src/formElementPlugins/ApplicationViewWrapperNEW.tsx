@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperPropsNEW, PluginComponents, ValidationState } from './types'
-import { useApplicationState } from '../contexts/ApplicationState'
-import { useUpdateResponseMutation } from '../utils/generated/graphql'
+import { ReviewResponse, useUpdateResponseMutation } from '../utils/generated/graphql'
 import {
   EvaluatorParameters,
   LooseString,
@@ -13,14 +12,18 @@ import {
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import { Form } from 'semantic-ui-react'
+import { Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import strings from '../utils/constants'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'
+import messages from '../utils/messages'
+import globalConfig from '../config.json'
+
+const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props) => {
-  const { element, isStrictPage, currentResponse, allResponses } = props
+  const { element, isStrictPage, isChanged, currentResponse, currentReview, allResponses } = props
 
   const {
     code,
@@ -61,6 +64,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
     evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
       objects: { responses: allResponses, currentUser },
       APIfetch: fetch,
+      graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     }).then((result: ElementPluginParameters) => {
       setEvaluatedParameters(result)
       setParametersReady(true)
@@ -79,7 +83,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
       isRequired,
       isStrictPage,
       responses,
-      evaluationParameters: { objects: { responses, currentUser }, APIfetch: fetch },
+      evaluationParameters: {
+        objects: { responses, currentUser },
+        APIfetch: fetch,
+        graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+      },
       currentResponse,
     })
     setValidationState(newValidationState)
@@ -149,12 +157,66 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
     />
   )
 
+  const changesToResponseProps: ChangesToResponseWarningProps = {
+    currentReview,
+    isChanged,
+    isValid: validationState ? (validationState.isValid as boolean) : true,
+  }
+
+  const displayResponseWarning = !!currentReview || (isChanged && validationState.isValid)
+
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        {parametersReady && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
+        <div
+          style={{
+            border: displayResponseWarning ? 'solid 1px' : 'transparent',
+            borderColor: isChanged ? 'blue' : !!currentReview ? 'red' : 'black',
+            borderRadius: 7,
+            padding: displayResponseWarning ? 4 : 5,
+            margin: 5,
+          }}
+        >
+          {parametersReady && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
+          <ChangesToResponseWarning {...changesToResponseProps} />
+        </div>
       </React.Suspense>
     </ErrorBoundary>
+  )
+}
+
+interface ChangesToResponseWarningProps {
+  currentReview?: ReviewResponse
+  isChanged: boolean
+  isValid: boolean
+}
+
+const ChangesToResponseWarning: React.FC<ChangesToResponseWarningProps> = ({
+  currentReview,
+  isChanged,
+  isValid,
+}) => {
+  const displayResponseWarning = currentReview || (isChanged && isValid)
+
+  return (
+    <div
+      style={{
+        color: isChanged ? 'grey' : 'red',
+        visibility: displayResponseWarning ? 'visible' : 'hidden',
+      }}
+    >
+      <Icon
+        name={
+          currentReview
+            ? isChanged
+              ? 'comment alternate outline'
+              : 'exclamation circle'
+            : 'info circle'
+        }
+        color={currentReview ? (isChanged ? 'grey' : 'red') : 'blue'}
+      />
+      {currentReview ? currentReview.comment : messages.APPLICATION_OTHER_CHANGES_MADE}
+    </div>
   )
 }
 

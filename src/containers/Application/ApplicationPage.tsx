@@ -38,7 +38,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
 
     // Re-direct based on application status
     if (fullStructure.info.current?.status !== ApplicationStatus.Draft)
-      replace(`/applicationNEW/${fullStructure.info.serial}`)
+      replace(`/application/${fullStructure.info.serial}`)
 
     // Re-direct if trying to access page higher than allowed
     if (!fullStructure.info.isLinear || !fullStructure.info?.firstStrictInvalidPage) return
@@ -46,14 +46,14 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
     const current = { sectionCode, pageNumber }
     if (!checkPageIsAccessible({ fullStructure, firstIncomplete, current })) {
       const { sectionCode, pageNumber } = firstIncomplete
-      push(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
+      push(`/application/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
     }
   }, [fullStructure, sectionCode, page])
 
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
   const {
-    info: { isLinear },
+    info: { isLinear, current },
   } = fullStructure
 
   return (
@@ -83,13 +83,13 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
           <Segment vertical style={{ marginBottom: 20 }}>
             <Header content={fullStructure.sections[sectionCode].details.title} />
             <PageElements
+              canEdit={current?.status === ApplicationStatus.Draft}
               elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
               responsesByCode={fullStructure.responsesByCode}
               isStrictPage={
                 sectionCode === strictSectionPage?.sectionCode &&
                 pageNumber === strictSectionPage?.pageNumber
               }
-              canEdit
             />
           </Segment>
         </Grid.Column>
