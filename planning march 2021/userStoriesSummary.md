@@ -1,38 +1,141 @@
+## Epic links
+
+### Start/Technical
+
+- [Epic #1](76) Schema documentation
+- [Epic #2](77) App routing
+- [Epic #6](74) Query Syntax and Actions plugin
+- [Epic #7](75) Question (Form Element) Plugins
+- [Epic #21](101) Structure refinements of hooks and new routing
+
+### Done
+
+- [Epic #8](70) Basic Application Skeleton
+- [Epic #9](73) In Progress application
+- [Epic #12](95) Login/Logout
+- [Epic #11](93) JWT Token & Permissions
+- [Epic #14](173) Application Submit
+- [Epic #20](100) Review of applications
+- [Epic #24](231) Application Start/End pages
+- [Epic #17](96) Create organisation
+- [Epic #42](475) Join organisation
+
+### In progress
+
+- [Epic #13](94) Application Changes Requested
+- [Epic #16](98) List and Filter applications
+- [Epic #18](97) Drug Registration
+- [Epic #19](99) Review Assignment
+- [Epic #22](165) Consolidation of Reviews
+- [Epic #23](249) Dashboard
+- [Epic #30](330) Lookup tables
+- [Epic #33](333) Application to PDF for download
+- [Epic #41](430) File upload management
+- [Epic #47](506) Display available actions
+
+### On hold:
+
+- [Epic #10](78) App Layout & menus
+- [Epic #31](331) Reviews History
+- [Epic #32](332) Emailing action
+- [Epic #34](334) Application final decision
+- [Epic #35](335) Applications renew
+- [Epic #36](336) Export/Import templates
+- [Epic #37](337) Grafana dashboard
+- [Epic #38](338) Public docs & tutorials
+- [Epic #39](339) Website & demo server
+- [Epic#40](340) Country Specific config
+
+### Epics to do (revised & new):
+
+- [Epic #43](502) Edit users permission in organisation
+- [Epic #44](503) List users permissions in organisation
+- [Epic #45](504) Applicant view applications permission
+- [Epic #46](505) Display filter in UI applications list
+- [Epic #48](507) Dashboard notifications
+- [Epic #49](508) Request organisation permission
+- [Epic #50](509) Import permit
+- [Epic #51](510) Generate certificate/expiry
+- [Epic #52](511) Delete application
+- [Epic #53](512) Deadline on applications
+- [Epic #54](513) Duplicate application
+- [Epic #55](514) Display company logo
+- [Epic #56](515) Notifications for upcoming renewals
+- [Epic #57](516) Organisation page
+
+### Epics To do/break-down:
+
+- [Epic #25](303) Other less-priority issues
+- [Epic #29](239) Template builder
+
 ## Features
 
 ### Org employee
 
-- [ ] Create user without an organisation - 1d
-- [ ] Join organisation - 1
+- [x] Join organisation - 1
+  - [Epic #12](95) Login/Logout
+  - [Epic #42](475) Join organisation
 - [ ] Edit user details - 2
+  - [Epic #43](502) Edit users permission in organisation
 - [ ] Should only see/edit application for their company and user - 1
-- [ ] Do updates on applications after "changes required" - 1
+  - [Epic #45](504) Applicant view applications by permission
+- [x] Do updates on applications after "changes required" - 1
+  - [Epic #13](94) Application Changes Requested
 - [ ] Get notified by email when "changes required" / "submitted" / "outcome changes" - 1
+  - [Epic #32](332) Emailing action
 - [ ] See application with different outcomes - 1
+  - [Epic #46](505) Display filter in UI of applications list
+  - [Epic #48](507) Dashboard notifications
 - [ ] Request admin permission in company - 3
+  - [Epic #49](508) Request organisation permission
 - [ ] Apply for drug registration - 1
-- [ ] And import permit - 2
+  - [Epic #18](97) Drug Registration
+- [ ] Apply for import permit - 2
+  - [Epic #50](509) Import permit
 - [ ] Receive evidence of drug registration and import permit - 2
-- [ ] Withdrawn application (less priority) - 3
+  - [Epic #51](510) Generate certificate/expiry
+- [ ] Withdrawn application - 3
+  - [Epic #52](511) Delete application
 - [ ] Delete a draft application - 2
+  - [Epic #52](511) Delete application
 - [ ] Select different organisation to apply for Drug registration and import permit - 2d
-- [ ] View applications by status "submitted", by dates and by outcome - 1
+  - [Epic #12](95) Login/Logout
+  - [Epic #18](97) Drug Registration
+  - [Epic #50](509) Import permit
+- [ ] View applications by status, by dates and by outcome - 1
+  - [Epic #16](98) List and Filter applications
+  - [Epic #46](505) Display filter in UI of applications list
 - [ ] View applications deadline which are waiting for "changes required" - 2
+  - [Epic #53](512) Deadline on applications
 - [ ] Duplicate/Export application - 3
+  - [Epic #33](333) Application to PDF for download
+  - [Epic #54](513) Duplicate application
 
 ### Org owner
 
 - [ ] Create a company - 1
+  - [Epic #17](96) Create organisation
 - [ ] Display company logo from application - 2
+  - [Epic #55](514) Display company logo
 - [ ] Apply to make changes to organisation - 3
 - [ ] Approve user joining organisation - 1
+  - [Epic #42](475) Join organisation
+  - [Epic #20](100) Review of applications
+  - [Epic #13](94) Application Changes Requested
 - [ ] View users permission on organisation - 2
+  - [Epic #44](503) List users permissions in organisation
 - [ ] Edit (add/delete) user permission on organisation - 2
+  - [Epic #43](502) Edit users permission in organisation
 - [ ] Remove user from organisation - 3
-- [ ] View organisation status - available/disabled, - renew date - 3
+  - TODO Epic: Remove users from organisation
+- [ ] View organisation: status - available/disabled, - renew date - 3
+  - [Epic #57](516) Organisation page
 - [ ] List of application results (i.e. import permits expiry dates) - 1
+  - [Epic #51](510) Generate certificate/expiry
 - [ ] Apply for more then one company - 2
+  - TODO Epic: Deal with multi-role user (Applicant/Reviewer)
 - [ ] Notifications for upcoming renewals (drug rego, import permits, etc..) - 3
+  - [Epic #56](515) Notifications for upcoming renewals
 
 ### Reviewer
 
@@ -43,7 +146,9 @@
 - [ ] See history of reviews of application in a previous "stage" in the review home page (yourself) - 2
 - [ ] See reviews done by others (after been submitted) for the same application when higher level permissions apply (others) - 3
 - [ ] Get notified by email when "assigned" / "available for self-assignment" / "outcome change" / "pending" / "changes requested" - 2
+  - [Epic #32](332) Emailing action
 - [ ] Start a review and see all questions assigned with a review option to `approve`/`decline` and make comments - 1
+- [ ] View history with previous responses or review changes required on each question - ?
 - [ ] Submit review when valid (either all `approved` or at least one `declined`) and make a decision based on validation - "List of questions" or "Non-conform" when at least one is `declined` / "Conform" when all is `approved` - 1
 - [ ] Get prompt before review is submitted with confirmation message indicating what will be sent to Applicant or to lower level reviewer for "changes requested" or to higher level reviewer. - 1
 - [ ] Data entry is saved on the go - 2
@@ -59,14 +164,17 @@
 - [ ] Review home page shows status and progress of associated reviews (and what I can do with each one) - 1 (duplicate?)
 - [ ] Can "self-assign" review if application and reviewLevel allows it - 1
 - [ ] Select which comments get sent to applicant in LOQ (if Level 2+) - 3
-- [ ] Get notified of new jobs -- assignments or changes submitted - 2 (duplicate)
 - [ ] Apply for permissions to perform new tasks/reviews - 3
 - [ ] Make changes to my reviews on request from a senior reviewer - 1
 - [ ] If senior reviewer, make Final decision for application (same as consolidator) - 1
 - [ ] Senior reviewer can make Final decision regardless of lower level recommendations (i.e. can overrule earlier reviews) - 3
 - [ ] When drug registration/import-permit/company is approved generates a certificate/permit/company - 1
+  - [Epic #51](510) Generate certificate/expiry
 - [ ] When drug registration/import-permit/company is declined, inform user of non conformity with message and generated document - 1
+  - [Epic #32](332) Emailing action
 - [ ] When consolidation/review (highest level) is submitted as LOQ, inform user of LOQ and generate LOQ document - 1
+  - [Epic #32](332) Emailing action
+  - [Epic #33](333) Application to PDF for download
 
 ### Assigner
 
@@ -78,6 +186,7 @@
 - [ ] Get prompt before re-assigning to other reviewer in case review has been started or submitted - 2
 - [ ] See assignment done by others when higher level permissions apply - 3
 - [ ] Get notified by email when new assignment task is required for an application (new application submitted, change of stage) - 2
+  - [Epic #32](332) Emailing action
 - [ ] Able to configure assigner for a stage and level 1 - 1
 - [ ] Able to configure assigner for a stage and any level - 3
 - [ ] Restrict reviewer configurations for reviewing a set of sections - 2
@@ -87,17 +196,26 @@
 ### Public user
 
 - [ ] View drug registrations (API)
+  - [Epic #51](510) Generate certificate/expiry
 - [ ] Create an account on the system 1d
+  - [Epic #12](95) Login/Logout
 - [ ] I can confirm my email address after creating user account
+  - [Epic #32](332) Emailing action
 
 ### Admin
 
 - [ ] Delete user from the system
+  - TODO Epic: Remove users from organisation
 - [ ] View permissions associated to user
+  - [Epic #44](503) List users permissions in organisation
 - [ ] Configure policies and permission names associated to act on templates
 - [ ] Import template ~~with core actions~~ with default permissions
 - [ ] Edit existing templates that can be tested and set as available
 - [ ] The system automatically cleans up stale applications, and auto-declines applications that have passed their deadlines (Scheduled Actions)
+- [ ] Setup number of application accepted daily/template
+- [ ] Setup expiry dates for templates
+- [ ] Setup localisation
+- [ ] Disable server to receive new applications
 
 ## Technical stories
 
@@ -111,35 +229,9 @@
 
 ## Deployment
 
+- [ ] Uploaded documentes hosting server
+
 ## Documentation
 
-- [ ] Creating new user and associating to organisations
-- [ ] Features available to Applicant users:
-- [ ] Apply to company
-- [ ] Change current company
-- [ ] Apply for Drug registration
-- [ ] Make changes required
-- [ ] Notifications by email
-- [ ] Dashboard & filters
-- [ ] View certificates for drugs
-- [ ] Features available to Reviewer users:
-- [ ] Login as FDS user, create new account for other FDS user
-- [ ] Review self-assignment
-- [ ] Assigning reviewers per section
-- [ ] Start/Continue review of sections assigned
-- [ ] Preview documents uploaded and make decision/comments per question
-- [ ] Consolidate reviews and send back to reviewer
-- [ ] See history of changes requested and review changes made
-- [ ] Review and make changes requested
-- [ ] Re-consolidate pending review (after changes requested submitted)
-- [ ] Submit List of Questions back to applicant
-- [ ] Make decision to Conform/Non-conform and submit review with change to outcome
-- [ ] List applications per outcome, assignee, stage, actionable, dates, etc
-- [ ] Login as Admin (on BW entry or initial setup with basic Admin credentials)
-- [ ] List of available templates, versions and applications in the system
-- [ ] Edit existing template using the template builder
-- [ ] Editing permission and grant/revoke user permissions
-- [ ] Create new admin user
-- [ ] Export/import template
-- [ ] Basic setup to access demo (Docker or server hosting)
-- [ ] Instructions on how to report bugs/improvements (using this repo)
+- [ ] External docs
+  - [Epic #38](338) Public docs & tutorials
