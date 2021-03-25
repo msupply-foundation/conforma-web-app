@@ -216,6 +216,23 @@
 - [ ] Setup expiry dates for templates
 - [ ] Setup localisation
 - [ ] Disable server to receive new applications
+- [ ] Update permissions associated with user/s
+- [ ] Upload templates for document generation and configure at what 'level', 'stage', 'outcome', 'role' and 'template' this documents should apply
+- [ ] Able to create new draft version of application template and edit it without affecting original 'live' version
+- [ ] Add/remove/edit - sections, stage and review levels
+- [ ] Add/remove/edit - Form elements (is visible, is required, is editable, parameters)
+- [ ] Add/remove/edit - Actions
+- [ ] Add/remove/edit - Template Permissions
+- [ ] Edit expiry and auto declined periods of applications for a template
+- [ ] Import/Export - Whole template
+- [ ] Import/Export - Template structure
+- [ ] Import/Export - Selected form elements
+- [ ] Import/Export - Actions
+- [ ] Import/Export - Permission Structure
+- [ ] Able to edit permission policies
+- [ ] Able to edit permission names
+- [ ] Can setup outcome tables and configure how they are populated (actions)
+- [ ] Can expose outcome tables (partial or as a whole) to public users
 
 ## Technical stories
 
