@@ -51,7 +51,7 @@ const PageElements: React.FC<PageElementProps> = ({
             const props: ApplicationViewWrapperPropsNEW = {
               element,
               isStrictPage,
-              isChanged: !!isChanged && !!isChangeRequest,
+              isNonRequiredChange: (isChanged as boolean) && !(isChangeRequest as boolean),
               allResponses: responsesByCode,
               currentResponse: responsesByCode?.[element.code],
               currentReview:

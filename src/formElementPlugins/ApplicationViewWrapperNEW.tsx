@@ -23,7 +23,14 @@ import globalConfig from '../config.json'
 const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props) => {
-  const { element, isStrictPage, isChanged, currentResponse, currentReview, allResponses } = props
+  const {
+    element,
+    isStrictPage,
+    isNonRequiredChange,
+    currentResponse,
+    currentReview,
+    allResponses,
+  } = props
 
   const {
     code,
@@ -159,11 +166,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
 
   const changesToResponseProps: ChangesToResponseWarningProps = {
     currentReview,
-    isChanged,
+    isNonRequiredChange,
     isValid: validationState ? (validationState.isValid as boolean) : true,
   }
 
-  const displayResponseWarning = !!currentReview || (isChanged && validationState.isValid)
+  const displayResponseWarning = !!currentReview || (isNonRequiredChange && validationState.isValid)
 
   return (
     <ErrorBoundary pluginCode={pluginCode}>
@@ -171,7 +178,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
         <div
           style={{
             border: displayResponseWarning ? 'solid 1px' : 'transparent',
-            borderColor: isChanged ? 'blue' : !!currentReview ? 'red' : 'black',
+            borderColor: isNonRequiredChange ? 'blue' : !!currentReview ? 'red' : 'black',
             borderRadius: 7,
             padding: displayResponseWarning ? 4 : 5,
             margin: 5,
@@ -187,33 +194,33 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
 
 interface ChangesToResponseWarningProps {
   currentReview?: ReviewResponse
-  isChanged: boolean
+  isNonRequiredChange: boolean
   isValid: boolean
 }
 
 const ChangesToResponseWarning: React.FC<ChangesToResponseWarningProps> = ({
   currentReview,
-  isChanged,
+  isNonRequiredChange,
   isValid,
 }) => {
-  const displayResponseWarning = currentReview || (isChanged && isValid)
+  const displayResponseWarning = !!currentReview || (isNonRequiredChange && isValid)
 
   return (
     <div
       style={{
-        color: isChanged ? 'grey' : 'red',
+        color: isNonRequiredChange ? 'grey' : 'red',
         visibility: displayResponseWarning ? 'visible' : 'hidden',
       }}
     >
       <Icon
         name={
           currentReview
-            ? isChanged
+            ? isNonRequiredChange
               ? 'comment alternate outline'
               : 'exclamation circle'
             : 'info circle'
         }
-        color={currentReview ? (isChanged ? 'grey' : 'red') : 'blue'}
+        color={currentReview ? (isNonRequiredChange ? 'grey' : 'red') : 'blue'}
       />
       {currentReview ? currentReview.comment : messages.APPLICATION_OTHER_CHANGES_MADE}
     </div>
