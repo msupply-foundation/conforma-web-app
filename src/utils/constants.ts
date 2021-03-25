@@ -31,6 +31,7 @@ export default {
   BUTTON_REVIEW_SUBMIT: 'Submit review',
   BUTTON_REVIEW_START: 'Start review',
   BUTTON_REVIEW_VIEW: 'View review',
+  BUTTON_SELF_ASSIGN: 'Self Assign',
   BUTTON_SUMMARY: 'Review & Summary',
   BUTTON_SUBMIT: 'Submit',
   BUTTON_SUMMARY_EDIT: 'Edit',

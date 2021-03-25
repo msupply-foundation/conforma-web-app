@@ -135,7 +135,7 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
 
   if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
 
-  return <Button onClick={selfAssignReview}>{strings.ACTION_START}</Button>
+  return <Button onClick={selfAssignReview}>{strings.BUTTON_SELF_ASSIGN}</Button>
 }
 
 // START REVIEW button

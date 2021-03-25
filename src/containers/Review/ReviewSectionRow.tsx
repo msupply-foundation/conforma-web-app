@@ -35,6 +35,8 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     filteredSectionIds: [sectionId],
   })
 
+  console.log(fullReviewStructure)
+
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!fullReviewStructure) return <Loading />
   const section = fullReviewStructure.sortedSections?.find(
@@ -54,9 +56,13 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     action: section?.reviewAction?.action || ReviewAction.unknown,
   }
 
+  const canRenderRow =
+    section?.reviewAction?.isReviewable ||
+    section?.reviewAction?.action === ReviewAction.canSelfAssign
+
   return (
     <>
-      {section?.reviewAction?.isReviewable && (
+      {canRenderRow && (
         <Grid columns="equal" verticalAlign="middle">
           <ReviewSectionRowAssigned {...props} />
           <ReviewSectionRowLastActionDate {...props} />
