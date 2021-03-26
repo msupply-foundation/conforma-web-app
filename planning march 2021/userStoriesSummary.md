@@ -179,19 +179,31 @@
 ### Assigner
 
 - [ ] Restrict visibility of applications where assigner is able to assign (for current stage) - 1
+  - [Epic #](518) Add and configure assign policy
 - [ ] See actionables in the list of applications to assign or re-assign - 1(assign) 2(re-assign)
+  - [Epic #47](506) Display available actions
 - [ ] See review home page with assignment of reviewers per section and progress if already submitted - 1
+  - [Epic #19](99) Review Assignment
 - [ ] Per section, show which reviewers can be assigned (based on the configuration) - 1
+  - [Epic #19](99) Review Assignment
 - [ ] Able to assign in review home page by section to user - 1
+  - [Epic #19](99) Review Assignment
 - [ ] Get prompt before re-assigning to other reviewer in case review has been started or submitted - 2
+  - [Epic #19](99) Review Assignment
 - [ ] See assignment done by others when higher level permissions apply - 3
+  - `note` -> epic can be shared with other user role stories where permissions are extended with 'supervisor' policy/permissionName
 - [ ] Get notified by email when new assignment task is required for an application (new application submitted, change of stage) - 2
   - [Epic #32](332) Emailing action
 - [ ] Able to configure assigner for a stage and level 1 - 1
+  - [Epic #19](99) Review Assignment
 - [ ] Able to configure assigner for a stage and any level - 3
+  - [Epic #](520) Assignment to work for all levels
 - [ ] Restrict reviewer configurations for reviewing a set of sections - 2
+  - [Epic #19](99) Review Assignment
 - [ ] Ability to set level of notifications - 3
+  - `note` -> epic can be shared with other user role stories about notifications
 - [ ] Can assign by question - 3
+  - [Epic #](521) Assignment by question
 
 ### Public user
 
@@ -204,35 +216,52 @@
 
 ### Admin
 
-- [ ] Delete user from the system
-  - TODO Epic: Remove users from organisation
+- [ ] Unlink/Delete user/organisation from the system
+  - [Epic #43](502) Edit users permission in organisation and organisation permission in the system
+- [ ] Update permissions associated with user/s
+  - [Epic #43](502) Edit users permission in organisation and organisation permission in the system
 - [ ] View permissions associated to user
   - [Epic #44](503) List users permissions in organisation
-- [ ] Configure policies and permission names associated to act on templates
-- [ ] Import template ~~with core actions~~ with default permissions
 - [ ] Edit existing templates that can be tested and set as available
-- [ ] The system automatically cleans up stale applications, and auto-declines applications that have passed their deadlines (Scheduled Actions)
-- [ ] Setup number of application accepted daily/template
-- [ ] Setup expiry dates for templates
-- [ ] Setup localisation
-- [ ] Disable server to receive new applications
-- [ ] Update permissions associated with user/s
-- [ ] Upload templates for document generation and configure at what 'level', 'stage', 'outcome', 'role' and 'template' this documents should apply
+  - [Epic #](527) Versioning templates
 - [ ] Able to create new draft version of application template and edit it without affecting original 'live' version
+  - [Epic #](527) Versioning templates
+- [ ] The system automatically cleans up stale applications, and auto-declines applications that have passed their deadlines (Scheduled Actions)
+  - [Epic #](525) Expiry and auto declined period and application limits of applications for a template
+- [ ] Edit expiry and auto declined period and application limits of applications for a template
+  - [Epic #](525) Expiry and auto declined period and application limits of applications for a template
+- [ ] Setup localisation
+  - [Epic #](528)
+- [ ] Upload templates for document generation and configure at what 'level', 'stage', 'outcome', 'role' and 'template' this documents should apply
+  - [Epic #33](333) Application PDF tempaltes
 - [ ] Add/remove/edit - sections, stage and review levels
+  - [Epic #](529) - Application Template structure and general info configurations
 - [ ] Add/remove/edit - Form elements (is visible, is required, is editable, parameters)
+  - [Epic #](539) Application Template configurations of Form Elements
 - [ ] Add/remove/edit - Actions
+  - [Epic #](530) - Application Template configuration of Actions
 - [ ] Add/remove/edit - Template Permissions
-- [ ] Edit expiry and auto declined periods of applications for a template
 - [ ] Import/Export - Whole template
+  - [Epic #](523) Import and Export Template
 - [ ] Import/Export - Template structure
+  - [Epic #](523) Import and Export Template
 - [ ] Import/Export - Selected form elements
+  - [Epic #](523) Import and Export Template
 - [ ] Import/Export - Actions
+  - [Epic #](523) Import and Export Template
 - [ ] Import/Export - Permission Structure
+  - [Epic #](523) Import and Export Template
 - [ ] Able to edit permission policies
+  - [Epic #](532) Able to edit permission policies and names
 - [ ] Able to edit permission names
+  - [Epic #](532) Able to edit permission policies and names
+- [ ] Able to edit Permission Structure
+  - [Epic #](533) Configurations of template permissions
 - [ ] Can setup outcome tables and configure how they are populated (actions)
+  - [Epic #51](510) Generate certificate/expiry
 - [ ] Can expose outcome tables (partial or as a whole) to public users
+  - [Epic #](534) Expose tables to public
+- [ ] Disable server to receive new applications (andrei - not sure what this is)
 
 ## Technical stories
 
