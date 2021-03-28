@@ -266,16 +266,21 @@
 ## Technical stories
 
 - [ ] Layout using fonts and colours as designed
+  - [Epic #](545) Apply designer styles
 - [ ] Get build process working, including serving plugins through module federation
+  - [Epic #](541) Front and Back end plugin system production ready
 - [ ] Deployment
-- [ ] Demo server
+  - [Epic #](543) Production build (back and front end)
 - [ ] Docker instance for interested parties
+  - [Epic #](543) Production build (back and front end)
+- [ ] Demo server
+  - [Epic #](544) Demo server
 
 ## Admin documentation
 
 ## Deployment
 
-- [ ] Uploaded documentes hosting server
+- [ ] Uploaded documentes hosting server ?
 
 ## Documentation
 
