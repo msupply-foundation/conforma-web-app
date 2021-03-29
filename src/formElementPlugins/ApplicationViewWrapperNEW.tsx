@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperPropsNEW, PluginComponents, ValidationState } from './types'
-import { ReviewResponse, useUpdateResponseMutation } from '../utils/generated/graphql'
+import { useUpdateResponseMutation } from '../utils/generated/graphql'
 import {
   EvaluatorParameters,
   LooseString,
@@ -23,14 +23,7 @@ import globalConfig from '../config.json'
 const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props) => {
-  const {
-    element,
-    isStrictPage,
-    isNonRequiredChange,
-    currentResponse,
-    currentReview,
-    allResponses,
-  } = props
+  const { element, isStrictPage, changesRequired, currentResponse, allResponses } = props
 
   const {
     code,
@@ -164,65 +157,72 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
     />
   )
 
-  const changesToResponseProps: ChangesToResponseWarningProps = {
-    currentReview,
-    isNonRequiredChange,
-    isValid: validationState ? (validationState.isValid as boolean) : true,
+  const getResponseAndBorder = () => {
+    if (!changesRequired) return null
+    const { isChangeRequest, isChanged } = changesRequired
+    const isValid = validationState ? (validationState.isValid as boolean) : true
+    const displayResponseWarning = isChangeRequest || (isChanged && isValid)
+    return (
+      <div
+        style={{
+          border: displayResponseWarning ? 'solid 1px' : 'transparent',
+          borderColor: isChangeRequest ? (isChanged ? 'black' : 'red') : 'blue',
+          borderRadius: 7,
+          padding: displayResponseWarning ? 4 : 5,
+          margin: 5,
+        }}
+      >
+        {parametersReady && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
+        <ChangesToResponseWarning {...changesRequired} isValid={isValid} />
+      </div>
+    )
   }
-
-  const displayResponseWarning = !!currentReview || (isNonRequiredChange && validationState.isValid)
 
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        <div
-          style={{
-            border: displayResponseWarning ? 'solid 1px' : 'transparent',
-            borderColor: isNonRequiredChange ? 'blue' : !!currentReview ? 'red' : 'black',
-            borderRadius: 7,
-            padding: displayResponseWarning ? 4 : 5,
-            margin: 5,
-          }}
-        >
-          {parametersReady && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
-          <ChangesToResponseWarning {...changesToResponseProps} />
-        </div>
+        {changesRequired ? (
+          getResponseAndBorder()
+        ) : (
+          <Form.Field required={isRequired}>{PluginComponent}</Form.Field>
+        )}
       </React.Suspense>
     </ErrorBoundary>
   )
 }
 
 interface ChangesToResponseWarningProps {
-  currentReview?: ReviewResponse
-  isNonRequiredChange: boolean
+  isChangeRequest: boolean
+  isChanged: boolean
+  reviewerComment: string
   isValid: boolean
 }
 
 const ChangesToResponseWarning: React.FC<ChangesToResponseWarningProps> = ({
-  currentReview,
-  isNonRequiredChange,
+  isChangeRequest,
+  isChanged,
+  reviewerComment,
   isValid,
 }) => {
-  const displayResponseWarning = !!currentReview || (isNonRequiredChange && isValid)
-
+  const displayResponseWarning = isChangeRequest || (isChanged && isValid)
   return (
     <div
       style={{
-        color: isNonRequiredChange ? 'grey' : 'red',
+        color: isChangeRequest && isChanged && isValid ? 'grey' : 'red',
         visibility: displayResponseWarning ? 'visible' : 'hidden',
       }}
     >
       <Icon
         name={
-          currentReview
-            ? isNonRequiredChange
+          isChangeRequest
+            ? isChanged
               ? 'comment alternate outline'
               : 'exclamation circle'
             : 'info circle'
         }
-        color={currentReview ? (isNonRequiredChange ? 'grey' : 'red') : 'blue'}
+        color={isChangeRequest ? (isChanged ? 'grey' : 'red') : 'blue'}
       />
-      {currentReview ? currentReview.comment : messages.APPLICATION_OTHER_CHANGES_MADE}
+      {isChangeRequest ? reviewerComment : messages.APPLICATION_OTHER_CHANGES_MADE}
     </div>
   )
 }
