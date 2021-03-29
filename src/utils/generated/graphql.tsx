@@ -1687,6 +1687,7 @@ export enum Trigger {
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
   OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
+  DevTest = 'DEV_TEST',
   OnScheduleTime = 'ON_SCHEDULE_TIME',
   Processing = 'PROCESSING',
   Error = 'ERROR'
@@ -2281,6 +2282,8 @@ export type ApplicationResponseFilter = {
   templateElementId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<ApplicationResponseStatusFilter>;
   /** Filter by the object’s `value` field. */
   value?: Maybe<JsonFilter>;
   /** Filter by the object’s `isValid` field. */
@@ -2310,6 +2313,37 @@ export type ApplicationResponseFilter = {
   /** Negates the expression. */
   not?: Maybe<ApplicationResponseFilter>;
 };
+
+/** A filter to be used against ApplicationResponseStatus fields. All fields are combined with a logical ‘and.’ */
+export type ApplicationResponseStatusFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<ApplicationResponseStatus>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<ApplicationResponseStatus>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<ApplicationResponseStatus>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<ApplicationResponseStatus>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<ApplicationResponseStatus>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<ApplicationResponseStatus>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<ApplicationResponseStatus>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<ApplicationResponseStatus>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<ApplicationResponseStatus>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<ApplicationResponseStatus>;
+};
+
+export enum ApplicationResponseStatus {
+  Draft = 'DRAFT',
+  Submitted = 'SUBMITTED'
+}
 
 /** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationResponseToManyReviewResponseFilter = {
@@ -5442,6 +5476,8 @@ export enum ApplicationResponsesOrderBy {
   TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
   ValueAsc = 'VALUE_ASC',
   ValueDesc = 'VALUE_DESC',
   IsValidAsc = 'IS_VALID_ASC',
@@ -5460,6 +5496,8 @@ export type ApplicationResponseCondition = {
   templateElementId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: Maybe<ApplicationResponseStatus>;
   /** Checks for equality with the object’s `value` field. */
   value?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isValid` field. */
@@ -5488,6 +5526,7 @@ export type ApplicationResponse = Node & {
   id: Scalars['Int'];
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -11048,6 +11087,7 @@ export type ApplicationResponseOnApplicationResponseForApplicationResponseApplic
 export type UpdateApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -11240,6 +11280,7 @@ export type ApplicationResponseOnApplicationResponseForApplicationResponseTempla
 export type UpdateApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -13408,6 +13449,7 @@ export type UpdateApplicationResponseOnReviewResponseForReviewResponseApplicatio
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -13927,6 +13969,7 @@ export type UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -14133,6 +14176,7 @@ export type ApplicationResponsePatch = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -14147,6 +14191,7 @@ export type FileApplicationResponseIdFkeyApplicationResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -14664,6 +14709,7 @@ export type ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInpu
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -16077,6 +16123,7 @@ export type TemplateElementOnApplicationResponseForApplicationResponseTemplateEl
 export type ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -16304,6 +16351,7 @@ export type ApplicationOnApplicationResponseForApplicationResponseApplicationIdF
 export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -17343,6 +17391,7 @@ export type ApplicationResponseInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -21304,6 +21353,7 @@ export type UpdateReviewResponseMutation = (
 
 export type GetAllResponsesQueryVariables = Exact<{
   serial: Scalars['String'];
+  responseStatuses?: Maybe<Array<ApplicationResponseStatus>>;
 }>;
 
 
@@ -22279,11 +22329,11 @@ export type UpdateReviewResponseMutationHookResult = ReturnType<typeof useUpdate
 export type UpdateReviewResponseMutationResult = Apollo.MutationResult<UpdateReviewResponseMutation>;
 export type UpdateReviewResponseMutationOptions = Apollo.BaseMutationOptions<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>;
 export const GetAllResponsesDocument = gql`
-    query getAllResponses($serial: String!) {
+    query getAllResponses($serial: String!, $responseStatuses: [ApplicationResponseStatus!]) {
   applicationBySerial(serial: $serial) {
     id
     serial
-    applicationResponses(orderBy: TIME_UPDATED_DESC) {
+    applicationResponses(orderBy: TIME_UPDATED_DESC, filter: {status: {in: $responseStatuses}}) {
       nodes {
         ...Response
         reviewResponses(condition: {isVisibleToApplicant: true}) {
@@ -22311,6 +22361,7 @@ ${ReviewResponseFragmentFragmentDoc}`;
  * const { data, loading, error } = useGetAllResponsesQuery({
  *   variables: {
  *      serial: // value for 'serial'
+ *      responseStatuses: // value for 'responseStatuses'
  *   },
  * });
  */
