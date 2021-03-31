@@ -163,6 +163,7 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 - **description\***: `string` -- as above [Optional]
 - **options\***: `array[string | object]` -- as above (in [Drop-down](#dropdown))
 - **default**: `string`/`number` -- the value initially selected before user input. If `number`, refers to the index of the options array. If not provided, no options will be pre-selected.
+- **optionsDisplayProperty**: -- as above (in Drop-down)
 - **hasOther**: `boolean` (default `false`) -- if `true`, displays an additional "Other" option with a free text field for inputting additional user-defined option.
 - **otherPlaceholder**: `string` -- placeholder text to show in the text input if `hasOther` is enabled.
 
