@@ -87,6 +87,7 @@ export function UserProvider({ children }: UserProviderProps) {
     user: User | undefined = undefined,
     permissions: TemplatePermissions | undefined = undefined
   ) => {
+    if (JWT == undefined) logout()
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem('persistJWT', JWT)
     if (!user || !permissions) fetchUserInfo({ dispatch: setUserState })
