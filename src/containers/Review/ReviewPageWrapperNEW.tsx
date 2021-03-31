@@ -22,6 +22,7 @@ const ReviewPageWrapperNEW: React.FC<{
     structure,
     firstRunValidation: false,
     shouldCalculateProgress: false,
+    shouldGetDraftResponses: false,
   })
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />

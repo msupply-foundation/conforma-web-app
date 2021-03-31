@@ -10,6 +10,9 @@ import { useUserState } from '../../contexts/UserState'
 import { EvaluatorParameters } from '../../utils/types'
 import { getTemplateSections } from '../helpers/application/getSectionsDetails'
 import { TemplateDetails } from '../types'
+import config from '../../config.json'
+
+const graphQLEndpoint = config.serverGraphQL
 
 interface useLoadTemplateProps {
   templateCode?: string
@@ -62,6 +65,7 @@ const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
     const evaluatorParams: EvaluatorParameters = {
       objects: { currentUser },
       APIfetch: fetch,
+      graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     }
     evaluate(template?.startMessage || '', evaluatorParams).then((startMessage: any) => {
       setTemplate({
