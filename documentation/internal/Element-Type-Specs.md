@@ -5,6 +5,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
 - [Template Element fields](#element-fields)
 - [Question/Element types](#types)
   - [Short Text Input](#short-text)
+  - [Long Text (Multi-line) Input](#long-text)
   - [Password](#password)
   - [Text Information](#text)
   - [Drop-down Selector](#dropdown)
@@ -59,6 +60,29 @@ _Free-form, single-line text input element_
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
 - **maskedInput**: `boolean` -- if `true`, displays user input as masked (hidden) characters -- i.e. for passwords. [Optional]
 - ~~**minWidth**/**maxWidth**: `integer` -- optional controls over visual display [Optional]~~ _(Not currently implemented -- We may never use these)_
+
+#### Response type
+
+_This describes the expected object that will be stored in the `application_response` table `value` field from the user's response_  
+`{ text: <string> }`
+
+---
+
+<a name="long-text"/>
+
+### Long Text (Multi-line) Input
+
+- **type/code**: `longText`
+- **category**: `Question`
+
+_Free-form, multi-line text input element_
+
+#### Input parameters (in the `parameters` JSON)
+
+- **label\***: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
+- **description\***: `string` -- additional explanatory text (usually not required) [Optional]
+- **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
+- **lines**: `number` -- height of the TextArea input, in number of lines/rows (default: 5)
 
 #### Response type
 
