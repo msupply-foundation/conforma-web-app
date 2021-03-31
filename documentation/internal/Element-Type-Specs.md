@@ -7,8 +7,8 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - [Short Text Input](#short-text)
   - [Password](#password)
   - [Text Information](#text)
-  - [Radio Buttons](#radio)
   - [Drop-down Selector](#dropdown)
+  - [Radio Buttons](#radio)
   - [Checkboxes](#checkbox)
   - [File Upload](#file)
   - [Page Break](#page)
@@ -118,37 +118,6 @@ _For displaying blocks of text in the application_
 
 ---
 
-<a name="radio"/>
-### Radio Buttons
-
-- **type/code**: `radioChoice`
-- **category**: `Question`
-
-_Multi-choice question, with one allowed selection, displayed as labelled radio buttons_
-
-#### Input parameters
-
-- **label\***: `string` -- as above
-- **description\***: `string` -- as above [Optional]
-- **options\***: `array[string]` -- the options for the radio buttons
-- **default**: `string`/`number` -- the value initially selected before user input. If `number`, refers to the index of the options array. If not provided, no options will be pre-selected.
-- **hasOther**: `boolean` (default `false`) -- if `true`, displays an additional "Other" option with a free text field for inputting additional user-defined option.
-- **otherPlaceholder**: `string` -- placeholder text to show in the text input if `hasOther` is enabled.
-
-#### Response type
-
-```
-{
-  optionIndex: <integer> (index from the options array)
-  text: <string> (actual text from options array)
-  reference?: To-do: some way to link the response to an entity in database (e.g. an organisation)
-  -- @nmadruga maybe you have an idea of what we'd need here
-}
-
-```
-
----
-
 <a name="dropdown"/>
 ### Drop-down Selector
 
@@ -180,6 +149,35 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 
 ---
 
+<a name="radio"/>
+### Radio Buttons
+
+- **type/code**: `radioChoice`
+- **category**: `Question`
+
+_Multi-choice question, with one allowed selection, displayed as labelled radio buttons_
+
+#### Input parameters
+
+- **label\***: `string` -- as above
+- **description\***: `string` -- as above [Optional]
+- **options\***: `array[string | object]` -- as above (in [Drop-down](#dropdown))
+- **default**: `string`/`number` -- the value initially selected before user input. If `number`, refers to the index of the options array. If not provided, no options will be pre-selected.
+- **hasOther**: `boolean` (default `false`) -- if `true`, displays an additional "Other" option with a free text field for inputting additional user-defined option.
+- **otherPlaceholder**: `string` -- placeholder text to show in the text input if `hasOther` is enabled.
+
+#### Response type
+
+````
+{
+  optionIndex: <integer> (index from the options array)
+  text: <string> (actual text from options array)
+  reference?: To-do: some way to link the response to an entity in database (e.g. an organisation)
+  -- @nmadruga maybe you have an idea of what we'd need here
+}
+
+```---
+
 <a name="checkbox"/>
 ### Checkboxes
 
@@ -194,14 +192,16 @@ _One or more checkboxes, any number of which can be selected/toggled_
 - **description\***: `string` -- as above [Optional]
 - **checkboxes\***: `array[string | checkbox]` -- an array of labels, one per checkbox. For more complexity, an array of Checkbox objects can be provided with the following properties:
 
-  ```
-   {
-     label: <string> - text to display next to checkbox (Can be empty string but not omitted)
-     text: <string> - value to store in Response "text" field and shown in Summary View. Will be same as label if omitted.
-     key: <string | number> - unique code used as key/property name for Response object. Defaults to numerical index of array if omitted
-     selected: <boolean> - initial state of checkbox
-   }
-  ```
+````
+
+{
+label: <string> - text to display next to checkbox (Can be empty string but not omitted)
+text: <string> - value to store in Response "text" field and shown in Summary View. Will be same as label if omitted.
+key: <string | number> - unique code used as key/property name for Response object. Defaults to numerical index of array if omitted
+selected: <boolean> - initial state of checkbox
+}
+
+```
 
 - **type**: `string` -- Can be "toggle" to display as a toggle switch, or "slider" to display as a slider switch (defaults to regular checkbox).
 - **layout**: `string` -- if "inline", displays checkboxes horizontally in rows. Useful if there are a lot of checkboxes.
@@ -209,13 +209,14 @@ _One or more checkboxes, any number of which can be selected/toggled_
 #### Response type
 
 ```
+
 {
-  text: <string> -- comma separated list of all selected checkbox "text" values, shown in Summary view (or Review)
-  values: {
-            <key-name-1> : { text: <text value>, isSelected: <boolean>}
-            <key-name-2> : { text: <text value>, isSelected: <boolean>}
-            ... for all checkbox keys
-          }
+text: <string> -- comma separated list of all selected checkbox "text" values, shown in Summary view (or Review)
+values: {
+<key-name-1> : { text: <text value>, isSelected: <boolean>}
+<key-name-2> : { text: <text value>, isSelected: <boolean>}
+... for all checkbox keys
+}
 }
 
 ```
@@ -243,17 +244,18 @@ _Interface for uploading documents or other files_
 Response object is populated after file upload, based on the server response. Note: only successful uploads are included in the response. Error files or files currently loading are displayed in the UI but filtered out before saving.
 
 ```
+
 {
-  text: <string> -- comma separated list of all filenames
-  files: [
-      {
-        filename: <string>
-        fileUrl: <string>
-        thumbnailUrl: <string>
-        mimetype: <string>
-      },
-      ...
-  ]
+text: <string> -- comma separated list of all filenames
+files: [
+{
+filename: <string>
+fileUrl: <string>
+thumbnailUrl: <string>
+mimetype: <string>
+},
+...
+]
 }
 
 ```
@@ -274,3 +276,4 @@ _For specifying where the list of questions is broken into UI pages/steps. The *
   - ~~default: `false`~~
 
 ---
+```
