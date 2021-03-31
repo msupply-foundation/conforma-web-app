@@ -214,12 +214,12 @@ _One or more checkboxes, any number of which can be selected/toggled_
 ```
 
 {
-  text: <string> -- comma separated list of all selected checkbox "text" values, shown in Summary view (or Review)
-  values: {
-    <key-name-1> : { text: <text value>, isSelected: <boolean>}
-    <key-name-2> : { text: <text value>, isSelected: <boolean>}
-    ... for all checkbox keys
-    }
+    text: <string> -- comma separated list of all selected checkbox "text" values, shown in Summary view (or Review)
+    values: {
+        <key-name-1> : { text: <text value>, isSelected: <boolean>}
+        <key-name-2> : { text: <text value>, isSelected: <boolean>}
+        ... for all checkbox keys
+        }
 }
 
 ```
@@ -249,16 +249,16 @@ Response object is populated after file upload, based on the server response. No
 ```
 
 {
-text: <string> -- comma separated list of all filenames
-files: [
-{
-filename: <string>
-fileUrl: <string>
-thumbnailUrl: <string>
-mimetype: <string>
-},
-...
-]
+  text: <string> -- comma separated list of all filenames
+  files: [
+    {
+      filename: <string>
+      fileUrl: <string>
+      thumbnailUrl: <string>
+      mimetype: <string>
+    },
+    ...
+  ]
 }
 
 ```
