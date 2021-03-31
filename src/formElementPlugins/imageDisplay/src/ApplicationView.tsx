@@ -1,14 +1,19 @@
 import React from 'react'
-import { Message } from 'semantic-ui-react'
+import { Image } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters }) => {
-  const { url, maxWidth, maxHeight, alignment, altText } = parameters
+  const { url, size, alignment, altText } = parameters
 
   return (
-    <Message>
-      <Message.Header>{parameters.title}</Message.Header>
-    </Message>
+    <Image
+      src={url}
+      size={size || 'medium'}
+      // Have to do a bit of trickery in terms margin over-rides to get
+      // right alignment working
+      centered={alignment === 'center' || alignment === 'right'}
+      style={alignment === 'right' ? { marginRight: 'unset' } : {}}
+    />
   )
 }
 
