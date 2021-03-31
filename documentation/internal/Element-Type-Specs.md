@@ -161,10 +161,11 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 
 - **label\***: `string` -- as above
 - **description\***: `string` -- as above [Optional]
-- **options\***: `array[string]` -- as above
+- **options\***: `array[string | object]` -- array of options for the user to select from. If an array of **strings** is provided, these strings will be displayed to the user. However, if an array of **objects** is provided, you will also need to specify an `optionsDisplayProperty` (see below)
 - **default**: `string`/`number` -- if not provided, defaults to index 0.
 - **search**: `boolean` (default: `false`) -- if `true`, the list of options can be searched and filtered by user
-- **hasOther**: `boolean` -- if `true`, an additional text-entry field is provided so the user can add their own alternative option _(not yet implemented)_
+- **optionsDisplayProperty**: If `options` (above) consists of an array of objects, this parameter specifies the field of each object to be displayed in the options list. For example, if `options` was a list of companies, you'd probably specify `name` as the `optionsDisplayProperty`. Note that even though one field is displayed to the user in the Dropdown list, the _entire_ selected object is saved as the selection.
+- ~~**hasOther**: `boolean` -- if `true`, an additional text-entry field is provided so the user can add their own alternative option _(not yet implemented)_~~
 
 #### Response type
 
@@ -172,7 +173,7 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 {
   optionIndex: <integer> (index from the options array)
   text: <string> (actual text from options array)
-  reference?: To-do -- as above
+  selection: <string | object> (entire object or string from the supplied options list)
 }
 
 ```
