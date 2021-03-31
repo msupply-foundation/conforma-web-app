@@ -56,7 +56,7 @@ type ValidationState = {
 interface ApplicationViewProps extends ApplicationViewWrapperProps {
   onUpdate: Function
   onSave: Function
-  value: string // TODO: Change to allow object with any shape
+  value: any
   setValue: (text: string) => void // TO update the value on the ApplicationViewWrapper
   setIsActive: () => void
   validationState: ValidationState
