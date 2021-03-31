@@ -8,6 +8,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - [Long Text (Multi-line) Input](#long-text)
   - [Password](#password)
   - [Text Information](#text)
+  - [Image Display](#image)
   - [Drop-down Selector](#dropdown)
   - [Radio Buttons](#radio)
   - [Checkboxes](#checkbox)
@@ -142,6 +143,25 @@ _For displaying blocks of text in the application_
 
 ---
 
+<a name="image"/>
+### Image Display
+
+- **type/code**: `imageDisplay`
+- **category**: `Information`
+
+_For displaying images in applications_
+
+#### Input parameters
+
+- **label\***: `string` -- Label for image (above) [Optional]
+- **description\***: `string` -- Detailed text [Optional]
+- **url\***: `string` -- URL of the source image file
+- **size\***: `string` -- From SemanticUI "size" parameter, one of the following values: `mini`, `tiny`, `small`, `medium`, `large`, `big`, `huge`, `massive` (default `medium`)
+- **alignment\***: `string` -- one of `left`, `center`, `right` (default `left`)
+- **altText\***: `string` -- text for the HTML `alt` and `title` attributes (will show as tool-tip) [Optional]
+
+---
+
 <a name="dropdown"/>
 ### Drop-down Selector
 
@@ -157,7 +177,7 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 - **options\***: `array[string | object]` -- array of options for the user to select from. If an array of **strings** is provided, these strings will be displayed to the user. However, if an array of **objects** is provided, you will also need to specify an `optionsDisplayProperty` (see below)
 - **default**: `string`/`number` -- if not provided, defaults to index 0.
 - **search**: `boolean` (default: `false`) -- if `true`, the list of options can be searched and filtered by user
-- **optionsDisplayProperty**: If `options` (above) consists of an array of objects, this parameter specifies the field of each object to be displayed in the options list. For example, if `options` was a list of organisation objects (i.e. `{orgId, name, licenceNumber}`), you'd probably specify `name` as the `optionsDisplayProperty`. Note that even though one field is displayed to the user in the Dropdown list, the _entire_ selected object is saved as the selection.
+- **optionsDisplayProperty**: If `options` (above) consists of an array of objects, this parameter specifies the field of each object to be displayed in the options list. For example, if `options` was a list of organisation objects (i.e. `{orgId, name, licenceNumber}`), you`d probably specify `name`as the`optionsDisplayProperty`. Note that even though one field is displayed to the user in the Dropdown list, the _entire_ selected object is saved as the selection.
 - ~~**hasOther**: `boolean` -- if `true`, an additional text-entry field is provided so the user can add their own alternative option _(not yet implemented)_~~
 
 #### Response type
