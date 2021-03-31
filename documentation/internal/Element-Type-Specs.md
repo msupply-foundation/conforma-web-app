@@ -128,10 +128,12 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 
 #### Input parameters
 
-- **labe\*l**: `string` -- as above
+- **label\***: `string` -- as above
 - **description\***: `string` -- as above [Optional]
 - **options\***: `array[string]` -- the options for the radio buttons
 - **default**: `string`/`number` -- the value initially selected before user input. If `number`, refers to the index of the options array. If not provided, no options will be pre-selected.
+- **hasOther**: `boolean` (default `false`) -- if `true`, displays an additional "Other" option with a free text field for inputting additional user-defined option.
+- **otherPlaceholder**: `string` -- placeholder text to show in the text input if `hasOther` is enabled.
 
 #### Response type
 
