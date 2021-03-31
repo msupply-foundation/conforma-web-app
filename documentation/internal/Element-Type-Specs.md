@@ -168,15 +168,17 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 
 #### Response type
 
-````
+```
 {
   optionIndex: <integer> (index from the options array)
-  text: <string> (actual text from options array)
-  reference?: To-do: some way to link the response to an entity in database (e.g. an organisation)
-  -- @nmadruga maybe you have an idea of what we'd need here
+  text: <string> (actual text from options array, will be "Other: <value>" if "Other" is selected)
+  selection: <string | object> (entire object or string from the supplied options list)
+  other: <string> (text of the "Other" selection, only present if "Other" is selected)
 }
 
-```---
+```
+
+---
 
 <a name="checkbox"/>
 ### Checkboxes
@@ -192,13 +194,13 @@ _One or more checkboxes, any number of which can be selected/toggled_
 - **description\***: `string` -- as above [Optional]
 - **checkboxes\***: `array[string | checkbox]` -- an array of labels, one per checkbox. For more complexity, an array of Checkbox objects can be provided with the following properties:
 
-````
+```
 
 {
-label: <string> - text to display next to checkbox (Can be empty string but not omitted)
-text: <string> - value to store in Response "text" field and shown in Summary View. Will be same as label if omitted.
-key: <string | number> - unique code used as key/property name for Response object. Defaults to numerical index of array if omitted
-selected: <boolean> - initial state of checkbox
+  label: <string> - text to display next to checkbox (Can be empty string but not omitted)
+  text: <string> - value to store in Response "text" field and shown in Summary View. Will be same as label if omitted.
+  key: <string | number> - unique code used as key/property name for Response object. Defaults to numerical index of array if omitted
+  selected: <boolean> - initial state of checkbox
 }
 
 ```
@@ -211,12 +213,12 @@ selected: <boolean> - initial state of checkbox
 ```
 
 {
-text: <string> -- comma separated list of all selected checkbox "text" values, shown in Summary view (or Review)
-values: {
-<key-name-1> : { text: <text value>, isSelected: <boolean>}
-<key-name-2> : { text: <text value>, isSelected: <boolean>}
-... for all checkbox keys
-}
+  text: <string> -- comma separated list of all selected checkbox "text" values, shown in Summary view (or Review)
+  values: {
+    <key-name-1> : { text: <text value>, isSelected: <boolean>}
+    <key-name-2> : { text: <text value>, isSelected: <boolean>}
+    ... for all checkbox keys
+    }
 }
 
 ```
@@ -276,4 +278,7 @@ _For specifying where the list of questions is broken into UI pages/steps. The *
   - ~~default: `false`~~
 
 ---
+
+```
+
 ```
