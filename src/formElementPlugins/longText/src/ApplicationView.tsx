@@ -14,7 +14,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onSave,
   Markdown,
 }) => {
-  const { placeholder, label, description, rows, maxLength } = parameters
+  const { label, description, placeholder, rows } = parameters
 
   useEffect(() => {
     onUpdate(value)
