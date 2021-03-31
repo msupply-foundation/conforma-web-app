@@ -6,8 +6,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   code,
   parameters,
   onUpdate,
-  value,
-  setValue,
+  // value,
+  // setValue,
   isEditable,
   currentResponse,
   validationState,
@@ -20,35 +20,50 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     description,
     options,
     default: defaultOption,
+    optionsDisplayProperty,
     hasOther,
     otherPlaceholder,
   } = parameters
 
   const [otherText, setOtherText] = useState<string>()
+  const [selectedIndex, setSelectedIndex] = useState<number>()
 
   const allOptions = [...options]
   if (hasOther) allOptions.push('Other')
 
   useEffect(() => {
-    onUpdate(value)
+    onUpdate(currentResponse)
     // This ensures that, if a default is specified, it gets saved on first load
-    if (!value && defaultOption !== undefined) {
-      const defaultIndex = getDefaultIndex(defaultOption, allOptions)
-      const defaultValue = allOptions?.[defaultIndex]
+    if (!currentResponse && defaultOption !== undefined) {
+      const optionIndex = getDefaultIndex(defaultOption, options)
       onSave({
-        text: defaultValue,
-        optionIndex: defaultIndex,
+        text: optionsDisplayProperty
+          ? allOptions[optionIndex][optionsDisplayProperty]
+          : allOptions[optionIndex],
+        selection: allOptions[optionIndex],
+        optionIndex,
       })
-      setValue(defaultValue)
+    }
+    if (currentResponse) {
+      const { optionIndex } = currentResponse
+      setSelectedIndex(optionIndex)
     }
   }, [])
 
   function handleChange(e: any, data: any) {
-    const { value, index } = data
-    setValue(value)
+    const { index: optionIndex } = data
+    console.log('Othertext', otherText)
+    setSelectedIndex(optionIndex)
     onSave({
-      text: hasOther && value === 'Other: ' ? 'Other' + otherText : value,
-      optionIndex: index,
+      text:
+        hasOther && selectedIndex === allOptions.length - 1
+          ? 'Other: ' + otherText
+          : optionsDisplayProperty
+          ? allOptions[optionIndex][optionsDisplayProperty]
+          : allOptions[optionIndex],
+      selection: allOptions[optionIndex],
+      optionIndex,
+      other: hasOther ? otherText : undefined,
     })
   }
 
@@ -59,9 +74,19 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   function handleOtherLoseFocus(e: any) {
     onSave({
       text: 'Other: ' + otherText,
+      selection: allOptions[allOptions.length - 1],
       optionIndex: allOptions.length - 1,
+      other: hasOther ? otherText : undefined,
     })
   }
+
+  const radioButtonOptions = allOptions.map((option: any, index: number) => {
+    return {
+      key: `${index}_${option}`,
+      text: optionsDisplayProperty ? option[optionsDisplayProperty] : option,
+      value: index,
+    }
+  })
 
   return (
     <>
@@ -69,24 +94,23 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Markdown text={label} semanticComponent="noParagraph" />
       </label>
       <Markdown text={description} />
-      {allOptions.map((option: string, index: number) => {
+      {radioButtonOptions.map((option: any, index: number) => {
         return (
           <Form.Field key={`${index}_${option}`} disabled={!isEditable}>
             <Radio
-              label={option}
+              label={option.text}
               name={`${code}_radio_${index}`} // This is GROUP name
-              value={option}
-              checked={option === value}
+              value={selectedIndex}
+              checked={index === selectedIndex}
               onChange={handleChange}
               index={index}
-              float="left"
             />
             {/* TO-DO: Need to find a way to make this input field inline with  the last Other radio button*/}
-            {option === 'Other' && (
+            {hasOther && index === allOptions.length - 1 && (
               <Input
                 placeholder={otherPlaceholder}
                 size="small"
-                disabled={value !== 'Other'}
+                disabled={selectedIndex !== allOptions.length - 1}
                 onChange={handleOtherChange}
                 onBlur={handleOtherLoseFocus}
               />
