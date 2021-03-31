@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Radio, Form, Input } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
+import strings from '../constants'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   code,
@@ -30,10 +31,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   )
   const [selectedIndex, setSelectedIndex] = useState<number>()
 
-  console.log('otherText', otherText)
-
   const allOptions = [...options]
-  if (hasOther) allOptions.push('Other')
+  if (hasOther) allOptions.push(strings.OTHER)
 
   useEffect(() => {
     onUpdate(currentResponse)
@@ -60,7 +59,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     onSave({
       text:
         hasOther && optionIndex === allOptions.length - 1
-          ? 'Other: ' + otherText
+          ? `${strings.OTHER}: ${otherText}`
           : optionsDisplayProperty
           ? allOptions[optionIndex][optionsDisplayProperty]
           : allOptions[optionIndex],
@@ -76,7 +75,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   function handleOtherLoseFocus(e: any) {
     onSave({
-      text: 'Other: ' + otherText,
+      text: `${strings.OTHER}: ${otherText}`,
       selection: allOptions[allOptions.length - 1],
       optionIndex: allOptions.length - 1,
       other: hasOther ? otherText : undefined,
