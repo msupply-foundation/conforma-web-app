@@ -25,8 +25,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     otherPlaceholder,
   } = parameters
 
-  const [otherText, setOtherText] = useState<string>()
+  const [otherText, setOtherText] = useState<string | undefined>(
+    hasOther ? currentResponse?.other : undefined
+  )
   const [selectedIndex, setSelectedIndex] = useState<number>()
+
+  console.log('otherText', otherText)
 
   const allOptions = [...options]
   if (hasOther) allOptions.push('Other')
@@ -52,18 +56,17 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   function handleChange(e: any, data: any) {
     const { index: optionIndex } = data
-    console.log('Othertext', otherText)
     setSelectedIndex(optionIndex)
     onSave({
       text:
-        hasOther && selectedIndex === allOptions.length - 1
+        hasOther && optionIndex === allOptions.length - 1
           ? 'Other: ' + otherText
           : optionsDisplayProperty
           ? allOptions[optionIndex][optionsDisplayProperty]
           : allOptions[optionIndex],
       selection: allOptions[optionIndex],
       optionIndex,
-      other: hasOther ? otherText : undefined,
+      other: hasOther && optionIndex === allOptions.length - 1 ? otherText : undefined,
     })
   }
 
@@ -113,6 +116,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 disabled={selectedIndex !== allOptions.length - 1}
                 onChange={handleOtherChange}
                 onBlur={handleOtherLoseFocus}
+                value={otherText}
               />
             )}
           </Form.Field>
