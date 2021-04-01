@@ -25,6 +25,12 @@ export default gql`
           }
         }
       }
+      user {
+        ...User
+      }
+      org {
+        ...Organisation
+      }
     }
     applicationStageStatusLatests(condition: { serial: $serial }) {
       nodes {

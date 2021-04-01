@@ -22,7 +22,6 @@ import {
   useGetApplicationNewQuery,
 } from '../generated/graphql'
 import messages from '../messages'
-import { DateTime } from 'luxon'
 import { buildSectionsStructure } from '../helpers/structure'
 import config from '../../config.json'
 
@@ -54,6 +53,8 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       return
     }
     if (!data) return
+
+    console.log('Data', data)
 
     const application = data.applicationBySerial as Application
 
@@ -118,6 +119,9 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       },
       firstStrictInvalidPage: null,
       isChangeRequest: false,
+      user: application?.user,
+      org: application?.org,
+      config: config,
     }
 
     const baseElements: ElementBaseNEW[] = []

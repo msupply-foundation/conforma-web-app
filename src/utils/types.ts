@@ -115,6 +115,9 @@ interface ApplicationDetails {
   current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
   firstStrictInvalidPage: SectionAndPage | null
   submissionMessage?: string // TODO: Change to compulsory after re-structure is finished
+  user?: any
+  org?: any
+  config?: any
 }
 
 interface ApplicationElementStates {

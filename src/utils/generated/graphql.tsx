@@ -21097,6 +21097,11 @@ export type ElementFragment = (
   & Pick<TemplateElement, 'id' | 'code' | 'index' | 'title' | 'elementTypePluginCode' | 'category' | 'visibilityCondition' | 'isRequired' | 'isEditable' | 'validation' | 'validationMessage' | 'parameters'>
 );
 
+export type OrganisationFragment = (
+  { __typename?: 'Organisation' }
+  & Pick<Organisation, 'id' | 'name' | 'address' | 'licenceNumber'>
+);
+
 export type ResponseFragment = (
   { __typename?: 'ApplicationResponse' }
   & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'templateElementId' | 'timeUpdated'>
@@ -21129,6 +21134,11 @@ export type TemplateFragment = (
 export type TemplateStageFragment = (
   { __typename?: 'TemplateStage' }
   & Pick<TemplateStage, 'number' | 'title' | 'id' | 'description'>
+);
+
+export type UserFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'username' | 'firstName' | 'lastName' | 'email' | 'dateOfBirth'>
 );
 
 export type CreateApplicationMutationVariables = Exact<{
@@ -21462,7 +21472,13 @@ export type GetApplicationNewQuery = (
           & SectionFragment
         )> }
       )>> }
-    ) }
+    ), user?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )>, org?: Maybe<(
+      { __typename?: 'Organisation' }
+      & OrganisationFragment
+    )> }
     & ApplicationFragment
   )>, applicationStageStatusLatests?: Maybe<(
     { __typename?: 'ApplicationStageStatusLatestsConnection' }
@@ -21866,6 +21882,14 @@ export const ElementFragmentDoc = gql`
   parameters
 }
     `;
+export const OrganisationFragmentDoc = gql`
+    fragment Organisation on Organisation {
+  id
+  name
+  address
+  licenceNumber
+}
+    `;
 export const ResponseFragmentDoc = gql`
     fragment Response on ApplicationResponse {
   id
@@ -21921,6 +21945,16 @@ export const TemplateStageFragmentDoc = gql`
   title
   id
   description
+}
+    `;
+export const UserFragmentDoc = gql`
+    fragment User on User {
+  id
+  username
+  firstName
+  lastName
+  email
+  dateOfBirth
 }
     `;
 export const CreateApplicationDocument = gql`
@@ -22463,6 +22497,12 @@ export const GetApplicationNewDocument = gql`
         }
       }
     }
+    user {
+      ...User
+    }
+    org {
+      ...Organisation
+    }
   }
   applicationStageStatusLatests(condition: {serial: $serial}) {
     nodes {
@@ -22475,6 +22515,8 @@ ${TemplateFragmentDoc}
 ${TemplateStageFragmentDoc}
 ${SectionFragmentDoc}
 ${ElementFragmentDoc}
+${UserFragmentDoc}
+${OrganisationFragmentDoc}
 ${StageFragmentDoc}`;
 
 /**
