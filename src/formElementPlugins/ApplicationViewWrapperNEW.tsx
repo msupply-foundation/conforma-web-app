@@ -70,7 +70,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
   // Update dynamic parameters when responses change
   useEffect(() => {
     evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
-      objects: { responses: allResponses, currentUser },
+      objects: { responses: allResponses, currentUser, applicationData },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     }).then((result: ElementPluginParameters) => {

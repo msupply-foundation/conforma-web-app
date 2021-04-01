@@ -29,7 +29,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperPropsNEW> = (props) => {
   useEffect(() => {
     // Runs once on component mount
     evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
-      objects: { responses: allResponses, currentUser },
+      objects: { responses: allResponses, currentUser, applicationData },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     }).then((result: ElementPluginParameters) => {
