@@ -35,21 +35,22 @@ const ElementsBox: React.FC<ElementsBoxProps> = ({
           } = element
           const response = responsesByCode[code]
           return (
-            <ApplicationViewWrapper
-              key={`question_${code}`}
-              code={code}
-              initialValue={response}
-              pluginCode={pluginCode}
-              parameters={parameters}
-              isVisible={isVisible}
-              isEditable={isEditable}
-              isRequired={isRequired}
-              validationExpression={validation}
-              validationMessage={validationMessage}
-              allResponses={responsesByCode}
-              currentResponse={response}
-              forceValidation={forceValidation}
-            />
+            <p>No longer used</p>
+            // <ApplicationViewWrapper
+            //   key={`question_${code}`}
+            //   code={code}
+            //   initialValue={response}
+            //   pluginCode={pluginCode}
+            //   parameters={parameters}
+            //   isVisible={isVisible}
+            //   isEditable={isEditable}
+            //   isRequired={isRequired}
+            //   validationExpression={validation}
+            //   validationMessage={validationMessage}
+            //   allResponses={responsesByCode}
+            //   currentResponse={response}
+            //   forceValidation={forceValidation}
+            // />
           )
         })}
       </Form>

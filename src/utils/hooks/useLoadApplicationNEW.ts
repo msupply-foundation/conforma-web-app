@@ -19,6 +19,8 @@ import {
   Template,
   TemplateElement,
   TemplateStage,
+  User,
+  Organisation,
   useGetApplicationNewQuery,
 } from '../generated/graphql'
 import messages from '../messages'
@@ -53,8 +55,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       return
     }
     if (!data) return
-
-    console.log('Data', data)
 
     const application = data.applicationBySerial as Application
 
@@ -119,9 +119,9 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       },
       firstStrictInvalidPage: null,
       isChangeRequest: false,
-      user: application?.user,
-      org: application?.org,
-      config: config,
+      user: application?.user as User,
+      org: application?.org as Organisation,
+      config,
     }
 
     const baseElements: ElementBaseNEW[] = []

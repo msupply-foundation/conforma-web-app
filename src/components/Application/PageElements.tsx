@@ -1,6 +1,12 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ElementStateNEW, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
+import {
+  ApplicationDetails,
+  ElementStateNEW,
+  PageElement,
+  ResponsesByCode,
+  SectionAndPage,
+} from '../../utils/types'
 import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapperNEW'
 import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
 import { Form, Grid, Segment, Button, Icon } from 'semantic-ui-react'
@@ -21,6 +27,7 @@ import DecisionAreaNEW from '../Review/DecisionAreaNEW'
 interface PageElementProps {
   elements: PageElement[]
   responsesByCode: ResponsesByCode
+  applicationData: ApplicationDetails
   isStrictPage?: boolean
   canEdit?: boolean
   isReview?: boolean
@@ -32,6 +39,7 @@ interface PageElementProps {
 const PageElements: React.FC<PageElementProps> = ({
   elements,
   responsesByCode,
+  applicationData,
   isStrictPage,
   canEdit,
   isReview,
@@ -53,6 +61,7 @@ const PageElements: React.FC<PageElementProps> = ({
               isStrictPage,
               isChanged: !!isChanged && !!isChangeRequest,
               allResponses: responsesByCode,
+              applicationData,
               currentResponse: responsesByCode?.[element.code],
               currentReview:
                 visibleReviews?.length > 0 ? (visibleReviews[0] as ReviewResponse) : undefined,
@@ -68,6 +77,7 @@ const PageElements: React.FC<PageElementProps> = ({
     element,
     response: responsesByCode?.[element.code],
     allResponses: responsesByCode,
+    applicationData,
   })
   // Summary Page
   if (isSummary) {

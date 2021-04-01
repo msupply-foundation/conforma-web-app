@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Checkbox, Form } from 'semantic-ui-react'
-import { ApplicationViewProps } from '../../types'
+import { ApplicationViewPropsOLD } from '../../types'
 import strings from '../constants'
 
 interface Checkbox {
@@ -15,7 +15,7 @@ interface CheckboxSavedState {
   values: { [key: string]: Checkbox }
 }
 
-const ApplicationView: React.FC<ApplicationViewProps> = ({
+const ApplicationView: React.FC<ApplicationViewPropsOLD> = ({
   code,
   parameters,
   onUpdate,

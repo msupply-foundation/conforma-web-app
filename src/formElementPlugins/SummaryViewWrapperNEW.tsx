@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { Form } from 'semantic-ui-react'
 import { SummaryViewWrapperPropsNEW, PluginComponents, ValidationState } from './types'
-import { TemplateElementCategory } from '../utils/generated/graphql'
-import { ElementPluginParameters, User } from '../utils/types'
-import { extractDynamicExpressions, evaluateDynamicParameters } from './ApplicationViewWrapper'
+import { ElementPluginParameters } from '../utils/types'
+import { extractDynamicExpressions, evaluateDynamicParameters } from './ApplicationViewWrapperNEW'
 import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 import globalConfig from '../config.json'
@@ -12,7 +11,7 @@ import globalConfig from '../config.json'
 const graphQLEndpoint = globalConfig.serverGraphQL
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperPropsNEW> = (props) => {
-  const { element, response, allResponses } = props
+  const { element, response, allResponses, applicationData } = props
   const { parameters, category, code, pluginCode, isEditable, isRequired, isVisible } = element
   const {
     userState: { currentUser },

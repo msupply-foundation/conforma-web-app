@@ -4,7 +4,7 @@ import { Grid, Icon, Form, Input } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents, ValidationState } from './types'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 import { ElementPluginParameters, User } from '../utils/types'
-import { extractDynamicExpressions, evaluateDynamicParameters } from './ApplicationViewWrapper'
+import { extractDynamicExpressions, evaluateDynamicParameters } from './ApplicationViewWrapperNEW'
 import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 

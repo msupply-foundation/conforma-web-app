@@ -92,6 +92,7 @@ const ReviewPage: React.FC<{
                 />
               )}
               responsesByCode={responsesByCode as ResponsesByCode}
+              applicationData={fullApplicationStructure.info}
               serial={info.serial}
               isReview
               canEdit={

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Accordion, Segment, Grid, Header, Icon } from 'semantic-ui-react'
 import { PageElements } from '.'
-import { ResponsesByCode, SectionStateNEW, PageNEW } from '../../utils/types'
+import { ResponsesByCode, SectionStateNEW, PageNEW, ApplicationDetails } from '../../utils/types'
 
 interface SectionProps {
   section: SectionStateNEW
@@ -9,6 +9,7 @@ interface SectionProps {
   extraPageContent?: (page: PageNEW) => React.ReactNode
   scrollableAttachment?: (page: PageNEW) => React.ReactNode
   responsesByCode: ResponsesByCode
+  applicationData: ApplicationDetails
   isReview?: boolean
   serial: string
   isSummary?: boolean
@@ -20,6 +21,7 @@ interface SectionProps {
 const SectionWrapper: React.FC<SectionProps> = ({
   section,
   responsesByCode,
+  applicationData,
   isActive,
   toggleSection,
   extraSectionTitleContent,
@@ -56,6 +58,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
               <PageElements
                 elements={page.state}
                 responsesByCode={responsesByCode}
+                applicationData={applicationData}
                 isReview={isReview}
                 serial={serial}
                 sectionAndPage={{ sectionCode: details.code, pageNumber: page.number }}

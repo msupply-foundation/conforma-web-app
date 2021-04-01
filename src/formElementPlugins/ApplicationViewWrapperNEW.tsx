@@ -23,7 +23,15 @@ import globalConfig from '../config.json'
 const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props) => {
-  const { element, isStrictPage, isChanged, currentResponse, currentReview, allResponses } = props
+  const {
+    element,
+    isStrictPage,
+    isChanged,
+    currentResponse,
+    currentReview,
+    allResponses,
+    applicationData,
+  } = props
 
   const {
     code,
@@ -143,7 +151,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
     <ApplicationView
       onUpdate={onUpdate}
       onSave={onSave}
-      initialValue={currentResponse}
       {...props}
       {...element}
       parameters={{ ...parameters, ...evaluatedParameters }}
@@ -234,7 +241,10 @@ const getDefaultIndex = (defaultOption: string | number, options: string[]) => {
   } else return options.indexOf(defaultOption)
 }
 
-const extractDynamicExpressions = (fields: string[], parameters: ElementPluginParameters) => {
+export const extractDynamicExpressions = (
+  fields: string[],
+  parameters: ElementPluginParameters
+) => {
   const expressionObject: ElementPluginParameters = {}
   fields.forEach((field) => {
     expressionObject[field] = parameters[field]
@@ -242,7 +252,7 @@ const extractDynamicExpressions = (fields: string[], parameters: ElementPluginPa
   return expressionObject
 }
 
-const evaluateDynamicParameters = async (
+export const evaluateDynamicParameters = async (
   dynamicExpressions: ElementPluginParameters,
   evaluatorParameters: EvaluatorParameters
 ) => {

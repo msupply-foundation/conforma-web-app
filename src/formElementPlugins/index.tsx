@@ -1,4 +1,4 @@
-import ApplicationViewWrapper from './ApplicationViewWrapper'
+import ApplicationViewWrapper from './ApplicationViewWrapperNEW'
 import TemplateViewWrapper from './TemplateViewWrapper'
 import SummaryViewWrapper from './SummaryViewWrapper'
 import pluginProvider from './pluginProvider'

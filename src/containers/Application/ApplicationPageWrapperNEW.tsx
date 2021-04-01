@@ -50,8 +50,6 @@ const ApplicationPageWrapperNEW: React.FC<ApplicationProps> = ({ structure }) =>
     minRefetchTimestampForRevalidation,
   })
 
-  console.log('Full Structure', fullStructure)
-
   /* Method to pass to progress bar, next button and submit button to cause revalidation before action can be proceeded
      Should always be called on submit, but only be called on next or progress bar navigation when isLinear */
   // TODO may rename if we want to display loading modal ?

@@ -139,20 +139,21 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   if (!pluginCode || !isVisible) return null
 
   const PluginComponent = (
-    <ApplicationView
-      onUpdate={onUpdate}
-      onSave={onSave}
-      {...props}
-      parameters={{ ...parameters, ...evaluatedParameters }}
-      value={value}
-      setValue={setValue}
-      setIsActive={setIsActive}
-      Markdown={Markdown}
-      validationState={validationState || { isValid: true }}
-      validate={validate}
-      // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
-      getDefaultIndex={getDefaultIndex}
-    />
+    <p>No longer used</p>
+    // <ApplicationView
+    //   onUpdate={onUpdate}
+    //   onSave={onSave}
+    //   {...props}
+    //   parameters={{ ...parameters, ...evaluatedParameters }}
+    //   value={value}
+    //   setValue={setValue}
+    //   setIsActive={setIsActive}
+    //   Markdown={Markdown}
+    //   validationState={validationState || { isValid: true }}
+    //   validate={validate}
+    //   // TO-DO: ensure validationState gets calculated BEFORE rendering this child, so we don't need this fallback.
+    //   getDefaultIndex={getDefaultIndex}
+    // />
   )
 
   return (

@@ -1,6 +1,12 @@
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { ReviewResponse, TemplateElement } from '../utils/generated/graphql'
-import { ElementState, ElementStateNEW, ResponseFull, ResponsesByCode } from '../utils/types'
+import {
+  ApplicationDetails,
+  ElementState,
+  ElementStateNEW,
+  ResponseFull,
+  ResponsesByCode,
+} from '../utils/types'
 
 interface OnUpdateApplicationView {
   (updateObject: { value?: any; isValid: boolean | undefined }): void
@@ -28,24 +34,26 @@ interface ApplicationViewWrapperProps {
 }
 
 interface ApplicationViewWrapperPropsNEW {
-  // code: string
+  code?: string
   element: ElementStateNEW
   // pluginCode: string // TODO: Create type OR use existing from graphql
   // isVisible: boolean
-  // isEditable: boolean
-  // isRequired: boolean
+  isEditable?: boolean
+  isRequired?: boolean
   // isValid: boolean
+  parameters?: any
   isStrictPage: boolean | undefined
   isChanged: boolean
   // // parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement)
   // validationExpression: IQueryNode
   // validationMessage: string | null
   allResponses: ResponsesByCode
+  applicationData: ApplicationDetails
   currentResponse: ResponseFull | null
   currentReview?: ReviewResponse
   // applicationState,
   // graphQLclient
-  // initialValue: any // Could be a primative or an object with any shape
+  initialValue?: any // Could be a primative or an object with any shape
 }
 
 type ValidationState = {
@@ -53,7 +61,19 @@ type ValidationState = {
   validationMessage?: string | undefined
 }
 
-interface ApplicationViewProps extends ApplicationViewWrapperProps {
+interface ApplicationViewProps extends ApplicationViewWrapperPropsNEW {
+  onUpdate: Function
+  onSave: Function
+  value: any
+  setValue: (text: string) => void // TO update the value on the ApplicationViewWrapper
+  setIsActive: () => void
+  validationState: ValidationState
+  Markdown: any
+  getDefaultIndex: Function
+  validate: Function
+}
+
+interface ApplicationViewPropsOLD extends ApplicationViewWrapperProps {
   onUpdate: Function
   onSave: Function
   value: any
@@ -81,6 +101,7 @@ interface SummaryViewWrapperPropsNEW {
   element: ElementStateNEW
   response: ResponseFull | null
   allResponses: ResponsesByCode
+  applicationData: ApplicationDetails
 }
 
 interface OnUpdateTemplateWrapperView {
@@ -133,6 +154,7 @@ export {
   ApplicationViewWrapperProps,
   ApplicationViewWrapperPropsNEW,
   ApplicationViewProps,
+  ApplicationViewPropsOLD,
   ValidationState,
   TemplateViewWrapperProps,
   SummaryViewWrapperProps,

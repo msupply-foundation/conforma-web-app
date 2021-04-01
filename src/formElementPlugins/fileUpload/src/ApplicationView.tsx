@@ -39,13 +39,16 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   value,
   setValue,
   isEditable,
-  // currentResponse,
+  currentResponse,
   validationState,
   onSave,
   Markdown,
   initialValue,
 }) => {
   const { label, description, fileCountLimit, fileExtensions, fileSizeLimit } = parameters
+
+  console.log('currentResponse', currentResponse)
+  console.log('initialValue', initialValue)
 
   // These values required for file upload query parameters:
   const {
