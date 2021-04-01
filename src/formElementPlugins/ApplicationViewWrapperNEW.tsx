@@ -92,7 +92,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props)
       isStrictPage,
       responses,
       evaluationParameters: {
-        objects: { responses, currentUser },
+        objects: { responses, currentUser, applicationData },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
       },

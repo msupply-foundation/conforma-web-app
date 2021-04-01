@@ -2,6 +2,7 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { ApplicationResponse, ReviewResponse } from '../../generated/graphql'
 import {
+  ApplicationDetails,
   ElementStateNEW,
   EvaluatorParameters,
   FullStructure,
@@ -70,6 +71,7 @@ const addEvaluatedResponsesToStructure = async ({
     flattenedElements.map((elem: PageElement) => elem.element as ElementStateNEW),
     responseObject,
     currentUser,
+    structure.info, // i.e. applicationData
     evaluationOptions
   )
   results.forEach((evaluatedElement, index) => {
@@ -87,12 +89,19 @@ async function evaluateAndValidateElements(
   elements: ElementStateNEW[],
   responseObject: ResponsesByCode,
   currentUser: User | null,
+  applicationData: ApplicationDetails,
   evaluationOptions: EvaluationOptions
 ) {
   const elementPromiseArray: Promise<ElementStateNEW>[] = []
   elements.forEach((element) => {
     elementPromiseArray.push(
-      evaluateSingleElement(element, responseObject, currentUser, evaluationOptions)
+      evaluateSingleElement(
+        element,
+        responseObject,
+        currentUser,
+        applicationData,
+        evaluationOptions
+      )
     )
   })
   return await Promise.all(elementPromiseArray)
@@ -116,12 +125,14 @@ async function evaluateSingleElement(
   element: ElementStateNEW,
   responseObject: ResponsesByCode,
   currentUser: User | null,
+  applicationData: ApplicationDetails,
   evaluationOptions: EvaluationOptions
 ): Promise<ElementStateNEW> {
   const evaluationParameters = {
     objects: {
       responses: { ...responseObject, thisResponse: responseObject?.[element.code]?.text },
       currentUser,
+      applicationData,
     },
     APIfetch: fetch,
     graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
