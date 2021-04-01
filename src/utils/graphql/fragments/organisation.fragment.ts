@@ -5,6 +5,6 @@ export default gql`
     id
     name
     address
-    licenceNumber
+    registration
   }
 `
