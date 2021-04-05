@@ -3,6 +3,7 @@ import { AssignmentDetailsNEW, FullStructure, SectionStateNEW } from '../types'
 import {
   ReviewQuestionAssignment,
   ReviewResponse,
+  TemplateElement,
   useGetReviewResponsesQuery,
 } from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
@@ -120,7 +121,8 @@ const addIsAssigned = (
   newStructure: FullStructure,
   reviewQuestionAssignment: ReviewQuestionAssignment[]
 ) => {
-  reviewQuestionAssignment.forEach(({ templateElementId, id }) => {
+  reviewQuestionAssignment.forEach(({ templateElement, id }) => {
+    const { id: templateElementId } = templateElement as TemplateElement
     const assignedElement = newStructure?.elementsById?.[templateElementId || '']
 
     if (!assignedElement) return

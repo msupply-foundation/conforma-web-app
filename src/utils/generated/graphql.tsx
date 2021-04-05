@@ -2282,8 +2282,6 @@ export type ApplicationResponseFilter = {
   templateElementId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `status` field. */
-  status?: Maybe<ApplicationResponseStatusFilter>;
   /** Filter by the object’s `value` field. */
   value?: Maybe<JsonFilter>;
   /** Filter by the object’s `isValid` field. */
@@ -2313,37 +2311,6 @@ export type ApplicationResponseFilter = {
   /** Negates the expression. */
   not?: Maybe<ApplicationResponseFilter>;
 };
-
-/** A filter to be used against ApplicationResponseStatus fields. All fields are combined with a logical ‘and.’ */
-export type ApplicationResponseStatusFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<ApplicationResponseStatus>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<ApplicationResponseStatus>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<ApplicationResponseStatus>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<ApplicationResponseStatus>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<ApplicationResponseStatus>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<ApplicationResponseStatus>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<ApplicationResponseStatus>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<ApplicationResponseStatus>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<ApplicationResponseStatus>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<ApplicationResponseStatus>;
-};
-
-export enum ApplicationResponseStatus {
-  Draft = 'DRAFT',
-  Submitted = 'SUBMITTED'
-}
 
 /** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationResponseToManyReviewResponseFilter = {
@@ -5476,8 +5443,6 @@ export enum ApplicationResponsesOrderBy {
   TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  StatusAsc = 'STATUS_ASC',
-  StatusDesc = 'STATUS_DESC',
   ValueAsc = 'VALUE_ASC',
   ValueDesc = 'VALUE_DESC',
   IsValidAsc = 'IS_VALID_ASC',
@@ -5496,8 +5461,6 @@ export type ApplicationResponseCondition = {
   templateElementId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `status` field. */
-  status?: Maybe<ApplicationResponseStatus>;
   /** Checks for equality with the object’s `value` field. */
   value?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isValid` field. */
@@ -5526,7 +5489,6 @@ export type ApplicationResponse = Node & {
   id: Scalars['Int'];
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -11087,7 +11049,6 @@ export type ApplicationResponseOnApplicationResponseForApplicationResponseApplic
 export type UpdateApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -11280,7 +11241,6 @@ export type ApplicationResponseOnApplicationResponseForApplicationResponseTempla
 export type UpdateApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -13449,7 +13409,6 @@ export type UpdateApplicationResponseOnReviewResponseForReviewResponseApplicatio
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -13969,7 +13928,6 @@ export type UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -14176,7 +14134,6 @@ export type ApplicationResponsePatch = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -14191,7 +14148,6 @@ export type FileApplicationResponseIdFkeyApplicationResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -14709,7 +14665,6 @@ export type ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInpu
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -16123,7 +16078,6 @@ export type TemplateElementOnApplicationResponseForApplicationResponseTemplateEl
 export type ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -16351,7 +16305,6 @@ export type ApplicationOnApplicationResponseForApplicationResponseApplicationIdF
 export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -17391,7 +17344,6 @@ export type ApplicationResponseInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -21332,7 +21284,7 @@ export type UpdateReviewAssignmentMutation = (
         { __typename?: 'ReviewQuestionAssignmentsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'ReviewQuestionAssignment' }
-          & Pick<ReviewQuestionAssignment, 'id' | 'templateElementId'>
+          & Pick<ReviewQuestionAssignment, 'id'>
           & { templateElement?: Maybe<(
             { __typename?: 'TemplateElement' }
             & Pick<TemplateElement, 'id'>
@@ -21719,7 +21671,7 @@ export type GetReviewInfoQuery = (
         { __typename?: 'ReviewQuestionAssignmentsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'ReviewQuestionAssignment' }
-          & Pick<ReviewQuestionAssignment, 'id' | 'templateElementId'>
+          & Pick<ReviewQuestionAssignment, 'id'>
           & { templateElement?: Maybe<(
             { __typename?: 'TemplateElement' }
             & Pick<TemplateElement, 'id'>
@@ -22313,7 +22265,6 @@ export const UpdateReviewAssignmentDocument = gql`
       reviewQuestionAssignments {
         nodes {
           id
-          templateElementId
           templateElement {
             id
             section {
@@ -22959,7 +22910,6 @@ export const GetReviewInfoDocument = gql`
       reviewQuestionAssignments {
         nodes {
           id
-          templateElementId
           templateElement {
             id
             section {

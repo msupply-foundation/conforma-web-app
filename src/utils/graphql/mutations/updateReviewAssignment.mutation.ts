@@ -10,7 +10,6 @@ export default gql`
         reviewQuestionAssignments {
           nodes {
             id
-            templateElementId
             templateElement {
               id
               section {
