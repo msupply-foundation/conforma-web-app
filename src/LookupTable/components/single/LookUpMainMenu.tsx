@@ -2,6 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Button, Header, Icon } from 'semantic-ui-react'
 import { MainMenu } from '..'
+import { LookUpTableImportCsvContext } from '../../contexts'
 
 interface ILookUpMainMenu {
   tableName: string
@@ -9,6 +10,7 @@ interface ILookUpMainMenu {
 
 const LookUpMainMenu: React.FC<ILookUpMainMenu> = (props) => {
   const { tableName } = props
+  const { dispatch } = React.useContext(LookUpTableImportCsvContext)
 
   return (
     <MainMenu
@@ -24,7 +26,13 @@ const LookUpMainMenu: React.FC<ILookUpMainMenu> = (props) => {
             <Icon name="arrow alternate circle left" />
             Back
           </Button>
-          <Button icon labelPosition="left" href="#">
+          <Button
+            icon
+            labelPosition="left"
+            as="button"
+            color="green"
+            onClick={() => dispatch({ type: 'OPEN_MODAL' })}
+          >
             <Icon name="upload" />
             Import
           </Button>

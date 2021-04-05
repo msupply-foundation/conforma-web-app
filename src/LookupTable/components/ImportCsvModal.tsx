@@ -14,12 +14,15 @@ import { LookUpTableImportCsvContext } from '../contexts'
 import config from '../../config.json'
 import axios from 'axios'
 
-const ImportCsvModal: React.FC = ({ onImportSuccess, ...props }: any) => {
+const ImportCsvModal: React.FC = ({ onImportSuccess, lookupTable = null, ...props }: any) => {
   const { state, dispatch } = React.useContext(LookUpTableImportCsvContext)
   const { uploadModalOpen: open, file, tableName, submittable, submitting, errors, success } = state
 
   useEffect(() => {
-    dispatch({ type: 'SUBMITTABLE', payload: open && file !== null && tableName !== '' })
+    dispatch({
+      type: 'SUBMITTABLE',
+      payload: open && file !== null && lookupTable?.id ? true : tableName !== '',
+    })
   }, [open, file, tableName])
 
   const fileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -33,25 +36,29 @@ const ImportCsvModal: React.FC = ({ onImportSuccess, ...props }: any) => {
 
     let formData: any = new FormData()
     formData.append('file', file)
-    formData.append('tableName', tableName)
+    if (!lookupTable?.id) formData.append('tableName', tableName)
 
     axios
-      .post(config.serverREST + '/lookup-table/import', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        onUploadProgress: (data) => {
-          //Set the progress value to show the progress bar
-          console.log(
-            'data.loaded',
-            data.loaded,
-            'data.total',
-            data.total,
-            Math.round((100 * data.loaded) / data.total),
-            data
-          )
-        },
-      })
+      .post(
+        config.serverREST + '/lookup-table/import' + (lookupTable?.id ? '/' + lookupTable.id : ''),
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          onUploadProgress: (data) => {
+            //Set the progress value to show the progress bar
+            console.log(
+              'data.loaded',
+              data.loaded,
+              'data.total',
+              data.total,
+              Math.round((100 * data.loaded) / data.total),
+              data
+            )
+          },
+        }
+      )
       .then(function (response) {
         dispatch({ type: 'SET_SUCCESS', payload: true })
         onImportSuccess()
@@ -92,7 +99,11 @@ const ImportCsvModal: React.FC = ({ onImportSuccess, ...props }: any) => {
       onOpen={() => dispatch({ type: 'OPEN_MODAL' })}
       open={open}
     >
-      <Modal.Header>Import Lookup-table</Modal.Header>
+      <Modal.Header>
+        {!lookupTable?.id
+          ? 'Import Lookup-table'
+          : `Import into Lookup-table: ${lookupTable.label}`}
+      </Modal.Header>
       <Modal.Content>
         {submitting ? (
           <Segment basic placeholder>
@@ -110,16 +121,18 @@ const ImportCsvModal: React.FC = ({ onImportSuccess, ...props }: any) => {
           </Message>
         ) : (
           <Form>
-            <Form.Field>
-              <label>Table name</label>
-              <input
-                placeholder="Table name"
-                value={tableName || ''}
-                onChange={(event) =>
-                  dispatch({ type: 'SET_TABLE_NAME', payload: event.target.value })
-                }
-              />
-            </Form.Field>
+            {!lookupTable?.id && (
+              <Form.Field>
+                <label>Table name</label>
+                <input
+                  placeholder="Table name"
+                  value={tableName || ''}
+                  onChange={(event) =>
+                    dispatch({ type: 'SET_TABLE_NAME', payload: event.target.value })
+                  }
+                />
+              </Form.Field>
+            )}
             <Form.Field>
               <label>File input & upload </label>
 

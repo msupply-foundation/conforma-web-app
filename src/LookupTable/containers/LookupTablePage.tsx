@@ -9,26 +9,15 @@ import { withImportCsvModal } from '../components/hocs'
 import { SingleTableStructureContext } from '../contexts/SingleTableStructureContext'
 
 const LookupTablePage: React.FC = () => {
-  const { state } = useContext(SingleTableStructureContext)
-  const { called, loading, data } = state
+  const { state, lookupTable } = useContext(SingleTableStructureContext)
+  const { called, loading } = state
 
-  const [lookupTable, setLookupTable] = useState<LookUpTableType>({
-    id: 0,
-    name: '',
-    label: '',
-    fieldMap: [],
-  })
-
-  useEffect(() => {
-    if (!loading && called && data.lookupTable) {
-      setLookupTable(data.lookupTable)
-    }
-  }, [loading, called, data])
+  console.log('lookupTable => ', loading, called, lookupTable)
 
   // return error ? (
   //   <Message error header={'Error loading lookup-table'} list={[error.message]} />
   // ) :
-  return loading && !called ? (
+  return loading && !called && !lookupTable.id ? (
     <Loading />
   ) : lookupTable.id !== 0 ? (
     <Container style={{ padding: '2em 0em' }}>
