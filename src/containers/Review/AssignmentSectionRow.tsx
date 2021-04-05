@@ -79,7 +79,6 @@ const getAssignmentOptions = ({ assignments, sectionCode }: AssignmentSectionRow
       matchAssignmentToSection(assignment, sectionCode)
   )
 
-  console.log(currentlyAssigned)
   // For now just show an option to un assign
   if (currentlyAssigned)
     return {

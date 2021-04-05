@@ -35,8 +35,6 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     filteredSectionIds: [sectionId],
   })
 
-  console.log(fullReviewStructure)
-
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!fullReviewStructure) return <Loading />
   const section = fullReviewStructure.sortedSections?.find(
