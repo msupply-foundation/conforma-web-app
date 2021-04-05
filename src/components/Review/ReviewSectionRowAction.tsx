@@ -97,7 +97,7 @@ const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
 
   const reReviewCount = reReviewableCount(reviewProgress)
 
-  if (reReviewCount === 0) return
+  if (reReviewCount === 0) return null
 
   // Either need to run a mutation to re-review or just navigate to section
   const buttonAction =
