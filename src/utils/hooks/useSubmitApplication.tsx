@@ -36,12 +36,14 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
       }
     })
 
-    return await applicationSubmitMutation({
+    const result = await applicationSubmitMutation({
       variables: {
         serial: serialNumber,
         responses: responsesPatch,
       },
     })
+    if (result.errors) throw new Error(result.errors.toString())
+    return result
   }
   // TODO: Remove this
   const submit = async (responses: ResponseFull[]) => {

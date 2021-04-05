@@ -57,13 +57,14 @@ const useCreateReview = ({
       applicationResponseId: element.response?.id || 0,
       reviewQuestionAssignmentId: element.assignmentId,
     }))
-
-    return await createReviewMutation({
+    const result = await createReviewMutation({
       variables: {
         reviewAssigmentId,
         applicationResponses,
       },
     })
+    if (result.errors) throw new Error(result.errors.toString())
+    return result
   }
   // TODO: Remove this
   const createReview = ({ applicationResponses }: CreateReviewProps) => {

@@ -5,6 +5,7 @@ import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
+import AssignmentSectionRow from './AssignmentSectionRow'
 import ReviewSectionRow from './ReviewSectionRow'
 
 interface ReviewHomeProps {
@@ -28,13 +29,17 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
 
   const [filters, setFilters] = useState<Filters | null>(null)
 
+  const getFilteredByStage = (assignments: AssignmentDetailsNEW[]) => {
+    if (!filters) return []
+    return assignments.filter((assignment) => assignment.stage.id === filters.selectedStage)
+  }
+
   const getFilteredReviewer = (assignments: AssignmentDetailsNEW[]) => {
     if (!filters) return []
-    return assignments.filter(
+    return getFilteredByStage(assignments).filter(
       (assignment) =>
-        (filters.selectedReviewer === ALL_REVIEWERS ||
-          assignment.reviewer.id === filters.selectedReviewer) &&
-        assignment.stage.id === filters.selectedStage
+        filters.selectedReviewer === ALL_REVIEWERS ||
+        assignment.reviewer.id === filters.selectedReviewer
     )
   }
 
@@ -53,9 +58,16 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
     <>
       <ReviewerAndStageSelection {...reviewerAndStageSelectionProps} />
       {filters &&
-        Object.values(fullApplicationStructure.sections).map(({ details: { id, title } }) => (
+        Object.values(fullApplicationStructure.sections).map(({ details: { id, title, code } }) => (
           <Segment key={id}>
             <Header>{title}</Header>
+            <AssignmentSectionRow
+              {...{
+                assignments: getFilteredByStage(assignments),
+                structure: fullApplicationStructure,
+                sectionCode: code,
+              }}
+            />
             {getFilteredReviewer(assignments).map((assignment) => (
               <ReviewSectionRow
                 {...{

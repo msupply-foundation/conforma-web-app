@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getReviewInfo($applicationId: Int) {
+  query getReviewInfo($applicationId: Int, $assignerId: Int!) {
     reviewAssignments(condition: { applicationId: $applicationId }, orderBy: TIME_CREATED_DESC) {
       nodes {
         id
@@ -11,6 +11,7 @@ export default gql`
         level
         reviewerId
         isLastLevel
+        templateSectionRestrictions
         reviewer {
           id
           firstName
@@ -39,7 +40,22 @@ export default gql`
         reviewQuestionAssignments {
           nodes {
             id
-            templateElementId
+            templateElement {
+              id
+              section {
+                id
+                code
+              }
+            }
+          }
+        }
+        reviewAssignmentAssignerJoins(filter: { assignerId: { equalTo: $assignerId } }) {
+          nodes {
+            assigner {
+              firstName
+              lastName
+              id
+            }
           }
         }
       }
