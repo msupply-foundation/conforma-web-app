@@ -3,11 +3,13 @@ import { Route, Switch } from 'react-router-dom'
 import { LookupTableListPage } from '.'
 import { useRouter } from '../../utils/hooks/useRouter'
 import LookupTablePage from './LookupTablePage'
-import { LookUpTableImportCsvProvider } from '../contexts'
 import {
+  LookUpTableImportCsvProvider,
+  SingleTableStructureConsumer,
+  SingleTableStructureProvider,
   TableStructuresConsumer,
   TableStructuresProvider,
-} from '../contexts/TableStructuresContext'
+} from '../contexts'
 
 const LookupTableWrapper: React.FC = () => {
   const {
@@ -27,7 +29,13 @@ const LookupTableWrapper: React.FC = () => {
           </TableStructuresProvider>
         </Route>
         <Route exact path={`${path}/:lookupTableID`}>
-          <LookupTablePage />
+          <SingleTableStructureProvider>
+            <SingleTableStructureConsumer>
+              {({ getSingleTableStructure, state }) => (
+                <LookupTablePage onImportSuccess={() => getSingleTableStructure()} />
+              )}
+            </SingleTableStructureConsumer>
+          </SingleTableStructureProvider>
         </Route>
       </Switch>
     </LookUpTableImportCsvProvider>

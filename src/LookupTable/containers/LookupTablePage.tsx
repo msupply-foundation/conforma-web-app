@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { useParams } from 'react-router-dom'
 import { Container, Divider, Message } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import { LookUpMainMenu, LookUpTable } from '../components/single'
 import { LookUpTableType } from '../types'
-import { getTableStructureId } from '../graphql'
 import { withImportCsvModal } from '../components/hocs'
+import { SingleTableStructureContext } from '../contexts/SingleTableStructureContext'
 
 const LookupTablePage: React.FC = () => {
-  let { lookupTableID } = useParams<{ lookupTableID: string }>()
+  const { state } = useContext(SingleTableStructureContext)
+  const { called, loading, data } = state
+
   const [lookupTable, setLookupTable] = useState<LookUpTableType>({
     id: 0,
     name: '',
@@ -17,21 +19,16 @@ const LookupTablePage: React.FC = () => {
     fieldMap: [],
   })
 
-  const { loading, error, data } = useQuery(getTableStructureId, {
-    skip: !lookupTableID,
-    variables: { lookupTableID: Number(lookupTableID) },
-    fetchPolicy: 'no-cache',
-  })
-
   useEffect(() => {
-    if (!loading && data.lookupTable) {
+    if (!loading && called && data.lookupTable) {
       setLookupTable(data.lookupTable)
     }
-  }, [loading, data])
+  }, [loading, called, data])
 
-  return error ? (
-    <Message error header={'Error loading lookup-table'} list={[error.message]} />
-  ) : loading ? (
+  // return error ? (
+  //   <Message error header={'Error loading lookup-table'} list={[error.message]} />
+  // ) :
+  return loading && !called ? (
     <Loading />
   ) : lookupTable.id !== 0 ? (
     <Container style={{ padding: '2em 0em' }}>

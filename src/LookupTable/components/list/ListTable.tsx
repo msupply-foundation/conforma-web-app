@@ -23,7 +23,7 @@ const ListTable: React.FC = () => {
         }))
       )
     }
-  }, [loading, data])
+  }, [loading, called, data])
 
   const handleExpansion = (lookupTable: LookUpTableType) => {
     if (!lookupTable) return
