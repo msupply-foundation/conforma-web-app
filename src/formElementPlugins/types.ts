@@ -36,7 +36,11 @@ interface ApplicationViewWrapperPropsNEW {
   // isRequired: boolean
   // isValid: boolean
   isStrictPage: boolean | undefined
-  isChanged: boolean
+  changesRequired?: {
+    isChangeRequest: boolean
+    isChanged: boolean
+    reviewerComment: string
+  }
   // // parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement)
   // validationExpression: IQueryNode
   // validationMessage: string | null

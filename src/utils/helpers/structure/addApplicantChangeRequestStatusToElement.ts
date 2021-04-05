@@ -7,6 +7,19 @@ import {
 import { FullStructure } from '../../types'
 
 const addApplicantChangeRequestStatusToElement = (structure: FullStructure) => {
+  const checkHasAnyReviewResponses = Object.values(structure?.sortedPages || {}).flatMap(
+    ({ state }) =>
+      state.filter(({ latestApplicationResponse, previousApplicationResponse }) =>
+        // For application not in draft - check if any latestApplicationResponse has been reviewed
+        // For applications in draft - check if any previousApplicationResponse has been reviewed
+        structure?.info?.current?.status !== ApplicationStatus.Draft
+          ? latestApplicationResponse?.reviewResponses.nodes[0] !== undefined
+          : previousApplicationResponse?.reviewResponses.nodes[0]
+      )
+  )
+  // No reviews, then don't set isChanged and isChangeRequested fields
+  if (checkHasAnyReviewResponses.length === 0) return
+
   const questionElements = Object.values(structure?.elementsById || {}).filter(
     ({ element }) => element?.category === TemplateElementCategory.Question
   )

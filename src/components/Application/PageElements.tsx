@@ -47,15 +47,22 @@ const PageElements: React.FC<PageElementProps> = ({
       <Form>
         {visibleElements.map(
           ({ element, isChangeRequest, isChanged, previousApplicationResponse }) => {
-            const visibleReviews = previousApplicationResponse?.reviewResponses.nodes
+            const currentReview = previousApplicationResponse?.reviewResponses.nodes[0]
+            const changesRequired =
+              isChangeRequest || isChanged
+                ? {
+                    isChangeRequest: isChangeRequest as boolean,
+                    isChanged: isChanged as boolean,
+                    reviewerComment: currentReview?.comment || '',
+                  }
+                : undefined
+
             const props: ApplicationViewWrapperPropsNEW = {
               element,
               isStrictPage,
-              isChanged: !!isChanged && !!isChangeRequest,
+              changesRequired,
               allResponses: responsesByCode,
               currentResponse: responsesByCode?.[element.code],
-              currentReview:
-                visibleReviews?.length > 0 ? (visibleReviews[0] as ReviewResponse) : undefined,
             }
             // Wrapper displays response & changes requested warning for LOQ re-submission
             return <ApplicationViewWrapper key={`question_${element.code}`} {...props} />
