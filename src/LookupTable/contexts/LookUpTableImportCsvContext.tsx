@@ -6,6 +6,10 @@ const initialState: LookUpTableImportCsvType = {
   uploadModalOpen: false,
   file: null,
   tableName: '',
+  submittable: false,
+  submitting: false,
+  errors: [],
+  success: false,
 }
 
 const LookUpTableImportCsvContext = React.createContext<{

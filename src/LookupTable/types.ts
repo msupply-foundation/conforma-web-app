@@ -30,12 +30,20 @@ enum LookUpTableImportCsvActions {
   UploadModalClose = 'CLOSE_MODAL',
   ImportCSV = 'SET_FILE',
   SetTableName = 'SET_TABLE_NAME',
+  submittable = 'SUBMITTABLE',
+  submitting = 'SUBMITTING',
+  setErrorMessages = 'SET_ERROR_MESSAGES',
+  setSuccess = 'SET_SUCCESS',
 }
 
 type LookUpTableImportCsvType = {
   uploadModalOpen: boolean
   file: File | null
   tableName: string | null
+  submittable: boolean
+  submitting: boolean
+  errors: []
+  success: boolean
 }
 
 type LookUpTableImportCsvActionType =
@@ -43,6 +51,10 @@ type LookUpTableImportCsvActionType =
   | { type: 'CLOSE_MODAL' }
   | { type: 'SET_FILE'; payload: File }
   | { type: 'SET_TABLE_NAME'; payload: string }
+  | { type: 'SUBMITTABLE'; payload: boolean }
+  | { type: 'SUBMITTING'; payload: boolean }
+  | { type: 'SET_ERROR_MESSAGES'; payload: [] }
+  | { type: 'SET_SUCCESS'; payload: boolean }
 
 export {
   FieldMapType,

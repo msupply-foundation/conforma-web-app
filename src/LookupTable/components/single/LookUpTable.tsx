@@ -4,6 +4,7 @@ import { Header, Message, Table } from 'semantic-ui-react'
 import { Loading } from '../../../components'
 import { FieldMapType, LookUpTableType, TableStructureType } from '../../types'
 import { withTableQueryBuilder } from '../hocs'
+import { toCamelCase } from '../../utils'
 
 const LookupTable: React.FC<TableStructureType> = (props) => {
   const { tableQuery, tableName, structure } = props
@@ -20,15 +21,15 @@ const LookupTable: React.FC<TableStructureType> = (props) => {
     }
   }, [loading, data])
 
-  const buildLookupTable = (lookupTable: LookUpTableType | undefined) => {
-    return lookupTable ? (
+  const buildLookupTable = (lookupTable: LookUpTableType[] | undefined) => {
+    return lookupTable && lookupTable.length > 0 ? (
       (lookupTable as any).map((myDataRow: any) => {
         return (
           <Table.Row key={`lookup-table-${tableName}-row-${myDataRow.id}`}>
             {structure &&
               structure.fieldMap.map((field: FieldMapType) => (
                 <Table.Cell key={`lookup-table-${tableName}-data-${field.fieldname}`}>
-                  {myDataRow[field.fieldname]}
+                  {myDataRow[toCamelCase(field.fieldname)]}
                 </Table.Cell>
               ))}
           </Table.Row>
@@ -37,7 +38,7 @@ const LookupTable: React.FC<TableStructureType> = (props) => {
     ) : (
       <Table.Row key={`lookup-table-${tableName}-row-error`}>
         <Table.Cell>
-          <Header as="h5" icon="exclamation circle" content="No lookup-table found!" />
+          <Header as="h5" icon="exclamation circle" content="No data found!" />
         </Table.Cell>
       </Table.Row>
     )
