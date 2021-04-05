@@ -3,35 +3,19 @@ import React, { useContext, useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Button, Header, Icon, Message, Popup, Table } from 'semantic-ui-react'
 import { Loading } from '../../../components'
-import { LookUpTableImportCsvContext } from '../../contexts'
 import { TableStructuresContext } from '../../contexts/TableStructuresContext'
-import { getAllTableStructures } from '../../graphql'
 import { FieldMapType, LookUpTableType } from '../../types'
 
 const TABLE_PREFIX = 'lookup_table_'
 
 const ListTable: React.FC = () => {
-  // const { loading, error, data, subscribeToMore } = useQuery(getAllTableStructures, {
-  //   fetchPolicy: 'network-only',
-  // })
-
   const { getTableStructures, state } = useContext(TableStructuresContext)
-  // getTableStructures()
-  const { called, loading, data } = state
-  useEffect(() => {
-    console.log(state)
-    getTableStructures()
-    console.log('After', state)
-  }, [])
 
-  useEffect(() => {
-    console.log('dataChange', state)
-  }, [data])
+  const { called, loading, data } = state
 
   const [LookupTableRows, setLookupTableRows] = useState<LookUpTableType[] | []>([])
 
   useEffect(() => {
-    // console.log(loading, error, data)
     if (!loading && called && data.lookupTables.nodes) {
       setLookupTableRows(
         data.lookupTables.nodes.map((lookupTable: LookUpTableType) => ({

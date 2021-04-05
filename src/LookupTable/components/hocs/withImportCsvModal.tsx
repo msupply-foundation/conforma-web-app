@@ -1,13 +1,11 @@
 import React from 'react'
 import { ImportCsvModal } from '..'
-import { TableStructuresContext } from '../../contexts/TableStructuresContext'
 
-const withImportCsvModal = (WrappedComponent: any) => (props: any) => {
-  const { getTableStructures } = React.useContext(TableStructuresContext)
+const withImportCsvModal = (WrappedComponent: any) => ({ getTableStructures, ...props }: any) => {
   return (
     <React.Fragment>
       <WrappedComponent {...props} />
-      <ImportCsvModal {...props} getTableStructures={() => getTableStructures()} />
+      <ImportCsvModal {...props} onSucessfulImport={getTableStructures} />
     </React.Fragment>
   )
 }

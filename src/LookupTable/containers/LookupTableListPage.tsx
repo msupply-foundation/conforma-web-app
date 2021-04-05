@@ -6,7 +6,6 @@ import {
 } from '../components/list'
 
 import { withImportCsvModal } from '../components/hocs'
-import { TableStructuresContext, TableStructuresProvider } from '../contexts/TableStructuresContext'
 
 const LookupTableListPage: React.FC = () => {
   return (

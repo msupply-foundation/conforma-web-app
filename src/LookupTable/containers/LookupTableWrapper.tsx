@@ -4,7 +4,10 @@ import { LookupTableListPage } from '.'
 import { useRouter } from '../../utils/hooks/useRouter'
 import LookupTablePage from './LookupTablePage'
 import { LookUpTableImportCsvProvider } from '../contexts'
-import { TableStructuresProvider } from '../contexts/TableStructuresContext'
+import {
+  TableStructuresConsumer,
+  TableStructuresProvider,
+} from '../contexts/TableStructuresContext'
 
 const LookupTableWrapper: React.FC = () => {
   const {
@@ -16,7 +19,11 @@ const LookupTableWrapper: React.FC = () => {
       <Switch>
         <Route exact path={path}>
           <TableStructuresProvider>
-            <LookupTableListPage />
+            <TableStructuresConsumer>
+              {({ getTableStructures, state }) => (
+                <LookupTableListPage getTableStructures={() => getTableStructures()} />
+              )}
+            </TableStructuresConsumer>
           </TableStructuresProvider>
         </Route>
         <Route exact path={`${path}/:lookupTableID`}>

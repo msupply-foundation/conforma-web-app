@@ -1,5 +1,5 @@
 import { useLazyQuery } from '@apollo/client'
-import React, { useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { getAllTableStructures } from '../graphql'
 
 const initialState: any = {
@@ -18,16 +18,17 @@ const TableStructuresProvider: React.FC = ({ children }) => {
     fetchPolicy: 'no-cache',
   })
 
-  const getMyTableStructures = () => {
-    console.log('I am called')
+  useEffect(() => {
     getTableStructures()
-  }
+  }, [])
 
   return (
-    <TableStructuresContext.Provider value={{ state, getTableStructures: getMyTableStructures }}>
+    <TableStructuresContext.Provider value={{ state, getTableStructures }}>
       {children}
     </TableStructuresContext.Provider>
   )
 }
 
-export { TableStructuresContext, TableStructuresProvider }
+const TableStructuresConsumer = TableStructuresContext.Consumer
+
+export { TableStructuresContext, TableStructuresProvider, TableStructuresConsumer }
