@@ -21,7 +21,7 @@ const LookupTableWrapper: React.FC = () => {
           <TableStructuresProvider>
             <TableStructuresConsumer>
               {({ getTableStructures, state }) => (
-                <LookupTableListPage getTableStructures={() => getTableStructures()} />
+                <LookupTableListPage onImportSuccess={() => getTableStructures()} />
               )}
             </TableStructuresConsumer>
           </TableStructuresProvider>

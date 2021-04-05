@@ -9,8 +9,7 @@ import { FieldMapType, LookUpTableType } from '../../types'
 const TABLE_PREFIX = 'lookup_table_'
 
 const ListTable: React.FC = () => {
-  const { getTableStructures, state } = useContext(TableStructuresContext)
-
+  const { state } = useContext(TableStructuresContext)
   const { called, loading, data } = state
 
   const [LookupTableRows, setLookupTableRows] = useState<LookUpTableType[] | []>([])

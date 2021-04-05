@@ -14,7 +14,7 @@ import { LookUpTableImportCsvContext } from '../contexts'
 import config from '../../config.json'
 import axios from 'axios'
 
-const ImportCsvModal: React.FC = ({ onSucessfulImport }: any) => {
+const ImportCsvModal: React.FC = ({ onImportSuccess, ...props }: any) => {
   const { state, dispatch } = React.useContext(LookUpTableImportCsvContext)
   const { uploadModalOpen: open, file, tableName, submittable, submitting, errors, success } = state
 
@@ -54,7 +54,7 @@ const ImportCsvModal: React.FC = ({ onSucessfulImport }: any) => {
       })
       .then(function (response) {
         dispatch({ type: 'SET_SUCCESS', payload: true })
-        onSucessfulImport()
+        onImportSuccess()
       })
       .catch(function (error: any) {
         let myErrors = []
