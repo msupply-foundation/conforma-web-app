@@ -6,7 +6,7 @@ import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignme
 import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
 
 const NOT_ASSIGNED = 0
-const UN_ASSIGN = -1
+const UNASSIGN = -1
 
 type AssignmentSectionRowProps = {
   assignments: AssignmentDetailsNEW[]
@@ -22,7 +22,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
 
   const onAssignment = async (_: any, { value: newValue }: any) => {
     if (newValue === NOT_ASSIGNED || newValue === value) return
-    if (newValue === UN_ASSIGN) return console.log('un assignment not implemented')
+    if (newValue === UNASSIGN) return console.log('un assignment not implemented')
     const assignment = assignments.find((assignment) => assignment.reviewer.id === newValue)
     if (!assignment) return
 
@@ -87,8 +87,8 @@ const getAssignmentOptions = ({ assignments, sectionCode }: AssignmentSectionRow
       options: [
         getOptionFromAssignment(currentlyAssigned),
         {
-          key: UN_ASSIGN,
-          value: UN_ASSIGN,
+          key: UNASSIGN,
+          value: UNASSIGN,
           text: strings.ASSIGNMENT_UNASSIGN,
         },
       ],
