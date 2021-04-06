@@ -6,19 +6,16 @@ const withImportCsvModal = (WrappedComponent: any) => ({
   structure = null,
   importModelOpen = false,
   ...props
-}: any) => {
-  console.log('importModelOpen in hoc', importModelOpen)
-  return (
-    <React.Fragment>
-      <WrappedComponent {...props} />
-      <ImportCsvModal
-        {...props}
-        importModelOpen={importModelOpen}
-        onImportSuccess={onImportSuccess}
-        structure={structure}
-      />
-    </React.Fragment>
-  )
-}
+}: any) => (
+  <React.Fragment>
+    <WrappedComponent {...props} />
+    <ImportCsvModal
+      {...props}
+      importModelOpen={importModelOpen}
+      onImportSuccess={onImportSuccess}
+      structure={structure}
+    />
+  </React.Fragment>
+)
 
 export default withImportCsvModal

@@ -31,7 +31,6 @@ const ImportCsvModal: React.FC = ({
   }
 
   useEffect(() => {
-    console.log('importModelOpen', importModelOpen)
     if (importModelOpen) {
       dispatch({ type: 'OPEN_MODAL' })
     } else {
@@ -149,9 +148,6 @@ const ImportCsvModal: React.FC = ({
                 readOnly
                 value={file?.name || ''}
               />
-              {/* <Progress style={{ marginTop: '20px' }} percent={100} error active progress>
-              File Upload Failed
-            </Progress> */}
             </Form.Field>
           </Form>
         )}
