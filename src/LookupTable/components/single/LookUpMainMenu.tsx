@@ -4,19 +4,15 @@ import { Button, Header, Icon } from 'semantic-ui-react'
 import { MainMenu } from '..'
 import { LookUpTableImportCsvContext } from '../../contexts'
 
-interface ILookUpMainMenu {
-  tableName: string
-}
-
-const LookUpMainMenu: React.FC<ILookUpMainMenu> = (props) => {
-  const { tableName } = props
+const LookUpMainMenu: React.FC<any> = (props) => {
+  const { structure } = props
   const { dispatch } = React.useContext(LookUpTableImportCsvContext)
 
   return (
     <MainMenu
       header={
         <Header>
-          Lookup Table: {tableName}
+          Lookup Table: {structure.label}
           <Header.Subheader>View individual lookup-table and its contents</Header.Subheader>
         </Header>
       }

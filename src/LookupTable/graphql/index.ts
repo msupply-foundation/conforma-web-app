@@ -1,4 +1,5 @@
-import getTableStructureId from './getTableStructureId.query'
+import getTableStructureById from './getTableStructureById.query'
 import getAllTableStructures from './getAllTableStructures.query'
+import getDynamicSingleTable from './getDynamicSingleTable.query'
 
-export { getAllTableStructures, getTableStructureId }
+export { getAllTableStructures, getTableStructureById, getDynamicSingleTable }

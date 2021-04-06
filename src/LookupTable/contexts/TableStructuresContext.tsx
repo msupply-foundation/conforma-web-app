@@ -5,6 +5,7 @@ import { getAllTableStructures } from '../graphql'
 const initialState: any = {
   data: [],
   loading: true,
+  called: false,
   error: {},
 }
 

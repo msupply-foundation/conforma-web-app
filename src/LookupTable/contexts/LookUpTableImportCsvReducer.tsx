@@ -31,7 +31,6 @@ const LookUpTableImportCsvReducer = (
     case LookUpTableImportCsvActions.submitting:
       return { ...state, submitting: action.payload, submittable: false }
     case LookUpTableImportCsvActions.setErrorMessages:
-      console.log('errors => ', action.payload)
       return { ...state, errors: action.payload, submitting: false }
     case LookUpTableImportCsvActions.setSuccess:
       return { ...state, success: true, errors: [], submitting: false, submittable: false }

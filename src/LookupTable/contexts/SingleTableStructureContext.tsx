@@ -1,16 +1,16 @@
 import { useLazyQuery } from '@apollo/client'
-import React, { useEffect, useReducer, useState } from 'react'
-import { useParams } from 'react-router'
-import { getTableStructureId } from '../graphql'
+import React, { useEffect, useState } from 'react'
+import { getTableStructureById } from '../graphql'
 import { LookUpTableType } from '../types'
 
 const initialState: any = {
   data: [],
   loading: true,
+  called: false,
   error: {},
 }
 
-const initialLookupTableState: LookUpTableType = {
+const initialStructureState: LookUpTableType = {
   id: 0,
   name: '',
   label: '',
@@ -18,35 +18,35 @@ const initialLookupTableState: LookUpTableType = {
 }
 
 const SingleTableStructureContext = React.createContext({
-  state: initialState,
-  getSingleTableStructure: () => {},
-  lookupTable: initialLookupTableState,
+  structureLoadState: initialState,
+  getStructure: () => {},
+  setStructureID: (id: number) => id,
+  structure: initialStructureState,
 })
 
 const SingleTableStructureProvider: React.FC = ({ children }) => {
-  let { lookupTableID } = useParams<{ lookupTableID: string }>()
+  const [structureID, setStructureID]: [null | number, any] = useState<number>(0)
+  const [structure, setStructure] = useState<LookUpTableType>(initialStructureState)
 
-  const [lookupTable, setLookupTable] = useState<LookUpTableType>(initialLookupTableState)
-
-  const [getSingleTableStructure, state] = useLazyQuery(getTableStructureId, {
-    variables: { lookupTableID: Number(lookupTableID) },
+  const [getStructure, structureLoadState] = useLazyQuery(getTableStructureById, {
+    variables: { lookupTableID: structureID },
     fetchPolicy: 'no-cache',
   })
-  const { called, loading, data } = state
+
+  const { called, loading, data, error } = structureLoadState
 
   useEffect(() => {
-    getSingleTableStructure()
-  }, [])
+    if (structureID > 0) getStructure({ variables: { lookupTableID: structureID } })
+  }, [structureID])
 
   useEffect(() => {
-    if (!loading && called && data.lookupTable) {
-      console.log('Single lookup table getting set')
-      setLookupTable(data.lookupTable)
-    }
-  }, [loading, called, data])
+    if (!loading && called && !error && data.lookupTable) setStructure(data.lookupTable)
+  }, [loading, called, data, error])
 
   return (
-    <SingleTableStructureContext.Provider value={{ state, getSingleTableStructure, lookupTable }}>
+    <SingleTableStructureContext.Provider
+      value={{ setStructureID, structureLoadState, getStructure, structure }}
+    >
       {children}
     </SingleTableStructureContext.Provider>
   )

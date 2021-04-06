@@ -31,11 +31,8 @@ const LookupTableWrapper: React.FC = () => {
         <Route exact path={`${path}/:lookupTableID`}>
           <SingleTableStructureProvider>
             <SingleTableStructureConsumer>
-              {({ getSingleTableStructure, state, lookupTable }) => (
-                <LookupTablePage
-                  onImportSuccess={() => getSingleTableStructure()}
-                  lookupTable={lookupTable}
-                />
+              {({ getStructure, structure }) => (
+                <LookupTablePage onImportSuccess={() => getStructure()} structure={structure} />
               )}
             </SingleTableStructureConsumer>
           </SingleTableStructureProvider>

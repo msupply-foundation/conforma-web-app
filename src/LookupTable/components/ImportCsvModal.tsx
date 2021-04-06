@@ -14,14 +14,14 @@ import { LookUpTableImportCsvContext } from '../contexts'
 import config from '../../config.json'
 import axios from 'axios'
 
-const ImportCsvModal: React.FC = ({ onImportSuccess, lookupTable = null, ...props }: any) => {
+const ImportCsvModal: React.FC = ({ onImportSuccess, structure = null, ...props }: any) => {
   const { state, dispatch } = React.useContext(LookUpTableImportCsvContext)
   const { uploadModalOpen: open, file, tableName, submittable, submitting, errors, success } = state
 
   useEffect(() => {
     dispatch({
       type: 'SUBMITTABLE',
-      payload: open && file !== null && lookupTable?.id ? true : tableName !== '',
+      payload: open && file !== null && structure?.id ? true : tableName !== '',
     })
   }, [open, file, tableName])
 
@@ -36,26 +36,15 @@ const ImportCsvModal: React.FC = ({ onImportSuccess, lookupTable = null, ...prop
 
     let formData: any = new FormData()
     formData.append('file', file)
-    if (!lookupTable?.id) formData.append('tableName', tableName)
+    if (!structure?.id) formData.append('tableName', tableName)
 
     axios
       .post(
-        config.serverREST + '/lookup-table/import' + (lookupTable?.id ? '/' + lookupTable.id : ''),
+        config.serverREST + '/lookup-table/import' + (structure?.id ? '/' + structure.id : ''),
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-          },
-          onUploadProgress: (data) => {
-            //Set the progress value to show the progress bar
-            console.log(
-              'data.loaded',
-              data.loaded,
-              'data.total',
-              data.total,
-              Math.round((100 * data.loaded) / data.total),
-              data
-            )
           },
         }
       )
@@ -69,23 +58,11 @@ const ImportCsvModal: React.FC = ({ onImportSuccess, lookupTable = null, ...prop
           const errorResponse = error.response.data
           if (errorResponse.name === 'ValidationError') {
             myErrors = JSON.parse(errorResponse.message)
-            console.log('myErrors => ', myErrors)
           }
           myErrors.push(errorResponse.message)
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log(error.response.data)
-          // console.log(error.response.status)
-          // console.log(error.response.headers)
         } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.log(error.request)
           myErrors.push(error.request.message)
         } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log('Error', error.message)
           myErrors.push(error.message)
         }
 
@@ -100,9 +77,7 @@ const ImportCsvModal: React.FC = ({ onImportSuccess, lookupTable = null, ...prop
       open={open}
     >
       <Modal.Header>
-        {!lookupTable?.id
-          ? 'Import Lookup-table'
-          : `Import into Lookup-table: ${lookupTable.label}`}
+        {!structure?.id ? 'Import Lookup-table' : `Import into Lookup-table: ${structure.label}`}
       </Modal.Header>
       <Modal.Content>
         {submitting ? (
@@ -117,11 +92,14 @@ const ImportCsvModal: React.FC = ({ onImportSuccess, lookupTable = null, ...prop
         ) : success ? (
           <Message positive>
             <Message.Header>Lookup table successfully imported</Message.Header>
-            <p>Lookup table '{tableName}' has been successfully created.</p>
+            <p>
+              Lookup table '{structure?.label}' has been successfully
+              {!structure?.id ? ' created' : ' updated'}.
+            </p>
           </Message>
         ) : (
           <Form>
-            {!lookupTable?.id && (
+            {!structure?.id && (
               <Form.Field>
                 <label>Table name</label>
                 <input
