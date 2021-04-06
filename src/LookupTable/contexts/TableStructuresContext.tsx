@@ -1,6 +1,7 @@
 import { useLazyQuery } from '@apollo/client'
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getAllTableStructures } from '../graphql'
+import { LookUpTableType } from '../types'
 
 const initialState: any = {
   data: [],
@@ -11,7 +12,9 @@ const initialState: any = {
 
 const TableStructuresContext = React.createContext({
   state: initialState,
+  LookupTableRows: [],
   getTableStructures: () => {},
+  setLookupTableRows: (rows: any) => rows,
 })
 
 const TableStructuresProvider: React.FC = ({ children }) => {
@@ -19,12 +22,29 @@ const TableStructuresProvider: React.FC = ({ children }) => {
     fetchPolicy: 'no-cache',
   })
 
+  const { called, loading, data, error } = state
+
+  const [LookupTableRows, setLookupTableRows]: [any, any] = useState<[] | LookUpTableType[]>([])
+
+  useEffect(() => {
+    if (!loading && called && !error && data.lookupTables.nodes) {
+      setLookupTableRows(
+        data.lookupTables.nodes.map((lookupTable: LookUpTableType) => ({
+          ...lookupTable,
+          isExpanded: false,
+        }))
+      )
+    }
+  }, [loading, called, data, error])
+
   useEffect(() => {
     getTableStructures()
   }, [])
 
   return (
-    <TableStructuresContext.Provider value={{ state, getTableStructures }}>
+    <TableStructuresContext.Provider
+      value={{ state, getTableStructures, LookupTableRows, setLookupTableRows }}
+    >
       {children}
     </TableStructuresContext.Provider>
   )

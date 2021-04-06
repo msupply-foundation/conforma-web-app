@@ -8,21 +8,8 @@ import { FieldMapType, LookUpTableType } from '../../types'
 const TABLE_PREFIX = 'lookup_table_'
 
 const ListTable: React.FC = () => {
-  const { state } = useContext(TableStructuresContext)
-  const { called, loading, data, error } = state
-
-  const [LookupTableRows, setLookupTableRows] = useState<LookUpTableType[] | []>([])
-
-  useEffect(() => {
-    if (!loading && called && data.lookupTables.nodes) {
-      setLookupTableRows(
-        data.lookupTables.nodes.map((lookupTable: LookUpTableType) => ({
-          ...lookupTable,
-          isExpanded: false,
-        }))
-      )
-    }
-  }, [loading, called, data])
+  const { LookupTableRows, state, setLookupTableRows } = useContext(TableStructuresContext)
+  const { called, loading, error } = state
 
   const handleExpansion = (lookupTable: LookUpTableType) => {
     if (!lookupTable) return
