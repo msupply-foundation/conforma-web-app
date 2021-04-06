@@ -4,7 +4,7 @@ import { ElementStateNEW, PageElement, ResponsesByCode, SectionAndPage } from '.
 import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapperNEW'
 import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
 import { Form, Grid, Segment, Button, Icon, Label } from 'semantic-ui-react'
-import Markdown from '../../utils/helpers/semanticReactMarkdown'
+import getSimplifiedTimeDifference from '../../utils/dateAndTime/getSimplifiedTimeDifference'
 import strings from '../../utils/constants'
 import {
   ApplicationResponse,
@@ -115,13 +115,6 @@ const PageElements: React.FC<PageElementProps> = ({
   // TODO: Find out problem to display edit button with review responses when Review is locked
 
   if (isReview) {
-    const getInformationOrQuestion = (element: ElementStateNEW, props: ElementComponentProps) =>
-      element.category === TemplateElementCategory.Question ? (
-        <QuestionResponseComponent {...props} />
-      ) : (
-        <InformationComponent {...props} />
-      )
-
     return (
       <Form>
         {visibleElements.map(
@@ -151,7 +144,13 @@ const PageElements: React.FC<PageElementProps> = ({
                     marginBottom: thisReviewLatestResponse?.decision ? 0 : 10,
                   }}
                 >
-                  <Grid columns="equal">{getInformationOrQuestion(element, props)}</Grid>
+                  <Grid columns="equal">
+                    {element.category === TemplateElementCategory.Question ? (
+                      <QuestionResponseComponent {...props} />
+                    ) : (
+                      <InformationComponent {...props} />
+                    )}
+                  </Grid>
                 </Segment>
                 {thisReviewLatestResponse && (
                   <ReviewResponseComponent
@@ -251,8 +250,7 @@ const ReviewResponseComponent: React.FC<{
               : 'Non Conform'}
           </text>
           <Label style={{ padding: 6 }} size="mini">
-            Time
-            {/* {getSimplifiedTimeDifference(reviewResponse.timeUpdated)} */}
+            {getSimplifiedTimeDifference(reviewResponse.timeUpdated)}
           </Label>
         </div>
         {!reviewResponse.comment ? null : (
@@ -307,6 +305,16 @@ const ReviewButton: React.FC<{
             : strings.BUTTON_REVIEW_RESPONSE
         }
         size="small"
+        style={{
+          letterSpacing: 0.8,
+          fontWeight: 1000,
+          fontSize: 17,
+          background: 'none',
+          color: '#003BFE',
+          border: 'none',
+          borderRadius: 8,
+          textTransform: 'capitalize',
+        }}
         onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
       />
       <DecisionAreaNEW
