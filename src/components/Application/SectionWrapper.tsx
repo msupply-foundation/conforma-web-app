@@ -33,7 +33,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
   const { details, pages } = section
 
   return (
-    <Accordion styled fluid>
+    <Accordion styled fluid style={{ backgroundColor: '#DCDDDD' }}>
       <Segment.Group size="large">
         <Accordion.Title active={isActive} onClick={toggleSection}>
           <Grid columns="equal">
@@ -50,7 +50,10 @@ const SectionWrapper: React.FC<SectionProps> = ({
         </Accordion.Title>
         <Accordion.Content active={isActive}>
           {Object.values(pages).map((page) => (
-            <Segment key={`Page_${page.number}`}>
+            <Segment
+              key={`Page_${page.number}`}
+              style={{ backgroundColor: '#DCDDDD', border: 'none', boxShadow: 'none' }}
+            >
               {scrollableAttachment && scrollableAttachment(page)}
               <p>{page.name}</p>
               <PageElements

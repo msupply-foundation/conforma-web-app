@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom'
 import { ElementStateNEW, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
 import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapperNEW'
 import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
-import { Form, Grid, Segment, Button, Icon } from 'semantic-ui-react'
+import { Form, Grid, Segment, Button, Icon, Label } from 'semantic-ui-react'
+import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import strings from '../../utils/constants'
 import {
   ApplicationResponse,
   ReviewResponse,
+  ReviewResponseDecision,
   ReviewResponseStatus,
   TemplateElementCategory,
 } from '../../utils/generated/graphql'
@@ -112,44 +114,93 @@ const PageElements: React.FC<PageElementProps> = ({
 
   // TODO: Find out problem to display edit button with review responses when Review is locked
 
-  if (isReview)
+  if (isReview) {
+    const getInformationOrQuestion = (element: ElementStateNEW, props: ElementComponentProps) =>
+      element.category === TemplateElementCategory.Question ? (
+        <QuestionResponseComponent {...props} />
+      ) : (
+        <InformationComponent {...props} />
+      )
+
     return (
       <Form>
-        <Segment.Group>
-          {visibleElements.map(
-            ({
-              element,
-              thisReviewLatestResponse,
-              isNewApplicationResponse,
-              latestApplicationResponse,
-            }) => (
-              <Segment key={`question_${element.id}`}>
-                <Grid columns="equal">
-                  <Grid.Column floated="left">
-                    <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
-                  </Grid.Column>
-                  <Grid.Column floated="right" textAlign="right">
-                    <ReviewButton
-                      isNewApplicationResponse={isNewApplicationResponse}
-                      reviewResponse={thisReviewLatestResponse as ReviewResponse}
-                      summaryViewProps={getSummaryViewProps(element)}
-                    />
-                  </Grid.Column>
-                </Grid>
-                <ReviewResponseComponent
-                  latestApplicationResponse={latestApplicationResponse}
-                  reviewResponse={thisReviewLatestResponse as ReviewResponse}
-                  summaryViewProps={getSummaryViewProps(element)}
-                />
-              </Segment>
+        {visibleElements.map(
+          ({
+            element,
+            thisReviewLatestResponse,
+            isNewApplicationResponse,
+            latestApplicationResponse,
+          }) => {
+            const props: ElementComponentProps = {
+              isNewApplicationResponse: !!isNewApplicationResponse,
+              latestApplicationResponse: latestApplicationResponse,
+              summaryProps: getSummaryViewProps(element),
+              thisReviewLatestResponse: thisReviewLatestResponse,
+            }
+            return (
+              <>
+                <Segment
+                  key={`question_${element.id}`}
+                  style={{
+                    borderRadius: 8,
+                    borderBottomLeftRadius: thisReviewLatestResponse?.decision ? 0 : 8,
+                    borderBottomRightRadius: thisReviewLatestResponse?.decision ? 0 : 8,
+                    border: 'none',
+                    boxShadow: 'none',
+                    margin: 10,
+                    marginBottom: thisReviewLatestResponse?.decision ? 0 : 10,
+                  }}
+                >
+                  <Grid columns="equal">{getInformationOrQuestion(element, props)}</Grid>
+                </Segment>
+                {thisReviewLatestResponse && (
+                  <ReviewResponseComponent
+                    latestApplicationResponse={latestApplicationResponse}
+                    reviewResponse={thisReviewLatestResponse}
+                    summaryViewProps={props.summaryProps}
+                  />
+                )}
+              </>
             )
-          )}
-        </Segment.Group>
+          }
+        )}
       </Form>
     )
-
+  }
   return null
 }
+
+interface ElementComponentProps {
+  isNewApplicationResponse: boolean
+  latestApplicationResponse: ApplicationResponse
+  summaryProps: SummaryViewWrapperPropsNEW
+  thisReviewLatestResponse?: ReviewResponse
+}
+
+const InformationComponent: React.FC<ElementComponentProps> = ({ summaryProps }) => (
+  <Grid.Column stretched>
+    <SummaryViewWrapperNEW {...summaryProps} />
+  </Grid.Column>
+)
+
+const QuestionResponseComponent: React.FC<ElementComponentProps> = ({
+  isNewApplicationResponse,
+  summaryProps,
+  thisReviewLatestResponse,
+}) => (
+  <>
+    <Grid.Column floated="left">
+      <SummaryViewWrapperNEW {...summaryProps} />
+    </Grid.Column>
+    <Grid.Column floated="right" textAlign="right">
+      <ReviewButton
+        isNewApplicationResponse={isNewApplicationResponse}
+        reviewResponse={thisReviewLatestResponse as ReviewResponse}
+        summaryViewProps={summaryProps}
+      />
+    </Grid.Column>
+  </>
+)
 
 const ReviewResponseComponent: React.FC<{
   reviewResponse: ReviewResponse
@@ -167,28 +218,72 @@ const ReviewResponseComponent: React.FC<{
   if (latestApplicationResponse.id !== reviewResponse.applicationResponse?.id) return null
 
   return (
-    <>
-      <Grid columns="equal">
-        <Grid.Column floated="left">
-          <p>{reviewResponse?.decision}</p>
-          <p>{reviewResponse?.comment || ''}</p>
-        </Grid.Column>
-        {reviewResponse.status === ReviewResponseStatus.Draft && (
-          <Grid.Column floated="right" textAlign="right">
-            <Icon
-              name="pencil"
-              color="blue"
-              onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
-            />
-          </Grid.Column>
+    <div
+      style={{
+        display: 'flex',
+        background: 'rgb(249, 255, 255)',
+        margin: 10,
+        marginTop: 0,
+        borderTop: '3px solid rgb(230, 230, 230)',
+        borderBottom: '3px solid rgb(230, 230, 230)',
+        padding: 14,
+      }}
+    >
+      <div style={{ color: 'rgb(150, 150, 150)', marginRight: 20 }}>
+        {reviewResponse.review?.reviewer?.firstName} {reviewResponse.review?.reviewer?.lastName}
+      </div>
+      <div style={{ flexGrow: 1, textAlign: 'left' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Icon
+            name="circle"
+            size="tiny"
+            color={reviewResponse?.decision === ReviewResponseDecision.Approve ? 'green' : 'red'}
+          />
+          <text
+            style={{
+              fontWeight: 'bolder',
+              fontSize: 16,
+              marginRight: 10,
+            }}
+          >
+            {reviewResponse?.decision === ReviewResponseDecision.Approve
+              ? 'Conform'
+              : 'Non Conform'}
+          </text>
+          <Label style={{ padding: 6 }} size="mini">
+            Time
+            {/* {getSimplifiedTimeDifference(reviewResponse.timeUpdated)} */}
+          </Label>
+        </div>
+        {!reviewResponse.comment ? null : (
+          <div
+            style={{
+              color: 'grey',
+
+              display: 'flex',
+              margin: 6,
+            }}
+          >
+            <Icon name="comment alternate outline" color="grey" />
+            <div
+              style={{
+                marginLeft: 6,
+              }}
+            >
+              {reviewResponse.comment}
+            </div>
+          </div>
         )}
-      </Grid>
+      </div>
+      {reviewResponse.status === ReviewResponseStatus.Draft && (
+        <Icon name="edit" color="blue" onClick={() => setToggleDecisionArea(!toggleDecisionArea)} />
+      )}
       <DecisionAreaNEW
         reviewResponse={reviewResponse}
         toggle={toggleDecisionArea}
         summaryViewProps={summaryViewProps}
       />
-    </>
+    </div>
   )
 }
 
