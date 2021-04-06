@@ -13,10 +13,31 @@ import {
 import { LookUpTableImportCsvContext } from '../contexts'
 import config from '../../config.json'
 import axios from 'axios'
+import { useHistory } from 'react-router'
 
-const ImportCsvModal: React.FC = ({ onImportSuccess, structure = null, ...props }: any) => {
+const ImportCsvModal: React.FC = ({
+  onImportSuccess,
+  importModelOpen = false,
+  structure = null,
+  ...props
+}: any) => {
   const { state, dispatch } = React.useContext(LookUpTableImportCsvContext)
   const { uploadModalOpen: open, file, tableName, submittable, submitting, errors, success } = state
+
+  const history = useHistory()
+
+  const goBack = () => {
+    history.goBack()
+  }
+
+  useEffect(() => {
+    console.log('importModelOpen', importModelOpen)
+    if (importModelOpen) {
+      dispatch({ type: 'OPEN_MODAL' })
+    } else {
+      dispatch({ type: 'CLOSE_MODAL' })
+    }
+  }, [importModelOpen])
 
   useEffect(() => {
     dispatch({
@@ -136,7 +157,7 @@ const ImportCsvModal: React.FC = ({ onImportSuccess, structure = null, ...props 
         )}
       </Modal.Content>
       <Modal.Actions>
-        <Button color="black" onClick={(e) => dispatch({ type: 'CLOSE_MODAL' })}>
+        <Button color="black" onClick={goBack}>
           Cancel
         </Button>
         {errors.length > 0 || success ? (

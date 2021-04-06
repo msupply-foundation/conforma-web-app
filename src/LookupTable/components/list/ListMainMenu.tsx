@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 import { Button, Header } from 'semantic-ui-react'
 import { MainMenu } from '..'
 import { LookUpTableImportCsvContext } from '../../contexts'
@@ -19,7 +20,7 @@ const ListMainMenu: React.FC<LookUpTableListMainMenuType> = ({
         </Header>
       }
       actions={
-        <Button primary as="button" onClick={() => dispatch({ type: 'OPEN_MODAL' })}>
+        <Button primary as={NavLink} to="/lookup-tables/import">
           Add new Lookup-table
         </Button>
       }

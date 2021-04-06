@@ -1,4 +1,3 @@
-import { gql, useQuery } from '@apollo/client'
 import React, { useContext, useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Button, Header, Icon, Message, Popup, Table } from 'semantic-ui-react'
@@ -10,7 +9,7 @@ const TABLE_PREFIX = 'lookup_table_'
 
 const ListTable: React.FC = () => {
   const { state } = useContext(TableStructuresContext)
-  const { called, loading, data } = state
+  const { called, loading, data, error } = state
 
   const [LookupTableRows, setLookupTableRows] = useState<LookUpTableType[] | []>([])
 
@@ -31,10 +30,9 @@ const ListTable: React.FC = () => {
     setLookupTableRows([...LookupTableRows])
   }
 
-  // return error ? (
-  //   <Message error header={'Error loading lookup-table'} list={[error.message]} />
-  // ) :
-  return loading && !called ? (
+  return error ? (
+    <Message error header={'Error loading lookup-table'} list={[error.message]} />
+  ) : loading && !called ? (
     <Loading />
   ) : (
     <Table sortable stackable selectable>
@@ -74,7 +72,11 @@ const ListTable: React.FC = () => {
                     <Popup
                       content="Import lookup table"
                       trigger={
-                        <Button icon as={NavLink} to={'lookup'}>
+                        <Button
+                          icon
+                          as={NavLink}
+                          to={'/lookup-tables/' + lookupTable.id + '/import'}
+                        >
                           <Icon name="upload" />
                         </Button>
                       }
@@ -82,7 +84,11 @@ const ListTable: React.FC = () => {
                     <Popup
                       content="Export lookup table"
                       trigger={
-                        <Button icon as={NavLink} to={'lookup'}>
+                        <Button
+                          icon
+                          as={NavLink}
+                          to={'/lookup-tables/' + lookupTable.id + '/export'}
+                        >
                           <Icon name="download" />
                         </Button>
                       }
