@@ -10,7 +10,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ header, actions }) => {
   return (
     <Menu borderless secondary>
       <Menu.Item>{header}</Menu.Item>
-      {actions ? <Menu.Item position="right">{actions}</Menu.Item> : null}
+      {actions && <Menu.Item position="right">{actions}</Menu.Item>}
     </Menu>
   )
 }
