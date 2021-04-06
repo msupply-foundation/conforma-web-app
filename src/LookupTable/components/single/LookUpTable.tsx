@@ -7,17 +7,17 @@ import { SingleTableContext } from '../../contexts'
 
 const LookupTable: React.FC<any> = (props) => {
   const { structure } = props
-  const { singleTableLoadState, lookupTable, setStructure } = useContext(SingleTableContext)
+  const { singleTableLoadState, lookupTable, setStructure }: any = useContext(SingleTableContext)
 
   useEffect(() => {
     setStructure(structure)
   }, [structure])
 
-  const { loading, error } = singleTableLoadState
+  const { loading, called, error } = singleTableLoadState
 
   return error ? (
     <Message error header={'Error loading lookup-table'} list={[error.message]} />
-  ) : loading ? (
+  ) : loading || !called || !lookupTable ? (
     <Loading />
   ) : (
     <Table sortable stackable selectable>

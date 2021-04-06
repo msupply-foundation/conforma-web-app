@@ -22,7 +22,7 @@ const SingleTableContext = React.createContext({
   setStructure: (structure: any) => structure,
   structure: initialStructureState,
   singleTableLoadState: initialState,
-  lookupTable: [],
+  lookupTable: null,
 })
 
 const SingleTableProvider: React.FC = ({ children }) => {
@@ -39,13 +39,14 @@ const SingleTableProvider: React.FC = ({ children }) => {
       }
     }
   `)
+
   const [getSingleTable, singleTableLoadState] = useLazyQuery(dynamicQuery, {
     fetchPolicy: 'no-cache',
   })
 
   const { called, loading, data, error } = singleTableLoadState
 
-  const [lookupTable, setLookupTable] = useState([])
+  const [lookupTable, setLookupTable] = useState(null)
 
   useEffect(() => {
     if (structure.id) {

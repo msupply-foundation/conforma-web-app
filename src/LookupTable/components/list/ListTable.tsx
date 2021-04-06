@@ -8,7 +8,7 @@ import { FieldMapType, LookUpTableType } from '../../types'
 const TABLE_PREFIX = 'lookup_table_'
 
 const ListTable: React.FC = () => {
-  const { LookupTableRows, state, setLookupTableRows } = useContext(TableStructuresContext)
+  const { LookupTableRows, state, setLookupTableRows }: any = useContext(TableStructuresContext)
   const { called, loading, error } = state
 
   const handleExpansion = (lookupTable: LookUpTableType) => {
@@ -19,7 +19,7 @@ const ListTable: React.FC = () => {
 
   return error ? (
     <Message error header={'Error loading lookup-table'} list={[error.message]} />
-  ) : loading && !called ? (
+  ) : loading || !called || !LookupTableRows ? (
     <Loading />
   ) : (
     <Table sortable stackable selectable>
