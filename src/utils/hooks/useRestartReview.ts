@@ -55,12 +55,14 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
   }
 
   return async () => {
-    return await updateReview({
+    const result = await updateReview({
       variables: {
         reviewId: reviewId,
         reviewPatch: constructReviewPatch(await getFullReviewStructureAsync()),
       },
     })
+    if (result.errors) throw new Error(result.errors.toString())
+    return result
   }
 }
 

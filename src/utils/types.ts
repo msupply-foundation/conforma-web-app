@@ -163,6 +163,9 @@ interface AssignmentDetailsNEW {
   totalAssignedQuestions: number
   stage: ApplicationStage
   reviewQuestionAssignments: ReviewQuestionAssignment[]
+  isCurrentUserAssigner: boolean
+  assignableSectionRestrictions: (string | null)[]
+  isCurrentUserReviewer: boolean
 }
 
 interface BasicStringObject {

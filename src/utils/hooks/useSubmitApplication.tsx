@@ -1,5 +1,9 @@
 import { useState } from 'react'
-import { TemplateElementCategory, useUpdateApplicationMutation } from '../generated/graphql'
+import {
+  ApplicationResponseStatus,
+  TemplateElementCategory,
+  useUpdateApplicationMutation,
+} from '../generated/graphql'
 import { FullStructure, ResponseFull, UseGetApplicationProps } from '../types'
 
 const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
@@ -25,16 +29,21 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
     const responsesPatch = elements.map(({ latestApplicationResponse }) => {
       return {
         id: latestApplicationResponse.id,
-        patch: { value: latestApplicationResponse.value || null },
+        patch: {
+          value: latestApplicationResponse.value || null,
+          status: ApplicationResponseStatus.Submitted,
+        },
       }
     })
 
-    return await applicationSubmitMutation({
+    const result = await applicationSubmitMutation({
       variables: {
         serial: serialNumber,
         responses: responsesPatch,
       },
     })
+    if (result.errors) throw new Error(result.errors.toString())
+    return result
   }
   // TODO: Remove this
   const submit = async (responses: ResponseFull[]) => {

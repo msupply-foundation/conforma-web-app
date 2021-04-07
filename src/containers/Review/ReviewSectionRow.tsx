@@ -54,9 +54,13 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     action: section?.reviewAction?.action || ReviewAction.unknown,
   }
 
+  const canRenderRow =
+    section?.reviewAction?.isReviewable ||
+    section?.reviewAction?.action === ReviewAction.canSelfAssign
+
   return (
     <>
-      {section?.reviewAction?.isReviewable && (
+      {canRenderRow && (
         <Grid columns="equal" verticalAlign="middle">
           <ReviewSectionRowAssigned {...props} />
           <ReviewSectionRowLastActionDate {...props} />
