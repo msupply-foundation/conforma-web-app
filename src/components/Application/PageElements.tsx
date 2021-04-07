@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ElementStateNEW, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
 import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapperNEW'
 import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
-import { Form, Grid, Segment, Button, Icon, Label } from 'semantic-ui-react'
+import { Form, Grid, Segment, Button, Icon, Label, Header } from 'semantic-ui-react'
 import getSimplifiedTimeDifference from '../../utils/dateAndTime/getSimplifiedTimeDifference'
 import strings from '../../utils/constants'
 import {
@@ -19,6 +19,7 @@ import {
   SummaryViewWrapperPropsNEW,
 } from '../../formElementPlugins/types'
 import DecisionAreaNEW from '../Review/DecisionAreaNEW'
+import { useRouter } from '../../utils/hooks/useRouter'
 
 interface PageElementProps {
   elements: PageElement[]
@@ -78,36 +79,72 @@ const PageElements: React.FC<PageElementProps> = ({
     response: responsesByCode?.[element.code],
     allResponses: responsesByCode,
   })
+
   // Summary Page
   if (isSummary) {
     const { sectionCode, pageNumber } = sectionAndPage as SectionAndPage
     return (
       <Form>
-        <Segment.Group>
-          {visibleElements
-            .filter(({ element }) => element.isVisible)
-            .map(({ element }) => {
-              return (
-                <Segment key={`question_${element.code}`}>
-                  <Grid columns="equal">
-                    <Grid.Column floated="left">
-                      <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
-                    </Grid.Column>
-                    {element.category === TemplateElementCategory.Question && canEdit && (
-                      <Grid.Column floated="right" textAlign="right">
-                        <Button
-                          content={strings.BUTTON_SUMMARY_EDIT}
-                          size="small"
-                          as={Link}
-                          to={`/application/${serial}/${sectionCode}/Page${pageNumber}`}
-                        />
-                      </Grid.Column>
-                    )}
-                  </Grid>
-                </Segment>
-              )
-            })}
-        </Segment.Group>
+        {visibleElements.map((state) => {
+          const {
+            element,
+            isChanged,
+            isChangeRequest,
+            previousApplicationResponse,
+            latestApplicationResponse,
+          } = state
+          // console.log(state.element.code, state.element.category, state)
+          const props: SummaryComponentProps = {
+            canEdit: !!canEdit,
+            linkToPage: `application/${serial}/${sectionCode}/Page${pageNumber}`,
+            summaryProps: getSummaryViewProps(element),
+            latestApplicationResponse: latestApplicationResponse,
+            previousApplicationResponse: previousApplicationResponse,
+          }
+
+          const changedQuestionResponse = !isChangeRequest && !isChanged
+          const previousReviewResponse = isChangeRequest
+            ? previousApplicationResponse.reviewResponses.nodes[0]
+            : undefined
+
+          console.log('previousReviewResponse', previousReviewResponse)
+
+          return (
+            <>
+              <Segment
+                key={`question_${element.id}`}
+                style={{
+                  borderRadius: 8,
+                  borderBottomLeftRadius: changedQuestionResponse ? 0 : 8,
+                  borderBottomRightRadius: changedQuestionResponse ? 0 : 8,
+                  border: 'none',
+                  boxShadow: 'none',
+                  margin: 10,
+                  marginBottom: changedQuestionResponse ? 0 : 10,
+                }}
+              >
+                <Grid columns="equal">
+                  {element.category === TemplateElementCategory.Question ? (
+                    changedQuestionResponse ? (
+                      <SummaryResponseComponent {...props} />
+                    ) : (
+                      <ChangedQuestionResponseComponent {...props} />
+                    )
+                  ) : (
+                    <InformationComponent {...props} />
+                  )}
+                </Grid>
+              </Segment>
+              {previousReviewResponse && (
+                <ReviewCommentResponseComponent
+                  latestApplicationResponse={latestApplicationResponse}
+                  reviewResponse={previousReviewResponse as ReviewResponse}
+                  summaryViewProps={props.summaryProps}
+                />
+              )}
+            </>
+          )
+        })}
       </Form>
     )
   }
@@ -124,7 +161,7 @@ const PageElements: React.FC<PageElementProps> = ({
             isNewApplicationResponse,
             latestApplicationResponse,
           }) => {
-            const props: ElementComponentProps = {
+            const props: ReviewComponentProps = {
               isNewApplicationResponse: !!isNewApplicationResponse,
               latestApplicationResponse: latestApplicationResponse,
               summaryProps: getSummaryViewProps(element),
@@ -146,14 +183,14 @@ const PageElements: React.FC<PageElementProps> = ({
                 >
                   <Grid columns="equal">
                     {element.category === TemplateElementCategory.Question ? (
-                      <QuestionResponseComponent {...props} />
+                      <ReviewQuestionResponseComponent {...props} />
                     ) : (
                       <InformationComponent {...props} />
                     )}
                   </Grid>
                 </Segment>
                 {thisReviewLatestResponse && (
-                  <ReviewResponseComponent
+                  <ReviewCommentResponseComponent
                     latestApplicationResponse={latestApplicationResponse}
                     reviewResponse={thisReviewLatestResponse}
                     summaryViewProps={props.summaryProps}
@@ -169,20 +206,79 @@ const PageElements: React.FC<PageElementProps> = ({
   return null
 }
 
-interface ElementComponentProps {
-  isNewApplicationResponse: boolean
-  latestApplicationResponse: ApplicationResponse
+interface InformationComponentProps {
   summaryProps: SummaryViewWrapperPropsNEW
-  thisReviewLatestResponse?: ReviewResponse
 }
 
-const InformationComponent: React.FC<ElementComponentProps> = ({ summaryProps }) => (
+const InformationComponent: React.FC<InformationComponentProps> = ({ summaryProps }) => (
   <Grid.Column stretched>
     <SummaryViewWrapperNEW {...summaryProps} />
   </Grid.Column>
 )
 
-const QuestionResponseComponent: React.FC<ElementComponentProps> = ({
+type SummaryComponentProps = InformationComponentProps & {
+  canEdit: boolean
+  linkToPage: string
+  latestApplicationResponse: ApplicationResponse
+  previousApplicationResponse: ApplicationResponse
+}
+
+const SummaryResponseComponent: React.FC<SummaryComponentProps> = ({
+  canEdit,
+  linkToPage,
+  summaryProps,
+}) => (
+  <>
+    <Grid.Column floated="left">
+      <SummaryViewWrapperNEW {...summaryProps} />
+    </Grid.Column>
+    <Grid.Column floated="right" textAlign="right">
+      {canEdit && (
+        <Button content={strings.BUTTON_SUMMARY_EDIT} size="small" as={Link} to={linkToPage} />
+      )}
+    </Grid.Column>
+  </>
+)
+
+const ChangedQuestionResponseComponent: React.FC<SummaryComponentProps> = ({
+  canEdit,
+  linkToPage,
+  latestApplicationResponse,
+  summaryProps,
+}) => {
+  const { push } = useRouter()
+  return (
+    <>
+      <Grid.Column floated="left">
+        <SummaryViewWrapperNEW {...summaryProps} />
+        <Icon name="circle" size="tiny" color="blue" />
+        <text
+          style={{
+            fontWeight: 'bolder',
+            fontSize: 16,
+            marginRight: 10,
+          }}
+        >
+          Updated
+        </text>
+        <Label style={{ padding: 6 }} size="mini">
+          {getSimplifiedTimeDifference(latestApplicationResponse.timeUpdated)}
+        </Label>
+      </Grid.Column>
+      <Grid.Column floated="right" textAlign="right">
+        {canEdit && <Icon name="edit" color="blue" size="small" onClick={() => push(linkToPage)} />}
+      </Grid.Column>
+    </>
+  )
+}
+
+type ReviewComponentProps = InformationComponentProps & {
+  isNewApplicationResponse: boolean
+  latestApplicationResponse: ApplicationResponse
+  thisReviewLatestResponse?: ReviewResponse
+}
+
+const ReviewQuestionResponseComponent: React.FC<ReviewComponentProps> = ({
   isNewApplicationResponse,
   summaryProps,
   thisReviewLatestResponse,
@@ -201,7 +297,7 @@ const QuestionResponseComponent: React.FC<ElementComponentProps> = ({
   </>
 )
 
-const ReviewResponseComponent: React.FC<{
+const ReviewCommentResponseComponent: React.FC<{
   reviewResponse: ReviewResponse
   summaryViewProps: SummaryViewWrapperPropsNEW
   latestApplicationResponse: ApplicationResponse
