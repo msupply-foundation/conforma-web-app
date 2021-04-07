@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { Form } from 'semantic-ui-react'
-import { SummaryViewWrapperPropsNEW, PluginComponents, ValidationState } from './types'
-import { TemplateElementCategory } from '../utils/generated/graphql'
-import { ElementPluginParameters, User } from '../utils/types'
+import { SummaryViewWrapperPropsNEW, PluginComponents } from './types'
+import { ElementPluginParameters } from '../utils/types'
 import { extractDynamicExpressions, evaluateDynamicParameters } from './ApplicationViewWrapper'
 import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
@@ -11,15 +10,18 @@ import globalConfig from '../config.json'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
 
-const SummaryViewWrapper: React.FC<SummaryViewWrapperPropsNEW> = (props) => {
-  const { element, response, allResponses } = props
-  const { parameters, category, code, pluginCode, isEditable, isRequired, isVisible } = element
+const SummaryViewWrapper: React.FC<SummaryViewWrapperPropsNEW> = ({
+  element,
+  response,
+  allResponses,
+  displayTitle = true,
+}) => {
+  const { parameters, pluginCode, isRequired, isVisible } = element
   const {
     userState: { currentUser },
   } = useUserState()
   const [evaluatedParameters, setEvaluatedParameters] = useState({})
   const [parametersLoaded, setParametersLoaded] = useState(false)
-  const responses = { thisResponse: response?.text, ...allResponses }
 
   const { SummaryView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
@@ -38,18 +40,13 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperPropsNEW> = (props) => {
       setParametersLoaded(true)
     })
   }, [])
-  if (
-    !pluginCode ||
-    !isVisible
-    // || category === TemplateElementCategory.Information
-  )
-    return null
+  if (!pluginCode || !isVisible) return null
 
   const DefaultSummaryView: React.FC = () => {
     const combinedParams = { ...parameters, ...evaluatedParameters }
     return (
       <Form.Field required={isRequired}>
-        {parametersLoaded && (
+        {parametersLoaded && displayTitle && (
           <>
             <label style={{ color: 'black' }}>
               <Markdown text={combinedParams.label} semanticComponent="noParagraph" />

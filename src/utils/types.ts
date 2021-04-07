@@ -376,7 +376,6 @@ interface ResponseFull {
   id: number
   text: string | null | undefined
   optionIndex?: number
-  reference?: any // Not yet decided how to represent
   isValid?: boolean | null
   hash?: string // Used in Password plugin
   files?: any[] // Used in FileUpload plugin

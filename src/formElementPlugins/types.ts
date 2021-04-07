@@ -85,6 +85,7 @@ interface SummaryViewWrapperPropsNEW {
   element: ElementStateNEW
   response: ResponseFull | null
   allResponses: ResponsesByCode
+  displayTitle?: boolean
 }
 
 interface OnUpdateTemplateWrapperView {

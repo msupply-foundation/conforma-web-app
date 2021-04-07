@@ -110,12 +110,12 @@ const PageElements: React.FC<PageElementProps> = ({
                 key={`question_${element.id}`}
                 style={{
                   borderRadius: 8,
-                  borderBottomLeftRadius: changedQuestionResponse ? 0 : 8,
-                  borderBottomRightRadius: changedQuestionResponse ? 0 : 8,
+                  borderBottomLeftRadius: isChangeRequest ? 0 : 8,
+                  borderBottomRightRadius: isChangeRequest ? 0 : 8,
                   border: 'none',
                   boxShadow: 'none',
                   margin: 10,
-                  marginBottom: changedQuestionResponse ? 0 : 10,
+                  marginBottom: isChangeRequest ? 0 : 10,
                 }}
               >
                 <Grid columns="equal">
@@ -130,7 +130,7 @@ const PageElements: React.FC<PageElementProps> = ({
                   )}
                 </Grid>
               </Segment>
-              {/* {isChangeRequest && <ChangedReviewResponseComponent {...props} />} */}
+              {isChangeRequest && <ChangedReviewResponseComponent {...props} />}
             </>
           )
         })}
@@ -240,6 +240,8 @@ const ChangedQuestionResponseComponent: React.FC<SummaryComponentProps> = ({
     <>
       <Grid.Column floated="left">
         <SummaryViewWrapperNEW {...summaryProps} />
+      </Grid.Column>
+      <Grid.Column>
         <Icon name="circle" size="tiny" color="blue" />
         <text
           style={{
@@ -263,10 +265,9 @@ const ChangedQuestionResponseComponent: React.FC<SummaryComponentProps> = ({
 
 const ChangedReviewResponseComponent: React.FC<SummaryComponentProps> = ({
   previousApplicationResponse,
+  summaryProps,
 }) => {
   const reviewResponse = previousApplicationResponse.reviewResponses.nodes?.[0]
-
-  console.log(reviewResponse)
 
   if (!reviewResponse) return null
   if (!reviewResponse?.decision) return null
@@ -274,45 +275,52 @@ const ChangedReviewResponseComponent: React.FC<SummaryComponentProps> = ({
   // If review was approved we don't need to show to the Applicant
   if (reviewResponse?.decision === ReviewResponseDecision.Approve) return null
 
+  const { element, allResponses } = summaryProps
+
   return (
-    <div
+    <Grid
       style={{
-        display: 'flex',
         background: 'rgb(249, 255, 255)',
         margin: 10,
         marginTop: 0,
+        padding: 14,
         borderTop: '3px solid rgb(230, 230, 230)',
         borderBottom: '3px solid rgb(230, 230, 230)',
-        padding: 14,
       }}
     >
-      <Grid>
-        <Grid.Column>
-          <Label style={{ padding: 6 }} size="mini">
-            {getSimplifiedTimeDifference(reviewResponse.timeUpdated)}
-          </Label>
-        </Grid.Column>
-        <Grid.Column>
+      <Grid.Column floated="left" width={2}>
+        <Label size="mini" content={getSimplifiedTimeDifference(reviewResponse.timeUpdated)} />
+      </Grid.Column>
+      <Grid.Column floated="left" width={14}>
+        <SummaryViewWrapperNEW
+          {...{
+            element,
+            allResponses,
+            response: {
+              id: previousApplicationResponse.id,
+              text: previousApplicationResponse.value.text,
+            },
+            displayTitle: false,
+          }}
+        />
+        <div
+          style={{
+            color: 'grey',
+            display: 'flex',
+            margin: 6,
+          }}
+        >
+          <Icon name="comment alternate outline" color="grey" />
           <div
             style={{
-              color: 'grey',
-              display: 'flex',
-              margin: 6,
+              marginLeft: 6,
             }}
           >
-            <Header>{previousApplicationResponse.value}</Header>
-            <Icon name="comment alternate outline" color="grey" />
-            <div
-              style={{
-                marginLeft: 6,
-              }}
-            >
-              {reviewResponse.comment || 'Response has been resufused'}
-            </div>
+            {reviewResponse.comment || ''}
           </div>
-        </Grid.Column>
-      </Grid>
-    </div>
+        </div>
+      </Grid.Column>
+    </Grid>
   )
 }
 
@@ -347,8 +355,6 @@ const ReviewCommentResponseComponent: React.FC<{
   latestApplicationResponse: ApplicationResponse
 }> = ({ reviewResponse, summaryViewProps, latestApplicationResponse }) => {
   const [toggleDecisionArea, setToggleDecisionArea] = useState(false)
-
-  console.log(reviewResponse, latestApplicationResponse)
 
   if (!reviewResponse) return null
   if (!reviewResponse?.decision) return null
