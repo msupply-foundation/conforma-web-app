@@ -177,6 +177,7 @@ const ApproveAllButton: React.FC<{ page: PageNEW }> = ({ page }) => {
 }
 
 const StageComponent: React.FC<{ stage: string }> = ({ stage }) => (
+  // TODO: Issue #561 - Setup to use pre-defined colour of stage label
   <Label
     style={
       stage === 'Assessment'
