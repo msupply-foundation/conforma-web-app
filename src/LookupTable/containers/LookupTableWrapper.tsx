@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Switch, useParams } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import { LookupTableListPage } from '.'
 import { useRouter } from '../../utils/hooks/useRouter'
 import LookupTablePage from './LookupTablePage'
@@ -7,8 +7,8 @@ import {
   LookUpTableImportCsvProvider,
   SingleTableStructureConsumer,
   SingleTableStructureProvider,
-  TableStructuresConsumer,
-  TableStructuresProvider,
+  AllTableStructuresConsumer,
+  AllTableStructuresProvider,
 } from '../contexts'
 
 const LookupTableWrapper: React.FC = () => {
@@ -21,18 +21,18 @@ const LookupTableWrapper: React.FC = () => {
     <LookUpTableImportCsvProvider>
       <Switch>
         <Route exact path={[path, `${path}/import`]}>
-          <TableStructuresProvider>
-            <TableStructuresConsumer>
-              {({ getTableStructures }) => {
+          <AllTableStructuresProvider>
+            <AllTableStructuresConsumer>
+              {({ getAllTableStructures }) => {
                 return (
                   <LookupTableListPage
-                    onImportSuccess={() => getTableStructures()}
+                    onImportSuccess={() => getAllTableStructures()}
                     importModelOpen={pathname === `${path}/import`}
                   />
                 )
               }}
-            </TableStructuresConsumer>
-          </TableStructuresProvider>
+            </AllTableStructuresConsumer>
+          </AllTableStructuresProvider>
         </Route>
         <Route exact path={[`${path}/:lookupTableID`, `${path}/:lookupTableID/import`]}>
           <SingleTableStructureProvider>
