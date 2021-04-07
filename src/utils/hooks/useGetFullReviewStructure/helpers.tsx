@@ -3,6 +3,7 @@ import {
   GetReviewResponsesQuery,
   ReviewResponse,
   ReviewQuestionAssignment,
+  TemplateElement,
 } from '../../generated/graphql'
 import {
   addElementsById,
@@ -99,7 +100,8 @@ const addIsAssigned = (
   newStructure: FullStructure,
   reviewQuestionAssignment: ReviewQuestionAssignment[]
 ) => {
-  reviewQuestionAssignment.forEach(({ templateElementId, id }) => {
+  reviewQuestionAssignment.forEach(({ templateElement, id }) => {
+    const { id: templateElementId } = templateElement as TemplateElement
     const assignedElement = newStructure?.elementsById?.[templateElementId || '']
 
     if (!assignedElement) return
