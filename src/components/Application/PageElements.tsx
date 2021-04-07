@@ -112,23 +112,22 @@ const PageElements: React.FC<PageElementProps> = ({
                   borderRadius: 8,
                   borderBottomLeftRadius: isChangeRequest ? 0 : 8,
                   borderBottomRightRadius: isChangeRequest ? 0 : 8,
+                  background: isChangeRequest ? 'rgb(249, 255, 255)' : '#FFFFFF',
                   border: 'none',
                   boxShadow: 'none',
                   margin: 10,
                   marginBottom: isChangeRequest ? 0 : 10,
                 }}
               >
-                <Grid columns="equal">
-                  {element.category === TemplateElementCategory.Question ? (
-                    changedQuestionResponse ? (
-                      <SummaryResponseComponent {...props} />
-                    ) : (
-                      <ChangedQuestionResponseComponent {...props} />
-                    )
+                {element.category === TemplateElementCategory.Question ? (
+                  changedQuestionResponse ? (
+                    <SummaryResponseComponent {...props} />
                   ) : (
-                    <InformationComponent {...props} />
-                  )}
-                </Grid>
+                    <ChangedQuestionResponseComponent {...props} />
+                  )
+                ) : (
+                  <InformationComponent {...props} />
+                )}
               </Segment>
               {isChangeRequest && <ChangedReviewResponseComponent {...props} />}
             </>
@@ -170,13 +169,11 @@ const PageElements: React.FC<PageElementProps> = ({
                     marginBottom: thisReviewLatestResponse?.decision ? 0 : 10,
                   }}
                 >
-                  <Grid columns="equal">
-                    {element.category === TemplateElementCategory.Question ? (
-                      <ReviewQuestionResponseComponent {...props} />
-                    ) : (
-                      <InformationComponent {...props} />
-                    )}
-                  </Grid>
+                  {element.category === TemplateElementCategory.Question ? (
+                    <ReviewQuestionResponseComponent {...props} />
+                  ) : (
+                    <InformationComponent {...props} />
+                  )}
                 </Segment>
                 {thisReviewLatestResponse && (
                   <ReviewCommentResponseComponent
@@ -200,9 +197,11 @@ interface InformationComponentProps {
 }
 
 const InformationComponent: React.FC<InformationComponentProps> = ({ summaryProps }) => (
-  <Grid.Column stretched>
-    <SummaryViewWrapperNEW {...summaryProps} />
-  </Grid.Column>
+  <Grid>
+    <Grid.Column stretched>
+      <SummaryViewWrapperNEW {...summaryProps} />
+    </Grid.Column>
+  </Grid>
 )
 
 type SummaryComponentProps = InformationComponentProps & {
@@ -217,8 +216,8 @@ const SummaryResponseComponent: React.FC<SummaryComponentProps> = ({
   linkToPage,
   summaryProps,
 }) => (
-  <>
-    <Grid.Column floated="left">
+  <Grid columns="equal">
+    <Grid.Column floated="left" width={4}>
       <SummaryViewWrapperNEW {...summaryProps} />
     </Grid.Column>
     <Grid.Column floated="right" textAlign="right">
@@ -226,7 +225,7 @@ const SummaryResponseComponent: React.FC<SummaryComponentProps> = ({
         <Button content={strings.BUTTON_SUMMARY_EDIT} size="small" as={Link} to={linkToPage} />
       )}
     </Grid.Column>
-  </>
+  </Grid>
 )
 
 const ChangedQuestionResponseComponent: React.FC<SummaryComponentProps> = ({
@@ -237,11 +236,11 @@ const ChangedQuestionResponseComponent: React.FC<SummaryComponentProps> = ({
 }) => {
   const { push } = useRouter()
   return (
-    <>
-      <Grid.Column floated="left">
+    <Grid>
+      <Grid.Column floated="left" width={4}>
         <SummaryViewWrapperNEW {...summaryProps} />
       </Grid.Column>
-      <Grid.Column>
+      <Grid.Column width={4}>
         <Icon name="circle" size="tiny" color="blue" />
         <text
           style={{
@@ -256,10 +255,10 @@ const ChangedQuestionResponseComponent: React.FC<SummaryComponentProps> = ({
           {getSimplifiedTimeDifference(latestApplicationResponse.timeUpdated)}
         </Label>
       </Grid.Column>
-      <Grid.Column floated="right" textAlign="right">
+      <Grid.Column floated="right" textAlign="right" width={8}>
         {canEdit && <Icon name="edit" color="blue" size="small" onClick={() => push(linkToPage)} />}
       </Grid.Column>
-    </>
+    </Grid>
   )
 }
 
@@ -280,18 +279,17 @@ const ChangedReviewResponseComponent: React.FC<SummaryComponentProps> = ({
   return (
     <Grid
       style={{
-        background: 'rgb(249, 255, 255)',
         margin: 10,
         marginTop: 0,
-        padding: 14,
         borderTop: '3px solid rgb(230, 230, 230)',
         borderBottom: '3px solid rgb(230, 230, 230)',
+        backgroundColor: '#FFFFFF',
       }}
     >
-      <Grid.Column floated="left" width={2}>
+      <Grid.Column floated="left" width={4}>
         <Label size="mini" content={getSimplifiedTimeDifference(reviewResponse.timeUpdated)} />
       </Grid.Column>
-      <Grid.Column floated="left" width={14}>
+      <Grid.Column floated="left" width={12}>
         <SummaryViewWrapperNEW
           {...{
             element,
@@ -335,8 +333,8 @@ const ReviewQuestionResponseComponent: React.FC<ReviewComponentProps> = ({
   summaryProps,
   thisReviewLatestResponse,
 }) => (
-  <>
-    <Grid.Column floated="left">
+  <Grid>
+    <Grid.Column floated="left" width={4}>
       <SummaryViewWrapperNEW {...summaryProps} />
     </Grid.Column>
     <Grid.Column floated="right" textAlign="right">
@@ -346,7 +344,7 @@ const ReviewQuestionResponseComponent: React.FC<ReviewComponentProps> = ({
         summaryViewProps={summaryProps}
       />
     </Grid.Column>
-  </>
+  </Grid>
 )
 
 const ReviewCommentResponseComponent: React.FC<{
