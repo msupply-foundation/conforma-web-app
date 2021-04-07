@@ -103,11 +103,6 @@ const PageElements: React.FC<PageElementProps> = ({
           }
 
           const changedQuestionResponse = !isChangeRequest && !isChanged
-          const previousReviewResponse = isChangeRequest
-            ? previousApplicationResponse.reviewResponses.nodes[0]
-            : undefined
-
-          console.log('previousReviewResponse', previousReviewResponse)
 
           return (
             <>
@@ -135,13 +130,7 @@ const PageElements: React.FC<PageElementProps> = ({
                   )}
                 </Grid>
               </Segment>
-              {previousReviewResponse && (
-                <ReviewCommentResponseComponent
-                  latestApplicationResponse={latestApplicationResponse}
-                  reviewResponse={previousReviewResponse as ReviewResponse}
-                  summaryViewProps={props.summaryProps}
-                />
-              )}
+              {/* {isChangeRequest && <ChangedReviewResponseComponent {...props} />} */}
             </>
           )
         })}
@@ -272,6 +261,61 @@ const ChangedQuestionResponseComponent: React.FC<SummaryComponentProps> = ({
   )
 }
 
+const ChangedReviewResponseComponent: React.FC<SummaryComponentProps> = ({
+  previousApplicationResponse,
+}) => {
+  const reviewResponse = previousApplicationResponse.reviewResponses.nodes?.[0]
+
+  console.log(reviewResponse)
+
+  if (!reviewResponse) return null
+  if (!reviewResponse?.decision) return null
+
+  // If review was approved we don't need to show to the Applicant
+  if (reviewResponse?.decision === ReviewResponseDecision.Approve) return null
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        background: 'rgb(249, 255, 255)',
+        margin: 10,
+        marginTop: 0,
+        borderTop: '3px solid rgb(230, 230, 230)',
+        borderBottom: '3px solid rgb(230, 230, 230)',
+        padding: 14,
+      }}
+    >
+      <Grid>
+        <Grid.Column>
+          <Label style={{ padding: 6 }} size="mini">
+            {getSimplifiedTimeDifference(reviewResponse.timeUpdated)}
+          </Label>
+        </Grid.Column>
+        <Grid.Column>
+          <div
+            style={{
+              color: 'grey',
+              display: 'flex',
+              margin: 6,
+            }}
+          >
+            <Header>{previousApplicationResponse.value}</Header>
+            <Icon name="comment alternate outline" color="grey" />
+            <div
+              style={{
+                marginLeft: 6,
+              }}
+            >
+              {reviewResponse.comment || 'Response has been resufused'}
+            </div>
+          </div>
+        </Grid.Column>
+      </Grid>
+    </div>
+  )
+}
+
 type ReviewComponentProps = InformationComponentProps & {
   isNewApplicationResponse: boolean
   latestApplicationResponse: ApplicationResponse
@@ -304,8 +348,9 @@ const ReviewCommentResponseComponent: React.FC<{
 }> = ({ reviewResponse, summaryViewProps, latestApplicationResponse }) => {
   const [toggleDecisionArea, setToggleDecisionArea] = useState(false)
 
+  console.log(reviewResponse, latestApplicationResponse)
+
   if (!reviewResponse) return null
-  if (!reviewResponse?.decision) return null
   if (!reviewResponse?.decision) return null
 
   // After review is submitted, reviewResponses are trimmed if they are not changed duplicates
