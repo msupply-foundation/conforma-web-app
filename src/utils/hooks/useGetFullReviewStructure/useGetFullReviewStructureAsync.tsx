@@ -5,7 +5,7 @@ import { UseGetFullReviewStructureProps, FullStructure } from '../../types'
 import { getSectionIds, generateReviewStructure } from './helpers'
 
 interface AwaitModeResolver {
-  awaitMethod: (reslt: FullStructure | null) => void
+  awaitMethod: (result: FullStructure | null) => void
 }
 
 const useGetFullReviewStructureAsync = (props: UseGetFullReviewStructureProps) => {
