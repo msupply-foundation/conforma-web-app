@@ -43,9 +43,18 @@ const SiteLayout: React.FC = () => {
       <Container>
         <UserArea />
       </Container>
-      <Container>
+      <Container
+        className="basebody"
+        style={{
+          minHeight: '100vh',
+          paddingTop: 135,
+          paddingBottom: 65,
+          paddingRight: 25,
+          paddingLeft: 25,
+        }}
+      >
         <Switch>
-          <Route exact path="/">
+          <Route exact path="/dashboard">
             <Home />
           </Route>
           <Route exact path="/login">
