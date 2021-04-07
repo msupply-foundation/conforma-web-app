@@ -35,13 +35,15 @@ import UserArea from '../User/UserArea'
 import ListWrapper from '../List/ListWrapper'
 import ReviewSubmission from '../../components/Review/ReviewSubmission'
 import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpdateTrackerState'
-import { Container } from 'semantic-ui-react'
+import { Container, Segment } from 'semantic-ui-react'
+import DevOptions from '../User/DevOptions'
 
 const SiteLayout: React.FC = () => {
   return (
     <Router>
       <Container>
         <UserArea />
+        <DevOptions />
       </Container>
       <Container
         className="basebody"

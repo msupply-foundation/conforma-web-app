@@ -71,6 +71,7 @@ export default {
   LABEL_REVIEW_RESSUBMIT: 'Request a resubmission',
   LABEL_WELCOME: 'Welcome to IRIMS Application Manager',
   LINK_LOGIN_USER: 'Create new account',
+  MENU_ITEM_DASHBOARD: 'Dashboard',
   TITLE_APPLICATION_FORM: 'application form',
   TITLE_APPLICATION_SUBMIT: 'Review & Submit',
   TITLE_NO_ORGANISATION: 'No Organisation',
