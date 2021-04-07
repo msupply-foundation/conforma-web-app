@@ -30,7 +30,6 @@ const useGetFullReviewStructureAsync = (props: UseGetFullReviewStructureProps) =
   console.log(awaitModeResolver, !!awaitModeResolver)
 
   useEffect(() => {
-    console.log('here')
     if (error) {
       console.log(error)
       if (awaitModeResolver) awaitModeResolver.awaitMethod(null)
