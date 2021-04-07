@@ -1,25 +1,30 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Button, Header, Icon, Message, Popup, Table } from 'semantic-ui-react'
 import { Loading } from '../../../components'
-import { TableStructuresContext } from '../../contexts/TableStructuresContext'
+import { AllTableStructuresContext } from '../../contexts/AllTableStructures.context'
 import { FieldMapType, LookUpTableType } from '../../types'
 
 const TABLE_PREFIX = 'lookup_table_'
 
 const ListTable: React.FC = () => {
-  const { LookupTableRows, state, setLookupTableRows }: any = useContext(TableStructuresContext)
-  const { called, loading, error } = state
+  const {
+    allTableStructures,
+    allTableStructuresLoadState,
+    setAllTableStructures,
+  }: any = useContext(AllTableStructuresContext)
+
+  const { called, loading, error } = allTableStructuresLoadState
 
   const handleExpansion = (lookupTable: LookUpTableType) => {
     if (!lookupTable) return
     lookupTable.isExpanded = !lookupTable.isExpanded
-    setLookupTableRows([...LookupTableRows])
+    setAllTableStructures([...allTableStructures])
   }
 
   return error ? (
     <Message error header={'Error loading lookup-table'} list={[error.message]} />
-  ) : loading || !called || !LookupTableRows ? (
+  ) : loading || !called || !allTableStructures ? (
     <Loading />
   ) : (
     <Table sortable stackable selectable>
@@ -37,8 +42,8 @@ const ListTable: React.FC = () => {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {LookupTableRows.length > 0 ? (
-          (LookupTableRows as LookUpTableType[]).map((lookupTable: LookUpTableType) => (
+        {allTableStructures.length > 0 ? (
+          (allTableStructures as LookUpTableType[]).map((lookupTable: LookUpTableType) => (
             <React.Fragment key={`lookup-table-a-${lookupTable.id}`}>
               <Table.Row
                 key={`lookup-table-${lookupTable.id}`}
