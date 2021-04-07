@@ -130,6 +130,8 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
             right: 0,
             boxShadow: '0px -6px 3px -3px #AAAAAA',
             paddingTop: 10,
+            paddingBottom: 70,
+            zIndex: 1000,
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

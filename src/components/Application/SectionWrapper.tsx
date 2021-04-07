@@ -45,7 +45,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
         }}
       >
         <Accordion.Title active={isActive} onClick={toggleSection}>
-          <Sticky context={stickyRef} offset={135}>
+          <Sticky context={stickyRef} offset={135} bottomOffset={150}>
             <Grid
               columns="equal"
               style={{
