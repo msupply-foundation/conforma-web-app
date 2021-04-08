@@ -26,10 +26,6 @@ export {
   ApplicationElementStates,
   ApplicationListRow,
   ApplicationProps,
-  ApplicationStage,
-  ApplicationStageMap,
-  ApplicationStages, // TODO: Remove this
-  AssignmentDetails,
   AssignmentDetailsNEW,
   CellProps,
   ChangeRequestsProgress,
@@ -135,21 +131,6 @@ interface ApplicationProps {
 interface ApplicationStage {
   id: number
   name: string
-}
-
-interface ApplicationStageMap {
-  [key: string]: ApplicationStage
-}
-
-interface ApplicationStages {
-  stages: StageDetails[]
-  submissionMessage: string
-}
-
-interface AssignmentDetails {
-  id: number
-  review?: ReviewDetails
-  questions: ReviewQuestion[]
 }
 
 interface AssignmentDetailsNEW {
