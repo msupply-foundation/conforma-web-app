@@ -1,8 +1,8 @@
 import { ReviewStatus, ReviewAssignmentStatus } from '../../generated/graphql'
-import { SectionStateNEW, AssignmentDetails, ReviewDetails, ReviewAction } from '../../types'
+import { SectionState, AssignmentDetails, ReviewDetails, ReviewAction } from '../../types'
 
 type GenerateSectionActions = (props: {
-  sections: SectionStateNEW[]
+  sections: SectionState[]
   reviewAssignment: AssignmentDetails
   thisReview?: ReviewDetails | null
   currentUserId: number

@@ -3,9 +3,9 @@ import { Loading } from '../../components'
 import {
   AssignmentDetails,
   FullStructure,
-  PageNEW,
+  Page,
   ResponsesByCode,
-  SectionStateNEW,
+  SectionState,
 } from '../../utils/types'
 
 import {
@@ -81,11 +81,9 @@ const ReviewPage: React.FC<{
               isActive={isSectionActive(section.details.code)}
               toggleSection={toggleSection(section.details.code)}
               section={section}
-              extraSectionTitleContent={(section: SectionStateNEW) => (
-                <SectionProgress {...section} />
-              )}
-              extraPageContent={(page: PageNEW) => <ApproveAllButton page={page} />}
-              scrollableAttachment={(page: PageNEW) => (
+              extraSectionTitleContent={(section: SectionState) => <SectionProgress {...section} />}
+              extraPageContent={(page: Page) => <ApproveAllButton page={page} />}
+              scrollableAttachment={(page: Page) => (
                 <ScrollableAttachment
                   code={`${section.details.code}P${page.number}`}
                   addScrollabe={addScrollable}
@@ -119,7 +117,7 @@ const ReviewPage: React.FC<{
   )
 }
 
-const ApproveAllButton: React.FC<{ page: PageNEW }> = ({ page }) => {
+const ApproveAllButton: React.FC<{ page: Page }> = ({ page }) => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
 
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)

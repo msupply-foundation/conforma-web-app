@@ -12,7 +12,7 @@ import {
   generateReviewProgress,
   generateReviewSectionActions,
 } from '../../helpers/structure'
-import { UseGetFullReviewStructureProps, User, FullStructure, SectionStateNEW } from '../../types'
+import { UseGetFullReviewStructureProps, User, FullStructure, SectionState } from '../../types'
 
 const getSectionIds = ({
   fullApplicationStructure,
@@ -90,7 +90,7 @@ const setIsNewApplicationResponse = (structure: FullStructure) => {
   })
 }
 
-const getFilteredSections = (sectionIds: number[], sections: SectionStateNEW[]) => {
+const getFilteredSections = (sectionIds: number[], sections: SectionState[]) => {
   return sections.filter((section) =>
     sectionIds.find((sectionId) => section.details.id === sectionId)
   )

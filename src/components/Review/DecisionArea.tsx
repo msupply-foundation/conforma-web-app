@@ -4,7 +4,7 @@ import { Button, Header, Modal, Radio, Segment, TextArea } from 'semantic-ui-rea
 import { ReviewResponse, ReviewResponseDecision } from '../../utils/generated/graphql'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
-import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapper'
+import SummaryViewWrapper from '../../formElementPlugins/SummaryViewWrapper'
 import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
 
@@ -57,7 +57,7 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
         >
           <Segment basic>
             <Header>{strings.TITLE_DETAILS}</Header>
-            <SummaryViewWrapperNEW {...summaryViewProps} />
+            <SummaryViewWrapper {...summaryViewProps} />
           </Segment>
           <Segment basic>
             <Header as="h3">{strings.LABEL_REVIEW}</Header>

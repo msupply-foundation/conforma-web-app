@@ -1,5 +1,5 @@
 import { ReviewResponse, TemplateElement } from '../utils/generated/graphql'
-import { ElementStateNEW, ResponseFull, ResponsesByCode } from '../utils/types'
+import { ElementState, ResponseFull, ResponsesByCode } from '../utils/types'
 
 interface OnUpdateApplicationView {
   (updateObject: { value?: any; isValid: boolean | undefined }): void
@@ -10,7 +10,7 @@ type BasicObject = {
 }
 
 interface ApplicationViewWrapperProps {
-  element: ElementStateNEW
+  element: ElementState
   isStrictPage: boolean | undefined
   changesRequired?: {
     isChangeRequest: boolean
@@ -49,7 +49,7 @@ interface SummaryViewProps {
 }
 
 interface SummaryViewWrapperProps {
-  element: ElementStateNEW
+  element: ElementState
   response: ResponseFull | null
   allResponses: ResponsesByCode
 }

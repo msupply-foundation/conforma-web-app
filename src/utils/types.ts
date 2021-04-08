@@ -16,9 +16,7 @@ import {
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
-
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
-import { APPLICATION_COLUMNS, USER_ROLES } from './data'
 
 export {
   ApplicationDetails,
@@ -29,56 +27,42 @@ export {
   CellProps,
   ChangeRequestsProgress,
   ColumnDetails,
-  ColumnsPerRole,
   ContextApplicationState,
   CurrentPage,
   DecisionOption,
-  ElementBaseNEW,
+  ElementBase,
   ElementsById,
   ElementPluginParameterValue,
   ElementPluginParameters,
-  ElementStateNEW,
-  ElementsActivityState,
+  ElementState,
   EvaluatorParameters,
   FullStructure,
-  GroupedReviewResponses,
-  IGraphQLConnection,
   LooseString,
   MethodRevalidate,
   MethodToCallProps,
-  PageNEW,
+  Page,
   PageElement,
-  PageElementsStatuses,
   Progress,
-  ProgressStatus,
   ResponseFull,
-  ResponsePayload,
   ResponsesByCode,
-  ResumeSection,
   ReviewAction,
   ReviewDetails,
-  ReviewProgressStatus,
   ReviewProgress,
   ReviewQuestion,
-  ReviewQuestionDecision,
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
   SectionProgress,
-  SectionStateNEW,
-  SectionsStructureNEW,
+  SectionState,
+  SectionsStructure,
   SetStrictSectionPage,
   SortQuery,
   StageAndStatus,
   TemplateDetails,
-  TemplateElementStateNEW,
   TemplatePermissions,
   TemplatesDetails,
-  ValidateFunction,
-  ValidateObject,
   UseGetApplicationProps,
   User,
-  UserRoles,
   UseGetFullReviewStructureProps,
   OrganisationSimple,
   Organisation,
@@ -94,13 +78,13 @@ interface ApplicationDetails {
   outcome: string
   isLinear: boolean
   isChangeRequest: boolean
-  current?: StageAndStatus // TODO: Change to compulsory after re-strcture is finished
+  current: StageAndStatus
   firstStrictInvalidPage: SectionAndPage | null
   submissionMessage?: string // TODO: Change to compulsory after re-structure is finished
 }
 
 interface ApplicationElementStates {
-  [key: string]: ElementStateNEW
+  [key: string]: ElementState
 }
 
 interface ApplicationListRow extends ApplicationListShape {
@@ -148,10 +132,6 @@ interface ColumnDetails {
   ColumnComponent: React.FunctionComponent<any>
 }
 
-type ColumnsPerRole = {
-  [role in USER_ROLES]: Array<APPLICATION_COLUMNS>
-}
-
 interface ContextApplicationState {
   id: number | null
   serialNumber: string | null
@@ -176,7 +156,7 @@ interface ElementPluginParameters {
   [key: string]: ElementPluginParameterValue
 }
 
-interface ElementBaseNEW {
+interface ElementBase {
   id: number
   code: string
   title: string
@@ -191,7 +171,7 @@ interface ElementBaseNEW {
   parameters: any
 }
 
-interface ElementStateNEW extends ElementBaseNEW {
+interface ElementState extends ElementBase {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
@@ -218,17 +198,13 @@ interface FullStructure {
   elementsById?: ElementsById
   lastValidationTimestamp?: number
   info: ApplicationDetails
-  sections: SectionsStructureNEW
+  sections: SectionsStructure
   stages: StageDetails[]
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
   canSubmitReviewAs?: Decision | null
-  sortedSections?: SectionStateNEW[]
-  sortedPages?: PageNEW[]
-}
-
-type GroupedReviewResponses = {
-  [templateElementId: string]: ReviewResponse[]
+  sortedSections?: SectionState[]
+  sortedPages?: Page[]
 }
 
 interface IGraphQLConnection {
@@ -247,7 +223,7 @@ interface MethodToCallProps {
   setStrictSectionPage: SetStrictSectionPage
 }
 
-interface PageNEW {
+interface Page {
   number: number
   sectionCode: string
   name: string
@@ -258,7 +234,7 @@ interface PageNEW {
 }
 
 type PageElement = {
-  element: ElementStateNEW
+  element: ElementState
   response: ResponseFull | null
   previousApplicationResponse: ApplicationResponse
   latestApplicationResponse: ApplicationResponse
@@ -271,10 +247,6 @@ type PageElement = {
   isChanged?: boolean
 }
 
-interface PageElementsStatuses {
-  [code: string]: ProgressStatus
-}
-
 interface Progress {
   doneRequired: number
   doneNonRequired: number
@@ -285,8 +257,6 @@ interface Progress {
   valid: boolean
   firstStrictInvalidPage: number | null
 }
-
-type ProgressStatus = 'VALID' | 'NOT_VALID' | 'INCOMPLETE'
 
 interface ResponseFull {
   id: number
@@ -301,22 +271,13 @@ interface ResponseFull {
   customValidation?: ValidationState
 }
 
-interface ResponsePayload {
-  applicationId: number
-  templateQuestions: TemplateElement[]
-}
 interface ResponsesByCode {
   [key: string]: ResponseFull
 }
 
-interface ResumeSection {
-  sectionCode: string
-  page: number
-}
-
 type ReviewSectionComponentProps = {
   fullStructure: FullStructure
-  section: SectionStateNEW
+  section: SectionState
   assignment: AssignmentDetails
   thisReview?: ReviewDetails | null
   action: ReviewAction
@@ -339,8 +300,6 @@ interface ReviewerDetails {
   lastName: string
   current: boolean
 }
-
-type ReviewProgressStatus = 'NOT_COMPLETED' | 'DECLINED' | 'APPROVED'
 
 interface ReviewQuestion {
   code: string
@@ -397,7 +356,7 @@ interface ChangeRequestsProgress {
   doneChangeRequests: number
 }
 
-interface SectionStateNEW {
+interface SectionState {
   details: SectionDetails
   progress?: Progress
   reviewProgress?: ReviewProgress
@@ -409,12 +368,12 @@ interface SectionStateNEW {
   changeRequestsProgress?: ChangeRequestsProgress
   assigned?: ReviewerDetails
   pages: {
-    [pageNum: number]: PageNEW
+    [pageNum: number]: Page
   }
 }
 
-interface SectionsStructureNEW {
-  [code: string]: SectionStateNEW
+interface SectionsStructure {
+  [code: string]: SectionState
 }
 
 interface SetStrictSectionPage {
@@ -448,12 +407,6 @@ interface TemplateDetails {
   startMessage?: string
 }
 
-interface TemplateElementStateNEW extends ElementBaseNEW {
-  isRequiredExpression: IQueryNode
-  isVisibleExpression: IQueryNode
-  isEditableExpression: IQueryNode
-}
-
 interface TemplatePermissions {
   [index: string]: Array<PermissionPolicyType>
 }
@@ -463,18 +416,6 @@ type TemplatesDetails = {
   name: string
   code: string
 }[]
-
-interface ValidateFunction {
-  (
-    validationExpress: IQueryNode,
-    validationMessage: string,
-    evaluatorParameters: EvaluatorParameters
-  ): any
-}
-
-interface ValidateObject {
-  validate: ValidateFunction
-}
 
 interface UseGetApplicationProps {
   serialNumber: string
@@ -515,10 +456,6 @@ interface LoginPayload {
   orgList?: OrganisationSimple[]
 }
 
-type UserRoles = {
-  [role in USER_ROLES]: Array<PermissionPolicyType>
-}
-
 interface UseGetFullReviewStructureProps {
   fullApplicationStructure: FullStructure
   reviewAssignment: AssignmentDetails
@@ -529,8 +466,4 @@ interface UseGetFullReviewStructureProps {
 interface SortQuery {
   sortColumn?: string
   sortDirection?: 'ascending' | 'descending'
-}
-
-interface SetStrictSectionPage {
-  (sectionAndPage: SectionAndPage | null): void
 }

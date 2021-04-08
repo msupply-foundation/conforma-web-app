@@ -8,7 +8,7 @@ import strings from '../../utils/constants'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 import ReviewPage from './ReviewPage'
 
-const ReviewPageWrapperNEW: React.FC<{
+const ReviewPageWrapper: React.FC<{
   structure: FullStructure
   reviewAssignments: AssignmentDetails[]
 }> = ({ structure, reviewAssignments }) => {
@@ -50,4 +50,4 @@ const ReviewPageWrapperNEW: React.FC<{
   )
 }
 
-export default ReviewPageWrapperNEW
+export default ReviewPageWrapper

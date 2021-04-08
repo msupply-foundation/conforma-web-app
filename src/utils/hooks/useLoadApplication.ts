@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import {
   ApplicationDetails,
-  ElementBaseNEW,
+  ElementBase,
   FullStructure,
   TemplateDetails,
-  TemplateElementStateNEW,
   UseGetApplicationProps,
 } from '../types'
 import evaluate from '@openmsupply/expression-evaluator'
@@ -119,7 +118,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       isChangeRequest: false,
     }
 
-    const baseElements: ElementBaseNEW[] = []
+    const baseElements: ElementBase[] = []
     application.applicationSections.nodes.forEach((sectionNode) => {
       let pageCount = 1
       const elementsInSection = sectionNode?.templateSection?.templateElementsBySectionId
@@ -137,13 +136,10 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
             sectionCode: sectionNode?.templateSection?.code,
             elementIndex: element.index,
             page: pageCount,
-            isEditableExpression: element.isEditable,
-            isRequiredExpression: element.isRequired,
-            isVisibleExpression: element.visibilityCondition,
             parameters: element.parameters,
             validationExpression: element.validation,
             validationMessage: element.validationMessage,
-          } as TemplateElementStateNEW)
+          } as ElementBase)
       })
     })
 

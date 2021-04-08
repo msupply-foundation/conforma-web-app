@@ -3,7 +3,7 @@ import NavigationBox from './NavigationBox'
 import ApplicationWrapper from './ApplicationWrapper'
 import ApplicationPageWrapper from './ApplicationPageWrapper'
 import ApplicationHome from './ApplicationHome'
-import ApplicationSubmission from './ApplicationSubmissionNEW'
+import ApplicationSubmission from './ApplicationSubmission'
 import ApplicationPage from './ApplicationPage'
 import ApplicationSummary from './ApplicationSummary'
 

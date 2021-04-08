@@ -7,7 +7,7 @@ import {
   FullStructure,
   MethodRevalidate,
   MethodToCallProps,
-  PageNEW,
+  Page,
   Progress,
   SectionAndPage,
 } from '../../utils/types'
@@ -70,7 +70,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 
   const getPageList = (
     sectionCode: string,
-    pages: { [pageNumber: string]: PageNEW },
+    pages: { [pageNumber: string]: Page },
     isStrictSection: boolean
   ) => {
     const isActivePage = (sectionCode: string, pageNumber: number) =>

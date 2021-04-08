@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ElementStateNEW, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
+import { ElementState, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
 import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapper'
-import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapper'
+import SummaryViewWrapper from '../../formElementPlugins/SummaryViewWrapper'
 import { Form, Grid, Segment, Button, Icon } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import {
@@ -71,7 +71,7 @@ const PageElements: React.FC<PageElementProps> = ({
       </Form>
     )
 
-  const getSummaryViewProps = (element: ElementStateNEW) => ({
+  const getSummaryViewProps = (element: ElementState) => ({
     element,
     response: responsesByCode?.[element.code],
     allResponses: responsesByCode,
@@ -89,7 +89,7 @@ const PageElements: React.FC<PageElementProps> = ({
                 <Segment key={`question_${element.code}`}>
                   <Grid columns="equal">
                     <Grid.Column floated="left">
-                      <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
+                      <SummaryViewWrapper {...getSummaryViewProps(element)} />
                     </Grid.Column>
                     {element.category === TemplateElementCategory.Question && canEdit && (
                       <Grid.Column floated="right" textAlign="right">
@@ -126,7 +126,7 @@ const PageElements: React.FC<PageElementProps> = ({
               <Segment key={`question_${element.id}`}>
                 <Grid columns="equal">
                   <Grid.Column floated="left">
-                    <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
+                    <SummaryViewWrapper {...getSummaryViewProps(element)} />
                   </Grid.Column>
                   <Grid.Column floated="right" textAlign="right">
                     <ReviewButton
