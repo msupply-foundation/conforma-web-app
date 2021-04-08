@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useCreateReviewMutation } from '../../utils/generated/graphql'
 import { FullStructure } from '../types'
 
-export interface CreateReviewProps {
+interface CreateReviewProps {
   applicationResponses: { applicationResponseId: number; reviewQuestionAssignmentId: number }[]
 }
 

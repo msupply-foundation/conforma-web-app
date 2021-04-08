@@ -7,7 +7,7 @@ import strings from '../../utils/constants'
 import { Decision, ReviewStatus } from '../../utils/generated/graphql'
 import useGetDecisionOptions from '../../utils/hooks/useGetDecisionOptions'
 import { useRouter } from '../../utils/hooks/useRouter'
-import useSubmitReviewNEW from '../../utils/hooks/useSubmitReviewNEW'
+import useSubmitReviewNEW from '../../utils/hooks/useSubmitReview'
 import messages from '../../utils/messages'
 import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
 

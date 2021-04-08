@@ -21077,16 +21077,6 @@ export type DeleteUserOrganisationInput = {
   id: Scalars['Int'];
 };
 
-export type AddNewSectionFragment = (
-  { __typename?: 'ApplicationSection' }
-  & Pick<ApplicationSection, 'id' | 'applicationId' | 'templateSectionId'>
-);
-
-export type AddNewUserFragment = (
-  { __typename?: 'User' }
-  & Pick<User, 'id' | 'username'>
-);
-
 export type ApplicationFragment = (
   { __typename?: 'Application' }
   & Pick<Application, 'id' | 'serial' | 'name' | 'outcome' | 'trigger'>
@@ -21181,24 +21171,6 @@ export type CreateReviewMutation = (
     & { review?: Maybe<(
       { __typename?: 'Review' }
       & Pick<Review, 'id'>
-    )> }
-  )> }
-);
-
-export type CreateUserMutationVariables = Exact<{
-  email: Scalars['String'];
-  password: Scalars['String'];
-  username: Scalars['String'];
-}>;
-
-
-export type CreateUserMutation = (
-  { __typename?: 'Mutation' }
-  & { createUser?: Maybe<(
-    { __typename?: 'CreateUserPayload' }
-    & { user?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'username'>
     )> }
   )> }
 );
@@ -21420,53 +21392,6 @@ export type GetApplicationQuery = (
   { __typename?: 'Query' }
   & { applicationBySerial?: Maybe<(
     { __typename?: 'Application' }
-    & { applicationResponses: (
-      { __typename?: 'ApplicationResponsesConnection' }
-      & { nodes: Array<Maybe<(
-        { __typename?: 'ApplicationResponse' }
-        & ResponseFragment
-      )>> }
-    ), template?: Maybe<(
-      { __typename?: 'Template' }
-      & { templateStages: (
-        { __typename?: 'TemplateStagesConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'TemplateStage' }
-          & TemplateStageFragment
-        )>> }
-      ) }
-      & TemplateFragment
-    )>, applicationSections: (
-      { __typename?: 'ApplicationSectionsConnection' }
-      & { nodes: Array<Maybe<(
-        { __typename?: 'ApplicationSection' }
-        & Pick<ApplicationSection, 'id'>
-        & { templateSection?: Maybe<(
-          { __typename?: 'TemplateSection' }
-          & { templateElementsBySectionId: (
-            { __typename?: 'TemplateElementsConnection' }
-            & { nodes: Array<Maybe<(
-              { __typename?: 'TemplateElement' }
-              & ElementFragment
-            )>> }
-          ) }
-          & SectionFragment
-        )> }
-      )>> }
-    ) }
-    & ApplicationFragment
-  )> }
-);
-
-export type GetApplicationNewQueryVariables = Exact<{
-  serial: Scalars['String'];
-}>;
-
-
-export type GetApplicationNewQuery = (
-  { __typename?: 'Query' }
-  & { applicationBySerial?: Maybe<(
-    { __typename?: 'Application' }
     & { template?: Maybe<(
       { __typename?: 'Template' }
       & { templateStages: (
@@ -21505,22 +21430,6 @@ export type GetApplicationNewQuery = (
   )> }
 );
 
-export type GetApplicationStatusQueryVariables = Exact<{
-  serial: Scalars['String'];
-}>;
-
-
-export type GetApplicationStatusQuery = (
-  { __typename?: 'Query' }
-  & { applicationStageStatusAlls?: Maybe<(
-    { __typename?: 'ApplicationStageStatusAllsConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'ApplicationStageStatusAll' }
-      & Pick<ApplicationStageStatusAll, 'stage' | 'stageId' | 'status' | 'statusHistoryTimeCreated'>
-    )>> }
-  )> }
-);
-
 export type GetApplicationListQueryVariables = Exact<{
   filters?: Maybe<ApplicationListShapeFilter>;
   sortFields?: Maybe<Array<ApplicationListShapesOrderBy>>;
@@ -21542,132 +21451,6 @@ export type GetApplicationListQuery = (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
     ) }
-  )> }
-);
-
-export type GetElementsAndResponsesQueryVariables = Exact<{
-  serial: Scalars['String'];
-}>;
-
-
-export type GetElementsAndResponsesQuery = (
-  { __typename?: 'Query' }
-  & { applicationBySerial?: Maybe<(
-    { __typename?: 'Application' }
-    & { applicationResponses: (
-      { __typename?: 'ApplicationResponsesConnection' }
-      & { nodes: Array<Maybe<(
-        { __typename?: 'ApplicationResponse' }
-        & { templateElement?: Maybe<(
-          { __typename?: 'TemplateElement' }
-          & Pick<TemplateElement, 'code'>
-        )> }
-        & ResponseFragment
-      )>> }
-    ), template?: Maybe<(
-      { __typename?: 'Template' }
-      & { templateSections: (
-        { __typename?: 'TemplateSectionsConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'TemplateSection' }
-          & { templateElementsBySectionId: (
-            { __typename?: 'TemplateElementsConnection' }
-            & { nodes: Array<Maybe<(
-              { __typename?: 'TemplateElement' }
-              & ElementFragment
-            )>> }
-          ) }
-          & SectionFragment
-        )>> }
-      ) }
-      & TemplateFragment
-    )> }
-    & ApplicationFragment
-  )> }
-);
-
-export type GetReviewQueryVariables = Exact<{
-  reviewId: Scalars['Int'];
-}>;
-
-
-export type GetReviewQuery = (
-  { __typename?: 'Query' }
-  & { review?: Maybe<(
-    { __typename?: 'Review' }
-    & { reviewer?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'username' | 'firstName' | 'lastName'>
-    )>, reviewResponses: (
-      { __typename?: 'ReviewResponsesConnection' }
-      & { nodes: Array<Maybe<(
-        { __typename?: 'ReviewResponse' }
-        & Pick<ReviewResponse, 'id' | 'comment' | 'decision'>
-        & { applicationResponse?: Maybe<(
-          { __typename?: 'ApplicationResponse' }
-          & Pick<ApplicationResponse, 'id'>
-        )> }
-      )>> }
-    ) }
-  )> }
-);
-
-export type GetReviewAssignmentQueryVariables = Exact<{
-  reviewerId: Scalars['Int'];
-  applicationId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-}>;
-
-
-export type GetReviewAssignmentQuery = (
-  { __typename?: 'Query' }
-  & { reviewAssignments?: Maybe<(
-    { __typename?: 'ReviewAssignmentsConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'applicationId' | 'stageId'>
-      & { reviewer?: Maybe<(
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'username' | 'firstName' | 'lastName'>
-      )>, reviews: (
-        { __typename?: 'ReviewsConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'Review' }
-          & Pick<Review, 'id' | 'status'>
-          & { reviewResponses: (
-            { __typename?: 'ReviewResponsesConnection' }
-            & { nodes: Array<Maybe<(
-              { __typename?: 'ReviewResponse' }
-              & Pick<ReviewResponse, 'id' | 'comment' | 'decision'>
-              & { applicationResponse?: Maybe<(
-                { __typename?: 'ApplicationResponse' }
-                & Pick<ApplicationResponse, 'id'>
-              )> }
-            )>> }
-          ) }
-        )>> }
-      ), reviewQuestionAssignments: (
-        { __typename?: 'ReviewQuestionAssignmentsConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'ReviewQuestionAssignment' }
-          & Pick<ReviewQuestionAssignment, 'id'>
-          & { templateElement?: Maybe<(
-            { __typename?: 'TemplateElement' }
-            & Pick<TemplateElement, 'code'>
-            & { section?: Maybe<(
-              { __typename?: 'TemplateSection' }
-              & Pick<TemplateSection, 'id' | 'index'>
-            )>, applicationResponses: (
-              { __typename?: 'ApplicationResponsesConnection' }
-              & { nodes: Array<Maybe<(
-                { __typename?: 'ApplicationResponse' }
-                & Pick<ApplicationResponse, 'id'>
-              )>> }
-            ) }
-          )> }
-        )>> }
-      ) }
-    )>> }
   )> }
 );
 
@@ -21777,22 +21560,6 @@ export type GetReviewResponsesQuery = (
   )> }
 );
 
-export type GetReviewStatusQueryVariables = Exact<{
-  reviewId: Scalars['Int'];
-}>;
-
-
-export type GetReviewStatusQuery = (
-  { __typename?: 'Query' }
-  & { reviewStatusHistories?: Maybe<(
-    { __typename?: 'ReviewStatusHistoriesConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'ReviewStatusHistory' }
-      & Pick<ReviewStatusHistory, 'status'>
-    )>> }
-  )> }
-);
-
 export type GetTemplateQueryVariables = Exact<{
   code: Scalars['String'];
   status?: Maybe<TemplateStatus>;
@@ -21846,24 +21613,6 @@ export type GetTemplatesQuery = (
   )> }
 );
 
-export type GetTriggersQueryVariables = Exact<{
-  serial?: Maybe<Scalars['String']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-}>;
-
-
-export type GetTriggersQuery = (
-  { __typename?: 'Query' }
-  & { applicationTriggerStates?: Maybe<(
-    { __typename?: 'ApplicationTriggerStatesConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'ApplicationTriggerState' }
-      & Pick<ApplicationTriggerState, 'serial' | 'applicationTrigger' | 'reviewAssignmentTrigger' | 'reviewTrigger'>
-    )>> }
-  )> }
-);
-
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -21878,19 +21627,6 @@ export type GetUsersQuery = (
   )> }
 );
 
-export const AddNewSectionFragmentDoc = gql`
-    fragment addNewSection on ApplicationSection {
-  id
-  applicationId
-  templateSectionId
-}
-    `;
-export const AddNewUserFragmentDoc = gql`
-    fragment addNewUser on User {
-  id
-  username
-}
-    `;
 export const ApplicationFragmentDoc = gql`
     fragment Application on Application {
   id
@@ -22063,43 +21799,6 @@ export function useCreateReviewMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateReviewMutationHookResult = ReturnType<typeof useCreateReviewMutation>;
 export type CreateReviewMutationResult = Apollo.MutationResult<CreateReviewMutation>;
 export type CreateReviewMutationOptions = Apollo.BaseMutationOptions<CreateReviewMutation, CreateReviewMutationVariables>;
-export const CreateUserDocument = gql`
-    mutation createUser($email: String!, $password: String!, $username: String!) {
-  createUser(input: {user: {email: $email, passwordHash: $password, username: $username}}) {
-    user {
-      id
-      username
-    }
-  }
-}
-    `;
-export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
-
-/**
- * __useCreateUserMutation__
- *
- * To run a mutation, you first call `useCreateUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
- *   variables: {
- *      email: // value for 'email'
- *      password: // value for 'password'
- *      username: // value for 'username'
- *   },
- * });
- */
-export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
-        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, baseOptions);
-      }
-export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
-export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
-export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const RestartApplicationDocument = gql`
     mutation restartApplication($serial: String!, $applicationPatch: ApplicationPatch!) {
   updateApplicationBySerial(input: {serial: $serial, patch: $applicationPatch}) {
@@ -22477,70 +22176,6 @@ export const GetApplicationDocument = gql`
     query getApplication($serial: String!) {
   applicationBySerial(serial: $serial) {
     ...Application
-    applicationResponses {
-      nodes {
-        ...Response
-      }
-    }
-    template {
-      ...Template
-      templateStages {
-        nodes {
-          ...TemplateStage
-        }
-      }
-    }
-    applicationSections {
-      nodes {
-        id
-        templateSection {
-          ...Section
-          templateElementsBySectionId {
-            nodes {
-              ...Element
-            }
-          }
-        }
-      }
-    }
-  }
-}
-    ${ApplicationFragmentDoc}
-${ResponseFragmentDoc}
-${TemplateFragmentDoc}
-${TemplateStageFragmentDoc}
-${SectionFragmentDoc}
-${ElementFragmentDoc}`;
-
-/**
- * __useGetApplicationQuery__
- *
- * To run a query within a React component, call `useGetApplicationQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetApplicationQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetApplicationQuery({
- *   variables: {
- *      serial: // value for 'serial'
- *   },
- * });
- */
-export function useGetApplicationQuery(baseOptions?: Apollo.QueryHookOptions<GetApplicationQuery, GetApplicationQueryVariables>) {
-        return Apollo.useQuery<GetApplicationQuery, GetApplicationQueryVariables>(GetApplicationDocument, baseOptions);
-      }
-export function useGetApplicationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApplicationQuery, GetApplicationQueryVariables>) {
-          return Apollo.useLazyQuery<GetApplicationQuery, GetApplicationQueryVariables>(GetApplicationDocument, baseOptions);
-        }
-export type GetApplicationQueryHookResult = ReturnType<typeof useGetApplicationQuery>;
-export type GetApplicationLazyQueryHookResult = ReturnType<typeof useGetApplicationLazyQuery>;
-export type GetApplicationQueryResult = Apollo.QueryResult<GetApplicationQuery, GetApplicationQueryVariables>;
-export const GetApplicationNewDocument = gql`
-    query getApplicationNew($serial: String!) {
-  applicationBySerial(serial: $serial) {
-    ...Application
     template {
       ...Template
       templateStages {
@@ -22577,68 +22212,30 @@ ${ElementFragmentDoc}
 ${StageFragmentDoc}`;
 
 /**
- * __useGetApplicationNewQuery__
+ * __useGetApplicationQuery__
  *
- * To run a query within a React component, call `useGetApplicationNewQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetApplicationNewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetApplicationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetApplicationQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetApplicationNewQuery({
+ * const { data, loading, error } = useGetApplicationQuery({
  *   variables: {
  *      serial: // value for 'serial'
  *   },
  * });
  */
-export function useGetApplicationNewQuery(baseOptions?: Apollo.QueryHookOptions<GetApplicationNewQuery, GetApplicationNewQueryVariables>) {
-        return Apollo.useQuery<GetApplicationNewQuery, GetApplicationNewQueryVariables>(GetApplicationNewDocument, baseOptions);
+export function useGetApplicationQuery(baseOptions?: Apollo.QueryHookOptions<GetApplicationQuery, GetApplicationQueryVariables>) {
+        return Apollo.useQuery<GetApplicationQuery, GetApplicationQueryVariables>(GetApplicationDocument, baseOptions);
       }
-export function useGetApplicationNewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApplicationNewQuery, GetApplicationNewQueryVariables>) {
-          return Apollo.useLazyQuery<GetApplicationNewQuery, GetApplicationNewQueryVariables>(GetApplicationNewDocument, baseOptions);
+export function useGetApplicationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApplicationQuery, GetApplicationQueryVariables>) {
+          return Apollo.useLazyQuery<GetApplicationQuery, GetApplicationQueryVariables>(GetApplicationDocument, baseOptions);
         }
-export type GetApplicationNewQueryHookResult = ReturnType<typeof useGetApplicationNewQuery>;
-export type GetApplicationNewLazyQueryHookResult = ReturnType<typeof useGetApplicationNewLazyQuery>;
-export type GetApplicationNewQueryResult = Apollo.QueryResult<GetApplicationNewQuery, GetApplicationNewQueryVariables>;
-export const GetApplicationStatusDocument = gql`
-    query getApplicationStatus($serial: String!) {
-  applicationStageStatusAlls(condition: {serial: $serial, stageIsCurrent: true, statusIsCurrent: true}) {
-    nodes {
-      stage
-      stageId
-      status
-      statusHistoryTimeCreated
-    }
-  }
-}
-    `;
-
-/**
- * __useGetApplicationStatusQuery__
- *
- * To run a query within a React component, call `useGetApplicationStatusQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetApplicationStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetApplicationStatusQuery({
- *   variables: {
- *      serial: // value for 'serial'
- *   },
- * });
- */
-export function useGetApplicationStatusQuery(baseOptions?: Apollo.QueryHookOptions<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>) {
-        return Apollo.useQuery<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>(GetApplicationStatusDocument, baseOptions);
-      }
-export function useGetApplicationStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>) {
-          return Apollo.useLazyQuery<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>(GetApplicationStatusDocument, baseOptions);
-        }
-export type GetApplicationStatusQueryHookResult = ReturnType<typeof useGetApplicationStatusQuery>;
-export type GetApplicationStatusLazyQueryHookResult = ReturnType<typeof useGetApplicationStatusLazyQuery>;
-export type GetApplicationStatusQueryResult = Apollo.QueryResult<GetApplicationStatusQuery, GetApplicationStatusQueryVariables>;
+export type GetApplicationQueryHookResult = ReturnType<typeof useGetApplicationQuery>;
+export type GetApplicationLazyQueryHookResult = ReturnType<typeof useGetApplicationLazyQuery>;
+export type GetApplicationQueryResult = Apollo.QueryResult<GetApplicationQuery, GetApplicationQueryVariables>;
 export const GetApplicationListDocument = gql`
     query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $reviewerId: Int!) {
   applicationList(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch, reviewerid: $reviewerId) {
@@ -22703,190 +22300,6 @@ export function useGetApplicationListLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetApplicationListQueryHookResult = ReturnType<typeof useGetApplicationListQuery>;
 export type GetApplicationListLazyQueryHookResult = ReturnType<typeof useGetApplicationListLazyQuery>;
 export type GetApplicationListQueryResult = Apollo.QueryResult<GetApplicationListQuery, GetApplicationListQueryVariables>;
-export const GetElementsAndResponsesDocument = gql`
-    query getElementsAndResponses($serial: String!) {
-  applicationBySerial(serial: $serial) {
-    ...Application
-    applicationResponses {
-      nodes {
-        ...Response
-        templateElement {
-          code
-        }
-      }
-    }
-    template {
-      ...Template
-      templateSections {
-        nodes {
-          ...Section
-          templateElementsBySectionId {
-            nodes {
-              ...Element
-            }
-          }
-        }
-      }
-    }
-  }
-}
-    ${ApplicationFragmentDoc}
-${ResponseFragmentDoc}
-${TemplateFragmentDoc}
-${SectionFragmentDoc}
-${ElementFragmentDoc}`;
-
-/**
- * __useGetElementsAndResponsesQuery__
- *
- * To run a query within a React component, call `useGetElementsAndResponsesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetElementsAndResponsesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetElementsAndResponsesQuery({
- *   variables: {
- *      serial: // value for 'serial'
- *   },
- * });
- */
-export function useGetElementsAndResponsesQuery(baseOptions?: Apollo.QueryHookOptions<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>) {
-        return Apollo.useQuery<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>(GetElementsAndResponsesDocument, baseOptions);
-      }
-export function useGetElementsAndResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>) {
-          return Apollo.useLazyQuery<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>(GetElementsAndResponsesDocument, baseOptions);
-        }
-export type GetElementsAndResponsesQueryHookResult = ReturnType<typeof useGetElementsAndResponsesQuery>;
-export type GetElementsAndResponsesLazyQueryHookResult = ReturnType<typeof useGetElementsAndResponsesLazyQuery>;
-export type GetElementsAndResponsesQueryResult = Apollo.QueryResult<GetElementsAndResponsesQuery, GetElementsAndResponsesQueryVariables>;
-export const GetReviewDocument = gql`
-    query getReview($reviewId: Int!) {
-  review(id: $reviewId) {
-    reviewer {
-      id
-      username
-      firstName
-      lastName
-    }
-    reviewResponses {
-      nodes {
-        id
-        comment
-        decision
-        applicationResponse {
-          id
-        }
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetReviewQuery__
- *
- * To run a query within a React component, call `useGetReviewQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetReviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetReviewQuery({
- *   variables: {
- *      reviewId: // value for 'reviewId'
- *   },
- * });
- */
-export function useGetReviewQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewQuery, GetReviewQueryVariables>) {
-        return Apollo.useQuery<GetReviewQuery, GetReviewQueryVariables>(GetReviewDocument, baseOptions);
-      }
-export function useGetReviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewQuery, GetReviewQueryVariables>) {
-          return Apollo.useLazyQuery<GetReviewQuery, GetReviewQueryVariables>(GetReviewDocument, baseOptions);
-        }
-export type GetReviewQueryHookResult = ReturnType<typeof useGetReviewQuery>;
-export type GetReviewLazyQueryHookResult = ReturnType<typeof useGetReviewLazyQuery>;
-export type GetReviewQueryResult = Apollo.QueryResult<GetReviewQuery, GetReviewQueryVariables>;
-export const GetReviewAssignmentDocument = gql`
-    query getReviewAssignment($reviewerId: Int!, $applicationId: Int, $stageId: Int) {
-  reviewAssignments(condition: {reviewerId: $reviewerId, applicationId: $applicationId, stageId: $stageId}) {
-    nodes {
-      id
-      applicationId
-      reviewer {
-        id
-        username
-        firstName
-        lastName
-      }
-      stageId
-      reviews {
-        nodes {
-          id
-          status
-          reviewResponses {
-            nodes {
-              id
-              comment
-              decision
-              applicationResponse {
-                id
-              }
-            }
-          }
-        }
-      }
-      reviewQuestionAssignments {
-        nodes {
-          id
-          templateElement {
-            code
-            section {
-              id
-              index
-            }
-            applicationResponses(condition: {applicationId: $applicationId}) {
-              nodes {
-                id
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetReviewAssignmentQuery__
- *
- * To run a query within a React component, call `useGetReviewAssignmentQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetReviewAssignmentQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetReviewAssignmentQuery({
- *   variables: {
- *      reviewerId: // value for 'reviewerId'
- *      applicationId: // value for 'applicationId'
- *      stageId: // value for 'stageId'
- *   },
- * });
- */
-export function useGetReviewAssignmentQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewAssignmentQuery, GetReviewAssignmentQueryVariables>) {
-        return Apollo.useQuery<GetReviewAssignmentQuery, GetReviewAssignmentQueryVariables>(GetReviewAssignmentDocument, baseOptions);
-      }
-export function useGetReviewAssignmentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewAssignmentQuery, GetReviewAssignmentQueryVariables>) {
-          return Apollo.useLazyQuery<GetReviewAssignmentQuery, GetReviewAssignmentQueryVariables>(GetReviewAssignmentDocument, baseOptions);
-        }
-export type GetReviewAssignmentQueryHookResult = ReturnType<typeof useGetReviewAssignmentQuery>;
-export type GetReviewAssignmentLazyQueryHookResult = ReturnType<typeof useGetReviewAssignmentLazyQuery>;
-export type GetReviewAssignmentQueryResult = Apollo.QueryResult<GetReviewAssignmentQuery, GetReviewAssignmentQueryVariables>;
 export const GetReviewDecisionCommentDocument = gql`
     query getReviewDecisionComment($reviewDecisionId: Int!) {
   reviewDecision(id: $reviewDecisionId) {
@@ -23058,41 +22471,6 @@ export function useGetReviewResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetReviewResponsesQueryHookResult = ReturnType<typeof useGetReviewResponsesQuery>;
 export type GetReviewResponsesLazyQueryHookResult = ReturnType<typeof useGetReviewResponsesLazyQuery>;
 export type GetReviewResponsesQueryResult = Apollo.QueryResult<GetReviewResponsesQuery, GetReviewResponsesQueryVariables>;
-export const GetReviewStatusDocument = gql`
-    query getReviewStatus($reviewId: Int!) {
-  reviewStatusHistories(condition: {isCurrent: true, reviewId: $reviewId}) {
-    nodes {
-      status
-    }
-  }
-}
-    `;
-
-/**
- * __useGetReviewStatusQuery__
- *
- * To run a query within a React component, call `useGetReviewStatusQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetReviewStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetReviewStatusQuery({
- *   variables: {
- *      reviewId: // value for 'reviewId'
- *   },
- * });
- */
-export function useGetReviewStatusQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewStatusQuery, GetReviewStatusQueryVariables>) {
-        return Apollo.useQuery<GetReviewStatusQuery, GetReviewStatusQueryVariables>(GetReviewStatusDocument, baseOptions);
-      }
-export function useGetReviewStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewStatusQuery, GetReviewStatusQueryVariables>) {
-          return Apollo.useLazyQuery<GetReviewStatusQuery, GetReviewStatusQueryVariables>(GetReviewStatusDocument, baseOptions);
-        }
-export type GetReviewStatusQueryHookResult = ReturnType<typeof useGetReviewStatusQuery>;
-export type GetReviewStatusLazyQueryHookResult = ReturnType<typeof useGetReviewStatusLazyQuery>;
-export type GetReviewStatusQueryResult = Apollo.QueryResult<GetReviewStatusQuery, GetReviewStatusQueryVariables>;
 export const GetTemplateDocument = gql`
     query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE) {
   templates(condition: {code: $code, status: $status}) {
@@ -23184,46 +22562,6 @@ export function useGetTemplatesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetTemplatesQueryHookResult = ReturnType<typeof useGetTemplatesQuery>;
 export type GetTemplatesLazyQueryHookResult = ReturnType<typeof useGetTemplatesLazyQuery>;
 export type GetTemplatesQueryResult = Apollo.QueryResult<GetTemplatesQuery, GetTemplatesQueryVariables>;
-export const GetTriggersDocument = gql`
-    query getTriggers($serial: String, $reviewAssignmentId: Int, $reviewId: Int) {
-  applicationTriggerStates(condition: {serial: $serial, reviewAssignmentId: $reviewAssignmentId, reviewId: $reviewId}, first: 1) {
-    nodes {
-      serial
-      applicationTrigger
-      reviewAssignmentTrigger
-      reviewTrigger
-    }
-  }
-}
-    `;
-
-/**
- * __useGetTriggersQuery__
- *
- * To run a query within a React component, call `useGetTriggersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTriggersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTriggersQuery({
- *   variables: {
- *      serial: // value for 'serial'
- *      reviewAssignmentId: // value for 'reviewAssignmentId'
- *      reviewId: // value for 'reviewId'
- *   },
- * });
- */
-export function useGetTriggersQuery(baseOptions?: Apollo.QueryHookOptions<GetTriggersQuery, GetTriggersQueryVariables>) {
-        return Apollo.useQuery<GetTriggersQuery, GetTriggersQueryVariables>(GetTriggersDocument, baseOptions);
-      }
-export function useGetTriggersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTriggersQuery, GetTriggersQueryVariables>) {
-          return Apollo.useLazyQuery<GetTriggersQuery, GetTriggersQueryVariables>(GetTriggersDocument, baseOptions);
-        }
-export type GetTriggersQueryHookResult = ReturnType<typeof useGetTriggersQuery>;
-export type GetTriggersLazyQueryHookResult = ReturnType<typeof useGetTriggersLazyQuery>;
-export type GetTriggersQueryResult = Apollo.QueryResult<GetTriggersQuery, GetTriggersQueryVariables>;
 export const GetUsersDocument = gql`
     query getUsers {
   users {

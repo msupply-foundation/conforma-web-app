@@ -5,7 +5,7 @@ import { ApplicationHeader, ApplicationSelectType, Loading } from '../../compone
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { useUserState } from '../../contexts/UserState'
 import useCreateApplication from '../../utils/hooks/useCreateApplication'
-import useLoadTemplate from '../../utils/hooks/useLoadTemplateNEW'
+import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { SectionsList } from '../../components/Application/Sections'

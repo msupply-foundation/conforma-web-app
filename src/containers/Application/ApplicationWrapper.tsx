@@ -4,7 +4,7 @@ import { Message } from 'semantic-ui-react'
 
 import { Loading, NoMatch } from '../../components'
 import { useUserState } from '../../contexts/UserState'
-import useLoadApplication from '../../utils/hooks/useLoadApplicationNEW'
+import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { User } from '../../utils/types'
 import { ApplicationHome, ApplicationSubmission, ApplicationPageWrapperNEW } from './'

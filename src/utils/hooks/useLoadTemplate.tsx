@@ -7,18 +7,18 @@ import {
 } from '../generated/graphql'
 import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
-import { EvaluatorParameters } from '../../utils/types'
+import { EvaluatorParameters } from '../types'
 import { getTemplateSections } from '../helpers/application/getSectionsDetails'
 import { TemplateDetails } from '../types'
 import config from '../../config.json'
 
 const graphQLEndpoint = config.serverGraphQL
 
-interface useLoadTemplateProps {
+interface UseLoadTemplateProps {
   templateCode?: string
 }
 
-const useLoadTemplate = ({ templateCode }: useLoadTemplateProps) => {
+const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
   const [template, setTemplate] = useState<TemplateDetails>()
   const [error, setError] = useState('')
   const {
