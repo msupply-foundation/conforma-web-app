@@ -1,12 +1,18 @@
-import { ApplicationHeader, ApplicationSelectType, Navigation } from './Application'
+import {
+  ApplicationHeader,
+  ApplicationSelectType,
+  Navigation,
+  ProgressBar,
+  PageElements,
+} from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
 import FilterList from './FilterList'
 import Home from './Home'
 import Login from '../containers/User/Login'
 import Loading from './Loading'
-import { AppMenu, Footer, ModalWarning } from './Main'
-// import { DecisionArea, ReviewSection } from './Review'
+import { Footer, ModalWarning } from './Main'
+// import { DecisionArea } from './Review'
 import TemplateList from './TemplateList'
 import TemplateNew from './TemplateNew'
 import Template from './Template'
@@ -38,6 +44,8 @@ export {
   NoMatch,
   Product,
   ProductList,
+  ProgressBar,
+  PageElements,
   Organisation,
   OrgMemberEdit,
   TemplateList,

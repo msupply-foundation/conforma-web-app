@@ -4,7 +4,7 @@ import ApplicationSelectType from './ApplicationSelectType'
 import Navigation from './Navigation'
 // import SectionSummary from './SectionSummary'
 import SectionWrapper from './SectionWrapper'
-// import ProgressBar from './ProgressBar'
+import ProgressBar from './ProgressBar'
 import PageElements from './PageElements'
 
 export {
@@ -15,5 +15,5 @@ export {
   // SectionSummary,
   SectionWrapper,
   PageElements,
-  // ProgressBar,
+  ProgressBar,
 }

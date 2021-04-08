@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ElementStateNEW, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
-import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapperNEW'
-import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
+import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapper'
+import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapper'
 import { Form, Grid, Segment, Button, Icon } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import {
@@ -13,10 +13,10 @@ import {
 } from '../../utils/generated/graphql'
 
 import {
-  ApplicationViewWrapperPropsNEW,
-  SummaryViewWrapperPropsNEW,
+  ApplicationViewWrapperProps,
+  SummaryViewWrapperProps,
 } from '../../formElementPlugins/types'
-import DecisionAreaNEW from '../Review/DecisionAreaNEW'
+import DecisionArea from '../Review/DecisionArea'
 
 interface PageElementProps {
   elements: PageElement[]
@@ -57,7 +57,7 @@ const PageElements: React.FC<PageElementProps> = ({
                   }
                 : undefined
 
-            const props: ApplicationViewWrapperPropsNEW = {
+            const props: ApplicationViewWrapperProps = {
               element,
               isStrictPage,
               changesRequired,
@@ -153,7 +153,7 @@ const PageElements: React.FC<PageElementProps> = ({
 
 const ReviewResponseComponent: React.FC<{
   reviewResponse: ReviewResponse
-  summaryViewProps: SummaryViewWrapperPropsNEW
+  summaryViewProps: SummaryViewWrapperProps
   latestApplicationResponse: ApplicationResponse
 }> = ({ reviewResponse, summaryViewProps, latestApplicationResponse }) => {
   const [toggleDecisionArea, setToggleDecisionArea] = useState(false)
@@ -183,7 +183,7 @@ const ReviewResponseComponent: React.FC<{
           </Grid.Column>
         )}
       </Grid>
-      <DecisionAreaNEW
+      <DecisionArea
         reviewResponse={reviewResponse}
         toggle={toggleDecisionArea}
         summaryViewProps={summaryViewProps}
@@ -194,7 +194,7 @@ const ReviewResponseComponent: React.FC<{
 
 const ReviewButton: React.FC<{
   reviewResponse: ReviewResponse
-  summaryViewProps: SummaryViewWrapperPropsNEW
+  summaryViewProps: SummaryViewWrapperProps
   isNewApplicationResponse?: boolean
 }> = ({ reviewResponse, summaryViewProps, isNewApplicationResponse }) => {
   const [toggleDecisionArea, setToggleDecisionArea] = useState(false)
@@ -214,7 +214,7 @@ const ReviewButton: React.FC<{
         size="small"
         onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
       />
-      <DecisionAreaNEW
+      <DecisionArea
         reviewResponse={reviewResponse}
         toggle={toggleDecisionArea}
         summaryViewProps={summaryViewProps}

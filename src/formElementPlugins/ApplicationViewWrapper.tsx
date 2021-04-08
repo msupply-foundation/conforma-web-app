@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
-import { ApplicationViewWrapperPropsNEW, PluginComponents, ValidationState } from './types'
+import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
 import {
   EvaluatorParameters,
@@ -22,7 +22,7 @@ import globalConfig from '../config.json'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
 
-const ApplicationViewWrapper: React.FC<ApplicationViewWrapperPropsNEW> = (props) => {
+const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const { element, isStrictPage, changesRequired, currentResponse, allResponses } = props
 
   const {

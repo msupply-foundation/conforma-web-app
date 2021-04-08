@@ -18,7 +18,7 @@ interface ProgressBarProps {
   strictSectionPage: SectionAndPage | null
 }
 
-const ProgressBarNEW: React.FC<ProgressBarProps> = ({
+const ProgressBar: React.FC<ProgressBarProps> = ({
   structure,
   requestRevalidation,
   strictSectionPage,
@@ -134,12 +134,6 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({
               <Header as="h4">{title}</Header>
             </Grid.Column>
           </Grid>
-
-          // OR:
-          // <div>
-          //   {progress && getIndicator(progress, stepNumber)}
-          //   <Label basic disabled={isSectionDisabled(index)} content={title} />
-          // </div>
         ),
       },
       onTitleClick: () => handleChangeToPage(code, 1),
@@ -159,4 +153,4 @@ const ProgressBarNEW: React.FC<ProgressBarProps> = ({
   )
 }
 
-export default ProgressBarNEW
+export default ProgressBar

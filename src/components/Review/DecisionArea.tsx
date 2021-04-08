@@ -4,17 +4,17 @@ import { Button, Header, Modal, Radio, Segment, TextArea } from 'semantic-ui-rea
 import { ReviewResponse, ReviewResponseDecision } from '../../utils/generated/graphql'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
-import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
-import { SummaryViewWrapperPropsNEW } from '../../formElementPlugins/types'
-import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponseNEW'
+import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapper'
+import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
+import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
 
 interface DecisionAreaProps {
   reviewResponse: ReviewResponse
   toggle: boolean
-  summaryViewProps: SummaryViewWrapperPropsNEW
+  summaryViewProps: SummaryViewWrapperProps
 }
 
-const DecisionAreaNEW: React.FC<DecisionAreaProps> = ({
+const DecisionArea: React.FC<DecisionAreaProps> = ({
   toggle,
   reviewResponse,
   summaryViewProps,
@@ -117,4 +117,4 @@ const DecisionAreaNEW: React.FC<DecisionAreaProps> = ({
   )
 }
 
-export default DecisionAreaNEW
+export default DecisionArea

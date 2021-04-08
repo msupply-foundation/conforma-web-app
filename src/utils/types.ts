@@ -18,7 +18,6 @@ import {
 import { ValidationState } from '../formElementPlugins/types'
 
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
-import { SummaryViewWrapperProps } from '../formElementPlugins/types'
 import { APPLICATION_COLUMNS, USER_ROLES } from './data'
 
 export {
@@ -35,7 +34,6 @@ export {
   ContextFormElementUpdateTrackerState,
   ContextListState,
   CurrentPage,
-  DecisionAreaState,
   DecisionOption,
   ElementBase,
   ElementBaseNEW,
@@ -196,12 +194,6 @@ type DecisionOption = {
   title: string
   isVisible: boolean
   value: boolean
-}
-
-interface DecisionAreaState {
-  open: boolean
-  review: ReviewQuestionDecision | null
-  summaryViewProps: SummaryViewWrapperProps | null
 }
 
 type ElementPluginParameterValue = string | number | string[] | IQueryNode
