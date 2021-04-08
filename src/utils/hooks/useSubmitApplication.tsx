@@ -13,7 +13,7 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
     onError: (submissionError) => setError(submissionError.message),
   })
 
-  const submitFromStructure = async (structure: FullStructure) => {
+  const submit = async (structure: FullStructure) => {
     const elements = Object.values(structure.elementsById || {}).filter(
       (element) => element.element.category === TemplateElementCategory.Question
     )
@@ -39,7 +39,7 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
 
   return {
     error,
-    submitFromStructure,
+    submit,
   }
 }
 
