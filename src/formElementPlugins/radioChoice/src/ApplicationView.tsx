@@ -97,8 +97,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       </label>
       <Markdown text={description} />
       {radioButtonOptions.map((option: any, index: number) => {
+        const showOther = hasOther && index === allOptions.length - 1
         return (
-          <Form.Field key={`${index}_${option}`} disabled={!isEditable}>
+          <Form.Field key={`${index}_${option}`} disabled={!isEditable} inline={showOther}>
             <Radio
               label={option.text}
               name={`${code}_radio_${index}`} // This is GROUP name
@@ -107,8 +108,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
               onChange={handleChange}
               index={index}
             />
-            {/* TO-DO: Need to find a way to make this input field inline with  the last Other radio button*/}
-            {hasOther && index === allOptions.length - 1 && (
+            {showOther && (
               <Input
                 placeholder={otherPlaceholder}
                 size="small"
