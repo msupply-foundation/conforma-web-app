@@ -98,6 +98,7 @@ export {
   UseGetApplicationProps,
   User,
   UserRoles,
+  UseGetFullReviewStructureProps,
   OrganisationSimple,
   Organisation,
   LoginPayload,
@@ -642,6 +643,13 @@ interface LoginPayload {
 
 type UserRoles = {
   [role in USER_ROLES]: Array<PermissionPolicyType>
+}
+
+interface UseGetFullReviewStructureProps {
+  fullApplicationStructure: FullStructure
+  reviewAssignment: AssignmentDetailsNEW
+  filteredSectionIds?: number[]
+  awaitMode?: boolean
 }
 
 interface SortQuery {
