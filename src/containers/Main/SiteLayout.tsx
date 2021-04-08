@@ -31,7 +31,7 @@ const SiteLayout: React.FC = () => {
     <Router>
       <UserArea />
       <Switch>
-        <Route exact path="/dashboard">
+        <Route exact path="/">
           <Home />
         </Route>
         <Route exact path="/login">
