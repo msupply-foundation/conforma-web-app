@@ -16,7 +16,7 @@ import {
 } from '../../utils/generated/graphql'
 import strings from '../../utils/constants'
 
-import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructure'
+import useGetReviewStructureForSections from '../../utils/hooks/useGetReviewStructureForSection'
 import SectionWrapper from '../../components/Application/SectionWrapper'
 import React from 'react'
 import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivation'
@@ -36,7 +36,7 @@ const ReviewPage: React.FC<{
     userState: { currentUser },
   } = useUserState()
 
-  const { fullReviewStructure, error } = useGetFullReviewStructure({
+  const { fullReviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment,
     fullApplicationStructure,
   })

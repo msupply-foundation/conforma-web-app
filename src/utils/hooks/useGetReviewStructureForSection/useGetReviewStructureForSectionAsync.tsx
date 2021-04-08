@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useUserState } from '../../../contexts/UserState'
 import { useGetReviewResponsesQuery } from '../../generated/graphql'
-import { UseGetFullReviewStructureProps, FullStructure } from '../../types'
+import { UseGetReviewStructureForSectionProps, FullStructure } from '../../types'
 import { getSectionIds, generateReviewStructure } from './helpers'
 
 interface AwaitModeResolver {
   awaitMethod: (result: FullStructure | null) => void
 }
 
-const useGetFullReviewStructureAsync = (props: UseGetFullReviewStructureProps) => {
+const useGetReviewStructureForSectionAsync = (props: UseGetReviewStructureForSectionProps) => {
   const {
     userState: { currentUser },
   } = useUserState()
@@ -53,4 +53,4 @@ const useGetFullReviewStructureAsync = (props: UseGetFullReviewStructureProps) =
   return getFullReviewStructureAsync
 }
 
-export default useGetFullReviewStructureAsync
+export default useGetReviewStructureForSectionAsync

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Button, Divider, Header, Message, Segment, Sticky } from 'semantic-ui-react'
 import { FullStructure, SectionAndPage, StageAndStatus, TemplateDetails } from '../../utils/types'
-import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
+import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { ApplicationHeader, Loading } from '../../components'
 import strings from '../../utils/constants'
 import { useUserState } from '../../contexts/UserState'
@@ -26,7 +26,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     userState: { currentUser },
   } = useUserState()
 
-  const { error, fullStructure } = useGetFullApplicationStructure({
+  const { error, fullStructure } = useGetApplicationStructure({
     structure,
   })
 

@@ -3,7 +3,7 @@ import { Message, Segment, Header, Dropdown, Grid } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
-import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
+import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 import AssignmentSectionRow from './AssignmentSectionRow'
 import ReviewSectionRow from './ReviewSectionRow'
@@ -21,7 +21,7 @@ type Filters = {
 const ALL_REVIEWERS = 0
 
 const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
-  const { error, fullStructure: fullApplicationStructure } = useGetFullApplicationStructure({
+  const { error, fullStructure: fullApplicationStructure } = useGetApplicationStructure({
     structure,
     firstRunValidation: false,
     shouldCalculateProgress: false,

@@ -8,7 +8,7 @@ import {
   ReviewSectionRowAction,
 } from '../../components/Review'
 import strings from '../../utils/constants'
-import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructure'
+import useGetReviewStructureForSections from '../../utils/hooks/useGetReviewStructureForSection'
 import {
   AssignmentDetails,
   FullStructure,
@@ -29,7 +29,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   assignment,
   fullApplicationStructure,
 }) => {
-  const { fullReviewStructure, error } = useGetFullReviewStructure({
+  const { fullReviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment: assignment,
     fullApplicationStructure,
     filteredSectionIds: [sectionId],
