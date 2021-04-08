@@ -241,7 +241,10 @@ const getDefaultIndex = (defaultOption: string | number, options: string[]) => {
   } else return options.indexOf(defaultOption)
 }
 
-const extractDynamicExpressions = (fields: string[], parameters: ElementPluginParameters) => {
+export const extractDynamicExpressions = (
+  fields: string[],
+  parameters: ElementPluginParameters
+) => {
   const expressionObject: ElementPluginParameters = {}
   fields.forEach((field) => {
     expressionObject[field] = parameters[field]
@@ -249,7 +252,7 @@ const extractDynamicExpressions = (fields: string[], parameters: ElementPluginPa
   return expressionObject
 }
 
-const evaluateDynamicParameters = async (
+export const evaluateDynamicParameters = async (
   dynamicExpressions: ElementPluginParameters,
   evaluatorParameters: EvaluatorParameters
 ) => {
