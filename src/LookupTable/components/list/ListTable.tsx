@@ -1,9 +1,11 @@
+import axios from 'axios'
 import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Button, Header, Icon, Message, Popup, Table } from 'semantic-ui-react'
 import { Loading } from '../../../components'
 import { AllTableStructuresContext } from '../../contexts/AllTableStructures.context'
 import { FieldMapType, LookUpTableType } from '../../types'
+import config from '../../../config.json'
 
 const TABLE_PREFIX = 'lookup_table_'
 
@@ -20,6 +22,17 @@ const ListTable: React.FC = () => {
     if (!lookupTable) return
     lookupTable.isExpanded = !lookupTable.isExpanded
     setAllTableStructures([...allTableStructures])
+  }
+
+  const downloadItem = async (id: any) => {
+    await axios.get(config.serverREST + `/lookup-table/export/${id}`).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', 'file.csv')
+      document.body.appendChild(link)
+      link.click()
+    })
   }
 
   return error ? (
@@ -76,11 +89,7 @@ const ListTable: React.FC = () => {
                     <Popup
                       content="Export lookup table"
                       trigger={
-                        <Button
-                          icon
-                          as={NavLink}
-                          to={'/lookup-tables/' + lookupTable.id + '/export'}
-                        >
+                        <Button icon as="button" onClick={(e) => downloadItem(lookupTable.id)}>
                           <Icon name="download" />
                         </Button>
                       }
