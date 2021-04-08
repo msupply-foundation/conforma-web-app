@@ -2,7 +2,7 @@ import {
   ApplicationElementStates,
   ResponsesByCode,
   SectionDetails,
-  SectionsStructure,
+  SectionsStructureNEW,
 } from '../../types'
 import { getPageElements } from '../application/getPageElements'
 
@@ -27,10 +27,10 @@ export const buildSectionsStructure = ({
   sections,
   elementsState,
   responsesByCode,
-}: BuildSectionsStructureProps): SectionsStructure => {
+}: BuildSectionsStructureProps): SectionsStructureNEW => {
   // Create the sections and pages structure to display each section's element
   // Will also add the responses for each element, and can add reviews if received by props
-  return sections.reduce((sectionsStructure: SectionsStructure, section) => {
+  return sections.reduce((sectionsStructure: SectionsStructureNEW, section) => {
     const pageNumbers = Array.from(Array(section.totalPages).keys(), (n) => n + 1)
     const pages = pageNumbers.reduce((pages, pageNumber) => {
       const elements = getPageElements({
@@ -68,7 +68,7 @@ const getResponse = (code: string, responsesByCode: ResponsesByCode) =>
   responsesByCode && responsesByCode[code] ? responsesByCode[code] : null
 
 export const buildTemplateSectionsStructure = (sections: SectionDetails[]) => {
-  return sections.reduce((sectionsStructure: SectionsStructure, section) => {
+  return sections.reduce((sectionsStructure: SectionsStructureNEW, section) => {
     return {
       ...sectionsStructure,
       [section.code]: {

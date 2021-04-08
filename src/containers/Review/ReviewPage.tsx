@@ -1,7 +1,7 @@
 import { Button, Header, Label, Message, Segment } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import {
-  AssignmentDetailsNEW,
+  AssignmentDetails,
   FullStructure,
   PageNEW,
   ResponsesByCode,
@@ -29,7 +29,7 @@ import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
 
 const ReviewPage: React.FC<{
-  reviewAssignment: AssignmentDetailsNEW
+  reviewAssignment: AssignmentDetails
   fullApplicationStructure: FullStructure
 }> = ({ reviewAssignment, fullApplicationStructure }) => {
   const {

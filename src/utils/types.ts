@@ -25,22 +25,18 @@ export {
   ApplicationElementStates,
   ApplicationListRow,
   ApplicationProps,
-  AssignmentDetailsNEW,
+  AssignmentDetails,
   CellProps,
   ChangeRequestsProgress,
   ColumnDetails,
   ColumnsPerRole,
   ContextApplicationState,
-  ContextFormElementUpdateTrackerState,
-  ContextListState,
   CurrentPage,
   DecisionOption,
-  ElementBase,
   ElementBaseNEW,
   ElementsById,
   ElementPluginParameterValue,
   ElementPluginParameters,
-  ElementState,
   ElementStateNEW,
   ElementsActivityState,
   EvaluatorParameters,
@@ -50,8 +46,6 @@ export {
   LooseString,
   MethodRevalidate,
   MethodToCallProps,
-  Page,
-  PageElements,
   PageNEW,
   PageElement,
   PageElementsStatuses,
@@ -67,28 +61,21 @@ export {
   ReviewProgress,
   ReviewQuestion,
   ReviewQuestionDecision,
-  ReviewerResponsesPayload,
   ReviewSectionComponentProps,
   SectionAndPage,
-  SectionState,
   SectionDetails,
   SectionProgress,
-  SectionsStructure,
   SectionStateNEW,
   SectionsStructureNEW,
   SetStrictSectionPage,
   SortQuery,
   StageAndStatus,
   TemplateDetails,
-  TemplateElementState,
   TemplateElementStateNEW,
   TemplatePermissions,
   TemplatesDetails,
   ValidateFunction,
   ValidateObject,
-  ValidatedSections,
-  ValidityFailure,
-  RevalidateResult,
   UseGetApplicationProps,
   User,
   UserRoles,
@@ -113,7 +100,7 @@ interface ApplicationDetails {
 }
 
 interface ApplicationElementStates {
-  [key: string]: ElementState
+  [key: string]: ElementStateNEW
 }
 
 interface ApplicationListRow extends ApplicationListShape {
@@ -131,7 +118,7 @@ interface ApplicationStage {
   name: string
 }
 
-interface AssignmentDetailsNEW {
+interface AssignmentDetails {
   id: number
   status: ReviewAssignmentStatus | null
   timeCreated: Date
@@ -165,23 +152,10 @@ type ColumnsPerRole = {
   [role in USER_ROLES]: Array<APPLICATION_COLUMNS>
 }
 
-interface ContextFormElementUpdateTrackerState {
-  elementEnteredTimestamp: number
-  elementEnteredTextValue: string
-  elementUpdatedTimestamp: number
-  elementUpdatedTextValue: string
-  isLastElementUpdateProcessed: boolean
-  wasElementChanged: boolean
-}
-
 interface ContextApplicationState {
   id: number | null
   serialNumber: string | null
   inputElementsActivity: ElementsActivityState
-}
-
-interface ContextListState {
-  applications: ApplicationDetails[]
 }
 
 interface CurrentPage {
@@ -202,21 +176,6 @@ interface ElementPluginParameters {
   [key: string]: ElementPluginParameterValue
 }
 
-interface ElementBase {
-  id: number
-  code: string
-  title: string
-  pluginCode: string
-  sectionIndex: number
-  sectionCode: string
-  elementIndex: number
-  page: number
-  category: TemplateElementCategory
-  validation: IQueryNode
-  validationMessage: string | null
-  parameters: any
-}
-
 interface ElementBaseNEW {
   id: number
   code: string
@@ -230,12 +189,6 @@ interface ElementBaseNEW {
   validationExpression: IQueryNode
   validationMessage: string | null
   parameters: any
-}
-
-interface ElementState extends ElementBase {
-  isEditable: boolean
-  isRequired: boolean
-  isVisible: boolean
 }
 
 interface ElementStateNEW extends ElementBaseNEW {
@@ -293,17 +246,6 @@ interface MethodToCallProps {
   firstStrictInvalidPage: SectionAndPage | null
   setStrictSectionPage: SetStrictSectionPage
 }
-
-interface Page {
-  number: number
-  state: PageElements
-}
-
-type PageElements = {
-  element: ElementState
-  response: ResponseFull | null
-  review?: ReviewQuestionDecision
-}[]
 
 interface PageNEW {
   number: number
@@ -375,7 +317,7 @@ interface ResumeSection {
 type ReviewSectionComponentProps = {
   fullStructure: FullStructure
   section: SectionStateNEW
-  assignment: AssignmentDetailsNEW
+  assignment: AssignmentDetails
   thisReview?: ReviewDetails | null
   action: ReviewAction
   isAssignedToCurrentUser: boolean
@@ -412,11 +354,6 @@ interface ReviewQuestionDecision {
   decision?: ReviewResponseDecision | null
 }
 
-interface ReviewerResponsesPayload {
-  userId: number
-  reviewSections: SectionsStructure
-}
-
 type SectionAndPage = {
   sectionCode: string
   pageNumber: number
@@ -435,18 +372,6 @@ interface SectionProgress {
   completed: boolean
   valid: boolean
   linkedPage: number
-}
-
-interface SectionState {
-  details: SectionDetails
-  progress?: SectionProgress
-  assigned?: ReviewerDetails
-  pages: {
-    [pageName: string]: Page
-  }
-}
-interface SectionsStructure {
-  [code: string]: SectionState
 }
 
 interface ReviewProgress {
@@ -523,13 +448,6 @@ interface TemplateDetails {
   startMessage?: string
 }
 
-interface TemplateElementState extends ElementBase {
-  isRequired: IQueryNode
-  visibilityCondition: IQueryNode
-  isEditable: IQueryNode
-  // isValid: boolean | null
-}
-
 interface TemplateElementStateNEW extends ElementBaseNEW {
   isRequiredExpression: IQueryNode
   isVisibleExpression: IQueryNode
@@ -556,23 +474,6 @@ interface ValidateFunction {
 
 interface ValidateObject {
   validate: ValidateFunction
-}
-
-interface ValidatedSections {
-  sectionsWithProgress: SectionsStructure
-  elementsToUpdate: ValidityFailure[]
-}
-interface ValidityFailure {
-  id: number
-  isValid: boolean
-  code: string
-}
-
-interface RevalidateResult {
-  allValid: boolean
-  progress: SectionProgress
-  sectionCode?: string
-  validityFailures: ValidityFailure[]
 }
 
 interface UseGetApplicationProps {
@@ -620,7 +521,7 @@ type UserRoles = {
 
 interface UseGetFullReviewStructureProps {
   fullApplicationStructure: FullStructure
-  reviewAssignment: AssignmentDetailsNEW
+  reviewAssignment: AssignmentDetails
   filteredSectionIds?: number[]
   awaitMode?: boolean
 }
@@ -632,8 +533,4 @@ interface SortQuery {
 
 interface SetStrictSectionPage {
   (sectionAndPage: SectionAndPage | null): void
-}
-
-interface MethodToCallOnRevalidation {
-  (firstInvalidPage: SectionAndPage | null, setStrictSectionPage: SetStrictSectionPage): void
 }

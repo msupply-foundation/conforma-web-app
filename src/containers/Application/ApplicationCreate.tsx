@@ -10,7 +10,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { SectionsList } from '../../components/Application/Sections'
 
-const ApplicationCreateNEW: React.FC = () => {
+const ApplicationCreate: React.FC = () => {
   const {
     applicationState: { serialNumber },
     setApplicationState,
@@ -110,4 +110,4 @@ const ApplicationCreateNEW: React.FC = () => {
   )
 }
 
-export default ApplicationCreateNEW
+export default ApplicationCreate

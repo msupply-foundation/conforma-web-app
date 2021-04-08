@@ -20,7 +20,7 @@ import {
   TemplateNew,
   Template,
 } from '../../components'
-import { ApplicationCreateNEW, ApplicationWrapper } from '../Application'
+import { ApplicationCreate, ApplicationWrapper } from '../Application'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import UserArea from '../User/UserArea'
 import ListWrapper from '../List/ListWrapper'
@@ -42,7 +42,7 @@ const SiteLayout: React.FC = () => {
         </Route>
         <Route path="/application/new">
           <ApplicationProvider>
-            <ApplicationCreateNEW />
+            <ApplicationCreate />
           </ApplicationProvider>
         </Route>
         <Route path="/application/:serialNumber">

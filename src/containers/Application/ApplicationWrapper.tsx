@@ -7,7 +7,7 @@ import { useUserState } from '../../contexts/UserState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { User } from '../../utils/types'
-import { ApplicationHome, ApplicationSubmission, ApplicationPageWrapperNEW } from './'
+import { ApplicationHome, ApplicationSubmission, ApplicationPageWrapper } from './'
 import strings from '../../utils/constants'
 import { ReviewWrapper } from '../Review'
 
@@ -42,7 +42,7 @@ const ApplicationWrapper: React.FC = () => {
         <ApplicationSubmission structure={structure} />
       </Route>
       <Route>
-        <ApplicationPageWrapperNEW structure={structure} />
+        <ApplicationPageWrapper structure={structure} />
       </Route>
     </Switch>
   ) : (

@@ -10,7 +10,7 @@ import {
 } from '../../utils/types'
 import strings from '../../utils/constants'
 import { Message } from 'semantic-ui-react'
-import { ApplicationPage, ApplicationSummary } from './'
+import { ApplicationPage, ApplicationSummary } from '.'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
 
@@ -24,7 +24,7 @@ interface RevalidationState {
   lastRevalidationRequest: number
 }
 
-const ApplicationPageWrapperNEW: React.FC<ApplicationProps> = ({ structure }) => {
+const ApplicationPageWrapper: React.FC<ApplicationProps> = ({ structure }) => {
   const {
     match: { path },
   } = useRouter()
@@ -109,4 +109,4 @@ const ApplicationPageWrapperNEW: React.FC<ApplicationProps> = ({ structure }) =>
   )
 }
 
-export default ApplicationPageWrapperNEW
+export default ApplicationPageWrapper

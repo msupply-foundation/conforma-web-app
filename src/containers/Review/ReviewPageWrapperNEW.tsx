@@ -5,12 +5,12 @@ import { Loading, NoMatch } from '../../components'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
-import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
+import { AssignmentDetails, FullStructure } from '../../utils/types'
 import ReviewPage from './ReviewPage'
 
 const ReviewPageWrapperNEW: React.FC<{
   structure: FullStructure
-  reviewAssignments: AssignmentDetailsNEW[]
+  reviewAssignments: AssignmentDetails[]
 }> = ({ structure, reviewAssignments }) => {
   const {
     query: { reviewId },

@@ -9,11 +9,11 @@ import useGetDecisionOptions from '../../utils/hooks/useGetDecisionOptions'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useSubmitReviewNEW from '../../utils/hooks/useSubmitReview'
 import messages from '../../utils/messages'
-import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
+import { AssignmentDetails, FullStructure } from '../../utils/types'
 
 type ReviewSubmitProps = {
   structure: FullStructure
-  reviewAssignment: AssignmentDetailsNEW
+  reviewAssignment: AssignmentDetails
   scrollTo: (code: string) => void
 }
 
