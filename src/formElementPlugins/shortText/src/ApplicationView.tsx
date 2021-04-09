@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { Form, Input } from 'semantic-ui-react'
+import React, { useEffect } from 'react'
+import { Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
+  element,
   parameters,
   onUpdate,
   value,
   setValue,
   setIsActive,
-  isEditable,
-  currentResponse,
   validationState,
   onSave,
   Markdown,
 }) => {
+  const { isEditable } = element
   const { placeholder, maskedInput, label, description } = parameters
 
   useEffect(() => {

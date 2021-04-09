@@ -29,19 +29,15 @@ interface FileInfo {
 }
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
-  code,
+  element,
   parameters,
-  onUpdate,
-  value,
-  setValue,
-  isEditable,
-  currentResponse,
-  applicationData,
-  validationState,
   onSave,
   Markdown,
   initialValue,
+  currentResponse,
+  applicationData,
 }) => {
+  const { isEditable } = element
   const { label, description, fileCountLimit, fileExtensions, fileSizeLimit } = parameters
 
   const { config } = applicationData

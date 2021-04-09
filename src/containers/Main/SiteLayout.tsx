@@ -20,19 +20,10 @@ import {
   TemplateNew,
   Template,
 } from '../../components'
-import {
-  ApplicationCreate,
-  ApplicationCreateNEW,
-  ApplicationPageWrapper,
-  ApplicationWrapper,
-} from '../Application'
-import { ReviewOverview, ReviewPageWrapper } from '../Review'
+import { ApplicationCreate, ApplicationWrapper } from '../Application'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
-import ApplicationOverview from '../Application/ApplicationOverview'
-import ApplicationSubmission from '../Application/ApplicationSubmission'
 import UserArea from '../User/UserArea'
 import ListWrapper from '../List/ListWrapper'
-import ReviewSubmission from '../../components/Review/ReviewSubmission'
 import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpdateTrackerState'
 
 const SiteLayout: React.FC = () => {
@@ -49,58 +40,16 @@ const SiteLayout: React.FC = () => {
         <Route exact path="/applications">
           <ListWrapper />
         </Route>
-        {/* Application router NEW*/}
-        {/* Create application new route */}
         <Route path="/application/new">
           <ApplicationProvider>
-            <ApplicationCreateNEW />
+            <ApplicationCreate />
           </ApplicationProvider>
         </Route>
-        {/* Other application routes nested in ApplicationWrapper */}
         <Route path="/application/:serialNumber">
           <FormElementUpdateTrackerProvider>
             <ApplicationWrapper />
           </FormElementUpdateTrackerProvider>
         </Route>
-        {/* Application current routes - to be removed */}
-        <Route exact path="/applicationOLD/new">
-          <ApplicationProvider>
-            <ApplicationCreate />
-          </ApplicationProvider>
-        </Route>
-        <Route exact path="/applicationOLD/:serialNumber">
-          <ApplicationProvider>
-            <ApplicationPageWrapper />
-          </ApplicationProvider>
-        </Route>
-        <Route exact path="/applicationOLD/:serialNumber/:sectionCode/Page:page">
-          <ApplicationProvider>
-            <ApplicationPageWrapper />
-          </ApplicationProvider>
-        </Route>
-        <Route exact path="/applicationOLD/:serialNumber/submission">
-          <ApplicationSubmission />
-        </Route>
-        <Route exact path="/applicationOLD/:serialNumber/summary">
-          <ApplicationOverview />
-        </Route>
-        {/* Review current routes - to be removed */}
-        <Route exact path="/applicationOLD/:serialNumber/review">
-          <ReviewOverview />
-        </Route>
-        <Route exact path="/applicationOLD/:serialNumber/review/:reviewId">
-          <ReviewPageWrapper />
-        </Route>
-        <Route exact path="/applicationOLD/:serialNumber/review/:reviewId/submission">
-          <ReviewSubmission />
-        </Route>
-        <Route exact path="/applicationOLD/:serialNumber/consolidation/">
-          <NoMatch />
-        </Route>
-        <Route exact path="/applicationOLD/:serialNumber/consolidation/:consolidationId">
-          <NoMatch />
-        </Route>
-        {/* End of Review routes */}
         <Route exact path="/application/:serialNumber/approval">
           <Approval />
         </Route>

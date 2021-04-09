@@ -1,16 +1,9 @@
 import { gql } from '@apollo/client'
 
-// TODO: Remove this
-
 export default gql`
   query getApplication($serial: String!) {
     applicationBySerial(serial: $serial) {
       ...Application
-      applicationResponses {
-        nodes {
-          ...Response
-        }
-      }
       template {
         ...Template
         templateStages {
@@ -24,13 +17,18 @@ export default gql`
           id
           templateSection {
             ...Section
-            templateElementsBySectionId {
+            templateElementsBySectionId(orderBy: INDEX_ASC) {
               nodes {
                 ...Element
               }
             }
           }
         }
+      }
+    }
+    applicationStageStatusLatests(condition: { serial: $serial }) {
+      nodes {
+        ...Stage
       }
     }
   }

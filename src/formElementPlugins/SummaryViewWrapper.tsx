@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
-import { Grid, Icon, Form, Input } from 'semantic-ui-react'
-import { SummaryViewWrapperProps, PluginComponents, ValidationState } from './types'
-import { TemplateElementCategory } from '../utils/generated/graphql'
-import { ElementPluginParameters, User } from '../utils/types'
-import { extractDynamicExpressions, evaluateDynamicParameters } from './ApplicationViewWrapperNEW'
+import { Form } from 'semantic-ui-react'
+import { SummaryViewWrapperProps, PluginComponents } from './types'
+import { ElementPluginParameters } from '../utils/types'
+import { extractDynamicExpressions, evaluateDynamicParameters } from './ApplicationViewWrapper'
 import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
+import globalConfig from '../config.json'
+
+const graphQLEndpoint = globalConfig.serverGraphQL
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
   const { element, response, allResponses } = props
-  const { parameters, category, code, pluginCode, isEditable, isRequired, isVisible } = element
+  const { parameters, pluginCode, isRequired, isVisible } = element
   const {
     userState: { currentUser },
   } = useUserState()
@@ -29,12 +31,12 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
     evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
       objects: { responses: allResponses, currentUser },
       APIfetch: fetch,
+      graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     }).then((result: ElementPluginParameters) => {
       setEvaluatedParameters(result)
       setParametersLoaded(true)
     })
   }, [])
-
   if (
     !pluginCode ||
     !isVisible
@@ -47,9 +49,12 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
     return (
       <Form.Field required={isRequired}>
         {parametersLoaded && (
-          <label style={{ color: 'black' }}>
-            <Markdown text={combinedParams.label} semanticComponent="noParagraph" />
-          </label>
+          <>
+            <label style={{ color: 'black' }}>
+              <Markdown text={combinedParams.label} semanticComponent="noParagraph" />
+            </label>
+            <Markdown text={combinedParams.description} />
+          </>
         )}
         <Markdown text={(response ? response?.text : '') as string} />
       </Form.Field>
