@@ -414,12 +414,6 @@ interface TemplateElementState extends ElementBase {
   isEditableExpression: IQueryNode
 }
 
-// interface TemplateElementStateNEW extends ElementBaseNEW {
-//   isRequiredExpression: IQueryNode
-//   isVisibleExpression: IQueryNode
-//   isEditableExpression: IQueryNode
-// }
-
 interface TemplatePermissions {
   [index: string]: Array<PermissionPolicyType>
 }
