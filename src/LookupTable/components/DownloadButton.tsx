@@ -1,9 +1,15 @@
 import axios from 'axios'
 import config from '../../config.json'
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Popup, Button, Icon, Message } from 'semantic-ui-react'
 
-const DownloadButton = ({ id, open: openPopup = false, popUpContent: content = '' }: any) => {
+const DownloadButton = ({
+  id,
+  open: openPopup = false,
+  popUpContent = '',
+  content = '',
+  ...props
+}: any) => {
   const [open, setOpen] = useState(openPopup)
   const [error, setError]: any = useState('')
 
@@ -45,15 +51,29 @@ const DownloadButton = ({ id, open: openPopup = false, popUpContent: content = '
     <Popup
       open={open}
       content={
-        error ? <Message negative header="Error trying to download" content={error} /> : content
+        error ? (
+          <Message negative header="Error trying to download" content={error} />
+        ) : (
+          popUpContent
+        )
       }
       onClose={handleClose}
       onOpen={handleOpen}
       on={error ? 'click' : 'hover'}
       trigger={
-        <Button icon as="button" onClick={(e) => downloadItem(e)}>
-          <Icon name="download" />
-        </Button>
+        <Button
+          icon
+          as="button"
+          color="orange"
+          content={
+            <Fragment>
+              <Icon name="download" />
+              {content}
+            </Fragment>
+          }
+          onClick={(e) => downloadItem(e)}
+          {...props}
+        />
       }
     />
   )

@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Button, Header, Icon } from 'semantic-ui-react'
-import { MainMenu } from '..'
+import { DownloadButton, MainMenu } from '..'
 
 const LookUpMainMenu: React.FC<any> = (props) => {
   const { structure } = props
@@ -30,15 +30,12 @@ const LookUpMainMenu: React.FC<any> = (props) => {
             <Icon name="upload" />
             Import
           </Button>
-          <Button
-            icon
-            as={NavLink}
-            labelPosition="right"
-            to={`/lookup-tables/${structure.id}/export`}
-          >
-            <Icon name="download" />
-            Export
-          </Button>
+          <DownloadButton
+            content="Export"
+            labelPosition="left"
+            popUpContent={`Download '${structure.label}' table`}
+            id={structure.id}
+          />
         </Button.Group>
       }
     />
