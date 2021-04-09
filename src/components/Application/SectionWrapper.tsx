@@ -34,19 +34,19 @@ const SectionWrapper: React.FC<SectionProps> = ({
   const stickyRef = useRef(null)
   return (
     <div ref={stickyRef} key={`${section.details.id}`}>
-      <Accordion fluid style={inlineStyles}>
+      <Accordion style={sectionStyles.sup}>
         <Accordion.Title active={isActive} onClick={toggleSection}>
           <Sticky context={stickyRef} offset={135} bottomOffset={150}>
-            <Grid columns="equal" style={inlineStyles}>
+            <Grid columns="equal" style={sectionStyles.body}>
               <Grid.Column floated="left">
-                <Header as="h2" content={details.title} style={sectionTitleStyle} />
+                <Header as="h2" content={details.title} style={sectionStyles.title} />
               </Grid.Column>
               <Grid.Column floated="right" textAlign="right">
                 {extraSectionTitleContent && extraSectionTitleContent(section)}
               </Grid.Column>
               <Grid.Column floated="right" textAlign="right" width={1}>
                 <Icon
-                  style={sectionIconStyle}
+                  style={sectionStyles.icon}
                   name={isActive ? 'angle up' : 'angle down'}
                   size="large"
                 />
@@ -58,7 +58,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
           {Object.values(pages).map((page) => (
             <>
               {scrollableAttachment && scrollableAttachment(page)}
-              <p style={pageStyle as CSSProperties}>{page.name}</p>
+              <p style={sectionStyles.page}>{page.name}</p>
               <PageElements
                 key={`${section.details.id}Page_${page.number}`}
                 elements={page.state}
@@ -80,42 +80,35 @@ const SectionWrapper: React.FC<SectionProps> = ({
 }
 
 // Styles - TODO: Move to LESS || Global class style (semantic)
-const inlineStyles = {
-  acordion: {
+const sectionStyles = {
+  sup: {
     borderRadius: 8,
     marginBottom: 10,
     border: 'none',
     boxShadow: 'none',
     backgroundColor: '#DCDDDD', // Invision
-    title: {
-      sticky: {
-        grid: {
-          margin: 0,
-          borderRadius: 8,
-          backgroundColor: '#DCDDDD', // Invision
-        },
-      },
-    },
-  },
-}
-
-const sectionIconStyle = { color: 'rgb(100, 100, 100)' }
-
-const sectionTitleStyle = {
-  color: '#4A4A4A',
-  fontSize: 18,
-  fontWeight: 900,
-  textTransform: 'uppercase',
-  letterSpacing: 1,
-}
-
-const pageStyle = {
-  color: '#4A4A4A',
-  fontSize: 15,
-  fontWeight: 900,
-  textTransform: 'uppercase',
-  letterSpacing: 1,
-  marginTop: 8,
+  } as CSSProperties,
+  body: {
+    margin: 0,
+    borderRadius: 8,
+    backgroundColor: '#DCDDDD', // Invision
+  } as CSSProperties,
+  title: {
+    color: '#4A4A4A',
+    fontSize: 18,
+    fontWeight: 900,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  } as CSSProperties,
+  icon: { color: 'rgb(100, 100, 100)' } as CSSProperties,
+  page: {
+    color: '#4A4A4A',
+    fontSize: 15,
+    fontWeight: 900,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginTop: 8,
+  } as CSSProperties,
 }
 
 export default SectionWrapper
