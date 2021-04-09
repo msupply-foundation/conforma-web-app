@@ -12,7 +12,7 @@ p {
 }
 
 .ui.basic.buttons .button, .ui.basic.button  {
-                color: #003BFE
+  color: #003BFE
 }
 
 .sup .ui.tiny.progress {
@@ -25,14 +25,14 @@ p {
 
 
 /* Table Striping */
-.dreistripes .ui.grid:nth-child(even) {
+.stripes .ui.grid:nth-child(even) {
   background: rgb(248, 248, 248);
 }
 
-.dreistripes .ui.grid:nth-child(even) .dreistripedlabel {
+.stripes .ui.grid:nth-child(even) .stripedlabel {
   background: white;
 }
 
-.dreistripes .ui.grid:nth-child(odd) .dreistripedlabel {
+.stripes .ui.grid:nth-child(odd) .stripedlabel {
   background: rgb(248, 248, 248);
 }
