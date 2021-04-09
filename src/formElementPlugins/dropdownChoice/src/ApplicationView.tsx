@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Dropdown, Header, Label } from 'semantic-ui-react'
+import { Dropdown, Label } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
+  element,
   parameters,
   onUpdate,
+  currentResponse,
   // value,
   // setValue,
-  isEditable,
-  currentResponse,
   validationState,
   onSave,
   Markdown,
@@ -25,6 +25,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   } = parameters
 
   const [selectedIndex, setSelectedIndex] = useState<number>()
+  const { isEditable } = element
 
   useEffect(() => {
     // This ensures that, if a default is specified, it gets saved on first load

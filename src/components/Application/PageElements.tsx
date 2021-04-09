@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ElementStateNEW, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
-import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapperNEW'
-import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
+import { ElementState, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
+import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapper'
+import SummaryViewWrapper from '../../formElementPlugins/SummaryViewWrapper'
 import { Form, Grid, Segment, Button, Icon } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import {
@@ -13,10 +13,10 @@ import {
 } from '../../utils/generated/graphql'
 
 import {
-  ApplicationViewWrapperPropsNEW,
-  SummaryViewWrapperPropsNEW,
+  ApplicationViewWrapperProps,
+  SummaryViewWrapperProps,
 } from '../../formElementPlugins/types'
-import DecisionAreaNEW from '../Review/DecisionAreaNEW'
+import DecisionArea from '../Review/DecisionArea'
 
 interface PageElementProps {
   elements: PageElement[]
@@ -47,15 +47,22 @@ const PageElements: React.FC<PageElementProps> = ({
       <Form>
         {visibleElements.map(
           ({ element, isChangeRequest, isChanged, previousApplicationResponse }) => {
-            const visibleReviews = previousApplicationResponse?.reviewResponses.nodes
-            const props: ApplicationViewWrapperPropsNEW = {
+            const currentReview = previousApplicationResponse?.reviewResponses.nodes[0]
+            const changesRequired =
+              isChangeRequest || isChanged
+                ? {
+                    isChangeRequest: isChangeRequest as boolean,
+                    isChanged: isChanged as boolean,
+                    reviewerComment: currentReview?.comment || '',
+                  }
+                : undefined
+
+            const props: ApplicationViewWrapperProps = {
               element,
               isStrictPage,
-              isChanged: !!isChanged && !!isChangeRequest,
+              changesRequired,
               allResponses: responsesByCode,
               currentResponse: responsesByCode?.[element.code],
-              currentReview:
-                visibleReviews?.length > 0 ? (visibleReviews[0] as ReviewResponse) : undefined,
             }
             // Wrapper displays response & changes requested warning for LOQ re-submission
             return <ApplicationViewWrapper key={`question_${element.code}`} {...props} />
@@ -64,7 +71,7 @@ const PageElements: React.FC<PageElementProps> = ({
       </Form>
     )
 
-  const getSummaryViewProps = (element: ElementStateNEW) => ({
+  const getSummaryViewProps = (element: ElementState) => ({
     element,
     response: responsesByCode?.[element.code],
     allResponses: responsesByCode,
@@ -82,7 +89,7 @@ const PageElements: React.FC<PageElementProps> = ({
                 <Segment key={`question_${element.code}`}>
                   <Grid columns="equal">
                     <Grid.Column floated="left">
-                      <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
+                      <SummaryViewWrapper {...getSummaryViewProps(element)} />
                     </Grid.Column>
                     {element.category === TemplateElementCategory.Question && canEdit && (
                       <Grid.Column floated="right" textAlign="right">
@@ -119,7 +126,7 @@ const PageElements: React.FC<PageElementProps> = ({
               <Segment key={`question_${element.id}`}>
                 <Grid columns="equal">
                   <Grid.Column floated="left">
-                    <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
+                    <SummaryViewWrapper {...getSummaryViewProps(element)} />
                   </Grid.Column>
                   <Grid.Column floated="right" textAlign="right">
                     <ReviewButton
@@ -146,7 +153,7 @@ const PageElements: React.FC<PageElementProps> = ({
 
 const ReviewResponseComponent: React.FC<{
   reviewResponse: ReviewResponse
-  summaryViewProps: SummaryViewWrapperPropsNEW
+  summaryViewProps: SummaryViewWrapperProps
   latestApplicationResponse: ApplicationResponse
 }> = ({ reviewResponse, summaryViewProps, latestApplicationResponse }) => {
   const [toggleDecisionArea, setToggleDecisionArea] = useState(false)
@@ -176,7 +183,7 @@ const ReviewResponseComponent: React.FC<{
           </Grid.Column>
         )}
       </Grid>
-      <DecisionAreaNEW
+      <DecisionArea
         reviewResponse={reviewResponse}
         toggle={toggleDecisionArea}
         summaryViewProps={summaryViewProps}
@@ -187,7 +194,7 @@ const ReviewResponseComponent: React.FC<{
 
 const ReviewButton: React.FC<{
   reviewResponse: ReviewResponse
-  summaryViewProps: SummaryViewWrapperPropsNEW
+  summaryViewProps: SummaryViewWrapperProps
   isNewApplicationResponse?: boolean
 }> = ({ reviewResponse, summaryViewProps, isNewApplicationResponse }) => {
   const [toggleDecisionArea, setToggleDecisionArea] = useState(false)
@@ -207,7 +214,7 @@ const ReviewButton: React.FC<{
         size="small"
         onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
       />
-      <DecisionAreaNEW
+      <DecisionArea
         reviewResponse={reviewResponse}
         toggle={toggleDecisionArea}
         summaryViewProps={summaryViewProps}

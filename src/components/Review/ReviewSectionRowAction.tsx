@@ -8,6 +8,7 @@ import { useUserState } from '../../contexts/UserState'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
 import { ReviewStatus } from '../../utils/generated/graphql'
+import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const {
@@ -18,7 +19,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
     action,
     section: { details, reviewProgress },
     isAssignedToCurrentUser,
-
+    assignment: { isCurrentUserReviewer },
     thisReview,
   } = props
 
@@ -53,6 +54,12 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
 
         return null
       }
+
+      case ReviewAction.canSelfAssign: {
+        if (isCurrentUserReviewer) return <SelfAssignButton {...props} />
+        return null
+      }
+
       default:
         return null
     }
@@ -68,6 +75,7 @@ const reReviewableCount = (reviewProgress?: ReviewProgress) =>
 const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
   section: { details, reviewProgress },
+  assignment,
 }) => {
   const {
     location: { pathname },
@@ -77,14 +85,17 @@ const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
   const [restartReviewError, setRestartReviewError] = useState(false)
   const reviewId = fullStructure.thisReview?.id
 
-  const restartReview = useRestartReview(reviewId || 0)
+  const restartReview = useRestartReview({
+    reviewId: reviewId || 0,
+    structure: fullStructure,
+    assignment,
+  })
 
   const restart = async () => {
     {
       try {
-        const result = await restartReview(fullStructure)
-        const responseCheck = result.data?.updateReview?.review?.id
-        if (!responseCheck) throw new Error('Review ID is missing from response')
+        await restartReview()
+
         push(`${pathname}/${reviewId}?activeSections=${details.code}`)
       } catch (e) {
         console.error(e)
@@ -95,6 +106,10 @@ const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
 
   if (restartReviewError) return <Message error title={strings.ERROR_GENERIC} />
 
+  const reReviewCount = reReviewableCount(reviewProgress)
+
+  if (reReviewCount === 0) return null
+
   // Either need to run a mutation to re-review or just navigate to section
   const buttonAction =
     fullStructure.thisReview?.status == ReviewStatus.Draft
@@ -102,10 +117,35 @@ const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
       : restart
 
   return (
-    <Button onClick={buttonAction}>{`${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewableCount(
-      reviewProgress
-    )})`}</Button>
+    <Button
+      onClick={buttonAction}
+    >{`${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewCount})`}</Button>
   )
+}
+
+// SELF ASSIGN REVIEW button
+const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
+  assignment,
+  fullStructure: structure,
+}) => {
+  const [assignmentError, setAssignmentError] = useState(false)
+
+  const { assignSectionToUser } = useUpdateReviewAssignment(structure)
+
+  const selfAssignReview = async () => {
+    {
+      try {
+        await assignSectionToUser({ assignment, isSelfAssignment: true })
+      } catch (e) {
+        console.log(e)
+        setAssignmentError(true)
+      }
+    }
+  }
+
+  if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
+
+  return <Button onClick={selfAssignReview}>{strings.BUTTON_SELF_ASSIGN}</Button>
 }
 
 // START REVIEW button
@@ -126,10 +166,6 @@ const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
 
   const { createReviewFromStructure } = useCreateReview({
     reviewAssigmentId: assignment.id,
-    reviewerId: currentUser?.userId as number,
-    serialNumber: fullStructure.info.serial,
-    // TODO: Remove this
-    onCompleted: () => {},
   })
 
   const startReview = async () => {
@@ -137,7 +173,6 @@ const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
       try {
         const result = await createReviewFromStructure(fullStructure)
         const newReviewId = result.data?.createReview?.review?.id
-        if (!newReviewId) throw new Error('Review ID is missing from response')
         push(`${pathname}/${newReviewId}?activeSections=${details.code}`)
       } catch (e) {
         console.error(e)

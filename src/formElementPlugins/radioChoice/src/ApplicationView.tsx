@@ -4,14 +4,12 @@ import { ApplicationViewProps } from '../../types'
 import strings from '../constants'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
-  code,
+  element,
   parameters,
   onUpdate,
+  currentResponse,
   // value,
   // setValue,
-  isEditable,
-  currentResponse,
-  validationState,
   onSave,
   Markdown,
   getDefaultIndex,
@@ -25,6 +23,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     hasOther,
     otherPlaceholder,
   } = parameters
+
+  const { code, isEditable } = element
 
   const [selectedIndex, setSelectedIndex] = useState<number>()
 
