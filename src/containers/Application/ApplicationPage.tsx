@@ -1,21 +1,17 @@
 import React, { useEffect } from 'react'
+import { Grid, Header, Segment } from 'semantic-ui-react'
 import {
   FullStructure,
   SectionAndPage,
   MethodRevalidate,
   ApplicationProps,
 } from '../../utils/types'
-
-import { ApplicationStatus } from '../../utils/generated/graphql'
+import { Loading, Navigation, PageElements, ProgressBar } from '../../components'
 import { useUserState } from '../../contexts/UserState'
-import { useRouter } from '../../utils/hooks/useRouter'
-import { Loading } from '../../components'
-import strings from '../../utils/constants'
-import { Grid, Header, Segment } from 'semantic-ui-react'
-import ProgressBarNEW from '../../components/Application/ProgressBarNEW'
-import { PageElements } from '../../components/Application'
-import { Navigation } from '../../components'
+import { ApplicationStatus } from '../../utils/generated/graphql'
 import { checkPageIsAccessible } from '../../utils/helpers/structure'
+import { useRouter } from '../../utils/hooks/useRouter'
+import strings from '../../utils/constants'
 
 const ApplicationPage: React.FC<ApplicationProps> = ({
   structure: fullStructure,
@@ -73,7 +69,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
         }}
       >
         <Grid.Column width={4}>
-          <ProgressBarNEW
+          <ProgressBar
             structure={fullStructure}
             requestRevalidation={requestRevalidation as MethodRevalidate}
             strictSectionPage={strictSectionPage as SectionAndPage}

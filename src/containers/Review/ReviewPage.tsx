@@ -1,11 +1,11 @@
 import { Button, Header, Label, Message, Segment } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import {
-  AssignmentDetailsNEW,
+  AssignmentDetails,
   FullStructure,
-  PageNEW,
+  Page,
   ResponsesByCode,
-  SectionStateNEW,
+  SectionState,
 } from '../../utils/types'
 
 import {
@@ -29,7 +29,7 @@ import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
 
 const ReviewPage: React.FC<{
-  reviewAssignment: AssignmentDetailsNEW
+  reviewAssignment: AssignmentDetails
   fullApplicationStructure: FullStructure
 }> = ({ reviewAssignment, fullApplicationStructure }) => {
   const {
@@ -81,11 +81,9 @@ const ReviewPage: React.FC<{
               isActive={isSectionActive(section.details.code)}
               toggleSection={toggleSection(section.details.code)}
               section={section}
-              extraSectionTitleContent={(section: SectionStateNEW) => (
-                <SectionProgress {...section} />
-              )}
-              extraPageContent={(page: PageNEW) => <ApproveAllButton page={page} />}
-              scrollableAttachment={(page: PageNEW) => (
+              extraSectionTitleContent={(section: SectionState) => <SectionProgress {...section} />}
+              extraPageContent={(page: Page) => <ApproveAllButton page={page} />}
+              scrollableAttachment={(page: Page) => (
                 <ScrollableAttachment
                   code={`${section.details.code}P${page.number}`}
                   addScrollabe={addScrollable}
@@ -119,7 +117,7 @@ const ReviewPage: React.FC<{
   )
 }
 
-const ApproveAllButton: React.FC<{ page: PageNEW }> = ({ page }) => {
+const ApproveAllButton: React.FC<{ page: Page }> = ({ page }) => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
 
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)

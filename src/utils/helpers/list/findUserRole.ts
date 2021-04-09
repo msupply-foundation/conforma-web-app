@@ -1,5 +1,10 @@
+import { USER_ROLES } from '../../data'
 import { PermissionPolicyType } from '../../generated/graphql'
-import { UserRoles, TemplatePermissions } from '../../types'
+import { TemplatePermissions } from '../../types'
+
+type UserRoles = {
+  [role in USER_ROLES]: Array<PermissionPolicyType>
+}
 
 /**
  * @function: findUserRole

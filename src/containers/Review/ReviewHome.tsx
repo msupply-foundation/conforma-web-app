@@ -4,11 +4,12 @@ import { Loading } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
 import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
-import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
+import { AssignmentDetails, FullStructure } from '../../utils/types'
+import AssignmentSectionRow from './AssignmentSectionRow'
 import ReviewSectionRow from './ReviewSectionRow'
 
 interface ReviewHomeProps {
-  assignments: AssignmentDetailsNEW[]
+  assignments: AssignmentDetails[]
   structure: FullStructure
 }
 
@@ -28,13 +29,17 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
 
   const [filters, setFilters] = useState<Filters | null>(null)
 
-  const getFilteredReviewer = (assignments: AssignmentDetailsNEW[]) => {
+  const getFilteredByStage = (assignments: AssignmentDetails[]) => {
     if (!filters) return []
-    return assignments.filter(
+    return assignments.filter((assignment) => assignment.stage.id === filters.selectedStage)
+  }
+
+  const getFilteredReviewer = (assignments: AssignmentDetails[]) => {
+    if (!filters) return []
+    return getFilteredByStage(assignments).filter(
       (assignment) =>
-        (filters.selectedReviewer === ALL_REVIEWERS ||
-          assignment.reviewer.id === filters.selectedReviewer) &&
-        assignment.stage.id === filters.selectedStage
+        filters.selectedReviewer === ALL_REVIEWERS ||
+        assignment.reviewer.id === filters.selectedReviewer
     )
   }
 
@@ -53,9 +58,16 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
     <>
       <ReviewerAndStageSelection {...reviewerAndStageSelectionProps} />
       {filters &&
-        Object.values(fullApplicationStructure.sections).map(({ details: { id, title } }) => (
+        Object.values(fullApplicationStructure.sections).map(({ details: { id, title, code } }) => (
           <Segment key={id}>
             <Header>{title}</Header>
+            <AssignmentSectionRow
+              {...{
+                assignments: getFilteredByStage(assignments),
+                structure: fullApplicationStructure,
+                sectionCode: code,
+              }}
+            />
             {getFilteredReviewer(assignments).map((assignment) => (
               <ReviewSectionRow
                 {...{
@@ -76,7 +88,7 @@ type ReviewerAndStageSelectionProps = {
   filters: Filters | null
   setFilters: (filters: Filters) => void
   structure: FullStructure
-  assignments: AssignmentDetailsNEW[]
+  assignments: AssignmentDetails[]
 }
 
 const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
@@ -124,7 +136,7 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
   )
 }
 
-const getStageOptions = (structure: FullStructure, assignments: AssignmentDetailsNEW[]) =>
+const getStageOptions = (structure: FullStructure, assignments: AssignmentDetails[]) =>
   structure.stages
     .filter(({ id }) => assignments.some(({ stage }) => id === stage.id))
     .map(({ id, title }) => ({
@@ -133,7 +145,7 @@ const getStageOptions = (structure: FullStructure, assignments: AssignmentDetail
       text: title,
     }))
 
-const getReviewerOptions = (assignments: AssignmentDetailsNEW[], currentUserId: number) => {
+const getReviewerOptions = (assignments: AssignmentDetails[], currentUserId: number) => {
   const reviewerOptions: { value: number; key: number; text: string }[] = [
     {
       value: ALL_REVIEWERS,
