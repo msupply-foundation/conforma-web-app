@@ -36,7 +36,7 @@ import ListWrapper from '../List/ListWrapper'
 import ReviewSubmission from '../../components/Review/ReviewSubmission'
 import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpdateTrackerState'
 import { Container, Segment } from 'semantic-ui-react'
-import DevOptions from '../User/DevOptions'
+import DevOptions from '../Dev/DevOptions'
 
 const SiteLayout: React.FC = () => {
   return (

@@ -1,9 +1,9 @@
 import React from 'react'
 import { Dropdown, Menu } from 'semantic-ui-react'
-import { AppMenu } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import UserSelection from './UserSelection'
+import AppMenu from './AppMenu'
 
 const DevOptions: React.FC = () => {
   const {
