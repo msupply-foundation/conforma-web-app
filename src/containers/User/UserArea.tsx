@@ -23,7 +23,7 @@ const UserArea: React.FC = () => {
       }}
     >
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <Link to="/dashboard" style={{ color: 'rgb(240,240,240)', fontSize: 14, letterSpacing: 1 }}>
+        <Link to="/" style={{ color: 'rgb(240,240,240)', fontSize: 14, letterSpacing: 1 }}>
           <Icon name="home" />
           {strings.MENU_ITEM_DASHBOARD}
         </Link>

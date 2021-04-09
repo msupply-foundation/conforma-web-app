@@ -56,7 +56,7 @@ const SiteLayout: React.FC = () => {
         }}
       >
         <Switch>
-          <Route exact path="/dashboard">
+          <Route exact path="/">
             <Home />
           </Route>
           <Route exact path="/login">
