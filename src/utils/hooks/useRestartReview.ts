@@ -1,5 +1,5 @@
 import { useUpdateReviewMutation, ReviewPatch, Trigger, Decision } from '../generated/graphql'
-import { AssignmentDetailsNEW, FullStructure } from '../types'
+import { AssignmentDetails, FullStructure } from '../types'
 import { useGetFullReviewStructureAsync } from './useGetFullReviewStructure'
 
 // below lines are used to get return type of the function that is returned by useRestartReviewMutation
@@ -9,7 +9,7 @@ type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 type UseRestartReview = (props: {
   reviewId: number
   structure: FullStructure
-  assignment: AssignmentDetailsNEW
+  assignment: AssignmentDetails
 }) => () => PromiseReturnType
 
 type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch

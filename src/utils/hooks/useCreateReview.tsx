@@ -1,52 +1,21 @@
 import { ApolloError } from '@apollo/client'
 import { useState } from 'react'
-import {
-  CreateReviewMutation,
-  Review,
-  useCreateReviewMutation,
-} from '../../utils/generated/graphql'
-import getReviewAssignmentQuery from '../graphql/queries/getReviewAssignment.query'
+import { useCreateReviewMutation } from '../../utils/generated/graphql'
 import { FullStructure } from '../types'
 
-export interface CreateReviewProps {
+interface CreateReviewProps {
   applicationResponses: { applicationResponseId: number; reviewQuestionAssignmentId: number }[]
 }
 
 interface UseCreateReviewProps {
-  reviewerId: number
   reviewAssigmentId: number
-  serialNumber: string
-  onCompleted: (id: number) => void
 }
 
-const useCreateReview = ({
-  reviewerId,
-  serialNumber,
-  onCompleted,
-  reviewAssigmentId,
-}: UseCreateReviewProps) => {
-  const [processing, setProcessing] = useState(false)
+const useCreateReview = ({ reviewAssigmentId }: UseCreateReviewProps) => {
   const [error, setError] = useState<ApolloError | undefined>()
 
   const [createReviewMutation] = useCreateReviewMutation({
-    // TODO: Remove this
-    onCompleted: ({ createReview }: CreateReviewMutation) => {
-      const { id } = createReview?.review as Review
-      setProcessing(false)
-      onCompleted(id)
-    },
-    // TODO: Remove this
-    onError: (error) => {
-      setProcessing(false)
-      setError(error)
-    },
-    // TODO: Remove this
-    refetchQueries: [
-      {
-        query: getReviewAssignmentQuery,
-        variables: { reviewerId, serialNumber },
-      },
-    ],
+    onError: (error) => setError(error),
   })
 
   const createReviewFromStructure = async (structure: FullStructure) => {
@@ -66,22 +35,10 @@ const useCreateReview = ({
     if (result.errors) throw new Error(result.errors.toString())
     return result
   }
-  // TODO: Remove this
-  const createReview = ({ applicationResponses }: CreateReviewProps) => {
-    setProcessing(true)
-    createReviewMutation({
-      variables: {
-        reviewAssigmentId,
-        applicationResponses,
-      },
-    })
-  }
 
   return {
-    processing,
     error,
     createReviewFromStructure,
-    create: createReview,
   }
 }
 

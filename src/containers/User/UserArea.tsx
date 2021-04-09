@@ -4,7 +4,7 @@ import strings from '../../utils/constants'
 import { useUserState } from '../../contexts/UserState'
 import UserSelection from './UserSelection'
 import useListTemplates from '../../utils/hooks/useListTemplates'
-import { AppMenu } from '../../components'
+import { AppMenu } from '../../components/Main'
 
 const UserArea: React.FC = () => {
   const {

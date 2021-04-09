@@ -3,13 +3,13 @@ import { Dropdown, Grid, Message } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import { ReviewAssignmentStatus } from '../../utils/generated/graphql'
 import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
-import { AssignmentDetailsNEW, FullStructure } from '../../utils/types'
+import { AssignmentDetails, FullStructure } from '../../utils/types'
 
 const NOT_ASSIGNED = 0
 const UNASSIGN = -1
 
 type AssignmentSectionRowProps = {
-  assignments: AssignmentDetailsNEW[]
+  assignments: AssignmentDetails[]
   sectionCode: string
   structure: FullStructure
 }
@@ -50,7 +50,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
   )
 }
 
-const getOptionFromAssignment = ({ reviewer, isCurrentUserReviewer }: AssignmentDetailsNEW) => ({
+const getOptionFromAssignment = ({ reviewer, isCurrentUserReviewer }: AssignmentDetails) => ({
   key: reviewer.id,
   value: reviewer.id,
   text: isCurrentUserReviewer
@@ -106,7 +106,7 @@ const getAssignmentOptions = ({ assignments, sectionCode }: AssignmentSectionRow
   }
 }
 // Find at least one reviewQuestion assignment in assignment that matches sectionCode
-const matchAssignmentToSection = (assignment: AssignmentDetailsNEW, sectionCode: string) =>
+const matchAssignmentToSection = (assignment: AssignmentDetails, sectionCode: string) =>
   assignment.reviewQuestionAssignments.some(
     (reviewQuestionAssignment) =>
       reviewQuestionAssignment.templateElement?.section?.code === sectionCode

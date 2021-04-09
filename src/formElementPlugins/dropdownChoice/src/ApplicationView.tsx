@@ -1,19 +1,19 @@
 import React, { useEffect } from 'react'
-import { Dropdown, Header, Label } from 'semantic-ui-react'
+import { Dropdown, Label } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
+  element,
   parameters,
   onUpdate,
   value,
   setValue,
-  isEditable,
-  currentResponse,
   validationState,
   onSave,
   Markdown,
   getDefaultIndex,
 }) => {
+  const { isEditable } = element
   const { label, description, placeholder, search, options, default: defaultOption } = parameters
 
   useEffect(() => {

@@ -33,18 +33,13 @@ const host = config.serverREST
 const { uploadEndpoint } = config
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
-  code,
+  element,
   parameters,
-  onUpdate,
-  value,
-  setValue,
-  isEditable,
-  // currentResponse,
-  validationState,
   onSave,
   Markdown,
   initialValue,
 }) => {
+  const { isEditable } = element
   const { label, description, fileCountLimit, fileExtensions, fileSizeLimit } = parameters
 
   // These values required for file upload query parameters:

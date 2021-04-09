@@ -166,10 +166,6 @@ const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
 
   const { createReviewFromStructure } = useCreateReview({
     reviewAssigmentId: assignment.id,
-    reviewerId: currentUser?.userId as number,
-    serialNumber: fullStructure.info.serial,
-    // TODO: Remove this
-    onCompleted: () => {},
   })
 
   const startReview = async () => {
