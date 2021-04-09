@@ -1,6 +1,6 @@
 import { Decision, ReviewResponseDecision } from '../../generated/graphql'
 
-import { FullStructure, SectionStateNEW, PageNEW, PageElement } from '../../types'
+import { FullStructure, SectionState, Page, PageElement } from '../../types'
 
 const generateReviewProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach(generatePageReviewProgress)
@@ -9,14 +9,14 @@ const generateReviewProgress = (newStructure: FullStructure) => {
   generateReviewValidity(newStructure)
 }
 
-const generateSectionReviewProgress = (section: SectionStateNEW) => {
+const generateSectionReviewProgress = (section: SectionState) => {
   section.reviewProgress = getSums(Object.values(section.pages))
 }
 // Helper to see if thisReviewLatestResponse is linked to latest application resposne
 const isLatestReviewResponseUpToDate = (element: PageElement) =>
   element.response?.id === element.thisReviewLatestResponse?.applicationResponse?.id
 
-const generatePageReviewProgress = (page: PageNEW) => {
+const generatePageReviewProgress = (page: Page) => {
   const totalReviewable = page.state.filter((element) => element.isAssigned)
 
   // Only consider review responses that are linked to latest application response
@@ -74,7 +74,7 @@ const generateReviewValidity = (newStructure: FullStructure) => {
 }
 // Simple helper that will iterate over elements and sum up all of the values for keys
 // returning an object of keys with sums
-const getSums = (elements: PageNEW[]) => {
+const getSums = (elements: Page[]) => {
   const initial = {
     totalReviewable: 0,
     doneConform: 0,

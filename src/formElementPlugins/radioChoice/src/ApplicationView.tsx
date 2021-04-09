@@ -4,14 +4,12 @@ import { ApplicationViewProps } from '../../types'
 import strings from '../constants'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
-  code,
+  element,
   parameters,
   onUpdate,
+  currentResponse,
   // value,
   // setValue,
-  isEditable,
-  currentResponse,
-  validationState,
   onSave,
   Markdown,
   getDefaultIndex,
@@ -26,13 +24,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     otherPlaceholder,
   } = parameters
 
-  const [otherText, setOtherText] = useState<string | undefined>(
-    hasOther ? currentResponse?.other : undefined
-  )
+  const { code, isEditable } = element
+
   const [selectedIndex, setSelectedIndex] = useState<number>()
 
   const allOptions = [...options]
   if (hasOther) allOptions.push(strings.OTHER)
+
+  const [otherText, setOtherText] = useState<string | undefined>(
+    hasOther && currentResponse?.optionIndex === allOptions.length - 1
+      ? (currentResponse?.text as string)
+      : undefined
+  )
 
   useEffect(() => {
     onUpdate(currentResponse)
@@ -54,18 +57,20 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }, [])
 
   function handleChange(e: any, data: any) {
+    console.log('CHanged..')
     const { index: optionIndex } = data
     setSelectedIndex(optionIndex)
+    console.log('Selected:', optionIndex)
     onSave({
       text:
         hasOther && optionIndex === allOptions.length - 1
-          ? `${strings.OTHER}: ${otherText}`
+          ? otherText || ''
           : optionsDisplayProperty
           ? allOptions[optionIndex][optionsDisplayProperty]
           : allOptions[optionIndex],
       selection: allOptions[optionIndex],
       optionIndex,
-      other: hasOther && optionIndex === allOptions.length - 1 ? otherText : undefined,
+      other: hasOther && optionIndex === allOptions.length - 1,
     })
   }
 
@@ -75,10 +80,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   function handleOtherLoseFocus(e: any) {
     onSave({
-      text: `${strings.OTHER}: ${otherText}`,
+      text: otherText,
       selection: allOptions[allOptions.length - 1],
       optionIndex: allOptions.length - 1,
-      other: hasOther ? otherText : undefined,
+      other: hasOther,
     })
   }
 
@@ -97,8 +102,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       </label>
       <Markdown text={description} />
       {radioButtonOptions.map((option: any, index: number) => {
+        const showOther = hasOther && index === allOptions.length - 1
         return (
-          <Form.Field key={`${index}_${option}`} disabled={!isEditable}>
+          <Form.Field key={`${index}_${option}`} disabled={!isEditable} inline={showOther}>
             <Radio
               label={option.text}
               name={`${code}_radio_${index}`} // This is GROUP name
@@ -107,8 +113,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
               onChange={handleChange}
               index={index}
             />
-            {/* TO-DO: Need to find a way to make this input field inline with  the last Other radio button*/}
-            {hasOther && index === allOptions.length - 1 && (
+            {showOther && (
               <Input
                 placeholder={otherPlaceholder}
                 size="small"
