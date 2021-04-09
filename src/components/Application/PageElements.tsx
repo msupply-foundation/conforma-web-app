@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { ElementStateNEW, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
 import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapperNEW'
@@ -105,20 +105,8 @@ const PageElements: React.FC<PageElementProps> = ({
           const changedQuestionResponse = !isChangeRequest && !isChanged
 
           return (
-            <>
-              <Segment
-                key={`question_${element.id}`}
-                style={{
-                  borderRadius: 8,
-                  borderBottomLeftRadius: isChangeRequest ? 0 : 8,
-                  borderBottomRightRadius: isChangeRequest ? 0 : 8,
-                  background: isChangeRequest ? 'rgb(249, 255, 255)' : '#FFFFFF',
-                  border: 'none',
-                  boxShadow: 'none',
-                  margin: 10,
-                  marginBottom: isChangeRequest ? 0 : 10,
-                }}
-              >
+            <div key={`question_${element.id}`}>
+              <Segment style={inlineStyles({ isChangeRequest })}>
                 {element.category === TemplateElementCategory.Question ? (
                   changedQuestionResponse ? (
                     <SummaryResponseComponent {...props} />
@@ -130,7 +118,7 @@ const PageElements: React.FC<PageElementProps> = ({
                 )}
               </Segment>
               {isChangeRequest && <ChangedReviewResponseComponent {...props} />}
-            </>
+            </div>
           )
         })}
       </Form>
@@ -155,20 +143,12 @@ const PageElements: React.FC<PageElementProps> = ({
               summaryProps: getSummaryViewProps(element),
               thisReviewLatestResponse: thisReviewLatestResponse,
             }
+
+            const isChangeRequest: boolean = !!thisReviewLatestResponse?.decision
+
             return (
               <>
-                <Segment
-                  key={`question_${element.id}`}
-                  style={{
-                    borderRadius: 8,
-                    borderBottomLeftRadius: thisReviewLatestResponse?.decision ? 0 : 8,
-                    borderBottomRightRadius: thisReviewLatestResponse?.decision ? 0 : 8,
-                    border: 'none',
-                    boxShadow: 'none',
-                    margin: 10,
-                    marginBottom: thisReviewLatestResponse?.decision ? 0 : 10,
-                  }}
-                >
+                <Segment key={`question_${element.id}`} style={inlineStyles({ isChangeRequest })}>
                   {element.category === TemplateElementCategory.Question ? (
                     <ReviewQuestionResponseComponent {...props} />
                   ) : (
@@ -242,16 +222,8 @@ const ChangedQuestionResponseComponent: React.FC<SummaryComponentProps> = ({
       </Grid.Column>
       <Grid.Column width={4}>
         <Icon name="circle" size="tiny" color="blue" />
-        <text
-          style={{
-            fontWeight: 'bolder',
-            fontSize: 16,
-            marginRight: 10,
-          }}
-        >
-          Updated
-        </text>
-        <Label style={{ padding: 6 }} size="mini">
+        <text style={reviewStatusStyle as CSSProperties}>Updated</text>
+        <Label style={datePaddingStyle} size="mini">
           {getSimplifiedTimeDifference(latestApplicationResponse.timeUpdated)}
         </Label>
       </Grid.Column>
@@ -277,17 +249,13 @@ const ChangedReviewResponseComponent: React.FC<SummaryComponentProps> = ({
   const { element, allResponses } = summaryProps
 
   return (
-    <Grid
-      style={{
-        margin: 10,
-        marginTop: 0,
-        borderTop: '3px solid rgb(230, 230, 230)',
-        borderBottom: '3px solid rgb(230, 230, 230)',
-        backgroundColor: '#FFFFFF',
-      }}
-    >
+    <Grid>
       <Grid.Column floated="left" width={4}>
-        <Label size="mini" content={getSimplifiedTimeDifference(reviewResponse.timeUpdated)} />
+        <Label
+          style={datePaddingStyle as CSSProperties}
+          size="mini"
+          content={getSimplifiedTimeDifference(reviewResponse.timeUpdated)}
+        />
       </Grid.Column>
       <Grid.Column floated="left" width={12}>
         <SummaryViewWrapperNEW
@@ -301,21 +269,9 @@ const ChangedReviewResponseComponent: React.FC<SummaryComponentProps> = ({
             displayTitle: false,
           }}
         />
-        <div
-          style={{
-            color: 'grey',
-            display: 'flex',
-            margin: 6,
-          }}
-        >
+        <div style={changesRequestedStyles.body as CSSProperties}>
           <Icon name="comment alternate outline" color="grey" />
-          <div
-            style={{
-              marginLeft: 6,
-            }}
-          >
-            {reviewResponse.comment || ''}
-          </div>
+          <div style={commentMargin as CSSProperties}>{reviewResponse.comment || ''}</div>
         </div>
       </Grid.Column>
     </Grid>
@@ -362,59 +318,30 @@ const ReviewCommentResponseComponent: React.FC<{
   if (latestApplicationResponse.id !== reviewResponse.applicationResponse?.id) return null
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        background: 'rgb(249, 255, 255)',
-        margin: 10,
-        marginTop: 0,
-        borderTop: '3px solid rgb(230, 230, 230)',
-        borderBottom: '3px solid rgb(230, 230, 230)',
-        padding: 14,
-      }}
-    >
-      <div style={{ color: 'rgb(150, 150, 150)', marginRight: 20 }}>
+    <div style={reviewCommentStyle.sup}>
+      <div style={reviewCommentStyle.reviewer}>
         {reviewResponse.review?.reviewer?.firstName} {reviewResponse.review?.reviewer?.lastName}
       </div>
-      <div style={{ flexGrow: 1, textAlign: 'left' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={reviewCommentStyle.body as CSSProperties}>
+        <div style={reviewCommentStyle.decision}>
           <Icon
             name="circle"
             size="tiny"
             color={reviewResponse?.decision === ReviewResponseDecision.Approve ? 'green' : 'red'}
           />
-          <text
-            style={{
-              fontWeight: 'bolder',
-              fontSize: 16,
-              marginRight: 10,
-            }}
-          >
+          <text style={reviewStatusStyle as CSSProperties}>
             {reviewResponse?.decision === ReviewResponseDecision.Approve
               ? 'Conform'
               : 'Non Conform'}
           </text>
-          <Label style={{ padding: 6 }} size="mini">
+          <Label style={datePaddingStyle} size="mini">
             {getSimplifiedTimeDifference(reviewResponse.timeUpdated)}
           </Label>
         </div>
         {!reviewResponse.comment ? null : (
-          <div
-            style={{
-              color: 'grey',
-
-              display: 'flex',
-              margin: 6,
-            }}
-          >
+          <div style={reviewCommentStyle.comment}>
             <Icon name="comment alternate outline" color="grey" />
-            <div
-              style={{
-                marginLeft: 6,
-              }}
-            >
-              {reviewResponse.comment}
-            </div>
+            <div style={commentMargin}>{reviewResponse.comment}</div>
           </div>
         )}
       </div>
@@ -450,16 +377,7 @@ const ReviewButton: React.FC<{
             : strings.BUTTON_REVIEW_RESPONSE
         }
         size="small"
-        style={{
-          letterSpacing: 0.8,
-          fontWeight: 1000,
-          fontSize: 17,
-          background: 'none',
-          color: '#003BFE',
-          border: 'none',
-          borderRadius: 8,
-          textTransform: 'capitalize',
-        }}
+        style={inlineStyles}
         onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
       />
       <DecisionAreaNEW
@@ -469,6 +387,77 @@ const ReviewButton: React.FC<{
       />
     </>
   )
+}
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const inlineStyles = ({ isChangeRequest }: { isChangeRequest?: boolean }) => ({
+  segment: {
+    borderRadius: 8,
+    borderBottomLeftRadius: isChangeRequest ? 0 : 8,
+    borderBottomRightRadius: isChangeRequest ? 0 : 8,
+    background: isChangeRequest ? 'rgb(249, 255, 255)' : '#FFFFFF',
+    border: 'none',
+    boxShadow: 'none',
+    margin: 10,
+    marginBottom: isChangeRequest ? 0 : 10,
+  },
+  grid: {
+    margin: 10,
+    marginTop: 0,
+    borderTop: '3px solid rgb(230, 230, 230)',
+    borderBottom: '3px solid rgb(230, 230, 230)',
+    backgroundColor: '#FFFFFF',
+  },
+  button: {
+    letterSpacing: 0.8,
+    fontWeight: 1000,
+    fontSize: 17,
+    background: 'none',
+    color: '#003BFE',
+    border: 'none',
+    borderRadius: 8,
+    textTransform: 'capitalize',
+  },
+})
+
+const reviewStatusStyle = {
+  fontWeight: 'bolder',
+  fontSize: 16,
+  marginRight: 10,
+}
+
+const datePaddingStyle = { padding: 6 }
+const commentMargin = { marginLeft: 6 }
+
+const reviewCommentStyle = {
+  sup: {
+    display: 'flex',
+    background: 'rgb(249, 255, 255)',
+    margin: 10,
+    marginTop: 0,
+    borderTop: '3px solid rgb(230, 230, 230)',
+    borderBottom: '3px solid rgb(230, 230, 230)',
+    padding: 14,
+  },
+  reviewer: { color: 'rgb(150, 150, 150)', marginRight: 20 },
+  body: {
+    flexGrow: 1,
+    textAlign: 'left',
+  },
+  decision: { display: 'flex', alignItems: 'center' },
+  comment: {
+    color: 'grey',
+    display: 'flex',
+    margin: 6,
+  },
+}
+
+const changesRequestedStyles = {
+  body: {
+    color: 'grey',
+    display: 'flex',
+    margin: 6,
+  },
 }
 
 export default PageElements
