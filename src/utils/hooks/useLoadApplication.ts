@@ -4,6 +4,7 @@ import {
   ElementBase,
   FullStructure,
   TemplateDetails,
+  TemplateElementState,
   UseGetApplicationProps,
 } from '../types'
 import evaluate from '@openmsupply/expression-evaluator'
@@ -136,10 +137,13 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
             sectionCode: sectionNode?.templateSection?.code,
             elementIndex: element.index,
             page: pageCount,
+            isEditableExpression: element.isEditable,
+            isRequiredExpression: element.isRequired,
+            isVisibleExpression: element.visibilityCondition,
             parameters: element.parameters,
             validationExpression: element.validation,
             validationMessage: element.validationMessage,
-          } as ElementBase)
+          } as TemplateElementState)
       })
     })
 

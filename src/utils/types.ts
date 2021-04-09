@@ -59,6 +59,7 @@ export {
   SortQuery,
   StageAndStatus,
   TemplateDetails,
+  TemplateElementState,
   TemplatePermissions,
   TemplatesDetails,
   UseGetApplicationProps,
@@ -406,6 +407,18 @@ interface TemplateDetails {
   sections?: SectionDetails[] // TODO: Change to not optional after re-structure
   startMessage?: string
 }
+
+interface TemplateElementState extends ElementBase {
+  isRequiredExpression: IQueryNode
+  isVisibleExpression: IQueryNode
+  isEditableExpression: IQueryNode
+}
+
+// interface TemplateElementStateNEW extends ElementBaseNEW {
+//   isRequiredExpression: IQueryNode
+//   isVisibleExpression: IQueryNode
+//   isEditableExpression: IQueryNode
+// }
 
 interface TemplatePermissions {
   [index: string]: Array<PermissionPolicyType>
