@@ -26,13 +26,16 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     otherPlaceholder,
   } = parameters
 
-  const [otherText, setOtherText] = useState<string | undefined>(
-    hasOther ? currentResponse?.other : undefined
-  )
   const [selectedIndex, setSelectedIndex] = useState<number>()
 
   const allOptions = [...options]
   if (hasOther) allOptions.push(strings.OTHER)
+
+  const [otherText, setOtherText] = useState<string | undefined>(
+    hasOther && currentResponse?.optionIndex === allOptions.length - 1
+      ? (currentResponse?.text as string)
+      : undefined
+  )
 
   useEffect(() => {
     onUpdate(currentResponse)
@@ -54,18 +57,20 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }, [])
 
   function handleChange(e: any, data: any) {
+    console.log('CHanged..')
     const { index: optionIndex } = data
     setSelectedIndex(optionIndex)
+    console.log('Selected:', optionIndex)
     onSave({
       text:
         hasOther && optionIndex === allOptions.length - 1
-          ? `${strings.OTHER}: ${otherText}`
+          ? otherText || ''
           : optionsDisplayProperty
           ? allOptions[optionIndex][optionsDisplayProperty]
           : allOptions[optionIndex],
       selection: allOptions[optionIndex],
       optionIndex,
-      other: hasOther && optionIndex === allOptions.length - 1 ? otherText : undefined,
+      other: hasOther && optionIndex === allOptions.length - 1,
     })
   }
 
@@ -75,10 +80,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   function handleOtherLoseFocus(e: any) {
     onSave({
-      text: `${strings.OTHER}: ${otherText}`,
+      text: otherText,
       selection: allOptions[allOptions.length - 1],
       optionIndex: allOptions.length - 1,
-      other: hasOther ? otherText : undefined,
+      other: hasOther,
     })
   }
 

@@ -174,9 +174,9 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 ```
 {
   optionIndex: <integer> (index from the options array)
-  text: <string> (actual text from options array, will be "Other: <value>" if "Other" is selected)
+  text: <string> (actual text from options array)
   selection: <string | object> (entire object or string from the supplied options list)
-  other: <string> (text of the "Other" selection, only present if "Other" is selected)
+  other: <boolean> (`true` if "Other" has been selected)
 }
 
 ```
