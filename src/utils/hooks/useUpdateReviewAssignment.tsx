@@ -5,7 +5,7 @@ import {
   TemplateElementCategory,
   Trigger,
 } from '../generated/graphql'
-import { AssignmentDetailsNEW, FullStructure } from '../types'
+import { AssignmentDetails, FullStructure } from '../types'
 
 // below lines are used to get return type of the function that is returned by useUpdateReviewAssignmentMutation
 type UseUpdateReviewAssignmentMutationReturnType = ReturnType<
@@ -19,7 +19,7 @@ type UseUpdateReviewAssignment = (
   assignSectionToUser: (props: {
     // Section code is optional if omitted all sections are assigned
     sectionCode?: string
-    assignment: AssignmentDetailsNEW
+    assignment: AssignmentDetails
     // isSelfAssignment defaults to false
     isSelfAssignment?: boolean
   }) => PromiseReturnType

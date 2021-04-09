@@ -1,10 +1,9 @@
 import React, { useState, CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
-import { ElementStateNEW, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
-import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapperNEW'
-import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
-import { Form, Grid, Segment, Button, Icon, Label, Header } from 'semantic-ui-react'
-import getSimplifiedTimeDifference from '../../utils/dateAndTime/getSimplifiedTimeDifference'
+import { ElementState, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
+import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapper'
+import SummaryViewWrapper from '../../formElementPlugins/SummaryViewWrapper'
+import { Form, Grid, Segment, Button, Icon, Label } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import {
   ApplicationResponse,
@@ -15,11 +14,12 @@ import {
 } from '../../utils/generated/graphql'
 
 import {
-  ApplicationViewWrapperPropsNEW,
-  SummaryViewWrapperPropsNEW,
+  ApplicationViewWrapperProps,
+  SummaryViewWrapperProps,
 } from '../../formElementPlugins/types'
-import DecisionAreaNEW from '../Review/DecisionAreaNEW'
+import DecisionArea from '../Review/DecisionArea'
 import { useRouter } from '../../utils/hooks/useRouter'
+import getSimplifiedTimeDifference from '../../utils/dateAndTime/getSimplifiedTimeDifference'
 
 interface PageElementProps {
   elements: PageElement[]
@@ -60,7 +60,7 @@ const PageElements: React.FC<PageElementProps> = ({
                   }
                 : undefined
 
-            const props: ApplicationViewWrapperPropsNEW = {
+            const props: ApplicationViewWrapperProps = {
               element,
               isStrictPage,
               changesRequired,
@@ -74,7 +74,7 @@ const PageElements: React.FC<PageElementProps> = ({
       </Form>
     )
 
-  const getSummaryViewProps = (element: ElementStateNEW) => ({
+  const getSummaryViewProps = (element: ElementState) => ({
     element,
     response: responsesByCode?.[element.code],
     allResponses: responsesByCode,
@@ -173,13 +173,13 @@ const PageElements: React.FC<PageElementProps> = ({
 }
 
 interface InformationComponentProps {
-  summaryProps: SummaryViewWrapperPropsNEW
+  summaryProps: SummaryViewWrapperProps
 }
 
 const InformationComponent: React.FC<InformationComponentProps> = ({ summaryProps }) => (
   <Grid>
     <Grid.Column stretched>
-      <SummaryViewWrapperNEW {...summaryProps} />
+      <SummaryViewWrapper {...summaryProps} />
     </Grid.Column>
   </Grid>
 )
@@ -198,7 +198,7 @@ const SummaryResponseComponent: React.FC<SummaryComponentProps> = ({
 }) => (
   <Grid columns="equal">
     <Grid.Column floated="left" width={4}>
-      <SummaryViewWrapperNEW {...summaryProps} />
+      <SummaryViewWrapper {...summaryProps} />
     </Grid.Column>
     <Grid.Column floated="right" textAlign="right">
       {canEdit && (
@@ -218,7 +218,7 @@ const ChangedQuestionResponseComponent: React.FC<SummaryComponentProps> = ({
   return (
     <Grid>
       <Grid.Column floated="left" width={4}>
-        <SummaryViewWrapperNEW {...summaryProps} />
+        <SummaryViewWrapper {...summaryProps} />
       </Grid.Column>
       <Grid.Column width={4}>
         <Icon name="circle" size="tiny" color="blue" />
@@ -258,7 +258,7 @@ const ChangedReviewResponseComponent: React.FC<SummaryComponentProps> = ({
         />
       </Grid.Column>
       <Grid.Column floated="left" width={12}>
-        <SummaryViewWrapperNEW
+        <SummaryViewWrapper
           {...{
             element,
             allResponses,
@@ -291,7 +291,7 @@ const ReviewQuestionResponseComponent: React.FC<ReviewComponentProps> = ({
 }) => (
   <Grid>
     <Grid.Column floated="left" width={4}>
-      <SummaryViewWrapperNEW {...summaryProps} />
+      <SummaryViewWrapper {...summaryProps} />
     </Grid.Column>
     <Grid.Column floated="right" textAlign="right">
       <ReviewButton
@@ -305,7 +305,7 @@ const ReviewQuestionResponseComponent: React.FC<ReviewComponentProps> = ({
 
 const ReviewCommentResponseComponent: React.FC<{
   reviewResponse: ReviewResponse
-  summaryViewProps: SummaryViewWrapperPropsNEW
+  summaryViewProps: SummaryViewWrapperProps
   latestApplicationResponse: ApplicationResponse
 }> = ({ reviewResponse, summaryViewProps, latestApplicationResponse }) => {
   const [toggleDecisionArea, setToggleDecisionArea] = useState(false)
@@ -348,7 +348,7 @@ const ReviewCommentResponseComponent: React.FC<{
       {reviewResponse.status === ReviewResponseStatus.Draft && (
         <Icon name="edit" color="blue" onClick={() => setToggleDecisionArea(!toggleDecisionArea)} />
       )}
-      <DecisionAreaNEW
+      <DecisionArea
         reviewResponse={reviewResponse}
         toggle={toggleDecisionArea}
         summaryViewProps={summaryViewProps}
@@ -359,7 +359,7 @@ const ReviewCommentResponseComponent: React.FC<{
 
 const ReviewButton: React.FC<{
   reviewResponse: ReviewResponse
-  summaryViewProps: SummaryViewWrapperPropsNEW
+  summaryViewProps: SummaryViewWrapperProps
   isNewApplicationResponse?: boolean
 }> = ({ reviewResponse, summaryViewProps, isNewApplicationResponse }) => {
   const [toggleDecisionArea, setToggleDecisionArea] = useState(false)
@@ -380,7 +380,7 @@ const ReviewButton: React.FC<{
         style={inlineStyles}
         onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
       />
-      <DecisionAreaNEW
+      <DecisionArea
         reviewResponse={reviewResponse}
         toggle={toggleDecisionArea}
         summaryViewProps={summaryViewProps}

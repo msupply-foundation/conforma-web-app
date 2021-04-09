@@ -1,17 +1,27 @@
 import { useUpdateReviewMutation, ReviewPatch, Trigger, Decision } from '../generated/graphql'
-import { FullStructure } from '../types'
+import { AssignmentDetails, FullStructure } from '../types'
+import { useGetFullReviewStructureAsync } from './useGetFullReviewStructure'
 
 // below lines are used to get return type of the function that is returned by useRestartReviewMutation
 type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewMutation>
 type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 // hook used to restart a review, , as per type definition below (returns promise that resolve with mutation result data)
-type UseRestartReview = (reviewId: number) => (structure: FullStructure) => PromiseReturnType
+type UseRestartReview = (props: {
+  reviewId: number
+  structure: FullStructure
+  assignment: AssignmentDetails
+}) => () => PromiseReturnType
 
 type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch
 
 // Need to duplicate or create new review responses for all assigned questions
-const useRestartReview: UseRestartReview = (reviewId) => {
+const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment }) => {
   const [updateReview] = useUpdateReviewMutation()
+
+  const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
+    fullApplicationStructure: structure,
+    reviewAssignment: assignment,
+  })
 
   const constructReviewPatch: ConstructReviewPatch = (structure) => {
     const elements = Object.values(structure?.elementsById || {})
@@ -44,19 +54,16 @@ const useRestartReview: UseRestartReview = (reviewId) => {
     }
   }
 
-  const submitReview = async (structure: FullStructure) => {
+  return async () => {
     const result = await updateReview({
       variables: {
         reviewId: reviewId,
-        reviewPatch: constructReviewPatch(structure),
+        reviewPatch: constructReviewPatch(await getFullReviewStructureAsync()),
       },
     })
-
     if (result.errors) throw new Error(result.errors.toString())
     return result
   }
-
-  return submitReview
 }
 
 export default useRestartReview

@@ -1,11 +1,9 @@
 import {
-  ApplicationEdit,
   ApplicationHeader,
   ApplicationSelectType,
-  ApplicationStart,
   Navigation,
-  SectionSummary,
   ProgressBar,
+  PageElements,
 } from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
@@ -14,7 +12,6 @@ import Home from './Home'
 import Login from '../containers/User/Login'
 import Loading from './Loading'
 import { Footer, ModalWarning } from './Main'
-import { DecisionArea, ReviewSection } from './Review'
 import TemplateList from './TemplateList'
 import TemplateNew from './TemplateNew'
 import Template from './Template'
@@ -29,14 +26,11 @@ export {
   Account,
   AdminPermissions,
   AdminUsers,
-  ApplicationEdit,
   ApplicationHeader,
   ApplicationSelectType,
-  ApplicationStart,
   Approval,
   Admin,
   Config,
-  DecisionArea,
   FilterList,
   Footer,
   Home,
@@ -47,11 +41,10 @@ export {
   Notification,
   NotificationsList,
   NoMatch,
-  SectionSummary,
-  ProgressBar,
   Product,
   ProductList,
-  ReviewSection,
+  ProgressBar,
+  PageElements,
   Organisation,
   OrgMemberEdit,
   TemplateList,

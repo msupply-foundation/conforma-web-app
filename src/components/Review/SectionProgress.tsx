@@ -1,9 +1,9 @@
 import React from 'react'
 import { Icon, Label, Progress } from 'semantic-ui-react'
-import { ReviewProgress, SectionProgress, SectionStateNEW } from '../../utils/types'
+import { ReviewProgress, SectionProgress, SectionState } from '../../utils/types'
 import strings from '../../utils/constants'
 
-const SectionProgress: React.FC<SectionStateNEW> = ({ reviewProgress, reviewAction }) => {
+const SectionProgress: React.FC<SectionState> = ({ reviewProgress, reviewAction }) => {
   if (reviewAction?.isAssignedToCurrentUser && reviewProgress) {
     return reviewAction.isReviewable ? (
       <SectionProgressBar reviewProgress={reviewProgress} />

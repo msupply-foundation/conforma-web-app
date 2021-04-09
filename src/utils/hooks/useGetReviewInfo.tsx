@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { AssignmentDetailsNEW } from '../types'
+import { AssignmentDetails } from '../types'
 import {
   Review,
   ReviewAssignment,
@@ -18,7 +18,7 @@ interface UseGetReviewInfoProps {
 }
 
 const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
-  const [assignments, setAssignments] = useState<AssignmentDetailsNEW[]>()
+  const [assignments, setAssignments] = useState<AssignmentDetails[]>()
   const [isFetching, setIsFetching] = useState(true)
   const [fetchingError, setFetchingError] = useState('')
   const [refetchAttempts, setRefetchAttempts] = useState(0)
@@ -67,7 +67,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
       return
     }
 
-    const assignments: AssignmentDetailsNEW[] = reviewAssigments.map((reviewAssignment) => {
+    const assignments: AssignmentDetails[] = reviewAssigments.map((reviewAssignment) => {
       // There will always just be one review assignment linked to a review.
       const review = reviewAssignment.reviews.nodes[0] as Review
       if (reviewAssignment.reviews.nodes.length > 1)
@@ -95,7 +95,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
 
       const stage = { id: assignmentStage?.id as number, name: assignmentStage?.title as string }
 
-      const assignment: AssignmentDetailsNEW = {
+      const assignment: AssignmentDetails = {
         id,
         review: review
           ? {

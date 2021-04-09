@@ -75,6 +75,7 @@ const reReviewableCount = (reviewProgress?: ReviewProgress) =>
 const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
   section: { details, reviewProgress },
+  assignment,
 }) => {
   const {
     location: { pathname },
@@ -84,12 +85,17 @@ const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
   const [restartReviewError, setRestartReviewError] = useState(false)
   const reviewId = fullStructure.thisReview?.id
 
-  const restartReview = useRestartReview(reviewId || 0)
+  const restartReview = useRestartReview({
+    reviewId: reviewId || 0,
+    structure: fullStructure,
+    assignment,
+  })
 
   const restart = async () => {
     {
       try {
-        await restartReview(fullStructure)
+        await restartReview()
+
         push(`${pathname}/${reviewId}?activeSections=${details.code}`)
       } catch (e) {
         console.error(e)
@@ -160,10 +166,6 @@ const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
 
   const { createReviewFromStructure } = useCreateReview({
     reviewAssigmentId: assignment.id,
-    reviewerId: currentUser?.userId as number,
-    serialNumber: fullStructure.info.serial,
-    // TODO: Remove this
-    onCompleted: () => {},
   })
 
   const startReview = async () => {

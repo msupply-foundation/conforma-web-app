@@ -1,13 +1,13 @@
 import React, { CSSProperties, useRef } from 'react'
 import { Accordion, Grid, Header, Icon, Sticky } from 'semantic-ui-react'
 import { PageElements } from '.'
-import { ResponsesByCode, SectionStateNEW, PageNEW } from '../../utils/types'
+import { ResponsesByCode, SectionState, Page } from '../../utils/types'
 
 interface SectionProps {
-  section: SectionStateNEW
-  extraSectionTitleContent?: (section: SectionStateNEW) => React.ReactNode
-  extraPageContent?: (page: PageNEW) => React.ReactNode
-  scrollableAttachment?: (page: PageNEW) => React.ReactNode
+  section: SectionState
+  extraSectionTitleContent?: (section: SectionState) => React.ReactNode
+  extraPageContent?: (page: Page) => React.ReactNode
+  scrollableAttachment?: (page: Page) => React.ReactNode
   responsesByCode: ResponsesByCode
   isReview?: boolean
   serial: string

@@ -10,7 +10,7 @@ import {
 import strings from '../../utils/constants'
 import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructure'
 import {
-  AssignmentDetailsNEW,
+  AssignmentDetails,
   FullStructure,
   ReviewAction,
   ReviewSectionComponentProps,
@@ -20,7 +20,7 @@ import {
 // to be used in ReviewHome and Expansions
 type ReviewSectionRowProps = {
   sectionId: number
-  assignment: AssignmentDetailsNEW
+  assignment: AssignmentDetails
   fullApplicationStructure: FullStructure
 }
 

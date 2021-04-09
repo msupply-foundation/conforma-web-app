@@ -21,7 +21,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     userState: { currentUser },
   } = useUserState()
 
-  const { submitFromStructure } = useSubmitApplication({
+  const { submit } = useSubmitApplication({
     serialNumber: fullStructure?.info.serial as string,
     currentUser: currentUser as User,
   })
@@ -54,7 +54,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
             replace(`/application/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
           } else {
             try {
-              await submitFromStructure(fullStructure)
+              await submit(fullStructure)
               push(`/application/${fullStructure?.info.serial}/submission`)
             } catch (e) {
               console.log(e)
