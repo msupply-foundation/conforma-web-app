@@ -21320,13 +21320,7 @@ export type GetApplicationQuery = (
           & SectionFragment
         )> }
       )>> }
-    ), user?: Maybe<(
-      { __typename?: 'User' }
-      & UserFragment
-    )>, org?: Maybe<(
-      { __typename?: 'Organisation' }
-      & OrganisationFragment
-    )> }
+    ) }
     & ApplicationFragment
   )>, applicationStageStatusLatests?: Maybe<(
     { __typename?: 'ApplicationStageStatusLatestsConnection' }
@@ -22122,12 +22116,6 @@ export const GetApplicationDocument = gql`
         }
       }
     }
-    user {
-      ...User
-    }
-    org {
-      ...Organisation
-    }
   }
   applicationStageStatusLatests(condition: {serial: $serial}) {
     nodes {
@@ -22140,8 +22128,6 @@ ${TemplateFragmentDoc}
 ${TemplateStageFragmentDoc}
 ${SectionFragmentDoc}
 ${ElementFragmentDoc}
-${UserFragmentDoc}
-${OrganisationFragmentDoc}
 ${StageFragmentDoc}`;
 
 /**
