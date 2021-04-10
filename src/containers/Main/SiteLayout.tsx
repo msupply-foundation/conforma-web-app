@@ -36,16 +36,7 @@ const SiteLayout: React.FC = () => {
         <UserArea />
         <DevOptions />
       </Container>
-      <Container
-        className="basebody"
-        style={{
-          minHeight: '100vh',
-          paddingTop: 135,
-          paddingBottom: 65,
-          paddingRight: 25,
-          paddingLeft: 25,
-        }}
-      >
+      <Container className="basebody" style={containerStyle}>
         <Switch>
           <Route exact path="/">
             <Home />
@@ -121,6 +112,15 @@ const SiteLayout: React.FC = () => {
       </Container>
     </Router>
   )
+}
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const containerStyle = {
+  minHeight: '100vh',
+  paddingTop: 135,
+  paddingBottom: 65,
+  paddingRight: 25,
+  paddingLeft: 25,
 }
 
 export default SiteLayout

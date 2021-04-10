@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import { Button, Container, Header, Label, Message, Segment } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import {
@@ -24,7 +24,7 @@ import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivati
 import useScrollableAttachments, {
   ScrollableAttachment,
 } from '../../utils/hooks/useScrollableAttachments'
-import { SectionProgress } from '../../components/Review'
+import { ReviewHeader, SectionProgress } from '../../components/Review'
 import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
 
@@ -57,43 +57,19 @@ const ReviewPage: React.FC<{
   )
     return <Header>Review in Progress</Header>
 
-  const { sections, responsesByCode, info } = fullReviewStructure
-  return (
-    <Container>
-      <div style={{ textAlign: 'center' }}>
-        <StageComponent stage={fullApplicationStructure?.info?.current?.stage?.name || ''} />
-      </div>
-      <Header
-        textAlign="center"
-        style={{ margin: 3, padding: 5 }}
-        content={fullApplicationStructure.info.name}
-        subheader={strings.DATE_APPLICATION_PLACEHOLDER}
-      />
+  const {
+    sections,
+    responsesByCode,
+    info: {
+      serial,
+      current: { stage },
+      name,
+    },
+  } = fullReviewStructure
 
-      <Header
-        as="h1"
-        textAlign="center"
-        style={{ fontSize: 26, fontWeight: 900, letterSpacing: 1, marginBottom: 4, marginTop: 5 }}
-        content="REVIEW"
-      />
-
-      <Header
-        textAlign="center"
-        style={{ marginTop: 4, color: '#4A4A4A', fontSize: 16, letterSpacing: 0.36 }}
-        as="h3"
-      >
-        {strings.SUBTITLE_REVIEW}
-      </Header>
-      <Segment
-        className="sup"
-        style={{
-          background: 'white',
-          border: 'none',
-          borderRadius: 0,
-          boxShadow: 'none',
-          paddingTop: 25,
-        }}
-      >
+  const ReviewMain: React.FC = () => (
+    <>
+      <Segment className="sup" style={inlineStyles.top}>
         {Object.values(sections).map((section) => (
           <SectionWrapper
             key={`ApplicationSection_${section.details.id}`}
@@ -109,7 +85,7 @@ const ReviewPage: React.FC<{
               />
             )}
             responsesByCode={responsesByCode as ResponsesByCode}
-            serial={info.serial}
+            serial={serial}
             isReview
             canEdit={
               reviewAssignment?.review?.status === ReviewStatus.Draft ||
@@ -118,20 +94,25 @@ const ReviewPage: React.FC<{
           />
         ))}
       </Segment>
-      <Segment
-        basic
-        style={{
-          marginLeft: '10%',
-          marginRight: '10%',
-        }}
-      >
+      <Segment basic style={inlineStyles.bot}>
         <ReviewSubmit
           structure={fullReviewStructure}
           reviewAssignment={reviewAssignment}
           scrollTo={scrollTo}
         />
       </Segment>
-    </Container>
+    </>
+  )
+
+  return error ? (
+    <Message error title={strings.ERROR_GENERIC} list={[error]} />
+  ) : (
+    <ReviewHeader
+      applicationStage={stage.name || ''}
+      applicationName={name}
+      currentUser={currentUser}
+      ChildComponent={ReviewMain}
+    />
   )
 }
 
@@ -158,45 +139,38 @@ const ApproveAllButton: React.FC<{ page: Page }> = ({ page }) => {
     return null
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 20 }}>
+    <div style={inlineStyles.button}>
       <Button
-        style={{
-          background: 'none',
-          color: '#003BFE',
-          letterSpacing: 1.4,
-          border: '2px solid #003BFE',
-          borderRadius: 8,
-          textTransform: 'capitalize',
-        }}
+        style={inlineStyles.approve}
         onClick={massApprove}
-      >{`${strings.BUTTON_REVIEW_APPROVE_ALL} (${responsesToReview.length})`}</Button>
+        content={`${strings.BUTTON_REVIEW_APPROVE_ALL} (${responsesToReview.length})`}
+      />
     </div>
   )
 }
 
-const StageComponent: React.FC<{ stage: string }> = ({ stage }) => (
-  // TODO: Issue #561 - Setup to use pre-defined colour of stage label
-  <Label
-    style={
-      stage === 'Assessment'
-        ? {
-            color: 'white',
-            background: 'rgb(86, 180, 219)',
-            fontSize: '10px',
-            textTransform: 'uppercase',
-            letterSpacing: '0.81px',
-          }
-        : {
-            color: 'white',
-            background: 'rgb(225, 126, 72)',
-            fontSize: '10px',
-            textTransform: 'uppercase',
-            letterSpacing: '0.81px',
-          }
-    }
-  >
-    {stage}
-  </Label>
-)
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const inlineStyles = {
+  top: {
+    background: 'white',
+    border: 'none',
+    borderRadius: 0,
+    boxShadow: 'none',
+    paddingTop: 25,
+  } as CSSProperties,
+  bot: {
+    marginLeft: '10%',
+    marginRight: '10%',
+  } as CSSProperties,
+  button: { display: 'flex', justifyContent: 'flex-end', paddingRight: 20 } as CSSProperties,
+  approve: {
+    background: 'none',
+    color: '#003BFE',
+    letterSpacing: 1.4,
+    border: '2px solid #003BFE',
+    borderRadius: 8,
+    textTransform: 'capitalize',
+  } as CSSProperties,
+}
 
 export default ReviewPage
