@@ -17,7 +17,7 @@ import {
   generateResponsesProgress,
 } from '../helpers/structure'
 
-interface useGetFullApplicationStructureProps {
+interface UseGetFullApplicationStructureProps {
   structure: FullStructure
   shouldRevalidate?: boolean
   minRefetchTimestampForRevalidation?: number
@@ -33,7 +33,7 @@ const useGetFullApplicationStructure = ({
   firstRunValidation = true,
   shouldCalculateProgress = true,
   shouldGetDraftResponses = true,
-}: useGetFullApplicationStructureProps) => {
+}: UseGetFullApplicationStructureProps) => {
   const {
     info: { serial },
   } = structure

@@ -3,18 +3,20 @@ import { Form, Input } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
+  element,
   parameters,
   onUpdate,
   value,
   setValue,
   setIsActive,
-  isEditable,
   currentResponse,
   validationState,
   onSave,
   Markdown,
 }) => {
   const { label, description, placeholder, rows } = parameters
+
+  const { isEditable } = element
 
   useEffect(() => {
     onUpdate(value)
@@ -36,7 +38,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       </label>
       <Markdown text={description} />
       <Form.TextArea
-        fluid
         placeholder={placeholder}
         rows={rows || 5}
         onChange={handleChange}

@@ -211,14 +211,16 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 - **hasOther**: `boolean` (default `false`) -- if `true`, displays an additional "Other" option with a free text field for inputting additional user-defined option.
 - **otherPlaceholder**: `string` -- placeholder text to show in the text input if `hasOther` is enabled.
 
+  **Note**: if including an "Other" options, then `options` should only be an array of strings, or else you'll be mixing objects with strings, which will cause problems. In other words, you should never have both `optionsDisplayProperty` and `hasOther` defined in the same question element.
+
 #### Response type
 
 ```
 {
   optionIndex: <integer> (index from the options array)
-  text: <string> (actual text from options array, will be "Other: <value>" if "Other" is selected)
+  text: <string> (actual text from options array)
   selection: <string | object> (entire object or string from the supplied options list)
-  other: <string> (text of the "Other" selection, only present if "Other" is selected)
+  other: <boolean> (`true` if "Other" has been selected)
 }
 
 ```

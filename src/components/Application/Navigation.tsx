@@ -5,7 +5,7 @@ import {
   MethodToCallProps,
   SectionAndPage,
   SectionDetails,
-  SectionsStructureNEW,
+  SectionsStructure,
 } from '../../utils/types'
 import strings from '../../utils/constants'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -13,7 +13,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 interface NavigationProps {
   current: SectionAndPage
   isLinear: boolean
-  sections: SectionsStructureNEW
+  sections: SectionsStructure
   serialNumber: string
   requestRevalidation: MethodRevalidate
 }

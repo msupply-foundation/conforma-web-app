@@ -2,13 +2,13 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { ApplicationResponse, ReviewResponse } from '../../generated/graphql'
 import {
-  ApplicationDetails,
-  ElementStateNEW,
+  ElementState,
   EvaluatorParameters,
   FullStructure,
   PageElement,
   ResponsesByCode,
   User,
+  ApplicationDetails,
 } from '../../types'
 import config from '../../../config.json'
 const graphQLEndpoint = config.serverGraphQL
@@ -68,7 +68,7 @@ const addEvaluatedResponsesToStructure = async ({
   // updated with evaluated elements and responses without re-building
   // structure
   const results = await evaluateAndValidateElements(
-    flattenedElements.map((elem: PageElement) => elem.element as ElementStateNEW),
+    flattenedElements.map((elem: PageElement) => elem.element as ElementState),
     responseObject,
     currentUser,
     structure.info, // i.e. applicationData
@@ -86,13 +86,13 @@ const addEvaluatedResponsesToStructure = async ({
 }
 
 async function evaluateAndValidateElements(
-  elements: ElementStateNEW[],
+  elements: ElementState[],
   responseObject: ResponsesByCode,
   currentUser: User | null,
   applicationData: ApplicationDetails,
   evaluationOptions: EvaluationOptions
 ) {
-  const elementPromiseArray: Promise<ElementStateNEW>[] = []
+  const elementPromiseArray: Promise<ElementState>[] = []
   elements.forEach((element) => {
     elementPromiseArray.push(
       evaluateSingleElement(
@@ -122,12 +122,12 @@ const evaluateExpressionWithFallBack = (
   })
 
 async function evaluateSingleElement(
-  element: ElementStateNEW,
+  element: ElementState,
   responseObject: ResponsesByCode,
   currentUser: User | null,
   applicationData: ApplicationDetails,
   evaluationOptions: EvaluationOptions
-): Promise<ElementStateNEW> {
+): Promise<ElementState> {
   const evaluationParameters = {
     objects: {
       responses: { ...responseObject, thisResponse: responseObject?.[element.code]?.text },
@@ -146,7 +146,7 @@ async function evaluateSingleElement(
 
   const evaluations = evaluationKeys.map((evaluationKey) => {
     const elementKey = evaluationMapping[evaluationKey as keyof EvaluationOptions]
-    const evaluationExpression = element[elementKey as keyof ElementStateNEW]
+    const evaluationExpression = element[elementKey as keyof ElementState]
 
     return evaluateExpressionWithFallBack(evaluationExpression, evaluationParameters, true)
   })

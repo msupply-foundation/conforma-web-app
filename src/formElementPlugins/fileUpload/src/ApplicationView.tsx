@@ -29,26 +29,20 @@ interface FileInfo {
 }
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
-  code,
+  element,
   parameters,
-  onUpdate,
-  value,
-  setValue,
-  isEditable,
-  currentResponse,
-  applicationData,
-  validationState,
   onSave,
   Markdown,
   initialValue,
+  currentResponse,
+  applicationData,
 }) => {
+  const { isEditable } = element
   const { label, description, fileCountLimit, fileExtensions, fileSizeLimit } = parameters
 
   const { config } = applicationData
   const host = config.serverREST
   const { uploadEndpoint } = config
-
-  console.log('applicationData', applicationData)
 
   // These values required for file upload query parameters:
   const {
