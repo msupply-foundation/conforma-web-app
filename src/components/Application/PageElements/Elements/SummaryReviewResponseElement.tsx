@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react'
-import { Grid, Icon, Label } from 'semantic-ui-react'
+import { Icon, Label } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../../../formElementPlugins'
 import { SummaryViewWrapperProps } from '../../../../formElementPlugins/types'
 import getSimplifiedTimeDifference from '../../../../utils/dateAndTime/getSimplifiedTimeDifference'
@@ -34,28 +34,45 @@ const SummaryReviewResponseElement: React.FC<SummaryReviewResponseElementProps> 
   }
 
   return (
-    <Grid>
-      <Grid.Column floated="left" width={4}>
+    <div style={reviewCommentStyle.top}>
+      <div style={reviewCommentStyle.left}>
         <Label
           style={datePaddingStyle}
           size="mini"
           content={getSimplifiedTimeDifference(reviewResponse.timeUpdated)}
         />
-      </Grid.Column>
-      <Grid.Column floated="left" width={12}>
-        <SummaryViewWrapper {...previousReviewProps} />
-        <div style={changesRequestedStyles.body}>
+      </div>
+      <div style={reviewCommentStyle.body}>
+        <div style={reviewCommentStyle.previous}>
+          <SummaryViewWrapper {...previousReviewProps} />
+        </div>
+        <div style={reviewCommentStyle.comment}>
           <Icon name="comment alternate outline" color="grey" />
           <div style={commentMargin}>{reviewResponse.comment || ''}</div>
         </div>
-      </Grid.Column>
-    </Grid>
+      </div>
+    </div>
   )
 }
 
 // Styles - TODO: Move to LESS || Global class style (semantic)
-const changesRequestedStyles = {
+const reviewCommentStyle = {
+  top: {
+    display: 'flex',
+    background: '#FFFFFF',
+    margin: 10,
+    marginTop: 0,
+    borderTop: '3px solid rgb(230, 230, 230)',
+    borderBottom: '3px solid rgb(230, 230, 230)',
+    padding: 14,
+  } as CSSProperties,
+  left: { color: 'rgb(150, 150, 150)', marginRight: 20 } as CSSProperties,
   body: {
+    flexGrow: 1,
+    textAlign: 'left',
+  } as CSSProperties,
+  previous: { display: 'flex', alignItems: 'center' },
+  comment: {
     color: 'grey',
     display: 'flex',
     margin: 6,
