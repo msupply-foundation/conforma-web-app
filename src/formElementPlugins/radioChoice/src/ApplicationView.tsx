@@ -3,18 +3,16 @@ import { Radio, Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
-  code,
+  element,
   parameters,
   onUpdate,
   value,
   setValue,
-  isEditable,
-  currentResponse,
-  validationState,
   onSave,
   Markdown,
   getDefaultIndex,
 }) => {
+  const { code, isEditable } = element
   const { label, description, options, default: defaultOption } = parameters
 
   useEffect(() => {

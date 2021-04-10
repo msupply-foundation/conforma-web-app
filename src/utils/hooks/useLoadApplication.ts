@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
 import {
   ApplicationDetails,
-  ElementBaseNEW,
+  ElementBase,
   FullStructure,
   TemplateDetails,
-  TemplateElementStateNEW,
+  TemplateElementState,
   UseGetApplicationProps,
 } from '../types'
 import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
-import { EvaluatorParameters } from '../../utils/types'
+import { EvaluatorParameters } from '../types'
 import { getApplicationSections } from '../helpers/application/getSectionsDetails'
 import {
   Application,
@@ -19,10 +19,9 @@ import {
   Template,
   TemplateElement,
   TemplateStage,
-  useGetApplicationNewQuery,
+  useGetApplicationQuery,
 } from '../generated/graphql'
 import messages from '../messages'
-import { DateTime } from 'luxon'
 import { buildSectionsStructure } from '../helpers/structure'
 import config from '../../config.json'
 
@@ -40,7 +39,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     userState: { currentUser },
   } = useUserState()
 
-  const { data, loading, error, refetch } = useGetApplicationNewQuery({
+  const { data, loading, error, refetch } = useGetApplicationQuery({
     variables: {
       serial: serialNumber,
     },
@@ -120,7 +119,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       isChangeRequest: false,
     }
 
-    const baseElements: ElementBaseNEW[] = []
+    const baseElements: ElementBase[] = []
     application.applicationSections.nodes.forEach((sectionNode) => {
       let pageCount = 1
       const elementsInSection = sectionNode?.templateSection?.templateElementsBySectionId
@@ -144,7 +143,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
             parameters: element.parameters,
             validationExpression: element.validation,
             validationMessage: element.validationMessage,
-          } as TemplateElementStateNEW)
+          } as TemplateElementState)
       })
     })
 

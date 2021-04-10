@@ -1,5 +1,9 @@
-import { ColumnsPerRole } from '../types'
 import APPLICATION_COLUMNS from './applicationColumns'
+import USER_ROLES from './userRoles'
+
+type ColumnsPerRole = {
+  [role in USER_ROLES]: Array<APPLICATION_COLUMNS>
+}
 
 const COLUMNS_PER_ROLE: ColumnsPerRole = {
   applicant: [
