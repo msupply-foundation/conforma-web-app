@@ -44,8 +44,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const host = config.serverREST
   const { uploadEndpoint } = config
 
-  console.log('applicationData', applicationData)
-
   // These values required for file upload query parameters:
   const {
     userState: { currentUser },
