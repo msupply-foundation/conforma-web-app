@@ -58,6 +58,7 @@ export default {
   LABEL_REVIEW_COMPLETED: 'Completed',
   LABEL_REVIEW_DECLINED: 'Declined',
   LABEL_REVIEW_RESSUBMIT: 'Request a resubmission',
+  LABEL_UPDATED: 'Updated',
   LABEL_WELCOME: 'Welcome to IRIMS Application Manager',
   LINK_LOGIN_USER: 'Create new account',
   MENU_ITEM_DASHBOARD: 'Dashboard',
