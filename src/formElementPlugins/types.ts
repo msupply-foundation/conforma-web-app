@@ -53,6 +53,7 @@ interface SummaryViewWrapperProps {
   element: ElementState
   response: ResponseFull | null
   allResponses: ResponsesByCode
+  applicationData: ApplicationDetails
 }
 
 interface OnUpdateTemplateWrapperView {
