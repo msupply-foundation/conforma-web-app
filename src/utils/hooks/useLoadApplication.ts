@@ -16,10 +16,12 @@ import {
   ApplicationSection,
   ApplicationStageStatusAll,
   ApplicationStatus,
+  Organisation,
   Template,
   TemplateElement,
   TemplateStage,
   useGetApplicationQuery,
+  User,
 } from '../generated/graphql'
 import messages from '../messages'
 import { buildSectionsStructure } from '../helpers/structure'

@@ -1,5 +1,5 @@
 import { ReviewResponse, TemplateElement } from '../utils/generated/graphql'
-import { ElementState, ResponseFull, ResponsesByCode } from '../utils/types'
+import { ApplicationDetails, ElementState, ResponseFull, ResponsesByCode } from '../utils/types'
 
 interface OnUpdateApplicationView {
   (updateObject: { value?: any; isValid: boolean | undefined }): void
@@ -19,6 +19,7 @@ interface ApplicationViewWrapperProps {
   }
   allResponses: ResponsesByCode
   currentResponse: ResponseFull | null
+  applicationData: ApplicationDetails
   currentReview?: ReviewResponse
 }
 

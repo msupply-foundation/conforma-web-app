@@ -8,6 +8,7 @@ import {
   PageElement,
   ResponsesByCode,
   User,
+  ApplicationDetails,
 } from '../../types'
 import config from '../../../config.json'
 const graphQLEndpoint = config.serverGraphQL
