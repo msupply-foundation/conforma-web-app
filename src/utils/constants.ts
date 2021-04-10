@@ -62,7 +62,7 @@ export default {
   LINK_LOGIN_USER: 'Create new account',
   MENU_ITEM_DASHBOARD: 'Dashboard',
   TITLE_APPLICATION_FORM: 'application form',
-  TITLE_APPLICATION_SUBMIT: 'Review & Submit',
+  TITLE_APPLICATION_SUMMARY: 'Review and submit',
   TITLE_NO_ORGANISATION: 'No Organisation',
   TITLE_DETAILS: 'Details',
   TITLE_INTRODUCTION: 'Introduction',
@@ -81,6 +81,7 @@ export default {
   REVIEW_FILTER_STAGE: 'Stage',
   SUBTITLE_APPLICATION_STEPS:
     'The following steps will need to be completed before the form can be submitted',
+  SUBTITLE_APPLICATION_SUMMARY: 'Please review each section before submitting form',
   SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you',
   SUBTITLE_SUBMISSION_STEPS: 'It will be going through the following stages before approval',
   USER_NONREGISTERED: 'nonRegistered',

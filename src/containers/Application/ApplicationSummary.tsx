@@ -78,11 +78,14 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
           as="h1"
           textAlign="center"
           style={inlineStyles.title1}
-          content="Review and submit"
+          content={strings.TITLE_APPLICATION_SUMMARY}
         />
-        <Header textAlign="center" style={inlineStyles.title2} as="h3">
-          Please review each section before submitting form
-        </Header>
+        <Header
+          textAlign="center"
+          style={inlineStyles.title2}
+          as="h3"
+          content={strings.SUBTITLE_APPLICATION_SUMMARY}
+        ></Header>
         {Object.values(sections).map((section) => (
           <SectionWrapper
             key={`ApplicationSection_${section.details.id}`}
