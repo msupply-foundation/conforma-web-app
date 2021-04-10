@@ -18,7 +18,7 @@ import {
 import strings from '../../utils/constants'
 
 import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructure'
-import SectionWrapper from '../../components/Application/SectionWrapper'
+import SectionWrapper from '../../components/Application/Sections/SectionWrapper'
 import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivation'
 
 import useScrollableAttachments, {

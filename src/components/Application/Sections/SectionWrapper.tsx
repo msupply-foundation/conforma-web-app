@@ -1,7 +1,7 @@
 import React, { CSSProperties, useRef } from 'react'
 import { Accordion, Grid, Header, Icon, Sticky } from 'semantic-ui-react'
-import { PageElements } from '.'
-import { ResponsesByCode, SectionState, Page } from '../../utils/types'
+import { PageElements } from '..'
+import { ResponsesByCode, SectionState, Page } from '../../../utils/types'
 
 interface SectionProps {
   section: SectionState
@@ -69,7 +69,6 @@ const SectionWrapper: React.FC<SectionProps> = ({
                 isSummary={isSummary}
                 canEdit={canEdit}
               />
-
               {extraPageContent && extraPageContent(page)}
             </>
           ))}
