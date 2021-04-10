@@ -23,7 +23,14 @@ import globalConfig from '../config.json'
 const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
-  const { element, isStrictPage, changesRequired, currentResponse, allResponses } = props
+  const {
+    element,
+    isStrictPage,
+    changesRequired,
+    currentResponse,
+    allResponses,
+    applicationData,
+  } = props
 
   const {
     code,
@@ -84,7 +91,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       isStrictPage,
       responses,
       evaluationParameters: {
-        objects: { responses, currentUser },
+        objects: { responses, currentUser, applicationData },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
       },
