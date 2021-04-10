@@ -56,7 +56,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
         </Accordion.Title>
         <Accordion.Content active={isActive}>
           {Object.values(pages).map((page) => (
-            <>
+            <div key={`${section.details.id}Page_${page.number}Container`}>
               {scrollableAttachment && scrollableAttachment(page)}
               <p style={sectionStyles.page}>{page.name}</p>
               <PageElements
@@ -70,7 +70,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
                 canEdit={canEdit}
               />
               {extraPageContent && extraPageContent(page)}
-            </>
+            </div>
           ))}
         </Accordion.Content>
       </Accordion>

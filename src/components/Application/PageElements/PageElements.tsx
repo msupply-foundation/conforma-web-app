@@ -137,7 +137,7 @@ const PageElements: React.FC<PageElementProps> = ({
             const isChangeRequest: boolean = !!thisReviewLatestResponse?.decision
 
             return (
-              <>
+              <div key={`${element.code}ReviewContainer`}>
                 <Segment
                   key={`question_${element.id}`}
                   style={inlineStyles.segment({ isChangeRequest })}
@@ -155,7 +155,7 @@ const PageElements: React.FC<PageElementProps> = ({
                     summaryViewProps={props.summaryProps}
                   />
                 )}
-              </>
+              </div>
             )
           }
         )}
