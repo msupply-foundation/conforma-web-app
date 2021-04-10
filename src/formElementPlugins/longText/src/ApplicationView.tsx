@@ -38,7 +38,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       </label>
       <Markdown text={description} />
       <Form.TextArea
-        fluid
         placeholder={placeholder}
         rows={rows || 5}
         onChange={handleChange}
