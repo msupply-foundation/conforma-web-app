@@ -54,7 +54,7 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
         {!reviewResponse.comment ? null : (
           <div style={reviewCommentStyle.comment}>
             <Icon name="comment alternate outline" color="grey" />
-            <div style={commentMargin}>{reviewResponse.comment}</div>
+            <div>{reviewResponse.comment}</div>
           </div>
         )}
       </div>
@@ -100,7 +100,6 @@ const reviewStatusStyle = {
   fontSize: 16,
   marginRight: 10,
 } as CSSProperties
-const commentMargin = { marginLeft: 6 } as CSSProperties
 const datePaddingStyle = { padding: 6 } as CSSProperties
 
 export default ReviewDecisionElement

@@ -96,7 +96,7 @@ const PageElements: React.FC<PageElementProps> = ({
 
           return (
             <div key={`question_${element.id}`}>
-              <Segment style={inlineStyles({ isChangeRequest })}>
+              <Segment style={inlineStyles.segment({ isChangeRequest })}>
                 {element.category === TemplateElementCategory.Question ? (
                   changedQuestionResponse ? (
                     <SummaryResponseElement {...props} />
@@ -138,7 +138,10 @@ const PageElements: React.FC<PageElementProps> = ({
 
             return (
               <>
-                <Segment key={`question_${element.id}`} style={inlineStyles({ isChangeRequest })}>
+                <Segment
+                  key={`question_${element.id}`}
+                  style={inlineStyles.segment({ isChangeRequest })}
+                >
                   {element.category === TemplateElementCategory.Question ? (
                     <ReviewResponseElement {...props} />
                   ) : (
@@ -163,24 +166,16 @@ const PageElements: React.FC<PageElementProps> = ({
 }
 
 // Styles - TODO: Move to LESS || Global class style (semantic)
-const inlineStyles = ({ isChangeRequest }: { isChangeRequest?: boolean }) => ({
-  segment: {
+const inlineStyles = {
+  segment: ({ isChangeRequest }: { isChangeRequest?: boolean }) => ({
     borderRadius: 8,
     borderBottomLeftRadius: isChangeRequest ? 0 : 8,
     borderBottomRightRadius: isChangeRequest ? 0 : 8,
-    background: isChangeRequest ? 'rgb(249, 255, 255)' : '#FFFFFF',
     border: 'none',
     boxShadow: 'none',
     margin: 10,
     marginBottom: isChangeRequest ? 0 : 10,
-  },
-  grid: {
-    margin: 10,
-    marginTop: 0,
-    borderTop: '3px solid rgb(230, 230, 230)',
-    borderBottom: '3px solid rgb(230, 230, 230)',
-    backgroundColor: '#FFFFFF',
-  },
-})
+  }),
+}
 
 export default PageElements
