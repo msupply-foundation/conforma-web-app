@@ -9,6 +9,7 @@ import {
   ReviewResponseStatus,
 } from '../../../../utils/generated/graphql'
 import DecisionArea from '../../../Review/DecisionArea'
+import strings from '../../../../utils/constants'
 
 interface ReviewDecisionElementProps {
   latestApplicationResponse: ApplicationResponse
@@ -44,8 +45,8 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
           />
           <Label style={reviewStatusStyle}>
             {reviewResponse?.decision === ReviewResponseDecision.Approve
-              ? 'Conform'
-              : 'Non Conform'}
+              ? strings.LABEL_REVIEW_DECICION_CONFORM
+              : strings.LABEL_REVIEW_DECISION_NON_CONFORM}
           </Label>
           <Label style={datePaddingStyle} size="mini">
             {getSimplifiedTimeDifference(reviewResponse.timeUpdated)}

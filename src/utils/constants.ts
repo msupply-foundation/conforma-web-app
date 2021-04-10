@@ -1,4 +1,4 @@
-import { Decision } from './generated/graphql'
+import { Decision, ReviewResponseDecision } from './generated/graphql'
 
 export default {
   ACTION_CONTINUE: 'Continue',
@@ -57,6 +57,8 @@ export default {
   LABEL_REVIEW_APPROVE: 'Approve',
   LABEL_REVIEW_COMPLETED: 'Completed',
   LABEL_REVIEW_DECLINED: 'Declined',
+  LABEL_REVIEW_DECICION_CONFORM: 'Conform',
+  LABEL_REVIEW_DECISION_NON_CONFORM: 'Non conform',
   LABEL_REVIEW_RESSUBMIT: 'Request a resubmission',
   LABEL_UPDATED: 'Updated',
   LABEL_WELCOME: 'Welcome to IRIMS Application Manager',
