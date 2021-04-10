@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { CSSProperties, useEffect, useState } from 'react'
 import { ApplicationProps, MethodToCallProps, ResponsesByCode, User } from '../../utils/types'
 import useSubmitApplication from '../../utils/hooks/useSubmitApplication'
 import { useUserState } from '../../contexts/UserState'
@@ -69,41 +69,18 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
   if (!fullStructure) return <Loading />
   const { sections, responsesByCode, info } = fullStructure
   return (
-    <Container style={{ paddingBottom: 60 }}>
-      <Header
-        textAlign="center"
-        style={{
-          color: 'rgb(150,150,150)',
-          letterSpacing: 1,
-          textTransform: 'uppercase',
-          fontWeight: 400,
-          fontSize: 24,
-          paddingTop: 25,
-        }}
-      >
+    <Container style={inlineStyles.container}>
+      <Header textAlign="center" style={inlineStyles.header}>
         {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
       </Header>
-      <Segment
-        className="sup"
-        style={{
-          background: 'white',
-          border: 'none',
-          borderRadius: 0,
-          boxShadow: 'none',
-          paddingTop: 25,
-        }}
-      >
+      <Segment className="sup" style={inlineStyles.top}>
         <Header
           as="h1"
           textAlign="center"
-          style={{ fontSize: 26, fontWeight: 900, letterSpacing: 1, marginBottom: 4 }}
+          style={inlineStyles.title1}
           content="Review and submit"
         />
-        <Header
-          textAlign="center"
-          style={{ marginTop: 4, color: '#4A4A4A', fontSize: 16, letterSpacing: 0.36 }}
-          as="h3"
-        >
+        <Header textAlign="center" style={inlineStyles.title2} as="h3">
           Please review each section before submitting form
         </Header>
         {Object.values(sections).map((section) => (
@@ -121,31 +98,54 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
         {/* <ModalWarning showModal={showModal} /> */}
       </Segment>
       {info.current?.status === ApplicationStatus.Draft ? (
-        <Container
-          style={{
-            background: 'white',
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            boxShadow: '0px -6px 3px -3px #AAAAAA',
-            paddingTop: 10,
-            paddingBottom: 70,
-            zIndex: 1000,
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Segment style={inlineStyles.bot}>
+          <div style={inlineStyles.submit}>
             <Button
-              style={{ alignSelf: 'flex-end', marginRight: 30 }}
+              style={inlineStyles.button}
               color="blue"
               onClick={handleSubmit}
               content={strings.BUTTON_SUBMIT}
             />
           </div>
-        </Container>
+        </Segment>
       ) : null}
     </Container>
   )
+}
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const inlineStyles = {
+  container: { paddingBottom: 60 } as CSSProperties,
+  header: {
+    color: 'rgb(150,150,150)',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    fontWeight: 400,
+    fontSize: 24,
+    paddingTop: 25,
+  } as CSSProperties,
+  top: {
+    background: 'white',
+    border: 'none',
+    borderRadius: 0,
+    boxShadow: 'none',
+    paddingTop: 25,
+  } as CSSProperties,
+  title1: { fontSize: 26, fontWeight: 900, letterSpacing: 1, marginBottom: 4 } as CSSProperties,
+  title2: { marginTop: 4, color: '#4A4A4A', fontSize: 16, letterSpacing: 0.36 } as CSSProperties,
+  bot: {
+    background: 'white',
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    boxShadow: '0px -6px 3px -3px #AAAAAA',
+    paddingTop: 10,
+    paddingBottom: 70,
+    zIndex: 1000,
+  } as CSSProperties,
+  submit: { display: 'flex', justifyContent: 'flex-end' } as CSSProperties,
+  button: { alignSelf: 'flex-end', marginRight: 30 },
 }
 
 export default ApplicationSummary
