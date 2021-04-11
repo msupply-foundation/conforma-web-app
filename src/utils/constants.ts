@@ -1,12 +1,16 @@
-import { Decision, ReviewResponseDecision } from './generated/graphql'
+import { Decision } from './generated/graphql'
 
 export default {
+  ACTION_ASSIGN: 'Assign',
   ACTION_CONTINUE: 'Continue',
   ACTION_START: 'Start',
   ACTION_DATE_RE_SUBMITTED: 'Re-Submitted',
   ACTION_DATE_ASSIGNED: 'Assigned',
   ACTION_DATE_REVIEW_SUBMITTED: 'Review Submitted',
   ACTION_DATE_REVIEW_STARTED: 'Review Started',
+  ACTION_RE_REVIEW: 'Re-review',
+  ACTION_RE_ASSIGN: 'Re-Assign',
+  ACTION_SELF_ASSIGN: 'Self-Assign',
   ACTION_VIEW: 'View',
   ASSIGNED: 'assigned',
   ASSIGNED_TO: 'assigned to',
@@ -42,6 +46,7 @@ export default {
   ERROR_LOGIN_PASSWORD: 'Oops! Problem with username or password',
   LABEL_APPLICATIONS: 'applications',
   LABEL_APPLICATION_UPDATE: 'Update',
+  LABEL_APPLICATION_SUBMITTED: 'Application Submitted',
   LABEL_ASSIGNED_TO_YOU: 'Assigned to you',
   LABEL_ASSIGNED_TO_OTHER: 'Assigned to another reviewer',
   LABEL_COMMENT: 'Add comment',

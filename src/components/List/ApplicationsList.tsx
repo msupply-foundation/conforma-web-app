@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import { Table, Message, Segment } from 'semantic-ui-react'
+import { useRouter } from '../../utils/hooks/useRouter'
 import messages from '../../utils/messages'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
@@ -28,12 +29,12 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
           <Table.Row>
             {columns.map(({ headerName, sortName }, index) => (
               <Table.HeaderCell
-                key={`ApplicationList-header-${headerName}`}
+                key={`ApplicationList-header-${headerName}-${index}`}
                 sorted={sortName && sortColumn === sortName ? sortDirection : undefined}
                 onClick={() => handleSort(sortName)}
                 colSpan={index === columns.length - 1 ? 2 : 1} // Set last column to fill last column (expansion)
               >
-                {headerName}
+                <p>{headerName}</p>
               </Table.HeaderCell>
             ))}
           </Table.Row>
@@ -84,24 +85,27 @@ interface ApplicationRowProps {
   handleExpansion: (row: ApplicationListRow) => void
 }
 
-const ApplicationRow: React.FC<ApplicationRowProps> = ({
-  index,
-  columns,
-  application,
-  handleExpansion,
-}) => (
-  <Table.Row
-    key={`ApplicationList-application-${index}`}
-    onClick={() => handleExpansion(application)}
-  >
-    {columns.map(({ headerName, ColumnComponent }) => (
-      <Table.Cell key={`ApplicationList-row-${index}-${headerName}`}>
-        <ColumnComponent application={application} />
-      </Table.Cell>
-    ))}
-    <Table.Cell icon="angle down" collapsing />
-  </Table.Row>
-)
+const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application }) => {
+  const { push, query } = useRouter()
+
+  return (
+    <Table.Row
+      key={`ApplicationList-application-${application.id}`}
+      onClick={() => {
+        console.log(query)
+        if (query.userRole === 'applicant') push(`/application/${application.serial}`)
+        else push(`/application/${application.serial}/review`)
+      }}
+    >
+      {columns.map(({ headerName, ColumnComponent }, index) => (
+        <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
+          <ColumnComponent application={application} />
+        </Table.Cell>
+      ))}
+      <Table.Cell icon="angle right" collapsing />
+    </Table.Row>
+  )
+}
 
 interface SectionsExpandedRowProps {
   application: ApplicationListRow
@@ -109,14 +113,10 @@ interface SectionsExpandedRowProps {
   colSpan: number
 }
 
-const SectionsExpandedRow: React.FC<SectionsExpandedRowProps> = ({
-  application,
-  index,
-  colSpan,
-}) => {
-  const { serial } = application
+const SectionsExpandedRow: React.FC<SectionsExpandedRowProps> = ({ application, colSpan }) => {
+  const { id } = application
   return (
-    <Table.Row key={`ApplicationList-application-${index}-sections`} colSpan={colSpan}>
+    <Table.Row key={`ApplicationList-application-${id}-sections`} colSpan={colSpan}>
       <Table.Cell colSpan={colSpan}>
         <Segment color="grey">TODO: SECTIONS</Segment>
       </Table.Cell>

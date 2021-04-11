@@ -61,7 +61,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   return (
     <>
       {canRenderRow && (
-        <Grid columns="equal" verticalAlign="middle">
+        <Grid columns="equal" verticalAlign="middle" style={sectionRowStyle}>
           <ReviewSectionRowAssigned {...props} />
           <ReviewSectionRowLastActionDate {...props} />
           <ReviewSectionRowProgress {...props} />
@@ -71,5 +71,8 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     </>
   )
 }
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const sectionRowStyle = { borderRadius: 10 }
 
 export default ReviewSectionRow

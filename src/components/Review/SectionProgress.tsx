@@ -9,17 +9,12 @@ const SectionProgress: React.FC<SectionState> = ({ reviewProgress, reviewAction 
       <SectionProgressBar reviewProgress={reviewProgress} />
     ) : (
       <Label
-        basic
         icon={<Icon name="circle" size="mini" color="blue" />}
         content={strings.LABEL_ASSIGNED_TO_YOU}
       />
     )
   }
-  return (
-    <Label style={{ backgroundColor: 'White', color: 'Black' }}>
-      {strings.LABEL_ASSIGNED_TO_OTHER}
-    </Label>
-  )
+  return <Label style={labelStyle}>{strings.LABEL_ASSIGNED_TO_OTHER}</Label>
 }
 
 const getProgressTitle = ({ doneNonConform, doneConform, totalReviewable }: ReviewProgress) => {
@@ -43,6 +38,9 @@ const SectionProgressBar: React.FC<SectionProgressBarProps> = ({ reviewProgress 
     />
   )
 }
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const labelStyle = { background: 'none', color: 'Black' }
 
 export default SectionProgress
 export { SectionProgressBar }
