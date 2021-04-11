@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React, { CSSProperties, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Grid, Message } from 'semantic-ui-react'
+import { Button, Grid, Icon, Message } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ReviewAction, ReviewProgress, ReviewSectionComponentProps } from '../../utils/types'
 import strings from '../../utils/constants'
-import { useUserState } from '../../contexts/UserState'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
 import { ReviewStatus } from '../../utils/generated/graphql'
@@ -17,36 +16,30 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
 
   const {
     action,
-    section: { details, reviewProgress },
+    section: { reviewProgress },
     isAssignedToCurrentUser,
     assignment: { isCurrentUserReviewer },
     thisReview,
   } = props
 
   const reviewPath = `${pathname}/${thisReview?.id}`
-  const reviewSectionLink = `${reviewPath}?activeSections=${details.code}`
 
   const getContent = () => {
     switch (action) {
       case ReviewAction.canContinue: {
         if (isAssignedToCurrentUser) {
           if (reReviewableCount(reviewProgress)) return <ReReviewButton {...props} />
-
-          return <Link to={reviewSectionLink}>{strings.ACTION_CONTINUE}</Link>
-        }
-
-        return <p>In Review</p>
+          else return <ContinueReviewButton {...props} />
+        } else return <div style={inProgressStyle}>{strings.STATUS_IN_PROGRESS}</div>
       }
       case ReviewAction.canView: {
-        if (isAssignedToCurrentUser)
-          return <Link to={`${reviewSectionLink}`}>{strings.ACTION_VIEW}</Link>
-        else return <Link to={`${reviewSectionLink}`}>{strings.ACTION_VIEW}</Link>
+        if (isAssignedToCurrentUser) return <ContinueReviewButton {...props} />
+        else return <ViewReviewIcon {...props} />
       }
 
       case ReviewAction.canStartReview: {
         if (isAssignedToCurrentUser) return <StartReviewButton {...props} />
-
-        return null
+        else return <NotStartedLabel />
       }
 
       case ReviewAction.canReReview: {
@@ -95,7 +88,6 @@ const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
     {
       try {
         await restartReview()
-
         push(`${pathname}/${reviewId}?activeSections=${details.code}`)
       } catch (e) {
         console.error(e)
@@ -105,6 +97,8 @@ const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
   }
 
   if (restartReviewError) return <Message error title={strings.ERROR_GENERIC} />
+
+  if (reReviewableCount(reviewProgress) === 0) return null
 
   const reReviewCount = reReviewableCount(reviewProgress)
 
@@ -118,6 +112,7 @@ const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
 
   return (
     <Button
+      style={actionReReviewStyle}
       onClick={buttonAction}
     >{`${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewCount})`}</Button>
   )
@@ -155,9 +150,6 @@ const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
   section: { details },
 }) => {
   const {
-    userState: { currentUser },
-  } = useUserState()
-  const {
     location: { pathname },
     push,
   } = useRouter()
@@ -183,7 +175,93 @@ const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
 
   if (startReviewError) return <Message error title={strings.ERROR_GENERIC} />
 
-  return <Button onClick={startReview}>{strings.ACTION_START}</Button>
+  return (
+    <div style={actionStartStyle} onClick={startReview}>
+      {strings.ACTION_START}
+    </div>
+  )
 }
+
+// CONTINUE REVIEW Button
+const ContinueReviewButton: React.FC<ReviewSectionComponentProps> = ({
+  fullStructure,
+  section: { details },
+}) => {
+  const {
+    location: { pathname },
+  } = useRouter()
+
+  const reviewId = fullStructure.thisReview?.id
+
+  return (
+    <Link style={actionContinueStyle} to={`${pathname}/${reviewId}?activeSections=${details.code}`}>
+      {strings.ACTION_VIEW}
+    </Link>
+  )
+}
+
+// VIEW REVIEW Icon
+const ViewReviewIcon: React.FC<ReviewSectionComponentProps> = ({
+  fullStructure,
+  section: { details },
+}) => {
+  const { pathname, push } = useRouter()
+
+  const reviewId = fullStructure.thisReview?.id
+  return (
+    <Icon
+      style={viewIconStyle}
+      onClick={() => push(`${pathname}/${reviewId}?activeSections=${details.code}`)}
+      name="angle right"
+    />
+  )
+}
+
+// NOT_STARTED LABEL
+const NotStartedLabel: React.FC = () => (
+  <div style={notStartedLabelStyle}>{strings.STATUS_NOT_STARTED}</div>
+)
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const actionContinueStyle = {
+  color: '#003BFE',
+  fontWeight: 800,
+  letterSpacing: 1,
+  background: 'none',
+  border: 'none',
+  fontSize: 16,
+} as CSSProperties
+
+const actionStartStyle = {
+  color: '#003BFE',
+  fontWeight: 400,
+  letterSpacing: 1,
+  background: 'none',
+  border: 'none',
+  fontSize: 16,
+} as CSSProperties
+
+const actionReReviewStyle = {
+  color: '#003BFE',
+  fontWeight: 400,
+  letterSpacing: 1,
+  background: 'none',
+  border: 'none',
+  fontSize: 16,
+} as CSSProperties
+
+const inProgressStyle = {
+  color: 'rgb(130, 130, 130)',
+  fontStyle: 'italic',
+  marginRight: 20,
+} as CSSProperties
+
+const viewIconStyle = { color: 'rgb(130, 130, 130)' }
+
+const notStartedLabelStyle = {
+  color: 'rgb(130, 130, 130)',
+  fontStyle: 'italic',
+  marginRight: 20,
+} as CSSProperties
 
 export default ReviewSectionRowAction
