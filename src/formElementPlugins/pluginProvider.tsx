@@ -31,6 +31,13 @@ class pluginProvider {
         folderName: 'shortText',
         category: 'Input',
       },
+      longText: {
+        code: 'longText',
+        displayName: 'Multi-line Text Input',
+        isCore: true,
+        folderName: 'longText',
+        category: 'Input',
+      },
       textInfo: {
         code: 'textInfo',
         isCore: true,
