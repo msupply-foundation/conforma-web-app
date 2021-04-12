@@ -31,6 +31,13 @@ class pluginProvider {
         folderName: 'shortText',
         category: 'Input',
       },
+      longText: {
+        code: 'longText',
+        displayName: 'Multi-line Text Input',
+        isCore: true,
+        folderName: 'longText',
+        category: 'Input',
+      },
       textInfo: {
         code: 'textInfo',
         isCore: true,
@@ -64,6 +71,13 @@ class pluginProvider {
         displayName: 'Secure Password Input',
         isCore: true,
         folderName: 'password',
+        category: 'Input',
+      },
+      fileUpload: {
+        code: 'fileUpload',
+        displayName: 'File Upload',
+        isCore: true,
+        folderName: 'fileUpload',
         category: 'Input',
       },
     }

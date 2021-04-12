@@ -1,59 +1,44 @@
 import { ApolloError } from '@apollo/client'
 import { useState } from 'react'
-import {
-  CreateReviewMutation,
-  Review,
-  useCreateReviewMutation,
-} from '../../utils/generated/graphql'
-import getReviewAssignmentQuery from '../graphql/queries/getReviewAssignment.query'
+import { useCreateReviewMutation } from '../../utils/generated/graphql'
+import { FullStructure } from '../types'
 
-export interface CreateReviewProps {
-  reviewAssigmentId: number
+interface CreateReviewProps {
   applicationResponses: { applicationResponseId: number; reviewQuestionAssignmentId: number }[]
 }
 
 interface UseCreateReviewProps {
-  reviewerId: number
-  serialNumber: string
-  onCompleted: (id: number) => void
+  reviewAssigmentId: number
 }
 
-const useCreateReview = ({ reviewerId, serialNumber, onCompleted }: UseCreateReviewProps) => {
-  const [processing, setProcessing] = useState(false)
+const useCreateReview = ({ reviewAssigmentId }: UseCreateReviewProps) => {
   const [error, setError] = useState<ApolloError | undefined>()
 
   const [createReviewMutation] = useCreateReviewMutation({
-    onCompleted: ({ createReview }: CreateReviewMutation) => {
-      const { id } = createReview?.review as Review
-      setProcessing(false)
-      onCompleted(id)
-    },
-    onError: (error) => {
-      setProcessing(false)
-      setError(error)
-    },
-    refetchQueries: [
-      {
-        query: getReviewAssignmentQuery,
-        variables: { reviewerId, serialNumber },
-      },
-    ],
+    onError: (error) => setError(error),
   })
 
-  const createReview = ({ reviewAssigmentId, applicationResponses }: CreateReviewProps) => {
-    setProcessing(true)
-    createReviewMutation({
+  const createReviewFromStructure = async (structure: FullStructure) => {
+    const elements = Object.values(structure?.elementsById || {})
+    const reviewableElements = elements.filter((element) => element?.isAssigned)
+
+    const applicationResponses = reviewableElements.map((element) => ({
+      applicationResponseId: element.response?.id || 0,
+      reviewQuestionAssignmentId: element.assignmentId,
+    }))
+    const result = await createReviewMutation({
       variables: {
         reviewAssigmentId,
         applicationResponses,
       },
     })
+    if (result.errors) throw new Error(result.errors.toString())
+    return result
   }
 
   return {
-    processing,
     error,
-    create: createReview,
+    createReviewFromStructure,
   }
 }
 

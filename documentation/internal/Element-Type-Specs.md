@@ -1,6 +1,24 @@
 _Ongoing authoritative reference of Template Question/Element types, including input parameters and response type (shape). Please ensure this document matches the current implementation at all times._
 
+## Contents
+
+- [Template Element fields](#element-fields)
+- [Question/Element types](#types)
+  - [Short Text Input](#short-text)
+  - [Long Text (Multi-line) Input](#long-text)
+  - [Password](#password)
+  - [Text Information](#text)
+  - [Drop-down Selector](#dropdown)
+  - [Radio Buttons](#radio)
+  - [Checkboxes](#checkbox)
+  - [File Upload](#file)
+  - [Page Break](#page)
+
+<a name="element-fields"/>
+
 ## Template Element fields
+
+These fields are common to all element types and have their own field in the `template_element` table.
 
 - **id, section_id** : database references
 - **code**: `string` -- unique (per template) identifier
@@ -19,12 +37,14 @@ _Ongoing authoritative reference of Template Question/Element types, including i
 - **validation_message**: `string` -- the message that shows in the UI when validation fails.  
   _TO-DO: Handle multiple validation criteria with different messages (eg. "Not a valid email", "Email is not unique")_
 - **parameters**: `JSON` -- the parameters specific to each question/element type. See individual plugins below for parameter breakdown
+  <a name="types"/>
 
 ## Question/Element types
 
 **Note**: all parameter fields can also have a dynamic query object instead of a primitive. The [`evaluateExpression`](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax) function will return literal strings (or numbers, booleans) as is. The types described for the parameters below are the type that is expected to be _returned_ from a query expression.
 
 **Note**: parameters marked with \* can be defined as dynamic expressions -- these are specified in the `pluginConfig.json` file of each plugin.
+<a name="short-text"/>
 
 ### Short Text Input
 
@@ -39,7 +59,22 @@ _Free-form, single-line text input element_
 - **description\***: `string` -- additional explanatory text (usually not required) [Optional]
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
 - **maskedInput**: `boolean` -- if `true`, displays user input as masked (hidden) characters -- i.e. for passwords. [Optional]
-- ~~**minWidth**/**maxWidth**: `integer` -- optional controls over visual display [Optional]~~ _(Not currently implemented -- We may never use these)_
+- **maxLength**: `number` -- response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length.  
+   _Note_: if you want to show an error state for trying to exceed the maximum, you'll need to specify a validation expression with a REGEX operator, and the range will need to be one character less than the `maxLength`, so the error state is triggered. So to set limit of 100 characters, you'd set `maxLength` to 101 and use the following expression for "validation":
+  ```
+  {
+  operator: "REGEX"
+  children: [
+    {
+      operator: "objectProperties",
+      children: [
+        "responses.thisResponse"
+      ]
+    }
+    "^[\\\\s\\\\S]{0,100}$"
+  ]
+  }
+  ```
 
 #### Response type
 
@@ -47,6 +82,32 @@ _This describes the expected object that will be stored in the `application_resp
 `{ text: <string> }`
 
 ---
+
+<a name="long-text"/>
+
+### Long Text (Multi-line) Input
+
+- **type/code**: `longText`
+- **category**: `Question`
+
+_Free-form, multi-line text input element_
+
+#### Input parameters (in the `parameters` JSON)
+
+- **label\***: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
+- **description\***: `string` -- additional explanatory text (usually not required) [Optional]
+- **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
+- **lines**: `number` -- height of the TextArea input, in number of lines/rows (default: 5)
+- **maxLength**: `number` -- response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length. (See Note in ShortText above for how to integrate `maxLength` with validation.)
+
+#### Response type
+
+_This describes the expected object that will be stored in the `application_response` table `value` field from the user's response_  
+`{ text: <string> }`
+
+---
+
+<a name="password"/>
 
 ### Password Input
 
@@ -81,6 +142,7 @@ _This describes the expected object that will be stored in the `application_resp
 
 ---
 
+<a name="text"/>
 ### Text Information
 
 - **type/code**: `textInfo`
@@ -96,34 +158,7 @@ _For displaying blocks of text in the application_
 
 ---
 
-### Radio Buttons
-
-- **type/code**: `radioChoice`
-- **category**: `Question`
-
-_Multi-choice question, with one allowed selection, displayed as labelled radio buttons_
-
-#### Input parameters
-
-- **labe\*l**: `string` -- as above
-- **description\***: `string` -- as above [Optional]
-- **options\***: `array[string]` -- the options for the radio buttons
-- **default**: `string`/`number` -- the value initially selected before user input. If `number`, refers to the index of the options array. If not provided, no options will be pre-selected.
-
-#### Response type
-
-```
-{
-  optionIndex: <integer> (index from the options array)
-  text: <string> (actual text from options array)
-  reference?: To-do: some way to link the response to an entity in database (e.g. an organisation)
-  -- @nmadruga maybe you have an idea of what we'd need here
-}
-
-```
-
----
-
+<a name="dropdown"/>
 ### Drop-down Selector
 
 - **type/code**: `dropdownChoice`
@@ -135,10 +170,11 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 
 - **label\***: `string` -- as above
 - **description\***: `string` -- as above [Optional]
-- **options\***: `array[string]` -- as above
+- **options\***: `array[string | object]` -- array of options for the user to select from. If an array of **strings** is provided, these strings will be displayed to the user. However, if an array of **objects** is provided, you will also need to specify an `optionsDisplayProperty` (see below)
 - **default**: `string`/`number` -- if not provided, defaults to index 0.
 - **search**: `boolean` (default: `false`) -- if `true`, the list of options can be searched and filtered by user
-- **hasOther**: `boolean` -- if `true`, an additional text-entry field is provided so the user can add their own alternative option _(not yet implemented)_
+- **optionsDisplayProperty**: If `options` (above) consists of an array of objects, this parameter specifies the field of each object to be displayed in the options list. For example, if `options` was a list of organisation objects (i.e. `{orgId, name, licenceNumber}`), you'd probably specify `name` as the `optionsDisplayProperty`. Note that even though one field is displayed to the user in the Dropdown list, the _entire_ selected object is saved as the selection. And if `optionsDisplayProperty` refers to a field that doesn't exist on the supplied object, the plugin will fail and show in error in the application.
+- ~~**hasOther**: `boolean` -- if `true`, an additional text-entry field is provided so the user can add their own alternative option _(not yet implemented)_~~
 
 #### Response type
 
@@ -146,13 +182,48 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 {
   optionIndex: <integer> (index from the options array)
   text: <string> (actual text from options array)
-  reference?: To-do -- as above
+  selection: <string | object> (entire object or string from the supplied options list)
 }
 
 ```
 
 ---
 
+<a name="radio"/>
+### Radio Buttons
+
+- **type/code**: `radioChoice`
+- **category**: `Question`
+
+_Multi-choice question, with one allowed selection, displayed as labelled radio buttons_
+
+#### Input parameters
+
+- **label\***: `string` -- as above
+- **description\***: `string` -- as above [Optional]
+- **options\***: `array[string | object]` -- as above (in [Drop-down](#dropdown))
+- **default**: `string`/`number` -- the value initially selected before user input. If `number`, refers to the index of the options array. If not provided, no options will be pre-selected.
+- **optionsDisplayProperty**: -- as above (in Drop-down)
+- **hasOther**: `boolean` (default `false`) -- if `true`, displays an additional "Other" option with a free text field for inputting additional user-defined option.
+- **otherPlaceholder**: `string` -- placeholder text to show in the text input if `hasOther` is enabled.
+
+  **Note**: if including an "Other" options, then `options` should only be an array of strings, or else you'll be mixing objects with strings, which will cause problems. In other words, you should never have both `optionsDisplayProperty` and `hasOther` defined in the same question element.
+
+#### Response type
+
+```
+{
+  optionIndex: <integer> (index from the options array)
+  text: <string> (actual text from options array)
+  selection: <string | object> (entire object or string from the supplied options list)
+  other: <boolean> (`true` if "Other" has been selected)
+}
+
+```
+
+---
+
+<a name="checkbox"/>
 ### Checkboxes
 
 - **type/code**: `checkbox`
@@ -166,14 +237,16 @@ _One or more checkboxes, any number of which can be selected/toggled_
 - **description\***: `string` -- as above [Optional]
 - **checkboxes\***: `array[string | checkbox]` -- an array of labels, one per checkbox. For more complexity, an array of Checkbox objects can be provided with the following properties:
 
-  ```
-   {
-     label: <string> - text to display next to checkbox (Can be empty string but not omitted)
-     text: <string> - value to store in Response "text" field and shown in Summary View. Will be same as label if omitted.
-     key: <string | number> - unique code used as key/property name for Response object. Defaults to numerical index of array if omitted
-     selected: <boolean> - initial state of checkbox
-   }
-  ```
+```
+
+{
+  label: <string> - text to display next to checkbox (Can be empty string but not omitted)
+  text: <string> - value to store in Response "text" field and shown in Summary View. Will be same as label if omitted.
+  key: <string | number> - unique code used as key/property name for Response object. Defaults to numerical index of array if omitted
+  selected: <boolean> - initial state of checkbox
+}
+
+```
 
 - **type**: `string` -- Can be "toggle" to display as a toggle switch, or "slider" to display as a slider switch (defaults to regular checkbox).
 - **layout**: `string` -- if "inline", displays checkboxes horizontally in rows. Useful if there are a lot of checkboxes.
@@ -181,19 +254,60 @@ _One or more checkboxes, any number of which can be selected/toggled_
 #### Response type
 
 ```
+
 {
-  text: <string> -- comma separated list of all selected checkbox "text" values, shown in Summary view (or Review)
-  values: {
-            <key-name-1> : { text: <text value>, isSelected: <boolean>}
-            <key-name-2> : { text: <text value>, isSelected: <boolean>}
-            ... for all checkbox keys
-          }
+    text: <string> -- comma separated list of all selected checkbox "text" values, shown in Summary view (or Review)
+    values: {
+        <key-name-1> : { text: <text value>, isSelected: <boolean>}
+        <key-name-2> : { text: <text value>, isSelected: <boolean>}
+        ... for all checkbox keys
+        }
 }
 
 ```
 
 ---
 
+<a name="file"/>
+### File Upload
+
+- **type/code**: `fileUpload`
+- **category**: `Question`
+
+_Interface for uploading documents or other files_
+
+#### Input parameters
+
+- **label\***: `string` -- as above
+- **description\***: `string` -- as above [Optional]
+- **fileCountLimit**: `number` -- maximum number of files allowed to upload for this question (default: 1)
+- **fileExtensions**: `array[string]` -- list of allowed file extensions (default: no restrictions). e.g. `["pdf", "doc", "txt", "jpg", "png"]`
+- **fileSizeLimit**: `number` -- maximum file size in KB (default: no limit)
+
+#### Response type
+
+Response object is populated after file upload, based on the server response. Note: only successful uploads are included in the response. Error files or files currently loading are displayed in the UI but filtered out before saving.
+
+```
+
+{
+  text: <string> -- comma separated list of all filenames
+  files: [
+    {
+      filename: <string>
+      fileUrl: <string>
+      thumbnailUrl: <string>
+      mimetype: <string>
+    },
+    ...
+  ]
+}
+
+```
+
+---
+
+<a name="page"/>
 ### Page Break
 
 - **type/code**: `pageBreak`
@@ -207,3 +321,7 @@ _For specifying where the list of questions is broken into UI pages/steps. The *
   - ~~default: `false`~~
 
 ---
+
+```
+
+```

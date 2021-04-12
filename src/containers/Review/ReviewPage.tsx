@@ -1,11 +1,11 @@
 import { Button, Header, Label, Message, Segment } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import {
-  AssignmentDetailsNEW,
+  AssignmentDetails,
   FullStructure,
-  PageNEW,
+  Page,
   ResponsesByCode,
-  SectionStateNEW,
+  SectionState,
 } from '../../utils/types'
 
 import {
@@ -26,11 +26,16 @@ import useScrollableAttachments, {
 } from '../../utils/hooks/useScrollableAttachments'
 import { SectionProgress } from '../../components/Review'
 import ReviewSubmit from './ReviewSubmit'
+import { useUserState } from '../../contexts/UserState'
 
 const ReviewPage: React.FC<{
-  reviewAssignment: AssignmentDetailsNEW
+  reviewAssignment: AssignmentDetails
   fullApplicationStructure: FullStructure
 }> = ({ reviewAssignment, fullApplicationStructure }) => {
+  const {
+    userState: { currentUser },
+  } = useUserState()
+
   const { fullReviewStructure, error } = useGetFullReviewStructure({
     reviewAssignment,
     fullApplicationStructure,
@@ -42,8 +47,16 @@ const ReviewPage: React.FC<{
 
   const { addScrollable, scrollTo } = useScrollableAttachments()
 
-  if (error) return <Message error title={strings.ERROR_APPLICATION_OVERVIEW} list={[error]} />
+  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!fullReviewStructure) return <Loading />
+
+  // TODO decide how to handle this, and localise if not deleted
+  if (
+    reviewAssignment?.reviewer?.id !== currentUser?.userId &&
+    fullReviewStructure?.thisReview?.status !== ReviewStatus.Submitted
+  )
+    return <Header>Review in Progress</Header>
+
   const { sections, responsesByCode, info } = fullReviewStructure
   return (
     <>
@@ -68,11 +81,9 @@ const ReviewPage: React.FC<{
               isActive={isSectionActive(section.details.code)}
               toggleSection={toggleSection(section.details.code)}
               section={section}
-              extraSectionTitleContent={(section: SectionStateNEW) => (
-                <SectionProgress {...section} />
-              )}
-              extraPageContent={(page: PageNEW) => <ApproveAllButton page={page} />}
-              scrollableAttachment={(page: PageNEW) => (
+              extraSectionTitleContent={(section: SectionState) => <SectionProgress {...section} />}
+              extraPageContent={(page: Page) => <ApproveAllButton page={page} />}
+              scrollableAttachment={(page: Page) => (
                 <ScrollableAttachment
                   code={`${section.details.code}P${page.number}`}
                   addScrollabe={addScrollable}
@@ -81,7 +92,10 @@ const ReviewPage: React.FC<{
               responsesByCode={responsesByCode as ResponsesByCode}
               serial={info.serial}
               isReview
-              canEdit={reviewAssignment?.review?.status === ReviewStatus.Draft}
+              canEdit={
+                reviewAssignment?.review?.status === ReviewStatus.Draft ||
+                reviewAssignment?.review?.status === ReviewStatus.Locked
+              }
             />
           ))}
         </Segment>
@@ -103,7 +117,7 @@ const ReviewPage: React.FC<{
   )
 }
 
-const ApproveAllButton: React.FC<{ page: PageNEW }> = ({ page }) => {
+const ApproveAllButton: React.FC<{ page: Page }> = ({ page }) => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
 
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)

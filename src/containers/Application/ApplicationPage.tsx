@@ -1,25 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
+import { Grid, Header, Segment } from 'semantic-ui-react'
 import {
   FullStructure,
-  ResponsesByCode,
-  ElementStateNEW,
   SectionAndPage,
   MethodRevalidate,
-  MethodToCallProps,
   ApplicationProps,
 } from '../../utils/types'
-import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
-import { ApplicationStatus } from '../../utils/generated/graphql'
+import { Loading, Navigation, PageElements, ProgressBar } from '../../components'
 import { useUserState } from '../../contexts/UserState'
+import { ApplicationStatus } from '../../utils/generated/graphql'
+import { checkPageIsAccessible } from '../../utils/helpers/structure'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { Loading } from '../../components'
 import strings from '../../utils/constants'
-import { Grid, Header, Message, Segment } from 'semantic-ui-react'
-import ProgressBarNEW from '../../components/Application/ProgressBarNEW'
-import { PageElements } from '../../components/Application'
-import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
-import checkPageIsAccessible from '../../utils/helpers/structure/checkPageIsAccessible'
-import { Navigation } from '../../components'
 
 const ApplicationPage: React.FC<ApplicationProps> = ({
   structure: fullStructure,
@@ -32,6 +24,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   const {
     query: { serialNumber, sectionCode, page },
     push,
+    replace,
   } = useRouter()
 
   const pageNumber = Number(page)
@@ -40,10 +33,8 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
     if (!fullStructure) return
 
     // Re-direct based on application status
-    if (fullStructure.info.current?.status === ApplicationStatus.ChangesRequired)
-      push(`/applicationNEW/${fullStructure.info.serial}`)
     if (fullStructure.info.current?.status !== ApplicationStatus.Draft)
-      push(`/applicationNEW/${fullStructure.info.serial}/summary`)
+      replace(`/application/${fullStructure.info.serial}`)
 
     // Re-direct if trying to access page higher than allowed
     if (!fullStructure.info.isLinear || !fullStructure.info?.firstStrictInvalidPage) return
@@ -51,14 +42,14 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
     const current = { sectionCode, pageNumber }
     if (!checkPageIsAccessible({ fullStructure, firstIncomplete, current })) {
       const { sectionCode, pageNumber } = firstIncomplete
-      push(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
+      push(`/application/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
     }
   }, [fullStructure, sectionCode, page])
 
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
   const {
-    info: { isLinear },
+    info: { isLinear, current },
   } = fullStructure
 
   return (
@@ -78,7 +69,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
         }}
       >
         <Grid.Column width={4}>
-          <ProgressBarNEW
+          <ProgressBar
             structure={fullStructure}
             requestRevalidation={requestRevalidation as MethodRevalidate}
             strictSectionPage={strictSectionPage as SectionAndPage}
@@ -88,13 +79,13 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
           <Segment vertical style={{ marginBottom: 20 }}>
             <Header content={fullStructure.sections[sectionCode].details.title} />
             <PageElements
+              canEdit={current?.status === ApplicationStatus.Draft}
               elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
               responsesByCode={fullStructure.responsesByCode}
               isStrictPage={
                 sectionCode === strictSectionPage?.sectionCode &&
                 pageNumber === strictSectionPage?.pageNumber
               }
-              canEdit
             />
           </Segment>
         </Grid.Column>
