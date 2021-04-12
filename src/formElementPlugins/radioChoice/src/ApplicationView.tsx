@@ -57,10 +57,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }, [])
 
   function handleChange(e: any, data: any) {
-    console.log('CHanged..')
     const { index: optionIndex } = data
     setSelectedIndex(optionIndex)
-    console.log('Selected:', optionIndex)
     onSave({
       text:
         hasOther && optionIndex === allOptions.length - 1
@@ -104,7 +102,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {radioButtonOptions.map((option: any, index: number) => {
         const showOther = hasOther && index === allOptions.length - 1
         return (
-          <Form.Field key={`${index}_${option}`} disabled={!isEditable} inline={showOther}>
+          <Form.Field key={option.key} disabled={!isEditable} inline={showOther}>
             <Radio
               label={option.text}
               name={`${code}_radio_${index}`} // This is GROUP name
