@@ -11,6 +11,7 @@ export default {
   ACTION_RE_REVIEW: 'Re-review',
   ACTION_RE_ASSIGN: 'Re-Assign',
   ACTION_SELF_ASSIGN: 'Self-Assign',
+  ACTION_UPDATE: 'Update',
   ACTION_VIEW: 'View',
   ASSIGNED: 'assigned',
   ASSIGNED_TO: 'assigned to',
