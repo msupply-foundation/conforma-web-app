@@ -78,6 +78,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
           toggleSection={toggleSection(section.details.code)}
           section={section}
           responsesByCode={responsesByCode as ResponsesByCode}
+          applicationData={fullStructure.info}
           serial={info.serial}
           isSummary
           canEdit={info.current?.status === ApplicationStatus.Draft}

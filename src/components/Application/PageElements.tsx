@@ -1,6 +1,12 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ElementState, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
+import {
+  ApplicationDetails,
+  ElementState,
+  PageElement,
+  ResponsesByCode,
+  SectionAndPage,
+} from '../../utils/types'
 import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapper'
 import SummaryViewWrapper from '../../formElementPlugins/SummaryViewWrapper'
 import { Form, Grid, Segment, Button, Icon } from 'semantic-ui-react'
@@ -21,6 +27,7 @@ import DecisionArea from '../Review/DecisionArea'
 interface PageElementProps {
   elements: PageElement[]
   responsesByCode: ResponsesByCode
+  applicationData: ApplicationDetails
   isStrictPage?: boolean
   canEdit?: boolean
   isReview?: boolean
@@ -32,6 +39,7 @@ interface PageElementProps {
 const PageElements: React.FC<PageElementProps> = ({
   elements,
   responsesByCode,
+  applicationData,
   isStrictPage,
   canEdit,
   isReview,
@@ -62,6 +70,7 @@ const PageElements: React.FC<PageElementProps> = ({
               isStrictPage,
               changesRequired,
               allResponses: responsesByCode,
+              applicationData,
               currentResponse: responsesByCode?.[element.code],
             }
             // Wrapper displays response & changes requested warning for LOQ re-submission
@@ -75,6 +84,7 @@ const PageElements: React.FC<PageElementProps> = ({
     element,
     response: responsesByCode?.[element.code],
     allResponses: responsesByCode,
+    applicationData,
   })
   // Summary Page
   if (isSummary) {
