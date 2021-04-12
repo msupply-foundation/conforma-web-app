@@ -60,6 +60,7 @@ export default {
   LABEL_REVIEW_DECICION_CONFORM: 'Conform',
   LABEL_REVIEW_DECISION_NON_CONFORM: 'Non conform',
   LABEL_REVIEW_RESSUBMIT: 'Request a resubmission',
+  LABEL_REVIEWED_BY: 'Review by',
   LABEL_UPDATED: 'Updated',
   LABEL_WELCOME: 'Welcome to IRIMS Application Manager',
   LINK_LOGIN_USER: 'Create new account',
