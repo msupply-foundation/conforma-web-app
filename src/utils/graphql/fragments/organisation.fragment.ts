@@ -6,5 +6,6 @@ export default gql`
     name
     address
     registration
+    logoUrl
   }
 `
