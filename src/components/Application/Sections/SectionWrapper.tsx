@@ -83,6 +83,7 @@ const sectionStyles = {
   sup: {
     borderRadius: 8,
     marginBottom: 10,
+    padding: 10,
     border: 'none',
     boxShadow: 'none',
     backgroundColor: '#DCDDDD', // Invision
