@@ -4,19 +4,17 @@ import { ApplicationViewProps } from '../../types'
 import config from '../../../config.json'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
+  element,
   parameters,
-  onUpdate,
   value,
   // setValue
   setIsActive,
-  isEditable,
-  currentResponse,
   validationState,
   onSave,
   Markdown,
-  isRequired,
   validate,
 }) => {
+  const { isEditable } = element
   const {
     placeholder,
     confirmPlaceholder,
@@ -112,9 +110,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
             : null
         }
       />
-      {(showPasswordToggle === undefined ? true : showPasswordToggle) && (
-        <Checkbox label="Show password" checked={!masked} onClick={() => setMasked(!masked)} />
-      )}
+      <Form.Field required={false}>
+        {(showPasswordToggle === undefined ? true : showPasswordToggle) && (
+          <Checkbox label="Show password" checked={!masked} onClick={() => setMasked(!masked)} />
+        )}
+      </Form.Field>
     </>
   )
 }

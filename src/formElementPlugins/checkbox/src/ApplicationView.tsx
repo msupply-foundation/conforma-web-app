@@ -16,18 +16,13 @@ interface CheckboxSavedState {
 }
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
-  code,
+  element,
   parameters,
-  onUpdate,
-  value,
-  setValue,
-  isEditable,
-  currentResponse,
-  validationState,
   onSave,
   Markdown,
   initialValue,
 }) => {
+  const { isEditable } = element
   const { label, description, checkboxes, type, layout } = parameters
 
   const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
@@ -59,6 +54,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {checkboxElements.map((cb: Checkbox, index: number) => {
         return layout === 'inline' ? (
           <Checkbox
+            key={`${index}_${cb.label}`}
             label={cb.label}
             checked={cb.selected}
             onChange={toggle}

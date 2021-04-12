@@ -21,7 +21,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     userState: { currentUser },
   } = useUserState()
 
-  const { error: submitError, processing, submit } = useSubmitApplication({
+  const { submit } = useSubmitApplication({
     serialNumber: fullStructure?.info.serial as string,
     currentUser: currentUser as User,
   })
@@ -32,10 +32,15 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
 
   useEffect(() => {
     if (!fullStructure) return
+
+    // Re-direct based on application status
+    if (fullStructure.info.current?.status === ApplicationStatus.ChangesRequired)
+      replace(`/application/${fullStructure.info.serial}`)
+
     // Re-direct if application is not valid
     if (fullStructure.info.firstStrictInvalidPage) {
       const { sectionCode, pageNumber } = fullStructure.info.firstStrictInvalidPage
-      replace(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
+      replace(`/application/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
     }
   }, [fullStructure])
 
@@ -46,13 +51,13 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
           if (firstStrictInvalidPage) {
             const { sectionCode, pageNumber } = firstStrictInvalidPage
             setStrictSectionPage(firstStrictInvalidPage)
-            replace(`/applicationNEW/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
+            replace(`/application/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
           } else {
             try {
-              fullStructure?.responsesByCode &&
-                (await submit(Object.values(fullStructure?.responsesByCode)))
-              push(`/applicationNEW/${fullStructure?.info.serial}/submission`)
-            } catch {
+              await submit(fullStructure)
+              push(`/application/${fullStructure?.info.serial}/submission`)
+            } catch (e) {
+              console.log(e)
               setError(true)
             }
           }
@@ -60,9 +65,8 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
       )
   }
 
-  if (submitError || error)
-    return <Message error header={strings.ERROR_APPLICATION_SUBMIT} list={[submitError]} />
-  if (!fullStructure || processing) return <Loading />
+  if (error) return <Message error header={strings.ERROR_APPLICATION_SUBMIT} list={[error]} />
+  if (!fullStructure) return <Loading />
   const { sections, responsesByCode, info } = fullStructure
   return (
     <Container>

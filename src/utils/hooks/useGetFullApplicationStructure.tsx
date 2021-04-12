@@ -2,19 +2,28 @@ import { useState, useEffect } from 'react'
 import { FullStructure } from '../types'
 import {
   ApplicationResponse,
+  ApplicationResponseStatus,
   ApplicationStatus,
   useGetAllResponsesQuery,
 } from '../generated/graphql'
 import { useUserState } from '../../contexts/UserState'
-import { generateResponsesProgress } from '../helpers/structure/generateProgress'
-import addEvaluatedResponsesToStructure from '../helpers/structure/addEvaluatedResponsesToStructure'
+import {
+  addEvaluatedResponsesToStructure,
+  addElementsById,
+  addSortedSectionsAndPages,
+  addApplicationResponses,
+  addApplicantChangeRequestStatusToElement,
+  generateApplicantChangesRequestedProgress,
+  generateResponsesProgress,
+} from '../helpers/structure'
 
-interface useGetFullApplicationStructureProps {
+interface UseGetFullApplicationStructureProps {
   structure: FullStructure
   shouldRevalidate?: boolean
   minRefetchTimestampForRevalidation?: number
   firstRunValidation?: boolean
   shouldCalculateProgress?: boolean
+  shouldGetDraftResponses?: boolean
 }
 
 const useGetFullApplicationStructure = ({
@@ -23,7 +32,8 @@ const useGetFullApplicationStructure = ({
   minRefetchTimestampForRevalidation = 0,
   firstRunValidation = true,
   shouldCalculateProgress = true,
-}: useGetFullApplicationStructureProps) => {
+  shouldGetDraftResponses = true,
+}: UseGetFullApplicationStructureProps) => {
   const {
     info: { serial },
   } = structure
@@ -43,6 +53,9 @@ const useGetFullApplicationStructure = ({
   const { data, error } = useGetAllResponsesQuery({
     variables: {
       serial,
+      responseStatuses: shouldGetDraftResponses
+        ? [ApplicationResponseStatus.Submitted, ApplicationResponseStatus.Draft]
+        : [ApplicationResponseStatus.Submitted],
     },
     skip: !serial,
     fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
@@ -68,11 +81,12 @@ const useGetFullApplicationStructure = ({
     if (isDataUpToDate && !shouldRevalidateThisRun) return
 
     const shouldDoValidation = shouldRevalidateThisRun || firstRunProcessValidation
+    const applicationResponses = data?.applicationBySerial?.applicationResponses
+      ?.nodes as ApplicationResponse[]
 
     addEvaluatedResponsesToStructure({
       structure,
-      applicationResponses: data?.applicationBySerial?.applicationResponses
-        ?.nodes as ApplicationResponse[],
+      applicationResponses,
       currentUser,
       evaluationOptions: {
         isEditable: true,
@@ -84,10 +98,29 @@ const useGetFullApplicationStructure = ({
       if (shouldDoValidation) {
         newStructure.lastValidationTimestamp = Date.now()
       }
-      if (shouldCalculateProgress) generateResponsesProgress(newStructure)
+
+      newStructure = addElementsById(newStructure)
+      newStructure = addSortedSectionsAndPages(newStructure)
+
+      // even though response is already added to element, we need to add Latest and Previous application response
+      addApplicationResponses(newStructure, applicationResponses)
+
+      if (shouldCalculateProgress) {
+        addApplicantChangeRequestStatusToElement(newStructure)
+
+        generateApplicantChangesRequestedProgress(newStructure)
+
+        // generateResponseProgress uses change statuses calculated in generateApplicantChangesRequestedProgress
+        generateResponsesProgress(newStructure)
+
+        // For change requests we treat application as not linear
+        newStructure.info.isLinear =
+          newStructure.info.isLinear && !newStructure.info.isChangeRequest
+      }
 
       setLastProcessedTimestamp(Date.now())
       setFirstRunProcessValidation(false)
+
       setFullStructure(newStructure)
     })
   }, [lastRefetchedTimestamp, shouldRevalidate, minRefetchTimestampForRevalidation, error])

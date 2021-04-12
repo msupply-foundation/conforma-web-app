@@ -1,18 +1,22 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ElementStateNEW, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
-import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapperNEW'
-import SummaryViewWrapperNEW from '../../formElementPlugins/SummaryViewWrapperNEW'
+import { ElementState, PageElement, ResponsesByCode, SectionAndPage } from '../../utils/types'
+import ApplicationViewWrapper from '../../formElementPlugins/ApplicationViewWrapper'
+import SummaryViewWrapper from '../../formElementPlugins/SummaryViewWrapper'
 import { Form, Grid, Segment, Button, Icon } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import {
+  ApplicationResponse,
   ReviewResponse,
   ReviewResponseStatus,
   TemplateElementCategory,
 } from '../../utils/generated/graphql'
 
-import { SummaryViewWrapperPropsNEW } from '../../formElementPlugins/types'
-import DecisionAreaNEW from '../Review/DecisionAreaNEW'
+import {
+  ApplicationViewWrapperProps,
+  SummaryViewWrapperProps,
+} from '../../formElementPlugins/types'
+import DecisionArea from '../Review/DecisionArea'
 
 interface PageElementProps {
   elements: PageElement[]
@@ -35,25 +39,39 @@ const PageElements: React.FC<PageElementProps> = ({
   serial,
   sectionAndPage,
 }) => {
+  const visibleElements = elements.filter(({ element }) => element.isVisible)
+
   // Editable Application page
   if (canEdit && !isReview && !isSummary)
     return (
       <Form>
-        {elements.map(({ element }) => {
-          return (
-            <ApplicationViewWrapper
-              key={`question_${element.code}`}
-              element={element}
-              isStrictPage={isStrictPage}
-              allResponses={responsesByCode}
-              currentResponse={responsesByCode?.[element.code]}
-            />
-          )
-        })}
+        {visibleElements.map(
+          ({ element, isChangeRequest, isChanged, previousApplicationResponse }) => {
+            const currentReview = previousApplicationResponse?.reviewResponses.nodes[0]
+            const changesRequired =
+              isChangeRequest || isChanged
+                ? {
+                    isChangeRequest: isChangeRequest as boolean,
+                    isChanged: isChanged as boolean,
+                    reviewerComment: currentReview?.comment || '',
+                  }
+                : undefined
+
+            const props: ApplicationViewWrapperProps = {
+              element,
+              isStrictPage,
+              changesRequired,
+              allResponses: responsesByCode,
+              currentResponse: responsesByCode?.[element.code],
+            }
+            // Wrapper displays response & changes requested warning for LOQ re-submission
+            return <ApplicationViewWrapper key={`question_${element.code}`} {...props} />
+          }
+        )}
       </Form>
     )
 
-  const getSummaryViewProps = (element: ElementStateNEW) => ({
+  const getSummaryViewProps = (element: ElementState) => ({
     element,
     response: responsesByCode?.[element.code],
     allResponses: responsesByCode,
@@ -64,56 +82,68 @@ const PageElements: React.FC<PageElementProps> = ({
     return (
       <Form>
         <Segment.Group>
-          {elements.map(({ element }) => {
-            return (
-              <Segment key={`question_${element.code}`}>
-                <Grid columns="equal">
-                  <Grid.Column floated="left">
-                    <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
-                  </Grid.Column>
-                  {element.category === TemplateElementCategory.Question && canEdit && (
-                    <Grid.Column floated="right" textAlign="right">
-                      <Button
-                        content={strings.BUTTON_SUMMARY_EDIT}
-                        size="small"
-                        as={Link}
-                        to={`/application/${serial}/${sectionCode}/Page${pageNumber}`}
-                      />
+          {visibleElements
+            .filter(({ element }) => element.isVisible)
+            .map(({ element }) => {
+              return (
+                <Segment key={`question_${element.code}`}>
+                  <Grid columns="equal">
+                    <Grid.Column floated="left">
+                      <SummaryViewWrapper {...getSummaryViewProps(element)} />
                     </Grid.Column>
-                  )}
-                </Grid>
-              </Segment>
-            )
-          })}
+                    {element.category === TemplateElementCategory.Question && canEdit && (
+                      <Grid.Column floated="right" textAlign="right">
+                        <Button
+                          content={strings.BUTTON_SUMMARY_EDIT}
+                          size="small"
+                          as={Link}
+                          to={`/application/${serial}/${sectionCode}/Page${pageNumber}`}
+                        />
+                      </Grid.Column>
+                    )}
+                  </Grid>
+                </Segment>
+              )
+            })}
         </Segment.Group>
       </Form>
     )
   }
 
-  // Review Page -- TO-DO
+  // TODO: Find out problem to display edit button with review responses when Review is locked
+
   if (isReview)
     return (
       <Form>
         <Segment.Group>
-          {elements.map(({ element, thisReviewLatestResponse }) => (
-            <Segment key={`question_${element.id}`}>
-              <Grid columns="equal">
-                <Grid.Column floated="left">
-                  <SummaryViewWrapperNEW {...getSummaryViewProps(element)} />
-                </Grid.Column>
-                <Grid.Column floated="right" textAlign="right">
-                  <ReviewButton
-                    reviewResponse={thisReviewLatestResponse as ReviewResponse}
-                    summaryViewProps={getSummaryViewProps(element)}
-                  />
-                </Grid.Column>
-              </Grid>
-              <ReviewResponseComponent
-                reviewResponse={thisReviewLatestResponse as ReviewResponse}
-                summaryViewProps={getSummaryViewProps(element)}
-              />
-            </Segment>
-          ))}
+          {visibleElements.map(
+            ({
+              element,
+              thisReviewLatestResponse,
+              isNewApplicationResponse,
+              latestApplicationResponse,
+            }) => (
+              <Segment key={`question_${element.id}`}>
+                <Grid columns="equal">
+                  <Grid.Column floated="left">
+                    <SummaryViewWrapper {...getSummaryViewProps(element)} />
+                  </Grid.Column>
+                  <Grid.Column floated="right" textAlign="right">
+                    <ReviewButton
+                      isNewApplicationResponse={isNewApplicationResponse}
+                      reviewResponse={thisReviewLatestResponse as ReviewResponse}
+                      summaryViewProps={getSummaryViewProps(element)}
+                    />
+                  </Grid.Column>
+                </Grid>
+                <ReviewResponseComponent
+                  latestApplicationResponse={latestApplicationResponse}
+                  reviewResponse={thisReviewLatestResponse as ReviewResponse}
+                  summaryViewProps={getSummaryViewProps(element)}
+                />
+              </Segment>
+            )
+          )}
         </Segment.Group>
       </Form>
     )
@@ -123,12 +153,18 @@ const PageElements: React.FC<PageElementProps> = ({
 
 const ReviewResponseComponent: React.FC<{
   reviewResponse: ReviewResponse
-  summaryViewProps: SummaryViewWrapperPropsNEW
-}> = ({ reviewResponse, summaryViewProps }) => {
+  summaryViewProps: SummaryViewWrapperProps
+  latestApplicationResponse: ApplicationResponse
+}> = ({ reviewResponse, summaryViewProps, latestApplicationResponse }) => {
   const [toggleDecisionArea, setToggleDecisionArea] = useState(false)
 
   if (!reviewResponse) return null
   if (!reviewResponse?.decision) return null
+  if (!reviewResponse?.decision) return null
+
+  // After review is submitted, reviewResponses are trimmed if they are not changed duplicates
+  // or if they are null, we only want to show reviewResponses that are linked to latestApplicationResponse
+  if (latestApplicationResponse.id !== reviewResponse.applicationResponse?.id) return null
 
   return (
     <>
@@ -147,7 +183,7 @@ const ReviewResponseComponent: React.FC<{
           </Grid.Column>
         )}
       </Grid>
-      <DecisionAreaNEW
+      <DecisionArea
         reviewResponse={reviewResponse}
         toggle={toggleDecisionArea}
         summaryViewProps={summaryViewProps}
@@ -158,8 +194,9 @@ const ReviewResponseComponent: React.FC<{
 
 const ReviewButton: React.FC<{
   reviewResponse: ReviewResponse
-  summaryViewProps: SummaryViewWrapperPropsNEW
-}> = ({ reviewResponse, summaryViewProps }) => {
+  summaryViewProps: SummaryViewWrapperProps
+  isNewApplicationResponse?: boolean
+}> = ({ reviewResponse, summaryViewProps, isNewApplicationResponse }) => {
   const [toggleDecisionArea, setToggleDecisionArea] = useState(false)
 
   if (!reviewResponse) return null
@@ -169,11 +206,15 @@ const ReviewButton: React.FC<{
   return (
     <>
       <Button
-        content={strings.BUTTON_REVIEW_RESPONSE}
+        content={
+          isNewApplicationResponse
+            ? strings.BUTTON_RE_REVIEW_RESPONSE
+            : strings.BUTTON_REVIEW_RESPONSE
+        }
         size="small"
         onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
       />
-      <DecisionAreaNEW
+      <DecisionArea
         reviewResponse={reviewResponse}
         toggle={toggleDecisionArea}
         summaryViewProps={summaryViewProps}

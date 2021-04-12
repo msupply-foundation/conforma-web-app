@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
-import { AssignmentDetailsNEW } from '../types'
+import { AssignmentDetails } from '../types'
 import {
   Review,
   ReviewAssignment,
+  ReviewQuestionAssignment,
   ReviewStatus,
   useGetReviewInfoQuery,
   User,
 } from '../generated/graphql'
 import messages from '../messages'
+import { useUserState } from '../../contexts/UserState'
 
 const MAX_REFETCH = 10
 interface UseGetReviewInfoProps {
@@ -15,16 +17,19 @@ interface UseGetReviewInfoProps {
   userId: number
 }
 
-const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
-  const [assignments, setAssignments] = useState<AssignmentDetailsNEW[]>()
+const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
+  const [assignments, setAssignments] = useState<AssignmentDetails[]>()
   const [isFetching, setIsFetching] = useState(true)
   const [fetchingError, setFetchingError] = useState('')
   const [refetchAttempts, setRefetchAttempts] = useState(0)
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   const { data, loading, error, refetch } = useGetReviewInfoQuery({
     variables: {
-      reviewerId: userId,
       applicationId,
+      assignerId: currentUser?.userId as number,
     },
     notifyOnNetworkStatusChange: true,
     // if this is removed, there might be an infinite loading when looking at a review for the frist time, after clearing cache
@@ -62,7 +67,7 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
       return
     }
 
-    const assignments: AssignmentDetailsNEW[] = reviewAssigments.map((reviewAssignment) => {
+    const assignments: AssignmentDetails[] = reviewAssigments.map((reviewAssignment) => {
       // There will always just be one review assignment linked to a review.
       const review = reviewAssignment.reviews.nodes[0] as Review
       if (reviewAssignment.reviews.nodes.length > 1)
@@ -71,19 +76,26 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
           reviewAssignment.id
         )
 
-      const { id, status, stage: assignmentStage, timeCreated, level, reviewer } = reviewAssignment
+      const {
+        id,
+        status,
+        stage: assignmentStage,
+        timeCreated,
+        level,
+        reviewer,
+        reviewAssignmentAssignerJoins,
+        templateSectionRestrictions,
+      } = reviewAssignment
 
       // Extra field just to use in initial example - might conflict with future queries
       // to get reviewQuestionAssignment
-      const reviewQustionAssignments = reviewAssignment.reviewQuestionAssignments.nodes
-      const totalAssignedQuestions = reviewQustionAssignments.length
-      const assignedTemplateElementIds = reviewQustionAssignments.map(
-        (reviewQuestionAssignment) => reviewQuestionAssignment?.templateElementId as number
-      )
+      const reviewQuestionAssignments = (reviewAssignment.reviewQuestionAssignments.nodes ||
+        []) as ReviewQuestionAssignment[]
+      const totalAssignedQuestions = reviewQuestionAssignments.length
 
       const stage = { id: assignmentStage?.id as number, name: assignmentStage?.title as string }
 
-      const assignment: AssignmentDetailsNEW = {
+      const assignment: AssignmentDetails = {
         id,
         review: review
           ? {
@@ -100,8 +112,11 @@ const useGetReviewInfo = ({ applicationId, userId }: UseGetReviewInfoProps) => {
         stage,
         reviewer: reviewer as User,
         level: level || 1,
+        isCurrentUserReviewer: reviewer?.id === (currentUser?.userId as number),
+        isCurrentUserAssigner: reviewAssignmentAssignerJoins.nodes.length > 0,
+        assignableSectionRestrictions: templateSectionRestrictions || [],
         totalAssignedQuestions,
-        assignedTemplateElementIds,
+        reviewQuestionAssignments,
         timeCreated,
       }
 
