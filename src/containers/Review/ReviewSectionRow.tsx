@@ -61,15 +61,20 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   return (
     <>
       {canRenderRow && (
-        <Grid columns="equal" verticalAlign="middle">
+        <Grid columns="equal" verticalAlign="middle" style={inlineStyle.grid}>
           <ReviewSectionRowAssigned {...props} />
           <ReviewSectionRowLastActionDate {...props} />
           <ReviewSectionRowProgress {...props} />
           <ReviewSectionRowAction {...props} />
         </Grid>
-      )}{' '}
+      )}
     </>
   )
+}
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const inlineStyle = {
+  grid: { borderRadius: 10 },
 }
 
 export default ReviewSectionRow

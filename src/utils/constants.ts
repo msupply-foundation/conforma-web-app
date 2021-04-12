@@ -42,6 +42,8 @@ export default {
   ERROR_LOGIN_PASSWORD: 'Oops! Problem with username or password',
   LABEL_APPLICATIONS: 'applications',
   LABEL_APPLICATION_UPDATE: 'Update',
+  LABEL_APPLICATION_SUBMITTED: 'Application Submitted',
+  LABEL_ASSIGNED_SELF: 'Can be self assigned',
   LABEL_ASSIGNED_TO_YOU: 'Assigned to you',
   LABEL_ASSIGNED_TO_OTHER: 'Assigned to another reviewer',
   LABEL_COMMENT: 'Add comment',
