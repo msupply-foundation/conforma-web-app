@@ -21113,7 +21113,7 @@ export type ElementFragment = (
 
 export type OrganisationFragment = (
   { __typename?: 'Organisation' }
-  & Pick<Organisation, 'id' | 'name' | 'address' | 'registration'>
+  & Pick<Organisation, 'id' | 'name' | 'address' | 'registration' | 'logoUrl'>
 );
 
 export type ResponseFragment = (
@@ -21698,6 +21698,7 @@ export const OrganisationFragmentDoc = gql`
   name
   address
   registration
+  logoUrl
 }
     `;
 export const ResponseFragmentDoc = gql`
