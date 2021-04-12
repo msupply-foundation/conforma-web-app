@@ -57,10 +57,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }, [])
 
   function handleChange(e: any, data: any) {
-    console.log('CHanged..')
     const { index: optionIndex } = data
     setSelectedIndex(optionIndex)
-    console.log('Selected:', optionIndex)
     onSave({
       text:
         hasOther && optionIndex === allOptions.length - 1
