@@ -1,8 +1,7 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-import { LookupTableListPage } from '.'
+import { LookupTableListPage, LookupTablePage } from '.'
 import { useRouter } from '../../utils/hooks/useRouter'
-import LookupTablePage from './LookupTablePage'
 import {
   LookUpTableImportCsvProvider,
   SingleTableStructureConsumer,
