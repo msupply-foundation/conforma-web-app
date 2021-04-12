@@ -2,13 +2,15 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { ApplicationResponse, ReviewResponse } from '../../generated/graphql'
 import {
-  ElementStateNEW,
+  ElementState,
   EvaluatorParameters,
   FullStructure,
   PageElement,
   ResponsesByCode,
   User,
 } from '../../types'
+import config from '../../../config.json'
+const graphQLEndpoint = config.serverGraphQL
 
 type EvaluationOptions = {
   isRequired: boolean
@@ -65,7 +67,7 @@ const addEvaluatedResponsesToStructure = async ({
   // updated with evaluated elements and responses without re-building
   // structure
   const results = await evaluateAndValidateElements(
-    flattenedElements.map((elem: PageElement) => elem.element as ElementStateNEW),
+    flattenedElements.map((elem: PageElement) => elem.element as ElementState),
     responseObject,
     currentUser,
     evaluationOptions
@@ -82,12 +84,12 @@ const addEvaluatedResponsesToStructure = async ({
 }
 
 async function evaluateAndValidateElements(
-  elements: ElementStateNEW[],
+  elements: ElementState[],
   responseObject: ResponsesByCode,
   currentUser: User | null,
   evaluationOptions: EvaluationOptions
 ) {
-  const elementPromiseArray: Promise<ElementStateNEW>[] = []
+  const elementPromiseArray: Promise<ElementState>[] = []
   elements.forEach((element) => {
     elementPromiseArray.push(
       evaluateSingleElement(element, responseObject, currentUser, evaluationOptions)
@@ -111,17 +113,18 @@ const evaluateExpressionWithFallBack = (
   })
 
 async function evaluateSingleElement(
-  element: ElementStateNEW,
+  element: ElementState,
   responseObject: ResponsesByCode,
   currentUser: User | null,
   evaluationOptions: EvaluationOptions
-): Promise<ElementStateNEW> {
+): Promise<ElementState> {
   const evaluationParameters = {
     objects: {
       responses: { ...responseObject, thisResponse: responseObject?.[element.code]?.text },
       currentUser,
     },
     APIfetch: fetch,
+    graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     // TO-DO: Also send org objects etc.
     // graphQLConnection: TO-DO
   }
@@ -132,7 +135,7 @@ async function evaluateSingleElement(
 
   const evaluations = evaluationKeys.map((evaluationKey) => {
     const elementKey = evaluationMapping[evaluationKey as keyof EvaluationOptions]
-    const evaluationExpression = element[elementKey as keyof ElementStateNEW]
+    const evaluationExpression = element[elementKey as keyof ElementState]
 
     return evaluateExpressionWithFallBack(evaluationExpression, evaluationParameters, true)
   })
