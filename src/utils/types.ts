@@ -10,7 +10,6 @@ import {
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
-  TemplateElement,
   TemplateElementCategory,
   User as GraphQLUser,
   Organisation as GraphQLOrg,
@@ -65,7 +64,7 @@ export {
   TemplatesDetails,
   UseGetApplicationProps,
   User,
-  UseGetFullReviewStructureProps,
+  UseGetReviewStructureForSectionProps,
   OrganisationSimple,
   Organisation,
   LoginPayload,
@@ -468,7 +467,7 @@ interface LoginPayload {
   orgList?: OrganisationSimple[]
 }
 
-interface UseGetFullReviewStructureProps {
+interface UseGetReviewStructureForSectionProps {
   fullApplicationStructure: FullStructure
   reviewAssignment: AssignmentDetails
   filteredSectionIds?: number[]
