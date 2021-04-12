@@ -104,7 +104,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {radioButtonOptions.map((option: any, index: number) => {
         const showOther = hasOther && index === allOptions.length - 1
         return (
-          <Form.Field key={`${index}_${option}`} disabled={!isEditable} inline={showOther}>
+          <Form.Field key={option.key} disabled={!isEditable} inline={showOther}>
             <Radio
               label={option.text}
               name={`${code}_radio_${index}`} // This is GROUP name
