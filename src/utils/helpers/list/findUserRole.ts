@@ -24,8 +24,6 @@ const userRoles: UserRoles = {
 // permissions: Array<PermissionPolicyType>
 
 export default (templatePermissions: TemplatePermissions, type: string): string | undefined => {
-  console.log(templatePermissions)
-
   const found = Object.entries(templatePermissions).find(([template]) => template === type)
   if (found) {
     const [_, permissions] = found
@@ -36,7 +34,6 @@ export default (templatePermissions: TemplatePermissions, type: string): string 
       const common = permissionList.filter((permission) => comparePermissions.includes(permission))
       return common.length > 0
     })
-
     const filteredRoles = matching.map(([role]) => role)
     return filteredRoles?.[0] || undefined
   }
