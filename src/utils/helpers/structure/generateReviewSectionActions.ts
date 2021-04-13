@@ -26,13 +26,13 @@ const generateReviewSectionActions: GenerateSectionActions = ({
   let baseAction: ReviewAction | undefined
   const isCurrentUserReview = reviewAssignment.reviewer.id === currentUserId
 
-  if (
-    reviewAssignment?.status === ReviewAssignmentStatus.AvailableForSelfAssignment &&
-    isCurrentUserReview
-  )
+  if (reviewAssignment?.status === ReviewAssignmentStatus.AvailableForSelfAssignment)
     baseAction = ReviewAction.canSelfAssign
+  if (thisReview?.status === ReviewStatus.Locked) baseAction = ReviewAction.canContinueLocked
   if (reviewAssignment?.status === ReviewAssignmentStatus.Assigned && !thisReview)
     baseAction = ReviewAction.canStartReview
+  if (reviewAssignment?.status === ReviewAssignmentStatus.SelfAssignedByAnother)
+    baseAction = ReviewAction.canSelfAssignLocked
 
   sections.forEach((section) => {
     // would need to juggled this around a little bit for level > 1 (i.e. only show canStartReview where sections submitted lvl < 1 review with no linked thisReviewResponse)

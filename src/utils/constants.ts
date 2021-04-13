@@ -51,6 +51,7 @@ export default {
   LABEL_ASSIGNED_SELF: 'Can be self assigned',
   LABEL_ASSIGNED_TO_YOU: 'Assigned to you',
   LABEL_ASSIGNED_TO_OTHER: 'Assigned to another reviewer',
+  LABEL_ASSIGNMENT_LOCKED: 'Locked for',
   LABEL_COMMENT: 'Add comment',
   LABEL_LIST_PER_PAGE: 'Applications per page',
   LABEL_LOADING: 'Loading...',

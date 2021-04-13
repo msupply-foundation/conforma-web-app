@@ -345,6 +345,7 @@ enum ReviewAction {
   canView = 'CAN_VIEW',
   canReReview = 'CAN_RE_REVIEW',
   canSelfAssign = 'CAN_SELF_ASSIGN',
+  canSelfAssignLocked = 'CAN_SELF_ASSIGN_LOCKED',
   canStartReview = 'CAN_START_REVIEW',
   canContinueLocked = 'CAN_CONTINUE_LOCKED',
   canUpdate = 'CAN_UPDATE',
