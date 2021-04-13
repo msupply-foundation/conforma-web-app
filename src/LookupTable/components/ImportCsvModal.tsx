@@ -76,10 +76,11 @@ const ImportCsvModal: React.FC = ({
         let myErrors = []
         if (error.response) {
           const errorResponse = error.response.data
-          if (errorResponse.name === 'ValidationError') {
+          if (errorResponse.name === 'ValidationErrors') {
             myErrors = JSON.parse(errorResponse.message)
+          } else {
+            myErrors.push(errorResponse.message)
           }
-          myErrors.push(errorResponse.message)
         } else if (error.request) {
           myErrors.push(error.request.message)
         } else {
