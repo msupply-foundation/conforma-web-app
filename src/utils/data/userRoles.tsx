@@ -1,9 +1,8 @@
 enum USER_ROLES {
+  ASSIGNER = 'assigner',
   APPLICANT = 'applicant',
-  REVIEWER_1 = 'reviewer1',
-  REVIEWER_2 = 'reviewer2',
-  SUPERVISOR = 'supervisor',
   CONSOLIDATOR = 'consolidator',
+  REVIEWER = 'reviewer',
 }
 
 export default USER_ROLES
