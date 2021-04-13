@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button, Grid, Sticky } from 'semantic-ui-react'
+import React, { CSSProperties } from 'react'
+import { Button, Container, Icon } from 'semantic-ui-react'
 import {
   MethodRevalidate,
   MethodToCallProps,
@@ -105,35 +105,71 @@ const Navigation: React.FC<NavigationProps> = ({
   }
 
   return (
-    <Sticky
-      pushing
-      style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
-    >
-      <Grid container>
-        <Grid.Row verticalAlign="middle">
-          <Grid.Column width={5}>
+    <Container style={inlineStyles.container}>
+      <div style={inlineStyles.layout}>
+        <div style={inlineStyles.left(isFirstPage)}>
+          {isFirstPage ? null : (
             <Button
-              basic
+              style={inlineStyles.navButton}
+              icon
               onClick={previousButtonHandler}
               content={strings.BUTTON_PREVIOUS}
-              style={{ display: isFirstPage ? 'none' : 'inline-block' }}
-            />
-          </Grid.Column>
-          <Grid.Column width={5}>
+            >
+              <Icon name="angle left" /> {strings.BUTTON_PREVIOUS}
+            </Button>
+          )}
+          {isLastPage ? null : (
             <Button
-              basic
+              style={inlineStyles.navButton}
+              icon
               onClick={nextPageButtonHandler}
               content={strings.BUTTON_NEXT}
-              style={{ display: isLastPage ? 'none' : 'inline-block' }}
-            />
-          </Grid.Column>
-          <Grid.Column width={5}>
-            <Button color="blue" onClick={summaryButtonHandler} content={strings.BUTTON_SUMMARY} />
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-    </Sticky>
+            >
+              {strings.BUTTON_NEXT} <Icon name="angle right" />
+            </Button>
+          )}
+        </div>
+        <Button
+          style={inlineStyles.submitButton}
+          color="blue"
+          onClick={summaryButtonHandler}
+          content={strings.BUTTON_SUMMARY}
+        />
+      </div>
+    </Container>
   )
+}
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const inlineStyles = {
+  container: {
+    background: 'white',
+    position: 'fixed',
+    bottom: 65,
+    left: 0,
+    right: 0,
+    boxShadow: '0px -6px 3px -3px #AAAAAA',
+    paddingTop: 10,
+  } as CSSProperties,
+  layout: { display: 'flex' },
+  left: (isFirstPage: boolean) =>
+    ({
+      flexGrow: 1,
+      display: 'flex',
+      justifyContent: isFirstPage ? 'flex-end' : 'space-between',
+      paddingLeft: 20,
+      paddingRight: 20,
+    } as CSSProperties),
+  navButton: {
+    background: 'none',
+    letterSpacing: 1.4,
+    minWidth: 120,
+    color: '#003BFE',
+    border: 'none',
+    borderRadius: 8,
+    textTransform: 'capitalize',
+  } as CSSProperties,
+  submitButton: { alignSelf: 'flex-end' } as CSSProperties,
 }
 
 export default Navigation
