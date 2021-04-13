@@ -29,8 +29,8 @@ const generateReviewSectionActions: GenerateSectionActions = ({
   if (reviewAssignment?.status === ReviewAssignmentStatus.AvailableForSelfAssignment)
     baseAction = ReviewAction.canSelfAssign
   if (thisReview?.status === ReviewStatus.Locked) baseAction = ReviewAction.canContinueLocked
-  if (reviewAssignment?.status === ReviewAssignmentStatus.Assigned && !thisReview)
-    baseAction = ReviewAction.canStartReview
+  if (isCurrentUserReview && reviewAssignment?.status === ReviewAssignmentStatus.Assigned)
+    baseAction = thisReview ? ReviewAction.canContinue : ReviewAction.canStartReview
   if (reviewAssignment?.status === ReviewAssignmentStatus.SelfAssignedByAnother)
     baseAction = ReviewAction.canSelfAssignLocked
 
