@@ -12,7 +12,6 @@ const Footer: React.FC = () => (
 // Styles - TODO: Move to LESS || Global class style (semantic)
 const inlineStyles = {
   container: {
-    position: 'fixed',
     bottom: 0,
     padding: 0,
     border: 'none',
