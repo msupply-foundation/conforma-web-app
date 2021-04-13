@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router'
 import { Message } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
-import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
+import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
@@ -18,7 +18,7 @@ const ReviewPageWrapper: React.FC<{
   } = useRouter()
 
   // Get application structure with evaluated properties (i.e visibility)
-  const { error, fullStructure: fullApplicationStructure } = useGetFullApplicationStructure({
+  const { error, fullStructure: fullApplicationStructure } = useGetApplicationStructure({
     structure,
     firstRunValidation: false,
     shouldCalculateProgress: false,

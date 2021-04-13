@@ -4,6 +4,7 @@ import {
   Navigation,
   ProgressBar,
   PageElements,
+  SectionWrapper,
 } from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
@@ -45,6 +46,7 @@ export {
   ProductList,
   ProgressBar,
   PageElements,
+  SectionWrapper,
   Organisation,
   OrgMemberEdit,
   TemplateList,

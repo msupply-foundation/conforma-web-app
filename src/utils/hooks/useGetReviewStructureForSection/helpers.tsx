@@ -12,18 +12,23 @@ import {
   generateReviewProgress,
   generateReviewSectionActions,
 } from '../../helpers/structure'
-import { UseGetFullReviewStructureProps, User, FullStructure, SectionState } from '../../types'
+import {
+  UseGetReviewStructureForSectionProps,
+  User,
+  FullStructure,
+  SectionState,
+} from '../../types'
 
 const getSectionIds = ({
   fullApplicationStructure,
   filteredSectionIds,
-}: UseGetFullReviewStructureProps) =>
+}: UseGetReviewStructureForSectionProps) =>
   filteredSectionIds ||
   Object.values(fullApplicationStructure.sections).map((section) => section.details.id) ||
   []
 
 type GenerateReviewStructure = (
-  props: UseGetFullReviewStructureProps & {
+  props: UseGetReviewStructureForSectionProps & {
     currentUser?: User | null
     sectionIds: number[]
     data: GetReviewResponsesQuery
