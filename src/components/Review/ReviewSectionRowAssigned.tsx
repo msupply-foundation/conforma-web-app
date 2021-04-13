@@ -9,16 +9,16 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
   action,
   assignment,
 }) => {
-  const isAssignedToSelf: boolean =
+  const isSelfAssigned: boolean =
     action === ReviewAction.canStartReview || action === ReviewAction.canContinue
   const isReviewLocked: boolean =
     action === ReviewAction.canSelfAssignLocked || action === ReviewAction.canContinueLocked
   return (
     <Grid.Column>
       <div style={inlineStyle.container}>
-        {action === ReviewAction.canSelfAssign ? (
+        {isAssignedToCurrentUser && action === ReviewAction.canSelfAssign ? (
           <Label style={inlineStyle.yourAssignmentLabel} content={strings.LABEL_ASSIGNMENT_SELF} />
-        ) : isAssignedToSelf ? (
+        ) : isSelfAssigned ? (
           <Label
             icon={<Icon name="circle" size="tiny" />}
             style={inlineStyle.yourAssignmentLabel}
@@ -40,7 +40,9 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
             style={inlineStyle.othersAssignmentLabel}
             content={
               <>
-                {strings.LABEL_REVIEWED_BY}
+                {action === ReviewAction.canSelfAssign
+                  ? strings.LABEL_ASSIGNMENT_AVAILABLE
+                  : strings.LABEL_REVIEWED_BY}
                 <Reviewer user={assignment.reviewer} isCurrent={isAssignedToCurrentUser} />
               </>
             }
@@ -80,7 +82,6 @@ const inlineStyle = {
     background: 'transparent',
     color: 'red',
     fontWeight: 500,
-    marginRight: 10,
   },
   othersAssignmentLabel: {
     background: 'transparent',
@@ -88,7 +89,7 @@ const inlineStyle = {
   },
   reviewer: (isCurrent: boolean) =>
     ({
-      marginLeft: 5,
+      background: 'transparent',
       color: isCurrent ? 'rgb(120, 120, 120)' : 'rgb(82, 123,237)',
     } as CSSProperties),
 }
