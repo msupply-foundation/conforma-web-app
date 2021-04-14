@@ -10,9 +10,9 @@ import {
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
-  TemplateElement,
   TemplateElementCategory,
   User as GraphQLUser,
+  Organisation as GraphQLOrg,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
@@ -64,7 +64,7 @@ export {
   TemplatesDetails,
   UseGetApplicationProps,
   User,
-  UseGetFullReviewStructureProps,
+  UseGetReviewStructureForSectionProps,
   OrganisationSimple,
   Organisation,
   LoginPayload,
@@ -82,6 +82,9 @@ interface ApplicationDetails {
   current: StageAndStatus
   firstStrictInvalidPage: SectionAndPage | null
   submissionMessage?: string // TODO: Change to compulsory after re-structure is finished
+  user?: GraphQLUser
+  org?: GraphQLOrg
+  config?: any
 }
 
 interface ApplicationElementStates {
@@ -266,6 +269,7 @@ interface ResponseFull {
   isValid?: boolean | null
   hash?: string // Used in Password plugin
   files?: any[] // Used in FileUpload plugin
+  other?: string // Used in RadioChoice plugin
   timeCreated?: Date
   reviewResponse?: ReviewResponse
   customValidation?: ValidationState
@@ -462,7 +466,7 @@ interface LoginPayload {
   orgList?: OrganisationSimple[]
 }
 
-interface UseGetFullReviewStructureProps {
+interface UseGetReviewStructureForSectionProps {
   fullApplicationStructure: FullStructure
   reviewAssignment: AssignmentDetails
   filteredSectionIds?: number[]

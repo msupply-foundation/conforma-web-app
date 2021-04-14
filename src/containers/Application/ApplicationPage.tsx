@@ -58,16 +58,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
       <Header textAlign="center">
         {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
       </Header>
-      <Grid
-        stackable
-        style={{
-          backgroundColor: 'white',
-          padding: 10,
-          margin: '0px 50px',
-          minHeight: 500,
-          flex: 1,
-        }}
-      >
+      <Grid stackable style={inlineStyles.pageWrapper}>
         <Grid.Column width={4}>
           <ProgressBar
             structure={fullStructure}
@@ -82,6 +73,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
               canEdit={current?.status === ApplicationStatus.Draft}
               elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
               responsesByCode={fullStructure.responsesByCode}
+              applicationData={fullStructure.info}
               isStrictPage={
                 sectionCode === strictSectionPage?.sectionCode &&
                 pageNumber === strictSectionPage?.pageNumber
@@ -100,6 +92,17 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
       />
     </Segment.Group>
   )
+}
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const inlineStyles = {
+  pageWrapper: {
+    backgroundColor: 'white',
+    padding: 10,
+    margin: '0px 50px',
+    minHeight: 500,
+    flex: 1,
+  },
 }
 
 export default ApplicationPage
