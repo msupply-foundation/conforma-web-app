@@ -1,24 +1,61 @@
 /*******************************
      User Global Variables
 *******************************/
-/*--@fontName: Open Sans;--*/
+@fontName: 'Open Sans';
 
 /*-------------------
       Site Colors
 --------------------*/
 
 /*---  Colors  ---*/
-@red              : rgb(225, 55, 134);
-@orange           : #F2711C;
-@yellow           : #FBBD08;
-@olive            : #B5CC18;
-@green            : rgb(87, 180, 100);
-@teal             : #00B5AD;
-@blue             : #003BFE;
-@violet           : #6435C9;
-@purple           : #A333C8;
-@pink             : #E03997;
-@brown            : #A5673F;
-@grey             : #767676;
+@red: rgb(225, 55, 134);
+@orange: #f2711c;
+@yellow: #fbbd08;
+@olive: #b5cc18;
+@green: rgb(87, 180, 100);
+@teal: #00b5ad;
+@blue: #003bfe;
+@violet: #6435c9;
+@purple: #a333c8;
+@pink: #e03997;
+@brown: #a5673f;
+@grey: #767676;
+@black: #4a4a4a;
 
-@black            : #4A4A4A;
+/*-----------------------------------------------------
+      Custom Colours -- from designer
+      See: https://debs181572.invisionapp.com/console/Drug-reg-app----Desktop-ckmfpptbx008401xqfx1j17ha/ckmfppu8f003s01wvdt41eywt/play
+------------------------------------------------------*/
+@headerCopy: #000000;
+@headersInteractiveLow: #4a4a4a;
+@surfacesDark: #aeaeae;
+@surfacesMed: #dcdddd;
+@surfacesLight: #f8f8f8;
+@surfacesWhite: #ffffff;
+//
+@interactiveHigh: #003bfe;
+@information: #24b5df;
+@success: #1eb759;
+@attention: #f40081;
+@error: #e40000;
+//
+@otherOrange: #ef7837;
+@otherPeach: #ef78377f;
+@otherPink: #e400007f;
+@otherBlue: #24b5df7f;
+
+/*----------------------
+      Headers and Text
+-----------------------*/
+
+// Header font sizes
+@h1: 36px;
+@h2: 26px;
+@h3: 20px;
+@h4: 14px;
+@h5: 15px;
+@h6: 13px;
+
+// New variables for font-weights
+@regularWeight: 400;
+@semiboldWeight: 600;

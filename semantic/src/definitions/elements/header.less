@@ -8,16 +8,14 @@
  *
  */
 
-
 /*******************************
             Theme
 *******************************/
 
-@type    : 'element';
-@element : 'header';
+@type: 'element';
+@element: 'header';
 
 @import (multiple) '../../theme.config';
-
 
 /*******************************
             Header
@@ -115,7 +113,6 @@
   vertical-align: @contentIconAlignment;
 }
 
-
 /*--------------
  Loose Coupling
 ---------------*/
@@ -131,12 +128,9 @@
   margin-top: @nextParagraphDistance;
 }
 
-
-
 /*******************************
             Types
 *******************************/
-
 
 /*--------------
      Page
@@ -144,20 +138,30 @@
 
 h1.ui.header {
   font-size: @h1;
+  font-weight: @regularWeight;
 }
 h2.ui.header {
   font-size: @h2;
+  font-weight: @regularWeight;
 }
 h3.ui.header {
   font-size: @h3;
+  font-weight: @regularWeight;
 }
 h4.ui.header {
   font-size: @h4;
+  font-weight: @semiboldWeight;
+  text-transform: uppercase;
 }
 h5.ui.header {
   font-size: @h5;
+  font-weight: @semiboldWeight;
 }
-
+h6.ui.header {
+  font-size: @h6;
+  font-weight: @semiboldWeight;
+  text-transform: uppercase;
+}
 
 /* Sub Header */
 h1.ui.header .sub.header {
@@ -175,7 +179,6 @@ h4.ui.header .sub.header {
 h5.ui.header .sub.header {
   font-size: @h5SubHeaderFontSize;
 }
-
 
 /*--------------
  Content Heading
@@ -241,8 +244,6 @@ h5.ui.header .sub.header {
   font-size: @hugeSubHeadingSize;
 }
 
-
-
 /*-------------------
         Icon
 --------------------*/
@@ -301,7 +302,6 @@ h5.ui.header .sub.header {
   opacity: @disabledOpacity;
 }
 
-
 /*******************************
            Variations
 *******************************/
@@ -328,7 +328,6 @@ h5.ui.header .sub.header {
 .ui.inverted.block.header {
   border-bottom: none;
 }
-
 
 /*-------------------
        Colors
@@ -551,7 +550,6 @@ a.ui.inverted.grey.header:hover {
   color: @lightGreyHover !important;
 }
 
-
 /*-------------------
        Aligned
 --------------------*/
@@ -580,12 +578,12 @@ a.ui.inverted.grey.header:hover {
 --------------------*/
 
 .ui.floated.header,
-.ui[class*="left floated"].header {
+.ui[class*='left floated'].header {
   float: left;
   margin-top: 0em;
   margin-right: @floatedMargin;
 }
-.ui[class*="right floated"].header {
+.ui[class*='right floated'].header {
   float: right;
   margin-top: 0em;
   margin-left: @floatedMargin;
@@ -598,7 +596,6 @@ a.ui.inverted.grey.header:hover {
 .ui.fitted.header {
   padding: 0em;
 }
-
 
 /*-------------------
       Dividing
@@ -618,7 +615,6 @@ a.ui.inverted.grey.header:hover {
 .ui.inverted.dividing.header {
   border-bottom-color: @invertedDividedBorderColor;
 }
-
 
 /*-------------------
         Block

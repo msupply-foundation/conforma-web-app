@@ -2,10 +2,10 @@
          Site Overrides
 *******************************/
 
-p {
+/* p {
   font-size: 15px;
   letter-spacing: 0;
-}
+} */
 
 .ui.basebody.container {
   background: rgb(248, 248, 248);
