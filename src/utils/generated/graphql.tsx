@@ -21205,6 +21205,17 @@ export type CreateReviewMutation = (
     & { review?: Maybe<(
       { __typename?: 'Review' }
       & Pick<Review, 'id'>
+      & { reviewAssignment?: Maybe<(
+        { __typename?: 'ReviewAssignment' }
+        & Pick<ReviewAssignment, 'id'>
+        & { reviews: (
+          { __typename?: 'ReviewsConnection' }
+          & { nodes: Array<Maybe<(
+            { __typename?: 'Review' }
+            & Pick<Review, 'id'>
+          )>> }
+        ) }
+      )> }
     )> }
   )> }
 );
@@ -21827,6 +21838,14 @@ export const CreateReviewDocument = gql`
   createReview(input: {review: {reviewAssignmentId: $reviewAssigmentId, trigger: $trigger, reviewDecisionsUsingId: {create: {decision: NO_DECISION}}, reviewResponsesUsingId: {create: $applicationResponses}}}) {
     review {
       id
+      reviewAssignment {
+        id
+        reviews {
+          nodes {
+            id
+          }
+        }
+      }
     }
   }
 }
