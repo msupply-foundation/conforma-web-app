@@ -8,12 +8,13 @@
  *
  */
 
+
 /*******************************
             Theme
 *******************************/
 
-@type: 'global';
-@element: 'site';
+@type    : 'global';
+@element : 'site';
 
 @import (multiple) '../../theme.config';
 
@@ -53,8 +54,7 @@ h1,
 h2,
 h3,
 h4,
-h5,
-h6 {
+h5 {
   font-family: @headerFont;
   line-height: @headerLineHeight;
   margin: @headerMargin;
@@ -65,41 +65,25 @@ h6 {
 h1 {
   min-height: 1rem;
   font-size: @h1;
-  font-weight: @regularWeight;
 }
 h2 {
   font-size: @h2;
-  font-weight: @regularWeight;
 }
 h3 {
   font-size: @h3;
-  font-weight: @regularWeight;
-  color: @darkGrey;
 }
 h4 {
   font-size: @h4;
-  font-weight: @semiboldWeight;
-  text-transform: uppercase;
-  color: @darkGrey;
 }
 h5 {
   font-size: @h5;
-  font-weight: @semiboldWeight;
-  color: @darkGrey;
-}
-h6 {
-  font-size: @h6;
-  font-weight: @semiboldWeight;
-  text-transform: uppercase;
-  color: @darkGrey;
 }
 
 h1:first-child,
 h2:first-child,
 h3:first-child,
 h4:first-child,
-h5:first-child,
-h6:first-child {
+h5:first-child {
   margin-top: 0em;
 }
 
@@ -107,10 +91,10 @@ h1:last-child,
 h2:last-child,
 h3:last-child,
 h4:last-child,
-h5:last-child,
-h6:first-child {
+h5:last-child {
   margin-bottom: 0em;
 }
+
 
 /*******************************
              Text
@@ -118,6 +102,7 @@ h6:first-child {
 
 p {
   margin: @paragraphMargin;
+  line-height: @paragraphLineHeight;
 }
 p:first-child {
   margin-top: 0em;
@@ -139,11 +124,13 @@ a:hover {
   text-decoration: @linkHoverUnderline;
 }
 
+
 /*******************************
          Scrollbars
 *******************************/
 
 .addScrollbars() when (@useCustomScrollbars) {
+
   /* Force Simple Scrollbars */
   body ::-webkit-scrollbar {
     -webkit-appearance: none;
