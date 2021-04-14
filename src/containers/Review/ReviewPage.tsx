@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react'
-import { Button, Container, Header, Label, Message, Segment } from 'semantic-ui-react'
-import { Loading } from '../../components'
+import { Button, Header, Message, Segment } from 'semantic-ui-react'
+import { Loading, SectionWrapper } from '../../components'
 import {
   AssignmentDetails,
   FullStructure,
@@ -17,8 +17,7 @@ import {
 } from '../../utils/generated/graphql'
 import strings from '../../utils/constants'
 
-import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructure'
-import SectionWrapper from '../../components/Application/Sections/SectionWrapper'
+import useGetReviewStructureForSections from '../../utils/hooks/useGetReviewStructureForSection'
 import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivation'
 
 import useScrollableAttachments, {
@@ -36,7 +35,7 @@ const ReviewPage: React.FC<{
     userState: { currentUser },
   } = useUserState()
 
-  const { fullReviewStructure, error } = useGetFullReviewStructure({
+  const { fullReviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment,
     fullApplicationStructure,
   })
@@ -85,6 +84,7 @@ const ReviewPage: React.FC<{
               />
             )}
             responsesByCode={responsesByCode as ResponsesByCode}
+            applicationData={fullApplicationStructure.info}
             serial={serial}
             isReview
             canEdit={

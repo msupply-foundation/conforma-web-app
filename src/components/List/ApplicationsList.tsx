@@ -10,7 +10,6 @@ interface ApplicationsListProps {
   applications: ApplicationListRow[]
   sortQuery: SortQuery
   handleSort: Function
-  handleExpansion: (row: ApplicationListRow) => void
   loading: boolean
 }
 
@@ -19,7 +18,6 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   applications,
   sortQuery: { sortColumn, sortDirection },
   handleSort,
-  handleExpansion,
   loading,
 }) => {
   return (
@@ -48,12 +46,10 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
             </Table.Row>
           ) : (
             applications.map((application, index) => {
-              const { isExpanded } = application
               const rowProps = {
                 index,
                 columns,
                 application,
-                handleExpansion,
               }
               const sectionsProps = {
                 index,
@@ -63,7 +59,6 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
               return (
                 <Fragment key={`ApplicationList-application-${index}`}>
                   <ApplicationRow {...rowProps} />
-                  {isExpanded && <SectionsExpandedRow {...sectionsProps} />}
                 </Fragment>
               )
             })
@@ -82,7 +77,6 @@ interface ApplicationRowProps {
   index: number
   columns: Array<ColumnDetails>
   application: ApplicationListRow
-  handleExpansion: (row: ApplicationListRow) => void
 }
 
 const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application }) => {
@@ -103,23 +97,6 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application })
         </Table.Cell>
       ))}
       <Table.Cell icon="angle right" collapsing />
-    </Table.Row>
-  )
-}
-
-interface SectionsExpandedRowProps {
-  application: ApplicationListRow
-  index: number
-  colSpan: number
-}
-
-const SectionsExpandedRow: React.FC<SectionsExpandedRowProps> = ({ application, colSpan }) => {
-  const { id } = application
-  return (
-    <Table.Row key={`ApplicationList-application-${id}-sections`} colSpan={colSpan}>
-      <Table.Cell colSpan={colSpan}>
-        <Segment color="grey">TODO: SECTIONS</Segment>
-      </Table.Cell>
     </Table.Row>
   )
 }

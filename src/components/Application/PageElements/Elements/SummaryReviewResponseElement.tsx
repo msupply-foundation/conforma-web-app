@@ -22,7 +22,7 @@ const SummaryReviewResponseElement: React.FC<SummaryReviewResponseElementProps> 
   // If review was approved we don't need to show to the Applicant
   if (reviewResponse?.decision === ReviewResponseDecision.Approve) return null
 
-  const { element, allResponses } = summaryProps
+  const { element, allResponses, applicationData } = summaryProps
   const previousReviewProps = {
     element,
     allResponses,
@@ -30,6 +30,7 @@ const SummaryReviewResponseElement: React.FC<SummaryReviewResponseElementProps> 
       id: previousApplicationResponse.id,
       text: previousApplicationResponse.value.text,
     },
+    applicationData,
     displayTitle: false,
   }
 

@@ -86,12 +86,6 @@ const ListWrapper: React.FC = () => {
     }
   }
 
-  const handleExpansion = (application: ApplicationListRow) => {
-    if (!applicationsRows) return
-    application.isExpanded = !application.isExpanded // updates in place inside applicationRows
-    setApplicationsRows([...applicationsRows]) // triggers re-render
-  }
-
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
   ) : (
@@ -156,7 +150,6 @@ const ListWrapper: React.FC = () => {
           applications={applicationsRows}
           sortQuery={sortQuery}
           handleSort={handleSort}
-          handleExpansion={handleExpansion}
           loading={loading}
         />
       )}
