@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dropdown, Label } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
@@ -6,42 +6,63 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
   onUpdate,
-  value,
-  setValue,
+  currentResponse,
+  // value,
+  // setValue,
   validationState,
   onSave,
   Markdown,
   getDefaultIndex,
 }) => {
+  const {
+    label,
+    description,
+    placeholder,
+    search,
+    options,
+    optionsDisplayProperty,
+    default: defaultOption,
+  } = parameters
+
+  const [selectedIndex, setSelectedIndex] = useState<number>()
   const { isEditable } = element
-  const { label, description, placeholder, search, options, default: defaultOption } = parameters
 
   useEffect(() => {
-    onUpdate(value)
     // This ensures that, if a default is specified, it gets saved on first load
-    if (!value && defaultOption !== undefined) {
-      const defaultIndex = getDefaultIndex(defaultOption, options)
-      const defaultValue = options?.[defaultIndex]
+    if (!currentResponse?.text && defaultOption !== undefined) {
+      const optionIndex = getDefaultIndex(defaultOption, options)
       onSave({
-        text: defaultValue,
-        optionIndex: defaultIndex,
+        text: optionsDisplayProperty
+          ? options[optionIndex][optionsDisplayProperty]
+          : options[optionIndex],
+        selection: options[optionIndex],
+        optionIndex,
       })
-      setValue(defaultValue)
+      setSelectedIndex(optionIndex)
+    }
+    if (currentResponse?.text) {
+      const { optionIndex } = currentResponse
+      setSelectedIndex(optionIndex)
     }
   }, [])
 
   function handleChange(e: any, data: any) {
-    const { value } = data
-    setValue(value)
-    onSave({ text: value, optionIndex: options.indexOf(value) })
+    const { value: optionIndex } = data
+    setSelectedIndex(optionIndex)
+    onSave({
+      text: optionsDisplayProperty
+        ? options[optionIndex][optionsDisplayProperty]
+        : options[optionIndex],
+      selection: options[optionIndex],
+      optionIndex,
+    })
   }
 
   const dropdownOptions = options.map((option: any, index: number) => {
     return {
       key: `${index}_${option}`,
-      text: option,
-      value: option,
-      index,
+      text: optionsDisplayProperty ? option[optionsDisplayProperty] : option,
+      value: index,
     }
   })
 
@@ -58,7 +79,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         placeholder={placeholder}
         options={dropdownOptions}
         onChange={handleChange}
-        value={value}
+        value={selectedIndex}
         disabled={!isEditable}
         error={!validationState.isValid ? true : undefined}
       />
