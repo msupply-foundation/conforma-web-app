@@ -21454,7 +21454,7 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'level' | 'status' | 'timeCreated' | 'reviewerId' | 'isLastLevel' | 'templateSectionRestrictions'>
+      & Pick<ReviewAssignment, 'id' | 'level' | 'status' | 'timeCreated' | 'reviewerId' | 'isLastLevel' | 'templateSectionRestrictions' | 'trigger'>
       & { reviewer?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'id' | 'firstName' | 'lastName'>
@@ -22325,6 +22325,7 @@ export const GetReviewInfoDocument = gql`
       reviewerId
       isLastLevel
       templateSectionRestrictions
+      trigger
       reviewer {
         id
         firstName

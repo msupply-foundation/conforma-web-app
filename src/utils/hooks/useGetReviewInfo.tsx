@@ -52,9 +52,14 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
     }
 
     const reviews: Review[] = reviewAssigments.map(({ reviews }) => reviews.nodes[0] as Review)
-    // Checking if any of reviews trigger is running before refetching assignments
-    // This is done to get latest status for reviews (afte trigger finishes to run)
-    if (reviews.every((review) => !review || review?.trigger === null)) {
+    // Checking if any of reviews or reviewAssignment trigger is running before refetching assignments
+    // This is done to get latest status for reviews & assignment (afte trigger finishes to run)
+    if (
+      reviews.every((review) => !review || review?.trigger === null) &&
+      reviewAssigments.every(
+        (reviewAssignment) => !reviewAssigments || reviewAssignment?.trigger === null
+      )
+    ) {
       setRefetchAttempts(0)
     } else {
       if (refetchAttempts < MAX_REFETCH) {
