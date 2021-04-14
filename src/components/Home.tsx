@@ -27,6 +27,7 @@ const Home: React.FC = () => {
       </Header>
       <div className="hide-on-mobile">
         <Header as="h2">Desktop Headings</Header>
+        <p>Adjust the viewport width to see mobile fonts</p>
         <Divider />
         <Header as="h1">H1 Open Sans 36px, Regular, #00000</Header>
         <Header as="h2">H2 Open Sans 26px, Regular, #00000</Header>
