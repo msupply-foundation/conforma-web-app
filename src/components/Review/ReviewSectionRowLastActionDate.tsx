@@ -29,7 +29,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
       case ReviewAction.canStartReview: {
         return (
           <p>{`${strings.ACTION_DATE_ASSIGNED}: ${getSimplifiedTimeDifference(
-            assignment.timeCreated
+            assignment.timeUpdated
           )}`}</p>
         )
       }
