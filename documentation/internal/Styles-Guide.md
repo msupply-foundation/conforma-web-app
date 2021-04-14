@@ -67,3 +67,11 @@ When making changes to styles, it's best to approach it with the following prior
 3. (Last resort) create a custom class
 
 For the most part, it's best to put changes at the same "level" as the definition or variable you're over-riding or extending. So, if you're over-riding a definition for a component (i.e. it's originally defined in `definitions/components`), put them in the appropriate component over-ride file (i.e. `site/[components]/[overrides]`).
+
+### Progressive Truthfulness
+
+This from the [Semantic-UI theming docs](https://semantic-ui.com/usage/theming.html), and summarises the way of thinking about styling very nicely:
+
+> [Progressive truthfulness] is perhaps a better way to build models of physical objects...Start with a model that is fully detailed but only resembles what is wanted. Then, one adjusts one attribute after another, bringing the result ever closer to the mental vision of the new creation, or to the real properties of a real-world object ...starting with exemplars that themselves have consistency of style ensures that such consistency is the designer's to lose.
+
+> **Frederick Brooks - The Design of Design**
