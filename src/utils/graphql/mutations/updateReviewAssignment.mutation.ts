@@ -6,7 +6,7 @@ export default gql`
       reviewAssignment {
         id
         status
-        timeCreated
+        timeUpdated
         reviewQuestionAssignments {
           nodes {
             id
