@@ -22,9 +22,9 @@ Semantic UI style definitions are found in `./semantic/src`, with the following 
 - `sites/[components]/[overrides]`
 - `sites/globals/[overrides]`
 
-So anything defined in `sites/globals` will take priority and replace any lower defintions.
+So anything defined in `sites/globals` will take priority and replace any lower/earlier definitions.
 
-Note:
+**Note**:
 
 1. `[components]` are organised into `collections`, `elements`, `modules` and `views` subfolders.
 2. `[overrides]` refers to both the `.overrides` file and `.variables` file. They both "over-ride" their respective values, but `.variables` is for variables and `.overrides` is for CSS/Less definitions.
@@ -46,7 +46,7 @@ h2: @h2
 .alert: @red
 ```
 
-From what I can tell, there doesn't seem to be any restriction about having to define variables before they're used. CSS definitions deep in the component seem to be able to refer to variables defined in the parent elements quite happily.
+From what I can tell, there doesn't seem to be any restriction about having to define variables before they're used. CSS definitions deep in the component tree seem to be able to refer to variables defined in the parent elements quite happily.
 
 Semantic-UI has dozens of built-in variables (global, per-component, and per-theme) with a complex heirarchy, so most of the time over-riding a pre-existing variable value is the best approach.
 
