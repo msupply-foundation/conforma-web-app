@@ -145,11 +145,13 @@ const inlineStyles = {
   container: {
     background: 'white',
     position: 'fixed',
-    bottom: 65,
+    bottom: 0,
     left: 0,
     right: 0,
     boxShadow: '0px -6px 3px -3px #AAAAAA',
     paddingTop: 10,
+    paddingBottom: 10,
+    zIndex: 1000,
   } as CSSProperties,
   layout: { display: 'flex' },
   left: (isFirstPage: boolean) =>
