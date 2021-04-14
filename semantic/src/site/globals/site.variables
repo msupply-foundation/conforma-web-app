@@ -8,19 +8,19 @@
 --------------------*/
 
 /*---  Colors  ---*/
-@red: rgb(225, 55, 134);
+@red: @error;
 @orange: #f2711c;
 @yellow: #fbbd08;
 @olive: #b5cc18;
 @green: rgb(87, 180, 100);
 @teal: #00b5ad;
-@blue: #003bfe;
+@blue: @interactiveHigh;
 @violet: #6435c9;
 @purple: #a333c8;
-@pink: #e03997;
+@pink: @attention;
 @brown: #a5673f;
 @grey: #767676;
-@black: #4a4a4a;
+@black: #000000;
 
 /*-----------------------------------------------------
       Custom Colours -- from designer
@@ -44,11 +44,11 @@
 @otherPink: #e400007f;
 @otherBlue: #24b5df7f;
 
-/*----------------------
+/*------------------------
       Headers and Text
------------------------*/
+-------------------------*/
 
-// Header font sizes
+// Header font sizes (overrides except h6)
 @h1: 36px;
 @h2: 26px;
 @h3: 20px;
@@ -59,3 +59,23 @@
 // New variables for font-weights
 @regularWeight: 400;
 @semiboldWeight: 600;
+
+// Text colours
+@darkGrey: #4a4a4a;
+
+// Custom classes for text variants
+.secondary {
+  font-size: 13px;
+}
+.small {
+  font-size: 12px;
+}
+
+.interactive {
+  color: @interactiveHigh; // blue
+}
+
+.attention {
+  font-size: 12px;
+  color: @attention; // pink
+}
