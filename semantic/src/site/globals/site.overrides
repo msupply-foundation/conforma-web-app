@@ -15,11 +15,6 @@ p strong {
   background: rgb(248, 248, 248);
 }
 
-.ui.basic.buttons .button,
-.ui.basic.button {
-  color: #003bfe;
-}
-
 .sup .ui.tiny.progress {
   margin-bottom: 4px !important;
 }
