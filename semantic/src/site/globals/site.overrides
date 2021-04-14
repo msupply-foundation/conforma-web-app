@@ -106,3 +106,21 @@ h5:last-child,
 h6:first-child {
   margin-bottom: 0em;
 }
+
+/*-----------------------------------------------------
+      Mobile & Desktop
+      - classes for hiding on Mobile or Desktop devices
+------------------------------------------------------*/
+
+// Desktop
+@media only screen and (min-width: @tabletBreakpoint) {
+  .hide-on-desktop {
+    display: none;
+  }
+}
+// Mobile
+@media only screen and (max-width: @largestMobileScreen) {
+  .hide-on-mobile {
+    display: none;
+  }
+}
