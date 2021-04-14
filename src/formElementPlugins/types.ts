@@ -54,6 +54,7 @@ interface SummaryViewWrapperProps {
   response: ResponseFull | null
   allResponses: ResponsesByCode
   applicationData: ApplicationDetails
+  displayTitle?: boolean
 }
 
 interface OnUpdateTemplateWrapperView {

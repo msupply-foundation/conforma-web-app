@@ -1,5 +1,4 @@
 import ApplicationCreate from './ApplicationCreate'
-import NavigationBox from './NavigationBox'
 import ApplicationWrapper from './ApplicationWrapper'
 import ApplicationPageWrapper from './ApplicationPageWrapper'
 import ApplicationHome from './ApplicationHome'
@@ -15,5 +14,4 @@ export {
   ApplicationSummary,
   ApplicationWrapper,
   ApplicationPageWrapper,
-  NavigationBox,
 }

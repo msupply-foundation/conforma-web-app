@@ -4,6 +4,7 @@ import {
   Navigation,
   ProgressBar,
   PageElements,
+  SectionWrapper,
 } from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
@@ -12,7 +13,6 @@ import Home from './Home'
 import Login from '../containers/User/Login'
 import Loading from './Loading'
 import { Footer, ModalWarning } from './Main'
-// import { DecisionArea } from './Review'
 import TemplateList from './TemplateList'
 import TemplateNew from './TemplateNew'
 import Template from './Template'
@@ -46,6 +46,7 @@ export {
   ProductList,
   ProgressBar,
   PageElements,
+  SectionWrapper,
   Organisation,
   OrgMemberEdit,
   TemplateList,

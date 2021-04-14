@@ -10,15 +10,19 @@ import globalConfig from '../config.json'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
 
-const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
-  const { element, response, allResponses, applicationData } = props
+const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
+  element,
+  response,
+  allResponses,
+  applicationData,
+  displayTitle = true,
+}) => {
   const { parameters, pluginCode, isRequired, isVisible } = element
   const {
     userState: { currentUser },
   } = useUserState()
   const [evaluatedParameters, setEvaluatedParameters] = useState({})
   const [parametersLoaded, setParametersLoaded] = useState(false)
-  const responses = { thisResponse: response?.text, ...allResponses }
 
   const { SummaryView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
@@ -37,18 +41,13 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = (props) => {
       setParametersLoaded(true)
     })
   }, [])
-  if (
-    !pluginCode ||
-    !isVisible
-    // || category === TemplateElementCategory.Information
-  )
-    return null
+  if (!pluginCode || !isVisible) return null
 
   const DefaultSummaryView: React.FC = () => {
     const combinedParams = { ...parameters, ...evaluatedParameters }
     return (
       <Form.Field required={isRequired}>
-        {parametersLoaded && (
+        {parametersLoaded && displayTitle && (
           <>
             <label style={{ color: 'black' }}>
               <Markdown text={combinedParams.label} semanticComponent="noParagraph" />
