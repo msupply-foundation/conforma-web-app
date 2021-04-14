@@ -35,3 +35,74 @@ p strong {
 .stripes .ui.grid:nth-child(odd) .stripedlabel {
   background: rgb(248, 248, 248);
 }
+
+/*******************************
+             Headers
+*******************************/
+
+// Note -- normally we will use the <Header/> component which already
+// contains these definitions. But this allows us to use <h1>, <h2>, etc.
+// directly if required
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: @headerFont;
+  line-height: @headerLineHeight;
+  margin: @headerMargin;
+  font-weight: @headerFontWeight;
+  padding: 0em;
+}
+
+h1 {
+  min-height: 1rem;
+  font-size: @h1;
+  font-weight: @regularWeight;
+}
+h2 {
+  font-size: @h2;
+  font-weight: @regularWeight;
+}
+h3 {
+  font-size: @h3;
+  font-weight: @regularWeight;
+  color: @darkGrey;
+}
+h4 {
+  font-size: @h4;
+  font-weight: @semiboldWeight;
+  text-transform: uppercase;
+  color: @darkGrey;
+}
+h5 {
+  font-size: @h5;
+  font-weight: @semiboldWeight;
+  color: @darkGrey;
+}
+h6 {
+  font-size: @h6;
+  font-weight: @semiboldWeight;
+  text-transform: uppercase;
+  color: @darkGrey;
+}
+
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child,
+h5:first-child,
+h6:first-child {
+  margin-top: 0em;
+}
+
+h1:last-child,
+h2:last-child,
+h3:last-child,
+h4:last-child,
+h5:last-child,
+h6:first-child {
+  margin-bottom: 0em;
+}
