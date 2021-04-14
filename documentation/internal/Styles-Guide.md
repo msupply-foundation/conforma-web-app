@@ -9,7 +9,7 @@ Semantic UI style definitions are found in `./semantic/src`, with the following 
 - `semantic.less` -- the "root" CSS/LESS file, which imports style definitions from everywhere else. Currently, many component imports are commented out, so we must remember to re-enable them if we use them.
 - `theme.less` -- Imports for files containing Less variables **(Don't change)**
 - `theme.config` -- A list of components and the theme used to style them (all currently set to "default", we shouldn't need to change this)
-- `definitions` -- folder containing primary .less definitions for all components (organised by type). We DO NOT edit these files directly.
+- `definitions` -- folder containing primary .less definitions for all components (organised by type). We **DO NOT** edit these files directly.
 - `themes` -- folder of available themes. Currently only "default" is present, all others have been zipped into "other_themes.zip"
 - `site` -- this is where we edit our customisations. There is a `.variables` and `.overrides` file for each component, as well as global ones.
 
@@ -58,4 +58,4 @@ When making changes to styles, it's best to approach it with the following prior
 2. Over-ride or extend pre-existing tag and class definitions
 3. (Last resort) create a custom class
 
-For the most part, it's best to put changes at the same "level" as the definition or variable you're over-riding or extending. So, if you're over-riding a definition for a component (i.e. it's originally defined in `definitions/components`), put them in the appropriate component over-ride file (i.e. `site/[components]/[overrides]`)
+For the most part, it's best to put changes at the same "level" as the definition or variable you're over-riding or extending. So, if you're over-riding a definition for a component (i.e. it's originally defined in `definitions/components`), put them in the appropriate component over-ride file (i.e. `site/[components]/[overrides]`).

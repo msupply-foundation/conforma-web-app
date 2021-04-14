@@ -55,8 +55,9 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   return (
     <>
       <Header
+        as="h1"
         textAlign="center"
-        style={inlineStyles.title}
+        // style={inlineStyles.title}
         content={currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
       />
       <Grid stackable style={inlineStyles.grid}>
