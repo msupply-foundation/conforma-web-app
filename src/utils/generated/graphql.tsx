@@ -7327,7 +7327,9 @@ export enum UserOrgJoinsOrderBy {
   RegistrationAsc = 'REGISTRATION_ASC',
   RegistrationDesc = 'REGISTRATION_DESC',
   AddressAsc = 'ADDRESS_ASC',
-  AddressDesc = 'ADDRESS_DESC'
+  AddressDesc = 'ADDRESS_DESC',
+  LogoUrlAsc = 'LOGO_URL_ASC',
+  LogoUrlDesc = 'LOGO_URL_DESC'
 }
 
 /** A condition to be used against `UserOrgJoin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -7356,6 +7358,8 @@ export type UserOrgJoinCondition = {
   registration?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `address` field. */
   address?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `logoUrl` field. */
+  logoUrl?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `UserOrgJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -7384,6 +7388,8 @@ export type UserOrgJoinFilter = {
   registration?: Maybe<StringFilter>;
   /** Filter by the object’s `address` field. */
   address?: Maybe<StringFilter>;
+  /** Filter by the object’s `logoUrl` field. */
+  logoUrl?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<UserOrgJoinFilter>>;
   /** Checks for any expressions in this list. */
@@ -7419,6 +7425,7 @@ export type UserOrgJoin = {
   userRole?: Maybe<Scalars['String']>;
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
+  logoUrl?: Maybe<Scalars['String']>;
 };
 
 /** A `UserOrgJoin` edge in the connection. */
