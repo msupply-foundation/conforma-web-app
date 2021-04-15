@@ -15,6 +15,9 @@ p strong {
   font-weight: @semiboldWeight;
 }
 
+/*--------------------------------
+   Main area, User are & Footer
+---------------------------------*/
 #main-container {
   padding: 0;
   position: relative;
@@ -55,12 +58,6 @@ p strong {
 #user-area a {
   color: @userAreaText;
   font-size: 14px;
-}
-
-// Not currently used, but should be appplied to the Link in the menu
-// bar that reflects the current page
-.selected-link {
-  font-weight: bold;
 }
 
 #org-selector {
@@ -123,36 +120,46 @@ p strong {
   margin-left: 10px;
 }
 
-/* Application home */
+/*--------------------------------
+   Application home & create
+---------------------------------*/
 #application-area {
-  font-family: @userAreaFont;
   display: flex;
   flex-direction: column;
+  padding-left: 0;
+  padding-right: 0;
 }
 
-.company-title .h4 {
-  height: 45px;
-  width: 185px;
+.company-title {
   letter-spacing: @letterSpacingRegular;
   line-height: @lineHeightBig;
 }
 
-/* TODO: Add issue to trim if app name is too big*/
-.back {
+// Back to application list label
+#application-area .label {
   align-self: flex-start;
-  width: 132px;
-  height: 20px;
-  font-weight: @regularWeight;
-  font-size: @h5;
-  line-height: @fontHeightRegular;
+  min-width: 132px;
+  max-width: 500px;
+  height: 25px;
+  background-color: transparent;
 }
 
-.rectangle {
-  height: 814px;
+/*--------------------------------
+      General used classes
+---------------------------------*/
+
+// In use for ApplicationCreate and ApplicationHome
+#application-content {
   width: 800px;
   background-color: @surfacesWhite;
   padding: 30px 32px 50px;
   flex: 1;
+}
+
+// Not currently used, but should be appplied to the Link in the menu
+// bar that reflects the current page
+.selected-link {
+  font-weight: bold;
 }
 
 .sup .ui.tiny.progress {

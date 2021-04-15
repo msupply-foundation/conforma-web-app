@@ -60,6 +60,7 @@
 @h6Mob: 11px;
 
 // line-height
+@lineHeightSmall: 20px;
 @lineHeightRegular: 24px;
 @lineHeightBig: 36px;
 @lineHeightBigger: 45px;
