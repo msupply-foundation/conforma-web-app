@@ -32,7 +32,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
         return (
           <LastDate
             title={strings.ACTION_DATE_ASSIGNED}
-            indicator={getSimplifiedTimeDifference(assignment.timeCreated)}
+            indicator={getSimplifiedTimeDifference(assignment.timeUpdated)}
           />
         )
       }
