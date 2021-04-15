@@ -1,6 +1,12 @@
 import React from 'react'
 import { Form, Segment } from 'semantic-ui-react'
-import { ElementState, PageElement, ResponsesByCode, SectionAndPage } from '../../../utils/types'
+import {
+  ApplicationDetails,
+  ElementState,
+  PageElement,
+  ResponsesByCode,
+  SectionAndPage,
+} from '../../../utils/types'
 import { ApplicationViewWrapper } from '../../../formElementPlugins'
 import { ApplicationViewWrapperProps } from '../../../formElementPlugins/types'
 import { TemplateElementCategory } from '../../../utils/generated/graphql'
@@ -14,6 +20,7 @@ import ReviewDecisionElement from './Elements/ReviewDecisionElement'
 interface PageElementProps {
   elements: PageElement[]
   responsesByCode: ResponsesByCode
+  applicationData: ApplicationDetails
   isStrictPage?: boolean
   canEdit?: boolean
   isReview?: boolean
@@ -25,6 +32,7 @@ interface PageElementProps {
 const PageElements: React.FC<PageElementProps> = ({
   elements,
   responsesByCode,
+  applicationData,
   isStrictPage,
   canEdit,
   isReview,
@@ -55,6 +63,7 @@ const PageElements: React.FC<PageElementProps> = ({
               isStrictPage,
               changesRequired,
               allResponses: responsesByCode,
+              applicationData,
               currentResponse: responsesByCode?.[element.code],
             }
             // Wrapper displays response & changes requested warning for LOQ re-submission
@@ -68,6 +77,7 @@ const PageElements: React.FC<PageElementProps> = ({
     element,
     response: responsesByCode?.[element.code],
     allResponses: responsesByCode,
+    applicationData,
   })
 
   // Summary Page

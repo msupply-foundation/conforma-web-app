@@ -8,6 +8,7 @@ import {
   PageElement,
   ResponsesByCode,
   User,
+  ApplicationDetails,
 } from '../../types'
 import config from '../../../config.json'
 const graphQLEndpoint = config.serverGraphQL
@@ -70,6 +71,7 @@ const addEvaluatedResponsesToStructure = async ({
     flattenedElements.map((elem: PageElement) => elem.element as ElementState),
     responseObject,
     currentUser,
+    structure.info, // i.e. applicationData
     evaluationOptions
   )
   results.forEach((evaluatedElement, index) => {
@@ -87,12 +89,19 @@ async function evaluateAndValidateElements(
   elements: ElementState[],
   responseObject: ResponsesByCode,
   currentUser: User | null,
+  applicationData: ApplicationDetails,
   evaluationOptions: EvaluationOptions
 ) {
   const elementPromiseArray: Promise<ElementState>[] = []
   elements.forEach((element) => {
     elementPromiseArray.push(
-      evaluateSingleElement(element, responseObject, currentUser, evaluationOptions)
+      evaluateSingleElement(
+        element,
+        responseObject,
+        currentUser,
+        applicationData,
+        evaluationOptions
+      )
     )
   })
   return await Promise.all(elementPromiseArray)
@@ -116,12 +125,14 @@ async function evaluateSingleElement(
   element: ElementState,
   responseObject: ResponsesByCode,
   currentUser: User | null,
+  applicationData: ApplicationDetails,
   evaluationOptions: EvaluationOptions
 ): Promise<ElementState> {
   const evaluationParameters = {
     objects: {
       responses: { ...responseObject, thisResponse: responseObject?.[element.code]?.text },
       currentUser,
+      applicationData,
     },
     APIfetch: fetch,
     graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
