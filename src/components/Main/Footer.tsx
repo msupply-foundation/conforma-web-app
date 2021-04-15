@@ -15,17 +15,4 @@ const Footer: React.FC = () => (
   </Container>
 )
 
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const inlineStyles = {
-  container: {
-    bottom: 0,
-    padding: 0,
-    border: 'none',
-    boxShadow: 'none',
-    background: 'white',
-    height: '65px',
-  },
-  segment: { margin: 0, boxShadow: 'none', border: 'none', borderRadius: 0 },
-}
-
 export default Footer

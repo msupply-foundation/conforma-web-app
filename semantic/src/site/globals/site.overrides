@@ -123,18 +123,6 @@ p strong {
   margin-left: 10px;
 }
 
-// const inlineStyles = {
-//   container: {
-//     bottom: 0,
-//     padding: 0,
-//     border: 'none',
-//     boxShadow: 'none',
-//     background: 'white',
-//     height: '65px',
-//   },
-//   segment: { margin: 0, boxShadow: 'none', border: 'none', borderRadius: 0 },
-// }
-
 .sup .ui.tiny.progress {
   margin-bottom: 4px !important;
 }
