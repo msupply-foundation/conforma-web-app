@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react'
-import { Checkbox, Dropdown, Form, Label, Message } from 'semantic-ui-react'
+import { Dropdown, Form, Label, Message } from 'semantic-ui-react'
 import { Decision } from '../../utils/generated/graphql'
 import { DecisionOption } from '../../utils/types'
 import strings from '../../utils/constants'
@@ -23,12 +23,13 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
       text: title,
       value: code,
       checked: value,
-      onChange: () => setDecision(code),
     }))
+
+  const onChangeDecision = (_: any, { value: code }: any) => setDecision(code)
 
   if (isEditable)
     return (
-      <Form fluid style={inlineStyles.form}>
+      <Form style={inlineStyles.form}>
         <Label style={inlineStyles.decisionLabel} content={strings.LABEL_REVIEW_DECISION} />
         <Form.Field
           as={Dropdown}
@@ -36,6 +37,7 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
           disabled={options.length === 0}
           error={isDecisionError}
           options={options}
+          onChange={onChangeDecision}
         />
       </Form>
     )

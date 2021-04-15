@@ -44,8 +44,7 @@ const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEdita
       <TextArea
         style={inlineStyles.commentArea}
         rows="1"
-        fluid
-        placeHolder={strings.LABEL_REVIEW_OVERALL_COMMENT}
+        placeholder={strings.LABEL_REVIEW_OVERALL_COMMENT}
         defaultValue={initialComment}
         onChange={(_, { value }) => setComment(String(value))}
         onBlur={() => updateComment({ variables: { reviewDecisionId, comment } })}
