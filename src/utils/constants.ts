@@ -111,4 +111,6 @@ export default {
   DATE_MONTHS_AGO: 'months ago',
   DATE_LAST_YEAR: 'Last Year',
   DATE_YEARS_AGO: 'years ago',
+  FOOTER_TEXT: 'Powered by mSupply Application Manager',
+  FOOTER_COPYRIGHT: '© 2020',
 }

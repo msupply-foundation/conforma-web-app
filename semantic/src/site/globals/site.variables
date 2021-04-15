@@ -89,3 +89,4 @@
 -------------------------*/
 
 @headerHeight: 120px;
+@footerHeight: 75px;
