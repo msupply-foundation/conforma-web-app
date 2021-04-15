@@ -30,7 +30,7 @@ const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEdita
   if (!isEditable)
     return data?.reviewDecision?.comment ? (
       <Message
-        compact
+        style={inlineStyles.message}
         attached="bottom"
         icon="comment outline"
         header={strings.TITLE_REVIEW_COMMENT}
@@ -40,14 +40,35 @@ const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEdita
 
   const initialComment = data?.reviewDecision?.comment || ''
   return (
-    <Form>
+    <Form style={inlineStyles.form}>
       <TextArea
+        style={inlineStyles.commentArea}
+        rows="1"
+        fluid
+        placeHolder={strings.LABEL_REVIEW_OVERALL_COMMENT}
         defaultValue={initialComment}
         onChange={(_, { value }) => setComment(String(value))}
         onBlur={() => updateComment({ variables: { reviewDecisionId, comment } })}
       />
     </Form>
   )
+}
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const inlineStyles = {
+  message: {
+    // Showing too big on mobile
+    margin: '10px 20px 10px',
+  },
+  form: {
+    // Showing too big on mobile
+    width: 500,
+    margin: '10px 20px 10px',
+  },
+  commentArea: {
+    marginLeft: 10,
+    resize: 'none',
+  },
 }
 
 export default ReviewComment

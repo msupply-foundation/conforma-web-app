@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, ModalProps } from 'semantic-ui-react'
+import React, { CSSProperties, useState } from 'react'
+import { Button, Container, ModalProps } from 'semantic-ui-react'
 import { ModalWarning } from '../../components'
 import ReviewComment from '../../components/Review/ReviewComment'
 import ReviewDecision from '../../components/Review/ReviewDecision'
@@ -29,24 +29,36 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
     isDecisionError,
   } = useGetDecisionOptions(structure.canSubmitReviewAs, thisReview)
 
+  const isEdtiable = thisReview?.status == ReviewStatus.Draft
+
   return (
-    <>
-      <ReviewComment
-        isEditable={thisReview?.status == ReviewStatus.Draft}
-        reviewDecisionId={Number(reviewDecision?.id)}
-      />
-      <ReviewDecision
-        decisionOptions={decisionOptions}
-        setDecision={setDecision}
-        isDecisionError={isDecisionError}
-        isEditable={thisReview?.status == ReviewStatus.Draft}
-      />
-      <ReviewSubmitButton
-        {...props}
-        getDecision={getDecision}
-        getAndSetDecisionError={getAndSetDecisionError}
-      />
-    </>
+    <Container style={inlineStyles.container}>
+      <div style={inlineStyles.hBox}>
+        <ReviewProgress />
+        <div style={inlineStyles.submissionLayout(isEdtiable)}>
+          <ReviewDecision
+            decisionOptions={decisionOptions}
+            setDecision={setDecision}
+            isDecisionError={isDecisionError}
+            isEditable={isEdtiable}
+          />
+          <ReviewComment isEditable={isEdtiable} reviewDecisionId={Number(reviewDecision?.id)} />
+          <ReviewSubmitButton
+            {...props}
+            getDecision={getDecision}
+            getAndSetDecisionError={getAndSetDecisionError}
+          />
+        </div>
+      </div>
+    </Container>
+  )
+}
+
+const ReviewProgress: React.FC = () => {
+  return (
+    <p className="hide-on-desktop" style={inlineStyles.mobileProgress}>
+      TODO: Progress for mobile
+    </p>
   )
 }
 
@@ -129,10 +141,51 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
 
   return (
     <>
-      <Button onClick={onClick}>{strings.BUTTON_REVIEW_SUBMIT}</Button>
+      <Button
+        style={inlineStyles.submitButton}
+        color="blue"
+        onClick={onClick}
+        content={strings.BUTTON_REVIEW_SUBMIT}
+      />
       <ModalWarning showModal={showWarningModal} />
       {/* TODO add submission modal */}
     </>
   )
 }
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const inlineStyles = {
+  container: {
+    background: 'white',
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    boxShadow: '0px -6px 3px -3px #AAAAAA',
+    paddingTop: 10,
+    paddingBottom: 10,
+    zIndex: 1000,
+  } as CSSProperties,
+  hBox: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginLeft: 20,
+    marginRight: 20,
+  } as CSSProperties,
+  submissionLayout: (isEdtiable: boolean) =>
+    ({
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: isEdtiable ? 'flex-start' : 'space-evenly',
+    } as CSSProperties),
+  mobileProgress: {
+    display: 'none',
+  } as CSSProperties,
+  submitButton: {
+    minWidth: 150,
+    alignSelf: 'flex-end',
+    margin: '10px 20px 10px',
+  } as CSSProperties,
+}
+
 export default ReviewSubmit

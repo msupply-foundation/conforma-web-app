@@ -1,5 +1,5 @@
-import React from 'react'
-import { Checkbox, Form, Message } from 'semantic-ui-react'
+import React, { CSSProperties } from 'react'
+import { Checkbox, Dropdown, Form, Label, Message } from 'semantic-ui-react'
 import { Decision } from '../../utils/generated/graphql'
 import { DecisionOption } from '../../utils/types'
 import strings from '../../utils/constants'
@@ -17,31 +17,35 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
   isDecisionError,
   isEditable,
 }) => {
+  const options = decisionOptions
+    .filter((option) => option.isVisible)
+    .map(({ title, code, value }) => ({
+      text: title,
+      value: code,
+      checked: value,
+      onChange: () => setDecision(code),
+    }))
+
   if (isEditable)
     return (
-      <Form style={inlineStyles}>
-        {decisionOptions
-          .filter((option) => option.isVisible)
-          .map((option) => (
-            <Form.Field error={isDecisionError} key={option.code}>
-              <Checkbox
-                radio
-                label={option.title}
-                name={option.title}
-                value={option.code}
-                checked={option.value}
-                onChange={() => setDecision(option.code)}
-              />
-            </Form.Field>
-          ))}
+      <Form fluid style={inlineStyles.form}>
+        <Label style={inlineStyles.decisionLabel} content={strings.LABEL_REVIEW_DECISION} />
+        <Form.Field
+          as={Dropdown}
+          selection
+          disabled={options.length === 0}
+          error={isDecisionError}
+          options={options}
+        />
       </Form>
     )
+
   // If review has been submitted/locked:
   const visibleOption = decisionOptions.find((option) => option.isVisible)
   if (!visibleOption) return null
   return (
     <Message
-      compact
+      style={inlineStyles.message}
       attached="top"
       icon="calendar check outline"
       header={strings.TITLE_REVIEW_DECISION}
@@ -52,7 +56,23 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
 
 // Styles - TODO: Move to LESS || Global class style (semantic)
 const inlineStyles = {
-  form: { marginRight: 30 },
+  message: {
+    // Showing too big on mobile
+    margin: '10px 20px 10px',
+  },
+  form: {
+    // Showing too big on mobile
+    display: 'flex',
+    maxHeight: 50,
+    margin: '10px 20px 10px',
+  } as CSSProperties,
+  decisionLabel: {
+    background: 'transparent',
+    fontWeight: 'bolder',
+    fontSize: 16,
+    alignContent: 'center',
+    marginRight: 10,
+  } as CSSProperties,
 }
 
 export default ReviewDecision
