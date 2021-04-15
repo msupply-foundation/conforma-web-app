@@ -1,5 +1,5 @@
-import React, { CSSProperties } from 'react'
-import { Button, Container, Icon, Image } from 'semantic-ui-react'
+import React from 'react'
+import { Button, Container, Icon, Image, List } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { Link } from 'react-router-dom'
 import strings from '../../utils/constants'
@@ -25,10 +25,20 @@ const MainMenuBar: React.FC = () => {
   // Probably passed in as props
   return (
     <div id="menu-bar">
-      <Link to="/">
-        {/* <Icon name="home" /> */}
-        {strings.MENU_ITEM_DASHBOARD}
-      </Link>
+      <List horizontal>
+        <List.Item>
+          <Link to="/" className="selected-link">
+            {/* <Icon name="home" /> */}
+            {strings.MENU_ITEM_DASHBOARD}
+          </Link>
+        </List.Item>
+        <List.Item>
+          <Link to="/">Menu Item 1</Link>
+        </List.Item>
+        <List.Item>
+          <Link to="/">Menu Item 2</Link>
+        </List.Item>
+      </List>
     </div>
   )
 }
@@ -37,6 +47,7 @@ const OrgSelector: React.FC<{ user: User }> = ({ user }) => {
   // TO-DO: Make into Dropdown so Org can be selected
   return (
     <div id="org-selector">
+      {/* TO-DO: Replace with proper company logo */}
       <Image src="/images/temp_logo.png" />
       <div>
         {user?.organisation?.orgName || ''}

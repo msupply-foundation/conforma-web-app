@@ -47,7 +47,7 @@ p strong {
 }
 
 #menu-bar {
-  // border: 1px white solid;
+  border: 1px white solid;
 }
 // Menu bar links
 #user-area a {
@@ -65,15 +65,17 @@ p strong {
   font-size: 27px;
   letter-spacing: 3.4px;
   text-transform: uppercase;
-  // border: 1px white solid;
+  border: 1px white solid;
   display: flex;
   align-items: center;
   height: 100%;
+  max-height: 65px;
   margin-top: 10px;
 }
 
 #org-selector .image {
   margin-right: 20px;
+  height: 100%;
 }
 
 #user-area-user-menu .button {
