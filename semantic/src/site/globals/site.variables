@@ -59,9 +59,21 @@
 @h5Mob: 15px;
 @h6Mob: 11px;
 
-// New variables for font-weights
+// line-height
+@lineHeightRegular: 24px;
+@lineHeightBig: 36px;
+@lineHeightBigger: 45px;
+
+// font-weights
 @regularWeight: 400;
 @semiboldWeight: 600;
+
+// font-height
+@fontHeightSmall: 16px;
+@fontHeightRegular: 20px;
+
+// letter spacing
+@letterSpacingRegular: 1.8px;
 
 // Text colours
 @darkGrey: @headersInteractiveLow;

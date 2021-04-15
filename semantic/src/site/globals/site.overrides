@@ -87,9 +87,41 @@ p strong {
 }
 
 #content-area {
-  padding-top: @headerHeight + 25px;
-  padding-right: 25px;
-  padding-left: 25px;
+  padding-top: @headerHeight + 12px;
+  padding-right: 12px;
+  padding-left: 12px;
+}
+
+/* Application home */
+#application-area {
+  font-family: @userAreaFont;
+  display: flex;
+  flex-direction: column;
+}
+
+.company-title .h4 {
+  height: 45px;
+  width: 185px;
+  letter-spacing: @letterSpacingRegular;
+  line-height: @lineHeightBig;
+}
+
+/* TODO: Add issue to trim if app name is too big*/
+.back {
+  align-self: flex-start;
+  width: 132px;
+  height: 20px;
+  font-weight: @regularWeight;
+  font-size: @h5;
+  line-height: @fontHeightRegular;
+}
+
+.rectangle {
+  height: 814px;
+  width: 800px;
+  background-color: @surfacesWhite;
+  padding: 30px 32px 50px;
+  flex: 1;
 }
 
 .sup .ui.tiny.progress {
