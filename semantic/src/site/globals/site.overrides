@@ -47,7 +47,7 @@ p strong {
 }
 
 #menu-bar {
-  border: 1px white solid;
+  // border: 1px white solid;
 }
 // Menu bar links
 #user-area a {
@@ -65,7 +65,7 @@ p strong {
   font-size: 27px;
   letter-spacing: 3.4px;
   text-transform: uppercase;
-  border: 1px white solid;
+  // border: 1px white solid;
   display: flex;
   align-items: center;
   height: 100%;
@@ -83,6 +83,7 @@ p strong {
   border-radius: 20px;
   background-color: @surfacesWhite;
   color: @darkGrey;
+  min-width: 120px;
 }
 
 #content-area {
