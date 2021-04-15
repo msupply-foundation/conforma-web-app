@@ -25,8 +25,10 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
 
   const constructReviewPatch: ConstructReviewPatch = (structure) => {
     const elements = Object.values(structure?.elementsById || {})
+
+    // Exclude not assigned, not visible and missing responses
     const reviewableElements = elements.filter(
-      (element) => element?.isAssigned && element?.response?.id && element?.response?.id != 0
+      (element) => element?.isAssigned && element?.element.isVisible && element.response?.id
     )
 
     // For re-assignment this would be slightly different, we need to consider latest review response of this level
