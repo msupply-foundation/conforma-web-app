@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Form } from 'semantic-ui-react'
+import React, { useState, useEffect } from 'react'
+import { Form, Input } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
@@ -9,12 +9,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   value,
   setValue,
   setIsActive,
+  currentResponse,
   validationState,
   onSave,
   Markdown,
 }) => {
+  const { label, description, placeholder, lines, maxLength } = parameters
+
   const { isEditable } = element
-  const { placeholder, maskedInput, label, description, maxLength } = parameters
 
   useEffect(() => {
     onUpdate(value)
@@ -39,15 +41,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Markdown text={label} semanticComponent="noParagraph" />
       </label>
       <Markdown text={description} />
-      <Form.Input
-        fluid
+      <Form.TextArea
         placeholder={placeholder}
+        rows={lines || 5}
         onChange={handleChange}
         onBlur={handleLoseFocus}
         onFocus={setIsActive}
         value={value ? value : ''}
         disabled={!isEditable}
-        type={maskedInput ? 'password' : undefined}
         error={
           !validationState.isValid
             ? {

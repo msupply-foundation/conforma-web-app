@@ -93,6 +93,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
             toggleSection={toggleSection(section.details.code)}
             section={section}
             responsesByCode={responsesByCode as ResponsesByCode}
+            applicationData={fullStructure.info}
             serial={info.serial}
             isSummary
             canEdit={info.current?.status === ApplicationStatus.Draft}
@@ -144,7 +145,7 @@ const inlineStyles = {
     right: 0,
     boxShadow: '0px -6px 3px -3px #AAAAAA',
     paddingTop: 10,
-    paddingBottom: 70,
+    paddingBottom: 10,
     zIndex: 1000,
   } as CSSProperties,
   submit: { display: 'flex', justifyContent: 'flex-end' } as CSSProperties,

@@ -3,7 +3,6 @@ import { Button, Icon, Grid, List, Image, Message, Segment, Loader } from 'seman
 import { nanoid } from 'nanoid'
 import { ApplicationViewProps } from '../../types'
 import strings from '../constants'
-import config from '../../../config.json'
 import { useUserState } from '../../../contexts/UserState'
 import { useRouter } from '../../../utils/hooks/useRouter'
 
@@ -29,18 +28,21 @@ interface FileInfo {
   fileData?: FileResponseData | null
 }
 
-const host = config.serverREST
-const { uploadEndpoint } = config
-
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
   onSave,
   Markdown,
   initialValue,
+  currentResponse,
+  applicationData,
 }) => {
   const { isEditable } = element
   const { label, description, fileCountLimit, fileExtensions, fileSizeLimit } = parameters
+
+  const { config } = applicationData
+  const host = config.serverREST
+  const { uploadEndpoint } = config
 
   // These values required for file upload query parameters:
   const {

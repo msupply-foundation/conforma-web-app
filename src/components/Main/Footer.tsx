@@ -17,7 +17,6 @@ const inlineStyles = {
     border: 'none',
     boxShadow: 'none',
     background: 'white',
-    zIndex: 1000,
     height: '65px',
   },
   segment: { margin: 0, boxShadow: 'none', border: 'none', borderRadius: 0 },

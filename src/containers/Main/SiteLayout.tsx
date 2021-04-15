@@ -116,7 +116,6 @@ const SiteLayout: React.FC = () => {
 
 // Styles - TODO: Move to LESS || Global class style (semantic)
 const containerStyle = {
-  minHeight: '100vh',
   paddingTop: 135,
   paddingBottom: 65,
   paddingRight: 25,
