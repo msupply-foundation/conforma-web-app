@@ -54,8 +54,7 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
       status: ReviewAssignmentStatus.Assigned,
       // onReviewSelfAssign will trigger core action to disallow other reviewers to self assign
       trigger: isSelfAssignment ? Trigger.OnReviewSelfAssign : Trigger.OnReviewAssign,
-      // TODO: change to timeUpdated
-      timeCreated: new Date().toISOString(),
+      timeUpdated: new Date().toISOString(),
       reviewQuestionAssignmentsUsingId: {
         create: createReviewQuestionAssignments,
       },
