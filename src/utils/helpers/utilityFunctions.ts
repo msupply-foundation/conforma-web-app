@@ -6,6 +6,13 @@ export const isArraySorted = (array: any[], ascending = true) => {
     )
 }
 
-export const getFullUrl = (baseUrl: string, host: string) => {
-  return baseUrl
+/*
+Checks if a URL string is an external URL or a local/relative one
+If local/relative, it prepends it with a specified host, else it
+returns it unchanged.
+*/
+export const getFullUrl = (baseUrl: string | undefined, host: string) => {
+  const fullUrl = baseUrl?.startsWith('http') ? baseUrl : host + baseUrl
+  if (baseUrl?.startsWith('http')) console.log('url', baseUrl)
+  return fullUrl
 }

@@ -12,7 +12,6 @@ const UserArea: React.FC = () => {
     userState: { currentUser },
   } = useUserState()
 
-  console.log('User', currentUser)
   return (
     <Container id="user-area">
       <div id="user-area-left">
@@ -51,9 +50,9 @@ const OrgSelector: React.FC<{ user: User }> = ({ user }) => {
   // TO-DO: Make into Dropdown so Org can be selected
   return (
     <div id="org-selector">
-      {/* TO-DO: Replace with proper company logo */}
-
-      <Image src={getFullUrl(user.organisation.logoUrl)} />
+      {user?.organisation?.logoUrl && (
+        <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST)} />
+      )}
       <div>
         {user?.organisation?.orgName || ''}
         <Icon size="small" name="angle down" />
