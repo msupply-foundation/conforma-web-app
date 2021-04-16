@@ -4,11 +4,15 @@ import { useUserState } from '../../contexts/UserState'
 import { Link } from 'react-router-dom'
 import strings from '../../utils/constants'
 import { User } from '../../utils/types'
+import config from '../../config.json'
+import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 
 const UserArea: React.FC = () => {
   const {
     userState: { currentUser },
   } = useUserState()
+
+  console.log('User', currentUser)
   return (
     <Container id="user-area">
       <div id="user-area-left">
@@ -48,7 +52,8 @@ const OrgSelector: React.FC<{ user: User }> = ({ user }) => {
   return (
     <div id="org-selector">
       {/* TO-DO: Replace with proper company logo */}
-      <Image src="/images/temp_logo.png" />
+
+      <Image src={getFullUrl(user.organisation.logoUrl)} />
       <div>
         {user?.organisation?.orgName || ''}
         <Icon size="small" name="angle down" />
