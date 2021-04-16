@@ -134,6 +134,7 @@ p strong {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  padding-bottom: 10px;
 }
 
 // Back to application list label
@@ -158,6 +159,7 @@ p strong {
 
 #application-area .ui.header .sub.header {
   margin-top: 11px;
+  margin-bottom: 30px;
   font-size: large;
   letter-spacing: @letterSpacingSmall;
 }
@@ -166,7 +168,17 @@ p strong {
   padding: 0;
   margin-left: 0;
   background-color: transparent;
+  color: black;
   font-size: small;
+}
+
+#application-area .ui.list > .item .header {
+  color: @darkGrey;
+  font-weight: @regularWeight;
+  font-size: medium;
+}
+#application-area .ui.list > .item > i.icon {
+  color: @darkGrey;
 }
 
 #application-area .application-segment {

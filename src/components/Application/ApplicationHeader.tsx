@@ -17,7 +17,7 @@ const ApplicationHeader: React.FC<AppHeaderProps> = ({ template, currentUser, Ch
       <div className="top-container">
         <Label
           icon
-          size="medium"
+          className="back-label"
           as={Link}
           to={`/applications?type=${code}`}
           content={
