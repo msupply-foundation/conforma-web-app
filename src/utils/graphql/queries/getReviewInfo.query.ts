@@ -6,10 +6,10 @@ export default gql`
     reviewAssignments(condition: { applicationId: $applicationId }, orderBy: TIME_UPDATED_DESC) {
       nodes {
         id
-        level
+        levelNumber
         status
         timeUpdated
-        level
+        levelNumber
         reviewerId
         isLastLevel
         templateSectionRestrictions
