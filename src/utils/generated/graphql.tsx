@@ -121,6 +121,7 @@ export type Query = Node & {
   permissionName?: Maybe<PermissionName>;
   permissionNameByName?: Maybe<PermissionName>;
   permissionPolicy?: Maybe<PermissionPolicy>;
+  permissionPolicyByName?: Maybe<PermissionPolicy>;
   review?: Maybe<Review>;
   reviewAssignment?: Maybe<ReviewAssignment>;
   reviewAssignmentAssignerJoin?: Maybe<ReviewAssignmentAssignerJoin>;
@@ -131,6 +132,7 @@ export type Query = Node & {
   template?: Maybe<Template>;
   templateAction?: Maybe<TemplateAction>;
   templateElement?: Maybe<TemplateElement>;
+  templateElementByTemplateCodeAndCode?: Maybe<TemplateElement>;
   templatePermission?: Maybe<TemplatePermission>;
   templateSection?: Maybe<TemplateSection>;
   templateStage?: Maybe<TemplateStage>;
@@ -142,6 +144,7 @@ export type Query = Node & {
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
   applicationList?: Maybe<ApplicationListShapesConnection>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
+  getTemplateCode?: Maybe<Scalars['String']>;
   jwtGetBigint?: Maybe<Scalars['BigInt']>;
   jwtGetBoolean?: Maybe<Scalars['Boolean']>;
   jwtGetText?: Maybe<Scalars['String']>;
@@ -804,6 +807,12 @@ export type QueryPermissionPolicyArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryPermissionPolicyByNameArgs = {
+  name: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryReviewArgs = {
   id: Scalars['Int'];
 };
@@ -860,6 +869,13 @@ export type QueryTemplateActionArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryTemplateElementArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTemplateElementByTemplateCodeAndCodeArgs = {
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
 };
 
 
@@ -927,6 +943,12 @@ export type QueryApplicationListArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryApplicationStatusHistoryApplicationIdArgs = {
   applicationStageHistoryId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetTemplateCodeArgs = {
+  sectionId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -1981,8 +2003,8 @@ export type ReviewAssignmentFilter = {
   templateSectionRestrictions?: Maybe<StringListFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `timeCreated` field. */
-  timeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `timeUpdated` field. */
+  timeUpdated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `levelNumber` field. */
   levelNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `levelId` field. */
@@ -2721,6 +2743,8 @@ export type TemplateElementFilter = {
   validationMessage?: Maybe<StringFilter>;
   /** Filter by the object’s `parameters` field. */
   parameters?: Maybe<JsonFilter>;
+  /** Filter by the object’s `templateCode` field. */
+  templateCode?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponses` relation. */
   applicationResponses?: Maybe<TemplateElementToManyApplicationResponseFilter>;
   /** Some related `applicationResponses` exist. */
@@ -4121,8 +4145,8 @@ export enum ReviewAssignmentsOrderBy {
   TemplateSectionRestrictionsDesc = 'TEMPLATE_SECTION_RESTRICTIONS_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
-  TimeCreatedAsc = 'TIME_CREATED_ASC',
-  TimeCreatedDesc = 'TIME_CREATED_DESC',
+  TimeUpdatedAsc = 'TIME_UPDATED_ASC',
+  TimeUpdatedDesc = 'TIME_UPDATED_DESC',
   LevelNumberAsc = 'LEVEL_NUMBER_ASC',
   LevelNumberDesc = 'LEVEL_NUMBER_DESC',
   LevelIdAsc = 'LEVEL_ID_ASC',
@@ -4155,8 +4179,8 @@ export type ReviewAssignmentCondition = {
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
-  /** Checks for equality with the object’s `timeCreated` field. */
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeUpdated` field. */
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `levelNumber` field. */
   levelNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `levelId` field. */
@@ -4192,7 +4216,7 @@ export type ReviewAssignment = Node & {
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -5075,6 +5099,8 @@ export enum TemplateElementsOrderBy {
   ValidationMessageDesc = 'VALIDATION_MESSAGE_DESC',
   ParametersAsc = 'PARAMETERS_ASC',
   ParametersDesc = 'PARAMETERS_DESC',
+  TemplateCodeAsc = 'TEMPLATE_CODE_ASC',
+  TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -5107,6 +5133,8 @@ export type TemplateElementCondition = {
   validationMessage?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `parameters` field. */
   parameters?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `templateCode` field. */
+  templateCode?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `TemplateElement` values. */
@@ -5139,6 +5167,7 @@ export type TemplateElement = Node & {
   validation?: Maybe<Scalars['JSON']>;
   validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  templateCode?: Maybe<Scalars['String']>;
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -7516,7 +7545,9 @@ export enum UserOrgJoinsOrderBy {
   RegistrationAsc = 'REGISTRATION_ASC',
   RegistrationDesc = 'REGISTRATION_DESC',
   AddressAsc = 'ADDRESS_ASC',
-  AddressDesc = 'ADDRESS_DESC'
+  AddressDesc = 'ADDRESS_DESC',
+  LogoUrlAsc = 'LOGO_URL_ASC',
+  LogoUrlDesc = 'LOGO_URL_DESC'
 }
 
 /** A condition to be used against `UserOrgJoin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -7545,6 +7576,8 @@ export type UserOrgJoinCondition = {
   registration?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `address` field. */
   address?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `logoUrl` field. */
+  logoUrl?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `UserOrgJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -7573,6 +7606,8 @@ export type UserOrgJoinFilter = {
   registration?: Maybe<StringFilter>;
   /** Filter by the object’s `address` field. */
   address?: Maybe<StringFilter>;
+  /** Filter by the object’s `logoUrl` field. */
+  logoUrl?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<UserOrgJoinFilter>>;
   /** Checks for any expressions in this list. */
@@ -7608,6 +7643,7 @@ export type UserOrgJoin = {
   userRole?: Maybe<Scalars['String']>;
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
+  logoUrl?: Maybe<Scalars['String']>;
 };
 
 /** A `UserOrgJoin` edge in the connection. */
@@ -7811,6 +7847,8 @@ export type Mutation = {
   updatePermissionPolicyByNodeId?: Maybe<UpdatePermissionPolicyPayload>;
   /** Updates a single `PermissionPolicy` using a unique key and a patch. */
   updatePermissionPolicy?: Maybe<UpdatePermissionPolicyPayload>;
+  /** Updates a single `PermissionPolicy` using a unique key and a patch. */
+  updatePermissionPolicyByName?: Maybe<UpdatePermissionPolicyPayload>;
   /** Updates a single `Review` using its globally unique id and a patch. */
   updateReviewByNodeId?: Maybe<UpdateReviewPayload>;
   /** Updates a single `Review` using a unique key and a patch. */
@@ -7851,6 +7889,8 @@ export type Mutation = {
   updateTemplateElementByNodeId?: Maybe<UpdateTemplateElementPayload>;
   /** Updates a single `TemplateElement` using a unique key and a patch. */
   updateTemplateElement?: Maybe<UpdateTemplateElementPayload>;
+  /** Updates a single `TemplateElement` using a unique key and a patch. */
+  updateTemplateElementByTemplateCodeAndCode?: Maybe<UpdateTemplateElementPayload>;
   /** Updates a single `TemplatePermission` using its globally unique id and a patch. */
   updateTemplatePermissionByNodeId?: Maybe<UpdateTemplatePermissionPayload>;
   /** Updates a single `TemplatePermission` using a unique key and a patch. */
@@ -7947,6 +7987,8 @@ export type Mutation = {
   deletePermissionPolicyByNodeId?: Maybe<DeletePermissionPolicyPayload>;
   /** Deletes a single `PermissionPolicy` using a unique key. */
   deletePermissionPolicy?: Maybe<DeletePermissionPolicyPayload>;
+  /** Deletes a single `PermissionPolicy` using a unique key. */
+  deletePermissionPolicyByName?: Maybe<DeletePermissionPolicyPayload>;
   /** Deletes a single `Review` using its globally unique id. */
   deleteReviewByNodeId?: Maybe<DeleteReviewPayload>;
   /** Deletes a single `Review` using a unique key. */
@@ -7987,6 +8029,8 @@ export type Mutation = {
   deleteTemplateElementByNodeId?: Maybe<DeleteTemplateElementPayload>;
   /** Deletes a single `TemplateElement` using a unique key. */
   deleteTemplateElement?: Maybe<DeleteTemplateElementPayload>;
+  /** Deletes a single `TemplateElement` using a unique key. */
+  deleteTemplateElementByTemplateCodeAndCode?: Maybe<DeleteTemplateElementPayload>;
   /** Deletes a single `TemplatePermission` using its globally unique id. */
   deleteTemplatePermissionByNodeId?: Maybe<DeleteTemplatePermissionPayload>;
   /** Deletes a single `TemplatePermission` using a unique key. */
@@ -8411,6 +8455,12 @@ export type MutationUpdatePermissionPolicyArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePermissionPolicyByNameArgs = {
+  input: UpdatePermissionPolicyByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateReviewByNodeIdArgs = {
   input: UpdateReviewByNodeIdInput;
 };
@@ -8527,6 +8577,12 @@ export type MutationUpdateTemplateElementByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateTemplateElementArgs = {
   input: UpdateTemplateElementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTemplateElementByTemplateCodeAndCodeArgs = {
+  input: UpdateTemplateElementByTemplateCodeAndCodeInput;
 };
 
 
@@ -8819,6 +8875,12 @@ export type MutationDeletePermissionPolicyArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePermissionPolicyByNameArgs = {
+  input: DeletePermissionPolicyByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteReviewByNodeIdArgs = {
   input: DeleteReviewByNodeIdInput;
 };
@@ -8935,6 +8997,12 @@ export type MutationDeleteTemplateElementByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTemplateElementArgs = {
   input: DeleteTemplateElementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTemplateElementByTemplateCodeAndCodeArgs = {
+  input: DeleteTemplateElementByTemplateCodeAndCodeInput;
 };
 
 
@@ -9630,13 +9698,19 @@ export type PermissionNamePermissionPolicyIdFkeyInput = {
   /** The primary key(s) for `permissionPolicy` for the far side of the relationship. */
   connectById?: Maybe<PermissionPolicyPermissionPolicyPkeyConnect>;
   /** The primary key(s) for `permissionPolicy` for the far side of the relationship. */
+  connectByName?: Maybe<PermissionPolicyPermissionPolicyNameKeyConnect>;
+  /** The primary key(s) for `permissionPolicy` for the far side of the relationship. */
   connectByNodeId?: Maybe<PermissionPolicyNodeIdConnect>;
   /** The primary key(s) for `permissionPolicy` for the far side of the relationship. */
   deleteById?: Maybe<PermissionPolicyPermissionPolicyPkeyDelete>;
   /** The primary key(s) for `permissionPolicy` for the far side of the relationship. */
+  deleteByName?: Maybe<PermissionPolicyPermissionPolicyNameKeyDelete>;
+  /** The primary key(s) for `permissionPolicy` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PermissionPolicyNodeIdDelete>;
   /** The primary key(s) and patch data for `permissionPolicy` for the far side of the relationship. */
   updateById?: Maybe<PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyPkeyUpdate>;
+  /** The primary key(s) and patch data for `permissionPolicy` for the far side of the relationship. */
+  updateByName?: Maybe<PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyNameKeyUpdate>;
   /** The primary key(s) and patch data for `permissionPolicy` for the far side of the relationship. */
   updateByNodeId?: Maybe<PermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate>;
   /** A `PermissionPolicyInput` object that will be created and connected to this object. */
@@ -9648,6 +9722,11 @@ export type PermissionPolicyPermissionPolicyPkeyConnect = {
   id: Scalars['Int'];
 };
 
+/** The fields on `permissionPolicy` to look up the row to connect. */
+export type PermissionPolicyPermissionPolicyNameKeyConnect = {
+  name: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to connect. */
 export type PermissionPolicyNodeIdConnect = {
   /** The globally unique `ID` which identifies a single `permissionPolicy` to be connected. */
@@ -9657,6 +9736,11 @@ export type PermissionPolicyNodeIdConnect = {
 /** The fields on `permissionPolicy` to look up the row to delete. */
 export type PermissionPolicyPermissionPolicyPkeyDelete = {
   id: Scalars['Int'];
+};
+
+/** The fields on `permissionPolicy` to look up the row to delete. */
+export type PermissionPolicyPermissionPolicyNameKeyDelete = {
+  name: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to delete. */
@@ -11284,13 +11368,19 @@ export type ApplicationResponseTemplateElementIdFkeyInput = {
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectById?: Maybe<TemplateElementTemplateElementPkeyConnect>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  connectByTemplateCodeAndCode?: Maybe<TemplateElementTemplateElementTemplateCodeCodeKeyConnect>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateElementNodeIdConnect>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteById?: Maybe<TemplateElementTemplateElementPkeyDelete>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  deleteByTemplateCodeAndCode?: Maybe<TemplateElementTemplateElementTemplateCodeCodeKeyDelete>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateElementNodeIdDelete>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateById?: Maybe<TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate>;
+  /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
+  updateByTemplateCodeAndCode?: Maybe<TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeKeyUpdate>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateByNodeId?: Maybe<ApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate>;
   /** A `TemplateElementInput` object that will be created and connected to this object. */
@@ -11302,6 +11392,12 @@ export type TemplateElementTemplateElementPkeyConnect = {
   id: Scalars['Int'];
 };
 
+/** The fields on `templateElement` to look up the row to connect. */
+export type TemplateElementTemplateElementTemplateCodeCodeKeyConnect = {
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to connect. */
 export type TemplateElementNodeIdConnect = {
   /** The globally unique `ID` which identifies a single `templateElement` to be connected. */
@@ -11311,6 +11407,12 @@ export type TemplateElementNodeIdConnect = {
 /** The fields on `templateElement` to look up the row to delete. */
 export type TemplateElementTemplateElementPkeyDelete = {
   id: Scalars['Int'];
+};
+
+/** The fields on `templateElement` to look up the row to delete. */
+export type TemplateElementTemplateElementTemplateCodeCodeKeyDelete = {
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to delete. */
@@ -11341,6 +11443,7 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   validation?: Maybe<Scalars['JSON']>;
   validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  templateCode?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
@@ -11391,13 +11494,19 @@ export type TemplateElementSectionIdFkeyInverseInput = {
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectById?: Maybe<Array<TemplateElementTemplateElementPkeyConnect>>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  connectByTemplateCodeAndCode?: Maybe<Array<TemplateElementTemplateElementTemplateCodeCodeKeyConnect>>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<TemplateElementNodeIdConnect>>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteById?: Maybe<Array<TemplateElementTemplateElementPkeyDelete>>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  deleteByTemplateCodeAndCode?: Maybe<Array<TemplateElementTemplateElementTemplateCodeCodeKeyDelete>>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<TemplateElementNodeIdDelete>>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateById?: Maybe<Array<TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementPkeyUpdate>>;
+  /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
+  updateByTemplateCodeAndCode?: Maybe<Array<TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementTemplateCodeCodeKeyUpdate>>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate>>;
   /** A `TemplateElementInput` object that will be created and connected to this object. */
@@ -11425,6 +11534,7 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   validation?: Maybe<Scalars['JSON']>;
   validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  templateCode?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
@@ -11586,7 +11696,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   status?: Maybe<ReviewAssignmentStatus>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -11690,7 +11800,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -11794,7 +11904,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -11898,7 +12008,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisat
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -12162,7 +12272,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -12334,7 +12444,7 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -12424,7 +12534,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFk
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -12710,7 +12820,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignm
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -12788,13 +12898,19 @@ export type ReviewQuestionAssignmentTemplateElementIdFkeyInput = {
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectById?: Maybe<TemplateElementTemplateElementPkeyConnect>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  connectByTemplateCodeAndCode?: Maybe<TemplateElementTemplateElementTemplateCodeCodeKeyConnect>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateElementNodeIdConnect>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteById?: Maybe<TemplateElementTemplateElementPkeyDelete>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  deleteByTemplateCodeAndCode?: Maybe<TemplateElementTemplateElementTemplateCodeCodeKeyDelete>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateElementNodeIdDelete>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateById?: Maybe<TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate>;
+  /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
+  updateByTemplateCodeAndCode?: Maybe<TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeKeyUpdate>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateByNodeId?: Maybe<ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate>;
   /** A `TemplateElementInput` object that will be created and connected to this object. */
@@ -12823,6 +12939,7 @@ export type UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssi
   validation?: Maybe<Scalars['JSON']>;
   validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  templateCode?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
@@ -12902,7 +13019,7 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -14813,13 +14930,19 @@ export type ReviewResponseTemplateElementIdFkeyInput = {
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectById?: Maybe<TemplateElementTemplateElementPkeyConnect>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  connectByTemplateCodeAndCode?: Maybe<TemplateElementTemplateElementTemplateCodeCodeKeyConnect>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateElementNodeIdConnect>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteById?: Maybe<TemplateElementTemplateElementPkeyDelete>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  deleteByTemplateCodeAndCode?: Maybe<TemplateElementTemplateElementTemplateCodeCodeKeyDelete>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateElementNodeIdDelete>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateById?: Maybe<TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate>;
+  /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
+  updateByTemplateCodeAndCode?: Maybe<TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeKeyUpdate>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateByNodeId?: Maybe<ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate>;
   /** A `TemplateElementInput` object that will be created and connected to this object. */
@@ -14848,6 +14971,7 @@ export type UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElemen
   validation?: Maybe<Scalars['JSON']>;
   validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  templateCode?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
@@ -14956,6 +15080,14 @@ export type ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput = {
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
 
+/** The fields on `templateElement` to look up the row to update. */
+export type TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `templateElement` being updated. */
+  patch: UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch;
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `templateElement` to be connected. */
@@ -14979,6 +15111,7 @@ export type TemplateElementPatch = {
   validation?: Maybe<Scalars['JSON']>;
   validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  templateCode?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
@@ -15000,6 +15133,7 @@ export type ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput = {
   validation?: Maybe<Scalars['JSON']>;
   validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  templateCode?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
@@ -15616,7 +15750,7 @@ export type ReviewAssignmentPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -15643,7 +15777,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -15675,6 +15809,14 @@ export type ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmen
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
 };
 
+/** The fields on `templateElement` to look up the row to update. */
+export type TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `templateElement` being updated. */
+  patch: UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `templateElement` to be connected. */
@@ -15698,6 +15840,7 @@ export type ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateIn
   validation?: Maybe<Scalars['JSON']>;
   validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  templateCode?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
@@ -15741,7 +15884,7 @@ export type ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCr
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -15926,7 +16069,7 @@ export type ReviewAssignmentLevelIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -15990,7 +16133,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -16087,7 +16230,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -16391,7 +16534,7 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -16461,7 +16604,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -16530,7 +16673,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -16599,7 +16742,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   status: ReviewAssignmentStatus;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -16674,6 +16817,14 @@ export type ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInp
   filesUsingId?: Maybe<FileApplicationResponseIdFkeyInverseInput>;
 };
 
+/** The fields on `templateElement` to look up the row to update. */
+export type TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementTemplateCodeCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `templateElement` being updated. */
+  patch: UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch;
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `templateElement` to be connected. */
@@ -16696,6 +16847,7 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   validation?: Maybe<Scalars['JSON']>;
   validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  templateCode?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
@@ -16851,6 +17003,14 @@ export type TemplateElementSectionIdFkeyTemplateSectionCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
 
+/** The fields on `templateElement` to look up the row to update. */
+export type TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `templateElement` being updated. */
+  patch: UpdateTemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch;
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `templateElement` to be connected. */
@@ -16874,6 +17034,7 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   validation?: Maybe<Scalars['JSON']>;
   validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  templateCode?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
@@ -17560,6 +17721,13 @@ export type PermissionNamePermissionPolicyIdFkeyPermissionNameCreateInput = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+};
+
+/** The fields on `permissionPolicy` to look up the row to update. */
+export type PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `permissionPolicy` being updated. */
+  patch: UpdatePermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyPatch;
+  name: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -18488,7 +18656,7 @@ export type ReviewAssignmentInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
@@ -18868,6 +19036,7 @@ export type TemplateElementInput = {
   validation?: Maybe<Scalars['JSON']>;
   validationMessage?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  templateCode?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
@@ -19834,6 +20003,15 @@ export type UpdatePermissionPolicyInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `updatePermissionPolicyByName` mutation. */
+export type UpdatePermissionPolicyByNameInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `PermissionPolicy` being updated. */
+  patch: PermissionPolicyPatch;
+  name: Scalars['String'];
+};
+
 /** All input for the `updateReviewByNodeId` mutation. */
 export type UpdateReviewByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -20260,6 +20438,16 @@ export type UpdateTemplateElementInput = {
   /** An object where the defined keys will be set on the `TemplateElement` being updated. */
   patch: TemplateElementPatch;
   id: Scalars['Int'];
+};
+
+/** All input for the `updateTemplateElementByTemplateCodeAndCode` mutation. */
+export type UpdateTemplateElementByTemplateCodeAndCodeInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `TemplateElement` being updated. */
+  patch: TemplateElementPatch;
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
 };
 
 /** All input for the `updateTemplatePermissionByNodeId` mutation. */
@@ -21122,6 +21310,13 @@ export type DeletePermissionPolicyInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `deletePermissionPolicyByName` mutation. */
+export type DeletePermissionPolicyByNameInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
 /** All input for the `deleteReviewByNodeId` mutation. */
 export type DeleteReviewByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -21520,6 +21715,14 @@ export type DeleteTemplateElementInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `deleteTemplateElementByTemplateCodeAndCode` mutation. */
+export type DeleteTemplateElementByTemplateCodeAndCodeInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+};
+
 /** All input for the `deleteTemplatePermissionByNodeId` mutation. */
 export type DeleteTemplatePermissionByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -21890,6 +22093,17 @@ export type CreateReviewMutation = (
     & { review?: Maybe<(
       { __typename?: 'Review' }
       & Pick<Review, 'id'>
+      & { reviewAssignment?: Maybe<(
+        { __typename?: 'ReviewAssignment' }
+        & Pick<ReviewAssignment, 'id'>
+        & { reviews: (
+          { __typename?: 'ReviewsConnection' }
+          & { nodes: Array<Maybe<(
+            { __typename?: 'Review' }
+            & Pick<Review, 'id'>
+          )>> }
+        ) }
+      )> }
     )> }
   )> }
 );
@@ -22018,7 +22232,7 @@ export type UpdateReviewAssignmentMutation = (
     { __typename?: 'UpdateReviewAssignmentPayload' }
     & { reviewAssignment?: Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'status' | 'timeCreated'>
+      & Pick<ReviewAssignment, 'id' | 'status' | 'timeUpdated'>
       & { reviewQuestionAssignments: (
         { __typename?: 'ReviewQuestionAssignmentsConnection' }
         & { nodes: Array<Maybe<(
@@ -22204,7 +22418,7 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'levelNumber' | 'status' | 'timeCreated' | 'reviewerId' | 'isLastLevel' | 'templateSectionRestrictions'>
+      & Pick<ReviewAssignment, 'id' | 'levelNumber' | 'status' | 'timeUpdated' | 'reviewerId' | 'isLastLevel' | 'templateSectionRestrictions'>
       & { reviewer?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'id' | 'firstName' | 'lastName'>
@@ -22512,6 +22726,14 @@ export const CreateReviewDocument = gql`
   createReview(input: {review: {reviewAssignmentId: $reviewAssigmentId, trigger: $trigger, reviewDecisionsUsingId: {create: {decision: NO_DECISION}}, reviewResponsesUsingId: {create: $applicationResponses}}}) {
     review {
       id
+      reviewAssignment {
+        id
+        reviews {
+          nodes {
+            id
+          }
+        }
+      }
     }
   }
 }
@@ -22753,7 +22975,7 @@ export const UpdateReviewAssignmentDocument = gql`
     reviewAssignment {
       id
       status
-      timeCreated
+      timeUpdated
       reviewQuestionAssignments {
         nodes {
           id
@@ -23088,12 +23310,12 @@ export type GetReviewDecisionCommentLazyQueryHookResult = ReturnType<typeof useG
 export type GetReviewDecisionCommentQueryResult = Apollo.QueryResult<GetReviewDecisionCommentQuery, GetReviewDecisionCommentQueryVariables>;
 export const GetReviewInfoDocument = gql`
     query getReviewInfo($applicationId: Int, $assignerId: Int!) {
-  reviewAssignments(condition: {applicationId: $applicationId}, orderBy: TIME_CREATED_DESC) {
+  reviewAssignments(condition: {applicationId: $applicationId}, orderBy: TIME_UPDATED_DESC) {
     nodes {
       id
       levelNumber
       status
-      timeCreated
+      timeUpdated
       levelNumber
       reviewerId
       isLastLevel
