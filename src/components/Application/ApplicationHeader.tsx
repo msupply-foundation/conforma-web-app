@@ -14,21 +14,23 @@ const ApplicationHeader: React.FC<AppHeaderProps> = ({ template, currentUser, Ch
   const { code, name } = template
   return (
     <Container id="application-area">
-      <Label
-        icon
-        size="medium"
-        as={Link}
-        to={`/applications?type=${code}`}
-        content={
-          <>
-            <Icon name="angle left" />
-            {`${name} ${strings.LABEL_APPLICATIONS}`}
-          </>
-        }
-      />
-      <Header as="h4" className="company-title" textAlign="center">
-        {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
-      </Header>
+      <div className="top-container">
+        <Label
+          icon
+          size="medium"
+          as={Link}
+          to={`/applications?type=${code}`}
+          content={
+            <>
+              <Icon name="angle left" />
+              {`${name} ${strings.LABEL_APPLICATIONS}`}
+            </>
+          }
+        />
+        <Header as="h4" className="company-title" textAlign="center">
+          {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
+        </Header>
+      </div>
       <Container id="application-content">
         <Header as="h2" textAlign="center">
           {`${name} ${strings.TITLE_APPLICATION_FORM}`}

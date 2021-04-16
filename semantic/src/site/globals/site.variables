@@ -2,7 +2,7 @@
      User Global Variables
 *******************************/
 @fontName: 'Open Sans';
-@userAreaFont: 'Arial'; // TO-DO: Check with Deb what to use for this
+@alternativeFont: 'Arial'; // TO-DO: Check with Deb what to use for this
 
 @red: @error;
 @orange: #f2711c;
@@ -67,6 +67,7 @@
 
 // font-weights
 @regularWeight: 400;
+@mildboldWeight: 500;
 @semiboldWeight: 600;
 
 // font-height
@@ -95,6 +96,10 @@
 .attention {
   font-size: 12px;
   color: @attention; // pink
+}
+
+.alt-font {
+  font-family: @alternativeFont;
 }
 
 /*------------------------

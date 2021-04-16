@@ -26,7 +26,7 @@ p strong {
 }
 
 #user-area {
-  font-family: @userAreaFont;
+  font-family: @alternativeFont;
   color: @userAreaText;
   display: flex;
   position: fixed; // TO-DO: No fixed on mobile
@@ -130,18 +130,35 @@ p strong {
   padding-right: 0;
 }
 
-.company-title {
+#application-area .top-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+#application-area .company-title {
+  width: 100%;
   letter-spacing: @letterSpacingRegular;
-  line-height: @lineHeightBig;
+  font-family: @alternativeFont;
+  font-weight: @mildboldWeight;
+  line-height: @lineHeightBigger;
+}
+
+@media only screen and (min-width: @tabletBreakpoint) {
+  #application-area .company-title {
+    margin-top: -25px;
+  }
 }
 
 // Back to application list label
 #application-area .label {
-  align-self: flex-start;
   min-width: 132px;
   max-width: 500px;
-  height: 25px;
   background-color: transparent;
+}
+
+#application-area .application-segment {
+  padding: 0;
 }
 
 /*--------------------------------
@@ -151,9 +168,10 @@ p strong {
 // In use for ApplicationCreate and ApplicationHome
 #application-content {
   width: 800px;
+  display: flex;
+  flex-direction: column;
   background-color: @surfacesWhite;
-  padding: 30px 32px 50px;
-  flex: 1;
+  padding: 30px 50px 32px;
 }
 
 // Not currently used, but should be appplied to the Link in the menu

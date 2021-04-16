@@ -91,9 +91,17 @@ const ApplicationCreate: React.FC = () => {
         <SectionsList sections={template.sections} />
         <Divider />
         <Markdown text={template.startMessage || ''} semanticComponent="Message" info />
-        <Button color="blue" loading={processing} onClick={handleCreate}>
-          {strings.BUTTON_APPLICATION_START}
-        </Button>
+        <Segment basic className="application-segment">
+          <Button
+            color="blue"
+            floated="left"
+            className="wide"
+            loading={processing}
+            onClick={handleCreate}
+          >
+            {strings.BUTTON_APPLICATION_START}
+          </Button>
+        </Segment>
       </>
     ) : null
   }
