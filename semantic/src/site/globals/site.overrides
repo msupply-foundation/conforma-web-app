@@ -7,7 +7,7 @@ body {
 }
 
 p {
-  font-size: 15px;
+  font-size: medium;
   letter-spacing: 0;
 }
 
@@ -57,12 +57,12 @@ p strong {
 // Menu bar links
 #user-area a {
   color: @userAreaText;
-  font-size: 14px;
+  font-size: small;
 }
 
 #org-selector {
-  font-size: 27px;
-  letter-spacing: 3.4px;
+  font-size: x-large;
+  letter-spacing: @letterSpacingLarge;
   text-transform: uppercase;
   // border: 1px white solid;
   display: flex;
@@ -115,7 +115,7 @@ p strong {
 }
 
 #footer-content p {
-  font-size: 12px;
+  font-size: xx-small;
   color: @surfacesDark;
   margin-left: 10px;
 }
@@ -136,6 +136,13 @@ p strong {
   justify-content: space-between;
 }
 
+// Back to application list label
+#application-area .back-label {
+  min-width: 132px;
+  max-width: 500px;
+  background-color: transparent;
+}
+
 #application-area .company-title {
   width: 100%;
   letter-spacing: @letterSpacingRegular;
@@ -150,11 +157,17 @@ p strong {
   }
 }
 
-// Back to application list label
-#application-area .label {
-  min-width: 132px;
-  max-width: 500px;
+#application-area .ui.header .sub.header {
+  margin-top: 11px;
+  font-size: large;
+  letter-spacing: @letterSpacingSmall;
+}
+
+#application-area .label-title {
+  padding: 0;
+  margin-left: 0;
   background-color: transparent;
+  font-size: small;
 }
 
 #application-area .application-segment {
@@ -229,6 +242,7 @@ h1 {
 }
 h2 {
   font-size: @h2;
+  line-height: @lineHeightBig;
   font-weight: @regularWeight;
 }
 h3 {

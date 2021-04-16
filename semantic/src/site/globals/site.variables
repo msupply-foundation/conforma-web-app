@@ -75,7 +75,9 @@
 @fontHeightRegular: 20px;
 
 // letter spacing
+@letterSpacingSmall: 0.36px;
 @letterSpacingRegular: 1.8px;
+@letterSpacingLarge: 3.4px;
 
 // Text colours
 @darkGrey: @headersInteractiveLow;
@@ -85,8 +87,27 @@
 .secondary {
   font-size: 13px;
 }
-.small {
+
+.xx-samll {
   font-size: 12px;
+}
+.x-small {
+  font-size: 13px;
+}
+.small {
+  font-size: 14px;
+}
+.medium {
+  font-size: 15px;
+}
+.large {
+  font-size: 20px;
+}
+.x-large {
+  font-size: 27px;
+}
+.xx-large {
+  font-size: 36px;
 }
 
 .interactive {
