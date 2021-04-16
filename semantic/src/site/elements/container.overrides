@@ -2,15 +2,8 @@
          Site Overrides
 *******************************/
 
-@media only screen and (min-width: 1200px) {
-  .ui.container {
-    width: 1024px;
-  }
-}
+// Overrides container width
+@maxWidth: 1024px;
 
-@media only screen and (max-width: 1200px) {
-  .ui.container {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-}
+// Overrides to remove left and right margin on mobile
+@mobileGutter: 0;

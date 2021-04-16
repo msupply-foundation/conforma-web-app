@@ -157,7 +157,7 @@ p strong {
 
 #application-area .ui.header .sub.header {
   margin-top: 11px;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
   font-size: large;
   letter-spacing: @letterSpacingSmall;
 }
