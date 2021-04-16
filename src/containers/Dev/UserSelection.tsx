@@ -4,7 +4,6 @@ import { Loading } from '../../components'
 import { postRequest as attemptLogin } from '../../utils/helpers/fetchMethods'
 import config from '../../config.json'
 import { useGetUsersQuery } from '../../utils/generated/graphql'
-import { useRouter } from '../../utils/hooks/useRouter'
 import { User } from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
 

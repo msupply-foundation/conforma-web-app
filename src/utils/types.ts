@@ -10,7 +10,6 @@ import {
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
-  TemplateElement,
   TemplateElementCategory,
   User as GraphQLUser,
   Organisation as GraphQLOrg,
@@ -65,7 +64,7 @@ export {
   TemplatesDetails,
   UseGetApplicationProps,
   User,
-  UseGetFullReviewStructureProps,
+  UseGetReviewStructureForSectionProps,
   OrganisationSimple,
   Organisation,
   LoginPayload,
@@ -110,7 +109,7 @@ interface ApplicationStage {
 interface AssignmentDetails {
   id: number
   status: ReviewAssignmentStatus | null
-  timeCreated: Date
+  timeUpdated: Date
   level: number
   reviewerId?: number
   review: ReviewDetails | null
@@ -267,7 +266,6 @@ interface ResponseFull {
   id: number
   text: string | null | undefined
   optionIndex?: number
-  reference?: any // Not yet decided how to represent
   isValid?: boolean | null
   hash?: string // Used in Password plugin
   files?: any[] // Used in FileUpload plugin
@@ -468,7 +466,7 @@ interface LoginPayload {
   orgList?: OrganisationSimple[]
 }
 
-interface UseGetFullReviewStructureProps {
+interface UseGetReviewStructureForSectionProps {
   fullApplicationStructure: FullStructure
   reviewAssignment: AssignmentDetails
   filteredSectionIds?: number[]

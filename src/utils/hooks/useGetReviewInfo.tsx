@@ -80,7 +80,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         id,
         status,
         stage: assignmentStage,
-        timeCreated,
+        timeUpdated,
         levelNumber,
         reviewer,
         reviewAssignmentAssignerJoins,
@@ -117,7 +117,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         assignableSectionRestrictions: templateSectionRestrictions || [],
         totalAssignedQuestions,
         reviewQuestionAssignments,
-        timeCreated,
+        timeUpdated,
       }
 
       return assignment

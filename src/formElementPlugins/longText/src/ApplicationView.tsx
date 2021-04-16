@@ -14,7 +14,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onSave,
   Markdown,
 }) => {
-  const { label, description, placeholder, rows } = parameters
+  const { label, description, placeholder, lines, maxLength } = parameters
 
   const { isEditable } = element
 
@@ -23,8 +23,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }, [])
 
   function handleChange(e: any) {
-    onUpdate(e.target.value)
-    setValue(e.target.value)
+    let text = e.target.value
+    if (maxLength && text.length > maxLength) {
+      text = text.substring(0, maxLength)
+    }
+    onUpdate(text)
+    setValue(text)
   }
 
   function handleLoseFocus(e: any) {
@@ -39,7 +43,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Markdown text={description} />
       <Form.TextArea
         placeholder={placeholder}
-        rows={rows || 5}
+        rows={lines || 5}
         onChange={handleChange}
         onBlur={handleLoseFocus}
         onFocus={setIsActive}

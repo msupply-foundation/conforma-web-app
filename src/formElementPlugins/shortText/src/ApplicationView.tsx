@@ -14,15 +14,19 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
 }) => {
   const { isEditable } = element
-  const { placeholder, maskedInput, label, description } = parameters
+  const { placeholder, maskedInput, label, description, maxLength } = parameters
 
   useEffect(() => {
     onUpdate(value)
   }, [])
 
   function handleChange(e: any) {
-    onUpdate(e.target.value)
-    setValue(e.target.value)
+    let text = e.target.value
+    if (maxLength && text.length > maxLength) {
+      text = text.substring(0, maxLength)
+    }
+    onUpdate(text)
+    setValue(text)
   }
 
   function handleLoseFocus(e: any) {

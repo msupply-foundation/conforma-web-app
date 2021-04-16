@@ -1,6 +1,6 @@
 import { useUpdateReviewMutation, ReviewPatch, Trigger, Decision } from '../generated/graphql'
 import { AssignmentDetails, FullStructure } from '../types'
-import { useGetFullReviewStructureAsync } from './useGetFullReviewStructure'
+import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSection'
 
 // below lines are used to get return type of the function that is returned by useRestartReviewMutation
 type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewMutation>
