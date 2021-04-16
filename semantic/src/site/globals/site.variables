@@ -71,7 +71,6 @@
 @semiboldWeight: 600;
 
 // font-height
-@fontHeightSmall: 16px;
 @fontHeightRegular: 20px;
 
 // letter spacing

@@ -3,6 +3,5 @@
 *******************************/
 
 .ui.label {
-  line-height: @lineHeightSmall;
   font-weight: @semiboldWeight;
 }

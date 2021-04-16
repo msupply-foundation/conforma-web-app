@@ -16,7 +16,7 @@ p strong {
 }
 
 /*--------------------------------
-   Main area, User are & Footer
+   Main area, User area & Footer
 ---------------------------------*/
 #main-container {
   padding: 0;
@@ -148,7 +148,6 @@ p strong {
   letter-spacing: @letterSpacingRegular;
   font-family: @alternativeFont;
   font-weight: @mildboldWeight;
-  line-height: @lineHeightBigger;
 }
 
 @media only screen and (min-width: @tabletBreakpoint) {
@@ -242,7 +241,6 @@ h1 {
 }
 h2 {
   font-size: @h2;
-  line-height: @lineHeightBig;
   font-weight: @regularWeight;
 }
 h3 {
