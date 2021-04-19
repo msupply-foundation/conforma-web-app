@@ -26,7 +26,12 @@ const useGetSingleTable = () => {
   useEffect(() => {
     if (structure.id) {
       setDynamicQuery(getDynamicSingleTable(structure))
-      getSingleTable()
+
+      // Note: After we have updated the structure and added/updated row is successful, structure query
+      // successfully brings the updated structure but the lookup table call says the newly added field is
+      // not there (probably the graphql schema is being updated). A half a second wait before making
+      // the query fixes it so I decided to fix it lazy for now.
+      setTimeout(() => getSingleTable(), 500)
     }
   }, [structure])
 

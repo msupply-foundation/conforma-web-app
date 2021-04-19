@@ -18,7 +18,7 @@ const LookUpTableImportCsvReducer = (
         submittable: false,
         submitting: false,
         errors: [],
-        success: false,
+        success: [],
       }
     case LookUpTableImportCsvActions.UploadModalClose:
       return { ...state, uploadModalOpen: false }
@@ -32,8 +32,14 @@ const LookUpTableImportCsvReducer = (
       return { ...state, submitting: action.payload, submittable: false }
     case LookUpTableImportCsvActions.setErrorMessages:
       return { ...state, errors: action.payload, submitting: false }
-    case LookUpTableImportCsvActions.setSuccess:
-      return { ...state, success: true, errors: [], submitting: false, submittable: false }
+    case LookUpTableImportCsvActions.setSuccessMessages:
+      return {
+        ...state,
+        success: action.payload,
+        errors: [],
+        submitting: false,
+        submittable: false,
+      }
     default:
       return state
   }

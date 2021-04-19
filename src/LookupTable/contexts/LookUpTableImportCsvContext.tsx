@@ -9,7 +9,7 @@ const initialState: LookUpTableImportCsvType = {
   submittable: false,
   submitting: false,
   errors: [],
-  success: false,
+  success: [],
 }
 
 const LookUpTableImportCsvContext = React.createContext<{

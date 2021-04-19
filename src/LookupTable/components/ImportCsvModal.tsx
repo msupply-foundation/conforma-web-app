@@ -19,7 +19,6 @@ const ImportCsvModal: React.FC = ({
   onImportSuccess,
   importModelOpen = false,
   structure = null,
-  ...props
 }: any) => {
   const { state, dispatch } = React.useContext(LookUpTableImportCsvContext)
   const { uploadModalOpen: open, file, tableName, submittable, submitting, errors, success } = state
@@ -58,7 +57,7 @@ const ImportCsvModal: React.FC = ({
     formData.append('file', file)
     if (!structure?.id) formData.append('tableName', tableName)
 
-    axios
+    await axios
       .post(
         config.serverREST + '/lookup-table/import' + (structure?.id ? '/' + structure.id : ''),
         formData,
@@ -68,8 +67,9 @@ const ImportCsvModal: React.FC = ({
           },
         }
       )
-      .then(function (response) {
-        dispatch({ type: 'SET_SUCCESS', payload: true })
+      .then(function (response: any) {
+        const successResponse = response.data
+        dispatch({ type: 'SET_SUCCESS_MESSAGES', payload: JSON.parse(successResponse.message) })
         onImportSuccess()
       })
       .catch(function (error: any) {
@@ -110,14 +110,15 @@ const ImportCsvModal: React.FC = ({
           </Segment>
         ) : errors.length > 0 ? (
           <Message error header="Errors found" list={[...errors]} />
-        ) : success ? (
-          <Message positive>
-            <Message.Header>Lookup table successfully imported</Message.Header>
-            <p>
-              Lookup table '{structure?.label}' has been successfully
-              {!structure?.id ? ' created' : ' updated'}.
-            </p>
-          </Message>
+        ) : success.length > 0 ? (
+          <Message
+            positive
+            header={`Lookup table '${
+              !structure?.id ? tableName : structure?.label
+            }' has been successfully
+              ${!structure?.id ? ' created' : ' updated'}.`}
+            list={[...success]}
+          />
         ) : (
           <Form>
             {!structure?.id && (
@@ -155,9 +156,9 @@ const ImportCsvModal: React.FC = ({
       </Modal.Content>
       <Modal.Actions>
         <Button color="black" onClick={goBack}>
-          Cancel
+          Close
         </Button>
-        {errors.length > 0 || success ? (
+        {errors.length > 0 || success.length > 0 ? (
           <Button
             content={success ? 'Import another CSV' : 'Try again'}
             labelPosition="right"
