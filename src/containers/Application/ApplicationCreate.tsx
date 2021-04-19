@@ -89,7 +89,7 @@ const ApplicationCreate: React.FC = () => {
         <Label className="label-title" content={strings.SUBTITLE_APPLICATION_STEPS} />
         <Header as="h4" content={strings.TITLE_STEPS} />
         <SectionsList sections={template.sections} />
-        <Divider />
+        <Divider className="last-line" />
         <Markdown text={template.startMessage || ''} semanticComponent="Message" info />
         <Segment basic className="application-segment">
           <Button
