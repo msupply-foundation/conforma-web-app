@@ -80,15 +80,15 @@ interface ApplicationRowProps {
 }
 
 const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application }) => {
-  const { push, query } = useRouter()
+  const { replace, query } = useRouter()
 
   return (
     <Table.Row
       key={`ApplicationList-application-${application.id}`}
       onClick={() => {
         console.log(query)
-        if (query.userRole === 'applicant') push(`/application/${application.serial}`)
-        else push(`/application/${application.serial}/review`)
+        if (query.userRole === 'applicant') replace(`/application/${application.serial}`)
+        else replace(`/application/${application.serial}/review`)
       }}
     >
       {columns.map(({ headerName, ColumnComponent }, index) => (
