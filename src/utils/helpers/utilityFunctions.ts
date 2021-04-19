@@ -12,7 +12,5 @@ If local/relative, it prepends it with a specified host, else it
 returns it unchanged.
 */
 export const getFullUrl = (baseUrl: string | undefined, host: string) => {
-  const fullUrl = baseUrl?.startsWith('http') ? baseUrl : host + baseUrl
-  if (baseUrl?.startsWith('http')) console.log('url', baseUrl)
-  return fullUrl
+  return baseUrl?.startsWith('http') ? baseUrl : host + baseUrl
 }
