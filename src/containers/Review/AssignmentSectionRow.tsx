@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { CSSProperties, useState } from 'react'
 import { Dropdown, Grid, Message } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import { ReviewAssignmentStatus } from '../../utils/generated/graphql'
@@ -42,9 +42,17 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
 
   if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
   return (
-    <Grid columns="equal">
+    <Grid columns="equal" verticalAlign="middle" style={inlineStyles.grid}>
       <Grid.Column floated="left">
-        <Dropdown options={options} value={value} onChange={onAssignment} />
+        <div style={inlineStyles.container}>
+          <div style={inlineStyles.title}>{strings.LABEL_REVIEWED_BY}</div>
+          <Dropdown
+            options={options}
+            value={value}
+            onChange={onAssignment}
+            style={inlineStyles.dropdown}
+          />
+        </div>
       </Grid.Column>
     </Grid>
   )
@@ -111,5 +119,22 @@ const matchAssignmentToSection = (assignment: AssignmentDetails, sectionCode: st
     (reviewQuestionAssignment) =>
       reviewQuestionAssignment.templateElement?.section?.code === sectionCode
   )
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const inlineStyles = {
+  grid: { borderRadius: 10 },
+  container: { display: 'flex', alignItems: 'center' } as CSSProperties,
+  title: { fontWeight: 500 } as CSSProperties,
+  dropdown: {
+    border: '2px solid rgb(150,150, 150)',
+    marginLeft: 10,
+    fontSize: 12,
+    padding: 10,
+    fontWeight: 800,
+    paddingTop: 2,
+    paddingBottom: 2,
+    borderRadius: 4,
+  } as CSSProperties,
+}
 
 export default AssignmentSectionRow
