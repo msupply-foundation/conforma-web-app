@@ -16,7 +16,6 @@ const ApplicationHeader: React.FC<AppHeaderProps> = ({ template, currentUser, Ch
     <Container id="application-area">
       <div className="top-container">
         <Label
-          icon
           className="back-label"
           as={Link}
           to={`/applications?type=${code}`}
@@ -34,7 +33,7 @@ const ApplicationHeader: React.FC<AppHeaderProps> = ({ template, currentUser, Ch
       <Container id="application-content">
         <Header as="h2" textAlign="center">
           {`${name} ${strings.TITLE_APPLICATION_FORM}`}
-          <Header.Subheader as="h3" content={strings.TITLE_INTRODUCTION} />
+          <Header.Subheader content={<Header as="h3" content={strings.TITLE_INTRODUCTION} />} />
         </Header>
         <ChildComponent />
       </Container>
