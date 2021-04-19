@@ -1,3 +1,14 @@
 /*******************************
         Site Overrides
 *******************************/
+
+@borderWidth: 4px;
+@borderRadius: 8px;
+
+.ui.info.message .header i.icon {
+  color: @information;
+}
+
+.ui.info.message {
+  border-left: @borderWidth solid @information;
+}

@@ -5,7 +5,7 @@
 
 import React from 'react'
 import ReactMarkdown, { ReactMarkdownProps } from 'react-markdown'
-import { Message, Icon } from 'semantic-ui-react'
+import { Message, Icon, Header } from 'semantic-ui-react'
 
 type SemanticComponent = 'Message' | 'noParagraph' // Enum for available renderers
 interface MarkdownBlockProps {
@@ -34,9 +34,11 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
         const headingText = children?.[0]?.value
         return (
           <Message.Header>
-            {info && <Icon name="info circle" />}
-            {error && <Icon name="exclamation circle" />}
-            {headingText}
+            <Header
+              as="h4"
+              icon={info ? <Icon name="info circle" /> : null}
+              content={headingText}
+            />
           </Message.Header>
         )
       },
