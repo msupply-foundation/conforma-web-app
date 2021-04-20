@@ -80,8 +80,8 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         id,
         status,
         stage: assignmentStage,
-        timeCreated,
-        level,
+        timeUpdated,
+        levelNumber,
         reviewer,
         reviewAssignmentAssignerJoins,
         templateSectionRestrictions,
@@ -103,7 +103,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
               status: review.status as ReviewStatus,
               timeStatusCreated: review.timeStatusCreated,
               isLastLevel: !!review?.isLastLevel,
-              level: review.level || 0,
+              level: review.levelNumber || 0,
               stage,
               reviewDecision: review.reviewDecisions.nodes[0], // this will be the latest, sorted in query
             }
@@ -111,13 +111,13 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         status,
         stage,
         reviewer: reviewer as User,
-        level: level || 1,
+        level: levelNumber || 1,
         isCurrentUserReviewer: reviewer?.id === (currentUser?.userId as number),
         isCurrentUserAssigner: reviewAssignmentAssignerJoins.nodes.length > 0,
         assignableSectionRestrictions: templateSectionRestrictions || [],
         totalAssignedQuestions,
         reviewQuestionAssignments,
-        timeCreated,
+        timeUpdated,
       }
 
       return assignment

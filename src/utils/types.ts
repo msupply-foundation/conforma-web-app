@@ -109,7 +109,7 @@ interface ApplicationStage {
 interface AssignmentDetails {
   id: number
   status: ReviewAssignmentStatus | null
-  timeCreated: Date
+  timeUpdated: Date
   level: number
   reviewerId?: number
   review: ReviewDetails | null
