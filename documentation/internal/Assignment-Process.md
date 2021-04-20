@@ -19,7 +19,7 @@ First of all, some bulletpoint (and rules) to help clarify the diagram
 - Review assignments can be restricted by section/s (template_section_restriction, which is an array of section codes user can review, value can be blank to allow review of all sections)
 - Review assignments of status `Available or Assigned` can be assigned by the assigner linked through the `review_assignment_assigner_join` table
 - `Assigned` status indicates that the reviewer is able to create a review (or one already exists)
-- Review assignment should only be editable by a reviewer if it's `Available for self-assignment`, otherwise by linked `Assigner`. Review assignment should not be editable once stage of review assignmetn is different to application stage
+- Review assignment should only be editable by a reviewer if it's `Available for self-assignment`, otherwise by linked `Assigner`. Review assignment should not be editable once stage of review assignment is different to the current application stage.
 - `is_last_level` field is a helper field for front end (to avoid front ending needing to figure if if review is last level for given stage)
 
 ## Difference between self assignemnt and assignment
