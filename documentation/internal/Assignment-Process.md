@@ -10,7 +10,7 @@ Seems like a good starting (anchor) point for describing this functionality, let
 
 First of all, some bulletpoint (and rules) to help clarify the diagram
 
-- One review assignment should exists per reviewer/application/stage/level
+- One review assignment should exist per reviewer/application/stage/level
 - Review assignment can have the following statuses
   - `Available` -> Can be assigned by assigner
   - `Self-assigned by another` -> Was available for self assignment (but self assigned by someone else)
