@@ -24,7 +24,7 @@ First of all, some bulletpoint (and rules) to help clarify the diagram
 
 ## Difference between self assignemnt and assignment
 
-The idea behind self assignment originated with requirement for users (who are not themself assigners) to be able to 'choose' or pick which application they will be reviewing. Currently self assignment is not restricted by template_section_restrictions
+The idea behind self assignment originated with requirement for users (who are not themselves assigners) to be able to 'choose' or pick which application they will be reviewing. Currently self assignment is not restricted by template_section_restrictions.
 
 ## The Act of Assigning - Web App
 
