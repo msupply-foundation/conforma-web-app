@@ -54,4 +54,4 @@ todo
 
 Best described in a diagram (this diagram is abstracted to only show bits related to assignments)
 
-![Assignment UI Flow](images/Assignment-Flow-Detailed.png)
+![Assignment UI Flow](images/Assignment-UI-Flow.png)
