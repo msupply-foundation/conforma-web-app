@@ -42,7 +42,7 @@ When reviews are submitted, we do similar thing but for level + 1. Typical scena
 
 ## Diagram
 
-This diagram is somewhat complex, it describes some functionality that is not implemented (re-assignment), it can be helpful when visualising full assignment flow (and for analysing different scenariors of assignment)
+This diagram is somewhat complex — it describes some functionality that is not implemented (re-assignment), but it can be helpful when visualising full assignment flow (and for analysing different scenarios of assignment)
 
 ![Assignment Flow](images/Assignment-Flow-Detailed.png)
 
