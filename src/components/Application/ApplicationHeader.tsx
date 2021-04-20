@@ -26,7 +26,7 @@ const ApplicationHeader: React.FC<AppHeaderProps> = ({ template, currentUser, Ch
             </>
           }
         />
-        <Header as="h4" className="company-title" textAlign="center">
+        <Header as="h4" className="heading-alt" textAlign="center">
           {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
         </Header>
       </div>

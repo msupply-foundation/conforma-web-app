@@ -146,14 +146,9 @@ p strong {
   background-color: transparent;
 }
 
-#application-area .company-title {
-  letter-spacing: @letterSpacingRegular;
-  font-family: @alternativeFont;
-  font-weight: @mildboldWeight;
-}
-
+// Fix for company header on mobile to not clash wit back to applications
 @media only screen and (min-width: @tabletBreakpoint) {
-  #application-area .company-title {
+  #application-area .heading-alt {
     margin-top: -25px;
   }
 }
@@ -201,6 +196,13 @@ p strong {
   flex-direction: column;
   background-color: @surfacesWhite;
   padding: 30px 50px 32px;
+}
+
+// In use for company title in application header (home/create pages)
+.heading-alt {
+  letter-spacing: @letterSpacingRegular;
+  font-family: @alternativeFont;
+  font-weight: @mildboldWeight;
 }
 
 // Not currently used, but should be appplied to the Link in the menu
