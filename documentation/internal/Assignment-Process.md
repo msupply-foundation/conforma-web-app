@@ -22,7 +22,7 @@ First of all, some bulletpoint (and rules) to help clarify the diagram
 - Review assignment should only be editable by a reviewer if it's `Available for self-assignment`, otherwise by linked `Assigner`. Review assignment should not be editable once stage of review assignment is different to the current application stage.
 - `is_last_level` field is a helper field for front end (to avoid front ending needing to figure if if review is last level for given stage)
 
-## Difference between self assignemnt and assignment
+## Difference between self-assignment and assignment
 
 The idea behind self assignment originated with requirement for users (who are not themselves assigners) to be able to 'choose' or pick which application they will be reviewing. Currently self assignment is not restricted by template_section_restrictions.
 
