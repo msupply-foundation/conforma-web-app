@@ -156,12 +156,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           onChange={handleFiles}
         />
         <Segment basic textAlign="center">
-          <Button primary disabled={!isEditable} onClick={() => fileInputRef?.current?.click()}>
-            <Icon name="upload" />
-            {uploadedFiles.length === 0
-              ? strings.BUTTON_CLICK_TO_UPLOAD
-              : strings.BUTTON_UPLOAD_ANOTHER}
-          </Button>
+          {uploadedFiles.length < fileCountLimit && (
+            <Button primary disabled={!isEditable} onClick={() => fileInputRef?.current?.click()}>
+              <Icon name="upload" />
+              {uploadedFiles.length === 0
+                ? strings.BUTTON_CLICK_TO_UPLOAD
+                : strings.BUTTON_UPLOAD_ANOTHER}
+            </Button>
+          )}
         </Segment>
         <List horizontal verticalAlign="top">
           {uploadedFiles.map((file) => {

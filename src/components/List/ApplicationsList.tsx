@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Table, Message, Segment } from 'semantic-ui-react'
+import { Table, Message } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import messages from '../../utils/messages'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
@@ -80,23 +80,16 @@ interface ApplicationRowProps {
 }
 
 const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application }) => {
-  const { push, query } = useRouter()
+  const { replace, query } = useRouter()
 
   return (
-    <Table.Row
-      key={`ApplicationList-application-${application.id}`}
-      onClick={() => {
-        console.log(query)
-        if (query.userRole === 'applicant') push(`/application/${application.serial}`)
-        else push(`/application/${application.serial}/review`)
-      }}
-    >
+    <Table.Row key={`ApplicationList-application-${application.id}`}>
       {columns.map(({ headerName, ColumnComponent }, index) => (
         <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
           <ColumnComponent application={application} />
         </Table.Cell>
       ))}
-      <Table.Cell icon="angle right" collapsing />
+      <Table.Cell icon="angle down" />
     </Table.Row>
   )
 }
