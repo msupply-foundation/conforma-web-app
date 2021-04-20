@@ -36,7 +36,7 @@ Front end doesn't generate review_assignment records, this happens on the server
 
 To reduce front end logic, server is responsible for generating review_assignment records, based on user permissions. This is done by an action `generateReviewAssignments` which is configured to fire when application or review changes status.
 
-Basically, when application is submitted, we want to look at all of the permissions linked to application template of type Assign, where template permission configurations match current level and stage, review_assignment records are generated for users who are linked to that template permission (through permission name), and any extra configurations (template section restrictions, canSelfAssign, etc..) are populated for new review_assignment record.
+Basically, when application is submitted, we want to look at all of the permissions linked to application template of type Review, where template permission configurations match current level and stage, review_assignment records are generated for users who are linked to that template permission (through permission name), and any extra configurations (template section restrictions, canSelfAssign, etc..) are populated for new review_assignment record.
 
 When reviews are submitted, we do similar thing but for level + 1. Typical scenario is a consolidator being informed that they can self assign a consolidation when lower level reviewer submits a review.
 
