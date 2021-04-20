@@ -40,14 +40,8 @@ const LookUpTableImportCsvReducer = (
   switch (action.type) {
     case LookUpTableImportCsvActions.UploadModalOpen:
       return {
-        ...state,
+        ...initialState,
         uploadModalOpen: true,
-        file: null,
-        tableName: '',
-        submittable: false,
-        submitting: false,
-        errors: [],
-        success: [],
       }
     case LookUpTableImportCsvActions.UploadModalClose:
       return { ...state, uploadModalOpen: false }
@@ -63,11 +57,8 @@ const LookUpTableImportCsvReducer = (
       return { ...state, errors: action.payload, submitting: false }
     case LookUpTableImportCsvActions.setSuccessMessages:
       return {
-        ...state,
+        ...initialState,
         success: action.payload,
-        errors: [],
-        submitting: false,
-        submittable: false,
       }
     default:
       return state
