@@ -1,5 +1,5 @@
 import React from 'react'
-import { List } from 'semantic-ui-react'
+import { Header, Icon, List } from 'semantic-ui-react'
 import { SectionDetails } from '../../../utils/types'
 
 interface SectionsListProps {
@@ -8,11 +8,22 @@ interface SectionsListProps {
 
 const SectionsList: React.FC<SectionsListProps> = ({ sections }) => {
   return (
-    <List divided relaxed="very">
-      {Object.entries(sections).map(([sectionCode, { title }]) => (
-        <List.Item key={`list-item-${sectionCode}`} icon="circle outline" header={title} />
-      ))}
-    </List>
+    <List
+      divided
+      relaxed="very"
+      items={Object.entries(sections).map(([sectionCode, { title }]) => ({
+        key: `list-item-${sectionCode}`,
+        content: (
+          <div className="line-vertical-box">
+            <div className="left">
+              <Icon name="circle outline" />
+              <Header content={title} />
+            </div>
+            <div></div>
+          </div>
+        ),
+      }))}
+    />
   )
 }
 
