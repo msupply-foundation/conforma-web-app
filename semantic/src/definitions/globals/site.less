@@ -8,12 +8,13 @@
  *
  */
 
+
 /*******************************
             Theme
 *******************************/
 
-@type: 'global';
-@element: 'site';
+@type    : 'global';
+@element : 'site';
 
 @import (multiple) '../../theme.config';
 
@@ -94,12 +95,14 @@ h5:last-child {
   margin-bottom: 0em;
 }
 
+
 /*******************************
              Text
 *******************************/
 
 p {
   margin: @paragraphMargin;
+  line-height: @paragraphLineHeight;
 }
 p:first-child {
   margin-top: 0em;
@@ -121,11 +124,13 @@ a:hover {
   text-decoration: @linkHoverUnderline;
 }
 
+
 /*******************************
          Scrollbars
 *******************************/
 
 .addScrollbars() when (@useCustomScrollbars) {
+
   /* Force Simple Scrollbars */
   body ::-webkit-scrollbar {
     -webkit-appearance: none;
