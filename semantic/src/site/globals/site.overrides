@@ -205,9 +205,12 @@ p strong {
 }
 
 // Steps line - progress bar
-#application-area .ui.list .progress {
+#application-area .ui.list .progress-box {
   padding-right: 50px;
   height: 10px;
+}
+
+#application-area .ui.list .progress-box .progress {
   width: 120px;
 }
 

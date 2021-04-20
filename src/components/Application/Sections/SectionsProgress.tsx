@@ -109,13 +109,15 @@ const SectionProgress: React.FC<ProgressType> = ({
 }) => {
   const totalDone = doneRequired + doneNonRequired
   return totalDone > 0 && totalSum > 0 ? (
-    <Progress
-      className="progress"
-      percent={(100 * totalDone) / totalSum}
-      size="tiny"
-      success={valid}
-      error={!valid}
-    />
+    <div className="progress-box">
+      <Progress
+        className="progress"
+        percent={(100 * totalDone) / totalSum}
+        size="tiny"
+        success={valid}
+        error={!valid}
+      />
+    </div>
   ) : null
 }
 
