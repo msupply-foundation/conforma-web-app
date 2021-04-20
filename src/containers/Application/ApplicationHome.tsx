@@ -59,34 +59,27 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     return (
       <>
         <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
-        <>
-          <Label className="label-title" content={strings.SUBTITLE_APPLICATION_STEPS} />
-          <Header as="h4" content={strings.TITLE_STEPS} />
-          <SectionsProgress
-            changesRequested={isChangeRequest}
-            draftStatus={current?.status === ApplicationStatus.Draft}
-            sections={sections}
-            firstStrictInvalidPage={firstStrictInvalidPage}
-            restartApplication={async ({ sectionCode, pageNumber }) => {
-              await restartApplication(fullStructure)
-              push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
-            }}
-            resumeApplication={handleResumeClick}
-          />
-          <Divider className="last-line" />
-          <Markdown text={template.startMessage || ''} semanticComponent="Message" info />
-        </>
+        <Label className="label-title" content={strings.SUBTITLE_APPLICATION_STEPS} />
+        <Header as="h4" content={strings.TITLE_STEPS} />
+        <SectionsProgress
+          changesRequested={isChangeRequest}
+          draftStatus={current?.status === ApplicationStatus.Draft}
+          sections={sections}
+          firstStrictInvalidPage={firstStrictInvalidPage}
+          restartApplication={async ({ sectionCode, pageNumber }) => {
+            await restartApplication(fullStructure)
+            push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
+          }}
+          resumeApplication={handleResumeClick}
+        />
+        <Divider className="last-line" />
+        <Markdown text={template.startMessage || ''} semanticComponent="Message" info />
         {current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage && (
-          <Sticky
-            pushing
-            style={{ backgroundColor: 'white', boxShadow: ' 0px -5px 8px 0px rgba(0,0,0,0.1)' }}
-          >
-            <Segment basic textAlign="right">
-              <Button as={Link} color="blue" onClick={handleSummaryClicked}>
-                {strings.BUTTON_SUMMARY}
-              </Button>
-            </Segment>
-          </Sticky>
+          <Segment basic className="application-segment" textAlign="right">
+            <Button as={Link} color="blue" onClick={handleSummaryClicked}>
+              {strings.BUTTON_SUMMARY}
+            </Button>
+          </Segment>
         )}
       </>
     )
