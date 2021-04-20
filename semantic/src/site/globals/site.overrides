@@ -44,6 +44,7 @@ p strong {
 #user-area-left {
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
 }
 
 #menu-bar {
