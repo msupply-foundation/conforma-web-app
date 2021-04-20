@@ -1,6 +1,6 @@
 # Assignment Process
 
-The logic of assigning a review spans between both web app and server, front end is only concerned with queries and mutations to review_assignment and review_question_assignment tables, whereas back end does most of the grunt work (through actions and triggers) and generates records in those tables based on user permissions and states of application and it's review.
+The logic of assigning a review spans between both web app and server — front end is only concerned with queries and mutations to review_assignment and review_question_assignment tables, whereas back end does most of the grunt work (through actions and triggers) and generates records in those tables based on user permissions and states of application and its review.
 
 ## Schema
 
@@ -14,7 +14,7 @@ First of all, some bulletpoint (and rules) to help clarify the diagram
 - Review assignment can have the following statuses
   - `Available` -> Can be assigned by assigner
   - `Self-assigned by another` -> Was available for self assignment (but self assigned by someone else)
-  - `Assigned` -> At least on review_question_assignment was linked to review_assignment
+  - `Assigned` -> At least one review_question_assignment was linked to review_assignment
   - `Available for self-assignment` -> Can be self assigned
 - Review assignments can be restricted by section/s (template_section_restriction, which is an array of section codes user can review, value can be blank to allow review of all sections)
 - Review assignments of status `Available or Assigned` can be assigned by the assigner linked through the join table
