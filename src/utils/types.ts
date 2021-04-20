@@ -454,8 +454,9 @@ interface OrganisationSimple {
 }
 
 interface Organisation extends OrganisationSimple {
-  licenceNumber: string
+  registration: string
   address: string
+  logoUrl: string
 }
 
 interface LoginPayload {

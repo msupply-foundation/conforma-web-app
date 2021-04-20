@@ -75,8 +75,8 @@ const UserSelection: React.FC = () => {
               {users.map((user, index) => (
                 <Grid.Row key={`user_select_${index}`}>
                   <Button
-                    basic
-                    color="blue"
+                    // basic
+                    color="grey"
                     content={user}
                     fluid
                     onClick={() => handleChangeUser(user)}

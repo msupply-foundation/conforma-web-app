@@ -2,7 +2,7 @@
      User Global Variables
 *******************************/
 @fontName: 'Open Sans';
-@alternativeFont: 'Arial'; // TO-DO: Check with Deb what to use for this
+@alternativeFont: 'Roboto'; // TO-DO: Check with Deb what to use for this
 
 @red: @error;
 @orange: #f2711c;
