@@ -181,13 +181,13 @@ const getReviewerOptions = (assignments: AssignmentDetails[], currentUserId: num
       text: strings.REVIEW_FILTER_YOURSELF,
     },
   ]
-  assignments.forEach(({ reviewer: { id, firstName, lastName } }) => {
-    if (!id || !firstName) return
+  assignments.forEach(({ reviewer: { id, username } }) => {
+    if (!id || !username) return
     if (reviewerOptions.some((option) => option.key === id)) return
     reviewerOptions.push({
       value: id,
       key: id,
-      text: `${firstName} ${lastName || ''}`,
+      text: username,
     })
   })
 
