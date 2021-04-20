@@ -16,7 +16,7 @@ First of all, some bulletpoint (and rules) to help clarify the diagram
   - `Self-assigned by another` -> Was available for self assignment (but self assigned by someone else)
   - `Assigned` -> At least on review_question_assignment was linked to review_assignment
   - `Available for self-assignment` -> Can be self assigned
-- Review assignments can be restricted by section (template_section_restriction, which is an array of section codes)
+- Review assignments can be restricted by section/s (template_section_restriction, which is an array of section codes user can review, value can be blank to allow review of all sections)
 - Review assignments of status `Available or Assigned` can be assigned by the assigner linked through the join table
 - `Assigned` status is used to indicate to the reviewer that they can start the review (if review hasn't been started already)
 - Review assignment should only be editable by a reviewer if it's `Available for self-assignment`, otherwise by linked `Assigner`. Review assignment should not be editable once stage of review assignmetn is different to application stage
