@@ -14,7 +14,7 @@ First of all, some bulletpoint (and rules) to help clarify the diagram
 - Review assignment can have the following statuses
   - `Available` -> Can be assigned by assigner
   - `Self-assigned by another` -> Was available for self assignment (but self assigned by someone else)
-  - `Assigned` -> At least on review_question_assignment was linked to review_assignment
+  - `Assigned` -> At least one review_question_assignment was linked to review_assignment
   - `Available for self-assignment` -> Can be self assigned
 - Review assignments can be restricted by section (template_section_restriction, which is an array of section codes)
 - Review assignments of status `Available or Assigned` can be assigned by the assigner linked through the join table
