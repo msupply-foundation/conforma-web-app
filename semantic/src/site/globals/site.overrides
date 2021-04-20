@@ -143,6 +143,7 @@ p strong {
   background-color: transparent;
 }
 
+// Company title on applcation home/create
 #application-area .company-title {
   letter-spacing: @letterSpacingRegular;
   font-family: @alternativeFont;
@@ -155,6 +156,7 @@ p strong {
   }
 }
 
+// "Introduction" subheader
 #application-area .ui.header .sub.header {
   margin-top: 11px;
   margin-bottom: 16px;
@@ -162,6 +164,7 @@ p strong {
   letter-spacing: @letterSpacingSmall;
 }
 
+// Title before steps
 #application-area .label-title {
   padding: 0;
   margin-left: 0;
@@ -170,19 +173,55 @@ p strong {
   font-size: small;
 }
 
+// Steps line (vertical box - layout)
+#application-area .line-vertical-box {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  min-height: 30px; // TODO: Need to be updated for mobile
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Inner steps line (left side - icon & header)
+#application-area .line-vertical-box .left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+// Steps line - header
 #application-area .ui.list > .item .header {
   color: @darkGrey;
   font-weight: @regularWeight;
   font-size: medium;
+  width: 200px;
+  overflow: hidden; // So long titles don't overflow the header area
 }
+
+// Steps line - icon
 #application-area .ui.list > .item > i.icon {
   color: @darkGrey;
 }
 
+// Steps line - progress bar
+#application-area .ui.list .progress {
+  padding-right: 50px;
+  height: 10px;
+  width: 120px;
+}
+
+// Steps line - actions box
+#application-area .ui.list .actions-box {
+  min-width: 100px;
+}
+
+// Steps line - last line divisor
 #application-area .last-line {
   margin: 0;
 }
 
+// Message area segment - bottom of application home/create
 #application-area .application-segment {
   padding: 0;
 }
@@ -191,7 +230,7 @@ p strong {
       General used classes
 ---------------------------------*/
 
-// In use for ApplicationCreate and ApplicationHome
+// In use for application home/create
 #application-content {
   width: 800px;
   display: flex;

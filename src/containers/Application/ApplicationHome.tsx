@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Button, Divider, Header, Message, Segment, Sticky } from 'semantic-ui-react'
+import { Button, Divider, Header, Label, Message, Segment, Sticky } from 'semantic-ui-react'
 import { FullStructure, SectionAndPage, StageAndStatus, TemplateDetails } from '../../utils/types'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { ApplicationHeader, Loading } from '../../components'
@@ -10,6 +10,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { Link } from 'react-router-dom'
 import useRestartApplication from '../../utils/hooks/useRestartApplication'
+import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import messages from '../../utils/messages'
 
 interface ApplicationProps {
@@ -58,9 +59,9 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     return (
       <>
         <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
-        <Segment>
-          <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
-          <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
+        <>
+          <Label className="label-title" content={strings.SUBTITLE_APPLICATION_STEPS} />
+          <Header as="h4" content={strings.TITLE_STEPS} />
           <SectionsProgress
             changesRequested={isChangeRequest}
             draftStatus={current?.status === ApplicationStatus.Draft}
@@ -72,8 +73,9 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
             }}
             resumeApplication={handleResumeClick}
           />
-          <Divider />
-        </Segment>
+          <Divider className="last-line" />
+          <Markdown text={template.startMessage || ''} semanticComponent="Message" info />
+        </>
         {current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage && (
           <Sticky
             pushing
