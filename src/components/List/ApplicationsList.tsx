@@ -1,7 +1,5 @@
 import React, { Fragment } from 'react'
-import { Link } from 'react-router-dom'
-import { Table, Message, Segment, Icon } from 'semantic-ui-react'
-import { USER_ROLES } from '../../utils/data'
+import { Table, Message } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import messages from '../../utils/messages'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
@@ -91,16 +89,7 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application })
           <ColumnComponent application={application} />
         </Table.Cell>
       ))}
-      <Table.Cell
-        selectable
-        icon="angle right"
-        as={Link}
-        onClick={() =>
-          query.userRole === USER_ROLES.APPLICANT
-            ? replace(`/application/${application.serial}`)
-            : replace(`/application/${application.serial}/review`)
-        }
-      />
+      <Table.Cell icon="angle down" />
     </Table.Row>
   )
 }
