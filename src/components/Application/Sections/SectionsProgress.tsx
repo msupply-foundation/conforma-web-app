@@ -179,6 +179,7 @@ const ActionGeneral: React.FC<ActionGeneralProps> = (props) => {
   if (isStrictSection)
     return (
       <Button
+        inverted
         color="blue"
         content={strings.BUTTON_APPLICATION_RESUME}
         onClick={() =>
