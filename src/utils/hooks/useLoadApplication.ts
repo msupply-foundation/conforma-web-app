@@ -16,10 +16,12 @@ import {
   ApplicationSection,
   ApplicationStageStatusAll,
   ApplicationStatus,
+  Organisation,
   Template,
   TemplateElement,
   TemplateStage,
   useGetApplicationQuery,
+  User,
 } from '../generated/graphql'
 import messages from '../messages'
 import { buildSectionsStructure } from '../helpers/structure'
@@ -117,6 +119,9 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       },
       firstStrictInvalidPage: null,
       isChangeRequest: false,
+      user: application?.user as User,
+      org: application?.org as Organisation,
+      config,
     }
 
     const baseElements: ElementBase[] = []
@@ -150,7 +155,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     const templateStages = application.template?.templateStages.nodes as TemplateStage[]
 
     const evaluatorParams: EvaluatorParameters = {
-      objects: { currentUser },
+      objects: { currentUser, applicationData: applicationDetails },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     }

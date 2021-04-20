@@ -5,7 +5,7 @@ import { Loading } from '../../components'
 import { tempStageStyle } from '../../components/Review'
 import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
-import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
+import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 import AssignmentSectionRow from './AssignmentSectionRow'
 import ReviewSectionRow from './ReviewSectionRow'
@@ -23,7 +23,7 @@ type Filters = {
 const ALL_REVIEWERS = 0
 
 const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
-  const { error, fullStructure: fullApplicationStructure } = useGetFullApplicationStructure({
+  const { error, fullStructure: fullApplicationStructure } = useGetApplicationStructure({
     structure,
     firstRunValidation: false,
     shouldCalculateProgress: false,
@@ -181,13 +181,13 @@ const getReviewerOptions = (assignments: AssignmentDetails[], currentUserId: num
       text: strings.REVIEW_FILTER_YOURSELF,
     },
   ]
-  assignments.forEach(({ reviewer: { id, firstName, lastName } }) => {
-    if (!id || !firstName) return
+  assignments.forEach(({ reviewer: { id, username } }) => {
+    if (!id || !username) return
     if (reviewerOptions.some((option) => option.key === id)) return
     reviewerOptions.push({
       value: id,
       key: id,
-      text: `${firstName} ${lastName || ''}`,
+      text: username,
     })
   })
 

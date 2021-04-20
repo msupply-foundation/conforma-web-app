@@ -18,31 +18,31 @@ const ReviewerActionCell: React.FC<CellProps> = ({
   },
 }) => {
   const actions = []
-  const not0 = (num: number | undefined) => num && Number(num) !== 0
-  let canShowView = not0(reviewAssignedCount) || not0(reviewSubmittedCount)
-  let canShowStart = not0(reviewAssignedNotStartedCount)
+  const notZero = (num: number | undefined) => num && Number(num) !== 0
+  let canShowView = notZero(reviewAssignedCount) || notZero(reviewSubmittedCount)
+  let canShowStart = notZero(reviewAssignedNotStartedCount)
 
-  if (not0(reviewPendingCount)) {
+  if (notZero(reviewPendingCount)) {
     canShowView = canShowStart = false
     actions.push(strings.ACTION_RE_REVIEW)
   }
 
-  if (not0(reviewDraftCount)) {
+  if (notZero(reviewDraftCount)) {
     canShowView = false
     actions.push(strings.ACTION_CONTINUE)
   }
 
-  if (not0(reviewAvailableForSelfAssignmentCount)) {
+  if (notZero(reviewAvailableForSelfAssignmentCount)) {
     canShowView = false
     actions.push(strings.ACTION_SELF_ASSIGN)
   }
 
-  if (not0(assignCount) && isFullyAssignedLevel1) {
+  if (notZero(assignCount) && isFullyAssignedLevel1) {
     canShowView = false
     actions.push(strings.ACTION_RE_ASSIGN)
   }
 
-  if (not0(assignCount) && !isFullyAssignedLevel1) {
+  if (notZero(assignCount) && !isFullyAssignedLevel1) {
     canShowView = false
     actions.push(strings.ACTION_ASSIGN)
   }

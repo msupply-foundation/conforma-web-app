@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useUserState } from '../../../contexts/UserState'
 import { useGetReviewResponsesQuery } from '../../generated/graphql'
-import { UseGetFullReviewStructureProps, FullStructure } from '../../types'
+import { UseGetReviewStructureForSectionProps, FullStructure } from '../../types'
 import { getSectionIds, generateReviewStructure } from './helpers'
 
-const useGetFullReviewStructure = (props: UseGetFullReviewStructureProps) => {
+const useGetReviewStructureForSections = (props: UseGetReviewStructureForSectionProps) => {
   const [fullReviewStructure, setFullReviewStructure] = useState<FullStructure>()
   const {
     userState: { currentUser },
@@ -34,4 +34,4 @@ const useGetFullReviewStructure = (props: UseGetFullReviewStructureProps) => {
   }
 }
 
-export default useGetFullReviewStructure
+export default useGetReviewStructureForSections

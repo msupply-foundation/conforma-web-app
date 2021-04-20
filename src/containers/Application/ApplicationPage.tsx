@@ -74,6 +74,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
               canEdit={current?.status === ApplicationStatus.Draft}
               elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
               responsesByCode={fullStructure.responsesByCode}
+              applicationData={fullStructure.info}
               isStrictPage={
                 sectionCode === strictSectionPage?.sectionCode &&
                 pageNumber === strictSectionPage?.pageNumber

@@ -3,10 +3,6 @@ import { useState } from 'react'
 import { useCreateReviewMutation } from '../../utils/generated/graphql'
 import { FullStructure } from '../types'
 
-interface CreateReviewProps {
-  applicationResponses: { applicationResponseId: number; reviewQuestionAssignmentId: number }[]
-}
-
 interface UseCreateReviewProps {
   reviewAssigmentId: number
 }
@@ -20,8 +16,9 @@ const useCreateReview = ({ reviewAssigmentId }: UseCreateReviewProps) => {
 
   const createReviewFromStructure = async (structure: FullStructure) => {
     const elements = Object.values(structure?.elementsById || {})
+    // Exclude not assigned, not visible and missing responses
     const reviewableElements = elements.filter(
-      (element) => element?.isAssigned && element?.response?.id && element?.response?.id != 0
+      (element) => element?.isAssigned && element?.element.isVisible && element.response?.id
     )
 
     const applicationResponses = reviewableElements.map((element) => ({
