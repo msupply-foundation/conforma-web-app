@@ -7,6 +7,7 @@ Please see [ReadMe](../__README.md) for information about maintaining this docum
 - [Setup](setup/Setup.md)
 - [Overview of Navigation/URL structure](Overview-of-Navigation-&-URL-structure.md)
 - [Filters for Applications](Filters-for-Applications.md)
+- [Assignment Process](Assignment-Process.md)
 
 ### Development
 
