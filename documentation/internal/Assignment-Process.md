@@ -28,7 +28,7 @@ The idea behind self assignment originated with requirement for users (who are n
 
 ## The Act of Assigning - Web App
 
-From front end perspective, this involves creating a mutation, which adds review_question_assignments to review_assignment, changes status of review_assignment to `Assigned`. For self assignemnt trigger is set to `ON_REVIEW_SELF_ASSIGN`.
+From front end perspective, this involves creating a mutation, which adds review_question_assignments to review_assignment, and changes status of review_assignment to `Assigned`. For self assignment, trigger is set to `ON_REVIEW_SELF_ASSIGN`.
 
 Front end doesn't generate review_assignment records, this happens on the server.
 
