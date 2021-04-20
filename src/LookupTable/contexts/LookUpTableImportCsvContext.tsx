@@ -17,7 +17,7 @@ const initialState: LookUpTableImportCsvType = {
 
 const LookUpTableImportCsvContext = React.createContext<{
   state: LookUpTableImportCsvType
-  dispatch: React.Dispatch<any>
+  dispatch: React.Dispatch<LookUpTableImportCsvActionType>
 }>({
   state: initialState,
   dispatch: () => null,
