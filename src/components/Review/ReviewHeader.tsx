@@ -2,6 +2,7 @@ import React, { CSSProperties } from 'react'
 import { Container, Header, Label } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import { User } from '../../utils/types'
+import Stage from './Stage'
 
 export interface ReviewHeaderProps {
   applicationStage: string
@@ -19,7 +20,7 @@ const ReviewHeader: React.FC<ReviewHeaderProps> = ({
   return (
     <Container>
       <div style={inlineStyles.container}>
-        <StageComponent stage={applicationStage} />
+        <Stage name={applicationStage} />
       </div>
       <Header
         textAlign="center"
@@ -44,11 +45,6 @@ const ReviewHeader: React.FC<ReviewHeaderProps> = ({
   )
 }
 
-const StageComponent: React.FC<{ stage: string }> = ({ stage }) => (
-  // TODO: Issue #561 - Setup to use pre-defined colour of stage label
-  <Label style={tempStageStyle(stage)}>{stage}</Label>
-)
-
 // Styles - TODO: Move to LESS || Global class style (semantic)
 const inlineStyles = {
   container: { textAlign: 'center' } as CSSProperties,
@@ -61,24 +57,6 @@ const inlineStyles = {
     marginTop: 5,
   } as CSSProperties,
   subtitle: { marginTop: 4, color: '#4A4A4A', fontSize: 16, letterSpacing: 0.36 } as CSSProperties,
-}
-
-const tempStageStyle = (stage: string) => {
-  return stage === 'Assessment'
-    ? {
-        color: 'white',
-        background: 'rgb(86, 180, 219)',
-        fontSize: '10px',
-        textTransform: 'uppercase',
-        letterSpacing: '0.81px',
-      }
-    : {
-        color: 'white',
-        background: 'rgb(225, 126, 72)',
-        fontSize: '10px',
-        textTransform: 'uppercase',
-        letterSpacing: '0.81px',
-      }
 }
 
 export default ReviewHeader

@@ -1,3 +1,24 @@
 /*******************************
      User Global Variables
 *******************************/
+/*--@fontName: Open Sans;--*/
+
+/*-------------------
+      Site Colors
+--------------------*/
+
+/*---  Colors  ---*/
+@red              : rgb(225, 55, 134);
+@orange           : #F2711C;
+@yellow           : #FBBD08;
+@olive            : #B5CC18;
+@green            : rgb(87, 180, 100);
+@teal             : #00B5AD;
+@blue             : #003BFE;
+@violet           : #6435C9;
+@purple           : #A333C8;
+@pink             : #E03997;
+@brown            : #A5673F;
+@grey             : #767676;
+
+@black            : #4A4A4A;
