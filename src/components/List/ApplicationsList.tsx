@@ -1,5 +1,7 @@
 import React, { Fragment } from 'react'
-import { Table, Message, Segment } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { Table, Message, Segment, Icon } from 'semantic-ui-react'
+import { USER_ROLES } from '../../utils/data'
 import { useRouter } from '../../utils/hooks/useRouter'
 import messages from '../../utils/messages'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
@@ -83,20 +85,22 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application })
   const { replace, query } = useRouter()
 
   return (
-    <Table.Row
-      key={`ApplicationList-application-${application.id}`}
-      onClick={() => {
-        console.log(query)
-        if (query.userRole === 'applicant') replace(`/application/${application.serial}`)
-        else replace(`/application/${application.serial}/review`)
-      }}
-    >
+    <Table.Row key={`ApplicationList-application-${application.id}`}>
       {columns.map(({ headerName, ColumnComponent }, index) => (
         <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
           <ColumnComponent application={application} />
         </Table.Cell>
       ))}
-      <Table.Cell icon="angle right" collapsing />
+      <Table.Cell
+        selectable
+        icon="angle right"
+        as={Link}
+        onClick={() =>
+          query.userRole === USER_ROLES.APPLICANT
+            ? replace(`/application/${application.serial}`)
+            : replace(`/application/${application.serial}/review`)
+        }
+      />
     </Table.Row>
   )
 }
