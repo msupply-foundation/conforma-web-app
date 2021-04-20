@@ -7,7 +7,7 @@ body {
 }
 
 p {
-  font-size: medium;
+  font-size: @fontMedium;
   letter-spacing: 0;
 }
 
@@ -56,7 +56,7 @@ p strong {
 // Menu bar links
 #user-area a {
   color: @userAreaText;
-  font-size: 14px; // REPLACE WITH VARIABLE
+  font-size: @fontSmall;
 }
 
 // Not currently used, but should be appplied to the Link in the menu
@@ -66,8 +66,8 @@ p strong {
 }
 
 #org-selector {
-  font-size: 22px; // REPLACE WITH VARIABLE
-  letter-spacing: 3.4px; // REPLACE WITH VARIABLE
+  font-size: @fontLarge;
+  letter-spacing: @letterSpacingLarge;
   text-transform: uppercase;
   display: flex;
   align-items: center;
@@ -118,7 +118,7 @@ p strong {
 }
 
 #footer-content p {
-  font-size: 12px; // REPLACE WITH VARIABLE
+  font-size: @fontXXsmall;
   color: @surfacesDark;
   margin-left: 10px;
 }
@@ -156,7 +156,7 @@ p strong {
 #application-area .ui.header .sub.header {
   margin-top: 11px;
   margin-bottom: 16px;
-  font-size: large;
+  font-size: @fontLarge;
   letter-spacing: @letterSpacingSmall;
 }
 
@@ -165,13 +165,13 @@ p strong {
   margin-left: 0;
   background-color: transparent;
   color: black;
-  font-size: small;
+  font-size: @fontSmall;
 }
 
 #application-area .ui.list > .item .header {
   color: @darkGrey;
   font-weight: @regularWeight;
-  font-size: medium;
+  font-size: @fontMedium;
 }
 #application-area .ui.list > .item > i.icon {
   color: @darkGrey;
@@ -202,7 +202,7 @@ p strong {
 .heading-alt {
   letter-spacing: @letterSpacingRegular;
   font-family: @alternativeFont;
-  font-weight: @mildboldWeight;
+  font-weight: @regularWeight;
 }
 
 // Not currently used, but should be appplied to the Link in the menu

@@ -67,7 +67,6 @@
 
 // font-weights
 @regularWeight: 400;
-@mildboldWeight: 500;
 @semiboldWeight: 600;
 
 // font-height
@@ -87,26 +86,35 @@
   font-size: 13px;
 }
 
-.xx-samll {
-  font-size: 12px;
+// Global fonts definitions
+@fontXXsmall: 12px;
+@fontXsmall: 13px;
+@fontSmall: 14px;
+@fontMedium: 15px;
+@fontLarge: 20px;
+@fontXlarge: 27px;
+@fontXXlarge: 36px;
+
+.xx-small {
+  font-size: @fontXXsmall;
 }
 .x-small {
-  font-size: 13px;
+  font-size: @fontXsmall;
 }
 .small {
-  font-size: 14px;
+  font-size: @fontSmall;
 }
 .medium {
-  font-size: 15px;
+  font-size: @fontMedium;
 }
 .large {
-  font-size: 20px;
+  font-size: @fontLarge;
 }
 .x-large {
-  font-size: 27px;
+  font-size: @fontXlarge;
 }
 .xx-large {
-  font-size: 36px;
+  font-size: @fontXlarge;
 }
 
 .interactive {
@@ -114,7 +122,7 @@
 }
 
 .attention {
-  font-size: 12px;
+  font-size: @fontXXsmall;
   color: @attention; // pink
 }
 
