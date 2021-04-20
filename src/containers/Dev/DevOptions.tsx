@@ -12,7 +12,7 @@ const DevOptions: React.FC = () => {
 
   const { filteredTemplates } = useListTemplates(templatePermissions, isLoading)
   return (
-    <div style={menuStyle}>
+    <div id="dev-options" style={menuStyle}>
       <Dropdown item icon="user">
         <UserSelection />
       </Dropdown>

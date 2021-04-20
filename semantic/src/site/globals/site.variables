@@ -2,12 +2,8 @@
      User Global Variables
 *******************************/
 @fontName: 'Open Sans';
+@userAreaFont: 'Roboto'; // TO-DO: Check with Deb what to use for this
 
-/*-------------------
-      Site Colors
---------------------*/
-
-/*---  Colors  ---*/
 @red: @error;
 @orange: #f2711c;
 @yellow: #fbbd08;
@@ -69,6 +65,7 @@
 
 // Text colours
 @darkGrey: @headersInteractiveLow;
+@userAreaText: white;
 
 // Custom classes for text variants
 .secondary {
@@ -86,3 +83,10 @@
   font-size: 12px;
   color: @attention; // pink
 }
+
+/*------------------------
+      Layout constants
+-------------------------*/
+
+@headerHeight: 120px;
+@footerHeight: 75px;
