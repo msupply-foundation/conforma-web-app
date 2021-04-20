@@ -18,12 +18,9 @@ import {
 
 import { SingleTableContext, SingleTableProvider, SingleTableConsumer } from './SingleTableContext'
 
-import LookUpTableImportCsvReducer from './LookUpTableImportCsvReducer'
-
 export {
   LookUpTableImportCsvContext,
   LookUpTableImportCsvProvider,
-  LookUpTableImportCsvReducer,
   AllTableStructuresContext,
   AllTableStructuresProvider,
   AllTableStructuresConsumer,
