@@ -2,13 +2,12 @@
         Site Overrides
 *******************************/
 
-@borderWidth: 4px;
-@borderRadius: 8px;
-
+// Info message blue icon
 .ui.info.message .header i.icon {
   color: @information;
 }
 
+// Info message left border
 .ui.info.message {
-  border-left: @borderWidth solid @information;
+  border-left: @accentBorderWidth solid @information;
 }
