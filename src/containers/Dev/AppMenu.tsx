@@ -31,9 +31,9 @@ const AppMenu: React.FC<AppMenuProps> = ({ templatePermissions }) => {
             {templatePermissions.map(({ name, code, permissions }) => (
               <Grid.Row key={`app_menu_${name}`}>
                 <Button
-                  basic
+                  // basic
                   fluid
-                  color="blue"
+                  color="grey"
                   content={name}
                   active={type === code}
                   as={Link}

@@ -64,7 +64,7 @@ const OrgSelector: React.FC<{ user: User }> = ({ user }) => {
 const UserMenu: React.FC<{ user: User }> = ({ user }) => {
   const { logout } = useUserState()
   return (
-    <div id="user-area-user-menu">
+    <div id="user-menu">
       <Button animated onClick={() => logout()}>
         <Button.Content visible>
           {user?.firstName || ''} {user?.lastName || ''}
