@@ -23,7 +23,7 @@ Actions are available to the applicant user for their own applications, and very
 - `Withdraw` -> Application that has been submitted
 - `Delete` -> Application that hasn't been submitted
 
-## Reveiwer's or Consolidator's actions
+## Reviewer's or Consolidator's actions
 
 Actions are available to the Reviewer user (based `template_permission`) after the **application is submitted**.
 Actions more specific to the Consolidator user are available after there is a review **stage increment** or after **review is submitted**.
