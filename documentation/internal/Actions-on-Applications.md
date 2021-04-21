@@ -44,19 +44,41 @@ The options are per section of the application, but will show on the application
 
 **Note**: When re-assigning section(s) when the review has been started there is some pending work todo for moving assignments
 
-### Application list view
+## Generating and display of actions
 
-On server side we use smart view to calculate the count of each of the following (used to define available actions on the front-end) based on status of `review_assignment` and `review`.
-The GraphQL query to application list view will fetch ALL `review_assignment` related to the current application `serial`, for all reviewer `user` of any `level` and `stage`.
-The actions are available to the user (if permissions apply) when the related field(s) is above 0 or `true`.
+Actions are displayed in 2 main places: on the Application's list and on the Review home page (for Reviewer/Assigner) or Application home page (for Applicant)
+
+### Applicant home page (or list)
+
+The GraphQL query (`getApplication` and `getApplicationList`) simply gets application related to the current user and the `status`, which is used to define the action to be displayed.
+
+- `Continue` -> Application with `status` = DRAFT (and owned by the current user)
+- `View` -> Application with `status` = SUBMITTED or others (e.g. COMPLETED, EXPIRED, ...)
+- `Update` -> Application with `status` = CHANGES_REQUIRED
+
+**Note**: For now the front-end allows to see any application, not only restricted by user permission. Later, when restrictions apply, only users with appropriate permissions will be able to see other users' application statuses.
+
+### Review and Assigner home page (or list)
+
+On server side we calculate the count of each of the following fields (used to define each available action on the front-end) based on status of `review_assignment` and `review`.
+The GraphQL queries (`getReviewInfo` and `getApplicationList`) will fetch ALL `review_assignment` related to the current application `serial`, for all reviewer `user` of any `level` and `stage`.
+For each existing `review_assignment` with submitted `review` which isn't assigned to the current user, there is the default action to `View`.
+Otherwise if `review_assignment` and `review` is associated to the current user, will generate one of the following actions and display in each of the assigned sections:
+
+Actions generated for **reviewer** user will check which of the count (of owned review/assignment) field is above 0 to display the action (as the top most possible one).
 
 - `Continue` -> review_draft_count
 - `Start` -> review_assigned_not_started_count
-- `Self-Assign` -> review_available_for_self_assignment_count
 - `Re-Review` -> review_pending_count
 - `Update` -> review_change_request_count
 - `View` -> review_submitted_count
+- `Self-Assign` -> review_available_for_self_assignment_count
+
+**Note**: For now the front-end is displaying all reviews associated with the current application on the "Review Home page". Later, when restrictions apply, only users with appropriate permissions will be able to see other users' review statuses.
+
+Actions generated for **assigner** user will check which of the count (of ALL review/assignment) field is above 0 or `true`,
+
 - `Assign` -> assign_count
 - `Re-assign` -> assign_count & is_fully_assigned_level_1
 
-**Note**: For now the front-end is displaying all reviews associated with the current application on the "Review Home page". Later, when restrictions apply, only users with appropriate permissions will be able to see other users' review statuses.
+**Note**: If user is both an Assigner and Review for the current application the actions to both can disoplay to them, one for Reviewer and one for Assigner.
