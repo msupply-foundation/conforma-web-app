@@ -86,7 +86,7 @@ const ApplicationCreate: React.FC = () => {
   const NewApplicationInfo: React.FC = () => {
     return template?.sections ? (
       <>
-        <p className="label-title">{strings.SUBTITLE_APPLICATION_STEPS}</p>
+        <p>{strings.SUBTITLE_APPLICATION_STEPS}</p>
         <Header as="h4" className="steps-header" content={strings.TITLE_STEPS} />
         <SectionsList sections={template.sections} />
         <Markdown text={template.startMessage || ''} semanticComponent="Message" info />

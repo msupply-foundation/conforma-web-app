@@ -165,7 +165,8 @@ p strong {
 #application-area .steps-header {
   font-size: @fontSmall;
   font-weight: @regularWeight;
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 5px;
 }
 
 #application-area .ui.list > .item .header {
