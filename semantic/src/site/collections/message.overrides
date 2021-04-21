@@ -1,3 +1,13 @@
 /*******************************
         Site Overrides
 *******************************/
+
+// Info message blue icon
+.ui.info.message .header i.icon {
+  color: @information;
+}
+
+// Info message left border
+.ui.info.message {
+  border-left: @accentBorderWidth solid @information;
+}

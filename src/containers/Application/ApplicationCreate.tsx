@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Button, Divider, Header, Message, Segment } from 'semantic-ui-react'
+import { Button, Divider, Header, Label, Message, Segment } from 'semantic-ui-react'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { ApplicationHeader, ApplicationSelectType, Loading } from '../../components'
 import { useApplicationState } from '../../contexts/ApplicationState'
@@ -86,14 +86,15 @@ const ApplicationCreate: React.FC = () => {
   const NewApplicationInfo: React.FC = () => {
     return template?.sections ? (
       <>
-        <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
-        <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
+        <p>{strings.SUBTITLE_APPLICATION_STEPS}</p>
+        <Header as="h4" className="steps-header" content={strings.TITLE_STEPS} />
         <SectionsList sections={template.sections} />
-        <Divider />
         <Markdown text={template.startMessage || ''} semanticComponent="Message" info />
-        <Button color="blue" loading={processing} onClick={handleCreate}>
-          {strings.BUTTON_APPLICATION_START}
-        </Button>
+        <Segment basic className="application-segment">
+          <Button color="blue" className="wide" loading={processing} onClick={handleCreate}>
+            {strings.BUTTON_APPLICATION_START}
+          </Button>
+        </Segment>
       </>
     ) : null
   }

@@ -2,7 +2,7 @@
      User Global Variables
 *******************************/
 @fontName: 'Open Sans';
-@userAreaFont: 'Roboto'; // TO-DO: Check with Deb what to use for this
+@alternativeFont: 'Roboto'; // TO-DO: Check with Deb what to use for this
 
 @red: @error;
 @orange: #f2711c;
@@ -59,9 +59,23 @@
 @h5Mob: 15px;
 @h6Mob: 11px;
 
-// New variables for font-weights
+// line-height
+@lineHeightSmall: 20px;
+@lineHeightRegular: 24px;
+@lineHeightBig: 36px;
+@lineHeightBigger: 45px;
+
+// font-weights
 @regularWeight: 400;
 @semiboldWeight: 600;
+
+// font-height
+@fontHeightRegular: 20px;
+
+// letter spacing
+@letterSpacingSmall: 0.36px;
+@letterSpacingRegular: 1.8px;
+@letterSpacingLarge: 3.4px;
 
 // Text colours
 @darkGrey: @headersInteractiveLow;
@@ -71,8 +85,36 @@
 .secondary {
   font-size: 13px;
 }
+
+// Global fonts definitions
+@fontXXsmall: 12px;
+@fontXsmall: 13px;
+@fontSmall: 14px;
+@fontMedium: 15px;
+@fontLarge: 20px;
+@fontXlarge: 27px;
+@fontXXlarge: 36px;
+
+.xx-small {
+  font-size: @fontXXsmall;
+}
+.x-small {
+  font-size: @fontXsmall;
+}
 .small {
-  font-size: 12px;
+  font-size: @fontSmall;
+}
+.medium {
+  font-size: @fontMedium;
+}
+.large {
+  font-size: @fontLarge;
+}
+.x-large {
+  font-size: @fontXlarge;
+}
+.xx-large {
+  font-size: @fontXlarge;
 }
 
 .interactive {
@@ -80,8 +122,12 @@
 }
 
 .attention {
-  font-size: 12px;
+  font-size: @fontXXsmall;
   color: @attention; // pink
+}
+
+.alt-font {
+  font-family: @alternativeFont;
 }
 
 /*------------------------
