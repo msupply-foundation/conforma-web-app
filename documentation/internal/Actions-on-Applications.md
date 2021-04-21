@@ -46,7 +46,8 @@ The options are per section of the application, but will show on the application
 
 ### Application list view
 
-On server side we use smart view to calculate the count of each of the following (used to define available actions on the front-end) based on status of `review_assignment` and `review` (associated to self for Reviewer, and associated to any review for Assigners).
+On server side we use smart view to calculate the count of each of the following (used to define available actions on the front-end) based on status of `review_assignment` and `review`.
+The GraphQL query to application list view will fetch ALL `review_assignment` related to the current application `serial`, for all reviewer `user` of any `level` and `stage`.
 The actions are available to the user (if permissions apply) when the related field(s) is above 0 or `true`.
 
 - `Continue` -> review_draft_count
@@ -57,3 +58,5 @@ The actions are available to the user (if permissions apply) when the related fi
 - `View` -> review_submitted_count
 - `Assign` -> assign_count
 - `Re-assign` -> assign_count & is_fully_assigned_level_1
+
+**Note**: For now only the front-end is displaying all reviews associated to the current application on the "Review Home page", later when restrictions apply only users with higher permissions will be able to see other users review's status.
