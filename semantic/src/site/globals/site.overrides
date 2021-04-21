@@ -161,8 +161,10 @@ p strong {
   letter-spacing: @letterSpacingSmall;
 }
 
-// Remove margin on top of Steps header on application home/create
+// Extra font and margin on Steps header on application home/create
 #application-area .steps-header {
+  font-size: @fontSmall;
+  font-weight: @regularWeight;
   margin: 0;
 }
 
