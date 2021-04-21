@@ -177,10 +177,6 @@ p strong {
   color: @darkGrey;
 }
 
-#application-area .last-line {
-  margin: 0;
-}
-
 #application-area .application-segment {
   padding: 0;
 }

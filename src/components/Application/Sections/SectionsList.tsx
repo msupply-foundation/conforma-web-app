@@ -8,7 +8,7 @@ interface SectionsListProps {
 
 const SectionsList: React.FC<SectionsListProps> = ({ sections }) => {
   return (
-    <List divided relaxed="very">
+    <List celled relaxed="very">
       {Object.entries(sections).map(([sectionCode, { title }]) => (
         <List.Item key={`list-item-${sectionCode}`} icon="circle outline" header={title} />
       ))}
