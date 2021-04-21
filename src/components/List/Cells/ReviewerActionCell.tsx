@@ -13,6 +13,7 @@ const ReviewerActionCell: React.FC<CellProps> = ({
     reviewSubmittedCount,
     reviewAvailableForSelfAssignmentCount,
     serial,
+    assignCount,
     isFullyAssignedLevel1,
   },
 }) => {
@@ -36,12 +37,12 @@ const ReviewerActionCell: React.FC<CellProps> = ({
     actions.push(strings.ACTION_SELF_ASSIGN)
   }
 
-  if (notZero(reviewAssignedCount) && isFullyAssignedLevel1) {
+  if (notZero(assignCount) && isFullyAssignedLevel1) {
     canShowView = false
     actions.push(strings.ACTION_RE_ASSIGN)
   }
 
-  if (notZero(reviewAssignedCount) && !isFullyAssignedLevel1) {
+  if (notZero(assignCount) && !isFullyAssignedLevel1) {
     canShowView = false
     actions.push(strings.ACTION_ASSIGN)
   }

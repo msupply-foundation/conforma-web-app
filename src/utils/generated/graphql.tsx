@@ -144,6 +144,7 @@ export type Query = Node & {
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
   applicationList?: Maybe<ApplicationListShapesConnection>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
+  assignerList?: Maybe<AssignerListConnection>;
   getTemplateCode?: Maybe<Scalars['String']>;
   jwtGetBigint?: Maybe<Scalars['BigInt']>;
   jwtGetBoolean?: Maybe<Scalars['Boolean']>;
@@ -929,7 +930,7 @@ export type QueryUserOrganisationArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryApplicationListArgs = {
-  reviewerid?: Maybe<Scalars['Int']>;
+  userid?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -943,6 +944,18 @@ export type QueryApplicationListArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryApplicationStatusHistoryApplicationIdArgs = {
   applicationStageHistoryId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAssignerListArgs = {
+  assignerid?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<AssignerListRecordFilter>;
 };
 
 
@@ -6466,7 +6479,13 @@ export enum ApplicationListShapesOrderBy {
   ReviewChangeRequestCountAsc = 'REVIEW_CHANGE_REQUEST_COUNT_ASC',
   ReviewChangeRequestCountDesc = 'REVIEW_CHANGE_REQUEST_COUNT_DESC',
   ReviewPendingCountAsc = 'REVIEW_PENDING_COUNT_ASC',
-  ReviewPendingCountDesc = 'REVIEW_PENDING_COUNT_DESC'
+  ReviewPendingCountDesc = 'REVIEW_PENDING_COUNT_DESC',
+  AssignReviewerAssignedCountAsc = 'ASSIGN_REVIEWER_ASSIGNED_COUNT_ASC',
+  AssignReviewerAssignedCountDesc = 'ASSIGN_REVIEWER_ASSIGNED_COUNT_DESC',
+  AssignReviewersCountAsc = 'ASSIGN_REVIEWERS_COUNT_ASC',
+  AssignReviewersCountDesc = 'ASSIGN_REVIEWERS_COUNT_DESC',
+  AssignCountAsc = 'ASSIGN_COUNT_ASC',
+  AssignCountDesc = 'ASSIGN_COUNT_DESC'
 }
 
 /** A condition to be used against `ApplicationListShape` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -6515,6 +6534,12 @@ export type ApplicationListShapeCondition = {
   reviewChangeRequestCount?: Maybe<Scalars['BigInt']>;
   /** Checks for equality with the object’s `reviewPendingCount` field. */
   reviewPendingCount?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `assignReviewerAssignedCount` field. */
+  assignReviewerAssignedCount?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `assignReviewersCount` field. */
+  assignReviewersCount?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `assignCount` field. */
+  assignCount?: Maybe<Scalars['BigInt']>;
 };
 
 
@@ -6564,6 +6589,12 @@ export type ApplicationListShapeFilter = {
   reviewChangeRequestCount?: Maybe<BigIntFilter>;
   /** Filter by the object’s `reviewPendingCount` field. */
   reviewPendingCount?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `assignReviewerAssignedCount` field. */
+  assignReviewerAssignedCount?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `assignReviewersCount` field. */
+  assignReviewersCount?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `assignCount` field. */
+  assignCount?: Maybe<BigIntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationListShapeFilter>>;
   /** Checks for any expressions in this list. */
@@ -6635,6 +6666,9 @@ export type ApplicationListShape = {
   reviewSubmittedCount?: Maybe<Scalars['BigInt']>;
   reviewChangeRequestCount?: Maybe<Scalars['BigInt']>;
   reviewPendingCount?: Maybe<Scalars['BigInt']>;
+  assignReviewerAssignedCount?: Maybe<Scalars['BigInt']>;
+  assignReviewersCount?: Maybe<Scalars['BigInt']>;
+  assignCount?: Maybe<Scalars['BigInt']>;
 };
 
 /** A `ApplicationListShape` edge in the connection. */
@@ -7646,6 +7680,53 @@ export type UserOrgJoinsEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `UserOrgJoin` at the end of the edge. */
   node?: Maybe<UserOrgJoin>;
+};
+
+/** A filter to be used against `AssignerListRecord` object types. All fields are combined with a logical ‘and.’ */
+export type AssignerListRecordFilter = {
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `assignReviewerAssignedCount` field. */
+  assignReviewerAssignedCount?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `assignReviewersCount` field. */
+  assignReviewersCount?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `assignCount` field. */
+  assignCount?: Maybe<BigIntFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<AssignerListRecordFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<AssignerListRecordFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<AssignerListRecordFilter>;
+};
+
+/** A connection to a list of `AssignerListRecord` values. */
+export type AssignerListConnection = {
+  __typename?: 'AssignerListConnection';
+  /** A list of `AssignerListRecord` objects. */
+  nodes: Array<Maybe<AssignerListRecord>>;
+  /** A list of edges which contains the `AssignerListRecord` and cursor to aid in pagination. */
+  edges: Array<AssignerListEdge>;
+  /** The count of *all* `AssignerListRecord` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** The return type of our `assignerList` query. */
+export type AssignerListRecord = {
+  __typename?: 'AssignerListRecord';
+  applicationId?: Maybe<Scalars['Int']>;
+  assignReviewerAssignedCount?: Maybe<Scalars['BigInt']>;
+  assignReviewersCount?: Maybe<Scalars['BigInt']>;
+  assignCount?: Maybe<Scalars['BigInt']>;
+};
+
+/** A `AssignerListRecord` edge in the connection. */
+export type AssignerListEdge = {
+  __typename?: 'AssignerListEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `AssignerListRecord` at the end of the edge. */
+  node?: Maybe<AssignerListRecord>;
 };
 
 /** A filter to be used against `ReviewListRecord` object types. All fields are combined with a logical ‘and.’ */
@@ -18083,6 +18164,9 @@ export type ApplicationListShapeInput = {
   reviewSubmittedCount?: Maybe<Scalars['BigInt']>;
   reviewChangeRequestCount?: Maybe<Scalars['BigInt']>;
   reviewPendingCount?: Maybe<Scalars['BigInt']>;
+  assignReviewerAssignedCount?: Maybe<Scalars['BigInt']>;
+  assignReviewersCount?: Maybe<Scalars['BigInt']>;
+  assignCount?: Maybe<Scalars['BigInt']>;
 };
 
 /** The output of our create `ApplicationListShape` mutation. */
@@ -22365,7 +22449,7 @@ export type GetApplicationListQueryVariables = Exact<{
   sortFields?: Maybe<Array<ApplicationListShapesOrderBy>>;
   paginationOffset: Scalars['Int'];
   numberToFetch: Scalars['Int'];
-  reviewerId: Scalars['Int'];
+  userId: Scalars['Int'];
 }>;
 
 
@@ -22376,7 +22460,7 @@ export type GetApplicationListQuery = (
     & Pick<ApplicationListShapesConnection, 'totalCount'>
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationListShape' }
-      & Pick<ApplicationListShape, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'applicant' | 'applicantFirstName' | 'applicantLastName' | 'applicantUsername' | 'orgName' | 'stage' | 'status' | 'outcome' | 'lastActiveDate' | 'reviewAssignedCount' | 'reviewAssignedNotStartedCount' | 'reviewAvailableForSelfAssignmentCount' | 'reviewDraftCount' | 'reviewChangeRequestCount' | 'reviewSubmittedCount' | 'reviewPendingCount'>
+      & Pick<ApplicationListShape, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'applicant' | 'applicantFirstName' | 'applicantLastName' | 'applicantUsername' | 'orgName' | 'stage' | 'status' | 'outcome' | 'lastActiveDate' | 'reviewAssignedCount' | 'reviewAssignedNotStartedCount' | 'reviewAvailableForSelfAssignmentCount' | 'reviewDraftCount' | 'reviewChangeRequestCount' | 'reviewSubmittedCount' | 'reviewPendingCount' | 'assignReviewerAssignedCount' | 'assignReviewersCount' | 'assignCount' | 'isFullyAssignedLevel1'>
     )>>, pageInfo: (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
@@ -23202,8 +23286,8 @@ export type GetApplicationQueryHookResult = ReturnType<typeof useGetApplicationQ
 export type GetApplicationLazyQueryHookResult = ReturnType<typeof useGetApplicationLazyQuery>;
 export type GetApplicationQueryResult = Apollo.QueryResult<GetApplicationQuery, GetApplicationQueryVariables>;
 export const GetApplicationListDocument = gql`
-    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $reviewerId: Int!) {
-  applicationList(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch, reviewerid: $reviewerId) {
+    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $userId: Int!) {
+  applicationList(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch, userid: $userId) {
     nodes {
       id
       serial
@@ -23226,6 +23310,10 @@ export const GetApplicationListDocument = gql`
       reviewChangeRequestCount
       reviewSubmittedCount
       reviewPendingCount
+      assignReviewerAssignedCount
+      assignReviewersCount
+      assignCount
+      isFullyAssignedLevel1
     }
     pageInfo {
       hasPreviousPage
@@ -23252,7 +23340,7 @@ export const GetApplicationListDocument = gql`
  *      sortFields: // value for 'sortFields'
  *      paginationOffset: // value for 'paginationOffset'
  *      numberToFetch: // value for 'numberToFetch'
- *      reviewerId: // value for 'reviewerId'
+ *      userId: // value for 'userId'
  *   },
  * });
  */
