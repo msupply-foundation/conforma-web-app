@@ -59,4 +59,4 @@ The actions are available to the user (if permissions apply) when the related fi
 - `Assign` -> assign_count
 - `Re-assign` -> assign_count & is_fully_assigned_level_1
 
-**Note**: For now only the front-end is displaying all reviews associated to the current application on the "Review Home page", later when restrictions apply only users with higher permissions will be able to see other users review's status.
+**Note**: For now the front-end is displaying all reviews associated with the current application on the "Review Home page". Later, when restrictions apply, only users with appropriate permissions will be able to see other users' review statuses.
