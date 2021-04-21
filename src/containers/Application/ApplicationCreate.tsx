@@ -86,19 +86,12 @@ const ApplicationCreate: React.FC = () => {
   const NewApplicationInfo: React.FC = () => {
     return template?.sections ? (
       <>
-        <Label className="label-title" content={strings.SUBTITLE_APPLICATION_STEPS} />
-        <Header as="h4" content={strings.TITLE_STEPS} />
+        <p className="label-title">{strings.SUBTITLE_APPLICATION_STEPS}</p>
+        <Header as="h4" className="steps-header" content={strings.TITLE_STEPS} />
         <SectionsList sections={template.sections} />
-        <Divider className="last-line" />
         <Markdown text={template.startMessage || ''} semanticComponent="Message" info />
         <Segment basic className="application-segment">
-          <Button
-            color="blue"
-            floated="left"
-            className="wide"
-            loading={processing}
-            onClick={handleCreate}
-          >
+          <Button color="blue" className="wide" loading={processing} onClick={handleCreate}>
             {strings.BUTTON_APPLICATION_START}
           </Button>
         </Segment>

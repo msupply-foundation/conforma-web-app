@@ -9,6 +9,7 @@ body {
 p {
   font-size: @fontMedium;
   letter-spacing: 0;
+  padding: 0;
 }
 
 p strong {
@@ -142,7 +143,7 @@ p strong {
 // Back to application list label
 #application-area .back-label {
   min-width: 132px;
-  max-width: 500px;
+  max-width: 250px;
   background-color: transparent;
 }
 
@@ -160,12 +161,9 @@ p strong {
   letter-spacing: @letterSpacingSmall;
 }
 
-#application-area .label-title {
-  padding: 0;
-  margin-left: 0;
-  background-color: transparent;
-  color: black;
-  font-size: @fontSmall;
+// Remove margin on top of Steps header on application home/create
+#application-area .steps-header {
+  margin: 0;
 }
 
 #application-area .ui.list > .item .header {
