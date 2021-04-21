@@ -20,7 +20,7 @@ Actions are available to the applicant user for their own applications, and very
 
 ### Other applicant's actions (todo)
 
-- `Widthdrawn` -> Application that has been submitted
+- `Withdraw` -> Application that has been submitted
 - `Delete` -> Application that hasn't been submitted
 
 ## Reveiwer's or Consolidator's actions
