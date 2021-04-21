@@ -9,7 +9,7 @@ interface SectionsListProps {
 const SectionsList: React.FC<SectionsListProps> = ({ sections }) => {
   return (
     <List
-      divided
+      celled
       relaxed="very"
       items={Object.entries(sections).map(([sectionCode, { title }]) => ({
         key: `list-item-${sectionCode}`,

@@ -4,11 +4,14 @@ import { useUserState } from '../../contexts/UserState'
 import { Link } from 'react-router-dom'
 import strings from '../../utils/constants'
 import { User } from '../../utils/types'
+import config from '../../config.json'
+import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 
 const UserArea: React.FC = () => {
   const {
     userState: { currentUser },
   } = useUserState()
+
   return (
     <Container id="user-area">
       <div id="user-area-left">
@@ -47,8 +50,9 @@ const OrgSelector: React.FC<{ user: User }> = ({ user }) => {
   // TO-DO: Make into Dropdown so Org can be selected
   return (
     <div id="org-selector">
-      {/* TO-DO: Replace with proper company logo */}
-      <Image src="/images/temp_logo.png" />
+      {user?.organisation?.logoUrl && (
+        <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST)} />
+      )}
       <div>
         {user?.organisation?.orgName || ''}
         <Icon size="small" name="angle down" />
@@ -60,7 +64,7 @@ const OrgSelector: React.FC<{ user: User }> = ({ user }) => {
 const UserMenu: React.FC<{ user: User }> = ({ user }) => {
   const { logout } = useUserState()
   return (
-    <div id="user-area-user-menu">
+    <div id="user-menu">
       <Button animated onClick={() => logout()}>
         <Button.Content visible>
           {user?.firstName || ''} {user?.lastName || ''}

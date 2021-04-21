@@ -15,11 +15,10 @@ type UserRoles = {
  */
 
 const userRoles: UserRoles = {
-  reviewer1: [PermissionPolicyType.Review],
+  consolidator: [PermissionPolicyType.Assign, PermissionPolicyType.Review],
+  reviewer: [PermissionPolicyType.Review],
+  assigner: [PermissionPolicyType.Assign],
   applicant: [PermissionPolicyType.Apply],
-  reviewer2: [PermissionPolicyType.Review, PermissionPolicyType.Assign],
-  supervisor: [PermissionPolicyType.Assign],
-  consolidator: [PermissionPolicyType.Assign], //, PermissionPolicyType.Consolidate]
 }
 
 // permissions: Array<PermissionPolicyType>

@@ -1,3 +1,16 @@
 /*******************************
     User Variable Overrides
 *******************************/
+
+// Overwrite behaivor of List item "Very relaxed" and celled
+.ui[class*='very relaxed'].list:not(.horizontal) > .item {
+  padding-left: 0;
+}
+
+.ui[class*='very relaxed'].list:not(.horizontal) > .item:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+.ui[class*='very relaxed'].list:not(.horizontal) > .item:last-child {
+  padding-bottom: @veryRelaxedItemVerticalPadding;
+}

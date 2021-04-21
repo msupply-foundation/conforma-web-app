@@ -114,12 +114,4 @@ const SiteLayout: React.FC = () => {
   )
 }
 
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const containerStyle = {
-  paddingTop: 135,
-  paddingBottom: 65,
-  paddingRight: 25,
-  paddingLeft: 25,
-}
-
 export default SiteLayout
