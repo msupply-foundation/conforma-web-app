@@ -12,7 +12,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 
 const LookupTableListPage: React.FC<{ importModalProps?: any; basePath: string }> = ({
   importModalProps = {},
-  basePath,
+  basePath = '',
   ...props
 }) => {
   const { pathname } = useRouter()
