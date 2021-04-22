@@ -3,7 +3,7 @@ import { Button, Header, Icon, List, Progress } from 'semantic-ui-react'
 import {
   ChangeRequestsProgress,
   FullStructure,
-  Progress as ProgressType,
+  ApplicationProgress,
   SectionAndPage,
 } from '../../utils/types'
 import strings from '../../utils/constants'
@@ -42,7 +42,7 @@ const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure
 
   let isBeforeStrict = true
 
-  const getIndicator = ({ completed, valid }: ProgressType) => {
+  const getIndicator = ({ completed, valid }: ApplicationProgress) => {
     return completed ? (
       <Icon name={valid ? 'check circle' : 'exclamation circle'} color={valid ? 'green' : 'red'} />
     ) : (
@@ -118,7 +118,7 @@ const SectionEdit: React.FC<SectionEditProps> = ({ sectionCode, resumeApplicatio
   )
 }
 
-const SectionProgress: React.FC<ProgressType> = ({
+const SectionProgress: React.FC<ApplicationProgress> = ({
   doneRequired,
   doneNonRequired,
   totalSum,
@@ -140,7 +140,7 @@ const SectionProgress: React.FC<ProgressType> = ({
 
 interface ActionProps {
   changeRequestsProgress?: ChangeRequestsProgress
-  generalProgress?: ProgressType
+  generalProgress?: ApplicationProgress
   resumeApplication: (location: SectionAndPage) => void
   sectionCode: string
 }

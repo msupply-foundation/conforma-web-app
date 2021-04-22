@@ -42,7 +42,7 @@ export {
   MethodToCallProps,
   Page,
   PageElement,
-  Progress,
+  ApplicationProgress,
   ResponseFull,
   ResponsesByCode,
   ReviewAction,
@@ -231,7 +231,7 @@ interface Page {
   number: number
   sectionCode: string
   name: string
-  progress: Progress
+  progress: ApplicationProgress
   reviewProgress?: ReviewProgress
   changeRequestsProgress?: ChangeRequestsProgress
   state: PageElement[]
@@ -251,7 +251,7 @@ type PageElement = {
   isChanged?: boolean
 }
 
-interface Progress {
+interface ApplicationProgress {
   doneRequired: number
   doneNonRequired: number
   completed: boolean
@@ -362,7 +362,7 @@ interface ChangeRequestsProgress {
 
 interface SectionState {
   details: SectionDetails
-  progress?: Progress
+  progress?: ApplicationProgress
   reviewProgress?: ReviewProgress
   reviewAction?: {
     action: ReviewAction
