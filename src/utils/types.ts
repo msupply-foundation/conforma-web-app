@@ -52,7 +52,6 @@ export {
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
-  SectionProgress,
   SectionState,
   SectionsStructure,
   SetStrictSectionPage,
@@ -328,13 +327,6 @@ interface SectionDetails {
   code: string
   title: string
   totalPages: number
-}
-interface SectionProgress {
-  total: number
-  done: number
-  completed: boolean
-  valid: boolean
-  linkedPage: number
 }
 
 interface ReviewProgress {
