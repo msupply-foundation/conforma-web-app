@@ -57,11 +57,11 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
             key: `list-item-${sectionCode}`,
             content: (
               <div className="line-vertical-box">
-                <div className="left">
+                <div className="centered-flex-box-row">
                   {progress ? getIndicator(progress) : null}
                   <Header content={details.title} />
                 </div>
-                <div className="right">
+                <div className="right-align-flex-box-row">
                   {(draftStatus || changesRequested) && progress && (
                     <SectionProgress {...progress} />
                   )}

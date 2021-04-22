@@ -15,7 +15,7 @@ const SectionsList: React.FC<SectionsListProps> = ({ sections }) => {
         key: `list-item-${sectionCode}`,
         content: (
           <div className="line-vertical-box">
-            <div className="left">
+            <div className="centered-flex-box-row">
               <Icon name="circle outline" />
               <Header content={title} />
             </div>

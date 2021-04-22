@@ -155,7 +155,7 @@ p strong {
 }
 
 // "Introduction" subheader
-#application-area .ui.header .sub.header {
+.ui.header .sub.header {
   margin-top: 11px;
   margin-bottom: 16px;
   font-size: @fontLarge;
@@ -163,7 +163,7 @@ p strong {
 }
 
 // Extra font and margin on Steps header on application home/create
-#application-area .steps-header {
+.steps-header {
   font-size: @fontSmall;
   font-weight: @regularWeight;
   margin-top: 0;
@@ -171,7 +171,7 @@ p strong {
 }
 
 // Steps line (vertical box - layout)
-#application-area .line-vertical-box {
+.line-vertical-box {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -181,56 +181,37 @@ p strong {
 }
 
 // Inner steps line (left side - icon & header)
-#application-area .line-vertical-box .left {
+.line-vertical-box .centered-flex-box-row {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
 // Inner steps line (right side - progress & action)
-#application-area .line-vertical-box .right {
+.line-vertical-box .right-align-flex-box-row {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
 }
 
-// Steps line - header
-#application-area .ui.list > .item .header {
-  color: @darkGrey;
-  font-weight: @regularWeight;
-  font-size: @fontMedium;
-  width: 200px;
-  overflow: hidden; // So long titles don't overflow the header area
-}
-
-// Steps line - icon
-#application-area .ui.list > .item > i.icon {
-  color: @darkGrey;
-}
-
 // Steps line - progress bar
-#application-area .ui.list .progress-box {
+.progress-box {
   padding-right: 50px;
   height: 10px;
 }
 
-#application-area .ui.list .progress-box .progress {
+.progress-box .progress {
   width: 120px;
 }
 
 // Steps line - actions box
-#application-area .ui.list .actions-box {
+.actions-box {
   min-width: 100px;
 }
 
-// Steps line - last line divisor
-#application-area .last-line {
-  margin: 0;
-}
-
 // Message area segment - bottom of application home/create
-#application-area .application-segment {
+.application-segment {
   padding: 0;
 }
 
