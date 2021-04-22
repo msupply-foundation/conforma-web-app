@@ -1,12 +1,6 @@
 import React, { useEffect } from 'react'
-import { Button, Header, Message, Segment } from 'semantic-ui-react'
-import Markdown from '../../utils/helpers/semanticReactMarkdown'
-import {
-  ApplicationHeader,
-  ApplicationSections,
-  ApplicationSelectType,
-  Loading,
-} from '../../components'
+import { Button, Message, Segment } from 'semantic-ui-react'
+import { ApplicationHeader, ApplicationSelectType, Loading } from '../../components'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { useUserState } from '../../contexts/UserState'
 import useCreateApplication from '../../utils/hooks/useCreateApplication'
@@ -14,6 +8,7 @@ import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { SectionsList } from '../../components/Sections'
+import ApplicationHomeWrapper from '../../components/Application/ApplicationHomeWrapper'
 
 const ApplicationCreate: React.FC = () => {
   const {
@@ -86,34 +81,21 @@ const ApplicationCreate: React.FC = () => {
       />
     )
 
+  if (!template) return <ApplicationSelectType /> // TODO
   if (loading || !template?.startMessage) return <Loading />
 
-  const NewApplicationInfo: React.FC = () => {
-    return template?.sections ? (
-      <>
-        <p>{strings.SUBTITLE_APPLICATION_STEPS}</p>
-        <Header as="h4" className="steps-header" content={strings.TITLE_STEPS} />
+  return template?.sections ? (
+    <ApplicationHeader template={template} currentUser={currentUser}>
+      <ApplicationHomeWrapper startMessage={template.startMessage}>
         <SectionsList sections={template.sections} />
-        <Markdown text={template.startMessage || ''} semanticComponent="Message" info />
-        <Segment basic className="application-segment">
-          <Button color="blue" className="wide" loading={processing} onClick={handleCreate}>
-            {strings.BUTTON_APPLICATION_START}
-          </Button>
-        </Segment>
-      </>
-    ) : null
-  }
-
-  return template ? (
-    <ApplicationHeader
-      template={template}
-      currentUser={currentUser}
-      ChildComponent={NewApplicationInfo}
-    />
-  ) : (
-    // TODO
-    <ApplicationSelectType />
-  )
+      </ApplicationHomeWrapper>
+      <Segment basic className="application-segment">
+        <Button color="blue" className="wide" loading={processing} onClick={handleCreate}>
+          {strings.BUTTON_APPLICATION_START}
+        </Button>
+      </Segment>
+    </ApplicationHeader>
+  ) : null
 }
 
 export default ApplicationCreate

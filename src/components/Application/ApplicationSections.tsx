@@ -53,7 +53,7 @@ const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure
 
   return (
     <List
-      divided
+      celled
       relaxed="very"
       items={Object.entries(sections).map(
         ([sectionCode, { details, progress, changeRequestsProgress }]) => {
@@ -74,27 +74,29 @@ const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure
             key: `list-item-${sectionCode}`,
             content: (
               <div className="line-vertical-box">
-                <div className="left">
+                <div className="centered-flex-box-row">
                   {progress ? getIndicator(progress) : null}
                   <Header content={details.title} />
                 </div>
-                {(isDraftStatus || isChangeRequest) && progress && (
-                  <ApplicationProgressBar {...progress} />
-                )}
-                <div className="actions-box">
-                  {isChangeRequest ? (
-                    <ActionisChangesRequest
-                      {...sectionActionProps}
-                      isDraftStatus={isDraftStatus}
-                      restartApplication={handleRestartClick}
-                    />
-                  ) : isDraftStatus ? (
-                    <ActionGeneral
-                      {...sectionActionProps}
-                      isBeforeStrict={isBeforeStrict}
-                      isStrictSection={isStrictSection}
-                    />
-                  ) : null}
+                <div className="right-align-flex-box-row">
+                  {(isDraftStatus || isChangeRequest) && progress && (
+                    <ApplicationProgressBar {...progress} />
+                  )}
+                  <div className="actions-box">
+                    {isChangeRequest ? (
+                      <ActionisChangesRequest
+                        {...sectionActionProps}
+                        isDraftStatus={isDraftStatus}
+                        restartApplication={handleRestartClick}
+                      />
+                    ) : isDraftStatus ? (
+                      <ActionGeneral
+                        {...sectionActionProps}
+                        isBeforeStrict={isBeforeStrict}
+                        isStrictSection={isStrictSection}
+                      />
+                    ) : null}
+                  </div>
                 </div>
               </div>
             ),
