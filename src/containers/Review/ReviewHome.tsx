@@ -2,7 +2,6 @@ import React, { CSSProperties, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Message, Segment, Header, Dropdown, Grid, Button, Icon } from 'semantic-ui-react'
 import { Loading } from '../../components'
-import { tempStageStyle } from '../../components/Review'
 import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
@@ -151,7 +150,7 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
             options={stageOptions}
             value={filters?.selectedStage}
             onChange={changeFilters('selectedStage')}
-            style={tempStageStyle(selectedStageText)}
+            // style={tempStageStyle(selectedStageText)}
           />
         </div>
       </Grid.Column>

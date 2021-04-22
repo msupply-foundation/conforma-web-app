@@ -247,6 +247,10 @@ p strong {
   margin-top: 10px; // This is only necessary because of annoying Semantic defaults
 }
 
+.list-row {
+  padding-bottom: 30px;
+}
+
 .flex-grow-1 {
   flex-grow: 1;
 }

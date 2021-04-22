@@ -5,3 +5,14 @@
 .ui.label {
   font-weight: @semiboldWeight;
 }
+
+// Class for coloured "Stage" labels
+.ui.label.stage-label {
+  color: white;
+  background-color: rgb(86, 180, 219); // default -- over-ridden by template setting
+  font-size: @fontXXsmall;
+  letter-spacing: 0.81px;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  border-radius: 4px;
+}
