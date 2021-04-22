@@ -195,12 +195,13 @@ p strong {
   justify-content: flex-end;
 }
 
-// Steps line - progress bar
+// Steps line - progress bar (box)
 .progress-box {
   padding-right: 50px;
-  height: 10px;
+  height: 3px;
 }
 
+// Steps line - progress bar
 .progress-box .progress {
   width: 120px;
 }
