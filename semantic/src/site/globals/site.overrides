@@ -95,6 +95,8 @@ p strong {
   padding-right: 12px;
   padding-left: 12px;
   padding-bottom: @footerHeight + 25px; // To allow for footer
+  display: flex;
+  justify-content: center;
 }
 
 #footer {
@@ -224,6 +226,29 @@ p strong {
 // Message area segment - bottom of application home/create
 #application-area .application-segment {
   padding: 0;
+}
+
+/*--------------------------------
+      Application List
+---------------------------------*/
+
+#list-container {
+  padding: 25px 0;
+  max-width: 900px; // Maybe this could be wider if table is getting cluttered?
+}
+
+#list-top {
+  display: flex;
+  align-items: center;
+}
+
+#list-top .ui.header {
+  padding-right: 20px;
+  margin-top: 10px; // This is only necessary because of annoying Semantic defaults
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
 }
 
 /*--------------------------------
