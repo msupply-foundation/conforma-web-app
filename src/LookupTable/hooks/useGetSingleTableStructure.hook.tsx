@@ -22,7 +22,7 @@ const useGetTableStructure = (): LookupTableStructureType => {
     fetchPolicy: 'no-cache',
   })
 
-  const { loading, data, error } = structureLoadState
+  const { loading, data, error }: any = structureLoadState
 
   useEffect(() => {
     execute({ lookupTableID: Number(structureID) })
@@ -37,7 +37,7 @@ const useGetTableStructure = (): LookupTableStructureType => {
   return {
     setStructureID,
     structureLoadState,
-    getStructure: execute,
+    getStructure: (options: any = { lookupTableID: Number(structureID) }) => execute(options),
     structure,
   }
 }

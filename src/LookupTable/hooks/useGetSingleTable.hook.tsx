@@ -1,8 +1,14 @@
 import { gql, useLazyQuery } from '@apollo/client'
 import { useEffect, useState } from 'react'
-import { initialStructureState } from '../contexts'
 import { getDynamicSingleTable } from '../graphql'
 import { capitalizeFirstLetter, toCamelCase } from '../utils'
+
+const initialStructureState: any = {
+  data: [],
+  loading: true,
+  called: false,
+  error: {},
+}
 
 const useGetSingleTable = () => {
   const GQL_TABLE_NAME_PREFIX = 'lookupTable'
@@ -24,7 +30,7 @@ const useGetSingleTable = () => {
   const [lookupTable, setLookupTable] = useState(null)
 
   useEffect(() => {
-    if (structure.id) {
+    if (structure?.id) {
       setDynamicQuery(getDynamicSingleTable(structure))
 
       // Note: After we have updated the structure and added/updated row is successful, structure query
@@ -36,14 +42,16 @@ const useGetSingleTable = () => {
   }, [structure])
 
   useEffect(() => {
-    const tableName = `${GQL_TABLE_NAME_PREFIX}${capitalizeFirstLetter(
-      toCamelCase(structure.name)
-    )}s`
+    if (structure?.name) {
+      const tableName = `${GQL_TABLE_NAME_PREFIX}${capitalizeFirstLetter(
+        toCamelCase(structure.name)
+      )}s`
 
-    if (!loading && called && !error && data[tableName]) {
-      setLookupTable(data[tableName].nodes)
+      if (!loading && called && !error && data[tableName]) {
+        setLookupTable(data[tableName].nodes)
+      }
     }
-  }, [loading, called, data, error])
+  }, [loading, called, data, error, structure])
 
   return { singleTableLoadState, structure, lookupTable, setStructure }
 }

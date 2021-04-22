@@ -4,13 +4,13 @@ import { Button, Header, Icon } from 'semantic-ui-react'
 import { MainMenu } from '..'
 
 const LookUpMainMenu: React.FC<any> = (props) => {
-  const { structure } = props
+  const { tableLabel, tableId } = props
 
   return (
     <MainMenu
       header={
         <Header>
-          Lookup Table: {structure.label}
+          Lookup Table: {tableLabel}
           <Header.Subheader>View individual lookup-table and its contents</Header.Subheader>
         </Header>
       }
@@ -25,17 +25,12 @@ const LookUpMainMenu: React.FC<any> = (props) => {
             labelPosition="left"
             as={NavLink}
             color="green"
-            to={`/lookup-tables/${structure.id}/import`}
+            to={`/lookup-tables/${tableId}/import`}
           >
             <Icon name="upload" />
             Import
           </Button>
-          <Button
-            icon
-            as={NavLink}
-            labelPosition="right"
-            to={`/lookup-tables/${structure.id}/export`}
-          >
+          <Button icon as={NavLink} labelPosition="right" to={`/lookup-tables/${tableId}/export`}>
             <Icon name="download" />
             Export
           </Button>
@@ -45,4 +40,4 @@ const LookUpMainMenu: React.FC<any> = (props) => {
   )
 }
 
-export default LookUpMainMenu
+export default React.memo(LookUpMainMenu)

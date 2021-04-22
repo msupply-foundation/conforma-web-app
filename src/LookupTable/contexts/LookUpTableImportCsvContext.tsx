@@ -57,8 +57,8 @@ const LookUpTableImportCsvReducer = (
       return { ...state, errors: action.payload, submitting: false }
     case LookUpTableImportCsvActions.setSuccessMessages:
       return {
-        ...initialState,
-        uploadModalOpen: true,
+        ...state,
+        submitting: false,
         success: action.payload,
       }
     default:

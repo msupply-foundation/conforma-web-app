@@ -1,13 +1,12 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Header, Message, Table } from 'semantic-ui-react'
 import { Loading } from '../../../components'
+import { useGetSingleTable } from '../../hooks'
 import { FieldMapType } from '../../types'
 import { toCamelCase } from '../../utils'
-import { SingleTableContext } from '../../contexts'
 
-const LookupTable: React.FC<any> = (props) => {
-  const { structure } = props
-  const { singleTableLoadState, lookupTable, setStructure }: any = useContext(SingleTableContext)
+const LookupTable: React.FC<any> = ({ structure }) => {
+  const { singleTableLoadState, lookupTable, setStructure }: any = useGetSingleTable()
 
   useEffect(() => {
     setStructure(structure)
