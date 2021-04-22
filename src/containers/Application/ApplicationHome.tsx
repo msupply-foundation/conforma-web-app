@@ -1,15 +1,13 @@
 import React, { useEffect } from 'react'
-import { Button, Divider, Header, Label, Message, Segment, Sticky } from 'semantic-ui-react'
-import { FullStructure, SectionAndPage, StageAndStatus, TemplateDetails } from '../../utils/types'
+import { Button, Divider, Header, Label, Message, Segment } from 'semantic-ui-react'
+import { FullStructure, StageAndStatus, TemplateDetails } from '../../utils/types'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { ApplicationHeader, Loading } from '../../components'
 import strings from '../../utils/constants'
 import { useUserState } from '../../contexts/UserState'
-import { SectionsProgress } from '../../components/Application/Sections'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { Link } from 'react-router-dom'
-import useRestartApplication from '../../utils/hooks/useRestartApplication'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import messages from '../../utils/messages'
 
@@ -32,18 +30,12 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     structure,
   })
 
-  const restartApplication = useRestartApplication(serialNumber)
-
   useEffect(() => {
     if (!fullStructure) return
     const { status } = fullStructure.info.current as StageAndStatus
     if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired)
       replace(`/application/${serialNumber}/summary`)
   }, [fullStructure])
-
-  const handleResumeClick = ({ sectionCode, pageNumber }: SectionAndPage) => {
-    push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
-  }
 
   const handleSummaryClicked = () => {
     push(`/application/${serialNumber}/summary`)
@@ -53,7 +45,6 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
 
   const {
     info: { current, isChangeRequest, firstStrictInvalidPage },
-    sections,
   } = fullStructure
 
   const HomeMain: React.FC = () => {
@@ -62,17 +53,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
         <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
         <Label className="label-title" content={strings.SUBTITLE_APPLICATION_STEPS} />
         <Header as="h4" content={strings.TITLE_STEPS} />
-        <SectionsProgress
-          changesRequested={isChangeRequest}
-          draftStatus={current?.status === ApplicationStatus.Draft}
-          sections={sections}
-          firstStrictInvalidPage={firstStrictInvalidPage}
-          restartApplication={async ({ sectionCode, pageNumber }) => {
-            await restartApplication(fullStructure)
-            push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
-          }}
-          resumeApplication={handleResumeClick}
-        />
+        <ApplicationSections fullStructure={structure} />
         <Divider className="last-line" />
         <Markdown text={template.startMessage || ''} semanticComponent="Message" info />
         {current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage && (

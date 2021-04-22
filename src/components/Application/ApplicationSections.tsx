@@ -1,30 +1,45 @@
 import React from 'react'
-import { Button, Grid, Header, Icon, List, Progress } from 'semantic-ui-react'
+import { Button, Header, Icon, List, Progress } from 'semantic-ui-react'
 import {
   ChangeRequestsProgress,
+  FullStructure,
   Progress as ProgressType,
   SectionAndPage,
-  SectionsStructure,
-} from '../../../utils/types'
-import strings from '../../../utils/constants'
+} from '../../utils/types'
+import strings from '../../utils/constants'
+import { useRouter } from '../../utils/hooks/useRouter'
+import useRestartApplication from '../../utils/hooks/useRestartApplication'
+import { ApplicationStatus } from '../../utils/generated/graphql'
 
-interface SectionsProgressProps {
-  changesRequested: boolean
-  draftStatus: boolean
-  firstStrictInvalidPage: SectionAndPage | null
-  sections: SectionsStructure
-  restartApplication: (location: SectionAndPage) => void
-  resumeApplication: (location: SectionAndPage) => void
+interface ApplicationSectionsProps {
+  fullStructure: FullStructure
 }
 
-const SectionsProgress: React.FC<SectionsProgressProps> = ({
-  changesRequested,
-  draftStatus,
-  firstStrictInvalidPage,
-  sections,
-  restartApplication,
-  resumeApplication,
-}) => {
+const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure }) => {
+  const { push } = useRouter()
+
+  const {
+    info: {
+      serial,
+      isChangeRequest,
+      current: { status },
+      firstStrictInvalidPage,
+    },
+    sections,
+  } = fullStructure
+  const isDraftStatus = status === ApplicationStatus.Draft
+
+  const restartApplication = useRestartApplication(serial)
+
+  const handleRestartClick = async ({ sectionCode, pageNumber }: SectionAndPage) => {
+    await restartApplication(fullStructure)
+    push(`/application/${serial}/${sectionCode}/Page${pageNumber}`)
+  }
+
+  const handleResumeClick = ({ sectionCode, pageNumber }: SectionAndPage) => {
+    push(`/application/${serial}/${sectionCode}/Page${pageNumber}`)
+  }
+
   let isBeforeStrict = true
 
   const getIndicator = ({ completed, valid }: ProgressType) => {
@@ -49,7 +64,7 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
           const sectionActionProps: ActionProps = {
             changeRequestsProgress,
             generalProgress: progress,
-            resumeApplication,
+            resumeApplication: handleResumeClick,
             sectionCode,
           }
 
@@ -61,15 +76,17 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
                   {progress ? getIndicator(progress) : null}
                   <Header content={details.title} />
                 </div>
-                {(draftStatus || changesRequested) && progress && <SectionProgress {...progress} />}
+                {(isDraftStatus || isChangeRequest) && progress && (
+                  <SectionProgress {...progress} />
+                )}
                 <div className="actions-box">
-                  {changesRequested ? (
-                    <ActionChangesRequested
+                  {isChangeRequest ? (
+                    <ActionisChangesRequest
                       {...sectionActionProps}
-                      isDraftStatus={draftStatus}
-                      restartApplication={restartApplication}
+                      isDraftStatus={isDraftStatus}
+                      restartApplication={handleRestartClick}
                     />
-                  ) : draftStatus ? (
+                  ) : isDraftStatus ? (
                     <ActionGeneral
                       {...sectionActionProps}
                       isBeforeStrict={isBeforeStrict}
@@ -128,12 +145,12 @@ interface ActionProps {
   sectionCode: string
 }
 
-type ActionChangesRequestedProps = ActionProps & {
+type ActionisChangesRequestProps = ActionProps & {
   isDraftStatus: boolean
   restartApplication: (location: SectionAndPage) => void
 }
 
-const ActionChangesRequested: React.FC<ActionChangesRequestedProps> = (props) => {
+const ActionisChangesRequest: React.FC<ActionisChangesRequestProps> = (props) => {
   const {
     sectionCode,
     generalProgress,
@@ -196,4 +213,4 @@ const ActionGeneral: React.FC<ActionGeneralProps> = (props) => {
   return null
 }
 
-export default SectionsProgress
+export default ApplicationSections
