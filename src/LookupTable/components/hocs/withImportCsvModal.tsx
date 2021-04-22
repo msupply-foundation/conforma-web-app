@@ -2,17 +2,16 @@ import React from 'react'
 import { ImportCsvModal } from '..'
 
 const withImportCsvModal = (WrappedComponent: any) => ({
-  onImportSuccess,
+  importModalProps,
   structure = null,
-  importModelOpen = false,
   ...props
 }: any) => (
   <React.Fragment>
-    <WrappedComponent {...props} />
+    <WrappedComponent structure={structure} {...props} />
     <ImportCsvModal
-      {...props}
-      importModelOpen={importModelOpen}
-      onImportSuccess={onImportSuccess}
+      open={importModalProps.open}
+      onImportSuccess={importModalProps.onSuccess}
+      onClose={importModalProps.onClose}
       structure={structure}
     />
   </React.Fragment>

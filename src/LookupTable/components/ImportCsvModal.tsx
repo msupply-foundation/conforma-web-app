@@ -13,36 +13,26 @@ import {
 import { LookUpTableImportCsvContext } from '../contexts'
 import config from '../../config.json'
 import axios from 'axios'
-import { useHistory } from 'react-router'
 
-const ImportCsvModal: React.FC = ({
+const ImportCsvModal: React.FC<any> = ({
   onImportSuccess,
-  importModelOpen = false,
+  onClose,
+  open = false,
   structure = null,
 }: any) => {
   const { state, dispatch } = React.useContext(LookUpTableImportCsvContext)
-  const { uploadModalOpen: open, file, tableName, submittable, submitting, errors, success } = state
-
-  const history = useHistory()
-
-  const goBack = () => {
-    history.goBack()
-  }
+  const { uploadModalOpen, file, tableName, submittable, submitting, errors, success } = state
 
   useEffect(() => {
-    if (importModelOpen) {
-      dispatch({ type: 'OPEN_MODAL' })
-    } else {
-      dispatch({ type: 'CLOSE_MODAL' })
-    }
-  }, [importModelOpen])
+    dispatch({ type: open ? 'OPEN_MODAL' : 'CLOSE_MODAL' })
+  }, [open])
 
   useEffect(() => {
     dispatch({
       type: 'SUBMITTABLE',
-      payload: open && file !== null && structure?.id ? true : tableName !== '',
+      payload: uploadModalOpen && file !== null && structure?.id ? true : tableName !== '',
     })
-  }, [open, file, tableName])
+  }, [uploadModalOpen, file, tableName])
 
   const fileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target as HTMLInputElement
@@ -95,7 +85,7 @@ const ImportCsvModal: React.FC = ({
     <Modal
       onClose={() => dispatch({ type: 'CLOSE_MODAL' })}
       onOpen={() => dispatch({ type: 'OPEN_MODAL' })}
-      open={open}
+      open={uploadModalOpen}
     >
       <Modal.Header>
         {!structure?.id ? 'Import Lookup-table' : `Import into Lookup-table: ${structure.label}`}
@@ -155,7 +145,7 @@ const ImportCsvModal: React.FC = ({
         )}
       </Modal.Content>
       <Modal.Actions>
-        <Button color="black" onClick={goBack}>
+        <Button color="black" onClick={onClose}>
           Close
         </Button>
         {errors.length > 0 || success.length > 0 ? (

@@ -1,5 +1,12 @@
-import { TypedDocumentNode, OperationVariables } from '@apollo/client'
+import { TypedDocumentNode, OperationVariables, ApolloQueryResult } from '@apollo/client'
 import { DocumentNode } from 'graphql'
+
+type AllLookupTableStructuresType = {
+  allTableStructuresLoadState: ApolloQueryResult<any>
+  allTableStructures?: LookUpTableType[]
+  setAllTableStructures: (rows: any) => void
+  refetchAllTableStructures: (variables: any) => Promise<ApolloQueryResult<any>>
+}
 
 type FieldMapType = {
   fieldname: string
@@ -64,4 +71,5 @@ export {
   LookUpTableImportCsvActions,
   LookUpTableImportCsvType,
   LookUpTableImportCsvActionType,
+  AllLookupTableStructuresType,
 }

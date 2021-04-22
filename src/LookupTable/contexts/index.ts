@@ -4,12 +4,6 @@ import {
 } from './LookUpTableImportCsvContext'
 
 import {
-  AllTableStructuresContext,
-  AllTableStructuresProvider,
-  AllTableStructuresConsumer,
-} from './AllTableStructures.context'
-
-import {
   SingleTableStructureContext,
   SingleTableStructureProvider,
   SingleTableStructureConsumer,
@@ -21,9 +15,6 @@ import { SingleTableContext, SingleTableProvider, SingleTableConsumer } from './
 export {
   LookUpTableImportCsvContext,
   LookUpTableImportCsvProvider,
-  AllTableStructuresContext,
-  AllTableStructuresProvider,
-  AllTableStructuresConsumer,
   SingleTableStructureContext,
   SingleTableStructureProvider,
   SingleTableStructureConsumer,

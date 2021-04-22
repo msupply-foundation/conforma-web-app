@@ -1,32 +1,43 @@
-import { useLazyQuery } from '@apollo/client'
+import { ApolloQueryResult, QueryLazyOptions } from '@apollo/client'
 import { useEffect, useState } from 'react'
-import { initialStructureState } from '../contexts'
-import { getTableStructureById } from '../graphql'
+import { useGetLookupTableStructureByIdLazyQuery } from '../../utils/generated/graphql'
 import { LookUpTableType } from '../types'
 
-const useGetTableStructure = () => {
-  const [structureID, setStructureID]: [null | number, any] = useState<number>(0)
-  const [structure, setStructure] = useState<LookUpTableType>(initialStructureState)
+type LookupTableStructureType = {
+  setStructureID: (id: number) => void
+  structureLoadState: ApolloQueryResult<any>
+  getStructure?: (options?: QueryLazyOptions<any>) => void
+  structure?: LookUpTableType
+}
 
-  const [getStructure, structureLoadState] = useLazyQuery(getTableStructureById, {
+const useGetTableStructure = (): LookupTableStructureType => {
+  const [structureID, setStructureID] = useState<number>(0)
+  const [structure, setStructure] = useState<LookUpTableType>()
+
+  const [execute, structureLoadState]: [
+    (options?: any) => void,
+    ApolloQueryResult<any>
+  ] = useGetLookupTableStructureByIdLazyQuery({
     variables: { lookupTableID: structureID },
     fetchPolicy: 'no-cache',
   })
 
-  const { called, loading, data, error } = structureLoadState
+  const { loading, data, error } = structureLoadState
 
   useEffect(() => {
-    if (structureID > 0) getStructure({ variables: { lookupTableID: structureID } })
+    execute({ lookupTableID: Number(structureID) })
   }, [structureID])
 
   useEffect(() => {
-    if (!loading && called && !error && data.lookupTable) setStructure(data.lookupTable)
-  }, [loading, called, data, error])
+    if (!loading && !error && data?.lookupTable) {
+      setStructure(data.lookupTable as any)
+    }
+  }, [loading, data, error])
 
   return {
     setStructureID,
     structureLoadState,
-    getStructure,
+    getStructure: execute,
     structure,
   }
 }

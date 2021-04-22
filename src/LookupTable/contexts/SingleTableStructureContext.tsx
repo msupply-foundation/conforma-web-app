@@ -1,3 +1,4 @@
+import { ApolloQueryResult, QueryLazyOptions } from '@apollo/client'
 import React from 'react'
 import { useGetSingleTableStructure } from '../hooks'
 import { LookUpTableType } from '../types'
@@ -16,9 +17,13 @@ const initialStructureState: LookUpTableType = {
   fieldMap: [],
 }
 
-const SingleTableStructureContext = React.createContext({
+const SingleTableStructureContext = React.createContext<{
+  structureLoadState: ApolloQueryResult<any>
+  getStructure?: (options?: QueryLazyOptions<any>) => void
+  setStructureID: (id: number) => void
+  structure?: LookUpTableType
+}>({
   structureLoadState: initialState,
-  getStructure: () => {},
   setStructureID: (id: number) => id,
   structure: initialStructureState,
 })

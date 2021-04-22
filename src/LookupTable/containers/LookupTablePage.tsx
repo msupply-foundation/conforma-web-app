@@ -2,10 +2,10 @@ import React, { useContext, useEffect } from 'react'
 import { Container, Divider, Message } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import { LookUpMainMenu, LookUpTable } from '../components/single'
-import { withImportCsvModal } from '../components/hocs'
 import { SingleTableStructureContext } from '../contexts'
 import { useParams } from 'react-router'
 import { SingleTableProvider } from '../contexts'
+import { withImportCsvModal } from '../components/hocs'
 
 const LookupTablePage: React.FC = (props: any) => {
   let { lookupTableID: structureID } = useParams<{ lookupTableID: string }>()
@@ -15,11 +15,11 @@ const LookupTablePage: React.FC = (props: any) => {
     setStructureID(Number(structureID))
   }, [structureID])
 
-  const { called, loading, error } = structureLoadState
+  const { loading, error } = structureLoadState
 
   return error ? (
     <Message error header={'Error loading lookup-table'} list={[error.message]} />
-  ) : loading || !called || !structure.id ? (
+  ) : loading || !structure?.id ? (
     <Loading />
   ) : structure.id !== 0 ? (
     <Container style={{ padding: '2em 0em' }}>
