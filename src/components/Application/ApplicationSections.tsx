@@ -69,11 +69,11 @@ const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure
             sectionCode,
           }
 
+          // TODO: Create local component Section
           return {
             key: `list-item-${sectionCode}`,
             content: (
               <div className="line-vertical-box">
-                // TODO: Create local component Section
                 <div className="left">
                   {progress ? getIndicator(progress) : null}
                   <Header content={details.title} />
