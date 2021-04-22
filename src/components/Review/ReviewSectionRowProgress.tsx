@@ -25,15 +25,14 @@ const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
         return null
       }
       case ReviewAction.canView: {
-        return <ReviewSectionProgressBar reviewProgress={reviewProgress} />
+        return <ReviewSectionProgressBar {...reviewProgress} />
       }
       case ReviewAction.canContinue: {
-        if (isAssignedToCurrentUser)
-          return <ReviewSectionProgressBar reviewProgress={reviewProgress} />
+        if (isAssignedToCurrentUser) return <ReviewSectionProgressBar {...reviewProgress} />
         return null
       }
       case ReviewAction.canReReview: {
-        return <ReviewSectionProgressBar reviewProgress={reviewProgress} />
+        return <ReviewSectionProgressBar {...reviewProgress} />
       }
       default:
         return null

@@ -6,7 +6,7 @@ import strings from '../../utils/constants'
 const SectionProgress: React.FC<SectionState> = ({ reviewProgress, reviewAction }) => {
   if (reviewAction?.isAssignedToCurrentUser && reviewProgress) {
     return reviewAction.isReviewable ? (
-      <ReviewSectionProgressBar reviewProgress={reviewProgress} />
+      <ReviewSectionProgressBar {...reviewProgress} />
     ) : (
       <Label
         icon={<Icon name="circle" size="mini" color="blue" />}
@@ -17,15 +17,17 @@ const SectionProgress: React.FC<SectionState> = ({ reviewProgress, reviewAction 
   return <Label style={labelStyle}>{strings.LABEL_ASSIGNED_TO_OTHER}</Label>
 }
 
-const getProgressTitle = ({ doneNonConform, doneConform, totalReviewable }: ReviewProgress) => {
+const getReviewProgressTitle = ({
+  doneNonConform,
+  doneConform,
+  totalReviewable,
+}: ReviewProgress) => {
   if (doneNonConform > 0) return `(${doneNonConform}) ${strings.LABEL_REVIEW_DECLINED}`
-  else if (doneConform === totalReviewable) return strings.LABEL_REVIEW_COMPLETED
+  else if (doneConform === totalReviewable) return strings.LABEL_SECTION_COMPLETED
   return null
 }
 
-type ReviewSectionProgressBarProps = { reviewProgress: ReviewProgress }
-
-const ReviewSectionProgressBar: React.FC<ReviewSectionProgressBarProps> = ({ reviewProgress }) => {
+const ReviewSectionProgressBar: React.FC<ReviewProgress> = (reviewProgress) => {
   const { doneNonConform, doneConform, totalReviewable } = reviewProgress
   return (
     <Progress
@@ -34,17 +36,19 @@ const ReviewSectionProgressBar: React.FC<ReviewSectionProgressBarProps> = ({ rev
       size="tiny"
       success={doneNonConform === 0}
       error={doneNonConform > 0}
-      label={getProgressTitle(reviewProgress)}
+      label={getReviewProgressTitle(reviewProgress)}
     />
   )
 }
 
-const ApplicationProgressBar: React.FC<ApplicationProgress> = ({
-  doneRequired,
-  doneNonRequired,
-  totalSum,
-  valid,
-}) => {
+const getApplicationProgressTitle = ({ completed, valid }: ApplicationProgress) => {
+  if (!valid) return strings.LABEL_SECTION_PROBLEM
+  else if (completed) return strings.LABEL_SECTION_COMPLETED
+  return null
+}
+
+const ApplicationProgressBar: React.FC<ApplicationProgress> = (applicationProgress) => {
+  const { doneRequired, doneNonRequired, totalSum, valid } = applicationProgress
   const totalDone = doneRequired + doneNonRequired
   return totalDone > 0 && totalSum > 0 ? (
     <div className="progress-box">
@@ -54,6 +58,7 @@ const ApplicationProgressBar: React.FC<ApplicationProgress> = ({
         size="tiny"
         success={valid}
         error={!valid}
+        label={getApplicationProgressTitle(applicationProgress)}
       />
     </div>
   ) : null
