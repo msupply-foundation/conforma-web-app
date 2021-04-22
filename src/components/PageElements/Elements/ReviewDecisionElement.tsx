@@ -1,15 +1,15 @@
 import React, { useState, CSSProperties } from 'react'
 import { Icon, Label } from 'semantic-ui-react'
-import { SummaryViewWrapperProps } from '../../../../formElementPlugins/types'
-import getSimplifiedTimeDifference from '../../../../utils/dateAndTime/getSimplifiedTimeDifference'
+import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
+import getSimplifiedTimeDifference from '../../../utils/dateAndTime/getSimplifiedTimeDifference'
 import {
   ApplicationResponse,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewResponseStatus,
-} from '../../../../utils/generated/graphql'
-import DecisionArea from '../../../Review/DecisionArea'
-import strings from '../../../../utils/constants'
+} from '../../../utils/generated/graphql'
+import DecisionArea from '../../Review/DecisionArea'
+import strings from '../../../utils/constants'
 
 interface ReviewDecisionElementProps {
   latestApplicationResponse: ApplicationResponse

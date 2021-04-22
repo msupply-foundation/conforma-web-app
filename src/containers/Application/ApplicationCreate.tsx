@@ -1,14 +1,19 @@
 import React, { useEffect } from 'react'
-import { Button, Divider, Header, Label, Message, Segment } from 'semantic-ui-react'
+import { Button, Header, Message, Segment } from 'semantic-ui-react'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
-import { ApplicationHeader, ApplicationSelectType, Loading } from '../../components'
+import {
+  ApplicationHeader,
+  ApplicationSections,
+  ApplicationSelectType,
+  Loading,
+} from '../../components'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { useUserState } from '../../contexts/UserState'
 import useCreateApplication from '../../utils/hooks/useCreateApplication'
 import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
-import { SectionsList } from '../../components/Application/Sections'
+import { SectionsList } from '../../components/Sections'
 
 const ApplicationCreate: React.FC = () => {
   const {

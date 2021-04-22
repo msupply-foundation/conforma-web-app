@@ -1,7 +1,7 @@
 import React, { CSSProperties, useRef } from 'react'
 import { Accordion, Grid, Header, Icon, Sticky } from 'semantic-ui-react'
-import { PageElements } from '..'
-import { ResponsesByCode, SectionState, Page, ApplicationDetails } from '../../../utils/types'
+import { ResponsesByCode, SectionState, Page, ApplicationDetails } from '../../utils/types'
+import { PageElements } from '../'
 
 interface SectionProps {
   section: SectionState
