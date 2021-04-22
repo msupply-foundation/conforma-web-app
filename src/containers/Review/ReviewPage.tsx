@@ -109,6 +109,7 @@ const ReviewPage: React.FC<{
   ) : (
     <ReviewHeader
       applicationStage={stage.name || ''}
+      applicationStageColour={stage.colour}
       applicationName={name}
       currentUser={currentUser}
       ChildComponent={ReviewMain}

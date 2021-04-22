@@ -22139,7 +22139,7 @@ export type SectionFragment = (
 
 export type StageFragment = (
   { __typename?: 'ApplicationStageStatusLatest' }
-  & Pick<ApplicationStageStatusLatest, 'stage' | 'stageId' | 'status' | 'statusHistoryTimeCreated'>
+  & Pick<ApplicationStageStatusLatest, 'stage' | 'stageId' | 'stageColour' | 'status' | 'statusHistoryTimeCreated'>
 );
 
 export type TemplateFragment = (
@@ -22749,6 +22749,7 @@ export const StageFragmentDoc = gql`
     fragment Stage on ApplicationStageStatusLatest {
   stage
   stageId
+  stageColour
   status
   statusHistoryTimeCreated
 }
