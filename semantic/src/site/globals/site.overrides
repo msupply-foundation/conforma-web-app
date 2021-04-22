@@ -187,6 +187,14 @@ p strong {
   align-items: center;
 }
 
+// Inner steps line (right side - progress & action)
+#application-area .line-vertical-box .right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 // Steps line - header
 #application-area .ui.list > .item .header {
   color: @darkGrey;

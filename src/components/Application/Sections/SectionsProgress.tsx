@@ -61,21 +61,25 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
                   {progress ? getIndicator(progress) : null}
                   <Header content={details.title} />
                 </div>
-                {(draftStatus || changesRequested) && progress && <SectionProgress {...progress} />}
-                <div className="actions-box">
-                  {changesRequested ? (
-                    <ActionChangesRequested
-                      {...sectionActionProps}
-                      isDraftStatus={draftStatus}
-                      restartApplication={restartApplication}
-                    />
-                  ) : draftStatus ? (
-                    <ActionGeneral
-                      {...sectionActionProps}
-                      isBeforeStrict={isBeforeStrict}
-                      isStrictSection={isStrictSection}
-                    />
-                  ) : null}
+                <div className="right">
+                  {(draftStatus || changesRequested) && progress && (
+                    <SectionProgress {...progress} />
+                  )}
+                  <div className="actions-box">
+                    {changesRequested ? (
+                      <ActionChangesRequested
+                        {...sectionActionProps}
+                        isDraftStatus={draftStatus}
+                        restartApplication={restartApplication}
+                      />
+                    ) : draftStatus ? (
+                      <ActionGeneral
+                        {...sectionActionProps}
+                        isBeforeStrict={isBeforeStrict}
+                        isStrictSection={isStrictSection}
+                      />
+                    ) : null}
+                  </div>
                 </div>
               </div>
             ),
