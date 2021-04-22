@@ -9,7 +9,7 @@
 // Class for coloured "Stage" labels
 .ui.label.stage-label {
   color: white;
-  background-color: rgb(86, 180, 219); // default -- over-ridden by template setting
+  // bg colour defined inline from template setting
   font-size: @fontXXsmall;
   letter-spacing: 0.81px;
   padding: 4px 10px;

@@ -27,6 +27,7 @@ export default gql`
         applicantUsername
         orgName
         stage
+        stageColour
         status
         outcome
         lastActiveDate

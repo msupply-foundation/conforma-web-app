@@ -1,9 +1,10 @@
 import React from 'react'
 import { Label } from 'semantic-ui-react'
 
-const Stage: React.FC<{ name: string }> = ({ name }) => (
-  // TODO: Issue #561 - Setup to use pre-defined colour of stage label
-  <Label className="stage-label">{name}</Label>
+const Stage: React.FC<{ name: string; colour: string }> = ({ name, colour }) => (
+  <Label className="stage-label" style={{ backgroundColor: colour }}>
+    {name}
+  </Label>
 )
 
 export default Stage
