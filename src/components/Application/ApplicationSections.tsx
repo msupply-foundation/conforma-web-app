@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Header, Icon, List, Progress } from 'semantic-ui-react'
+import { Button, Header, Icon, List } from 'semantic-ui-react'
 import {
   ChangeRequestsProgress,
   FullStructure,
@@ -10,6 +10,7 @@ import strings from '../../utils/constants'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useRestartApplication from '../../utils/hooks/useRestartApplication'
 import { ApplicationStatus } from '../../utils/generated/graphql'
+import { ApplicationProgressBar } from '../Sections/SectionProgress'
 
 interface ApplicationSectionsProps {
   fullStructure: FullStructure
@@ -72,12 +73,13 @@ const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure
             key: `list-item-${sectionCode}`,
             content: (
               <div className="line-vertical-box">
+                // TODO: Create local component Section
                 <div className="left">
                   {progress ? getIndicator(progress) : null}
                   <Header content={details.title} />
                 </div>
                 {(isDraftStatus || isChangeRequest) && progress && (
-                  <SectionProgress {...progress} />
+                  <ApplicationProgressBar {...progress} />
                 )}
                 <div className="actions-box">
                   {isChangeRequest ? (
@@ -116,26 +118,6 @@ const SectionEdit: React.FC<SectionEditProps> = ({ sectionCode, resumeApplicatio
       onClick={() => resumeApplication({ sectionCode, pageNumber: 1 })}
     />
   )
-}
-
-const SectionProgress: React.FC<ApplicationProgress> = ({
-  doneRequired,
-  doneNonRequired,
-  totalSum,
-  valid,
-}) => {
-  const totalDone = doneRequired + doneNonRequired
-  return totalDone > 0 && totalSum > 0 ? (
-    <div className="progress-box">
-      <Progress
-        className="progress"
-        percent={(100 * totalDone) / totalSum}
-        size="tiny"
-        success={valid}
-        error={!valid}
-      />
-    </div>
-  ) : null
 }
 
 interface ActionProps {

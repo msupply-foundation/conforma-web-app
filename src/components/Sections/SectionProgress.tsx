@@ -1,12 +1,12 @@
 import React from 'react'
 import { Icon, Label, Progress } from 'semantic-ui-react'
-import { ReviewProgress, SectionProgress, SectionState } from '../../utils/types'
+import { ApplicationProgress, ReviewProgress, SectionState } from '../../utils/types'
 import strings from '../../utils/constants'
 
 const SectionProgress: React.FC<SectionState> = ({ reviewProgress, reviewAction }) => {
   if (reviewAction?.isAssignedToCurrentUser && reviewProgress) {
     return reviewAction.isReviewable ? (
-      <SectionProgressBar reviewProgress={reviewProgress} />
+      <ReviewSectionProgressBar reviewProgress={reviewProgress} />
     ) : (
       <Label
         icon={<Icon name="circle" size="mini" color="blue" />}
@@ -23,9 +23,9 @@ const getProgressTitle = ({ doneNonConform, doneConform, totalReviewable }: Revi
   return null
 }
 
-type SectionProgressBarProps = { reviewProgress: ReviewProgress }
+type ReviewSectionProgressBarProps = { reviewProgress: ReviewProgress }
 
-const SectionProgressBar: React.FC<SectionProgressBarProps> = ({ reviewProgress }) => {
+const ReviewSectionProgressBar: React.FC<ReviewSectionProgressBarProps> = ({ reviewProgress }) => {
   const { doneNonConform, doneConform, totalReviewable } = reviewProgress
   return (
     <Progress
@@ -39,8 +39,28 @@ const SectionProgressBar: React.FC<SectionProgressBarProps> = ({ reviewProgress 
   )
 }
 
+const ApplicationProgressBar: React.FC<ApplicationProgress> = ({
+  doneRequired,
+  doneNonRequired,
+  totalSum,
+  valid,
+}) => {
+  const totalDone = doneRequired + doneNonRequired
+  return totalDone > 0 && totalSum > 0 ? (
+    <div className="progress-box">
+      <Progress
+        className="progress"
+        percent={(100 * totalDone) / totalSum}
+        size="tiny"
+        success={valid}
+        error={!valid}
+      />
+    </div>
+  ) : null
+}
+
 // Styles - TODO: Move to LESS || Global class style (semantic)
 const labelStyle = { background: 'none', color: 'Black' }
 
 export default SectionProgress
-export { SectionProgressBar }
+export { ReviewSectionProgressBar, ApplicationProgressBar }

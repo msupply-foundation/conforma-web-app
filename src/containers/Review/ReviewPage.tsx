@@ -23,7 +23,8 @@ import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivati
 import useScrollableAttachments, {
   ScrollableAttachment,
 } from '../../utils/hooks/useScrollableAttachments'
-import { ReviewHeader, SectionProgress } from '../../components/Review'
+import { ReviewHeader } from '../../components/Review'
+import { SectionProgress } from '../../components/Sections'
 import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
 
