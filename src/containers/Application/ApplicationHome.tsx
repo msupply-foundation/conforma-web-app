@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom'
 import useRestartApplication from '../../utils/hooks/useRestartApplication'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import messages from '../../utils/messages'
+import ApplicationHomeWrapper from '../../components/Application/ApplicationHomeWrapper'
 
 interface ApplicationProps {
   structure: FullStructure
@@ -60,21 +61,19 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     return (
       <>
         <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
-        <Label className="label-title" content={strings.SUBTITLE_APPLICATION_STEPS} />
-        <Header as="h4" content={strings.TITLE_STEPS} />
-        <SectionsProgress
-          changesRequested={isChangeRequest}
-          draftStatus={current?.status === ApplicationStatus.Draft}
-          sections={sections}
-          firstStrictInvalidPage={firstStrictInvalidPage}
-          restartApplication={async ({ sectionCode, pageNumber }) => {
-            await restartApplication(fullStructure)
-            push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
-          }}
-          resumeApplication={handleResumeClick}
-        />
-        <Divider className="last-line" />
-        <Markdown text={template.startMessage || ''} semanticComponent="Message" info />
+        <ApplicationHomeWrapper startMessage={template.startMessage}>
+          <SectionsProgress
+            changesRequested={isChangeRequest}
+            draftStatus={current?.status === ApplicationStatus.Draft}
+            sections={sections}
+            firstStrictInvalidPage={firstStrictInvalidPage}
+            restartApplication={async ({ sectionCode, pageNumber }) => {
+              await restartApplication(fullStructure)
+              push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
+            }}
+            resumeApplication={handleResumeClick}
+          />
+        </ApplicationHomeWrapper>
         {current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage && (
           <Segment basic className="application-segment" textAlign="right">
             <Button as={Link} color="blue" onClick={handleSummaryClicked}>

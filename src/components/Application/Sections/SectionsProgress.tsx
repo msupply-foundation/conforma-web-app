@@ -37,7 +37,7 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
 
   return (
     <List
-      divided
+      celled
       relaxed="very"
       items={Object.entries(sections).map(
         ([sectionCode, { details, progress, changeRequestsProgress }]) => {
