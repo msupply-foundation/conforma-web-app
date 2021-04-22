@@ -10,11 +10,7 @@ import { useGetAllTableStructures } from '../hooks'
 import { useHistory } from 'react-router'
 import { useRouter } from '../../utils/hooks/useRouter'
 
-const LookupTableListPage: React.FC<{ importModalProps?: any; basePath: string }> = ({
-  importModalProps = {},
-  basePath = '',
-  ...props
-}) => {
+const LookupTableListPage: React.FC<{ basePath: string }> = ({ basePath = '', ...props }) => {
   const { pathname } = useRouter()
   const history = useHistory()
 
