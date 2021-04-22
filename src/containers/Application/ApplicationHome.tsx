@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Button, Divider, Header, Label, Message, Segment, Sticky } from 'semantic-ui-react'
+import { Button, Header, Message, Segment } from 'semantic-ui-react'
 import { FullStructure, SectionAndPage, StageAndStatus, TemplateDetails } from '../../utils/types'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { ApplicationHeader, Loading } from '../../components'
@@ -10,7 +10,6 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { Link } from 'react-router-dom'
 import useRestartApplication from '../../utils/hooks/useRestartApplication'
-import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import messages from '../../utils/messages'
 import ApplicationHomeWrapper from '../../components/Application/ApplicationHomeWrapper'
 
@@ -50,6 +49,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     push(`/application/${serialNumber}/summary`)
   }
 
+  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
   const {
@@ -57,38 +57,30 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     sections,
   } = fullStructure
 
-  const HomeMain: React.FC = () => {
-    return (
-      <>
-        <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
-        <ApplicationHomeWrapper startMessage={template.startMessage}>
-          <SectionsProgress
-            changesRequested={isChangeRequest}
-            draftStatus={current?.status === ApplicationStatus.Draft}
-            sections={sections}
-            firstStrictInvalidPage={firstStrictInvalidPage}
-            restartApplication={async ({ sectionCode, pageNumber }) => {
-              await restartApplication(fullStructure)
-              push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
-            }}
-            resumeApplication={handleResumeClick}
-          />
-        </ApplicationHomeWrapper>
-        {current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage && (
-          <Segment basic className="application-segment" textAlign="right">
-            <Button as={Link} color="blue" onClick={handleSummaryClicked}>
-              {strings.BUTTON_SUMMARY}
-            </Button>
-          </Segment>
-        )}
-      </>
-    )
-  }
-
-  return error ? (
-    <Message error title={strings.ERROR_GENERIC} list={[error]} />
-  ) : (
-    <ApplicationHeader template={template} currentUser={currentUser} ChildComponent={HomeMain} />
+  return (
+    <ApplicationHeader template={template} currentUser={currentUser}>
+      <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
+      <ApplicationHomeWrapper startMessage={template.startMessage}>
+        <SectionsProgress
+          changesRequested={isChangeRequest}
+          draftStatus={current?.status === ApplicationStatus.Draft}
+          sections={sections}
+          firstStrictInvalidPage={firstStrictInvalidPage}
+          restartApplication={async ({ sectionCode, pageNumber }) => {
+            await restartApplication(fullStructure)
+            push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
+          }}
+          resumeApplication={handleResumeClick}
+        />
+      </ApplicationHomeWrapper>
+      {current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage && (
+        <Segment basic className="application-segment" textAlign="right">
+          <Button as={Link} color="blue" onClick={handleSummaryClicked}>
+            {strings.BUTTON_SUMMARY}
+          </Button>
+        </Segment>
+      )}
+    </ApplicationHeader>
   )
 }
 

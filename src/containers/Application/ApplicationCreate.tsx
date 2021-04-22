@@ -81,33 +81,21 @@ const ApplicationCreate: React.FC = () => {
       />
     )
 
+  if (!template) return <ApplicationSelectType /> // TODO
   if (loading || !template?.startMessage) return <Loading />
 
-  const NewApplicationInfo: React.FC = () => {
-    return template?.sections ? (
-      <>
-        <ApplicationHomeWrapper startMessage={template.startMessage}>
-          <SectionsList sections={template.sections} />
-        </ApplicationHomeWrapper>
-        <Segment basic className="application-segment">
-          <Button color="blue" className="wide" loading={processing} onClick={handleCreate}>
-            {strings.BUTTON_APPLICATION_START}
-          </Button>
-        </Segment>
-      </>
-    ) : null
-  }
-
-  return template ? (
-    <ApplicationHeader
-      template={template}
-      currentUser={currentUser}
-      ChildComponent={NewApplicationInfo}
-    />
-  ) : (
-    // TODO
-    <ApplicationSelectType />
-  )
+  return template?.sections ? (
+    <ApplicationHeader template={template} currentUser={currentUser}>
+      <ApplicationHomeWrapper startMessage={template.startMessage}>
+        <SectionsList sections={template.sections} />
+      </ApplicationHomeWrapper>
+      <Segment basic className="application-segment">
+        <Button color="blue" className="wide" loading={processing} onClick={handleCreate}>
+          {strings.BUTTON_APPLICATION_START}
+        </Button>
+      </Segment>
+    </ApplicationHeader>
+  ) : null
 }
 
 export default ApplicationCreate
