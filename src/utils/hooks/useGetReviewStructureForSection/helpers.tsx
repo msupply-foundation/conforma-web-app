@@ -183,7 +183,7 @@ const addIsAssigned = (
     if (!assignedElement) return
 
     assignedElement.isAssigned = true
-    assignedElement.assignmentId = id
+    assignedElement.reviewQuestionAssignmentId = id
   })
   return newStructure
 }

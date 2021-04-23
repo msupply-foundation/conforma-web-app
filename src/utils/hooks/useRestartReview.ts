@@ -37,24 +37,30 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
       element.thisReviewLatestResponse.status === ReviewResponseStatus.Draft
     // Exclude not assigned, not visible and missing responses
     const reviewableElements = elements.filter(
-      (element) =>
-        element?.isAssigned &&
-        element?.element.isVisible &&
-        element.response?.id &&
-        !isDraftReviewResponse(element)
+      (element) => element.isPendingReview && !isDraftReviewResponse(element)
     )
 
     // For re-assignment this would be slightly different, we need to consider latest review response of this level
     // not necessarily this thisReviewLatestResponse (would be just latestReviewResponse, from all reviews at this level)
     const reviewResponseCreate = reviewableElements.map(
-      ({ isPendingReview, thisReviewLatestResponse, response, assignmentId }) => {
+      ({
+        isPendingReview,
+        thisReviewLatestResponse,
+        response,
+        reviewQuestionAssignmentId,
+        latestPreviousLevelReviewResponse,
+      }) => {
+        const applicationResponseId = assignment.level > 1 ? undefined : response?.id
+        const reviewResponseLinkId =
+          assignment.level === 1 ? undefined : latestPreviousLevelReviewResponse?.id
         // create new if element is awaiting review
         const shouldCreateNew = isPendingReview
         return {
           decision: shouldCreateNew ? null : thisReviewLatestResponse?.decision,
           comment: shouldCreateNew ? null : thisReviewLatestResponse?.comment,
-          applicationResponseId: response?.id,
-          reviewQuestionAssignmentId: assignmentId,
+          applicationResponseId,
+          reviewResponseLinkId,
+          reviewQuestionAssignmentId,
         }
       }
     )
