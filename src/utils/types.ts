@@ -55,6 +55,7 @@ export {
   SectionProgress,
   SectionState,
   SectionsStructure,
+  SetReviewResponseOnElement,
   SetStrictSectionPage,
   SortQuery,
   StageAndStatus,
@@ -104,6 +105,7 @@ interface ApplicationProps {
 interface ApplicationStage {
   id: number
   name: string
+  number: number
 }
 
 interface AssignmentDetails {
@@ -242,14 +244,23 @@ type PageElement = {
   response: ResponseFull | null
   previousApplicationResponse: ApplicationResponse
   latestApplicationResponse: ApplicationResponse
+  latestPreviousLevelReviewResponse?: ReviewResponse
+  previousPreviousLevelReviewResponse?: ReviewResponse
   thisReviewLatestResponse?: ReviewResponse
+  thisReviewPreviousResponse?: ReviewResponse
+  latestOriginalReviewResponse?: ReviewResponse
+  previousOriginalReviewResponse?: ReviewResponse
   isNewApplicationResponse?: boolean
   review?: ReviewQuestionDecision
+  isPendingReview?: boolean
   assignmentId: number
   isAssigned?: boolean
   isChangeRequest?: boolean
   isChanged?: boolean
+  isActiveReviewResponse?: boolean
 }
+
+type SetReviewResponseOnElement = (element: PageElement, response: ReviewResponse) => void
 
 interface Progress {
   doneRequired: number
@@ -339,10 +350,20 @@ interface SectionProgress {
 
 interface ReviewProgress {
   totalReviewable: number
-  doneConform: number
-  doneNonConform: number
-  doneNewReviewable: number
-  totalNewReviewable: number
+  totalActive: number
+  doneConform?: number
+  doneNonConform?: number
+  doneNewReviewable?: number
+  totalNewReviewable?: number
+  totalConform?: number
+  totalNonConform?: number
+  totalPendingReview?: number
+  doneAgreeConform?: number
+  doneAgreeNonConform?: number
+  doneDisagree?: number
+  doneActiveDisagree?: number
+  doneActiveAgreeConform?: number
+  doneActiveAgreeNonConform?: number
 }
 enum ReviewAction {
   canContinue = 'CAN_CONTINUE',
