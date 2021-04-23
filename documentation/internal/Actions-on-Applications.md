@@ -81,4 +81,4 @@ Actions generated for **assigner** user will check which of the count (of ALL re
 - `Assign` -> assign_count
 - `Re-assign` -> assign_count & is_fully_assigned_level_1
 
-**Note**: If user is both an Assigner and Review for the current application the actions to both can disoplay to them, one for Reviewer and one for Assigner.
+**Note**: If user is both an Assigner and Reviewer for the current application the actions for _both_ will be displayed — one for Reviewer and one for Assigner.
