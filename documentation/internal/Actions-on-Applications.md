@@ -56,7 +56,7 @@ The GraphQL query (`getApplication` and `getApplicationList`) simply gets applic
 - `View` -> Application with `status` = SUBMITTED or others (e.g. COMPLETED, EXPIRED, ...)
 - `Update` -> Application with `status` = CHANGES_REQUIRED
 
-**Note**: For now the front-end allows to see any application, not only restricted by user permission. Later, when restrictions apply, only users with appropriate permissions will be able to see other users' application statuses.
+**Note**: For now the front-end allows a user to see any application, not only restricted by user permission. Later, when restrictions apply, only users with appropriate permissions will be able to see other users' application statuses.
 
 ### Review and Assigner home page (or list)
 
