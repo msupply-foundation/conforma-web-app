@@ -13,6 +13,7 @@ export default gql`
         reviewerId
         isLastLevel
         templateSectionRestrictions
+        trigger
         reviewer {
           id
           firstName
