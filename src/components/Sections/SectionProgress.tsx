@@ -29,15 +29,18 @@ const getReviewProgressTitle = ({
 
 const ReviewSectionProgressBar: React.FC<ReviewProgress> = (reviewProgress) => {
   const { doneNonConform, doneConform, totalReviewable } = reviewProgress
+  const progressLabel = getReviewProgressTitle(reviewProgress)
   return (
-    <Progress
-      style={{ width: 150, display: 'inline-flex' }}
-      percent={(100 * (doneConform + doneNonConform)) / totalReviewable}
-      size="tiny"
-      success={doneNonConform === 0}
-      error={doneNonConform > 0}
-      label={getReviewProgressTitle(reviewProgress)}
-    />
+    <div className="progress-box">
+      {progressLabel && <Label className="simple-label" content={progressLabel} />}
+      <Progress
+        className="progress"
+        percent={(100 * (doneConform + doneNonConform)) / totalReviewable}
+        size="tiny"
+        success={doneNonConform === 0}
+        error={doneNonConform > 0}
+      />
+    </div>
   )
 }
 
@@ -50,15 +53,16 @@ const getApplicationProgressTitle = ({ completed, valid }: ApplicationProgress) 
 const ApplicationProgressBar: React.FC<ApplicationProgress> = (applicationProgress) => {
   const { doneRequired, doneNonRequired, totalSum, valid } = applicationProgress
   const totalDone = doneRequired + doneNonRequired
+  const progressLabel = getApplicationProgressTitle(applicationProgress)
   return totalDone > 0 && totalSum > 0 ? (
     <div className="progress-box">
+      {progressLabel && <Label className="simple-label" content={progressLabel} />}
       <Progress
         className="progress"
         percent={(100 * totalDone) / totalSum}
         size="tiny"
         success={valid}
         error={!valid}
-        label={getApplicationProgressTitle(applicationProgress)}
       />
     </div>
   ) : null

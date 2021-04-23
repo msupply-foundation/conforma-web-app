@@ -198,7 +198,10 @@ p strong {
 // Steps line - progress bar (box)
 .progress-box {
   padding-right: 50px;
-  height: 3px;
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 // Steps line - progress bar
