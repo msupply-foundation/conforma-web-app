@@ -5,6 +5,7 @@ import {
   ReviewQuestionAssignment,
   TemplateElement,
   ReviewStatus,
+  ReviewResponseStatus,
 } from '../../generated/graphql'
 import {
   addElementsById,
@@ -87,7 +88,7 @@ const generateReviewStructure: GenerateReviewStructure = ({
   newStructure.thisReview = review
 
   newStructure = addIsPendingReview(newStructure, level)
-  newStructure = addIsActiveReviewResponse(newStructure, level)
+  newStructure = addIsActiveReviewResponse(newStructure)
 
   if (level === 1) {
     generateReviewProgress(newStructure)
@@ -137,15 +138,10 @@ const addIsPendingReview = (structure: FullStructure, reviewLevel: number) => {
   return structure
 }
 // When consolidation is ongoing for one review, and change request was submitted for the other one, the only 'active' or 'editable' review response is the one not in change request (submitted)
-const addIsActiveReviewResponse = (structure: FullStructure, reviewLevel: number) => {
+const addIsActiveReviewResponse = (structure: FullStructure) => {
   Object.values(structure.elementsById || {}).forEach((element) => {
-    if (reviewLevel === 1) {
-      element.isActiveReviewResponse = true
-      return
-    }
     element.isActiveReviewResponse =
-      !element.isPendingReview &&
-      element?.latestPreviousLevelReviewResponse?.review?.status === ReviewStatus.Submitted
+      element?.thisReviewLatestResponse?.status === ReviewResponseStatus.Draft
   })
   return structure
 }
