@@ -2,22 +2,12 @@ import React from 'react'
 import { Grid } from 'semantic-ui-react'
 import { ReviewAction, ReviewSectionComponentProps } from '../../utils/types'
 import { SectionProgressBar } from './SectionProgress'
-import strings from '../../utils/constants'
 
 const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
   action,
-  section,
+  section: { reviewProgress },
   isAssignedToCurrentUser,
 }) => {
-  // Set default for SectionProgressBar
-  const reviewProgress = section.reviewProgress || {
-    totalReviewable: 0,
-    doneConform: 0,
-    doneNonConform: 0,
-    totalNewReviewable: 0,
-    doneNewReviewable: 0,
-  }
-
   const getContent = () => {
     switch (action) {
       case ReviewAction.canStartReview: {

@@ -17,16 +17,24 @@ const SectionProgress: React.FC<SectionState> = ({ reviewProgress, reviewAction 
   return <Label style={labelStyle}>{strings.LABEL_ASSIGNED_TO_OTHER}</Label>
 }
 
-const getProgressTitle = ({ doneNonConform, doneConform, totalReviewable }: ReviewProgress) => {
+const getReviewProgressDefaults = (reviewProgress: ReviewProgress | undefined) => ({
+  doneNonConform: reviewProgress?.doneNonConform || 0,
+  doneConform: reviewProgress?.doneConform || 0,
+  totalReviewable: reviewProgress?.totalReviewable || 0,
+})
+
+const getProgressTitle = (reviewProgress: ReviewProgress | undefined) => {
+  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(reviewProgress)
+
   if (doneNonConform > 0) return `(${doneNonConform}) ${strings.LABEL_REVIEW_DECLINED}`
   else if (doneConform === totalReviewable) return strings.LABEL_REVIEW_COMPLETED
   return null
 }
 
-type SectionProgressBarProps = { reviewProgress: ReviewProgress }
+type SectionProgressBarProps = { reviewProgress: ReviewProgress | undefined }
 
 const SectionProgressBar: React.FC<SectionProgressBarProps> = ({ reviewProgress }) => {
-  const { doneNonConform, doneConform, totalReviewable } = reviewProgress
+  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(reviewProgress)
   return (
     <Progress
       style={{ width: 150, display: 'inline-flex' }}

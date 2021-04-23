@@ -11,30 +11,22 @@ import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignme
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const {
-    location: { pathname },
-  } = useRouter()
-
-  const {
     action,
     section: { reviewProgress },
     isAssignedToCurrentUser,
     assignment: { isCurrentUserReviewer },
-    thisReview,
   } = props
-
-  const reviewPath = `${pathname}/${thisReview?.id}`
 
   const getContent = () => {
     switch (action) {
       case ReviewAction.canContinue: {
         if (isAssignedToCurrentUser) {
-          if (reReviewableCount(reviewProgress)) return <ReReviewButton {...props} />
+          if (reReviewableCount(reviewProgress) > 0) return <ReReviewButton {...props} />
           else return <ContinueReviewButton {...props} />
         } else return <div style={inProgressStyle}>{strings.STATUS_IN_PROGRESS}</div>
       }
       case ReviewAction.canView: {
-        if (isAssignedToCurrentUser) return <ContinueReviewButton {...props} />
-        else return <ViewReviewIcon {...props} />
+        return <ViewReviewIcon {...props} />
       }
 
       case ReviewAction.canStartReview: {
@@ -156,14 +148,15 @@ const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
 
   const [startReviewError, setStartReviewError] = useState(false)
 
-  const { createReviewFromStructure } = useCreateReview({
-    reviewAssigmentId: assignment.id,
+  const createReview = useCreateReview({
+    structure: fullStructure,
+    assignment,
   })
 
   const startReview = async () => {
     {
       try {
-        const result = await createReviewFromStructure(fullStructure)
+        const result = await createReview()
         const newReviewId = result.data?.createReview?.review?.id
         push(`${pathname}/${newReviewId}?activeSections=${details.code}`)
       } catch (e) {
@@ -195,7 +188,7 @@ const ContinueReviewButton: React.FC<ReviewSectionComponentProps> = ({
 
   return (
     <Link style={actionContinueStyle} to={`${pathname}/${reviewId}?activeSections=${details.code}`}>
-      {strings.ACTION_VIEW}
+      {strings.ACTION_CONTINUE}
     </Link>
   )
 }
