@@ -46,7 +46,7 @@ The options are per section of the application, but will show on the application
 
 ## Generating and display of actions
 
-Actions are displayed in 2 main places: on the Application's list and on the Review home page (for Reviewer/Assigner) or Application home page (for Applicant)
+Actions are displayed in 2 main places: on the Applications list and on the Review home page (for Reviewer/Assigner) or Application home page (for Applicant)
 
 ### Applicant home page (or list)
 
