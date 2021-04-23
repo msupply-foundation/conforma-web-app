@@ -105,6 +105,7 @@ a:hover {
   padding-left: 12px;
   padding-bottom: @footerHeight + 25px; // To allow for footer
   display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 
