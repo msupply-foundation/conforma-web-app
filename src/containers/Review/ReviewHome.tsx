@@ -150,7 +150,6 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
             options={stageOptions}
             value={filters?.selectedStage}
             onChange={changeFilters('selectedStage')}
-            // style={tempStageStyle(selectedStageText)}
           />
         </div>
       </Grid.Column>
