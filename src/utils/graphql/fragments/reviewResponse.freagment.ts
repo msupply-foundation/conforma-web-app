@@ -9,5 +9,10 @@ export default gql`
     status
     timeUpdated
     originalReviewResponseId
+    reviewResponseLinkId
+    applicationResponse {
+      id
+      templateElementId
+    }
   }
 `
