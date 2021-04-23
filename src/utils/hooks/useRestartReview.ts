@@ -1,5 +1,11 @@
-import { useUpdateReviewMutation, ReviewPatch, Trigger, Decision } from '../generated/graphql'
-import { AssignmentDetails, FullStructure } from '../types'
+import {
+  useUpdateReviewMutation,
+  ReviewPatch,
+  Trigger,
+  Decision,
+  ReviewResponseStatus,
+} from '../generated/graphql'
+import { AssignmentDetails, FullStructure, PageElement } from '../types'
 import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSection'
 
 // below lines are used to get return type of the function that is returned by useRestartReviewMutation
@@ -25,18 +31,25 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
 
   const constructReviewPatch: ConstructReviewPatch = (structure) => {
     const elements = Object.values(structure?.elementsById || {})
-
+    // Check for draft review response in case consolidation is ongoing and new review response is added
+    const isDraftReviewResponse = (element: PageElement) =>
+      element.thisReviewLatestResponse &&
+      element.thisReviewLatestResponse.status === ReviewResponseStatus.Draft
     // Exclude not assigned, not visible and missing responses
     const reviewableElements = elements.filter(
-      (element) => element?.isAssigned && element?.element.isVisible && element.response?.id
+      (element) =>
+        element?.isAssigned &&
+        element?.element.isVisible &&
+        element.response?.id &&
+        !isDraftReviewResponse(element)
     )
 
     // For re-assignment this would be slightly different, we need to consider latest review response of this level
     // not necessarily this thisReviewLatestResponse (would be just latestReviewResponse, from all reviews at this level)
     const reviewResponseCreate = reviewableElements.map(
-      ({ thisReviewLatestResponse, response, assignmentId }) => {
-        // create new if application response is not linked to latest review response
-        const shouldCreateNew = thisReviewLatestResponse?.applicationResponse?.id !== response?.id
+      ({ isPendingReview, thisReviewLatestResponse, response, assignmentId }) => {
+        // create new if element is awaiting review
+        const shouldCreateNew = isPendingReview
         return {
           decision: shouldCreateNew ? null : thisReviewLatestResponse?.decision,
           comment: shouldCreateNew ? null : thisReviewLatestResponse?.comment,
