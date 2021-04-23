@@ -16,6 +16,15 @@ p strong {
   font-weight: @semiboldWeight;
 }
 
+a {
+  color: @interactiveHigh;
+}
+
+a:hover {
+  color: @interactiveHigh;
+  opacity: 0.8;
+}
+
 /*--------------------------------
    Main area, User area & Footer
 ---------------------------------*/
@@ -253,6 +262,11 @@ p strong {
 
 .flex-grow-1 {
   flex-grow: 1;
+}
+
+.user-action {
+  font-size: @fontXsmall;
+  font-weight: @semiboldWeight;
 }
 
 /*--------------------------------

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Label, Progress, Segment } from 'semantic-ui-react'
+import { Icon, Progress, Segment } from 'semantic-ui-react'
 import { ApplicationStatus } from '../../../utils/generated/graphql'
 import { CellProps } from '../../../utils/types'
 
@@ -15,12 +15,10 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
   switch (status) {
     case ApplicationStatus.ChangesRequired:
       return (
-        <Segment basic textAlign="center">
-          <Link to={`/application/${serial}`}>
-            <Icon name="exclamation circle" color="red" />
-            {ACTIONS.MAKE_CHANGES}
-          </Link>
-        </Segment>
+        <Link to={`/application/${serial}`}>
+          <Icon name="exclamation circle" color="red" />
+          {ACTIONS.MAKE_CHANGES}
+        </Link>
       )
     case ApplicationStatus.Draft:
       return (
@@ -38,11 +36,7 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
       console.log('Problem to get status of application serial ', serial)
       return null
     default:
-      return (
-        <Segment basic textAlign="center">
-          <p>{status}</p>
-        </Segment>
-      )
+      return <p>{status}</p>
   }
 }
 
