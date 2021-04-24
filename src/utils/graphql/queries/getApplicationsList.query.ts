@@ -6,7 +6,7 @@ export default gql`
     $sortFields: [ApplicationListShapesOrderBy!]
     $paginationOffset: Int!
     $numberToFetch: Int!
-    $userId: Int!
+    $userId: Int! = 0
   ) {
     applicationList(
       filter: $filters

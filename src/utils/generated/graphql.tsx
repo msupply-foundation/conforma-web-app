@@ -22488,7 +22488,7 @@ export type GetApplicationListQueryVariables = Exact<{
   sortFields?: Maybe<Array<ApplicationListShapesOrderBy>>;
   paginationOffset: Scalars['Int'];
   numberToFetch: Scalars['Int'];
-  userId: Scalars['Int'];
+  userId?: Scalars['Int'];
 }>;
 
 
@@ -23327,7 +23327,7 @@ export type GetApplicationQueryHookResult = ReturnType<typeof useGetApplicationQ
 export type GetApplicationLazyQueryHookResult = ReturnType<typeof useGetApplicationLazyQuery>;
 export type GetApplicationQueryResult = Apollo.QueryResult<GetApplicationQuery, GetApplicationQueryVariables>;
 export const GetApplicationListDocument = gql`
-    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $userId: Int!) {
+    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $userId: Int! = 0) {
   applicationList(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch, userid: $userId) {
     nodes {
       id
