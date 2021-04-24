@@ -22124,6 +22124,13 @@ export type ReviewResponseFragmentFragment = (
   & { applicationResponse?: Maybe<(
     { __typename?: 'ApplicationResponse' }
     & Pick<ApplicationResponse, 'id' | 'templateElementId'>
+  )>, review?: Maybe<(
+    { __typename?: 'Review' }
+    & Pick<Review, 'id'>
+    & { reviewer?: Maybe<(
+      { __typename?: 'User' }
+      & UserFragment
+    )> }
   )> }
 );
 
@@ -22597,10 +22604,6 @@ export type GetReviewResponsesQuery = (
     { __typename?: 'ReviewResponsesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewResponse' }
-      & { review?: Maybe<(
-        { __typename?: 'Review' }
-        & Pick<Review, 'id' | 'status'>
-      )> }
       & ReviewResponseFragmentFragment
     )>> }
   )>, originalReviewResponses?: Maybe<(
@@ -22725,6 +22728,16 @@ export const ResponseFragmentDoc = gql`
   timeUpdated
 }
     `;
+export const UserFragmentDoc = gql`
+    fragment User on User {
+  id
+  username
+  firstName
+  lastName
+  email
+  dateOfBirth
+}
+    `;
 export const ReviewResponseFragmentFragmentDoc = gql`
     fragment reviewResponseFragment on ReviewResponse {
   applicationResponseId
@@ -22739,8 +22752,14 @@ export const ReviewResponseFragmentFragmentDoc = gql`
     id
     templateElementId
   }
+  review {
+    id
+    reviewer {
+      ...User
+    }
+  }
 }
-    `;
+    ${UserFragmentDoc}`;
 export const SectionFragmentDoc = gql`
     fragment Section on TemplateSection {
   id
@@ -22774,16 +22793,6 @@ export const TemplateStageFragmentDoc = gql`
   title
   id
   description
-}
-    `;
-export const UserFragmentDoc = gql`
-    fragment User on User {
-  id
-  username
-  firstName
-  lastName
-  email
-  dateOfBirth
 }
     `;
 export const CreateApplicationDocument = gql`
@@ -23531,10 +23540,6 @@ export const GetReviewResponsesDocument = gql`
   previousLevelReviewResponses: reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {review: {applicationId: {equalTo: $applicationId}, levelNumber: {equalTo: $previousLevel}, stageNumber: {equalTo: $stageNumber}}, templateElement: {section: {id: {in: $sectionIds}}}, status: {notEqualTo: DRAFT}}) {
     nodes {
       ...reviewResponseFragment
-      review {
-        id
-        status
-      }
     }
   }
   originalReviewResponses: reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {review: {applicationId: {equalTo: $applicationId}, levelNumber: {equalTo: 1}, stageNumber: {equalTo: $stageNumber}}, templateElement: {section: {id: {in: $sectionIds}}}, status: {notEqualTo: DRAFT}}) {
