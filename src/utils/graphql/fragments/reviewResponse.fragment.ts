@@ -14,5 +14,11 @@ export default gql`
       id
       templateElementId
     }
+    review {
+      id
+      reviewer {
+        ...User
+      }
+    }
   }
 `

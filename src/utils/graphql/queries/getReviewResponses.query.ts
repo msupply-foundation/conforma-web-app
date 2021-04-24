@@ -45,10 +45,6 @@ export default gql`
     ) {
       nodes {
         ...reviewResponseFragment
-        review {
-          id
-          status
-        }
       }
     }
     originalReviewResponses: reviewResponses(
