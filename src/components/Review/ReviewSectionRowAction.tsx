@@ -148,7 +148,7 @@ const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
 
   const [startReviewError, setStartReviewError] = useState(false)
 
-  const createReview = useCreateReview({
+  const { createReviewFromStructure } = useCreateReview({
     structure: fullStructure,
     assignment,
   })
@@ -156,7 +156,7 @@ const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
   const startReview = async () => {
     {
       try {
-        const result = await createReview()
+        const result = await createReviewFromStructure(fullStructure)
         const newReviewId = result.data?.createReview?.review?.id
         push(`${pathname}/${newReviewId}?activeSections=${details.code}`)
       } catch (e) {
