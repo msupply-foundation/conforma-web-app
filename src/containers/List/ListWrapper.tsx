@@ -12,6 +12,7 @@ import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
 import PaginationBar from '../../components/List/Pagination'
+import checkExistingUserRole from '../../utils/helpers/list/checkExistingUserRole'
 
 const ListWrapper: React.FC = () => {
   const { query, updateQuery } = useRouter()
@@ -28,7 +29,7 @@ const ListWrapper: React.FC = () => {
 
   useEffect(() => {
     if (!templatePermissions) return
-    if (!type || !userRole) redirectToDefault()
+    if (!type || !userRole || !checkExistingUserRole(userRole)) redirectToDefault()
     else {
       const columns = mapColumnsByRole(userRole as USER_ROLES)
       setColumns(columns)
@@ -58,7 +59,10 @@ const ListWrapper: React.FC = () => {
 
   const redirectToDefault = () => {
     const redirectType = type || Object.keys(templatePermissions)[0]
-    const redirectUserRole = userRole || getDefaultUserRole(templatePermissions, redirectType)
+    const redirectUserRole = checkExistingUserRole(userRole)
+      ? userRole
+      : getDefaultUserRole(templatePermissions, redirectType)
+
     if (redirectType && redirectUserRole)
       updateQuery({ type: redirectType, userRole: redirectUserRole })
     else {
