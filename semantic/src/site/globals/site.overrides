@@ -183,16 +183,9 @@ p strong {
 // Inner steps line (left side - icon & header)
 .line-vertical-box .centered-flex-box-row {
   display: flex;
+  flex-grow: 1;
   flex-direction: row;
   align-items: center;
-}
-
-// Inner steps line (right side - progress & action)
-.line-vertical-box .right-align-flex-box-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
 }
 
 // Steps line - progress bar (box)
