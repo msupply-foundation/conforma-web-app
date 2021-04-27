@@ -154,22 +154,6 @@ p strong {
   }
 }
 
-// "Introduction" subheader
-.ui.header .sub.header {
-  margin-top: 11px;
-  margin-bottom: 16px;
-  font-size: @fontLarge;
-  letter-spacing: @letterSpacingSmall;
-}
-
-// Extra font and margin on Steps header on application home/create
-.steps-header {
-  font-size: @fontSmall;
-  font-weight: @regularWeight;
-  margin-top: 0;
-  margin-bottom: 5px;
-}
-
 // Steps line (vertical box - layout)
 .line-vertical-box {
   display: flex;
