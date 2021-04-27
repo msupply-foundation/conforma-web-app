@@ -10,17 +10,28 @@ Seems like a good starting (anchor) point for describing this functionality, let
 
 First of all, some bulletpoint (and rules) to help clarify the diagram
 
-- One review assignment should exist per reviewer/application/stage/level
-- Review assignment can have the following statuses
-  - `Available` -> Can be assigned by assigner
-  - `Self-assigned by another` -> Was available for self assignment (but self assigned by someone else)
-  - `Assigned` -> At least one review_question_assignment was linked to review_assignment
-  - `Available for self-assignment` -> Can be self assigned
-- Review assignments can be restricted by section/s (template_section_restriction, which is an array of section codes user can review, value can be blank to allow review of all sections)
-- Review assignments of status `Available or Assigned` can be assigned by the assigner linked through the `review_assignment_assigner_join` table
-- `Assigned` status indicates that the reviewer is able to create a review (or one already exists)
+### Assignment rules
+- One `review_assignment` should exist per reviewer/application/stage/level
 - Review assignment should only be editable by a reviewer if it's `Available for self-assignment`, otherwise by linked `Assigner`. Review assignment should not be editable once stage of review assignment is different to the current application stage.
 - `is_last_level` field is a helper field for front end (to avoid front ending needing to figure if if review is last level for given stage)
+
+### Assignment status
+Review assignment can have the following statuses
+ - `Available` -> Can be assigned by assigner
+ - `Self-assigned by another` -> Was available for self assignment (but self assigned by someone else)
+ - `Assigned` -> indicates that the reviewer is able to create a review (or one already exists)
+   - At least one `review_question_assignment` was linked to review_assignment
+ - `Available for self-assignment` -> Can be self assigned
+
+### Restrictions
+Review assignments can be restricted by section/s
+ - `template_section_restriction` is an array of section codes user can review
+ - Default is `null` which allow review of all sections or all questions in the application
+ 
+### Assigner settings
+- Review assignments of status `Available` or `Assigned` can be assigned by an assigner
+- Assigner is linked through the `review_assignment_assigner_join` table
+
 
 ## Difference between self-assignment and assignment
 
