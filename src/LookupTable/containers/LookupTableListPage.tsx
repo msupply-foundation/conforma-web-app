@@ -10,7 +10,7 @@ import { useGetAllTableStructures } from '../hooks'
 import { useHistory } from 'react-router'
 import { useRouter } from '../../utils/hooks/useRouter'
 
-const LookupTableListPage: React.FC<{ basePath: string }> = ({ basePath = '', ...props }) => {
+const LookupTableListPage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
   const { pathname } = useRouter()
   const history = useHistory()
 
@@ -26,11 +26,9 @@ const LookupTableListPage: React.FC<{ basePath: string }> = ({ basePath = '', ..
       <LookUpTableListMainMenu
         headerText={'Lookup Tables'}
         subHeaderText={'This page contains the list of all lookup-tables'}
-        {...props}
       />
       <Divider />
       <LookUpTableListTable
-        {...props}
         allTableStructures={allTableStructures}
         allTableStructuresLoadState={allTableStructuresLoadState}
         setAllTableStructures={setAllTableStructures}
