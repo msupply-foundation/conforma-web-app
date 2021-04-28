@@ -1,14 +1,14 @@
 import React, { CSSProperties, useState } from 'react'
 import { Button, Grid } from 'semantic-ui-react'
-import { SummaryViewWrapper } from '../../../../formElementPlugins'
-import { SummaryViewWrapperProps } from '../../../../formElementPlugins/types'
+import { SummaryViewWrapper } from '../../../formElementPlugins'
+import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import {
   ApplicationResponse,
   ReviewResponse,
   ReviewResponseStatus,
-} from '../../../../utils/generated/graphql'
-import DecisionArea from '../../../Review/DecisionArea'
-import strings from '../../../../utils/constants'
+} from '../../../utils/generated/graphql'
+import DecisionArea from '../../Review/DecisionArea'
+import strings from '../../../utils/constants'
 
 interface ReviewResponseElementProps {
   isNewApplicationResponse: boolean

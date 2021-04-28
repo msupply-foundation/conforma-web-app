@@ -1,8 +1,7 @@
 import React from 'react'
 import { Grid } from 'semantic-ui-react'
 import { ReviewAction, ReviewSectionComponentProps } from '../../utils/types'
-import { SectionProgressBar } from './SectionProgress'
-import strings from '../../utils/constants'
+import { ReviewSectionProgressBar } from '../Sections/SectionProgress'
 
 const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
   action,
@@ -25,14 +24,14 @@ const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
         return null
       }
       case ReviewAction.canView: {
-        return <SectionProgressBar reviewProgress={reviewProgress} />
+        return <ReviewSectionProgressBar {...reviewProgress} />
       }
       case ReviewAction.canContinue: {
-        if (isAssignedToCurrentUser) return <SectionProgressBar reviewProgress={reviewProgress} />
+        if (isAssignedToCurrentUser) return <ReviewSectionProgressBar {...reviewProgress} />
         return null
       }
       case ReviewAction.canReReview: {
-        return <SectionProgressBar reviewProgress={reviewProgress} />
+        return <ReviewSectionProgressBar {...reviewProgress} />
       }
       default:
         return null

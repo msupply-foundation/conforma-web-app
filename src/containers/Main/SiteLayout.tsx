@@ -8,7 +8,6 @@ import {
   Admin,
   Config,
   Home,
-  Login,
   Notification,
   NotificationsList,
   NoMatch,
@@ -24,6 +23,7 @@ import {
 import { ApplicationCreate, ApplicationWrapper } from '../Application'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import UserArea from '../User/UserArea'
+import Login from '../User/Login'
 import ListWrapper from '../List/ListWrapper'
 import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpdateTrackerState'
 import { Container } from 'semantic-ui-react'

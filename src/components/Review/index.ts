@@ -1,4 +1,3 @@
-import SectionProgress from './SectionProgress'
 import Stage from './Stage'
 import ReviewHeader from './ReviewHeader'
 import ReviewSectionRowAction from './ReviewSectionRowAction'
@@ -7,7 +6,6 @@ import ReviewSectionRowLastActionDate from './ReviewSectionRowLastActionDate'
 import ReviewSectionRowProgress from './ReviewSectionRowProgress'
 
 export {
-  SectionProgress,
   Stage,
   ReviewHeader,
   ReviewSectionRowAction,
