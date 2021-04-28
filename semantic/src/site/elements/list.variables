@@ -3,4 +3,4 @@
 *******************************/
 
 /* Override List.item "Very Relaxed" padding */
-@veryRelaxedItemVerticalPadding: 20px;
+@veryRelaxedItemVerticalPadding: 15px;

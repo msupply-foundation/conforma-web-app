@@ -75,3 +75,15 @@
     color: @darkGrey;
   }
 }
+
+// "Introduction" subheader on application home/create
+.ui.header .sub.header {
+  margin-top: 11px;
+  margin-bottom: 16px;
+  letter-spacing: @letterSpacingSmall;
+}
+
+// Remove top margin on Steps header on application home/create
+.steps-header {
+  margin-top: 0 !important;
+}

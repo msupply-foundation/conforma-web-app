@@ -8,7 +8,7 @@
 @orange: #f2711c;
 @yellow: #fbbd08;
 @olive: #b5cc18;
-@green: rgb(87, 180, 100);
+@green: @success;
 @teal: #00b5ad;
 @blue: @interactiveHigh;
 @violet: #6435c9;
@@ -39,6 +39,11 @@
 @otherPeach: #ef78377f;
 @otherPink: #e400007f;
 @otherBlue: #24b5df7f;
+
+// Inverted blue button
+@lightBlueHover: @blue;
+@lightBlueTextColor: @blue;
+@lightBlue: @blue;
 
 /*------------------------
       Headers and Text

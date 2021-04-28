@@ -8,7 +8,7 @@ import {
   MethodRevalidate,
   MethodToCallProps,
   Page,
-  Progress,
+  ApplicationProgress,
   SectionAndPage,
 } from '../../utils/types'
 
@@ -100,7 +100,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   // success -> if completed and valid
   // empty circle with number -> if none of the above and section (has step), also add key
   // or empty circle -> if none of the above
-  const getIndicator = (progress: Progress, isStrict: boolean, step?: number) => {
+  const getIndicator = (progress: ApplicationProgress, isStrict: boolean, step?: number) => {
     const { completed, valid } = progress
     const isStrictlylInvalid = !valid || (isStrict && !completed)
     const size = step ? 'large' : 'small'
