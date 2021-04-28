@@ -74,7 +74,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
         />
       </ApplicationHomeWrapper>
       {current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage && (
-        <Segment basic className="application-segment" textAlign="right">
+        <Segment basic className="padding-zero" textAlign="right">
           <Button as={Link} color="blue" onClick={handleSummaryClicked}>
             {strings.BUTTON_SUMMARY}
           </Button>

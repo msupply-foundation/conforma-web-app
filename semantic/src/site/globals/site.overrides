@@ -189,7 +189,7 @@ p strong {
 }
 
 // Message area segment - bottom of application home/create
-.application-segment {
+.padding-zero {
   padding: 0;
 }
 
