@@ -73,30 +73,28 @@ const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure
           return {
             key: `list-item-${sectionCode}`,
             content: (
-              <div className="line-vertical-box">
+              <div className="section-single-row-box-container">
                 <div className="centered-flex-box-row">
                   {progress ? getIndicator(progress) : null}
                   <Header content={details.title} />
                 </div>
-                <div className="right-align-flex-box-row">
-                  {(isDraftStatus || isChangeRequest) && progress && (
-                    <ApplicationProgressBar {...progress} />
-                  )}
-                  <div className="actions-box">
-                    {isChangeRequest ? (
-                      <ActionsChangesRequest
-                        {...sectionActionProps}
-                        isDraftStatus={isDraftStatus}
-                        restartApplication={handleRestartClick}
-                      />
-                    ) : isDraftStatus ? (
-                      <ActionGeneral
-                        {...sectionActionProps}
-                        isBeforeStrict={isBeforeStrict}
-                        isStrictSection={isStrictSection}
-                      />
-                    ) : null}
-                  </div>
+                {(isDraftStatus || isChangeRequest) && progress && (
+                  <ApplicationProgressBar {...progress} />
+                )}
+                <div className="actions-box">
+                  {isChangeRequest ? (
+                    <ActionsChangesRequest
+                      {...sectionActionProps}
+                      isDraftStatus={isDraftStatus}
+                      restartApplication={handleRestartClick}
+                    />
+                  ) : isDraftStatus ? (
+                    <ActionGeneral
+                      {...sectionActionProps}
+                      isBeforeStrict={isBeforeStrict}
+                      isStrictSection={isStrictSection}
+                    />
+                  ) : null}
                 </div>
               </div>
             ),

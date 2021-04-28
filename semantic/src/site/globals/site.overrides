@@ -154,24 +154,8 @@ p strong {
   }
 }
 
-// "Introduction" subheader
-.ui.header .sub.header {
-  margin-top: 11px;
-  margin-bottom: 16px;
-  font-size: @fontLarge;
-  letter-spacing: @letterSpacingSmall;
-}
-
-// Extra font and margin on Steps header on application home/create
-.steps-header {
-  font-size: @fontSmall;
-  font-weight: @regularWeight;
-  margin-top: 0;
-  margin-bottom: 5px;
-}
-
 // Steps line (vertical box - layout)
-.line-vertical-box {
+.section-single-row-box-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -181,18 +165,11 @@ p strong {
 }
 
 // Inner steps line (left side - icon & header)
-.line-vertical-box .centered-flex-box-row {
+.centered-flex-box-row {
   display: flex;
+  flex-grow: 1;
   flex-direction: row;
   align-items: center;
-}
-
-// Inner steps line (right side - progress & action)
-.line-vertical-box .right-align-flex-box-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
 }
 
 // Steps line - progress bar (box)
@@ -205,7 +182,7 @@ p strong {
 }
 
 // Steps line - progress bar
-.progress-box .progress {
+.progress {
   width: 120px;
 }
 
@@ -215,7 +192,7 @@ p strong {
 }
 
 // Message area segment - bottom of application home/create
-.application-segment {
+.padding-zero {
   padding: 0;
 }
 

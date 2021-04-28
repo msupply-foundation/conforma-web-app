@@ -89,7 +89,7 @@ const ApplicationCreate: React.FC = () => {
       <ApplicationHomeWrapper startMessage={template.startMessage}>
         <SectionsList sections={template.sections} />
       </ApplicationHomeWrapper>
-      <Segment basic className="application-segment">
+      <Segment basic className="padding-zero">
         <Button color="blue" className="wide" loading={processing} onClick={handleCreate}>
           {strings.BUTTON_APPLICATION_START}
         </Button>
