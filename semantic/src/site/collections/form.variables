@@ -7,3 +7,8 @@
 @labelColor: @black;
 
 @inputColor: @darkGrey;
+
+/* Errored Input */
+@formErrorColor: @black;
+@formErrorBorder: @attention;
+@formErrorBackground: @surfacesWhite;

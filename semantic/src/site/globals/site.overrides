@@ -25,6 +25,18 @@ a:hover {
   opacity: 0.8;
 }
 
+.center-text {
+  text-align: center;
+}
+
+.alert {
+  color: @attention;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
 /*--------------------------------
    Login page
 ---------------------------------*/
@@ -48,9 +60,17 @@ a:hover {
   padding: 20px;
 }
 
+.flex-centered {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
 .login-header {
   margin: 0 !important;
-  text-transform: uppercase;
+  text-transform: uppercase !important;
+  letter-spacing: @letterSpacingRegular !important;
 }
 
 .image-icon {

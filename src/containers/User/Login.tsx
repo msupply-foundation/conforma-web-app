@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
 import { Link } from 'react-router-dom'
-import { Form, Button, Container, Grid, Image, Header, Dropdown } from 'semantic-ui-react'
+import { Form, Button, Container, Icon, Image, Header, Dropdown, List } from 'semantic-ui-react'
 import isLoggedIn from '../../utils/helpers/loginCheck'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
@@ -76,25 +76,35 @@ const Login: React.FC = () => {
     }
   }, [loginPayload])
 
-  const handleSelection = (e: any, data: any) => {
-    const { value } = data
-    setSelectedOrgIndex(value)
+  const handleOrgClick = (orgId: number) => {
+    setSelectedOrgIndex(orgId)
+    handleSubmit()
   }
 
   return (
     <Container id="login-container">
       <div id="login-box">
-        <div className="centered-flex-box-row">
+        <div className="flex-centered">
           <Image src="/images/logo-32x32.png" className="image-icon" />
           <Header as="h3" className="login-header">
-            {strings.LABEL_WELCOME}
+            {strings.TITLE_LOGIN_HEADER}
           </Header>
         </div>
-        <Header as="h2">Login</Header>
+        <Header as="h2" className="centered header-space-around-medium">
+          {loginPayload
+            ? messages.LOGIN_WELCOME.replace('%1', loginPayload.user.firstName)
+            : strings.TITLE_LOGIN}
+        </Header>
         <Form>
+          {isError && (
+            <p className="alert">
+              <Icon name="attention" />
+              {strings.ERROR_LOGIN_PASSWORD}
+            </p>
+          )}
           {!loginPayload && (
             <>
-              <Form.Field>
+              <Form.Field error={isError}>
                 <label>{strings.LABEL_LOGIN_USERNAME}</label>
                 <input
                   placeholder={strings.LABEL_LOGIN_USERNAME}
@@ -104,7 +114,7 @@ const Login: React.FC = () => {
                   onChange={(event) => setUsername(event.target.value)}
                 />
               </Form.Field>
-              <Form.Field>
+              <Form.Field error={isError}>
                 <label>{strings.LABEL_LOGIN_PASSWORD}</label>
                 <input
                   placeholder={strings.LABEL_LOGIN_PASSWORD}
@@ -117,27 +127,41 @@ const Login: React.FC = () => {
             </>
           )}
           {loginPayload && (
-            <p>{messages.LOGIN_WELCOME_SELECT_ORG.replace('%1', loginPayload.user.firstName)}</p>
+            <p>
+              <strong>{messages.LOGIN_ORG_SELECT}</strong>
+            </p>
           )}
-          {loginPayload && (
-            <Dropdown
-              selection
-              options={loginPayload?.orgList?.map((org: OrganisationSimple, index) => ({
-                key: `org_${org.orgId}`,
-                text: `${org.orgName} ${org?.userRole ? `(${org.userRole})` : ''}`,
-                value: index,
+          {loginPayload && loginPayload?.orgList && (
+            <List
+              celled
+              relaxed="very"
+              className="clickable"
+              items={loginPayload?.orgList.map((org: OrganisationSimple) => ({
+                key: `list-item-${org.orgId}`,
+                content: (
+                  <div
+                    className="section-single-row-box-container"
+                    onClick={() => handleOrgClick(org.orgId)}
+                  >
+                    <div className="centered-flex-box-row flex-grow-1">{org.orgName}</div>
+                    <Icon name="chevron right" />
+                  </div>
+                ),
               }))}
-              defaultValue={0}
-              onChange={handleSelection}
             />
           )}
-          <Container>
-            {!loginPayload && <Link to="/register">{strings.LINK_LOGIN_USER}</Link>}
-            <Button floated="right" type="submit" onClick={handleSubmit}>
+          {!loginPayload && (
+            <Button primary fluid type="submit" onClick={handleSubmit}>
               {!loginPayload ? strings.LABEL_LOG_IN : strings.LABEL_PROCEED}
             </Button>
-          </Container>
-          {isError && <p>{strings.ERROR_LOGIN_PASSWORD}</p>}
+          )}
+          {!loginPayload && (
+            <p className="center-text">
+              <strong>
+                <Link to="/register">{strings.LINK_LOGIN_USER}</Link>
+              </strong>
+            </p>
+          )}
           {networkError && <p>{networkError}</p>}
         </Form>
       </div>
