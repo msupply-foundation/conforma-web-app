@@ -36,7 +36,7 @@ export default {
   BUTTON_SUMMARY: 'Review & Summary',
   BUTTON_SUBMIT: 'Submit',
   BUTTON_SUMMARY_EDIT: 'Edit',
-  PLACEHOLDER_SEARCH: 'Search Applications',
+  PLACEHOLDER_SEARCH: 'Search Applications...',
   DATE_APPLICATION_PLACEHOLDER: '31/12/2020',
   ERROR_APPLICATION_CREATE: 'Problem loading application creation page',
   ERROR_APPLICATION_PAGE: 'Problem loading application',

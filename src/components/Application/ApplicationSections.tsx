@@ -74,7 +74,7 @@ const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure
             key: `list-item-${sectionCode}`,
             content: (
               <div className="section-single-row-box-container">
-                <div className="centered-flex-box-row">
+                <div className="centered-flex-box-row flex-grow-1">
                   {progress ? getIndicator(progress) : null}
                   <Header content={details.title} />
                 </div>

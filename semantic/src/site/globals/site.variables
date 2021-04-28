@@ -45,6 +45,9 @@
 @lightBlueTextColor: @blue;
 @lightBlue: @blue;
 
+// Others
+@headersInteractiveMed: #656565;
+
 /*------------------------
       Headers and Text
 -------------------------*/
@@ -92,8 +95,8 @@
 }
 
 // Global fonts definitions
-@fontXXsmall: 12px;
-@fontXsmall: 13px;
+@fontXXsmall: 10px;
+@fontXsmall: 12px;
 @fontSmall: 14px;
 @fontMedium: 15px;
 @fontLarge: 20px;

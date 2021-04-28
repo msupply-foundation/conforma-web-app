@@ -6,5 +6,6 @@ export default gql`
     title
     id
     description
+    colour
   }
 `

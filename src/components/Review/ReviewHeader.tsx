@@ -6,6 +6,7 @@ import Stage from './Stage'
 
 export interface ReviewHeaderProps {
   applicationStage: string
+  applicationStageColour: string
   applicationName: string
   currentUser: User | null
   ChildComponent: React.FC
@@ -13,6 +14,7 @@ export interface ReviewHeaderProps {
 
 const ReviewHeader: React.FC<ReviewHeaderProps> = ({
   applicationStage,
+  applicationStageColour,
   applicationName,
   currentUser,
   ChildComponent,
@@ -20,7 +22,7 @@ const ReviewHeader: React.FC<ReviewHeaderProps> = ({
   return (
     <Container>
       <div style={inlineStyles.container}>
-        <Stage name={applicationStage} />
+        <Stage name={applicationStage} colour={applicationStageColour} />
       </div>
       <Header
         textAlign="center"
