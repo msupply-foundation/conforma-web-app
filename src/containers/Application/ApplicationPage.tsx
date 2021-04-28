@@ -57,7 +57,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
       <Header
         as="h1"
         textAlign="center"
-        // style={inlineStyles.title}
         content={currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
       />
       <Grid stackable style={inlineStyles.grid}>
@@ -98,14 +97,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
 
 // Styles - TODO: Move to LESS || Global class style (semantic)
 const inlineStyles = {
-  title: {
-    color: 'rgb(150,150,150)',
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-    fontWeight: 400,
-    paddingTop: 25,
-    fontSize: 24,
-  } as CSSProperties,
   grid: {
     backgroundColor: 'white',
     padding: 10,

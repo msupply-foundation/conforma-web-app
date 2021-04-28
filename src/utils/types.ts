@@ -103,6 +103,7 @@ interface ApplicationProps {
 interface ApplicationStage {
   id: number
   name: string
+  colour: string
 }
 
 interface AssignmentDetails {

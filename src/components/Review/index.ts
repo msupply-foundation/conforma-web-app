@@ -1,4 +1,4 @@
-import Stage, { tempStageStyle } from './Stage'
+import Stage from './Stage'
 import ReviewHeader from './ReviewHeader'
 import ReviewSectionRowAction from './ReviewSectionRowAction'
 import ReviewSectionRowAssigned from './ReviewSectionRowAssigned'
@@ -12,5 +12,4 @@ export {
   ReviewSectionRowAssigned,
   ReviewSectionRowLastActionDate,
   ReviewSectionRowProgress,
-  tempStageStyle,
 }

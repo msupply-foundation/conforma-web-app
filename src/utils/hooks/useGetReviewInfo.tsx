@@ -98,7 +98,11 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         []) as ReviewQuestionAssignment[]
       const totalAssignedQuestions = reviewQuestionAssignments.length
 
-      const stage = { id: assignmentStage?.id as number, name: assignmentStage?.title as string }
+      const stage = {
+        id: assignmentStage?.id as number,
+        name: assignmentStage?.title as string,
+        colour: assignmentStage?.colour as string,
+      }
 
       const assignment: AssignmentDetails = {
         id,

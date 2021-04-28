@@ -16,6 +16,15 @@ p strong {
   font-weight: @semiboldWeight;
 }
 
+a {
+  color: @interactiveHigh;
+}
+
+a:hover {
+  color: @interactiveHigh;
+  opacity: 0.8;
+}
+
 /*--------------------------------
    Main area, User area & Footer
 ---------------------------------*/
@@ -95,6 +104,9 @@ p strong {
   padding-right: 12px;
   padding-left: 12px;
   padding-bottom: @footerHeight + 25px; // To allow for footer
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #footer {
@@ -167,7 +179,6 @@ p strong {
 // Inner steps line (left side - icon & header)
 .centered-flex-box-row {
   display: flex;
-  flex-grow: 1;
   flex-direction: row;
   align-items: center;
 }
@@ -195,6 +206,38 @@ p strong {
 // Message area segment - bottom of application home/create
 .padding-zero {
   padding: 0;
+}
+
+/*--------------------------------
+      Application List
+---------------------------------*/
+
+#list-container {
+  padding: 25px 0;
+  max-width: 900px; // Maybe this could be wider if table is getting cluttered?
+}
+
+#list-top {
+  display: flex;
+  align-items: center;
+}
+
+#list-top .ui.header {
+  padding-right: 20px;
+  margin-top: 10px; // This is only necessary because of annoying Semantic defaults
+}
+
+.list-row {
+  padding-bottom: 30px;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.user-action {
+  font-size: @fontXsmall;
+  font-weight: @semiboldWeight;
 }
 
 /*--------------------------------
