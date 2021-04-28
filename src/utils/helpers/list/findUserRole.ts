@@ -43,7 +43,7 @@ const findUserRole = (
   type: string
 ): string | undefined => {
   const userRoles = getUserRolesForType(templatePermissions, type)
-  return userRoles?.[0] || undefined
+  return userRoles?.[0]
 }
 
 const checkExistingUserRole = (
@@ -57,7 +57,7 @@ const checkExistingUserRole = (
 
   // If userRole correspond to one existing, check if user has permission
   const userRoles = getUserRolesForType(templatePermissions, type)
-  return userRoles?.includes(userRole) || false
+  return userRoles?.includes(userRole)
 }
 
 export { findUserRole, checkExistingUserRole }
