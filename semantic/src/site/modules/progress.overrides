@@ -1,3 +1,15 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.progress {
+  border-radius: 0em;
+}
+
+.ui.progress .bar {
+  border-radius: 0em;
+}
+
+.ui.tiny.progress .bar {
+  height: 3px;
+}

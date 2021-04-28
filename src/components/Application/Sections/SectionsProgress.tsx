@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Grid, Icon, List, Progress } from 'semantic-ui-react'
+import { Button, Grid, Header, Icon, List, Progress } from 'semantic-ui-react'
 import {
   ChangeRequestsProgress,
   Progress as ProgressType,
@@ -37,7 +37,7 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
 
   return (
     <List
-      divided
+      celled
       relaxed="very"
       items={Object.entries(sections).map(
         ([sectionCode, { details, progress, changeRequestsProgress }]) => {
@@ -55,14 +55,14 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
 
           return {
             key: `list-item-${sectionCode}`,
-            icon: progress ? getIndicator(progress) : null,
-            header: (
-              <Grid stackable style={{ minHeight: 50 }}>
-                <Grid.Column style={{ minWidth: 100 }} floated="left" width={4}>
-                  <p>{details.title}</p>
-                </Grid.Column>
+            content: (
+              <div className="section-single-row-box-container">
+                <div className="centered-flex-box-row">
+                  {progress ? getIndicator(progress) : null}
+                  <Header content={details.title} />
+                </div>
                 {(draftStatus || changesRequested) && progress && <SectionProgress {...progress} />}
-                <Grid.Column style={{ minWidth: 120, padding: 0 }} verticalAlign="middle" width={2}>
+                <div className="actions-box">
                   {changesRequested ? (
                     <ActionChangesRequested
                       {...sectionActionProps}
@@ -76,8 +76,8 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
                       isStrictSection={isStrictSection}
                     />
                   ) : null}
-                </Grid.Column>
-              </Grid>
+                </div>
+              </div>
             ),
           }
         }
@@ -96,7 +96,6 @@ const SectionEdit: React.FC<SectionEditProps> = ({ sectionCode, resumeApplicatio
     <Icon
       name="pencil square"
       color="blue"
-      style={{ minWidth: 100 }}
       onClick={() => resumeApplication({ sectionCode, pageNumber: 1 })}
     />
   )
@@ -110,15 +109,15 @@ const SectionProgress: React.FC<ProgressType> = ({
 }) => {
   const totalDone = doneRequired + doneNonRequired
   return totalDone > 0 && totalSum > 0 ? (
-    <Grid.Column style={{ width: 200, paddingRight: '5%' }} floated="right" width={4}>
+    <div className="progress-box">
       <Progress
-        style={{ width: 200 }}
+        className="progress"
         percent={(100 * totalDone) / totalSum}
         size="tiny"
         success={valid}
         error={!valid}
       />
-    </Grid.Column>
+    </div>
   ) : null
 }
 
@@ -180,6 +179,7 @@ const ActionGeneral: React.FC<ActionGeneralProps> = (props) => {
   if (isStrictSection)
     return (
       <Button
+        inverted
         color="blue"
         content={strings.BUTTON_APPLICATION_RESUME}
         onClick={() =>
