@@ -72,7 +72,7 @@ export default {
   LABEL_SECTION_PROBLEM: 'Errors',
   LABEL_SECTION_COMPLETED: 'Completed',
   LABEL_UPDATED: 'Updated',
-  LABEL_WELCOME: 'Welcome to IRIMS Application Manager',
+  LABEL_WELCOME: 'IRIMS Application Manager',
   LINK_LOGIN_USER: 'Create new account',
   MENU_ITEM_DASHBOARD: 'Dashboard',
   TITLE_APPLICATION_FORM: 'application form',

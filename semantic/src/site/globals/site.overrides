@@ -26,6 +26,39 @@ a:hover {
 }
 
 /*--------------------------------
+   Login page
+---------------------------------*/
+
+#login-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+#login-box {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  max-width: 450px;
+  box-shadow: 0 2px 14px 0 rgba(129, 129, 129, 0.25);
+  border-radius: @borderRadius;
+  padding: 20px;
+}
+
+.login-header {
+  margin: 0 !important;
+  text-transform: uppercase;
+}
+
+.image-icon {
+  height: 45px;
+  margin-right: 12px;
+}
+
+/*--------------------------------
    Main area, User area & Footer
 ---------------------------------*/
 #main-container {
