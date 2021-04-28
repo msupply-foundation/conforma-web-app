@@ -113,8 +113,9 @@ interface SectionEditProps {
 const SectionEdit: React.FC<SectionEditProps> = ({ sectionCode, resumeApplication }) => {
   return (
     <Icon
+      link
       name="pencil square"
-      color="blue"
+      size="large"
       onClick={() => resumeApplication({ sectionCode, pageNumber: 1 })}
     />
   )
