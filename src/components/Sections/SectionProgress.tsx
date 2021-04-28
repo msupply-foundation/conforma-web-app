@@ -3,7 +3,7 @@ import { Icon, Label, Progress } from 'semantic-ui-react'
 import { ApplicationProgress, ReviewProgress, SectionState } from '../../utils/types'
 import strings from '../../utils/constants'
 
-const SectionProgress: React.FC<SectionState> = ({ reviewProgress, reviewAction }) => {
+const ReviewStatusOrProgress: React.FC<SectionState> = ({ reviewProgress, reviewAction }) => {
   if (reviewAction?.isAssignedToCurrentUser && reviewProgress) {
     return reviewAction.isReviewable ? (
       <ReviewSectionProgressBar {...reviewProgress} />
@@ -71,5 +71,5 @@ const ApplicationProgressBar: React.FC<ApplicationProgress> = (applicationProgre
 // Styles - TODO: Move to LESS || Global class style (semantic)
 const labelStyle = { background: 'none', color: 'Black' }
 
-export default SectionProgress
+export default ReviewStatusOrProgress
 export { ReviewSectionProgressBar, ApplicationProgressBar }

@@ -24,7 +24,7 @@ import useScrollableAttachments, {
   ScrollableAttachment,
 } from '../../utils/hooks/useScrollableAttachments'
 import { ReviewHeader } from '../../components/Review'
-import { SectionProgress } from '../../components/Sections'
+import { ReviewStatusOrProgress } from '../../components/Sections'
 import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
 
@@ -76,7 +76,9 @@ const ReviewPage: React.FC<{
             isActive={isSectionActive(section.details.code)}
             toggleSection={toggleSection(section.details.code)}
             section={section}
-            extraSectionTitleContent={(section: SectionState) => <SectionProgress {...section} />}
+            extraSectionTitleContent={(section: SectionState) => (
+              <ReviewStatusOrProgress {...section} />
+            )}
             extraPageContent={(page: Page) => <ApproveAllButton page={page} />}
             scrollableAttachment={(page: Page) => (
               <ScrollableAttachment

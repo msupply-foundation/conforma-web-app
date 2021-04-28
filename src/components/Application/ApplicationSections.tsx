@@ -84,7 +84,7 @@ const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure
                   )}
                   <div className="actions-box">
                     {isChangeRequest ? (
-                      <ActionisChangesRequest
+                      <ActionsChangesRequest
                         {...sectionActionProps}
                         isDraftStatus={isDraftStatus}
                         restartApplication={handleRestartClick}
@@ -134,7 +134,7 @@ type ActionisChangesRequestProps = ActionProps & {
   restartApplication: (location: SectionAndPage) => void
 }
 
-const ActionisChangesRequest: React.FC<ActionisChangesRequestProps> = (props) => {
+const ActionsChangesRequest: React.FC<ActionisChangesRequestProps> = (props) => {
   const {
     sectionCode,
     generalProgress,
