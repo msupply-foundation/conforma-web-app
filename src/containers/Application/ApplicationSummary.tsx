@@ -1,13 +1,12 @@
 import React, { CSSProperties, useEffect, useState } from 'react'
+import { Button, Header, Message, Container, Segment } from 'semantic-ui-react'
 import { ApplicationProps, MethodToCallProps, ResponsesByCode, User } from '../../utils/types'
 import useSubmitApplication from '../../utils/hooks/useSubmitApplication'
 import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { Loading } from '../../components'
-import { SectionWrapper } from '../../components/Application'
+import { Loading, SectionWrapper } from '../../components'
 import strings from '../../utils/constants'
-import { Button, Header, Message, Container, Segment } from 'semantic-ui-react'
 import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivation'
 
 const ApplicationSummary: React.FC<ApplicationProps> = ({

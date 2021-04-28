@@ -6,10 +6,10 @@ import {
   PageElement,
   ResponsesByCode,
   SectionAndPage,
-} from '../../../utils/types'
-import { ApplicationViewWrapper } from '../../../formElementPlugins'
-import { ApplicationViewWrapperProps } from '../../../formElementPlugins/types'
-import { TemplateElementCategory } from '../../../utils/generated/graphql'
+} from '../../utils/types'
+import { ApplicationViewWrapper } from '../../formElementPlugins'
+import { ApplicationViewWrapperProps } from '../../formElementPlugins/types'
+import { TemplateElementCategory } from '../../utils/generated/graphql'
 import SummaryInformationElement from './Elements/SummaryInformationElement'
 import SummaryResponseElement from './Elements/SummaryResponseElement'
 import SummaryResponseChangedElement from './Elements/SummaryResponseChangedElement'

@@ -1,15 +1,13 @@
 import React, { useEffect } from 'react'
 import { Button, Header, Message, Segment } from 'semantic-ui-react'
-import { FullStructure, SectionAndPage, StageAndStatus, TemplateDetails } from '../../utils/types'
+import { FullStructure, StageAndStatus, TemplateDetails } from '../../utils/types'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
-import { ApplicationHeader, Loading } from '../../components'
+import { ApplicationHeader, ApplicationSections, Loading } from '../../components'
 import strings from '../../utils/constants'
 import { useUserState } from '../../contexts/UserState'
-import { SectionsProgress } from '../../components/Application/Sections'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { Link } from 'react-router-dom'
-import useRestartApplication from '../../utils/hooks/useRestartApplication'
 import messages from '../../utils/messages'
 import ApplicationHomeWrapper from '../../components/Application/ApplicationHomeWrapper'
 
@@ -32,18 +30,12 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     structure,
   })
 
-  const restartApplication = useRestartApplication(serialNumber)
-
   useEffect(() => {
     if (!fullStructure) return
     const { status } = fullStructure.info.current as StageAndStatus
     if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired)
       replace(`/application/${serialNumber}/summary`)
   }, [fullStructure])
-
-  const handleResumeClick = ({ sectionCode, pageNumber }: SectionAndPage) => {
-    push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
-  }
 
   const handleSummaryClicked = () => {
     push(`/application/${serialNumber}/summary`)
@@ -54,24 +46,13 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
 
   const {
     info: { current, isChangeRequest, firstStrictInvalidPage },
-    sections,
   } = fullStructure
 
   return (
     <ApplicationHeader template={template} currentUser={currentUser}>
       <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
       <ApplicationHomeWrapper startMessage={template.startMessage}>
-        <SectionsProgress
-          changesRequested={isChangeRequest}
-          draftStatus={current?.status === ApplicationStatus.Draft}
-          sections={sections}
-          firstStrictInvalidPage={firstStrictInvalidPage}
-          restartApplication={async ({ sectionCode, pageNumber }) => {
-            await restartApplication(fullStructure)
-            push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
-          }}
-          resumeApplication={handleResumeClick}
-        />
+        <ApplicationSections fullStructure={structure} />
       </ApplicationHomeWrapper>
       {current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage && (
         <Segment basic className="padding-zero" textAlign="right">

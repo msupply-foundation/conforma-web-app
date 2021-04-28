@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Grid } from 'semantic-ui-react'
-import { SummaryViewWrapper } from '../../../../formElementPlugins'
-import { SummaryViewWrapperProps } from '../../../../formElementPlugins/types'
-import { ApplicationResponse } from '../../../../utils/generated/graphql'
-import strings from '../../../../utils/constants'
+import { SummaryViewWrapper } from '../../../formElementPlugins'
+import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
+import { ApplicationResponse } from '../../../utils/generated/graphql'
+import strings from '../../../utils/constants'
 
 interface SummaryResponseElementProps {
   canEdit: boolean

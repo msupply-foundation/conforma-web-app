@@ -1,33 +1,49 @@
 import React from 'react'
-import { Button, Grid, Header, Icon, List, Progress } from 'semantic-ui-react'
+import { Button, Header, Icon, List } from 'semantic-ui-react'
 import {
   ChangeRequestsProgress,
-  Progress as ProgressType,
+  FullStructure,
+  ApplicationProgress,
   SectionAndPage,
-  SectionsStructure,
-} from '../../../utils/types'
-import strings from '../../../utils/constants'
+} from '../../utils/types'
+import strings from '../../utils/constants'
+import { useRouter } from '../../utils/hooks/useRouter'
+import useRestartApplication from '../../utils/hooks/useRestartApplication'
+import { ApplicationStatus } from '../../utils/generated/graphql'
+import { ApplicationProgressBar } from '../Sections/SectionProgress'
 
-interface SectionsProgressProps {
-  changesRequested: boolean
-  draftStatus: boolean
-  firstStrictInvalidPage: SectionAndPage | null
-  sections: SectionsStructure
-  restartApplication: (location: SectionAndPage) => void
-  resumeApplication: (location: SectionAndPage) => void
+interface ApplicationSectionsProps {
+  fullStructure: FullStructure
 }
 
-const SectionsProgress: React.FC<SectionsProgressProps> = ({
-  changesRequested,
-  draftStatus,
-  firstStrictInvalidPage,
-  sections,
-  restartApplication,
-  resumeApplication,
-}) => {
+const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure }) => {
+  const { push } = useRouter()
+
+  const {
+    info: {
+      serial,
+      isChangeRequest,
+      current: { status },
+      firstStrictInvalidPage,
+    },
+    sections,
+  } = fullStructure
+  const isDraftStatus = status === ApplicationStatus.Draft
+
+  const restartApplication = useRestartApplication(serial)
+
+  const handleRestartClick = async ({ sectionCode, pageNumber }: SectionAndPage) => {
+    await restartApplication(fullStructure)
+    push(`/application/${serial}/${sectionCode}/Page${pageNumber}`)
+  }
+
+  const handleResumeClick = ({ sectionCode, pageNumber }: SectionAndPage) => {
+    push(`/application/${serial}/${sectionCode}/Page${pageNumber}`)
+  }
+
   let isBeforeStrict = true
 
-  const getIndicator = ({ completed, valid }: ProgressType) => {
+  const getIndicator = ({ completed, valid }: ApplicationProgress) => {
     return completed ? (
       <Icon name={valid ? 'check circle' : 'exclamation circle'} color={valid ? 'green' : 'red'} />
     ) : (
@@ -49,10 +65,11 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
           const sectionActionProps: ActionProps = {
             changeRequestsProgress,
             generalProgress: progress,
-            resumeApplication,
+            resumeApplication: handleResumeClick,
             sectionCode,
           }
 
+          // TODO: Create local component Section
           return {
             key: `list-item-${sectionCode}`,
             content: (
@@ -61,15 +78,17 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
                   {progress ? getIndicator(progress) : null}
                   <Header content={details.title} />
                 </div>
-                {(draftStatus || changesRequested) && progress && <SectionProgress {...progress} />}
+                {(isDraftStatus || isChangeRequest) && progress && (
+                  <ApplicationProgressBar {...progress} />
+                )}
                 <div className="actions-box">
-                  {changesRequested ? (
-                    <ActionChangesRequested
+                  {isChangeRequest ? (
+                    <ActionsChangesRequest
                       {...sectionActionProps}
-                      isDraftStatus={draftStatus}
-                      restartApplication={restartApplication}
+                      isDraftStatus={isDraftStatus}
+                      restartApplication={handleRestartClick}
                     />
-                  ) : draftStatus ? (
+                  ) : isDraftStatus ? (
                     <ActionGeneral
                       {...sectionActionProps}
                       isBeforeStrict={isBeforeStrict}
@@ -94,46 +113,27 @@ interface SectionEditProps {
 const SectionEdit: React.FC<SectionEditProps> = ({ sectionCode, resumeApplication }) => {
   return (
     <Icon
+      link
       name="pencil square"
-      color="blue"
+      size="large"
       onClick={() => resumeApplication({ sectionCode, pageNumber: 1 })}
     />
   )
 }
 
-const SectionProgress: React.FC<ProgressType> = ({
-  doneRequired,
-  doneNonRequired,
-  totalSum,
-  valid,
-}) => {
-  const totalDone = doneRequired + doneNonRequired
-  return totalDone > 0 && totalSum > 0 ? (
-    <div className="progress-box">
-      <Progress
-        className="progress"
-        percent={(100 * totalDone) / totalSum}
-        size="tiny"
-        success={valid}
-        error={!valid}
-      />
-    </div>
-  ) : null
-}
-
 interface ActionProps {
   changeRequestsProgress?: ChangeRequestsProgress
-  generalProgress?: ProgressType
+  generalProgress?: ApplicationProgress
   resumeApplication: (location: SectionAndPage) => void
   sectionCode: string
 }
 
-type ActionChangesRequestedProps = ActionProps & {
+type ActionisChangesRequestProps = ActionProps & {
   isDraftStatus: boolean
   restartApplication: (location: SectionAndPage) => void
 }
 
-const ActionChangesRequested: React.FC<ActionChangesRequestedProps> = (props) => {
+const ActionsChangesRequest: React.FC<ActionisChangesRequestProps> = (props) => {
   const {
     sectionCode,
     generalProgress,
@@ -196,4 +196,4 @@ const ActionGeneral: React.FC<ActionGeneralProps> = (props) => {
   return null
 }
 
-export default SectionsProgress
+export default ApplicationSections

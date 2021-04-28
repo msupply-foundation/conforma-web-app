@@ -1,6 +1,6 @@
 import React from 'react'
 import { Header, Icon, List } from 'semantic-ui-react'
-import { SectionDetails } from '../../../utils/types'
+import { SectionDetails } from '../../utils/types'
 
 interface SectionsListProps {
   sections: SectionDetails[]

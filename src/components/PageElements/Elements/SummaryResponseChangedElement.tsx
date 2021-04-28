@@ -1,12 +1,11 @@
-import { stripIgnoredCharacters } from 'graphql'
 import React, { CSSProperties } from 'react'
 import { Grid, Icon, Label } from 'semantic-ui-react'
-import { SummaryViewWrapper } from '../../../../formElementPlugins'
-import { SummaryViewWrapperProps } from '../../../../formElementPlugins/types'
-import getSimplifiedTimeDifference from '../../../../utils/dateAndTime/getSimplifiedTimeDifference'
-import { ApplicationResponse } from '../../../../utils/generated/graphql'
-import { useRouter } from '../../../../utils/hooks/useRouter'
-import strings from '../../../../utils/constants'
+import { SummaryViewWrapper } from '../../../formElementPlugins'
+import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
+import getSimplifiedTimeDifference from '../../../utils/dateAndTime/getSimplifiedTimeDifference'
+import { ApplicationResponse } from '../../../utils/generated/graphql'
+import { useRouter } from '../../../utils/hooks/useRouter'
+import strings from '../../../utils/constants'
 
 interface SummaryResponseChangedElementProps {
   canEdit: boolean

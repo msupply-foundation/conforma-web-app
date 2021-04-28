@@ -1,9 +1,9 @@
 import React, { CSSProperties } from 'react'
 import { Icon, Label } from 'semantic-ui-react'
-import { SummaryViewWrapper } from '../../../../formElementPlugins'
-import { SummaryViewWrapperProps } from '../../../../formElementPlugins/types'
-import getSimplifiedTimeDifference from '../../../../utils/dateAndTime/getSimplifiedTimeDifference'
-import { ApplicationResponse, ReviewResponseDecision } from '../../../../utils/generated/graphql'
+import { SummaryViewWrapper } from '../../../formElementPlugins'
+import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
+import getSimplifiedTimeDifference from '../../../utils/dateAndTime/getSimplifiedTimeDifference'
+import { ApplicationResponse, ReviewResponseDecision } from '../../../utils/generated/graphql'
 
 interface SummaryReviewResponseElementProps {
   previousApplicationResponse: ApplicationResponse

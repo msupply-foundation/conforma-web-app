@@ -7,7 +7,7 @@ import useCreateApplication from '../../utils/hooks/useCreateApplication'
 import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
-import { SectionsList } from '../../components/Application/Sections'
+import { SectionsList } from '../../components/Sections'
 import ApplicationHomeWrapper from '../../components/Application/ApplicationHomeWrapper'
 
 const ApplicationCreate: React.FC = () => {
