@@ -56,7 +56,7 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
           return {
             key: `list-item-${sectionCode}`,
             content: (
-              <div className="line-vertical-box">
+              <div className="section-single-row-box-container">
                 <div className="centered-flex-box-row">
                   {progress ? getIndicator(progress) : null}
                   <Header content={details.title} />

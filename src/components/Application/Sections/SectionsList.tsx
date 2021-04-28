@@ -14,7 +14,7 @@ const SectionsList: React.FC<SectionsListProps> = ({ sections }) => {
       items={Object.entries(sections).map(([sectionCode, { title }]) => ({
         key: `list-item-${sectionCode}`,
         content: (
-          <div className="line-vertical-box">
+          <div className="section-single-row-box-container">
             <div className="centered-flex-box-row">
               <Icon name="circle outline" />
               <Header content={title} />
