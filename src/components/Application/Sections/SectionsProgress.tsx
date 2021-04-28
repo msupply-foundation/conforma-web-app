@@ -37,7 +37,7 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
 
   return (
     <List
-      divided
+      celled
       relaxed="very"
       items={Object.entries(sections).map(
         ([sectionCode, { details, progress, changeRequestsProgress }]) => {
@@ -56,8 +56,8 @@ const SectionsProgress: React.FC<SectionsProgressProps> = ({
           return {
             key: `list-item-${sectionCode}`,
             content: (
-              <div className="line-vertical-box">
-                <div className="left">
+              <div className="section-single-row-box-container">
+                <div className="centered-flex-box-row">
                   {progress ? getIndicator(progress) : null}
                   <Header content={details.title} />
                 </div>

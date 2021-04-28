@@ -73,7 +73,7 @@ export {
 
 interface ApplicationDetails {
   id: number
-  type: string
+  code: string
   serial: string
   name: string
   outcome: string
@@ -81,7 +81,7 @@ interface ApplicationDetails {
   isChangeRequest: boolean
   current: StageAndStatus
   firstStrictInvalidPage: SectionAndPage | null
-  submissionMessage?: string // TODO: Change to compulsory after re-structure is finished
+  submissionMessage?: string
   user?: GraphQLUser
   org?: GraphQLOrg
   config?: any
@@ -350,6 +350,7 @@ enum ReviewAction {
   canView = 'CAN_VIEW',
   canReReview = 'CAN_RE_REVIEW',
   canSelfAssign = 'CAN_SELF_ASSIGN',
+  canSelfAssignLocked = 'CAN_SELF_ASSIGN_LOCKED',
   canStartReview = 'CAN_START_REVIEW',
   canContinueLocked = 'CAN_CONTINUE_LOCKED',
   canUpdate = 'CAN_UPDATE',

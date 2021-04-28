@@ -16,7 +16,7 @@ const Home: React.FC = () => {
           <Link to="/applications">Applications list</Link>
         </List.Item>
         <List.Item>
-          <Link to="/application/new?type=TestRego">Feature showcase application</Link>
+          <Link to="/application/new?type=Demo">Feature showcase application</Link>
         </List.Item>
         <List.Item>
           <Link to="/application/new?type=UserRegistration">User registration application</Link>

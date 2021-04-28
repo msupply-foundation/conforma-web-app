@@ -2,7 +2,26 @@
     User Variable Overrides
 *******************************/
 
-// Overwrite behaivor of List item "Very relaxed" and celled
+// Remove list margin to be done outside element
+.ui.list {
+  margin: 0;
+}
+
+// List header style
+.ui.list > .item .header {
+  color: @darkGrey;
+  font-weight: @regularWeight;
+  font-size: @fontMedium;
+  width: 200px;
+  overflow: hidden; // So long titles don't overflow the header area
+}
+
+// List icon - color grey
+.ui.list > .item > i.icon {
+  color: @darkGrey;
+}
+
+// List item "Very relaxed" and celled
 .ui[class*='very relaxed'].list:not(.horizontal) > .item {
   padding-left: 0;
 }

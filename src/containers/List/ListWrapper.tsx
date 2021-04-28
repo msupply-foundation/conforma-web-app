@@ -14,7 +14,7 @@ import { FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useListApplications from '../../utils/hooks/useListApplications'
 import strings from '../../utils/constants'
-import getDefaultUserRole from '../../utils/helpers/list/findUserRole'
+import { findUserRole, checkExistingUserRole } from '../../utils/helpers/list/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/list/mapColumnsByRole'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
@@ -38,7 +38,8 @@ const ListWrapper: React.FC = () => {
 
   useEffect(() => {
     if (!templatePermissions) return
-    if (!type || !userRole) redirectToDefault()
+    if (!type || !userRole || !checkExistingUserRole(templatePermissions, type, userRole))
+      redirectToDefault()
     else {
       const columns = mapColumnsByRole(userRole as USER_ROLES)
       setColumns(columns)
@@ -68,7 +69,10 @@ const ListWrapper: React.FC = () => {
 
   const redirectToDefault = () => {
     const redirectType = type || Object.keys(templatePermissions)[0]
-    const redirectUserRole = userRole || getDefaultUserRole(templatePermissions, redirectType)
+    const redirectUserRole = checkExistingUserRole(templatePermissions, redirectType, userRole)
+      ? userRole
+      : findUserRole(templatePermissions, redirectType)
+
     if (redirectType && redirectUserRole)
       updateQuery({ type: redirectType, userRole: redirectUserRole })
     else {

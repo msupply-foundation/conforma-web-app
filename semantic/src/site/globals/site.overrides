@@ -166,24 +166,8 @@ a:hover {
   }
 }
 
-// "Introduction" subheader
-#application-area .ui.header .sub.header {
-  margin-top: 11px;
-  margin-bottom: 16px;
-  font-size: @fontLarge;
-  letter-spacing: @letterSpacingSmall;
-}
-
-// Extra font and margin on Steps header on application home/create
-#application-area .steps-header {
-  font-size: @fontSmall;
-  font-weight: @regularWeight;
-  margin-top: 0;
-  margin-bottom: 5px;
-}
-
 // Steps line (vertical box - layout)
-#application-area .line-vertical-box {
+.section-single-row-box-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -193,48 +177,31 @@ a:hover {
 }
 
 // Inner steps line (left side - icon & header)
-#application-area .line-vertical-box .left {
+.centered-flex-box-row {
   display: flex;
+  flex-grow: 1;
   flex-direction: row;
   align-items: center;
 }
 
-// Steps line - header
-#application-area .ui.list > .item .header {
-  color: @darkGrey;
-  font-weight: @regularWeight;
-  font-size: @fontMedium;
-  width: 200px;
-  overflow: hidden; // So long titles don't overflow the header area
-}
-
-// Steps line - icon
-#application-area .ui.list > .item > i.icon {
-  color: @darkGrey;
+// Steps line - progress bar (box)
+.progress-box {
+  padding-right: 50px;
+  height: 3px;
 }
 
 // Steps line - progress bar
-#application-area .ui.list .progress-box {
-  padding-right: 50px;
-  height: 10px;
-}
-
-#application-area .ui.list .progress-box .progress {
+.progress {
   width: 120px;
 }
 
 // Steps line - actions box
-#application-area .ui.list .actions-box {
+.actions-box {
   min-width: 100px;
 }
 
-// Steps line - last line divisor
-#application-area .last-line {
-  margin: 0;
-}
-
 // Message area segment - bottom of application home/create
-#application-area .application-segment {
+.padding-zero {
   padding: 0;
 }
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Button, Divider, Header, Label, Message, Segment, Sticky } from 'semantic-ui-react'
+import { Button, Header, Message, Segment } from 'semantic-ui-react'
 import { FullStructure, SectionAndPage, StageAndStatus, TemplateDetails } from '../../utils/types'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { ApplicationHeader, Loading } from '../../components'
@@ -10,8 +10,8 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { Link } from 'react-router-dom'
 import useRestartApplication from '../../utils/hooks/useRestartApplication'
-import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import messages from '../../utils/messages'
+import ApplicationHomeWrapper from '../../components/Application/ApplicationHomeWrapper'
 
 interface ApplicationProps {
   structure: FullStructure
@@ -49,6 +49,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     push(`/application/${serialNumber}/summary`)
   }
 
+  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
   const {
@@ -56,12 +57,10 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     sections,
   } = fullStructure
 
-  const HomeMain: React.FC = () => {
-    return (
-      <>
-        <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
-        <Label className="label-title" content={strings.SUBTITLE_APPLICATION_STEPS} />
-        <Header as="h4" content={strings.TITLE_STEPS} />
+  return (
+    <ApplicationHeader template={template} currentUser={currentUser}>
+      <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
+      <ApplicationHomeWrapper startMessage={template.startMessage}>
         <SectionsProgress
           changesRequested={isChangeRequest}
           draftStatus={current?.status === ApplicationStatus.Draft}
@@ -73,23 +72,15 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
           }}
           resumeApplication={handleResumeClick}
         />
-        <Divider className="last-line" />
-        <Markdown text={template.startMessage || ''} semanticComponent="Message" info />
-        {current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage && (
-          <Segment basic className="application-segment" textAlign="right">
-            <Button as={Link} color="blue" onClick={handleSummaryClicked}>
-              {strings.BUTTON_SUMMARY}
-            </Button>
-          </Segment>
-        )}
-      </>
-    )
-  }
-
-  return error ? (
-    <Message error title={strings.ERROR_GENERIC} list={[error]} />
-  ) : (
-    <ApplicationHeader template={template} currentUser={currentUser} ChildComponent={HomeMain} />
+      </ApplicationHomeWrapper>
+      {current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage && (
+        <Segment basic className="padding-zero" textAlign="right">
+          <Button as={Link} color="blue" onClick={handleSummaryClicked}>
+            {strings.BUTTON_SUMMARY}
+          </Button>
+        </Segment>
+      )}
+    </ApplicationHeader>
   )
 }
 
