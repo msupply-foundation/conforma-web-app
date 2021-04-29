@@ -146,12 +146,12 @@ const Login: React.FC = () => {
             <List
               celled
               relaxed="very"
-              className="clickable no-bottom-border"
+              className="no-bottom-border"
               items={[...loginPayload?.orgList, noOrgOption].map((org: OrganisationSimple) => ({
                 key: `list-item-${org.orgId}`,
                 content: (
                   <div
-                    className="section-single-row-box-container"
+                    className="section-single-row-box-container clickable"
                     onClick={() => setSelectedOrgId(org.orgId)}
                   >
                     <div className="centered-flex-box-row flex-grow-1">
