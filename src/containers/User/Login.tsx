@@ -93,7 +93,7 @@ const Login: React.FC = () => {
     <Container id="login-container">
       <div id="login-box">
         <div className="flex-centered">
-          <Image src="/images/logo-32x32.png" className="image-icon" />
+          <Image src="/images/logos/logo_512.png" className="image-icon" />
           <Header as="h3" className="login-header">
             {strings.TITLE_LOGIN_HEADER}
           </Header>
