@@ -2,7 +2,7 @@ import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { Message } from 'semantic-ui-react'
 
-import { ApplicationHeader, Loading, NoMatch } from '../../components'
+import { ApplicationContainer, Loading, NoMatch } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -32,7 +32,7 @@ const ApplicationWrapper: React.FC = () => {
   ) : isLoading ? (
     <Loading />
   ) : structure && template ? (
-    <ApplicationHeader template={template} currentUser={currentUser}>
+    <ApplicationContainer template={template} currentUser={currentUser}>
       <Switch>
         <Route path={`${path}/review`}>
           <ReviewWrapper structure={structure} />
@@ -47,7 +47,7 @@ const ApplicationWrapper: React.FC = () => {
           <ApplicationPageWrapper structure={structure} />
         </Route>
       </Switch>
-    </ApplicationHeader>
+    </ApplicationContainer>
   ) : (
     <NoMatch />
   )

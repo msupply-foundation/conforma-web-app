@@ -6,7 +6,13 @@ import {
   MethodRevalidate,
   ApplicationProps,
 } from '../../utils/types'
-import { ApplicationHeader, Loading, Navigation, PageElements, ProgressBar } from '../../components'
+import {
+  ApplicationContainer,
+  Loading,
+  Navigation,
+  PageElements,
+  ProgressBar,
+} from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { checkPageIsAccessible } from '../../utils/helpers/structure'

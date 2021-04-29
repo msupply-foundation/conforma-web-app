@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Button, Message, Segment } from 'semantic-ui-react'
-import { ApplicationHeader, ApplicationSelectType, Loading } from '../../components'
+import { ApplicationContainer, ApplicationSelectType, Loading } from '../../components'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { useUserState } from '../../contexts/UserState'
 import useCreateApplication from '../../utils/hooks/useCreateApplication'
@@ -85,8 +85,8 @@ const ApplicationCreate: React.FC = () => {
   if (loading || !template?.startMessage) return <Loading />
 
   return template?.sections ? (
-    <ApplicationHeader template={template} currentUser={currentUser}>
-      <ApplicationHomeWrapper startMessage={template.startMessage}>
+    <ApplicationContainer template={template} currentUser={currentUser}>
+      <ApplicationHomeWrapper startMessage={template.startMessage} name={template.name}>
         <SectionsList sections={template.sections} />
       </ApplicationHomeWrapper>
       <Segment basic className="padding-zero">
@@ -94,7 +94,7 @@ const ApplicationCreate: React.FC = () => {
           {strings.BUTTON_APPLICATION_START}
         </Button>
       </Segment>
-    </ApplicationHeader>
+    </ApplicationContainer>
   ) : null
 }
 
