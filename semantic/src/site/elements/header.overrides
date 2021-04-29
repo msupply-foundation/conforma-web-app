@@ -89,9 +89,6 @@
 }
 
 // Adjustments (overrides) to default header styles
-.header-centered {
-  text-align: center;
-}
 
 .header-space-around-none {
   margin-top: 0 !important;
