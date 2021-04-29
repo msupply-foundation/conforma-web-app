@@ -6,7 +6,7 @@ import {
   MethodRevalidate,
   ApplicationProps,
 } from '../../utils/types'
-import { Loading, Navigation, PageElements, ProgressBar } from '../../components'
+import { ApplicationHeader, Loading, Navigation, PageElements, ProgressBar } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { checkPageIsAccessible } from '../../utils/helpers/structure'
@@ -54,12 +54,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
 
   return (
     <>
-      <Header
-        as="h1"
-        textAlign="center"
-        content={currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
-      />
-      <Grid stackable style={inlineStyles.grid}>
+      <Grid stackable>
         <Grid.Column width={4}>
           <ProgressBar
             structure={fullStructure}
@@ -93,17 +88,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
       />
     </>
   )
-}
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const inlineStyles = {
-  grid: {
-    backgroundColor: 'white',
-    padding: 10,
-    margin: '0px 50px',
-    minHeight: 500,
-    flex: 1,
-  } as CSSProperties,
 }
 
 export default ApplicationPage

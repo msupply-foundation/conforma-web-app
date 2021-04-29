@@ -49,7 +49,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
   } = fullStructure
 
   return (
-    <ApplicationHeader template={template} currentUser={currentUser}>
+    <>
       <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
       <ApplicationHomeWrapper startMessage={template.startMessage}>
         <ApplicationSections fullStructure={structure} />
@@ -61,7 +61,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
           </Button>
         </Segment>
       )}
-    </ApplicationHeader>
+    </>
   )
 }
 

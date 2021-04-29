@@ -83,6 +83,15 @@
   letter-spacing: @letterSpacingSmall;
 }
 
+// In use for company title in application header (home/create pages)
+.ui.header.heading-alt {
+  letter-spacing: @letterSpacingRegular;
+  font-family: @alternativeFont;
+  font-weight: @regularWeight;
+  text-transform: uppercase;
+  color: @headersInteractiveLow;
+}
+
 // Remove top margin on Steps header on application home/create
 .steps-header {
   margin-top: 0 !important;

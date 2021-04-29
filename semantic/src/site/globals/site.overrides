@@ -201,9 +201,9 @@ a:hover {
   margin-left: 10px;
 }
 
-/*--------------------------------
-   Application home & create
----------------------------------*/
+/*-----------------------------------
+   Application home & create and form
+------------------------------------*/
 #application-area {
   display: flex;
   flex-direction: column;
@@ -222,6 +222,9 @@ a:hover {
   min-width: 132px;
   max-width: 350px;
   background-color: transparent;
+  font-size: @fontSmall;
+  color: @black;
+  font-weight: @regularWeight;
 }
 
 // Fix for company header on mobile to not clash wit back to applications
@@ -316,13 +319,6 @@ a:hover {
   flex-direction: column;
   background-color: @surfacesWhite;
   padding: 30px 50px 32px;
-}
-
-// In use for company title in application header (home/create pages)
-.heading-alt {
-  letter-spacing: @letterSpacingRegular;
-  font-family: @alternativeFont;
-  font-weight: @regularWeight;
 }
 
 // Not currently used, but should be appplied to the Link in the menu
