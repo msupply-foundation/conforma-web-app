@@ -88,12 +88,12 @@ const ApplicationCreate: React.FC = () => {
     <ApplicationContainer template={template} currentUser={currentUser}>
       <ApplicationHomeWrapper startMessage={template.startMessage} name={template.name}>
         <SectionsList sections={template.sections} />
+        <Segment basic className="padding-zero">
+          <Button color="blue" className="wide" loading={processing} onClick={handleCreate}>
+            {strings.BUTTON_APPLICATION_START}
+          </Button>
+        </Segment>
       </ApplicationHomeWrapper>
-      <Segment basic className="padding-zero">
-        <Button color="blue" className="wide" loading={processing} onClick={handleCreate}>
-          {strings.BUTTON_APPLICATION_START}
-        </Button>
-      </Segment>
     </ApplicationContainer>
   ) : null
 }

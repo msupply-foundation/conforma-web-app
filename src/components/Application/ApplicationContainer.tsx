@@ -30,13 +30,6 @@ const ApplicationContainer: React.FC<AppHeaderProps> = ({ template, currentUser,
         </Header>
       </div>
       {children}
-      {/* <Container id="application-content">
-        <Header as="h2" textAlign="center">
-          {`${name} ${strings.TITLE_APPLICATION_FORM}`}
-          <Header.Subheader content={<Header as="h3" content={strings.TITLE_INTRODUCTION} />} />
-        </Header>
-        {children}
-      </Container> */}
     </Container>
   )
 }
