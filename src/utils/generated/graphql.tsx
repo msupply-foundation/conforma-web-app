@@ -54,6 +54,8 @@ export type Query = Node & {
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
   /** Reads and enables pagination through a set of `File`. */
   files?: Maybe<FilesConnection>;
+  /** Reads and enables pagination through a set of `LookupTable`. */
+  lookupTables?: Maybe<LookupTablesConnection>;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications?: Maybe<NotificationsConnection>;
   /** Reads and enables pagination through a set of `Organisation`. */
@@ -113,6 +115,7 @@ export type Query = Node & {
   elementTypePlugin?: Maybe<ElementTypePlugin>;
   file?: Maybe<File>;
   fileByUniqueId?: Maybe<File>;
+  lookupTable?: Maybe<LookupTable>;
   notification?: Maybe<Notification>;
   organisation?: Maybe<Organisation>;
   organisationByName?: Maybe<Organisation>;
@@ -172,6 +175,8 @@ export type Query = Node & {
   elementTypePluginByNodeId?: Maybe<ElementTypePlugin>;
   /** Reads a single `File` using its globally unique `ID`. */
   fileByNodeId?: Maybe<File>;
+  /** Reads a single `LookupTable` using its globally unique `ID`. */
+  lookupTableByNodeId?: Maybe<LookupTable>;
   /** Reads a single `Notification` using its globally unique `ID`. */
   notificationByNodeId?: Maybe<Notification>;
   /** Reads a single `Organisation` using its globally unique `ID`. */
@@ -378,6 +383,19 @@ export type QueryFilesArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
   condition?: Maybe<FileCondition>;
   filter?: Maybe<FileFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTablesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+  condition?: Maybe<LookupTableCondition>;
+  filter?: Maybe<LookupTableFilter>;
 };
 
 
@@ -760,6 +778,12 @@ export type QueryFileByUniqueIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryLookupTableArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryNotificationArgs = {
   id: Scalars['Int'];
 };
@@ -1069,6 +1093,12 @@ export type QueryElementTypePluginByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryFileByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -7156,6 +7186,83 @@ export type ElementTypePluginsEdge = {
   node?: Maybe<ElementTypePlugin>;
 };
 
+/** Methods to use when ordering `LookupTable`. */
+export enum LookupTablesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  LabelAsc = 'LABEL_ASC',
+  LabelDesc = 'LABEL_DESC',
+  FieldMapAsc = 'FIELD_MAP_ASC',
+  FieldMapDesc = 'FIELD_MAP_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `LookupTable` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type LookupTableCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `label` field. */
+  label?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `fieldMap` field. */
+  fieldMap?: Maybe<Scalars['JSON']>;
+};
+
+/** A filter to be used against `LookupTable` object types. All fields are combined with a logical ‘and.’ */
+export type LookupTableFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `label` field. */
+  label?: Maybe<StringFilter>;
+  /** Filter by the object’s `fieldMap` field. */
+  fieldMap?: Maybe<JsonFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LookupTableFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LookupTableFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LookupTableFilter>;
+};
+
+/** A connection to a list of `LookupTable` values. */
+export type LookupTablesConnection = {
+  __typename?: 'LookupTablesConnection';
+  /** A list of `LookupTable` objects. */
+  nodes: Array<Maybe<LookupTable>>;
+  /** A list of edges which contains the `LookupTable` and cursor to aid in pagination. */
+  edges: Array<LookupTablesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LookupTable` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type LookupTable = Node & {
+  __typename?: 'LookupTable';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  fieldMap?: Maybe<Scalars['JSON']>;
+};
+
+/** A `LookupTable` edge in the connection. */
+export type LookupTablesEdge = {
+  __typename?: 'LookupTablesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `LookupTable` at the end of the edge. */
+  node?: Maybe<LookupTable>;
+};
+
 /** Methods to use when ordering `Organisation`. */
 export enum OrganisationsOrderBy {
   Natural = 'NATURAL',
@@ -7868,6 +7975,8 @@ export type Mutation = {
   createElementTypePlugin?: Maybe<CreateElementTypePluginPayload>;
   /** Creates a single `File`. */
   createFile?: Maybe<CreateFilePayload>;
+  /** Creates a single `LookupTable`. */
+  createLookupTable?: Maybe<CreateLookupTablePayload>;
   /** Creates a single `Notification`. */
   createNotification?: Maybe<CreateNotificationPayload>;
   /** Creates a single `Organisation`. */
@@ -7952,6 +8061,10 @@ export type Mutation = {
   updateFile?: Maybe<UpdateFilePayload>;
   /** Updates a single `File` using a unique key and a patch. */
   updateFileByUniqueId?: Maybe<UpdateFilePayload>;
+  /** Updates a single `LookupTable` using its globally unique id and a patch. */
+  updateLookupTableByNodeId?: Maybe<UpdateLookupTablePayload>;
+  /** Updates a single `LookupTable` using a unique key and a patch. */
+  updateLookupTable?: Maybe<UpdateLookupTablePayload>;
   /** Updates a single `Notification` using its globally unique id and a patch. */
   updateNotificationByNodeId?: Maybe<UpdateNotificationPayload>;
   /** Updates a single `Notification` using a unique key and a patch. */
@@ -8092,6 +8205,10 @@ export type Mutation = {
   deleteFile?: Maybe<DeleteFilePayload>;
   /** Deletes a single `File` using a unique key. */
   deleteFileByUniqueId?: Maybe<DeleteFilePayload>;
+  /** Deletes a single `LookupTable` using its globally unique id. */
+  deleteLookupTableByNodeId?: Maybe<DeleteLookupTablePayload>;
+  /** Deletes a single `LookupTable` using a unique key. */
+  deleteLookupTable?: Maybe<DeleteLookupTablePayload>;
   /** Deletes a single `Notification` using its globally unique id. */
   deleteNotificationByNodeId?: Maybe<DeleteNotificationPayload>;
   /** Deletes a single `Notification` using a unique key. */
@@ -8252,6 +8369,12 @@ export type MutationCreateElementTypePluginArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateFileArgs = {
   input: CreateFileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLookupTableArgs = {
+  input: CreateLookupTableInput;
 };
 
 
@@ -8504,6 +8627,18 @@ export type MutationUpdateFileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateFileByUniqueIdArgs = {
   input: UpdateFileByUniqueIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableByNodeIdArgs = {
+  input: UpdateLookupTableByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableArgs = {
+  input: UpdateLookupTableInput;
 };
 
 
@@ -8924,6 +9059,18 @@ export type MutationDeleteFileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteFileByUniqueIdArgs = {
   input: DeleteFileByUniqueIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableByNodeIdArgs = {
+  input: DeleteLookupTableByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableArgs = {
+  input: DeleteLookupTableInput;
 };
 
 
@@ -18522,6 +18669,41 @@ export type CreateFilePayloadFileEdgeArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
 };
 
+/** All input for the create `LookupTable` mutation. */
+export type CreateLookupTableInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTable` to be created by this mutation. */
+  lookupTable: LookupTableInput;
+};
+
+/** An input for mutations affecting `LookupTable` */
+export type LookupTableInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  fieldMap?: Maybe<Scalars['JSON']>;
+};
+
+/** The output of our create `LookupTable` mutation. */
+export type CreateLookupTablePayload = {
+  __typename?: 'CreateLookupTablePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTable` that was created by this mutation. */
+  lookupTable?: Maybe<LookupTable>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTable`. May be used by Relay 1. */
+  lookupTableEdge?: Maybe<LookupTablesEdge>;
+};
+
+
+/** The output of our create `LookupTable` mutation. */
+export type CreateLookupTablePayloadLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+};
+
 /** All input for the create `Notification` mutation. */
 export type CreateNotificationInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -19921,6 +20103,52 @@ export type UpdateFileByUniqueIdInput = {
   uniqueId: Scalars['String'];
 };
 
+/** All input for the `updateLookupTableByNodeId` mutation. */
+export type UpdateLookupTableByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTable` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LookupTable` being updated. */
+  patch: LookupTablePatch;
+};
+
+/** Represents an update to a `LookupTable`. Fields that are set will be updated. */
+export type LookupTablePatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  fieldMap?: Maybe<Scalars['JSON']>;
+};
+
+/** The output of our update `LookupTable` mutation. */
+export type UpdateLookupTablePayload = {
+  __typename?: 'UpdateLookupTablePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTable` that was updated by this mutation. */
+  lookupTable?: Maybe<LookupTable>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTable`. May be used by Relay 1. */
+  lookupTableEdge?: Maybe<LookupTablesEdge>;
+};
+
+
+/** The output of our update `LookupTable` mutation. */
+export type UpdateLookupTablePayloadLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+};
+
+/** All input for the `updateLookupTable` mutation. */
+export type UpdateLookupTableInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LookupTable` being updated. */
+  patch: LookupTablePatch;
+  id: Scalars['Int'];
+};
+
 /** All input for the `updateNotificationByNodeId` mutation. */
 export type UpdateNotificationByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -21247,6 +21475,41 @@ export type DeleteFileByUniqueIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   uniqueId: Scalars['String'];
+};
+
+/** All input for the `deleteLookupTableByNodeId` mutation. */
+export type DeleteLookupTableByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTable` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `LookupTable` mutation. */
+export type DeleteLookupTablePayload = {
+  __typename?: 'DeleteLookupTablePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTable` that was deleted by this mutation. */
+  lookupTable?: Maybe<LookupTable>;
+  deletedLookupTableNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTable`. May be used by Relay 1. */
+  lookupTableEdge?: Maybe<LookupTablesEdge>;
+};
+
+
+/** The output of our delete `LookupTable` mutation. */
+export type DeleteLookupTablePayloadLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+};
+
+/** All input for the `deleteLookupTable` mutation. */
+export type DeleteLookupTableInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
 };
 
 /** All input for the `deleteNotificationByNodeId` mutation. */
