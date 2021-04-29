@@ -59,7 +59,7 @@ a:hover {
   flex-direction: column;
   background-color: white;
   max-width: 450px;
-  box-shadow: 0 2px 14px 0 rgba(129, 129, 129, 0.25);
+  box-shadow: @basicBoxShadow;
   border-radius: @borderRadius;
   padding: 20px;
 }
