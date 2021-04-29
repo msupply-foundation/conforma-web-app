@@ -138,6 +138,10 @@
   font-family: @alternativeFont;
 }
 
+// Link behaviour
+
+@hoverOpacity: 0.8;
+
 /*------------------------
       Layout constants
 -------------------------*/

@@ -22,7 +22,7 @@ a {
 
 a:hover {
   color: @interactiveHigh;
-  opacity: 0.8;
+  opacity: @hoverOpacity;
 }
 
 .center-text {
@@ -35,6 +35,10 @@ a:hover {
 
 .clickable {
   cursor: pointer;
+}
+
+.clickable:hover {
+  opacity: @hoverOpacity;
 }
 
 /*--------------------------------
@@ -76,6 +80,10 @@ a:hover {
 .image-icon {
   height: 45px;
   margin-right: 12px;
+}
+
+#login-button {
+  margin-top: 30px;
 }
 
 /*--------------------------------

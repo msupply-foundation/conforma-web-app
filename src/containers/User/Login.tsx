@@ -102,6 +102,12 @@ const Login: React.FC = () => {
               {strings.ERROR_LOGIN_PASSWORD}
             </p>
           )}
+          {networkError && (
+            <p className="alert">
+              <Icon name="attention" />
+              {networkError}
+            </p>
+          )}
           {!loginPayload && (
             <>
               <Form.Field error={isError}>
@@ -112,6 +118,7 @@ const Login: React.FC = () => {
                   type="text"
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
+                  style={{ marginBottom: 10 }}
                 />
               </Form.Field>
               <Form.Field error={isError}>
@@ -135,7 +142,7 @@ const Login: React.FC = () => {
             <List
               celled
               relaxed="very"
-              className="clickable"
+              className="clickable no-bottom-border"
               items={loginPayload?.orgList.map((org: OrganisationSimple) => ({
                 key: `list-item-${org.orgId}`,
                 content: (
@@ -151,7 +158,7 @@ const Login: React.FC = () => {
             />
           )}
           {!loginPayload && (
-            <Button primary fluid type="submit" onClick={handleSubmit}>
+            <Button id="login-button" primary fluid type="submit" onClick={handleSubmit}>
               {!loginPayload ? strings.LABEL_LOG_IN : strings.LABEL_PROCEED}
             </Button>
           )}
@@ -162,7 +169,6 @@ const Login: React.FC = () => {
               </strong>
             </p>
           )}
-          {networkError && <p>{networkError}</p>}
         </Form>
       </div>
     </Container>
