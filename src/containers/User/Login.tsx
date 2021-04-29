@@ -9,18 +9,21 @@ import messages from '../../utils/messages'
 import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { LoginPayload, OrganisationSimple } from '../../utils/types'
 
+const LOGIN_AS_NO_ORG = 0
+const NO_ORG_SELECTED = -1
+
 const Login: React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isError, setIsError] = useState(false)
   const [networkError, setNetworkError] = useState('')
   const [loginPayload, setLoginPayload] = useState<LoginPayload>()
-  const [selectedOrgId, setSelectedOrgId] = useState<number>(-1)
+  const [selectedOrgId, setSelectedOrgId] = useState<number>(NO_ORG_SELECTED)
   const { push, history } = useRouter()
   const { onLogin } = useUserState()
 
   const noOrgOption: OrganisationSimple = {
-    orgId: 0,
+    orgId: LOGIN_AS_NO_ORG,
     orgName: strings.LABEL_NO_ORG,
     userRole: null,
   }
@@ -59,7 +62,7 @@ const Login: React.FC = () => {
   }
 
   useEffect(() => {
-    if (loginPayload?.orgList?.length === 0) {
+    if (loginPayload?.orgList?.length === LOGIN_AS_NO_ORG) {
       // No orgs, so skip org login
       finishLogin(loginPayload)
       return
@@ -155,7 +158,7 @@ const Login: React.FC = () => {
                     onClick={() => setSelectedOrgId(org.orgId)}
                   >
                     <div className="centered-flex-box-row flex-grow-1">
-                      <span style={{ fontStyle: org.orgId === 0 ? 'italic' : '' }}>
+                      <span style={{ fontStyle: org.orgId === LOGIN_AS_NO_ORG ? 'italic' : '' }}>
                         {org.orgName}
                       </span>
                     </div>
