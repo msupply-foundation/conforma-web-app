@@ -341,6 +341,11 @@ a:hover {
   padding: 0;
 }
 
+// Seperation between Section title and form elements
+.form-area {
+  margin-top: 30px;
+}
+
 #help-column {
   max-width: 200px;
 }
