@@ -10,9 +10,9 @@ import {
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
-  TemplateElement,
   TemplateElementCategory,
   User as GraphQLUser,
+  Organisation as GraphQLOrg,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
@@ -42,7 +42,7 @@ export {
   MethodToCallProps,
   Page,
   PageElement,
-  Progress,
+  ApplicationProgress,
   ResponseFull,
   ResponsesByCode,
   ReviewAction,
@@ -52,7 +52,6 @@ export {
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
-  SectionProgress,
   SectionState,
   SectionsStructure,
   SetStrictSectionPage,
@@ -64,7 +63,7 @@ export {
   TemplatesDetails,
   UseGetApplicationProps,
   User,
-  UseGetFullReviewStructureProps,
+  UseGetReviewStructureForSectionProps,
   OrganisationSimple,
   Organisation,
   LoginPayload,
@@ -73,7 +72,7 @@ export {
 
 interface ApplicationDetails {
   id: number
-  type: string
+  code: string
   serial: string
   name: string
   outcome: string
@@ -81,7 +80,10 @@ interface ApplicationDetails {
   isChangeRequest: boolean
   current: StageAndStatus
   firstStrictInvalidPage: SectionAndPage | null
-  submissionMessage?: string // TODO: Change to compulsory after re-structure is finished
+  submissionMessage?: string
+  user?: GraphQLUser
+  org?: GraphQLOrg
+  config?: any
 }
 
 interface ApplicationElementStates {
@@ -101,12 +103,13 @@ interface ApplicationProps {
 interface ApplicationStage {
   id: number
   name: string
+  colour: string
 }
 
 interface AssignmentDetails {
   id: number
   status: ReviewAssignmentStatus | null
-  timeCreated: Date
+  timeUpdated: Date
   level: number
   reviewerId?: number
   review: ReviewDetails | null
@@ -228,7 +231,7 @@ interface Page {
   number: number
   sectionCode: string
   name: string
-  progress: Progress
+  progress: ApplicationProgress
   reviewProgress?: ReviewProgress
   changeRequestsProgress?: ChangeRequestsProgress
   state: PageElement[]
@@ -248,7 +251,7 @@ type PageElement = {
   isChanged?: boolean
 }
 
-interface Progress {
+interface ApplicationProgress {
   doneRequired: number
   doneNonRequired: number
   completed: boolean
@@ -263,7 +266,6 @@ interface ResponseFull {
   id: number
   text: string | null | undefined
   optionIndex?: number
-  reference?: any // Not yet decided how to represent
   isValid?: boolean | null
   hash?: string // Used in Password plugin
   files?: any[] // Used in FileUpload plugin
@@ -327,13 +329,6 @@ interface SectionDetails {
   title: string
   totalPages: number
 }
-interface SectionProgress {
-  total: number
-  done: number
-  completed: boolean
-  valid: boolean
-  linkedPage: number
-}
 
 interface ReviewProgress {
   totalReviewable: number
@@ -347,6 +342,7 @@ enum ReviewAction {
   canView = 'CAN_VIEW',
   canReReview = 'CAN_RE_REVIEW',
   canSelfAssign = 'CAN_SELF_ASSIGN',
+  canSelfAssignLocked = 'CAN_SELF_ASSIGN_LOCKED',
   canStartReview = 'CAN_START_REVIEW',
   canContinueLocked = 'CAN_CONTINUE_LOCKED',
   canUpdate = 'CAN_UPDATE',
@@ -360,7 +356,7 @@ interface ChangeRequestsProgress {
 
 interface SectionState {
   details: SectionDetails
-  progress?: Progress
+  progress?: ApplicationProgress
   reviewProgress?: ReviewProgress
   reviewAction?: {
     action: ReviewAction
@@ -452,8 +448,9 @@ interface OrganisationSimple {
 }
 
 interface Organisation extends OrganisationSimple {
-  licenceNumber: string
+  registration: string
   address: string
+  logoUrl: string
 }
 
 interface LoginPayload {
@@ -464,7 +461,7 @@ interface LoginPayload {
   orgList?: OrganisationSimple[]
 }
 
-interface UseGetFullReviewStructureProps {
+interface UseGetReviewStructureForSectionProps {
   fullApplicationStructure: FullStructure
   reviewAssignment: AssignmentDetails
   filteredSectionIds?: number[]

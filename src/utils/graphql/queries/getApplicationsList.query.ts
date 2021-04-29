@@ -6,14 +6,14 @@ export default gql`
     $sortFields: [ApplicationListShapesOrderBy!]
     $paginationOffset: Int!
     $numberToFetch: Int!
-    $reviewerId: Int!
+    $userId: Int! = 0
   ) {
     applicationList(
       filter: $filters
       orderBy: $sortFields
       offset: $paginationOffset
       first: $numberToFetch
-      reviewerid: $reviewerId
+      userid: $userId
     ) {
       nodes {
         id
@@ -27,6 +27,7 @@ export default gql`
         applicantUsername
         orgName
         stage
+        stageColour
         status
         outcome
         lastActiveDate
@@ -37,6 +38,10 @@ export default gql`
         reviewChangeRequestCount
         reviewSubmittedCount
         reviewPendingCount
+        assignReviewerAssignedCount
+        assignReviewersCount
+        assignCount
+        isFullyAssignedLevel1
       }
       # Use the page and count info for rendering Pagination UI
       pageInfo {

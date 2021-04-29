@@ -1,5 +1,5 @@
 import { TemplateElementCategory } from '../../generated/graphql'
-import { ElementState, FullStructure, Page, Progress, SectionState } from '../../types'
+import { ElementState, FullStructure, Page, ApplicationProgress, SectionState } from '../../types'
 
 const initialProgress = {
   doneNonRequired: 0,
@@ -17,9 +17,9 @@ const calculateCompleted = (totalSum: number, doneRequired: number, doneNonRequi
   return totalSum === totalDone
 }
 
-const getSectionProgress = (pages: Page[]): Progress => {
+const getSectionProgress = (pages: Page[]): ApplicationProgress => {
   const sectionProgress = pages.reduce(
-    (sectionProgress: Progress, { number, progress }) => {
+    (sectionProgress: ApplicationProgress, { number, progress }) => {
       if (!progress) return sectionProgress
       sectionProgress.doneNonRequired += progress.doneNonRequired || 0
       sectionProgress.totalNonRequired += progress.totalNonRequired || 0

@@ -52,9 +52,14 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
     }
 
     const reviews: Review[] = reviewAssigments.map(({ reviews }) => reviews.nodes[0] as Review)
-    // Checking if any of reviews trigger is running before refetching assignments
-    // This is done to get latest status for reviews (afte trigger finishes to run)
-    if (reviews.every((review) => !review || review?.trigger === null)) {
+    // Checking if any of reviews or reviewAssignment trigger is running before refetching assignments
+    // This is done to get latest status for reviews & assignment (afte trigger finishes to run)
+    if (
+      reviews.every((review) => !review || review?.trigger === null) &&
+      reviewAssigments.every(
+        (reviewAssignment) => !reviewAssigments || reviewAssignment?.trigger === null
+      )
+    ) {
       setRefetchAttempts(0)
     } else {
       if (refetchAttempts < MAX_REFETCH) {
@@ -80,8 +85,8 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         id,
         status,
         stage: assignmentStage,
-        timeCreated,
-        level,
+        timeUpdated,
+        levelNumber,
         reviewer,
         reviewAssignmentAssignerJoins,
         templateSectionRestrictions,
@@ -93,7 +98,11 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         []) as ReviewQuestionAssignment[]
       const totalAssignedQuestions = reviewQuestionAssignments.length
 
-      const stage = { id: assignmentStage?.id as number, name: assignmentStage?.title as string }
+      const stage = {
+        id: assignmentStage?.id as number,
+        name: assignmentStage?.title as string,
+        colour: assignmentStage?.colour as string,
+      }
 
       const assignment: AssignmentDetails = {
         id,
@@ -103,7 +112,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
               status: review.status as ReviewStatus,
               timeStatusCreated: review.timeStatusCreated,
               isLastLevel: !!review?.isLastLevel,
-              level: review.level || 0,
+              level: review.levelNumber || 0,
               stage,
               reviewDecision: review.reviewDecisions.nodes[0], // this will be the latest, sorted in query
             }
@@ -111,13 +120,13 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         status,
         stage,
         reviewer: reviewer as User,
-        level: level || 1,
+        level: levelNumber || 1,
         isCurrentUserReviewer: reviewer?.id === (currentUser?.userId as number),
         isCurrentUserAssigner: reviewAssignmentAssignerJoins.nodes.length > 0,
         assignableSectionRestrictions: templateSectionRestrictions || [],
         totalAssignedQuestions,
         reviewQuestionAssignments,
-        timeCreated,
+        timeUpdated,
       }
 
       return assignment

@@ -45,6 +45,13 @@ class pluginProvider {
         folderName: 'textInfo',
         category: 'Informative',
       },
+      imageDisplay: {
+        code: 'imageDisplay',
+        isCore: true,
+        displayName: 'Image Display',
+        folderName: 'imageDisplay',
+        category: 'Informative',
+      },
       dropdownChoice: {
         code: 'dropdownChoice',
         isCore: true,

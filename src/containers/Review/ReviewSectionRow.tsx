@@ -8,7 +8,7 @@ import {
   ReviewSectionRowAction,
 } from '../../components/Review'
 import strings from '../../utils/constants'
-import useGetFullReviewStructure from '../../utils/hooks/useGetFullReviewStructure'
+import useGetReviewStructureForSections from '../../utils/hooks/useGetReviewStructureForSection'
 import {
   AssignmentDetails,
   FullStructure,
@@ -29,7 +29,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   assignment,
   fullApplicationStructure,
 }) => {
-  const { fullReviewStructure, error } = useGetFullReviewStructure({
+  const { fullReviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment: assignment,
     fullApplicationStructure,
     filteredSectionIds: [sectionId],
@@ -61,15 +61,18 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   return (
     <>
       {canRenderRow && (
-        <Grid columns="equal" verticalAlign="middle">
+        <Grid columns="equal" verticalAlign="middle" style={sectionRowStyle}>
           <ReviewSectionRowAssigned {...props} />
           <ReviewSectionRowLastActionDate {...props} />
           <ReviewSectionRowProgress {...props} />
           <ReviewSectionRowAction {...props} />
         </Grid>
-      )}{' '}
+      )}
     </>
   )
 }
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const sectionRowStyle = { borderRadius: 10 }
 
 export default ReviewSectionRow

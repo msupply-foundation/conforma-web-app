@@ -16,10 +16,12 @@ import {
   ApplicationSection,
   ApplicationStageStatusAll,
   ApplicationStatus,
+  Organisation,
   Template,
   TemplateElement,
   TemplateStage,
   useGetApplicationQuery,
+  User,
 } from '../generated/graphql'
 import messages from '../messages'
 import { buildSectionsStructure } from '../helpers/structure'
@@ -98,11 +100,11 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     const stages = data.applicationStageStatusLatests?.nodes as ApplicationStageStatusAll[]
     if (stages.length > 1) console.log('StageStatusAll More than one results for 1 application!')
-    const { stageId, stage, status, statusHistoryTimeCreated } = stages[0] // Should only have one result
+    const { stageId, stage, stageColour, status, statusHistoryTimeCreated } = stages[0] // Should only have one result
 
     const applicationDetails: ApplicationDetails = {
       id: application.id,
-      type: application.template?.name as string,
+      code: application.template?.code as string,
       isLinear: application.template?.isLinear as boolean,
       serial: application.serial as string,
       name: application.name as string,
@@ -111,12 +113,16 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         stage: {
           id: stageId as number,
           name: stage as string,
+          colour: stageColour as string,
         },
         status: status as ApplicationStatus,
         date: statusHistoryTimeCreated,
       },
       firstStrictInvalidPage: null,
       isChangeRequest: false,
+      user: application?.user as User,
+      org: application?.org as Organisation,
+      config,
     }
 
     const baseElements: ElementBase[] = []
@@ -150,7 +156,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     const templateStages = application.template?.templateStages.nodes as TemplateStage[]
 
     const evaluatorParams: EvaluatorParameters = {
-      objects: { currentUser },
+      objects: { currentUser, applicationData: applicationDetails },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     }

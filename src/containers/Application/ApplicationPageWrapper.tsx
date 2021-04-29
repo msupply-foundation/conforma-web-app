@@ -11,7 +11,7 @@ import {
 import strings from '../../utils/constants'
 import { Message } from 'semantic-ui-react'
 import { ApplicationPage, ApplicationSummary } from '.'
-import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
+import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
 
 interface MethodToCall {
@@ -44,7 +44,7 @@ const ApplicationPageWrapper: React.FC<ApplicationProps> = ({ structure }) => {
   const minRefetchTimestampForRevalidation =
     shouldRevalidate && wasElementChanged ? elementUpdatedTimestamp : 0
 
-  const { error, fullStructure } = useGetFullApplicationStructure({
+  const { error, fullStructure } = useGetApplicationStructure({
     structure,
     shouldRevalidate,
     minRefetchTimestampForRevalidation,
