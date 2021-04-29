@@ -1,3 +1,377 @@
 /*******************************
          Site Overrides
 *******************************/
+
+body {
+  background-color: @surfacesLight;
+}
+
+p {
+  font-size: @fontMedium;
+  letter-spacing: 0;
+  padding: 0;
+}
+
+p strong {
+  font-weight: @semiboldWeight;
+}
+
+a {
+  color: @interactiveHigh;
+}
+
+a:hover {
+  color: @interactiveHigh;
+  opacity: 0.8;
+}
+
+/*--------------------------------
+   Main area, User area & Footer
+---------------------------------*/
+#main-container {
+  padding: 0;
+  position: relative;
+  min-height: 100vh;
+  // Max width is 1027px, from Semantic-UI Container
+}
+
+#user-area {
+  font-family: @alternativeFont;
+  color: @userAreaText;
+  display: flex;
+  position: fixed; // TO-DO: No fixed on mobile
+  background-color: @headersInteractiveLow;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  height: @headerHeight; // TO-DO: Adjust for mobile
+  justify-content: space-between;
+}
+
+#user-area.ui.container {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+#user-area-left {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+#menu-bar {
+  font-size: inherit;
+}
+// Menu bar links
+#user-area a {
+  color: @userAreaText;
+  font-size: @fontSmall;
+}
+
+// Not currently used, but should be appplied to the Link in the menu
+// bar that reflects the current page
+.selected-link {
+  font-weight: bold;
+}
+
+#org-selector {
+  font-size: @fontLarge;
+  letter-spacing: @letterSpacingLarge;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  max-height: 55px;
+  margin-top: 10px;
+}
+
+#org-selector .image {
+  margin-right: 20px;
+  height: 100%;
+}
+
+#user-menu .button {
+  margin-top: 10px;
+  border-radius: 20px;
+  background-color: @surfacesWhite;
+  color: @darkGrey;
+  min-width: 120px;
+}
+
+#content-area {
+  padding-top: @headerHeight + 12px;
+  padding-right: 12px;
+  padding-left: 12px;
+  padding-bottom: @footerHeight + 25px; // To allow for footer
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#footer {
+  background-color: white;
+  margin-top: 20px;
+  padding: 10px;
+  height: @footerHeight;
+  position: absolute;
+  bottom: 0;
+}
+
+#footer-content {
+  // border: 1px solid black;
+  display: flex;
+  flex-direction: row;
+  max-width: 220px;
+  align-items: center;
+}
+
+#footer-content .ui.image {
+  height: 100%;
+}
+
+#footer-content p {
+  font-size: @fontXXsmall;
+  color: @surfacesDark;
+  margin-left: 10px;
+}
+
+/*--------------------------------
+   Application home & create
+---------------------------------*/
+#application-area {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#application-area .top-container {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-bottom: 20px;
+}
+
+// Back to application list label
+#application-area .back-label {
+  min-width: 132px;
+  max-width: 350px;
+  background-color: transparent;
+}
+
+// Fix for company header on mobile to not clash wit back to applications
+@media only screen and (min-width: @tabletBreakpoint) {
+  #application-area .heading-alt {
+    margin-top: -25px;
+  }
+}
+
+// Steps line (vertical box - layout)
+.section-single-row-box-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  min-height: 30px; // TODO: Need to be updated for mobile
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Inner steps line (left side - icon & header)
+.centered-flex-box-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+// Steps line - progress bar (box)
+.progress-box {
+  padding-right: 50px;
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+// Steps line - progress bar
+.progress {
+  width: 120px;
+}
+
+// Steps line - actions box
+.actions-box {
+  min-width: 100px;
+  text-align: right;
+}
+
+// Message area segment - bottom of application home/create
+.padding-zero {
+  padding: 0;
+}
+
+/*--------------------------------
+      Application List
+---------------------------------*/
+
+#list-container {
+  padding: 25px 0;
+  max-width: 900px; // Maybe this could be wider if table is getting cluttered?
+}
+
+#list-top {
+  display: flex;
+  align-items: center;
+}
+
+#list-top .ui.header {
+  padding-right: 20px;
+  margin-top: 10px; // This is only necessary because of annoying Semantic defaults
+}
+
+.list-row {
+  padding-bottom: 30px;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.user-action {
+  font-size: @fontXsmall;
+  font-weight: @semiboldWeight;
+}
+
+/*--------------------------------
+      General used classes
+---------------------------------*/
+
+// In use for ApplicationHeader around all Application pages
+#application-content {
+  width: 800px;
+  display: flex;
+  flex-direction: column;
+  background-color: @surfacesWhite;
+  padding: 30px 50px 32px;
+}
+
+// In use for company title in application header (home/create pages)
+.heading-alt {
+  letter-spacing: @letterSpacingRegular;
+  font-family: @alternativeFont;
+  font-weight: @regularWeight;
+}
+
+// Not currently used, but should be appplied to the Link in the menu
+// bar that reflects the current page
+.selected-link {
+  font-weight: bold;
+}
+
+.sup .ui.tiny.progress {
+  margin-bottom: 4px !important;
+}
+
+.sup .ui.form .required.fields:not(.grouped) > .field > label:after {
+  color: rgb(248, 248, 248) !important;
+}
+
+/* Table Striping */
+.stripes .ui.grid:nth-child(even) {
+  background: rgb(248, 248, 248);
+}
+
+.stripes .ui.grid:nth-child(even) .stripedlabel {
+  background: white;
+}
+
+.stripes .ui.grid:nth-child(odd) .stripedlabel {
+  background: rgb(248, 248, 248);
+}
+
+/*******************************
+             Headers
+*******************************/
+
+// Note -- normally we will use the <Header/> component which already
+// contains these definitions. But this allows us to use <h1>, <h2>, etc.
+// directly if required
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: @headerFont;
+  line-height: @headerLineHeight;
+  margin: @headerMargin;
+  font-weight: @headerFontWeight;
+  padding: 0em;
+}
+
+h1 {
+  min-height: 1rem;
+  font-size: @h1;
+  font-weight: @regularWeight;
+}
+h2 {
+  font-size: @h2;
+  font-weight: @regularWeight;
+}
+h3 {
+  font-size: @h3;
+  font-weight: @regularWeight;
+  color: @darkGrey;
+}
+h4 {
+  font-size: @h4;
+  font-weight: @semiboldWeight;
+  text-transform: uppercase;
+  color: @darkGrey;
+}
+h5 {
+  font-size: @h5;
+  font-weight: @semiboldWeight;
+  color: @darkGrey;
+}
+h6 {
+  font-size: @h6;
+  font-weight: @semiboldWeight;
+  text-transform: uppercase;
+  color: @darkGrey;
+}
+
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child,
+h5:first-child,
+h6:first-child {
+  margin-top: 0em;
+}
+
+h1:last-child,
+h2:last-child,
+h3:last-child,
+h4:last-child,
+h5:last-child,
+h6:first-child {
+  margin-bottom: 0em;
+}
+
+/*-----------------------------------------------------
+      Mobile & Desktop
+      - classes for hiding on Mobile or Desktop devices
+------------------------------------------------------*/
+
+// Desktop
+@media only screen and (min-width: @tabletBreakpoint) {
+  .hide-on-desktop {
+    display: none;
+  }
+}
+// Mobile
+@media only screen and (max-width: @largestMobileScreen) {
+  .hide-on-mobile {
+    display: none;
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { CSSProperties, useEffect } from 'react'
 import { Grid, Header, Segment } from 'semantic-ui-react'
 import {
   FullStructure,
@@ -53,21 +53,13 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   } = fullStructure
 
   return (
-    <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
-      {/* <ModalWarning showModal={showModal} /> */}
-      <Header textAlign="center">
-        {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
-      </Header>
-      <Grid
-        stackable
-        style={{
-          backgroundColor: 'white',
-          padding: 10,
-          margin: '0px 50px',
-          minHeight: 500,
-          flex: 1,
-        }}
-      >
+    <>
+      <Header
+        as="h1"
+        textAlign="center"
+        content={currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
+      />
+      <Grid stackable style={inlineStyles.grid}>
         <Grid.Column width={4}>
           <ProgressBar
             structure={fullStructure}
@@ -82,6 +74,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
               canEdit={current?.status === ApplicationStatus.Draft}
               elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
               responsesByCode={fullStructure.responsesByCode}
+              applicationData={fullStructure.info}
               isStrictPage={
                 sectionCode === strictSectionPage?.sectionCode &&
                 pageNumber === strictSectionPage?.pageNumber
@@ -98,8 +91,19 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
         serialNumber={serialNumber}
         requestRevalidation={requestRevalidation as MethodRevalidate}
       />
-    </Segment.Group>
+    </>
   )
+}
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const inlineStyles = {
+  grid: {
+    backgroundColor: 'white',
+    padding: 10,
+    margin: '0px 50px',
+    minHeight: 500,
+    flex: 1,
+  } as CSSProperties,
 }
 
 export default ApplicationPage

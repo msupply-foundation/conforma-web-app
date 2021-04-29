@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { Message, Segment, Header, Dropdown, Grid } from 'semantic-ui-react'
+import React, { CSSProperties, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Message, Segment, Header, Dropdown, Grid, Button, Icon } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
-import useGetFullApplicationStructure from '../../utils/hooks/useGetFullApplicationStructure'
+import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 import AssignmentSectionRow from './AssignmentSectionRow'
 import ReviewSectionRow from './ReviewSectionRow'
@@ -21,7 +22,7 @@ type Filters = {
 const ALL_REVIEWERS = 0
 
 const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
-  const { error, fullStructure: fullApplicationStructure } = useGetFullApplicationStructure({
+  const { error, fullStructure: fullApplicationStructure } = useGetApplicationStructure({
     structure,
     firstRunValidation: false,
     shouldCalculateProgress: false,
@@ -54,13 +55,23 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
     assignments,
   }
 
+  const {
+    info: { code, name },
+  } = structure
+
   return (
     <>
+      <div style={inlineStyles.top}>
+        <Button as={Link} to={`/applications?type=${code}`} style={inlineStyles.link} icon>
+          <Icon size="large" name="angle left" />
+        </Button>
+        <Header as="h2" style={inlineStyles.title} content={name} />
+      </div>
       <ReviewerAndStageSelection {...reviewerAndStageSelectionProps} />
       {filters &&
         Object.values(fullApplicationStructure.sections).map(({ details: { id, title, code } }) => (
-          <Segment key={id}>
-            <Header>{title}</Header>
+          <Segment className="stripes" key={id} style={inlineStyles.body}>
+            <Header style={inlineStyles.section} content={title} />
             <AssignmentSectionRow
               {...{
                 assignments: getFilteredByStage(assignments),
@@ -114,23 +125,32 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
 
   if (!filters) return null
 
+  const stageOptions = getStageOptions(structure, assignments)
+  const selectedStageText =
+    stageOptions.find((options) => options.key == filters?.selectedStage)?.text || ''
+
   return (
     <Grid columns="equal">
       <Grid.Column floated="left">
-        {`${strings.REVIEW_FILTER_SHOW_TASKS_FOR} `}
-        <Dropdown
-          options={getReviewerOptions(assignments, currentUser?.userId as number)}
-          value={filters?.selectedReviewer}
-          onChange={changeFilters('selectedReviewer')}
-        />
+        <div style={inlineStyles.assignedFilterContainer}>
+          {`${strings.REVIEW_FILTER_SHOW_TASKS_FOR} `}
+          <Dropdown
+            options={getReviewerOptions(assignments, currentUser?.userId as number)}
+            value={filters?.selectedReviewer}
+            onChange={changeFilters('selectedReviewer')}
+            style={inlineStyles.assignedFilterDropdown}
+          />
+        </div>
       </Grid.Column>
       <Grid.Column floated="right" textAlign="right">
-        {`${strings.REVIEW_FILTER_STAGE} `}
-        <Dropdown
-          options={getStageOptions(structure, assignments)}
-          value={filters?.selectedStage}
-          onChange={changeFilters('selectedStage')}
-        />
+        <div style={inlineStyles.stageFilterContainer}>
+          {`${strings.REVIEW_FILTER_STAGE} `}
+          <Dropdown
+            options={stageOptions}
+            value={filters?.selectedStage}
+            onChange={changeFilters('selectedStage')}
+          />
+        </div>
       </Grid.Column>
     </Grid>
   )
@@ -158,17 +178,64 @@ const getReviewerOptions = (assignments: AssignmentDetails[], currentUserId: num
       text: strings.REVIEW_FILTER_YOURSELF,
     },
   ]
-  assignments.forEach(({ reviewer: { id, firstName, lastName } }) => {
-    if (!id || !firstName || !lastName) return
+  assignments.forEach(({ reviewer: { id, username } }) => {
+    if (!id || !username) return
     if (reviewerOptions.some((option) => option.key === id)) return
     reviewerOptions.push({
       value: id,
       key: id,
-      text: `${firstName} ${lastName}`,
+      text: username,
     })
   })
 
   return reviewerOptions
+}
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const inlineStyles = {
+  top: { display: 'flex', alignItems: 'center' } as CSSProperties,
+  link: { background: 'none' } as CSSProperties,
+  title: { padding: 0, margin: 10 } as CSSProperties,
+  body: {
+    borderRadius: 7,
+    boxShadow: 'none',
+    borderWidth: 2,
+    paddingBottom: 30,
+    paddingLeft: 30,
+    paddingRight: 30,
+  } as CSSProperties,
+  section: {
+    fontWeight: 800,
+    paddingBottom: 20,
+  } as CSSProperties,
+  assignedFilterContainer: {
+    marginLeft: 30,
+    display: 'flex',
+    alignItems: 'center',
+    color: 'rgb(120,120, 120)',
+    fontSize: 14,
+    fontWeight: 800,
+  } as CSSProperties,
+  assignedFilterDropdown: {
+    border: '2px solid rgb(150,150, 150)',
+    marginLeft: 10,
+    fontSize: 14,
+    padding: 10,
+    fontWeight: 800,
+    paddingTop: 2,
+    paddingBottom: 2,
+    borderRadius: 4,
+  } as CSSProperties,
+  stageFilterContainer: {
+    marginRight: 30,
+    display: 'flex',
+    alignItems: 'center',
+    color: 'rgb(120,120, 120)',
+    fontSize: 14,
+    fontWeight: 800,
+    textTransform: 'uppercase',
+    justifyContent: 'flex-end',
+  } as CSSProperties,
 }
 
 export default ReviewHome

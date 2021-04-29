@@ -3,16 +3,17 @@ import { gql } from '@apollo/client'
 // TODO: Use Fragments - Assignment Review and User ?
 export default gql`
   query getReviewInfo($applicationId: Int, $assignerId: Int!) {
-    reviewAssignments(condition: { applicationId: $applicationId }, orderBy: TIME_CREATED_DESC) {
+    reviewAssignments(condition: { applicationId: $applicationId }, orderBy: TIME_UPDATED_DESC) {
       nodes {
         id
-        level
+        levelNumber
         status
-        timeCreated
-        level
+        timeUpdated
+        levelNumber
         reviewerId
         isLastLevel
         templateSectionRestrictions
+        trigger
         reviewer {
           id
           firstName

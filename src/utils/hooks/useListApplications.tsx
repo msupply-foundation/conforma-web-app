@@ -27,7 +27,7 @@ const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicSt
       sortFields,
       paginationOffset,
       numberToFetch,
-      reviewerId: currentUser?.userId as number,
+      userId: currentUser?.userId as number,
     },
     fetchPolicy: 'network-only',
   })

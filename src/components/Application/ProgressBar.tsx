@@ -8,7 +8,7 @@ import {
   MethodRevalidate,
   MethodToCallProps,
   Page,
-  Progress,
+  ApplicationProgress,
   SectionAndPage,
 } from '../../utils/types'
 
@@ -82,7 +82,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     return (
       <List
         link
-        style={{ paddingLeft: '50px' }}
+        style={inlineStyles.link}
         items={Object.entries(pages).map(([number, { name: pageName, progress }]) => ({
           key: `ProgressSection_${sectionCode}_${number}`,
           active: isActivePage(sectionCode, Number(number)),
@@ -100,7 +100,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   // success -> if completed and valid
   // empty circle with number -> if none of the above and section (has step), also add key
   // or empty circle -> if none of the above
-  const getIndicator = (progress: Progress, isStrict: boolean, step?: number) => {
+  const getIndicator = (progress: ApplicationProgress, isStrict: boolean, step?: number) => {
     const { completed, valid } = progress
     const isStrictlylInvalid = !valid || (isStrict && !completed)
     const size = step ? 'large' : 'small'
@@ -144,13 +144,19 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   })
 
   return (
-    <Sticky as={Container}>
-      <Header as="h5" style={{ paddingLeft: 30 }}>
+    <Sticky as={Container} offset={135}>
+      <Header as="h5" style={inlineStyles.top}>
         {strings.TITLE_INTRODUCTION}
       </Header>
       <Accordion activeIndex={activeIndex} panels={sectionsList} />
     </Sticky>
   )
+}
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const inlineStyles = {
+  top: { paddingLeft: 30 },
+  link: { paddingLeft: 50 },
 }
 
 export default ProgressBar

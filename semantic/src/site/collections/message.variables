@@ -1,3 +1,17 @@
 /*******************************
     User Variable Overrides
 *******************************/
+
+// Info message left border width
+@accentBorderWidth: 4px;
+
+// Info other borders width
+@borderWidth: 0px;
+
+// Info message colors
+@infoTextColor: @headersInteractiveLow;
+@infoHeaderColor: @headersInteractiveLow;
+@infoColor: @surfacesLight;
+@infoBoxShadow: @surfacesLight;
+@infoBorderColor: @surfacesLight;
+@infoBackgroundColor: @surfacesLight;

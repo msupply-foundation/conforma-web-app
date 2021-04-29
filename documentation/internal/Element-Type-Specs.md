@@ -8,6 +8,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - [Long Text (Multi-line) Input](#long-text)
   - [Password](#password)
   - [Text Information](#text)
+  - [Image Display](#image)
   - [Drop-down Selector](#dropdown)
   - [Radio Buttons](#radio)
   - [Checkboxes](#checkbox)
@@ -155,6 +156,25 @@ _For displaying blocks of text in the application_
 - **title\***: `string` -- Heading text to display [Optional]
 - **text\***: `string` -- body text to display
   _(Maybe have some formatting options, but not initially, although `text` should support Markdown)_
+
+---
+
+<a name="image"/>
+### Image Display
+
+- **type/code**: `imageDisplay`
+- **category**: `Information`
+
+_For displaying images in applications_
+
+#### Input parameters
+
+- **label\***: `string` -- Label for image (above) [Optional]
+- **description\***: `string` -- Detailed text [Optional]
+- **url\***: `string` -- URL of the source image file
+- **size\***: `string` -- From SemanticUI "size" parameter, one of the following values: `mini`, `tiny`, `small`, `medium`, `large`, `big`, `huge`, `massive` (default `medium`)
+- **alignment\***: `string` -- one of `left`, `center`, `right` (default `left`)
+- **altText\***: `string` -- text for the HTML `alt` and `title` attributes (will show as tool-tip) [Optional]
 
 ---
 

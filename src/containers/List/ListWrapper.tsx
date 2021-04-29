@@ -1,10 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import { Container, List, Label, Segment, Button, Search, Grid } from 'semantic-ui-react'
+import React, { CSSProperties, useEffect, useState } from 'react'
+import {
+  Container,
+  List,
+  Label,
+  Segment,
+  Button,
+  Search,
+  Grid,
+  Header,
+  Icon,
+} from 'semantic-ui-react'
 import { FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useListApplications from '../../utils/hooks/useListApplications'
 import strings from '../../utils/constants'
-import getDefaultUserRole from '../../utils/helpers/list/findUserRole'
+import { findUserRole, checkExistingUserRole } from '../../utils/helpers/list/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/list/mapColumnsByRole'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
@@ -28,7 +38,8 @@ const ListWrapper: React.FC = () => {
 
   useEffect(() => {
     if (!templatePermissions) return
-    if (!type || !userRole) redirectToDefault()
+    if (!type || !userRole || !checkExistingUserRole(templatePermissions, type, userRole))
+      redirectToDefault()
     else {
       const columns = mapColumnsByRole(userRole as USER_ROLES)
       setColumns(columns)
@@ -58,7 +69,10 @@ const ListWrapper: React.FC = () => {
 
   const redirectToDefault = () => {
     const redirectType = type || Object.keys(templatePermissions)[0]
-    const redirectUserRole = userRole || getDefaultUserRole(templatePermissions, redirectType)
+    const redirectUserRole = checkExistingUserRole(templatePermissions, redirectType, userRole)
+      ? userRole
+      : findUserRole(templatePermissions, redirectType)
+
     if (redirectType && redirectUserRole)
       updateQuery({ type: redirectType, userRole: redirectUserRole })
     else {
@@ -86,18 +100,12 @@ const ListWrapper: React.FC = () => {
     }
   }
 
-  const handleExpansion = (application: ApplicationListRow) => {
-    if (!applicationsRows) return
-    application.isExpanded = !application.isExpanded // updates in place inside applicationRows
-    setApplicationsRows([...applicationsRows]) // triggers re-render
-  }
-
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
   ) : (
-    <Container>
-      <FilterList />
-      <Segment vertical>
+    <div id="list-container">
+      {/* <FilterList /> */}
+      {/* <Segment vertical>
         {Object.keys(query).length > 0 && <h3>Query parameters:</h3>}
         <List>
           {Object.entries(query).map(([key, value]) => (
@@ -127,19 +135,36 @@ const ListWrapper: React.FC = () => {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-      </Segment>
+      </Segment> */}
+      <div id="list-top">
+        <Header as="h2">{query.type}</Header>
+        <Search
+          className="flex-grow-1"
+          // size="large"
+          placeholder={strings.PLACEHOLDER_SEARCH}
+          onSearchChange={handleSearchChange}
+          input={{ icon: 'search', iconPosition: 'left' }}
+          open={false}
+          value={searchText}
+        />
+        {query.userRole === 'applicant' ? (
+          <Button as={Link} to={`/application/new?type=${type}`} inverted color="blue">
+            <Icon name="plus" size="tiny" color="blue" />
+            {strings.BUTTON_APPLICATION_NEW}
+          </Button>
+        ) : null}
+      </div>
       {columns && applicationsRows && (
         <ApplicationsList
           columns={columns}
           applications={applicationsRows}
           sortQuery={sortQuery}
           handleSort={handleSort}
-          handleExpansion={handleExpansion}
           loading={loading}
         />
       )}
       <PaginationBar totalCount={applicationCount} />
-    </Container>
+    </div>
   )
 }
 
