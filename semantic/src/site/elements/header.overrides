@@ -87,3 +87,15 @@
 .steps-header {
   margin-top: 0 !important;
 }
+
+// Adjustments (overrides) to default header styles
+
+.header-space-around-none {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.header-space-around-medium {
+  margin-top: @h3 !important;
+  margin-bottom: @h3 !important;
+}

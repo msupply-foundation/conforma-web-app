@@ -33,3 +33,8 @@
 .ui[class*='very relaxed'].list:not(.horizontal) > .item:last-child {
   padding-bottom: @veryRelaxedItemVerticalPadding;
 }
+
+// Prevent last "divider" line on lists
+.ui[class*='no-bottom-border'].list:not(.horizontal) > .item:last-child {
+  border-bottom: none;
+}
