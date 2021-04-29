@@ -202,7 +202,7 @@ a:hover {
 }
 
 /*-----------------------------------
-   Application home & create and form
+   Application Area -- wraps around all content below Header
 ------------------------------------*/
 #application-area {
   display: flex;
@@ -314,11 +314,18 @@ a:hover {
 
 // In use for ApplicationHeader around all Application pages
 #application-content {
-  width: 800px;
   display: flex;
   flex-direction: column;
   background-color: @surfacesWhite;
   padding: 30px 50px 32px;
+}
+
+.application-home-width {
+  width: 800px !important;
+}
+
+.application-form-width {
+  width: 900px !important;
 }
 
 // Not currently used, but should be appplied to the Link in the menu

@@ -60,7 +60,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
 
   return (
     <>
-      <Grid stackable>
+      <Grid id="application-content" stackable className="application-form-width">
         <Grid.Column width={4}>
           <ProgressBar
             structure={fullStructure}

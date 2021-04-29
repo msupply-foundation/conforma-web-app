@@ -15,7 +15,7 @@ const ApplicationHomeWrapper: React.FC<ApplicationHomeWrapperProps> = ({
 }) => {
   return (
     <>
-      <Container id="application-content">
+      <Container id="application-content" className="application-home-width">
         <Header as="h2" textAlign="center">
           {`${name} ${strings.TITLE_APPLICATION_FORM}`}
           <Header.Subheader content={<Header as="h3" content={strings.TITLE_INTRODUCTION} />} />
