@@ -52,7 +52,6 @@ const Login: React.FC = () => {
   }
 
   const finishLogin = async (loginPayload: LoginPayload) => {
-    console.log('loginPayload', loginPayload)
     const { JWT, user, templatePermissions } = loginPayload
     await onLogin(JWT, user, templatePermissions)
     if (history.location?.state?.from) push(history.location.state.from)
@@ -60,7 +59,6 @@ const Login: React.FC = () => {
   }
 
   useEffect(() => {
-    console.log('Orgs', loginPayload?.orgList)
     if (loginPayload?.orgList?.length === 0) {
       // No orgs, so skip org login
       finishLogin(loginPayload)
@@ -87,11 +85,6 @@ const Login: React.FC = () => {
       setNetworkError(error.message)
     })
   }, [selectedOrgId])
-
-  const handleOrgClick = (orgId: number) => {
-    console.log('OrgId', orgId)
-    setSelectedOrgId(orgId)
-  }
 
   return (
     <Container id="login-container">
@@ -159,7 +152,7 @@ const Login: React.FC = () => {
                 content: (
                   <div
                     className="section-single-row-box-container"
-                    onClick={() => handleOrgClick(org.orgId)}
+                    onClick={() => setSelectedOrgId(org.orgId)}
                   >
                     <div className="centered-flex-box-row flex-grow-1">
                       <span style={{ fontStyle: org.orgId === 0 ? 'italic' : '' }}>
