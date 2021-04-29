@@ -105,7 +105,7 @@ const Navigation: React.FC<NavigationProps> = ({
   }
 
   return (
-    <Container style={inlineStyles.container}>
+    <Container id="app-navigation" style={inlineStyles.container}>
       <div style={inlineStyles.layout}>
         <div style={inlineStyles.left(isFirstPage)}>
           {isFirstPage ? null : (
