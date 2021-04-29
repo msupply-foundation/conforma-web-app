@@ -23,6 +23,7 @@
     font-size: @h4;
     font-weight: @semiboldWeight;
     text-transform: uppercase;
+    letter-spacing: @letterSpacingRegular;
     color: @darkGrey;
   }
   h5.ui.header {

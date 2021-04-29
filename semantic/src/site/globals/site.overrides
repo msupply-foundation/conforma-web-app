@@ -112,6 +112,7 @@ a:hover {
   padding-right: 20px;
   height: @headerHeight; // TO-DO: Adjust for mobile
   justify-content: space-between;
+  z-index: 10;
 }
 
 #user-area.ui.container {
@@ -164,6 +165,7 @@ a:hover {
   min-width: 120px;
 }
 
+// Whole content container except Header and Footer
 #content-area {
   padding-top: @headerHeight + 12px;
   padding-right: 12px;
@@ -202,23 +204,17 @@ a:hover {
 }
 
 /*-----------------------------------
-   Application Area -- wraps around all content below Header
+   Application Wrapper
 ------------------------------------*/
-#application-area {
-  display: flex;
-  flex-direction: column;
-  padding-left: 0;
-  padding-right: 0;
-}
 
-#application-area .top-container {
+#content-area .top-container {
   flex-wrap: wrap;
   justify-content: space-between;
   padding-bottom: 20px;
 }
 
 // Back to application list label
-#application-area .back-label {
+#content-area .back-label {
   min-width: 132px;
   max-width: 350px;
   background-color: transparent;
@@ -227,11 +223,23 @@ a:hover {
   font-weight: @regularWeight;
 }
 
-// Fix for company header on mobile to not clash wit back to applications
+// Fix for company header on mobile to not clash with 'back to applications'
 @media only screen and (min-width: @tabletBreakpoint) {
-  #application-area .heading-alt {
+  #content-area .heading-alt {
     margin-top: -25px;
   }
+}
+
+/*---------------------------------------
+   Application Home -- Start/Create page
+----------------------------------------*/
+
+#application-home-content {
+  display: flex;
+  flex-direction: column;
+  background-color: @surfacesWhite;
+  width: 800px;
+  padding: 30px 50px 32px;
 }
 
 // Steps line (vertical box - layout)
@@ -309,20 +317,39 @@ a:hover {
 }
 
 /*--------------------------------
+      Application Form area
+---------------------------------*/
+
+.dev-border {
+  // border: 1px solid black;
+  display: inherit;
+}
+
+#application-form {
+  display: flex;
+  flex-direction: column;
+  background-color: @surfacesWhite;
+  width: 800px;
+  padding: 30px 1rem 32px;
+}
+
+#progress-column {
+  max-width: 205px;
+}
+
+#form-column {
+  padding: 0;
+}
+
+#help-column {
+  max-width: 200px;
+}
+
+/*--------------------------------
       General used classes
 ---------------------------------*/
 
 // In use for ApplicationHeader around all Application pages
-#application-content {
-  display: flex;
-  flex-direction: column;
-  background-color: @surfacesWhite;
-  padding: 30px 50px 32px;
-}
-
-.application-home-width {
-  width: 800px !important;
-}
 
 .application-form-width {
   width: 900px !important;

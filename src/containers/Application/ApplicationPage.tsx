@@ -1,5 +1,5 @@
 import React, { CSSProperties, useEffect } from 'react'
-import { Grid, Header, Segment } from 'semantic-ui-react'
+import { Container, Grid, Header, Segment } from 'semantic-ui-react'
 import {
   FullStructure,
   SectionAndPage,
@@ -60,31 +60,35 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
 
   return (
     <>
-      <Grid id="application-content" stackable className="application-form-width">
-        <Grid.Column width={4}>
-          <ProgressBar
-            structure={fullStructure}
-            requestRevalidation={requestRevalidation as MethodRevalidate}
-            strictSectionPage={strictSectionPage as SectionAndPage}
-          />
-        </Grid.Column>
-        <Grid.Column width={10} stretched>
-          <Segment vertical style={{ marginBottom: 20 }}>
-            <Header content={fullStructure.sections[sectionCode].details.title} />
-            <PageElements
-              canEdit={current?.status === ApplicationStatus.Draft}
-              elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
-              responsesByCode={fullStructure.responsesByCode}
-              applicationData={fullStructure.info}
-              isStrictPage={
-                sectionCode === strictSectionPage?.sectionCode &&
-                pageNumber === strictSectionPage?.pageNumber
-              }
+      <Container id="application-form">
+        <Grid stackable className="dev-border">
+          <Grid.Column width={4} id="progress-column" className="dev-border">
+            <ProgressBar
+              structure={fullStructure}
+              requestRevalidation={requestRevalidation as MethodRevalidate}
+              strictSectionPage={strictSectionPage as SectionAndPage}
             />
-          </Segment>
-        </Grid.Column>
-        <Grid.Column width={2} />
-      </Grid>
+          </Grid.Column>
+          <Grid.Column width={9} stretched id="form-column" className="dev-border">
+            <Segment basic>
+              <Header as="h4" content={fullStructure.sections[sectionCode].details.title} />
+              <PageElements
+                canEdit={current?.status === ApplicationStatus.Draft}
+                elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
+                responsesByCode={fullStructure.responsesByCode}
+                applicationData={fullStructure.info}
+                isStrictPage={
+                  sectionCode === strictSectionPage?.sectionCode &&
+                  pageNumber === strictSectionPage?.pageNumber
+                }
+              />
+            </Segment>
+          </Grid.Column>
+          <Grid.Column width={3} id="help-column" className="dev-border">
+            Help tips go here
+          </Grid.Column>
+        </Grid>
+      </Container>
       <Navigation
         current={{ sectionCode, pageNumber }}
         isLinear={isLinear}

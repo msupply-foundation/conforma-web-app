@@ -106,9 +106,7 @@ const SiteLayout: React.FC = () => {
             </Route>
           </Switch>
         </Container>
-        <Container>
-          <Footer />
-        </Container>
+        <Footer />
       </Container>
     </Router>
   )
