@@ -82,6 +82,10 @@ a:hover {
   margin-right: 12px;
 }
 
+.form-extra-spacing {
+  margin-bottom: 25px !important;
+}
+
 #login-button {
   margin-top: 30px;
 }

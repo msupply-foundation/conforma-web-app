@@ -15,9 +15,15 @@ const Login: React.FC = () => {
   const [isError, setIsError] = useState(false)
   const [networkError, setNetworkError] = useState('')
   const [loginPayload, setLoginPayload] = useState<LoginPayload>()
-  const [selectedOrgIndex, setSelectedOrgIndex] = useState(0)
+  const [selectedOrgId, setSelectedOrgId] = useState<number>(-1)
   const { push, history } = useRouter()
   const { onLogin } = useUserState()
+
+  const noOrgOption: OrganisationSimple = {
+    orgId: 0,
+    orgName: strings.LABEL_NO_ORG,
+    userRole: null,
+  }
 
   // useEffect ensures isLoggedIn only runs on first mount, not re-renders
   useEffect(() => {
@@ -42,22 +48,11 @@ const Login: React.FC = () => {
       }).catch((error) => {
         setNetworkError(error.message)
       })
-    } else {
-      // Organisation login
-      const { orgId } = loginPayload?.orgList?.[selectedOrgIndex] as OrganisationSimple
-      attemptLoginOrg({
-        orgId,
-        JWT: loginPayload.JWT,
-        onLoginOrgSuccess: (loginOrgResult: LoginPayload) => {
-          finishLogin(loginOrgResult)
-        },
-      }).catch((error) => {
-        setNetworkError(error.message)
-      })
     }
   }
 
   const finishLogin = async (loginPayload: LoginPayload) => {
+    console.log('loginPayload', loginPayload)
     const { JWT, user, templatePermissions } = loginPayload
     await onLogin(JWT, user, templatePermissions)
     if (history.location?.state?.from) push(history.location.state.from)
@@ -65,20 +60,37 @@ const Login: React.FC = () => {
   }
 
   useEffect(() => {
+    console.log('Orgs', loginPayload?.orgList)
     if (loginPayload?.orgList?.length === 0) {
       // No orgs, so skip org login
       finishLogin(loginPayload)
       return
     }
-    if (loginPayload?.orgList?.length === 1) {
-      // Auto-login with only one organisation
-      handleSubmit()
-    }
   }, [loginPayload])
 
+  useEffect(() => {
+    // Organisation login
+    if (!loginPayload) return
+    const orgId = selectedOrgId
+    if (orgId === 0) {
+      // Log in without organisation
+      finishLogin(loginPayload)
+      return
+    }
+    attemptLoginOrg({
+      orgId,
+      JWT: loginPayload.JWT,
+      onLoginOrgSuccess: (loginOrgResult: LoginPayload) => {
+        finishLogin(loginOrgResult)
+      },
+    }).catch((error) => {
+      setNetworkError(error.message)
+    })
+  }, [selectedOrgId])
+
   const handleOrgClick = (orgId: number) => {
-    setSelectedOrgIndex(orgId)
-    handleSubmit()
+    console.log('OrgId', orgId)
+    setSelectedOrgId(orgId)
   }
 
   return (
@@ -110,7 +122,7 @@ const Login: React.FC = () => {
           )}
           {!loginPayload && (
             <>
-              <Form.Field error={isError}>
+              <Form.Field error={isError} className="form-extra-spacing">
                 <label>{strings.LABEL_LOGIN_USERNAME}</label>
                 <input
                   placeholder={strings.LABEL_LOGIN_USERNAME}
@@ -118,7 +130,6 @@ const Login: React.FC = () => {
                   type="text"
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
-                  style={{ marginBottom: 10 }}
                 />
               </Form.Field>
               <Form.Field error={isError}>
@@ -143,14 +154,18 @@ const Login: React.FC = () => {
               celled
               relaxed="very"
               className="clickable no-bottom-border"
-              items={loginPayload?.orgList.map((org: OrganisationSimple) => ({
+              items={[...loginPayload?.orgList, noOrgOption].map((org: OrganisationSimple) => ({
                 key: `list-item-${org.orgId}`,
                 content: (
                   <div
                     className="section-single-row-box-container"
                     onClick={() => handleOrgClick(org.orgId)}
                   >
-                    <div className="centered-flex-box-row flex-grow-1">{org.orgName}</div>
+                    <div className="centered-flex-box-row flex-grow-1">
+                      <span style={{ fontStyle: org.orgId === 0 ? 'italic' : '' }}>
+                        {org.orgName}
+                      </span>
+                    </div>
                     <Icon name="chevron right" />
                   </div>
                 ),
@@ -159,7 +174,7 @@ const Login: React.FC = () => {
           )}
           {!loginPayload && (
             <Button id="login-button" primary fluid type="submit" onClick={handleSubmit}>
-              {!loginPayload ? strings.LABEL_LOG_IN : strings.LABEL_PROCEED}
+              {strings.LABEL_LOG_IN}
             </Button>
           )}
           {!loginPayload && (
