@@ -1,5 +1,12 @@
-import { TypedDocumentNode, OperationVariables } from '@apollo/client'
+import { TypedDocumentNode, OperationVariables, ApolloQueryResult } from '@apollo/client'
 import { DocumentNode } from 'graphql'
+
+type AllLookupTableStructuresType = {
+  allTableStructuresLoadState: ApolloQueryResult<any>
+  allTableStructures?: LookUpTableType[]
+  setAllTableStructures: (rows: any) => void
+  refetchAllTableStructures: (variables: any) => Promise<ApolloQueryResult<any>>
+}
 
 type FieldMapType = {
   fieldname: string
@@ -33,7 +40,7 @@ enum LookUpTableImportCsvActions {
   submittable = 'SUBMITTABLE',
   submitting = 'SUBMITTING',
   setErrorMessages = 'SET_ERROR_MESSAGES',
-  setSuccess = 'SET_SUCCESS',
+  setSuccessMessages = 'SET_SUCCESS_MESSAGES',
 }
 
 type LookUpTableImportCsvType = {
@@ -43,7 +50,7 @@ type LookUpTableImportCsvType = {
   submittable: boolean
   submitting: boolean
   errors: []
-  success: boolean
+  success: []
 }
 
 type LookUpTableImportCsvActionType =
@@ -54,7 +61,7 @@ type LookUpTableImportCsvActionType =
   | { type: 'SUBMITTABLE'; payload: boolean }
   | { type: 'SUBMITTING'; payload: boolean }
   | { type: 'SET_ERROR_MESSAGES'; payload: [] }
-  | { type: 'SET_SUCCESS'; payload: boolean }
+  | { type: 'SET_SUCCESS_MESSAGES'; payload: [] }
 
 export {
   FieldMapType,
@@ -64,4 +71,5 @@ export {
   LookUpTableImportCsvActions,
   LookUpTableImportCsvType,
   LookUpTableImportCsvActionType,
+  AllLookupTableStructuresType,
 }

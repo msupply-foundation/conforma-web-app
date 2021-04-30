@@ -1,3 +1,3 @@
-import { LookupTableWrapper } from './containers'
+import { LookupTableRoutes } from './containers'
 
-export { LookupTableWrapper }
+export { LookupTableRoutes }
