@@ -1,6 +1,5 @@
 import React, { CSSProperties, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Message, Segment, Header, Dropdown, Grid, Button, Icon } from 'semantic-ui-react'
+import { Message, Segment, Header, Dropdown, Grid } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
@@ -54,10 +53,6 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
     structure: fullApplicationStructure,
     assignments,
   }
-
-  const {
-    info: { code, name },
-  } = structure
 
   return (
     <>

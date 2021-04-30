@@ -72,7 +72,7 @@ export {
 
 interface ApplicationDetails {
   id: number
-  code: string
+  template: TemplateDetails
   serial: string
   name: string
   outcome: string

@@ -104,7 +104,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     const applicationDetails: ApplicationDetails = {
       id: application.id,
-      code: application.template?.code as string,
+      template: application.template as TemplateDetails,
       isLinear: application.template?.isLinear as boolean,
       serial: application.serial as string,
       name: application.name as string,
