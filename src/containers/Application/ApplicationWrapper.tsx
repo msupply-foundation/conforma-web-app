@@ -25,29 +25,32 @@ const ApplicationWrapper: React.FC = () => {
     currentUser: currentUser as User,
     networkFetch: true,
   })
-  console.log('template', template)
 
   return error ? (
     <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   ) : isLoading ? (
     <Loading />
   ) : structure && template ? (
-    <ApplicationContainer template={template} currentUser={currentUser}>
-      <Switch>
-        <Route path={`${path}/review`}>
-          <ReviewWrapper structure={structure} />
-        </Route>
-        <Route exact path={path}>
+    <Switch>
+      <Route path={`${path}/review`}>
+        <ReviewWrapper structure={structure} />
+      </Route>
+      <Route exact path={path}>
+        <ApplicationContainer template={template} currentUser={currentUser}>
           <ApplicationHome structure={structure} template={template} />
-        </Route>
-        <Route exact path={`${path}/submission`}>
+        </ApplicationContainer>
+      </Route>
+      <Route exact path={`${path}/submission`}>
+        <ApplicationContainer template={template} currentUser={currentUser}>
           <ApplicationSubmission structure={structure} />
-        </Route>
-        <Route>
+        </ApplicationContainer>
+      </Route>
+      <Route>
+        <ApplicationContainer template={template} currentUser={currentUser}>
           <ApplicationPageWrapper structure={structure} />
-        </Route>
-      </Switch>
-    </ApplicationContainer>
+        </ApplicationContainer>
+      </Route>
+    </Switch>
   ) : (
     <NoMatch />
   )

@@ -61,12 +61,6 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
 
   return (
     <>
-      <div style={inlineStyles.top}>
-        <Button as={Link} to={`/applications?type=${code}`} style={inlineStyles.link} icon>
-          <Icon size="large" name="angle left" />
-        </Button>
-        <Header as="h2" style={inlineStyles.title} content={name} />
-      </div>
       <ReviewerAndStageSelection {...reviewerAndStageSelectionProps} />
       {filters &&
         Object.values(fullApplicationStructure.sections).map(({ details: { id, title, code } }) => (
@@ -193,9 +187,6 @@ const getReviewerOptions = (assignments: AssignmentDetails[], currentUserId: num
 
 // Styles - TODO: Move to LESS || Global class style (semantic)
 const inlineStyles = {
-  top: { display: 'flex', alignItems: 'center' } as CSSProperties,
-  link: { background: 'none' } as CSSProperties,
-  title: { padding: 0, margin: 10 } as CSSProperties,
   body: {
     borderRadius: 7,
     boxShadow: 'none',

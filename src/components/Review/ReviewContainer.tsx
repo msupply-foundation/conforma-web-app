@@ -1,20 +1,16 @@
 import React from 'react'
 import { Container, Header, Icon, Label } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { TemplateDetails, User } from '../../utils/types'
+import { ApplicationDetails } from '../../utils/types'
 import strings from '../../utils/constants'
-export interface ApplicationContainerProps {
-  template: TemplateDetails
-  currentUser: User | null
+
+export interface ReviewContainerProps {
+  application: ApplicationDetails
 }
 
-const ApplicationContainer: React.FC<ApplicationContainerProps> = ({
-  template,
-  currentUser,
-  children,
-}) => {
+const ReviewContainer: React.FC<ReviewContainerProps> = ({ application, children }) => {
   const { push } = useRouter()
-  const { code, name } = template
+  const { code, name, org } = application
   return (
     <Container>
       <div className="top-container">
@@ -29,7 +25,7 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({
           }
         />
         <Header as="h2" className="heading-alt" textAlign="center">
-          {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
+          {org?.name || strings.TITLE_NO_ORGANISATION}
         </Header>
       </div>
       {children}
@@ -37,4 +33,8 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({
   )
 }
 
-export default ApplicationContainer
+// top: { display: 'flex', alignItems: 'center' } as CSSProperties,
+// link: { background: 'none' } as CSSProperties,
+// title: { padding: 0, margin: 10 } as CSSProperties,
+
+export default ReviewContainer
