@@ -1,3 +1,20 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.grid {
+  margin: 10px;
+}
+
+/* Table Striping */
+.stripes .ui.grid:nth-child(even) {
+  background: @surfacesLight;
+}
+
+.stripes .ui.grid:nth-child(even) .stripedlabel {
+  background: white;
+}
+
+.stripes .ui.grid:nth-child(odd) .stripedlabel {
+  background: @surfacesLight;
+}

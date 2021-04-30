@@ -13,17 +13,17 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({
   currentUser,
   children,
 }) => {
-  const { push } = useRouter()
+  const { replace } = useRouter()
   const { code, name } = template
   return (
     <Container>
       <div className="top-container">
         <Label
           className="back-label clickable"
-          onClick={() => push(`/applications?type=${code}`)}
+          onClick={() => replace(`/applications?type=${code}`)}
           content={
             <>
-              <Icon name="angle left" />
+              <Icon name="angle left" size="large" />
               {`${name} ${strings.LABEL_APPLICATIONS}`}
             </>
           }

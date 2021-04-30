@@ -20,7 +20,7 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
           <Label style={inlineStyle.yourAssignmentLabel} content={strings.LABEL_ASSIGNMENT_SELF} />
         ) : isSelfAssigned ? (
           <Label
-            icon={<Icon name="circle" size="tiny" />}
+            icon={<Icon name="circle" size="tiny" color="blue" />}
             style={inlineStyle.yourAssignmentLabel}
             content={strings.LABEL_ASSIGNED_TO_YOU}
           />
