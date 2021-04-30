@@ -148,12 +148,12 @@ const inlineStyles = {
     bottom: 0,
     left: 0,
     right: 0,
-    boxShadow: '0px -6px 3px -3px #AAAAAA',
+    boxShadow: 'rgb(204, 201, 201) 0px -6px 5px -3px',
     paddingTop: 10,
     paddingBottom: 10,
     zIndex: 1000,
   } as CSSProperties,
-  layout: { display: 'flex' },
+  layout: { display: 'flex', maxWidth: 1127 },
   left: (isFirstPage: boolean) =>
     ({
       flexGrow: 1,
