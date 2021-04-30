@@ -4,6 +4,7 @@
 
 .ui.grid {
   margin: 10px;
+  border-radius: 6px;
 }
 
 /* Table Striping */
@@ -17,4 +18,10 @@
 
 .stripes .ui.grid:nth-child(odd) .stripedlabel {
   background: @surfacesLight;
+}
+
+.ui[class*='middle aligned'].grid > .column:not(.row) {
+  padding: 0px;
+  margin-left: 10px;
+  margin-right: 10px;
 }

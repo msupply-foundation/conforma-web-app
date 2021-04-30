@@ -42,7 +42,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
 
   if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
   return (
-    <Grid className="section-single-row-box-container">
+    <Grid className="section-single-row-box-container" verticalAlign="middle">
       <Grid.Column className="centered-flex-box-row">
         <Label className="simple-label" content={strings.LABEL_REVIEWED_BY} />
         <Dropdown

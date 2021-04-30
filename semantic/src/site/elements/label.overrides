@@ -30,3 +30,7 @@
   height: 20px;
   padding-left: 0;
 }
+
+.ui.label.simple-label > .text-blue {
+  color: blue;
+}
