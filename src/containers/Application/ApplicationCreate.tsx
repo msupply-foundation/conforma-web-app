@@ -84,15 +84,24 @@ const ApplicationCreate: React.FC = () => {
   if (!template) return <ApplicationSelectType /> // TODO
   if (loading || !template?.startMessage) return <Loading />
 
+  const StartButtonSegment: React.FC = () => {
+    return (
+      <Segment basic className="padding-zero">
+        <Button color="blue" className="button-wide" loading={processing} onClick={handleCreate}>
+          {strings.BUTTON_APPLICATION_START}
+        </Button>
+      </Segment>
+    )
+  }
+
   return template?.sections ? (
     <ApplicationContainer template={template} currentUser={currentUser}>
-      <ApplicationHomeWrapper startMessage={template.startMessage} name={template.name}>
+      <ApplicationHomeWrapper
+        startMessage={template.startMessage}
+        name={template.name}
+        ButtonSegment={StartButtonSegment}
+      >
         <SectionsList sections={template.sections} />
-        <Segment basic className="padding-zero">
-          <Button color="blue" className="button-wide" loading={processing} onClick={handleCreate}>
-            {strings.BUTTON_APPLICATION_START}
-          </Button>
-        </Segment>
       </ApplicationHomeWrapper>
     </ApplicationContainer>
   ) : null

@@ -6,11 +6,13 @@ import strings from '../../utils/constants'
 interface ApplicationHomeWrapperProps {
   startMessage?: string
   name: string
+  ButtonSegment?: React.FC
 }
 
 const ApplicationHomeWrapper: React.FC<ApplicationHomeWrapperProps> = ({
   startMessage,
   name,
+  ButtonSegment,
   children,
 }) => {
   return (
@@ -22,8 +24,9 @@ const ApplicationHomeWrapper: React.FC<ApplicationHomeWrapperProps> = ({
         </Header>
         <p>{strings.SUBTITLE_APPLICATION_STEPS}</p>
         <Header as="h4" className="steps-header" content={strings.TITLE_STEPS} />
-        {startMessage && <Markdown text={startMessage || ''} semanticComponent="Message" info />}
         {children}
+        {startMessage && <Markdown text={startMessage || ''} semanticComponent="Message" info />}
+        {ButtonSegment && <ButtonSegment />}
       </Container>
     </>
   )

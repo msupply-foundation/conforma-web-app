@@ -351,6 +351,14 @@ a:hover {
 }
 
 /*--------------------------------
+      Application Navigation area
+---------------------------------*/
+
+#app-navigation {
+  height: @footerHeight;
+}
+
+/*--------------------------------
       General used classes
 ---------------------------------*/
 
