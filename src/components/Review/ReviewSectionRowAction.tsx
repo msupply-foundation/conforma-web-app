@@ -1,6 +1,6 @@
-import React, { CSSProperties, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Grid, Header, Icon, Label, Message } from 'semantic-ui-react'
+import { Grid, Icon, Label, Message } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ReviewAction, ReviewProgress, ReviewSectionComponentProps } from '../../utils/types'
 import strings from '../../utils/constants'
