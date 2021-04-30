@@ -1,32 +1,28 @@
-import axios from 'axios'
-import React, { useContext } from 'react'
+import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Button, Header, Icon, Message, Popup, Table } from 'semantic-ui-react'
 import { Loading } from '../../../components'
-import { AllTableStructuresContext } from '../../contexts/AllTableStructures.context'
 import { FieldMapType, LookUpTableType } from '../../types'
 import { DownloadButton } from '..'
 
 const TABLE_PREFIX = 'lookup_table_'
 
-const ListTable: React.FC = () => {
-  const {
-    allTableStructures,
-    allTableStructuresLoadState,
-    setAllTableStructures,
-  }: any = useContext(AllTableStructuresContext)
-
-  const { called, loading, error } = allTableStructuresLoadState
+const ListTable: React.FC<any> = ({
+  allTableStructures,
+  allTableStructuresLoadState,
+  setAllTableStructures,
+}: any) => {
+  const { loading, error } = allTableStructuresLoadState
 
   const handleExpansion = (lookupTable: LookUpTableType) => {
     if (!lookupTable) return
     lookupTable.isExpanded = !lookupTable.isExpanded
-    setAllTableStructures([...allTableStructures])
+    setAllTableStructures(allTableStructures)
   }
 
   return error ? (
     <Message error header={'Error loading lookup-table'} list={[error.message]} />
-  ) : loading || !called || !allTableStructures ? (
+  ) : loading || !allTableStructures ? (
     <Loading />
   ) : (
     <Table sortable stackable selectable>

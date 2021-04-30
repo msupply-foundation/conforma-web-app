@@ -26,7 +26,7 @@ import UserArea from '../User/UserArea'
 import Login from '../User/Login'
 import ListWrapper from '../List/ListWrapper'
 import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpdateTrackerState'
-import { LookupTableWrapper } from '../../LookupTable'
+import { LookupTableRoutes } from '../../LookupTable'
 import { Container } from 'semantic-ui-react'
 import DevOptions from '../Dev/DevOptions'
 
@@ -102,7 +102,10 @@ const SiteLayout: React.FC = () => {
             <Route exact path="/products/:productId"></Route>
             {/* Lookup Table routes wrapper */}
             <Route path="/lookup-tables">
-              <LookupTableWrapper />
+              <LookupTableRoutes />
+            </Route>
+            <Route>
+              <NoMatch />
             </Route>
             <Route>
               <NoMatch />

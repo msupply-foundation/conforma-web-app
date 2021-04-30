@@ -13,37 +13,27 @@ import {
 import { LookUpTableImportCsvContext } from '../contexts'
 import config from '../../config.json'
 import axios from 'axios'
-import { useHistory } from 'react-router'
 
-const ImportCsvModal: React.FC = ({
+const ImportCsvModal: React.FC<any> = ({
   onImportSuccess,
-  importModelOpen = false,
-  structure = null,
-  ...props
+  onClose,
+  open = false,
+  tableLabel = '',
+  tableStructureID = 0,
 }: any) => {
   const { state, dispatch } = React.useContext(LookUpTableImportCsvContext)
-  const { uploadModalOpen: open, file, tableName, submittable, submitting, errors, success } = state
-
-  const history = useHistory()
-
-  const goBack = () => {
-    history.goBack()
-  }
+  const { uploadModalOpen, file, tableName, submittable, submitting, errors, success } = state
 
   useEffect(() => {
-    if (importModelOpen) {
-      dispatch({ type: 'OPEN_MODAL' })
-    } else {
-      dispatch({ type: 'CLOSE_MODAL' })
-    }
-  }, [importModelOpen])
+    dispatch({ type: open ? 'OPEN_MODAL' : 'CLOSE_MODAL' })
+  }, [open])
 
   useEffect(() => {
     dispatch({
       type: 'SUBMITTABLE',
-      payload: open && file !== null && structure?.id ? true : tableName !== '',
+      payload: uploadModalOpen && file !== null && (tableStructureID ? true : tableName !== ''),
     })
-  }, [open, file, tableName])
+  }, [uploadModalOpen, file, tableName])
 
   const fileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target as HTMLInputElement
@@ -56,11 +46,13 @@ const ImportCsvModal: React.FC = ({
 
     let formData: any = new FormData()
     formData.append('file', file)
-    if (!structure?.id) formData.append('tableName', tableName)
+    if (!tableStructureID) formData.append('tableName', tableName)
 
-    axios
+    await axios
       .post(
-        config.serverREST + '/lookup-table/import' + (structure?.id ? '/' + structure.id : ''),
+        config.serverREST +
+          '/lookup-table/import' +
+          (tableStructureID ? '/' + String(tableStructureID) : ''),
         formData,
         {
           headers: {
@@ -68,18 +60,20 @@ const ImportCsvModal: React.FC = ({
           },
         }
       )
-      .then(function (response) {
-        dispatch({ type: 'SET_SUCCESS', payload: true })
+      .then(function (response: any) {
+        const successResponse = response.data
         onImportSuccess()
+        dispatch({ type: 'SET_SUCCESS_MESSAGES', payload: JSON.parse(successResponse.message) })
       })
       .catch(function (error: any) {
         let myErrors = []
         if (error.response) {
           const errorResponse = error.response.data
-          if (errorResponse.name === 'ValidationError') {
+          if (errorResponse.name === 'ValidationErrors') {
             myErrors = JSON.parse(errorResponse.message)
+          } else {
+            myErrors.push(errorResponse.message)
           }
-          myErrors.push(errorResponse.message)
         } else if (error.request) {
           myErrors.push(error.request.message)
         } else {
@@ -94,10 +88,10 @@ const ImportCsvModal: React.FC = ({
     <Modal
       onClose={() => dispatch({ type: 'CLOSE_MODAL' })}
       onOpen={() => dispatch({ type: 'OPEN_MODAL' })}
-      open={open}
+      open={uploadModalOpen}
     >
       <Modal.Header>
-        {!structure?.id ? 'Import Lookup-table' : `Import into Lookup-table: ${structure.label}`}
+        {!tableLabel ? 'Import Lookup-table' : `Import into Lookup-table: ${tableLabel}`}
       </Modal.Header>
       <Modal.Content>
         {submitting ? (
@@ -109,17 +103,16 @@ const ImportCsvModal: React.FC = ({
           </Segment>
         ) : errors.length > 0 ? (
           <Message error header="Errors found" list={[...errors]} />
-        ) : success ? (
-          <Message positive>
-            <Message.Header>Lookup table successfully imported</Message.Header>
-            <p>
-              Lookup table '{structure?.label}' has been successfully
-              {!structure?.id ? ' created' : ' updated'}.
-            </p>
-          </Message>
+        ) : success.length > 0 ? (
+          <Message
+            positive
+            header={`Lookup table '${tableLabel || tableName}' has been successfully
+              ${!tableLabel ? ' created' : ' updated'}.`}
+            list={[...success]}
+          />
         ) : (
           <Form>
-            {!structure?.id && (
+            {!tableLabel && (
               <Form.Field>
                 <label>Table name</label>
                 <input
@@ -153,16 +146,16 @@ const ImportCsvModal: React.FC = ({
         )}
       </Modal.Content>
       <Modal.Actions>
-        <Button color="black" onClick={goBack}>
-          Cancel
+        <Button color="black" onClick={onClose}>
+          Close
         </Button>
-        {errors.length > 0 || success ? (
+        {errors.length > 0 || success.length > 0 ? (
           <Button
             content={success ? 'Import another CSV' : 'Try again'}
             labelPosition="right"
             icon="download"
             color={success ? 'green' : 'orange'}
-            onClick={(e) => dispatch({ type: 'OPEN_MODAL' })}
+            onClick={(_) => dispatch({ type: 'OPEN_MODAL' })}
           />
         ) : (
           <Button
@@ -179,4 +172,4 @@ const ImportCsvModal: React.FC = ({
   )
 }
 
-export default ImportCsvModal
+export default React.memo(ImportCsvModal)

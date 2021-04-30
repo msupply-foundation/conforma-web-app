@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query($lookupTableID: Int!) {
+  query getLookupTableStructureById($lookupTableID: Int!) {
     lookupTable(id: $lookupTableID) {
       id
       label
