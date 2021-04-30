@@ -298,8 +298,9 @@ a:hover {
   border: 1px solid @headersInteractiveMed;
   border-radius: 3px;
   padding-left: 10px;
+  padding-right: 10px;
   margin-left: 10px;
-  width: 100px;
+  max-width: 150px;
 }
 
 /*--------------------------------

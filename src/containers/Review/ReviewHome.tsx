@@ -60,7 +60,7 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
       <ReviewerAndStageSelection {...reviewerAndStageSelectionProps} />
       {filters &&
         Object.values(fullApplicationStructure.sections).map(({ details: { id, title, code } }) => (
-          <Segment className="stripes review-sections-container" key={id}>
+          <Segment className="stripes" key={id}>
             <Header as="h5" content={title} />
             <AssignmentSectionRow
               {...{
@@ -120,10 +120,7 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
   return (
     <div className="section-single-row-box-container" id="review-filters-container">
       <div className="centered-flex-box-row">
-        <Label
-          className="uppercase-label padding-zero"
-          content={strings.REVIEW_FILTER_SHOW_TASKS_FOR}
-        />
+        <Label className="simple-label" content={strings.REVIEW_FILTER_SHOW_TASKS_FOR} />
         <Dropdown
           className="reviewer-dropdown"
           options={getReviewerOptions(assignments, currentUser?.userId as number)}
@@ -132,7 +129,7 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
         />
       </div>
       <div className="centered-flex-box-row">
-        <Label className="uppercase-label padding-zero" content={strings.REVIEW_FILTER_STAGE} />
+        <Label className="uppercase-label" content={strings.REVIEW_FILTER_STAGE} />
         <Dropdown
           options={stageOptions}
           value={filters?.selectedStage}
