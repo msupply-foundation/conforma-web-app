@@ -5,3 +5,8 @@
 i.icon {
   color: @darkGrey;
 }
+
+link.icon {
+  font-size: @fontXXsmall;
+  font-weight: @semiboldWeight;
+}

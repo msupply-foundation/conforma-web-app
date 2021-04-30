@@ -32,7 +32,9 @@ const ReviewSectionProgressBar: React.FC<ReviewProgress> = (reviewProgress) => {
   const progressLabel = getReviewProgressTitle(reviewProgress)
   return (
     <div className="progress-box">
-      {progressLabel && <Label size="tiny" className="simple-label" content={progressLabel} />}
+      {progressLabel && (
+        <Label size="tiny" className="simple-label text-italic" content={progressLabel} />
+      )}
       <Progress
         className="progress"
         percent={(100 * (doneConform + doneNonConform)) / totalReviewable}
