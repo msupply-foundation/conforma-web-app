@@ -37,7 +37,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   if (!assignments || assignments.length === 0) return <NoMatch />
 
   return (
-    <ReviewContainer application={structure.info} currentUser={currentUser}>
+    <ReviewContainer application={structure.info}>
       <Switch>
         <Route exact path={path}>
           <ReviewHome assignments={assignments} structure={structure} />
