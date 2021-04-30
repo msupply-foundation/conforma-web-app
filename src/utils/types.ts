@@ -393,6 +393,7 @@ interface StageDetails {
   number: number
   id: number
   title: string
+  colour?: string
   description?: string
 }
 

@@ -169,6 +169,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
             id: stage.id,
             title: stage.title as string,
             description: stage.description ? stage.description : undefined,
+            colour: stage.colour as string,
           })),
           sections: buildSectionsStructure({ sections, baseElements }),
         }
