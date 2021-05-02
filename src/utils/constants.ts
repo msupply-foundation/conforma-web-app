@@ -50,7 +50,7 @@ export default {
   LABEL_APPLICATION_SUBMITTED: 'Application Submitted',
   LABEL_ASSIGNED_TO_YOU: 'Assigned to you',
   LABEL_ASSIGNED_TO_OTHER: 'Assigned to another reviewer',
-  LABEL_ASSIGNMENT_LOCKED: 'Locked review by',
+  LABEL_ASSIGNMENT_LOCKED: 'Locked for',
   LABEL_ASSIGNMENT_SELF: 'Can be self assigned',
   LABEL_ASSIGNMENT_AVAILABLE: 'Can be self assigned by',
   LABEL_COMMENT: 'Add comment',
