@@ -38,15 +38,3 @@
 .ui.label.simple-label > .text-blue {
   color: @information;
 }
-
-.ui.label.link-label {
-  background-color: transparent;
-  color: @blue;
-}
-
-.ui.active.label.link-label:hover {
-  background-color: transparent;
-  border-color: none;
-  opacity: @hoverOpacity;
-  color: @blue;
-}
