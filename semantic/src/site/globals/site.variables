@@ -138,9 +138,17 @@
   font-family: @alternativeFont;
 }
 
+// Link behaviour
+
+@hoverOpacity: 0.8;
+
 /*------------------------
       Layout constants
 -------------------------*/
 
 @headerHeight: 120px;
 @footerHeight: 75px;
+@borderRadius: 8px;
+
+// Box shadow -- used in Login form
+@basicBoxShadow: 0 2px 14px 0 rgba(129, 129, 129, 0.25);

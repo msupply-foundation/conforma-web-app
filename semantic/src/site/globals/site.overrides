@@ -22,7 +22,72 @@ a {
 
 a:hover {
   color: @interactiveHigh;
-  opacity: 0.8;
+  opacity: @hoverOpacity;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.alert {
+  color: @attention;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  opacity: @hoverOpacity;
+}
+
+/*--------------------------------
+   Login page
+---------------------------------*/
+
+#login-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+#login-box {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  max-width: 450px;
+  box-shadow: @basicBoxShadow;
+  border-radius: @borderRadius;
+  padding: 20px;
+}
+
+.flex-centered {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-header {
+  margin: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: @letterSpacingRegular !important;
+}
+
+.image-icon {
+  height: 45px;
+  margin-right: 12px;
+}
+
+.form-extra-spacing {
+  margin-bottom: 25px !important;
+}
+
+#login-button {
+  margin-top: 30px;
 }
 
 /*--------------------------------
@@ -127,7 +192,7 @@ a:hover {
 }
 
 #footer-content .ui.image {
-  height: 100%;
+  max-height: @footerHeight - 20px;
 }
 
 #footer-content p {

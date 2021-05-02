@@ -4,7 +4,8 @@ export default {
   APPLICATIONS_LIST_EMPTY: 'No applications found',
   APPLICATION_MISSING_TEMPLATE: '',
   APPLICATION_OTHER_CHANGES_MADE: 'This is a new submission and will require a review.',
-  LOGIN_WELCOME_SELECT_ORG: 'Welcome back, %1. Please select your organisation.',
+  LOGIN_WELCOME: 'Welcome, %1',
+  LOGIN_ORG_SELECT: 'Please select an organisation',
   VALIDATION_FAIL: {
     title: 'Validation failed',
     message: 'Please fix invalid fields before continuing',
