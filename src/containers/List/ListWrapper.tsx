@@ -57,16 +57,17 @@ const ListWrapper: React.FC = () => {
   }, [loading, applications])
 
   useEffect(() => {
-    updateQuery({ search: searchText })
+    if (searchText !== undefined) updateQuery({ search: searchText })
   }, [searchText])
 
   useEffect(() => {
     const { sortColumn, sortDirection } = sortQuery
-    updateQuery({
-      sortBy: sortColumn
-        ? `${sortColumn}${sortDirection === 'ascending' ? ':asc' : ''}`
-        : undefined,
-    })
+    if (Object.keys(sortQuery).length > 0)
+      updateQuery({
+        sortBy: sortColumn
+          ? `${sortColumn}${sortDirection === 'ascending' ? ':asc' : ''}`
+          : undefined,
+      })
   }, [sortQuery])
 
   const redirectToDefault = () => {
@@ -74,10 +75,10 @@ const ListWrapper: React.FC = () => {
     const redirectUserRole = checkExistingUserRole(templatePermissions, redirectType, userRole)
       ? userRole
       : findUserRole(templatePermissions, redirectType)
-
-    if (redirectType && redirectUserRole)
-      updateQuery({ type: redirectType, userRole: redirectUserRole })
-    else {
+    if (redirectType && redirectUserRole) {
+      console.log('Redirecting...')
+      updateQuery({ type: redirectType, userRole: redirectUserRole }, true)
+    } else {
       // To-Do: Show 404 if no default found
     }
   }
