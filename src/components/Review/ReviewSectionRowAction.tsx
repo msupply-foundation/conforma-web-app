@@ -116,11 +116,10 @@ const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
       : restart
 
   return (
-    <Icon
-      link
-      as={Link}
+    <a
+      className="user-action clickable"
       onClick={buttonAction}
-    >{`${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewCount})`}</Icon>
+    >{`${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewCount})`}</a>
   )
 }
 
@@ -147,9 +146,9 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
 
   return (
-    <Icon link as={Link} onClick={selfAssignReview}>
+    <a className="user-action clickable" onClick={selfAssignReview}>
       {strings.BUTTON_SELF_ASSIGN}
-    </Icon>
+    </a>
   )
 }
 
@@ -186,9 +185,9 @@ const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
   if (startReviewError) return <Message error title={strings.ERROR_GENERIC} />
 
   return (
-    <Icon link as={Link} onClick={startReview}>
+    <a className="user-action clickable" onClick={startReview}>
       {strings.ACTION_START}
-    </Icon>
+    </a>
   )
 }
 
@@ -204,9 +203,12 @@ const ContinueReviewButton: React.FC<ReviewSectionComponentProps> = ({
   const reviewId = fullStructure.thisReview?.id
 
   return (
-    <Icon link as={Link} to={`${pathname}/${reviewId}?activeSections=${details.code}`}>
+    <a
+      className="user-action clickable"
+      href={`${pathname}/${reviewId}?activeSections=${details.code}`}
+    >
       {strings.ACTION_VIEW}
-    </Icon>
+    </a>
   )
 }
 

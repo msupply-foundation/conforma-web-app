@@ -2,11 +2,7 @@
          Site Overrides
 *******************************/
 
+// Override the default color to grey
 i.icon {
   color: @darkGrey;
-}
-
-link.icon {
-  font-size: @fontXXsmall;
-  font-weight: @semiboldWeight;
 }
