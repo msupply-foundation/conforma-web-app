@@ -12,6 +12,7 @@ import {
 } from 'semantic-ui-react'
 import { FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
+import usePageTitle from '../../utils/hooks/usePageTitle'
 import useListApplications from '../../utils/hooks/useListApplications'
 import strings from '../../utils/constants'
 import { findUserRole, checkExistingUserRole } from '../../utils/helpers/list/findUserRole'
@@ -33,6 +34,7 @@ const ListWrapper: React.FC = () => {
   const [searchText, setSearchText] = useState<string>(query?.search)
   const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
   const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>()
+  usePageTitle(strings.PAGE_TITLE_LIST)
 
   const { error, loading, applications, applicationCount } = useListApplications(query)
 
