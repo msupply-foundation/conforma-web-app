@@ -8,7 +8,6 @@ import {
   Admin,
   Config,
   Home,
-  Login,
   Notification,
   NotificationsList,
   NoMatch,
@@ -24,8 +23,10 @@ import {
 import { ApplicationCreate, ApplicationWrapper } from '../Application'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import UserArea from '../User/UserArea'
+import Login from '../User/Login'
 import ListWrapper from '../List/ListWrapper'
 import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpdateTrackerState'
+import { LookupTableRoutes } from '../../LookupTable'
 import { Container } from 'semantic-ui-react'
 import DevOptions from '../Dev/DevOptions'
 
@@ -98,8 +99,13 @@ const SiteLayout: React.FC = () => {
             <Route exact path="/products">
               <ProductList />
             </Route>
-            <Route exact path="/products/:productId">
-              <Product />
+            <Route exact path="/products/:productId"></Route>
+            {/* Lookup Table routes wrapper */}
+            <Route path="/lookup-tables">
+              <LookupTableRoutes />
+            </Route>
+            <Route>
+              <NoMatch />
             </Route>
             <Route>
               <NoMatch />

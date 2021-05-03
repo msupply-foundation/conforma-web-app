@@ -7,10 +7,9 @@ import { TemplateDetails, User } from '../../utils/types'
 export interface AppHeaderProps {
   template: TemplateDetails
   currentUser: User | null
-  ChildComponent: React.FC
 }
 
-const ApplicationHeader: React.FC<AppHeaderProps> = ({ template, currentUser, ChildComponent }) => {
+const ApplicationHeader: React.FC<AppHeaderProps> = ({ template, currentUser, children }) => {
   const { code, name } = template
   return (
     <Container id="application-area">
@@ -35,7 +34,7 @@ const ApplicationHeader: React.FC<AppHeaderProps> = ({ template, currentUser, Ch
           {`${name} ${strings.TITLE_APPLICATION_FORM}`}
           <Header.Subheader content={<Header as="h3" content={strings.TITLE_INTRODUCTION} />} />
         </Header>
-        <ChildComponent />
+        {children}
       </Container>
     </Container>
   )

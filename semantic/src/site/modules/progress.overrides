@@ -1,3 +1,13 @@
 /*******************************
          Site Overrides
 *******************************/
+
+// Style for progress in Steps list (sections)
+.ui.tiny.progress {
+  border-radius: 0px;
+  margin-bottom: 0px;
+}
+
+.ui.tiny.progress .bar {
+  height: 3px;
+}

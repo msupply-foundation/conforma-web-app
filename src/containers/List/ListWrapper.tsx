@@ -1,10 +1,20 @@
 import React, { CSSProperties, useEffect, useState } from 'react'
-import { Container, List, Label, Segment, Button, Search, Grid, Header } from 'semantic-ui-react'
+import {
+  Container,
+  List,
+  Label,
+  Segment,
+  Button,
+  Search,
+  Grid,
+  Header,
+  Icon,
+} from 'semantic-ui-react'
 import { FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useListApplications from '../../utils/hooks/useListApplications'
 import strings from '../../utils/constants'
-import getDefaultUserRole from '../../utils/helpers/list/findUserRole'
+import { findUserRole, checkExistingUserRole } from '../../utils/helpers/list/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/list/mapColumnsByRole'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
@@ -28,7 +38,8 @@ const ListWrapper: React.FC = () => {
 
   useEffect(() => {
     if (!templatePermissions) return
-    if (!type || !userRole) redirectToDefault()
+    if (!type || !userRole || !checkExistingUserRole(templatePermissions, type, userRole))
+      redirectToDefault()
     else {
       const columns = mapColumnsByRole(userRole as USER_ROLES)
       setColumns(columns)
@@ -58,7 +69,10 @@ const ListWrapper: React.FC = () => {
 
   const redirectToDefault = () => {
     const redirectType = type || Object.keys(templatePermissions)[0]
-    const redirectUserRole = userRole || getDefaultUserRole(templatePermissions, redirectType)
+    const redirectUserRole = checkExistingUserRole(templatePermissions, redirectType, userRole)
+      ? userRole
+      : findUserRole(templatePermissions, redirectType)
+
     if (redirectType && redirectUserRole)
       updateQuery({ type: redirectType, userRole: redirectUserRole })
     else {
@@ -89,7 +103,7 @@ const ListWrapper: React.FC = () => {
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
   ) : (
-    <Container style={inlineStyles.container}>
+    <div id="list-container">
       {/* <FilterList /> */}
       {/* <Segment vertical>
         {Object.keys(query).length > 0 && <h3>Query parameters:</h3>}
@@ -122,13 +136,11 @@ const ListWrapper: React.FC = () => {
           </Grid.Row>
         </Grid>
       </Segment> */}
-      <div style={inlineStyles.top}>
-        <Header as="h2" style={inlineStyles.type}>
-          {query.type}
-        </Header>
+      <div id="list-top">
+        <Header as="h2">{query.type}</Header>
         <Search
+          className="flex-grow-1"
           // size="large"
-          style={inlineStyles.search}
           placeholder={strings.PLACEHOLDER_SEARCH}
           onSearchChange={handleSearchChange}
           input={{ icon: 'search', iconPosition: 'left' }}
@@ -136,12 +148,10 @@ const ListWrapper: React.FC = () => {
           value={searchText}
         />
         {query.userRole === 'applicant' ? (
-          <Button
-            style={inlineStyles.create}
-            as={Link}
-            to={`/application/new?type=${type}`}
-            content={strings.BUTTON_APPLICATION_NEW}
-          />
+          <Button as={Link} to={`/application/new?type=${type}`} inverted color="blue">
+            <Icon name="plus" size="tiny" color="blue" />
+            {strings.BUTTON_APPLICATION_NEW}
+          </Button>
         ) : null}
       </div>
       {columns && applicationsRows && (
@@ -154,24 +164,8 @@ const ListWrapper: React.FC = () => {
         />
       )}
       <PaginationBar totalCount={applicationCount} />
-    </Container>
+    </div>
   )
-}
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const inlineStyles = {
-  container: { paddingTop: 40 } as CSSProperties,
-  top: { display: 'flex', alignItems: 'center' } as CSSProperties,
-  type: { letterSpacing: 1, fontWeight: 400, margin: 0 } as CSSProperties,
-  search: { flexGrow: 1, marginLeft: 30 } as CSSProperties,
-  create: {
-    background: 'none',
-    color: '#003BFE',
-    letterSpacing: 1.4,
-    border: '2px solid #003BFE',
-    borderRadius: 8,
-    textTransform: 'capitalize',
-  } as CSSProperties,
 }
 
 export default ListWrapper

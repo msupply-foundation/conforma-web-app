@@ -42,7 +42,7 @@ export {
   MethodToCallProps,
   Page,
   PageElement,
-  Progress,
+  ApplicationProgress,
   ResponseFull,
   ResponsesByCode,
   ReviewAction,
@@ -52,7 +52,6 @@ export {
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
-  SectionProgress,
   SectionState,
   SectionsStructure,
   SetReviewResponseOnElement,
@@ -106,6 +105,7 @@ interface ApplicationStage {
   id: number
   name: string
   number: number
+  colour: string
 }
 
 interface AssignmentDetails {
@@ -233,7 +233,7 @@ interface Page {
   number: number
   sectionCode: string
   name: string
-  progress: Progress
+  progress: ApplicationProgress
   reviewProgress?: ReviewProgress
   changeRequestsProgress?: ChangeRequestsProgress
   state: PageElement[]
@@ -261,8 +261,7 @@ type PageElement = {
 }
 
 type SetReviewResponseOnElement = (element: PageElement, response: ReviewResponse) => void
-
-interface Progress {
+interface ApplicationProgress {
   doneRequired: number
   doneNonRequired: number
   completed: boolean
@@ -340,13 +339,6 @@ interface SectionDetails {
   title: string
   totalPages: number
 }
-interface SectionProgress {
-  total: number
-  done: number
-  completed: boolean
-  valid: boolean
-  linkedPage: number
-}
 
 interface ReviewProgress {
   totalReviewable: number
@@ -384,7 +376,7 @@ interface ChangeRequestsProgress {
 
 interface SectionState {
   details: SectionDetails
-  progress?: Progress
+  progress?: ApplicationProgress
   reviewProgress?: ReviewProgress
   reviewAction?: {
     action: ReviewAction
