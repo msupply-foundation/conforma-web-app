@@ -12,7 +12,7 @@ const ReviewContainer: React.FC<ReviewContainerProps> = ({ application, children
   const { replace } = useRouter()
   const { template, name, org } = application
   return (
-    <Container>
+    <Container id="review-area">
       <div className="top-container">
         <Label
           className="back-label clickable"
