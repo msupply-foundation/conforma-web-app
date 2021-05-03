@@ -76,7 +76,6 @@ const ListWrapper: React.FC = () => {
       ? userRole
       : findUserRole(templatePermissions, redirectType)
     if (redirectType && redirectUserRole) {
-      console.log('Redirecting...')
       updateQuery({ type: redirectType, userRole: redirectUserRole }, true)
     } else {
       // To-Do: Show 404 if no default found
