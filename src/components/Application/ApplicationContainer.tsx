@@ -15,9 +15,10 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({
 }) => {
   const { replace } = useRouter()
   const { code, name } = template
+  const isNonRegistered = currentUser?.username === strings.USER_NONREGISTERED
   return (
-    <Container id="application-area">
-      <div className="top-container">
+    <Container id="application-area" className={isNonRegistered ? 'non-registered' : ''}>
+      <div className={'top-container' + isNonRegistered ? 'hidden' : ''}>
         <Label
           className="back-label clickable"
           onClick={() => replace(`/applications?type=${code}`)}

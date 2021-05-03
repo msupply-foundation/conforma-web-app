@@ -46,7 +46,7 @@ a:hover {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .invisible {
@@ -218,6 +218,11 @@ a:hover {
 /*-----------------------------------
    Application/Review Wrappers
 ------------------------------------*/
+
+// Moves back up if UserArea is not displayed
+#application-area.non-registered {
+  margin-top: -@headerHeight;
+}
 
 #content-area .top-container {
   flex-wrap: wrap;
