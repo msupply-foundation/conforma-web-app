@@ -12,7 +12,7 @@ const UserArea: React.FC = () => {
     userState: { currentUser },
   } = useUserState()
 
-  if (currentUser?.username === strings.USER_NONREGISTERED) return null
+  if (!currentUser || currentUser?.username === strings.USER_NONREGISTERED) return null
 
   return (
     <Container id="user-area">

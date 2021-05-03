@@ -81,7 +81,8 @@ const ApplicationCreate: React.FC = () => {
       />
     )
 
-  if (!template) return <ApplicationSelectType /> // TODO
+  if (!template) return null
+  // if (!template) return <ApplicationSelectType /> // TODO
   if (loading || !template?.startMessage) return <Loading />
 
   const StartButtonSegment: React.FC = () => {

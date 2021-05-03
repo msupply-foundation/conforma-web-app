@@ -2,11 +2,17 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Label, Header, List, Divider, Form, Button } from 'semantic-ui-react'
 import { useUserState } from '../contexts/UserState'
+import strings from '../utils/constants'
 
 const Home: React.FC = () => {
   const {
     userState: { currentUser },
+    logout,
   } = useUserState()
+  if (currentUser?.username === strings.USER_NONREGISTERED || !currentUser) {
+    logout()
+    return null
+  }
   return (
     <div>
       <Label>Hello, {currentUser?.firstName}. Welcome to the Dashboard!</Label>

@@ -34,6 +34,15 @@ const ListWrapper: React.FC = () => {
   const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
   const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>()
 
+  const {
+    userState: { currentUser },
+    logout,
+  } = useUserState()
+  if (currentUser?.username === strings.USER_NONREGISTERED || !currentUser) {
+    logout()
+    return null
+  }
+
   const { error, loading, applications, applicationCount } = useListApplications(query)
 
   useEffect(() => {
