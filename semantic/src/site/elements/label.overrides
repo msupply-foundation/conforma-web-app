@@ -30,10 +30,6 @@
   padding-left: 0;
 }
 
-.ui.label.text-italic {
-  font-style: italic;
-}
-
 .ui.label.simple-label > .text-blue {
   color: @information;
 }

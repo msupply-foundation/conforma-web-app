@@ -33,7 +33,9 @@ const ReviewSectionProgressBar: React.FC<ReviewProgress> = (reviewProgress) => {
   return (
     <div className="progress-box">
       {progressLabel && (
-        <Label size="tiny" className="simple-label text-italic" content={progressLabel} />
+        <Label size="tiny" className="simple-label">
+          <em>{progressLabel}</em>
+        </Label>
       )}
       <Progress
         className="progress"

@@ -31,7 +31,11 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
           if (reReviewableCount(reviewProgress)) return <ReReviewButton {...props} />
           else return <ContinueReviewButton {...props} />
         } else
-          return <Label className="simple-label text-italic" content={strings.STATUS_IN_PROGRESS} />
+          return (
+            <Label className="simple-label">
+              <em>{strings.STATUS_IN_PROGRESS}</em>
+            </Label>
+          )
       }
       case ReviewAction.canView: {
         if (isAssignedToCurrentUser) return <ContinueReviewButton {...props} />
