@@ -16,7 +16,7 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({
   const { replace } = useRouter()
   const { code, name } = template
   return (
-    <Container>
+    <Container id="application-area">
       <div className="top-container">
         <Label
           className="back-label clickable"
