@@ -45,7 +45,7 @@ a:hover {
   opacity: @hoverOpacity;
 }
 
-.hidden {
+.hidden-element {
   display: none !important;
 }
 

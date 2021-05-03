@@ -18,7 +18,7 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({
   const isNonRegistered = currentUser?.username === strings.USER_NONREGISTERED
   return (
     <Container id="application-area" className={isNonRegistered ? 'non-registered' : ''}>
-      <div className={'top-container' + isNonRegistered ? 'hidden' : ''}>
+      <div className={'top-container' + isNonRegistered ? 'hidden-element' : ''}>
         <Label
           className="back-label clickable"
           onClick={() => replace(`/applications?type=${code}`)}
