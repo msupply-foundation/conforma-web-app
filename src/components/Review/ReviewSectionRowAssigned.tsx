@@ -18,8 +18,7 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
         <Label className="simple-label" content={strings.LABEL_ASSIGNMENT_SELF} />
       ) : isSelfAssigned ? (
         <Label
-          className="simple-label"
-          colour="blue"
+          className="simple-label relevant-text"
           sie="large"
           icon={<Icon name="circle" size="tiny" color="blue" />}
           content={strings.LABEL_ASSIGNED_TO_YOU}
@@ -27,12 +26,12 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
       ) : isReviewLocked ? (
         <Label
           className="simple-label"
-          icon={<Icon name="ban" size="small" />}
+          icon={<Icon name="ban" size="small" color="red" />}
           content={
             <>
               {`${strings.LABEL_ASSIGNMENT_LOCKED} `}
               <Label
-                className="simple-label text-blue"
+                className="simple-label"
                 content={
                   isAssignedToCurrentUser
                     ? strings.REVIEW_FILTER_YOURSELF
@@ -53,7 +52,7 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
                 ? `${strings.LABEL_ASSIGNMENT_AVAILABLE} `
                 : `${strings.LABEL_REVIEWED_BY} `}
               <Label
-                className="simple-label text-blue"
+                className="simple-label info-text"
                 content={
                   isAssignedToCurrentUser
                     ? strings.REVIEW_FILTER_YOURSELF

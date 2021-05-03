@@ -30,6 +30,10 @@
   padding-left: 0;
 }
 
-.ui.label.simple-label > .text-blue {
+.ui.label.relevant-text {
+  color: @blue;
+}
+
+.ui.label.info-text {
   color: @information;
 }
