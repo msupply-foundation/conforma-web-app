@@ -32,9 +32,11 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
 
   return (
     <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
-      <Header textAlign="center">
-        {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
-      </Header>
+      {currentUser?.username !== strings.USER_NONREGISTERED && (
+        <Header textAlign="center">
+          {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
+        </Header>
+      )}
       <Segment
         textAlign="center"
         style={{

@@ -69,9 +69,11 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
   const { sections, responsesByCode, info } = fullStructure
   return (
     <Container style={inlineStyles.container}>
-      <Header textAlign="center" style={inlineStyles.header}>
-        {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
-      </Header>
+      {currentUser?.username !== strings.USER_NONREGISTERED && (
+        <Header textAlign="center" style={inlineStyles.header}>
+          {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
+        </Header>
+      )}
       <Segment className="sup" style={inlineStyles.top}>
         <Header
           as="h1"
