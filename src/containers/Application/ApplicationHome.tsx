@@ -52,7 +52,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     <>
       <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
       <ApplicationHomeWrapper startMessage={template.startMessage} name={template.name}>
-        <ApplicationSections fullStructure={structure} />
+        <ApplicationSections fullStructure={fullStructure} />
         {current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage && (
           <Segment basic className="padding-zero" textAlign="right">
             <Button as={Link} color="blue" onClick={handleSummaryClicked}>
