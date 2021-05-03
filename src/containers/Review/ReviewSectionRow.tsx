@@ -62,10 +62,12 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     <>
       {canRenderRow && (
         <Grid columns="equal" className="section-single-row-box-container" verticalAlign="middle">
-          <ReviewSectionRowAssigned {...props} />
-          <ReviewSectionRowLastActionDate {...props} />
-          <ReviewSectionRowProgress {...props} />
-          <ReviewSectionRowAction {...props} />
+          <Grid.Row>
+            <ReviewSectionRowAssigned {...props} />
+            <ReviewSectionRowLastActionDate {...props} />
+            <ReviewSectionRowProgress {...props} />
+            <ReviewSectionRowAction {...props} />
+          </Grid.Row>
         </Grid>
       )}
     </>

@@ -265,7 +265,6 @@ a:hover {
   height: 30px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 // Steps line - progress bar

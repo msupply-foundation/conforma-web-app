@@ -27,7 +27,6 @@
   background-color: transparent;
   color: @darkGrey;
   font-weight: @regularWeight;
-  height: 20px;
   padding-left: 0;
 }
 
