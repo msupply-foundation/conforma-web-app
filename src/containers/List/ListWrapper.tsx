@@ -27,17 +27,14 @@ const ListWrapper: React.FC = () => {
   const { query, updateQuery } = useRouter()
   const { type, userRole } = query
   const {
-    userState: { templatePermissions },
+    userState: { templatePermissions, currentUser },
+    logout,
   } = useUserState()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
   const [searchText, setSearchText] = useState<string>(query?.search)
   const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
   const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>()
 
-  const {
-    userState: { currentUser },
-    logout,
-  } = useUserState()
   if (currentUser?.username === strings.USER_NONREGISTERED || !currentUser) {
     logout()
     return null
