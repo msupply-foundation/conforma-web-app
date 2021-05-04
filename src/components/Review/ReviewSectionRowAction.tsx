@@ -223,6 +223,7 @@ const ViewReviewIcon: React.FC<ReviewSectionComponentProps> = ({
   return (
     <Icon
       name="angle right"
+      className="dark-grey"
       onClick={() => push(`${pathname}/${reviewId}?activeSections=${details.code}`)}
     />
   )
