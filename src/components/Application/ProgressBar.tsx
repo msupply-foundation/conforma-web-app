@@ -145,7 +145,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 
   return (
     <Sticky as={Container} offset={135}>
-      <Header as="h5" style={inlineStyles.top}>
+      <Header as="h4" style={inlineStyles.top}>
         {strings.TITLE_INTRODUCTION}
       </Header>
       <Accordion activeIndex={activeIndex} panels={sectionsList} />

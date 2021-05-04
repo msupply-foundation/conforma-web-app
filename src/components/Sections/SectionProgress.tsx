@@ -14,7 +14,7 @@ const ReviewStatusOrProgress: React.FC<SectionState> = ({ reviewProgress, review
       />
     )
   }
-  return <Label style={labelStyle}>{strings.LABEL_ASSIGNED_TO_OTHER}</Label>
+  return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
 }
 
 const getReviewProgressDefaults = (reviewProgress: ReviewProgress | undefined) => ({
@@ -37,7 +37,11 @@ const ReviewSectionProgressBar: React.FC<SectionProgressBarProps> = ({ reviewPro
   const progressLabel = getReviewProgressTitle(reviewProgress)
   return (
     <div className="progress-box">
-      {progressLabel && <Label className="simple-label" content={progressLabel} />}
+      {progressLabel && (
+        <Label size="tiny" className="simple-label">
+          <em>{progressLabel}</em>
+        </Label>
+      )}
       <Progress
         className="progress"
         percent={(100 * (doneConform + doneNonConform)) / totalReviewable}
@@ -61,7 +65,7 @@ const ApplicationProgressBar: React.FC<ApplicationProgress> = (applicationProgre
   const progressLabel = getApplicationProgressTitle(applicationProgress)
   return totalDone > 0 && totalSum > 0 ? (
     <div className="progress-box">
-      {progressLabel && <Label className="simple-label" content={progressLabel} />}
+      {progressLabel && <Label size="tiny" className="simple-label" content={progressLabel} />}
       <Progress
         className="progress"
         percent={(100 * totalDone) / totalSum}
@@ -72,9 +76,6 @@ const ApplicationProgressBar: React.FC<ApplicationProgress> = (applicationProgre
     </div>
   ) : null
 }
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const labelStyle = { background: 'none', color: 'Black' }
 
 export default ReviewStatusOrProgress
 export { ReviewSectionProgressBar, ApplicationProgressBar }

@@ -12,6 +12,7 @@ import {
 } from 'semantic-ui-react'
 import { FilterList } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
+import usePageTitle from '../../utils/hooks/usePageTitle'
 import useListApplications from '../../utils/hooks/useListApplications'
 import strings from '../../utils/constants'
 import { findUserRole, checkExistingUserRole } from '../../utils/helpers/list/findUserRole'
@@ -27,12 +28,19 @@ const ListWrapper: React.FC = () => {
   const { query, updateQuery } = useRouter()
   const { type, userRole } = query
   const {
-    userState: { templatePermissions },
+    userState: { templatePermissions, currentUser },
+    logout,
   } = useUserState()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
   const [searchText, setSearchText] = useState<string>(query?.search)
   const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
   const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>()
+  usePageTitle(strings.PAGE_TITLE_LIST)
+
+  if (currentUser?.username === strings.USER_NONREGISTERED || !currentUser) {
+    logout()
+    return null
+  }
 
   const { error, loading, applications, applicationCount } = useListApplications(query)
 
@@ -55,16 +63,17 @@ const ListWrapper: React.FC = () => {
   }, [loading, applications])
 
   useEffect(() => {
-    updateQuery({ search: searchText })
+    if (searchText !== undefined) updateQuery({ search: searchText })
   }, [searchText])
 
   useEffect(() => {
     const { sortColumn, sortDirection } = sortQuery
-    updateQuery({
-      sortBy: sortColumn
-        ? `${sortColumn}${sortDirection === 'ascending' ? ':asc' : ''}`
-        : undefined,
-    })
+    if (Object.keys(sortQuery).length > 0)
+      updateQuery({
+        sortBy: sortColumn
+          ? `${sortColumn}${sortDirection === 'ascending' ? ':asc' : ''}`
+          : undefined,
+      })
   }, [sortQuery])
 
   const redirectToDefault = () => {
@@ -72,10 +81,9 @@ const ListWrapper: React.FC = () => {
     const redirectUserRole = checkExistingUserRole(templatePermissions, redirectType, userRole)
       ? userRole
       : findUserRole(templatePermissions, redirectType)
-
-    if (redirectType && redirectUserRole)
-      updateQuery({ type: redirectType, userRole: redirectUserRole })
-    else {
+    if (redirectType && redirectUserRole) {
+      updateQuery({ type: redirectType, userRole: redirectUserRole }, true)
+    } else {
       // To-Do: Show 404 if no default found
     }
   }
