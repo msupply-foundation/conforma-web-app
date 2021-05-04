@@ -4,4 +4,4 @@
 
 // Overwrite border style for all Segments
 @borderRadius: 8px;
-@border: 1px solid #777777;
+@border: 1px solid @borderColourDark;
