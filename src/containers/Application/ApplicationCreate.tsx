@@ -25,7 +25,7 @@ const ApplicationCreate: React.FC = () => {
     templateCode: type,
   })
 
-  usePageTitle(strings.PAGE_TITLE_NEW)
+  usePageTitle(strings.PAGE_TITLE_CREATE)
 
   const {
     userState: { currentUser },
