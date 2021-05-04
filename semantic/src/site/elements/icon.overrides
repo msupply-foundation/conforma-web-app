@@ -4,5 +4,5 @@
 
 // Override the default color to grey
 i.icon {
-  color: @darkGrey;
+  // color: @darkGrey;
 }
