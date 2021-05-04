@@ -30,23 +30,23 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
   } = useGetDecisionOptions(structure.canSubmitReviewAs, thisReview)
 
   return (
-    <>
-      <ReviewComment
-        isEditable={thisReview?.status == ReviewStatus.Draft}
-        reviewDecisionId={Number(reviewDecision?.id)}
-      />
+    <div id="review-submit-area">
       <ReviewDecision
         decisionOptions={decisionOptions}
         setDecision={setDecision}
         isDecisionError={isDecisionError}
         isEditable={thisReview?.status == ReviewStatus.Draft}
       />
+      <ReviewComment
+        isEditable={thisReview?.status == ReviewStatus.Draft}
+        reviewDecisionId={Number(reviewDecision?.id)}
+      />
       <ReviewSubmitButton
         {...props}
         getDecision={getDecision}
         getAndSetDecisionError={getAndSetDecisionError}
       />
-    </>
+    </div>
   )
 }
 
@@ -129,7 +129,12 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
 
   return (
     <>
-      <Button onClick={onClick}>{strings.BUTTON_REVIEW_SUBMIT}</Button>
+      <Button
+        primary
+        className="button-wide"
+        onClick={onClick}
+        content={strings.BUTTON_REVIEW_SUBMIT}
+      />
       <ModalWarning showModal={showWarningModal} />
       {/* TODO add submission modal */}
     </>

@@ -97,13 +97,11 @@ const ReviewPage: React.FC<{
           />
         ))}
       </Segment>
-      <Segment basic style={inlineStyles.bot}>
-        <ReviewSubmit
-          structure={fullReviewStructure}
-          reviewAssignment={reviewAssignment}
-          scrollTo={scrollTo}
-        />
-      </Segment>
+      <ReviewSubmit
+        structure={fullReviewStructure}
+        reviewAssignment={reviewAssignment}
+        scrollTo={scrollTo}
+      />
     </>
   )
 
@@ -161,10 +159,7 @@ const inlineStyles = {
     borderRadius: 0,
     boxShadow: 'none',
     paddingTop: 25,
-  } as CSSProperties,
-  bot: {
-    marginLeft: '10%',
-    marginRight: '10%',
+    margin: 0,
   } as CSSProperties,
   button: { display: 'flex', justifyContent: 'flex-end', paddingRight: 20 } as CSSProperties,
   approve: {
