@@ -6,3 +6,10 @@
 .wide {
   min-width: 280px;
 }
+
+// Override for icon in button
+.ui.button > .icon:not(.button) {
+  opacity: 1;
+  vertical-align: 'middle';
+  transform: translateY(-2px); // Might not work for larger icons
+}

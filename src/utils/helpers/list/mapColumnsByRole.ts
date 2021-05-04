@@ -29,7 +29,7 @@ import { ColumnDetails } from '../../types'
 
 const allColumns: { [key in APPLICATION_COLUMNS]: ColumnDetails } = {
   SERIAL_NUMBER: {
-    headerName: '',
+    headerName: 'Serial',
     sortName: 'serial',
     ColumnComponent: SerialNumberCell,
   },

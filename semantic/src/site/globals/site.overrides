@@ -16,6 +16,80 @@ p strong {
   font-weight: @semiboldWeight;
 }
 
+a {
+  color: @interactiveHigh;
+}
+
+a:hover {
+  color: @interactiveHigh;
+  opacity: @hoverOpacity;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.alert {
+  color: @attention;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  opacity: @hoverOpacity;
+}
+
+/*--------------------------------
+   Login page
+---------------------------------*/
+
+#login-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+#login-box {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  max-width: 450px;
+  box-shadow: @basicBoxShadow;
+  border-radius: @borderRadius;
+  padding: 20px;
+}
+
+.flex-centered {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-header {
+  margin: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: @letterSpacingRegular !important;
+}
+
+.image-icon {
+  height: 45px;
+  margin-right: 12px;
+}
+
+.form-extra-spacing {
+  margin-bottom: 25px !important;
+}
+
+#login-button {
+  margin-top: 30px;
+}
+
 /*--------------------------------
    Main area, User area & Footer
 ---------------------------------*/
@@ -95,6 +169,9 @@ p strong {
   padding-right: 12px;
   padding-left: 12px;
   padding-bottom: @footerHeight + 25px; // To allow for footer
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #footer {
@@ -115,7 +192,7 @@ p strong {
 }
 
 #footer-content .ui.image {
-  height: 100%;
+  max-height: @footerHeight - 20px;
 }
 
 #footer-content p {
@@ -154,32 +231,78 @@ p strong {
   }
 }
 
-#application-area .ui.header .sub.header {
-  margin-top: 11px;
-  margin-bottom: 16px;
-  font-size: @fontLarge;
-  letter-spacing: @letterSpacingSmall;
+// Steps line (vertical box - layout)
+.section-single-row-box-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  min-height: 30px; // TODO: Need to be updated for mobile
+  align-items: center;
+  justify-content: space-between;
 }
 
-// Extra font and margin on Steps header on application home/create
-#application-area .steps-header {
-  font-size: @fontSmall;
-  font-weight: @regularWeight;
-  margin-top: 0;
-  margin-bottom: 5px;
+// Inner steps line (left side - icon & header)
+.centered-flex-box-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-#application-area .ui.list > .item .header {
-  color: @darkGrey;
-  font-weight: @regularWeight;
-  font-size: @fontMedium;
-}
-#application-area .ui.list > .item > i.icon {
-  color: @darkGrey;
+// Steps line - progress bar (box)
+.progress-box {
+  padding-right: 50px;
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-#application-area .application-segment {
+// Steps line - progress bar
+.progress {
+  width: 120px;
+}
+
+// Steps line - actions box
+.actions-box {
+  min-width: 100px;
+  text-align: right;
+}
+
+// Message area segment - bottom of application home/create
+.padding-zero {
   padding: 0;
+}
+
+/*--------------------------------
+      Application List
+---------------------------------*/
+
+#list-container {
+  padding: 25px 0;
+  max-width: 900px; // Maybe this could be wider if table is getting cluttered?
+}
+
+#list-top {
+  display: flex;
+  align-items: center;
+}
+
+#list-top .ui.header {
+  padding-right: 20px;
+  margin-top: 10px; // This is only necessary because of annoying Semantic defaults
+}
+
+.list-row {
+  padding-bottom: 30px;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.user-action {
+  font-size: @fontXsmall;
+  font-weight: @semiboldWeight;
 }
 
 /*--------------------------------

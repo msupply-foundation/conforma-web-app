@@ -1,18 +1,18 @@
 import {
   ApplicationHeader,
+  ApplicationSections,
   ApplicationSelectType,
   Navigation,
   ProgressBar,
-  PageElements,
-  SectionWrapper,
 } from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
 import FilterList from './FilterList'
 import Home from './Home'
-import Login from '../containers/User/Login'
 import Loading from './Loading'
 import { Footer, ModalWarning } from './Main'
+import { SectionWrapper } from './Sections'
+import { PageElements } from './PageElements'
 import TemplateList from './TemplateList'
 import TemplateNew from './TemplateNew'
 import Template from './Template'
@@ -28,6 +28,7 @@ export {
   AdminPermissions,
   AdminUsers,
   ApplicationHeader,
+  ApplicationSections,
   ApplicationSelectType,
   Approval,
   Admin,
@@ -35,17 +36,16 @@ export {
   FilterList,
   Footer,
   Home,
-  Login,
   Loading,
   ModalWarning,
   Navigation,
   Notification,
   NotificationsList,
   NoMatch,
+  PageElements,
   Product,
   ProductList,
   ProgressBar,
-  PageElements,
   SectionWrapper,
   Organisation,
   OrgMemberEdit,

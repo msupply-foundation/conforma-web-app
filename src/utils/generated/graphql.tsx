@@ -54,6 +54,8 @@ export type Query = Node & {
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
   /** Reads and enables pagination through a set of `File`. */
   files?: Maybe<FilesConnection>;
+  /** Reads and enables pagination through a set of `LookupTable`. */
+  lookupTables?: Maybe<LookupTablesConnection>;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications?: Maybe<NotificationsConnection>;
   /** Reads and enables pagination through a set of `Organisation`. */
@@ -113,6 +115,7 @@ export type Query = Node & {
   elementTypePlugin?: Maybe<ElementTypePlugin>;
   file?: Maybe<File>;
   fileByUniqueId?: Maybe<File>;
+  lookupTable?: Maybe<LookupTable>;
   notification?: Maybe<Notification>;
   organisation?: Maybe<Organisation>;
   organisationByName?: Maybe<Organisation>;
@@ -173,6 +176,8 @@ export type Query = Node & {
   elementTypePluginByNodeId?: Maybe<ElementTypePlugin>;
   /** Reads a single `File` using its globally unique `ID`. */
   fileByNodeId?: Maybe<File>;
+  /** Reads a single `LookupTable` using its globally unique `ID`. */
+  lookupTableByNodeId?: Maybe<LookupTable>;
   /** Reads a single `Notification` using its globally unique `ID`. */
   notificationByNodeId?: Maybe<Notification>;
   /** Reads a single `Organisation` using its globally unique `ID`. */
@@ -379,6 +384,19 @@ export type QueryFilesArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
   condition?: Maybe<FileCondition>;
   filter?: Maybe<FileFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTablesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+  condition?: Maybe<LookupTableCondition>;
+  filter?: Maybe<LookupTableFilter>;
 };
 
 
@@ -761,6 +779,12 @@ export type QueryFileByUniqueIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryLookupTableArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryNotificationArgs = {
   id: Scalars['Int'];
 };
@@ -1081,6 +1105,12 @@ export type QueryFileByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryLookupTableByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryNotificationByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -1231,6 +1261,8 @@ export enum ActionPluginsOrderBy {
   PathDesc = 'PATH_DESC',
   RequiredParametersAsc = 'REQUIRED_PARAMETERS_ASC',
   RequiredParametersDesc = 'REQUIRED_PARAMETERS_DESC',
+  OptionalParametersAsc = 'OPTIONAL_PARAMETERS_ASC',
+  OptionalParametersDesc = 'OPTIONAL_PARAMETERS_DESC',
   OutputPropertiesAsc = 'OUTPUT_PROPERTIES_ASC',
   OutputPropertiesDesc = 'OUTPUT_PROPERTIES_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -1249,6 +1281,8 @@ export type ActionPluginCondition = {
   path?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `requiredParameters` field. */
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `optionalParameters` field. */
+  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `outputProperties` field. */
   outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
@@ -1265,6 +1299,8 @@ export type ActionPluginFilter = {
   path?: Maybe<StringFilter>;
   /** Filter by the object’s `requiredParameters` field. */
   requiredParameters?: Maybe<StringListFilter>;
+  /** Filter by the object’s `optionalParameters` field. */
+  optionalParameters?: Maybe<StringListFilter>;
   /** Filter by the object’s `outputProperties` field. */
   outputProperties?: Maybe<StringListFilter>;
   /** Checks for all expressions in this list. */
@@ -1415,6 +1451,7 @@ export type ActionPlugin = Node & {
   description?: Maybe<Scalars['String']>;
   path?: Maybe<Scalars['String']>;
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
   outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -1447,14 +1484,16 @@ export enum ActionQueuesOrderBy {
   IdDesc = 'ID_DESC',
   TriggerEventAsc = 'TRIGGER_EVENT_ASC',
   TriggerEventDesc = 'TRIGGER_EVENT_DESC',
+  TriggerPayloadAsc = 'TRIGGER_PAYLOAD_ASC',
+  TriggerPayloadDesc = 'TRIGGER_PAYLOAD_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   SequenceAsc = 'SEQUENCE_ASC',
   SequenceDesc = 'SEQUENCE_DESC',
   ActionCodeAsc = 'ACTION_CODE_ASC',
   ActionCodeDesc = 'ACTION_CODE_DESC',
-  ApplicationDataAsc = 'APPLICATION_DATA_ASC',
-  ApplicationDataDesc = 'APPLICATION_DATA_DESC',
+  ConditionExpressionAsc = 'CONDITION_EXPRESSION_ASC',
+  ConditionExpressionDesc = 'CONDITION_EXPRESSION_DESC',
   ParameterQueriesAsc = 'PARAMETER_QUERIES_ASC',
   ParameterQueriesDesc = 'PARAMETER_QUERIES_DESC',
   ParametersEvaluatedAsc = 'PARAMETERS_EVALUATED_ASC',
@@ -1481,14 +1520,16 @@ export type ActionQueueCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `triggerEvent` field. */
   triggerEvent?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `triggerPayload` field. */
+  triggerPayload?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `sequence` field. */
   sequence?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `actionCode` field. */
   actionCode?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicationData` field. */
-  applicationData?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `conditionExpression` field. */
+  conditionExpression?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parameterQueries` field. */
   parameterQueries?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parametersEvaluated` field. */
@@ -1513,7 +1554,8 @@ export enum ActionQueueStatus {
   Queued = 'QUEUED',
   Processing = 'PROCESSING',
   Success = 'SUCCESS',
-  Fail = 'FAIL'
+  Fail = 'FAIL',
+  ConditionNotMet = 'CONDITION_NOT_MET'
 }
 
 
@@ -1523,14 +1565,16 @@ export type ActionQueueFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `triggerEvent` field. */
   triggerEvent?: Maybe<IntFilter>;
+  /** Filter by the object’s `triggerPayload` field. */
+  triggerPayload?: Maybe<JsonFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `sequence` field. */
   sequence?: Maybe<IntFilter>;
   /** Filter by the object’s `actionCode` field. */
   actionCode?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicationData` field. */
-  applicationData?: Maybe<JsonFilter>;
+  /** Filter by the object’s `conditionExpression` field. */
+  conditionExpression?: Maybe<JsonFilter>;
   /** Filter by the object’s `parameterQueries` field. */
   parameterQueries?: Maybe<JsonFilter>;
   /** Filter by the object’s `parametersEvaluated` field. */
@@ -1920,6 +1964,8 @@ export type TemplateStageFilter = {
   title?: Maybe<StringFilter>;
   /** Filter by the object’s `description` field. */
   description?: Maybe<StringFilter>;
+  /** Filter by the object’s `colour` field. */
+  colour?: Maybe<StringFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `templateStageReviewLevelsByStageId` relation. */
@@ -3824,10 +3870,11 @@ export type ActionQueue = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -3978,6 +4025,8 @@ export enum TemplateStagesOrderBy {
   TitleDesc = 'TITLE_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  ColourAsc = 'COLOUR_ASC',
+  ColourDesc = 'COLOUR_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -3994,6 +4043,8 @@ export type TemplateStageCondition = {
   title?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `description` field. */
   description?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `colour` field. */
+  colour?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
 };
@@ -4019,6 +4070,7 @@ export type TemplateStage = Node & {
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  colour?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   /** Reads a single `Template` that is related to this `TemplateStage`. */
   template?: Maybe<Template>;
@@ -6472,6 +6524,8 @@ export enum ApplicationListShapesOrderBy {
   OrgNameDesc = 'ORG_NAME_DESC',
   StageAsc = 'STAGE_ASC',
   StageDesc = 'STAGE_DESC',
+  StageColourAsc = 'STAGE_COLOUR_ASC',
+  StageColourDesc = 'STAGE_COLOUR_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
   OutcomeAsc = 'OUTCOME_ASC',
@@ -6526,6 +6580,8 @@ export type ApplicationListShapeCondition = {
   orgName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `stage` field. */
   stage?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `stageColour` field. */
+  stageColour?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<ApplicationStatus>;
   /** Checks for equality with the object’s `outcome` field. */
@@ -6581,6 +6637,8 @@ export type ApplicationListShapeFilter = {
   orgName?: Maybe<StringFilter>;
   /** Filter by the object’s `stage` field. */
   stage?: Maybe<StringFilter>;
+  /** Filter by the object’s `stageColour` field. */
+  stageColour?: Maybe<StringFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ApplicationStatusFilter>;
   /** Filter by the object’s `outcome` field. */
@@ -6669,6 +6727,7 @@ export type ApplicationListShape = {
   applicant?: Maybe<Scalars['String']>;
   orgName?: Maybe<Scalars['String']>;
   stage?: Maybe<Scalars['String']>;
+  stageColour?: Maybe<Scalars['String']>;
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
@@ -6715,6 +6774,8 @@ export enum ApplicationStageStatusAllsOrderBy {
   StageNumberDesc = 'STAGE_NUMBER_DESC',
   StageAsc = 'STAGE_ASC',
   StageDesc = 'STAGE_DESC',
+  StageColourAsc = 'STAGE_COLOUR_ASC',
+  StageColourDesc = 'STAGE_COLOUR_DESC',
   StageHistoryIdAsc = 'STAGE_HISTORY_ID_ASC',
   StageHistoryIdDesc = 'STAGE_HISTORY_ID_DESC',
   StageHistoryTimeCreatedAsc = 'STAGE_HISTORY_TIME_CREATED_ASC',
@@ -6728,7 +6789,9 @@ export enum ApplicationStageStatusAllsOrderBy {
   StatusHistoryTimeCreatedAsc = 'STATUS_HISTORY_TIME_CREATED_ASC',
   StatusHistoryTimeCreatedDesc = 'STATUS_HISTORY_TIME_CREATED_DESC',
   StatusIsCurrentAsc = 'STATUS_IS_CURRENT_ASC',
-  StatusIsCurrentDesc = 'STATUS_IS_CURRENT_DESC'
+  StatusIsCurrentDesc = 'STATUS_IS_CURRENT_DESC',
+  OutcomeAsc = 'OUTCOME_ASC',
+  OutcomeDesc = 'OUTCOME_DESC'
 }
 
 /** A condition to be used against `ApplicationStageStatusAll` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -6751,6 +6814,8 @@ export type ApplicationStageStatusAllCondition = {
   stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stage` field. */
   stage?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `stageColour` field. */
+  stageColour?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `stageHistoryId` field. */
   stageHistoryId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageHistoryTimeCreated` field. */
@@ -6765,6 +6830,8 @@ export type ApplicationStageStatusAllCondition = {
   statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `statusIsCurrent` field. */
   statusIsCurrent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `outcome` field. */
+  outcome?: Maybe<ApplicationOutcome>;
 };
 
 /** A filter to be used against `ApplicationStageStatusAll` object types. All fields are combined with a logical ‘and.’ */
@@ -6787,6 +6854,8 @@ export type ApplicationStageStatusAllFilter = {
   stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `stage` field. */
   stage?: Maybe<StringFilter>;
+  /** Filter by the object’s `stageColour` field. */
+  stageColour?: Maybe<StringFilter>;
   /** Filter by the object’s `stageHistoryId` field. */
   stageHistoryId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageHistoryTimeCreated` field. */
@@ -6801,6 +6870,8 @@ export type ApplicationStageStatusAllFilter = {
   statusHistoryTimeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `statusIsCurrent` field. */
   statusIsCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `outcome` field. */
+  outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationStageStatusAllFilter>>;
   /** Checks for any expressions in this list. */
@@ -6833,6 +6904,7 @@ export type ApplicationStageStatusAll = {
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   stage?: Maybe<Scalars['String']>;
+  stageColour?: Maybe<Scalars['String']>;
   stageHistoryId?: Maybe<Scalars['Int']>;
   stageHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
   stageIsCurrent?: Maybe<Scalars['Boolean']>;
@@ -6840,6 +6912,7 @@ export type ApplicationStageStatusAll = {
   status?: Maybe<ApplicationStatus>;
   statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
   statusIsCurrent?: Maybe<Scalars['Boolean']>;
+  outcome?: Maybe<ApplicationOutcome>;
 };
 
 /** A `ApplicationStageStatusAll` edge in the connection. */
@@ -6872,6 +6945,8 @@ export enum ApplicationStageStatusLatestsOrderBy {
   StageNumberDesc = 'STAGE_NUMBER_DESC',
   StageAsc = 'STAGE_ASC',
   StageDesc = 'STAGE_DESC',
+  StageColourAsc = 'STAGE_COLOUR_ASC',
+  StageColourDesc = 'STAGE_COLOUR_DESC',
   StageHistoryIdAsc = 'STAGE_HISTORY_ID_ASC',
   StageHistoryIdDesc = 'STAGE_HISTORY_ID_DESC',
   StageHistoryTimeCreatedAsc = 'STAGE_HISTORY_TIME_CREATED_ASC',
@@ -6885,7 +6960,9 @@ export enum ApplicationStageStatusLatestsOrderBy {
   StatusHistoryTimeCreatedAsc = 'STATUS_HISTORY_TIME_CREATED_ASC',
   StatusHistoryTimeCreatedDesc = 'STATUS_HISTORY_TIME_CREATED_DESC',
   StatusIsCurrentAsc = 'STATUS_IS_CURRENT_ASC',
-  StatusIsCurrentDesc = 'STATUS_IS_CURRENT_DESC'
+  StatusIsCurrentDesc = 'STATUS_IS_CURRENT_DESC',
+  OutcomeAsc = 'OUTCOME_ASC',
+  OutcomeDesc = 'OUTCOME_DESC'
 }
 
 /** A condition to be used against `ApplicationStageStatusLatest` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -6908,6 +6985,8 @@ export type ApplicationStageStatusLatestCondition = {
   stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stage` field. */
   stage?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `stageColour` field. */
+  stageColour?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `stageHistoryId` field. */
   stageHistoryId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageHistoryTimeCreated` field. */
@@ -6922,6 +7001,8 @@ export type ApplicationStageStatusLatestCondition = {
   statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `statusIsCurrent` field. */
   statusIsCurrent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `outcome` field. */
+  outcome?: Maybe<ApplicationOutcome>;
 };
 
 /** A filter to be used against `ApplicationStageStatusLatest` object types. All fields are combined with a logical ‘and.’ */
@@ -6944,6 +7025,8 @@ export type ApplicationStageStatusLatestFilter = {
   stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `stage` field. */
   stage?: Maybe<StringFilter>;
+  /** Filter by the object’s `stageColour` field. */
+  stageColour?: Maybe<StringFilter>;
   /** Filter by the object’s `stageHistoryId` field. */
   stageHistoryId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageHistoryTimeCreated` field. */
@@ -6958,6 +7041,8 @@ export type ApplicationStageStatusLatestFilter = {
   statusHistoryTimeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `statusIsCurrent` field. */
   statusIsCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `outcome` field. */
+  outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationStageStatusLatestFilter>>;
   /** Checks for any expressions in this list. */
@@ -6990,6 +7075,7 @@ export type ApplicationStageStatusLatest = {
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   stage?: Maybe<Scalars['String']>;
+  stageColour?: Maybe<Scalars['String']>;
   stageHistoryId?: Maybe<Scalars['Int']>;
   stageHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
   stageIsCurrent?: Maybe<Scalars['Boolean']>;
@@ -6997,6 +7083,7 @@ export type ApplicationStageStatusLatest = {
   status?: Maybe<ApplicationStatus>;
   statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
   statusIsCurrent?: Maybe<Scalars['Boolean']>;
+  outcome?: Maybe<ApplicationOutcome>;
 };
 
 /** A `ApplicationStageStatusLatest` edge in the connection. */
@@ -7111,6 +7198,83 @@ export type ElementTypePluginsEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `ElementTypePlugin` at the end of the edge. */
   node?: Maybe<ElementTypePlugin>;
+};
+
+/** Methods to use when ordering `LookupTable`. */
+export enum LookupTablesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  LabelAsc = 'LABEL_ASC',
+  LabelDesc = 'LABEL_DESC',
+  FieldMapAsc = 'FIELD_MAP_ASC',
+  FieldMapDesc = 'FIELD_MAP_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `LookupTable` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type LookupTableCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `label` field. */
+  label?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `fieldMap` field. */
+  fieldMap?: Maybe<Scalars['JSON']>;
+};
+
+/** A filter to be used against `LookupTable` object types. All fields are combined with a logical ‘and.’ */
+export type LookupTableFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `label` field. */
+  label?: Maybe<StringFilter>;
+  /** Filter by the object’s `fieldMap` field. */
+  fieldMap?: Maybe<JsonFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LookupTableFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LookupTableFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LookupTableFilter>;
+};
+
+/** A connection to a list of `LookupTable` values. */
+export type LookupTablesConnection = {
+  __typename?: 'LookupTablesConnection';
+  /** A list of `LookupTable` objects. */
+  nodes: Array<Maybe<LookupTable>>;
+  /** A list of edges which contains the `LookupTable` and cursor to aid in pagination. */
+  edges: Array<LookupTablesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LookupTable` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type LookupTable = Node & {
+  __typename?: 'LookupTable';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  fieldMap?: Maybe<Scalars['JSON']>;
+};
+
+/** A `LookupTable` edge in the connection. */
+export type LookupTablesEdge = {
+  __typename?: 'LookupTablesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `LookupTable` at the end of the edge. */
+  node?: Maybe<LookupTable>;
 };
 
 /** Methods to use when ordering `Organisation`. */
@@ -7825,6 +7989,8 @@ export type Mutation = {
   createElementTypePlugin?: Maybe<CreateElementTypePluginPayload>;
   /** Creates a single `File`. */
   createFile?: Maybe<CreateFilePayload>;
+  /** Creates a single `LookupTable`. */
+  createLookupTable?: Maybe<CreateLookupTablePayload>;
   /** Creates a single `Notification`. */
   createNotification?: Maybe<CreateNotificationPayload>;
   /** Creates a single `Organisation`. */
@@ -7909,6 +8075,10 @@ export type Mutation = {
   updateFile?: Maybe<UpdateFilePayload>;
   /** Updates a single `File` using a unique key and a patch. */
   updateFileByUniqueId?: Maybe<UpdateFilePayload>;
+  /** Updates a single `LookupTable` using its globally unique id and a patch. */
+  updateLookupTableByNodeId?: Maybe<UpdateLookupTablePayload>;
+  /** Updates a single `LookupTable` using a unique key and a patch. */
+  updateLookupTable?: Maybe<UpdateLookupTablePayload>;
   /** Updates a single `Notification` using its globally unique id and a patch. */
   updateNotificationByNodeId?: Maybe<UpdateNotificationPayload>;
   /** Updates a single `Notification` using a unique key and a patch. */
@@ -8049,6 +8219,10 @@ export type Mutation = {
   deleteFile?: Maybe<DeleteFilePayload>;
   /** Deletes a single `File` using a unique key. */
   deleteFileByUniqueId?: Maybe<DeleteFilePayload>;
+  /** Deletes a single `LookupTable` using its globally unique id. */
+  deleteLookupTableByNodeId?: Maybe<DeleteLookupTablePayload>;
+  /** Deletes a single `LookupTable` using a unique key. */
+  deleteLookupTable?: Maybe<DeleteLookupTablePayload>;
   /** Deletes a single `Notification` using its globally unique id. */
   deleteNotificationByNodeId?: Maybe<DeleteNotificationPayload>;
   /** Deletes a single `Notification` using a unique key. */
@@ -8209,6 +8383,12 @@ export type MutationCreateElementTypePluginArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateFileArgs = {
   input: CreateFileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLookupTableArgs = {
+  input: CreateLookupTableInput;
 };
 
 
@@ -8461,6 +8641,18 @@ export type MutationUpdateFileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateFileByUniqueIdArgs = {
   input: UpdateFileByUniqueIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableByNodeIdArgs = {
+  input: UpdateLookupTableByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableArgs = {
+  input: UpdateLookupTableInput;
 };
 
 
@@ -8885,6 +9077,18 @@ export type MutationDeleteFileByUniqueIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableByNodeIdArgs = {
+  input: DeleteLookupTableByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableArgs = {
+  input: DeleteLookupTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteNotificationByNodeIdArgs = {
   input: DeleteNotificationByNodeIdInput;
 };
@@ -9198,6 +9402,7 @@ export type ActionPluginInput = {
   description?: Maybe<Scalars['String']>;
   path?: Maybe<Scalars['String']>;
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
   outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -9232,10 +9437,11 @@ export type CreateActionQueueInput = {
 export type ActionQueueInput = {
   id?: Maybe<Scalars['Int']>;
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -9359,10 +9565,11 @@ export type ActionQueueOnActionQueueForActionQueueTriggerEventFkeyUsingActionQue
 /** An object where the defined keys will be set on the `actionQueue` being updated. */
 export type UpdateActionQueueOnActionQueueForActionQueueTriggerEventFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -9495,6 +9702,7 @@ export type UpdateTemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyPatc
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  colour?: Maybe<Scalars['String']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -10684,9 +10892,10 @@ export type ActionQueueOnActionQueueForActionQueueTemplateIdFkeyUsingActionQueue
 export type UpdateActionQueueOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -10711,10 +10920,11 @@ export type TemplateOnActionQueueForActionQueueTemplateIdFkeyNodeIdUpdate = {
 export type ActionQueuePatch = {
   id?: Maybe<Scalars['Int']>;
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -10731,9 +10941,10 @@ export type ActionQueuePatch = {
 export type ActionQueueTemplateIdFkeyActionQueueCreateInput = {
   id?: Maybe<Scalars['Int']>;
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -12141,6 +12352,7 @@ export type UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyP
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  colour?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
@@ -12238,6 +12450,7 @@ export type UpdateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewL
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  colour?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
@@ -12314,6 +12527,7 @@ export type UpdateTemplateStageOnApplicationStageHistoryForApplicationStageHisto
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  colour?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
@@ -16361,6 +16575,7 @@ export type TemplateStagePatch = {
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  colour?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
@@ -16374,6 +16589,7 @@ export type ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput = {
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  colour?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
@@ -16571,6 +16787,7 @@ export type TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput = {
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  colour?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
@@ -16610,6 +16827,7 @@ export type ReviewAssignmentStageIdFkeyTemplateStageCreateInput = {
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  colour?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
@@ -17991,6 +18209,7 @@ export type TemplateStageTemplateIdFkeyTemplateStageCreateInput = {
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  colour?: Maybe<Scalars['String']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -18034,10 +18253,11 @@ export type TriggerQueueOnActionQueueForActionQueueTriggerEventFkeyNodeIdUpdate 
 /** The `actionQueue` to be created by this mutation. */
 export type ActionQueueTriggerEventFkeyActionQueueCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -18182,6 +18402,7 @@ export type ApplicationListShapeInput = {
   applicant?: Maybe<Scalars['String']>;
   orgName?: Maybe<Scalars['String']>;
   stage?: Maybe<Scalars['String']>;
+  stageColour?: Maybe<Scalars['String']>;
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
@@ -18475,6 +18696,41 @@ export type CreateFilePayload = {
 /** The output of our create `File` mutation. */
 export type CreateFilePayloadFileEdgeArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
+};
+
+/** All input for the create `LookupTable` mutation. */
+export type CreateLookupTableInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTable` to be created by this mutation. */
+  lookupTable: LookupTableInput;
+};
+
+/** An input for mutations affecting `LookupTable` */
+export type LookupTableInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  fieldMap?: Maybe<Scalars['JSON']>;
+};
+
+/** The output of our create `LookupTable` mutation. */
+export type CreateLookupTablePayload = {
+  __typename?: 'CreateLookupTablePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTable` that was created by this mutation. */
+  lookupTable?: Maybe<LookupTable>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTable`. May be used by Relay 1. */
+  lookupTableEdge?: Maybe<LookupTablesEdge>;
+};
+
+
+/** The output of our create `LookupTable` mutation. */
+export type CreateLookupTablePayloadLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTablesOrderBy>>;
 };
 
 /** All input for the create `Notification` mutation. */
@@ -19268,6 +19524,7 @@ export type TemplateStageInput = {
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  colour?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
@@ -19480,6 +19737,7 @@ export type ActionPluginPatch = {
   description?: Maybe<Scalars['String']>;
   path?: Maybe<Scalars['String']>;
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
   outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -19873,6 +20131,52 @@ export type UpdateFileByUniqueIdInput = {
   /** An object where the defined keys will be set on the `File` being updated. */
   patch: FilePatch;
   uniqueId: Scalars['String'];
+};
+
+/** All input for the `updateLookupTableByNodeId` mutation. */
+export type UpdateLookupTableByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTable` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LookupTable` being updated. */
+  patch: LookupTablePatch;
+};
+
+/** Represents an update to a `LookupTable`. Fields that are set will be updated. */
+export type LookupTablePatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  fieldMap?: Maybe<Scalars['JSON']>;
+};
+
+/** The output of our update `LookupTable` mutation. */
+export type UpdateLookupTablePayload = {
+  __typename?: 'UpdateLookupTablePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTable` that was updated by this mutation. */
+  lookupTable?: Maybe<LookupTable>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTable`. May be used by Relay 1. */
+  lookupTableEdge?: Maybe<LookupTablesEdge>;
+};
+
+
+/** The output of our update `LookupTable` mutation. */
+export type UpdateLookupTablePayloadLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+};
+
+/** All input for the `updateLookupTable` mutation. */
+export type UpdateLookupTableInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LookupTable` being updated. */
+  patch: LookupTablePatch;
+  id: Scalars['Int'];
 };
 
 /** All input for the `updateNotificationByNodeId` mutation. */
@@ -21203,6 +21507,41 @@ export type DeleteFileByUniqueIdInput = {
   uniqueId: Scalars['String'];
 };
 
+/** All input for the `deleteLookupTableByNodeId` mutation. */
+export type DeleteLookupTableByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTable` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `LookupTable` mutation. */
+export type DeleteLookupTablePayload = {
+  __typename?: 'DeleteLookupTablePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTable` that was deleted by this mutation. */
+  lookupTable?: Maybe<LookupTable>;
+  deletedLookupTableNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTable`. May be used by Relay 1. */
+  lookupTableEdge?: Maybe<LookupTablesEdge>;
+};
+
+
+/** The output of our delete `LookupTable` mutation. */
+export type DeleteLookupTablePayloadLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+};
+
+/** All input for the `deleteLookupTable` mutation. */
+export type DeleteLookupTableInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
 /** All input for the `deleteNotificationByNodeId` mutation. */
 export type DeleteNotificationByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -22141,7 +22480,7 @@ export type SectionFragment = (
 
 export type StageFragment = (
   { __typename?: 'ApplicationStageStatusLatest' }
-  & Pick<ApplicationStageStatusLatest, 'stage' | 'stageId' | 'status' | 'stageNumber' | 'statusHistoryTimeCreated'>
+  & Pick<ApplicationStageStatusLatest, 'stage' | 'stageId' | 'stageColour' | 'status' | 'stageNumber' | 'statusHistoryTimeCreated'>
 );
 
 export type TemplateFragment = (
@@ -22151,7 +22490,7 @@ export type TemplateFragment = (
 
 export type TemplateStageFragment = (
   { __typename?: 'TemplateStage' }
-  & Pick<TemplateStage, 'number' | 'title' | 'id' | 'description'>
+  & Pick<TemplateStage, 'number' | 'title' | 'id' | 'description' | 'colour'>
 );
 
 export type UserFragment = (
@@ -22402,6 +22741,20 @@ export type UpdateReviewResponseMutation = (
   )> }
 );
 
+export type GetAllLookupTableStructuresQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllLookupTableStructuresQuery = (
+  { __typename?: 'Query' }
+  & { lookupTables?: Maybe<(
+    { __typename?: 'LookupTablesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'LookupTable' }
+      & Pick<LookupTable, 'id' | 'name' | 'label' | 'fieldMap'>
+    )>> }
+  )> }
+);
+
 export type GetAllResponsesQueryVariables = Exact<{
   serial: Scalars['String'];
   responseStatuses?: Maybe<Array<ApplicationResponseStatus>>;
@@ -22488,7 +22841,7 @@ export type GetApplicationListQueryVariables = Exact<{
   sortFields?: Maybe<Array<ApplicationListShapesOrderBy>>;
   paginationOffset: Scalars['Int'];
   numberToFetch: Scalars['Int'];
-  userId: Scalars['Int'];
+  userId?: Scalars['Int'];
 }>;
 
 
@@ -22499,11 +22852,24 @@ export type GetApplicationListQuery = (
     & Pick<ApplicationListShapesConnection, 'totalCount'>
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationListShape' }
-      & Pick<ApplicationListShape, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'applicant' | 'applicantFirstName' | 'applicantLastName' | 'applicantUsername' | 'orgName' | 'stage' | 'status' | 'outcome' | 'lastActiveDate' | 'reviewAssignedCount' | 'reviewAssignedNotStartedCount' | 'reviewAvailableForSelfAssignmentCount' | 'reviewDraftCount' | 'reviewChangeRequestCount' | 'reviewSubmittedCount' | 'reviewPendingCount' | 'assignReviewerAssignedCount' | 'assignReviewersCount' | 'assignCount' | 'isFullyAssignedLevel1'>
+      & Pick<ApplicationListShape, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'applicant' | 'applicantFirstName' | 'applicantLastName' | 'applicantUsername' | 'orgName' | 'stage' | 'stageColour' | 'status' | 'outcome' | 'lastActiveDate' | 'reviewAssignedCount' | 'reviewAssignedNotStartedCount' | 'reviewAvailableForSelfAssignmentCount' | 'reviewDraftCount' | 'reviewChangeRequestCount' | 'reviewSubmittedCount' | 'reviewPendingCount' | 'assignReviewerAssignedCount' | 'assignReviewersCount' | 'assignCount' | 'isFullyAssignedLevel1'>
     )>>, pageInfo: (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
     ) }
+  )> }
+);
+
+export type GetLookupTableStructureByIdQueryVariables = Exact<{
+  lookupTableID: Scalars['Int'];
+}>;
+
+
+export type GetLookupTableStructureByIdQuery = (
+  { __typename?: 'Query' }
+  & { lookupTable?: Maybe<(
+    { __typename?: 'LookupTable' }
+    & Pick<LookupTable, 'id' | 'label' | 'name' | 'fieldMap'>
   )> }
 );
 
@@ -22770,6 +23136,7 @@ export const StageFragmentDoc = gql`
     fragment Stage on ApplicationStageStatusLatest {
   stage
   stageId
+  stageColour
   status
   stageNumber
   statusHistoryTimeCreated
@@ -22791,6 +23158,7 @@ export const TemplateStageFragmentDoc = gql`
   title
   id
   description
+  colour
 }
     `;
 export const CreateApplicationDocument = gql`
@@ -23216,6 +23584,43 @@ export function useUpdateReviewResponseMutation(baseOptions?: Apollo.MutationHoo
 export type UpdateReviewResponseMutationHookResult = ReturnType<typeof useUpdateReviewResponseMutation>;
 export type UpdateReviewResponseMutationResult = Apollo.MutationResult<UpdateReviewResponseMutation>;
 export type UpdateReviewResponseMutationOptions = Apollo.BaseMutationOptions<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>;
+export const GetAllLookupTableStructuresDocument = gql`
+    query getAllLookupTableStructures {
+  lookupTables {
+    nodes {
+      id
+      name
+      label
+      fieldMap
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllLookupTableStructuresQuery__
+ *
+ * To run a query within a React component, call `useGetAllLookupTableStructuresQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllLookupTableStructuresQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllLookupTableStructuresQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllLookupTableStructuresQuery(baseOptions?: Apollo.QueryHookOptions<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>) {
+        return Apollo.useQuery<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>(GetAllLookupTableStructuresDocument, baseOptions);
+      }
+export function useGetAllLookupTableStructuresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>(GetAllLookupTableStructuresDocument, baseOptions);
+        }
+export type GetAllLookupTableStructuresQueryHookResult = ReturnType<typeof useGetAllLookupTableStructuresQuery>;
+export type GetAllLookupTableStructuresLazyQueryHookResult = ReturnType<typeof useGetAllLookupTableStructuresLazyQuery>;
+export type GetAllLookupTableStructuresQueryResult = Apollo.QueryResult<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>;
 export const GetAllResponsesDocument = gql`
     query getAllResponses($serial: String!, $responseStatuses: [ApplicationResponseStatus!]) {
   applicationBySerial(serial: $serial) {
@@ -23335,7 +23740,7 @@ export type GetApplicationQueryHookResult = ReturnType<typeof useGetApplicationQ
 export type GetApplicationLazyQueryHookResult = ReturnType<typeof useGetApplicationLazyQuery>;
 export type GetApplicationQueryResult = Apollo.QueryResult<GetApplicationQuery, GetApplicationQueryVariables>;
 export const GetApplicationListDocument = gql`
-    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $userId: Int!) {
+    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $userId: Int! = 0) {
   applicationList(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch, userid: $userId) {
     nodes {
       id
@@ -23349,6 +23754,7 @@ export const GetApplicationListDocument = gql`
       applicantUsername
       orgName
       stage
+      stageColour
       status
       outcome
       lastActiveDate
@@ -23402,6 +23808,42 @@ export function useGetApplicationListLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetApplicationListQueryHookResult = ReturnType<typeof useGetApplicationListQuery>;
 export type GetApplicationListLazyQueryHookResult = ReturnType<typeof useGetApplicationListLazyQuery>;
 export type GetApplicationListQueryResult = Apollo.QueryResult<GetApplicationListQuery, GetApplicationListQueryVariables>;
+export const GetLookupTableStructureByIdDocument = gql`
+    query getLookupTableStructureById($lookupTableID: Int!) {
+  lookupTable(id: $lookupTableID) {
+    id
+    label
+    name
+    fieldMap
+  }
+}
+    `;
+
+/**
+ * __useGetLookupTableStructureByIdQuery__
+ *
+ * To run a query within a React component, call `useGetLookupTableStructureByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLookupTableStructureByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLookupTableStructureByIdQuery({
+ *   variables: {
+ *      lookupTableID: // value for 'lookupTableID'
+ *   },
+ * });
+ */
+export function useGetLookupTableStructureByIdQuery(baseOptions?: Apollo.QueryHookOptions<GetLookupTableStructureByIdQuery, GetLookupTableStructureByIdQueryVariables>) {
+        return Apollo.useQuery<GetLookupTableStructureByIdQuery, GetLookupTableStructureByIdQueryVariables>(GetLookupTableStructureByIdDocument, baseOptions);
+      }
+export function useGetLookupTableStructureByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLookupTableStructureByIdQuery, GetLookupTableStructureByIdQueryVariables>) {
+          return Apollo.useLazyQuery<GetLookupTableStructureByIdQuery, GetLookupTableStructureByIdQueryVariables>(GetLookupTableStructureByIdDocument, baseOptions);
+        }
+export type GetLookupTableStructureByIdQueryHookResult = ReturnType<typeof useGetLookupTableStructureByIdQuery>;
+export type GetLookupTableStructureByIdLazyQueryHookResult = ReturnType<typeof useGetLookupTableStructureByIdLazyQuery>;
+export type GetLookupTableStructureByIdQueryResult = Apollo.QueryResult<GetLookupTableStructureByIdQuery, GetLookupTableStructureByIdQueryVariables>;
 export const GetReviewDecisionCommentDocument = gql`
     query getReviewDecisionComment($reviewDecisionId: Int!) {
   reviewDecision(id: $reviewDecisionId) {

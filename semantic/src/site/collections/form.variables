@@ -7,3 +7,16 @@
 @labelColor: @black;
 
 @inputColor: @darkGrey;
+
+@focusedFormBorderColor: @information;
+
+/* Errored Input */
+@formErrorColor: @black;
+@formErrorBorder: @attention;
+@formErrorBackground: @surfacesWhite;
+
+/* Focused Error */
+@inputErrorFocusBackground: @surfacesWhite;
+@inputErrorFocusColor: @black;
+@inputErrorFocusBorder: lighten(@attention, 35);
+@inputErrorFocusBoxShadow: none;
