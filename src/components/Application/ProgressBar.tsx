@@ -117,7 +117,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     )
   }
 
-  const sectionsList = Object.values(sections).map(({ details, progress, pages }, index) => {
+  // console.log('Sections', structure.sections)
+  const sectionsList = [...Object.values(sections)].map(({ details, progress, pages }, index) => {
     const isStrictSection = !!strictSectionPage && strictSectionPage.sectionCode === details.code
 
     const stepNumber = index + 1
@@ -131,7 +132,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
               {progress && getIndicator(progress, isStrictSection, stepNumber)}
             </Grid.Column>
             <Grid.Column width={12} textAlign="left" verticalAlign="middle">
-              <Header as="h4">{title}</Header>
+              <p>{title}</p>
             </Grid.Column>
           </Grid>
         ),
@@ -144,10 +145,15 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   })
 
   return (
+<<<<<<< Updated upstream
     <Sticky as={Container} offset={135}>
       <Header as="h5" style={inlineStyles.top}>
         {strings.TITLE_INTRODUCTION}
       </Header>
+=======
+    <Sticky as={Container} id="appliction-progress" offset={135}>
+      <p style={inlineStyles.top}>{strings.TITLE_INTRODUCTION}</p>
+>>>>>>> Stashed changes
       <Accordion activeIndex={activeIndex} panels={sectionsList} />
     </Sticky>
   )
