@@ -18,7 +18,7 @@ interface ProgressBarProps {
   strictSectionPage: SectionAndPage | null
 }
 
-enum SectionOrPage {
+enum ProgressType {
   section = 'SECTION',
   page = 'PAGE',
 }
@@ -84,22 +84,28 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     const checkPageIsStrict = (pageNumber: string) =>
       isStrictSection && strictSectionPage?.pageNumber === Number(pageNumber)
 
-    return <p>*</p>
-    // return (
-    //   <List
-    //     link
-    //     items={Object.entries(pages).map(([number, { name: pageName, progress }]) => ({
-    //       key: `ProgressSection_${sectionCode}_${number}`,
-    //       active: isActivePage(sectionCode, Number(number)),
-    //       as: 'a',
-    //       icon: progress
-    //         ? getIndicator(progress, checkPageIsStrict(number), Number(number), SectionOrPage.page)
-    //         : null,
-    //       content: pageName,
-    //       onClick: () => handleChangeToPage(sectionCode, Number(number)),
-    //     }))}
-    //   />
-    // )
+    return (
+      <List className="page-list">
+        {Object.entries(pages).map(([number, { name: pageName, progress }]) => (
+          <List.Item
+            key={`ProgressSection_${sectionCode}_${number}`}
+            active={isActivePage(sectionCode, Number(number))}
+            as="a"
+            onClick={() => handleChangeToPage(sectionCode, Number(number))}
+          >
+            {progress
+              ? getIndicator(
+                  progress,
+                  checkPageIsStrict(number),
+                  isActivePage(sectionCode, Number(number)),
+                  ProgressType.page
+                )
+              : null}
+            {pageName}
+          </List.Item>
+        ))}
+      </List>
+    )
   }
 
   // We want to be able to show FIVE states:
@@ -109,36 +115,50 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   // not started -> nothing has been filled in section/page
   // incomplete -> started but not invalid (probably display same as not started)
   // current -> "dot" in circle to show current section/page
+  const progressIconMap = {
+    error: [
+      <Icon name={'exclamation circle'} color={'pink'} className="progress-indicator" />,
+      <Icon name={'exclamation circle'} color={'pink'} className="progress-page-indicator" />,
+    ],
+    completed: [
+      <Icon name="check circle" color="green" className="progress-indicator" />,
+      <Icon name="circle" color="green" className="progress-page-indicator" />,
+    ],
+    notStarted: [
+      <Icon name="circle outline" className="progress-indicator" />,
+      <div className="progress-page-indicator" />,
+    ],
+    incomplete: [
+      <Icon name="circle outline" color="green" className="progress-indicator" />,
+      <div className="progress-page-indicator" />,
+    ],
+    current: [
+      <Icon name="circle" color="blue" className="progress-indicator" />,
+      <Icon name="circle" color="blue" className="progress-page-indicator" />,
+    ],
+  }
+
   const getIndicator = (
     progress: ApplicationProgress,
     isStrict: boolean,
-    step?: number,
-    type = SectionOrPage.section
+    isActive: boolean,
+    type = ProgressType.section
   ) => {
-    console.log('progress', progress)
-    console.log('step', step)
     const { completed, valid } = progress
     const isStrictlylInvalid = !valid || (isStrict && !completed)
+    const isStarted = progress.doneNonRequired + progress.doneRequired > 0
+    const typeIndex = type === ProgressType.section ? 0 : 1
 
-    if (isStrictlylInvalid) return <Icon name={'exclamation circle'} color={'pink'} />
-    if (completed && valid) {
-      if (type === SectionOrPage.section) return <Icon name={'check circle'} color={'green'} />
-      else return <Icon name={'dot circle outline'} color={'grey'} />
-    }
-    // if
-
-    // return <Icon name="circle outline" />
-    return step ? (
-      <Label circular as="a" basic color="blue" key={`progress_${step}`}>
-        {step}
-      </Label>
-    ) : (
-      <Icon name="circle outline" />
-    )
+    if (isStrictlylInvalid) return progressIconMap.error[typeIndex]
+    if (completed && valid) return progressIconMap.completed[typeIndex]
+    if (isActive) return progressIconMap.current[typeIndex]
+    if (isStarted) return progressIconMap.incomplete[typeIndex]
+    return progressIconMap.notStarted[typeIndex]
   }
 
   const sectionsList = [...Object.values(sections)].map(({ details, progress, pages }, index) => {
     const isStrictSection = !!strictSectionPage && strictSectionPage.sectionCode === details.code
+    console.log('Sections', sections)
 
     const stepNumber = index + 1
     const { code, title } = details
@@ -148,7 +168,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         children: (
           <div className="progress-row">
             <div className="progress-indicator">
-              {progress && getIndicator(progress, isStrictSection, stepNumber)}
+              {progress && getIndicator(progress, isStrictSection, index === activeIndex)}
             </div>
             <div className="progress-name">
               <p>{title}</p>
@@ -166,7 +186,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   return (
     <Sticky as={Container} id="application-progress" offset={135}>
       <div className="progress-row">
-        <div className="progress-icon">{/* <Icon name="circle outline" /> */}</div>
+        <div className="progress-indicator">{/* <Icon name="circle outline" /> */}</div>
         <div className="progress-name">
           <p>{strings.TITLE_INTRODUCTION}</p>
         </div>

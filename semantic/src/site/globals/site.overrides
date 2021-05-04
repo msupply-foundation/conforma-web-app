@@ -402,6 +402,14 @@ a:hover {
 .progress-name {
 }
 
+.page-list {
+  font-size: 0.85em !important;
+  padding-left: 30px !important;
+}
+
+.page-list {
+}
+
 /*--------------------------------
       Application Navigation area
 ---------------------------------*/
