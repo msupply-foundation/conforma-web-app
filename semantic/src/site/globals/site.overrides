@@ -45,7 +45,7 @@ a:hover {
   opacity: @hoverOpacity;
 }
 
-.hidden {
+.hidden-element {
   display: none;
 }
 
@@ -425,12 +425,6 @@ a:hover {
 /*--------------------------------
       General used classes
 ---------------------------------*/
-
-// In use for ApplicationHeader around all Application pages
-
-.application-form-width {
-  width: 900px !important;
-}
 
 // Not currently used, but should be appplied to the Link in the menu
 // bar that reflects the current page
