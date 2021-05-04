@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Container, Grid, Header, Segment } from 'semantic-ui-react'
 import {
   FullStructure,
@@ -17,6 +17,7 @@ import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { checkPageIsAccessible } from '../../utils/helpers/structure'
 import { useRouter } from '../../utils/hooks/useRouter'
+import usePageTitle from '../../utils/hooks/usePageTitle'
 import strings from '../../utils/constants'
 
 const ApplicationPage: React.FC<ApplicationProps> = ({
@@ -32,6 +33,8 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
     push,
     replace,
   } = useRouter()
+
+  usePageTitle(strings.PAGE_TITLE_APPLICATION.replace('%1', serialNumber))
 
   const pageNumber = Number(page)
 
@@ -61,7 +64,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   return (
     <>
       <Container id="application-form">
-        <Grid stackable className="dev-border">
+        <Grid stackable>
           <Grid.Column width={4} id="progress-column" className="dev-border">
             <ProgressBar
               structure={fullStructure}
@@ -69,7 +72,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
               strictSectionPage={strictSectionPage as SectionAndPage}
             />
           </Grid.Column>
-          <Grid.Column width={9} stretched id="form-column" className="dev-border">
+          <Grid.Column width={9} stretched id="form-column">
             <Segment basic>
               <Header as="h4" content={fullStructure.sections[sectionCode].details.title} />
               <PageElements

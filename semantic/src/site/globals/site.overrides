@@ -45,8 +45,8 @@ a:hover {
   opacity: @hoverOpacity;
 }
 
-.hidden {
-  display: none;
+.hidden-element {
+  display: none !important;
 }
 
 .invisible {
@@ -218,6 +218,11 @@ a:hover {
 /*-----------------------------------
    Application/Review Wrappers
 ------------------------------------*/
+
+// Moves back up if UserArea is not displayed
+#application-area.non-registered {
+  margin-top: -@headerHeight;
+}
 
 #content-area .top-container {
   flex-wrap: wrap;
@@ -406,6 +411,7 @@ a:hover {
   width: @applicationFormWidth;
   padding-left: 20px;
   padding-right: 20px;
+  flex-wrap: wrap;
 }
 
 #prev-next-links {
@@ -426,16 +432,16 @@ a:hover {
       General used classes
 ---------------------------------*/
 
-// In use for ApplicationHeader around all Application pages
-
-.application-form-width {
-  width: 900px !important;
-}
-
 // Not currently used, but should be appplied to the Link in the menu
 // bar that reflects the current page
 .selected-link {
   font-weight: bold;
+}
+
+// Colours
+
+.dark-grey {
+  color: @darkGrey !important;
 }
 
 /*******************************
