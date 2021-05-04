@@ -5,7 +5,7 @@ import { ApplicationViewProps } from '../../types'
 const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters, Markdown }) => {
   return (
     <Message>
-      <Message.Header>{parameters.title}</Message.Header>
+      <Markdown text={parameters.title} />
       <Markdown text={parameters.text} />
     </Message>
   )

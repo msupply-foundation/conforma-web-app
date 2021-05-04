@@ -46,7 +46,7 @@ a:hover {
 }
 
 .hidden-element {
-  display: none;
+  display: none !important;
 }
 
 .invisible {
@@ -218,6 +218,11 @@ a:hover {
 /*-----------------------------------
    Application/Review Wrappers
 ------------------------------------*/
+
+// Moves back up if UserArea is not displayed
+#application-area.non-registered {
+  margin-top: -@headerHeight;
+}
 
 #content-area .top-container {
   flex-wrap: wrap;
@@ -431,6 +436,12 @@ a:hover {
 // bar that reflects the current page
 .selected-link {
   font-weight: bold;
+}
+
+// Colours
+
+.dark-grey {
+  color: @darkGrey !important;
 }
 
 /*******************************
