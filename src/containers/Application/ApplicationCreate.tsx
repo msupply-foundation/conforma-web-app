@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { Button, Message, Segment } from 'semantic-ui-react'
-import { ApplicationHeader, ApplicationSelectType, Loading } from '../../components'
+import { ApplicationContainer, ApplicationSelectType, Loading } from '../../components'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { useUserState } from '../../contexts/UserState'
 import useCreateApplication from '../../utils/hooks/useCreateApplication'
 import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
 import { useRouter } from '../../utils/hooks/useRouter'
+import usePageTitle from '../../utils/hooks/usePageTitle'
 import strings from '../../utils/constants'
 import { SectionsList } from '../../components/Sections'
 import ApplicationHomeWrapper from '../../components/Application/ApplicationHomeWrapper'
@@ -23,6 +24,8 @@ const ApplicationCreate: React.FC = () => {
   const { error, loading, template } = useLoadTemplate({
     templateCode: type,
   })
+
+  usePageTitle(strings.PAGE_TITLE_CREATE)
 
   const {
     userState: { currentUser },
@@ -84,17 +87,26 @@ const ApplicationCreate: React.FC = () => {
   if (!template) return <ApplicationSelectType /> // TODO
   if (loading || !template?.startMessage) return <Loading />
 
-  return template?.sections ? (
-    <ApplicationHeader template={template} currentUser={currentUser}>
-      <ApplicationHomeWrapper startMessage={template.startMessage}>
-        <SectionsList sections={template.sections} />
-      </ApplicationHomeWrapper>
+  const StartButtonSegment: React.FC = () => {
+    return (
       <Segment basic className="padding-zero">
-        <Button color="blue" className="wide" loading={processing} onClick={handleCreate}>
+        <Button color="blue" className="button-wide" loading={processing} onClick={handleCreate}>
           {strings.BUTTON_APPLICATION_START}
         </Button>
       </Segment>
-    </ApplicationHeader>
+    )
+  }
+
+  return template?.sections ? (
+    <ApplicationContainer template={template} currentUser={currentUser}>
+      <ApplicationHomeWrapper
+        startMessage={template.startMessage}
+        name={template.name}
+        ButtonSegment={StartButtonSegment}
+      >
+        <SectionsList sections={template.sections} />
+      </ApplicationHomeWrapper>
+    </ApplicationContainer>
   ) : null
 }
 
