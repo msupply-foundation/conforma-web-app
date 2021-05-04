@@ -4,18 +4,42 @@ import {
   ListMainMenu as LookUpTableListMainMenu,
   ListTable as LookUpTableListTable,
 } from '../components/list'
+import { ImportCsvModal } from '../components'
+import { AllLookupTableStructuresType } from '../types'
+import { useGetAllTableStructures } from '../hooks'
+import { useHistory } from 'react-router'
+import { useRouter } from '../../utils/hooks/useRouter'
 
-import { withImportCsvModal } from '../components/hocs'
+const LookupTableListPage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
+  const { pathname } = useRouter()
+  const history = useHistory()
 
-const LookupTableListPage: React.FC = () => (
-  <Container style={{ padding: '2em 0em' }}>
-    <LookUpTableListMainMenu
-      headerText={'Lookup Tables'}
-      subHeaderText={'This page contains the list of all lookup-tables'}
-    />
-    <Divider />
-    <LookUpTableListTable />
-  </Container>
-)
+  const {
+    allTableStructures,
+    allTableStructuresLoadState,
+    setAllTableStructures,
+    refetchAllTableStructures,
+  }: AllLookupTableStructuresType = useGetAllTableStructures()
 
-export default withImportCsvModal(LookupTableListPage)
+  return (
+    <Container style={{ padding: '2em 0em' }}>
+      <LookUpTableListMainMenu
+        headerText={'Lookup Tables'}
+        subHeaderText={'This page contains the list of all lookup-tables'}
+      />
+      <Divider />
+      <LookUpTableListTable
+        allTableStructures={allTableStructures}
+        allTableStructuresLoadState={allTableStructuresLoadState}
+        setAllTableStructures={setAllTableStructures}
+      />
+      <ImportCsvModal
+        open={pathname === `${basePath}/import`}
+        onClose={() => history.replace(`${basePath}`)}
+        onImportSuccess={refetchAllTableStructures}
+      />
+    </Container>
+  )
+}
+
+export default LookupTableListPage

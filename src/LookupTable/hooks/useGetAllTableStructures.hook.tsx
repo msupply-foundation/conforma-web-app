@@ -1,40 +1,32 @@
 import { useEffect, useState } from 'react'
-import { useLazyQuery } from '@apollo/client'
-import { getAllTableStructures as getAllTableStructuresGqlQuery } from '../graphql'
-import { LookUpTableType } from '../types'
+import { AllLookupTableStructuresType, LookUpTableType } from '../types'
+import { useGetAllLookupTableStructuresQuery } from '../../utils/generated/graphql'
 
-const useGetAllTableStructures = () => {
-  const [allTableStructures, setAllTableStructures]: any = useState<null | LookUpTableType[]>(null)
+const useGetAllTableStructures = (): AllLookupTableStructuresType => {
+  const [allTableStructures, setAllTableStructures] = useState<LookUpTableType[]>()
 
-  const [getAllTableStructures, allTableStructuresLoadState] = useLazyQuery(
-    getAllTableStructuresGqlQuery,
-    {
-      fetchPolicy: 'no-cache',
-    }
-  )
+  const allTableStructuresLoadState = useGetAllLookupTableStructuresQuery({
+    fetchPolicy: 'no-cache',
+  })
 
-  const { called, loading, data, error } = allTableStructuresLoadState
+  const { data, loading, error, refetch: refetchAllTableStructures } = allTableStructuresLoadState
 
   useEffect(() => {
-    getAllTableStructures()
-  }, [])
-
-  useEffect(() => {
-    if (!loading && called && !error && data.lookupTables.nodes) {
+    if (!loading && !error && data?.lookupTables?.nodes) {
       setAllTableStructures(
-        data.lookupTables.nodes.map((lookupTable: LookUpTableType) => ({
+        data.lookupTables.nodes.map((lookupTable: any) => ({
           ...lookupTable,
           isExpanded: false,
         }))
       )
     }
-  }, [loading, called, data, error])
+  }, [loading, error, data])
 
   return {
     allTableStructuresLoadState,
-    getAllTableStructures,
     allTableStructures,
     setAllTableStructures,
+    refetchAllTableStructures,
   }
 }
 
