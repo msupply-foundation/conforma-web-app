@@ -145,13 +145,21 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 
   return (
     <Sticky as={Container} id="appliction-progress" offset={135}>
-      <Grid>
+      <div className="progress-row">
+        <div>
+          <Icon name="circle outline" />
+        </div>
+        <div>
+          <p style={inlineStyles.top}>{strings.TITLE_INTRODUCTION}</p>
+        </div>
+      </div>
+      {/* <Grid>
         <Grid.Column width={4} textAlign="right" verticalAlign="middle"></Grid.Column>
         <Grid.Column width={12} textAlign="left" verticalAlign="middle">
           <p style={inlineStyles.top}>{strings.TITLE_INTRODUCTION}</p>
         </Grid.Column>
       </Grid>
-      <Accordion activeIndex={activeIndex} panels={sectionsList} />
+      <Accordion activeIndex={activeIndex} panels={sectionsList} /> */}
     </Sticky>
   )
 }
