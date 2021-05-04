@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Button, Header, Message, Segment } from 'semantic-ui-react'
 import { FullStructure, StageAndStatus, TemplateDetails } from '../../utils/types'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
-import { ApplicationHeader, ApplicationSections, Loading } from '../../components'
+import { ApplicationContainer, ApplicationSections, Loading } from '../../components'
 import strings from '../../utils/constants'
 import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -51,20 +51,27 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     info: { current, isChangeRequest, firstStrictInvalidPage },
   } = fullStructure
 
+  const SummaryButtonSegment: React.FC = () => {
+    return current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage ? (
+      <Segment basic className="padding-zero" textAlign="right">
+        <Button as={Link} color="blue" onClick={handleSummaryClicked}>
+          {strings.BUTTON_SUMMARY}
+        </Button>
+      </Segment>
+    ) : null
+  }
+
   return (
-    <ApplicationHeader template={template} currentUser={currentUser}>
+    <>
       <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
-      <ApplicationHomeWrapper startMessage={template.startMessage}>
+      <ApplicationHomeWrapper
+        startMessage={template.startMessage}
+        name={template.name}
+        ButtonSegment={SummaryButtonSegment}
+      >
         <ApplicationSections fullStructure={structure} />
       </ApplicationHomeWrapper>
-      {current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage && (
-        <Segment basic className="padding-zero" textAlign="right">
-          <Button as={Link} color="blue" onClick={handleSummaryClicked}>
-            {strings.BUTTON_SUMMARY}
-          </Button>
-        </Segment>
-      )}
-    </ApplicationHeader>
+    </>
   )
 }
 
