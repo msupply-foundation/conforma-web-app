@@ -92,15 +92,14 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       <div className="progress-page-indicator" />,
     ],
     current: [
-      <Icon.Group>
-        <Icon name="circle outline" color="grey" className="progress-indicator" />
+      <Icon.Group className="progress-indicator">
+        <Icon name="circle outline" color="grey" />
         <Icon
           name="circle"
           color="blue"
           size="mini"
-          className="progress-indicator"
           // Hack to make grouped icons align properly
-          style={{ transform: 'translateX(-72%) translateY(-42%)' }}
+          style={{ transform: 'translateX(-72%) translateY(-56%)' }}
         />
       </Icon.Group>,
       <Icon name="circle" color="blue" size="tiny" className="progress-page-indicator" />,

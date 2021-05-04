@@ -405,7 +405,8 @@ a:hover {
 }
 
 .progress-indicator {
-  // width: 30px;
+  // Make Section Icons just a little bit bigger
+  font-size: 1.1em !important;
 }
 
 .progress-name {
