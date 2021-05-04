@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Container, Grid, Header, Segment } from 'semantic-ui-react'
 import {
   FullStructure,
@@ -61,7 +61,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   return (
     <>
       <Container id="application-form">
-        <Grid stackable className="dev-border">
+        <Grid stackable>
           <Grid.Column width={4} id="progress-column" className="dev-border">
             <ProgressBar
               structure={fullStructure}
@@ -69,7 +69,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
               strictSectionPage={strictSectionPage as SectionAndPage}
             />
           </Grid.Column>
-          <Grid.Column width={9} stretched id="form-column" className="dev-border">
+          <Grid.Column width={9} stretched id="form-column">
             <Segment basic>
               <Header as="h4" content={fullStructure.sections[sectionCode].details.title} />
               <PageElements
