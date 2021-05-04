@@ -90,31 +90,38 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           <List.Item
             key={`ProgressSection_${sectionCode}_${number}`}
             active={isActivePage(sectionCode, Number(number))}
-            as="a"
+            // as="a"
             onClick={() => handleChangeToPage(sectionCode, Number(number))}
           >
-            {progress
-              ? getIndicator(
-                  progress,
-                  checkPageIsStrict(number),
-                  isActivePage(sectionCode, Number(number)),
-                  ProgressType.page
-                )
-              : null}
-            {pageName}
+            <Grid className="progress-row page-row">
+              <Grid.Column
+                width={3}
+                textAlign="right"
+                verticalAlign="middle"
+                // className="progress-indicator"
+              >
+                {progress ? (
+                  getIndicator(
+                    progress,
+                    checkPageIsStrict(number),
+                    isActivePage(sectionCode, Number(number)),
+                    ProgressType.page
+                  )
+                ) : (
+                  <div className="progress-page-indicator" />
+                )}
+              </Grid.Column>
+              <Grid.Column width={13} textAlign="left" verticalAlign="middle">
+                <p>{pageName}</p>
+              </Grid.Column>
+            </Grid>
           </List.Item>
         ))}
       </List>
     )
   }
 
-  // We want to be able to show FIVE states:
-  //    (but some may show same icon)
-  // error -> if at least one error or if not completed and strict
-  // success -> if completed and valid
-  // not started -> nothing has been filled in section/page
-  // incomplete -> started but not invalid (probably display same as not started)
-  // current -> "dot" in circle to show current section/page
+  // Maps types of indicators to specific Icon components
   const progressIconMap = {
     error: [
       <Icon name={'exclamation circle'} color={'pink'} className="progress-indicator" />,
@@ -122,7 +129,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     ],
     completed: [
       <Icon name="check circle" color="green" className="progress-indicator" />,
-      <Icon name="circle" color="green" className="progress-page-indicator" />,
+      <Icon name="circle" color="green" size="tiny" className="progress-page-indicator" />,
     ],
     notStarted: [
       <Icon name="circle outline" className="progress-indicator" />,
@@ -133,11 +140,21 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       <div className="progress-page-indicator" />,
     ],
     current: [
-      <Icon name="circle" color="blue" className="progress-indicator" />,
-      <Icon name="circle" color="blue" className="progress-page-indicator" />,
+      <Icon.Group>
+        <Icon name="circle outline" className="progress-indicator dark-grey" />
+        <Icon name="circle" color="blue" size="mini" className="progress-indicator" />
+      </Icon.Group>,
+      <Icon name="circle" color="blue" size="tiny" className="progress-page-indicator" />,
     ],
   }
 
+  // We want to be able to show FIVE states:
+  //    (but some may show same icon)
+  // error -> if at least one error or if not completed and strict
+  // success -> if completed and valid
+  // not started -> nothing has been filled in section/page
+  // incomplete -> started but not invalid (probably display same as not started)
+  // current -> "dot" in circle to show current section/page
   const getIndicator = (
     progress: ApplicationProgress,
     isStrict: boolean,
@@ -166,14 +183,19 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       key: `progress_${stepNumber}`,
       title: {
         children: (
-          <div className="progress-row">
-            <div className="progress-indicator">
+          <Grid className="progress-row">
+            <Grid.Column
+              width={3}
+              textAlign="right"
+              verticalAlign="middle"
+              // className="progress-indicator"
+            >
               {progress && getIndicator(progress, isStrictSection, index === activeIndex)}
-            </div>
-            <div className="progress-name">
+            </Grid.Column>
+            <Grid.Column width={13} textAlign="left" verticalAlign="middle">
               <p>{title}</p>
-            </div>
-          </div>
+            </Grid.Column>
+          </Grid>
         ),
       },
       onTitleClick: () => handleChangeToPage(code, 1),
@@ -185,12 +207,17 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 
   return (
     <Sticky as={Container} id="application-progress" offset={135}>
-      <div className="progress-row">
-        <div className="progress-indicator">{/* <Icon name="circle outline" /> */}</div>
-        <div className="progress-name">
+      <Grid className="progress-row">
+        <Grid.Column
+          width={3}
+          textAlign="right"
+          verticalAlign="middle"
+          // className="progress-indicator"
+        ></Grid.Column>
+        <Grid.Column width={13} textAlign="left" verticalAlign="middle">
           <p>{strings.TITLE_INTRODUCTION}</p>
-        </div>
-      </div>
+        </Grid.Column>
+      </Grid>
       <Accordion activeIndex={activeIndex} panels={sectionsList} />
     </Sticky>
   )

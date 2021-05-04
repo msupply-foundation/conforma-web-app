@@ -396,7 +396,7 @@ a:hover {
 }
 
 .progress-indicator {
-  width: 30px;
+  // width: 30px;
 }
 
 .progress-name {
