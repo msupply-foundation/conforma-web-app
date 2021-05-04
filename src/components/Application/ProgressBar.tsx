@@ -73,54 +73,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     })
   }
 
-  const getPageList = (
-    sectionCode: string,
-    pages: { [pageNumber: string]: Page },
-    isStrictSection: boolean
-  ) => {
-    const isActivePage = (sectionCode: string, pageNumber: number) =>
-      currentSectionCode === sectionCode && Number(page) === pageNumber
-
-    const checkPageIsStrict = (pageNumber: string) =>
-      isStrictSection && strictSectionPage?.pageNumber === Number(pageNumber)
-
-    return (
-      <List className="page-list">
-        {Object.entries(pages).map(([number, { name: pageName, progress }]) => (
-          <List.Item
-            key={`ProgressSection_${sectionCode}_${number}`}
-            active={isActivePage(sectionCode, Number(number))}
-            // as="a"
-            onClick={() => handleChangeToPage(sectionCode, Number(number))}
-          >
-            <Grid className="progress-row page-row">
-              <Grid.Column
-                width={3}
-                textAlign="right"
-                verticalAlign="middle"
-                // className="progress-indicator"
-              >
-                {progress ? (
-                  getIndicator(
-                    progress,
-                    checkPageIsStrict(number),
-                    isActivePage(sectionCode, Number(number)),
-                    ProgressType.page
-                  )
-                ) : (
-                  <div className="progress-page-indicator" />
-                )}
-              </Grid.Column>
-              <Grid.Column width={13} textAlign="left" verticalAlign="middle">
-                <p>{pageName}</p>
-              </Grid.Column>
-            </Grid>
-          </List.Item>
-        ))}
-      </List>
-    )
-  }
-
   // Maps types of indicators to specific Icon components
   const progressIconMap = {
     error: [
@@ -132,17 +84,24 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       <Icon name="circle" color="green" size="tiny" className="progress-page-indicator" />,
     ],
     notStarted: [
-      <Icon name="circle outline" className="progress-indicator" />,
+      <Icon name="circle outline" color="grey" className="progress-indicator" />,
       <div className="progress-page-indicator" />,
     ],
     incomplete: [
-      <Icon name="circle outline" color="green" className="progress-indicator" />,
+      <Icon name="circle outline" color="grey" className="progress-indicator" />,
       <div className="progress-page-indicator" />,
     ],
     current: [
       <Icon.Group>
-        <Icon name="circle outline" className="progress-indicator dark-grey" />
-        <Icon name="circle" color="blue" size="mini" className="progress-indicator" />
+        <Icon name="circle outline" color="grey" className="progress-indicator" />
+        <Icon
+          name="circle"
+          color="blue"
+          size="mini"
+          className="progress-indicator"
+          // Hack to make grouped icons align properly
+          style={{ transform: 'translateX(-72%) translateY(-42%)' }}
+        />
       </Icon.Group>,
       <Icon name="circle" color="blue" size="tiny" className="progress-page-indicator" />,
     ],
@@ -173,27 +132,75 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     return progressIconMap.notStarted[typeIndex]
   }
 
+  const getPageList = (
+    sectionCode: string,
+    pages: { [pageNumber: string]: Page },
+    isStrictSection: boolean
+  ) => {
+    const isActivePage = (sectionCode: string, pageNumber: number) =>
+      currentSectionCode === sectionCode && Number(page) === pageNumber
+
+    const checkPageIsStrict = (pageNumber: string) =>
+      isStrictSection && strictSectionPage?.pageNumber === Number(pageNumber)
+
+    return (
+      <List className="page-list">
+        {Object.entries(pages).map(([number, { name: pageName, progress }]) => (
+          <List.Item
+            key={`ProgressSection_${sectionCode}_${number}`}
+            active={isActivePage(sectionCode, Number(number))}
+            // as="a"
+            onClick={() => handleChangeToPage(sectionCode, Number(number))}
+          >
+            <Grid className="page-row">
+              <Grid.Column
+                textAlign="right"
+                verticalAlign="middle"
+                className="progress-indicator-column"
+              >
+                {progress ? (
+                  getIndicator(
+                    progress,
+                    checkPageIsStrict(number),
+                    isActivePage(sectionCode, Number(number)),
+                    ProgressType.page
+                  )
+                ) : (
+                  <div className="progress-page-indicator" />
+                )}
+              </Grid.Column>
+              <Grid.Column
+                textAlign="left"
+                verticalAlign="middle"
+                className="progress-page-name-column"
+              >
+                {pageName}
+              </Grid.Column>
+            </Grid>
+          </List.Item>
+        ))}
+      </List>
+    )
+  }
+
   const sectionsList = [...Object.values(sections)].map(({ details, progress, pages }, index) => {
     const isStrictSection = !!strictSectionPage && strictSectionPage.sectionCode === details.code
-    console.log('Sections', sections)
-
-    const stepNumber = index + 1
     const { code, title } = details
     return {
-      key: `progress_${stepNumber}`,
+      key: `progress_${index}`,
       title: {
         children: (
           <Grid className="progress-row">
             <Grid.Column
-              width={3}
+              // width={2}
               textAlign="right"
               verticalAlign="middle"
-              // className="progress-indicator"
+              className="progress-indicator-column"
             >
               {progress && getIndicator(progress, isStrictSection, index === activeIndex)}
             </Grid.Column>
-            <Grid.Column width={13} textAlign="left" verticalAlign="middle">
-              <p>{title}</p>
+            <Grid.Column textAlign="left" verticalAlign="middle" className="progress-name-column">
+              {title}
             </Grid.Column>
           </Grid>
         ),
@@ -209,13 +216,19 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     <Sticky as={Container} id="application-progress" offset={135}>
       <Grid className="progress-row">
         <Grid.Column
-          width={3}
+          // width={3}
           textAlign="right"
           verticalAlign="middle"
-          // className="progress-indicator"
+          className="progress-indicator-column"
         ></Grid.Column>
-        <Grid.Column width={13} textAlign="left" verticalAlign="middle">
-          <p>{strings.TITLE_INTRODUCTION}</p>
+        <Grid.Column
+          // width={13}
+          textAlign="left"
+          verticalAlign="middle"
+          className="progress-name-column clickable"
+          onClick={() => push(`/application/${structure.info.serial}`)}
+        >
+          {strings.TITLE_INTRODUCTION}
         </Grid.Column>
       </Grid>
       <Accordion activeIndex={activeIndex} panels={sectionsList} />

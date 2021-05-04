@@ -370,7 +370,7 @@ a:hover {
 
 #progress-column {
   max-width: 205px;
-  padding-left: 0;
+  padding-left: 5px;
   padding-right: 0;
 }
 
@@ -390,9 +390,18 @@ a:hover {
 // Progress Bar
 
 .progress-row {
-  display: flex;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: -10px !important;
+  margin-bottom: -10px !important;
+  height: 60px;
+}
+
+.progress-indicator-column {
+  width: 20px !important;
+  padding-right: 7px !important;
+}
+
+.progress-name-column {
+  width: 200px !important;
 }
 
 .progress-indicator {
@@ -405,9 +414,18 @@ a:hover {
 .page-list {
   font-size: 0.85em !important;
   padding-left: 30px !important;
+  margin-bottom: -25px !important;
 }
 
-.page-list {
+.page-row {
+  padding-bottom: 8px !important;
+}
+
+.progress-page-indicator {
+}
+
+.progress-page-name-column {
+  width: 150px !important;
 }
 
 /*--------------------------------
