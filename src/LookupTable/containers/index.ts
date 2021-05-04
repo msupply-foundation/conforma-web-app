@@ -1,5 +1,5 @@
-import LookupTableWrapper from './LookupTableWrapper'
+import LookupTableRoutes from './LookupTableRoutes'
 import LookupTableListPage from './LookupTableListPage'
 import LookupTablePage from './LookupTablePage'
 
-export { LookupTableWrapper, LookupTableListPage, LookupTablePage }
+export { LookupTableRoutes, LookupTableListPage, LookupTablePage }

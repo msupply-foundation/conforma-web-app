@@ -411,6 +411,7 @@ a:hover {
   width: @applicationFormWidth;
   padding-left: 20px;
   padding-right: 20px;
+  flex-wrap: wrap;
 }
 
 #prev-next-links {
@@ -430,12 +431,6 @@ a:hover {
 /*--------------------------------
       General used classes
 ---------------------------------*/
-
-// In use for ApplicationHeader around all Application pages
-
-.application-form-width {
-  width: 900px !important;
-}
 
 // Not currently used, but should be appplied to the Link in the menu
 // bar that reflects the current page

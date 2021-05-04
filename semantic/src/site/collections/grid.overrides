@@ -6,12 +6,20 @@
 .stripes .ui.grid > .row {
   border-radius: 6px;
   padding: 0px;
-  margin: 0px 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.stripes .ui.grid:first-child > .row {
+  margin-top: 10px;
+}
+
+.stripes .ui.grid:last-child > .row {
+  margin-bottom: 10px;
 }
 
 .stripes .ui.grid:nth-child(even) > .row {
   background: @surfacesLight;
-  margin: 10px 10px;
 }
 
 .stripes .ui.grid:nth-child(even) .stripedlabel {

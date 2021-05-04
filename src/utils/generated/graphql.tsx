@@ -22702,6 +22702,20 @@ export type UpdateReviewResponseMutation = (
   )> }
 );
 
+export type GetAllLookupTableStructuresQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllLookupTableStructuresQuery = (
+  { __typename?: 'Query' }
+  & { lookupTables?: Maybe<(
+    { __typename?: 'LookupTablesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'LookupTable' }
+      & Pick<LookupTable, 'id' | 'name' | 'label' | 'fieldMap'>
+    )>> }
+  )> }
+);
+
 export type GetAllResponsesQueryVariables = Exact<{
   serial: Scalars['String'];
   responseStatuses?: Maybe<Array<ApplicationResponseStatus>>;
@@ -22804,6 +22818,19 @@ export type GetApplicationListQuery = (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
     ) }
+  )> }
+);
+
+export type GetLookupTableStructureByIdQueryVariables = Exact<{
+  lookupTableID: Scalars['Int'];
+}>;
+
+
+export type GetLookupTableStructureByIdQuery = (
+  { __typename?: 'Query' }
+  & { lookupTable?: Maybe<(
+    { __typename?: 'LookupTable' }
+    & Pick<LookupTable, 'id' | 'label' | 'name' | 'fieldMap'>
   )> }
 );
 
@@ -23508,6 +23535,43 @@ export function useUpdateReviewResponseMutation(baseOptions?: Apollo.MutationHoo
 export type UpdateReviewResponseMutationHookResult = ReturnType<typeof useUpdateReviewResponseMutation>;
 export type UpdateReviewResponseMutationResult = Apollo.MutationResult<UpdateReviewResponseMutation>;
 export type UpdateReviewResponseMutationOptions = Apollo.BaseMutationOptions<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>;
+export const GetAllLookupTableStructuresDocument = gql`
+    query getAllLookupTableStructures {
+  lookupTables {
+    nodes {
+      id
+      name
+      label
+      fieldMap
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllLookupTableStructuresQuery__
+ *
+ * To run a query within a React component, call `useGetAllLookupTableStructuresQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllLookupTableStructuresQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllLookupTableStructuresQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllLookupTableStructuresQuery(baseOptions?: Apollo.QueryHookOptions<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>) {
+        return Apollo.useQuery<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>(GetAllLookupTableStructuresDocument, baseOptions);
+      }
+export function useGetAllLookupTableStructuresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>(GetAllLookupTableStructuresDocument, baseOptions);
+        }
+export type GetAllLookupTableStructuresQueryHookResult = ReturnType<typeof useGetAllLookupTableStructuresQuery>;
+export type GetAllLookupTableStructuresLazyQueryHookResult = ReturnType<typeof useGetAllLookupTableStructuresLazyQuery>;
+export type GetAllLookupTableStructuresQueryResult = Apollo.QueryResult<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>;
 export const GetAllResponsesDocument = gql`
     query getAllResponses($serial: String!, $responseStatuses: [ApplicationResponseStatus!]) {
   applicationBySerial(serial: $serial) {
@@ -23695,6 +23759,42 @@ export function useGetApplicationListLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetApplicationListQueryHookResult = ReturnType<typeof useGetApplicationListQuery>;
 export type GetApplicationListLazyQueryHookResult = ReturnType<typeof useGetApplicationListLazyQuery>;
 export type GetApplicationListQueryResult = Apollo.QueryResult<GetApplicationListQuery, GetApplicationListQueryVariables>;
+export const GetLookupTableStructureByIdDocument = gql`
+    query getLookupTableStructureById($lookupTableID: Int!) {
+  lookupTable(id: $lookupTableID) {
+    id
+    label
+    name
+    fieldMap
+  }
+}
+    `;
+
+/**
+ * __useGetLookupTableStructureByIdQuery__
+ *
+ * To run a query within a React component, call `useGetLookupTableStructureByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLookupTableStructureByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLookupTableStructureByIdQuery({
+ *   variables: {
+ *      lookupTableID: // value for 'lookupTableID'
+ *   },
+ * });
+ */
+export function useGetLookupTableStructureByIdQuery(baseOptions?: Apollo.QueryHookOptions<GetLookupTableStructureByIdQuery, GetLookupTableStructureByIdQueryVariables>) {
+        return Apollo.useQuery<GetLookupTableStructureByIdQuery, GetLookupTableStructureByIdQueryVariables>(GetLookupTableStructureByIdDocument, baseOptions);
+      }
+export function useGetLookupTableStructureByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLookupTableStructureByIdQuery, GetLookupTableStructureByIdQueryVariables>) {
+          return Apollo.useLazyQuery<GetLookupTableStructureByIdQuery, GetLookupTableStructureByIdQueryVariables>(GetLookupTableStructureByIdDocument, baseOptions);
+        }
+export type GetLookupTableStructureByIdQueryHookResult = ReturnType<typeof useGetLookupTableStructureByIdQuery>;
+export type GetLookupTableStructureByIdLazyQueryHookResult = ReturnType<typeof useGetLookupTableStructureByIdLazyQuery>;
+export type GetLookupTableStructureByIdQueryResult = Apollo.QueryResult<GetLookupTableStructureByIdQuery, GetLookupTableStructureByIdQueryVariables>;
 export const GetReviewDecisionCommentDocument = gql`
     query getReviewDecisionComment($reviewDecisionId: Int!) {
   reviewDecision(id: $reviewDecisionId) {
