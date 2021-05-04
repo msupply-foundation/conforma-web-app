@@ -70,6 +70,7 @@ export default {
   LABEL_REVIEW_DECISION_NON_CONFORM: 'Non conform',
   LABEL_REVIEW_OVERALL_COMMENT: 'Overall comment',
   LABEL_REVIEW_RESSUBMIT: 'Request a resubmission',
+  LABEL_REVIEW_SECTION: 'Please complete the section',
   LABEL_REVIEW_SUBMIT_AS: 'Submit as',
   LABEL_REVIEWED_BY: 'Review by',
   LABEL_SECTION_PROBLEM: 'Errors',

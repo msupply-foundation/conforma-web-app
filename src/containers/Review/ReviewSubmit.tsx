@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Button, ModalProps } from 'semantic-ui-react'
+import { Button, Form, Label, ModalProps } from 'semantic-ui-react'
 import { ModalWarning } from '../../components'
+import ModalConfirmation from '../../components/Main/ModalConfirmation'
 import ReviewComment from '../../components/Review/ReviewComment'
 import ReviewDecision from '../../components/Review/ReviewDecision'
 import strings from '../../utils/constants'
@@ -9,11 +10,10 @@ import useGetDecisionOptions from '../../utils/hooks/useGetDecisionOptions'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useSubmitReview from '../../utils/hooks/useSubmitReview'
 import messages from '../../utils/messages'
-import { AssignmentDetails, FullStructure } from '../../utils/types'
+import { FullStructure } from '../../utils/types'
 
 type ReviewSubmitProps = {
   structure: FullStructure
-  reviewAssignment: AssignmentDetails
   scrollTo: (code: string) => void
 }
 
@@ -58,7 +58,6 @@ type ReviewSubmitButtonProps = {
 const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> = ({
   scrollTo,
   structure,
-  reviewAssignment,
   getDecision,
   getAndSetDecisionError,
 }) => {
@@ -67,17 +66,19 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     replace,
   } = useRouter()
 
+  const [showModalConfirmation, setShowModalConfirmation] = useState<ModalProps>({ open: false })
   const [showWarningModal, setShowWarningModal] = useState<ModalProps>({ open: false })
+  // TODO: Show on message
+  const [submissionError, setSubmissionError] = useState<boolean>(false)
   const submitReview = useSubmitReview(Number(structure.thisReview?.id))
+  const setAttemptSubmission = () => (structure.attemptSubmission = true)
+  const attemptSubmissionFailed = structure.attemptSubmission && structure.firstIncompleteReviewPage
 
-  const showWarning = (message: {}, action: () => void) => {
+  const setWarning = (message: {}) => {
     setShowWarningModal({
       open: true,
       ...message,
-      onClick: () => {
-        setShowWarningModal({ open: false })
-        action()
-      },
+      onClick: () => setShowWarningModal({ open: false }),
       onClose: () => setShowWarningModal({ open: false }),
     })
   }
@@ -90,54 +91,52 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       const { sectionCode, pageNumber } = firstIncompleteReviewPage
 
       replace(`${pathname}?activeSections=${sectionCode}`)
-
-      // TODO add consolidator submission error
-      const message = reviewAssignment.level === 1 ? messages.REVIEW_LEVEL1_SUBMISSION_FAIL : {}
-      showWarning(message, () => scrollTo(`${sectionCode}P${pageNumber}`))
+      scrollTo(`${sectionCode}P${pageNumber}`)
+      setAttemptSubmission()
       return
     }
 
     // Check DECISION was made
     const decisionError = getAndSetDecisionError()
     if (decisionError) {
-      const message = messages.REVIEW_DECISION_SET_FAIL
-      showWarning(message, () => {})
+      setWarning(messages.REVIEW_DECISION_SET_FAIL)
       return
     }
 
     // Can SUBMIT
-    /* TODO add submission modal, currently will submit even if ok is not pressed, also deal with localisation at the same time */
-    const message = {
-      title: 'Submitting Review',
-      message: 'Are you sure',
-      option: 'SUBMIT',
-    }
+    setShowModalConfirmation({ open: true, ...messages.REVIEW_SUBMISSION_CONFIRM })
+  }
 
-    const action = async () => {
-      try {
-        await submitReview(structure, getDecision())
-      } catch (e) {
-        // TODO handle in UI
-        console.log('Update review mutation failed', e)
-      }
+  const submission = async () => {
+    try {
+      await submitReview(structure, getDecision())
+    } catch (e) {
+      console.log(e)
+      setShowModalConfirmation({ open: false })
+      setSubmissionError(true)
     }
-
-    showWarning(message, action)
   }
 
   if (structure.thisReview?.status !== ReviewStatus.Draft) return null
 
   return (
-    <>
+    <Form.Field>
       <Button
         primary
-        className="button-wide"
-        onClick={onClick}
+        className={attemptSubmissionFailed ? 'button-wide alert' : 'button-wide'}
+        onClick={() => onClick()}
         content={strings.BUTTON_REVIEW_SUBMIT}
       />
+      {attemptSubmissionFailed && (
+        <Label className="simple-label alert-text" content={messages.REVIEW_SUBMISSION_FAIL} />
+      )}
       <ModalWarning showModal={showWarningModal} />
-      {/* TODO add submission modal */}
-    </>
+      <ModalConfirmation
+        modalProps={showModalConfirmation}
+        onClick={() => submission()}
+        onClose={() => setShowWarningModal({ open: false })}
+      />
+    </Form.Field>
   )
 }
 export default ReviewSubmit

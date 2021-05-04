@@ -43,3 +43,7 @@
 .ui.label.info-text {
   color: @information;
 }
+
+.ui.label.alert-text {
+  color: @attention;
+}

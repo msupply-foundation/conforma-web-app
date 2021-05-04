@@ -201,6 +201,7 @@ interface FullStructure {
   thisReview?: ReviewDetails | null
   elementsById?: ElementsById
   lastValidationTimestamp?: number
+  attemptSubmission: boolean
   info: ApplicationDetails
   sections: SectionsStructure
   stages: StageDetails[]
