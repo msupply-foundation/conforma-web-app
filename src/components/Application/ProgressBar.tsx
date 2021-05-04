@@ -18,6 +18,11 @@ interface ProgressBarProps {
   strictSectionPage: SectionAndPage | null
 }
 
+enum SectionOrPage {
+  section = 'SECTION',
+  page = 'PAGE',
+}
+
 const ProgressBar: React.FC<ProgressBarProps> = ({
   structure,
   requestRevalidation,
@@ -79,35 +84,50 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     const checkPageIsStrict = (pageNumber: string) =>
       isStrictSection && strictSectionPage?.pageNumber === Number(pageNumber)
 
-    return (
-      <List
-        link
-        style={inlineStyles.link}
-        items={Object.entries(pages).map(([number, { name: pageName, progress }]) => ({
-          key: `ProgressSection_${sectionCode}_${number}`,
-          active: isActivePage(sectionCode, Number(number)),
-          as: 'a',
-          icon: progress ? getIndicator(progress, checkPageIsStrict(number)) : null,
-          content: pageName,
-          onClick: () => handleChangeToPage(sectionCode, Number(number)),
-        }))}
-      />
-    )
+    return <p>*</p>
+    // return (
+    //   <List
+    //     link
+    //     items={Object.entries(pages).map(([number, { name: pageName, progress }]) => ({
+    //       key: `ProgressSection_${sectionCode}_${number}`,
+    //       active: isActivePage(sectionCode, Number(number)),
+    //       as: 'a',
+    //       icon: progress
+    //         ? getIndicator(progress, checkPageIsStrict(number), Number(number), SectionOrPage.page)
+    //         : null,
+    //       content: pageName,
+    //       onClick: () => handleChangeToPage(sectionCode, Number(number)),
+    //     }))}
+    //   />
+    // )
   }
 
-  // We want to show three states:
+  // We want to be able to show FIVE states:
+  //    (but some may show same icon)
   // error -> if at least one error or if not completed and strict
   // success -> if completed and valid
-  // empty circle with number -> if none of the above and section (has step), also add key
-  // or empty circle -> if none of the above
-  const getIndicator = (progress: ApplicationProgress, isStrict: boolean, step?: number) => {
+  // not started -> nothing has been filled in section/page
+  // incomplete -> started but not invalid (probably display same as not started)
+  // current -> "dot" in circle to show current section/page
+  const getIndicator = (
+    progress: ApplicationProgress,
+    isStrict: boolean,
+    step?: number,
+    type = SectionOrPage.section
+  ) => {
+    console.log('progress', progress)
+    console.log('step', step)
     const { completed, valid } = progress
     const isStrictlylInvalid = !valid || (isStrict && !completed)
-    const size = step ? 'large' : 'small'
 
-    if (isStrictlylInvalid) return <Icon name={'exclamation circle'} color={'red'} size={size} />
-    if (completed && valid) return <Icon name={'check circle'} color={'green'} size={size} />
+    if (isStrictlylInvalid) return <Icon name={'exclamation circle'} color={'pink'} />
+    if (completed && valid) {
+      if (type === SectionOrPage.section) return <Icon name={'check circle'} color={'green'} />
+      else return <Icon name={'dot circle outline'} color={'grey'} />
+    }
+    // if
 
+    // return <Icon name="circle outline" />
     return step ? (
       <Label circular as="a" basic color="blue" key={`progress_${step}`}>
         {step}
@@ -126,14 +146,14 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       key: `progress_${stepNumber}`,
       title: {
         children: (
-          <Grid>
-            <Grid.Column width={4} textAlign="right" verticalAlign="middle">
+          <div className="progress-row">
+            <div className="progress-indicator">
               {progress && getIndicator(progress, isStrictSection, stepNumber)}
-            </Grid.Column>
-            <Grid.Column width={12} textAlign="left" verticalAlign="middle">
+            </div>
+            <div className="progress-name">
               <p>{title}</p>
-            </Grid.Column>
-          </Grid>
+            </div>
+          </div>
         ),
       },
       onTitleClick: () => handleChangeToPage(code, 1),
@@ -144,30 +164,16 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   })
 
   return (
-    <Sticky as={Container} id="appliction-progress" offset={135}>
+    <Sticky as={Container} id="application-progress" offset={135}>
       <div className="progress-row">
-        <div>
-          <Icon name="circle outline" />
-        </div>
-        <div>
-          <p style={inlineStyles.top}>{strings.TITLE_INTRODUCTION}</p>
+        <div className="progress-icon">{/* <Icon name="circle outline" /> */}</div>
+        <div className="progress-name">
+          <p>{strings.TITLE_INTRODUCTION}</p>
         </div>
       </div>
-      {/* <Grid>
-        <Grid.Column width={4} textAlign="right" verticalAlign="middle"></Grid.Column>
-        <Grid.Column width={12} textAlign="left" verticalAlign="middle">
-          <p style={inlineStyles.top}>{strings.TITLE_INTRODUCTION}</p>
-        </Grid.Column>
-      </Grid>
-      <Accordion activeIndex={activeIndex} panels={sectionsList} /> */}
+      <Accordion activeIndex={activeIndex} panels={sectionsList} />
     </Sticky>
   )
-}
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const inlineStyles = {
-  top: { paddingLeft: 30 },
-  link: { paddingLeft: 50 },
 }
 
 export default ProgressBar

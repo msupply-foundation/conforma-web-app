@@ -370,6 +370,8 @@ a:hover {
 
 #progress-column {
   max-width: 205px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 #form-column {
@@ -383,6 +385,21 @@ a:hover {
 
 #help-column {
   max-width: 200px;
+}
+
+// Progress Bar
+
+.progress-row {
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.progress-indicator {
+  width: 30px;
+}
+
+.progress-name {
 }
 
 /*--------------------------------
