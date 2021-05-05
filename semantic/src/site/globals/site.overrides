@@ -325,7 +325,7 @@ a:hover {
 
 #list-container {
   padding: 25px 0;
-  max-width: 900px; // Maybe this could be wider if table is getting cluttered?
+  max-width: @applicationListWidth;
 }
 
 #list-top {
@@ -476,6 +476,39 @@ a:hover {
   margin-bottom: 0;
   padding-left: 10px;
   padding-right: 20px;
+}
+
+/*--------------------------------
+      Application Summary area
+---------------------------------*/
+
+#application-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: @applicationSummaryWidth;
+  background-color: @surfacesWhite;
+}
+
+#application-summary-header {
+  padding-top: 30px;
+  padding-bottom: 20px;
+}
+
+#application-summary-content {
+  max-width: @applicationSummaryContentWidth;
+}
+
+#application-sections {
+}
+
+.summary-section {
+  background-color: @surfacesLight;
+  border-radius: @borderRadius;
+  padding: 20px;
+}
+
+#application-submit {
 }
 
 /*--------------------------------
