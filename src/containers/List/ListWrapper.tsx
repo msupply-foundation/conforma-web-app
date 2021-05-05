@@ -37,7 +37,7 @@ const ListWrapper: React.FC = () => {
   const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>()
   usePageTitle(strings.PAGE_TITLE_LIST)
 
-  if (currentUser?.username === strings.USER_NONREGISTERED || !currentUser) {
+  if (currentUser?.username === strings.USER_NONREGISTERED) {
     logout()
     return null
   }

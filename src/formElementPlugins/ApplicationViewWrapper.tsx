@@ -102,15 +102,24 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }
 
   const onSave = async (jsonValue: ResponseFull) => {
-    if (!jsonValue.customValidation) {
+    if (!jsonValue?.customValidation) {
       // Validate and Save response -- generic
-      const validationResult: ValidationState = await onUpdate(jsonValue.text)
-      if (jsonValue.text !== undefined)
+      const validationResult: ValidationState = await onUpdate(jsonValue?.text)
+      if (jsonValue?.text !== undefined)
         await responseMutation({
           variables: {
             id: currentResponse?.id as number,
             value: jsonValue,
             isValid: validationResult.isValid,
+          },
+        })
+      if (jsonValue === null)
+        // Reset response if cleared
+        await responseMutation({
+          variables: {
+            id: currentResponse?.id as number,
+            value: null,
+            isValid: null,
           },
         })
       setUpdateTrackerState({
