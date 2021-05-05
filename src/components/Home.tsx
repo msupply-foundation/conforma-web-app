@@ -10,7 +10,7 @@ const Home: React.FC = () => {
     userState: { currentUser },
     logout,
   } = useUserState()
-  if (currentUser?.username === strings.USER_NONREGISTERED || !currentUser) {
+  if (currentUser?.username === strings.USER_NONREGISTERED) {
     logout()
     return null
   }
