@@ -413,7 +413,7 @@ a:hover {
 }
 
 .page-list {
-  font-size: 0.85em !important;
+  font-size: 0.9em !important;
   padding-left: 30px !important;
   margin-bottom: -25px !important;
 }
@@ -427,6 +427,10 @@ a:hover {
 
 .progress-page-name-column {
   width: 150px !important;
+}
+
+.section-progress-graphic {
+  position: absolute;
 }
 
 /*--------------------------------

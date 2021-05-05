@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion, Container, Grid, Header, Icon, Label, List, Sticky } from 'semantic-ui-react'
+import { Accordion, Container, Grid, Icon, List, Sticky, Progress } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import { checkPageIsAccessible } from '../../utils/helpers/structure'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -16,6 +16,12 @@ interface ProgressBarProps {
   structure: FullStructure
   requestRevalidation: MethodRevalidate
   strictSectionPage: SectionAndPage | null
+}
+
+interface ProgressGraphicProps {
+  percent: number
+  length: number
+  error?: boolean
 }
 
 enum ProgressType {
@@ -134,7 +140,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   const getPageList = (
     sectionCode: string,
     pages: { [pageNumber: string]: Page },
-    isStrictSection: boolean
+    isStrictSection: boolean,
+    sectionProgress: ApplicationProgress
   ) => {
     const isActivePage = (sectionCode: string, pageNumber: number) =>
       currentSectionCode === sectionCode && Number(page) === pageNumber
@@ -142,43 +149,87 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     const checkPageIsStrict = (pageNumber: string) =>
       isStrictSection && strictSectionPage?.pageNumber === Number(pageNumber)
 
+    const ProgressGraphic: React.FC<ProgressGraphicProps> = ({ percent, length, error }) => {
+      return (
+        <Progress
+          percent={percent}
+          size="tiny"
+          success={!error}
+          error={error}
+          style={{
+            width: length,
+            transformOrigin: '0 0',
+            transform: `rotate(90deg) translate(-5px, -10px)`,
+          }}
+        />
+      )
+    }
+
+    const calculatePercent = () => {
+      console.log('Progress', sectionProgress)
+      console.log('Pages', pages)
+      return (
+        ((sectionProgress.doneNonRequired + sectionProgress.doneRequired) /
+          (sectionProgress.totalNonRequired + sectionProgress.totalRequired)) *
+        100
+      )
+    }
+
+    const calculateBarLength = () => {
+      // Adjust these constants to match existing style settings
+      const pixelsPerPage = 27.8
+      const topPad = 10
+      const bottomPad = 15
+      const numPages = Object.keys(pages).length
+      return pixelsPerPage * numPages + topPad + bottomPad
+    }
+
     return (
-      <List className="page-list">
-        {Object.entries(pages).map(([number, { name: pageName, progress }]) => (
-          <List.Item
-            key={`ProgressSection_${sectionCode}_${number}`}
-            active={isActivePage(sectionCode, Number(number))}
-            // as="a"
-            onClick={() => handleChangeToPage(sectionCode, Number(number))}
-          >
-            <Grid className="page-row">
-              <Grid.Column
-                textAlign="right"
-                verticalAlign="middle"
-                className="progress-indicator-column"
-              >
-                {progress ? (
-                  getIndicator(
-                    progress,
-                    checkPageIsStrict(number),
-                    isActivePage(sectionCode, Number(number)),
-                    ProgressType.page
-                  )
-                ) : (
-                  <div className="progress-page-indicator" />
-                )}
-              </Grid.Column>
-              <Grid.Column
-                textAlign="left"
-                verticalAlign="middle"
-                className="progress-page-name-column"
-              >
-                {pageName}
-              </Grid.Column>
-            </Grid>
-          </List.Item>
-        ))}
-      </List>
+      <div className="page-list-container">
+        <div className="section-progress-graphic">
+          <ProgressGraphic
+            percent={calculatePercent()}
+            length={calculateBarLength()}
+            error={!sectionProgress.valid}
+          />
+        </div>
+        <List className="page-list">
+          {Object.entries(pages).map(([number, { name: pageName, progress }]) => (
+            <List.Item
+              key={`ProgressSection_${sectionCode}_${number}`}
+              active={isActivePage(sectionCode, Number(number))}
+              // as="a"
+              onClick={() => handleChangeToPage(sectionCode, Number(number))}
+            >
+              <Grid className="page-row clickable">
+                <Grid.Column
+                  textAlign="right"
+                  verticalAlign="middle"
+                  className="progress-indicator-column"
+                >
+                  {progress ? (
+                    getIndicator(
+                      progress,
+                      checkPageIsStrict(number),
+                      isActivePage(sectionCode, Number(number)),
+                      ProgressType.page
+                    )
+                  ) : (
+                    <div className="progress-page-indicator" />
+                  )}
+                </Grid.Column>
+                <Grid.Column
+                  textAlign="left"
+                  verticalAlign="middle"
+                  className="progress-page-name-column"
+                >
+                  {pageName}
+                </Grid.Column>
+              </Grid>
+            </List.Item>
+          ))}
+        </List>
+      </div>
     )
   }
 
@@ -206,7 +257,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       },
       onTitleClick: () => handleChangeToPage(code, 1),
       content: {
-        content: getPageList(code, pages, isStrictSection),
+        content: getPageList(code, pages, isStrictSection, progress as ApplicationProgress),
       },
     }
   })
