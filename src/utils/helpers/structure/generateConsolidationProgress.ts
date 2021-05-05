@@ -1,16 +1,20 @@
 import { Decision, ReviewResponseDecision } from '../../generated/graphql'
 
-import { FullStructure, SectionState, Page, PageElement } from '../../types'
+import { FullStructure, SectionState, Page, PageElement, ConsolidationProgress } from '../../types'
+import { getReviewAndConsolidationProgress } from './generateReviewProgress'
 
-const generateReviewProgress = (newStructure: FullStructure) => {
-  newStructure?.sortedPages?.forEach(generatePageReviewProgress)
-  newStructure?.sortedSections?.forEach(generateSectionReviewProgress)
+const generateConsolidationProgress = (newStructure: FullStructure) => {
+  newStructure?.sortedPages?.forEach(generatePageconsolidationProgress)
+  newStructure?.sortedSections?.forEach(generateSectionconsolidationProgress)
 
   generateReviewValidity(newStructure)
 }
 
-const generateSectionReviewProgress = (section: SectionState) => {
-  section.reviewProgress = getSums(Object.values(section.pages))
+const generateSectionconsolidationProgress = (section: SectionState) => {
+  section.consolidationProgress = getConsolidationProgress(Object.values(section.pages))
+  section.reviewAndConsolidationProgress = getReviewAndConsolidationProgress(
+    Object.values(section.pages)
+  )
 }
 
 const conformOriginal = (element: PageElement) =>
@@ -23,7 +27,7 @@ const disagreeThiReview = (element: PageElement) =>
   element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Disagree
 const activeThisReview = (element: PageElement) => element.isActiveReviewResponse
 
-const generatePageReviewProgress = (page: Page) => {
+const generatePageconsolidationProgress = (page: Page) => {
   const totalReviewable = page.state.filter(
     (element) => element.isAssigned && element?.element.isVisible
   )
@@ -52,12 +56,16 @@ const generatePageReviewProgress = (page: Page) => {
   const doneActiveAgreeConform = doneAgreeConform.filter(activeThisReview)
   const doneActiveAgreeNonConform = doneAgreeNonConform.filter(activeThisReview)
 
-  page.reviewProgress = {
+  page.reviewAndConsolidationProgress = {
     totalReviewable: totalReviewable.length,
     totalActive: totalActive.length,
+    totalPendingReview: totalPendingReview.length,
+  }
+
+  page.consolidationProgress = {
     totalConform: totalConform.length,
     totalNonConform: totalNonConform.length,
-    totalPendingReview: totalPendingReview.length,
+
     doneAgreeConform: doneAgreeConform.length,
     doneAgreeNonConform: doneAgreeNonConform.length,
     doneDisagree: doneDisagree.length,
@@ -69,7 +77,10 @@ const generatePageReviewProgress = (page: Page) => {
 
 const generateReviewValidity = (newStructure: FullStructure) => {
   const sortedPages = newStructure?.sortedPages || []
-  const sums = getSums(sortedPages)
+  const sums = {
+    ...getConsolidationProgress(Object.values(newStructure.sections)),
+    ...getReviewAndConsolidationProgress(Object.values(newStructure.sections)),
+  }
 
   newStructure.firstIncompleteReviewPage = undefined
 
@@ -89,8 +100,9 @@ const generateReviewValidity = (newStructure: FullStructure) => {
   }
 
   const firstIncomplete = sortedPages.find(
-    ({ reviewProgress }) =>
-      reviewProgress?.totalReviewable !== (reviewProgress?.doneActiveAgreeConform || 0)
+    ({ consolidationProgress, reviewAndConsolidationProgress }) =>
+      reviewAndConsolidationProgress?.totalReviewable !==
+      (consolidationProgress?.doneActiveAgreeConform || 0)
   )
 
   if (!firstIncomplete) return
@@ -105,13 +117,11 @@ const generateReviewValidity = (newStructure: FullStructure) => {
 }
 // Simple helper that will iterate over elements and sum up all of the values for keys
 // returning an object of keys with sums
-const getSums = (elements: Page[]) => {
-  const initial = {
-    totalReviewable: 0,
-    totalActive: 0,
+const getConsolidationProgress = (elements: (Page | SectionState)[]) => {
+  const initial: ConsolidationProgress = {
     totalConform: 0,
     totalNonConform: 0,
-    totalPendingReview: 0,
+
     doneAgreeConform: 0,
     doneAgreeNonConform: 0,
     doneDisagree: 0,
@@ -120,24 +130,28 @@ const getSums = (elements: Page[]) => {
     doneActiveAgreeNonConform: 0,
   }
 
-  return elements.reduce(
-    (sum, { reviewProgress }) => ({
-      totalReviewable: sum.totalReviewable + (reviewProgress?.totalReviewable || 0),
-      totalActive: sum.totalActive + (reviewProgress?.totalActive || 0),
-      totalConform: sum.totalConform + (reviewProgress?.totalConform || 0),
-      totalNonConform: sum.totalNonConform + (reviewProgress?.totalNonConform || 0),
-      totalPendingReview: sum.totalPendingReview + (reviewProgress?.totalPendingReview || 0),
-      doneAgreeConform: sum.doneAgreeConform + (reviewProgress?.doneAgreeConform || 0),
-      doneAgreeNonConform: sum.doneAgreeNonConform + (reviewProgress?.doneAgreeNonConform || 0),
-      doneDisagree: sum.doneDisagree + (reviewProgress?.doneDisagree || 0),
-      doneActiveDisagree: sum.doneActiveDisagree + (reviewProgress?.doneActiveDisagree || 0),
-      doneActiveAgreeConform:
-        sum.doneActiveAgreeConform + (reviewProgress?.doneActiveAgreeConform || 0),
-      doneActiveAgreeNonConform:
-        sum.doneActiveAgreeNonConform + (reviewProgress?.doneActiveAgreeNonConform || 0),
-    }),
-    initial
-  )
+  return elements.reduce((sum, page) => {
+    const {
+      totalConform,
+      totalNonConform,
+      doneAgreeConform,
+      doneAgreeNonConform,
+      doneDisagree,
+      doneActiveDisagree,
+      doneActiveAgreeConform,
+      doneActiveAgreeNonConform,
+    } = page.consolidationProgress || initial
+    return {
+      totalConform: sum.totalConform + totalConform,
+      totalNonConform: sum.totalNonConform + totalNonConform,
+      doneAgreeConform: sum.doneAgreeConform + doneAgreeConform,
+      doneAgreeNonConform: sum.doneAgreeNonConform + doneAgreeNonConform,
+      doneDisagree: sum.doneDisagree + doneDisagree,
+      doneActiveDisagree: sum.doneActiveDisagree + doneActiveDisagree,
+      doneActiveAgreeConform: sum.doneActiveAgreeConform + doneActiveAgreeConform,
+      doneActiveAgreeNonConform: sum.doneActiveAgreeNonConform + doneActiveAgreeNonConform,
+    }
+  }, initial)
 }
 
-export default generateReviewProgress
+export default generateConsolidationProgress

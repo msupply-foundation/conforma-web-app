@@ -85,7 +85,7 @@ const generateReviewSectionActions: GenerateSectionActions = ({
   const isCurrentUserReview = reviewAssignment.reviewer.id === currentUserId
 
   sections.forEach((section) => {
-    const isReviewable = (section.reviewProgress?.totalReviewable || 0) > 0
+    const isReviewable = (section.reviewAndConsolidationProgress?.totalReviewable || 0) > 0
     const isAssignedToCurrentUser = isCurrentUserReview && isReviewable
 
     const checkMethodProps = {
@@ -96,8 +96,8 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       reviewAssignmentStatus: reviewAssignment.status,
       doesReviewExists: !!thisReview,
       reviewStatus: thisReview?.status,
-      isPendingReview: (section.reviewProgress?.totalPendingReview || 0) > 0,
-      isReviewActive: (section.reviewProgress?.totalActive || 0) > 0,
+      isPendingReview: (section.reviewAndConsolidationProgress?.totalPendingReview || 0) > 0,
+      isReviewActive: (section.reviewAndConsolidationProgress?.totalActive || 0) > 0,
     }
 
     const foundAction = actionDefinitions.find(({ checkMethod }) => checkMethod(checkMethodProps))

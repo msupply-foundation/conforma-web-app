@@ -1,12 +1,24 @@
 import React from 'react'
 import { Icon, Label, Progress } from 'semantic-ui-react'
-import { ApplicationProgress, ReviewProgress, SectionState } from '../../utils/types'
+import {
+  ApplicationProgress,
+  ReviewAndConsolidationProgress,
+  ReviewProgress,
+  SectionState,
+} from '../../utils/types'
 import strings from '../../utils/constants'
 
-const ReviewStatusOrProgress: React.FC<SectionState> = ({ reviewProgress, reviewAction }) => {
+const ReviewStatusOrProgress: React.FC<SectionState> = ({
+  reviewProgress,
+  reviewAction,
+  reviewAndConsolidationProgress,
+}) => {
   if (reviewAction?.isAssignedToCurrentUser && reviewProgress) {
     return reviewAction.isReviewable ? (
-      <ReviewSectionProgressBar reviewProgress={reviewProgress} />
+      <ReviewSectionProgressBar
+        reviewProgress={reviewProgress}
+        reviewAndConsolidationProgress={reviewAndConsolidationProgress}
+      />
     ) : (
       <Label
         icon={<Icon name="circle" size="mini" color="blue" />}
@@ -17,24 +29,30 @@ const ReviewStatusOrProgress: React.FC<SectionState> = ({ reviewProgress, review
   return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
 }
 
-const getReviewProgressDefaults = (reviewProgress: ReviewProgress | undefined) => ({
+const getReviewProgressDefaults = ({
+  reviewProgress,
+  reviewAndConsolidationProgress,
+}: SectionProgressBarProps) => ({
   doneNonConform: reviewProgress?.doneNonConform || 0,
   doneConform: reviewProgress?.doneConform || 0,
-  totalReviewable: reviewProgress?.totalReviewable || 0,
+  totalReviewable: reviewAndConsolidationProgress?.totalReviewable || 0,
 })
 
-const getReviewProgressTitle = (reviewProgress: ReviewProgress | undefined) => {
-  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(reviewProgress)
+const getReviewProgressTitle = (props: SectionProgressBarProps) => {
+  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(props)
   if (doneNonConform > 0) return `(${doneNonConform}) ${strings.LABEL_REVIEW_DECLINED}`
   else if (doneConform === totalReviewable) return strings.LABEL_SECTION_COMPLETED
   return null
 }
 
-type SectionProgressBarProps = { reviewProgress: ReviewProgress | undefined }
+type SectionProgressBarProps = {
+  reviewProgress: ReviewProgress | undefined
+  reviewAndConsolidationProgress: ReviewAndConsolidationProgress | undefined
+}
 
-const ReviewSectionProgressBar: React.FC<SectionProgressBarProps> = ({ reviewProgress }) => {
-  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(reviewProgress)
-  const progressLabel = getReviewProgressTitle(reviewProgress)
+const ReviewSectionProgressBar: React.FC<SectionProgressBarProps> = (props) => {
+  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(props)
+  const progressLabel = getReviewProgressTitle(props)
   return (
     <div className="progress-box">
       {progressLabel && (

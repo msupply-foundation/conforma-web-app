@@ -14,7 +14,7 @@ import {
   generateReviewSectionActions,
 } from '../../helpers/structure'
 import addReviewResponses from '../../helpers/structure/addReviewResponses'
-import generateReviewConsolidationProgress from '../../helpers/structure/generateReviewConsolidationProgress'
+import generateConsolidationProgress from '../../helpers/structure/generateConsolidationProgress'
 
 import {
   UseGetReviewStructureForSectionProps,
@@ -93,7 +93,7 @@ const generateReviewStructure: GenerateReviewStructure = ({
   if (level === 1) {
     generateReviewProgress(newStructure)
   } else {
-    generateReviewConsolidationProgress(newStructure)
+    generateConsolidationProgress(newStructure)
   }
 
   // filter by supplied sections or by all sections if none supplied to the hook
