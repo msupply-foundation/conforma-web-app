@@ -10,6 +10,7 @@ export default gql`
     timeUpdated
     originalReviewResponseId
     reviewResponseLinkId
+    templateElementId
     applicationResponse {
       id
       templateElementId

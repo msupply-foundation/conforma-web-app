@@ -1,26 +1,36 @@
 import React from 'react'
 import { Label, Progress } from 'semantic-ui-react'
-import { ApplicationProgress, ReviewProgress } from '../../utils/types'
+import {
+  ApplicationProgress,
+  ReviewAndConsolidationProgress,
+  ReviewProgress,
+} from '../../utils/types'
 import strings from '../../utils/constants'
 
-const getReviewProgressDefaults = (reviewProgress: ReviewProgress | undefined) => ({
+const getReviewProgressDefaults = ({
+  reviewProgress,
+  reviewAndConsolidationProgress,
+}: SectionProgressBarProps) => ({
   doneNonConform: reviewProgress?.doneNonConform || 0,
   doneConform: reviewProgress?.doneConform || 0,
-  totalReviewable: reviewProgress?.totalReviewable || 0,
+  totalReviewable: reviewAndConsolidationProgress?.totalReviewable || 0,
 })
 
-const getReviewProgressTitle = (reviewProgress: ReviewProgress | undefined) => {
-  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(reviewProgress)
+const getReviewProgressTitle = (props: SectionProgressBarProps) => {
+  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(props)
   if (doneNonConform > 0) return `(${doneNonConform}) ${strings.LABEL_REVIEW_DECLINED}`
   else if (doneConform === totalReviewable) return strings.LABEL_SECTION_COMPLETED
   return null
 }
 
-type SectionProgressBarProps = { reviewProgress: ReviewProgress | undefined }
+type SectionProgressBarProps = {
+  reviewProgress: ReviewProgress | undefined
+  reviewAndConsolidationProgress: ReviewAndConsolidationProgress | undefined
+}
 
-const ReviewSectionProgressBar: React.FC<SectionProgressBarProps> = ({ reviewProgress }) => {
-  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(reviewProgress)
-  const progressLabel = getReviewProgressTitle(reviewProgress)
+const ReviewSectionProgressBar: React.FC<SectionProgressBarProps> = (props) => {
+  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(props)
+  const progressLabel = getReviewProgressTitle(props)
   return (
     <div className="progress-box">
       {progressLabel && (
