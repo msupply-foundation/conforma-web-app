@@ -1,5 +1,3 @@
-import React, { CSSProperties, useState } from 'react'
-import { Button, Grid, Icon, Message } from 'semantic-ui-react'
 import React, { useState } from 'react'
 import { Grid, Icon, Label, Message } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
