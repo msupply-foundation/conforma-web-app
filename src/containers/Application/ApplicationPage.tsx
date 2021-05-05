@@ -1,16 +1,23 @@
-import React, { CSSProperties, useEffect } from 'react'
-import { Grid, Header, Segment } from 'semantic-ui-react'
+import React, { useEffect } from 'react'
+import { Container, Grid, Header, Segment } from 'semantic-ui-react'
 import {
   FullStructure,
   SectionAndPage,
   MethodRevalidate,
   ApplicationProps,
 } from '../../utils/types'
-import { Loading, Navigation, PageElements, ProgressBar } from '../../components'
+import {
+  ApplicationContainer,
+  Loading,
+  Navigation,
+  PageElements,
+  ProgressBar,
+} from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { checkPageIsAccessible } from '../../utils/helpers/structure'
 import { useRouter } from '../../utils/hooks/useRouter'
+import usePageTitle from '../../utils/hooks/usePageTitle'
 import strings from '../../utils/constants'
 
 const ApplicationPage: React.FC<ApplicationProps> = ({
@@ -26,6 +33,8 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
     push,
     replace,
   } = useRouter()
+
+  usePageTitle(strings.PAGE_TITLE_APPLICATION.replace('%1', serialNumber))
 
   const pageNumber = Number(page)
 
@@ -54,36 +63,35 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
 
   return (
     <>
-      <Header
-        as="h1"
-        textAlign="center"
-        content={currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
-      />
-      <Grid stackable style={inlineStyles.grid}>
-        <Grid.Column width={4}>
-          <ProgressBar
-            structure={fullStructure}
-            requestRevalidation={requestRevalidation as MethodRevalidate}
-            strictSectionPage={strictSectionPage as SectionAndPage}
-          />
-        </Grid.Column>
-        <Grid.Column width={10} stretched>
-          <Segment vertical style={{ marginBottom: 20 }}>
-            <Header content={fullStructure.sections[sectionCode].details.title} />
-            <PageElements
-              canEdit={current?.status === ApplicationStatus.Draft}
-              elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
-              responsesByCode={fullStructure.responsesByCode}
-              applicationData={fullStructure.info}
-              isStrictPage={
-                sectionCode === strictSectionPage?.sectionCode &&
-                pageNumber === strictSectionPage?.pageNumber
-              }
+      <Container id="application-form">
+        <Grid stackable>
+          <Grid.Column width={4} id="progress-column" className="dev-border">
+            <ProgressBar
+              structure={fullStructure}
+              requestRevalidation={requestRevalidation as MethodRevalidate}
+              strictSectionPage={strictSectionPage as SectionAndPage}
             />
-          </Segment>
-        </Grid.Column>
-        <Grid.Column width={2} />
-      </Grid>
+          </Grid.Column>
+          <Grid.Column width={9} stretched id="form-column">
+            <Segment basic>
+              <Header as="h4" content={fullStructure.sections[sectionCode].details.title} />
+              <PageElements
+                canEdit={current?.status === ApplicationStatus.Draft}
+                elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
+                responsesByCode={fullStructure.responsesByCode}
+                applicationData={fullStructure.info}
+                isStrictPage={
+                  sectionCode === strictSectionPage?.sectionCode &&
+                  pageNumber === strictSectionPage?.pageNumber
+                }
+              />
+            </Segment>
+          </Grid.Column>
+          <Grid.Column width={3} id="help-column" className="dev-border">
+            Help tips go here
+          </Grid.Column>
+        </Grid>
+      </Container>
       <Navigation
         current={{ sectionCode, pageNumber }}
         isLinear={isLinear}
@@ -93,17 +101,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
       />
     </>
   )
-}
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const inlineStyles = {
-  grid: {
-    backgroundColor: 'white',
-    padding: 10,
-    margin: '0px 50px',
-    minHeight: 500,
-    flex: 1,
-  } as CSSProperties,
 }
 
 export default ApplicationPage

@@ -1,6 +1,6 @@
-import React, { CSSProperties, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Grid, Icon, Message } from 'semantic-ui-react'
+import { Grid, Icon, Label, Message } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ReviewAction, ReviewProgress, ReviewSectionComponentProps } from '../../utils/types'
 import strings from '../../utils/constants'
@@ -30,7 +30,12 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
         if (isAssignedToCurrentUser) {
           if (reReviewableCount(reviewProgress)) return <ReReviewButton {...props} />
           else return <ContinueReviewButton {...props} />
-        } else return <div style={inProgressStyle}>{strings.STATUS_IN_PROGRESS}</div>
+        } else
+          return (
+            <Label className="simple-label">
+              <em>{strings.STATUS_IN_PROGRESS}</em>
+            </Label>
+          )
       }
       case ReviewAction.canView: {
         if (isAssignedToCurrentUser) return <ContinueReviewButton {...props} />
@@ -111,10 +116,10 @@ const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
       : restart
 
   return (
-    <Button
-      style={actionReReviewStyle}
+    <a
+      className="user-action clickable"
       onClick={buttonAction}
-    >{`${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewCount})`}</Button>
+    >{`${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewCount})`}</a>
   )
 }
 
@@ -140,7 +145,11 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
 
   if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
 
-  return <Button onClick={selfAssignReview}>{strings.BUTTON_SELF_ASSIGN}</Button>
+  return (
+    <a className="user-action clickable" onClick={selfAssignReview}>
+      {strings.BUTTON_SELF_ASSIGN}
+    </a>
+  )
 }
 
 // START REVIEW button
@@ -176,9 +185,9 @@ const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
   if (startReviewError) return <Message error title={strings.ERROR_GENERIC} />
 
   return (
-    <div style={actionStartStyle} onClick={startReview}>
+    <a className="user-action clickable" onClick={startReview}>
       {strings.ACTION_START}
-    </div>
+    </a>
   )
 }
 
@@ -194,9 +203,12 @@ const ContinueReviewButton: React.FC<ReviewSectionComponentProps> = ({
   const reviewId = fullStructure.thisReview?.id
 
   return (
-    <Link style={actionContinueStyle} to={`${pathname}/${reviewId}?activeSections=${details.code}`}>
+    <a
+      className="user-action clickable"
+      href={`${pathname}/${reviewId}?activeSections=${details.code}`}
+    >
       {strings.ACTION_VIEW}
-    </Link>
+    </a>
   )
 }
 
@@ -210,58 +222,16 @@ const ViewReviewIcon: React.FC<ReviewSectionComponentProps> = ({
   const reviewId = fullStructure.thisReview?.id
   return (
     <Icon
-      style={viewIconStyle}
-      onClick={() => push(`${pathname}/${reviewId}?activeSections=${details.code}`)}
       name="angle right"
+      className="dark-grey"
+      onClick={() => push(`${pathname}/${reviewId}?activeSections=${details.code}`)}
     />
   )
 }
 
 // NOT_STARTED LABEL
 const NotStartedLabel: React.FC = () => (
-  <div style={notStartedLabelStyle}>{strings.STATUS_NOT_STARTED}</div>
+  <Label className="simple-label" content={strings.STATUS_NOT_STARTED} />
 )
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const actionContinueStyle = {
-  color: '#003BFE',
-  fontWeight: 800,
-  letterSpacing: 1,
-  background: 'none',
-  border: 'none',
-  fontSize: 16,
-} as CSSProperties
-
-const actionStartStyle = {
-  color: '#003BFE',
-  fontWeight: 400,
-  letterSpacing: 1,
-  background: 'none',
-  border: 'none',
-  fontSize: 16,
-} as CSSProperties
-
-const actionReReviewStyle = {
-  color: '#003BFE',
-  fontWeight: 400,
-  letterSpacing: 1,
-  background: 'none',
-  border: 'none',
-  fontSize: 16,
-} as CSSProperties
-
-const inProgressStyle = {
-  color: 'rgb(130, 130, 130)',
-  fontStyle: 'italic',
-  marginRight: 20,
-} as CSSProperties
-
-const viewIconStyle = { color: 'rgb(130, 130, 130)' }
-
-const notStartedLabelStyle = {
-  color: 'rgb(130, 130, 130)',
-  fontStyle: 'italic',
-  marginRight: 20,
-} as CSSProperties
 
 export default ReviewSectionRowAction
