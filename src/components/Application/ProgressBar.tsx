@@ -224,7 +224,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
   })
 
   return (
-    <Sticky as={Container} id="application-progress" offset={135}>
+    <Sticky as={Container} id="application-progress" offset={135} className="hide-on-mobile">
       <Grid className="progress-row">
         <Grid.Column
           // width={3}

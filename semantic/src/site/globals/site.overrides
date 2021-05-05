@@ -573,12 +573,12 @@ h6:first-child {
 // Desktop
 @media only screen and (min-width: @tabletBreakpoint) {
   .hide-on-desktop {
-    display: none;
+    display: none !important;
   }
 }
 // Mobile
 @media only screen and (max-width: @largestMobileScreen) {
   .hide-on-mobile {
-    display: none;
+    display: none !important;
   }
 }
