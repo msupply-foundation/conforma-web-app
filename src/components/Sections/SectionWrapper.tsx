@@ -47,14 +47,18 @@ const SectionWrapper: React.FC<SectionProps> = ({
                 {extraSectionTitleContent && extraSectionTitleContent(section)}
               </Grid.Column>
               <Grid.Column textAlign="right" width={1}>
-                <Icon name={isActive ? 'angle up' : 'angle down'} size="large" />
+                <Icon
+                  name={isActive ? 'angle up' : 'angle down'}
+                  className="dark-grey"
+                  size="large"
+                />
               </Grid.Column>
             </Grid>
           </Sticky>
         </Accordion.Title>
         <Accordion.Content active={isActive}>
           {Object.values(pages).map((page) => (
-            <div key={`${section.details.id}Page_${page.number}Container`}>
+            <div key={`${section.details.id}Page_${page.number}Container`} className="summary-page">
               {scrollableAttachment && scrollableAttachment(page)}
               <Header as="h6" className="summary-page-header">
                 {page.name}

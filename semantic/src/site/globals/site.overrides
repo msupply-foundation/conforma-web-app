@@ -496,16 +496,34 @@ a:hover {
 }
 
 #application-summary-content {
-  max-width: @applicationSummaryContentWidth;
+  display: flex;
+  flex-direction: column;
+  width: @applicationSummaryContentWidth;
 }
 
 #application-sections {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .summary-section {
   background-color: @surfacesLight;
   border-radius: @borderRadius;
   padding: 20px;
+  margin-bottom: 15px;
+}
+
+.summary-page {
+  margin-bottom: 30px;
+}
+
+.ui.basic.segment.summary-page-element {
+  background-color: @surfacesWhite;
+  margin-bottom: 10px;
+  border-radius: @borderRadius;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 #application-submit {
