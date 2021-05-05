@@ -1,21 +1,7 @@
 import React from 'react'
-import { Icon, Label, Progress } from 'semantic-ui-react'
-import { ApplicationProgress, ReviewProgress, SectionState } from '../../utils/types'
+import { Label, Progress } from 'semantic-ui-react'
+import { ApplicationProgress, ReviewProgress } from '../../utils/types'
 import strings from '../../utils/constants'
-
-const ReviewStatusOrProgress: React.FC<SectionState> = ({ reviewProgress, reviewAction }) => {
-  if (reviewAction?.isAssignedToCurrentUser && reviewProgress) {
-    return reviewAction.isReviewable ? (
-      <ReviewSectionProgressBar reviewProgress={reviewProgress} />
-    ) : (
-      <Label
-        icon={<Icon name="circle" size="mini" color="blue" />}
-        content={strings.LABEL_ASSIGNED_TO_YOU}
-      />
-    )
-  }
-  return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
-}
 
 const getReviewProgressDefaults = (reviewProgress: ReviewProgress | undefined) => ({
   doneNonConform: reviewProgress?.doneNonConform || 0,
@@ -77,5 +63,4 @@ const ApplicationProgressBar: React.FC<ApplicationProgress> = (applicationProgre
   ) : null
 }
 
-export default ReviewStatusOrProgress
 export { ReviewSectionProgressBar, ApplicationProgressBar }

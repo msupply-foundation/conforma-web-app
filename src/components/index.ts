@@ -11,7 +11,8 @@ import FilterList from './FilterList'
 import Home from './Home'
 import Loading from './Loading'
 import { Footer, ModalWarning } from './Main'
-import { SectionWrapper } from './Sections'
+import { ReviewHeader } from './Review'
+import { ApplicationProgressBar, ReviewSectionProgressBar, SectionWrapper } from './Sections'
 import { PageElements } from './PageElements'
 import TemplateList from './TemplateList'
 import TemplateNew from './TemplateNew'
@@ -30,6 +31,7 @@ export {
   ApplicationContainer,
   ApplicationSections,
   ApplicationSelectType,
+  ApplicationProgressBar,
   Approval,
   Admin,
   Config,
@@ -46,6 +48,8 @@ export {
   Product,
   ProductList,
   ProgressBar,
+  ReviewHeader,
+  ReviewSectionProgressBar,
   SectionWrapper,
   Organisation,
   OrgMemberEdit,

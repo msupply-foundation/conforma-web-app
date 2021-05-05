@@ -5,7 +5,7 @@ import { PageElements } from '../'
 
 interface SectionProps {
   section: SectionState
-  extraSectionTitleContent?: (section: SectionState) => React.ReactNode
+  ExtraSectionTitleContent: React.FC<SectionState>
   extraPageContent?: (page: Page) => React.ReactNode
   scrollableAttachment?: (page: Page) => React.ReactNode
   responsesByCode: ResponsesByCode
@@ -24,7 +24,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
   applicationData,
   isActive,
   toggleSection,
-  extraSectionTitleContent,
+  ExtraSectionTitleContent,
   extraPageContent,
   isReview,
   serial,
@@ -44,7 +44,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
                 <Header as="h2" content={details.title} style={sectionStyles.title} />
               </Grid.Column>
               <Grid.Column floated="right" textAlign="right">
-                {extraSectionTitleContent && extraSectionTitleContent(section)}
+                <ExtraSectionTitleContent {...section} />
               </Grid.Column>
               <Grid.Column floated="right" textAlign="right" width={1}>
                 <Icon

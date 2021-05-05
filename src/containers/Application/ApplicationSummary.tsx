@@ -1,6 +1,12 @@
 import React, { CSSProperties, useEffect, useState } from 'react'
 import { Button, Header, Message, Container, Segment } from 'semantic-ui-react'
-import { ApplicationProps, MethodToCallProps, ResponsesByCode, User } from '../../utils/types'
+import {
+  ApplicationProps,
+  MethodToCallProps,
+  ResponsesByCode,
+  SectionState,
+  User,
+} from '../../utils/types'
 import useSubmitApplication from '../../utils/hooks/useSubmitApplication'
 import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
@@ -96,6 +102,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
             isActive={isSectionActive(section.details.code)}
             toggleSection={toggleSection(section.details.code)}
             section={section}
+            ExtraSectionTitleContent={EmptyComponent}
             responsesByCode={responsesByCode as ResponsesByCode}
             applicationData={fullStructure.info}
             serial={info.serial}
@@ -120,6 +127,8 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     </Container>
   )
 }
+
+const EmptyComponent: React.FC<SectionState> = (section) => null
 
 // Styles - TODO: Move to LESS || Global class style (semantic)
 const inlineStyles = {

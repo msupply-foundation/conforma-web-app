@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react'
-import { Button, Header, Message, Segment } from 'semantic-ui-react'
-import { Loading, SectionWrapper } from '../../components'
+import { Button, Container, Header, Icon, Label, Message, Segment } from 'semantic-ui-react'
+import { Loading, ReviewHeader, ReviewSectionProgressBar, SectionWrapper } from '../../components'
 import {
   AssignmentDetails,
   FullStructure,
@@ -8,7 +8,6 @@ import {
   ResponsesByCode,
   SectionState,
 } from '../../utils/types'
-
 import {
   ReviewResponseDecision,
   ReviewResponseStatus,
@@ -23,8 +22,6 @@ import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivati
 import useScrollableAttachments, {
   ScrollableAttachment,
 } from '../../utils/hooks/useScrollableAttachments'
-import { ReviewHeader } from '../../components/Review'
-import { ReviewStatusOrProgress } from '../../components/Sections'
 import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
 
@@ -67,8 +64,15 @@ const ReviewPage: React.FC<{
     },
   } = fullReviewStructure
 
-  const ReviewMain: React.FC = () => (
-    <>
+  return error ? (
+    <Message error title={strings.ERROR_GENERIC} list={[error]} />
+  ) : (
+    <Container>
+      <ReviewHeader
+        applicationStage={stage.name || ''}
+        applicationStageColour={stage.colour}
+        applicationName={name}
+      />
       <Segment className="sup" style={inlineStyles.top}>
         {Object.values(sections).map((section) => (
           <SectionWrapper
@@ -76,9 +80,7 @@ const ReviewPage: React.FC<{
             isActive={isSectionActive(section.details.code)}
             toggleSection={toggleSection(section.details.code)}
             section={section}
-            extraSectionTitleContent={(section: SectionState) => (
-              <ReviewStatusOrProgress {...section} />
-            )}
+            ExtraSectionTitleContent={SectionRowStatus}
             extraPageContent={(page: Page) => <ApproveAllButton page={page} />}
             scrollableAttachment={(page: Page) => (
               <ScrollableAttachment
@@ -104,20 +106,22 @@ const ReviewPage: React.FC<{
           scrollTo={scrollTo}
         />
       </Segment>
-    </>
+    </Container>
   )
+}
 
-  return error ? (
-    <Message error title={strings.ERROR_GENERIC} list={[error]} />
-  ) : (
-    <ReviewHeader
-      applicationStage={stage.name || ''}
-      applicationStageColour={stage.colour}
-      applicationName={name}
-      currentUser={currentUser}
-      ChildComponent={ReviewMain}
-    />
-  )
+const SectionRowStatus: React.FC<SectionState> = ({ reviewAction, reviewProgress }) => {
+  if (reviewAction?.isAssignedToCurrentUser && reviewProgress) {
+    return reviewAction.isReviewable ? (
+      <ReviewSectionProgressBar reviewProgress={reviewProgress} />
+    ) : (
+      <Label
+        icon={<Icon name="circle" size="mini" color="blue" />}
+        content={strings.LABEL_ASSIGNED_TO_YOU}
+      />
+    )
+  }
+  return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
 }
 
 const ApproveAllButton: React.FC<{ page: Page }> = ({ page }) => {
