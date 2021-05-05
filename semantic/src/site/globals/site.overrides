@@ -372,6 +372,7 @@ a:hover {
   max-width: 205px;
   padding-left: 5px;
   padding-right: 0;
+  padding-top: 0;
 }
 
 #form-column {
@@ -409,27 +410,28 @@ a:hover {
   font-size: 1.1em !important;
 }
 
-.progress-name {
-}
+// .progress-name {
+// }
 
 .page-list {
   font-size: 0.9em !important;
   padding-left: 30px !important;
-  margin-bottom: -25px !important;
+  margin-bottom: -30px !important;
+  margin-top: -20px !important;
 }
 
 .page-row {
   padding-bottom: 8px !important;
 }
 
-.progress-page-indicator {
-}
+// .progress-page-indicator {
+// }
 
 .progress-page-name-column {
   width: 150px !important;
 }
 
-.section-progress-graphic {
+.section-progress-bar {
   position: absolute;
 }
 

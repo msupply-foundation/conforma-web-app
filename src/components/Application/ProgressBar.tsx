@@ -12,13 +12,13 @@ import {
   SectionAndPage,
 } from '../../utils/types'
 
-interface ProgressBarProps {
+interface ProgressAreaProps {
   structure: FullStructure
   requestRevalidation: MethodRevalidate
   strictSectionPage: SectionAndPage | null
 }
 
-interface ProgressGraphicProps {
+interface ProgressBarProps {
   percent: number
   length: number
   error?: boolean
@@ -29,7 +29,7 @@ enum ProgressType {
   page = 'PAGE',
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({
+const ProgressArea: React.FC<ProgressAreaProps> = ({
   structure,
   requestRevalidation,
   strictSectionPage,
@@ -79,39 +79,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     })
   }
 
-  // Maps types of indicators to specific Icon components
-  const progressIconMap = {
-    error: [
-      <Icon name={'exclamation circle'} color={'pink'} className="progress-indicator" />,
-      <Icon name={'exclamation circle'} color={'pink'} className="progress-page-indicator" />,
-    ],
-    completed: [
-      <Icon name="check circle" color="green" className="progress-indicator" />,
-      <Icon name="circle" color="green" size="tiny" className="progress-page-indicator" />,
-    ],
-    notStarted: [
-      <Icon name="circle outline" color="grey" className="progress-indicator" />,
-      <div className="progress-page-indicator" />,
-    ],
-    incomplete: [
-      <Icon name="circle outline" color="grey" className="progress-indicator" />,
-      <div className="progress-page-indicator" />,
-    ],
-    current: [
-      <Icon.Group className="progress-indicator">
-        <Icon name="circle outline" color="grey" />
-        <Icon
-          name="circle"
-          color="blue"
-          size="mini"
-          // Hack to make grouped icons align properly
-          style={{ transform: 'translateX(-72%) translateY(-56%)' }}
-        />
-      </Icon.Group>,
-      <Icon name="circle" color="blue" size="tiny" className="progress-page-indicator" />,
-    ],
-  }
-
   // We want to be able to show FIVE states:
   //    (but some may show same icon)
   // error -> if at least one error or if not completed and strict
@@ -149,7 +116,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     const checkPageIsStrict = (pageNumber: string) =>
       isStrictSection && strictSectionPage?.pageNumber === Number(pageNumber)
 
-    const ProgressGraphic: React.FC<ProgressGraphicProps> = ({ percent, length, error }) => {
+    const SectionProgressBar: React.FC<ProgressBarProps> = ({ percent, length, error }) => {
       return (
         <Progress
           percent={percent}
@@ -159,36 +126,31 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           style={{
             width: length,
             transformOrigin: '0 0',
-            transform: `rotate(90deg) translate(-5px, -10px)`,
+            transform: `rotate(90deg) translate(2px, -10px)`,
           }}
         />
       )
     }
 
-    const calculatePercent = () => {
-      console.log('Progress', sectionProgress)
-      console.log('Pages', pages)
-      return (
-        ((sectionProgress.doneNonRequired + sectionProgress.doneRequired) /
-          (sectionProgress.totalNonRequired + sectionProgress.totalRequired)) *
-        100
-      )
-    }
+    const calculateBarPercent = () =>
+      sectionProgress.totalRequired === 0
+        ? 100
+        : (sectionProgress.doneRequired / sectionProgress.totalRequired) * 100
 
     const calculateBarLength = () => {
       // Adjust these constants to match existing style settings
       const pixelsPerPage = 27.8
-      const topPad = 10
-      const bottomPad = 15
+      const topPad = 5
+      const bottomPad = 10
       const numPages = Object.keys(pages).length
       return pixelsPerPage * numPages + topPad + bottomPad
     }
 
     return (
       <div className="page-list-container">
-        <div className="section-progress-graphic">
-          <ProgressGraphic
-            percent={calculatePercent()}
+        <div className="section-progress-bar">
+          <SectionProgressBar
+            percent={calculateBarPercent()}
             length={calculateBarLength()}
             error={!sectionProgress.valid}
           />
@@ -198,7 +160,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
             <List.Item
               key={`ProgressSection_${sectionCode}_${number}`}
               active={isActivePage(sectionCode, Number(number))}
-              // as="a"
               onClick={() => handleChangeToPage(sectionCode, Number(number))}
             >
               <Grid className="page-row clickable">
@@ -240,9 +201,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       key: `progress_${index}`,
       title: {
         children: (
-          <Grid className="progress-row">
+          <Grid className="progress-row clickable">
             <Grid.Column
-              // width={2}
               textAlign="right"
               verticalAlign="middle"
               className="progress-indicator-column"
@@ -286,4 +246,37 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   )
 }
 
-export default ProgressBar
+// Maps types of indicators to specific Icon components
+const progressIconMap = {
+  error: [
+    <Icon name={'exclamation circle'} color={'pink'} className="progress-indicator" />,
+    <Icon name={'exclamation circle'} color={'pink'} className="progress-page-indicator" />,
+  ],
+  completed: [
+    <Icon name="check circle" color="green" className="progress-indicator" />,
+    <Icon name="circle" color="green" size="tiny" className="progress-page-indicator" />,
+  ],
+  notStarted: [
+    <Icon name="circle outline" color="grey" className="progress-indicator" />,
+    <div className="progress-page-indicator" />,
+  ],
+  incomplete: [
+    <Icon name="circle outline" color="grey" className="progress-indicator" />,
+    <div className="progress-page-indicator" />,
+  ],
+  current: [
+    <Icon.Group className="progress-indicator">
+      <Icon name="circle outline" color="grey" />
+      <Icon
+        name="circle"
+        color="blue"
+        size="mini"
+        // Hack to make grouped icons align properly - Semantic bug
+        style={{ transform: 'translateX(-72%) translateY(-56%)' }}
+      />
+    </Icon.Group>,
+    <Icon name="circle" color="blue" size="tiny" className="progress-page-indicator" />,
+  ],
+}
+
+export default ProgressArea
