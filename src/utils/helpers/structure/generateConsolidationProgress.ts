@@ -38,10 +38,10 @@ const generatePageconsolidationProgress = (page: Page) => {
   const totalConform = totalReviewable.filter(conformOriginal)
   // totalNonConform of originalReviewResponse
   const totalNonConform = totalReviewable.filter(nonConformOriginal)
-  // latestPreviousLevelReviewResponse not linked to thisReviewLatestResponse
+  // lowerLevelReviewLatestResponse not linked to thisReviewLatestResponse
   const totalPendingReview = totalReviewable.filter(({ isPendingReview }) => isPendingReview)
 
-  // Linked to latestPreviousLevelReviewResponse
+  // Linked to lowerLevelReviewLatestResponse
   const totalUpToDateReviewResponses = totalReviewable.filter(
     ({ isPendingReview }) => !isPendingReview
   )

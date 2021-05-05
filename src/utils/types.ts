@@ -247,8 +247,8 @@ type PageElement = {
   response: ResponseFull | null
   previousApplicationResponse: ApplicationResponse
   latestApplicationResponse: ApplicationResponse
-  latestPreviousLevelReviewResponse?: ReviewResponse
-  previousPreviousLevelReviewResponse?: ReviewResponse
+  lowerLevelReviewLatestResponse?: ReviewResponse
+  lowerLevelReviewPreviousResponse?: ReviewResponse
   thisReviewLatestResponse?: ReviewResponse
   thisReviewPreviousResponse?: ReviewResponse
   latestOriginalReviewResponse?: ReviewResponse
