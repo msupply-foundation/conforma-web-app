@@ -4,7 +4,8 @@
 
 // Custom class for wider buttons
 .button-wide {
-  min-width: 280px;
+  width: 280px;
+  max-width: 100%;
 }
 
 // Override for icon in button

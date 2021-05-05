@@ -38,7 +38,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
     <div ref={stickyRef} key={`${section.details.id}`}>
       <Accordion className="summary-section">
         <Accordion.Title active={isActive} onClick={toggleSection}>
-          <Sticky context={stickyRef} offset={135} bottomOffset={150}>
+          <Sticky context={stickyRef} offset={134} bottomOffset={150}>
             <Grid columns="equal" className="summary-section-header">
               <Grid.Column>
                 <Header as="h4" content={details.title} />

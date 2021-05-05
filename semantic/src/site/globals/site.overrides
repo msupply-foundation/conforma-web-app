@@ -488,6 +488,8 @@ a:hover {
   align-items: center;
   width: @applicationSummaryWidth;
   background-color: @surfacesWhite;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 #application-summary-header {
@@ -498,13 +500,15 @@ a:hover {
 #application-summary-content {
   display: flex;
   flex-direction: column;
-  width: @applicationSummaryContentWidth;
+  width: 100%;
+  max-width: @applicationSummaryContentWidth;
 }
 
 #application-sections {
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-bottom: 30px;
 }
 
 .summary-section {
@@ -512,6 +516,10 @@ a:hover {
   border-radius: @borderRadius;
   padding: 20px;
   margin-bottom: 15px;
+}
+
+.summary-section-header {
+  background-color: @surfacesLight;
 }
 
 .summary-page {
@@ -527,6 +535,11 @@ a:hover {
 }
 
 #application-submit {
+  margin-bottom: 50px;
+}
+
+#application-submit p {
+  margin-top: 20px;
 }
 
 /*--------------------------------
