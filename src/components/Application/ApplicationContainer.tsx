@@ -6,16 +6,18 @@ import strings from '../../utils/constants'
 export interface ApplicationContainerProps {
   template: TemplateDetails
   currentUser: User | null
+  isNonRegistered: boolean
 }
 
 const ApplicationContainer: React.FC<ApplicationContainerProps> = ({
   template,
   currentUser,
+  isNonRegistered,
   children,
 }) => {
   const { replace } = useRouter()
   const { code, name } = template
-  const isNonRegistered = currentUser?.username === strings.USER_NONREGISTERED
+
   return (
     <Container id="application-area" className={isNonRegistered ? 'non-registered' : ''}>
       <div className={`top-container ${isNonRegistered ? 'hidden-element' : ''}`}>

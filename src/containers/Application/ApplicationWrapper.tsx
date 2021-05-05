@@ -17,7 +17,7 @@ const ApplicationWrapper: React.FC = () => {
     query: { serialNumber },
   } = useRouter()
   const {
-    userState: { currentUser },
+    userState: { currentUser, isNonRegistered },
   } = useUserState()
 
   const { error, isLoading, structure, template } = useLoadApplication({
@@ -36,7 +36,11 @@ const ApplicationWrapper: React.FC = () => {
         <ReviewWrapper structure={structure} />
       </Route>
       <Route exact path={path}>
-        <ApplicationContainer template={template} currentUser={currentUser}>
+        <ApplicationContainer
+          template={template}
+          currentUser={currentUser}
+          isNonRegistered={isNonRegistered}
+        >
           <ApplicationHome structure={structure} template={template} />
         </ApplicationContainer>
       </Route>
@@ -44,7 +48,11 @@ const ApplicationWrapper: React.FC = () => {
         <ApplicationSubmission structure={structure} />
       </Route>
       <Route>
-        <ApplicationContainer template={template} currentUser={currentUser}>
+        <ApplicationContainer
+          template={template}
+          currentUser={currentUser}
+          isNonRegistered={isNonRegistered}
+        >
           <ApplicationPageWrapper structure={structure} />
         </ApplicationContainer>
       </Route>

@@ -28,7 +28,7 @@ const ApplicationCreate: React.FC = () => {
   usePageTitle(strings.PAGE_TITLE_CREATE)
 
   const {
-    userState: { currentUser },
+    userState: { currentUser, isNonRegistered },
   } = useUserState()
 
   // If template has no start message, go straight to first page of new application
@@ -99,7 +99,11 @@ const ApplicationCreate: React.FC = () => {
   }
 
   return template?.sections ? (
-    <ApplicationContainer template={template} currentUser={currentUser}>
+    <ApplicationContainer
+      template={template}
+      currentUser={currentUser}
+      isNonRegistered={isNonRegistered}
+    >
       <ApplicationHomeWrapper
         startMessage={template.startMessage}
         name={template.name}
