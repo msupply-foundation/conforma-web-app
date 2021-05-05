@@ -11,12 +11,13 @@ export default {
     message: 'Please fix invalid fields before continuing',
     option: 'OK',
   },
-  REVIEW_LEVEL1_SUBMISSION_FAIL: {
-    title: 'Problem submitting review',
-    message:
-      'Please mark all reviewable questions to conform or at least one to non conform before submission',
-    option: 'OK',
+  REVIEW_SUBMISSION_CONFIRM: {
+    title: 'Submitting Review',
+    message: 'Are you sure',
+    option: 'SUBMIT',
   },
+  REVIEW_SUBMISSION_FAIL: 'Not all sections have been reviewed',
+  REVIEW_SUBMISSION_ERROR: 'Something wrong with server - review mutation failed',
   REVIEW_DECISION_SET_FAIL: {
     title: 'Problem submitting review',
     message: 'Please choose decision of List Of Question or Non Conformity',

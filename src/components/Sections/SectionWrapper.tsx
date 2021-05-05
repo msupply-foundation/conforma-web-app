@@ -4,39 +4,41 @@ import { ResponsesByCode, SectionState, Page, ApplicationDetails } from '../../u
 import { PageElements } from '../'
 
 interface SectionProps {
-  section: SectionState
+  toggleSection: () => void
   extraSectionTitleContent?: (section: SectionState) => React.ReactNode
   extraPageContent?: (page: Page) => React.ReactNode
   scrollableAttachment?: (page: Page) => React.ReactNode
+  section: SectionState
   responsesByCode: ResponsesByCode
   applicationData: ApplicationDetails
-  isReview?: boolean
-  serial: string
-  isSummary?: boolean
   isActive: boolean
-  toggleSection: () => void
+  isReview?: boolean
+  isSummary?: boolean
+  serial: string
   canEdit?: boolean
+  failed?: boolean
 }
 
 const SectionWrapper: React.FC<SectionProps> = ({
+  toggleSection,
+  extraSectionTitleContent,
+  extraPageContent,
+  scrollableAttachment,
   section,
   responsesByCode,
   applicationData,
   isActive,
-  toggleSection,
-  extraSectionTitleContent,
-  extraPageContent,
   isReview,
-  serial,
   isSummary,
-  scrollableAttachment,
+  serial,
   canEdit,
+  failed,
 }) => {
   const { details, pages } = section
   const stickyRef = useRef(null)
   return (
     <div ref={stickyRef} key={`${section.details.id}`}>
-      <Accordion className="summary-section">
+      <Accordion className="summary-section" style={sectionStyles.sup(!!failed)}>
         <Accordion.Title active={isActive} onClick={toggleSection}>
           <Sticky context={stickyRef} offset={134} bottomOffset={150}>
             <Grid columns="equal" className="summary-section-header">
@@ -81,6 +83,19 @@ const SectionWrapper: React.FC<SectionProps> = ({
       </Accordion>
     </div>
   )
+}
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const sectionStyles = {
+  sup: (failed: boolean) =>
+    ({
+      border: failed ? '2px solid pink' : 'none',
+      borderRadius: 8,
+      marginBottom: 10,
+      padding: 10,
+      boxShadow: 'none',
+      backgroundColor: '#DCDDDD', // Invision
+    } as CSSProperties),
 }
 
 export default SectionWrapper
