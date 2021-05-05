@@ -101,14 +101,6 @@ const generateReviewSectionActions: GenerateSectionActions = ({
     }
 
     const foundAction = actionDefinitions.find(({ checkMethod }) => checkMethod(checkMethodProps))
-    console.log(
-      foundAction?.action,
-      reviewAssignment.reviewer.firstName,
-      section.details.code,
-      thisReview?.status,
-      !!thisReview,
-      section.reviewProgress
-    )
 
     section.reviewAction = {
       isAssignedToCurrentUser,
