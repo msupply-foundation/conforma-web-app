@@ -1,6 +1,12 @@
 import { Decision, ReviewResponseDecision } from '../../generated/graphql'
 
-import { FullStructure, SectionState, Page } from '../../types'
+import {
+  FullStructure,
+  SectionState,
+  Page,
+  ReviewProgress,
+  ReviewAndConsolidationProgress,
+} from '../../types'
 
 const generateReviewProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach(generatePageReviewProgress)
@@ -10,7 +16,10 @@ const generateReviewProgress = (newStructure: FullStructure) => {
 }
 
 const generateSectionReviewProgress = (section: SectionState) => {
-  section.reviewProgress = getSums(Object.values(section.pages))
+  section.reviewProgress = getReviewProgressSums(Object.values(section.pages))
+  section.reviewAndConsolidationProgress = getReviewAndConsolidationProgress(
+    Object.values(section.pages)
+  )
 }
 
 const generatePageReviewProgress = (page: Page) => {
@@ -37,27 +46,33 @@ const generatePageReviewProgress = (page: Page) => {
 
   const totalPendingReview = totalReviewable.filter(({ isPendingReview }) => isPendingReview)
 
-  page.reviewProgress = {
+  page.reviewAndConsolidationProgress = {
     totalReviewable: totalReviewable.length,
     totalActive: totalReviewable.length,
+    totalPendingReview: totalPendingReview.length,
+  }
+
+  page.reviewProgress = {
     doneConform: doneConform.length,
     doneNonConform: doneNonConform.length,
     totalNewReviewable: totalNewReviewable.length,
     doneNewReviewable: doneNewReviewable.length,
-    totalPendingReview: totalPendingReview.length,
   }
 }
 
 const generateReviewValidity = (newStructure: FullStructure) => {
   const sortedPages = newStructure?.sortedPages || []
-  const sums = getSums(sortedPages)
+  const sums = {
+    ...getReviewProgressSums(Object.values(newStructure.sections)),
+    ...getReviewAndConsolidationProgress(Object.values(newStructure.sections)),
+  }
 
   let firstIncompleteReviewPage
 
   if (sums.doneNonConform === 0 && sums.totalReviewable > sums.doneConform) {
     const firstIncomplete = sortedPages.find(
-      ({ reviewProgress }) =>
-        reviewProgress?.totalReviewable !==
+      ({ reviewAndConsolidationProgress, reviewProgress }) =>
+        reviewAndConsolidationProgress?.totalReviewable !==
         (reviewProgress?.doneConform || 0) + (reviewProgress?.doneNonConform || 0)
     )
 
@@ -75,31 +90,44 @@ const generateReviewValidity = (newStructure: FullStructure) => {
     newStructure.canSubmitReviewAs =
       sums.doneNonConform === 0 ? Decision.Conform : Decision.NonConform
 }
-// Simple helper that will iterate over elements and sum up all of the values for keys
-// returning an object of keys with sums
-const getSums = (elements: Page[]) => {
-  const initial = {
-    totalReviewable: 0,
+// Helpers to iterate over progress and return sums of progress keys
+const getReviewAndConsolidationProgress = (elements: (Page | SectionState)[]) => {
+  const initial: ReviewAndConsolidationProgress = {
     totalActive: 0,
+    totalReviewable: 0,
+    totalPendingReview: 0,
+  }
+
+  return elements.reduce((sum, page) => {
+    const { totalActive, totalReviewable, totalPendingReview } =
+      page.reviewAndConsolidationProgress || initial
+    return {
+      totalActive: sum.totalActive + totalActive,
+      totalReviewable: sum.totalReviewable + totalReviewable,
+      totalPendingReview: sum.totalPendingReview + totalPendingReview,
+    }
+  }, initial)
+}
+
+const getReviewProgressSums = (elements: (Page | SectionState)[]) => {
+  const initial: ReviewProgress = {
     doneConform: 0,
     doneNonConform: 0,
     totalNewReviewable: 0,
     doneNewReviewable: 0,
-    totalPendingReview: 0,
   }
 
-  return elements.reduce(
-    (sum, { reviewProgress }) => ({
-      totalReviewable: sum.totalReviewable + (reviewProgress?.totalReviewable || 0),
-      totalActive: sum.totalActive + (reviewProgress?.totalActive || 0),
-      doneConform: sum.doneConform + (reviewProgress?.doneConform || 0),
-      doneNonConform: sum.doneNonConform + (reviewProgress?.doneNonConform || 0),
-      totalNewReviewable: sum.totalNewReviewable + (reviewProgress?.totalNewReviewable || 0),
-      doneNewReviewable: sum.doneNewReviewable + (reviewProgress?.doneNewReviewable || 0),
-      totalPendingReview: sum.totalPendingReview + (reviewProgress?.totalPendingReview || 0),
-    }),
-    initial
-  )
+  return elements.reduce((sum, page) => {
+    const { doneConform, doneNonConform, totalNewReviewable, doneNewReviewable } =
+      page.reviewProgress || initial
+    return {
+      doneConform: sum.doneConform + doneConform,
+      doneNonConform: sum.doneNonConform + doneNonConform,
+      totalNewReviewable: sum.totalNewReviewable + totalNewReviewable,
+      doneNewReviewable: sum.doneNewReviewable + doneNewReviewable,
+    }
+  }, initial)
 }
 
 export default generateReviewProgress
+export { getReviewAndConsolidationProgress }

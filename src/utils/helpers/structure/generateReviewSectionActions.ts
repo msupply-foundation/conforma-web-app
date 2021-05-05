@@ -16,7 +16,7 @@ type ActionDefinition = {
     isAssignedToCurrentUser: boolean
     reviewAssignmentStatus: ReviewAssignmentStatus | null
     isPendingReview: boolean
-    doesReviewExists: boolean
+    isReviewExisting: boolean
     reviewStatus: ReviewStatus | undefined
     isCurrentUserReview: boolean
     isReviewActive: boolean
@@ -26,9 +26,9 @@ type ActionDefinition = {
 const actionDefinitions: ActionDefinition[] = [
   {
     action: ReviewAction.canStartReview,
-    checkMethod: ({ reviewAssignmentStatus, isPendingReview, doesReviewExists }) =>
+    checkMethod: ({ reviewAssignmentStatus, isPendingReview, isReviewExisting }) =>
       reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
-      !doesReviewExists &&
+      !isReviewExisting &&
       isPendingReview,
   },
   {
@@ -85,7 +85,7 @@ const generateReviewSectionActions: GenerateSectionActions = ({
   const isCurrentUserReview = reviewAssignment.reviewer.id === currentUserId
 
   sections.forEach((section) => {
-    const isReviewable = (section.reviewProgress?.totalReviewable || 0) > 0
+    const isReviewable = (section.reviewAndConsolidationProgress?.totalReviewable || 0) > 0
     const isAssignedToCurrentUser = isCurrentUserReview && isReviewable
 
     const checkMethodProps = {
@@ -94,21 +94,13 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       isCurrentUserReview,
       reviewLevel: reviewAssignment.level,
       reviewAssignmentStatus: reviewAssignment.status,
-      doesReviewExists: !!thisReview,
+      isReviewExisting: !!thisReview,
       reviewStatus: thisReview?.status,
-      isPendingReview: (section.reviewProgress?.totalPendingReview || 0) > 0,
-      isReviewActive: (section.reviewProgress?.totalActive || 0) > 0,
+      isPendingReview: (section.reviewAndConsolidationProgress?.totalPendingReview || 0) > 0,
+      isReviewActive: (section.reviewAndConsolidationProgress?.totalActive || 0) > 0,
     }
 
     const foundAction = actionDefinitions.find(({ checkMethod }) => checkMethod(checkMethodProps))
-    console.log(
-      foundAction?.action,
-      reviewAssignment.reviewer.firstName,
-      section.details.code,
-      thisReview?.status,
-      !!thisReview,
-      section.reviewProgress
-    )
 
     section.reviewAction = {
       isAssignedToCurrentUser,

@@ -14,7 +14,7 @@ import {
   generateReviewSectionActions,
 } from '../../helpers/structure'
 import addReviewResponses from '../../helpers/structure/addReviewResponses'
-import generateReviewConsolidationProgress from '../../helpers/structure/generateReviewConsolidationProgress'
+import generateConsolidationProgress from '../../helpers/structure/generateConsolidationProgress'
 
 import {
   UseGetReviewStructureForSectionProps,
@@ -80,7 +80,7 @@ const generateReviewStructure: GenerateReviewStructure = ({
   setIsNewApplicationResponse(newStructure)
 
   // thisReviewLatestResponse and thisReviewPreviousResponse
-  // latestPreviousLevelReviewResponse and previousPreviousReviewLevelResponse
+  // lowerLevelReviewLatestResponse and previousPreviousReviewLevelResponse
   // latestOriginalReviewResponse and previousOriginalReviewResponse
   newStructure = addAllReviewResponses(newStructure, data)
 
@@ -93,7 +93,7 @@ const generateReviewStructure: GenerateReviewStructure = ({
   if (level === 1) {
     generateReviewProgress(newStructure)
   } else {
-    generateReviewConsolidationProgress(newStructure)
+    generateConsolidationProgress(newStructure)
   }
 
   // filter by supplied sections or by all sections if none supplied to the hook
@@ -129,7 +129,7 @@ const addIsPendingReview = (structure: FullStructure, reviewLevel: number) => {
       ? (element: PageElement) =>
           element.response?.id !== element.thisReviewLatestResponse?.applicationResponseId
       : (element: PageElement) =>
-          element?.latestPreviousLevelReviewResponse?.id !==
+          element?.lowerLevelReviewLatestResponse?.id !==
           element.thisReviewLatestResponse?.reviewResponseLinkId
 
   Object.values(structure.elementsById || {}).forEach((element) => {
@@ -154,12 +154,12 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
     (element, response) => (element.thisReviewLatestResponse = response),
     (element, response) => (element.thisReviewPreviousResponse = response)
   )
-  // add latestPreviousLevelReviewResponse and previousPreviousReviewLevelResponse
+  // add lowerLevelReviewLatestResponse and previousPreviousReviewLevelResponse
   structure = addReviewResponses(
     structure,
     data?.previousLevelReviewResponses?.nodes as ReviewResponse[], // Sorted in useGetReviewResponsesQuery
-    (element, response) => (element.latestPreviousLevelReviewResponse = response),
-    (element, response) => (element.previousPreviousLevelReviewResponse = response)
+    (element, response) => (element.lowerLevelReviewLatestResponse = response),
+    (element, response) => (element.lowerLevelReviewPreviousResponse = response)
   )
   // add latestOriginalReviewResponse and previousOriginalReviewResponse
   structure = addReviewResponses(
