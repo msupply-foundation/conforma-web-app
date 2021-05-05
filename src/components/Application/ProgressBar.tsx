@@ -142,6 +142,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
       const pixelsPerPage = 27.8
       const topPad = 5
       const bottomPad = 10
+
       const numPages = Object.keys(pages).length
       return pixelsPerPage * numPages + topPad + bottomPad
     }
@@ -194,7 +195,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
     )
   }
 
-  const sectionsList = [...Object.values(sections)].map(({ details, progress, pages }, index) => {
+  const sectionsList = Object.values(sections).map(({ details, progress, pages }, index) => {
     const isStrictSection = !!strictSectionPage && strictSectionPage.sectionCode === details.code
     const { code, title } = details
     return {
