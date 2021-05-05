@@ -56,7 +56,6 @@ export {
   SectionDetails,
   SectionState,
   SectionsStructure,
-  SetReviewResponseOnElement,
   SetStrictSectionPage,
   SortQuery,
   StageAndStatus,
@@ -264,7 +263,6 @@ type PageElement = {
   isActiveReviewResponse?: boolean
 }
 
-type SetReviewResponseOnElement = (element: PageElement, response: ReviewResponse) => void
 interface ApplicationProgress {
   doneRequired: number
   doneNonRequired: number

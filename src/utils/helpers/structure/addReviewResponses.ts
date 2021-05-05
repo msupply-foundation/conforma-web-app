@@ -1,6 +1,8 @@
 import { ReviewResponse } from '../../generated/graphql'
-import { FullStructure, SetReviewResponseOnElement } from '../../types'
+import { FullStructure, PageElement } from '../../types'
 import getGroupedReviewResponses from './getGroupedReviewResponses'
+
+type SetReviewResponseOnElement = (element: PageElement, response: ReviewResponse) => void
 
 const addReviewResponses = (
   structure: FullStructure,
