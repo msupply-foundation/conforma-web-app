@@ -8,7 +8,12 @@ import usePageTitle from '../utils/hooks/usePageTitle'
 const Home: React.FC = () => {
   const {
     userState: { currentUser },
+    logout,
   } = useUserState()
+  if (currentUser?.username === strings.USER_NONREGISTERED) {
+    logout()
+    return null
+  }
 
   usePageTitle(strings.PAGE_TITLE_HOME)
 

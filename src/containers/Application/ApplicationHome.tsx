@@ -69,7 +69,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
         name={template.name}
         ButtonSegment={SummaryButtonSegment}
       >
-        <ApplicationSections fullStructure={structure} />
+        <ApplicationSections fullStructure={fullStructure} />
       </ApplicationHomeWrapper>
     </>
   )
