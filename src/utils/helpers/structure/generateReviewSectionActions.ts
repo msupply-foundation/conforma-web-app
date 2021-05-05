@@ -16,7 +16,7 @@ type ActionDefinition = {
     isAssignedToCurrentUser: boolean
     reviewAssignmentStatus: ReviewAssignmentStatus | null
     isPendingReview: boolean
-    doesReviewExists: boolean
+    isReviewExisting: boolean
     reviewStatus: ReviewStatus | undefined
     isCurrentUserReview: boolean
     isReviewActive: boolean
@@ -26,9 +26,9 @@ type ActionDefinition = {
 const actionDefinitions: ActionDefinition[] = [
   {
     action: ReviewAction.canStartReview,
-    checkMethod: ({ reviewAssignmentStatus, isPendingReview, doesReviewExists }) =>
+    checkMethod: ({ reviewAssignmentStatus, isPendingReview, isReviewExisting }) =>
       reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
-      !doesReviewExists &&
+      !isReviewExisting &&
       isPendingReview,
   },
   {
@@ -94,7 +94,7 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       isCurrentUserReview,
       reviewLevel: reviewAssignment.level,
       reviewAssignmentStatus: reviewAssignment.status,
-      doesReviewExists: !!thisReview,
+      isReviewExisting: !!thisReview,
       reviewStatus: thisReview?.status,
       isPendingReview: (section.reviewAndConsolidationProgress?.totalPendingReview || 0) > 0,
       isReviewActive: (section.reviewAndConsolidationProgress?.totalActive || 0) > 0,
