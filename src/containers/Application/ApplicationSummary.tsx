@@ -105,9 +105,11 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
               onClick={handleSubmit}
               content={strings.BUTTON_SUBMIT_APPLICATION}
             />
-            <Link to={`/application/${fullStructure.info.serial}`}>
-              <strong>Back to form</strong>
-            </Link>
+            <p>
+              <Link to={`/application/${fullStructure.info.serial}`}>
+                <strong>Back to form</strong>
+              </Link>
+            </p>
           </div>
         ) : null}
       </div>
