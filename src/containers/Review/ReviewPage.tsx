@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react'
-import { Button, Header, Message, Segment } from 'semantic-ui-react'
+import { Button, Header, Message, Segment, Container } from 'semantic-ui-react'
 import { Loading, SectionWrapper } from '../../components'
 import {
   AssignmentDetails,
@@ -69,7 +69,7 @@ const ReviewPage: React.FC<{
 
   const ReviewMain: React.FC = () => (
     <>
-      <Segment className="sup" style={inlineStyles.top}>
+      <Container id="application-summary">
         {Object.values(sections).map((section) => (
           <SectionWrapper
             key={`ApplicationSection_${section.details.id}`}
@@ -96,7 +96,7 @@ const ReviewPage: React.FC<{
             }
           />
         ))}
-      </Segment>
+      </Container>
       <Segment basic style={inlineStyles.bot}>
         <ReviewSubmit
           structure={fullReviewStructure}
