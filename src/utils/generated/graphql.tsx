@@ -22459,7 +22459,7 @@ export type ResponseFragment = (
 
 export type ReviewResponseFragmentFragment = (
   { __typename?: 'ReviewResponse' }
-  & Pick<ReviewResponse, 'applicationResponseId' | 'decision' | 'comment' | 'id' | 'status' | 'timeUpdated' | 'originalReviewResponseId' | 'reviewResponseLinkId'>
+  & Pick<ReviewResponse, 'applicationResponseId' | 'decision' | 'comment' | 'id' | 'status' | 'timeUpdated' | 'originalReviewResponseId' | 'reviewResponseLinkId' | 'templateElementId'>
   & { applicationResponse?: Maybe<(
     { __typename?: 'ApplicationResponse' }
     & Pick<ApplicationResponse, 'id' | 'templateElementId'>
@@ -23114,6 +23114,7 @@ export const ReviewResponseFragmentFragmentDoc = gql`
   timeUpdated
   originalReviewResponseId
   reviewResponseLinkId
+  templateElementId
   applicationResponse {
     id
     templateElementId
