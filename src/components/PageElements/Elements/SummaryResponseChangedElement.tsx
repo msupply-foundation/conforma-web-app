@@ -12,20 +12,20 @@ interface SummaryResponseChangedElementProps {
   linkToPage: string
   latestApplicationResponse: ApplicationResponse
   previousApplicationResponse: ApplicationResponse
-  summaryProps: SummaryViewWrapperProps
+  summaryViewProps: SummaryViewWrapperProps
 }
 
 const SummaryResponseChangedElement: React.FC<SummaryResponseChangedElementProps> = ({
   canEdit,
   linkToPage,
   latestApplicationResponse,
-  summaryProps,
+  summaryViewProps,
 }) => {
   const { push } = useRouter()
   return (
     <Grid>
       <Grid.Column floated="left" width={4}>
-        <SummaryViewWrapper {...summaryProps} />
+        <SummaryViewWrapper {...summaryViewProps} />
       </Grid.Column>
       <Grid.Column width={4}>
         <Icon name="circle" size="tiny" color="blue" />

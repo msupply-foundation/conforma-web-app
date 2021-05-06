@@ -13,6 +13,7 @@ interface SectionProps {
   responsesByCode: ResponsesByCode
   applicationData: ApplicationDetails
   isActive: boolean
+  isConsolidation?: boolean
   isReview?: boolean
   isSummary?: boolean
   serial: string
@@ -29,6 +30,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
   responsesByCode,
   applicationData,
   isActive,
+  isConsolidation,
   isReview,
   isSummary,
   serial,
@@ -76,6 +78,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
                 responsesByCode={responsesByCode}
                 applicationData={applicationData}
                 isReview={isReview}
+                isConsolidation={isConsolidation}
                 serial={serial}
                 sectionAndPage={{ sectionCode: details.code, pageNumber: page.number }}
                 isSummary={isSummary}

@@ -7,12 +7,12 @@ import { ApplicationResponse, ReviewResponseDecision } from '../../../utils/gene
 
 interface SummaryReviewResponseElementProps {
   previousApplicationResponse: ApplicationResponse
-  summaryProps: SummaryViewWrapperProps
+  summaryViewProps: SummaryViewWrapperProps
 }
 
 const SummaryReviewResponseElement: React.FC<SummaryReviewResponseElementProps> = ({
   previousApplicationResponse,
-  summaryProps,
+  summaryViewProps,
 }) => {
   const reviewResponse = previousApplicationResponse.reviewResponses.nodes?.[0]
 
@@ -22,7 +22,7 @@ const SummaryReviewResponseElement: React.FC<SummaryReviewResponseElementProps> 
   // If review was approved we don't need to show to the Applicant
   if (reviewResponse?.decision === ReviewResponseDecision.Approve) return null
 
-  const { element, allResponses, applicationData } = summaryProps
+  const { element, allResponses, applicationData } = summaryViewProps
   const previousReviewProps = {
     element,
     allResponses,

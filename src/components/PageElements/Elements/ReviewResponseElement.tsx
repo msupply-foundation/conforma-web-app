@@ -13,30 +13,36 @@ import strings from '../../../utils/constants'
 
 interface ReviewResponseElementProps {
   isNewApplicationResponse: boolean
+  isConsolidation?: boolean
   latestApplicationResponse: ApplicationResponse
-  thisReviewLatestResponse?: ReviewResponse
-  summaryProps: SummaryViewWrapperProps
+  reviewResponse?: ReviewResponse
+  summaryViewProps: SummaryViewWrapperProps
 }
 
 const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
   isNewApplicationResponse,
+  isConsolidation,
   latestApplicationResponse,
-  thisReviewLatestResponse,
-  summaryProps,
+  reviewResponse,
+  summaryViewProps,
 }) => {
   const { query, updateQuery } = useRouter()
   const toggle = query?.openResponse === latestApplicationResponse.templateElement?.code
+
+  const shouldShowReviewButton =
+    isConsolidation ||
+    (reviewResponse?.status === ReviewResponseStatus.Draft && !reviewResponse?.decision)
 
   return (
     <>
       <Grid>
         <Grid.Column width={13} textAlign="left">
-          <SummaryViewWrapper {...summaryProps} />
+          <SummaryViewWrapper {...summaryViewProps} />
         </Grid.Column>
         <Grid.Column width={3} textAlign="right" verticalAlign="middle">
-          {thisReviewLatestResponse &&
-            thisReviewLatestResponse.status === ReviewResponseStatus.Draft &&
-            !thisReviewLatestResponse.decision && (
+          {reviewResponse &&
+            reviewResponse.status === ReviewResponseStatus.Draft &&
+            !reviewResponse.decision && (
               <ReviewButton
                 isNewApplicationResponse={isNewApplicationResponse}
                 elementCode={latestApplicationResponse.templateElement?.code as string}
@@ -45,11 +51,11 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
             )}
         </Grid.Column>
       </Grid>
-      {thisReviewLatestResponse && (
+      {reviewResponse && (
         <DecisionArea
-          reviewResponse={thisReviewLatestResponse as ReviewResponse}
+          reviewResponse={reviewResponse as ReviewResponse}
           toggle={toggle}
-          summaryViewProps={summaryProps}
+          summaryViewProps={summaryViewProps}
         />
       )}
     </>

@@ -16,15 +16,17 @@ import SummaryResponseChangedElement from './Elements/SummaryResponseChangedElem
 import SummaryReviewResponseElement from './Elements/SummaryReviewResponseElement'
 import ReviewResponseElement from './Elements/ReviewResponseElement'
 import ReviewDecisionElement from './Elements/ReviewDecisionElement'
+import ConsolidationDecisionElement from './Elements/ConsolidationDecisionElement'
 
 interface PageElementProps {
   elements: PageElement[]
   responsesByCode: ResponsesByCode
   applicationData: ApplicationDetails
-  isStrictPage?: boolean
   canEdit?: boolean
+  isConsolidation?: boolean
   isReview?: boolean
   isSummary?: boolean
+  isStrictPage?: boolean
   serial?: string
   sectionAndPage?: SectionAndPage
 }
@@ -33,10 +35,11 @@ const PageElements: React.FC<PageElementProps> = ({
   elements,
   responsesByCode,
   applicationData,
-  isStrictPage,
   canEdit,
+  isConsolidation,
   isReview,
   isSummary,
+  isStrictPage,
   serial,
   sectionAndPage,
 }) => {
@@ -97,7 +100,7 @@ const PageElements: React.FC<PageElementProps> = ({
           const props = {
             canEdit: !!canEdit,
             linkToPage: `/application/${serial}/${sectionCode}/Page${pageNumber}`,
-            summaryProps: getSummaryViewProps(element),
+            summaryViewProps: getSummaryViewProps(element),
             latestApplicationResponse: latestApplicationResponse,
             previousApplicationResponse: previousApplicationResponse,
           }
@@ -127,6 +130,7 @@ const PageElements: React.FC<PageElementProps> = ({
 
   // TODO: Find out problem to display edit button with review responses when Review is locked
 
+  // Review & Consolidation
   if (isReview) {
     return (
       <Form>
@@ -134,14 +138,16 @@ const PageElements: React.FC<PageElementProps> = ({
           ({
             element,
             thisReviewLatestResponse,
+            latestOriginalReviewResponse,
             isNewApplicationResponse,
             latestApplicationResponse,
           }) => {
             const props = {
+              latestApplicationResponse,
               isNewApplicationResponse: !!isNewApplicationResponse,
-              latestApplicationResponse: latestApplicationResponse,
-              summaryProps: getSummaryViewProps(element),
-              thisReviewLatestResponse: thisReviewLatestResponse,
+              summaryViewProps: getSummaryViewProps(element),
+              reviewResponse: thisReviewLatestResponse,
+              originalReviewResponse: latestOriginalReviewResponse,
             }
 
             const isChangeRequest: boolean = !!thisReviewLatestResponse?.decision
@@ -154,12 +160,10 @@ const PageElements: React.FC<PageElementProps> = ({
                   ) : (
                     <SummaryInformationElement {...props} />
                   )}
-                  {thisReviewLatestResponse && (
-                    <ReviewDecisionElement
-                      latestApplicationResponse={latestApplicationResponse}
-                      reviewResponse={thisReviewLatestResponse}
-                      summaryViewProps={props.summaryProps}
-                    />
+                  {thisReviewLatestResponse && isConsolidation ? (
+                    <ConsolidationDecisionElement {...props} />
+                  ) : (
+                    <ReviewDecisionElement {...props} />
                   )}
                 </Segment>
               </div>

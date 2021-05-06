@@ -4,13 +4,15 @@ import { SummaryViewWrapper } from '../../../formElementPlugins'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 
 interface SummaryInformationElementProps {
-  summaryProps: SummaryViewWrapperProps
+  summaryViewProps: SummaryViewWrapperProps
 }
 
-const SummaryInformationElement: React.FC<SummaryInformationElementProps> = ({ summaryProps }) => (
+const SummaryInformationElement: React.FC<SummaryInformationElementProps> = ({
+  summaryViewProps,
+}) => (
   <Grid>
     <Grid.Column stretched>
-      <SummaryViewWrapper {...summaryProps} />
+      <SummaryViewWrapper {...summaryViewProps} />
     </Grid.Column>
   </Grid>
 )

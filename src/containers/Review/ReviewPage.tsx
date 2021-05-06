@@ -105,6 +105,7 @@ const ReviewPage: React.FC<{
             applicationData={fullApplicationStructure.info}
             serial={serial}
             isReview
+            isConsolidation={section?.assignment.isConsolidation}
             canEdit={
               reviewAssignment?.review?.status === ReviewStatus.Draft ||
               reviewAssignment?.review?.status === ReviewStatus.Locked

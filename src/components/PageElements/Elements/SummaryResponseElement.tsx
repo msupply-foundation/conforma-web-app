@@ -11,17 +11,17 @@ interface SummaryResponseElementProps {
   linkToPage: string
   latestApplicationResponse: ApplicationResponse
   previousApplicationResponse: ApplicationResponse
-  summaryProps: SummaryViewWrapperProps
+  summaryViewProps: SummaryViewWrapperProps
 }
 
 const SummaryResponseElement: React.FC<SummaryResponseElementProps> = ({
   canEdit,
   linkToPage,
-  summaryProps,
+  summaryViewProps,
 }) => (
   <Grid>
     <Grid.Column width={14} textAlign="left">
-      <SummaryViewWrapper {...summaryProps} />
+      <SummaryViewWrapper {...summaryViewProps} />
     </Grid.Column>
     <Grid.Column width={2} textAlign="left" verticalAlign="middle">
       {canEdit && (

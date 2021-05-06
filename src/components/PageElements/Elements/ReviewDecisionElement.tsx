@@ -1,4 +1,4 @@
-import React, { useState, CSSProperties } from 'react'
+import React, { useState } from 'react'
 import { Icon, Label, Grid } from 'semantic-ui-react'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import { useRouter } from '../../../utils/hooks/useRouter'
@@ -14,7 +14,7 @@ import strings from '../../../utils/constants'
 
 interface ReviewDecisionElementProps {
   latestApplicationResponse: ApplicationResponse
-  reviewResponse: ReviewResponse
+  reviewResponse?: ReviewResponse
   summaryViewProps: SummaryViewWrapperProps
 }
 
@@ -79,7 +79,5 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
     </div>
   )
 }
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
 
 export default ReviewDecisionElement
