@@ -52,8 +52,9 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     section,
     assignment,
     thisReview,
-    isAssignedToCurrentUser,
     action: section?.assignment?.action || ReviewAction.unknown,
+    isConsolidation: section.assignment?.isConsolidation || false,
+    isAssignedToCurrentUser,
   }
 
   const canRenderRow =

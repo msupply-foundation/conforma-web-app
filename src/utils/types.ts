@@ -297,6 +297,7 @@ type ReviewSectionComponentProps = {
   thisReview?: ReviewDetails | null
   action: ReviewAction
   isAssignedToCurrentUser: boolean
+  isConsolidation: boolean
 }
 
 interface ReviewDetails {
