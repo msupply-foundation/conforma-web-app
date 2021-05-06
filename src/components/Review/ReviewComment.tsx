@@ -47,6 +47,7 @@ const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEdita
       <Form.Field id="review-commment-content">
         <TextArea
           defaultValue={initialComment}
+          rows={4}
           onChange={(_, { value }) => setComment(String(value))}
           onBlur={() => updateComment({ variables: { reviewDecisionId, comment } })}
         />
