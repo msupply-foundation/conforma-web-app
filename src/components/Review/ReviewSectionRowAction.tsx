@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { Grid, Icon, Label, Message } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ReviewAction, ReviewProgress, ReviewSectionComponentProps } from '../../utils/types'
@@ -11,24 +10,17 @@ import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignme
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const {
-    location: { pathname },
-  } = useRouter()
-
-  const {
     action,
     section: { reviewProgress },
     isAssignedToCurrentUser,
     assignment: { isCurrentUserReviewer },
-    thisReview,
   } = props
-
-  const reviewPath = `${pathname}/${thisReview?.id}`
 
   const getContent = () => {
     switch (action) {
       case ReviewAction.canContinue: {
         if (isAssignedToCurrentUser) {
-          if (reReviewableCount(reviewProgress)) return <ReReviewButton {...props} />
+          if (reReviewableCount(reviewProgress) > 0) return <ReReviewButton {...props} />
           else return <ContinueReviewButton {...props} />
         } else
           return (
@@ -38,8 +30,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
           )
       }
       case ReviewAction.canView: {
-        if (isAssignedToCurrentUser) return <ContinueReviewButton {...props} />
-        else return <ViewReviewIcon {...props} />
+        return <ViewReviewIcon {...props} />
       }
 
       case ReviewAction.canStartReview: {
@@ -166,7 +157,8 @@ const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
   const [startReviewError, setStartReviewError] = useState(false)
 
   const { createReviewFromStructure } = useCreateReview({
-    reviewAssigmentId: assignment.id,
+    structure: fullStructure,
+    assignment,
   })
 
   const startReview = async () => {

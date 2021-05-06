@@ -1,13 +1,14 @@
 import { ApolloError } from '@apollo/client'
 import { useState } from 'react'
 import { useCreateReviewMutation } from '../../utils/generated/graphql'
-import { FullStructure } from '../types'
+import { AssignmentDetails, FullStructure } from '../types'
 
 interface UseCreateReviewProps {
-  reviewAssigmentId: number
+  structure: FullStructure
+  assignment: AssignmentDetails
 }
 
-const useCreateReview = ({ reviewAssigmentId }: UseCreateReviewProps) => {
+const useCreateReview = ({ assignment }: UseCreateReviewProps) => {
   const [error, setError] = useState<ApolloError | undefined>()
 
   const [createReviewMutation] = useCreateReviewMutation({
@@ -27,7 +28,7 @@ const useCreateReview = ({ reviewAssigmentId }: UseCreateReviewProps) => {
     }))
     const result = await createReviewMutation({
       variables: {
-        reviewAssigmentId,
+        reviewAssigmentId: assignment.id as number,
         applicationResponses,
       },
     })

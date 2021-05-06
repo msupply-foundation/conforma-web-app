@@ -5,33 +5,26 @@ import { ReviewSectionProgressBar } from '../Sections/SectionProgress'
 
 const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
   action,
-  section,
+  section: { reviewProgress, reviewAndConsolidationProgress },
   isAssignedToCurrentUser,
 }) => {
-  // Set default for SectionProgressBar
-  const reviewProgress = section.reviewProgress || {
-    totalReviewable: 0,
-    doneConform: 0,
-    doneNonConform: 0,
-    totalNewReviewable: 0,
-    doneNewReviewable: 0,
-  }
-
   const getContent = () => {
+    const progressBarProps = { reviewProgress, reviewAndConsolidationProgress }
+
     switch (action) {
       case ReviewAction.canStartReview: {
         if (isAssignedToCurrentUser) return null
         return null
       }
       case ReviewAction.canView: {
-        return <ReviewSectionProgressBar {...reviewProgress} />
+        return <ReviewSectionProgressBar {...progressBarProps} />
       }
       case ReviewAction.canContinue: {
-        if (isAssignedToCurrentUser) return <ReviewSectionProgressBar {...reviewProgress} />
+        if (isAssignedToCurrentUser) return <ReviewSectionProgressBar {...progressBarProps} />
         return null
       }
       case ReviewAction.canReReview: {
-        return <ReviewSectionProgressBar {...reviewProgress} />
+        return <ReviewSectionProgressBar {...progressBarProps} />
       }
       default:
         return null
