@@ -1,6 +1,7 @@
 import React, { CSSProperties, useRef } from 'react'
 import { Accordion, Grid, Header, Icon, Sticky } from 'semantic-ui-react'
 import { ResponsesByCode, SectionState, Page, ApplicationDetails } from '../../utils/types'
+import styleConstants from '../../utils/data/styleConstants'
 import { PageElements } from '../'
 
 interface SectionProps {
@@ -38,7 +39,11 @@ const SectionWrapper: React.FC<SectionProps> = ({
     <div ref={stickyRef} key={`${section.details.id}`}>
       <Accordion className="summary-section">
         <Accordion.Title active={isActive} onClick={toggleSection}>
-          <Sticky context={stickyRef} offset={134} bottomOffset={150}>
+          <Sticky
+            context={stickyRef}
+            offset={styleConstants.HEADER_OFFSET}
+            bottomOffset={styleConstants.BOTTOM_OFFSET}
+          >
             <Grid columns="equal" className="summary-section-header">
               <Grid.Column>
                 <Header as="h4" content={details.title} />

@@ -435,6 +435,11 @@ a:hover {
   position: absolute;
 }
 
+.section-progress-bar .progress {
+  transform-origin: 0 0;
+  transform: rotate(90deg) translate(2px, -10px);
+}
+
 /*--------------------------------
       Application Navigation area
 ---------------------------------*/
