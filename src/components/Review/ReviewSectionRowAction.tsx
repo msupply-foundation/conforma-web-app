@@ -222,7 +222,7 @@ const ViewReviewIcon: React.FC<ReviewSectionComponentProps> = ({
   const reviewId = fullStructure.thisReview?.id
   return (
     <Icon
-      name="angle right"
+      name="chevron right"
       className="dark-grey"
       onClick={() => push(`${pathname}/${reviewId}?activeSections=${details.code}`)}
     />

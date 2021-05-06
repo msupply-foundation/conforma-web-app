@@ -24,7 +24,7 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({
           onClick={() => replace(`/applications?type=${code}`)}
           content={
             <>
-              <Icon name="angle left" className="dark-grey" size="large" />
+              <Icon name="chevron left" className="dark-grey" />
               {`${name} ${strings.LABEL_APPLICATIONS}`}
             </>
           }
