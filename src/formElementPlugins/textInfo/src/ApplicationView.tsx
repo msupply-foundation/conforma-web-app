@@ -1,8 +1,15 @@
 import React from 'react'
-import { Message, MessageContentProps } from 'semantic-ui-react'
+import { Message } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
-const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters, Markdown }) => {
+interface TextInfoProps {
+  parameters: any
+  Markdown: any
+}
+
+// Extract main content to another Component so it can be shared with SummaryView
+export const TextInfoElement: React.FC<TextInfoProps> = (props) => {
+  const { parameters, Markdown } = props
   const { title, text, style } = parameters
   if (['basic', 'info', 'warning', 'success', 'positive', 'negative', 'error'].includes(style)) {
     const info = style === 'info'
@@ -30,7 +37,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters, Markdown 
       </div>
     )
   }
-  // Plain Markdown
+  // Plain Markdown (default)
   else
     return (
       <div className="text-info">
@@ -38,6 +45,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters, Markdown 
         <Markdown text={text} />
       </div>
     )
+}
+
+const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters, Markdown }) => {
+  return <TextInfoElement parameters={parameters} Markdown={Markdown} />
 }
 
 export default ApplicationView

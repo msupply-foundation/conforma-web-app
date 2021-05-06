@@ -1,16 +1,9 @@
 import React from 'react'
-import { Message } from 'semantic-ui-react'
 import { SummaryViewProps } from '../../types'
+import { TextInfoElement } from './ApplicationView'
 
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown }) => {
-  return (
-    <div className="text-info">
-      {/* <Message> */}
-      <Markdown text={parameters.title} />
-      <Markdown text={parameters.text} />
-      {/* </Message> */}
-    </div>
-  )
+  return <TextInfoElement parameters={parameters} Markdown={Markdown} />
 }
 
 export default SummaryView
