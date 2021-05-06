@@ -106,8 +106,10 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
               content={strings.BUTTON_SUBMIT_APPLICATION}
             />
             <p>
-              <Link to={`/application/${fullStructure.info.serial}`}>
-                <strong>strings.LABEL_APPLICATION_BACK</strong>
+              <Link
+                to={`/application/${fullStructure.info.serial}/${fullStructure?.sortedSections?.[0].details.code}/Page1`}
+              >
+                <strong>{strings.LABEL_APPLICATION_BACK}</strong>
               </Link>
             </p>
           </div>
