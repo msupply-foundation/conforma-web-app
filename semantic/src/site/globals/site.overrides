@@ -390,9 +390,9 @@ a:hover {
 
 // Progress Bar
 
-.progress-row {
-  margin-top: -10px !important;
-  margin-bottom: -10px !important;
+.progress-row.ui.grid {
+  margin-top: -10px;
+  margin-bottom: -10px;
   height: 60px;
 }
 
@@ -405,9 +405,10 @@ a:hover {
   width: 200px !important;
 }
 
-.progress-indicator {
+.progress-indicator.icons,
+.progress-indicator.icon {
   // Make Section Icons just a little bit bigger
-  font-size: 1.1em !important;
+  font-size: 1.1em;
 }
 
 // .progress-name {
@@ -420,8 +421,8 @@ a:hover {
   margin-top: -20px !important;
 }
 
-.page-row {
-  padding-bottom: 8px !important;
+.page-row.ui.grid {
+  padding-bottom: 8px;
 }
 
 // .progress-page-indicator {
