@@ -89,7 +89,7 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application })
           <ColumnComponent application={application} />
         </Table.Cell>
       ))}
-      <Table.Cell icon="chevron down small" />
+      <Table.Cell icon="chevron down" />
     </Table.Row>
   )
 }
