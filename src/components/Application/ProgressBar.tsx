@@ -1,3 +1,9 @@
+// Adjust these constants to match existing style settings
+// in order for Progress Bar to display correctly
+const PIXELS_PER_PAGE = 27.8
+const TOP_PAD = 5
+const BOTTOM_PAD = 10
+
 import React from 'react'
 import { Accordion, Container, Grid, Icon, List, Sticky, Progress } from 'semantic-ui-react'
 import strings from '../../utils/constants'
@@ -134,13 +140,8 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
         : (sectionProgress.doneRequired / sectionProgress.totalRequired) * 100
 
     const calculateBarLength = () => {
-      // Adjust these constants to match existing style settings
-      const pixelsPerPage = 27.8
-      const topPad = 5
-      const bottomPad = 10
-
       const numPages = Object.keys(pages).length
-      return pixelsPerPage * numPages + topPad + bottomPad
+      return PIXELS_PER_PAGE * numPages + TOP_PAD + BOTTOM_PAD
     }
 
     return (
