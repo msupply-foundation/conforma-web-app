@@ -33,6 +33,8 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
     }
   }
 
+  console.log(action, isAssignedToCurrentUser)
+
   return <Grid.Column className="padding-zero">{getLabel()}</Grid.Column>
 }
 

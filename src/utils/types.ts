@@ -48,7 +48,6 @@ export {
   ReviewAction,
   ReviewDetails,
   ReviewProgress,
-  ReviewAndConsolidationProgress,
   ConsolidationProgress,
   ReviewQuestion,
   ReviewSectionComponentProps,
@@ -237,7 +236,6 @@ interface Page {
   progress: ApplicationProgress
   reviewProgress?: ReviewProgress
   consolidationProgress?: ConsolidationProgress
-  reviewAndConsolidationProgress?: ReviewAndConsolidationProgress
   changeRequestsProgress?: ChangeRequestsProgress
   state: PageElement[]
 }
@@ -342,28 +340,28 @@ interface SectionDetails {
   totalPages: number
 }
 
-interface ReviewAndConsolidationProgress {
+interface BaseReviewProgress {
   totalReviewable: number
   totalPendingReview: number
   totalActive: number // review or application responses that are in progress (as oppose to awaiting review to be started)
 }
 
-interface ReviewProgress {
+interface ReviewProgress extends BaseReviewProgress {
   doneConform: number
   doneNonConform: number
   doneNewReviewable: number
   totalNewReviewable: number
 }
 
-interface ConsolidationProgress {
-  totalConform: number
-  totalNonConform: number
+interface ConsolidationProgress extends BaseReviewProgress {
   doneAgreeConform: number
   doneAgreeNonConform: number
   doneDisagree: number
   doneActiveDisagree: number
   doneActiveAgreeConform: number
   doneActiveAgreeNonConform: number
+  totalConform: number
+  totalNonConform: number
 }
 
 enum ReviewAction {
@@ -387,7 +385,6 @@ interface SectionState {
   details: SectionDetails
   progress?: ApplicationProgress
   reviewProgress?: ReviewProgress
-  reviewAndConsolidationProgress?: ReviewAndConsolidationProgress
   consolidationProgress?: ConsolidationProgress
   reviewAction?: {
     action: ReviewAction

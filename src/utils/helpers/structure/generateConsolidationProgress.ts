@@ -1,7 +1,5 @@
 import { Decision, ReviewResponseDecision } from '../../generated/graphql'
-
 import { FullStructure, SectionState, Page, PageElement, ConsolidationProgress } from '../../types'
-import { getReviewAndConsolidationProgress } from './generateReviewProgress'
 
 const generateConsolidationProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach(generatePageconsolidationProgress)
@@ -12,9 +10,6 @@ const generateConsolidationProgress = (newStructure: FullStructure) => {
 
 const generateSectionconsolidationProgress = (section: SectionState) => {
   section.consolidationProgress = getConsolidationProgress(Object.values(section.pages))
-  section.reviewAndConsolidationProgress = getReviewAndConsolidationProgress(
-    Object.values(section.pages)
-  )
 }
 
 const conformOriginal = (element: PageElement) =>
@@ -29,7 +24,7 @@ const activeThisReview = (element: PageElement) => element.isActiveReviewRespons
 
 const generatePageconsolidationProgress = (page: Page) => {
   const totalReviewable = page.state.filter(
-    (element) => element.isAssigned && element?.element.isVisible
+    ({ isAssigned, element }) => isAssigned && element.isVisible
   )
 
   const totalActive = totalReviewable.filter(activeThisReview)
@@ -56,31 +51,25 @@ const generatePageconsolidationProgress = (page: Page) => {
   const doneActiveAgreeConform = doneAgreeConform.filter(activeThisReview)
   const doneActiveAgreeNonConform = doneAgreeNonConform.filter(activeThisReview)
 
-  page.reviewAndConsolidationProgress = {
-    totalReviewable: totalReviewable.length,
-    totalActive: totalActive.length,
-    totalPendingReview: totalPendingReview.length,
-  }
-
   page.consolidationProgress = {
-    totalConform: totalConform.length,
-    totalNonConform: totalNonConform.length,
-
     doneAgreeConform: doneAgreeConform.length,
     doneAgreeNonConform: doneAgreeNonConform.length,
     doneDisagree: doneDisagree.length,
     doneActiveDisagree: doneActiveDisagree.length,
     doneActiveAgreeConform: doneActiveAgreeConform.length,
     doneActiveAgreeNonConform: doneActiveAgreeNonConform.length,
+    totalConform: totalConform.length,
+    totalNonConform: totalNonConform.length,
+    // BaseReviewProgress
+    totalReviewable: totalReviewable.length,
+    totalPendingReview: totalPendingReview.length,
+    totalActive: totalActive.length,
   }
 }
 
 const generateReviewValidity = (newStructure: FullStructure) => {
   const sortedPages = newStructure?.sortedPages || []
-  const sums = {
-    ...getConsolidationProgress(Object.values(newStructure.sections)),
-    ...getReviewAndConsolidationProgress(Object.values(newStructure.sections)),
-  }
+  const sums = getConsolidationProgress(Object.values(newStructure.sections))
 
   newStructure.firstIncompleteReviewPage = undefined
 
@@ -100,8 +89,8 @@ const generateReviewValidity = (newStructure: FullStructure) => {
   }
 
   const firstIncomplete = sortedPages.find(
-    ({ consolidationProgress, reviewAndConsolidationProgress }) =>
-      reviewAndConsolidationProgress?.totalReviewable !==
+    ({ consolidationProgress }) =>
+      consolidationProgress?.totalReviewable !==
       (consolidationProgress?.doneActiveAgreeConform || 0)
   )
 
@@ -119,37 +108,47 @@ const generateReviewValidity = (newStructure: FullStructure) => {
 // returning an object of keys with sums
 const getConsolidationProgress = (elements: (Page | SectionState)[]) => {
   const initial: ConsolidationProgress = {
-    totalConform: 0,
-    totalNonConform: 0,
-
     doneAgreeConform: 0,
     doneAgreeNonConform: 0,
     doneDisagree: 0,
     doneActiveDisagree: 0,
     doneActiveAgreeConform: 0,
     doneActiveAgreeNonConform: 0,
+    totalConform: 0,
+    totalNonConform: 0,
+    // BaseReviewProgress
+    totalActive: 0,
+    totalReviewable: 0,
+    totalPendingReview: 0,
   }
 
   return elements.reduce((sum, page) => {
     const {
-      totalConform,
-      totalNonConform,
       doneAgreeConform,
       doneAgreeNonConform,
       doneDisagree,
       doneActiveDisagree,
       doneActiveAgreeConform,
       doneActiveAgreeNonConform,
+      totalConform,
+      totalNonConform,
+      totalActive,
+      totalReviewable,
+      totalPendingReview,
     } = page.consolidationProgress || initial
     return {
-      totalConform: sum.totalConform + totalConform,
-      totalNonConform: sum.totalNonConform + totalNonConform,
       doneAgreeConform: sum.doneAgreeConform + doneAgreeConform,
       doneAgreeNonConform: sum.doneAgreeNonConform + doneAgreeNonConform,
       doneDisagree: sum.doneDisagree + doneDisagree,
       doneActiveDisagree: sum.doneActiveDisagree + doneActiveDisagree,
       doneActiveAgreeConform: sum.doneActiveAgreeConform + doneActiveAgreeConform,
       doneActiveAgreeNonConform: sum.doneActiveAgreeNonConform + doneActiveAgreeNonConform,
+      totalConform: sum.totalConform + totalConform,
+      totalNonConform: sum.totalNonConform + totalNonConform,
+      // BaseReviewProgress
+      totalActive: sum.totalActive + totalActive,
+      totalReviewable: sum.totalReviewable + totalReviewable,
+      totalPendingReview: sum.totalPendingReview + totalPendingReview,
     }
   }, initial)
 }

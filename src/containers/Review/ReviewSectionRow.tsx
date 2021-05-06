@@ -37,9 +37,11 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!fullReviewStructure) return <Loading />
+
   const section = fullReviewStructure.sortedSections?.find(
     (section) => section.details.id === sectionId
   )
+
   if (!section) return null
 
   const thisReview = fullReviewStructure?.thisReview
@@ -57,6 +59,8 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   const canRenderRow =
     section?.reviewAction?.isReviewable ||
     section?.reviewAction?.action === ReviewAction.canSelfAssign
+
+  console.log('canRenderRow', canRenderRow, section?.reviewAction)
 
   return (
     <>

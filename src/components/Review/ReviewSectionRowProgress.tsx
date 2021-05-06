@@ -5,11 +5,11 @@ import { ReviewSectionProgressBar } from '../Sections/SectionProgress'
 
 const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
   action,
-  section: { reviewProgress, reviewAndConsolidationProgress },
+  section: { reviewProgress, consolidationProgress },
   isAssignedToCurrentUser,
 }) => {
   const getContent = () => {
-    const progressBarProps = { reviewProgress, reviewAndConsolidationProgress }
+    const progressBarProps = { reviewProgress, consolidationProgress }
 
     switch (action) {
       case ReviewAction.canStartReview: {

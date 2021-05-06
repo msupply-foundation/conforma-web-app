@@ -1,19 +1,12 @@
 import React from 'react'
 import { Label, Progress } from 'semantic-ui-react'
-import {
-  ApplicationProgress,
-  ReviewAndConsolidationProgress,
-  ReviewProgress,
-} from '../../utils/types'
+import { ApplicationProgress, ReviewProgress } from '../../utils/types'
 import strings from '../../utils/constants'
 
-const getReviewProgressDefaults = ({
-  reviewProgress,
-  reviewAndConsolidationProgress,
-}: SectionProgressBarProps) => ({
+const getReviewProgressDefaults = ({ reviewProgress }: SectionProgressBarProps) => ({
   doneNonConform: reviewProgress?.doneNonConform || 0,
   doneConform: reviewProgress?.doneConform || 0,
-  totalReviewable: reviewAndConsolidationProgress?.totalReviewable || 0,
+  totalReviewable: reviewProgress?.totalReviewable || 0,
 })
 
 const getReviewProgressTitle = (props: SectionProgressBarProps) => {
@@ -23,9 +16,8 @@ const getReviewProgressTitle = (props: SectionProgressBarProps) => {
   return null
 }
 
-type SectionProgressBarProps = {
-  reviewProgress: ReviewProgress | undefined
-  reviewAndConsolidationProgress: ReviewAndConsolidationProgress | undefined
+interface SectionProgressBarProps {
+  reviewProgress?: ReviewProgress
 }
 
 const ReviewSectionProgressBar: React.FC<SectionProgressBarProps> = (props) => {
