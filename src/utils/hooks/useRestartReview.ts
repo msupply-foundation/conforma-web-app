@@ -56,6 +56,7 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
         // create new if element is awaiting review
         const shouldCreateNew = isPendingReview
         return {
+          // Create new decision and comment if lower level review response or application was change, otherwise duplicate previous review response
           decision: shouldCreateNew ? null : thisReviewLatestResponse?.decision,
           comment: shouldCreateNew ? null : thisReviewLatestResponse?.comment,
           applicationResponseId,
@@ -65,6 +66,7 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
       }
     )
 
+    // See comment at the bottom of file for resulting shape
     return {
       trigger: Trigger.OnReviewRestart,
       reviewResponsesUsingId: {
@@ -81,6 +83,7 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
     const result = await updateReview({
       variables: {
         reviewId: reviewId,
+        // See comment at the bottom of file for resulting shape
         reviewPatch: constructReviewPatch(await getFullReviewStructureAsync()),
       },
     })
@@ -90,3 +93,28 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
 }
 
 export default useRestartReview
+
+/* shape of reviewPatch
+{
+  "trigger": "ON_REVIEW_RESTART",
+  "reviewResponsesUsingId": {
+    "create": [
+      {
+        "decision": null,
+        "comment": null,
+        "applicationResponseId": 34, // this or reviewResponseLinkId
+        "reviewResponseLinkId": 34,  // this or applicationResponseId
+        "reviewQuestionAssignmentId": 11
+      }
+    ]
+  },
+  "reviewDecisionsUsingId": {
+    "create": [
+      {
+        "decision": "NO_DECISION"
+      }
+    ]
+  }
+}
+
+*/
