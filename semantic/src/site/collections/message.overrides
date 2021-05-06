@@ -11,3 +11,20 @@
 .ui.info.message {
   border-left: @accentBorderWidth solid @information;
 }
+
+// Positive message left border
+.ui.positive.message,
+.ui.success.message {
+  border-left: @accentBorderWidth solid @green;
+}
+
+// Negative/Error message
+.ui.error.message,
+.ui.negative.message {
+  border-left: @accentBorderWidth solid @attention;
+}
+
+.ui.negative.message,
+.ui.error.message {
+  color: @attention;
+}
