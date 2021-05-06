@@ -1,5 +1,12 @@
 import { ReviewStatus, ReviewAssignmentStatus } from '../../generated/graphql'
-import { SectionState, AssignmentDetails, ReviewDetails, ReviewAction } from '../../types'
+import {
+  SectionState,
+  AssignmentDetails,
+  ReviewDetails,
+  ReviewAction,
+  ConsolidationProgress,
+  ReviewProgress,
+} from '../../types'
 
 type GenerateSectionActions = (props: {
   sections: SectionState[]
@@ -26,10 +33,20 @@ type ActionDefinition = {
 const actionDefinitions: ActionDefinition[] = [
   {
     action: ReviewAction.canStartReview,
-    checkMethod: ({ reviewAssignmentStatus, isPendingReview, isReviewExisting }) =>
-      reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
-      !isReviewExisting &&
-      isPendingReview,
+    checkMethod: ({ reviewAssignmentStatus, isPendingReview, isReviewExisting }) => {
+      console.log(
+        'Check action canStartReview',
+        reviewAssignmentStatus === ReviewAssignmentStatus.Assigned,
+        !isReviewExisting,
+        isPendingReview
+      )
+
+      return (
+        reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
+        !isReviewExisting &&
+        isPendingReview
+      )
+    },
   },
   {
     action: ReviewAction.canReReview,
@@ -85,7 +102,12 @@ const generateReviewSectionActions: GenerateSectionActions = ({
   const isCurrentUserReview = reviewAssignment.reviewer.id === currentUserId
 
   sections.forEach((section) => {
-    const isReviewable = (section.reviewProgress?.totalReviewable || 0) > 0
+    const { totalReviewable, totalPendingReview, totalActive } =
+      thisReview?.level === 1
+        ? (section.reviewProgress as ReviewProgress)
+        : (section.consolidationProgress as ConsolidationProgress)
+
+    const isReviewable = (totalReviewable || 0) > 0
     const isAssignedToCurrentUser = isCurrentUserReview && isReviewable
 
     const checkMethodProps = {
@@ -96,8 +118,8 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       reviewAssignmentStatus: reviewAssignment.status,
       isReviewExisting: !!thisReview,
       reviewStatus: thisReview?.status,
-      isPendingReview: (section.reviewProgress?.totalPendingReview || 0) > 0,
-      isReviewActive: (section.reviewProgress?.totalActive || 0) > 0,
+      isPendingReview: (totalPendingReview || 0) > 0,
+      isReviewActive: (totalActive || 0) > 0,
     }
 
     const foundAction = actionDefinitions.find(({ checkMethod }) => checkMethod(checkMethodProps))
