@@ -123,7 +123,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     <Form.Field>
       <Button
         primary
-        className={attemptSubmissionFailed ? 'button-wide alert' : 'button-wide'}
+        className={attemptSubmissionFailed ? 'alert' : ''}
         onClick={() => onClick()}
         content={strings.BUTTON_REVIEW_SUBMIT}
       />

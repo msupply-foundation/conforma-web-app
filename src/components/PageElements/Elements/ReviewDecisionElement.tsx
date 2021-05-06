@@ -31,8 +31,6 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
   // or if they are null, we only want to show reviewResponses that are linked to latestApplicationResponse
   if (latestApplicationResponse.id !== reviewResponse.applicationResponse?.id) return null
 
-  console.log('reviewResponse', reviewResponse)
-
   return (
     <div className="review-comment-area">
       <Grid columns="equal" className="review-comment-grid">

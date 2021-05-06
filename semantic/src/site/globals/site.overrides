@@ -356,14 +356,8 @@ a:hover {
 }
 
 #review-submit-area {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: baseline;
-  max-height: 250px;
-  background: @surfacesWhite;
-  padding-left: 10px;
-  padding-bottom: 30px;
+  // display: flex;
+  margin-bottom: 30px;
 }
 
 /*--------------------------------
