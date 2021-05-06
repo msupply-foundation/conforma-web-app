@@ -11,9 +11,7 @@ import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignme
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const {
     action,
-    section: { reviewProgress },
     isAssignedToCurrentUser,
-    thisReview,
     assignment: { isCurrentUserReviewer },
   } = props
 
