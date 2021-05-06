@@ -18,7 +18,8 @@ const isLatestReviewResponseUpToDate = (element: PageElement) =>
 
 const generatePageReviewProgress = (page: Page) => {
   const totalReviewable = page.state.filter(
-    (element) => element.isAssigned && element?.element.isVisible
+    (element) =>
+      element.isAssigned && element?.element.isVisible && element?.latestApplicationResponse?.id
   )
 
   // Only consider review responses that are linked to latest application response
