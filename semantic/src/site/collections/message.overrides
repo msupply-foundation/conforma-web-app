@@ -9,22 +9,25 @@
 
 // Info message left border
 .ui.info.message {
+  border: none;
   border-left: @accentBorderWidth solid @information;
 }
 
-// Positive message left border
-.ui.positive.message,
+// Success message left border
 .ui.success.message {
   border-left: @accentBorderWidth solid @green;
 }
 
-// Negative/Error message
-.ui.error.message,
-.ui.negative.message {
+// Error message
+.ui.error.message {
   border-left: @accentBorderWidth solid @attention;
 }
 
-.ui.negative.message,
-.ui.error.message {
-  color: @attention;
+.ui.error.message h1,
+.ui.error.message h2,
+.ui.error.message h3,
+.ui.error.message h4,
+.ui.error.message h5,
+.ui.error.message h6 {
+  color: @errorHeaderColor;
 }

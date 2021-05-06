@@ -3,23 +3,25 @@ import { Message, MessageContentProps } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters, Markdown }) => {
-  console.log('Parameters', parameters)
   const { title, text, style } = parameters
   if (['basic', 'info', 'warning', 'success', 'positive', 'negative', 'error'].includes(style)) {
-    const basic = style === 'basic'
     const info = style === 'info'
     const warning = style === 'warning'
-    const positive = style === 'success' || style === 'positive'
-    const negative = style === 'negative' || style === 'error'
+    const positive = style === 'positive'
+    const success = style === 'success'
+    const negative = style === 'negative'
+    const error = style === 'error'
 
+    // Styled Message box
     return (
       <div className="text-info">
         <Message
-          basic={basic}
           info={info}
           warning={warning}
           positive={positive}
+          success={success}
           negative={negative}
+          error={error}
           visible
         >
           <Markdown text={title} />
@@ -27,7 +29,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters, Markdown 
         </Message>
       </div>
     )
-  } else
+  }
+  // Plain Markdown
+  else
     return (
       <div className="text-info">
         <Markdown text={title} />
