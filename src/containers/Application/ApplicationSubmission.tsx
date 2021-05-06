@@ -3,6 +3,7 @@ import { Button, Header, Icon, Label, List, Segment, Container } from 'semantic-
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { ApplicationProps } from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
+import { Stage } from '../../components/Review'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { Link } from 'react-router-dom'
@@ -33,44 +34,52 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
 
   return (
     <Container id="application-summary">
-      <Segment basic textAlign="center">
+      <Segment basic textAlign="center" id="submission-header">
         <Header as="h4" icon>
           <Icon name="clock outline" className="information-colour" size="huge" />
           {strings.LABEL_PROCESSING}
         </Header>
         <Markdown text={submissionMessage || ''} />
-        {currentUser?.username !== strings.USER_NONREGISTERED && (
-          <>
-            <Segment basic textAlign="left">
-              <p>{strings.SUBTITLE_SUBMISSION_STEPS}</p>
-              <List>
-                {stages.map(({ title, description }) =>
-                  title ? (
-                    <List.Item key={`list_stage_${title}`}>
-                      <List.Header>{title}</List.Header>
-                      {description}
-                    </List.Item>
-                  ) : null
-                )}
-              </List>
-            </Segment>
-            <Segment basic textAlign="center">
-              <Button
-                color="blue"
-                as={Link}
-                to={`/application/${serialNumber}/summary`}
-                content={`${strings.BUTTON_BACK_TO} ${name}`}
-              />
-              <Label as={Link} to={'/'} content={strings.BUTTON_BACK_DASHBOARD} />
-            </Segment>
-          </>
-        )}
-        {currentUser?.username === strings.USER_NONREGISTERED && (
-          <Button primary onClick={() => logout()}>
-            {strings.ACTION_CONTINUE}
-          </Button>
-        )}
       </Segment>
+      {currentUser?.username !== strings.USER_NONREGISTERED && (
+        <>
+          <Segment basic textAlign="left" id="submission-content">
+            <p className="dark-grey">{strings.SUBTITLE_SUBMISSION_STEPS}</p>
+            <List>
+              {stages.map(({ title, description, colour }) =>
+                title ? (
+                  <List.Item key={`list_stage_${title}`}>
+                    <List.Content>
+                      <List.Header>
+                        <Stage name={title} colour={colour as string} />
+                      </List.Header>
+                      <List.Description>{description}</List.Description>
+                    </List.Content>
+                  </List.Item>
+                ) : null
+              )}
+            </List>
+          </Segment>
+          <Segment basic textAlign="center" id="submission-nav">
+            <Button
+              color="blue"
+              as={Link}
+              to={`/application/${serialNumber}/summary`}
+              content={`${strings.BUTTON_BACK_TO} ${name}`}
+            />
+            <p>
+              <Link to={'/'}>
+                <strong>{strings.BUTTON_BACK_DASHBOARD}</strong>
+              </Link>
+            </p>
+          </Segment>
+        </>
+      )}
+      {currentUser?.username === strings.USER_NONREGISTERED && (
+        <Button primary onClick={() => logout()}>
+          {strings.ACTION_CONTINUE}
+        </Button>
+      )}
     </Container>
   )
 }
