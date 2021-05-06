@@ -8,9 +8,7 @@
 // // Info message colours
 @infoTextColor: @headersInteractiveLow;
 @infoHeaderColor: @headersInteractiveLow;
-// @infoColor: @surfacesLight;
 @infoBoxShadow: none;
-// @infoBorderColor: @surfacesLight;
 @infoBackgroundColor: @surfacesLight;
 
 // Error message colours
