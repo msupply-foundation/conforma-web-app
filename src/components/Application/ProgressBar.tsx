@@ -123,11 +123,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
           size="tiny"
           success={!error}
           error={error}
-          style={{
-            width: length,
-            transformOrigin: '0 0',
-            transform: `rotate(90deg) translate(2px, -10px)`,
-          }}
+          style={{ width: length }}
         />
       )
     }
