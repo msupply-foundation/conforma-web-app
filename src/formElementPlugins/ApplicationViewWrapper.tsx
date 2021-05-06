@@ -189,7 +189,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         }}
       >
         {parametersReady ? (
-          <Form.Field required={isRequired}>{PluginComponent}</Form.Field>
+          <Form.Field className="element-application-view" required={isRequired}>
+            {PluginComponent}
+          </Form.Field>
         ) : (
           <Loader active inline />
         )}
@@ -204,7 +206,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         {changesRequired ? (
           getResponseAndBorder()
         ) : parametersReady ? (
-          <Form.Field required={isRequired}>{PluginComponent}</Form.Field>
+          <Form.Field className="element-application-view" required={isRequired}>
+            {PluginComponent}
+          </Form.Field>
         ) : (
           <Loader active inline />
         )}

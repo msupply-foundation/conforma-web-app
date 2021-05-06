@@ -3,7 +3,7 @@
 *******************************/
 
 .ui.checkbox {
-  font-size: @fontXsmall;
+  // font-size: @fontXsmall;
   color: @headersInteractiveLow;
   padding-left: 10px;
 }
