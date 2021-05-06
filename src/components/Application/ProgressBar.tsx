@@ -122,7 +122,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
           percent={percent}
           size="tiny"
           success={!error}
-          error={error}
+          error={error || (isStrictSection && !sectionProgress.completed)}
           style={{ width: length }}
         />
       )
