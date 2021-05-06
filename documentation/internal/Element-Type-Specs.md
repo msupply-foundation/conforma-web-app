@@ -146,6 +146,7 @@ _This describes the expected object that will be stored in the `application_resp
 ---
 
 <a name="text"/>
+
 ### Text Information
 
 - **type/code**: `textInfo`
@@ -157,11 +158,49 @@ _For displaying blocks of text in the application_
 
 - **title\***: `string` -- Heading text to display [Optional]
 - **text\***: `string` -- body text to display
-  _(Maybe have some formatting options, but not initially, although `text` should support Markdown)_
+- **style\***: `string` -- a range of present visual styles [Optional]. Options are: `none` (default), `basic`, `info`, `warning`, `success`, `positive`, `error`, `negative`  
+  (see screenshots below)
+
+**Note**: `title` and `text` strings support basic [**Markdown**](https://en.wikipedia.org/wiki/Markdown) formatting
+
+#### Style options
+
+#### `style: none` (default)
+
+![style:none](./images/Element-Type-Specs-textInfo-none.png)
+
+### `style: basic`
+
+![style:basic](./images/Element-Type-Specs-textInfo-basic.png)
+
+### `style: info`
+
+![style:info](./images/Element-Type-Specs-textInfo-info.png)
+
+### `style: warning`
+
+![style:warning](./images/Element-Type-Specs-textInfo-warning.png)
+
+### `style: success`
+
+![style:success](./images/Element-Type-Specs-textInfo-success.png)
+
+### `style: positive`
+
+![style:positive](./images/Element-Type-Specs-textInfo-positive.png)
+
+### `style: error`
+
+![style:error](./images/Element-Type-Specs-textInfo-error.png)
+
+### `style: negative`
+
+![style:negative](./images/Element-Type-Specs-textInfo-negative.png)
 
 ---
 
 <a name="image"/>
+
 ### Image Display
 
 - **type/code**: `imageDisplay`
@@ -181,6 +220,7 @@ _For displaying images in applications_
 ---
 
 <a name="dropdown"/>
+
 ### Drop-down Selector
 
 - **type/code**: `dropdownChoice`
@@ -212,6 +252,7 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 ---
 
 <a name="radio"/>
+
 ### Radio Buttons
 
 - **type/code**: `radioChoice`
@@ -246,6 +287,7 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 ---
 
 <a name="checkbox"/>
+
 ### Checkboxes
 
 - **type/code**: `checkbox`
@@ -291,6 +333,7 @@ _One or more checkboxes, any number of which can be selected/toggled_
 ---
 
 <a name="file"/>
+
 ### File Upload
 
 - **type/code**: `fileUpload`
@@ -330,6 +373,7 @@ Response object is populated after file upload, based on the server response. No
 ---
 
 <a name="page"/>
+
 ### Page Break
 
 - **type/code**: `pageBreak`
