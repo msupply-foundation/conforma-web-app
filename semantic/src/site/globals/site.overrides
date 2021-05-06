@@ -519,7 +519,7 @@ a:hover {
 .summary-section {
   background-color: @surfacesLight;
   border-radius: @borderRadius;
-  padding: 20px;
+  padding: 15px 20px;
   margin-bottom: 15px;
 }
 
