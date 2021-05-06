@@ -7,7 +7,7 @@ interface TextInfoProps {
   Markdown: any
 }
 
-// Extract main content to another Component so it can be shared with SummaryView
+// Extract main content to another Component so it can be shared with SummaryView (and TemplateView)
 export const TextInfoElement: React.FC<TextInfoProps> = (props) => {
   const { parameters, Markdown } = props
   const { title, text, style } = parameters
