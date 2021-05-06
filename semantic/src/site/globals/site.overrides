@@ -627,6 +627,10 @@ a:hover {
   color: @darkGrey !important;
 }
 
+.information-colour {
+  color: @information !important;
+}
+
 // Position adjustments
 .shift-up-1 {
   transform: translateY(-1px);

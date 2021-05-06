@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Header, Icon, Label, List, Segment } from 'semantic-ui-react'
+import { Button, Header, Icon, Label, List, Segment, Container } from 'semantic-ui-react'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { ApplicationProps } from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
@@ -32,31 +32,17 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
     push(`/application/${serialNumber}/summary`)
 
   return (
-    <Segment.Group style={{ backgroundColor: 'Gainsboro', display: 'flex' }}>
-      {currentUser?.username !== strings.USER_NONREGISTERED && (
-        <Header textAlign="center">
-          {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
-        </Header>
-      )}
-      <Segment
-        textAlign="center"
-        style={{
-          backgroundColor: 'white',
-          padding: 10,
-          margin: '0px 50px',
-          minHeight: 500,
-          flex: 1,
-        }}
-      >
-        <Header icon>
-          <Icon name="clock outline" color="blue" size="huge" />
+    <Container id="application-summary">
+      <Segment basic textAlign="center">
+        <Header as="h4" icon>
+          <Icon name="clock outline" className="information-colour" size="huge" />
           {strings.LABEL_PROCESSING}
         </Header>
         <Markdown text={submissionMessage || ''} />
         {currentUser?.username !== strings.USER_NONREGISTERED && (
           <>
-            <Segment basic textAlign="left" style={{ margin: '50px 50px', padding: 10 }}>
-              <Header as="h5">{strings.SUBTITLE_SUBMISSION_STEPS}</Header>
+            <Segment basic textAlign="left">
+              <p>{strings.SUBTITLE_SUBMISSION_STEPS}</p>
               <List>
                 {stages.map(({ title, description }) =>
                   title ? (
@@ -68,12 +54,11 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
                 )}
               </List>
             </Segment>
-            <Segment basic textAlign="center" style={{ margin: '50px 50px', padding: 10 }}>
+            <Segment basic textAlign="center">
               <Button
                 color="blue"
                 as={Link}
                 to={`/application/${serialNumber}/summary`}
-                style={{ minWidth: 200 }}
                 content={`${strings.BUTTON_BACK_TO} ${name}`}
               />
               <Label as={Link} to={'/'} content={strings.BUTTON_BACK_DASHBOARD} />
@@ -86,7 +71,7 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
           </Button>
         )}
       </Segment>
-    </Segment.Group>
+    </Container>
   )
 }
 
