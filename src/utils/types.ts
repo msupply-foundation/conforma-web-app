@@ -48,6 +48,8 @@ export {
   ReviewAction,
   ReviewDetails,
   ReviewProgress,
+  ReviewAndConsolidationProgress,
+  ConsolidationProgress,
   ReviewQuestion,
   ReviewSectionComponentProps,
   SectionAndPage,
@@ -103,6 +105,7 @@ interface ApplicationProps {
 interface ApplicationStage {
   id: number
   name: string
+  number: number
   colour: string
 }
 
@@ -233,6 +236,8 @@ interface Page {
   name: string
   progress: ApplicationProgress
   reviewProgress?: ReviewProgress
+  consolidationProgress?: ConsolidationProgress
+  reviewAndConsolidationProgress?: ReviewAndConsolidationProgress
   changeRequestsProgress?: ChangeRequestsProgress
   state: PageElement[]
 }
@@ -242,13 +247,20 @@ type PageElement = {
   response: ResponseFull | null
   previousApplicationResponse: ApplicationResponse
   latestApplicationResponse: ApplicationResponse
+  lowerLevelReviewLatestResponse?: ReviewResponse
+  lowerLevelReviewPreviousResponse?: ReviewResponse
   thisReviewLatestResponse?: ReviewResponse
+  thisReviewPreviousResponse?: ReviewResponse
+  latestOriginalReviewResponse?: ReviewResponse
+  previousOriginalReviewResponse?: ReviewResponse
   isNewApplicationResponse?: boolean
   review?: ReviewQuestionDecision
+  isPendingReview?: boolean
   assignmentId: number
   isAssigned?: boolean
   isChangeRequest?: boolean
   isChanged?: boolean
+  isActiveReviewResponse?: boolean
 }
 
 interface ApplicationProgress {
@@ -330,13 +342,30 @@ interface SectionDetails {
   totalPages: number
 }
 
-interface ReviewProgress {
+interface ReviewAndConsolidationProgress {
   totalReviewable: number
+  totalPendingReview: number
+  totalActive: number // review or application responses that are in progress (as oppose to awaiting review to be started)
+}
+
+interface ReviewProgress {
   doneConform: number
   doneNonConform: number
   doneNewReviewable: number
   totalNewReviewable: number
 }
+
+interface ConsolidationProgress {
+  totalConform: number
+  totalNonConform: number
+  doneAgreeConform: number
+  doneAgreeNonConform: number
+  doneDisagree: number
+  doneActiveDisagree: number
+  doneActiveAgreeConform: number
+  doneActiveAgreeNonConform: number
+}
+
 enum ReviewAction {
   canContinue = 'CAN_CONTINUE',
   canView = 'CAN_VIEW',
@@ -358,6 +387,8 @@ interface SectionState {
   details: SectionDetails
   progress?: ApplicationProgress
   reviewProgress?: ReviewProgress
+  reviewAndConsolidationProgress?: ReviewAndConsolidationProgress
+  consolidationProgress?: ConsolidationProgress
   reviewAction?: {
     action: ReviewAction
     isAssignedToCurrentUser: boolean
