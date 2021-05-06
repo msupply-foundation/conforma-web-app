@@ -100,12 +100,12 @@ const generateReviewSectionActions: GenerateSectionActions = ({
   currentUserId,
 }) => {
   const isCurrentUserReview = reviewAssignment.reviewer.id === currentUserId
+  const isConsolidation = reviewAssignment.level > 1
 
   sections.forEach((section) => {
-    const { totalReviewable, totalPendingReview, totalActive } =
-      thisReview?.level === 1
-        ? (section.reviewProgress as ReviewProgress)
-        : (section.consolidationProgress as ConsolidationProgress)
+    const { totalReviewable, totalPendingReview, totalActive } = isConsolidation
+      ? (section.consolidationProgress as ConsolidationProgress)
+      : (section.reviewProgress as ReviewProgress)
 
     const isReviewable = (totalReviewable || 0) > 0
     const isAssignedToCurrentUser = isCurrentUserReview && isReviewable
@@ -124,9 +124,10 @@ const generateReviewSectionActions: GenerateSectionActions = ({
 
     const foundAction = actionDefinitions.find(({ checkMethod }) => checkMethod(checkMethodProps))
 
-    section.reviewAction = {
+    section.assignment = {
       isAssignedToCurrentUser,
       isReviewable,
+      isConsolidation,
       action: foundAction ? foundAction.action : ReviewAction.unknown,
     }
   })

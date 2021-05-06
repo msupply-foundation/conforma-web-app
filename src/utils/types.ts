@@ -53,6 +53,7 @@ export {
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
+  SectionAssignment,
   SectionState,
   SectionsStructure,
   SetStrictSectionPage,
@@ -381,18 +382,20 @@ interface ChangeRequestsProgress {
   doneChangeRequests: number
 }
 
+interface SectionAssignment {
+  action: ReviewAction
+  isAssignedToCurrentUser: boolean
+  isConsolidation: boolean
+  isReviewable: boolean
+}
+
 interface SectionState {
   details: SectionDetails
   progress?: ApplicationProgress
   reviewProgress?: ReviewProgress
   consolidationProgress?: ConsolidationProgress
-  reviewAction?: {
-    action: ReviewAction
-    isAssignedToCurrentUser: boolean
-    isReviewable: boolean
-  }
+  assignment?: SectionAssignment
   changeRequestsProgress?: ChangeRequestsProgress
-  assigned?: ReviewerDetails
   pages: {
     [pageNum: number]: Page
   }

@@ -45,7 +45,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   if (!section) return null
 
   const thisReview = fullReviewStructure?.thisReview
-  const isAssignedToCurrentUser = !!section?.reviewAction?.isAssignedToCurrentUser
+  const isAssignedToCurrentUser = !!section?.assignment?.isAssignedToCurrentUser
 
   const props: ReviewSectionComponentProps = {
     fullStructure: fullReviewStructure,
@@ -53,14 +53,11 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     assignment,
     thisReview,
     isAssignedToCurrentUser,
-    action: section?.reviewAction?.action || ReviewAction.unknown,
+    action: section?.assignment?.action || ReviewAction.unknown,
   }
 
   const canRenderRow =
-    section?.reviewAction?.isReviewable ||
-    section?.reviewAction?.action === ReviewAction.canSelfAssign
-
-  console.log('canRenderRow', canRenderRow, section?.reviewAction)
+    section?.assignment?.isReviewable || section?.assignment?.action === ReviewAction.canSelfAssign
 
   return (
     <>
