@@ -24,8 +24,6 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
 
   usePageTitle(strings.PAGE_TITLE_APPLICATION.replace('%1', fullStructure.info.serial))
 
-  console.log('fullStructure', fullStructure)
-
   const { submit } = useSubmitApplication({
     serialNumber: fullStructure?.info.serial as string,
     currentUser: currentUser as User,
