@@ -42,10 +42,10 @@ const SectionWrapper: React.FC<SectionProps> = ({
         <Accordion.Title active={isActive} onClick={toggleSection}>
           <Sticky context={stickyRef} offset={134} bottomOffset={150}>
             <Grid columns="equal" className="summary-section-header">
-              <Grid.Column>
+              <Grid.Column width={10}>
                 <Header as="h4" content={details.title} />
               </Grid.Column>
-              <Grid.Column textAlign="right">
+              <Grid.Column textAlign="left">
                 {extraSectionTitleContent && extraSectionTitleContent(section)}
               </Grid.Column>
               <Grid.Column textAlign="right" width={1}>
@@ -90,11 +90,6 @@ const sectionStyles = {
   sup: (failed: boolean) =>
     ({
       border: failed ? '2px solid pink' : 'none',
-      borderRadius: 8,
-      marginBottom: 10,
-      padding: 10,
-      boxShadow: 'none',
-      backgroundColor: '#DCDDDD', // Invision
     } as CSSProperties),
 }
 

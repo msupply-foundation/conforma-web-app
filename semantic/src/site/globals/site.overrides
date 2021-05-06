@@ -25,6 +25,16 @@ a:hover {
   opacity: @hoverOpacity;
 }
 
+// Use this for links that use onClick (as opposed to <a> tags)
+.link-style {
+  color: @interactiveHigh;
+}
+
+.link-style:hover {
+  color: @interactiveHigh;
+  opacity: @hoverOpacity;
+}
+
 .center-text {
   text-align: center;
 }
@@ -323,6 +333,28 @@ a:hover {
       Review page
 ----------------------------------------*/
 
+// NOTE: The review page shares a lot of styles with Application Summary
+
+.review-comment-area {
+  background-color: @reviewCommentBackground;
+  margin-top: 10px;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-bottom: -14px;
+  border-top: 1px solid @surfacesMed;
+  border-bottom: 1px solid @surfacesMed;
+}
+
+.ui.grid.review-comment-grid {
+  padding: 10px 20px;
+  font-size: 0.85em;
+  color: @headersInteractiveLow;
+}
+
+.review-approve-all-button {
+  margin-top: 20px;
+}
+
 #review-submit-area {
   display: flex;
   flex-direction: column;
@@ -332,10 +364,6 @@ a:hover {
   background: @surfacesWhite;
   padding-left: 10px;
   padding-bottom: 30px;
-}
-
-#review-commment-area textarea {
-  resize: 'none';
 }
 
 /*--------------------------------
@@ -501,6 +529,8 @@ a:hover {
       Application Summary area
 ---------------------------------*/
 
+// Note: these layout ids/classes also shared with Review page
+
 #application-summary {
   display: flex;
   flex-direction: column;
@@ -534,6 +564,7 @@ a:hover {
   background-color: @surfacesLight;
   border-radius: @borderRadius;
   padding: 20px;
+  padding-bottom: 1px;
   margin-bottom: 15px;
 }
 
@@ -561,6 +592,11 @@ a:hover {
   margin-top: 20px;
 }
 
+// Hide sticky bar when it jumps to bottom
+.summary-section .bound.bottom {
+  display: none;
+}
+
 /*--------------------------------
       General used classes
 ---------------------------------*/
@@ -575,6 +611,16 @@ a:hover {
 
 .dark-grey {
   color: @darkGrey !important;
+}
+
+// Position adjustments
+.shift-up-1 {
+  transform: translateY(-1px);
+}
+
+.right-justify-content {
+  width: 100%;
+  text-align: right;
 }
 
 /*******************************
