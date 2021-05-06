@@ -23,7 +23,9 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
     return (
       <Container>
         {visibleOptions.length > 0 && (
-          <Label className="strong-label" size="large" content={strings.LABEL_REVIEW_SUBMIT_AS} />
+          <p>
+            <strong>{strings.LABEL_REVIEW_SUBMIT_AS}:</strong>
+          </p>
         )}
         {visibleOptions.map((option) => (
           <Form.Field

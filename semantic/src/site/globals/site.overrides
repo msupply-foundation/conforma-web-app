@@ -345,7 +345,7 @@ a:hover {
   border-bottom: 1px solid @surfacesMed;
 }
 
-.ui.grid.review-comment-grid {
+.review-comment-grid.ui.grid {
   padding: 10px 20px;
   font-size: 0.85em;
   color: @headersInteractiveLow;
@@ -358,6 +358,20 @@ a:hover {
 #review-submit-area {
   // display: flex;
   margin-bottom: 30px;
+}
+
+#review-submit-area p {
+  font-size: 0.95em;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+#review-submit-area.ui.form .field {
+  margin-bottom: 10px;
+}
+
+#review-submit-area .ui.checkbox {
+  padding-left: 0;
 }
 
 /*--------------------------------
