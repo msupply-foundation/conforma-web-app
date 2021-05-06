@@ -7,6 +7,7 @@ const BOTTOM_PAD = 10
 import React from 'react'
 import { Accordion, Container, Grid, Icon, List, Sticky, Progress } from 'semantic-ui-react'
 import strings from '../../utils/constants'
+import styleConstants from '../../utils/data/styleConstants'
 import { checkPageIsAccessible } from '../../utils/helpers/structure'
 import { useRouter } from '../../utils/hooks/useRouter'
 import {
@@ -221,7 +222,12 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
   })
 
   return (
-    <Sticky as={Container} id="application-progress" offset={135} className="hide-on-mobile">
+    <Sticky
+      as={Container}
+      id="application-progress"
+      offset={styleConstants.HEADER_OFFSET}
+      className="hide-on-mobile"
+    >
       <Grid className="progress-row">
         <Grid.Column
           // width={3}
