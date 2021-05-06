@@ -63,7 +63,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
 const reReviewableCount = (reviewProgress?: ReviewProgress) =>
   (reviewProgress?.totalNewReviewable || 0) - (reviewProgress?.doneNewReviewable || 0)
 
-// START CONTINUE OR RESTART BUTTON
+// START REVIEW, CONTINUE REVIEW OR RE-REVIEW BUTTON
 const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
   section: { details, reviewProgress },
