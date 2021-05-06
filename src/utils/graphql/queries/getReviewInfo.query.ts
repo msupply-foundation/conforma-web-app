@@ -37,6 +37,7 @@ export default gql`
         }
         stage {
           title
+          number
           id
         }
         reviewQuestionAssignments {
