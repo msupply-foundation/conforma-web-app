@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Header, Icon, Label, List, Segment, Container } from 'semantic-ui-react'
+import { Button, Header, Icon, List, Segment, Container } from 'semantic-ui-react'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { ApplicationProps } from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
