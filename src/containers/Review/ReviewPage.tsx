@@ -1,11 +1,18 @@
 import React, { CSSProperties } from 'react'
 import { Button, Container, Header, Icon, Label, Message, Segment } from 'semantic-ui-react'
-import { Loading, ReviewHeader, ReviewSectionProgressBar, SectionWrapper } from '../../components'
+import {
+  Loading,
+  ConsolidationSectionProgressBar,
+  ReviewHeader,
+  ReviewSectionProgressBar,
+  SectionWrapper,
+} from '../../components'
 import {
   AssignmentDetails,
   FullStructure,
   Page,
   ResponsesByCode,
+  SectionAssignment,
   SectionState,
 } from '../../utils/types'
 import {
@@ -15,10 +22,8 @@ import {
   useUpdateReviewResponseMutation,
 } from '../../utils/generated/graphql'
 import strings from '../../utils/constants'
-
 import useGetReviewStructureForSections from '../../utils/hooks/useGetReviewStructureForSection'
 import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivation'
-
 import useScrollableAttachments, {
   ScrollableAttachment,
 } from '../../utils/hooks/useScrollableAttachments'
@@ -110,18 +115,24 @@ const ReviewPage: React.FC<{
   )
 }
 
-const SectionRowStatus: React.FC<SectionState> = ({ reviewAction, reviewProgress }) => {
-  if (reviewAction?.isAssignedToCurrentUser && reviewProgress) {
-    return reviewAction.isReviewable ? (
-      <ReviewSectionProgressBar reviewProgress={reviewProgress} />
-    ) : (
+const SectionRowStatus: React.FC<SectionState> = (section) => {
+  const { assignment } = section
+  const { isConsolidation, isReviewable, isAssignedToCurrentUser } = assignment as SectionAssignment
+
+  if (!isAssignedToCurrentUser)
+    return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
+  if (!isReviewable)
+    return (
       <Label
         icon={<Icon name="circle" size="mini" color="blue" />}
         content={strings.LABEL_ASSIGNED_TO_YOU}
       />
     )
-  }
-  return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
+  if (isConsolidation && section.consolidationProgress)
+    return <ConsolidationSectionProgressBar consolidationProgress={section.consolidationProgress} />
+  if (section.reviewProgress)
+    return <ReviewSectionProgressBar reviewProgress={section.reviewProgress} />
+  return null // Unexpected
 }
 
 const ApproveAllButton: React.FC<{ page: Page }> = ({ page }) => {

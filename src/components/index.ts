@@ -12,7 +12,12 @@ import Home from './Home'
 import Loading from './Loading'
 import { Footer, ModalWarning } from './Main'
 import { ReviewHeader } from './Review'
-import { ApplicationProgressBar, ReviewSectionProgressBar, SectionWrapper } from './Sections'
+import {
+  ApplicationProgressBar,
+  ConsolidationSectionProgressBar,
+  ReviewSectionProgressBar,
+  SectionWrapper,
+} from './Sections'
 import { PageElements } from './PageElements'
 import TemplateList from './TemplateList'
 import TemplateNew from './TemplateNew'
@@ -35,6 +40,7 @@ export {
   Approval,
   Admin,
   Config,
+  ConsolidationSectionProgressBar,
   FilterList,
   Footer,
   Home,
