@@ -48,11 +48,11 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
         thisReviewLatestResponse,
         response,
         reviewQuestionAssignmentId,
-        lowerLevelReviewLatestResponse,
+        lowerLevelReviewPreviousResponse,
       }) => {
         const applicationResponseId = assignment.level > 1 ? undefined : response?.id
         const reviewResponseLinkId =
-          assignment.level === 1 ? undefined : lowerLevelReviewLatestResponse?.id
+          assignment.level === 1 ? undefined : lowerLevelReviewPreviousResponse?.id
         // create new if element is awaiting review
         const shouldCreateNew = isPendingReview
         return {
