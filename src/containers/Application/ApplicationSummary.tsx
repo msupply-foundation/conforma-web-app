@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Header, Message, Container, Segment } from 'semantic-ui-react'
+import { Button, Header, Message, Container } from 'semantic-ui-react'
 import { ApplicationProps, MethodToCallProps, ResponsesByCode, User } from '../../utils/types'
 import useSubmitApplication from '../../utils/hooks/useSubmitApplication'
 import { useUserState } from '../../contexts/UserState'
@@ -107,7 +107,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
             />
             <p>
               <Link to={`/application/${fullStructure.info.serial}`}>
-                <strong>Back to form</strong>
+                <strong>strings.LABEL_APPLICATION_BACK</strong>
               </Link>
             </p>
           </div>

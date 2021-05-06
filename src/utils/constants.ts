@@ -49,6 +49,7 @@ export default {
   LABEL_APPLICATIONS: 'applications',
   LABEL_APPLICATION_UPDATE: 'Update',
   LABEL_APPLICATION_SUBMITTED: 'Application Submitted',
+  LABEL_APPLICATION_BACK: 'Back to form',
   LABEL_ASSIGNED_TO_YOU: 'Assigned to you',
   LABEL_ASSIGNED_TO_OTHER: 'Assigned to another reviewer',
   LABEL_ASSIGNMENT_LOCKED: 'Locked for',
