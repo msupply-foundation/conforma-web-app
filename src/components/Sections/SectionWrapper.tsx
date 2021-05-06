@@ -53,9 +53,9 @@ const SectionWrapper: React.FC<SectionProps> = ({
               </Grid.Column>
               <Grid.Column textAlign="right" width={1}>
                 <Icon
-                  name={isActive ? 'angle up' : 'angle down'}
+                  name={isActive ? 'chevron up' : 'chevron down'}
                   className="dark-grey"
-                  size="large"
+                  // size="large"
                 />
               </Grid.Column>
             </Grid>
