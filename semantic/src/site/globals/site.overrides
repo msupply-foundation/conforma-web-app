@@ -374,6 +374,17 @@ a:hover {
   padding-left: 0;
 }
 
+#review-decision-container {
+  display: flex;
+  justify-content: flex-end;
+  height: 100vh;
+}
+
+#review-decision-content {
+  background-color: @surfacesWhite;
+  // width: 350px;
+}
+
 /*--------------------------------
       Application List
 ---------------------------------*/

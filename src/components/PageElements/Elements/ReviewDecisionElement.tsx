@@ -37,7 +37,6 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
       <Grid columns="equal" className="review-comment-grid">
         <Grid.Column width={2} textAlign="left">
           {reviewResponse.review?.reviewer?.firstName} {reviewResponse.review?.reviewer?.lastName}
-          STUFF GOES HERE
         </Grid.Column>
         <Grid.Column width={12} textAlign="left">
           <div>
