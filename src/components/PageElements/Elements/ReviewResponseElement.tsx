@@ -1,5 +1,6 @@
-import React, { CSSProperties, useState } from 'react'
-import { Button, Grid } from 'semantic-ui-react'
+import React from 'react'
+import { Grid } from 'semantic-ui-react'
+import { useRouter } from '../../../utils/hooks/useRouter'
 import { SummaryViewWrapper } from '../../../formElementPlugins'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import {
@@ -9,7 +10,6 @@ import {
 } from '../../../utils/generated/graphql'
 import DecisionArea from '../../Review/DecisionArea'
 import strings from '../../../utils/constants'
-import { Link } from 'react-router-dom'
 
 interface ReviewResponseElementProps {
   isNewApplicationResponse: boolean
@@ -20,11 +20,12 @@ interface ReviewResponseElementProps {
 
 const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
   isNewApplicationResponse,
+  latestApplicationResponse,
   thisReviewLatestResponse,
   summaryProps,
 }) => {
-  const decisionArea = useState(false)
-  const [toggle] = decisionArea
+  const { query, updateQuery } = useRouter()
+  const toggle = query?.openResponse === latestApplicationResponse.templateElement?.code
 
   return (
     <>
@@ -38,7 +39,8 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
             !thisReviewLatestResponse.decision && (
               <ReviewButton
                 isNewApplicationResponse={isNewApplicationResponse}
-                decisionArea={decisionArea}
+                elementCode={latestApplicationResponse.templateElement?.code as string}
+                updateQuery={updateQuery}
               />
             )}
         </Grid.Column>
@@ -56,9 +58,10 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
 
 const ReviewButton: React.FC<{
   isNewApplicationResponse?: boolean
-  decisionArea: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-}> = ({ isNewApplicationResponse, decisionArea: [toggleDecisionArea, setToggleDecisionArea] }) => (
-  <p className="link-style" onClick={() => setToggleDecisionArea(!toggleDecisionArea)}>
+  elementCode: string
+  updateQuery: Function
+}> = ({ isNewApplicationResponse, elementCode, updateQuery }) => (
+  <p className="link-style clickable" onClick={() => updateQuery({ openResponse: elementCode })}>
     <strong>
       {isNewApplicationResponse
         ? strings.BUTTON_RE_REVIEW_RESPONSE

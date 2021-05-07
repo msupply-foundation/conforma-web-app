@@ -1,6 +1,7 @@
 import React, { useState, CSSProperties } from 'react'
 import { Icon, Label, Grid } from 'semantic-ui-react'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
+import { useRouter } from '../../../utils/hooks/useRouter'
 import getSimplifiedTimeDifference from '../../../utils/dateAndTime/getSimplifiedTimeDifference'
 import {
   ApplicationResponse,
@@ -22,7 +23,7 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
   summaryViewProps,
   latestApplicationResponse,
 }) => {
-  const [toggleDecisionArea, setToggleDecisionArea] = useState(false)
+  const { updateQuery } = useRouter()
 
   if (!reviewResponse) return null
   if (!reviewResponse?.decision) return null
@@ -36,6 +37,7 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
       <Grid columns="equal" className="review-comment-grid">
         <Grid.Column width={2} textAlign="left">
           {reviewResponse.review?.reviewer?.firstName} {reviewResponse.review?.reviewer?.lastName}
+          STUFF GOES HERE
         </Grid.Column>
         <Grid.Column width={12} textAlign="left">
           <div>
@@ -68,17 +70,13 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
               name="pencil"
               className="clickable"
               color="blue"
-              onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
+              onClick={() => {
+                updateQuery({ openResponse: latestApplicationResponse.templateElement?.code })
+              }}
             />
           )}
         </Grid.Column>
       </Grid>
-
-      <DecisionArea
-        reviewResponse={reviewResponse}
-        toggle={toggleDecisionArea}
-        summaryViewProps={summaryViewProps}
-      />
     </div>
   )
 }
