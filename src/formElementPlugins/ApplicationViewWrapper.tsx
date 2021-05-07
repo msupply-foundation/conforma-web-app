@@ -181,7 +181,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     const borderColorClass = isChangeRequest ? (!isChanged ? 'alert-border' : '') : 'blue-border'
 
     return (
-      // <div className={`element-application-view ${borderClass} ${borderColorClass}`}>
       <>
         {parametersReady ? (
           <Form.Field
@@ -195,7 +194,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
           <Loader active inline />
         )}
       </>
-      // </div>
     )
   }
 
@@ -230,7 +228,10 @@ const ChangesToResponseWarning: React.FC<ChangesToResponseWarningProps> = ({
   isValid,
 }) => {
   const displayResponseWarning = isChangeRequest || (isChanged && isValid)
+  const visibilityClass = isChangeRequest || (isChanged && isValid) ? '' : 'invisible'
+  const colourClass = isChangeRequest ? (!isChanged ? 'alert' : '') : 'blue'
   return (
+    // TO DO -- implement styles
     <div
       style={{
         color: isChangeRequest && isChanged && isValid ? 'grey' : 'red',

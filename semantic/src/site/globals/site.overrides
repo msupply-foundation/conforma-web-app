@@ -538,10 +538,8 @@ a:hover {
   border: 1px solid @headersInteractiveMed;
   padding: 10px;
   border-radius: @borderRadius;
-  // margin-bottom: 10px !important;
   margin-left: -10px !important;
   margin-right: -10px !important;
-  // margin-top: 0;
 }
 
 .alert-border {
@@ -550,6 +548,10 @@ a:hover {
 
 .blue-border {
   border-color: @interactiveHigh;
+}
+
+.reviewer-comment {
+  font-size: 0.9em;
 }
 
 /*--------------------------------
