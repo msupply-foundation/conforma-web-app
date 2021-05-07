@@ -11,12 +11,12 @@ enum ACTIONS {
 }
 
 const StatusCell: React.FC<CellProps> = ({ application }) => {
-  const { serial, stage, status } = application
+  const { serial, status } = application
   switch (status) {
     case ApplicationStatus.ChangesRequired:
       return (
-        <Link to={`/application/${serial}`}>
-          <Icon name="exclamation circle" color="red" />
+        <Link to={`/application/${serial}`} className="user-action">
+          <Icon name="exclamation circle" className="alert" />
           {ACTIONS.MAKE_CHANGES}
         </Link>
       )
@@ -24,14 +24,24 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
       return (
         <Segment basic textAlign="center">
           <Progress size="tiny" />
-          <Link to={`/application/${serial}`}>{ACTIONS.EDIT_DRAFT}</Link>
-          <Icon name="trash alternate outline" style={{ marginLeft: 10 }} />
+          <Link to={`/application/${serial}`} className="user-action">
+            {ACTIONS.EDIT_DRAFT}
+          </Link>
+          <Icon name="trash alternate outline" />
         </Segment>
       )
     case ApplicationStatus.Expired:
-      return <Link to={`/application/${serial}/renew`}>{ACTIONS.RENEW}</Link> // TODO: Add Renew page (and logic)
+      return (
+        <Link to={`/application/${serial}/renew`} className="user-action">
+          {ACTIONS.RENEW}
+        </Link>
+      ) // TODO: Add Renew page (and logic)
     case ApplicationStatus.ChangesRequired:
-      return <Link to={`/application/${serial}`}>{ACTIONS.MAKE_CHANGES}</Link> // TODO: Show number of responses to make changes
+      return (
+        <Link to={`/application/${serial}`} className="user-action">
+          {ACTIONS.MAKE_CHANGES}
+        </Link>
+      ) // TODO: Show number of responses to make changes
     case undefined:
       console.log('Problem to get status of application serial ', serial)
       return null
