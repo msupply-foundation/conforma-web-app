@@ -301,7 +301,7 @@ a:hover {
 
 // Steps line - actions box
 .actions-box {
-  min-width: 100px;
+  min-width: 120px;
   text-align: right;
 }
 
@@ -532,6 +532,25 @@ a:hover {
 
 // .element-summary-view {
 // }
+
+// For change request borders
+.element-warning-border {
+  border: 1px solid @headersInteractiveMed;
+  padding: 10px;
+  border-radius: @borderRadius;
+  // margin-bottom: 10px !important;
+  margin-left: -10px !important;
+  margin-right: -10px !important;
+  // margin-top: 0;
+}
+
+.alert-border {
+  border-color: @attention;
+}
+
+.blue-border {
+  border-color: @interactiveHigh;
+}
 
 /*--------------------------------
       Application Navigation area

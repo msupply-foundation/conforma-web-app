@@ -177,26 +177,25 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     if (!changesRequired) return null
     const { isChangeRequest, isChanged } = changesRequired
     const isValid = validationState ? (validationState.isValid as boolean) : true
-    const displayResponseWarning = isChangeRequest || (isChanged && isValid)
+    const borderClass = isChangeRequest || (isChanged && isValid) ? 'element-warning-border' : ''
+    const borderColorClass = isChangeRequest ? (!isChanged ? 'alert-border' : '') : 'blue-border'
+
     return (
-      <div
-        style={{
-          border: displayResponseWarning ? 'solid 1px' : 'transparent',
-          borderColor: isChangeRequest ? (isChanged ? 'black' : 'red') : 'blue',
-          borderRadius: 7,
-          padding: displayResponseWarning ? 4 : 5,
-          margin: 5,
-        }}
-      >
+      // <div className={`element-application-view ${borderClass} ${borderColorClass}`}>
+      <>
         {parametersReady ? (
-          <Form.Field className="element-application-view" required={isRequired}>
+          <Form.Field
+            className={`element-application-view ${borderClass} ${borderColorClass}`}
+            required={isRequired}
+          >
             {PluginComponent}
+            <ChangesToResponseWarning {...changesRequired} isValid={isValid} />
           </Form.Field>
         ) : (
           <Loader active inline />
         )}
-        <ChangesToResponseWarning {...changesRequired} isValid={isValid} />
-      </div>
+      </>
+      // </div>
     )
   }
 
