@@ -150,6 +150,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
             parameters: element.parameters,
             validationExpression: element.validation,
             validationMessage: element.validationMessage,
+            helpText: element.helpText,
           } as TemplateElementState)
       })
     })

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Segment } from 'semantic-ui-react'
+import { Form, Grid, Segment } from 'semantic-ui-react'
 import {
   ApplicationDetails,
   ElementState,
@@ -10,6 +10,7 @@ import {
 import { ApplicationViewWrapper } from '../../formElementPlugins'
 import { ApplicationViewWrapperProps } from '../../formElementPlugins/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
+import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import SummaryInformationElement from './Elements/SummaryInformationElement'
 import SummaryResponseElement from './Elements/SummaryResponseElement'
 import SummaryResponseChangedElement from './Elements/SummaryResponseChangedElement'
@@ -67,7 +68,20 @@ const PageElements: React.FC<PageElementProps> = ({
               currentResponse: responsesByCode?.[element.code],
             }
             // Wrapper displays response & changes requested warning for LOQ re-submission
-            return <ApplicationViewWrapper key={`question_${element.code}`} {...props} />
+            return (
+              <div className="form-element-wrapper" key={`question_${element.code}`}>
+                <div className="form-element">
+                  <ApplicationViewWrapper {...props} />
+                </div>
+                {element.helpText && (
+                  <div className="help-tips hide-on-mobile">
+                    <div className="help-tips-content">
+                      <Markdown text={element.helpText} />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
           }
         )}
       </Form>
