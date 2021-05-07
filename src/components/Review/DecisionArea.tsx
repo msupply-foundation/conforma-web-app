@@ -119,7 +119,7 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
                     />
                   </Form.Field>
                   {review.decision === ReviewResponseDecision.Decline && !review.comment && (
-                    <p style={{ color: 'red' }}>{messages.REVIEW_RESUBMIT_COMMENT}</p>
+                    <p className="alert">{messages.REVIEW_RESUBMIT_COMMENT}</p>
                   )}
                 </Segment>
                 <Segment basic id="history-panel">

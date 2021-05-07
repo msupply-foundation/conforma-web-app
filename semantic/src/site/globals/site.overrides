@@ -393,6 +393,7 @@ a:hover {
   background-color: @surfacesWhite;
   width: 400px;
   padding: 15px;
+  overflow: scroll;
 }
 
 #history-panel {
