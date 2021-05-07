@@ -52,65 +52,80 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
       {!isOpen ? null : (
         <div id="review-decision-container">
           <div id="review-decision-content">
-            {/* <Container id="document-viewer" style={{}}></Container> */}
+            <div id="document-viewer" className="hidden-element">
+              TO-DO: DOCUMENT VIEWER
+            </div>
             <div id="details-panel">
               <Form>
                 <Segment basic>
-                  <Header>{strings.TITLE_DETAILS}</Header>
+                  <Header as="h3">{strings.TITLE_DETAILS}</Header>
                   <SummaryViewWrapper {...summaryViewProps} />
                 </Segment>
-
                 <Segment basic>
-                  <Header as="h3">{strings.LABEL_REVIEW}</Header>
+                  <Form.Field>
+                    <strong>{strings.LABEL_REVIEW}</strong>
+                  </Form.Field>
                   {/* // TODO: Change to list options dynamically? */}
-                  <Radio
-                    label={strings.LABEL_REVIEW_APPROVE}
-                    value={strings.LABEL_REVIEW_APPROVE}
-                    name="decisionGroup"
-                    checked={review.decision === ReviewResponseDecision.Approve}
-                    onChange={() =>
-                      setReview({
-                        ...review,
-                        decision: ReviewResponseDecision.Approve,
-                      })
-                    }
-                  />
-                  <Radio
-                    label={strings.LABEL_REVIEW_RESSUBMIT}
-                    value={strings.LABEL_REVIEW_RESSUBMIT}
-                    name="decisionGroup"
-                    checked={review.decision === ReviewResponseDecision.Decline}
-                    onChange={() =>
-                      setReview({
-                        ...review,
-                        decision: ReviewResponseDecision.Decline,
-                      })
-                    }
-                  />
+                  <Form.Field>
+                    <Radio
+                      label={strings.LABEL_REVIEW_APPROVE}
+                      value={strings.LABEL_REVIEW_APPROVE}
+                      name="decisionGroup"
+                      checked={review.decision === ReviewResponseDecision.Approve}
+                      onChange={() =>
+                        setReview({
+                          ...review,
+                          decision: ReviewResponseDecision.Approve,
+                        })
+                      }
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <Radio
+                      label={strings.LABEL_REVIEW_RESSUBMIT}
+                      value={strings.LABEL_REVIEW_RESSUBMIT}
+                      name="decisionGroup"
+                      checked={review.decision === ReviewResponseDecision.Decline}
+                      onChange={() =>
+                        setReview({
+                          ...review,
+                          decision: ReviewResponseDecision.Decline,
+                        })
+                      }
+                    />
+                  </Form.Field>
                 </Segment>
                 <Segment basic>
-                  <Header as="h3">{strings.LABEL_COMMENT}</Header>
+                  <Form.Field>
+                    <strong>{strings.LABEL_COMMENT}</strong>
+                  </Form.Field>
                   <TextArea
-                    rows={6}
-                    style={{ width: '100%' }}
+                    rows={8}
                     defaultValue={review.comment}
                     onChange={(_, { value }) => setReview({ ...review, comment: String(value) })}
                   />
                 </Segment>
                 <Segment basic>
-                  <Button
-                    color="blue"
-                    basic
-                    onClick={submit}
-                    disabled={
-                      !review.decision ||
-                      (review.decision === ReviewResponseDecision.Decline && !review.comment)
-                    }
-                    content={strings.BUTTON_SUBMIT}
-                  />
+                  <Form.Field>
+                    <Button
+                      primary
+                      className="button-wide"
+                      onClick={submit}
+                      disabled={
+                        !review.decision ||
+                        (review.decision === ReviewResponseDecision.Decline && !review.comment)
+                      }
+                      content={strings.BUTTON_SUBMIT}
+                    />
+                  </Form.Field>
                   {review.decision === ReviewResponseDecision.Decline && !review.comment && (
                     <p style={{ color: 'red' }}>{messages.REVIEW_RESUBMIT_COMMENT}</p>
                   )}
+                </Segment>
+                <Segment basic id="history-panel">
+                  <p>
+                    <em>History panel goes here</em>
+                  </p>
                 </Segment>
               </Form>
             </div>
