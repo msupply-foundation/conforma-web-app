@@ -467,10 +467,6 @@ a:hover {
   padding-right: 0;
 }
 
-// #form-column .ui.grid .column {
-//   padding: 0 0 0 10px !important;
-// }
-
 // Seperation between Section title and form elements
 .form-area {
   margin-top: 30px;
