@@ -173,6 +173,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
             colour: stage.colour as string,
           })),
           sections: buildSectionsStructure({ sections, baseElements }),
+          attemptSubmission: false,
         }
 
         setFullStructure(newStructure)

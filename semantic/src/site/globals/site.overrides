@@ -301,7 +301,7 @@ a:hover {
 }
 
 /*---------------------------------------
-   Review Home page
+      Review Home page
 ----------------------------------------*/
 
 #review-filters-container {
@@ -317,6 +317,25 @@ a:hover {
   padding-right: 10px;
   margin-left: 10px;
   max-width: 150px;
+}
+
+/*---------------------------------------
+      Review page
+----------------------------------------*/
+
+#review-submit-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: baseline;
+  max-height: 250px;
+  background: @surfacesWhite;
+  padding-left: 10px;
+  padding-bottom: 30px;
+}
+
+#review-commment-area textarea {
+  resize: 'none';
 }
 
 /*--------------------------------
