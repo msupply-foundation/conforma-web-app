@@ -74,12 +74,27 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   const setAttemptSubmission = () => (structure.attemptSubmission = true)
   const attemptSubmissionFailed = structure.attemptSubmission && structure.firstIncompleteReviewPage
 
-  const setWarning = (message: {}) => {
+  const showWarning = () => {
+    const { title, message, option } = messages.REVIEW_DECISION_SET_FAIL
     setShowWarningModal({
       open: true,
-      ...message,
+      title,
+      message,
+      option,
       onClick: () => setShowWarningModal({ open: false }),
       onClose: () => setShowWarningModal({ open: false }),
+    })
+  }
+
+  const showConfirmation = () => {
+    const { title, message, option } = messages.REVIEW_SUBMISSION_CONFIRM
+    setShowModalConfirmation({
+      open: true,
+      title,
+      message,
+      option,
+      onClick: () => submission(),
+      onClose: () => setShowModalConfirmation({ open: false }),
     })
   }
 
@@ -99,12 +114,12 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     // Check DECISION was made
     const decisionError = getAndSetDecisionError()
     if (decisionError) {
-      setWarning(messages.REVIEW_DECISION_SET_FAIL)
+      showWarning()
       return
     }
 
     // Can SUBMIT
-    setShowModalConfirmation({ open: true, ...messages.REVIEW_SUBMISSION_CONFIRM })
+    showConfirmation()
   }
 
   const submission = async () => {
@@ -130,12 +145,8 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       {attemptSubmissionFailed && (
         <Label className="simple-label alert-text" content={messages.REVIEW_SUBMISSION_FAIL} />
       )}
-      <ModalWarning showModal={showWarningModal} />
-      <ModalConfirmation
-        modalProps={showModalConfirmation}
-        onClick={() => submission()}
-        onClose={() => setShowWarningModal({ open: false })}
-      />
+      <ModalWarning {...showWarningModal} />
+      <ModalConfirmation {...showModalConfirmation} />
     </Form.Field>
   )
 }
