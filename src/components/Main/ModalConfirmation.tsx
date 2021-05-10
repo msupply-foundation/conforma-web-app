@@ -1,15 +1,17 @@
 import React from 'react'
 import { Button, Header, Icon, Modal, ModalProps } from 'semantic-ui-react'
 
-interface ModalConfirmationProps {
-  modalProps: ModalProps
-  onClick: Function
-  onClose: Function
-}
-const ModalConfirmation: React.FC<ModalConfirmationProps> = ({ modalProps, onClick, onClose }) => {
-  const { open, title, message, option } = modalProps
+const ModalConfirmation: React.FC<ModalProps> = (showModal) => {
+  const { title, message, option, onClick, ...modalProps } = showModal
+  // TOOD: Use more props from ModalProps for more general configuration of modal (e.g. Shorthand for different actions)
+  //   <Modal
+  //   trigger={<Button>Show Modal</Button>}
+  //   header='Reminder!'
+  //   content='Call Benjamin regarding the reports.'
+  //   actions={['Snooze', { key: 'done', content: 'Done', positive: true }]}
+  // />
   return (
-    <Modal open={open} basic size="small">
+    <Modal closeIcon {...modalProps} basic size="small">
       <Header icon>
         <Icon name="check square outline" color="green" />
         {title}
