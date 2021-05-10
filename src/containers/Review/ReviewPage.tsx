@@ -57,6 +57,9 @@ const ReviewPage: React.FC<{
   )
     return <Header>Review in Progress</Header>
 
+  // Temoorary - before merging PR #634
+  const isConsolidation = reviewAssignment.level > 1
+
   const {
     sections,
     responsesByCode,
@@ -105,7 +108,7 @@ const ReviewPage: React.FC<{
             applicationData={fullApplicationStructure.info}
             serial={serial}
             isReview
-            isConsolidation={section?.assignment.isConsolidation}
+            isConsolidation
             canEdit={
               reviewAssignment?.review?.status === ReviewStatus.Draft ||
               reviewAssignment?.review?.status === ReviewStatus.Locked
