@@ -4,5 +4,4 @@
 
 .ui.checkbox {
   color: @headersInteractiveLow;
-  // padding-left: 10px;
 }
