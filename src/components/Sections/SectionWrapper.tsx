@@ -39,25 +39,25 @@ const SectionWrapper: React.FC<SectionProps> = ({
   const stickyRef = useRef(null)
   return (
     <div ref={stickyRef} key={`${section.details.id}`}>
-      <Accordion style={sectionStyles.sup(!!failed)}>
+      <Accordion className="summary-section">
         <Accordion.Title active={isActive} onClick={toggleSection}>
           <Sticky
             context={stickyRef}
             offset={styleConstants.HEADER_OFFSET}
             bottomOffset={styleConstants.BOTTOM_OFFSET}
           >
-            <Grid columns="equal" style={sectionStyles.body}>
-              <Grid.Column floated="left">
-                <Header as="h2" content={details.title} style={sectionStyles.title} />
+            <Grid columns="equal" className="summary-section-header">
+              <Grid.Column>
+                <Header as="h4" content={details.title} />
               </Grid.Column>
-              <Grid.Column floated="right" textAlign="right">
+              <Grid.Column textAlign="right">
                 {extraSectionTitleContent && extraSectionTitleContent(section)}
               </Grid.Column>
-              <Grid.Column floated="right" textAlign="right" width={1}>
+              <Grid.Column textAlign="right" width={1}>
                 <Icon
-                  style={sectionStyles.icon}
-                  name={isActive ? 'angle up' : 'angle down'}
-                  size="large"
+                  name={isActive ? 'chevron up' : 'chevron down'}
+                  className="dark-grey"
+                  // size="large"
                 />
               </Grid.Column>
             </Grid>
@@ -65,9 +65,11 @@ const SectionWrapper: React.FC<SectionProps> = ({
         </Accordion.Title>
         <Accordion.Content active={isActive}>
           {Object.values(pages).map((page) => (
-            <div key={`${section.details.id}Page_${page.number}Container`}>
+            <div key={`${section.details.id}Page_${page.number}Container`} className="summary-page">
               {scrollableAttachment && scrollableAttachment(page)}
-              <p style={sectionStyles.page}>{page.name}</p>
+              <Header as="h6" className="summary-page-header">
+                {page.name}
+              </Header>
               <PageElements
                 key={`${section.details.id}Page_${page.number}`}
                 elements={page.state}
@@ -86,40 +88,6 @@ const SectionWrapper: React.FC<SectionProps> = ({
       </Accordion>
     </div>
   )
-}
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const sectionStyles = {
-  sup: (failed: boolean) =>
-    ({
-      border: failed ? '2px solid pink' : 'none',
-      borderRadius: 8,
-      marginBottom: 10,
-      padding: 10,
-      boxShadow: 'none',
-      backgroundColor: '#DCDDDD', // Invision
-    } as CSSProperties),
-  body: {
-    margin: 0,
-    borderRadius: 8,
-    backgroundColor: '#DCDDDD', // Invision
-  } as CSSProperties,
-  title: {
-    color: '#4A4A4A',
-    fontSize: 18,
-    fontWeight: 900,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  } as CSSProperties,
-  icon: { color: 'rgb(100, 100, 100)' } as CSSProperties,
-  page: {
-    color: '#4A4A4A',
-    fontSize: 15,
-    fontWeight: 900,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginTop: 8,
-  } as CSSProperties,
 }
 
 export default SectionWrapper

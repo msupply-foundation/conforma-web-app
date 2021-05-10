@@ -57,7 +57,7 @@ const OrgSelector: React.FC<{ user: User }> = ({ user }) => {
       )}
       <div>
         {user?.organisation?.orgName || ''}
-        <Icon size="small" name="angle down" />
+        <Icon size="small" name="chevron down" />
       </div>
     </div>
   )

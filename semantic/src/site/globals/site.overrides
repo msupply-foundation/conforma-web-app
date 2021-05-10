@@ -344,7 +344,7 @@ a:hover {
 
 #list-container {
   padding: 25px 0;
-  max-width: 900px; // Maybe this could be wider if table is getting cluttered?
+  max-width: @applicationListWidth;
 }
 
 #list-top {
@@ -501,6 +501,70 @@ a:hover {
   margin-bottom: 0;
   padding-left: 10px;
   padding-right: 20px;
+}
+
+/*--------------------------------
+      Application Summary area
+---------------------------------*/
+
+#application-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: @applicationSummaryWidth;
+  background-color: @surfacesWhite;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#application-summary-header {
+  padding-top: 30px;
+  padding-bottom: 20px;
+}
+
+#application-summary-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: @applicationSummaryContentWidth;
+}
+
+#application-sections {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.summary-section {
+  background-color: @surfacesLight;
+  border-radius: @borderRadius;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+}
+
+.summary-section-header {
+  background-color: @surfacesLight;
+}
+
+.summary-page {
+  margin-bottom: 30px;
+}
+
+.ui.basic.segment.summary-page-element {
+  background-color: @surfacesWhite;
+  margin-bottom: 10px;
+  border-radius: @borderRadius;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#application-submit {
+  margin-bottom: 50px;
+}
+
+#application-submit p {
+  margin-top: 20px;
 }
 
 /*--------------------------------
