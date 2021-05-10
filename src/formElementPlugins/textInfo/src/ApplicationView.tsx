@@ -7,6 +7,7 @@ interface TextInfoProps {
   Markdown: any
 }
 
+// All legal values for "style"
 type TextInfoStyle =
   | 'none'
   | 'basic'
