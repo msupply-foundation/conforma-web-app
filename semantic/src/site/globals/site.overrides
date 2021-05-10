@@ -722,6 +722,10 @@ a:hover {
   color: @information !important;
 }
 
+.interactive-color {
+  color: @interactiveHigh;
+}
+
 // Position adjustments
 .shift-up-1 {
   transform: translateY(-1px);

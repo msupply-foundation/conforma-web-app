@@ -228,7 +228,7 @@ const ChangesToResponseWarning: React.FC<ChangesToResponseWarningProps> = ({
   isValid,
 }) => {
   const visibilityClass = isChangeRequest || (isChanged && isValid) ? '' : 'invisible'
-  const colourClass = isChangeRequest ? (!isChanged ? 'alert' : '') : 'blue'
+  const colourClass = isChangeRequest ? (!isChanged ? 'alert' : '') : 'interactive-color'
   const icon = (
     <Icon
       name={
