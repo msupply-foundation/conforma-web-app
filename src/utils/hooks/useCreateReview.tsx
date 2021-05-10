@@ -23,8 +23,10 @@ const useCreateReview: UseCreateReview = ({ structure, assignment }) => {
 
   const constructReviewInput: ConstructReviewInput = (structure) => {
     const elements = Object.values(structure?.elementsById || {})
-    // Only create review for elements that are pendingReview
-    const reviewableElements = elements.filter(({ isPendingReview }) => isPendingReview)
+    // Only create review for elements that are pendingReview and are assigned
+    const reviewableElements = elements.filter(
+      ({ isPendingReview, isAssigned }) => isPendingReview && isAssigned
+    )
 
     const reviewResponseCreate = reviewableElements.map(
       ({ lowerLevelReviewPreviousResponse, response, reviewQuestionAssignmentId }) => {

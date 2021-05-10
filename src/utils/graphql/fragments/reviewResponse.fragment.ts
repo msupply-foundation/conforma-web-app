@@ -17,6 +17,7 @@ export default gql`
     }
     review {
       id
+      status
       reviewer {
         ...User
       }
