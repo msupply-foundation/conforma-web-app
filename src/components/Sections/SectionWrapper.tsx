@@ -39,7 +39,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
   const stickyRef = useRef(null)
   return (
     <div ref={stickyRef} key={`${section.details.id}`}>
-      <Accordion className="summary-section">
+      <Accordion className="summary-section" style={sectionStyles.sup(!!failed)}>
         <Accordion.Title active={isActive} onClick={toggleSection}>
           <Sticky
             context={stickyRef}
@@ -47,10 +47,10 @@ const SectionWrapper: React.FC<SectionProps> = ({
             bottomOffset={styleConstants.BOTTOM_OFFSET}
           >
             <Grid columns="equal" className="summary-section-header">
-              <Grid.Column>
+              <Grid.Column width={10}>
                 <Header as="h4" content={details.title} />
               </Grid.Column>
-              <Grid.Column textAlign="right">
+              <Grid.Column textAlign="left">
                 {extraSectionTitleContent && extraSectionTitleContent(section)}
               </Grid.Column>
               <Grid.Column textAlign="right" width={1}>
@@ -88,6 +88,14 @@ const SectionWrapper: React.FC<SectionProps> = ({
       </Accordion>
     </div>
   )
+}
+
+// Styles - TODO: Move to LESS || Global class style (semantic)
+const sectionStyles = {
+  sup: (failed: boolean) =>
+    ({
+      border: failed ? '2px solid pink' : 'none',
+    } as CSSProperties),
 }
 
 export default SectionWrapper

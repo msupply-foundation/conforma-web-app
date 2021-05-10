@@ -30,7 +30,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
   } = useGetDecisionOptions(structure.canSubmitReviewAs, thisReview)
 
   return (
-    <div id="review-submit-area">
+    <Form id="review-submit-area">
       <ReviewDecision
         decisionOptions={decisionOptions}
         setDecision={setDecision}
@@ -46,7 +46,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
         getDecision={getDecision}
         getAndSetDecisionError={getAndSetDecisionError}
       />
-    </div>
+    </Form>
   )
 }
 
@@ -138,7 +138,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     <Form.Field>
       <Button
         primary
-        className={attemptSubmissionFailed ? 'button-wide alert' : 'button-wide'}
+        className={attemptSubmissionFailed ? 'alert wide-button' : 'wide-button'}
         onClick={() => onClick()}
         content={strings.BUTTON_REVIEW_SUBMIT}
       />

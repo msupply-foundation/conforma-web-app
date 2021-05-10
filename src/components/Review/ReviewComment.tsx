@@ -40,16 +40,19 @@ const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEdita
 
   const initialComment = data?.reviewDecision?.comment || ''
   return (
-    <Container>
-      <Label className="strong-label" size="large" content={strings.LABEL_REVIEW_OVERALL_COMMENT} />
+    <div>
+      <p>
+        <strong>{strings.LABEL_REVIEW_OVERALL_COMMENT}:</strong>
+      </p>
       <Form.Field id="review-commment-content">
         <TextArea
           defaultValue={initialComment}
+          rows={4}
           onChange={(_, { value }) => setComment(String(value))}
           onBlur={() => updateComment({ variables: { reviewDecisionId, comment } })}
         />
       </Form.Field>
-    </Container>
+    </div>
   )
 }
 

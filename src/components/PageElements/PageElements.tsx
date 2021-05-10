@@ -163,14 +163,14 @@ const PageElements: React.FC<PageElementProps> = ({
                   ) : (
                     <SummaryInformationElement {...props} />
                   )}
+                  {thisReviewLatestResponse && (
+                    <ReviewDecisionElement
+                      latestApplicationResponse={latestApplicationResponse}
+                      reviewResponse={thisReviewLatestResponse}
+                      summaryViewProps={props.summaryProps}
+                    />
+                  )}
                 </Segment>
-                {thisReviewLatestResponse && (
-                  <ReviewDecisionElement
-                    latestApplicationResponse={latestApplicationResponse}
-                    reviewResponse={thisReviewLatestResponse}
-                    summaryViewProps={props.summaryProps}
-                  />
-                )}
               </div>
             )
           }
