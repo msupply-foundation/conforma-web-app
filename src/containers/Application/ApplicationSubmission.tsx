@@ -11,7 +11,7 @@ import { ApplicationStatus } from '../../utils/generated/graphql'
 
 const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
   const {
-    userState: { currentUser },
+    userState: { isNonRegistered },
     logout,
   } = useUserState()
 
@@ -41,7 +41,7 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
         </Header>
         <Markdown text={submissionMessage || ''} />
       </Segment>
-      {currentUser?.username !== strings.USER_NONREGISTERED && (
+      {!isNonRegistered && (
         <>
           <Segment basic textAlign="left" id="submission-content">
             <p className="dark-grey">{strings.SUBTITLE_SUBMISSION_STEPS}</p>
@@ -75,10 +75,12 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
           </Segment>
         </>
       )}
-      {currentUser?.username === strings.USER_NONREGISTERED && (
-        <Button primary onClick={() => logout()}>
-          {strings.ACTION_CONTINUE}
-        </Button>
+      {isNonRegistered && (
+        <Segment basic textAlign="center" id="submission-nav">
+          <Button primary onClick={() => logout()}>
+            {strings.ACTION_CONTINUE}
+          </Button>
+        </Segment>
       )}
     </Container>
   )
