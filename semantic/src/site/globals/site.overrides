@@ -611,6 +611,39 @@ a:hover {
 }
 
 /*--------------------------------
+      Application Submission page
+---------------------------------*/
+
+#submission-header i {
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+#submission-content {
+  max-width: 600px;
+}
+
+#submission-content .list {
+  margin-top: 25px;
+}
+
+#submission-content .list .header {
+  margin-bottom: 7px;
+}
+
+#submission-content .list .item {
+  margin-bottom: 15px;
+}
+
+#submission-nav {
+  padding-bottom: 60px;
+}
+
+#submission-nav p {
+  margin-top: 25px;
+}
+
+/*--------------------------------
       General used classes
 ---------------------------------*/
 
@@ -624,6 +657,10 @@ a:hover {
 
 .dark-grey {
   color: @darkGrey !important;
+}
+
+.information-colour {
+  color: @information !important;
 }
 
 // Position adjustments
