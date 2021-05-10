@@ -384,6 +384,7 @@ a:hover {
 }
 
 #document-viewer {
+  // Temp values -- replace once design is clarified
   background-color: #6f6f6f5e;
   width: 800px;
 }
