@@ -347,7 +347,7 @@ a:hover {
 
 .review-comment-grid.ui.grid {
   padding: 10px 20px;
-  font-size: 0.85em;
+  font-size: @smallerText;
   color: @headersInteractiveLow;
 }
 
@@ -360,7 +360,7 @@ a:hover {
 }
 
 #review-submit-area p {
-  font-size: 0.95em;
+  font-size: @tinyBitSmallerText;
   margin-top: 10px;
   margin-bottom: 5px;
 }
@@ -384,6 +384,7 @@ a:hover {
 }
 
 #document-viewer {
+  // Temp values -- replace once design is clarified
   background-color: #6f6f6f5e;
   width: 800px;
 }
@@ -532,7 +533,7 @@ a:hover {
 // }
 
 .page-list {
-  font-size: 0.9em !important;
+  font-size: @slightlySmallerText !important;
   padding-left: 30px !important;
   margin-bottom: -30px !important;
   margin-top: -20px !important;
@@ -754,6 +755,10 @@ a:hover {
 
 .information-colour {
   color: @information !important;
+}
+
+.interactive-color {
+  color: @interactiveHigh !important;
 }
 
 // Position adjustments

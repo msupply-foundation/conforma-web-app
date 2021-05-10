@@ -228,22 +228,15 @@ const ChangesToResponseWarning: React.FC<ChangesToResponseWarningProps> = ({
   isValid,
 }) => {
   const visibilityClass = isChangeRequest || (isChanged && isValid) ? '' : 'invisible'
-  const colourClass = isChangeRequest ? (!isChanged ? 'alert' : '') : 'blue'
-  const icon = (
-    <Icon
-      name={
-        isChangeRequest
-          ? isChanged
-            ? 'comment alternate outline'
-            : 'exclamation circle'
-          : 'info circle'
-      }
-      className="colourClass"
-    />
-  )
+  const colourClass = isChangeRequest ? (!isChanged ? 'alert' : '') : 'interactive-color'
+  const iconSelection = isChangeRequest
+    ? isChanged
+      ? 'comment alternate outline'
+      : 'exclamation circle'
+    : 'info circle'
   return (
     <p className={`${colourClass} ${visibilityClass} reviewer-comment`}>
-      {icon}
+      <Icon name={iconSelection} className="colourClass" />
       {isChangeRequest ? reviewerComment : messages.APPLICATION_OTHER_CHANGES_MADE}
     </p>
   )
