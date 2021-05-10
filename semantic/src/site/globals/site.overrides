@@ -25,6 +25,16 @@ a:hover {
   opacity: @hoverOpacity;
 }
 
+// Use this for links that use onClick (as opposed to <a> tags)
+.link-style {
+  color: @interactiveHigh;
+}
+
+.link-style:hover {
+  color: @interactiveHigh;
+  opacity: @hoverOpacity;
+}
+
 .center-text {
   text-align: center;
 }
@@ -301,7 +311,7 @@ a:hover {
 }
 
 /*---------------------------------------
-   Review Home page
+      Review Home page
 ----------------------------------------*/
 
 #review-filters-container {
@@ -319,13 +329,57 @@ a:hover {
   max-width: 150px;
 }
 
+/*---------------------------------------
+      Review page
+----------------------------------------*/
+
+// NOTE: The review page shares a lot of styles with Application Summary
+
+.review-comment-area {
+  background-color: @reviewCommentBackground;
+  margin-top: 10px;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-bottom: -14px;
+  border-top: 1px solid @surfacesMed;
+  border-bottom: 1px solid @surfacesMed;
+}
+
+.review-comment-grid.ui.grid {
+  padding: 10px 20px;
+  font-size: 0.85em;
+  color: @headersInteractiveLow;
+}
+
+.review-approve-all-button {
+  margin-top: 20px;
+}
+
+#review-submit-area {
+  margin-bottom: 30px;
+}
+
+#review-submit-area p {
+  font-size: 0.95em;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+#review-submit-area.ui.form .field {
+  margin-bottom: 10px;
+}
+
+#review-submit-area .ui.checkbox {
+  padding-left: 0;
+}
+
 /*--------------------------------
       Application List
 ---------------------------------*/
 
 #list-container {
   padding: 25px 0;
-  max-width: 900px; // Maybe this could be wider if table is getting cluttered?
+  max-width: @applicationListWidth;
 }
 
 #list-top {
@@ -370,6 +424,9 @@ a:hover {
 
 #progress-column {
   max-width: 205px;
+  padding-left: 5px;
+  padding-right: 0;
+  padding-top: 0;
 }
 
 #form-column {
@@ -383,6 +440,59 @@ a:hover {
 
 #help-column {
   max-width: 200px;
+}
+
+// Progress Bar
+
+.progress-row.ui.grid {
+  margin-top: -10px;
+  margin-bottom: -10px;
+  height: 60px;
+}
+
+.progress-indicator-column {
+  width: 20px !important;
+  padding-right: 7px !important;
+}
+
+.progress-name-column {
+  width: 200px !important;
+}
+
+.progress-indicator.icons,
+.progress-indicator.icon {
+  // Make Section Icons just a little bit bigger
+  font-size: 1.1em;
+}
+
+// .progress-name {
+// }
+
+.page-list {
+  font-size: 0.9em !important;
+  padding-left: 30px !important;
+  margin-bottom: -30px !important;
+  margin-top: -20px !important;
+}
+
+.page-row.ui.grid {
+  padding-bottom: 8px;
+}
+
+// .progress-page-indicator {
+// }
+
+.progress-page-name-column {
+  width: 150px !important;
+}
+
+.section-progress-bar {
+  position: absolute;
+}
+
+.section-progress-bar .progress {
+  transform-origin: 0 0;
+  transform: rotate(90deg) translate(2px, -10px);
 }
 
 /*--------------------------------
@@ -429,6 +539,78 @@ a:hover {
 }
 
 /*--------------------------------
+      Application Summary area
+---------------------------------*/
+
+// Note: these layout ids/classes also shared with Review page
+
+#application-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: @applicationSummaryWidth;
+  background-color: @surfacesWhite;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#application-summary-header {
+  padding-top: 30px;
+  padding-bottom: 20px;
+}
+
+#application-summary-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: @applicationSummaryContentWidth;
+}
+
+#application-sections {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.summary-section {
+  background-color: @surfacesLight;
+  border-radius: @borderRadius;
+  padding: 15px 20px;
+  padding-bottom: 1px;
+  margin-bottom: 15px;
+}
+
+.summary-section-header {
+  background-color: @surfacesLight;
+}
+
+.summary-page {
+  margin-bottom: 30px;
+}
+
+.ui.basic.segment.summary-page-element {
+  background-color: @surfacesWhite;
+  margin-bottom: 10px;
+  border-radius: @borderRadius;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#application-submit {
+  margin-bottom: 50px;
+}
+
+#application-submit p {
+  margin-top: 20px;
+}
+
+// Hide sticky bar when it jumps to bottom
+.summary-section .bound.bottom {
+  display: none;
+}
+
+/*--------------------------------
       General used classes
 ---------------------------------*/
 
@@ -442,6 +624,16 @@ a:hover {
 
 .dark-grey {
   color: @darkGrey !important;
+}
+
+// Position adjustments
+.shift-up-1 {
+  transform: translateY(-1px);
+}
+
+.right-justify-content {
+  width: 100%;
+  text-align: right;
 }
 
 /*******************************
@@ -523,12 +715,12 @@ h6:first-child {
 // Desktop
 @media only screen and (min-width: @tabletBreakpoint) {
   .hide-on-desktop {
-    display: none;
+    display: none !important;
   }
 }
 // Mobile
 @media only screen and (max-width: @largestMobileScreen) {
   .hide-on-mobile {
-    display: none;
+    display: none !important;
   }
 }

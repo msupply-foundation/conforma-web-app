@@ -11,7 +11,7 @@ import {
   Loading,
   Navigation,
   PageElements,
-  ProgressBar,
+  ProgressArea,
 } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
@@ -66,7 +66,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
       <Container id="application-form">
         <Grid stackable>
           <Grid.Column width={4} id="progress-column" className="dev-border">
-            <ProgressBar
+            <ProgressArea
               structure={fullStructure}
               requestRevalidation={requestRevalidation as MethodRevalidate}
               strictSectionPage={strictSectionPage as SectionAndPage}

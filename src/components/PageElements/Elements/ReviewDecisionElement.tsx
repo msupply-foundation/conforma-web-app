@@ -1,5 +1,5 @@
 import React, { useState, CSSProperties } from 'react'
-import { Icon, Label } from 'semantic-ui-react'
+import { Icon, Label, Grid } from 'semantic-ui-react'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import getSimplifiedTimeDifference from '../../../utils/dateAndTime/getSimplifiedTimeDifference'
 import {
@@ -32,36 +32,48 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
   if (latestApplicationResponse.id !== reviewResponse.applicationResponse?.id) return null
 
   return (
-    <div style={reviewCommentStyle.top}>
-      <div style={reviewCommentStyle.reviewer}>
-        {reviewResponse.review?.reviewer?.firstName} {reviewResponse.review?.reviewer?.lastName}
-      </div>
-      <div style={reviewCommentStyle.body}>
-        <div style={reviewCommentStyle.decision}>
-          <Icon
-            name="circle"
-            size="tiny"
-            color={reviewResponse?.decision === ReviewResponseDecision.Approve ? 'green' : 'red'}
-          />
-          <Label style={reviewStatusStyle}>
-            {reviewResponse?.decision === ReviewResponseDecision.Approve
-              ? strings.LABEL_REVIEW_DECICION_CONFORM
-              : strings.LABEL_REVIEW_DECISION_NON_CONFORM}
-          </Label>
-          <Label style={datePaddingStyle} size="mini">
-            {getSimplifiedTimeDifference(reviewResponse.timeUpdated)}
-          </Label>
-        </div>
-        {!reviewResponse.comment ? null : (
-          <div style={reviewCommentStyle.comment}>
-            <Icon name="comment alternate outline" color="grey" />
-            <div>{reviewResponse.comment}</div>
+    <div className="review-comment-area">
+      <Grid columns="equal" className="review-comment-grid">
+        <Grid.Column width={2} textAlign="left">
+          {reviewResponse.review?.reviewer?.firstName} {reviewResponse.review?.reviewer?.lastName}
+        </Grid.Column>
+        <Grid.Column width={12} textAlign="left">
+          <div>
+            <Icon
+              name="circle"
+              size="tiny"
+              color={reviewResponse?.decision === ReviewResponseDecision.Approve ? 'green' : 'pink'}
+            />
+            <Label className="simple-label">
+              <strong>
+                {reviewResponse?.decision === ReviewResponseDecision.Approve
+                  ? strings.LABEL_REVIEW_DECICION_CONFORM
+                  : strings.LABEL_REVIEW_DECISION_NON_CONFORM}
+              </strong>
+            </Label>
+            <Label size="mini" className="simple-label shift-up-1">
+              <strong>{getSimplifiedTimeDifference(reviewResponse.timeUpdated)}</strong>
+            </Label>
           </div>
-        )}
-      </div>
-      {reviewResponse.status === ReviewResponseStatus.Draft && (
-        <Icon name="edit" color="blue" onClick={() => setToggleDecisionArea(!toggleDecisionArea)} />
-      )}
+          {!reviewResponse.comment ? null : (
+            <div>
+              <Icon name="comment alternate outline" color="grey" />
+              {reviewResponse.comment}
+            </div>
+          )}
+        </Grid.Column>
+        <Grid.Column textAlign="right" width={2}>
+          {reviewResponse.status === ReviewResponseStatus.Draft && (
+            <Icon
+              name="pencil"
+              className="clickable"
+              color="blue"
+              onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
+            />
+          )}
+        </Grid.Column>
+      </Grid>
+
       <DecisionArea
         reviewResponse={reviewResponse}
         toggle={toggleDecisionArea}
@@ -70,37 +82,5 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
     </div>
   )
 }
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-
-const reviewCommentStyle = {
-  top: {
-    display: 'flex',
-    background: 'rgb(249, 255, 255)',
-    margin: 10,
-    marginTop: 0,
-    borderTop: '3px solid rgb(230, 230, 230)',
-    borderBottom: '3px solid rgb(230, 230, 230)',
-    padding: 14,
-  } as CSSProperties,
-  reviewer: { color: 'rgb(150, 150, 150)', marginRight: 20 } as CSSProperties,
-  body: {
-    flexGrow: 1,
-    textAlign: 'left',
-  } as CSSProperties,
-  decision: { display: 'flex', alignItems: 'center' },
-  comment: {
-    color: 'grey',
-    display: 'flex',
-    margin: 6,
-  } as CSSProperties,
-}
-const reviewStatusStyle = {
-  background: 'transparent',
-  fontWeight: 'bolder',
-  fontSize: 16,
-  marginRight: 10,
-} as CSSProperties
-const datePaddingStyle = { padding: 6 } as CSSProperties
 
 export default ReviewDecisionElement

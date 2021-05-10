@@ -9,6 +9,7 @@ import {
 } from '../../../utils/generated/graphql'
 import DecisionArea from '../../Review/DecisionArea'
 import strings from '../../../utils/constants'
+import { Link } from 'react-router-dom'
 
 interface ReviewResponseElementProps {
   isNewApplicationResponse: boolean
@@ -27,11 +28,11 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
 
   return (
     <>
-      <Grid columns="equal">
-        <Grid.Column floated="left" width={4}>
+      <Grid>
+        <Grid.Column width={13} textAlign="left">
           <SummaryViewWrapper {...summaryProps} />
         </Grid.Column>
-        <Grid.Column floated="right" textAlign="right">
+        <Grid.Column width={3} textAlign="right" verticalAlign="middle">
           {thisReviewLatestResponse &&
             thisReviewLatestResponse.status === ReviewResponseStatus.Draft &&
             !thisReviewLatestResponse.decision && (
@@ -57,26 +58,13 @@ const ReviewButton: React.FC<{
   isNewApplicationResponse?: boolean
   decisionArea: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }> = ({ isNewApplicationResponse, decisionArea: [toggleDecisionArea, setToggleDecisionArea] }) => (
-  <Button
-    content={
-      isNewApplicationResponse ? strings.BUTTON_RE_REVIEW_RESPONSE : strings.BUTTON_REVIEW_RESPONSE
-    }
-    size="small"
-    style={buttonStyle}
-    onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
-  />
+  <p className="link-style" onClick={() => setToggleDecisionArea(!toggleDecisionArea)}>
+    <strong>
+      {isNewApplicationResponse
+        ? strings.BUTTON_RE_REVIEW_RESPONSE
+        : strings.BUTTON_REVIEW_RESPONSE}
+    </strong>
+  </p>
 )
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const buttonStyle = {
-  letterSpacing: 0.8,
-  fontWeight: 1000,
-  fontSize: 17,
-  background: 'none',
-  color: '#003BFE',
-  border: 'none',
-  borderRadius: 8,
-  textTransform: 'capitalize',
-} as CSSProperties
 
 export default ReviewResponseElement

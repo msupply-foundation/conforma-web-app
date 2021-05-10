@@ -3,7 +3,7 @@ import {
   ApplicationSections,
   ApplicationSelectType,
   Navigation,
-  ProgressBar,
+  ProgressArea,
 } from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
@@ -45,7 +45,7 @@ export {
   PageElements,
   Product,
   ProductList,
-  ProgressBar,
+  ProgressArea,
   SectionWrapper,
   Organisation,
   OrgMemberEdit,

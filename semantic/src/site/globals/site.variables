@@ -48,6 +48,7 @@
 // Others
 @headersInteractiveMed: #656565;
 @borderColourDark: #777777;
+@reviewCommentBackground: azure;
 
 /*------------------------
       Headers and Text
@@ -153,6 +154,9 @@
 
 // Widths for various key containers
 @applicationFormWidth: 900px;
+@applicationListWidth: 900px; // Could be wider if table is getting cluttered?
+@applicationSummaryWidth: 900px;
+@applicationSummaryContentWidth: 700px;
 
 // Box shadow -- used in Login form
 @basicBoxShadow: rgb(204, 201, 201) 0px -3px 10px 0px;
