@@ -373,6 +373,35 @@ a:hover {
   padding-left: 0;
 }
 
+#review-decision-container {
+  display: flex;
+  justify-content: flex-end;
+  height: 100vh;
+}
+
+#review-decision-content {
+  display: flex;
+}
+
+#document-viewer {
+  // Temp values -- replace once design is clarified
+  background-color: #6f6f6f5e;
+  width: 800px;
+}
+
+#details-panel {
+  background-color: @surfacesWhite;
+  width: 400px;
+  padding: 15px;
+  overflow: scroll;
+}
+
+#history-panel {
+  // Temp - replace when real History Panel built
+  border: 1px solid lightgray;
+  height: 250px;
+}
+
 /*--------------------------------
       Application List
 ---------------------------------*/
