@@ -5,33 +5,35 @@ import styleConstants from '../../utils/data/styleConstants'
 import { PageElements } from '../'
 
 interface SectionProps {
-  section: SectionState
+  toggleSection: () => void
   extraSectionTitleContent?: (section: SectionState) => React.ReactNode
   extraPageContent?: (page: Page) => React.ReactNode
   scrollableAttachment?: (page: Page) => React.ReactNode
+  section: SectionState
   responsesByCode: ResponsesByCode
   applicationData: ApplicationDetails
-  isReview?: boolean
-  serial: string
-  isSummary?: boolean
   isActive: boolean
-  toggleSection: () => void
+  isReview?: boolean
+  isSummary?: boolean
+  serial: string
   canEdit?: boolean
+  failed?: boolean
 }
 
 const SectionWrapper: React.FC<SectionProps> = ({
+  toggleSection,
+  extraSectionTitleContent,
+  extraPageContent,
+  scrollableAttachment,
   section,
   responsesByCode,
   applicationData,
   isActive,
-  toggleSection,
-  extraSectionTitleContent,
-  extraPageContent,
   isReview,
-  serial,
   isSummary,
-  scrollableAttachment,
+  serial,
   canEdit,
+  failed,
 }) => {
   const { details, pages } = section
   const stickyRef = useRef(null)

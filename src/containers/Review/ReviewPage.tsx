@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react'
-import { Button, Header, Message, Segment } from 'semantic-ui-react'
+import { Button, Header, Icon, Label, Message, Segment } from 'semantic-ui-react'
 import { Loading, SectionWrapper } from '../../components'
 import {
   AssignmentDetails,
@@ -65,7 +65,12 @@ const ReviewPage: React.FC<{
       current: { stage },
       name,
     },
+    attemptSubmission,
+    firstIncompleteReviewPage,
   } = fullReviewStructure
+
+  const isMissingReviewResponses = (section: string): boolean =>
+    attemptSubmission && firstIncompleteReviewPage?.sectionCode === section
 
   const ReviewMain: React.FC = () => (
     <>
@@ -76,8 +81,18 @@ const ReviewPage: React.FC<{
             isActive={isSectionActive(section.details.code)}
             toggleSection={toggleSection(section.details.code)}
             section={section}
+            failed={isMissingReviewResponses(section.details.code)}
             extraSectionTitleContent={(section: SectionState) => (
-              <ReviewStatusOrProgress {...section} />
+              <div>
+                {isMissingReviewResponses(section.details.code) && (
+                  <Label
+                    icon={<Icon name="exclamation circle" color="pink" />}
+                    className="simple-label alert-text"
+                    content={strings.LABEL_REVIEW_SECTION}
+                  />
+                )}
+                <ReviewStatusOrProgress {...section} />
+              </div>
             )}
             extraPageContent={(page: Page) => <ApproveAllButton page={page} />}
             scrollableAttachment={(page: Page) => (
@@ -97,13 +112,7 @@ const ReviewPage: React.FC<{
           />
         ))}
       </Segment>
-      <Segment basic style={inlineStyles.bot}>
-        <ReviewSubmit
-          structure={fullReviewStructure}
-          reviewAssignment={reviewAssignment}
-          scrollTo={scrollTo}
-        />
-      </Segment>
+      <ReviewSubmit structure={fullReviewStructure} scrollTo={scrollTo} />
     </>
   )
 
@@ -161,10 +170,7 @@ const inlineStyles = {
     borderRadius: 0,
     boxShadow: 'none',
     paddingTop: 25,
-  } as CSSProperties,
-  bot: {
-    marginLeft: '10%',
-    marginRight: '10%',
+    margin: 0,
   } as CSSProperties,
   button: { display: 'flex', justifyContent: 'flex-end', paddingRight: 20 } as CSSProperties,
   approve: {

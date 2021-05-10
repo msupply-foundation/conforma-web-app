@@ -8,6 +8,10 @@
   max-width: 100%;
 }
 
+.ui.button.alert {
+  border: 2px solid @attention;
+}
+
 // Override for icon in button
 .ui.button > .icon:not(.button) {
   opacity: 1;
