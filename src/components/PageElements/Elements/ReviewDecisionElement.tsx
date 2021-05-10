@@ -65,13 +65,10 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
         </Grid.Column>
         <Grid.Column textAlign="right" width={2}>
           {reviewResponse.status === ReviewResponseStatus.Draft && (
-            <Icon
-              name="pencil"
-              className="clickable"
-              color="blue"
-              onClick={() => {
-                updateQuery({ openResponse: latestApplicationResponse.templateElement?.code })
-              }}
+            <UpdateIcon
+              onClick={updateQuery({
+                openResponse: latestApplicationResponse.templateElement?.code,
+              })}
             />
           )}
         </Grid.Column>
@@ -79,5 +76,9 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
     </div>
   )
 }
+
+const UpdateIcon: React.FC<{ onClick: Function }> = ({ onClick }) => (
+  <Icon className="clickable" name="pencil" size="big" color="blue" onClick={onClick} />
+)
 
 export default ReviewDecisionElement

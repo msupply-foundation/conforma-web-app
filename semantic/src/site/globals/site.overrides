@@ -345,6 +345,10 @@ a:hover {
   border-bottom: 1px solid @surfacesMed;
 }
 
+.changable-background {
+  background-color: @reviewCommentBackground;
+}
+
 .review-comment-grid.ui.grid {
   padding: 10px 20px;
   font-size: 0.85em;

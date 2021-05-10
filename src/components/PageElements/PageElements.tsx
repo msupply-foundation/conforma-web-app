@@ -11,9 +11,10 @@ import { ApplicationViewWrapper } from '../../formElementPlugins'
 import { ApplicationViewWrapperProps } from '../../formElementPlugins/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
 import SummaryInformationElement from './Elements/SummaryInformationElement'
-import SummaryResponseElement from './Elements/SummaryResponseElement'
-import SummaryResponseChangedElement from './Elements/SummaryResponseChangedElement'
-import SummaryReviewResponseElement from './Elements/SummaryReviewResponseElement'
+import ApplicantResponseElement from './Elements/ApplicantResponseElement'
+// import SummaryResponseElement from './Elements/SummaryResponseElement'
+// import SummaryResponseChangedElement from './Elements/SummaryResponseChangedElement'
+// import SummaryReviewResponseElement from './Elements/SummaryReviewResponseElement'
 import ReviewResponseElement from './Elements/ReviewResponseElement'
 import ReviewDecisionElement from './Elements/ReviewDecisionElement'
 import ConsolidationDecisionElement from './Elements/ConsolidationDecisionElement'
@@ -22,11 +23,12 @@ interface PageElementProps {
   elements: PageElement[]
   responsesByCode: ResponsesByCode
   applicationData: ApplicationDetails
-  canEdit?: boolean
+  canEdit: boolean
   isConsolidation?: boolean
   isReview?: boolean
-  isSummary?: boolean
   isStrictPage?: boolean
+  isSummary?: boolean
+  isUpdating?: boolean
   serial?: string
   sectionAndPage?: SectionAndPage
 }
@@ -35,11 +37,12 @@ const PageElements: React.FC<PageElementProps> = ({
   elements,
   responsesByCode,
   applicationData,
-  canEdit,
-  isConsolidation,
-  isReview,
-  isSummary,
-  isStrictPage,
+  canEdit = false,
+  isConsolidation = false,
+  isReview = false,
+  isStrictPage = false,
+  isSummary = false,
+  isUpdating = false,
   serial,
   sectionAndPage,
 }) => {
@@ -97,30 +100,27 @@ const PageElements: React.FC<PageElementProps> = ({
             latestApplicationResponse,
           } = state
 
+          const isResponseUpdated = !!isChangeRequest || !!isChanged
+
           const props = {
-            canEdit: !!canEdit,
+            applicationResponse: latestApplicationResponse,
+            canEdit: canEdit && isUpdating ? isResponseUpdated : true,
             linkToPage: `/application/${serial}/${sectionCode}/Page${pageNumber}`,
+            isResponseUpdated,
             summaryViewProps: getSummaryViewProps(element),
             latestApplicationResponse: latestApplicationResponse,
             previousApplicationResponse: previousApplicationResponse,
           }
 
-          const changedQuestionResponse = !isChangeRequest && !isChanged
-
           return (
             <div key={`question_${element.id}`}>
               <Segment basic className="summary-page-element">
                 {element.category === TemplateElementCategory.Question ? (
-                  changedQuestionResponse ? (
-                    <SummaryResponseElement {...props} />
-                  ) : (
-                    <SummaryResponseChangedElement {...props} />
-                  )
+                  <ApplicantResponseElement {...props} />
                 ) : (
                   <SummaryInformationElement {...props} />
                 )}
               </Segment>
-              {isChangeRequest && <SummaryReviewResponseElement {...props} />}
             </div>
           )
         })}
@@ -149,9 +149,6 @@ const PageElements: React.FC<PageElementProps> = ({
               reviewResponse: thisReviewLatestResponse,
               originalReviewResponse: latestOriginalReviewResponse,
             }
-
-            const isChangeRequest: boolean = !!thisReviewLatestResponse?.decision
-
             return (
               <div key={`${element.code}ReviewContainer`}>
                 <Segment basic key={`question_${element.id}`} className="summary-page-element">

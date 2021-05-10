@@ -16,6 +16,7 @@ interface SectionProps {
   isConsolidation?: boolean
   isReview?: boolean
   isSummary?: boolean
+  isUpdating?: boolean
   serial: string
   canEdit?: boolean
   failed?: boolean
@@ -27,14 +28,15 @@ const SectionWrapper: React.FC<SectionProps> = ({
   extraPageContent,
   scrollableAttachment,
   section,
+  serial,
   responsesByCode,
   applicationData,
   isActive,
-  isConsolidation,
-  isReview,
-  isSummary,
-  serial,
-  canEdit,
+  isConsolidation = false,
+  isReview = false,
+  isSummary = false,
+  isUpdating = false,
+  canEdit = false,
   failed,
 }) => {
   const { details, pages } = section
@@ -56,11 +58,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
                 {extraSectionTitleContent && extraSectionTitleContent(section)}
               </Grid.Column>
               <Grid.Column textAlign="right" width={1}>
-                <Icon
-                  name={isActive ? 'chevron up' : 'chevron down'}
-                  className="dark-grey"
-                  // size="large"
-                />
+                <Icon name={isActive ? 'chevron up' : 'chevron down'} className="dark-grey" />
               </Grid.Column>
             </Grid>
           </Sticky>
@@ -77,11 +75,12 @@ const SectionWrapper: React.FC<SectionProps> = ({
                 elements={page.state}
                 responsesByCode={responsesByCode}
                 applicationData={applicationData}
-                isReview={isReview}
-                isConsolidation={isConsolidation}
                 serial={serial}
                 sectionAndPage={{ sectionCode: details.code, pageNumber: page.number }}
+                isReview={isReview}
+                isConsolidation={isConsolidation}
                 isSummary={isSummary}
+                isUpdating={isUpdating}
                 canEdit={canEdit}
               />
               {extraPageContent && extraPageContent(page)}
