@@ -1,6 +1,7 @@
 import React, { CSSProperties, useRef } from 'react'
 import { Accordion, Grid, Header, Icon, Sticky } from 'semantic-ui-react'
 import { ResponsesByCode, SectionState, Page, ApplicationDetails } from '../../utils/types'
+import { useUserState } from '../../contexts/UserState'
 import styleConstants from '../../utils/data/styleConstants'
 import { PageElements } from '../'
 
@@ -37,13 +38,16 @@ const SectionWrapper: React.FC<SectionProps> = ({
 }) => {
   const { details, pages } = section
   const stickyRef = useRef(null)
+  const {
+    userState: { isNonRegistered },
+  } = useUserState()
   return (
     <div ref={stickyRef} key={`${section.details.id}`}>
       <Accordion className="summary-section" style={sectionStyles.sup(!!failed)}>
         <Accordion.Title active={isActive} onClick={toggleSection}>
           <Sticky
             context={stickyRef}
-            offset={styleConstants.HEADER_OFFSET}
+            offset={!isNonRegistered ? styleConstants.HEADER_OFFSET : 0}
             bottomOffset={styleConstants.BOTTOM_OFFSET}
           >
             <Grid columns="equal" className="summary-section-header">
