@@ -41,7 +41,7 @@ const ApplicationWrapper: React.FC = () => {
         </ApplicationContainer>
       </Route>
       <Route exact path={`${path}/submission`}>
-        <ApplicationContainer template={template} currentUser={currentUser}>
+        <ApplicationContainer template={template}>
           <ApplicationSubmission structure={structure} />
         </ApplicationContainer>
       </Route>
