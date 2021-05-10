@@ -5,7 +5,7 @@
 // Info message left border width
 @accentBorderWidth: 4px;
 
-// // Info message colours
+// Info message colours
 @infoTextColor: @headersInteractiveLow;
 @infoHeaderColor: @headersInteractiveLow;
 @infoBoxShadow: none;

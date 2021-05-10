@@ -356,7 +356,6 @@ a:hover {
 }
 
 #review-submit-area {
-  // display: flex;
   margin-bottom: 30px;
 }
 

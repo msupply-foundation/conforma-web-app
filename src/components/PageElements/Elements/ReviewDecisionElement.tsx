@@ -80,6 +80,4 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
   )
 }
 
-// Styles - TODO: Move to LESS || Global class style (semantic)
-
 export default ReviewDecisionElement
