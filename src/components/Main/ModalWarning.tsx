@@ -1,11 +1,7 @@
 import React from 'react'
 import { Button, Header, Icon, Modal, ModalProps } from 'semantic-ui-react'
 
-interface ModalWarningProps {
-  showModal: ModalProps
-}
-
-const ModalWarning: React.FC<ModalWarningProps> = ({ showModal }) => {
+const ModalWarning: React.FC<ModalProps> = (showModal) => {
   const { open, title, message, option, onClick } = showModal
 
   // TOOD: Use more props from ModalProps for more general configuration of modal (e.g. Shorthand for different actions)
