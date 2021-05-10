@@ -7,7 +7,7 @@ type UserState = {
   currentUser: User | null
   templatePermissions: TemplatePermissions
   isLoading: boolean
-  isNonRegistered: boolean
+  isNonRegistered: boolean | null
 }
 
 export type UserActions =
@@ -63,7 +63,7 @@ const initialState: UserState = {
   currentUser: null,
   templatePermissions: {},
   isLoading: false,
-  isNonRegistered: true,
+  isNonRegistered: null,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
