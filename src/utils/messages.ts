@@ -20,7 +20,7 @@ export default {
   REVIEW_SUBMISSION_ERROR: 'Something wrong with server - review mutation failed',
   REVIEW_DECISION_SET_FAIL: {
     title: 'Problem submitting review',
-    message: 'Please choose decision of List Of Question or Non Conformity',
+    message: 'Please select a decision: List Of Questions or Non Conformity',
     option: 'OK',
   },
   REDIRECT_TO_REGISTRATION: 'Re-directing to user registration application...',
