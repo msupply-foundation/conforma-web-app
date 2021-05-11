@@ -452,7 +452,7 @@ a:hover {
 }
 
 #progress-column {
-  max-width: 205px;
+  max-width: 200px;
   padding-left: 5px;
   padding-right: 0;
   padding-top: 0;
@@ -462,13 +462,48 @@ a:hover {
   padding: 0;
 }
 
+#form-column .ui.basic.segment {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 // Seperation between Section title and form elements
 .form-area {
   margin-top: 30px;
 }
 
-#help-column {
-  max-width: 200px;
+// Contains form-element and help-tips
+.form-element-wrapper {
+  display: flex;
+  padding-left: 10px;
+  justify-content: space-between;
+}
+
+.form-element {
+  width: clamp(350px, 70%, 480px);
+}
+
+.help-tips {
+  width: clamp(50px, 30%, 250px);
+  margin-top: 20px; // height of label, so flush with input field
+  margin-right: -10px;
+  max-height: 80px; // less than element height, so overflows
+  position: relative;
+}
+
+.help-tips-content {
+  font-style: italic;
+  padding-left: 20px;
+}
+
+// Vertical accent line for help tips
+.help-tips-content::before {
+  content: '';
+  border-left: 1px solid @information;
+  height: 40px;
+  position: absolute;
+  top: 5px;
+  left: 3%;
 }
 
 // Progress Bar
