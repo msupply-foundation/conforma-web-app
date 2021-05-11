@@ -54,6 +54,7 @@ export {
   ConsolidationProgress,
   ReviewQuestion,
   ReviewElementProps,
+  ConsolidationElementProps,
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
@@ -337,9 +338,16 @@ interface ReviewQuestion {
 interface ReviewElementProps {
   applicationResponse: ApplicationResponse
   reviewResponse: ReviewResponse
-  ExtraUserAction?: React.FC
-  ExtraEditAction?: React.FC
-  // isConsolidation: boolean
+  ExtraReviewAction?: React.FC
+  ExtraEditReviewAction?: React.FC
+}
+
+interface ConsolidationElementProps {
+  applicationResponse: ApplicationResponse
+  reviewResponse: ReviewResponse
+  originalReviewResponse: ReviewResponse
+  ExtraConsolidateAction?: React.FC
+  ExtraEditConsolidationAction?: React.FC
 }
 
 interface ReviewQuestionDecision {

@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Form, Icon, Segment } from 'semantic-ui-react'
 import {
   ApplicationDetails,
+  ConsolidationElementProps,
   ElementState,
   PageElement,
   ResponseElementProps,
@@ -23,7 +24,7 @@ import DecisionArea from '../Review/DecisionArea'
 import SummaryInformationElement from './Elements/SummaryInformationElement'
 import ApplicantResponseElement from './Elements/ApplicantResponseElement'
 import ReviewDecisionElement from './Elements/ReviewDecisionElement'
-// import ConsolidationDecisionElement from './Elements/ConsolidationDecisionElement'
+import ConsolidationDecisionElement from './Elements/ConsolidationDecisionElement'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 
@@ -138,8 +139,72 @@ const PageElements: React.FC<PageElementProps> = ({
       </Form>
     )
   }
+  // Consolidation
+  if (isConsolidation) {
+    return (
+      <div>
+        <Form>
+          {visibleElements.map(
+            ({
+              element,
+              thisReviewLatestResponse,
+              latestOriginalReviewResponse,
+              isNewApplicationResponse,
+              isPendingReview,
+              latestApplicationResponse,
+            }) => {
+              // TODO: Replace with isPendingReview
+              const canConsolidate = canEdit && !thisReviewLatestResponse?.decision
+              const reviewButtonProps = {
+                canEdit: canConsolidate,
+                isPendingReview,
+                isNewReview: !!isNewApplicationResponse,
+                elementCode: element.code,
+                updateQuery,
+              }
 
-  // Review & Consolidation
+              const summaryViewProps = getSummaryViewProps(element)
+
+              const consolidationProps: ConsolidationElementProps = {
+                applicationResponse: latestApplicationResponse,
+                reviewResponse: thisReviewLatestResponse as ReviewResponse,
+                originalReviewResponse: latestOriginalReviewResponse as ReviewResponse,
+                ExtraConsolidateAction: () =>
+                  canConsolidate ? <ReviewButton {...reviewButtonProps} /> : null,
+                ExtraEditConsolidationAction: () =>
+                  thisReviewLatestResponse?.status === ReviewResponseStatus.Draft ? (
+                    <UpdateIcon
+                      onClick={() =>
+                        updateQuery({
+                          openResponse: element.code,
+                        })
+                      }
+                    />
+                  ) : null,
+              }
+
+              const toggleDecision = openResponse === element.code
+
+              return (
+                <div key={`${element.code}ReviewContainer`}>
+                  <Segment basic key={`question_${element.id}`} className="summary-page-element">
+                    {element.category === TemplateElementCategory.Information ? (
+                      <SummaryInformationElement {...summaryViewProps} />
+                    ) : (
+                      <ConsolidateReviewDecision {...consolidationProps} {...summaryViewProps} />
+                    )}
+                  </Segment>
+                  {toggleDecision && <DecisionArea {...consolidationProps} {...summaryViewProps} />}
+                </div>
+              )
+            }
+          )}
+        </Form>
+      </div>
+    )
+  }
+
+  // Review
   if (isReview) {
     return (
       <div>
@@ -168,8 +233,9 @@ const PageElements: React.FC<PageElementProps> = ({
               const reviewProps: ReviewElementProps = {
                 applicationResponse: latestApplicationResponse,
                 reviewResponse: thisReviewLatestResponse as ReviewResponse,
-                ExtraUserAction: () => (canReview ? <ReviewButton {...reviewButtonProps} /> : null),
-                ExtraEditAction: () =>
+                ExtraReviewAction: () =>
+                  canReview ? <ReviewButton {...reviewButtonProps} /> : null,
+                ExtraEditReviewAction: () =>
                   thisReviewLatestResponse?.status === ReviewResponseStatus.Draft ? (
                     <UpdateIcon
                       onClick={() =>
@@ -179,9 +245,10 @@ const PageElements: React.FC<PageElementProps> = ({
                       }
                     />
                   ) : null,
-                // originalReviewResponse: latestOriginalReviewResponse,
               }
+
               const toggleDecision = openResponse === element.code
+
               return (
                 <div key={`${element.code}ReviewContainer`}>
                   <Segment basic key={`question_${element.id}`} className="summary-page-element">
@@ -203,23 +270,47 @@ const PageElements: React.FC<PageElementProps> = ({
       </div>
     )
   }
+
   return null
 }
+
+// TODO: For now just use isConsolitadion = true to test this...
+type ConsolidateReviewDecisionProps = ConsolidationElementProps & SummaryViewWrapperProps
+const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
+  reviewResponse,
+  originalReviewResponse,
+  ExtraConsolidateAction,
+  ExtraEditConsolidationAction,
+  ...otherProps
+}) => (
+  <div>
+    <ApplicantResponseElement {...otherProps} />
+    <ReviewDecisionElement reviewResponse={originalReviewResponse} {...otherProps}>
+      {ExtraConsolidateAction && <ExtraConsolidateAction />}
+    </ReviewDecisionElement>
+    <ConsolidationDecisionElement
+      reviewResponse={reviewResponse}
+      originalReviewResponse={originalReviewResponse}
+    >
+      {ExtraEditConsolidationAction && <ExtraEditConsolidationAction />}
+    </ConsolidationDecisionElement>
+  </div>
+)
 
 type ReviewApplicantResponseProps = ReviewElementProps & SummaryViewWrapperProps
 
 const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   reviewResponse,
-  ExtraUserAction,
-  ExtraEditAction,
+  ExtraReviewAction,
+  ExtraEditReviewAction,
   ...otherProps
 }) => (
   <div>
     <ApplicantResponseElement {...otherProps}>
-      {ExtraUserAction && <ExtraUserAction />}
+      {ExtraReviewAction && <ExtraReviewAction />}
     </ApplicantResponseElement>
     <ReviewDecisionElement reviewResponse={reviewResponse} {...otherProps}>
-      {ExtraEditAction && <ExtraEditAction />}
+      {ExtraEditReviewAction && <ExtraEditReviewAction />}
     </ReviewDecisionElement>
   </div>
 )
