@@ -301,7 +301,7 @@ a:hover {
 
 // Steps line - actions box
 .actions-box {
-  min-width: 100px;
+  min-width: 120px;
   text-align: right;
 }
 
@@ -347,7 +347,7 @@ a:hover {
 
 .review-comment-grid.ui.grid {
   padding: 10px 20px;
-  font-size: 0.85em;
+  font-size: @smallerText;
   color: @headersInteractiveLow;
 }
 
@@ -360,7 +360,7 @@ a:hover {
 }
 
 #review-submit-area p {
-  font-size: 0.95em;
+  font-size: @tinyBitSmallerText;
   margin-top: 10px;
   margin-bottom: 5px;
 }
@@ -498,7 +498,7 @@ a:hover {
 // }
 
 .page-list {
-  font-size: 0.9em !important;
+  font-size: @slightlySmallerText !important;
   padding-left: 30px !important;
   margin-bottom: -30px !important;
   margin-top: -20px !important;
@@ -532,6 +532,27 @@ a:hover {
 
 // .element-summary-view {
 // }
+
+// For change request borders
+.element-warning-border {
+  border: 1px solid @headersInteractiveMed;
+  padding: 10px;
+  border-radius: @borderRadius;
+  margin-left: -10px !important;
+  margin-right: -10px !important;
+}
+
+.alert-border {
+  border-color: @attention;
+}
+
+.blue-border {
+  border-color: @interactiveHigh;
+}
+
+.reviewer-comment {
+  font-size: 0.9em;
+}
 
 /*--------------------------------
       Application Navigation area
@@ -699,6 +720,10 @@ a:hover {
 
 .information-colour {
   color: @information !important;
+}
+
+.interactive-color {
+  color: @interactiveHigh !important;
 }
 
 // Position adjustments
