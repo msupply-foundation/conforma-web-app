@@ -19,13 +19,15 @@ const SummaryResponseElement: React.FC<SummaryResponseElementProps> = ({
   linkToPage,
   summaryProps,
 }) => (
-  <Grid columns="equal">
-    <Grid.Column floated="left" width={4}>
+  <Grid>
+    <Grid.Column width={14} textAlign="left">
       <SummaryViewWrapper {...summaryProps} />
     </Grid.Column>
-    <Grid.Column floated="right" textAlign="right">
+    <Grid.Column width={2} textAlign="left" verticalAlign="middle">
       {canEdit && (
-        <Button content={strings.BUTTON_SUMMARY_EDIT} size="small" as={Link} to={linkToPage} />
+        <Link to={linkToPage}>
+          <strong>{strings.BUTTON_SUMMARY_EDIT}</strong>
+        </Link>
       )}
     </Grid.Column>
   </Grid>

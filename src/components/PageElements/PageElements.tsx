@@ -106,7 +106,11 @@ const PageElements: React.FC<PageElementProps> = ({
 
           return (
             <div key={`question_${element.id}`}>
-              <Segment style={inlineStyles(isChangeRequest, isSummary)}>
+              <Segment
+                basic
+                className="summary-page-element"
+                style={inlineStyles(isChangeRequest, isSummary)}
+              >
                 {element.category === TemplateElementCategory.Question ? (
                   changedQuestionResponse ? (
                     <SummaryResponseElement {...props} />
@@ -148,20 +152,25 @@ const PageElements: React.FC<PageElementProps> = ({
 
             return (
               <div key={`${element.code}ReviewContainer`}>
-                <Segment key={`question_${element.id}`} style={inlineStyles(isChangeRequest)}>
+                <Segment
+                  basic
+                  key={`question_${element.id}`}
+                  className="summary-page-element"
+                  style={inlineStyles(isChangeRequest)}
+                >
                   {element.category === TemplateElementCategory.Question ? (
                     <ReviewResponseElement {...props} />
                   ) : (
                     <SummaryInformationElement {...props} />
                   )}
+                  {thisReviewLatestResponse && (
+                    <ReviewDecisionElement
+                      latestApplicationResponse={latestApplicationResponse}
+                      reviewResponse={thisReviewLatestResponse}
+                      summaryViewProps={props.summaryProps}
+                    />
+                  )}
                 </Segment>
-                {thisReviewLatestResponse && (
-                  <ReviewDecisionElement
-                    latestApplicationResponse={latestApplicationResponse}
-                    reviewResponse={thisReviewLatestResponse}
-                    summaryViewProps={props.summaryProps}
-                  />
-                )}
               </div>
             )
           }
@@ -174,14 +183,14 @@ const PageElements: React.FC<PageElementProps> = ({
 
 // Styles - TODO: Move to LESS || Global class style (semantic)
 const inlineStyles = (isChangeRequest?: boolean, isSummary?: boolean) => ({
-  background: isSummary && isChangeRequest ? 'rgb(249, 255, 255)' : '#FFFFFF',
-  borderRadius: 8,
-  borderBottomLeftRadius: isChangeRequest ? 0 : 8,
-  borderBottomRightRadius: isChangeRequest ? 0 : 8,
-  border: 'none',
-  boxShadow: 'none',
-  margin: 10,
-  marginBottom: isChangeRequest ? 0 : 10,
+  // background: isSummary && isChangeRequest ? 'rgb(249, 255, 255)' : '#FFFFFF',
+  // borderRadius: 8,
+  // borderBottomLeftRadius: isChangeRequest ? 0 : 8,
+  // borderBottomRightRadius: isChangeRequest ? 0 : 8,
+  // border: 'none',
+  // boxShadow: 'none',
+  // margin: 10,
+  // marginBottom: isChangeRequest ? 0 : 10,
 })
 
 export default PageElements

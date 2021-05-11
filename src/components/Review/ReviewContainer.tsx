@@ -19,7 +19,7 @@ const ReviewContainer: React.FC<ReviewContainerProps> = ({ application, children
           onClick={() => replace(`/applications?type=${template.code}`)}
           content={
             <>
-              <Icon name="angle left" className="dark-grey" size="large" />
+              <Icon name="chevron left" className="dark-grey" />
               {`${template.name} ${strings.LABEL_APPLICATIONS}`}
             </>
           }
@@ -27,7 +27,6 @@ const ReviewContainer: React.FC<ReviewContainerProps> = ({ application, children
         <Header as="h3" className="heading-alt" textAlign="center">
           {org?.name || strings.TITLE_NO_ORGANISATION}
         </Header>
-        <Header as="h2" textAlign="center" content={name} />
       </div>
       {children}
     </Container>

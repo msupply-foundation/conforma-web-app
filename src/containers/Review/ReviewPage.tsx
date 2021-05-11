@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react'
-import { Button, Header, Message, Segment } from 'semantic-ui-react'
+import { Button, Header, Icon, Message, Segment, Container, Label } from 'semantic-ui-react'
 import { Loading, SectionWrapper } from '../../components'
 import {
   AssignmentDetails,
@@ -65,19 +65,34 @@ const ReviewPage: React.FC<{
       current: { stage },
       name,
     },
+    attemptSubmission,
+    firstIncompleteReviewPage,
   } = fullReviewStructure
+
+  const isMissingReviewResponses = (section: string): boolean =>
+    attemptSubmission && firstIncompleteReviewPage?.sectionCode === section
 
   const ReviewMain: React.FC = () => (
     <>
-      <Segment className="sup" style={inlineStyles.top}>
+      <div id="application-summary-content">
         {Object.values(sections).map((section) => (
           <SectionWrapper
             key={`ApplicationSection_${section.details.id}`}
             isActive={isSectionActive(section.details.code)}
             toggleSection={toggleSection(section.details.code)}
             section={section}
+            failed={isMissingReviewResponses(section.details.code)}
             extraSectionTitleContent={(section: SectionState) => (
-              <ReviewStatusOrProgress {...section} />
+              <div>
+                {isMissingReviewResponses(section.details.code) && (
+                  <Label
+                    icon={<Icon name="exclamation circle" color="pink" />}
+                    className="simple-label alert-text"
+                    content={strings.LABEL_REVIEW_SECTION}
+                  />
+                )}
+                <ReviewStatusOrProgress {...section} />
+              </div>
             )}
             extraPageContent={(page: Page) => <ApproveAllButton page={page} />}
             scrollableAttachment={(page: Page) => (
@@ -96,14 +111,8 @@ const ReviewPage: React.FC<{
             }
           />
         ))}
-      </Segment>
-      <Segment basic style={inlineStyles.bot}>
-        <ReviewSubmit
-          structure={fullReviewStructure}
-          reviewAssignment={reviewAssignment}
-          scrollTo={scrollTo}
-        />
-      </Segment>
+        <ReviewSubmit structure={fullReviewStructure} scrollTo={scrollTo} />
+      </div>
     </>
   )
 
@@ -143,38 +152,15 @@ const ApproveAllButton: React.FC<{ page: Page }> = ({ page }) => {
     return null
 
   return (
-    <div style={inlineStyles.button}>
+    <div className="right-justify-content review-approve-all-button">
       <Button
-        style={inlineStyles.approve}
+        primary
+        inverted
         onClick={massApprove}
         content={`${strings.BUTTON_REVIEW_APPROVE_ALL} (${responsesToReview.length})`}
       />
     </div>
   )
-}
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const inlineStyles = {
-  top: {
-    background: 'white',
-    border: 'none',
-    borderRadius: 0,
-    boxShadow: 'none',
-    paddingTop: 25,
-  } as CSSProperties,
-  bot: {
-    marginLeft: '10%',
-    marginRight: '10%',
-  } as CSSProperties,
-  button: { display: 'flex', justifyContent: 'flex-end', paddingRight: 20 } as CSSProperties,
-  approve: {
-    background: 'none',
-    color: '#003BFE',
-    letterSpacing: 1.4,
-    border: '2px solid #003BFE',
-    borderRadius: 8,
-    textTransform: 'capitalize',
-  } as CSSProperties,
 }
 
 export default ReviewPage
