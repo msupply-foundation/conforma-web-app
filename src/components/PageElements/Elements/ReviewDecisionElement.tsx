@@ -1,36 +1,21 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Icon, Label, Grid } from 'semantic-ui-react'
-import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
-import { useRouter } from '../../../utils/hooks/useRouter'
 import getSimplifiedTimeDifference from '../../../utils/dateAndTime/getSimplifiedTimeDifference'
-import {
-  ApplicationResponse,
-  ReviewResponse,
-  ReviewResponseDecision,
-  ReviewResponseStatus,
-} from '../../../utils/generated/graphql'
-import DecisionArea from '../../Review/DecisionArea'
+import { ReviewResponseDecision } from '../../../utils/generated/graphql'
 import strings from '../../../utils/constants'
+import { ReviewElementProps } from '../../../utils/types'
 
-interface ReviewDecisionElementProps {
-  latestApplicationResponse: ApplicationResponse
-  reviewResponse?: ReviewResponse
-  summaryViewProps: SummaryViewWrapperProps
-}
-
-const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
+const ReviewDecisionElement: React.FC<ReviewElementProps> = ({
   reviewResponse,
-  summaryViewProps,
-  latestApplicationResponse,
+  applicationResponse,
+  children,
 }) => {
-  const { updateQuery } = useRouter()
-
   if (!reviewResponse) return null
   if (!reviewResponse?.decision) return null
 
   // After review is submitted, reviewResponses are trimmed if they are not changed duplicates
   // or if they are null, we only want to show reviewResponses that are linked to latestApplicationResponse
-  if (latestApplicationResponse.id !== reviewResponse.applicationResponse?.id) return null
+  if (applicationResponse.id !== reviewResponse.applicationResponse?.id) return null
 
   return (
     <div className="review-comment-area">
@@ -64,21 +49,11 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
           )}
         </Grid.Column>
         <Grid.Column textAlign="right" width={2}>
-          {reviewResponse.status === ReviewResponseStatus.Draft && (
-            <UpdateIcon
-              onClick={updateQuery({
-                openResponse: latestApplicationResponse.templateElement?.code,
-              })}
-            />
-          )}
+          {children}
         </Grid.Column>
       </Grid>
     </div>
   )
 }
-
-const UpdateIcon: React.FC<{ onClick: Function }> = ({ onClick }) => (
-  <Icon className="clickable" name="pencil" size="big" color="blue" onClick={onClick} />
-)
 
 export default ReviewDecisionElement

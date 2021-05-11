@@ -1,23 +1,31 @@
-import React from 'react'
-import { Form, Segment } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import { Form, Icon, Segment } from 'semantic-ui-react'
 import {
   ApplicationDetails,
   ElementState,
   PageElement,
+  ResponseElementProps,
   ResponsesByCode,
+  ReviewElementProps,
   SectionAndPage,
 } from '../../utils/types'
 import { ApplicationViewWrapper } from '../../formElementPlugins'
-import { ApplicationViewWrapperProps } from '../../formElementPlugins/types'
-import { TemplateElementCategory } from '../../utils/generated/graphql'
+import {
+  ApplicationViewWrapperProps,
+  SummaryViewWrapperProps,
+} from '../../formElementPlugins/types'
+import {
+  ReviewResponse,
+  ReviewResponseStatus,
+  TemplateElementCategory,
+} from '../../utils/generated/graphql'
+import DecisionArea from '../Review/DecisionArea'
 import SummaryInformationElement from './Elements/SummaryInformationElement'
 import ApplicantResponseElement from './Elements/ApplicantResponseElement'
-// import SummaryResponseElement from './Elements/SummaryResponseElement'
-// import SummaryResponseChangedElement from './Elements/SummaryResponseChangedElement'
-// import SummaryReviewResponseElement from './Elements/SummaryReviewResponseElement'
-import ReviewResponseElement from './Elements/ReviewResponseElement'
 import ReviewDecisionElement from './Elements/ReviewDecisionElement'
-import ConsolidationDecisionElement from './Elements/ConsolidationDecisionElement'
+// import ConsolidationDecisionElement from './Elements/ConsolidationDecisionElement'
+import { useRouter } from '../../utils/hooks/useRouter'
+import strings from '../../utils/constants'
 
 interface PageElementProps {
   elements: PageElement[]
@@ -46,6 +54,11 @@ const PageElements: React.FC<PageElementProps> = ({
   serial,
   sectionAndPage,
 }) => {
+  const {
+    push,
+    query: { openResponse },
+    updateQuery,
+  } = useRouter()
   const visibleElements = elements.filter(({ element }) => element.isVisible)
 
   // Editable Application page
@@ -92,33 +105,31 @@ const PageElements: React.FC<PageElementProps> = ({
     return (
       <Form>
         {visibleElements.map((state) => {
-          const {
-            element,
-            isChanged,
-            isChangeRequest,
-            previousApplicationResponse,
-            latestApplicationResponse,
-          } = state
+          const { element, isChanged, isChangeRequest, latestApplicationResponse } = state
 
           const isResponseUpdated = !!isChangeRequest || !!isChanged
-
-          const props = {
+          const canApplicantEdit = canEdit && isUpdating ? isResponseUpdated : true
+          const summaryViewProps = getSummaryViewProps(element)
+          const props: ResponseElementProps = {
             applicationResponse: latestApplicationResponse,
-            canEdit: canEdit && isUpdating ? isResponseUpdated : true,
-            linkToPage: `/application/${serial}/${sectionCode}/Page${pageNumber}`,
             isResponseUpdated,
-            summaryViewProps: getSummaryViewProps(element),
-            latestApplicationResponse: latestApplicationResponse,
-            previousApplicationResponse: previousApplicationResponse,
           }
 
           return (
             <div key={`question_${element.id}`}>
               <Segment basic className="summary-page-element">
-                {element.category === TemplateElementCategory.Question ? (
-                  <ApplicantResponseElement {...props} />
+                {element.category !== TemplateElementCategory.Question ? (
+                  <SummaryInformationElement {...summaryViewProps} />
                 ) : (
-                  <SummaryInformationElement {...props} />
+                  <ApplicantResponseElement {...props} {...summaryViewProps}>
+                    {canApplicantEdit && (
+                      <UpdateIcon
+                        onClick={() =>
+                          push(`/application/${serial}/${sectionCode}/Page${pageNumber}`)
+                        }
+                      />
+                    )}
+                  </ApplicantResponseElement>
                 )}
               </Segment>
             </div>
@@ -128,49 +139,117 @@ const PageElements: React.FC<PageElementProps> = ({
     )
   }
 
-  // TODO: Find out problem to display edit button with review responses when Review is locked
-
   // Review & Consolidation
   if (isReview) {
     return (
-      <Form>
-        {visibleElements.map(
-          ({
-            element,
-            thisReviewLatestResponse,
-            latestOriginalReviewResponse,
-            isNewApplicationResponse,
-            latestApplicationResponse,
-          }) => {
-            const props = {
+      <div>
+        <Form>
+          {visibleElements.map(
+            ({
+              element,
+              thisReviewLatestResponse,
+              latestOriginalReviewResponse,
+              isNewApplicationResponse,
+              isPendingReview,
               latestApplicationResponse,
-              isNewApplicationResponse: !!isNewApplicationResponse,
-              summaryViewProps: getSummaryViewProps(element),
-              reviewResponse: thisReviewLatestResponse,
-              originalReviewResponse: latestOriginalReviewResponse,
+            }) => {
+              // TODO: Replace with isPendingReview
+              const canReview = canEdit && !thisReviewLatestResponse?.decision
+              const reviewButtonProps = {
+                canEdit: canReview,
+                isPendingReview,
+                isNewReview: !!isNewApplicationResponse,
+                elementCode: element.code,
+                updateQuery,
+              }
+
+              const summaryViewProps = getSummaryViewProps(element)
+
+              const reviewProps: ReviewElementProps = {
+                applicationResponse: latestApplicationResponse,
+                reviewResponse: thisReviewLatestResponse as ReviewResponse,
+                ExtraUserAction: () => (canReview ? <ReviewButton {...reviewButtonProps} /> : null),
+                ExtraEditAction: () =>
+                  thisReviewLatestResponse?.status === ReviewResponseStatus.Draft ? (
+                    <UpdateIcon
+                      onClick={() =>
+                        updateQuery({
+                          openResponse: element.code,
+                        })
+                      }
+                    />
+                  ) : null,
+                // originalReviewResponse: latestOriginalReviewResponse,
+              }
+              const toggleDecision = openResponse === element.code
+              return (
+                <div key={`${element.code}ReviewContainer`}>
+                  <Segment basic key={`question_${element.id}`} className="summary-page-element">
+                    {element.category === TemplateElementCategory.Information ? (
+                      <SummaryInformationElement {...summaryViewProps} />
+                    ) : (
+                      <ReviewApplicantResponse {...reviewProps} {...summaryViewProps} />
+                    )}
+                    {/* {thisReviewLatestResponse && isConsolidation && (
+                      <ConsolidationDecisionElement {...props} />
+                    )} */}
+                  </Segment>
+                  {toggleDecision && <DecisionArea {...reviewProps} {...summaryViewProps} />}
+                </div>
+              )
             }
-            return (
-              <div key={`${element.code}ReviewContainer`}>
-                <Segment basic key={`question_${element.id}`} className="summary-page-element">
-                  {element.category === TemplateElementCategory.Question ? (
-                    <ReviewResponseElement {...props} />
-                  ) : (
-                    <SummaryInformationElement {...props} />
-                  )}
-                  {thisReviewLatestResponse && isConsolidation ? (
-                    <ConsolidationDecisionElement {...props} />
-                  ) : (
-                    <ReviewDecisionElement {...props} />
-                  )}
-                </Segment>
-              </div>
-            )
-          }
-        )}
-      </Form>
+          )}
+        </Form>
+      </div>
     )
   }
   return null
 }
+
+type ReviewApplicantResponseProps = ReviewElementProps & SummaryViewWrapperProps
+
+const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
+  reviewResponse,
+  ExtraUserAction,
+  ExtraEditAction,
+  ...otherProps
+}) => (
+  <div>
+    <ApplicantResponseElement {...otherProps}>
+      {ExtraUserAction && <ExtraUserAction />}
+    </ApplicantResponseElement>
+    <ReviewDecisionElement reviewResponse={reviewResponse} {...otherProps}>
+      {ExtraEditAction && <ExtraEditAction />}
+    </ReviewDecisionElement>
+  </div>
+)
+
+const UpdateIcon: React.FC<{ onClick: Function }> = ({ onClick }) => (
+  <Icon className="clickable" name="pencil" size="large" color="blue" onClick={onClick} />
+)
+
+interface ReviewButtonProps {
+  canEdit: boolean
+  isPendingReview?: boolean // Fix: isPendingReview not set when review doesn't have a decision
+  isNewReview: boolean
+  elementCode: string
+  updateQuery: Function
+}
+
+const ReviewButton: React.FC<ReviewButtonProps> = ({
+  isPendingReview = false,
+  canEdit,
+  isNewReview,
+  elementCode,
+  updateQuery,
+}) =>
+  // TODO: Replace check for isPendingReview when that is fixed to return only for reviable responses...
+  canEdit ? (
+    <p className="link-style clickable" onClick={() => updateQuery({ openResponse: elementCode })}>
+      <strong>
+        {isNewReview ? strings.BUTTON_RE_REVIEW_RESPONSE : strings.BUTTON_REVIEW_RESPONSE}
+      </strong>
+    </p>
+  ) : null
 
 export default PageElements

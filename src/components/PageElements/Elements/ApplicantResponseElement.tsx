@@ -4,25 +4,15 @@ import { SummaryViewWrapper } from '../../../formElementPlugins'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import strings from '../../../utils/constants'
 import getSimplifiedTimeDifference from '../../../utils/dateAndTime/getSimplifiedTimeDifference'
-import { ApplicationResponse } from '../../../utils/generated/graphql'
-import { useRouter } from '../../../utils/hooks/useRouter'
+import { ResponseElementProps } from '../../../utils/types'
 
-interface ApplicantResponseElementProps {
-  applicationResponse: ApplicationResponse
-  canEdit: boolean
-  linkToPage: string
-  isResponseUpdated: boolean
-  summaryViewProps: SummaryViewWrapperProps
-}
-
+type ApplicantResponseElementProps = ResponseElementProps & SummaryViewWrapperProps
 const ApplicantResponseElement: React.FC<ApplicantResponseElementProps> = ({
   applicationResponse,
-  canEdit,
-  linkToPage,
-  isResponseUpdated,
-  summaryViewProps,
+  isResponseUpdated = false,
+  children,
+  ...summaryViewProps
 }) => {
-  const { push } = useRouter()
   const backgroudColour = isResponseUpdated ? 'changable-background' : ''
   // TODO: Fix tiny margin showing on left and right on grid.item
   // TODO: Rename class className="review-comment-grid"
@@ -43,14 +33,10 @@ const ApplicantResponseElement: React.FC<ApplicantResponseElementProps> = ({
         </Grid.Column>
       )}
       <Grid.Column width={2} textAlign="left" verticalAlign="middle">
-        {canEdit && <UpdateIcon onClick={() => push(linkToPage)} />}
+        {children}
       </Grid.Column>
     </Grid>
   )
 }
-
-const UpdateIcon: React.FC<{ onClick: Function }> = ({ onClick }) => (
-  <Icon className="clickable" name="pencil" size="large" color="blue" onClick={onClick} />
-)
 
 export default ApplicantResponseElement
