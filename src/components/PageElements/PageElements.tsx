@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Grid, Segment } from 'semantic-ui-react'
+import { Form, Segment } from 'semantic-ui-react'
 import {
   ApplicationDetails,
   ElementState,
