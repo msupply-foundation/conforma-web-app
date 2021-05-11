@@ -19,6 +19,8 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
         )
       case ReviewAction.canStartReview:
       case ReviewAction.canContinue:
+      case ReviewAction.canReReview:
+      case ReviewAction.canUpdate:
       case ReviewAction.canView:
         return isAssignedToCurrentUser ? (
           <CurrentReviewInProgressLabel />
@@ -27,12 +29,15 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
         )
       case ReviewAction.canSelfAssignLocked:
       case ReviewAction.canContinueLocked:
-        return isAssignedToCurrentUser ? <CurrentReviewLockedLabel /> : null // Only show locked to yourself
+        return isAssignedToCurrentUser ? (
+          <CurrentReviewLockedLabel />
+        ) : (
+          <TheirReviewLockedLabel {...assignment.reviewer} />
+        )
       default:
         return null
     }
   }
-
   return <Grid.Column className="padding-zero">{getLabel()}</Grid.Column>
 }
 
@@ -49,6 +54,36 @@ const CurrentSelfAssignmentLabel: React.FC = () => (
   <Label className="simple-label" content={strings.LABEL_ASSIGNMENT_SELF} />
 )
 
+const CurrentReviewLockedLabel: React.FC = () => (
+  <Label
+    className="simple-label"
+    icon={<Icon name="ban" size="small" color="pink" />}
+    content={
+      <>
+        {`${strings.LABEL_ASSIGNMENT_LOCKED} `}
+        <Label className="simple-label" content={strings.REVIEW_FILTER_YOURSELF} />
+      </>
+    }
+  />
+)
+
+const ReviewerLabel: React.FC<User> = ({ firstName, lastName }) => (
+  <Label className="simple-label info-text" content={`${firstName || ''} ${lastName || ''}`} />
+)
+
+const TheirReviewLockedLabel: React.FC<User> = (reviewer) => (
+  <Label
+    className="simple-label"
+    icon={<Icon name="ban" size="small" color="pink" />}
+    content={
+      <>
+        {`${strings.LABEL_ASSIGNMENT_LOCKED} `}
+        <ReviewerLabel {...reviewer} />
+      </>
+    }
+  />
+)
+
 const TheirSelfAssignmentLabel: React.FC<User> = (reviewer) => (
   <Label
     className="simple-label"
@@ -61,10 +96,6 @@ const TheirSelfAssignmentLabel: React.FC<User> = (reviewer) => (
   />
 )
 
-const ReviewerLabel: React.FC<User> = ({ firstName, lastName }) => (
-  <Label className="simple-label info-text" content={`${firstName || ''} ${lastName || ''}`} />
-)
-
 const TheirReviewInProgressLabel: React.FC<User> = (reviewer) => (
   <Label
     className="simple-label"
@@ -72,19 +103,6 @@ const TheirReviewInProgressLabel: React.FC<User> = (reviewer) => (
       <>
         {`${strings.LABEL_REVIEWED_BY} `}
         <ReviewerLabel {...reviewer} />
-      </>
-    }
-  />
-)
-
-const CurrentReviewLockedLabel: React.FC = () => (
-  <Label
-    className="simple-label"
-    icon={<Icon name="ban" size="small" color="red" />}
-    content={
-      <>
-        {`${strings.LABEL_ASSIGNMENT_LOCKED} `}
-        <Label className="simple-label" content={strings.REVIEW_FILTER_YOURSELF} />
       </>
     }
   />
