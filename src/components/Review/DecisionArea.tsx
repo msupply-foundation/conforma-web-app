@@ -7,11 +7,33 @@ import messages from '../../utils/messages'
 import SummaryViewWrapper from '../../formElementPlugins/SummaryViewWrapper'
 import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
-import { getOperationAST } from 'graphql'
 
 type DecisionAreaProps = SummaryViewWrapperProps & {
   reviewResponse: ReviewResponse
   isConsolidation: boolean
+}
+
+const optionsMap = {
+  consolidation: [
+    {
+      label: strings.LABEL_CONSOLIDATION_AGREEMENT,
+      decision: ReviewResponseDecision.Agree,
+    },
+    {
+      label: strings.LABEL_CONSOLIDATION_DISAGREEMENT,
+      decision: ReviewResponseDecision.Disagree,
+    },
+  ],
+  review: [
+    {
+      label: strings.LABEL_REVIEW_APPROVE,
+      decision: ReviewResponseDecision.Approve,
+    },
+    {
+      label: strings.LABEL_REVIEW_RESSUBMIT,
+      decision: ReviewResponseDecision.Decline,
+    },
+  ],
 }
 
 const DecisionArea: React.FC<DecisionAreaProps> = ({
@@ -37,74 +59,7 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
       ? reviewUpdate?.decision === ReviewResponseDecision.Disagree
       : reviewUpdate?.decision === ReviewResponseDecision.Decline
 
-  // TODO: Improve - how to use shorthand was on my mind...
-  const getOptions = () => {
-    return isConsolidation ? (
-      <>
-        <strong>{strings.LABEL_CONSOLIDATE}</strong>
-        <Form.Field>
-          <Radio
-            label={strings.LABEL_CONSOLIDATION_AGREEMENT}
-            value={strings.LABEL_CONSOLIDATION_AGREEMENT}
-            name="decisionGroup"
-            checked={reviewUpdate.decision === ReviewResponseDecision.Agree}
-            onChange={() =>
-              setReviewUpdate({
-                ...reviewUpdate,
-                decision: ReviewResponseDecision.Agree,
-              })
-            }
-          />
-        </Form.Field>
-        <Form.Field>
-          <Radio
-            label={strings.LABEL_CONSOLIDATION_DISAGREEMENT}
-            value={strings.LABEL_CONSOLIDATION_DISAGREEMENT}
-            name="decisionGroup"
-            checked={reviewUpdate.decision === ReviewResponseDecision.Disagree}
-            onChange={() =>
-              setReviewUpdate({
-                ...reviewUpdate,
-                decision: ReviewResponseDecision.Disagree,
-              })
-            }
-          />
-        </Form.Field>
-      </>
-    ) : (
-      <>
-        <strong>{strings.LABEL_REVIEW}</strong>
-        <Form.Field>
-          <Radio
-            label={strings.LABEL_REVIEW_APPROVE}
-            value={strings.LABEL_REVIEW_APPROVE}
-            name="decisionGroup"
-            checked={reviewUpdate.decision === ReviewResponseDecision.Approve}
-            onChange={() =>
-              setReviewUpdate({
-                ...reviewUpdate,
-                decision: ReviewResponseDecision.Approve,
-              })
-            }
-          />
-        </Form.Field>
-        <Form.Field>
-          <Radio
-            label={strings.LABEL_REVIEW_RESSUBMIT}
-            value={strings.LABEL_REVIEW_RESSUBMIT}
-            name="decisionGroup"
-            checked={reviewUpdate.decision === ReviewResponseDecision.Decline}
-            onChange={() =>
-              setReviewUpdate({
-                ...reviewUpdate,
-                decision: ReviewResponseDecision.Decline,
-              })
-            }
-          />
-        </Form.Field>
-      </>
-    )
-  }
+  const options = isConsolidation ? optionsMap.consolidation : optionsMap.review
 
   return (
     <Modal
@@ -114,7 +69,7 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
         updateQuery({ openResponse: null })
       }}
       size="fullscreen"
-      style={{ margin: 0, background: 'transparent' }}
+      style={{ margin: 0, background: 'transparent' }} // TODO: Move style to overrides
     >
       <div id="review-decision-container">
         <div id="review-decision-content">
@@ -127,7 +82,27 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
                 <Header as="h3">{strings.TITLE_DETAILS}</Header>
                 <SummaryViewWrapper {...summaryViewProps} />
               </Segment>
-              <Segment basic>{getOptions()}</Segment>
+              <Segment basic>
+                <strong>
+                  {isConsolidation ? strings.LABEL_CONSOLIDATE : strings.LABEL_REVIEW}
+                </strong>
+                {options.map(({ decision, label }) => (
+                  <Form.Field key={decision}>
+                    <Radio
+                      label={label}
+                      value={decision}
+                      name="decisionGroup"
+                      checked={reviewUpdate.decision === decision}
+                      onChange={() =>
+                        setReviewUpdate({
+                          ...reviewUpdate,
+                          decision: decision,
+                        })
+                      }
+                    />
+                  </Form.Field>
+                ))}
+              </Segment>
               <Segment basic>
                 <Form.Field>
                   <strong>{strings.LABEL_COMMENT}</strong>
