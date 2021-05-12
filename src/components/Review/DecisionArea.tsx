@@ -16,11 +16,11 @@ type DecisionAreaProps = SummaryViewWrapperProps & {
 const optionsMap = {
   consolidation: [
     {
-      label: strings.LABEL_CONSOLIDATION_AGREEMENT,
+      label: strings.LABEL_CONSOLIDATION_AGREE,
       decision: ReviewResponseDecision.Agree,
     },
     {
-      label: strings.LABEL_CONSOLIDATION_DISAGREEMENT,
+      label: strings.LABEL_CONSOLIDATION_DISAGREE,
       decision: ReviewResponseDecision.Disagree,
     },
   ],
@@ -54,10 +54,11 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
     await updateResponse(reviewUpdate)
   }
 
-  const validateDecisionComment = () =>
-    !reviewUpdate.comment && isConsolidation
-      ? reviewUpdate?.decision === ReviewResponseDecision.Disagree
-      : reviewUpdate?.decision === ReviewResponseDecision.Decline
+  const isValidComment =
+    (!!reviewUpdate.comment && reviewUpdate.comment?.trim() !== '') ||
+    (isConsolidation
+      ? reviewUpdate?.decision !== ReviewResponseDecision.Disagree
+      : reviewUpdate?.decision !== ReviewResponseDecision.Decline)
 
   const options = isConsolidation ? optionsMap.consolidation : optionsMap.review
 
@@ -121,13 +122,11 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
                     primary
                     className="button-wide"
                     onClick={submit}
-                    disabled={validateDecisionComment()}
+                    disabled={!isValidComment}
                     content={strings.BUTTON_SUBMIT}
                   />
                 </Form.Field>
-                {validateDecisionComment() && (
-                  <p className="alert">{messages.REVIEW_RESUBMIT_COMMENT}</p>
-                )}
+                {!isValidComment && <p className="alert">{messages.REVIEW_RESUBMIT_COMMENT}</p>}
               </Segment>
               <Segment basic id="history-panel">
                 <p>
