@@ -7,11 +7,34 @@ interface TextInfoProps {
   Markdown: any
 }
 
+// All legal values for "style"
+type TextInfoStyle =
+  | 'none'
+  | 'basic'
+  | 'info'
+  | 'warning'
+  | 'success'
+  | 'positive'
+  | 'negative'
+  | 'error'
+
+// These values become a styled Message block. "none" or undefined/null render as plain Markdown
+const styledValues: TextInfoStyle[] = [
+  'basic',
+  'info',
+  'warning',
+  'success',
+  'positive',
+  'negative',
+  'error',
+]
+
 // Extract main content to another Component so it can be shared with SummaryView (and TemplateView)
 export const TextInfoElement: React.FC<TextInfoProps> = (props) => {
   const { parameters, Markdown } = props
-  const { title, text, style } = parameters
-  if (['basic', 'info', 'warning', 'success', 'positive', 'negative', 'error'].includes(style)) {
+  const { title, text } = parameters
+  const style: TextInfoStyle = parameters?.style
+  if (styledValues.includes(style)) {
     const info = style === 'info'
     const warning = style === 'warning'
     const positive = style === 'positive'

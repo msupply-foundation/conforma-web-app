@@ -104,6 +104,10 @@
 @fontLarge: 20px;
 @fontXlarge: 27px;
 @fontXXlarge: 36px;
+// Relative sizes
+@tinyBitSmallerText: 0.95em;
+@slightlySmallerText: 0.9em;
+@smallerText: 0.85em;
 
 .xx-small {
   font-size: @fontXXsmall;

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Container, Header, Icon, Label, Message, Segment } from 'semantic-ui-react'
+import { Button, Header, Icon, Label, Message } from 'semantic-ui-react'
 import {
   Loading,
   ConsolidationSectionProgressBar,

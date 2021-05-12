@@ -22,13 +22,14 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
       )
     case ApplicationStatus.Draft:
       return (
-        <Segment basic textAlign="center">
+        <>
           <Progress size="tiny" />
           <Link to={`/application/${serial}`} className="user-action">
             {ACTIONS.EDIT_DRAFT}
           </Link>
+          {/* TO DO: Trash icon should link to application delete */}
           <Icon name="trash alternate outline" />
-        </Segment>
+        </>
       )
     case ApplicationStatus.Expired:
       return (

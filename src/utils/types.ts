@@ -178,6 +178,7 @@ interface ElementBase {
   category: TemplateElementCategory
   validationExpression: IQueryNode
   validationMessage: string | null
+  helpText: string | null
   parameters: any
 }
 
