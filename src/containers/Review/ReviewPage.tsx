@@ -85,7 +85,7 @@ const ReviewPage: React.FC<{
             isActive={isSectionActive(section.details.code)}
             toggleSection={toggleSection(section.details.code)}
             section={section}
-            ExtraSectionTitleContent={SectionRowStatus}
+            extraSectionTitleContent={(section: SectionState) => <SectionRowStatus {...section} />}
             extraPageContent={(page: Page) => <ApproveAllButton page={page} />}
             scrollableAttachment={(page: Page) => (
               <ScrollableAttachment

@@ -34,13 +34,6 @@ const actionDefinitions: ActionDefinition[] = [
   {
     action: ReviewAction.canStartReview,
     checkMethod: ({ reviewAssignmentStatus, isPendingReview, isReviewExisting }) => {
-      console.log(
-        'Check action canStartReview',
-        reviewAssignmentStatus === ReviewAssignmentStatus.Assigned,
-        !isReviewExisting,
-        isPendingReview
-      )
-
       return (
         reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
         !isReviewExisting &&
