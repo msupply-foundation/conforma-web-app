@@ -51,9 +51,16 @@ const getConsolidationProgressDefaults = ({ consolidationProgress }: SectionProg
 const getConsolidationProgressTitle = (props: SectionProgressBarProps) => {
   const { doneAgreeNonConform, doneAgreeConform, doneDisagree } =
     getConsolidationProgressDefaults(props)
-  if (doneDisagree > 0) return `(${doneDisagree}) ${strings.LABEL_CONSOLIDATION_DISAGREEMENT}`
-  else if (doneAgreeConform > 0 || doneAgreeNonConform > 0)
-    return `${strings.LABEL_CONSOLIDATION_AGREEMENT} (${doneAgreeConform}) ${strings.LABEL_REVIEW_APPROVE} | (${doneAgreeNonConform}) ${strings.LABEL_REVIEW_DECLINED}`
+  const totalAgree = doneAgreeConform + doneAgreeNonConform
+  if (doneDisagree > 0) {
+    let disagreementLabel = `(${doneDisagree}) ${strings.LABEL_CONSOLIDATION_DISAGREEMENT}`
+    if (totalAgree > 0)
+      disagreementLabel += ` (${totalAgree}) ${strings.LABEL_CONSOLIDATION_AGREEMENT}`
+    return disagreementLabel
+  }
+
+  if (totalAgree > 0)
+    return `(${doneAgreeConform}) ${strings.LABEL_REVIEW_APPROVED} (${doneAgreeNonConform}) ${strings.LABEL_REVIEW_DECLINED}`
   return null
 }
 
@@ -80,8 +87,8 @@ const ConsolidationSectionProgressBar: React.FC<SectionProgressBarProps> = (prop
           (totalReviewable - totalPendingReview)
         }
         size="tiny"
-        success={doneAgreeNonConform === 0 && doneDisagree === 0}
-        error={doneAgreeNonConform > 0 || doneDisagree > 0}
+        success={doneDisagree === 0}
+        error={doneDisagree > 0}
       />
     </div>
   )
