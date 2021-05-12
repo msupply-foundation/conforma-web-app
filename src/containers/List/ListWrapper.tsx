@@ -28,7 +28,7 @@ const ListWrapper: React.FC = () => {
   const { query, updateQuery } = useRouter()
   const { type, userRole } = query
   const {
-    userState: { templatePermissions, currentUser },
+    userState: { templatePermissions, isNonRegistered },
     logout,
   } = useUserState()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
@@ -37,7 +37,7 @@ const ListWrapper: React.FC = () => {
   const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>()
   usePageTitle(strings.PAGE_TITLE_LIST)
 
-  if (currentUser?.username === strings.USER_NONREGISTERED) {
+  if (isNonRegistered) {
     logout()
     return null
   }

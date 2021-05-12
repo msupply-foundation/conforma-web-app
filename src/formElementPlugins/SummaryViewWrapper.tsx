@@ -46,7 +46,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   const DefaultSummaryView: React.FC = () => {
     const combinedParams = { ...parameters, ...evaluatedParameters }
     return (
-      <Form.Field required={isRequired}>
+      <Form.Field className="element-summary-view" required={isRequired}>
         {parametersLoaded && displayTitle && (
           <>
             <label style={{ color: 'black' }}>

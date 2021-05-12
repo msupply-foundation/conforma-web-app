@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 /* 
 Need to use useCreateReview hook for this mutation, it creates the following shape for $reviewInput
-(if used else where must set deicsion and trigger)
+(if used else where must set decision and trigger)
 
 {
   "trigger": "ON_REVIEW_CREATE",

@@ -2,7 +2,7 @@
   "isCore": true,
   "code": "longText",
   "displayName": "Multi-line Text Input",
-  "dynamicParameters": ["label", "description", "placeholder"],
+  "dynamicParameters": ["label", "description", "placeholder", "default"],
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"
 }

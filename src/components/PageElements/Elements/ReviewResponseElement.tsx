@@ -1,5 +1,6 @@
-import React, { CSSProperties, useState } from 'react'
-import { Button, Grid } from 'semantic-ui-react'
+import React from 'react'
+import { Grid } from 'semantic-ui-react'
+import { useRouter } from '../../../utils/hooks/useRouter'
 import { SummaryViewWrapper } from '../../../formElementPlugins'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import {
@@ -19,25 +20,27 @@ interface ReviewResponseElementProps {
 
 const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
   isNewApplicationResponse,
+  latestApplicationResponse,
   thisReviewLatestResponse,
   summaryProps,
 }) => {
-  const decisionArea = useState(false)
-  const [toggle] = decisionArea
+  const { query, updateQuery } = useRouter()
+  const toggle = query?.openResponse === latestApplicationResponse.templateElement?.code
 
   return (
     <>
-      <Grid columns="equal">
-        <Grid.Column floated="left" width={4}>
+      <Grid>
+        <Grid.Column width={13} textAlign="left">
           <SummaryViewWrapper {...summaryProps} />
         </Grid.Column>
-        <Grid.Column floated="right" textAlign="right">
+        <Grid.Column width={3} textAlign="right" verticalAlign="middle">
           {thisReviewLatestResponse &&
             thisReviewLatestResponse.status === ReviewResponseStatus.Draft &&
             !thisReviewLatestResponse.decision && (
               <ReviewButton
                 isNewApplicationResponse={isNewApplicationResponse}
-                decisionArea={decisionArea}
+                elementCode={latestApplicationResponse.templateElement?.code as string}
+                updateQuery={updateQuery}
               />
             )}
         </Grid.Column>
@@ -55,28 +58,16 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
 
 const ReviewButton: React.FC<{
   isNewApplicationResponse?: boolean
-  decisionArea: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-}> = ({ isNewApplicationResponse, decisionArea: [toggleDecisionArea, setToggleDecisionArea] }) => (
-  <Button
-    content={
-      isNewApplicationResponse ? strings.BUTTON_RE_REVIEW_RESPONSE : strings.BUTTON_REVIEW_RESPONSE
-    }
-    size="small"
-    style={buttonStyle}
-    onClick={() => setToggleDecisionArea(!toggleDecisionArea)}
-  />
+  elementCode: string
+  updateQuery: Function
+}> = ({ isNewApplicationResponse, elementCode, updateQuery }) => (
+  <p className="link-style clickable" onClick={() => updateQuery({ openResponse: elementCode })}>
+    <strong>
+      {isNewApplicationResponse
+        ? strings.BUTTON_RE_REVIEW_RESPONSE
+        : strings.BUTTON_REVIEW_RESPONSE}
+    </strong>
+  </p>
 )
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const buttonStyle = {
-  letterSpacing: 0.8,
-  fontWeight: 1000,
-  fontSize: 17,
-  background: 'none',
-  color: '#003BFE',
-  border: 'none',
-  borderRadius: 8,
-  textTransform: 'capitalize',
-} as CSSProperties
 
 export default ReviewResponseElement

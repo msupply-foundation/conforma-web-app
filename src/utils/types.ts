@@ -175,6 +175,7 @@ interface ElementBase {
   category: TemplateElementCategory
   validationExpression: IQueryNode
   validationMessage: string | null
+  helpText: string | null
   parameters: any
 }
 
@@ -204,6 +205,7 @@ interface FullStructure {
   thisReview?: ReviewDetails | null
   elementsById?: ElementsById
   lastValidationTimestamp?: number
+  attemptSubmission: boolean
   info: ApplicationDetails
   sections: SectionsStructure
   stages: StageDetails[]
