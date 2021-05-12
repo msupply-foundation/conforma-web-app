@@ -71,19 +71,18 @@ const ReviewPage: React.FC<{
     firstIncompleteReviewPage,
   } = fullReviewStructure
 
-
   const isMissingReviewResponses = (section: string): boolean =>
     attemptSubmission && firstIncompleteReviewPage?.sectionCode === section
-  
+
   return error ? (
     <Message error title={strings.ERROR_GENERIC} list={[error]} />
   ) : (
-    <div id="application-summary-content">
-      <ReviewHeader
-        applicationStage={stage.name || ''}
-        applicationStageColour={stage.colour}
-        applicationName={name}
-      />
+    <ReviewHeader
+      applicationStage={stage.name || ''}
+      applicationStageColour={stage.colour}
+      applicationName={name}
+    >
+      <div id="application-summary-content">
         {Object.values(sections).map((section) => (
           <SectionWrapper
             key={`ApplicationSection_${section.details.id}`}
@@ -100,7 +99,7 @@ const ReviewPage: React.FC<{
                     content={strings.LABEL_REVIEW_SECTION}
                   />
                 )}
-               <SectionRowStatus {...section} />
+                <SectionRowStatus {...section} />
               </div>
             )}
             extraPageContent={(page: Page) => <ApproveAllButton page={page} />}
