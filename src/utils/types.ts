@@ -258,7 +258,7 @@ type PageElement = {
   isNewApplicationResponse?: boolean
   review?: ReviewQuestionDecision
   isPendingReview?: boolean
-  assignmentId: number
+  reviewQuestionAssignmentId: number
   isAssigned?: boolean
   isChangeRequest?: boolean
   isChanged?: boolean

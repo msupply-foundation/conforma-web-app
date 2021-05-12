@@ -4,13 +4,13 @@ import { FullStructure, SectionState, Page, PageElement, ConsolidationProgress }
 import { getReviewAndConsolidationProgress } from './generateReviewProgress'
 
 const generateConsolidationProgress = (newStructure: FullStructure) => {
-  newStructure?.sortedPages?.forEach(generatePageconsolidationProgress)
-  newStructure?.sortedSections?.forEach(generateSectionconsolidationProgress)
+  newStructure?.sortedPages?.forEach(generatePageConsolidationProgress)
+  newStructure?.sortedSections?.forEach(generateSectionConsolidationProgress)
 
   generateReviewValidity(newStructure)
 }
 
-const generateSectionconsolidationProgress = (section: SectionState) => {
+const generateSectionConsolidationProgress = (section: SectionState) => {
   section.consolidationProgress = getConsolidationProgress(Object.values(section.pages))
   section.reviewAndConsolidationProgress = getReviewAndConsolidationProgress(
     Object.values(section.pages)
@@ -27,7 +27,7 @@ const disagreeThiReview = (element: PageElement) =>
   element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Disagree
 const activeThisReview = (element: PageElement) => element.isActiveReviewResponse
 
-const generatePageconsolidationProgress = (page: Page) => {
+const generatePageConsolidationProgress = (page: Page) => {
   const totalReviewable = page.state.filter(
     (element) => element.isAssigned && element?.element.isVisible
   )
