@@ -1,31 +1,29 @@
 import React from 'react'
 import { Grid } from 'semantic-ui-react'
 import { ReviewAction, ReviewSectionComponentProps } from '../../utils/types'
-import { ReviewSectionProgressBar } from '../Sections/SectionProgress'
+import { ConsolidationSectionProgressBar, ReviewSectionProgressBar } from '../'
 
 const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
   action,
-  section: { reviewProgress, reviewAndConsolidationProgress },
+  section: { reviewProgress, consolidationProgress },
   isAssignedToCurrentUser,
+  isConsolidation,
 }) => {
   const getContent = () => {
-    const progressBarProps = { reviewProgress, reviewAndConsolidationProgress }
-
     switch (action) {
       case ReviewAction.canStartReview: {
-        if (isAssignedToCurrentUser) return null
         return null
       }
-      case ReviewAction.canView: {
-        return <ReviewSectionProgressBar {...progressBarProps} />
-      }
-      case ReviewAction.canContinue: {
-        if (isAssignedToCurrentUser) return <ReviewSectionProgressBar {...progressBarProps} />
-        return null
-      }
-      case ReviewAction.canReReview: {
-        return <ReviewSectionProgressBar {...progressBarProps} />
-      }
+      case ReviewAction.canView:
+      case ReviewAction.canReReview:
+        if (isConsolidation)
+          return <ConsolidationSectionProgressBar consolidationProgress={consolidationProgress} />
+        return <ReviewSectionProgressBar reviewProgress={reviewProgress} />
+      case ReviewAction.canContinue:
+        if (!isAssignedToCurrentUser) return null
+        if (isConsolidation)
+          return <ConsolidationSectionProgressBar consolidationProgress={consolidationProgress} />
+        return <ReviewSectionProgressBar reviewProgress={reviewProgress} />
       default:
         return null
     }

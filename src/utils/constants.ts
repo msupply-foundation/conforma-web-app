@@ -60,6 +60,8 @@ export default {
   LABEL_CONSOLIDATION_AGREED_NON_CONFORM: 'Agreed with non-conformity',
   LABEL_CONSOLIDATION_DISAGREED_CONFORM: 'Disagreed with conformity',
   LABEL_CONSOLIDATION_DISAGREED_NON_CONFORM: 'Disagreed with non-conformity',
+  LABEL_CONSOLIDATION_AGREEMENT: 'Agree',
+  LABEL_CONSOLIDATION_DISAGREEMENT: 'Disagree',
   LABEL_LIST_PER_PAGE: 'Applications per page',
   LABEL_LOADING: 'Loading...',
   LABEL_LOGIN_PASSWORD: 'Password',

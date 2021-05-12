@@ -127,10 +127,12 @@ const addIsPendingReview = (structure: FullStructure, reviewLevel: number) => {
   const isPendingReview =
     reviewLevel === 1
       ? (element: PageElement) =>
-          element.response?.id !== element.thisReviewLatestResponse?.applicationResponseId
+          !!element.response &&
+          element.response?.id !== element?.thisReviewLatestResponse?.applicationResponseId
       : (element: PageElement) =>
-          element?.lowerLevelReviewLatestResponse?.id !==
-          element.thisReviewLatestResponse?.reviewResponseLinkId
+          !!element?.lowerLevelReviewLatestResponse &&
+          element.lowerLevelReviewLatestResponse?.id !==
+            element?.thisReviewLatestResponse?.reviewResponseLinkId
 
   Object.values(structure.elementsById || {}).forEach((element) => {
     element.isPendingReview = isPendingReview(element)
@@ -164,7 +166,7 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
   // add latestOriginalReviewResponse and previousOriginalReviewResponse
   structure = addReviewResponses(
     structure,
-    data?.previousLevelReviewResponses?.nodes as ReviewResponse[], // Sorted in useGetReviewResponsesQuery
+    data?.originalReviewResponses?.nodes as ReviewResponse[], // Sorted in useGetReviewResponsesQuery
     (element, response) => (element.latestOriginalReviewResponse = response),
     (element, response) => (element.previousOriginalReviewResponse = response)
   )
@@ -183,7 +185,7 @@ const addIsAssigned = (
     if (!assignedElement) return
 
     assignedElement.isAssigned = true
-    assignedElement.assignmentId = id
+    assignedElement.reviewQuestionAssignmentId = id
   })
   return newStructure
 }

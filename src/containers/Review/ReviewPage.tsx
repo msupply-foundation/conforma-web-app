@@ -1,14 +1,20 @@
-import React, { CSSProperties } from 'react'
-import { Button, Header, Icon, Message, Segment, Container, Label } from 'semantic-ui-react'
-import { Loading, SectionWrapper } from '../../components'
+import React from 'react'
+import { Button, Container, Header, Icon, Label, Message, Segment } from 'semantic-ui-react'
+import {
+  Loading,
+  ConsolidationSectionProgressBar,
+  ReviewHeader,
+  ReviewSectionProgressBar,
+  SectionWrapper,
+} from '../../components'
 import {
   AssignmentDetails,
   FullStructure,
   Page,
   ResponsesByCode,
+  SectionAssignment,
   SectionState,
 } from '../../utils/types'
-
 import {
   ReviewResponseDecision,
   ReviewResponseStatus,
@@ -16,15 +22,11 @@ import {
   useUpdateReviewResponseMutation,
 } from '../../utils/generated/graphql'
 import strings from '../../utils/constants'
-
 import useGetReviewStructureForSections from '../../utils/hooks/useGetReviewStructureForSection'
 import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivation'
-
 import useScrollableAttachments, {
   ScrollableAttachment,
 } from '../../utils/hooks/useScrollableAttachments'
-import { ReviewHeader } from '../../components/Review'
-import { ReviewStatusOrProgress } from '../../components/Sections'
 import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
 
@@ -57,9 +59,6 @@ const ReviewPage: React.FC<{
   )
     return <Header>Review in Progress</Header>
 
-  // Temoorary - before merging PR #634
-  const isConsolidation = reviewAssignment.level > 1
-
   const {
     sections,
     responsesByCode,
@@ -75,8 +74,14 @@ const ReviewPage: React.FC<{
   const isMissingReviewResponses = (section: string): boolean =>
     attemptSubmission && firstIncompleteReviewPage?.sectionCode === section
 
-  const ReviewMain: React.FC = () => (
-    <>
+  return error ? (
+    <Message error title={strings.ERROR_GENERIC} list={[error]} />
+  ) : (
+    <ReviewHeader
+      applicationStage={stage.name || ''}
+      applicationStageColour={stage.colour}
+      applicationName={name}
+    >
       <div id="application-summary-content">
         {Object.values(sections).map((section) => (
           <SectionWrapper
@@ -94,7 +99,7 @@ const ReviewPage: React.FC<{
                     content={strings.LABEL_REVIEW_SECTION}
                   />
                 )}
-                <ReviewStatusOrProgress {...section} />
+                <SectionRowStatus {...section} />
               </div>
             )}
             extraPageContent={(page: Page) => <ApproveAllButton page={page} />}
@@ -108,7 +113,7 @@ const ReviewPage: React.FC<{
             applicationData={fullApplicationStructure.info}
             serial={serial}
             isReview
-            isConsolidation
+            isConsolidation={section.assignment?.isConsolidation}
             canEdit={
               reviewAssignment?.review?.status === ReviewStatus.Draft ||
               reviewAssignment?.review?.status === ReviewStatus.Locked
@@ -117,20 +122,28 @@ const ReviewPage: React.FC<{
         ))}
         <ReviewSubmit structure={fullReviewStructure} scrollTo={scrollTo} />
       </div>
-    </>
+    </ReviewHeader>
   )
+}
 
-  return error ? (
-    <Message error title={strings.ERROR_GENERIC} list={[error]} />
-  ) : (
-    <ReviewHeader
-      applicationStage={stage.name || ''}
-      applicationStageColour={stage.colour}
-      applicationName={name}
-      currentUser={currentUser}
-      ChildComponent={ReviewMain}
-    />
-  )
+const SectionRowStatus: React.FC<SectionState> = (section) => {
+  const { assignment } = section
+  const { isConsolidation, isReviewable, isAssignedToCurrentUser } = assignment as SectionAssignment
+
+  if (!isAssignedToCurrentUser)
+    return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
+  if (!isReviewable)
+    return (
+      <Label
+        icon={<Icon name="circle" size="mini" color="blue" />}
+        content={strings.LABEL_ASSIGNED_TO_YOU}
+      />
+    )
+  if (isConsolidation && section.consolidationProgress)
+    return <ConsolidationSectionProgressBar consolidationProgress={section.consolidationProgress} />
+  if (section.reviewProgress)
+    return <ReviewSectionProgressBar reviewProgress={section.reviewProgress} />
+  return null // Unexpected
 }
 
 const ApproveAllButton: React.FC<{ page: Page }> = ({ page }) => {

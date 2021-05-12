@@ -1,75 +1,16 @@
 import React from 'react'
-import { Icon, Label, Progress } from 'semantic-ui-react'
-import {
-  ApplicationProgress,
-  ReviewAndConsolidationProgress,
-  ReviewProgress,
-  SectionState,
-} from '../../utils/types'
+import { Label, Progress } from 'semantic-ui-react'
+import { ApplicationProgress, ConsolidationProgress, ReviewProgress } from '../../utils/types'
 import strings from '../../utils/constants'
 
-const ReviewStatusOrProgress: React.FC<SectionState> = ({
-  reviewProgress,
-  reviewAction,
-  reviewAndConsolidationProgress,
-}) => {
-  if (reviewAction?.isAssignedToCurrentUser && reviewProgress) {
-    return reviewAction.isReviewable ? (
-      <ReviewSectionProgressBar
-        reviewProgress={reviewProgress}
-        reviewAndConsolidationProgress={reviewAndConsolidationProgress}
-      />
-    ) : (
-      <Label
-        icon={<Icon name="circle" size="mini" color="blue" />}
-        content={strings.LABEL_ASSIGNED_TO_YOU}
-      />
-    )
-  }
-  return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
+interface SectionProgressBarProps {
+  consolidationProgress?: ConsolidationProgress
+  reviewProgress?: ReviewProgress
 }
 
-const getReviewProgressDefaults = ({
-  reviewProgress,
-  reviewAndConsolidationProgress,
-}: SectionProgressBarProps) => ({
-  doneNonConform: reviewProgress?.doneNonConform || 0,
-  doneConform: reviewProgress?.doneConform || 0,
-  totalReviewable: reviewAndConsolidationProgress?.totalReviewable || 0,
-})
-
-const getReviewProgressTitle = (props: SectionProgressBarProps) => {
-  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(props)
-  if (doneNonConform > 0) return `(${doneNonConform}) ${strings.LABEL_REVIEW_DECLINED}`
-  else if (doneConform === totalReviewable) return strings.LABEL_SECTION_COMPLETED
-  return null
-}
-
-type SectionProgressBarProps = {
-  reviewProgress: ReviewProgress | undefined
-  reviewAndConsolidationProgress: ReviewAndConsolidationProgress | undefined
-}
-
-const ReviewSectionProgressBar: React.FC<SectionProgressBarProps> = (props) => {
-  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(props)
-  const progressLabel = getReviewProgressTitle(props)
-  return (
-    <div className="progress-box">
-      {progressLabel && (
-        <Label size="tiny" className="simple-label">
-          <em>{progressLabel}</em>
-        </Label>
-      )}
-      <Progress
-        className="progress"
-        percent={(100 * (doneConform + doneNonConform)) / totalReviewable}
-        size="tiny"
-        success={doneNonConform === 0}
-        error={doneNonConform > 0}
-      />
-    </div>
-  )
-}
+/**
+ * Application
+ */
 
 const getApplicationProgressTitle = ({ completed, valid }: ApplicationProgress) => {
   if (!valid) return strings.LABEL_SECTION_PROBLEM
@@ -95,5 +36,93 @@ const ApplicationProgressBar: React.FC<ApplicationProgress> = (applicationProgre
   ) : null
 }
 
-export default ReviewStatusOrProgress
-export { ReviewSectionProgressBar, ApplicationProgressBar }
+/**
+ * Consolidation
+ */
+
+const getConsolidationProgressDefaults = ({ consolidationProgress }: SectionProgressBarProps) => ({
+  doneAgreeNonConform: consolidationProgress?.doneAgreeNonConform || 0,
+  doneAgreeConform: consolidationProgress?.doneAgreeConform || 0,
+  doneDisagree: consolidationProgress?.doneDisagree || 0,
+  totalReviewable: consolidationProgress?.totalReviewable || 0,
+  totalPendingReview: consolidationProgress?.totalPendingReview || 0,
+})
+
+const getConsolidationProgressTitle = (props: SectionProgressBarProps) => {
+  const { doneAgreeNonConform, doneAgreeConform, doneDisagree } =
+    getConsolidationProgressDefaults(props)
+  if (doneDisagree > 0) return `(${doneDisagree}) ${strings.LABEL_CONSOLIDATION_DISAGREEMENT}`
+  else if (doneAgreeConform > 0 || doneAgreeNonConform > 0)
+    return `${strings.LABEL_CONSOLIDATION_AGREEMENT} (${doneAgreeConform}) ${strings.LABEL_REVIEW_APPROVE} | (${doneAgreeNonConform}) ${strings.LABEL_REVIEW_DECLINED}`
+  return null
+}
+
+const ConsolidationSectionProgressBar: React.FC<SectionProgressBarProps> = (props) => {
+  const {
+    doneAgreeNonConform,
+    doneAgreeConform,
+    doneDisagree,
+    totalReviewable,
+    totalPendingReview,
+  } = getConsolidationProgressDefaults(props)
+  const progressLabel = getConsolidationProgressTitle(props)
+  return (
+    <div className="progress-box">
+      {progressLabel && (
+        <Label size="tiny" className="simple-label">
+          <em>{progressLabel}</em>
+        </Label>
+      )}
+      <Progress
+        className="progress"
+        percent={
+          (100 * (doneAgreeNonConform + doneAgreeConform + doneDisagree)) /
+          (totalReviewable - totalPendingReview)
+        }
+        size="tiny"
+        success={doneAgreeNonConform === 0 && doneDisagree === 0}
+        error={doneAgreeNonConform > 0 || doneDisagree > 0}
+      />
+    </div>
+  )
+}
+
+/**
+ * Review
+ */
+
+const getReviewProgressDefaults = ({ reviewProgress }: SectionProgressBarProps) => ({
+  doneNonConform: reviewProgress?.doneNonConform || 0,
+  doneConform: reviewProgress?.doneConform || 0,
+  totalReviewable: reviewProgress?.totalReviewable || 0,
+})
+
+const getReviewProgressTitle = (props: SectionProgressBarProps) => {
+  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(props)
+  if (doneNonConform > 0) return `(${doneNonConform}) ${strings.LABEL_REVIEW_DECLINED}`
+  else if (doneConform === totalReviewable) return strings.LABEL_SECTION_COMPLETED
+  return null
+}
+
+const ReviewSectionProgressBar: React.FC<SectionProgressBarProps> = (props) => {
+  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(props)
+  const progressLabel = getReviewProgressTitle(props)
+  return (
+    <div className="progress-box">
+      {progressLabel && (
+        <Label size="tiny" className="simple-label">
+          <em>{progressLabel}</em>
+        </Label>
+      )}
+      <Progress
+        className="progress"
+        percent={(100 * (doneConform + doneNonConform)) / totalReviewable}
+        size="tiny"
+        success={doneNonConform === 0}
+        error={doneNonConform > 0}
+      />
+    </div>
+  )
+}
+
+export { ApplicationProgressBar, ConsolidationSectionProgressBar, ReviewSectionProgressBar }
