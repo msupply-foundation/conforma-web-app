@@ -36,14 +36,14 @@ const generatePageConsolidationProgress = (page: Page) => {
   // lowerLevelReviewLatestResponse not linked to thisReviewLatestResponse
   const totalPendingReview = totalReviewable.filter(({ isPendingReview }) => isPendingReview)
 
-  // Linked to lowerLevelReviewLatestResponse
-  const totalUpToDateReviewResponses = totalReviewable.filter(
-    ({ isPendingReview }) => !isPendingReview
-  )
+  // // Linked to lowerLevelReviewLatestResponse
+  // const totalUpToDateReviewResponses = totalReviewable.filter(
+  //   ({ isPendingReview }) => !isPendingReview
+  // )
 
-  const totalAgree = totalUpToDateReviewResponses.filter(agreeThisReview)
-  const doneDisagree = totalUpToDateReviewResponses.filter(disagreeThiReview)
+  const totalAgree = totalReviewable.filter(agreeThisReview)
 
+  const doneDisagree = totalReviewable.filter(disagreeThiReview)
   const doneAgreeConform = totalAgree.filter(conformOriginal)
   const doneAgreeNonConform = totalAgree.filter(nonConformOriginal)
 
