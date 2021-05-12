@@ -47,10 +47,18 @@ const actionDefinitions: ActionDefinition[] = [
       reviewStatus === ReviewStatus.Pending && reviewLevel > 1 && isReviewActive,
   },
   {
+    action: ReviewAction.canContinueLocked,
+    checkMethod: ({ reviewStatus }) => reviewStatus === ReviewStatus.Locked,
+  },
+  {
     action: ReviewAction.canSelfAssign,
-    checkMethod: ({ reviewAssignmentStatus, isCurrentUserReview }) =>
-      reviewAssignmentStatus === ReviewAssignmentStatus.AvailableForSelfAssignment &&
-      isCurrentUserReview,
+    checkMethod: ({ reviewAssignmentStatus }) =>
+      reviewAssignmentStatus === ReviewAssignmentStatus.AvailableForSelfAssignment,
+  },
+  {
+    action: ReviewAction.canSelfAssignLocked,
+    checkMethod: ({ reviewAssignmentStatus }) =>
+      reviewAssignmentStatus === ReviewAssignmentStatus.SelfAssignedByAnother,
   },
   {
     action: ReviewAction.canContinue,
@@ -65,10 +73,6 @@ const actionDefinitions: ActionDefinition[] = [
   {
     action: ReviewAction.canView,
     checkMethod: ({ reviewStatus }) => reviewStatus === ReviewStatus.Submitted,
-  },
-  {
-    action: ReviewAction.canContinueLocked,
-    checkMethod: ({ reviewStatus }) => reviewStatus === ReviewStatus.Locked,
   },
   {
     action: ReviewAction.canUpdate,
