@@ -104,8 +104,6 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       isReviewActive: (section.reviewAndConsolidationProgress?.totalActive || 0) > 0,
     }
 
-    console.log(isReviewable, isAssignedToCurrentUser, checkMethodProps)
-
     const foundAction = actionDefinitions.find(({ checkMethod }) => checkMethod(checkMethodProps))
 
     section.reviewAction = {
