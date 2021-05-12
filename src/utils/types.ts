@@ -53,7 +53,6 @@ export {
   ConsolidationProgress,
   ReviewQuestion,
   ReviewElementProps,
-  ConsolidationElementProps,
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
@@ -321,13 +320,6 @@ interface ReviewDetails {
   reviewDecision?: ReviewDecision | null
 }
 
-interface ReviewerDetails {
-  id: number
-  firstName: string
-  lastName: string
-  current: boolean
-}
-
 interface ReviewQuestion {
   code: string
   responseId: number
@@ -338,16 +330,10 @@ interface ReviewQuestion {
 interface ReviewElementProps {
   applicationResponse: ApplicationResponse
   reviewResponse: ReviewResponse
+  originalReviewResponse?: ReviewResponse
+  isConsolidation: boolean
   ExtraReviewAction?: React.FC
   ExtraEditReviewAction?: React.FC
-}
-
-interface ConsolidationElementProps {
-  applicationResponse: ApplicationResponse
-  reviewResponse: ReviewResponse
-  originalReviewResponse: ReviewResponse
-  ExtraConsolidateAction?: React.FC
-  ExtraEditConsolidationAction?: React.FC
 }
 
 interface ReviewQuestionDecision {

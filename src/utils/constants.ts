@@ -56,6 +56,7 @@ export default {
   LABEL_ASSIGNMENT_SELF: 'Can be self assigned',
   LABEL_ASSIGNMENT_AVAILABLE: 'Can be self assigned by',
   LABEL_COMMENT: 'Add comment',
+  LABEL_CONSOLIDATE: 'Consolidate',
   LABEL_CONSOLIDATION_AGREED_CONFORM: 'Agreed with conformity',
   LABEL_CONSOLIDATION_AGREED_NON_CONFORM: 'Agreed with non-conformity',
   LABEL_CONSOLIDATION_DISAGREED_CONFORM: 'Disagreed with conformity',
