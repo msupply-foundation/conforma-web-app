@@ -37,7 +37,7 @@ const optionsMap = {
 }
 
 const DecisionArea: React.FC<DecisionAreaProps> = ({
-  reviewResponse,
+  reviewResponse: initialReviewResponse,
   isConsolidation,
   ...summaryViewProps
 }) => {
@@ -45,20 +45,20 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
     query: { openResponse },
     updateQuery,
   } = useRouter()
-  const [reviewUpdate, setReviewUpdate] = useState(reviewResponse)
+  const [reviewResponse, setReviewResponse] = useState(initialReviewResponse)
   const updateResponse = useUpdateReviewResponse()
 
   const submit = async () => {
     updateQuery({ openResponse: null })
     // TODO do we need to handle update error ?
-    await updateResponse(reviewUpdate)
+    await updateResponse(reviewResponse)
   }
 
   const isValidComment =
-    (!!reviewUpdate.comment && reviewUpdate.comment?.trim() !== '') ||
+    (!!reviewResponse.comment && reviewResponse.comment?.trim() !== '') ||
     (isConsolidation
-      ? reviewUpdate?.decision !== ReviewResponseDecision.Disagree
-      : reviewUpdate?.decision !== ReviewResponseDecision.Decline)
+      ? reviewResponse?.decision !== ReviewResponseDecision.Disagree
+      : reviewResponse?.decision !== ReviewResponseDecision.Decline)
 
   const options = isConsolidation ? optionsMap.consolidation : optionsMap.review
 
@@ -93,10 +93,10 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
                       label={label}
                       value={decision}
                       name="decisionGroup"
-                      checked={reviewUpdate.decision === decision}
+                      checked={reviewResponse.decision === decision}
                       onChange={() =>
-                        setReviewUpdate({
-                          ...reviewUpdate,
+                        setReviewResponse({
+                          ...reviewResponse,
                           decision: decision,
                         })
                       }
@@ -110,9 +110,9 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
                 </Form.Field>
                 <TextArea
                   rows={8}
-                  defaultValue={reviewUpdate.comment}
+                  defaultValue={reviewResponse.comment}
                   onChange={(_, { value }) =>
-                    setReviewUpdate({ ...reviewUpdate, comment: String(value) })
+                    setReviewResponse({ ...reviewResponse, comment: String(value) })
                   }
                 />
               </Segment>
