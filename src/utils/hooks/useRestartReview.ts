@@ -3,7 +3,7 @@ import {
   ReviewPatch,
   Trigger,
   Decision,
-  ReviewResponseStatus,
+  ReviewStatus,
 } from '../generated/graphql'
 import { AssignmentDetails, FullStructure, PageElement } from '../types'
 import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSection'
@@ -29,16 +29,21 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
     reviewAssignment: assignment,
   })
 
+  const shouldCreateConsolidationReviewResponse = (element: PageElement) => {
+    if (assignment.level === 1) return true
+    return element?.lowerLevelReviewLatestResponse?.review?.status !== ReviewStatus.Draft
+  }
+
   const constructReviewPatch: ConstructReviewPatch = (structure) => {
     const elements = Object.values(structure?.elementsById || {})
-    // Check for draft review response in case consolidation is ongoing and new review response is added
-    const isDraftReviewResponse = (element: PageElement) =>
-      element.thisReviewLatestResponse &&
-      element.thisReviewLatestResponse.status === ReviewResponseStatus.Draft
+
     // Exclude not assigned, not visible and missing responses
-    const reviewableElements = elements.filter(
-      (element) => element.isPendingReview && !isDraftReviewResponse(element)
-    )
+    const reviewableElements = elements.filter((element) => {
+      const { isAssigned, isActiveReviewResponse } = element
+      return (
+        shouldCreateConsolidationReviewResponse(element) && isAssigned && !isActiveReviewResponse
+      )
+    })
 
     // For re-assignment this would be slightly different, we need to consider latest review response of this level
     // not necessarily this thisReviewLatestResponse (would be just latestReviewResponse, from all reviews at this level)
@@ -56,6 +61,7 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
         // create new if element is awaiting review
         const shouldCreateNew = isPendingReview
         return {
+          // Create new decision and comment if lower level review response or application was change, otherwise duplicate previous review response
           decision: shouldCreateNew ? null : thisReviewLatestResponse?.decision,
           comment: shouldCreateNew ? null : thisReviewLatestResponse?.comment,
           applicationResponseId,
@@ -65,6 +71,7 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
       }
     )
 
+    // See comment at the bottom of file for resulting shape
     return {
       trigger: Trigger.OnReviewRestart,
       reviewResponsesUsingId: {
@@ -81,6 +88,7 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
     const result = await updateReview({
       variables: {
         reviewId: reviewId,
+        // See comment at the bottom of file for resulting shape
         reviewPatch: constructReviewPatch(await getFullReviewStructureAsync()),
       },
     })
@@ -90,3 +98,28 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
 }
 
 export default useRestartReview
+
+/* shape of reviewPatch
+{
+  "trigger": "ON_REVIEW_RESTART",
+  "reviewResponsesUsingId": {
+    "create": [
+      {
+        "decision": null,
+        "comment": null,
+        "applicationResponseId": 34, // this or reviewResponseLinkId
+        "reviewResponseLinkId": 34,  // this or applicationResponseId
+        "reviewQuestionAssignmentId": 11
+      }
+    ]
+  },
+  "reviewDecisionsUsingId": {
+    "create": [
+      {
+        "decision": "NO_DECISION"
+      }
+    ]
+  }
+}
+
+*/

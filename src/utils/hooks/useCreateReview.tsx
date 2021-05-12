@@ -23,8 +23,10 @@ const useCreateReview: UseCreateReview = ({ structure, assignment }) => {
 
   const constructReviewInput: ConstructReviewInput = (structure) => {
     const elements = Object.values(structure?.elementsById || {})
-    // Only create review for elements that are pendingReview
-    const reviewableElements = elements.filter(({ isPendingReview }) => isPendingReview)
+    // Only create review for elements that are pendingReview and are assigned
+    const reviewableElements = elements.filter(
+      ({ isPendingReview, isAssigned }) => isPendingReview && isAssigned
+    )
 
     const reviewResponseCreate = reviewableElements.map(
       ({ lowerLevelReviewPreviousResponse, response, reviewQuestionAssignmentId }) => {
@@ -39,7 +41,7 @@ const useCreateReview: UseCreateReview = ({ structure, assignment }) => {
         }
       }
     )
-
+    // See comment at the bottom of file for resulting shape
     return {
       trigger: Trigger.OnReviewCreate,
       reviewAssignmentId: assignment.id,
@@ -56,6 +58,7 @@ const useCreateReview: UseCreateReview = ({ structure, assignment }) => {
   return async () => {
     const result = await updateReview({
       variables: {
+        // See comment at the bottom of file for resulting shape
         reviewInput: constructReviewInput(await getFullReviewStructureAsync()),
       },
     })
@@ -65,3 +68,25 @@ const useCreateReview: UseCreateReview = ({ structure, assignment }) => {
 }
 
 export default useCreateReview
+
+/* shape of reviewInput
+{
+  "trigger": "ON_REVIEW_CREATE",
+  "reviewAssignmentId": 4,
+  "reviewResponsesUsingId": {
+    "create": [
+      {
+        "applicationResponseId": 11,
+        "reviewQuestionAssignmentId": 11
+      }
+    ]
+  },
+  "reviewDecisionsUsingId": {
+    "create": [
+      {
+        "decision": "NO_DECISION"
+      }
+    ]
+  }
+}
+*/
