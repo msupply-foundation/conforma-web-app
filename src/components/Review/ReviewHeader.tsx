@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react'
-import { Container, Header, Label } from 'semantic-ui-react'
+import { Container, Header } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import { User } from '../../utils/types'
 import Stage from './Stage'
@@ -8,16 +8,13 @@ export interface ReviewHeaderProps {
   applicationStage: string
   applicationStageColour: string
   applicationName: string
-  currentUser: User | null
-  ChildComponent: React.FC
 }
 
 const ReviewHeader: React.FC<ReviewHeaderProps> = ({
   applicationStage,
   applicationStageColour,
   applicationName,
-  currentUser,
-  ChildComponent,
+  children
 }) => {
   return (
     <Container id="application-summary">
@@ -30,7 +27,7 @@ const ReviewHeader: React.FC<ReviewHeaderProps> = ({
         <Header as="h2" textAlign="center" content={strings.LABEL_REVIEW} />
         <p>{strings.SUBTITLE_REVIEW}</p>
       </div>
-      <ChildComponent />
+      {children}
     </Container>
   )
 }

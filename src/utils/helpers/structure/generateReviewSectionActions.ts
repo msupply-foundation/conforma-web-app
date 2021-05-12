@@ -1,5 +1,12 @@
 import { ReviewStatus, ReviewAssignmentStatus } from '../../generated/graphql'
-import { SectionState, AssignmentDetails, ReviewDetails, ReviewAction } from '../../types'
+import {
+  SectionState,
+  AssignmentDetails,
+  ReviewDetails,
+  ReviewAction,
+  ConsolidationProgress,
+  ReviewProgress,
+} from '../../types'
 
 type GenerateSectionActions = (props: {
   sections: SectionState[]
@@ -26,10 +33,13 @@ type ActionDefinition = {
 const actionDefinitions: ActionDefinition[] = [
   {
     action: ReviewAction.canStartReview,
-    checkMethod: ({ reviewAssignmentStatus, isPendingReview, isReviewExisting }) =>
-      reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
-      !isReviewExisting &&
-      isPendingReview,
+    checkMethod: ({ reviewAssignmentStatus, isPendingReview, isReviewExisting }) => {
+      return (
+        reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
+        !isReviewExisting &&
+        isPendingReview
+      )
+    },
   },
   {
     action: ReviewAction.canReReview,
@@ -87,9 +97,14 @@ const generateReviewSectionActions: GenerateSectionActions = ({
   currentUserId,
 }) => {
   const isCurrentUserReview = reviewAssignment.reviewer.id === currentUserId
+  const isConsolidation = reviewAssignment.level > 1
 
   sections.forEach((section) => {
-    const isReviewable = (section.reviewAndConsolidationProgress?.totalReviewable || 0) > 0
+    const { totalReviewable, totalPendingReview, totalActive } = isConsolidation
+      ? (section.consolidationProgress as ConsolidationProgress)
+      : (section.reviewProgress as ReviewProgress)
+
+    const isReviewable = (totalReviewable || 0) > 0
     const isAssignedToCurrentUser = isCurrentUserReview && isReviewable
 
     const checkMethodProps = {
@@ -100,15 +115,16 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       reviewAssignmentStatus: reviewAssignment.status,
       isReviewExisting: !!thisReview,
       reviewStatus: thisReview?.status,
-      isPendingReview: (section.reviewAndConsolidationProgress?.totalPendingReview || 0) > 0,
-      isReviewActive: (section.reviewAndConsolidationProgress?.totalActive || 0) > 0,
+      isPendingReview: (totalPendingReview || 0) > 0,
+      isReviewActive: (totalActive || 0) > 0,
     }
 
     const foundAction = actionDefinitions.find(({ checkMethod }) => checkMethod(checkMethodProps))
 
-    section.reviewAction = {
+    section.assignment = {
       isAssignedToCurrentUser,
       isReviewable,
+      isConsolidation,
       action: foundAction ? foundAction.action : ReviewAction.unknown,
     }
   })
