@@ -54,6 +54,8 @@ export default {
   LABEL_ASSIGNMENT_SELF: 'Can be self assigned',
   LABEL_ASSIGNMENT_AVAILABLE: 'Can be self assigned by',
   LABEL_COMMENT: 'Add comment',
+  LABEL_CONSOLIDATION_AGREEMENT: 'Agree',
+  LABEL_CONSOLIDATION_DISAGREEMENT: 'Disagree',
   LABEL_LIST_PER_PAGE: 'Applications per page',
   LABEL_LOADING: 'Loading...',
   LABEL_LOGIN_PASSWORD: 'Password',

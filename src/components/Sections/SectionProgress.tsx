@@ -48,6 +48,15 @@ const getConsolidationProgressDefaults = ({ consolidationProgress }: SectionProg
   totalPendingReview: consolidationProgress?.totalPendingReview || 0,
 })
 
+const getConsolidationProgressTitle = (props: SectionProgressBarProps) => {
+  const { doneAgreeNonConform, doneAgreeConform, doneDisagree } =
+    getConsolidationProgressDefaults(props)
+  if (doneDisagree > 0) return `(${doneDisagree}) ${strings.LABEL_CONSOLIDATION_DISAGREEMENT}`
+  else if (doneAgreeConform > 0 || doneAgreeNonConform > 0)
+    return `${strings.LABEL_CONSOLIDATION_AGREEMENT} (${doneAgreeConform}) ${strings.LABEL_REVIEW_APPROVE} | (${doneAgreeNonConform}) ${strings.LABEL_REVIEW_DECLINED}`
+  return null
+}
+
 const ConsolidationSectionProgressBar: React.FC<SectionProgressBarProps> = (props) => {
   const {
     doneAgreeNonConform,
@@ -56,17 +65,25 @@ const ConsolidationSectionProgressBar: React.FC<SectionProgressBarProps> = (prop
     totalReviewable,
     totalPendingReview,
   } = getConsolidationProgressDefaults(props)
+  const progressLabel = getConsolidationProgressTitle(props)
   return (
-    <Progress
-      className="progress"
-      percent={
-        (100 * (doneAgreeNonConform + doneAgreeConform + doneDisagree)) /
-        (totalReviewable - totalPendingReview)
-      }
-      size="tiny"
-      success={doneAgreeNonConform === 0 && doneDisagree === 0}
-      error={doneAgreeNonConform > 0 || doneDisagree > 0}
-    />
+    <div className="progress-box">
+      {progressLabel && (
+        <Label size="tiny" className="simple-label">
+          <em>{progressLabel}</em>
+        </Label>
+      )}
+      <Progress
+        className="progress"
+        percent={
+          (100 * (doneAgreeNonConform + doneAgreeConform + doneDisagree)) /
+          (totalReviewable - totalPendingReview)
+        }
+        size="tiny"
+        success={doneAgreeNonConform === 0 && doneDisagree === 0}
+        error={doneAgreeNonConform > 0 || doneDisagree > 0}
+      />
+    </div>
   )
 }
 
