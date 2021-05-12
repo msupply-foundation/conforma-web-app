@@ -10,6 +10,7 @@ import {
 import { ApplicationViewWrapper } from '../../formElementPlugins'
 import { ApplicationViewWrapperProps } from '../../formElementPlugins/types'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
+import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import SummaryInformationElement from './Elements/SummaryInformationElement'
 import SummaryResponseElement from './Elements/SummaryResponseElement'
 import SummaryResponseChangedElement from './Elements/SummaryResponseChangedElement'
@@ -67,7 +68,20 @@ const PageElements: React.FC<PageElementProps> = ({
               currentResponse: responsesByCode?.[element.code],
             }
             // Wrapper displays response & changes requested warning for LOQ re-submission
-            return <ApplicationViewWrapper key={`question_${element.code}`} {...props} />
+            return (
+              <div className="form-element-wrapper" key={`question_${element.code}`}>
+                <div className="form-element">
+                  <ApplicationViewWrapper {...props} />
+                </div>
+                {element.helpText && (
+                  <div className="help-tips hide-on-mobile">
+                    <div className="help-tips-content">
+                      <Markdown text={element.helpText} />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
           }
         )}
       </Form>
@@ -106,7 +120,7 @@ const PageElements: React.FC<PageElementProps> = ({
 
           return (
             <div key={`question_${element.id}`}>
-              <Segment style={inlineStyles(isChangeRequest, isSummary)}>
+              <Segment basic className="summary-page-element">
                 {element.category === TemplateElementCategory.Question ? (
                   changedQuestionResponse ? (
                     <SummaryResponseElement {...props} />
@@ -148,20 +162,20 @@ const PageElements: React.FC<PageElementProps> = ({
 
             return (
               <div key={`${element.code}ReviewContainer`}>
-                <Segment key={`question_${element.id}`} style={inlineStyles(isChangeRequest)}>
+                <Segment basic key={`question_${element.id}`} className="summary-page-element">
                   {element.category === TemplateElementCategory.Question ? (
                     <ReviewResponseElement {...props} />
                   ) : (
                     <SummaryInformationElement {...props} />
                   )}
+                  {thisReviewLatestResponse && (
+                    <ReviewDecisionElement
+                      latestApplicationResponse={latestApplicationResponse}
+                      reviewResponse={thisReviewLatestResponse}
+                      summaryViewProps={props.summaryProps}
+                    />
+                  )}
                 </Segment>
-                {thisReviewLatestResponse && (
-                  <ReviewDecisionElement
-                    latestApplicationResponse={latestApplicationResponse}
-                    reviewResponse={thisReviewLatestResponse}
-                    summaryViewProps={props.summaryProps}
-                  />
-                )}
               </div>
             )
           }
@@ -171,17 +185,5 @@ const PageElements: React.FC<PageElementProps> = ({
   }
   return null
 }
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const inlineStyles = (isChangeRequest?: boolean, isSummary?: boolean) => ({
-  background: isSummary && isChangeRequest ? 'rgb(249, 255, 255)' : '#FFFFFF',
-  borderRadius: 8,
-  borderBottomLeftRadius: isChangeRequest ? 0 : 8,
-  borderBottomRightRadius: isChangeRequest ? 0 : 8,
-  border: 'none',
-  boxShadow: 'none',
-  margin: 10,
-  marginBottom: isChangeRequest ? 0 : 10,
-})
 
 export default PageElements

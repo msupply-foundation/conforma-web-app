@@ -150,6 +150,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
             parameters: element.parameters,
             validationExpression: element.validation,
             validationMessage: element.validationMessage,
+            helpText: element.helpText,
           } as TemplateElementState)
       })
     })
@@ -173,6 +174,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
             colour: stage.colour as string,
           })),
           sections: buildSectionsStructure({ sections, baseElements }),
+          attemptSubmission: false,
         }
 
         setFullStructure(newStructure)

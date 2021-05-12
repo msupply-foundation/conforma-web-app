@@ -30,10 +30,20 @@
   padding-left: 0;
 }
 
+.ui.label.strong-label {
+  background-color: transparent;
+  color: @black;
+  font-weight: @semiboldWeight;
+}
+
 .ui.label.relevant-text {
   color: @blue;
 }
 
 .ui.label.info-text {
   color: @information;
+}
+
+.ui.label.alert-text {
+  color: @attention;
 }

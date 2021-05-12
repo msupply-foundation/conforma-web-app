@@ -6,13 +6,7 @@ import {
   MethodRevalidate,
   ApplicationProps,
 } from '../../utils/types'
-import {
-  ApplicationContainer,
-  Loading,
-  Navigation,
-  PageElements,
-  ProgressBar,
-} from '../../components'
+import { Loading, Navigation, PageElements, ProgressArea } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { checkPageIsAccessible } from '../../utils/helpers/structure'
@@ -66,13 +60,13 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
       <Container id="application-form">
         <Grid stackable>
           <Grid.Column width={4} id="progress-column" className="dev-border">
-            <ProgressBar
+            <ProgressArea
               structure={fullStructure}
               requestRevalidation={requestRevalidation as MethodRevalidate}
               strictSectionPage={strictSectionPage as SectionAndPage}
             />
           </Grid.Column>
-          <Grid.Column width={9} stretched id="form-column">
+          <Grid.Column width={12} stretched id="form-column">
             <Segment basic>
               <Header as="h4" content={fullStructure.sections[sectionCode].details.title} />
               <PageElements
@@ -86,9 +80,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
                 }
               />
             </Segment>
-          </Grid.Column>
-          <Grid.Column width={3} id="help-column" className="dev-border">
-            Help tips go here
           </Grid.Column>
         </Grid>
       </Container>

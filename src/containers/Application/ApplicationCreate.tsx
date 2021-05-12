@@ -99,7 +99,7 @@ const ApplicationCreate: React.FC = () => {
   }
 
   return template?.sections ? (
-    <ApplicationContainer template={template} currentUser={currentUser}>
+    <ApplicationContainer template={template}>
       <ApplicationHomeWrapper
         startMessage={template.startMessage}
         name={template.name}
