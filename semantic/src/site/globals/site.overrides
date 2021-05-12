@@ -344,7 +344,7 @@ a:hover {
   border-bottom: 1px solid @surfacesMed;
 }
 
-.changable-background {
+.changeable-background {
   background-color: @reviewCommentBackground;
 }
 

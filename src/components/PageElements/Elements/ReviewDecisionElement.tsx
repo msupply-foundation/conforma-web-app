@@ -23,7 +23,7 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
   if (isConsolidation && props.originalReviewResponse?.id !== reviewResponse.reviewResponseLinkId)
     return null
 
-  const backgroudColour = isActiveReview ? 'changable-background' : ''
+  const backgroudColour = isActiveReview ? 'changeable-background' : ''
 
   return (
     <div className={`review-comment-area ${backgroudColour}`}>
