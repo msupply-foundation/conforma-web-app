@@ -2566,6 +2566,8 @@ export type ApplicationFilter = {
   userId?: Maybe<IntFilter>;
   /** Filter by the object’s `orgId` field. */
   orgId?: Maybe<IntFilter>;
+  /** Filter by the object’s `sessionId` field. */
+  sessionId?: Maybe<StringFilter>;
   /** Filter by the object’s `serial` field. */
   serial?: Maybe<StringFilter>;
   /** Filter by the object’s `name` field. */
@@ -4878,6 +4880,8 @@ export enum ApplicationsOrderBy {
   UserIdDesc = 'USER_ID_DESC',
   OrgIdAsc = 'ORG_ID_ASC',
   OrgIdDesc = 'ORG_ID_DESC',
+  SessionIdAsc = 'SESSION_ID_ASC',
+  SessionIdDesc = 'SESSION_ID_DESC',
   SerialAsc = 'SERIAL_ASC',
   SerialDesc = 'SERIAL_DESC',
   NameAsc = 'NAME_ASC',
@@ -4902,6 +4906,8 @@ export type ApplicationCondition = {
   userId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `orgId` field. */
   orgId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `sessionId` field. */
+  sessionId?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `serial` field. */
   serial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `name` field. */
@@ -4935,6 +4941,7 @@ export type Application = Node & {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -10808,6 +10815,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -11257,6 +11265,7 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -11363,6 +11372,7 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -11474,6 +11484,7 @@ export type UpdateApplicationOnApplicationSectionForApplicationSectionApplicatio
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -11588,6 +11599,7 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -11926,6 +11938,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -12634,6 +12647,7 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -13428,6 +13442,7 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -13763,6 +13778,7 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -13974,6 +13990,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -14012,6 +14029,7 @@ export type ApplicationPatch = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -14035,6 +14053,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -15815,6 +15834,7 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -16015,6 +16035,7 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -16524,6 +16545,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -17112,6 +17134,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -17420,6 +17443,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -17477,6 +17501,7 @@ export type ApplicationSectionApplicationIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -17530,6 +17555,7 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -17603,6 +17629,7 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -17675,6 +17702,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -18355,6 +18383,7 @@ export type ApplicationInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -22521,6 +22550,7 @@ export type CreateApplicationMutationVariables = Exact<{
   templateId: Scalars['Int'];
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId: Scalars['String'];
   outcome?: Maybe<ApplicationOutcome>;
   trigger?: Maybe<Trigger>;
   sections?: Maybe<Array<ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput>>;
@@ -23183,8 +23213,8 @@ export const TemplateStageFragmentDoc = gql`
 }
     `;
 export const CreateApplicationDocument = gql`
-    mutation createApplication($name: String!, $serial: String!, $templateId: Int!, $userId: Int, $orgId: Int, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE, $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!], $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]) {
-  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, userId: $userId, orgId: $orgId, isActive: true, outcome: $outcome, trigger: $trigger, applicationSectionsUsingId: {create: $sections}, applicationResponsesUsingId: {create: $responses}}}) {
+    mutation createApplication($name: String!, $serial: String!, $templateId: Int!, $userId: Int, $orgId: Int, $sessionId: String!, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE, $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!], $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]) {
+  createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, userId: $userId, orgId: $orgId, sessionId: $sessionId, isActive: true, outcome: $outcome, trigger: $trigger, applicationSectionsUsingId: {create: $sections}, applicationResponsesUsingId: {create: $responses}}}) {
     application {
       userId
       orgId
@@ -23223,6 +23253,7 @@ export type CreateApplicationMutationFn = Apollo.MutationFunction<CreateApplicat
  *      templateId: // value for 'templateId'
  *      userId: // value for 'userId'
  *      orgId: // value for 'orgId'
+ *      sessionId: // value for 'sessionId'
  *      outcome: // value for 'outcome'
  *      trigger: // value for 'trigger'
  *      sections: // value for 'sections'
