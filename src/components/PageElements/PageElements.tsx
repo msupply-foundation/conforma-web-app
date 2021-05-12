@@ -24,7 +24,6 @@ import DecisionArea from '../Review/DecisionArea'
 import SummaryInformationElement from './Elements/SummaryInformationElement'
 import ApplicantResponseElement from './Elements/ApplicantResponseElement'
 import ReviewDecisionElement from './Elements/ReviewDecisionElement'
-import ConsolidationDecisionElement from './Elements/ConsolidationDecisionElement'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 
@@ -149,15 +148,14 @@ const PageElements: React.FC<PageElementProps> = ({
               element,
               thisReviewLatestResponse,
               latestOriginalReviewResponse,
-              isNewApplicationResponse,
-              isPendingReview,
               latestApplicationResponse,
+              isNewApplicationResponse,
+              isActiveReviewResponse,
             }) => {
-              // TODO: Replace with isPendingReview
-              const canConsolidate = canEdit && !thisReviewLatestResponse?.decision
+              const canConsolidate =
+                (isActiveReviewResponse as boolean) && !thisReviewLatestResponse?.decision
               const reviewButtonProps = {
-                canEdit: canConsolidate,
-                isPendingReview,
+                isActive: canConsolidate,
                 isNewReview: !!isNewApplicationResponse,
                 elementCode: element.code,
                 updateQuery,
@@ -169,6 +167,7 @@ const PageElements: React.FC<PageElementProps> = ({
                 applicationResponse: latestApplicationResponse,
                 reviewResponse: thisReviewLatestResponse as ReviewResponse,
                 originalReviewResponse: latestOriginalReviewResponse as ReviewResponse,
+                isConsolidation,
                 ExtraConsolidateAction: () =>
                   canConsolidate ? <ReviewButton {...reviewButtonProps} /> : null,
                 ExtraEditConsolidationAction: () =>
@@ -194,7 +193,13 @@ const PageElements: React.FC<PageElementProps> = ({
                       <ConsolidateReviewDecision {...consolidationProps} {...summaryViewProps} />
                     )}
                   </Segment>
-                  {toggleDecision && <DecisionArea {...consolidationProps} {...summaryViewProps} />}
+                  {toggleDecision && (
+                    <DecisionArea
+                      isActiveReview={true}
+                      {...consolidationProps}
+                      {...summaryViewProps}
+                    />
+                  )}
                 </div>
               )
             }
@@ -214,15 +219,15 @@ const PageElements: React.FC<PageElementProps> = ({
               element,
               thisReviewLatestResponse,
               latestOriginalReviewResponse,
-              isNewApplicationResponse,
-              isPendingReview,
               latestApplicationResponse,
+              isNewApplicationResponse,
+              isActiveReviewResponse,
             }) => {
               // TODO: Replace with isPendingReview
-              const canReview = canEdit && !thisReviewLatestResponse?.decision
+              const canReview =
+                (isActiveReviewResponse as boolean) && !thisReviewLatestResponse?.decision
               const reviewButtonProps = {
-                canEdit: canReview,
-                isPendingReview,
+                isActive: canReview,
                 isNewReview: !!isNewApplicationResponse,
                 elementCode: element.code,
                 updateQuery,
@@ -233,6 +238,8 @@ const PageElements: React.FC<PageElementProps> = ({
               const reviewProps: ReviewElementProps = {
                 applicationResponse: latestApplicationResponse,
                 reviewResponse: thisReviewLatestResponse as ReviewResponse,
+                isActiveReview: true,
+                isConsolidation,
                 ExtraReviewAction: () =>
                   canReview ? <ReviewButton {...reviewButtonProps} /> : null,
                 ExtraEditReviewAction: () =>
@@ -255,11 +262,9 @@ const PageElements: React.FC<PageElementProps> = ({
                     {element.category === TemplateElementCategory.Information ? (
                       <SummaryInformationElement {...summaryViewProps} />
                     ) : (
+                      // TODO: Show consolidator comment to Reviewer with button to Update
                       <ReviewApplicantResponse {...reviewProps} {...summaryViewProps} />
                     )}
-                    {/* {thisReviewLatestResponse && isConsolidation && (
-                      <ConsolidationDecisionElement {...props} />
-                    )} */}
                   </Segment>
                   {toggleDecision && <DecisionArea {...reviewProps} {...summaryViewProps} />}
                 </div>
@@ -274,10 +279,10 @@ const PageElements: React.FC<PageElementProps> = ({
   return null
 }
 
-// TODO: For now just use isConsolitadion = true to test this...
 type ConsolidateReviewDecisionProps = ConsolidationElementProps & SummaryViewWrapperProps
 const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
   reviewResponse,
+  isConsolidation,
   originalReviewResponse,
   ExtraConsolidateAction,
   ExtraEditConsolidationAction,
@@ -285,15 +290,23 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
 }) => (
   <div>
     <ApplicantResponseElement {...otherProps} />
-    <ReviewDecisionElement reviewResponse={originalReviewResponse} {...otherProps}>
-      {ExtraConsolidateAction && <ExtraConsolidateAction />}
-    </ReviewDecisionElement>
-    <ConsolidationDecisionElement
+    <ReviewDecisionElement
+      isActiveReview={true}
       reviewResponse={reviewResponse}
       originalReviewResponse={originalReviewResponse}
+      isConsolidation={isConsolidation}
+      {...otherProps}
     >
       {ExtraEditConsolidationAction && <ExtraEditConsolidationAction />}
-    </ConsolidationDecisionElement>
+    </ReviewDecisionElement>
+    <ReviewDecisionElement
+      isActiveReview={false}
+      reviewResponse={originalReviewResponse}
+      isConsolidation={false}
+      {...otherProps}
+    >
+      {ExtraConsolidateAction && <ExtraConsolidateAction />}
+    </ReviewDecisionElement>
   </div>
 )
 
@@ -320,22 +333,19 @@ const UpdateIcon: React.FC<{ onClick: Function }> = ({ onClick }) => (
 )
 
 interface ReviewButtonProps {
-  canEdit: boolean
-  isPendingReview?: boolean // Fix: isPendingReview not set when review doesn't have a decision
+  isActive: boolean
   isNewReview: boolean
   elementCode: string
   updateQuery: Function
 }
 
 const ReviewButton: React.FC<ReviewButtonProps> = ({
-  isPendingReview = false,
-  canEdit,
+  isActive,
   isNewReview,
   elementCode,
   updateQuery,
 }) =>
-  // TODO: Replace check for isPendingReview when that is fixed to return only for reviable responses...
-  canEdit ? (
+  isActive ? (
     <p className="link-style clickable" onClick={() => updateQuery({ openResponse: elementCode })}>
       <strong>
         {isNewReview ? strings.BUTTON_RE_REVIEW_RESPONSE : strings.BUTTON_REVIEW_RESPONSE}

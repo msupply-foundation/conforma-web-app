@@ -336,7 +336,6 @@ a:hover {
 // NOTE: The review page shares a lot of styles with Application Summary
 
 .review-comment-area {
-  background-color: @reviewCommentBackground;
   margin-top: 10px;
   margin-left: -20px;
   margin-right: -20px;
