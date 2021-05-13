@@ -5,7 +5,6 @@ import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/gr
 import ApplicantResponseElement from './ApplicantResponseElement'
 import ReviewResponseElement from './ReviewResponseElement'
 import strings from '../../../utils/constants'
-
 interface ReviewApplicantResponseProps {
   isNewApplicationResponse: boolean
   applicationResponse: ApplicationResponse
@@ -22,6 +21,9 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   showModal,
 }) => {
   const decisionExists = !!reviewResponse?.decision
+  // After review is submitted, reviewResponses are trimmed if they are not changed duplicates
+  // or if they are null, we only want to show reviewResponses that are linked to latestApplicationResponse
+  const isNewReview = applicationResponse.id !== reviewResponse.applicationResponse?.id
 
   return (
     <div>
@@ -42,15 +44,16 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
         )}
       </ApplicantResponseElement>
       {/* Review Response */}
-      <ReviewResponseElement
-        isCurrentReview={true}
-        isConsolidation={false}
-        isNewApplicationResponse={isNewApplicationResponse}
-        applicationResponse={applicationResponse}
-        reviewResponse={reviewResponse}
-      >
-        {decisionExists && <UpdateIcon onClick={showModal} />}
-      </ReviewResponseElement>
+      {isNewReview && (
+        <ReviewResponseElement
+          isCurrentReview={true}
+          isConsolidation={false}
+          applicationResponse={applicationResponse}
+          reviewResponse={reviewResponse}
+        >
+          {decisionExists && <UpdateIcon onClick={showModal} />}
+        </ReviewResponseElement>
+      )}
     </div>
   )
 }

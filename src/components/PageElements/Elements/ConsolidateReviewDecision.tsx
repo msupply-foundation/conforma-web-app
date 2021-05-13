@@ -26,6 +26,10 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
   const isConsolidation = true
   const decisionExists = !!reviewResponse?.decision
 
+  // After consolidation is submitted, reviewResponses are trimmed if they are not changed duplicates
+  // or if they are null, we only want to show reviewResponses that are linked to latestOriginalReviewResponse - from reviewer
+  const isNewConsolidation = originalReviewResponse?.id !== reviewResponse.reviewResponseLinkId
+
   return (
     <div>
       {/* Application Response */}
@@ -34,24 +38,24 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
         summaryViewProps={summaryViewProps}
       />
       {/* Consolidation Response */}
-      <ReviewResponseElement
-        isCurrentReview={true}
-        isConsolidation={isConsolidation}
-        isNewApplicationResponse={isNewApplicationResponse}
-        applicationResponse={applicationResponse}
-        reviewResponse={reviewResponse}
-        originalReviewResponse={originalReviewResponse}
-      >
-        {decisionExists && <UpdateIcon onClick={showModal} />}
-      </ReviewResponseElement>
+      {!isNewConsolidation && (
+        <ReviewResponseElement
+          isCurrentReview={true}
+          isConsolidation={isConsolidation}
+          applicationResponse={applicationResponse}
+          reviewResponse={reviewResponse}
+          originalReviewResponse={originalReviewResponse}
+        >
+          {decisionExists && <UpdateIcon onClick={showModal} />}
+        </ReviewResponseElement>
+      )}
       {/* Review Response */}
       {originalReviewResponse && (
         <ReviewResponseElement
           isCurrentReview={false}
-          isConsolidation={isConsolidation}
-          isNewApplicationResponse={isNewApplicationResponse}
+          isConsolidation={false}
           applicationResponse={applicationResponse}
-          reviewResponse={originalReviewResponse as ReviewResponse}
+          reviewResponse={originalReviewResponse}
         >
           {!decisionExists && (
             <ReviewElementTrigger title={strings.BUTTON_REVIEW_RESPONSE} onClick={showModal} />
