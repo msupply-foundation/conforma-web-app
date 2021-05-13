@@ -121,25 +121,22 @@ const PageElements: React.FC<PageElementProps> = ({
                 <SummaryInformationElement {...summaryViewProps} />
               </RenderElementWrapper>
             )
-          } else {
-            // TODO: Rename type of RenderElementWrapper accordingly
-            return (
-              <RenderElementWrapper key={element.code}>
-                <ApplicantResponseElement
-                  applicationResponse={latestApplicationResponse}
-                  summaryViewProps={summaryViewProps}
-                >
-                  {canApplicantEdit && (
-                    <UpdateIcon
-                      onClick={() =>
-                        push(`/application/${serial}/${sectionCode}/Page${pageNumber}`)
-                      }
-                    />
-                  )}
-                </ApplicantResponseElement>
-              </RenderElementWrapper>
-            )
           }
+          return (
+            <RenderElementWrapper key={element.code} isResponseUpdated={isResponseUpdated}>
+              <ApplicantResponseElement
+                applicationResponse={latestApplicationResponse}
+                summaryViewProps={summaryViewProps}
+                isResponseUpdated={isResponseUpdated}
+              >
+                {canApplicantEdit && (
+                  <UpdateIcon
+                    onClick={() => push(`/application/${serial}/${sectionCode}/Page${pageNumber}`)}
+                  />
+                )}
+              </ApplicantResponseElement>
+            </RenderElementWrapper>
+          )
         })}
       </Form>
     )
@@ -212,13 +209,20 @@ const PageElements: React.FC<PageElementProps> = ({
   return null
 }
 
-const RenderElementWrapper: React.FC<{ key: string }> = ({ key, children }) => {
+interface RenderElementWrapperProps {
+  key: string
+  isResponseUpdated?: boolean
+}
+const RenderElementWrapper: React.FC<RenderElementWrapperProps> = ({
+  key,
+  isResponseUpdated = false,
+  children,
+}) => {
+  const backgroudColour = isResponseUpdated ? 'changeable-background' : ''
   return (
-    <div key={`ReviewContainer_${key}`}>
-      <Segment basic key={`Review_${key}`} className="summary-page-element">
-        {children}
-      </Segment>
-    </div>
+    <Segment basic key={`Review_${key}`} className={`summary-page-element ${backgroudColour}`}>
+      {children}
+    </Segment>
   )
 }
 

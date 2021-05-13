@@ -48,7 +48,7 @@
 // Others
 @headersInteractiveMed: #656565;
 @borderColourDark: #777777;
-@reviewCommentBackground: azure;
+@activeCommentBackground: azure;
 
 /*------------------------
       Headers and Text

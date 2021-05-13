@@ -344,16 +344,6 @@ a:hover {
   border-bottom: 1px solid @surfacesMed;
 }
 
-.changeable-background {
-  background-color: @reviewCommentBackground;
-}
-
-.review-comment-grid.ui.grid {
-  padding: 10px 20px;
-  font-size: @smallerText;
-  color: @headersInteractiveLow;
-}
-
 .review-approve-all-button {
   margin-top: 20px;
 }
@@ -571,6 +561,12 @@ a:hover {
 // .element-summary-view {
 // }
 
+.element-grid.ui.grid {
+  padding: 10px 20px;
+  font-size: @smallerText;
+  color: @headersInteractiveLow;
+}
+
 // For change request borders
 .element-warning-border {
   border: 1px solid @headersInteractiveMed;
@@ -772,6 +768,11 @@ a:hover {
 .right-justify-content {
   width: 100%;
   text-align: right;
+}
+
+// Background for Active elements changes (Summary/Review/Consolidation)
+.changeable-background {
+  background-color: @activeCommentBackground !important;
 }
 
 /*******************************

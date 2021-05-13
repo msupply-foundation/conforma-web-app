@@ -18,12 +18,9 @@ const ApplicantResponseElement: React.FC<ApplicantResponseElementProps> = ({
   isResponseUpdated = false,
   children,
 }) => {
-  const backgroudColour = isResponseUpdated ? 'changable-background' : ''
-  // TODO: Fix tiny margin showing on left and right on grid.item
-  // TODO: Rename class className="review-comment-grid"
   return (
-    <Grid columns="equal" className={`review-comment-grid ${backgroudColour}`}>
-      <Grid.Column wodth={isResponseUpdated ? 4 : 14} textAlign="left">
+    <Grid columns="equal" className={'element-grid'}>
+      <Grid.Column width={isResponseUpdated ? 4 : 14} textAlign="left">
         <SummaryViewWrapper {...summaryViewProps} />
       </Grid.Column>
       {isResponseUpdated && (

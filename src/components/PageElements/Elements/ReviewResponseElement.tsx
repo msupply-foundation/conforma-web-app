@@ -24,7 +24,7 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
 
   return (
     <div className={`review-comment-area ${backgroudColour}`}>
-      <Grid columns="equal" className="review-comment-grid">
+      <Grid columns="equal" className="element-grid">
         <Grid.Column width={2} textAlign="left">
           {reviewResponse.review?.reviewer?.firstName} {reviewResponse.review?.reviewer?.lastName}
         </Grid.Column>
