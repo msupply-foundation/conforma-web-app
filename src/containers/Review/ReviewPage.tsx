@@ -102,7 +102,12 @@ const ReviewPage: React.FC<{
                 <SectionRowStatus {...section} />
               </div>
             )}
-            extraPageContent={(page: Page) => <ApproveAllButton page={page} />}
+            extraPageContent={(page: Page) => (
+              <ApproveAllButton
+                isConsolidation={!!section.assignment?.isConsolidation}
+                page={page}
+              />
+            )}
             scrollableAttachment={(page: Page) => (
               <ScrollableAttachment
                 code={`${section.details.code}P${page.number}`}
@@ -146,7 +151,10 @@ const SectionRowStatus: React.FC<SectionState> = (section) => {
   return null // Unexpected
 }
 
-const ApproveAllButton: React.FC<{ page: Page }> = ({ page }) => {
+const ApproveAllButton: React.FC<{ isConsolidation: boolean; page: Page }> = ({
+  isConsolidation,
+  page,
+}) => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
 
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)
@@ -159,7 +167,10 @@ const ApproveAllButton: React.FC<{ page: Page }> = ({ page }) => {
     responsesToReview.forEach((reviewResponse) => {
       if (!reviewResponse) return
       updateReviewResponse({
-        variables: { id: reviewResponse.id, decision: ReviewResponseDecision.Approve },
+        variables: {
+          id: reviewResponse.id,
+          decision: isConsolidation ? ReviewResponseDecision.Agree : ReviewResponseDecision.Approve,
+        },
       })
     })
   }
@@ -174,7 +185,9 @@ const ApproveAllButton: React.FC<{ page: Page }> = ({ page }) => {
         primary
         inverted
         onClick={massApprove}
-        content={`${strings.BUTTON_REVIEW_APPROVE_ALL} (${responsesToReview.length})`}
+        content={`${
+          isConsolidation ? strings.BUTTON_REVIEW_AGREE_ALL : strings.BUTTON_REVIEW_APPROVE_ALL
+        } (${responsesToReview.length})`}
       />
     </div>
   )
