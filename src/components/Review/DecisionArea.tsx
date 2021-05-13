@@ -85,9 +85,11 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
                 <SummaryViewWrapper {...summaryViewProps} />
               </Segment>
               <Segment basic>
-                <strong>
-                  {isConsolidation ? strings.LABEL_CONSOLIDATE : strings.LABEL_REVIEW}
-                </strong>
+                <Form.Field>
+                  <strong>
+                    {isConsolidation ? strings.LABEL_CONSOLIDATE : strings.LABEL_REVIEW}
+                  </strong>
+                </Form.Field>
                 {options.map(({ decision, label }) => (
                   <Form.Field key={decision}>
                     <Radio
@@ -138,7 +140,6 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
           </div>
         </div>
       </div>
-      )
     </Modal>
   )
 }
