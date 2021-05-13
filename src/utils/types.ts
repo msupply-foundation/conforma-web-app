@@ -13,6 +13,7 @@ import {
   TemplateElementCategory,
   User as GraphQLUser,
   Organisation as GraphQLOrg,
+  Filter,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
@@ -60,8 +61,10 @@ export {
   SortQuery,
   StageAndStatus,
   TemplateDetails,
+  TemplateCategoryDetails,
   TemplateElementState,
   TemplatePermissions,
+  TemplateInList,
   TemplatesDetails,
   UseGetApplicationProps,
   User,
@@ -428,6 +431,23 @@ interface StageDetails {
   title: string
   colour?: string
   description?: string
+}
+
+interface TemplateCategoryDetails {
+  categoryTitle: string
+  categoryIcon: string
+}
+
+interface TemplateInList {
+  id: number
+  name: string
+  code: string
+  templateCategory: TemplateCategoryDetails
+  permissions: PermissionPolicyType[]
+  hasApplyPermission: boolean
+  hasNonApplyPermissions: boolean
+  hasFilters: boolean
+  filters: Filter[]
 }
 
 interface TemplateDetails {
