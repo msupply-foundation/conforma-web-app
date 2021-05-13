@@ -38,10 +38,7 @@ const MainMenuBar: React.FC = () => {
           </Link>
         </List.Item>
         <List.Item>
-          <Link to="/">Menu Item 1</Link>
-        </List.Item>
-        <List.Item>
-          <Link to="/">Menu Item 2</Link>
+          <Link to="/layout">Layout helpers</Link>
         </List.Item>
       </List>
     </div>
