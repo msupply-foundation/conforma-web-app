@@ -4,14 +4,19 @@ import { SummaryViewWrapper } from '../../../formElementPlugins'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import strings from '../../../utils/constants'
 import getSimplifiedTimeDifference from '../../../utils/dateAndTime/getSimplifiedTimeDifference'
-import { ResponseElementProps } from '../../../utils/types'
+import { ApplicationResponse } from '../../../utils/generated/graphql'
 
-type ApplicantResponseElementProps = ResponseElementProps & SummaryViewWrapperProps
+interface ApplicantResponseElementProps {
+  applicationResponse: ApplicationResponse
+  summaryViewProps: SummaryViewWrapperProps
+  isResponseUpdated?: boolean
+}
+
 const ApplicantResponseElement: React.FC<ApplicantResponseElementProps> = ({
   applicationResponse,
+  summaryViewProps,
   isResponseUpdated = false,
   children,
-  ...summaryViewProps
 }) => {
   const backgroudColour = isResponseUpdated ? 'changable-background' : ''
   // TODO: Fix tiny margin showing on left and right on grid.item

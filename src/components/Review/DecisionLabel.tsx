@@ -5,14 +5,14 @@ import strings from '../../utils/constants'
 import getSimplifiedTimeDifference from '../../utils/dateAndTime/getSimplifiedTimeDifference'
 
 interface DecisionLabelProps {
-  isActiveReview: boolean
+  isCurrentReview: boolean
   isConsolidation: boolean
   reviewResponse: ReviewResponse
   originalReviewResponse?: ReviewResponse
 }
 
 const DecisionLabel: React.FC<DecisionLabelProps> = ({
-  isActiveReview,
+  isCurrentReview,
   isConsolidation,
   reviewResponse,
   originalReviewResponse,
@@ -33,7 +33,7 @@ const DecisionLabel: React.FC<DecisionLabelProps> = ({
 
   return (
     <div>
-      {isActiveReview && (
+      {isCurrentReview && (
         <Icon name="circle" size="tiny" color={isPositiveDecision() ? 'green' : 'pink'} />
       )}
       {getLabel()}

@@ -8,7 +8,8 @@ import SummaryViewWrapper from '../../formElementPlugins/SummaryViewWrapper'
 import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
 
-type DecisionAreaProps = SummaryViewWrapperProps & {
+interface DecisionAreaProps {
+  summaryViewProps: SummaryViewWrapperProps
   reviewResponse: ReviewResponse
   isConsolidation: boolean
 }
@@ -37,9 +38,9 @@ const optionsMap = {
 }
 
 const DecisionArea: React.FC<DecisionAreaProps> = ({
+  summaryViewProps,
   reviewResponse: initialReviewResponse,
   isConsolidation,
-  ...summaryViewProps
 }) => {
   const {
     query: { openResponse },

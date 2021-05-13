@@ -1,29 +1,50 @@
 import React from 'react'
 import { Icon, Grid } from 'semantic-ui-react'
-import { ReviewElementProps } from '../../../utils/types'
+import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/graphql'
 import { ElementDecisionLabel } from '../../Review'
 
-type ReviewDecisionElementProps = ReviewElementProps & { isActiveReview: boolean }
-const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
+interface ReviewResponseElementProps {
+  isCurrentReview: boolean
+  isConsolidation: boolean
+  isNewApplicationResponse: boolean
+  applicationResponse: ApplicationResponse
+  reviewResponse: ReviewResponse
+  originalReviewResponse?: ReviewResponse
+}
+
+const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
+  isCurrentReview,
+  reviewResponse,
   children,
-  isActiveReview,
   ...props
 }) => {
-  const { reviewResponse, isConsolidation } = props
   if (!reviewResponse) return null
   if (!reviewResponse?.decision) return null
 
   // After review is submitted, reviewResponses are trimmed if they are not changed duplicates
   // or if they are null, we only want to show reviewResponses that are linked to latestApplicationResponse
-  if (!isConsolidation && props.applicationResponse.id !== reviewResponse.applicationResponse?.id)
+  if (
+    !props.isConsolidation &&
+    props.applicationResponse.id !== reviewResponse.applicationResponse?.id
+  )
     return null
+
+  // console.log(
+  //   'isConsolidation',
+  //   isConsolidation,
+  //   props.originalReviewResponse?.id,
+  //   reviewResponse.reviewResponseLinkId
+  // )
 
   // After consolidation is submitted, reviewResponses are trimmed if they are not changed duplicates
   // or if they are null, we only want to show reviewResponses that are linked to latestOriginalReviewResponse - from reviewer
-  if (isConsolidation && props.originalReviewResponse?.id !== reviewResponse.reviewResponseLinkId)
+  if (
+    props.isConsolidation &&
+    props.originalReviewResponse?.id !== reviewResponse.reviewResponseLinkId
+  )
     return null
 
-  const backgroudColour = isActiveReview ? 'changeable-background' : ''
+  const backgroudColour = isCurrentReview ? 'changeable-background' : ''
 
   return (
     <div className={`review-comment-area ${backgroudColour}`}>
@@ -32,7 +53,11 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
           {reviewResponse.review?.reviewer?.firstName} {reviewResponse.review?.reviewer?.lastName}
         </Grid.Column>
         <Grid.Column width={12} textAlign="left">
-          <ElementDecisionLabel isActiveReview={isActiveReview} {...props} />
+          <ElementDecisionLabel
+            isCurrentReview={isCurrentReview}
+            reviewResponse={reviewResponse}
+            {...props}
+          />
           {!reviewResponse.comment ? null : (
             <div>
               <Icon name="comment alternate outline" color="grey" />
@@ -48,4 +73,4 @@ const ReviewDecisionElement: React.FC<ReviewDecisionElementProps> = ({
   )
 }
 
-export default ReviewDecisionElement
+export default ReviewResponseElement

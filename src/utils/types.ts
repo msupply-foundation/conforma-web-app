@@ -17,7 +17,6 @@ import {
 
 import { ValidationState } from '../formElementPlugins/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
-import React from 'react'
 
 export {
   ApplicationDetails,
@@ -46,13 +45,11 @@ export {
   ApplicationProgress,
   ResponseFull,
   ResponsesByCode,
-  ResponseElementProps,
   ReviewAction,
   ReviewDetails,
   ReviewProgress,
   ConsolidationProgress,
   ReviewQuestion,
-  ReviewElementProps,
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
@@ -295,12 +292,6 @@ interface ResponsesByCode {
   [key: string]: ResponseFull
 }
 
-interface ResponseElementProps {
-  applicationResponse: ApplicationResponse
-  isResponseUpdated?: boolean
-  // ExtraUserAction?: React.FC
-}
-
 type ReviewSectionComponentProps = {
   fullStructure: FullStructure
   section: SectionState
@@ -326,15 +317,6 @@ interface ReviewQuestion {
   responseId: number
   id: number
   sectionIndex: number
-}
-
-interface ReviewElementProps {
-  applicationResponse: ApplicationResponse
-  reviewResponse: ReviewResponse
-  originalReviewResponse?: ReviewResponse
-  isConsolidation: boolean
-  ExtraReviewAction?: React.FC
-  ExtraEditReviewAction?: React.FC
 }
 
 interface ReviewQuestionDecision {
