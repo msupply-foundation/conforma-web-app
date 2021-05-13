@@ -26,6 +26,8 @@ export default {
   BUTTON_BACK_TO: 'Back to',
   BUTTON_CLEAR_SEARCH: 'Clear Search',
   BUTTON_NEXT: 'Next',
+  BUTTON_DASHBOARD_NEW: 'New',
+  BUTTON_DASHBOARD_VIEW_ALL: 'View All',
   BUTTON_PREVIOUS: 'Previous',
   BUTTON_REVIEW_APPROVE_ALL: 'Approve all ',
   BUTTON_REVIEW_RE_REVIEW: 'Re-Review',
@@ -128,4 +130,6 @@ export default {
   PAGE_TITLE_CREATE: 'New Application | Application Manager',
   PAGE_TITLE_APPLICATION: 'Application %1 | Application Manager',
   PAGE_TITLE_REVIEW: 'Review %1 | Application Manager',
+  DEFAULT_TEMPLATE_CATEGORY_TITLE: 'General',
+  DEFAULT_TEMPLATE_CATEGORY_ICON: 'globe',
 }
