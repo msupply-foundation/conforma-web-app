@@ -164,3 +164,6 @@
 
 // Box shadow -- used in Login form
 @basicBoxShadow: rgb(204, 201, 201) 0px -3px 10px 0px;
+
+// Box shadow -- used in Dashboard 
+@templateBoxShadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;

@@ -738,6 +738,136 @@ a:hover {
 }
 
 /*--------------------------------
+      Dashboard
+---------------------------------*/
+
+// Layouts
+#dashboard {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#dashboard .template-category {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+#dashboard .template-category .title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+
+#dashboard .templates {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+#dashboard .template {
+  display: flex;
+  flex-direction: column;
+}
+
+#dashboard .template .title {
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+  align-items: start;
+}
+
+#dashboard .filters {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+#dashboard .filter {
+  display: flex;
+  align-items: center;
+}
+
+#dashboard .view-all-area {
+  display: flex;
+  max-width: 100%;
+}
+
+#dashboard .view-all {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-grow: 1;
+}
+
+
+// Margin and padding
+#dashboard .template {
+  margin: 15px;
+}
+
+#dashboard .template-category {
+  margin: 10px;
+}
+
+#dashboard .template .title {
+  padding: 10px;
+  padding-bottom: 3px;
+}
+
+#dashboard .template-category .title .header {
+  margin: 2px;
+}
+
+#dashboard .template-category .title a {
+  margin-left: 10px;
+}
+
+#dashboard .filters {
+  margin: 5px;
+  padding: 3px
+}
+
+#dashboard .filter {
+  margin: 2px;
+}
+
+#dashboard .view-all {
+  padding: 5px;
+}
+
+#dashboard .view-all i {
+  padding-right: 6px;
+}
+
+// Look and feel
+#dashboard .template {
+  max-width: 330px;
+  border-radius: @borderRadius;
+  background-color: @surfacesWhite;
+  box-shadow: @templateBoxShadow;
+}
+
+#dashboard .view-all {
+  font-weight: 600;
+  color:grey !important;
+  border-top: 1px solid rgba(0,0,0,.08);
+}
+
+
+// #dashboard .template-category  .category-header {
+
+// }
+
+/*--------------------------------
       General used classes
 ---------------------------------*/
 
@@ -841,6 +971,9 @@ h5:last-child,
 h6:first-child {
   margin-bottom: 0em;
 }
+
+
+
 
 /*-----------------------------------------------------
       Mobile & Desktop
