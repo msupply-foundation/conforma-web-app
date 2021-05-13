@@ -474,6 +474,7 @@ interface User {
   email: string
   dateOfBirth?: Date | null
   organisation?: Organisation
+  sessionId: string
 }
 
 interface OrganisationSimple {

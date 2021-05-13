@@ -66,6 +66,7 @@ const ApplicationCreate: React.FC = () => {
       templateId: template.id,
       userId: currentUser?.userId,
       orgId: currentUser?.organisation?.orgId,
+      sessionId: currentUser?.sessionId as string,
       templateSections: sections.map(({ id }) => {
         return { templateSectionId: id }
       }),
