@@ -7,7 +7,7 @@ import {
   Approval,
   Admin,
   Config,
-  Home,
+  Dashboard,
   Notification,
   NotificationsList,
   NoMatch,
@@ -40,7 +40,7 @@ const SiteLayout: React.FC = () => {
         <Container id="content-area">
           <Switch>
             <Route exact path="/">
-              <Home />
+              <Dashboard />
             </Route>
             <Route exact path="/layout">
               <LayoutHelpers />
