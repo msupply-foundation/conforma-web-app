@@ -46,7 +46,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
         )}
       </ApplicantResponseElement>
       {/* Review Response */}
-      {isNewReview && reviewResponse && (
+      {!isNewReview && reviewResponse && (
         <ReviewResponseElement
           isCurrentReview={true}
           isConsolidation={false}
