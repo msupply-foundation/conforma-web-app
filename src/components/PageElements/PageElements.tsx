@@ -112,7 +112,7 @@ const PageElements: React.FC<PageElementProps> = ({
           const { element, isChanged, isChangeRequest, latestApplicationResponse } = state
 
           const isResponseUpdated = !!isChangeRequest || !!isChanged
-          const canApplicantEdit = canEdit && isUpdating ? isResponseUpdated : true
+          const canApplicantEdit = isUpdating ? isResponseUpdated && canEdit : canEdit
           const summaryViewProps = getSummaryViewProps(element)
 
           if (element.category === TemplateElementCategory.Information) {
