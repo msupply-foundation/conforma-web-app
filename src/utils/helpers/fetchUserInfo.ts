@@ -17,8 +17,9 @@ const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
 
   fetch(userInfoUrl, { headers: createAuthorisationHeader(JWT) })
     .then((res: any) => res.json())
-    .then(({ templatePermissions, user, success }) => {
+    .then(({ templatePermissions, JWT, user, success }) => {
       if (!success) logout()
+      localStorage.setItem(LOCAL_STORAGE_JWT_KEY, JWT)
 
       // Set userinfo to context after receiving it from endpoint
       if (user && templatePermissions) {
