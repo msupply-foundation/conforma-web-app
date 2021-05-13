@@ -48,12 +48,12 @@ export {
   ReviewAction,
   ReviewDetails,
   ReviewProgress,
-  ReviewAndConsolidationProgress,
   ConsolidationProgress,
   ReviewQuestion,
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
+  SectionAssignment,
   SectionState,
   SectionsStructure,
   SetStrictSectionPage,
@@ -239,7 +239,6 @@ interface Page {
   progress: ApplicationProgress
   reviewProgress?: ReviewProgress
   consolidationProgress?: ConsolidationProgress
-  reviewAndConsolidationProgress?: ReviewAndConsolidationProgress
   changeRequestsProgress?: ChangeRequestsProgress
   state: PageElement[]
 }
@@ -258,7 +257,7 @@ type PageElement = {
   isNewApplicationResponse?: boolean
   review?: ReviewQuestionDecision
   isPendingReview?: boolean
-  assignmentId: number
+  reviewQuestionAssignmentId: number
   isAssigned?: boolean
   isChangeRequest?: boolean
   isChanged?: boolean
@@ -300,6 +299,7 @@ type ReviewSectionComponentProps = {
   thisReview?: ReviewDetails | null
   action: ReviewAction
   isAssignedToCurrentUser: boolean
+  isConsolidation: boolean
 }
 
 interface ReviewDetails {
@@ -344,28 +344,28 @@ interface SectionDetails {
   totalPages: number
 }
 
-interface ReviewAndConsolidationProgress {
+interface BaseReviewProgress {
   totalReviewable: number
   totalPendingReview: number
   totalActive: number // review or application responses that are in progress (as oppose to awaiting review to be started)
 }
 
-interface ReviewProgress {
+interface ReviewProgress extends BaseReviewProgress {
   doneConform: number
   doneNonConform: number
   doneNewReviewable: number
   totalNewReviewable: number
 }
 
-interface ConsolidationProgress {
-  totalConform: number
-  totalNonConform: number
+interface ConsolidationProgress extends BaseReviewProgress {
   doneAgreeConform: number
   doneAgreeNonConform: number
   doneDisagree: number
   doneActiveDisagree: number
   doneActiveAgreeConform: number
   doneActiveAgreeNonConform: number
+  totalConform: number
+  totalNonConform: number
 }
 
 enum ReviewAction {
@@ -385,19 +385,20 @@ interface ChangeRequestsProgress {
   doneChangeRequests: number
 }
 
+interface SectionAssignment {
+  action: ReviewAction
+  isAssignedToCurrentUser: boolean
+  isConsolidation: boolean
+  isReviewable: boolean
+}
+
 interface SectionState {
   details: SectionDetails
   progress?: ApplicationProgress
   reviewProgress?: ReviewProgress
-  reviewAndConsolidationProgress?: ReviewAndConsolidationProgress
   consolidationProgress?: ConsolidationProgress
-  reviewAction?: {
-    action: ReviewAction
-    isAssignedToCurrentUser: boolean
-    isReviewable: boolean
-  }
+  assignment?: SectionAssignment
   changeRequestsProgress?: ChangeRequestsProgress
-  assigned?: ReviewerDetails
   pages: {
     [pageNum: number]: Page
   }

@@ -11,7 +11,6 @@ import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignme
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const {
     action,
-    section: { reviewProgress },
     isAssignedToCurrentUser,
     assignment: { isCurrentUserReviewer },
   } = props
@@ -20,26 +19,28 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
     switch (action) {
       case ReviewAction.canContinue: {
         if (isAssignedToCurrentUser) {
-          if (reReviewableCount(reviewProgress) > 0) return <ReReviewButton {...props} />
-          else return <ContinueReviewButton {...props} />
-        } else
-          return (
-            <Label className="simple-label">
-              <em>{strings.STATUS_IN_PROGRESS}</em>
-            </Label>
-          )
+          return <StartContinueOrRestartButton {...props} />
+        }
+        return (
+          <Label className="simple-label">
+            <em>{strings.STATUS_IN_PROGRESS}</em>
+          </Label>
+        )
       }
+
       case ReviewAction.canView: {
         return <ViewReviewIcon {...props} />
       }
 
       case ReviewAction.canStartReview: {
-        if (isAssignedToCurrentUser) return <StartReviewButton {...props} />
-        else return <NotStartedLabel />
+        if (isAssignedToCurrentUser) {
+          return <StartContinueOrRestartButton {...props} />
+        }
+        return <NotStartedLabel />
       }
 
       case ReviewAction.canReReview: {
-        if (isAssignedToCurrentUser) return <ReReviewButton {...props} />
+        if (isAssignedToCurrentUser) return <StartContinueOrRestartButton {...props} />
 
         return null
       }
@@ -60,57 +61,59 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
 const reReviewableCount = (reviewProgress?: ReviewProgress) =>
   (reviewProgress?.totalNewReviewable || 0) - (reviewProgress?.doneNewReviewable || 0)
 
-// RE-REVIEW button
-const ReReviewButton: React.FC<ReviewSectionComponentProps> = ({
+// START REVIEW, CONTINUE REVIEW OR RE-REVIEW BUTTON
+const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
   section: { details, reviewProgress },
   assignment,
+  thisReview,
+  action,
 }) => {
   const {
     location: { pathname },
     push,
   } = useRouter()
 
-  const [restartReviewError, setRestartReviewError] = useState(false)
-  const reviewId = fullStructure.thisReview?.id
+  const [error, setError] = useState(false)
 
   const restartReview = useRestartReview({
-    reviewId: reviewId || 0,
+    reviewId: thisReview?.id || 0,
     structure: fullStructure,
     assignment,
   })
 
-  const restart = async () => {
-    {
-      try {
-        await restartReview()
-        push(`${pathname}/${reviewId}?activeSections=${details.code}`)
-      } catch (e) {
-        console.error(e)
-        return setRestartReviewError(true)
-      }
+  const createReview = useCreateReview({
+    structure: fullStructure,
+    assignment,
+  })
+
+  const getButtonName = () => {
+    const reReviewCount = reReviewableCount(reviewProgress)
+    if (reReviewCount > 0) return `${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewCount})`
+    return action === ReviewAction.canContinue ? strings.ACTION_CONTINUE : strings.ACTION_START
+  }
+
+  const doAction = async () => {
+    let reviewId = thisReview?.id as number
+    if (thisReview?.status == ReviewStatus.Draft)
+      return push(`${pathname}/${reviewId}?activeSections=${details.code}`)
+
+    try {
+      if (thisReview) await restartReview()
+      else reviewId = (await createReview()).data?.createReview?.review?.id as number
+      push(`${pathname}/${reviewId}?activeSections=${details.code}`)
+    } catch (e) {
+      console.log(e)
+      return setError(true)
     }
   }
 
-  if (restartReviewError) return <Message error title={strings.ERROR_GENERIC} />
-
-  if (reReviewableCount(reviewProgress) === 0) return null
-
-  const reReviewCount = reReviewableCount(reviewProgress)
-
-  if (reReviewCount === 0) return null
-
-  // Either need to run a mutation to re-review or just navigate to section
-  const buttonAction =
-    fullStructure.thisReview?.status == ReviewStatus.Draft
-      ? () => push(`${pathname}/${reviewId}?activeSections=${details.code}`)
-      : restart
+  if (error) return <Message error title={strings.ERROR_GENERIC} />
 
   return (
-    <a
-      className="user-action clickable"
-      onClick={buttonAction}
-    >{`${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewCount})`}</a>
+    <a className="user-action clickable" onClick={doAction}>
+      {getButtonName()}
+    </a>
   )
 }
 
@@ -139,67 +142,6 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   return (
     <a className="user-action clickable" onClick={selfAssignReview}>
       {strings.BUTTON_SELF_ASSIGN}
-    </a>
-  )
-}
-
-// START REVIEW button
-const StartReviewButton: React.FC<ReviewSectionComponentProps> = ({
-  assignment,
-  fullStructure,
-  section: { details },
-}) => {
-  const {
-    location: { pathname },
-    push,
-  } = useRouter()
-
-  const [startReviewError, setStartReviewError] = useState(false)
-
-  const { createReviewFromStructure } = useCreateReview({
-    structure: fullStructure,
-    assignment,
-  })
-
-  const startReview = async () => {
-    {
-      try {
-        const result = await createReviewFromStructure(fullStructure)
-        const newReviewId = result.data?.createReview?.review?.id
-        push(`${pathname}/${newReviewId}?activeSections=${details.code}`)
-      } catch (e) {
-        console.error(e)
-        return setStartReviewError(true)
-      }
-    }
-  }
-
-  if (startReviewError) return <Message error title={strings.ERROR_GENERIC} />
-
-  return (
-    <a className="user-action clickable" onClick={startReview}>
-      {strings.ACTION_START}
-    </a>
-  )
-}
-
-// CONTINUE REVIEW Button
-const ContinueReviewButton: React.FC<ReviewSectionComponentProps> = ({
-  fullStructure,
-  section: { details },
-}) => {
-  const {
-    location: { pathname },
-  } = useRouter()
-
-  const reviewId = fullStructure.thisReview?.id
-
-  return (
-    <a
-      className="user-action clickable"
-      href={`${pathname}/${reviewId}?activeSections=${details.code}`}
-    >
-      {strings.ACTION_VIEW}
     </a>
   )
 }

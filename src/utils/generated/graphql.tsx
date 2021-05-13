@@ -22582,9 +22582,7 @@ export type CreateApplicationMutation = (
 );
 
 export type CreateReviewMutationVariables = Exact<{
-  reviewAssigmentId: Scalars['Int'];
-  trigger?: Maybe<Trigger>;
-  applicationResponses?: Maybe<Array<ReviewResponseReviewIdFkeyReviewResponseCreateInput>>;
+  reviewInput: ReviewInput;
 }>;
 
 
@@ -23268,8 +23266,8 @@ export type CreateApplicationMutationHookResult = ReturnType<typeof useCreateApp
 export type CreateApplicationMutationResult = Apollo.MutationResult<CreateApplicationMutation>;
 export type CreateApplicationMutationOptions = Apollo.BaseMutationOptions<CreateApplicationMutation, CreateApplicationMutationVariables>;
 export const CreateReviewDocument = gql`
-    mutation createReview($reviewAssigmentId: Int!, $trigger: Trigger = ON_REVIEW_CREATE, $applicationResponses: [ReviewResponseReviewIdFkeyReviewResponseCreateInput!]) {
-  createReview(input: {review: {reviewAssignmentId: $reviewAssigmentId, trigger: $trigger, reviewDecisionsUsingId: {create: {decision: NO_DECISION}}, reviewResponsesUsingId: {create: $applicationResponses}}}) {
+    mutation createReview($reviewInput: ReviewInput!) {
+  createReview(input: {review: $reviewInput}) {
     review {
       id
       reviewAssignment {
@@ -23299,9 +23297,7 @@ export type CreateReviewMutationFn = Apollo.MutationFunction<CreateReviewMutatio
  * @example
  * const [createReviewMutation, { data, loading, error }] = useCreateReviewMutation({
  *   variables: {
- *      reviewAssigmentId: // value for 'reviewAssigmentId'
- *      trigger: // value for 'trigger'
- *      applicationResponses: // value for 'applicationResponses'
+ *      reviewInput: // value for 'reviewInput'
  *   },
  * });
  */
