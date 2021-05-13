@@ -9,17 +9,19 @@ import { Icon } from 'semantic-ui-react'
 interface ConsolidateReviewDecisionProps {
   applicationResponse: ApplicationResponse
   summaryViewProps: SummaryViewWrapperProps
-  reviewResponse: ReviewResponse
+  isActiveReviewResponse: boolean
   isNewApplicationResponse: boolean
   /* can add check for isNewReviewResponse */
+  reviewResponse?: ReviewResponse
   originalReviewResponse?: ReviewResponse
   showModal: () => void
 }
 const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
   applicationResponse,
   summaryViewProps,
-  reviewResponse,
+  isActiveReviewResponse,
   isNewApplicationResponse,
+  reviewResponse,
   originalReviewResponse,
   showModal,
 }) => {
@@ -28,7 +30,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
 
   // After consolidation is submitted, reviewResponses are trimmed if they are not changed duplicates
   // or if they are null, we only want to show reviewResponses that are linked to latestOriginalReviewResponse - from reviewer
-  const isNewConsolidation = originalReviewResponse?.id !== reviewResponse.reviewResponseLinkId
+  const isNewConsolidation = originalReviewResponse?.id !== reviewResponse?.reviewResponseLinkId
 
   return (
     <div>
@@ -38,7 +40,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
         summaryViewProps={summaryViewProps}
       />
       {/* Consolidation Response */}
-      {!isNewConsolidation && (
+      {!isNewConsolidation && reviewResponse && (
         <ReviewResponseElement
           isCurrentReview={true}
           isConsolidation={isConsolidation}
@@ -46,7 +48,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
           reviewResponse={reviewResponse}
           originalReviewResponse={originalReviewResponse}
         >
-          {decisionExists && <UpdateIcon onClick={showModal} />}
+          {isActiveReviewResponse && decisionExists && <UpdateIcon onClick={showModal} />}
         </ReviewResponseElement>
       )}
       {/* Review Response */}
@@ -57,7 +59,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
           applicationResponse={applicationResponse}
           reviewResponse={originalReviewResponse}
         >
-          {!decisionExists && (
+          {isActiveReviewResponse && !decisionExists && (
             <ReviewElementTrigger title={strings.BUTTON_REVIEW_RESPONSE} onClick={showModal} />
           )}
         </ReviewResponseElement>
