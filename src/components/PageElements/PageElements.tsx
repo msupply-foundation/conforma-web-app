@@ -172,26 +172,26 @@ const PageElements: React.FC<PageElementProps> = ({
               } else {
                 return (
                   <RenderElementWrapper key={element.code}>
-                    {isConsolidation
-                      ? thisReviewLatestResponse && (
-                          <ConsolidateReviewDecision
-                            applicationResponse={latestApplicationResponse}
-                            summaryViewProps={summaryViewProps}
-                            reviewResponse={thisReviewLatestResponse}
-                            originalReviewResponse={latestOriginalReviewResponse}
-                            isNewApplicationResponse={!!isNewApplicationResponse}
-                            showModal={() => updateQuery({ openResponse: element.code })}
-                          />
-                        )
-                      : thisReviewLatestResponse && (
-                          <ReviewApplicantResponse
-                            applicationResponse={latestApplicationResponse}
-                            summaryViewProps={summaryViewProps}
-                            reviewResponse={thisReviewLatestResponse}
-                            isNewApplicationResponse={!!isNewApplicationResponse}
-                            showModal={() => updateQuery({ openResponse: element.code })}
-                          />
-                        )}
+                    {isConsolidation ? (
+                      <ConsolidateReviewDecision
+                        applicationResponse={latestApplicationResponse}
+                        summaryViewProps={summaryViewProps}
+                        reviewResponse={thisReviewLatestResponse}
+                        originalReviewResponse={latestOriginalReviewResponse}
+                        isActiveReviewResponse={!!isActiveReviewResponse}
+                        isNewApplicationResponse={!!isNewApplicationResponse}
+                        showModal={() => updateQuery({ openResponse: element.code })}
+                      />
+                    ) : (
+                      <ReviewApplicantResponse
+                        applicationResponse={latestApplicationResponse}
+                        summaryViewProps={summaryViewProps}
+                        reviewResponse={thisReviewLatestResponse}
+                        isActiveReviewResponse={!!isActiveReviewResponse}
+                        isNewApplicationResponse={!!isNewApplicationResponse}
+                        showModal={() => updateQuery({ openResponse: element.code })}
+                      />
+                    )}
                     {toggleDecision && thisReviewLatestResponse && (
                       <DecisionArea
                         isConsolidation={isConsolidation}
