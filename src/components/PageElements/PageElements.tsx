@@ -117,14 +117,14 @@ const PageElements: React.FC<PageElementProps> = ({
 
           if (element.category === TemplateElementCategory.Information) {
             return (
-              <RenderElementWrapper key={element.id}>
+              <RenderElementWrapper key={element.code}>
                 <SummaryInformationElement {...summaryViewProps} />
               </RenderElementWrapper>
             )
           } else {
             // TODO: Rename type of RenderElementWrapper accordingly
             return (
-              <RenderElementWrapper key={element.id}>
+              <RenderElementWrapper key={element.code}>
                 <ApplicantResponseElement
                   applicationResponse={latestApplicationResponse}
                   summaryViewProps={summaryViewProps}
@@ -161,16 +161,17 @@ const PageElements: React.FC<PageElementProps> = ({
             }) => {
               const toggleDecision = openResponse === element.code
               const summaryViewProps = getSummaryViewProps(element)
+
               // Information - no review
               if (element.category === TemplateElementCategory.Information) {
                 return (
-                  <RenderElementWrapper key={element.id}>
+                  <RenderElementWrapper key={element.code}>
                     <SummaryInformationElement {...summaryViewProps} />
                   </RenderElementWrapper>
                 )
               } else {
                 return (
-                  <RenderElementWrapper key={element.id}>
+                  <RenderElementWrapper key={element.code}>
                     {isConsolidation
                       ? thisReviewLatestResponse && (
                           <ConsolidateReviewDecision
@@ -211,13 +212,15 @@ const PageElements: React.FC<PageElementProps> = ({
   return null
 }
 
-const RenderElementWrapper: React.FC<{ key: number }> = ({ key, children }) => (
-  <div key={`ReviewContainer_${key}`}>
-    <Segment basic key={`Review_${key}`} className="summary-page-element">
-      {children}
-    </Segment>
-  </div>
-)
+const RenderElementWrapper: React.FC<{ key: string }> = ({ key, children }) => {
+  return (
+    <div key={`ReviewContainer_${key}`}>
+      <Segment basic key={`Review_${key}`} className="summary-page-element">
+        {children}
+      </Segment>
+    </div>
+  )
+}
 
 const UpdateIcon: React.FC<{ onClick: Function }> = ({ onClick }) => (
   <Icon className="clickable" name="pencil" size="large" color="blue" onClick={onClick} />
