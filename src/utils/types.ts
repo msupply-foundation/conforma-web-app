@@ -16,7 +16,7 @@ import {
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
-import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { OperatorNode, ValueNode } from '@openmsupply/expression-evaluator/lib/types'
 
 export {
   ApplicationDetails,
@@ -35,6 +35,7 @@ export {
   ElementPluginParameterValue,
   ElementPluginParameters,
   ElementState,
+  EvaluatorNode,
   EvaluatorParameters,
   FullStructure,
   LooseString,
@@ -71,6 +72,8 @@ export {
   LoginPayload,
   BasicStringObject,
 }
+
+type EvaluatorNode = OperatorNode | ValueNode
 
 interface ApplicationDetails {
   id: number
@@ -157,7 +160,7 @@ type DecisionOption = {
   value: boolean
 }
 
-type ElementPluginParameterValue = string | number | string[] | IQueryNode
+type ElementPluginParameterValue = string | number | string[] | EvaluatorNode
 
 interface ElementPluginParameters {
   [key: string]: ElementPluginParameterValue
@@ -173,7 +176,7 @@ interface ElementBase {
   elementIndex: number
   page: number
   category: TemplateElementCategory
-  validationExpression: IQueryNode
+  validationExpression: EvaluatorNode
   validationMessage: string | null
   helpText: string | null
   parameters: any
@@ -441,9 +444,9 @@ interface TemplateDetails {
 }
 
 interface TemplateElementState extends ElementBase {
-  isRequiredExpression: IQueryNode
-  isVisibleExpression: IQueryNode
-  isEditableExpression: IQueryNode
+  isRequiredExpression: EvaluatorNode
+  isVisibleExpression: EvaluatorNode
+  isEditableExpression: EvaluatorNode
 }
 
 interface TemplatePermissions {
