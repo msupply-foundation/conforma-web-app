@@ -29,7 +29,7 @@ const Dashboard: React.FC = () => {
   return (
     <div id="dashboard">
       {templatesByCategory.map(
-        ({ templates, templateCategory: { categoryIcon, categoryTitle } }) => (
+        ({ templates, templateCategory: { icon: categoryIcon, title: categoryTitle } }) => (
           <div key={categoryTitle} className="template-category">
             <div className="title">
               {categoryIcon && <Icon size="large" color="grey" name={categoryIcon} />}

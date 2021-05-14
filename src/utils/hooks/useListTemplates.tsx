@@ -67,7 +67,7 @@ const useListTemplates = (templatePermissions: TemplatePermissions, isLoading: b
 const getTemplatesByCategory = (templates: TemplateInList[]) => {
   const templatesByCategoryObject: { [categoryTitle: string]: TemplateInList[] } = {}
   templates.forEach((template) => {
-    const title = String(template?.templateCategory?.categoryTitle)
+    const title = String(template?.templateCategory?.title)
     if (!templatesByCategoryObject[title]) templatesByCategoryObject[title] = []
     templatesByCategoryObject[title].push(template)
   })
@@ -109,8 +109,8 @@ const convertFromTemplateToTemplateDetails = (
     hasApplyPermission,
     hasNonApplyPermissions,
     templateCategory: {
-      categoryIcon,
-      categoryTitle,
+      icon: categoryIcon,
+      title: categoryTitle,
     },
   }
 

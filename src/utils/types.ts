@@ -435,8 +435,8 @@ interface StageDetails {
 }
 
 interface TemplateCategoryDetails {
-  categoryTitle: string
-  categoryIcon: SemanticICONS | undefined
+  title: string
+  icon: SemanticICONS | undefined
 }
 
 interface TemplateInList {
