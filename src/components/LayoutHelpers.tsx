@@ -15,7 +15,7 @@ const LayoutHelpers: React.FC = () => {
     return null
   }
 
-  usePageTitle(strings.PAGE_TITLE_HOME)
+  usePageTitle('Layout Helpers')
 
   return (
     <div>
