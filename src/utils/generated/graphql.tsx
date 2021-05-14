@@ -2172,8 +2172,8 @@ export type ReviewAssignmentFilter = {
   status?: Maybe<ReviewAssignmentStatusFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateSectionRestrictions` field. */
-  templateSectionRestrictions?: Maybe<StringListFilter>;
+  /** Filter by the object’s `allowedSections` field. */
+  allowedSections?: Maybe<StringListFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `timeUpdated` field. */
@@ -2570,6 +2570,10 @@ export type TemplatePermissionFilter = {
   permissionNameId?: Maybe<IntFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `allowedSections` field. */
+  allowedSections?: Maybe<StringListFilter>;
+  /** Filter by the object’s `canSelfAssign` field. */
+  canSelfAssign?: Maybe<BooleanFilter>;
   /** Filter by the object’s `stageNumber` field. */
   stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `levelNumber` field. */
@@ -4540,8 +4544,8 @@ export enum ReviewAssignmentsOrderBy {
   StatusDesc = 'STATUS_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  TemplateSectionRestrictionsAsc = 'TEMPLATE_SECTION_RESTRICTIONS_ASC',
-  TemplateSectionRestrictionsDesc = 'TEMPLATE_SECTION_RESTRICTIONS_DESC',
+  AllowedSectionsAsc = 'ALLOWED_SECTIONS_ASC',
+  AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
   TimeUpdatedAsc = 'TIME_UPDATED_ASC',
@@ -4574,8 +4578,8 @@ export type ReviewAssignmentCondition = {
   status?: Maybe<ReviewAssignmentStatus>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateSectionRestrictions` field. */
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `allowedSections` field. */
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `timeUpdated` field. */
@@ -4613,7 +4617,7 @@ export type ReviewAssignment = Node & {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -5124,6 +5128,10 @@ export enum TemplatePermissionsOrderBy {
   PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  AllowedSectionsAsc = 'ALLOWED_SECTIONS_ASC',
+  AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
+  CanSelfAssignAsc = 'CAN_SELF_ASSIGN_ASC',
+  CanSelfAssignDesc = 'CAN_SELF_ASSIGN_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
   StageNumberDesc = 'STAGE_NUMBER_DESC',
   LevelNumberAsc = 'LEVEL_NUMBER_ASC',
@@ -5142,6 +5150,10 @@ export type TemplatePermissionCondition = {
   permissionNameId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `allowedSections` field. */
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `canSelfAssign` field. */
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `stageNumber` field. */
   stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `levelNumber` field. */
@@ -5170,6 +5182,8 @@ export type TemplatePermission = Node & {
   id: Scalars['Int'];
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign: Scalars['Boolean'];
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -7896,8 +7910,12 @@ export enum PermissionsAllsOrderBy {
   StageNumberDesc = 'STAGE_NUMBER_DESC',
   ReviewLevelAsc = 'REVIEW_LEVEL_ASC',
   ReviewLevelDesc = 'REVIEW_LEVEL_DESC',
-  TemplatePermissionRestrictionsAsc = 'TEMPLATE_PERMISSION_RESTRICTIONS_ASC',
-  TemplatePermissionRestrictionsDesc = 'TEMPLATE_PERMISSION_RESTRICTIONS_DESC',
+  RestrictionsAsc = 'RESTRICTIONS_ASC',
+  RestrictionsDesc = 'RESTRICTIONS_DESC',
+  AllowedSectionsAsc = 'ALLOWED_SECTIONS_ASC',
+  AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
+  CanSelfAssignAsc = 'CAN_SELF_ASSIGN_ASC',
+  CanSelfAssignDesc = 'CAN_SELF_ASSIGN_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   TemplateCodeAsc = 'TEMPLATE_CODE_ASC',
@@ -7932,8 +7950,12 @@ export type PermissionsAllCondition = {
   stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewLevel` field. */
   reviewLevel?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templatePermissionRestrictions` field. */
-  templatePermissionRestrictions?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `restrictions` field. */
+  restrictions?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `allowedSections` field. */
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `canSelfAssign` field. */
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `templateCode` field. */
@@ -7968,8 +7990,12 @@ export type PermissionsAllFilter = {
   stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewLevel` field. */
   reviewLevel?: Maybe<IntFilter>;
-  /** Filter by the object’s `templatePermissionRestrictions` field. */
-  templatePermissionRestrictions?: Maybe<JsonFilter>;
+  /** Filter by the object’s `restrictions` field. */
+  restrictions?: Maybe<JsonFilter>;
+  /** Filter by the object’s `allowedSections` field. */
+  allowedSections?: Maybe<StringListFilter>;
+  /** Filter by the object’s `canSelfAssign` field. */
+  canSelfAssign?: Maybe<BooleanFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `templateCode` field. */
@@ -8014,7 +8040,9 @@ export type PermissionsAll = {
   templatePermissionId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   reviewLevel?: Maybe<Scalars['Int']>;
-  templatePermissionRestrictions?: Maybe<Scalars['JSON']>;
+  restrictions?: Maybe<Scalars['JSON']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   templateId?: Maybe<Scalars['Int']>;
   templateCode?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
@@ -10770,6 +10798,8 @@ export type TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateI
 export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -11543,6 +11573,8 @@ export type TemplatePermissionOnTemplatePermissionForTemplatePermissionPermissio
 export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -12880,7 +12912,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -12984,7 +13016,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -13088,7 +13120,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -13192,7 +13224,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisat
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -13459,7 +13491,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -13633,7 +13665,7 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -13723,7 +13755,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFk
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -14009,7 +14041,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignm
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -14209,7 +14241,7 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -16963,7 +16995,7 @@ export type ReviewAssignmentPatch = {
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -16990,7 +17022,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17098,7 +17130,7 @@ export type ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCr
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17283,7 +17315,7 @@ export type ReviewAssignmentLevelIdFkeyReviewAssignmentCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17347,7 +17379,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17446,7 +17478,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17754,7 +17786,7 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17824,7 +17856,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17893,7 +17925,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17962,7 +17994,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -18628,6 +18660,8 @@ export type TemplatePermissionPatch = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -18639,6 +18673,8 @@ export type TemplatePermissionPatch = {
 export type TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -19030,6 +19066,8 @@ export type TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeI
 export type TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -20258,7 +20296,7 @@ export type ReviewAssignmentInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -20763,6 +20801,8 @@ export type TemplatePermissionInput = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -24499,7 +24539,7 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'levelNumber' | 'status' | 'timeUpdated' | 'reviewerId' | 'isLastLevel' | 'templateSectionRestrictions' | 'trigger'>
+      & Pick<ReviewAssignment, 'id' | 'levelNumber' | 'status' | 'timeUpdated' | 'reviewerId' | 'isLastLevel' | 'allowedSections' | 'trigger'>
       & { reviewer?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'id' | 'firstName' | 'lastName'>
@@ -25510,7 +25550,7 @@ export const GetReviewInfoDocument = gql`
       levelNumber
       reviewerId
       isLastLevel
-      templateSectionRestrictions
+      allowedSections
       trigger
       reviewer {
         id

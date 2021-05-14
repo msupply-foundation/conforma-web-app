@@ -12,7 +12,7 @@ export default gql`
         levelNumber
         reviewerId
         isLastLevel
-        templateSectionRestrictions
+        allowedSections
         trigger
         reviewer {
           id
