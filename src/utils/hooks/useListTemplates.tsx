@@ -119,7 +119,7 @@ const convertFromTemplateToTemplateDetails = (
 
 const extractFilters = (template: Template, permissions: PermissionPolicyType[]) => {
   const templateFilters = template?.templateFilterJoins?.nodes?.map(
-    (templateFilterJoin) => templateFilterJoin?.templateFilter
+    (templateFilterJoin) => templateFilterJoin?.filter
   )
 
   const userRoleFilters = templateFilters?.filter((templateFilter) =>
