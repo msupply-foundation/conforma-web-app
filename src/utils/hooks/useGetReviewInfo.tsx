@@ -89,7 +89,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         levelNumber,
         reviewer,
         reviewAssignmentAssignerJoins,
-        templateSectionRestrictions,
+        allowedSections,
       } = reviewAssignment
 
       // Extra field just to use in initial example - might conflict with future queries
@@ -124,7 +124,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         level: levelNumber || 1,
         isCurrentUserReviewer: reviewer?.id === (currentUser?.userId as number),
         isCurrentUserAssigner: reviewAssignmentAssignerJoins.nodes.length > 0,
-        assignableSectionRestrictions: templateSectionRestrictions || [],
+        assignableSectionRestrictions: allowedSections || [],
         totalAssignedQuestions,
         reviewQuestionAssignments,
         timeUpdated,
