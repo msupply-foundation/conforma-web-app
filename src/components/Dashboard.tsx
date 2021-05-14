@@ -32,9 +32,7 @@ const Dashboard: React.FC = () => {
         ({ templates, templateCategory: { categoryIcon, categoryTitle } }) => (
           <div key={categoryTitle} className="template-category">
             <div className="title">
-              {categoryIcon && (
-                <Icon size="large" color="grey" name={categoryIcon as SemanticICONS} />
-              )}
+              {categoryIcon && <Icon size="large" color="grey" name={categoryIcon} />}
               <Header as="h4">{categoryTitle}</Header>
             </div>
             <div className="templates">
@@ -50,7 +48,7 @@ const Dashboard: React.FC = () => {
 }
 
 const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template }) => {
-  const { name, code, hasApplyPermission, hasFilters, filters } = template
+  const { name, code, hasApplyPermission, filters } = template
   return (
     <div className="template">
       <div className="title">
@@ -102,7 +100,7 @@ const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter }> =
     <div className="filter">
       <Link to={constructLink()}>
         {filter.icon && (
-          <Icon color={filter.iconColor as SemanticCOLORS} name={filter.icon as SemanticICONS} />
+          <Icon style={{ color: filter.iconColor }} name={filter.icon as SemanticICONS} />
         )}
         {`${applicationCount} ${filter.title}`}
       </Link>

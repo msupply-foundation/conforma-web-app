@@ -18,6 +18,7 @@ import {
 
 import { ValidationState } from '../formElementPlugins/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic'
 
 export {
   ApplicationDetails,
@@ -435,7 +436,7 @@ interface StageDetails {
 
 interface TemplateCategoryDetails {
   categoryTitle: string
-  categoryIcon: string
+  categoryIcon: SemanticICONS | undefined
 }
 
 interface TemplateInList {
@@ -446,7 +447,6 @@ interface TemplateInList {
   permissions: PermissionPolicyType[]
   hasApplyPermission: boolean
   hasNonApplyPermissions: boolean
-  hasFilters: boolean
   filters: Filter[]
 }
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { SemanticICONS } from 'semantic-ui-react'
 import {
   Filter,
   PermissionPolicyType,
@@ -85,12 +86,12 @@ const convertFromTemplateToTemplateDetails = (
   const permissions = templatePermissions[code] || []
 
   let categoryTitle: string = template?.templateCategory?.title || ''
-  let categoryIcon: string
+  let categoryIcon: SemanticICONS
   if (!categoryTitle) {
-    categoryIcon = constants.DEFAULT_TEMPLATE_CATEGORY_ICON
+    categoryIcon = constants.DEFAULT_TEMPLATE_CATEGORY_ICON as SemanticICONS
     categoryTitle = constants.DEFAULT_TEMPLATE_CATEGORY_TITLE
   } else {
-    categoryIcon = template?.templateCategory?.icon || ''
+    categoryIcon = (template?.templateCategory?.icon as SemanticICONS) || undefined
   }
 
   const hasApplyPermission = permissions.includes(PermissionPolicyType.Apply)
@@ -106,7 +107,6 @@ const convertFromTemplateToTemplateDetails = (
     permissions,
     filters,
     hasApplyPermission,
-    hasFilters: filters.length > 0,
     hasNonApplyPermissions,
     templateCategory: {
       categoryIcon,
