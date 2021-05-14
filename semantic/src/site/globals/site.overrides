@@ -860,7 +860,7 @@ a:hover {
 
   .view-all {
     padding: 5px;
-    font-weight: 600;
+    font-weight: @semiboldWeight;
     color:grey !important;
     border-top: 1px solid rgba(0,0,0,.08);
 
