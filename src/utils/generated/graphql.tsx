@@ -141,7 +141,6 @@ export type Query = Node & {
   reviewResponse?: Maybe<ReviewResponse>;
   reviewStatusHistory?: Maybe<ReviewStatusHistory>;
   template?: Maybe<Template>;
-  templateByCode?: Maybe<Template>;
   templateAction?: Maybe<TemplateAction>;
   templateCategory?: Maybe<TemplateCategory>;
   templateCategoryByCode?: Maybe<TemplateCategory>;
@@ -952,12 +951,6 @@ export type QueryReviewStatusHistoryArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryTemplateArgs = {
   id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryTemplateByCodeArgs = {
-  code: Scalars['String'];
 };
 
 
@@ -3922,16 +3915,16 @@ export type TemplateFilterJoinFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateFilterId` field. */
-  templateFilterId?: Maybe<IntFilter>;
+  /** Filter by the object’s `filterId` field. */
+  filterId?: Maybe<IntFilter>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** A related `template` exists. */
   templateExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `templateFilter` relation. */
-  templateFilter?: Maybe<FilterFilter>;
-  /** A related `templateFilter` exists. */
-  templateFilterExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `filter` relation. */
+  filter?: Maybe<FilterFilter>;
+  /** A related `filter` exists. */
+  filterExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateFilterJoinFilter>>;
   /** Checks for any expressions in this list. */
@@ -3956,10 +3949,10 @@ export type FilterFilter = {
   query?: Maybe<JsonFilter>;
   /** Filter by the object’s `userRole` field. */
   userRole?: Maybe<PermissionPolicyTypeFilter>;
-  /** Filter by the object’s `templateFilterJoinsByTemplateFilterId` relation. */
-  templateFilterJoinsByTemplateFilterId?: Maybe<FilterToManyTemplateFilterJoinFilter>;
-  /** Some related `templateFilterJoinsByTemplateFilterId` exist. */
-  templateFilterJoinsByTemplateFilterIdExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `templateFilterJoins` relation. */
+  templateFilterJoins?: Maybe<FilterToManyTemplateFilterJoinFilter>;
+  /** Some related `templateFilterJoins` exist. */
+  templateFilterJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<FilterFilter>>;
   /** Checks for any expressions in this list. */
@@ -6763,8 +6756,8 @@ export enum TemplateFilterJoinsOrderBy {
   IdDesc = 'ID_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
-  TemplateFilterIdAsc = 'TEMPLATE_FILTER_ID_ASC',
-  TemplateFilterIdDesc = 'TEMPLATE_FILTER_ID_DESC',
+  FilterIdAsc = 'FILTER_ID_ASC',
+  FilterIdDesc = 'FILTER_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -6775,8 +6768,8 @@ export type TemplateFilterJoinCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateFilterId` field. */
-  templateFilterId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `filterId` field. */
+  filterId?: Maybe<Scalars['Int']>;
 };
 
 /** A connection to a list of `TemplateFilterJoin` values. */
@@ -6798,11 +6791,11 @@ export type TemplateFilterJoin = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
-  templateFilterId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
   /** Reads a single `Template` that is related to this `TemplateFilterJoin`. */
   template?: Maybe<Template>;
   /** Reads a single `Filter` that is related to this `TemplateFilterJoin`. */
-  templateFilter?: Maybe<Filter>;
+  filter?: Maybe<Filter>;
 };
 
 export type Filter = Node & {
@@ -6817,11 +6810,11 @@ export type Filter = Node & {
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
   /** Reads and enables pagination through a set of `TemplateFilterJoin`. */
-  templateFilterJoinsByTemplateFilterId: TemplateFilterJoinsConnection;
+  templateFilterJoins: TemplateFilterJoinsConnection;
 };
 
 
-export type FilterTemplateFilterJoinsByTemplateFilterIdArgs = {
+export type FilterTemplateFilterJoinsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -8623,8 +8616,6 @@ export type Mutation = {
   updateTemplateByNodeId?: Maybe<UpdateTemplatePayload>;
   /** Updates a single `Template` using a unique key and a patch. */
   updateTemplate?: Maybe<UpdateTemplatePayload>;
-  /** Updates a single `Template` using a unique key and a patch. */
-  updateTemplateByCode?: Maybe<UpdateTemplatePayload>;
   /** Updates a single `TemplateAction` using its globally unique id and a patch. */
   updateTemplateActionByNodeId?: Maybe<UpdateTemplateActionPayload>;
   /** Updates a single `TemplateAction` using a unique key and a patch. */
@@ -8785,8 +8776,6 @@ export type Mutation = {
   deleteTemplateByNodeId?: Maybe<DeleteTemplatePayload>;
   /** Deletes a single `Template` using a unique key. */
   deleteTemplate?: Maybe<DeleteTemplatePayload>;
-  /** Deletes a single `Template` using a unique key. */
-  deleteTemplateByCode?: Maybe<DeleteTemplatePayload>;
   /** Deletes a single `TemplateAction` using its globally unique id. */
   deleteTemplateActionByNodeId?: Maybe<DeleteTemplateActionPayload>;
   /** Deletes a single `TemplateAction` using a unique key. */
@@ -9387,12 +9376,6 @@ export type MutationUpdateTemplateArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateTemplateByCodeArgs = {
-  input: UpdateTemplateByCodeInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateTemplateActionByNodeIdArgs = {
   input: UpdateTemplateActionByNodeIdInput;
 };
@@ -9873,12 +9856,6 @@ export type MutationDeleteTemplateArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteTemplateByCodeArgs = {
-  input: DeleteTemplateByCodeInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTemplateActionByNodeIdArgs = {
   input: DeleteTemplateActionByNodeIdInput;
 };
@@ -10227,19 +10204,13 @@ export type ActionQueueTemplateIdFkeyInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<TemplateTemplatePkeyConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateNodeIdConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<TemplateTemplatePkeyDelete>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplatePkeyUpdate>;
-  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
-  updateByCode?: Maybe<TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<ActionQueueOnActionQueueForActionQueueTemplateIdFkeyNodeIdUpdate>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -10251,11 +10222,6 @@ export type TemplateTemplatePkeyConnect = {
   id: Scalars['Int'];
 };
 
-/** The fields on `template` to look up the row to connect. */
-export type TemplateTemplateCodeKeyConnect = {
-  code: Scalars['String'];
-};
-
 /** The globally unique `ID` look up for the row to connect. */
 export type TemplateNodeIdConnect = {
   /** The globally unique `ID` which identifies a single `template` to be connected. */
@@ -10265,11 +10231,6 @@ export type TemplateNodeIdConnect = {
 /** The fields on `template` to look up the row to delete. */
 export type TemplateTemplatePkeyDelete = {
   id: Scalars['Int'];
-};
-
-/** The fields on `template` to look up the row to delete. */
-export type TemplateTemplateCodeKeyDelete = {
-  code: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to delete. */
@@ -10385,19 +10346,13 @@ export type TemplateTemplateCategoryIdFkeyInverseInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<Array<TemplateTemplatePkeyConnect>>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  connectByCode?: Maybe<Array<TemplateTemplateCodeKeyConnect>>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<TemplateNodeIdConnect>>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<Array<TemplateTemplatePkeyDelete>>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  deleteByCode?: Maybe<Array<TemplateTemplateCodeKeyDelete>>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<TemplateNodeIdDelete>>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<Array<TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplatePkeyUpdate>>;
-  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
-  updateByCode?: Maybe<Array<TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCodeKeyUpdate>>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpdate>>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -10498,19 +10453,13 @@ export type TemplateStageTemplateIdFkeyInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<TemplateTemplatePkeyConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateNodeIdConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<TemplateTemplatePkeyDelete>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplatePkeyUpdate>;
-  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
-  updateByCode?: Maybe<TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -10610,19 +10559,13 @@ export type TemplateSectionTemplateIdFkeyInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<TemplateTemplatePkeyConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateNodeIdConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<TemplateTemplatePkeyDelete>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplatePkeyUpdate>;
-  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
-  updateByCode?: Maybe<TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<TemplateSectionOnTemplateSectionForTemplateSectionTemplateIdFkeyNodeIdUpdate>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -10709,9 +10652,9 @@ export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateI
 /** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
 export type UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  templateFilterId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
-  filterToTemplateFilterId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInput>;
+  filterToFilterId?: Maybe<TemplateFilterJoinFilterIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `template` in the `TemplateFilterJoinInput` mutation. */
@@ -10719,19 +10662,13 @@ export type TemplateFilterJoinTemplateIdFkeyInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<TemplateTemplatePkeyConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateNodeIdConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<TemplateTemplatePkeyDelete>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplatePkeyUpdate>;
-  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
-  updateByCode?: Maybe<TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -11604,19 +11541,13 @@ export type TemplatePermissionTemplateIdFkeyInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<TemplateTemplatePkeyConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateNodeIdConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<TemplateTemplatePkeyDelete>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyUsingTemplatePkeyUpdate>;
-  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
-  updateByCode?: Maybe<TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -11743,19 +11674,13 @@ export type ApplicationTemplateIdFkeyInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<TemplateTemplatePkeyConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateNodeIdConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<TemplateTemplatePkeyDelete>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<TemplateOnApplicationForApplicationTemplateIdFkeyUsingTemplatePkeyUpdate>;
-  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
-  updateByCode?: Maybe<TemplateOnApplicationForApplicationTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<ApplicationOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -11951,19 +11876,13 @@ export type TemplateActionTemplateIdFkeyInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<TemplateTemplatePkeyConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateNodeIdConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<TemplateTemplatePkeyDelete>;
   /** The primary key(s) for `template` for the far side of the relationship. */
-  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate>;
-  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
-  updateByCode?: Maybe<TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -11996,13 +11915,6 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-};
-
-/** The fields on `template` to look up the row to update. */
-export type TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `template` being updated. */
-  patch: UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch;
-  code: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -12084,13 +11996,6 @@ export type TemplateActionTemplateIdFkeyTemplateActionCreateInput = {
   condition?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   templateToTemplateId?: Maybe<TemplateActionTemplateIdFkeyInput>;
-};
-
-/** The fields on `template` to look up the row to update. */
-export type TemplateOnApplicationForApplicationTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `template` being updated. */
-  patch: UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch;
-  code: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -18646,13 +18551,6 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
-/** The fields on `template` to look up the row to update. */
-export type TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `template` being updated. */
-  patch: UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch;
-  code: Scalars['String'];
-};
-
 /** The globally unique `ID` look up for the row to update. */
 export type TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `template` to be connected. */
@@ -19104,13 +19002,6 @@ export type TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput = {
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
 };
 
-/** The fields on `template` to look up the row to update. */
-export type TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `template` being updated. */
-  patch: UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch;
-  code: Scalars['String'];
-};
-
 /** The globally unique `ID` look up for the row to update. */
 export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `template` to be connected. */
@@ -19141,7 +19032,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
 };
 
 /** Input for the nested mutation of `filter` in the `TemplateFilterJoinInput` mutation. */
-export type TemplateFilterJoinTemplateFilterIdFkeyInput = {
+export type TemplateFilterJoinFilterIdFkeyInput = {
   /** The primary key(s) for `filter` for the far side of the relationship. */
   connectById?: Maybe<FilterFilterPkeyConnect>;
   /** The primary key(s) for `filter` for the far side of the relationship. */
@@ -19155,13 +19046,13 @@ export type TemplateFilterJoinTemplateFilterIdFkeyInput = {
   /** The primary key(s) for `filter` for the far side of the relationship. */
   deleteByNodeId?: Maybe<FilterNodeIdDelete>;
   /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
-  updateById?: Maybe<FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterPkeyUpdate>;
+  updateById?: Maybe<FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate>;
   /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
-  updateByCode?: Maybe<FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterCodeKeyUpdate>;
+  updateByCode?: Maybe<FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate>;
   /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
-  updateByNodeId?: Maybe<TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate>;
+  updateByNodeId?: Maybe<TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate>;
   /** A `FilterInput` object that will be created and connected to this object. */
-  create?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyFilterCreateInput>;
+  create?: Maybe<TemplateFilterJoinFilterIdFkeyFilterCreateInput>;
 };
 
 /** The fields on `filter` to look up the row to connect. */
@@ -19197,14 +19088,14 @@ export type FilterNodeIdDelete = {
 };
 
 /** The fields on `filter` to look up the row to update. */
-export type FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterPkeyUpdate = {
+export type FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate = {
   /** An object where the defined keys will be set on the `filter` being updated. */
-  patch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch;
+  patch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
   id: Scalars['Int'];
 };
 
 /** An object where the defined keys will be set on the `filter` being updated. */
-export type UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch = {
+export type UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   code?: Maybe<Scalars['String']>;
   iconColor?: Maybe<Scalars['String']>;
@@ -19212,11 +19103,11 @@ export type UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterI
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
-  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `templateFilterJoin` in the `FilterInput` mutation. */
-export type TemplateFilterJoinTemplateFilterIdFkeyInverseInput = {
+export type TemplateFilterJoinFilterIdFkeyInverseInput = {
   /** Flag indicating whether all other `templateFilterJoin` records that match this relationship should be removed. */
   deleteOthers?: Maybe<Scalars['Boolean']>;
   /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
@@ -19228,30 +19119,30 @@ export type TemplateFilterJoinTemplateFilterIdFkeyInverseInput = {
   /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<TemplateFilterJoinNodeIdDelete>>;
   /** The primary key(s) and patch data for `templateFilterJoin` for the far side of the relationship. */
-  updateById?: Maybe<Array<TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate>>;
+  updateById?: Maybe<Array<TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate>>;
   /** The primary key(s) and patch data for `templateFilterJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate>>;
+  updateByNodeId?: Maybe<Array<FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate>>;
   /** A `TemplateFilterJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<TemplateFilterJoinTemplateFilterIdFkeyTemplateFilterJoinCreateInput>>;
+  create?: Maybe<Array<TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput>>;
 };
 
 /** The fields on `templateFilterJoin` to look up the row to update. */
-export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate = {
+export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate = {
   /** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
-  patch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch;
+  patch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
   id: Scalars['Int'];
 };
 
 /** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
-export type UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch = {
+export type UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
-  filterToTemplateFilterId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInput>;
+  filterToFilterId?: Maybe<TemplateFilterJoinFilterIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate = {
+export type FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `templateFilterJoin` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
@@ -19262,28 +19153,28 @@ export type FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyN
 export type TemplateFilterJoinPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  templateFilterId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
-  filterToTemplateFilterId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInput>;
+  filterToFilterId?: Maybe<TemplateFilterJoinFilterIdFkeyInput>;
 };
 
 /** The `templateFilterJoin` to be created by this mutation. */
-export type TemplateFilterJoinTemplateFilterIdFkeyTemplateFilterJoinCreateInput = {
+export type TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
-  filterToTemplateFilterId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInput>;
+  filterToFilterId?: Maybe<TemplateFilterJoinFilterIdFkeyInput>;
 };
 
 /** The fields on `filter` to look up the row to update. */
-export type FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterCodeKeyUpdate = {
+export type FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate = {
   /** An object where the defined keys will be set on the `filter` being updated. */
-  patch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch;
+  patch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
   code: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate = {
+export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `filter` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `filter` being updated. */
@@ -19299,11 +19190,11 @@ export type FilterPatch = {
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
-  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
 };
 
 /** The `filter` to be created by this mutation. */
-export type TemplateFilterJoinTemplateFilterIdFkeyFilterCreateInput = {
+export type TemplateFilterJoinFilterIdFkeyFilterCreateInput = {
   id?: Maybe<Scalars['Int']>;
   code: Scalars['String'];
   iconColor?: Maybe<Scalars['String']>;
@@ -19311,7 +19202,7 @@ export type TemplateFilterJoinTemplateFilterIdFkeyFilterCreateInput = {
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
-  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -19325,16 +19216,9 @@ export type TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeI
 /** The `templateFilterJoin` to be created by this mutation. */
 export type TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  templateFilterId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
-  filterToTemplateFilterId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInput>;
-};
-
-/** The fields on `template` to look up the row to update. */
-export type TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `template` being updated. */
-  patch: UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch;
-  code: Scalars['String'];
+  filterToFilterId?: Maybe<TemplateFilterJoinFilterIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -19385,13 +19269,6 @@ export type TemplateSectionTemplateIdFkeyTemplateSectionCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
 
-/** The fields on `template` to look up the row to update. */
-export type TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `template` being updated. */
-  patch: UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch;
-  code: Scalars['String'];
-};
-
 /** The globally unique `ID` look up for the row to update. */
 export type TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `template` to be connected. */
@@ -19440,13 +19317,6 @@ export type TemplateStageTemplateIdFkeyTemplateStageCreateInput = {
   templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
-};
-
-/** The fields on `template` to look up the row to update. */
-export type TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `template` being updated. */
-  patch: UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch;
-  code: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -19508,13 +19378,6 @@ export type TemplateTemplateCategoryIdFkeyTemplateCategoryCreateInput = {
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
-};
-
-/** The fields on `template` to look up the row to update. */
-export type TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `template` being updated. */
-  patch: UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch;
-  code: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -20019,7 +19882,7 @@ export type FilterInput = {
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
-  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
 };
 
 /** The output of our create `Filter` mutation. */
@@ -20823,9 +20686,9 @@ export type CreateTemplateFilterJoinInput = {
 export type TemplateFilterJoinInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  templateFilterId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
-  filterToTemplateFilterId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInput>;
+  filterToFilterId?: Maybe<TemplateFilterJoinFilterIdFkeyInput>;
 };
 
 /** The output of our create `TemplateFilterJoin` mutation. */
@@ -20840,7 +20703,7 @@ export type CreateTemplateFilterJoinPayload = {
   /** Reads a single `Template` that is related to this `TemplateFilterJoin`. */
   template?: Maybe<Template>;
   /** Reads a single `Filter` that is related to this `TemplateFilterJoin`. */
-  templateFilter?: Maybe<Filter>;
+  filter?: Maybe<Filter>;
   /** An edge for our `TemplateFilterJoin`. May be used by Relay 1. */
   templateFilterJoinEdge?: Maybe<TemplateFilterJoinsEdge>;
 };
@@ -22243,15 +22106,6 @@ export type UpdateTemplateInput = {
   id: Scalars['Int'];
 };
 
-/** All input for the `updateTemplateByCode` mutation. */
-export type UpdateTemplateByCodeInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `Template` being updated. */
-  patch: TemplatePatch;
-  code: Scalars['String'];
-};
-
 /** All input for the `updateTemplateActionByNodeId` mutation. */
 export type UpdateTemplateActionByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -22411,7 +22265,7 @@ export type UpdateTemplateFilterJoinPayload = {
   /** Reads a single `Template` that is related to this `TemplateFilterJoin`. */
   template?: Maybe<Template>;
   /** Reads a single `Filter` that is related to this `TemplateFilterJoin`. */
-  templateFilter?: Maybe<Filter>;
+  filter?: Maybe<Filter>;
   /** An edge for our `TemplateFilterJoin`. May be used by Relay 1. */
   templateFilterJoinEdge?: Maybe<TemplateFilterJoinsEdge>;
 };
@@ -23701,13 +23555,6 @@ export type DeleteTemplateInput = {
   id: Scalars['Int'];
 };
 
-/** All input for the `deleteTemplateByCode` mutation. */
-export type DeleteTemplateByCodeInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  code: Scalars['String'];
-};
-
 /** All input for the `deleteTemplateActionByNodeId` mutation. */
 export type DeleteTemplateActionByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -23853,7 +23700,7 @@ export type DeleteTemplateFilterJoinPayload = {
   /** Reads a single `Template` that is related to this `TemplateFilterJoin`. */
   template?: Maybe<Template>;
   /** Reads a single `Filter` that is related to this `TemplateFilterJoin`. */
-  templateFilter?: Maybe<Filter>;
+  filter?: Maybe<Filter>;
   /** An edge for our `TemplateFilterJoin`. May be used by Relay 1. */
   templateFilterJoinEdge?: Maybe<TemplateFilterJoinsEdge>;
 };
@@ -24197,7 +24044,7 @@ export type TemplateFragment = (
     { __typename?: 'TemplateFilterJoinsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'TemplateFilterJoin' }
-      & { templateFilter?: Maybe<(
+      & { filter?: Maybe<(
         { __typename?: 'Filter' }
         & Pick<Filter, 'id' | 'iconColor' | 'icon' | 'query' | 'title' | 'userRole'>
       )> }
@@ -24877,7 +24724,7 @@ export const TemplateFragmentDoc = gql`
   }
   templateFilterJoins {
     nodes {
-      templateFilter {
+      filter {
         id
         iconColor
         icon
