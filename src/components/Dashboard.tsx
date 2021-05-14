@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Header, Button, Icon, SemanticCOLORS, SemanticICONS } from 'semantic-ui-react'
 import { useUserState } from '../contexts/UserState'
