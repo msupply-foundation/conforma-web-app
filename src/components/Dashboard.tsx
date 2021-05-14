@@ -62,13 +62,13 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
           </Button>
         )}
       </div>
-      {hasFilters && (
-        <div className="filters">
-          {filters.map((filter) => (
-            <FilterComponent key={filter.id} template={template} filter={filter} />
-          ))}
-        </div>
-      )}
+
+      <div className="filters">
+        {filters.map((filter) => (
+          <FilterComponent key={filter.id} template={template} filter={filter} />
+        ))}
+      </div>
+
       <ViewAll template={template} />
     </div>
   )
