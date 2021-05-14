@@ -58,7 +58,9 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   }
 
   const canRenderRow =
-    section?.assignment?.isReviewable || section?.assignment?.action === ReviewAction.canSelfAssign
+    section?.assignment?.isAssignedToCurrentUser ||
+    section?.assignment?.action === ReviewAction.canSelfAssign ||
+    (section?.assignment?.action === ReviewAction.canView && section?.assignment?.isReviewable)
 
   return (
     <>
