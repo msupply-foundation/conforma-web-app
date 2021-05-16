@@ -28,10 +28,6 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
   const isConsolidation = true
   const decisionExists = !!reviewResponse?.decision
 
-  // After consolidation is submitted, reviewResponses are trimmed if they are not changed duplicates
-  // or if they are null, we only want to show reviewResponses that are linked to latestOriginalReviewResponse - from reviewer
-  const isNewConsolidation = originalReviewResponse?.id !== reviewResponse?.reviewResponseLinkId
-
   return (
     <div>
       {/* Application Response */}
@@ -40,7 +36,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
         summaryViewProps={summaryViewProps}
       />
       {/* Consolidation Response */}
-      {!isNewConsolidation && reviewResponse && (
+      {reviewResponse && (
         <ReviewResponseElement
           isCurrentReview={true}
           isConsolidation={isConsolidation}
