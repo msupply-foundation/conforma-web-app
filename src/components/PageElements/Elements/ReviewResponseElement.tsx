@@ -13,9 +13,10 @@ interface ReviewResponseElementProps {
 
 const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
   isCurrentReview,
+  isConsolidation,
   reviewResponse,
+  originalReviewResponse,
   children,
-  ...props
 }) => {
   if (!reviewResponse) return null
   if (!reviewResponse?.decision) return null
@@ -31,8 +32,9 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
         <Grid.Column width={12} textAlign="left">
           <ElementDecisionLabel
             isCurrentReview={isCurrentReview}
+            isConsolidation={isConsolidation}
             reviewResponse={reviewResponse}
-            {...props}
+            originalReviewResponse={originalReviewResponse}
           />
           {!reviewResponse.comment ? null : (
             <div>
