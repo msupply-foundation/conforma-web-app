@@ -160,14 +160,14 @@ const PageElements: React.FC<PageElementProps> = ({
               const summaryViewProps = getSummaryViewProps(element)
 
               // Information - no review
-              if (element.category === TemplateElementCategory.Information) {
+              if (element.category === TemplateElementCategory.Information)
                 return (
                   <RenderElementWrapper key={element.code}>
                     <SummaryInformationElement {...summaryViewProps} />
                   </RenderElementWrapper>
                 )
-              } else {
-                return (
+              
+              return (
                   <RenderElementWrapper key={element.code}>
                     {isConsolidation ? (
                       <ConsolidateReviewDecision
