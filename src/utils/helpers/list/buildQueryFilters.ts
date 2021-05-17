@@ -3,7 +3,7 @@ import { BasicStringObject } from '../../types'
 import { ApplicationStatus, ApplicationOutcome } from '../../generated/graphql'
 
 interface FilterMap {
-  [key: string]: (value: string) => object
+  [urlQueryKey: string]: (urlQueryValue: string) => object
 }
 
 interface NamedDateMap {
