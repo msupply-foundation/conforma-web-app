@@ -20,7 +20,7 @@ const ApplicantResponseElement: React.FC<ApplicantResponseElementProps> = ({
 }) => {
   return (
     <Grid columns="equal" className={'element-grid'}>
-      <Grid.Column width={isResponseUpdated ? 4 : 14} textAlign="left">
+      <Grid.Column textAlign="left">
         <SummaryViewWrapper {...summaryViewProps} />
       </Grid.Column>
       {isResponseUpdated && (
