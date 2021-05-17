@@ -56,7 +56,7 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
   }
 
   const isInvalidComment =
-    (!!reviewResponse.comment || reviewResponse.comment?.trim() === '') &&
+    (!reviewResponse.comment || reviewResponse.comment?.trim() === '') &&
     (isConsolidation
       ? reviewResponse?.decision === ReviewResponseDecision.Disagree
       : reviewResponse?.decision === ReviewResponseDecision.Decline)
