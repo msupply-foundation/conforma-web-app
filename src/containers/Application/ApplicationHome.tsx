@@ -65,7 +65,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     <>
       <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
       <ApplicationHomeWrapper
-        startMessage={structure.info.startMessage}
+        startMessage={template.startMessage}
         name={template.name}
         ButtonSegment={SummaryButtonSegment}
       >
