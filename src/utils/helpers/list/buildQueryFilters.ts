@@ -23,6 +23,24 @@ export default function buildQueryFilters(filters: BasicStringObject) {
   return graphQLfilter
 }
 
+/* 
+  Query filters are mapped to an object provided by mapQueryToFilterField, they are in this format:
+  [filterName]: (queryString) => {[columnName]: { graphQLfilter }}
+  for example (url query parameter) ?filterName=queryString (?lastActiveDate=2021-02-01:2021-02-04)
+  would result in => {lastActiveDate: { greaterThanOrEqualTo: "2021-02-01", lessThanOrEqualTo: "2021-02-04"  } } 
+*/
+
+/* 
+  For generic types, mapping is provided via generiTypes -> getGenericTypes, and custom mapping is declared in mapQueryToFilterField
+  for example getGenericTypes will return an object like this: 
+  {
+    reviewAssignedNotStartedCount: ...
+    reviewAssignedCount: ..
+    ...
+    isFullyAssignedLevel1: (filterString) => { isFullyAssigneLevel1: { equalTo: String(filterString).toLowerCase() === 'true' } }
+  }
+ */
+
 const genericTypes: { computeFilter: GenericTypesMethod; columns: string[] }[] = [
   // NUMBER TYPE
   {
@@ -66,6 +84,7 @@ const genericTypes: { computeFilter: GenericTypesMethod; columns: string[] }[] =
   },
 ]
 
+// For every genericTypes mapping, return a method that generates a filter, see example above (isFullyAssignedLevel1)
 const getGenericTypes: GetGenericTypes = () => {
   const resultFilters: FilterMap = {}
   const addToResultFilter = (columnName: string, method: GenericTypesMethod) => {
