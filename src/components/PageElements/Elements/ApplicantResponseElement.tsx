@@ -19,7 +19,7 @@ const ApplicantResponseElement: React.FC<ApplicantResponseElementProps> = ({
   children,
 }) => {
   return (
-    <Grid columns="equal" className={'element-grid'}>
+    <Grid columns="equal" className="element-grid">
       <Grid.Column textAlign="left">
         <SummaryViewWrapper {...summaryViewProps} />
       </Grid.Column>
