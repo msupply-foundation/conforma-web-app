@@ -3,6 +3,7 @@ import { Form, Checkbox } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import config from '../../../config.json'
 import { useUserState } from '../../../contexts/UserState'
+import strings from '../constants'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -87,7 +88,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Form.Input
         name="password"
         fluid
-        placeholder={placeholder ? placeholder : 'Enter password'}
+        placeholder={placeholder ? placeholder : strings.PLACEHOLDER_DEFAULT}
         onChange={handleChange}
         onBlur={handleLoseFocus}
         onFocus={setIsActive}
@@ -107,7 +108,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Form.Input
           name="passwordConfirm"
           fluid
-          placeholder={confirmPlaceholder ? confirmPlaceholder : 'Confirm password'}
+          placeholder={
+            confirmPlaceholder ? confirmPlaceholder : strings.PLACEHOLDER_CONFIRM_DEFAULT
+          }
           onChange={handleChange}
           onBlur={handleLoseFocus}
           onFocus={setIsActive}
@@ -117,7 +120,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           error={
             passwordConfirm !== password && passwordConfirm !== ''
               ? {
-                  content: 'Passwords do not match',
+                  content: strings.ALERT_PASSWORDS_DONT_MATCH,
                   pointing: 'above',
                 }
               : null
@@ -126,7 +129,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       )}
       <Form.Field required={false}>
         {(showPasswordToggle === undefined ? true : showPasswordToggle) && (
-          <Checkbox label="Show password" checked={!masked} onClick={() => setMasked(!masked)} />
+          <Checkbox
+            label={strings.LABEL_SHOW_PASSWORD}
+            checked={!masked}
+            onClick={() => setMasked(!masked)}
+          />
         )}
       </Form.Field>
     </>
