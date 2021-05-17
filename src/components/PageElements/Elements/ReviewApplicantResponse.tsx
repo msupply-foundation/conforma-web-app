@@ -23,9 +23,6 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   showModal,
 }) => {
   const decisionExists = !!reviewResponse?.decision
-  // After review is submitted, reviewResponses are trimmed if they are not changed duplicates
-  // or if they are null, we only want to show reviewResponses that are linked to latestApplicationResponse
-  const isNewReview = applicationResponse.id !== reviewResponse?.applicationResponse?.id
 
   return (
     <div>
@@ -46,7 +43,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
         )}
       </ApplicantResponseElement>
       {/* Review Response */}
-      {!isNewReview && reviewResponse && (
+      {reviewResponse && (
         <ReviewResponseElement
           isCurrentReview={true}
           isConsolidation={false}
