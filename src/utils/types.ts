@@ -82,6 +82,7 @@ interface ApplicationDetails {
   isChangeRequest: boolean
   current: StageAndStatus
   firstStrictInvalidPage: SectionAndPage | null
+  startMessage?: string
   submissionMessage?: string
   user?: GraphQLUser
   org?: GraphQLOrg
