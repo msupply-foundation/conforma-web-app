@@ -816,6 +816,11 @@ a:hover {
     align-items: center;
     text-align: center;
     flex-grow: 1;
+
+    div {
+      display: flex;
+      align-items: center;
+    }
   }
 }
 

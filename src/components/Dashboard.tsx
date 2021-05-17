@@ -136,7 +136,7 @@ const ViewAll: React.FC<{ template: TemplateInList }> = ({ template: { code, per
         className="view-all clickable"
         to={`/applications?type=${code}&user-role=${applicationListRole}`}
       >
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div>
           {permissionTypes.map((policyType) => {
             const roleDisplay = rolesDisplay[policyType]
             return <Icon key={policyType} name={roleDisplay.icon} size="small" />
