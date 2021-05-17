@@ -13,10 +13,12 @@ import {
   TemplateElementCategory,
   User as GraphQLUser,
   Organisation as GraphQLOrg,
+  Filter,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
 import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic'
 
 export {
   ApplicationDetails,
@@ -60,8 +62,10 @@ export {
   SortQuery,
   StageAndStatus,
   TemplateDetails,
+  TemplateCategoryDetails,
   TemplateElementState,
   TemplatePermissions,
+  TemplateInList,
   TemplatesDetails,
   UseGetApplicationProps,
   User,
@@ -429,6 +433,22 @@ interface StageDetails {
   title: string
   colour?: string
   description?: string
+}
+
+interface TemplateCategoryDetails {
+  title: string
+  icon: SemanticICONS | undefined
+}
+
+interface TemplateInList {
+  id: number
+  name: string
+  code: string
+  templateCategory: TemplateCategoryDetails
+  permissions: PermissionPolicyType[]
+  hasApplyPermission: boolean
+  hasNonApplyPermissions: boolean
+  filters: Filter[]
 }
 
 interface TemplateDetails {
