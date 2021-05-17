@@ -162,25 +162,27 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     }
-    evaluate(application.template?.submissionMessage || '', evaluatorParams).then(
-      (submissionMessage: any) => {
-        let newStructure: FullStructure = {
-          info: { ...applicationDetails, submissionMessage },
-          stages: templateStages.map((stage) => ({
-            number: stage.number as number,
-            id: stage.id,
-            title: stage.title as string,
-            description: stage.description ? stage.description : undefined,
-            colour: stage.colour as string,
-          })),
-          sections: buildSectionsStructure({ sections, baseElements }),
-          attemptSubmission: false,
-        }
-
-        setFullStructure(newStructure)
-        setIsLoading(false)
+    const templateMessages: any = [
+      evaluate(application.template?.startMessage || '', evaluatorParams),
+      evaluate(application.template?.submissionMessage || '', evaluatorParams),
+    ]
+    Promise.all(templateMessages).then(([startMessage, submissionMessage]: any) => {
+      let newStructure: FullStructure = {
+        info: { ...applicationDetails, submissionMessage, startMessage },
+        stages: templateStages.map((stage) => ({
+          number: stage.number as number,
+          id: stage.id,
+          title: stage.title as string,
+          description: stage.description ? stage.description : undefined,
+          colour: stage.colour as string,
+        })),
+        sections: buildSectionsStructure({ sections, baseElements }),
+        attemptSubmission: false,
       }
-    )
+
+      setFullStructure(newStructure)
+      setIsLoading(false)
+    })
   }, [data, loading])
 
   return {

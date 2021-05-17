@@ -83,6 +83,7 @@ interface ApplicationDetails {
   current: StageAndStatus
   firstStrictInvalidPage: SectionAndPage | null
   submissionMessage?: string
+  startMessage?: string
   user?: GraphQLUser
   org?: GraphQLOrg
   config?: any
