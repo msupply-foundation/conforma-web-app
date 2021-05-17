@@ -5,7 +5,7 @@ import { useUserState } from '../contexts/UserState'
 import strings from '../utils/constants'
 import usePageTitle from '../utils/hooks/usePageTitle'
 
-const Home: React.FC = () => {
+const LayoutHelpers: React.FC = () => {
   const {
     userState: { currentUser, isNonRegistered },
     logout,
@@ -15,7 +15,7 @@ const Home: React.FC = () => {
     return null
   }
 
-  usePageTitle(strings.PAGE_TITLE_HOME)
+  usePageTitle('Layout Helpers')
 
   return (
     <div>
@@ -81,4 +81,4 @@ const Home: React.FC = () => {
   )
 }
 
-export default Home
+export default LayoutHelpers
