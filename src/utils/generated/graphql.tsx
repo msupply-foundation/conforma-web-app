@@ -113,7 +113,6 @@ export type Query = Node & {
   actionPlugin?: Maybe<ActionPlugin>;
   actionQueue?: Maybe<ActionQueue>;
   application?: Maybe<Application>;
-  applicationBySessionId?: Maybe<Application>;
   applicationBySerial?: Maybe<Application>;
   applicationResponse?: Maybe<ApplicationResponse>;
   applicationSection?: Maybe<ApplicationSection>;
@@ -784,12 +783,6 @@ export type QueryActionQueueArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryApplicationArgs = {
   id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryApplicationBySessionIdArgs = {
-  sessionId: Scalars['String'];
 };
 
 
@@ -7887,6 +7880,8 @@ export enum PermissionsAllsOrderBy {
   Natural = 'NATURAL',
   PermissionTypeAsc = 'PERMISSION_TYPE_ASC',
   PermissionTypeDesc = 'PERMISSION_TYPE_DESC',
+  PolicyNameAsc = 'POLICY_NAME_ASC',
+  PolicyNameDesc = 'POLICY_NAME_DESC',
   PermissionPolicyIdAsc = 'PERMISSION_POLICY_ID_ASC',
   PermissionPolicyIdDesc = 'PERMISSION_POLICY_ID_DESC',
   PermissionPolicyRulesAsc = 'PERMISSION_POLICY_RULES_ASC',
@@ -7921,6 +7916,8 @@ export enum PermissionsAllsOrderBy {
 export type PermissionsAllCondition = {
   /** Checks for equality with the object’s `permissionType` field. */
   permissionType?: Maybe<PermissionPolicyType>;
+  /** Checks for equality with the object’s `policyName` field. */
+  policyName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `permissionPolicyId` field. */
   permissionPolicyId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `permissionPolicyRules` field. */
@@ -7955,6 +7952,8 @@ export type PermissionsAllCondition = {
 export type PermissionsAllFilter = {
   /** Filter by the object’s `permissionType` field. */
   permissionType?: Maybe<PermissionPolicyTypeFilter>;
+  /** Filter by the object’s `policyName` field. */
+  policyName?: Maybe<StringFilter>;
   /** Filter by the object’s `permissionPolicyId` field. */
   permissionPolicyId?: Maybe<IntFilter>;
   /** Filter by the object’s `permissionPolicyRules` field. */
@@ -8007,6 +8006,7 @@ export type PermissionsAllsConnection = {
 export type PermissionsAll = {
   __typename?: 'PermissionsAll';
   permissionType?: Maybe<PermissionPolicyType>;
+  policyName?: Maybe<Scalars['String']>;
   permissionPolicyId?: Maybe<Scalars['Int']>;
   permissionPolicyRules?: Maybe<Scalars['JSON']>;
   permissionNameId?: Maybe<Scalars['Int']>;
@@ -8533,8 +8533,6 @@ export type Mutation = {
   /** Updates a single `Application` using a unique key and a patch. */
   updateApplication?: Maybe<UpdateApplicationPayload>;
   /** Updates a single `Application` using a unique key and a patch. */
-  updateApplicationBySessionId?: Maybe<UpdateApplicationPayload>;
-  /** Updates a single `Application` using a unique key and a patch. */
   updateApplicationBySerial?: Maybe<UpdateApplicationPayload>;
   /** Updates a single `ApplicationResponse` using its globally unique id and a patch. */
   updateApplicationResponseByNodeId?: Maybe<UpdateApplicationResponsePayload>;
@@ -8694,8 +8692,6 @@ export type Mutation = {
   deleteApplicationByNodeId?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `Application` using a unique key. */
   deleteApplication?: Maybe<DeleteApplicationPayload>;
-  /** Deletes a single `Application` using a unique key. */
-  deleteApplicationBySessionId?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `Application` using a unique key. */
   deleteApplicationBySerial?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `ApplicationResponse` using its globally unique id. */
@@ -9096,12 +9092,6 @@ export type MutationUpdateApplicationByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateApplicationArgs = {
   input: UpdateApplicationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateApplicationBySessionIdArgs = {
-  input: UpdateApplicationBySessionIdInput;
 };
 
 
@@ -9582,12 +9572,6 @@ export type MutationDeleteApplicationByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteApplicationArgs = {
   input: DeleteApplicationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteApplicationBySessionIdArgs = {
-  input: DeleteApplicationBySessionIdInput;
 };
 
 
@@ -11619,23 +11603,17 @@ export type ApplicationTemplateIdFkeyInverseInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<Array<ApplicationApplicationPkeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyConnect>>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<Array<ApplicationApplicationSerialKeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<ApplicationNodeIdConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<Array<ApplicationApplicationPkeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyDelete>>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<Array<ApplicationApplicationSerialKeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<ApplicationNodeIdDelete>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<Array<ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationPkeyUpdate>>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<Array<ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSessionIdKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<Array<ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -11647,11 +11625,6 @@ export type ApplicationTemplateIdFkeyInverseInput = {
 /** The fields on `application` to look up the row to connect. */
 export type ApplicationApplicationPkeyConnect = {
   id: Scalars['Int'];
-};
-
-/** The fields on `application` to look up the row to connect. */
-export type ApplicationApplicationSessionIdKeyConnect = {
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to connect. */
@@ -11668,11 +11641,6 @@ export type ApplicationNodeIdConnect = {
 /** The fields on `application` to look up the row to delete. */
 export type ApplicationApplicationPkeyDelete = {
   id: Scalars['Int'];
-};
-
-/** The fields on `application` to look up the row to delete. */
-export type ApplicationApplicationSessionIdKeyDelete = {
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to delete. */
@@ -12132,23 +12100,17 @@ export type ApplicationUserIdFkeyInverseInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<Array<ApplicationApplicationPkeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyConnect>>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<Array<ApplicationApplicationSerialKeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<ApplicationNodeIdConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<Array<ApplicationApplicationPkeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyDelete>>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<Array<ApplicationApplicationSerialKeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<ApplicationNodeIdDelete>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<Array<ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationPkeyUpdate>>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<Array<ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSessionIdKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<Array<ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -12245,23 +12207,17 @@ export type ApplicationOrgIdFkeyInverseInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<Array<ApplicationApplicationPkeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyConnect>>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<Array<ApplicationApplicationSerialKeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<ApplicationNodeIdConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<Array<ApplicationApplicationPkeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyDelete>>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<Array<ApplicationApplicationSerialKeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<ApplicationNodeIdDelete>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<Array<ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationPkeyUpdate>>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<Array<ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSessionIdKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<Array<ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -12362,23 +12318,17 @@ export type ApplicationSectionApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -12483,23 +12433,17 @@ export type ApplicationStageHistoryApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -12828,23 +12772,17 @@ export type ApplicationResponseApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -13543,23 +13481,17 @@ export type ReviewAssignmentApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -14344,23 +14276,17 @@ export type ReviewApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -14686,23 +14612,17 @@ export type FileApplicationSerialFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -14904,23 +14824,17 @@ export type NotificationApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -14958,13 +14872,6 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -16773,13 +16680,6 @@ export type NotificationApplicationIdFkeyNotificationCreateInput = {
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
-  sessionId: Scalars['String'];
-};
-
-/** The fields on `application` to look up the row to update. */
 export type ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
@@ -16978,13 +16878,6 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -17495,13 +17388,6 @@ export type ReviewApplicationIdFkeyReviewCreateInput = {
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -18094,13 +17980,6 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
-  sessionId: Scalars['String'];
-};
-
-/** The fields on `application` to look up the row to update. */
 export type ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
@@ -18410,13 +18289,6 @@ export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput =
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch;
-  sessionId: Scalars['String'];
-};
-
-/** The fields on `application` to look up the row to update. */
 export type ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch;
@@ -18475,13 +18347,6 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationStageHistoryCreat
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyPatch;
-  sessionId: Scalars['String'];
-};
-
-/** The fields on `application` to look up the row to update. */
 export type ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyPatch;
@@ -18534,13 +18399,6 @@ export type ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput = {
   templateSectionId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<ApplicationSectionApplicationIdFkeyInput>;
   templateSectionToTemplateSectionId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch;
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -18618,13 +18476,6 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch;
-  sessionId: Scalars['String'];
-};
-
-/** The fields on `application` to look up the row to update. */
 export type ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch;
@@ -18695,13 +18546,6 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch;
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -21335,15 +21179,6 @@ export type UpdateApplicationInput = {
   id: Scalars['Int'];
 };
 
-/** All input for the `updateApplicationBySessionId` mutation. */
-export type UpdateApplicationBySessionIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `Application` being updated. */
-  patch: ApplicationPatch;
-  sessionId: Scalars['String'];
-};
-
 /** All input for the `updateApplicationBySerial` mutation. */
 export type UpdateApplicationBySerialInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -22888,13 +22723,6 @@ export type DeleteApplicationInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
-};
-
-/** All input for the `deleteApplicationBySessionId` mutation. */
-export type DeleteApplicationBySessionIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  sessionId: Scalars['String'];
 };
 
 /** All input for the `deleteApplicationBySerial` mutation. */
