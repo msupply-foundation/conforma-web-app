@@ -55,11 +55,12 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
     await updateResponse(reviewResponse)
   }
 
-  const isValidComment =
-    (!!reviewResponse.comment && reviewResponse.comment?.trim() !== '') ||
+  const isInvalidComment =
+    !!reviewResponse.comment &&
+    reviewResponse.comment?.trim() !== '' &&
     (isConsolidation
-      ? reviewResponse?.decision !== ReviewResponseDecision.Disagree
-      : reviewResponse?.decision !== ReviewResponseDecision.Decline)
+      ? reviewResponse?.decision === ReviewResponseDecision.Disagree
+      : reviewResponse?.decision === ReviewResponseDecision.Decline)
 
   const options = isConsolidation ? optionsMap.consolidation : optionsMap.review
 
@@ -125,11 +126,11 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
                     primary
                     className="button-wide"
                     onClick={submit}
-                    disabled={!isValidComment}
+                    disabled={!isInvalidComment}
                     content={strings.BUTTON_SUBMIT}
                   />
                 </Form.Field>
-                {!isValidComment && <p className="alert">{messages.REVIEW_RESUBMIT_COMMENT}</p>}
+                {!isInvalidComment && <p className="alert">{messages.REVIEW_RESUBMIT_COMMENT}</p>}
               </Segment>
               <Segment basic id="history-panel">
                 <p>
