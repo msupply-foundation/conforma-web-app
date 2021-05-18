@@ -145,7 +145,7 @@ const mapQueryToFilterField: FilterMap = {
 const splitCommaList = (values: string) => values.split(',')
 
 // Use this to find string in an array of strings
-const inArray = (value: string) => ({ anyEqualTo: value })
+const inArray = (values: string) => ({ overlaps: splitCommaList(values) })
 
 // Use this if the values can be free text strings (e.g. stage name)
 const inList = (values: string) => ({ inInsensitive: splitCommaList(values) })
