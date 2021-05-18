@@ -112,6 +112,9 @@ const PageElements: React.FC<PageElementProps> = ({
           const { element, isChanged, isChangeRequest, latestApplicationResponse } = state
 
           const isResponseUpdated = !!isChangeRequest || !!isChanged
+
+          // Applicant can edit the summary page when is first submission (canEdit true when draft)
+          // Or when changes required for any question that have been updated (isUpdating true)
           const canApplicantEdit = isUpdating ? isResponseUpdated && canEdit : canEdit
           const summaryViewProps = getSummaryViewProps(element)
 
