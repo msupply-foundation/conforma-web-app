@@ -80,7 +80,6 @@ interface PluginConfig {
   code: string
   folderName: string
   displayName: string
-  dynamicParameters?: string[]
   parameterLoadingValues?: { [key: string]: string | string[] }
   category: 'Input' | 'Informative'
 }

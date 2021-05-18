@@ -254,7 +254,7 @@ export const buildParameters = (
   for (const [key, value] of Object.entries(parameters)) {
     if (value instanceof Object && !Array.isArray(value)) {
       parameterExpressions[key] = value
-      simpleParameters[key] = parameterLoadingValues?.[key] ?? 'LOADING'
+      simpleParameters[key] = parameterLoadingValues?.[key] ?? 'Loading...'
     } else simpleParameters[key] = value
   }
   return [simpleParameters, parameterExpressions]
