@@ -23,14 +23,8 @@ import globalConfig from '../config.json'
 const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
-  const {
-    element,
-    isStrictPage,
-    changesRequired,
-    currentResponse,
-    allResponses,
-    applicationData,
-  } = props
+  const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
+    props
 
   const {
     code,
@@ -57,24 +51,22 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   })
   const [evaluatedParameters, setEvaluatedParameters] = useState({})
 
-  // This value prevents the plugin component from rendering until parameters have been evaluated, otherwise React throws an error when trying to pass an Object in as a prop value
-  const [parametersReady, setParametersReady] = useState(false)
-
   const { ApplicationView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
-  const dynamicParameters = config?.dynamicParameters
-  const dynamicExpressions =
-    dynamicParameters && extractDynamicExpressions(dynamicParameters, parameters)
+  const parameterLoadingValues = config?.parameterLoadingValues
+  const [simpleParameters, parameterExpressions] = buildParameters(
+    parameters,
+    parameterLoadingValues
+  )
 
   // Update dynamic parameters when responses change
   useEffect(() => {
-    evaluateDynamicParameters(dynamicExpressions as ElementPluginParameters, {
+    evaluateParameters(parameterExpressions as ElementPluginParameters, {
       objects: { responses: allResponses, currentUser, applicationData },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     }).then((result: ElementPluginParameters) => {
       setEvaluatedParameters(result)
-      setParametersReady(true)
     })
   }, [allResponses])
 
@@ -162,7 +154,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       initialValue={currentResponse}
       {...props}
       {...element}
-      parameters={{ ...parameters, ...evaluatedParameters }}
+      parameters={{ ...simpleParameters, ...evaluatedParameters }}
       value={value}
       setValue={setValue}
       setIsActive={setIsActive}
@@ -182,17 +174,14 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
     return (
       <>
-        {parametersReady ? (
-          <Form.Field
-            className={`element-application-view ${borderClass} ${borderColorClass}`}
-            required={isRequired}
-          >
-            {PluginComponent}
-            <ChangesToResponseWarning {...changesRequired} isValid={isValid} />
-          </Form.Field>
-        ) : (
-          <Loader active inline />
-        )}
+        <Form.Field
+          className={`element-application-view ${borderClass} ${borderColorClass}`}
+          required={isRequired}
+        >
+          {PluginComponent}
+          <ChangesToResponseWarning {...changesRequired} isValid={isValid} />
+        </Form.Field>
+        : <Loader active inline />
       </>
     )
   }
@@ -202,12 +191,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       <React.Suspense fallback="Loading Plugin">
         {changesRequired ? (
           getResponseAndBorder()
-        ) : parametersReady ? (
+        ) : (
           <Form.Field className="element-application-view" required={isRequired}>
             {PluginComponent}
           </Form.Field>
-        ) : (
-          <Loader active inline />
         )}
       </React.Suspense>
     </ErrorBoundary>
@@ -256,27 +243,29 @@ const getDefaultIndex = (defaultOption: string | number, options: string[]) => {
   } else return options.indexOf(defaultOption)
 }
 
-export const extractDynamicExpressions = (
-  fields: string[],
-  parameters: ElementPluginParameters
+export const buildParameters = (
+  parameters: ElementPluginParameters,
+  parameterLoadingValues: any
 ) => {
-  const expressionObject: ElementPluginParameters = {}
-  fields.forEach((field) => {
-    expressionObject[field] = parameters[field]
-  })
-  return expressionObject
+  const simpleParameters: any = {}
+  const parameterExpressions: any = {}
+  for (const [key, value] of Object.entries(parameters)) {
+    if (value instanceof Object && !Array.isArray(value)) {
+      parameterExpressions[key] = value
+      simpleParameters[key] = parameterLoadingValues?.[key] ?? 'LOADING'
+    } else simpleParameters[key] = value
+  }
+  return [simpleParameters, parameterExpressions]
 }
 
-export const evaluateDynamicParameters = async (
-  dynamicExpressions: ElementPluginParameters,
+export const evaluateParameters = async (
+  parameterExpressions: ElementPluginParameters,
   evaluatorParameters: EvaluatorParameters
 ) => {
-  if (!dynamicExpressions) return {}
-  const fields = Object.keys(dynamicExpressions)
-  const expressions = Object.values(
-    dynamicExpressions
-  ).map((expression: ElementPluginParameterValue) =>
-    evaluateExpression(expression, evaluatorParameters)
+  if (!parameterExpressions) return {}
+  const fields = Object.keys(parameterExpressions)
+  const expressions = Object.values(parameterExpressions).map(
+    (expression: ElementPluginParameterValue) => evaluateExpression(expression, evaluatorParameters)
   )
   const evaluatedExpressions: any = await Promise.all(expressions)
   const evaluatedParameters: ElementPluginParameters = {}
