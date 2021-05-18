@@ -16,6 +16,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   validate,
   applicationData,
+  currentResponse,
+  allResponses,
 }) => {
   const { isEditable } = element
   const {
@@ -51,18 +53,22 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   async function handleChange(e: any) {
     if (e.target.name === 'password') {
       setPassword(e.target.value)
-      const responses = { thisResponse: password || '' }
-      const customValidation = await validate(validationInternal, validationMessageInternal, {
-        objects: { responses, currentUser, applicationData },
-        APIfetch: fetch,
-        graphQLConnection: { fetch: fetch.bind(window), endpoint: config.serverGraphQL },
-      })
-      setInternalValidation(customValidation)
+      const responses = { thisResponse: e.target.value || '', ...allResponses }
+      // Don't show error state on change if element is being use for checking existing password
+      const shouldShowValidation = requireConfirmation ? currentResponse?.text === '' : false
+      if (shouldShowValidation) {
+        const customValidation = await validate(validationInternal, validationMessageInternal, {
+          objects: { responses, currentUser, applicationData },
+          APIfetch: fetch,
+          graphQLConnection: { fetch: fetch.bind(window), endpoint: config.serverGraphQL },
+        })
+        setInternalValidation(customValidation)
+      }
     } else setPasswordConfirm(e.target.value)
   }
 
   async function handleLoseFocus(e: any) {
-    const responses = { thisResponse: password || '' }
+    const responses = { thisResponse: password || '', ...allResponses }
     const customValidation = await validate(validationInternal, validationMessageInternal, {
       objects: { responses, currentUser, applicationData },
       APIfetch: fetch,
