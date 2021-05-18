@@ -149,6 +149,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const PluginComponent = (
     <ApplicationView
+      key={JSON.stringify(evaluatedParameters)} // Improve this
       onUpdate={onUpdate}
       onSave={onSave}
       initialValue={currentResponse}
