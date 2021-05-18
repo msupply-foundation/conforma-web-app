@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { Form } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents } from './types'
-import { ElementPluginParameters } from '../utils/types'
-import { buildParameters, evaluateParameters } from './ApplicationViewWrapper'
+import evaluateExpression from '@openmsupply/expression-evaluator'
+import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { buildParameters } from './ApplicationViewWrapper'
 import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 import globalConfig from '../config.json'
@@ -33,23 +34,21 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
 
   useEffect(() => {
     // Runs once on component mount
-    evaluateParameters(
-      parameterExpressions as ElementPluginParameters,
-      {
+    Object.entries(parameterExpressions).forEach(([field, expression]) => {
+      evaluateExpression(expression as IQueryNode, {
         objects: { responses: allResponses, currentUser, applicationData },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-      },
-      setEvaluatedParameters
-    )
-    // .then((result: ElementPluginParameters) => {
-    //   setEvaluatedParameters(result)
-    // })
+      }).then((result: any) =>
+        setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
+      )
+    })
   }, [])
+
   if (!pluginCode || !isVisible) return null
 
   const DefaultSummaryView: React.FC = () => {
-    const combinedParams = { ...parameters, ...evaluatedParameters }
+    const combinedParams = { ...simpleParameters, ...evaluatedParameters }
     return (
       <Form.Field className="element-summary-view" required={isRequired}>
         {displayTitle && (

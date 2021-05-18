@@ -7,7 +7,6 @@ import {
   LooseString,
   ResponseFull,
   ElementPluginParameters,
-  ElementPluginParameterValue,
 } from '../utils/types'
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
@@ -259,25 +258,6 @@ export const buildParameters = (
     } else simpleParameters[key] = value
   }
   return [simpleParameters, parameterExpressions]
-}
-
-export const evaluateParameters = async (
-  parameterExpressions: ElementPluginParameters,
-  evaluatorParameters: EvaluatorParameters,
-  setEvaluatedParameters: any
-) => {
-  if (!parameterExpressions) return {}
-  const fields = Object.keys(parameterExpressions)
-  const expressions = Object.values(parameterExpressions).map(
-    (expression: ElementPluginParameterValue, index) =>
-      evaluateExpression(expression, evaluatorParameters).then()
-  )
-  // const evaluatedExpressions: any = await Promise.all(expressions)
-  // const evaluatedParameters: ElementPluginParameters = {}
-  // for (let i = 0; i < fields.length; i++) {
-  //   evaluatedParameters[fields[i]] = evaluatedExpressions[i]
-  // }
-  // return evaluatedParameters
 }
 
 const calculateValidationState = async ({
