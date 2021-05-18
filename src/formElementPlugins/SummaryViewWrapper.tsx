@@ -33,13 +33,18 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
 
   useEffect(() => {
     // Runs once on component mount
-    evaluateParameters(parameterExpressions as ElementPluginParameters, {
-      objects: { responses: allResponses, currentUser, applicationData },
-      APIfetch: fetch,
-      graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-    }).then((result: ElementPluginParameters) => {
-      setEvaluatedParameters(result)
-    })
+    evaluateParameters(
+      parameterExpressions as ElementPluginParameters,
+      {
+        objects: { responses: allResponses, currentUser, applicationData },
+        APIfetch: fetch,
+        graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+      },
+      setEvaluatedParameters
+    )
+    // .then((result: ElementPluginParameters) => {
+    //   setEvaluatedParameters(result)
+    // })
   }, [])
   if (!pluginCode || !isVisible) return null
 

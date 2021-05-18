@@ -61,12 +61,14 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   // Update dynamic parameters when responses change
   useEffect(() => {
-    evaluateParameters(parameterExpressions as ElementPluginParameters, {
-      objects: { responses: allResponses, currentUser, applicationData },
-      APIfetch: fetch,
-      graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-    }).then((result: ElementPluginParameters) => {
-      setEvaluatedParameters(result)
+    Object.entries(parameterExpressions).forEach(([field, expression]) => {
+      evaluateExpression(expression as IQueryNode, {
+        objects: { responses: allResponses, currentUser, applicationData },
+        APIfetch: fetch,
+        graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+      }).then((result: any) =>
+        setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
+      )
     })
   }, [allResponses])
 
@@ -149,7 +151,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const PluginComponent = (
     <ApplicationView
-      key={JSON.stringify(evaluatedParameters)} // Improve this
+      key={JSON.stringify(evaluatedParameters)} // Forces re-render after dynamic parameter update
       onUpdate={onUpdate}
       onSave={onSave}
       initialValue={currentResponse}
@@ -261,19 +263,21 @@ export const buildParameters = (
 
 export const evaluateParameters = async (
   parameterExpressions: ElementPluginParameters,
-  evaluatorParameters: EvaluatorParameters
+  evaluatorParameters: EvaluatorParameters,
+  setEvaluatedParameters: any
 ) => {
   if (!parameterExpressions) return {}
   const fields = Object.keys(parameterExpressions)
   const expressions = Object.values(parameterExpressions).map(
-    (expression: ElementPluginParameterValue) => evaluateExpression(expression, evaluatorParameters)
+    (expression: ElementPluginParameterValue, index) =>
+      evaluateExpression(expression, evaluatorParameters).then()
   )
-  const evaluatedExpressions: any = await Promise.all(expressions)
-  const evaluatedParameters: ElementPluginParameters = {}
-  for (let i = 0; i < fields.length; i++) {
-    evaluatedParameters[fields[i]] = evaluatedExpressions[i]
-  }
-  return evaluatedParameters
+  // const evaluatedExpressions: any = await Promise.all(expressions)
+  // const evaluatedParameters: ElementPluginParameters = {}
+  // for (let i = 0; i < fields.length; i++) {
+  //   evaluatedParameters[fields[i]] = evaluatedExpressions[i]
+  // }
+  // return evaluatedParameters
 }
 
 const calculateValidationState = async ({
