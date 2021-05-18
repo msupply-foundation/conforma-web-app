@@ -1062,8 +1062,9 @@ export type QueryApplicationStatusHistoryApplicationIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAssignerListArgs = {
-  assignerid?: Maybe<Scalars['Int']>;
+  stageid?: Maybe<Scalars['Int']>;
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
+  assignerid?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -1142,6 +1143,7 @@ export type QueryReviewLevelArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewListArgs = {
+  stageid?: Maybe<Scalars['Int']>;
   reviewerid?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
