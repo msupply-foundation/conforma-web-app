@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { Table, Message } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import messages from '../../utils/messages'
-import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
+import { ApplicationListRow, BasicStringObject, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
 
 interface ApplicationsListProps {
@@ -20,6 +20,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   handleSort,
   loading,
 }) => {
+  const { query } = useRouter()
   return (
     <>
       <Table sortable stackable selectable>
@@ -50,6 +51,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
                 index,
                 columns,
                 application,
+                query,
               }
               const sectionsProps = {
                 index,
@@ -77,16 +79,15 @@ interface ApplicationRowProps {
   index: number
   columns: Array<ColumnDetails>
   application: ApplicationListRow
+  query: BasicStringObject
 }
 
-const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application }) => {
-  const { replace, query } = useRouter()
-
+const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application, query }) => {
   return (
     <Table.Row key={`ApplicationList-application-${application.id}`} className="list-row">
       {columns.map(({ headerName, ColumnComponent }, index) => (
         <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
-          <ColumnComponent application={application} />
+          <ColumnComponent application={application} query={query} />
         </Table.Cell>
       ))}
       <Table.Cell icon="chevron down" />
