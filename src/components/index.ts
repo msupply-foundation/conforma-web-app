@@ -53,7 +53,7 @@ export {
   PageElements,
   Product,
   ProductList,
-ProgressArea,
+  ProgressArea,
   ReviewHeader,
   ReviewSectionProgressBar,
   SectionWrapper,

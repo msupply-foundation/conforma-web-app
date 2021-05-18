@@ -90,6 +90,7 @@ interface ApplicationDetails {
   current: StageAndStatus
   firstStrictInvalidPage: SectionAndPage | null
   submissionMessage?: string
+  startMessage?: string
   user?: GraphQLUser
   org?: GraphQLOrg
   config?: any
@@ -319,19 +320,13 @@ interface ReviewDetails {
   reviewDecision?: ReviewDecision | null
 }
 
-interface ReviewerDetails {
-  id: number
-  firstName: string
-  lastName: string
-  current: boolean
-}
-
 interface ReviewQuestion {
   code: string
   responseId: number
   id: number
   sectionIndex: number
 }
+
 interface ReviewQuestionDecision {
   id: number
   comment?: string | null

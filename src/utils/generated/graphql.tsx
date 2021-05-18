@@ -113,7 +113,6 @@ export type Query = Node & {
   actionPlugin?: Maybe<ActionPlugin>;
   actionQueue?: Maybe<ActionQueue>;
   application?: Maybe<Application>;
-  applicationBySessionId?: Maybe<Application>;
   applicationBySerial?: Maybe<Application>;
   applicationResponse?: Maybe<ApplicationResponse>;
   applicationSection?: Maybe<ApplicationSection>;
@@ -784,12 +783,6 @@ export type QueryActionQueueArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryApplicationArgs = {
   id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryApplicationBySessionIdArgs = {
-  sessionId: Scalars['String'];
 };
 
 
@@ -2179,8 +2172,8 @@ export type ReviewAssignmentFilter = {
   status?: Maybe<ReviewAssignmentStatusFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateSectionRestrictions` field. */
-  templateSectionRestrictions?: Maybe<StringListFilter>;
+  /** Filter by the object’s `allowedSections` field. */
+  allowedSections?: Maybe<StringListFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `timeUpdated` field. */
@@ -2577,6 +2570,10 @@ export type TemplatePermissionFilter = {
   permissionNameId?: Maybe<IntFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `allowedSections` field. */
+  allowedSections?: Maybe<StringListFilter>;
+  /** Filter by the object’s `canSelfAssign` field. */
+  canSelfAssign?: Maybe<BooleanFilter>;
   /** Filter by the object’s `stageNumber` field. */
   stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `levelNumber` field. */
@@ -4547,8 +4544,8 @@ export enum ReviewAssignmentsOrderBy {
   StatusDesc = 'STATUS_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  TemplateSectionRestrictionsAsc = 'TEMPLATE_SECTION_RESTRICTIONS_ASC',
-  TemplateSectionRestrictionsDesc = 'TEMPLATE_SECTION_RESTRICTIONS_DESC',
+  AllowedSectionsAsc = 'ALLOWED_SECTIONS_ASC',
+  AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
   TimeUpdatedAsc = 'TIME_UPDATED_ASC',
@@ -4581,8 +4578,8 @@ export type ReviewAssignmentCondition = {
   status?: Maybe<ReviewAssignmentStatus>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateSectionRestrictions` field. */
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `allowedSections` field. */
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `timeUpdated` field. */
@@ -4620,7 +4617,7 @@ export type ReviewAssignment = Node & {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -5131,6 +5128,10 @@ export enum TemplatePermissionsOrderBy {
   PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  AllowedSectionsAsc = 'ALLOWED_SECTIONS_ASC',
+  AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
+  CanSelfAssignAsc = 'CAN_SELF_ASSIGN_ASC',
+  CanSelfAssignDesc = 'CAN_SELF_ASSIGN_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
   StageNumberDesc = 'STAGE_NUMBER_DESC',
   LevelNumberAsc = 'LEVEL_NUMBER_ASC',
@@ -5149,6 +5150,10 @@ export type TemplatePermissionCondition = {
   permissionNameId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `allowedSections` field. */
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `canSelfAssign` field. */
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `stageNumber` field. */
   stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `levelNumber` field. */
@@ -5177,6 +5182,8 @@ export type TemplatePermission = Node & {
   id: Scalars['Int'];
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign: Scalars['Boolean'];
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -7885,6 +7892,26 @@ export type PermissionPoliciesEdge = {
 /** Methods to use when ordering `PermissionsAll`. */
 export enum PermissionsAllsOrderBy {
   Natural = 'NATURAL',
+  UsernameAsc = 'USERNAME_ASC',
+  UsernameDesc = 'USERNAME_DESC',
+  OrgNameAsc = 'ORG_NAME_ASC',
+  OrgNameDesc = 'ORG_NAME_DESC',
+  TemplateCodeAsc = 'TEMPLATE_CODE_ASC',
+  TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
+  PermissionNameAsc = 'PERMISSION_NAME_ASC',
+  PermissionNameDesc = 'PERMISSION_NAME_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
+  ReviewLevelAsc = 'REVIEW_LEVEL_ASC',
+  ReviewLevelDesc = 'REVIEW_LEVEL_DESC',
+  AllowedSectionsAsc = 'ALLOWED_SECTIONS_ASC',
+  AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
+  CanSelfAssignAsc = 'CAN_SELF_ASSIGN_ASC',
+  CanSelfAssignDesc = 'CAN_SELF_ASSIGN_DESC',
+  RestrictionsAsc = 'RESTRICTIONS_ASC',
+  RestrictionsDesc = 'RESTRICTIONS_DESC',
+  PolicyNameAsc = 'POLICY_NAME_ASC',
+  PolicyNameDesc = 'POLICY_NAME_DESC',
   PermissionTypeAsc = 'PERMISSION_TYPE_ASC',
   PermissionTypeDesc = 'PERMISSION_TYPE_DESC',
   PermissionPolicyIdAsc = 'PERMISSION_POLICY_ID_ASC',
@@ -7893,32 +7920,38 @@ export enum PermissionsAllsOrderBy {
   PermissionPolicyRulesDesc = 'PERMISSION_POLICY_RULES_DESC',
   PermissionNameIdAsc = 'PERMISSION_NAME_ID_ASC',
   PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
-  PermissionNameAsc = 'PERMISSION_NAME_ASC',
-  PermissionNameDesc = 'PERMISSION_NAME_DESC',
   TemplatePermissionIdAsc = 'TEMPLATE_PERMISSION_ID_ASC',
   TemplatePermissionIdDesc = 'TEMPLATE_PERMISSION_ID_DESC',
-  StageNumberAsc = 'STAGE_NUMBER_ASC',
-  StageNumberDesc = 'STAGE_NUMBER_DESC',
-  ReviewLevelAsc = 'REVIEW_LEVEL_ASC',
-  ReviewLevelDesc = 'REVIEW_LEVEL_DESC',
-  TemplatePermissionRestrictionsAsc = 'TEMPLATE_PERMISSION_RESTRICTIONS_ASC',
-  TemplatePermissionRestrictionsDesc = 'TEMPLATE_PERMISSION_RESTRICTIONS_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
-  TemplateCodeAsc = 'TEMPLATE_CODE_ASC',
-  TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC',
-  UsernameAsc = 'USERNAME_ASC',
-  UsernameDesc = 'USERNAME_DESC',
   OrgIdAsc = 'ORG_ID_ASC',
-  OrgIdDesc = 'ORG_ID_DESC',
-  OrgNameAsc = 'ORG_NAME_ASC',
-  OrgNameDesc = 'ORG_NAME_DESC'
+  OrgIdDesc = 'ORG_ID_DESC'
 }
 
 /** A condition to be used against `PermissionsAll` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type PermissionsAllCondition = {
+  /** Checks for equality with the object’s `username` field. */
+  username?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `orgName` field. */
+  orgName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `templateCode` field. */
+  templateCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `permissionName` field. */
+  permissionName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `stageNumber` field. */
+  stageNumber?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewLevel` field. */
+  reviewLevel?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `allowedSections` field. */
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `canSelfAssign` field. */
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `restrictions` field. */
+  restrictions?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `policyName` field. */
+  policyName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `permissionType` field. */
   permissionType?: Maybe<PermissionPolicyType>;
   /** Checks for equality with the object’s `permissionPolicyId` field. */
@@ -7927,32 +7960,38 @@ export type PermissionsAllCondition = {
   permissionPolicyRules?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `permissionNameId` field. */
   permissionNameId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `permissionName` field. */
-  permissionName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templatePermissionId` field. */
   templatePermissionId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `stageNumber` field. */
-  stageNumber?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewLevel` field. */
-  reviewLevel?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templatePermissionRestrictions` field. */
-  templatePermissionRestrictions?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateCode` field. */
-  templateCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `username` field. */
-  username?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `orgId` field. */
   orgId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `orgName` field. */
-  orgName?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `PermissionsAll` object types. All fields are combined with a logical ‘and.’ */
 export type PermissionsAllFilter = {
+  /** Filter by the object’s `username` field. */
+  username?: Maybe<StringFilter>;
+  /** Filter by the object’s `orgName` field. */
+  orgName?: Maybe<StringFilter>;
+  /** Filter by the object’s `templateCode` field. */
+  templateCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `permissionName` field. */
+  permissionName?: Maybe<StringFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewLevel` field. */
+  reviewLevel?: Maybe<IntFilter>;
+  /** Filter by the object’s `allowedSections` field. */
+  allowedSections?: Maybe<StringListFilter>;
+  /** Filter by the object’s `canSelfAssign` field. */
+  canSelfAssign?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `restrictions` field. */
+  restrictions?: Maybe<JsonFilter>;
+  /** Filter by the object’s `policyName` field. */
+  policyName?: Maybe<StringFilter>;
   /** Filter by the object’s `permissionType` field. */
   permissionType?: Maybe<PermissionPolicyTypeFilter>;
   /** Filter by the object’s `permissionPolicyId` field. */
@@ -7961,28 +8000,14 @@ export type PermissionsAllFilter = {
   permissionPolicyRules?: Maybe<JsonFilter>;
   /** Filter by the object’s `permissionNameId` field. */
   permissionNameId?: Maybe<IntFilter>;
-  /** Filter by the object’s `permissionName` field. */
-  permissionName?: Maybe<StringFilter>;
   /** Filter by the object’s `templatePermissionId` field. */
   templatePermissionId?: Maybe<IntFilter>;
-  /** Filter by the object’s `stageNumber` field. */
-  stageNumber?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewLevel` field. */
-  reviewLevel?: Maybe<IntFilter>;
-  /** Filter by the object’s `templatePermissionRestrictions` field. */
-  templatePermissionRestrictions?: Maybe<JsonFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateCode` field. */
-  templateCode?: Maybe<StringFilter>;
   /** Filter by the object’s `userId` field. */
   userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `username` field. */
-  username?: Maybe<StringFilter>;
   /** Filter by the object’s `orgId` field. */
   orgId?: Maybe<IntFilter>;
-  /** Filter by the object’s `orgName` field. */
-  orgName?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<PermissionsAllFilter>>;
   /** Checks for any expressions in this list. */
@@ -8006,21 +8031,24 @@ export type PermissionsAllsConnection = {
 
 export type PermissionsAll = {
   __typename?: 'PermissionsAll';
+  username?: Maybe<Scalars['String']>;
+  orgName?: Maybe<Scalars['String']>;
+  templateCode?: Maybe<Scalars['String']>;
+  permissionName?: Maybe<Scalars['String']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  reviewLevel?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
+  restrictions?: Maybe<Scalars['JSON']>;
+  policyName?: Maybe<Scalars['String']>;
   permissionType?: Maybe<PermissionPolicyType>;
   permissionPolicyId?: Maybe<Scalars['Int']>;
   permissionPolicyRules?: Maybe<Scalars['JSON']>;
   permissionNameId?: Maybe<Scalars['Int']>;
-  permissionName?: Maybe<Scalars['String']>;
   templatePermissionId?: Maybe<Scalars['Int']>;
-  stageNumber?: Maybe<Scalars['Int']>;
-  reviewLevel?: Maybe<Scalars['Int']>;
-  templatePermissionRestrictions?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
-  templateCode?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
-  username?: Maybe<Scalars['String']>;
   orgId?: Maybe<Scalars['Int']>;
-  orgName?: Maybe<Scalars['String']>;
 };
 
 /** A `PermissionsAll` edge in the connection. */
@@ -8533,8 +8561,6 @@ export type Mutation = {
   /** Updates a single `Application` using a unique key and a patch. */
   updateApplication?: Maybe<UpdateApplicationPayload>;
   /** Updates a single `Application` using a unique key and a patch. */
-  updateApplicationBySessionId?: Maybe<UpdateApplicationPayload>;
-  /** Updates a single `Application` using a unique key and a patch. */
   updateApplicationBySerial?: Maybe<UpdateApplicationPayload>;
   /** Updates a single `ApplicationResponse` using its globally unique id and a patch. */
   updateApplicationResponseByNodeId?: Maybe<UpdateApplicationResponsePayload>;
@@ -8694,8 +8720,6 @@ export type Mutation = {
   deleteApplicationByNodeId?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `Application` using a unique key. */
   deleteApplication?: Maybe<DeleteApplicationPayload>;
-  /** Deletes a single `Application` using a unique key. */
-  deleteApplicationBySessionId?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `Application` using a unique key. */
   deleteApplicationBySerial?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `ApplicationResponse` using its globally unique id. */
@@ -9096,12 +9120,6 @@ export type MutationUpdateApplicationByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateApplicationArgs = {
   input: UpdateApplicationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateApplicationBySessionIdArgs = {
-  input: UpdateApplicationBySessionIdInput;
 };
 
 
@@ -9582,12 +9600,6 @@ export type MutationDeleteApplicationByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteApplicationArgs = {
   input: DeleteApplicationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteApplicationBySessionIdArgs = {
-  input: DeleteApplicationBySessionIdInput;
 };
 
 
@@ -10786,6 +10798,8 @@ export type TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateI
 export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -11559,6 +11573,8 @@ export type TemplatePermissionOnTemplatePermissionForTemplatePermissionPermissio
 export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -11619,23 +11635,17 @@ export type ApplicationTemplateIdFkeyInverseInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<Array<ApplicationApplicationPkeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyConnect>>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<Array<ApplicationApplicationSerialKeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<ApplicationNodeIdConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<Array<ApplicationApplicationPkeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyDelete>>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<Array<ApplicationApplicationSerialKeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<ApplicationNodeIdDelete>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<Array<ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationPkeyUpdate>>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<Array<ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSessionIdKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<Array<ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -11647,11 +11657,6 @@ export type ApplicationTemplateIdFkeyInverseInput = {
 /** The fields on `application` to look up the row to connect. */
 export type ApplicationApplicationPkeyConnect = {
   id: Scalars['Int'];
-};
-
-/** The fields on `application` to look up the row to connect. */
-export type ApplicationApplicationSessionIdKeyConnect = {
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to connect. */
@@ -11668,11 +11673,6 @@ export type ApplicationNodeIdConnect = {
 /** The fields on `application` to look up the row to delete. */
 export type ApplicationApplicationPkeyDelete = {
   id: Scalars['Int'];
-};
-
-/** The fields on `application` to look up the row to delete. */
-export type ApplicationApplicationSessionIdKeyDelete = {
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to delete. */
@@ -12132,23 +12132,17 @@ export type ApplicationUserIdFkeyInverseInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<Array<ApplicationApplicationPkeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyConnect>>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<Array<ApplicationApplicationSerialKeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<ApplicationNodeIdConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<Array<ApplicationApplicationPkeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyDelete>>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<Array<ApplicationApplicationSerialKeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<ApplicationNodeIdDelete>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<Array<ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationPkeyUpdate>>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<Array<ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSessionIdKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<Array<ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -12245,23 +12239,17 @@ export type ApplicationOrgIdFkeyInverseInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<Array<ApplicationApplicationPkeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyConnect>>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<Array<ApplicationApplicationSerialKeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<ApplicationNodeIdConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<Array<ApplicationApplicationPkeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyDelete>>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<Array<ApplicationApplicationSerialKeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<ApplicationNodeIdDelete>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<Array<ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationPkeyUpdate>>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<Array<ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSessionIdKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<Array<ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -12362,23 +12350,17 @@ export type ApplicationSectionApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -12483,23 +12465,17 @@ export type ApplicationStageHistoryApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -12828,23 +12804,17 @@ export type ApplicationResponseApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -12942,7 +12912,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -13046,7 +13016,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -13150,7 +13120,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -13254,7 +13224,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisat
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -13521,7 +13491,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -13543,23 +13513,17 @@ export type ReviewAssignmentApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -13701,7 +13665,7 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -13791,7 +13755,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFk
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -14077,7 +14041,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignm
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -14277,7 +14241,7 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -14344,23 +14308,17 @@ export type ReviewApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -14686,23 +14644,17 @@ export type FileApplicationSerialFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -14904,23 +14856,17 @@ export type NotificationApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySessionId?: Maybe<ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -14958,13 +14904,6 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -16773,13 +16712,6 @@ export type NotificationApplicationIdFkeyNotificationCreateInput = {
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
-  sessionId: Scalars['String'];
-};
-
-/** The fields on `application` to look up the row to update. */
 export type ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
@@ -16981,13 +16913,6 @@ export type FileApplicationSerialFkeyFileCreateInput = {
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
-  sessionId: Scalars['String'];
-};
-
-/** The fields on `application` to look up the row to update. */
 export type ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
@@ -17070,7 +16995,7 @@ export type ReviewAssignmentPatch = {
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17097,7 +17022,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17205,7 +17130,7 @@ export type ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCr
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17390,7 +17315,7 @@ export type ReviewAssignmentLevelIdFkeyReviewAssignmentCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17454,7 +17379,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17495,13 +17420,6 @@ export type ReviewApplicationIdFkeyReviewCreateInput = {
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -17560,7 +17478,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17868,7 +17786,7 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17938,7 +17856,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -18007,7 +17925,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -18076,7 +17994,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -18091,13 +18009,6 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -18410,13 +18321,6 @@ export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput =
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch;
-  sessionId: Scalars['String'];
-};
-
-/** The fields on `application` to look up the row to update. */
 export type ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch;
@@ -18475,13 +18379,6 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationStageHistoryCreat
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyPatch;
-  sessionId: Scalars['String'];
-};
-
-/** The fields on `application` to look up the row to update. */
 export type ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyPatch;
@@ -18534,13 +18431,6 @@ export type ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput = {
   templateSectionId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<ApplicationSectionApplicationIdFkeyInput>;
   templateSectionToTemplateSectionId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch;
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -18618,13 +18508,6 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch;
-  sessionId: Scalars['String'];
-};
-
-/** The fields on `application` to look up the row to update. */
 export type ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch;
@@ -18695,13 +18578,6 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSessionIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch;
-  sessionId: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -18784,6 +18660,8 @@ export type TemplatePermissionPatch = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -18795,6 +18673,8 @@ export type TemplatePermissionPatch = {
 export type TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -19186,6 +19066,8 @@ export type TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeI
 export type TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -20414,7 +20296,7 @@ export type ReviewAssignmentInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -20919,6 +20801,8 @@ export type TemplatePermissionInput = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  canSelfAssign?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -21333,15 +21217,6 @@ export type UpdateApplicationInput = {
   /** An object where the defined keys will be set on the `Application` being updated. */
   patch: ApplicationPatch;
   id: Scalars['Int'];
-};
-
-/** All input for the `updateApplicationBySessionId` mutation. */
-export type UpdateApplicationBySessionIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `Application` being updated. */
-  patch: ApplicationPatch;
-  sessionId: Scalars['String'];
 };
 
 /** All input for the `updateApplicationBySerial` mutation. */
@@ -22888,13 +22763,6 @@ export type DeleteApplicationInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
-};
-
-/** All input for the `deleteApplicationBySessionId` mutation. */
-export type DeleteApplicationBySessionIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  sessionId: Scalars['String'];
 };
 
 /** All input for the `deleteApplicationBySerial` mutation. */
@@ -24671,7 +24539,7 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'levelNumber' | 'status' | 'timeUpdated' | 'reviewerId' | 'isLastLevel' | 'templateSectionRestrictions' | 'trigger'>
+      & Pick<ReviewAssignment, 'id' | 'levelNumber' | 'status' | 'timeUpdated' | 'reviewerId' | 'isLastLevel' | 'allowedSections' | 'trigger'>
       & { reviewer?: Maybe<(
         { __typename?: 'User' }
         & Pick<User, 'id' | 'firstName' | 'lastName'>
@@ -25682,7 +25550,7 @@ export const GetReviewInfoDocument = gql`
       levelNumber
       reviewerId
       isLastLevel
-      templateSectionRestrictions
+      allowedSections
       trigger
       reviewer {
         id
