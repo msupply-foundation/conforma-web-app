@@ -361,19 +361,12 @@ a:hover {
 // NOTE: The review page shares a lot of styles with Application Summary
 
 .review-comment-area {
-  background-color: @reviewCommentBackground;
   margin-top: 10px;
   margin-left: -20px;
   margin-right: -20px;
   margin-bottom: -14px;
   border-top: 1px solid @surfacesMed;
   border-bottom: 1px solid @surfacesMed;
-}
-
-.review-comment-grid.ui.grid {
-  padding: 10px 20px;
-  font-size: @smallerText;
-  color: @headersInteractiveLow;
 }
 
 .review-approve-all-button {
@@ -592,6 +585,12 @@ a:hover {
 
 // .element-summary-view {
 // }
+
+.element-grid.ui.grid {
+  padding: 10px 20px;
+  font-size: @smallerText;
+  color: @headersInteractiveLow;
+}
 
 // For change request borders
 .element-warning-border {
@@ -912,6 +911,11 @@ a:hover {
 .right-justify-content {
   width: 100%;
   text-align: right;
+}
+
+// Background for Active elements changes (Summary/Review/Consolidation)
+.changeable-background {
+  background-color: @activeCommentBackground !important;
 }
 
 /*******************************
