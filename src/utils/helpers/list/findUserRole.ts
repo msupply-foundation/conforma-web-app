@@ -16,9 +16,9 @@ type UserRoles = {
 
 const userRoles: UserRoles = {
   applicant: [PermissionPolicyType.Apply],
-  consolidator: [PermissionPolicyType.Assign, PermissionPolicyType.Review],
+  // consolidator: [PermissionPolicyType.Assign, PermissionPolicyType.Review],
   reviewer: [PermissionPolicyType.Review],
-  assigner: [PermissionPolicyType.Assign],
+  // assigner: [PermissionPolicyType.Assign],
 }
 
 // permissions: Array<PermissionPolicyType>

@@ -1,7 +1,7 @@
 enum USER_ROLES {
-  ASSIGNER = 'assigner',
+  // ASSIGNER = 'assigner',
   APPLICANT = 'applicant',
-  CONSOLIDATOR = 'consolidator',
+  // CONSOLIDATOR = 'consolidator',
   REVIEWER = 'reviewer',
 }
 

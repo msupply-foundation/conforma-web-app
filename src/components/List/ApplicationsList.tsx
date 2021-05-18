@@ -90,7 +90,6 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application, q
           <ColumnComponent application={application} query={query} />
         </Table.Cell>
       ))}
-      <Table.Cell icon="chevron down" />
     </Table.Row>
   )
 }
