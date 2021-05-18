@@ -31,6 +31,8 @@ export default gql`
         status
         outcome
         lastActiveDate
+        reviewerAction
+        assignerAction
         reviewAssignedCount
         reviewAssignedNotStartedCount
         reviewAvailableForSelfAssignmentCount
