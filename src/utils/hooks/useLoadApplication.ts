@@ -189,7 +189,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     error: structureError || error?.message,
     isLoading: loading || isLoading,
     structure,
-    template,
   }
 }
 
