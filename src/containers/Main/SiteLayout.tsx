@@ -7,7 +7,7 @@ import {
   Approval,
   Admin,
   Config,
-  Home,
+  Dashboard,
   Notification,
   NotificationsList,
   NoMatch,
@@ -29,6 +29,7 @@ import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpda
 import { LookupTableRoutes } from '../../LookupTable'
 import { Container } from 'semantic-ui-react'
 import DevOptions from '../Dev/DevOptions'
+import LayoutHelpers from '../../components/LayoutHelpers'
 
 const SiteLayout: React.FC = () => {
   return (
@@ -39,7 +40,10 @@ const SiteLayout: React.FC = () => {
         <Container id="content-area">
           <Switch>
             <Route exact path="/">
-              <Home />
+              <Dashboard />
+            </Route>
+            <Route exact path="/layout">
+              <LayoutHelpers />
             </Route>
             <Route exact path="/login">
               <Login />

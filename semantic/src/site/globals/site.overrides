@@ -64,6 +64,31 @@ a:hover {
 }
 
 /*--------------------------------
+   Common layout
+---------------------------------*/
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-row-center {
+  .flex-row();
+  justify-content: center;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-column-center {
+  .flex-column();
+  justify-content: center;
+}
+
+
+
+/*--------------------------------
    Login page
 ---------------------------------*/
 
@@ -737,6 +762,124 @@ a:hover {
 }
 
 /*--------------------------------
+      Dashboard
+---------------------------------*/
+
+// Layouts
+#dashboard {
+  .flex-row-center();
+  flex-wrap: wrap;
+
+  .template-category {
+    .flex-column-center();
+    align-items: center;
+
+    .title {
+      .flex-row();
+      align-items: center;
+    }
+  }
+
+  .templates {
+    .flex-row-center();
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .template {
+    .flex-column();
+
+    .title {
+      .flex-row-center();
+      align-items: start;
+    }
+  }
+
+  .filters {
+    .flex-column();
+    flex-grow: 1;
+  }
+  
+  .filter {
+    display: flex;
+    align-items: center;
+  }
+
+  .view-all-area {
+    display: flex;
+    max-width: 100%;
+  }
+
+  .view-all {
+    .flex-row-center() ;
+    align-items: center;
+    text-align: center;
+    flex-grow: 1;
+
+    div {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+// Margin and padding
+#dashboard {
+  .template {
+    margin: 15px;
+    max-width: 330px;
+    border-radius: @borderRadius;
+    background-color: @surfacesWhite;
+    box-shadow: @templateBoxShadow;
+    
+    .title {
+      padding: 10px;
+      padding-bottom: 3px;
+
+      .header {
+        margin: 2px;
+      }
+    }
+  }
+
+  .template-category {
+    margin: 10px;
+
+    .title {
+     
+      a {
+        margin-left: 10px;
+      }
+
+      .header {
+        margin: 2px;
+      }
+    }
+  }
+
+  .filters {
+    margin: 5px;
+    padding: 3px
+  }
+
+  .view-all {
+    padding: 5px;
+    font-weight: @semiboldWeight;
+    color:grey !important;
+    border-top: 1px solid rgba(0,0,0,.08);
+
+    i {
+      padding-right: 6px;
+    }
+  }
+}
+
+
+// #dashboard .template-category  .category-header {
+
+// }
+
+/*--------------------------------
       General used classes
 ---------------------------------*/
 
@@ -845,6 +988,9 @@ h5:last-child,
 h6:first-child {
   margin-bottom: 0em;
 }
+
+
+
 
 /*-----------------------------------------------------
       Mobile & Desktop

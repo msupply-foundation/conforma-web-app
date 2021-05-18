@@ -8,7 +8,7 @@ import {
 import Approval from './Approval'
 import Admin from './Admin'
 import FilterList from './FilterList'
-import Home from './Home'
+import Dashboard from './Dashboard'
 import Loading from './Loading'
 import { Footer, ModalWarning } from './Main'
 import { ReviewHeader } from './Review'
@@ -43,7 +43,7 @@ export {
   ConsolidationSectionProgressBar,
   FilterList,
   Footer,
-  Home,
+  Dashboard,
   Loading,
   ModalWarning,
   Navigation,
