@@ -110,9 +110,9 @@ const mapQueryToFilterField: FilterMap = {
   status: (values: string) => ({ status: inEnumList(values, ApplicationStatus) }),
 
   outcome: (values: string) => ({ outcome: inEnumList(values, ApplicationOutcome) }),
+
   // action
-  // assigned
-  // consolidator
+
   applicant: (values: string) => ({
     or: [
       { applicant: inList(values) },
@@ -122,7 +122,12 @@ const mapQueryToFilterField: FilterMap = {
     ],
   }),
 
+  reviewer: (value: string) => ({ reviewerUsernames: inArray(value) }),
+
+  assigner: (value: string) => ({ assignerUsernames: inArray(value) }),
+
   org: (values: string) => ({ orgName: inList(values) }),
+
   // deadlineDate (TBD)
 
   search: (value: string) => ({
@@ -138,6 +143,9 @@ const mapQueryToFilterField: FilterMap = {
 }
 
 const splitCommaList = (values: string) => values.split(',')
+
+// Use this to find string in an array of strings
+const inArray = (value: string) => ({ anyEqualTo: value })
 
 // Use this if the values can be free text strings (e.g. stage name)
 const inList = (values: string) => ({ inInsensitive: splitCommaList(values) })
