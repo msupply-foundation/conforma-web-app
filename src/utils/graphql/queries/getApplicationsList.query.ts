@@ -32,7 +32,7 @@ export default gql`
         outcome
         lastActiveDate
         reviewerAction
-        assignerAction
+        # assignerAction
         reviewAssignedCount
         reviewAssignedNotStartedCount
         reviewAvailableForSelfAssignmentCount
