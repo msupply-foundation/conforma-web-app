@@ -52,7 +52,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
   const {
-    info: { isLinear, current },
+    info: { isLinear, isChangeRequest, current },
   } = fullStructure
 
   return (
@@ -71,6 +71,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
               <Header as="h4" content={fullStructure.sections[sectionCode].details.title} />
               <PageElements
                 canEdit={current?.status === ApplicationStatus.Draft}
+                isUpdating={isChangeRequest}
                 elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
                 responsesByCode={fullStructure.responsesByCode}
                 applicationData={fullStructure.info}
