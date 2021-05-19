@@ -79,15 +79,14 @@ interface ApplicationRowProps {
   index: number
   columns: Array<ColumnDetails>
   application: ApplicationListRow
-  query: BasicStringObject
 }
 
-const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application, query }) => {
+const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application }) => {
   return (
     <Table.Row key={`ApplicationList-application-${application.id}`} className="list-row">
       {columns.map(({ headerName, ColumnComponent }, index) => (
         <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
-          <ColumnComponent application={application} query={query} />
+          <ColumnComponent application={application} />
         </Table.Cell>
       ))}
     </Table.Row>

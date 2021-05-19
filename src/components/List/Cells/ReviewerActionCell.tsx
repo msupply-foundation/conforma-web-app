@@ -1,6 +1,5 @@
 import React, { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
-import { Label } from 'semantic-ui-react'
 import { CellProps } from '../../../utils/types'
 import strings from '../../../utils/constants'
 
