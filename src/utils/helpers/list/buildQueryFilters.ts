@@ -98,8 +98,6 @@ const mapQueryToFilterField: FilterMap = {
 
   outcome: (values: string) => ({ outcome: inEnumList(values, ApplicationOutcome) }),
 
-  action: (values: string) => ({ reviewerAction: inArray(values) }),
-
   applicant: (values: string) => ({
     or: [
       { applicant: inList(values) },
@@ -109,11 +107,13 @@ const mapQueryToFilterField: FilterMap = {
     ],
   }),
 
-  reviewer: (value: string) => ({ reviewerUsernames: inArray(value) }),
+  reviewer: (values: string) => ({ reviewerUsernames: inArray(values) }),
 
-  assigner: (value: string) => ({ assignerUsernames: inArray(value) }),
+  assigner: (values: string) => ({ assignerUsernames: inArray(values) }),
 
   org: (values: string) => ({ orgName: inList(values) }),
+
+  reviewerAction: (value: string) => ({ reviewerAction: { equalTo: value } }),
 
   // deadlineDate (TBD)
 
