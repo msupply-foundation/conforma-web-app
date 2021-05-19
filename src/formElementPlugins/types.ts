@@ -18,6 +18,7 @@ interface ApplicationViewWrapperProps {
     reviewerComment: string
   }
   allResponses: ResponsesByCode
+  onSaveUpdateMethod?: Function
   currentResponse: ResponseFull | null
   applicationData: ApplicationDetails
   currentReview?: ReviewResponse

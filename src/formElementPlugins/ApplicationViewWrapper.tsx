@@ -22,8 +22,16 @@ import globalConfig from '../config.json'
 const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
-  const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
-    props
+  const [responseMutation] = useUpdateResponseMutation()
+  const {
+    element,
+    isStrictPage,
+    changesRequired,
+    currentResponse,
+    allResponses,
+    applicationData,
+    onSaveUpdateMethod = responseMutation,
+  } = props
 
   const {
     code,
@@ -38,7 +46,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const isValid = currentResponse?.isValid || true
 
-  const [responseMutation] = useUpdateResponseMutation()
   const { setState: setUpdateTrackerState } = useFormElementUpdateTracker()
 
   const {
@@ -99,7 +106,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       // Validate and Save response -- generic
       const validationResult: ValidationState = await onUpdate(jsonValue?.text)
       if (jsonValue?.text !== undefined)
-        await responseMutation({
+        await onSaveUpdateMethod({
           variables: {
             id: currentResponse?.id as number,
             value: jsonValue,
@@ -108,7 +115,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         })
       if (jsonValue === null)
         // Reset response if cleared
-        await responseMutation({
+        await onSaveUpdateMethod({
           variables: {
             id: currentResponse?.id as number,
             value: null,
@@ -124,7 +131,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       const { isValid, validationMessage } = jsonValue.customValidation
       setValidationState({ isValid, validationMessage })
       delete jsonValue.customValidation // Don't want to save this field
-      await responseMutation({
+      await onSaveUpdateMethod({
         variables: {
           id: currentResponse?.id as number,
           value: jsonValue,
