@@ -150,7 +150,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const PluginComponent = (
     <ApplicationView
-      key={JSON.stringify(evaluatedParameters)} // Forces re-render after dynamic parameter update
       onUpdate={onUpdate}
       onSave={onSave}
       initialValue={currentResponse}
