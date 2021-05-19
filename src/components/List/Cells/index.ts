@@ -1,5 +1,6 @@
 import ApplicantActionCell from './ApplicantActionCell'
-import ApplicationNameCell from './ApplicationNameCell'
+import { ApplicationNameCell } from './ApplicationNameCells'
+import { ApplicationNameReviewLinkCell } from './ApplicationNameCells'
 import ApplicantCell from './ApplicantCell'
 import ConsolidatorCell from './ConsolidatorCell'
 import DeadlineCell from './DeadlineCell'
@@ -13,6 +14,7 @@ import OutcomeCell from './OutcomeCell'
 
 export {
   ApplicationNameCell,
+  ApplicationNameReviewLinkCell,
   ApplicantActionCell,
   ApplicantCell,
   ConsolidatorCell,

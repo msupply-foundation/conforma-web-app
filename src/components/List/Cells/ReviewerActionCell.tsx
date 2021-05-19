@@ -1,6 +1,5 @@
 import React, { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
-import { Label } from 'semantic-ui-react'
 import { CellProps } from '../../../utils/types'
 import strings from '../../../utils/constants'
 
@@ -54,13 +53,13 @@ const ReviewerActionCell: React.FC<CellProps> = ({
     <>
       {actions.map((action, index) => {
         return (
-          <>
+          <React.Fragment key={index}>
             {/* To-do: style the | once we can see it properly */}
             {index > 0 ? <span>{' | '}</span> : ''}
-            <Link key={index} className="user-action" to={`/application/${serial}/review`}>
+            <Link className="user-action" to={`/application/${serial}/review`}>
               {action}
             </Link>
-          </>
+          </React.Fragment>
         )
       })}
     </>
