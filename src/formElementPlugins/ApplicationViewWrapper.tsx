@@ -3,6 +3,7 @@ import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
 import {
+  EvaluatorNode,
   EvaluatorParameters,
   LooseString,
   ResponseFull,
@@ -14,7 +15,6 @@ import validate from './defaultValidate'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { Form, Icon, Loader } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
-import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import strings from '../utils/constants'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'
 import messages from '../utils/messages'
@@ -23,14 +23,8 @@ import globalConfig from '../config.json'
 const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
-  const {
-    element,
-    isStrictPage,
-    changesRequired,
-    currentResponse,
-    allResponses,
-    applicationData,
-  } = props
+  const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
+    props
 
   const {
     code,
@@ -273,10 +267,8 @@ export const evaluateDynamicParameters = async (
 ) => {
   if (!dynamicExpressions) return {}
   const fields = Object.keys(dynamicExpressions)
-  const expressions = Object.values(
-    dynamicExpressions
-  ).map((expression: ElementPluginParameterValue) =>
-    evaluateExpression(expression, evaluatorParameters)
+  const expressions = Object.values(dynamicExpressions).map(
+    (expression: ElementPluginParameterValue) => evaluateExpression(expression, evaluatorParameters)
   )
   const evaluatedExpressions: any = await Promise.all(expressions)
   const evaluatedParameters: ElementPluginParameters = {}
@@ -295,7 +287,7 @@ const calculateValidationState = async ({
   evaluationParameters,
   currentResponse,
 }: {
-  validationExpression: IQueryNode | undefined
+  validationExpression: EvaluatorNode | undefined
   validationMessage: string | null | undefined
   isRequired: boolean | undefined
   isStrictPage: boolean | undefined

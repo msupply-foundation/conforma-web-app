@@ -70,7 +70,15 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
 
   if (error) return <Message error header={strings.ERROR_APPLICATION_SUBMIT} list={[error]} />
   if (!fullStructure) return <Loading />
-  const { sections, responsesByCode, info } = fullStructure
+  const {
+    sections,
+    responsesByCode,
+    info: {
+      serial,
+      current: { status },
+      isChangeRequest,
+    },
+  } = fullStructure
   return (
     <Container id="application-summary">
       <div id="application-summary-header">
@@ -87,15 +95,16 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
               section={section}
               responsesByCode={responsesByCode as ResponsesByCode}
               applicationData={fullStructure.info}
-              serial={info.serial}
+              serial={serial}
               isSummary
-              canEdit={info.current?.status === ApplicationStatus.Draft}
+              canEdit={status === ApplicationStatus.Draft}
+              isUpdating={isChangeRequest}
             />
           ))}
         </div>
         {/* <ModalWarning showModal={showModal} /> */}
 
-        {info.current?.status === ApplicationStatus.Draft ? (
+        {status === ApplicationStatus.Draft ? (
           <div id="application-submit">
             <Button
               primary

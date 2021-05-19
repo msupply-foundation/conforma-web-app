@@ -26,7 +26,7 @@
 @headersInteractiveLow: #4a4a4a;
 @surfacesDark: #aeaeae;
 @surfacesMed: #dcdddd;
-@surfacesLight: #F0F0F0;
+@surfacesLight: #f0f0f0;
 @surfacesWhite: #ffffff;
 //
 @interactiveHigh: #003bfe;
@@ -48,8 +48,8 @@
 // Others
 @headersInteractiveMed: #656565;
 @borderColourDark: #777777;
-@reviewCommentBackground: azure;
-// 
+@activeCommentBackground: azure;
+//
 @boxShadowColor: #d4d4d5;
 
 /*------------------------
@@ -167,5 +167,5 @@
 // Box shadow -- used in Login form
 @basicBoxShadow: @boxShadowColor 0px -3px 10px 0px;
 
-// Box shadow -- used in Dashboard 
+// Box shadow -- used in Dashboard
 @templateBoxShadow: 0 1px 3px 0 @boxShadowColor, 0 0 0 1px @boxShadowColor;

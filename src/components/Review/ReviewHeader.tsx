@@ -1,7 +1,6 @@
-import React, { CSSProperties } from 'react'
+import React from 'react'
 import { Container, Header } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import { User } from '../../utils/types'
 import Stage from './Stage'
 
 export interface ReviewHeaderProps {
@@ -14,7 +13,7 @@ const ReviewHeader: React.FC<ReviewHeaderProps> = ({
   applicationStage,
   applicationStageColour,
   applicationName,
-  children
+  children,
 }) => {
   return (
     <Container id="application-summary">

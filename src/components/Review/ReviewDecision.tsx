@@ -1,5 +1,5 @@
 import React from 'react'
-import { Checkbox, Container, Form, Header, Label, Message } from 'semantic-ui-react'
+import { Checkbox, Container, Form, Message } from 'semantic-ui-react'
 import { Decision } from '../../utils/generated/graphql'
 import { DecisionOption } from '../../utils/types'
 import strings from '../../utils/constants'
