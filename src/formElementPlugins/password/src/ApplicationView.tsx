@@ -37,6 +37,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   } = useUserState()
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
+  const [confirmationIsActive, setConfirmationIsActive] = useState(false)
   const [internalValidation, setInternalValidation] = useState({
     isValid: true,
     validationMessage: validationMessageInternal,
@@ -64,10 +65,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         })
         setInternalValidation(customValidation)
       }
-    } else setPasswordConfirm(e.target.value)
+    } else {
+      setConfirmationIsActive(true)
+      setPasswordConfirm(e.target.value)
+    }
   }
 
   async function handleLoseFocus(e: any) {
+    if (e.target.name === 'passwordConfirm') setConfirmationIsActive(false)
     const responses = { thisResponse: password || '', ...allResponses }
     const customValidation = await validate(validationInternal, validationMessageInternal, {
       objects: { responses, currentUser, applicationData },
@@ -124,7 +129,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           disabled={!isEditable}
           type={masked ? 'password' : undefined}
           error={
-            passwordConfirm !== password && passwordConfirm !== ''
+            passwordConfirm !== password && passwordConfirm !== '' && !confirmationIsActive
               ? {
                   content: strings.ALERT_PASSWORDS_DONT_MATCH,
                   pointing: 'above',
