@@ -13,12 +13,11 @@ type UseUpdateReviewAssignmentMutationReturnType = ReturnType<
 >
 type PromiseReturnType = ReturnType<UseUpdateReviewAssignmentMutationReturnType[0]>
 // hook used to assign section/s to user as per type definition below (returns promise that resolve with mutation result data)
-type UseUpdateReviewAssignment = (
-  structure: FullStructure
-) => {
+type UseUpdateReviewAssignment = (structure: FullStructure) => {
   assignSectionToUser: (props: {
     // Section code is optional if omitted all sections are assigned
     sectionCode?: string
+    assignerId?: number
     assignment: AssignmentDetails
     // isSelfAssignment defaults to false
     isSelfAssignment?: boolean
@@ -26,6 +25,7 @@ type UseUpdateReviewAssignment = (
 }
 
 type ConstructAssignSectionPatch = (
+  assignerId?: number,
   sectionCode?: string,
   isSelfAssignment?: boolean
 ) => ReviewAssignmentPatch
@@ -34,6 +34,7 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
   const [updateAssignment] = useUpdateReviewAssignmentMutation()
 
   const constructAssignSectionPatch: ConstructAssignSectionPatch = (
+    assignerId,
     sectionCode,
     isSelfAssignment
   ) => {
@@ -52,6 +53,7 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
 
     return {
       status: ReviewAssignmentStatus.Assigned,
+      assignerId: assignerId ? assignerId : null,
       // onReviewSelfAssign will trigger core action to disallow other reviewers to self assign
       trigger: isSelfAssignment ? Trigger.OnReviewSelfAssign : Trigger.OnReviewAssign,
       timeUpdated: new Date().toISOString(),
@@ -62,11 +64,16 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
   }
 
   return {
-    assignSectionToUser: async ({ sectionCode, assignment, isSelfAssignment = false }) => {
+    assignSectionToUser: async ({
+      assignerId,
+      sectionCode,
+      assignment,
+      isSelfAssignment = false,
+    }) => {
       const result = await updateAssignment({
         variables: {
           assignmentId: assignment.id,
-          assignmentPatch: constructAssignSectionPatch(sectionCode, isSelfAssignment),
+          assignmentPatch: constructAssignSectionPatch(assignerId, sectionCode, isSelfAssignment),
         },
       })
 

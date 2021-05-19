@@ -301,6 +301,7 @@ interface ResponsesByCode {
 }
 
 type ReviewSectionComponentProps = {
+  userId: number
   fullStructure: FullStructure
   section: SectionState
   assignment: AssignmentDetails

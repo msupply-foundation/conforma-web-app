@@ -12,10 +12,11 @@ type AssignmentSectionRowProps = {
   assignments: AssignmentDetails[]
   sectionCode: string
   structure: FullStructure
+  userId: number
 }
 // Component renders options calculated in getAssignmentOptions, and will execute assignment mutation on drop down change
 const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
-  const { structure, sectionCode, assignments } = props
+  const { assignments, sectionCode, structure, userId } = props
   const [assignmentError, setAssignmentError] = useState(false)
 
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
@@ -27,7 +28,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     if (!assignment) return
 
     try {
-      await assignSectionToUser({ assignment, sectionCode })
+      await assignSectionToUser({ assignment, assignerId: userId, sectionCode })
     } catch (e) {
       console.log(e)
       setAssignmentError(true)
