@@ -20,7 +20,6 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   handleSort,
   loading,
 }) => {
-  const { query } = useRouter()
   return (
     <>
       <Table sortable stackable selectable>
@@ -51,7 +50,6 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
                 index,
                 columns,
                 application,
-                query,
               }
               const sectionsProps = {
                 index,

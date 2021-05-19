@@ -139,7 +139,6 @@ interface BasicStringObject {
 
 interface CellProps {
   application: ApplicationListShape
-  query: BasicStringObject
 }
 
 interface ColumnDetails {
