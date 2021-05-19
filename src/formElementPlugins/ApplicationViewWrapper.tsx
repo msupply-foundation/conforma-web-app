@@ -61,7 +61,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   // Update dynamic parameters when responses change
   useEffect(() => {
     Object.entries(parameterExpressions).forEach(([field, expression]) => {
-      evaluateExpression(expression as IQueryNode, {
+      evaluateExpression(expression as EvaluatorNode, {
         objects: { responses: allResponses, currentUser, applicationData },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
