@@ -159,6 +159,7 @@ export type Query = Node & {
   applicationList?: Maybe<ApplicationListShapesConnection>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
   assignerList?: Maybe<AssignerListConnection>;
+  assignmentList?: Maybe<AssignmentListConnection>;
   getTemplateCode?: Maybe<Scalars['String']>;
   jwtGetBigint?: Maybe<Scalars['BigInt']>;
   jwtGetBoolean?: Maybe<Scalars['Boolean']>;
@@ -1067,6 +1068,18 @@ export type QueryAssignerListArgs = {
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
   filter?: Maybe<AssignerListRecordFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAssignmentListArgs = {
+  stageid?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<AssignmentListRecordFilter>;
 };
 
 
@@ -6973,6 +6986,10 @@ export enum ApplicationListShapesOrderBy {
   OutcomeDesc = 'OUTCOME_DESC',
   LastActiveDateAsc = 'LAST_ACTIVE_DATE_ASC',
   LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC',
+  AssignerUsernamesAsc = 'ASSIGNER_USERNAMES_ASC',
+  AssignerUsernamesDesc = 'ASSIGNER_USERNAMES_DESC',
+  ReviewerUsernamesAsc = 'REVIEWER_USERNAMES_ASC',
+  ReviewerUsernamesDesc = 'REVIEWER_USERNAMES_DESC',
   IsFullyAssignedLevel_1Asc = 'IS_FULLY_ASSIGNED_LEVEL_1_ASC',
   IsFullyAssignedLevel_1Desc = 'IS_FULLY_ASSIGNED_LEVEL_1_DESC',
   ReviewAvailableForSelfAssignmentCountAsc = 'REVIEW_AVAILABLE_FOR_SELF_ASSIGNMENT_COUNT_ASC',
@@ -7029,6 +7046,10 @@ export type ApplicationListShapeCondition = {
   outcome?: Maybe<ApplicationOutcome>;
   /** Checks for equality with the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `assignerUsernames` field. */
+  assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `reviewerUsernames` field. */
+  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `isFullyAssignedLevel1` field. */
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `reviewAvailableForSelfAssignmentCount` field. */
@@ -7086,6 +7107,10 @@ export type ApplicationListShapeFilter = {
   outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Filter by the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `assignerUsernames` field. */
+  assignerUsernames?: Maybe<StringListFilter>;
+  /** Filter by the object’s `reviewerUsernames` field. */
+  reviewerUsernames?: Maybe<StringListFilter>;
   /** Filter by the object’s `isFullyAssignedLevel1` field. */
   isFullyAssignedLevel1?: Maybe<BooleanFilter>;
   /** Filter by the object’s `reviewAvailableForSelfAssignmentCount` field. */
@@ -7172,6 +7197,8 @@ export type ApplicationListShape = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
   reviewAvailableForSelfAssignmentCount?: Maybe<Scalars['BigInt']>;
   reviewAssignedCount?: Maybe<Scalars['BigInt']>;
@@ -8412,6 +8439,50 @@ export type AssignerListEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `AssignerListRecord` at the end of the edge. */
   node?: Maybe<AssignerListRecord>;
+};
+
+/** A filter to be used against `AssignmentListRecord` object types. All fields are combined with a logical ‘and.’ */
+export type AssignmentListRecordFilter = {
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewerUsernames` field. */
+  reviewerUsernames?: Maybe<StringListFilter>;
+  /** Filter by the object’s `assignerUsernames` field. */
+  assignerUsernames?: Maybe<StringListFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<AssignmentListRecordFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<AssignmentListRecordFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<AssignmentListRecordFilter>;
+};
+
+/** A connection to a list of `AssignmentListRecord` values. */
+export type AssignmentListConnection = {
+  __typename?: 'AssignmentListConnection';
+  /** A list of `AssignmentListRecord` objects. */
+  nodes: Array<Maybe<AssignmentListRecord>>;
+  /** A list of edges which contains the `AssignmentListRecord` and cursor to aid in pagination. */
+  edges: Array<AssignmentListEdge>;
+  /** The count of *all* `AssignmentListRecord` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** The return type of our `assignmentList` query. */
+export type AssignmentListRecord = {
+  __typename?: 'AssignmentListRecord';
+  applicationId?: Maybe<Scalars['Int']>;
+  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+/** A `AssignmentListRecord` edge in the connection. */
+export type AssignmentListEdge = {
+  __typename?: 'AssignmentListEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `AssignmentListRecord` at the end of the edge. */
+  node?: Maybe<AssignmentListRecord>;
 };
 
 /** A filter to be used against `ReviewListRecord` object types. All fields are combined with a logical ‘and.’ */
@@ -19647,6 +19718,8 @@ export type ApplicationListShapeInput = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
   reviewAvailableForSelfAssignmentCount?: Maybe<Scalars['BigInt']>;
   reviewAssignedCount?: Maybe<Scalars['BigInt']>;
