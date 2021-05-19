@@ -1,54 +1,35 @@
-import React, { CSSProperties } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
-import { Label } from 'semantic-ui-react'
 import { CellProps } from '../../../utils/types'
 import strings from '../../../utils/constants'
+import { ReviewerAction } from '../../../utils/generated/graphql'
 
 const ReviewerActionCell: React.FC<CellProps> = ({
-  application: {
-    reviewAssignedNotStartedCount,
-    reviewAssignedCount,
-    reviewDraftCount,
-    reviewPendingCount,
-    reviewSubmittedCount,
-    reviewAvailableForSelfAssignmentCount,
-    serial,
-    assignCount,
-    isFullyAssignedLevel1,
-  },
+  application: { serial, assignCount, reviewerAction, isFullyAssignedLevel1 },
 }) => {
   const actions = []
   const notZero = (num: number | undefined) => num && Number(num) !== 0
-  let canShowView = notZero(reviewAssignedCount) || notZero(reviewSubmittedCount)
-  let canShowStart = notZero(reviewAssignedNotStartedCount)
 
-  if (notZero(reviewPendingCount)) {
-    canShowView = canShowStart = false
-    actions.push(strings.ACTION_RE_REVIEW)
+  const getActionString = (reviewerAction: ReviewerAction) => {
+    switch (reviewerAction) {
+      case ReviewerAction.UpdateReview:
+        return strings.ACTION_UPDATE
+      case ReviewerAction.RestartReview:
+        return strings.ACTION_RE_REVIEW
+      case ReviewerAction.ContinueReview:
+        return strings.ACTION_CONTINUE
+      case ReviewerAction.StartReview:
+        return strings.ACTION_START
+      default:
+        return strings.ACTION_VIEW
+    }
   }
 
-  if (notZero(reviewDraftCount)) {
-    canShowView = false
-    actions.push(strings.ACTION_CONTINUE)
-  }
+  if (!!reviewerAction) actions.push(getActionString(reviewerAction))
 
-  if (notZero(reviewAvailableForSelfAssignmentCount)) {
-    canShowView = false
-    actions.push(strings.ACTION_SELF_ASSIGN)
-  }
+  if (notZero(assignCount) && isFullyAssignedLevel1) actions.push(strings.ACTION_RE_ASSIGN)
 
-  if (notZero(assignCount) && isFullyAssignedLevel1) {
-    canShowView = false
-    actions.push(strings.ACTION_RE_ASSIGN)
-  }
-
-  if (notZero(assignCount) && !isFullyAssignedLevel1) {
-    canShowView = false
-    actions.push(strings.ACTION_ASSIGN)
-  }
-
-  if (canShowStart) actions.push(strings.ACTION_START)
-  else if (canShowView) actions.push(strings.ACTION_VIEW)
+  if (notZero(assignCount) && !isFullyAssignedLevel1) actions.push(strings.ACTION_ASSIGN)
 
   return (
     <>

@@ -33,13 +33,6 @@ export default gql`
         lastActiveDate
         reviewerAction
         # assignerAction
-        reviewAssignedCount
-        reviewAssignedNotStartedCount
-        reviewAvailableForSelfAssignmentCount
-        reviewDraftCount
-        reviewChangeRequestCount
-        reviewSubmittedCount
-        reviewPendingCount
         assignReviewerAssignedCount
         assignReviewersCount
         assignCount
