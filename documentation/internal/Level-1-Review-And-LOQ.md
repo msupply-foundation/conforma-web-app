@@ -31,7 +31,7 @@ Below is the summary of logic aspects of this topic
 
 ### Structure
 
-The 'state' of application and review (actions, progress, etc..) is calculated and stored in one state structure. It aids visual component and de-couples logic from UI elements. This structure is recalculated whenever a response is changed
+The 'state' of application and review (actions, progress, etc..) is calculated and stored in one state structure. It aids visual component and de-couples logic from UI elements. This structure is recalculated whenever a response is changed. Initial structure is constructed in `useGetApplicationStructure` and is used for applicant related UI, `useGetReviewStructureForSection` adds review related information, the later adds extra information the former. It's best described in the `Application-and-Review-Workflow.png` diagram.
 
 ## Schema
 
