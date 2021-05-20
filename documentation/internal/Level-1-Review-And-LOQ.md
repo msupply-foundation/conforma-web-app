@@ -25,7 +25,7 @@ Below is the summary of logic aspects of this topic
 
 - Calculates actions and progress of review and application
 - GraphQL mutation to create review and application responses
-- GraphQL mutation to update review_responses
+- GraphQL mutation to update `application_response` or `review_response`
 - Validates submission of review and application
 - GraphQL mutation to request submission of review and application
 
