@@ -77,7 +77,7 @@ Is created for each iteration of a review, can be of `status`:
 
 ## Review Responses Visibility
 
-`is_visible_to_applicant` field (not editable by any user, only by back end) controls visibility of review_response from applicant perspective. And `recommended_applicant_visibility` field (which is editable by reviewer) suggests visibility of review_response to applicant. `updateReviewVisibility` back end action will set `is_visible_to_applicant` when review is submitted. See `LOQ Workflow Diagram` below
+`is_visible_to_applicant` field (not editable by any user, only by back end) controls visibility of `review_response` from applicant perspective. And `recommended_applicant_visibility` field (which is editable by reviewer) suggests visibility of review_response to applicant. `updateReviewVisibility` back end action will set `is_visible_to_applicant` when review is submitted. See `LOQ Workflow Diagram` below
 
 ## Actions
 
