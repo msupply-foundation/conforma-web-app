@@ -17,7 +17,9 @@ Below is the summary of logic aspects of this topic
 ### Back End
 
 - Changes `review.status` and `application.status` to inform front end of actions that can be made
-- Trims Responses that are duplicated and not changed
+- On review **submission** trim `review_responses` that have been created but not reviewed by user
+- On application **re-submission**, trim `application_response` that are duplicated and not changed
+- On review **re-submission**, trim `review_responses` that are duplicated and not changed
 
 ### Front End
 
