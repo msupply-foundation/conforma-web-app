@@ -67,7 +67,13 @@ In response to LOQ, an applicant can restart an application. Similar logic to th
 
 ## Review Decision
 
-Is created for each iteration of a review, can be of status: `'List of questions`, `Conform`, `Non-conform`, `No Decision`. See `Validation of Submission` below for choices that will be available to the user.
+Is created for each iteration of a review, can be of `status`: 
+- `List of questions`
+- `Conform`
+- `Non-conform`
+- Default: `No Decision`
+
+ See `Validation of Submission` below for choices that will be available to the user.
 
 ## Review Responses Visibility
 
