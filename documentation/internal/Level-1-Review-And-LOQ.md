@@ -55,7 +55,7 @@ We only create `review_response` for elements that are assigned to reviewer via 
 
 **Back End**
 
-When review is submitted, an action will `trim` any responses that haven't changed and will update latest review responses time_updated to match review submission time (latest from status and stage history table) `trimResponses` action.
+When review is submitted, an action will `trim` any responses that haven't changed and will update latest review responses `time_updated` to match review submission time (latest from status and stage history table) `trimResponses` action.
 
 **Review Status**
 
