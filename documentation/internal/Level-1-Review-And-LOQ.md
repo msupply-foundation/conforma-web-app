@@ -45,17 +45,17 @@ This schema structure allows new responses to be created (previous responses to 
 
 **Front End**
 
-When reviewer start/re-starts a review, new review_responses are created for every `latest` application_response. If latest application_response already has a review_response linked (from previous review), review_response is duplicated. `useRestartReview` and `useCreateReview` hooks.
+When reviewer start/re-starts a review, new `review_response` entities are created for every `latest` `application_response`. If latest `application_response` already has a `review_response` linked (from previous review), `review_response` is duplicated. Done by `useRestartReview` and `useCreateReview` hooks.
 
-`Latest` application response is just application response with latest time_updated for a given template_element.
+`latest_application_response` is just application response with latest `time_updated` for a given element.
 
 It's possible that latest application response is not visible (it could become invisible due to changes in application), these are ignored.
 
-We only create review response for template_elements that are assigned to reviewer via review_question_assignment (see [Assignment Process](Assignment-Process.md) for more details)
+We only create `review_response` for elements that are assigned to reviewer via `review_question_assignment` (see [Assignment Process](Assignment-Process.md) for more details)
 
 **Back End**
 
-When review is submitted, an action will `trim` any responses that haven't changed and will update latest review responses time_updated to match review submission time (latest from status and stage history table) `trimResponses` action.
+When review is submitted, an action will `trim` any responses that haven't changed and will update latest review responses `time_updated` to match review submission time (latest from status and stage history table) `trimResponses` action.
 
 **Review Status**
 
@@ -67,11 +67,17 @@ In response to LOQ, an applicant can restart an application. Similar logic to th
 
 ## Review Decision
 
-Is created for each iteration of a review, can be of status: `'List of questions`, `Conform`, `Non-conform`, `No Decision`. See `Validation of Submission` below for choices that will be available to the user.
+Is created for each iteration of a review, can be of `status`: 
+- `List of questions`
+- `Conform`
+- `Non-conform`
+- Default: `No Decision`
+
+ See `Validation of Submission` below for choices that will be available to the user.
 
 ## Review Responses Visibility
 
-`is_visible_to_applicant` field (not editable by any user, only by back end) controls visibility of review_response from applicant perspective. And `recommended_applicant_visibility` field (which is editable by reviewer) suggests visibility of review_response to applicant. `updateReviewVisibility` back end action will set `is_visible_to_applicant` when review is submitted. See `LOQ Workflow Diagram` below
+`is_visible_to_applicant` field (not editable by any user, only by back end) controls visibility of `review_response` from applicant perspective. And `recommended_applicant_visibility` field (which is editable by reviewer) suggests visibility of review_response to applicant. `updateReviewVisibility` back end action will set `is_visible_to_applicant` when review is submitted. See `LOQ Workflow Diagram` below
 
 ## Actions
 
@@ -89,7 +95,7 @@ See `Structure` below for more details
 
 When **application** is restarted as a result of LOQ, it can only be submitted if general validation passes AND all questions with change requests have been changed. Logic for this is:
 
-latestApplicationResponse is different to previousApplicationResponse where previousApplicationResponse is linked to non confirm reviewResponse
+`latestApplicationResponse` is different to `previousApplicationResponse` where `previousApplicationResponse` is linked to non confirm `reviewResponse`
 
 **review** can be submitted as `LOQ` or `Non-conform` when at least review_response is marked as `decline`. Otherwise submission of `Conform` can be made if ALL assigned visible latest application responses have `approve` status review responses.
 
