@@ -12,6 +12,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   validationState,
   onSave,
   Markdown,
+  currentResponse,
 }) => {
   const { isEditable } = element
   const {
@@ -20,7 +21,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     label,
     description,
     default: defaultValue,
-    maxLength,
+    maxLength = Infinity,
   } = parameters
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   function handleChange(e: any) {
     let text = e.target.value
-    if (maxLength && text.length > maxLength) {
+    if (text.length > maxLength) {
       text = text.substring(0, maxLength)
     }
     onUpdate(text)

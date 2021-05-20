@@ -291,6 +291,7 @@ interface ResponseFull {
   hash?: string // Used in Password plugin
   files?: any[] // Used in FileUpload plugin
   other?: string // Used in RadioChoice plugin
+  selection?: string // Used in Dropdown/Radio selectors
   timeCreated?: Date
   reviewResponse?: ReviewResponse
   customValidation?: ValidationState

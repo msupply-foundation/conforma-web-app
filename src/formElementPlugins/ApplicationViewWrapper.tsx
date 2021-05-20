@@ -286,8 +286,10 @@ const calculateValidationState = async ({
   const validationResult = validationExpression
     ? await validate(validationExpression, validationMessage as string, evaluationParameters)
     : { isValid: true }
-
+  console.log('Validation  responses', responses)
+  currentResponse?.id === 0 && console.log('validationResult', validationResult)
   if (!validationResult.isValid && currentResponse?.text !== undefined) return validationResult
+  currentResponse?.id === 0 && console.log('Valid or text undefined')
   // !responses.thisResponse, check for null, undefined, empty string
   if (isRequired && isStrictPage && !responses?.thisResponse)
     return {
