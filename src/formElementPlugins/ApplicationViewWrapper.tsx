@@ -83,6 +83,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }, [currentResponse, isStrictPage])
 
   const onUpdate = async (value: LooseString) => {
+    console.log('Element', element.code)
     const responses = { thisResponse: value, ...allResponses }
     const newValidationState = await calculateValidationState({
       validationExpression,
