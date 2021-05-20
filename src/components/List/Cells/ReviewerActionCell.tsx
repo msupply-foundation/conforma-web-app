@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { CellProps } from '../../../utils/types'
+import { CellProps, ReviewAction } from '../../../utils/types'
 import strings from '../../../utils/constants'
 import { AssignerAction, ReviewerAction } from '../../../utils/generated/graphql'
 
@@ -11,6 +11,8 @@ const ReviewerActionCell: React.FC<CellProps> = ({
 
   const getReviewActionString = (reviewerAction: ReviewerAction) => {
     switch (reviewerAction) {
+      case ReviewerAction.SelfAssign:
+        return strings.ACTION_SELF_ASSIGN
       case ReviewerAction.UpdateReview:
         return strings.ACTION_UPDATE
       case ReviewerAction.RestartReview:
