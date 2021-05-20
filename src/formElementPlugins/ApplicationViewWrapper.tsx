@@ -46,12 +46,14 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const isValid = currentResponse?.isValid || true
 
+  // console.log(element.code, 'props', props)
+
   const { setState: setUpdateTrackerState } = useFormElementUpdateTracker()
 
   const {
     userState: { currentUser },
   } = useUserState()
-  const [value, setValue] = useState<any>(currentResponse?.text)
+  // const [value, setValue] = useState<any>(currentResponse?.text)
   const [validationState, setValidationState] = useState<ValidationState>({
     isValid,
   })
@@ -83,7 +85,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }, [currentResponse, isStrictPage])
 
   const onUpdate = async (value: LooseString) => {
-    console.log('Element', element.code)
     const responses = { thisResponse: value, ...allResponses }
     const newValidationState = await calculateValidationState({
       validationExpression,
@@ -146,11 +147,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     }
   }
 
-  const setIsActive = () => {
+  const setIsActive = (text: string | undefined | null = '') => {
     // Tells application state that a plugin field is in focus
     setUpdateTrackerState({
       type: 'setElementEntered',
-      textValue: value || '',
+      textValue: text || '',
     })
   }
 
@@ -164,8 +165,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       {...props}
       {...element}
       parameters={{ ...simpleParameters, ...evaluatedParameters }}
-      value={value}
-      setValue={setValue}
       setIsActive={setIsActive}
       Markdown={Markdown}
       validationState={validationState || { isValid: true }}
@@ -287,11 +286,8 @@ const calculateValidationState = async ({
   const validationResult = validationExpression
     ? await validate(validationExpression, validationMessage as string, evaluationParameters)
     : { isValid: true }
-  console.log('Validation  responses', responses)
-  currentResponse?.id === 0 && console.log('validationResult', validationResult)
   if (!validationResult.isValid && currentResponse?.text !== undefined) return validationResult
-  currentResponse?.id === 0 && console.log('Valid or text undefined')
-  // !responses.thisResponse, check for null, undefined, empty string
+
   if (isRequired && isStrictPage && !responses?.thisResponse)
     return {
       isValid: false,

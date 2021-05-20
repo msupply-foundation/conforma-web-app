@@ -10,10 +10,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
   onSave,
+  onUpdate,
   Markdown,
   initialValue,
   currentResponse,
-  onSaveUpdateMethod,
   ...props
 }) => {
   const { isEditable } = element
@@ -30,9 +30,19 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const [currentInputResponses, setCurrentInputResponses] = useState<any[]>([])
 
-  const [listItems, setListItems] = useState<any[]>([])
+  const [listItems, setListItems] = useState<any[]>(
+    initialValue?.list ? getInitialListState(initialValue.list) : []
+  )
   const [selectedListItem, setSelectedListItem] = useState<number | null>(null)
   const [open, setOpen] = useState(false)
+  const [invalidItem, setInvalidItem] = useState(false)
+
+  useEffect(() => {
+    onSave({
+      text: createTextString(listItems),
+      list: constructListResponse(listItems, inputFields),
+    })
+  }, [listItems])
 
   const innerElementUpdate = async ({ variables: response }: any) => {
     console.log(JSON.stringify(response))
@@ -42,8 +52,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const updateList = async () => {
-    console.log(currentInputResponses)
     // TO-DO: CHECK FOR VALID/REQUIRED etc before allowing into list.
+    if (anyInvalidItems(currentInputResponses)) {
+      console.log('Some invalid')
+      setInvalidItem(true)
+      return
+    }
     if (selectedListItem === null) setListItems([...listItems, currentInputResponses])
     else {
       console.log('UPDATING')
@@ -65,6 +79,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setOpen(true)
   }
 
+  const deleteItem = async (index: number) => {
+    setListItems(listItems.filter((_: any, i: number) => i !== index))
+  }
+
   return (
     <>
       <label>
@@ -78,6 +96,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           setOpen(false)
           setSelectedListItem(null)
           setCurrentInputResponses([])
+          setInvalidItem(false)
         }}
         onOpen={() => setOpen(true)}
         open={open}
@@ -108,18 +127,19 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
               return (
                 <ApplicationViewWrapper
                   key={`list-${element.code}`}
-                  {...props}
+                  element={element}
                   isStrictPage={false}
+                  allResponses={props.allResponses}
                   currentResponse={
                     selectedListItem === null
                       ? {
                           id: index,
                           text: currentInputResponses?.[index]?.value.text,
                         }
-                      : { id: index, ...listItems[selectedListItem][index]?.value }
+                      : { id: index, ...currentInputResponses?.[index]?.value }
                   }
                   onSaveUpdateMethod={innerElementUpdate}
-                  element={element}
+                  applicationData={props.applicationData}
                 />
               )
             })}
@@ -130,13 +150,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
               }
               onClick={updateList}
             />
+            {invalidItem && <p>Invalid item!</p>}
           </Form>
         </Segment>
       </Modal>
-      <p>Currently selected: {selectedListItem}</p>
       {listItems.map((item, index) => (
-        <p key={`list-item-${index}`} onClick={() => editItem(index)}>
-          {JSON.stringify(item)}
+        <p key={`list-item-${index}`}>
+          <span onClick={() => editItem(index)}>{JSON.stringify(item)}</span>
+          <br />
+          <span onClick={() => deleteItem(index)}>Delete</span>
         </p>
       ))}
     </>
@@ -144,3 +166,29 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 }
 
 export default ApplicationView
+
+const createTextString = (listItems: any) => {
+  return 'Temp text value'
+}
+
+const constructListResponse = (listItems: any, inputFields: any) =>
+  listItems.map((item: any) =>
+    item.map((field: any, index: number) => ({
+      code: inputFields[index].code,
+      title: inputFields[index].title,
+      value: field.value,
+    }))
+  )
+
+const getInitialListState = (listResponse: any) => {
+  if (!listResponse) return null
+  return listResponse.map((item: any) =>
+    item.map((field: any, index: number) => ({ id: index, value: field.value }))
+  )
+}
+
+const anyInvalidItems = (currentInput: any) =>
+  currentInput.some((response: any) => {
+    console.log(response)
+    return response.isValid === false
+  })

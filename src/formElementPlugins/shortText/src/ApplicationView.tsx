@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
@@ -6,14 +6,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
   onUpdate,
-  value,
-  setValue,
   setIsActive,
   validationState,
   onSave,
   Markdown,
   currentResponse,
 }) => {
+  const [value, setValue] = useState<string | null | undefined>(currentResponse?.text)
   const { isEditable } = element
   const {
     placeholder,
