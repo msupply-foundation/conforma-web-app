@@ -109,7 +109,7 @@ Application and Review Structure are generated in hooks `useGetApplicationStruct
 
 ## Components and Hooks
 
-This is described in Application and Review Flow documentation
+This is described in Application and Review Flow documentation [Application And Review Flow](Spplication-And-Review-Flow.md)
 
 # LOQ Workflow Diagram
 
