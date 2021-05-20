@@ -2,15 +2,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { CellProps } from '../../../utils/types'
 import strings from '../../../utils/constants'
-import { ReviewerAction } from '../../../utils/generated/graphql'
+import { AssignerAction, ReviewerAction } from '../../../utils/generated/graphql'
 
 const ReviewerActionCell: React.FC<CellProps> = ({
-  application: { serial, assignCount, reviewerAction, isFullyAssignedLevel1 },
+  application: { serial, reviewerAction, assignerAction },
 }) => {
   const actions = []
-  const notZero = (num: number | undefined) => num && Number(num) !== 0
 
-  const getActionString = (reviewerAction: ReviewerAction) => {
+  const getReviewActionString = (reviewerAction: ReviewerAction) => {
     switch (reviewerAction) {
       case ReviewerAction.UpdateReview:
         return strings.ACTION_UPDATE
@@ -21,15 +20,23 @@ const ReviewerActionCell: React.FC<CellProps> = ({
       case ReviewerAction.StartReview:
         return strings.ACTION_START
       default:
+        // ReviewerAction.ViewReview
         return strings.ACTION_VIEW
     }
   }
 
-  if (!!reviewerAction) actions.push(getActionString(reviewerAction))
+  const getAssignActionString = (assignerAction: AssignerAction) => {
+    switch (assignerAction) {
+      case AssignerAction.ReAssign:
+        return strings.ACTION_RE_ASSIGN
+      default:
+        // AssignerAction.Assign
+        return strings.ACTION_ASSIGN
+    }
+  }
 
-  if (notZero(assignCount) && isFullyAssignedLevel1) actions.push(strings.ACTION_RE_ASSIGN)
-
-  if (notZero(assignCount) && !isFullyAssignedLevel1) actions.push(strings.ACTION_ASSIGN)
+  if (!!reviewerAction) actions.push(getReviewActionString(reviewerAction))
+  if (!!assignerAction) actions.push(getAssignActionString(assignerAction))
 
   return (
     <>

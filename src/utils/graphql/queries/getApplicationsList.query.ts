@@ -32,11 +32,10 @@ export default gql`
         outcome
         lastActiveDate
         reviewerAction
-        # assignerAction
-        assignReviewerAssignedCount
-        assignReviewersCount
-        assignCount
+        assignerAction
         isFullyAssignedLevel1
+        assignedQuestionsLevel1
+        totalQuestions
       }
       # Use the page and count info for rendering Pagination UI
       pageInfo {
