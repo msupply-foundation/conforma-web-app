@@ -51,7 +51,7 @@ When reviewer start/re-starts a review, new `review_response` entities are creat
 
 It's possible that latest application response is not visible (it could become invisible due to changes in application), these are ignored.
 
-We only create review response for template_elements that are assigned to reviewer via review_question_assignment (see [Assignment Process](Assignment-Process.md) for more details)
+We only create `review_response` for elements that are assigned to reviewer via `review_question_assignment` (see [Assignment Process](Assignment-Process.md) for more details)
 
 **Back End**
 
