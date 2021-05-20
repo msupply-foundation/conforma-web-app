@@ -12,4 +12,4 @@ TODO add written description
 
 ## Revalidation Diagram
 
-![REvalidation Workflow](images/Revalidation-Workflow.png)
+![Revalidation Workflow](images/Revalidation-Workflow.png)
