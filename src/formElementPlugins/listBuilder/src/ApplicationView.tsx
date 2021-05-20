@@ -14,6 +14,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   initialValue,
   currentResponse,
+  applicationData,
+  allResponses,
   ...props
 }) => {
   const { isEditable } = element
@@ -54,7 +56,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const updateList = async () => {
     // TO-DO: CHECK FOR VALID/REQUIRED etc before allowing into list.
     if (anyInvalidItems(currentInputResponses)) {
-      console.log('Some invalid')
       setInvalidItem(true)
       return
     }
@@ -129,7 +130,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                   key={`list-${element.code}`}
                   element={element}
                   isStrictPage={false}
-                  allResponses={props.allResponses}
+                  allResponses={allResponses}
                   currentResponse={
                     selectedListItem === null
                       ? {
@@ -139,7 +140,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                       : { id: index, ...currentInputResponses?.[index]?.value }
                   }
                   onSaveUpdateMethod={innerElementUpdate}
-                  applicationData={props.applicationData}
+                  applicationData={applicationData}
                 />
               )
             })}

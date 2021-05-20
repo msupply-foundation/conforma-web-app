@@ -84,7 +84,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     onUpdate(currentResponse?.text)
   }, [currentResponse, isStrictPage])
 
-  const onUpdate = async (value: LooseString) => {
+  const onUpdate = async (value: LooseString, isFocusChange = false) => {
     const responses = { thisResponse: value, ...allResponses }
     const newValidationState = await calculateValidationState({
       validationExpression,
@@ -98,6 +98,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
       },
       currentResponse,
+      isFocusChange,
     })
     setValidationState(newValidationState)
     return newValidationState
@@ -106,7 +107,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const onSave = async (jsonValue: ResponseFull) => {
     if (!jsonValue?.customValidation) {
       // Validate and Save response -- generic
-      const validationResult: ValidationState = await onUpdate(jsonValue?.text)
+      const validationResult: ValidationState = await onUpdate(jsonValue?.text, true)
       if (jsonValue?.text !== undefined)
         await onSaveUpdateMethod({
           variables: {
@@ -274,6 +275,7 @@ const calculateValidationState = async ({
   responses,
   evaluationParameters,
   currentResponse,
+  isFocusChange,
 }: {
   validationExpression: EvaluatorNode | undefined
   validationMessage: string | null | undefined
@@ -282,12 +284,13 @@ const calculateValidationState = async ({
   responses: any // thisResponse field makes it not "ResponsesByCode"
   evaluationParameters: EvaluatorParameters
   currentResponse: ResponseFull | null
+  isFocusChange: boolean
 }) => {
   const validationResult = validationExpression
     ? await validate(validationExpression, validationMessage as string, evaluationParameters)
     : { isValid: true }
-  if (!validationResult.isValid && currentResponse?.text !== undefined) return validationResult
-
+  if ((!validationResult.isValid && currentResponse?.text !== undefined) || isFocusChange)
+    return validationResult
   if (isRequired && isStrictPage && !responses?.thisResponse)
     return {
       isValid: false,
