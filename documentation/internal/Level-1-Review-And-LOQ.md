@@ -95,7 +95,7 @@ See `Structure` below for more details
 
 When **application** is restarted as a result of LOQ, it can only be submitted if general validation passes AND all questions with change requests have been changed. Logic for this is:
 
-latestApplicationResponse is different to previousApplicationResponse where previousApplicationResponse is linked to non confirm reviewResponse
+`latestApplicationResponse` is different to `previousApplicationResponse` where `previousApplicationResponse` is linked to non confirm `reviewResponse`
 
 **review** can be submitted as `LOQ` or `Non-conform` when at least review_response is marked as `decline`. Otherwise submission of `Conform` can be made if ALL assigned visible latest application responses have `approve` status review responses.
 
