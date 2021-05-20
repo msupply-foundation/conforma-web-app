@@ -39,7 +39,7 @@ The aim of this diagram is to give some context (an anchor point), it's an abstr
 
 ![Review and LOQ Schema](images/Review-And-LOQ-Schema.png)
 
-This schema structure allows new responses to be created (previous responses to be duplicated) for every new update, and this creates a system which maintains historic data integrity.
+This schema structure allows new responses to be created (previous responses to be duplicated) whenever a review or application are opened (restarted) for editing, and this creates a system which maintains historic data integrity.
 
 ## Starting and Re-Staring Review
 
