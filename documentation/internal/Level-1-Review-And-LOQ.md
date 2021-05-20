@@ -16,7 +16,7 @@ Below is the summary of logic aspects of this topic
 
 ### Back End
 
-- Changes status of review and application to inform front end of actions that can be made
+- Changes `review.status` and `application.status` to inform front end of actions that can be made
 - Trims Responses that are duplicated and not changed
 
 ### Front End
