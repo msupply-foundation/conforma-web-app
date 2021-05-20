@@ -47,7 +47,7 @@ This schema structure allows new responses to be created (previous responses to 
 
 When reviewer start/re-starts a review, new `review_response` entities are created for every `latest` `application_response`. If latest `application_response` already has a `review_response` linked (from previous review), `review_response` is duplicated. Done by `useRestartReview` and `useCreateReview` hooks.
 
-`Latest` application response is just application response with latest time_updated for a given template_element.
+`latest_application_response` is just application response with latest `time_updated` for a given element.
 
 It's possible that latest application response is not visible (it could become invisible due to changes in application), these are ignored.
 
