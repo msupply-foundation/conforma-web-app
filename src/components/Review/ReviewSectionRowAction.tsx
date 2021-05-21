@@ -29,6 +29,9 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
       }
 
       case ReviewAction.canView: {
+        if (isAssignedToCurrentUser) {
+          return <ViewSubmittedReviewButton {...props} />
+        }
         return <ViewReviewIcon {...props} />
       }
 
@@ -142,6 +145,22 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   return (
     <a className="user-action clickable" onClick={selfAssignReview}>
       {strings.BUTTON_SELF_ASSIGN}
+    </a>
+  )
+}
+
+const ViewSubmittedReviewButton: React.FC<ReviewSectionComponentProps> = ({
+  fullStructure,
+  section: { details },
+}) => {
+  const { pathname, push } = useRouter()
+  const reviewId = fullStructure.thisReview?.id
+  return (
+    <a
+      className="user-action clickable"
+      onClick={() => push(`${pathname}/${reviewId}?activeSections=${details.code}`)}
+    >
+      {strings.ACTION_VIEW}
     </a>
   )
 }
