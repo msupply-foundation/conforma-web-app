@@ -36,7 +36,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     updateButtonText = 'Update',
     displayFormat,
     inputFields,
-    displayType = 'table',
+    displayType = 'cards',
   } = parameters
 
   const [currentInputResponses, setCurrentInputResponses] = useState<any[]>(
