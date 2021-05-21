@@ -68,7 +68,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       setInputError(true)
       return
     }
-    console.log(buildListItem(currentInputResponses, inputFields))
     // Add item
     if (selectedListItem === null)
       setListItems([...listItems, buildListItem(currentInputResponses, inputFields)])
@@ -196,6 +195,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 export default ApplicationView
 
 const createTextString = (listItems: any) => {
+  // This doesn't really get used except to identify whether the element has been entered or not
+  // TO-DO
   return 'Temp text value'
 }
 
@@ -235,14 +236,17 @@ export const ListCardLayout: React.FC<any> = ({
   editItem = () => {},
   deleteItem = () => {},
   Markdown,
+  isEditable = true,
 }: any) => {
   const { header, meta, description } = displayFormat
   return listItems.map((item: any, index: number) => (
     <Card key={`list-item-${index}`}>
       <Card.Content>
-        <Label floating onClick={() => deleteItem(index)}>
-          <Icon name="delete" />
-        </Label>
+        {isEditable && (
+          <Label floating onClick={() => deleteItem(index)}>
+            <Icon name="delete" />
+          </Label>
+        )}
         {header && (
           <Card.Header onClick={() => editItem(index)}>
             <Markdown text={substituteValues(header, item)} semanticComponent="noParagraph" />

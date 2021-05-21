@@ -10,6 +10,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
     displayFormat,
     fieldTitles: inputFields.map((e: any) => e.title),
     Markdown,
+    isEditable: false,
   }
 
   return displayType === 'table' ? (
