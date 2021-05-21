@@ -247,7 +247,7 @@ const substituteValues = (parameterisedString: string, item: any) => {
 }
 
 // Separate components, so can be shared with SummaryView
-interface ListLayoutProps {
+export interface ListLayoutProps {
   listItems: ListItem[]
   displayFormat: { header?: string; meta?: string; description: string }
   Markdown: any

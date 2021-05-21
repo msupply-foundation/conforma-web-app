@@ -118,7 +118,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         await onSaveUpdateMethod({
           variables: {
             id: currentResponse?.id as number,
-            value: null,
+            value: { text: undefined },
             isValid: null,
           },
         })
