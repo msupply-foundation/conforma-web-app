@@ -12,8 +12,25 @@ import {
   Label,
 } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
+import { ResponseFull } from '../../../utils/types'
+import { TemplateElement, TemplateElementCategory } from '../../../utils/generated/graphql'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
 import strings from '../constants'
+
+enum DisplayType {
+  CARDS = 'cards',
+  TABLE = 'table',
+}
+
+interface InputResponseField {
+  id?: number
+  code?: string
+  isValid?: boolean
+  title?: string | null | undefined
+  value: ResponseFull
+}
+
+type ListItem = InputResponseField[]
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -30,20 +47,21 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const {
     label,
     description,
-    createModalButtonText = 'Add item',
+    createModalButtonText = strings.BUTTON_LAUNCH_MODAL,
     modalText,
-    addButtonText,
-    updateButtonText = 'Update',
+    addButtonText = strings.BUTTON_ADD,
+    updateButtonText = strings.BUTTON_UPDATE,
+    deleteItemText = strings.BUTTON_DELETE,
     displayFormat,
     inputFields,
-    displayType = 'cards',
+    displayType = DisplayType.CARDS,
   } = parameters
 
-  const [currentInputResponses, setCurrentInputResponses] = useState<any[]>(
+  const [currentInputResponses, setCurrentInputResponses] = useState<InputResponseField[]>(
     resetCurrentResponses(inputFields)
   )
 
-  const [listItems, setListItems] = useState<any[]>(initialValue?.list ?? [])
+  const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
   const [selectedListItem, setSelectedListItem] = useState<number | null>(null)
   const [open, setOpen] = useState(false)
   const [inputError, setInputError] = useState(false)
@@ -56,9 +74,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }, [listItems])
 
   // This is sent to ApplicationViewWrapper and runs instead of the default responseMutation
-  const innerElementUpdate = async ({ variables: response }: any) => {
+  const innerElementUpdate = async ({ variables: response }: { variables: InputResponseField }) => {
     const newResponses = [...currentInputResponses]
-    newResponses[response.id] = response
+    newResponses[response.id as number] = response
     setCurrentInputResponses(newResponses)
     if (!anyErrorItems(newResponses, inputFields)) setInputError(false)
   }
@@ -89,22 +107,22 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const deleteItem = async (index: number) => {
-    setListItems(listItems.filter((_: any, i: number) => i !== index))
+    setListItems(listItems.filter((_, i) => i !== index))
     setOpen(false)
     setCurrentInputResponses(resetCurrentResponses(inputFields))
   }
 
-  const listDisplayProps = {
+  const listDisplayProps: ListLayoutProps = {
     listItems,
     displayFormat,
     editItem,
     deleteItem,
-    fieldTitles: inputFields.map((e: any) => e.title),
+    fieldTitles: inputFields.map((e: TemplateElement) => e.title),
     Markdown,
   }
 
   const DisplayComponent =
-    displayType === 'table' ? (
+    displayType === DisplayType.TABLE ? (
       <ListTableLayout {...listDisplayProps} />
     ) : (
       <ListCardLayout {...listDisplayProps} />
@@ -132,12 +150,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Segment>
           <Form>
             <Markdown text={modalText} />
-            {inputFields.map((field: any, index: number) => {
+            {inputFields.map((field: TemplateElement, index: number) => {
               const element = {
                 code: field.code,
-                pluginCode: field.elementTypePluginCode,
-                category: field.category,
-                title: field.title,
+                pluginCode: field.elementTypePluginCode as string,
+                category: field.category as TemplateElementCategory,
+                title: field.title as string,
                 parameters: field.parameters,
                 isEditable: true, // Update
                 isRequired: field.isRequired ?? true,
@@ -164,7 +182,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                           code: element.code,
                           text: currentInputResponses?.[index]?.value.text,
                         }
-                      : { id: index, code: element.code, ...currentInputResponses?.[index]?.value }
+                      : { code: element.code, ...currentInputResponses?.[index]?.value, id: index }
                   }
                   onSaveUpdateMethod={innerElementUpdate}
                   applicationData={applicationData}
@@ -173,13 +191,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
             })}
             <Button
               primary
-              content={selectedListItem !== null ? updateButtonText : addButtonText || 'Add'}
+              content={selectedListItem !== null ? updateButtonText : addButtonText}
               onClick={updateList}
             />
             {displayType === 'table' && selectedListItem !== null && (
               <Button
                 secondary
-                content={'Delete item'}
+                content={deleteItemText}
                 onClick={() => deleteItem(selectedListItem)}
               />
             )}
@@ -194,33 +212,32 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
 export default ApplicationView
 
-const createTextString = (listItems: any) => {
+const createTextString = (listItems: ListItem[]) => {
   // This doesn't really get used except to identify whether the element has been entered or not
   // TO-DO
   return 'Temp text value'
 }
 
-const resetCurrentResponses = (inputFields: any) =>
+const resetCurrentResponses = (inputFields: TemplateElement[]) =>
   new Array(inputFields.length).fill({ value: { text: undefined } })
 
-const buildListItem = (item: any, inputFields: any) =>
-  item.map((field: any, index: number) => ({
+const buildListItem = (item: ListItem, inputFields: TemplateElement[]) =>
+  item.map((field, index) => ({
     code: inputFields[index].code,
     id: field.id,
     title: inputFields[index].title,
     value: field.value,
   }))
 
-const anyInvalidItems = (currentInput: any) =>
-  currentInput.some((response: any) => response.isValid === false)
+const anyInvalidItems = (currentInput: InputResponseField[]) =>
+  currentInput.some((response) => response.isValid === false)
 
-const anyIncompleteItems = (currentInput: any, inputFields: any) =>
+const anyIncompleteItems = (currentInput: InputResponseField[], inputFields: TemplateElement[]) =>
   currentInput.some(
-    (response: any, index: number) =>
-      inputFields[index]?.isRequired !== false && !response.value.text
+    (response, index) => inputFields[index]?.isRequired !== false && !response.value.text
   )
 
-const anyErrorItems = (currentInput: any, inputFields: any) =>
+const anyErrorItems = (currentInput: InputResponseField[], inputFields: TemplateElement[]) =>
   anyInvalidItems(currentInput) || anyIncompleteItems(currentInput, inputFields)
 
 const substituteValues = (parameterisedString: string, item: any) => {
@@ -230,62 +247,79 @@ const substituteValues = (parameterisedString: string, item: any) => {
 }
 
 // Separate components, so can be shared with SummaryView
-export const ListCardLayout: React.FC<any> = ({
+interface ListLayoutProps {
+  listItems: ListItem[]
+  displayFormat: { header?: string; meta?: string; description: string }
+  Markdown: any
+  fieldTitles?: string[]
+  editItem?: Function
+  deleteItem?: Function
+  isEditable?: boolean
+}
+
+export const ListCardLayout: React.FC<ListLayoutProps> = ({
   listItems,
   displayFormat,
   editItem = () => {},
   deleteItem = () => {},
   Markdown,
   isEditable = true,
-}: any) => {
+}) => {
   const { header, meta, description } = displayFormat
-  return listItems.map((item: any, index: number) => (
-    <Card key={`list-item-${index}`}>
-      <Card.Content>
-        {isEditable && (
-          <Label floating onClick={() => deleteItem(index)}>
-            <Icon name="delete" />
-          </Label>
-        )}
-        {header && (
-          <Card.Header onClick={() => editItem(index)}>
-            <Markdown text={substituteValues(header, item)} semanticComponent="noParagraph" />
-          </Card.Header>
-        )}
-        {meta && (
-          <Card.Meta onClick={() => editItem(index)}>
-            <Markdown text={substituteValues(meta, item)} semanticComponent="noParagraph" />
-          </Card.Meta>
-        )}
-        {description && (
-          <Card.Description onClick={() => editItem(index)}>
-            <Markdown text={substituteValues(description, item)} semanticComponent="noParagraph" />
-          </Card.Description>
-        )}
-      </Card.Content>
-    </Card>
-  ))
+  return (
+    <>
+      {listItems.map((item, index) => (
+        <Card key={`list-item-${index}`}>
+          <Card.Content>
+            {isEditable && (
+              <Label floating onClick={() => deleteItem(index)}>
+                <Icon name="delete" />
+              </Label>
+            )}
+            {header && (
+              <Card.Header onClick={() => editItem(index)}>
+                <Markdown text={substituteValues(header, item)} semanticComponent="noParagraph" />
+              </Card.Header>
+            )}
+            {meta && (
+              <Card.Meta onClick={() => editItem(index)}>
+                <Markdown text={substituteValues(meta, item)} semanticComponent="noParagraph" />
+              </Card.Meta>
+            )}
+            {description && (
+              <Card.Description onClick={() => editItem(index)}>
+                <Markdown
+                  text={substituteValues(description, item)}
+                  semanticComponent="noParagraph"
+                />
+              </Card.Description>
+            )}
+          </Card.Content>
+        </Card>
+      ))}
+    </>
+  )
 }
 
-export const ListTableLayout: React.FC<any> = ({
+export const ListTableLayout: React.FC<ListLayoutProps> = ({
   listItems,
-  fieldTitles,
+  fieldTitles = [],
   editItem = () => {},
-  deleteItem = () => {},
-}: any) => {
+  // deleteItem = () => {},
+}) => {
   return (
     <Table celled selectable>
       <Table.Header>
         <Table.Row>
-          {fieldTitles.map((title: string) => (
+          {fieldTitles.map((title) => (
             <TableHeaderCell key={`list-header-field-${title}`}>{title}</TableHeaderCell>
           ))}
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {listItems.map((item: any, index: number) => (
+        {listItems.map((item, index) => (
           <Table.Row key={`list-row-${index}`} onClick={() => editItem(index)}>
-            {item.map((cell: any, cellIndex: number) => (
+            {item.map((cell, cellIndex) => (
               <TableCell key={`list-cell-${index}-${cellIndex}`}>
                 {cell?.value?.text || ''}
               </TableCell>
