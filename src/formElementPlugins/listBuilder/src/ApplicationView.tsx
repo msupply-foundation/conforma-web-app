@@ -30,10 +30,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const {
     label,
     description,
-    createModalButtonText,
+    createModalButtonText = 'Add item',
     modalText,
     addButtonText,
-    updateButtonText,
+    updateButtonText = 'Update',
     displayFormat,
     inputFields,
     displayType = 'table',
@@ -128,7 +128,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         }}
         onOpen={() => setOpen(true)}
         open={open}
-        trigger={<Button primary content={createModalButtonText || 'Add item'} />}
+        trigger={<Button primary content={createModalButtonText} />}
       >
         <Segment>
           <Form>
@@ -174,9 +174,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
             })}
             <Button
               primary
-              content={
-                selectedListItem !== null ? updateButtonText || 'Update' : addButtonText || 'Add'
-              }
+              content={selectedListItem !== null ? updateButtonText : addButtonText || 'Add'}
               onClick={updateList}
             />
             {displayType === 'table' && selectedListItem !== null && (
@@ -234,8 +232,8 @@ const substituteValues = (parameterisedString: string, item: any) => {
 export const ListCardLayout: React.FC<any> = ({
   listItems,
   displayFormat,
-  editItem,
-  deleteItem,
+  editItem = () => {},
+  deleteItem = () => {},
   Markdown,
 }: any) => {
   const { header, meta, description } = displayFormat
@@ -268,8 +266,8 @@ export const ListCardLayout: React.FC<any> = ({
 export const ListTableLayout: React.FC<any> = ({
   listItems,
   fieldTitles,
-  editItem,
-  deleteItem,
+  editItem = () => {},
+  deleteItem = () => {},
 }: any) => {
   return (
     <Table celled selectable>

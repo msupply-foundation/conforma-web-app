@@ -292,6 +292,7 @@ interface ResponseFull {
   files?: any[] // Used in FileUpload plugin
   other?: string // Used in RadioChoice plugin
   selection?: string // Used in Dropdown/Radio selectors
+  list?: any // Used in ListBuilder
   timeCreated?: Date
   reviewResponse?: ReviewResponse
   customValidation?: ValidationState
