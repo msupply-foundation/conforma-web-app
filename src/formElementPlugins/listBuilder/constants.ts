@@ -1,3 +1,4 @@
 export default {
-  LABEL_SUMMMARY_NOTHING_SELECTED: 'Nothing Selected',
+  ERROR_LIST_ITEMS_NOT_VALID:
+    "Can't add item to list. There are invalid entries or incomplete required fields",
 }
