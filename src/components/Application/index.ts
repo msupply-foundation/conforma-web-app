@@ -1,15 +1,13 @@
-import ApplicationHeader from './ApplicationHeader'
+import ApplicationContainer from './ApplicationContainer'
+import ApplicationSections from './ApplicationSections'
 import ApplicationSelectType from './ApplicationSelectType'
 import Navigation from './Navigation'
-import SectionWrapper from './Sections/SectionWrapper'
-import ProgressBar from './ProgressBar'
-import PageElements from './PageElements/PageElements'
+import ProgressArea from './ProgressBar'
 
 export {
-  ApplicationHeader,
+  ApplicationContainer,
+  ApplicationSections,
   ApplicationSelectType,
   Navigation,
-  SectionWrapper,
-  PageElements,
-  ProgressBar,
+  ProgressArea,
 }

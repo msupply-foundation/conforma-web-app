@@ -1,6 +1,6 @@
 import { Decision, ReviewResponseDecision } from '../../generated/graphql'
 
-import { FullStructure, SectionState, Page, PageElement } from '../../types'
+import { FullStructure, SectionState, Page, ReviewProgress } from '../../types'
 
 const generateReviewProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach(generatePageReviewProgress)
@@ -10,20 +10,18 @@ const generateReviewProgress = (newStructure: FullStructure) => {
 }
 
 const generateSectionReviewProgress = (section: SectionState) => {
-  section.reviewProgress = getSums(Object.values(section.pages))
+  section.reviewProgress = getReviewProgressSums(Object.values(section.pages))
 }
-// Helper to see if thisReviewLatestResponse is linked to latest application response
-const isLatestReviewResponseUpToDate = (element: PageElement) =>
-  element.response?.id === element.thisReviewLatestResponse?.applicationResponse?.id
 
 const generatePageReviewProgress = (page: Page) => {
   const totalReviewable = page.state.filter(
-    (element) => element.isAssigned && element?.element.isVisible
+    (element) =>
+      element.isAssigned && element?.element.isVisible && element?.latestApplicationResponse?.id
   )
 
   // Only consider review responses that are linked to latest application response
   const totalReviewableLinkedToLatestApplicationResponse = totalReviewable.filter(
-    isLatestReviewResponseUpToDate
+    ({ isPendingReview }) => !isPendingReview
   )
 
   const doneConform = totalReviewableLinkedToLatestApplicationResponse.filter(
@@ -34,22 +32,26 @@ const generatePageReviewProgress = (page: Page) => {
   )
   const totalNewReviewable = totalReviewable.filter((element) => element.isNewApplicationResponse)
   const doneNewReviewable = totalNewReviewable.filter(
-    (element) =>
-      isLatestReviewResponseUpToDate(element) && element.thisReviewLatestResponse?.decision
+    (element) => !element.isPendingReview && element.thisReviewLatestResponse?.decision
   )
 
+  const totalPendingReview = totalReviewable.filter(({ isPendingReview }) => isPendingReview)
+
   page.reviewProgress = {
-    totalReviewable: totalReviewable.length,
     doneConform: doneConform.length,
     doneNonConform: doneNonConform.length,
-    totalNewReviewable: totalNewReviewable.length,
     doneNewReviewable: doneNewReviewable.length,
+    totalNewReviewable: totalNewReviewable.length,
+    // BaseReviewProgress
+    totalReviewable: totalReviewable.length,
+    totalActive: totalReviewable.length,
+    totalPendingReview: totalPendingReview.length,
   }
 }
 
 const generateReviewValidity = (newStructure: FullStructure) => {
   const sortedPages = newStructure?.sortedPages || []
-  const sums = getSums(sortedPages)
+  const sums = getReviewProgressSums(Object.values(newStructure.sections))
 
   let firstIncompleteReviewPage
 
@@ -74,27 +76,46 @@ const generateReviewValidity = (newStructure: FullStructure) => {
     newStructure.canSubmitReviewAs =
       sums.doneNonConform === 0 ? Decision.Conform : Decision.NonConform
 }
-// Simple helper that will iterate over elements and sum up all of the values for keys
-// returning an object of keys with sums
-const getSums = (elements: Page[]) => {
-  const initial = {
-    totalReviewable: 0,
+
+/**
+ * @function: getReviewProgressSums
+ * Helper to iterate over progress and return sums of progress keys
+ * @param elements Pages or Sections
+ * @returns ReviewProgress of return sum of progresses
+ */
+const getReviewProgressSums = (elements: (Page | SectionState)[]) => {
+  const initial: ReviewProgress = {
     doneConform: 0,
     doneNonConform: 0,
     totalNewReviewable: 0,
     doneNewReviewable: 0,
+    // BaseReviewProgress
+    totalActive: 0,
+    totalReviewable: 0,
+    totalPendingReview: 0,
   }
 
-  return elements.reduce(
-    (sum, { reviewProgress }) => ({
-      totalReviewable: sum.totalReviewable + (reviewProgress?.totalReviewable || 0),
-      doneConform: sum.doneConform + (reviewProgress?.doneConform || 0),
-      doneNonConform: sum.doneNonConform + (reviewProgress?.doneNonConform || 0),
-      totalNewReviewable: sum.totalNewReviewable + (reviewProgress?.totalNewReviewable || 0),
-      doneNewReviewable: sum.doneNewReviewable + (reviewProgress?.doneNewReviewable || 0),
-    }),
-    initial
-  )
+  return elements.reduce((sum, page) => {
+    const {
+      doneConform,
+      doneNonConform,
+      totalNewReviewable,
+      doneNewReviewable,
+      totalActive,
+      totalReviewable,
+      totalPendingReview,
+    } = page.reviewProgress || initial
+    return {
+      doneConform: sum.doneConform + doneConform,
+      doneNonConform: sum.doneNonConform + doneNonConform,
+      totalNewReviewable: sum.totalNewReviewable + totalNewReviewable,
+      doneNewReviewable: sum.doneNewReviewable + doneNewReviewable,
+      // BaseReviewProgress
+      totalActive: sum.totalActive + totalActive,
+      totalReviewable: sum.totalReviewable + totalReviewable,
+      totalPendingReview: sum.totalPendingReview + totalPendingReview,
+    }
+  }, initial)
 }
 
 export default generateReviewProgress

@@ -152,11 +152,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           ref={fileInputRef}
           hidden
           name="file-upload"
-          multiple={fileCountLimit > 1}
+          multiple={fileCountLimit > 1 || !fileCountLimit}
           onChange={handleFiles}
         />
         <Segment basic textAlign="center">
-          {uploadedFiles.length < fileCountLimit && (
+          {(uploadedFiles.length < fileCountLimit || !fileCountLimit) && (
             <Button primary disabled={!isEditable} onClick={() => fileInputRef?.current?.click()}>
               <Icon name="upload" />
               {uploadedFiles.length === 0

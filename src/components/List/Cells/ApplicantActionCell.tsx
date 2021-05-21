@@ -12,14 +12,11 @@ const ApplicantActionCell: React.FC<CellProps> = ({ application: { status, seria
 
   return (
     <>
-      <Link style={actionStyle} to={`/application/${serial}`}>
+      <Link className="user-action" to={`/application/${serial}`}>
         {action}
       </Link>
     </>
   )
 }
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const actionStyle = { color: '#003BFE', fontWeight: 400, letterSpacing: 1 }
 
 export default ApplicantActionCell

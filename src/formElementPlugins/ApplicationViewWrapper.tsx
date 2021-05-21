@@ -3,6 +3,7 @@ import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
 import {
+  EvaluatorNode,
   EvaluatorParameters,
   LooseString,
   ResponseFull,
@@ -12,9 +13,8 @@ import {
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import { Form, Icon } from 'semantic-ui-react'
+import { Form, Icon, Loader } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
-import { IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import strings from '../utils/constants'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'
 import messages from '../utils/messages'
@@ -23,14 +23,8 @@ import globalConfig from '../config.json'
 const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
-  const {
-    element,
-    isStrictPage,
-    changesRequired,
-    currentResponse,
-    allResponses,
-    applicationData,
-  } = props
+  const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
+    props
 
   const {
     code,
@@ -102,15 +96,24 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }
 
   const onSave = async (jsonValue: ResponseFull) => {
-    if (!jsonValue.customValidation) {
+    if (!jsonValue?.customValidation) {
       // Validate and Save response -- generic
-      const validationResult: ValidationState = await onUpdate(jsonValue.text)
-      if (jsonValue.text !== undefined)
+      const validationResult: ValidationState = await onUpdate(jsonValue?.text)
+      if (jsonValue?.text !== undefined)
         await responseMutation({
           variables: {
             id: currentResponse?.id as number,
             value: jsonValue,
             isValid: validationResult.isValid,
+          },
+        })
+      if (jsonValue === null)
+        // Reset response if cleared
+        await responseMutation({
+          variables: {
+            id: currentResponse?.id as number,
+            value: null,
+            isValid: null,
           },
         })
       setUpdateTrackerState({
@@ -168,29 +171,38 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     if (!changesRequired) return null
     const { isChangeRequest, isChanged } = changesRequired
     const isValid = validationState ? (validationState.isValid as boolean) : true
-    const displayResponseWarning = isChangeRequest || (isChanged && isValid)
+    const borderClass = isChangeRequest || (isChanged && isValid) ? 'element-warning-border' : ''
+    const borderColorClass = isChangeRequest ? (!isChanged ? 'alert-border' : '') : 'blue-border'
+
     return (
-      <div
-        style={{
-          border: displayResponseWarning ? 'solid 1px' : 'transparent',
-          borderColor: isChangeRequest ? (isChanged ? 'black' : 'red') : 'blue',
-          borderRadius: 7,
-          padding: displayResponseWarning ? 4 : 5,
-          margin: 5,
-        }}
-      >
-        {parametersReady && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
-        <ChangesToResponseWarning {...changesRequired} isValid={isValid} />
-      </div>
+      <>
+        {parametersReady ? (
+          <Form.Field
+            className={`element-application-view ${borderClass} ${borderColorClass}`}
+            required={isRequired}
+          >
+            {PluginComponent}
+            <ChangesToResponseWarning {...changesRequired} isValid={isValid} />
+          </Form.Field>
+        ) : (
+          <Loader active inline />
+        )}
+      </>
     )
   }
 
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        {changesRequired
-          ? getResponseAndBorder()
-          : parametersReady && <Form.Field required={isRequired}>{PluginComponent}</Form.Field>}
+        {changesRequired ? (
+          getResponseAndBorder()
+        ) : parametersReady ? (
+          <Form.Field className="element-application-view" required={isRequired}>
+            {PluginComponent}
+          </Form.Field>
+        ) : (
+          <Loader active inline />
+        )}
       </React.Suspense>
     </ErrorBoundary>
   )
@@ -209,26 +221,18 @@ const ChangesToResponseWarning: React.FC<ChangesToResponseWarningProps> = ({
   reviewerComment,
   isValid,
 }) => {
-  const displayResponseWarning = isChangeRequest || (isChanged && isValid)
+  const visibilityClass = isChangeRequest || (isChanged && isValid) ? '' : 'invisible'
+  const colourClass = isChangeRequest ? (!isChanged ? 'alert' : '') : 'interactive-color'
+  const iconSelection = isChangeRequest
+    ? isChanged
+      ? 'comment alternate outline'
+      : 'exclamation circle'
+    : 'info circle'
   return (
-    <div
-      style={{
-        color: isChangeRequest && isChanged && isValid ? 'grey' : 'red',
-        visibility: displayResponseWarning ? 'visible' : 'hidden',
-      }}
-    >
-      <Icon
-        name={
-          isChangeRequest
-            ? isChanged
-              ? 'comment alternate outline'
-              : 'exclamation circle'
-            : 'info circle'
-        }
-        color={isChangeRequest ? (isChanged ? 'grey' : 'red') : 'blue'}
-      />
+    <p className={`${colourClass} ${visibilityClass} reviewer-comment`}>
+      <Icon name={iconSelection} className="colourClass" />
       {isChangeRequest ? reviewerComment : messages.APPLICATION_OTHER_CHANGES_MADE}
-    </div>
+    </p>
   )
 }
 
@@ -263,10 +267,8 @@ export const evaluateDynamicParameters = async (
 ) => {
   if (!dynamicExpressions) return {}
   const fields = Object.keys(dynamicExpressions)
-  const expressions = Object.values(
-    dynamicExpressions
-  ).map((expression: ElementPluginParameterValue) =>
-    evaluateExpression(expression, evaluatorParameters)
+  const expressions = Object.values(dynamicExpressions).map(
+    (expression: ElementPluginParameterValue) => evaluateExpression(expression, evaluatorParameters)
   )
   const evaluatedExpressions: any = await Promise.all(expressions)
   const evaluatedParameters: ElementPluginParameters = {}
@@ -285,7 +287,7 @@ const calculateValidationState = async ({
   evaluationParameters,
   currentResponse,
 }: {
-  validationExpression: IQueryNode | undefined
+  validationExpression: EvaluatorNode | undefined
   validationMessage: string | null | undefined
   isRequired: boolean | undefined
   isStrictPage: boolean | undefined

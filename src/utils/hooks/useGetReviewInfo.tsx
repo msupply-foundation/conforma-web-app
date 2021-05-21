@@ -52,9 +52,14 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
     }
 
     const reviews: Review[] = reviewAssigments.map(({ reviews }) => reviews.nodes[0] as Review)
-    // Checking if any of reviews trigger is running before refetching assignments
-    // This is done to get latest status for reviews (afte trigger finishes to run)
-    if (reviews.every((review) => !review || review?.trigger === null)) {
+    // Checking if any of reviews or reviewAssignment trigger is running before refetching assignments
+    // This is done to get latest status for reviews & assignment (afte trigger finishes to run)
+    if (
+      reviews.every((review) => !review || review?.trigger === null) &&
+      reviewAssigments.every(
+        (reviewAssignment) => !reviewAssigments || reviewAssignment?.trigger === null
+      )
+    ) {
       setRefetchAttempts(0)
     } else {
       if (refetchAttempts < MAX_REFETCH) {
@@ -84,7 +89,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         levelNumber,
         reviewer,
         reviewAssignmentAssignerJoins,
-        templateSectionRestrictions,
+        allowedSections,
       } = reviewAssignment
 
       // Extra field just to use in initial example - might conflict with future queries
@@ -93,7 +98,12 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         []) as ReviewQuestionAssignment[]
       const totalAssignedQuestions = reviewQuestionAssignments.length
 
-      const stage = { id: assignmentStage?.id as number, name: assignmentStage?.title as string }
+      const stage = {
+        id: assignmentStage?.id as number,
+        name: assignmentStage?.title as string,
+        number: assignmentStage?.number as number,
+        colour: assignmentStage?.colour as string,
+      }
 
       const assignment: AssignmentDetails = {
         id,
@@ -114,7 +124,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         level: levelNumber || 1,
         isCurrentUserReviewer: reviewer?.id === (currentUser?.userId as number),
         isCurrentUserAssigner: reviewAssignmentAssignerJoins.nodes.length > 0,
-        assignableSectionRestrictions: templateSectionRestrictions || [],
+        assignableSectionRestrictions: allowedSections || [],
         totalAssignedQuestions,
         reviewQuestionAssignments,
         timeUpdated,

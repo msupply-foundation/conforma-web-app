@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react'
-import { Button, Divider, Header, Message, Segment } from 'semantic-ui-react'
-import Markdown from '../../utils/helpers/semanticReactMarkdown'
-import { ApplicationHeader, ApplicationSelectType, Loading } from '../../components'
+import { Button, Message, Segment } from 'semantic-ui-react'
+import { ApplicationContainer, ApplicationSelectType, Loading } from '../../components'
 import { useApplicationState } from '../../contexts/ApplicationState'
 import { useUserState } from '../../contexts/UserState'
 import useCreateApplication from '../../utils/hooks/useCreateApplication'
 import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
 import { useRouter } from '../../utils/hooks/useRouter'
+import usePageTitle from '../../utils/hooks/usePageTitle'
 import strings from '../../utils/constants'
-import { SectionsList } from '../../components/Application/Sections'
+import { SectionsList } from '../../components/Sections'
+import ApplicationHomeWrapper from '../../components/Application/ApplicationHomeWrapper'
 
 const ApplicationCreate: React.FC = () => {
   const {
@@ -23,6 +24,8 @@ const ApplicationCreate: React.FC = () => {
   const { error, loading, template } = useLoadTemplate({
     templateCode: type,
   })
+
+  usePageTitle(strings.PAGE_TITLE_CREATE)
 
   const {
     userState: { currentUser },
@@ -63,6 +66,7 @@ const ApplicationCreate: React.FC = () => {
       templateId: template.id,
       userId: currentUser?.userId,
       orgId: currentUser?.organisation?.orgId,
+      sessionId: currentUser?.sessionId as string,
       templateSections: sections.map(({ id }) => {
         return { templateSectionId: id }
       }),
@@ -81,33 +85,31 @@ const ApplicationCreate: React.FC = () => {
       />
     )
 
+  if (!template) return null
+  // if (!template) return <ApplicationSelectType /> // TODO
   if (loading || !template?.startMessage) return <Loading />
 
-  const NewApplicationInfo: React.FC = () => {
-    return template?.sections ? (
-      <>
-        <Header as="h5">{strings.SUBTITLE_APPLICATION_STEPS}</Header>
-        <Header as="h5">{strings.TITLE_STEPS.toUpperCase()}</Header>
-        <SectionsList sections={template.sections} />
-        <Divider />
-        <Markdown text={template.startMessage || ''} semanticComponent="Message" info />
-        <Button color="blue" loading={processing} onClick={handleCreate}>
+  const StartButtonSegment: React.FC = () => {
+    return (
+      <Segment basic className="padding-zero">
+        <Button color="blue" className="button-wide" loading={processing} onClick={handleCreate}>
           {strings.BUTTON_APPLICATION_START}
         </Button>
-      </>
-    ) : null
+      </Segment>
+    )
   }
 
-  return template ? (
-    <ApplicationHeader
-      template={template}
-      currentUser={currentUser}
-      ChildComponent={NewApplicationInfo}
-    />
-  ) : (
-    // TODO
-    <ApplicationSelectType />
-  )
+  return template?.sections ? (
+    <ApplicationContainer template={template}>
+      <ApplicationHomeWrapper
+        startMessage={template.startMessage}
+        name={template.name}
+        ButtonSegment={StartButtonSegment}
+      >
+        <SectionsList sections={template.sections} />
+      </ApplicationHomeWrapper>
+    </ApplicationContainer>
+  ) : null
 }
 
 export default ApplicationCreate

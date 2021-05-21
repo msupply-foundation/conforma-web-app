@@ -7,8 +7,7 @@ import {
   Approval,
   Admin,
   Config,
-  Home,
-  Login,
+  Dashboard,
   Notification,
   NotificationsList,
   NoMatch,
@@ -24,10 +23,13 @@ import {
 import { ApplicationCreate, ApplicationWrapper } from '../Application'
 import { ApplicationProvider } from '../../contexts/ApplicationState'
 import UserArea from '../User/UserArea'
+import Login from '../User/Login'
 import ListWrapper from '../List/ListWrapper'
 import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpdateTrackerState'
+import { LookupTableRoutes } from '../../LookupTable'
 import { Container } from 'semantic-ui-react'
 import DevOptions from '../Dev/DevOptions'
+import LayoutHelpers from '../../components/LayoutHelpers'
 
 const SiteLayout: React.FC = () => {
   return (
@@ -38,7 +40,10 @@ const SiteLayout: React.FC = () => {
         <Container id="content-area">
           <Switch>
             <Route exact path="/">
-              <Home />
+              <Dashboard />
+            </Route>
+            <Route exact path="/layout">
+              <LayoutHelpers />
             </Route>
             <Route exact path="/login">
               <Login />
@@ -98,17 +103,20 @@ const SiteLayout: React.FC = () => {
             <Route exact path="/products">
               <ProductList />
             </Route>
-            <Route exact path="/products/:productId">
-              <Product />
+            <Route exact path="/products/:productId"></Route>
+            {/* Lookup Table routes wrapper */}
+            <Route path="/lookup-tables">
+              <LookupTableRoutes />
+            </Route>
+            <Route>
+              <NoMatch />
             </Route>
             <Route>
               <NoMatch />
             </Route>
           </Switch>
         </Container>
-        <Container>
-          <Footer />
-        </Container>
+        <Footer />
       </Container>
     </Router>
   )

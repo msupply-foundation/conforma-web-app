@@ -12,6 +12,8 @@ const UserArea: React.FC = () => {
     userState: { currentUser },
   } = useUserState()
 
+  if (!currentUser || currentUser?.username === strings.USER_NONREGISTERED) return null
+
   return (
     <Container id="user-area">
       <div id="user-area-left">
@@ -36,10 +38,10 @@ const MainMenuBar: React.FC = () => {
           </Link>
         </List.Item>
         <List.Item>
-          <Link to="/">Menu Item 1</Link>
+          <Link to="/layout">Layout helpers</Link>
         </List.Item>
         <List.Item>
-          <Link to="/">Menu Item 2</Link>
+          <Link to="/application/new?type=UserEdit">Edit User Account</Link>
         </List.Item>
       </List>
     </div>
@@ -55,7 +57,7 @@ const OrgSelector: React.FC<{ user: User }> = ({ user }) => {
       )}
       <div>
         {user?.organisation?.orgName || ''}
-        <Icon size="small" name="angle down" />
+        <Icon size="small" name="chevron down" />
       </div>
     </div>
   )

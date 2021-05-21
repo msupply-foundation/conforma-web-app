@@ -15,26 +15,48 @@ type UserRoles = {
  */
 
 const userRoles: UserRoles = {
+  applicant: [PermissionPolicyType.Apply],
   consolidator: [PermissionPolicyType.Assign, PermissionPolicyType.Review],
   reviewer: [PermissionPolicyType.Review],
   assigner: [PermissionPolicyType.Assign],
-  applicant: [PermissionPolicyType.Apply],
 }
 
 // permissions: Array<PermissionPolicyType>
-
-export default (templatePermissions: TemplatePermissions, type: string): string | undefined => {
+const getUserRolesForType = (templatePermissions: TemplatePermissions, type: string): string[] => {
   const found = Object.entries(templatePermissions).find(([template]) => template === type)
-  if (found) {
-    const [_, permissions] = found
-    const comparePermissions = permissions.map((permissionType) => permissionType.toUpperCase())
+  if (!found) return []
 
-    // Compare array of permission checking if are the same
-    const matching = Object.entries(userRoles).filter(([role, permissionList]) => {
-      const common = permissionList.filter((permission) => comparePermissions.includes(permission))
-      return common.length > 0
-    })
-    const filteredRoles = matching.map(([role]) => role)
-    return filteredRoles?.[0] || undefined
-  }
+  const [_, permissions] = found
+
+  // Compare array of permission checking if are the same
+  const matching = Object.entries(userRoles).filter(([_, permissionList]) => {
+    const common = permissionList.filter((permission) => permissions.includes(permission))
+    return common.length > 0
+  })
+  const filteredRoles = matching.map(([role]) => role)
+  return filteredRoles
 }
+
+const findUserRole = (
+  templatePermissions: TemplatePermissions,
+  type: string
+): string | undefined => {
+  const userRoles = getUserRolesForType(templatePermissions, type)
+  return userRoles?.[0]
+}
+
+const checkExistingUserRole = (
+  templatePermissions: TemplatePermissions,
+  type: string,
+  userRole: string
+) => {
+  const list = Object.values(USER_ROLES)
+  const existing = list.includes(userRole as USER_ROLES)
+  if (!existing) return false
+
+  // If userRole correspond to one existing, check if user has permission
+  const userRoles = getUserRolesForType(templatePermissions, type)
+  return userRoles?.includes(userRole)
+}
+
+export { findUserRole, checkExistingUserRole }

@@ -1,3 +1,49 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.label {
+  font-weight: @semiboldWeight;
+}
+
+// Uppercase label title
+.uppercase-label {
+  background-color: transparent !important;
+  text-transform: uppercase !important;
+}
+
+// Class for coloured "Stage" labels
+.ui.label.stage-label {
+  color: white;
+  // bg colour defined inline from template setting
+  letter-spacing: 0.81px;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  border-radius: 4px;
+}
+
+// In use for label over progress bar on Steps line
+.ui.label.simple-label {
+  background-color: transparent;
+  color: @darkGrey;
+  font-weight: @regularWeight;
+  padding-left: 0;
+}
+
+.ui.label.strong-label {
+  background-color: transparent;
+  color: @black;
+  font-weight: @semiboldWeight;
+}
+
+.ui.label.relevant-text {
+  color: @blue;
+}
+
+.ui.label.info-text {
+  color: @information;
+}
+
+.ui.label.alert-text {
+  color: @attention;
+}

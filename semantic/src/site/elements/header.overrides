@@ -23,6 +23,7 @@
     font-size: @h4;
     font-weight: @semiboldWeight;
     text-transform: uppercase;
+    letter-spacing: @letterSpacingRegular;
     color: @darkGrey;
   }
   h5.ui.header {
@@ -74,4 +75,42 @@
     text-transform: uppercase;
     color: @darkGrey;
   }
+}
+
+// "Introduction" subheader on application home/create
+.ui.header .sub.header {
+  margin-top: 11px;
+  margin-bottom: 16px;
+  letter-spacing: @letterSpacingSmall;
+}
+
+// In use for company title in application header (home/create pages)
+.ui.header.heading-alt {
+  letter-spacing: @letterSpacingRegular;
+  font-family: @alternativeFont;
+  font-weight: @regularWeight;
+  text-transform: uppercase;
+  color: @headersInteractiveLow;
+}
+
+// Remove top margin on Steps header on application home/create
+.steps-header {
+  margin-top: 0 !important;
+}
+
+// Add space between section title and assignment/review rows on Review home
+.section-title {
+  margin-bottom: 30px !important;
+}
+
+// Adjustments (overrides) to default header styles
+
+.header-space-around-none {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.header-space-around-medium {
+  margin-top: @h3 !important;
+  margin-bottom: @h3 !important;
 }

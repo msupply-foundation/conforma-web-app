@@ -1,18 +1,24 @@
 import {
-  ApplicationHeader,
+  ApplicationContainer,
+  ApplicationSections,
   ApplicationSelectType,
   Navigation,
-  ProgressBar,
-  PageElements,
-  SectionWrapper,
+  ProgressArea,
 } from './Application'
 import Approval from './Approval'
 import Admin from './Admin'
 import FilterList from './FilterList'
-import Home from './Home'
-import Login from '../containers/User/Login'
+import Dashboard from './Dashboard'
 import Loading from './Loading'
 import { Footer, ModalWarning } from './Main'
+import { ReviewHeader } from './Review'
+import {
+  ApplicationProgressBar,
+  ConsolidationSectionProgressBar,
+  ReviewSectionProgressBar,
+  SectionWrapper,
+} from './Sections'
+import { PageElements } from './PageElements'
 import TemplateList from './TemplateList'
 import TemplateNew from './TemplateNew'
 import Template from './Template'
@@ -27,25 +33,29 @@ export {
   Account,
   AdminPermissions,
   AdminUsers,
-  ApplicationHeader,
+  ApplicationContainer,
+  ApplicationSections,
   ApplicationSelectType,
+  ApplicationProgressBar,
   Approval,
   Admin,
   Config,
+  ConsolidationSectionProgressBar,
   FilterList,
   Footer,
-  Home,
-  Login,
+  Dashboard,
   Loading,
   ModalWarning,
   Navigation,
   Notification,
   NotificationsList,
   NoMatch,
+  PageElements,
   Product,
   ProductList,
-  ProgressBar,
-  PageElements,
+  ProgressArea,
+  ReviewHeader,
+  ReviewSectionProgressBar,
   SectionWrapper,
   Organisation,
   OrgMemberEdit,

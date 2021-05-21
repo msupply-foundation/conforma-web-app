@@ -37,42 +37,45 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!fullReviewStructure) return <Loading />
+
   const section = fullReviewStructure.sortedSections?.find(
     (section) => section.details.id === sectionId
   )
+
   if (!section) return null
 
   const thisReview = fullReviewStructure?.thisReview
-  const isAssignedToCurrentUser = !!section?.reviewAction?.isAssignedToCurrentUser
+  const isAssignedToCurrentUser = !!section?.assignment?.isAssignedToCurrentUser
 
   const props: ReviewSectionComponentProps = {
     fullStructure: fullReviewStructure,
     section,
     assignment,
     thisReview,
+    action: section?.assignment?.action || ReviewAction.unknown,
+    isConsolidation: section.assignment?.isConsolidation || false,
     isAssignedToCurrentUser,
-    action: section?.reviewAction?.action || ReviewAction.unknown,
   }
 
   const canRenderRow =
-    section?.reviewAction?.isReviewable ||
-    section?.reviewAction?.action === ReviewAction.canSelfAssign
+    section?.assignment?.isAssignedToCurrentUser ||
+    section?.assignment?.action === ReviewAction.canSelfAssign ||
+    (section?.assignment?.action === ReviewAction.canView && section?.assignment?.isReviewable)
 
   return (
     <>
       {canRenderRow && (
-        <Grid columns="equal" verticalAlign="middle" style={sectionRowStyle}>
-          <ReviewSectionRowAssigned {...props} />
-          <ReviewSectionRowLastActionDate {...props} />
-          <ReviewSectionRowProgress {...props} />
-          <ReviewSectionRowAction {...props} />
+        <Grid columns="equal" className="section-single-row-box-container" verticalAlign="middle">
+          <Grid.Row>
+            <ReviewSectionRowAssigned {...props} />
+            <ReviewSectionRowLastActionDate {...props} />
+            <ReviewSectionRowProgress {...props} />
+            <ReviewSectionRowAction {...props} />
+          </Grid.Row>
         </Grid>
       )}
     </>
   )
 }
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const sectionRowStyle = { borderRadius: 10 }
 
 export default ReviewSectionRow

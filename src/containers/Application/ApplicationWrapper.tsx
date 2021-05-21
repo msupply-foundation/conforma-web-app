@@ -2,7 +2,7 @@ import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { Message } from 'semantic-ui-react'
 
-import { Loading, NoMatch } from '../../components'
+import { ApplicationContainer, Loading, NoMatch } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -17,10 +17,10 @@ const ApplicationWrapper: React.FC = () => {
     query: { serialNumber },
   } = useRouter()
   const {
-    userState: { currentUser },
+    userState: { currentUser, isNonRegistered },
   } = useUserState()
 
-  const { error, isLoading, structure, template } = useLoadApplication({
+  const { error, isLoading, structure } = useLoadApplication({
     serialNumber,
     currentUser: currentUser as User,
     networkFetch: true,
@@ -30,19 +30,25 @@ const ApplicationWrapper: React.FC = () => {
     <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
   ) : isLoading ? (
     <Loading />
-  ) : structure && template ? (
+  ) : structure ? (
     <Switch>
       <Route path={`${path}/review`}>
         <ReviewWrapper structure={structure} />
       </Route>
       <Route exact path={path}>
-        <ApplicationHome structure={structure} template={template} />
+        <ApplicationContainer template={structure.info.template}>
+          <ApplicationHome structure={structure} template={structure.info.template} />
+        </ApplicationContainer>
       </Route>
       <Route exact path={`${path}/submission`}>
-        <ApplicationSubmission structure={structure} />
+        <ApplicationContainer template={structure.info.template}>
+          <ApplicationSubmission structure={structure} />
+        </ApplicationContainer>
       </Route>
       <Route>
-        <ApplicationPageWrapper structure={structure} />
+        <ApplicationContainer template={structure.info.template}>
+          <ApplicationPageWrapper structure={structure} />
+        </ApplicationContainer>
       </Route>
     </Switch>
   ) : (

@@ -4,35 +4,67 @@
 
 .ui.table {
   border-collapse: separate;
-  border-spacing:0 3px;
+  border-spacing: 0 10px;
   background: none;
 }
 .ui.table td {
-  background: rgb(255, 255, 255);
-  font-weight: 500;
-  color: #636262;
+  background: @surfacesWhite;
+  padding: 0;
 }
+
 .ui.table tr {
-  border:none;
+  border: none;
+  height: 52px;
 }
 
+.ui.table thead tr {
+  height: 0;
+}
+
+.ui.table thead th {
+  padding: 0;
+}
+
+.ui.table td:first-child,
+.ui.table thead th:first-child {
+  padding-left: @fontLarge;
+}
+
+// Prevents column headers having different background when selected
+// and on hover
+.ui.sortable.table thead th.sorted {
+  background: none;
+}
+.ui.sortable.table thead th:hover {
+  background: none;
+  opacity: 0.8;
+}
+
+// Removes the faint background that is visibile behind the list row
+// when hovering
+.ui.selectable.table tbody tr:hover,
+.ui.table tbody tr td.selectable:hover {
+  background: none !important;
+  color: @selectableTextColor !important;
+}
+
+// Column header text
 .ui.table thead tr th {
-  border:none;
+  border: none;
   background: none;
-
-}
-
-.ui.table thead tr th p {
-  border:none;
-  background: none;
-  color: rgb(129, 129, 129);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.81px;
+  font-weight: @semiboldWeight;
+  font-size: @fontXsmall;
+  letter-spacing: @letterSpacingSmall;
   text-transform: uppercase;
+  color: @headersInteractiveMed !important;
 }
+
 .ui.sortable.table thead th {
-  border:none;
+  border: none;
+}
+
+.ui.table tr td {
+  border: none;
 }
 
 .ui.table tr td:first-child {

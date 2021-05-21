@@ -14,10 +14,20 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
 }) => {
   const { isEditable } = element
-  const { placeholder, maskedInput, label, description, maxLength } = parameters
+  const {
+    placeholder,
+    maskedInput,
+    label,
+    description,
+    default: defaultValue,
+    maxLength,
+  } = parameters
 
   useEffect(() => {
-    onUpdate(value)
+    if (!value && defaultValue) {
+      onSave({ text: defaultValue })
+      setValue(defaultValue)
+    } else onUpdate(value)
   }, [])
 
   function handleChange(e: any) {

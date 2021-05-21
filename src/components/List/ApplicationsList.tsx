@@ -32,7 +32,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
                 onClick={() => handleSort(sortName)}
                 colSpan={index === columns.length - 1 ? 2 : 1} // Set last column to fill last column (expansion)
               >
-                <p>{headerName}</p>
+                {headerName}
               </Table.HeaderCell>
             ))}
           </Table.Row>
@@ -83,13 +83,13 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application })
   const { replace, query } = useRouter()
 
   return (
-    <Table.Row key={`ApplicationList-application-${application.id}`}>
+    <Table.Row key={`ApplicationList-application-${application.id}`} className="list-row">
       {columns.map(({ headerName, ColumnComponent }, index) => (
         <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
           <ColumnComponent application={application} />
         </Table.Cell>
       ))}
-      <Table.Cell icon="angle down" />
+      <Table.Cell icon="chevron down" />
     </Table.Row>
   )
 }
