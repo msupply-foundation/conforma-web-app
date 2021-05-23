@@ -151,7 +151,11 @@ const ReviewPage: React.FC<{
             }
           />
         ))}
-        <ReviewSubmit structure={fullReviewStructure} scrollTo={scrollTo} />
+        <ReviewSubmit
+          structure={fullReviewStructure}
+          assignment={reviewAssignment}
+          scrollTo={scrollTo}
+        />
       </div>
       <ModalWarning {...showWarningModal} />
     </ReviewHeader>
