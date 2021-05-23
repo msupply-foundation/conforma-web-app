@@ -12,7 +12,7 @@ import {
   addElementsById,
   addSortedSectionsAndPages,
   addApplicationResponses,
-  addApplicantChangeRequestStatusToElement,
+  addChangeRequestForApplicant,
   generateApplicantChangesRequestedProgress,
   generateResponsesProgress,
 } from '../helpers/structure'
@@ -106,7 +106,7 @@ const useGetApplicationStructure = ({
       addApplicationResponses(newStructure, applicationResponses)
 
       if (shouldCalculateProgress) {
-        addApplicantChangeRequestStatusToElement(newStructure)
+        addChangeRequestForApplicant(newStructure)
 
         generateApplicantChangesRequestedProgress(newStructure)
 

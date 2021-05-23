@@ -8,6 +8,7 @@ import {
   ReviewResponseStatus,
 } from '../../generated/graphql'
 import {
+  addChangeRequestForReviewer,
   addElementsById,
   addSortedSectionsAndPages,
   generateReviewProgress,
@@ -83,6 +84,8 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // lowerLevelReviewLatestResponse and previousPreviousReviewLevelResponse
   // latestOriginalReviewResponse and previousOriginalReviewResponse
   newStructure = addAllReviewResponses(newStructure, data)
+
+  addChangeRequestForReviewer(newStructure)
 
   // review info comes from reviewAssignment that's passed to this hook
   newStructure.thisReview = review

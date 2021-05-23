@@ -1,4 +1,5 @@
-import addApplicantChangeRequestStatusToElement from './addApplicantChangeRequestStatusToElement'
+import addChangeRequestForApplicant from './addChangeRequestForApplicant'
+import addChangeRequestForReviewer from './addChangeRequestForReviewer'
 import addApplicationResponses from './addApplicationResponses'
 import addElementsById from './addElementsById'
 import addEvaluatedResponsesToStructure from './addEvaluatedResponsesToStructure'
@@ -12,8 +13,9 @@ import generateReviewProgress from './generateReviewProgress'
 import generateReviewSectionActions from './generateReviewSectionActions'
 
 export {
-  addApplicantChangeRequestStatusToElement,
   addApplicationResponses,
+  addChangeRequestForApplicant,
+  addChangeRequestForReviewer,
   addSortedSectionsAndPages,
   generateResponsesProgress,
   addEvaluatedResponsesToStructure,
