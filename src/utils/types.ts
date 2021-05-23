@@ -371,6 +371,7 @@ interface ConsolidationProgress extends BaseReviewProgress {
   totalNonConform: number
 }
 
+// TODO: Maybe better to replace with combined actions from ReviewerAction and AssignerAction
 enum ReviewAction {
   canContinue = 'CAN_CONTINUE',
   canView = 'CAN_VIEW',
