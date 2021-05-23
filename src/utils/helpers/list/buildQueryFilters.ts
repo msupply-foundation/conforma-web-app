@@ -115,6 +115,8 @@ const mapQueryToFilterField: FilterMap = {
 
   reviewerAction: (value: string) => ({ reviewerAction: { equalTo: value } }),
 
+  assignerAction: (value: string) => ({ assignerAction: { equalTo: value } }),
+
   // deadlineDate (TBD)
 
   search: (value: string) => ({
