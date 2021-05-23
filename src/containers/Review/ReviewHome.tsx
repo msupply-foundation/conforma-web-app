@@ -12,7 +12,6 @@ import ReviewSectionRow from './ReviewSectionRow'
 interface ReviewHomeProps {
   assignments: AssignmentDetails[]
   structure: FullStructure
-  userId: number
 }
 
 type Filters = {
@@ -22,7 +21,7 @@ type Filters = {
 
 const ALL_REVIEWERS = 0
 
-const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure, userId }) => {
+const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure }) => {
   const { error, fullStructure: fullApplicationStructure } = useGetApplicationStructure({
     structure,
     firstRunValidation: false,
@@ -68,7 +67,6 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({ assignments, structure, userId 
                 assignments: getFilteredByStage(assignments),
                 structure: fullApplicationStructure,
                 sectionCode: code,
-                userId,
               }}
             />
             {getFilteredReviewer(assignments).map((assignment) => (

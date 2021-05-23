@@ -26,13 +26,11 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
 
   usePageTitle(strings.PAGE_TITLE_REVIEW.replace('%1', structure.info.serial))
 
-  const userId = currentUser?.userId as number
-
   // I think we need an option to selecte review assgnments where
   // userId is reviewerId or assignerId or both or not match it at all (just by row level permission restrictions)
   const { error, loading, assignments } = useGetReviewInfo({
     applicationId: structure.info.id,
-    userId,
+    userId: currentUser?.userId as number,
   })
 
   if (error) return <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
@@ -45,7 +43,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     <ReviewContainer application={structure.info}>
       <Switch>
         <Route exact path={path}>
-          <ReviewHome {...{ assignments, structure, userId }} />
+          <ReviewHome {...{ assignments, structure }} />
         </Route>
         <Route exact path={`${path}/:reviewId`}>
           <ReviewPageWrapper {...{ structure, reviewAssignments: assignments }} />
