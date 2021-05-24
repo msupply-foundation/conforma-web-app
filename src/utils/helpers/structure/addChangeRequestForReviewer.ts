@@ -6,17 +6,8 @@ import {
 } from '../../generated/graphql'
 import { FullStructure } from '../../types'
 
-const hasConsolidatorReviewResponse = (reviewerReviewResponse?: ReviewResponse) => {
-  const returned =
-    (reviewerReviewResponse?.reviewResponsesByReviewResponseLinkId?.nodes || []).length > 0
-  console.log(
-    reviewerReviewResponse?.reviewResponsesByReviewResponseLinkId,
-    reviewerReviewResponse?.reviewResponsesByReviewResponseLinkId.nodes,
-    (reviewerReviewResponse?.reviewResponsesByReviewResponseLinkId?.nodes || []).length
-  )
-
-  return returned
-}
+const hasConsolidatorReviewResponse = (reviewerReviewResponse?: ReviewResponse) =>
+  (reviewerReviewResponse?.reviewResponsesByReviewResponseLinkId?.nodes || []).length > 0
 
 const addChangeRequestForReviewer = (structure: FullStructure) => {
   const questionElements = Object.values(structure?.elementsById || {}).filter(
