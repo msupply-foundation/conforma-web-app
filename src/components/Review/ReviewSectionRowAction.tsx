@@ -39,6 +39,13 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
         return <NotStartedLabel />
       }
 
+      case ReviewAction.canUpdate: {
+        if (isAssignedToCurrentUser) {
+          return <div>TODO</div>
+        }
+        return <NotStartedLabel />
+      }
+
       case ReviewAction.canReReview: {
         if (isAssignedToCurrentUser) return <StartContinueOrRestartButton {...props} />
 
