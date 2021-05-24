@@ -68,7 +68,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   useEffect(() => {
     onSave({
-      text: createTextString(listItems),
+      text: 'Not required', // Text value never displayed to user
       list: listItems,
     })
   }, [listItems])
@@ -223,12 +223,6 @@ const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
     ''
   )
   return { header: '', meta: '', description: displayString }
-}
-
-const createTextString = (listItems: ListItem[]) => {
-  // This doesn't really get used except to identify whether the element has been entered or not
-  // TO-DO
-  return 'Temp text value'
 }
 
 const resetCurrentResponses = (inputFields: TemplateElement[]) =>
