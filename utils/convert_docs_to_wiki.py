@@ -23,12 +23,12 @@ def file_convert_links(file):
     f = open(file, 'r')
     original_markup = f.read()
     markup_regex = re.compile(
-        "(\[.+\])(\()(\S*/)?(\S+)({})".format(build_file_ext_regex_opts(markup_formats)))
+        "(!\[)(.+)(\]\()(\.\/)?(.*\.)({})\)".format(build_file_ext_regex_opts(markup_formats)))
     markup_substitution = r"\1\2\4)"
     new_markup = re.sub(markup_regex, markup_substitution, original_markup)
     media_link_regex = re.compile(
         "(\[.*\])(\()(\.*\/)?(\S*/)?(\S+)({})".format(build_file_ext_regex_opts(media_types)))
-    media_link_substitution = r"\1\2\4\5\6"
+    media_link_substitution = r"[[\5\6|\2]]"
     new_markup = re.sub(media_link_regex, media_link_substitution, new_markup)
     f.close()
     return new_markup
