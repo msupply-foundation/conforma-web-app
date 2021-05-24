@@ -2,7 +2,7 @@ import { Decision, ReviewResponseDecision } from '../../generated/graphql'
 
 import { FullStructure, SectionState, Page, ReviewProgress } from '../../types'
 
-const generateReviewProgress = (newStructure: FullStructure) => {
+const generateReviewerResponsesProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach(generatePageReviewProgress)
   newStructure?.sortedSections?.forEach(generateSectionReviewProgress)
 
@@ -118,4 +118,4 @@ const getReviewProgressSums = (elements: (Page | SectionState)[]) => {
   }, initial)
 }
 
-export default generateReviewProgress
+export default generateReviewerResponsesProgress

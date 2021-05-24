@@ -14,7 +14,7 @@ import {
   addApplicationResponses,
   addChangeRequestForApplicant,
   generateApplicantChangesRequestedProgress,
-  generateResponsesProgress,
+  generateApplicantResponsesProgress,
 } from '../helpers/structure'
 
 interface UseGetApplicationStructureProps {
@@ -111,7 +111,7 @@ const useGetApplicationStructure = ({
         generateApplicantChangesRequestedProgress(newStructure)
 
         // generateResponseProgress uses change statuses calculated in generateApplicantChangesRequestedProgress
-        generateResponsesProgress(newStructure)
+        generateApplicantResponsesProgress(newStructure)
 
         // For change requests we treat application as not linear
         newStructure.info.isLinear =

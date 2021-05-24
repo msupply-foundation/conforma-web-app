@@ -8,8 +8,10 @@ import addThisReviewResponses from './addReviewResponses'
 import buildSectionsStructure from './buildSectionsStructure'
 import checkPageIsAccessible from './checkPageIsAccessible'
 import generateApplicantChangesRequestedProgress from './generateApplicantChangesRequestedProgress'
-import generateResponsesProgress from './generateProgress'
-import generateReviewProgress from './generateReviewProgress'
+import generateApplicantResponsesProgress from './generateApplicantResponsesProgress'
+import generateConsolidatorResponsesProgress from './generateConsolidatorResponsesProgress'
+import generateReviewerChangesRequestedProgress from './generateReviewerChangesRequestedProgress'
+import generateReviewerResponsesProgress from './generateReviewerResponsesProgress'
 import generateReviewSectionActions from './generateReviewSectionActions'
 
 export {
@@ -17,13 +19,15 @@ export {
   addChangeRequestForApplicant,
   addChangeRequestForReviewer,
   addSortedSectionsAndPages,
-  generateResponsesProgress,
+  generateApplicantChangesRequestedProgress,
+  generateApplicantResponsesProgress,
   addEvaluatedResponsesToStructure,
   addElementsById,
-  generateApplicantChangesRequestedProgress,
   checkPageIsAccessible,
   addThisReviewResponses,
-  generateReviewProgress,
+  generateConsolidatorResponsesProgress,
+  generateReviewerChangesRequestedProgress,
+  generateReviewerResponsesProgress,
   generateReviewSectionActions,
   buildSectionsStructure,
 }

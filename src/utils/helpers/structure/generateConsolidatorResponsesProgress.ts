@@ -1,7 +1,7 @@
 import { Decision, ReviewResponseDecision } from '../../generated/graphql'
 import { FullStructure, SectionState, Page, PageElement, ConsolidationProgress } from '../../types'
 
-const generateConsolidationProgress = (newStructure: FullStructure) => {
+const generateConsolidatorResponsesProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach(generatePageConsolidationProgress)
   newStructure?.sortedSections?.forEach(generateSectionConsolidationProgress)
 
@@ -153,4 +153,4 @@ const getConsolidationProgress = (elements: (Page | SectionState)[]) => {
   }, initial)
 }
 
-export default generateConsolidationProgress
+export default generateConsolidatorResponsesProgress

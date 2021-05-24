@@ -4,18 +4,18 @@ import {
   ReviewResponse,
   ReviewQuestionAssignment,
   TemplateElement,
-  ReviewStatus,
   ReviewResponseStatus,
 } from '../../generated/graphql'
 import {
   addChangeRequestForReviewer,
   addElementsById,
   addSortedSectionsAndPages,
-  generateReviewProgress,
+  generateConsolidatorResponsesProgress,
+  generateReviewerChangesRequestedProgress,
+  generateReviewerResponsesProgress,
   generateReviewSectionActions,
 } from '../../helpers/structure'
 import addReviewResponses from '../../helpers/structure/addReviewResponses'
-import generateConsolidationProgress from '../../helpers/structure/generateConsolidationProgress'
 
 import {
   UseGetReviewStructureForSectionProps,
@@ -85,19 +85,20 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // latestOriginalReviewResponse and previousOriginalReviewResponse
   newStructure = addAllReviewResponses(newStructure, data)
 
-  // when changes requested by consolidator (included in thisReviewPreviousResponse OR thisReviewLatestResponse)
-  addChangeRequestForReviewer(newStructure)
-
   // review info comes from reviewAssignment that's passed to this hook
   newStructure.thisReview = review
+
+  // when changes requested by consolidator (included in thisReviewPreviousResponse OR thisReviewLatestResponse)
+  addChangeRequestForReviewer(newStructure)
 
   newStructure = addIsPendingReview(newStructure, level)
   newStructure = addIsActiveReviewResponse(newStructure)
 
   if (level === 1) {
-    generateReviewProgress(newStructure)
+    generateReviewerChangesRequestedProgress(newStructure)
+    generateReviewerResponsesProgress(newStructure)
   } else {
-    generateConsolidationProgress(newStructure)
+    generateConsolidatorResponsesProgress(newStructure)
   }
 
   // filter by supplied sections or by all sections if none supplied to the hook
