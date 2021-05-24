@@ -152,24 +152,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           <Form>
             <Markdown text={modalText} />
             {inputFields.map((field: TemplateElement, index: number) => {
-              const element = {
-                code: field.code,
-                pluginCode: field.elementTypePluginCode as string,
-                category: field.category as TemplateElementCategory,
-                title: field.title as string,
-                parameters: field.parameters,
-                isEditable: true, // Update
-                isRequired: field.isRequired ?? true,
-                isVisible: true,
-                validationExpression: field?.validation || true,
-                validationMessage: field?.validationMessage || '',
-                id: index, // This is the only link between element and the response
-                elementIndex: 0,
-                page: 0,
-                sectionIndex: 0,
-                helpText: null,
-                sectionCode: '0',
-              }
+              const element = buildElement(field, index)
               return (
                 <ApplicationViewWrapper
                   key={`list-${element.code}`}
@@ -212,6 +195,27 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 }
 
 export default ApplicationView
+
+const buildElement = (field: TemplateElement, index: number) => ({
+  id: index, // This is the only link between element and the response
+  code: field.code,
+  pluginCode: field.elementTypePluginCode as string,
+  category: field.category as TemplateElementCategory,
+  title: field.title as string,
+  parameters: field.parameters,
+  validationExpression: field?.validation || true,
+  validationMessage: field?.validationMessage || '',
+  isRequired: field.isRequired ?? true,
+  // Hard-coded visisbility and editability (for now)
+  isEditable: true,
+  isVisible: true,
+  // "Dummy" values, but required for element props:
+  elementIndex: 0,
+  page: 0,
+  sectionIndex: 0,
+  helpText: null,
+  sectionCode: '0',
+})
 
 const createTextString = (listItems: ListItem[]) => {
   // This doesn't really get used except to identify whether the element has been entered or not
