@@ -153,6 +153,7 @@ const addIsActiveReviewResponse = (structure: FullStructure) => {
 
 const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponsesQuery) => {
   // add thisReviewLatestResponse and thisReviewPreviousResponse
+  // includes for a consolidation also has reviewResponsesByReviewResponseLinkId with Consolidator decision
   structure = addReviewResponses(
     structure,
     data?.thisReviewResponses?.nodes as ReviewResponse[], // Sorted in useGetReviewResponsesQuery

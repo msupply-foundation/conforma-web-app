@@ -24697,6 +24697,13 @@ export type GetReviewResponsesQuery = (
     { __typename?: 'ReviewResponsesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewResponse' }
+      & { reviewResponsesByReviewResponseLinkId: (
+        { __typename?: 'ReviewResponsesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ReviewResponse' }
+          & ReviewResponseFragmentFragment
+        )>> }
+      ) }
       & ReviewResponseFragmentFragment
     )>> }
   )>, previousLevelReviewResponses?: Maybe<(
@@ -25722,6 +25729,11 @@ export const GetReviewResponsesDocument = gql`
   thisReviewResponses: reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {review: {reviewAssignmentId: {equalTo: $reviewAssignmentId}}, templateElement: {section: {id: {in: $sectionIds}}}, or: [{status: {notEqualTo: DRAFT}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
     nodes {
       ...reviewResponseFragment
+      reviewResponsesByReviewResponseLinkId(orderBy: TIME_UPDATED_DESC, filter: {status: {notEqualTo: DRAFT}}) {
+        nodes {
+          ...reviewResponseFragment
+        }
+      }
     }
   }
   previousLevelReviewResponses: reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {review: {applicationId: {equalTo: $applicationId}, levelNumber: {equalTo: $previousLevel}, stageNumber: {equalTo: $stageNumber}}, templateElement: {section: {id: {in: $sectionIds}}}, status: {notEqualTo: DRAFT}}) {

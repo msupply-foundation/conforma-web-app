@@ -29,6 +29,14 @@ export default gql`
     ) {
       nodes {
         ...reviewResponseFragment
+        reviewResponsesByReviewResponseLinkId(
+          orderBy: TIME_UPDATED_DESC
+          filter: { status: { notEqualTo: DRAFT } }
+        ) {
+          nodes {
+            ...reviewResponseFragment
+          }
+        }
       }
     }
     previousLevelReviewResponses: reviewResponses(
