@@ -95,8 +95,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       newList[selectedListItem] = buildListItem(currentInputResponses, inputFields)
       setListItems(newList)
     }
-    console.log(buildListItem(currentInputResponses, inputFields))
-
     setCurrentInputResponses(resetCurrentResponses(inputFields))
     setOpen(false)
     setSelectedListItem(null)
@@ -104,7 +102,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const editItem = async (index: number) => {
     setSelectedListItem(index)
-    setCurrentInputResponses(listItems[index])
+    setCurrentInputResponses(getInputResponses(listItems[index], inputFields))
     setOpen(true)
   }
 
@@ -238,6 +236,9 @@ const buildListItem = (item: InputResponseField[], inputFields: TemplateElement[
     {}
   )
 
+const getInputResponses = (listItem: ListItem, inputFields: TemplateElement[]) =>
+  inputFields.reduce((acc: InputResponseField[], { code }) => [...acc, listItem[code]], [])
+
 const anyInvalidItems = (currentInput: InputResponseField[]) =>
   currentInput.some((response) => response.isValid === false)
 
@@ -313,6 +314,7 @@ export const ListCardLayout: React.FC<ListLayoutProps> = ({
 export const ListTableLayout: React.FC<ListLayoutProps> = ({
   listItems,
   fieldTitles = [],
+  codes = [],
   editItem = () => {},
   // deleteItem = () => {},
 }) => {
@@ -328,11 +330,8 @@ export const ListTableLayout: React.FC<ListLayoutProps> = ({
       <Table.Body>
         {listItems.map((item, index) => (
           <Table.Row key={`list-row-${index}`} onClick={() => editItem(index)}>
-            {fieldTitles.map((title, cellIndex) => (
-              <TableCell key={`list-cell-${index}-${cellIndex}`}>
-                {JSON.stringify(item)}
-                {/* {cell?.value?.text || ''} */}
-              </TableCell>
+            {codes.map((code, cellIndex) => (
+              <TableCell key={`list-cell-${index}-${cellIndex}`}>{item[code].value.text}</TableCell>
             ))}
           </Table.Row>
         ))}
