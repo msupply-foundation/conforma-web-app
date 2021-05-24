@@ -30,7 +30,7 @@ interface InputResponseField {
   value: ResponseFull
 }
 
-type ListItem = InputResponseField[]
+type ListItem = { [code: string]: InputResponseField }
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -95,6 +95,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       newList[selectedListItem] = buildListItem(currentInputResponses, inputFields)
       setListItems(newList)
     }
+    console.log(buildListItem(currentInputResponses, inputFields))
+
     setCurrentInputResponses(resetCurrentResponses(inputFields))
     setOpen(false)
     setSelectedListItem(null)
@@ -118,6 +120,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     editItem,
     deleteItem,
     fieldTitles: inputFields.map((e: TemplateElement) => e.title),
+    codes: inputFields.map((e: TemplateElement) => e.code),
     Markdown,
   }
 
@@ -221,13 +224,19 @@ const createTextString = (listItems: ListItem[]) => {
 const resetCurrentResponses = (inputFields: TemplateElement[]) =>
   new Array(inputFields.length).fill({ value: { text: undefined } })
 
-const buildListItem = (item: ListItem, inputFields: TemplateElement[]) =>
-  item.map((field, index) => ({
-    code: inputFields[index].code,
-    id: field.id,
-    title: inputFields[index].title,
-    value: field.value,
-  }))
+const buildListItem = (item: InputResponseField[], inputFields: TemplateElement[]) =>
+  item.reduce(
+    (acc, field, index) => ({
+      ...acc,
+      [inputFields[index].code]: {
+        code: inputFields[index].code,
+        id: field.id,
+        title: inputFields[index].title,
+        value: field.value,
+      },
+    }),
+    {}
+  )
 
 const anyInvalidItems = (currentInput: InputResponseField[]) =>
   currentInput.some((response) => response.isValid === false)
@@ -241,8 +250,7 @@ const anyErrorItems = (currentInput: InputResponseField[], inputFields: Template
   anyInvalidItems(currentInput) || anyIncompleteItems(currentInput, inputFields)
 
 const substituteValues = (parameterisedString: string, item: any) => {
-  const getValueFromCode = (_: string, $: string, code: string) =>
-    item.find((field: any) => field.code === code).value.text || ''
+  const getValueFromCode = (_: string, $: string, code: string) => item[code].value.text || ''
   return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromCode)
 }
 
@@ -252,6 +260,7 @@ export interface ListLayoutProps {
   displayFormat: { header?: string; meta?: string; description: string }
   Markdown: any
   fieldTitles?: string[]
+  codes?: string[]
   editItem?: Function
   deleteItem?: Function
   isEditable?: boolean
@@ -319,9 +328,10 @@ export const ListTableLayout: React.FC<ListLayoutProps> = ({
       <Table.Body>
         {listItems.map((item, index) => (
           <Table.Row key={`list-row-${index}`} onClick={() => editItem(index)}>
-            {item.map((cell, cellIndex) => (
+            {fieldTitles.map((title, cellIndex) => (
               <TableCell key={`list-cell-${index}-${cellIndex}`}>
-                {cell?.value?.text || ''}
+                {JSON.stringify(item)}
+                {/* {cell?.value?.text || ''} */}
               </TableCell>
             ))}
           </Table.Row>
