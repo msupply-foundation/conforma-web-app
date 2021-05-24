@@ -52,8 +52,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     addButtonText = strings.BUTTON_ADD,
     updateButtonText = strings.BUTTON_UPDATE,
     deleteItemText = strings.BUTTON_DELETE,
-    displayFormat,
     inputFields,
+    displayFormat = getDefaultDisplayFormat(inputFields),
     displayType = DisplayType.CARDS,
   } = parameters
 
@@ -216,6 +216,14 @@ const buildElement = (field: TemplateElement, index: number) => ({
   helpText: null,
   sectionCode: '0',
 })
+
+const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
+  const displayString = inputFields.reduce(
+    (acc: string, { code, title }) => acc + `**${title}**: \${${code}}  \n`,
+    ''
+  )
+  return { header: '', meta: '', description: displayString }
+}
 
 const createTextString = (listItems: ListItem[]) => {
   // This doesn't really get used except to identify whether the element has been entered or not
