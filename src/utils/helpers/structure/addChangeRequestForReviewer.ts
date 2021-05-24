@@ -1,46 +1,59 @@
-import deepEqual from 'deep-equal'
 import {
-  ApplicationResponse,
-  ApplicationStatus,
+  ReviewResponse,
   ReviewResponseDecision,
+  ReviewStatus,
   TemplateElementCategory,
 } from '../../generated/graphql'
 import { FullStructure } from '../../types'
 
-const hasReviewResponse = (applicationResponse: ApplicationResponse) =>
-  applicationResponse?.reviewResponses.nodes?.length > 0
+const hasConsolidatorReviewResponse = (reviewerReviewResponse?: ReviewResponse) => {
+  const returned =
+    (reviewerReviewResponse?.reviewResponsesByReviewResponseLinkId?.nodes || []).length > 0
+  console.log(
+    reviewerReviewResponse?.reviewResponsesByReviewResponseLinkId,
+    reviewerReviewResponse?.reviewResponsesByReviewResponseLinkId.nodes,
+    (reviewerReviewResponse?.reviewResponsesByReviewResponseLinkId?.nodes || []).length
+  )
+
+  return returned
+}
 
 const addChangeRequestForReviewer = (structure: FullStructure) => {
   const questionElements = Object.values(structure?.elementsById || {}).filter(
     ({ element }) => element?.category === TemplateElementCategory.Question
   )
 
-  const hasReviewResponses = questionElements.some(
-    ({ latestApplicationResponse, previousApplicationResponse }) =>
-      hasReviewResponse(latestApplicationResponse) || hasReviewResponse(previousApplicationResponse)
+  const hasConsolidatorReviewResponses = questionElements.some(
+    ({ thisReviewLatestResponse, thisReviewPreviousResponse }) =>
+      hasConsolidatorReviewResponse(thisReviewLatestResponse) ||
+      hasConsolidatorReviewResponse(thisReviewPreviousResponse)
   )
 
-  // No reviews, then don't set isChanged and isChangeRequested fields
-  if (!hasReviewResponses) return
+  // No consolidation reviews, then don't set isChanged and isChangeRequested fields
+  if (!hasConsolidatorReviewResponses) return
 
   questionElements.forEach((element) => {
-    const { latestApplicationResponse, previousApplicationResponse } = element
-    const latestReviewResponse = latestApplicationResponse?.reviewResponses?.nodes[0]
-    const previousReviewResponse = previousApplicationResponse?.reviewResponses?.nodes[0]
-    // For not draft application (in changes requested), we just check the latestApplicationResponse
-    if (structure?.info?.current?.status !== ApplicationStatus.Draft) {
-      element.isChangeRequest = latestReviewResponse?.decision === ReviewResponseDecision.Decline
+    const { thisReviewLatestResponse, thisReviewPreviousResponse } = element
+    // For not draft review (in changes requested status), we check the consolidator linked reviewResponse on thisReviewLatestResponse
+    if (structure?.thisReview?.status !== ReviewStatus.Draft) {
+      const consolidatorLatestReviewResponse =
+        thisReviewLatestResponse?.reviewResponsesByReviewResponseLinkId?.nodes[0] // Sorted in useGetReviewResponsesQuery
+
+      element.isChangeRequest =
+        consolidatorLatestReviewResponse?.decision === ReviewResponseDecision.Disagree
       element.isChanged = false
       return
     }
 
-    // For draft applicaiton we check previousApplicationResponse
-    // and we should aslo set isChanged for all question elements
-    element.isChangeRequest = previousReviewResponse?.decision === ReviewResponseDecision.Decline
-    element.isChanged = !deepEqual(
-      latestApplicationResponse?.value,
-      previousApplicationResponse?.value
-    )
+    // For draft review we check the consolidator linked reviewResponse on thisReviewPreviousResponse
+    // and we should also set isChanged for all question elements
+    const consolidatorLatestReviewResponse =
+      thisReviewPreviousResponse?.reviewResponsesByReviewResponseLinkId.nodes[0] // Sorted in useGetReviewResponsesQuery
+    element.isChangeRequest =
+      consolidatorLatestReviewResponse?.decision === ReviewResponseDecision.Disagree
+    element.isChanged =
+      thisReviewLatestResponse?.comment !== thisReviewPreviousResponse?.comment ||
+      thisReviewLatestResponse?.decision !== thisReviewPreviousResponse?.decision
   })
 }
 

@@ -85,6 +85,7 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // latestOriginalReviewResponse and previousOriginalReviewResponse
   newStructure = addAllReviewResponses(newStructure, data)
 
+  // when changes requested by consolidator (included in thisReviewPreviousResponse OR thisReviewLatestResponse)
   addChangeRequestForReviewer(newStructure)
 
   // review info comes from reviewAssignment that's passed to this hook
@@ -160,6 +161,8 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
     (element, response) => (element.thisReviewLatestResponse = response),
     (element, response) => (element.thisReviewPreviousResponse = response)
   )
+  console.log(data.thisReviewResponses, structure)
+
   // add lowerLevelReviewLatestResponse and previousPreviousReviewLevelResponse
   structure = addReviewResponses(
     structure,
