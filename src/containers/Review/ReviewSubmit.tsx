@@ -62,6 +62,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   const {
     location: { pathname },
     replace,
+    push,
   } = useRouter()
 
   // Need to refetch review status before submission, in case it's pending
@@ -78,7 +79,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   const setAttemptSubmission = () => (structure.attemptSubmission = true)
   const attemptSubmissionFailed = structure.attemptSubmission && structure.firstIncompleteReviewPage
 
-  const showWarning = () => {
+  const showIncompleteSectionWarning = () => {
     const { title, message, option } = messages.REVIEW_DECISION_SET_FAIL
     setShowWarningModal({
       open: true,
@@ -87,6 +88,24 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       option,
       onClick: () => setShowWarningModal({ open: false }),
       onClose: () => setShowWarningModal({ open: false }),
+    })
+  }
+
+  const showPendingReviewWarning = () => {
+    const { title, message, option } = messages.REVIEW_STATUS_PENDING
+    setShowWarningModal({
+      open: true,
+      title,
+      message,
+      option,
+      onClick: () => {
+        setShowWarningModal({ open: false })
+        push(`/application/${structure.info.serial}/review`)
+      },
+      onClose: () => {
+        setShowWarningModal({ open: false })
+        push(`/application/${structure.info.serial}/review`)
+      },
     })
   }
 
@@ -118,11 +137,16 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     // Check DECISION was made
     const decisionError = getAndSetDecisionError()
     if (decisionError) {
-      showWarning()
+      showIncompleteSectionWarning()
       return
     }
+
+    // Check review status != PENDING
     const { thisReview } = await getFullReviewStructureAsync()
-    if (thisReview?.status === ReviewStatus.Pending) console.log('show modal to navigate to home')
+    if (thisReview?.status === ReviewStatus.Pending) {
+      showPendingReviewWarning()
+      return
+    }
 
     // Can SUBMIT
     showConfirmation()
