@@ -79,9 +79,7 @@ const ReviewPage: React.FC<{
     firstIncompleteReviewPage,
   } = fullReviewStructure
 
-  const status = thisReview?.status || null
-
-  if (status === ReviewStatus.Pending && showWarningModal.open === false) {
+  if (thisReview?.status === ReviewStatus.Pending && showWarningModal.open === false) {
     const { title, message, option } = messages.REVIEW_STATUS_PENDING
     setShowWarningModal({
       open: true,
