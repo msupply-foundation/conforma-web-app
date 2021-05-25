@@ -386,18 +386,21 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 - **label\***: `string` -- as above
 - **description\***: `string` -- as above [Optional]
 - **createModalButtonText** `string` -- text to display on the button to launch the new item interface (modal) (default: "Add item")
-- **addButtonText** `string` -- text to display on the button to add a new item (default: "Add")
-- **updateButtonText** `string` -- text to display on the button to add a new item (default: "Add item")
+- **addButtonText** `string` -- text to display on the button to add a new item from the item editing modal (default: "Add")
+- **updateButtonText** `string` -- text to display on the button to update an existing item from the item editing modal (default: "Update")
+- **deleteItemText** `string` -- text to display on the button to delete an item from the item editing modal (default: "Update")  
+  Note: this button only appears when displaying the list in "Table" view (see below). In "Cards" view, there is an icon to delete items directly on each card.
+- **modalText** `string` -- additional instructional text to show on the item editing modal (e.g. "Please enter ingredient details") [Optional]
+- **inputFields** `array[Elements]` -- an ordered list of input fields -- these are template questions/elements, just like all the ones on this page, but are "children" of the listBuilder element and display in the item editing modal. Not all fields are required or respected:
+
+  - `index` -- not required, order follows listed order
+  - `visibility_condition` / `is_editable` -- always `true` (for now, may be implemented later)
+  - `parameters`, `title`, and `code` are essential
 
 - **fileCountLimit**: `number` -- maximum number of files allowed to upload for this question (default: 1)
 - **fileExtensions**: `array[string]` -- list of allowed file extensions (default: no restrictions). e.g. `["pdf", "doc", "txt", "jpg", "png"]`
 - **fileSizeLimit**: `number` -- maximum file size in KB (default: no limit)
 
-createModalButtonText = strings.BUTTON_LAUNCH_MODAL,
-modalText,
-updateButtonText = strings.BUTTON_UPDATE,
-deleteItemText = strings.BUTTON_DELETE,
-inputFields,
 displayFormat = getDefaultDisplayFormat(inputFields),
 displayType
 
