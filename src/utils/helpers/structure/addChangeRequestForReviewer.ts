@@ -6,22 +6,27 @@ import {
 } from '../../generated/graphql'
 import { FullStructure } from '../../types'
 
-const hasConsolidatorReviewResponse = (reviewerReviewResponse?: ReviewResponse) =>
-  (reviewerReviewResponse?.reviewResponsesByReviewResponseLinkId?.nodes || []).length > 0
+const hasConsolidatorChangeRequest = (reviewerReviewResponse?: ReviewResponse) => {
+  const consolidatorReviewResponses =
+    reviewerReviewResponse?.reviewResponsesByReviewResponseLinkId?.nodes
+  if (!consolidatorReviewResponses) return false
+  const consolidatorReviewResponse = consolidatorReviewResponses[0] // Sorted in useGetReviewResponsesQuery
+  return consolidatorReviewResponse?.decision === ReviewResponseDecision.Disagree
+}
 
-const addChangeRequestForReviewer = (structure: FullStructure) => {
+const addChangeRequestForReviewer = (structure: FullStructure): boolean => {
   const questionElements = Object.values(structure?.elementsById || {}).filter(
     ({ element }) => element?.category === TemplateElementCategory.Question
   )
 
-  const hasConsolidatorReviewResponses = questionElements.some(
+  const hasConsolidatorChangeRequests = questionElements.some(
     ({ thisReviewLatestResponse, thisReviewPreviousResponse }) =>
-      hasConsolidatorReviewResponse(thisReviewLatestResponse) ||
-      hasConsolidatorReviewResponse(thisReviewPreviousResponse)
+      hasConsolidatorChangeRequest(thisReviewLatestResponse) ||
+      hasConsolidatorChangeRequest(thisReviewPreviousResponse)
   )
 
-  // No consolidation reviews, then don't set isChanged and isChangeRequested fields
-  if (!hasConsolidatorReviewResponses) return
+  // No consolidation changes request, then don't set isChanged and isChangeRequested fields
+  if (!hasConsolidatorChangeRequests) return false
 
   questionElements.forEach((element) => {
     const { thisReviewLatestResponse, thisReviewPreviousResponse } = element
@@ -29,7 +34,6 @@ const addChangeRequestForReviewer = (structure: FullStructure) => {
     if (structure?.thisReview?.status !== ReviewStatus.Draft) {
       const consolidatorLatestReviewResponse =
         thisReviewLatestResponse?.reviewResponsesByReviewResponseLinkId?.nodes[0] // Sorted in useGetReviewResponsesQuery
-
       element.isChangeRequest =
         consolidatorLatestReviewResponse?.decision === ReviewResponseDecision.Disagree
       element.isChanged = false
@@ -46,6 +50,8 @@ const addChangeRequestForReviewer = (structure: FullStructure) => {
       thisReviewLatestResponse?.comment !== thisReviewPreviousResponse?.comment ||
       thisReviewLatestResponse?.decision !== thisReviewPreviousResponse?.decision
   })
+
+  return true
 }
 
 export default addChangeRequestForReviewer

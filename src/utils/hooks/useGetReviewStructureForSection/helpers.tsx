@@ -89,13 +89,16 @@ const generateReviewStructure: GenerateReviewStructure = ({
   newStructure.thisReview = review
 
   // when changes requested by consolidator (included in thisReviewPreviousResponse OR thisReviewLatestResponse)
-  addChangeRequestForReviewer(newStructure)
+  const isChangeResquest = addChangeRequestForReviewer(newStructure)
 
   newStructure = addIsPendingReview(newStructure, level)
   newStructure = addIsActiveReviewResponse(newStructure)
 
-  if (level === 1) {
+  if (isChangeResquest) {
     generateReviewerChangesRequestedProgress(newStructure)
+    newStructure.info.isChangeRequest = true
+  }
+  if (level === 1) {
     generateReviewerResponsesProgress(newStructure)
   } else {
     generateConsolidatorResponsesProgress(newStructure)
