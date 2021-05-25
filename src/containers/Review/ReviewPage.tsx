@@ -92,7 +92,10 @@ const ReviewPage: React.FC<{
         setShowWarningModal({ open: false })
         push(`/application/${fullReviewStructure.info.serial}/review`)
       },
-      onClose: () => setShowWarningModal({ open: false }),
+      onClose: () => {
+        setShowWarningModal({ open: false })
+        push(`/application/${fullReviewStructure.info.serial}/review`)
+      },
     })
   }
 
