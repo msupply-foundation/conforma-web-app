@@ -9,7 +9,7 @@ import { FullStructure } from '../../types'
 const hasConsolidatorReviewResponse = (reviewerReviewResponse?: ReviewResponse) =>
   (reviewerReviewResponse?.reviewResponsesByReviewResponseLinkId?.nodes || []).length > 0
 
-const addChangeRequestForReviewer = (structure: FullStructure) => {
+const addChangeRequestForReviewer = (structure: FullStructure): boolean => {
   const questionElements = Object.values(structure?.elementsById || {}).filter(
     ({ element }) => element?.category === TemplateElementCategory.Question
   )
@@ -21,7 +21,7 @@ const addChangeRequestForReviewer = (structure: FullStructure) => {
   )
 
   // No consolidation reviews, then don't set isChanged and isChangeRequested fields
-  if (!hasConsolidatorReviewResponses) return
+  if (!hasConsolidatorReviewResponses) return false
 
   questionElements.forEach((element) => {
     const { thisReviewLatestResponse, thisReviewPreviousResponse } = element
@@ -46,6 +46,8 @@ const addChangeRequestForReviewer = (structure: FullStructure) => {
       thisReviewLatestResponse?.comment !== thisReviewPreviousResponse?.comment ||
       thisReviewLatestResponse?.decision !== thisReviewPreviousResponse?.decision
   })
+
+  return true
 }
 
 export default addChangeRequestForReviewer
