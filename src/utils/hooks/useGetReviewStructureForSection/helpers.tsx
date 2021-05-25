@@ -89,19 +89,13 @@ const generateReviewStructure: GenerateReviewStructure = ({
   newStructure.thisReview = review
 
   // when changes requested by consolidator (included in thisReviewPreviousResponse OR thisReviewLatestResponse)
-  const isChangeRequest = addChangeRequestForReviewer(newStructure)
+  addChangeRequestForReviewer(newStructure)
 
-  // When consolidation is ongoing for one review, and change request was submitted for the other one
-  // the only 'active' or 'editable' review response is the one not in change request (submitted)
+  newStructure = addIsPendingReview(newStructure, level)
   newStructure = addIsActiveReviewResponse(newStructure)
 
-  // when changes requested to lower level reviewer builds the changes requested progress
-  if (isChangeRequest) {
-    generateReviewerChangesRequestedProgress(newStructure)
-    newStructure.info.isChangeRequest = true
-  }
-
   if (level === 1) {
+    generateReviewerChangesRequestedProgress(newStructure)
     generateReviewerResponsesProgress(newStructure)
   } else {
     generateConsolidatorResponsesProgress(newStructure)
@@ -134,6 +128,23 @@ const getFilteredSections = (sectionIds: number[], sections: SectionState[]) => 
   )
 }
 
+const addIsPendingReview = (structure: FullStructure, reviewLevel: number) => {
+  const isPendingReview =
+    reviewLevel === 1
+      ? (element: PageElement) =>
+          !!element.response &&
+          element.response?.id !== element?.thisReviewLatestResponse?.applicationResponseId
+      : (element: PageElement) =>
+          !!element?.lowerLevelReviewLatestResponse &&
+          element.lowerLevelReviewLatestResponse?.id !==
+            element?.thisReviewLatestResponse?.reviewResponseLinkId
+
+  Object.values(structure.elementsById || {}).forEach((element) => {
+    element.isPendingReview = isPendingReview(element)
+  })
+  return structure
+}
+// When consolidation is ongoing for one review, and change request was submitted for the other one, the only 'active' or 'editable' review response is the one not in change request (submitted)
 const addIsActiveReviewResponse = (structure: FullStructure) => {
   Object.values(structure.elementsById || {}).forEach((element) => {
     element.isActiveReviewResponse =

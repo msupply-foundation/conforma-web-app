@@ -1,9 +1,10 @@
-import { FullStructure, SectionState, Page, PageElement } from '../../types'
+import { FullStructure, SectionState, Page } from '../../types'
 
 const generateReviewerChangesRequestedProgress = (newStructure: FullStructure) => {
-  newStructure?.sortedPages?.forEach(setPendingReviews)
   newStructure?.sortedPages?.forEach(generatePageChangeRequestProgress)
   newStructure?.sortedSections?.forEach(generateSectionReviewProgress)
+
+  addIsChangeRequest(newStructure)
 }
 
 const generateSectionReviewProgress = (section: SectionState) => {
@@ -12,33 +13,21 @@ const generateSectionReviewProgress = (section: SectionState) => {
 
 const generatePageChangeRequestProgress = (page: Page) => {
   const totalChangeRequests = page.state.filter(
-    ({ isChangeRequest, isAssigned, latestApplicationResponse, element: { isVisible } }) =>
-      isChangeRequest && isAssigned && isVisible && latestApplicationResponse?.id
+    ({ isChangeRequest, element: { isVisible } }) => isChangeRequest && isVisible
   )
-
-  // Only consider review responses that are linked to latest upper level review responses
-  const totalPendingChangeRequests = totalChangeRequests.filter(
-    ({ isPendingReview }) => !isPendingReview
-  )
-
   const doneChangeRequests = totalChangeRequests.filter((element) => element.isChanged)
 
   page.changeRequestsProgress = {
     totalChangeRequests: totalChangeRequests.length,
     doneChangeRequests: doneChangeRequests.length,
   }
-
-  // console.log(page.sectionCode, page.name, page.changeRequestsProgress, totalPendingChangeRequests)
 }
 
-const setPendingReviews = (page: Page) => {
-  const isPendingReview = ({ isChangeRequest, isChanged }: PageElement) =>
-    isChangeRequest && !isChanged
+const addIsChangeRequest = (newStructure: FullStructure) => {
+  const isPageRequest = ({ changeRequestsProgress }: Page) =>
+    changeRequestsProgress?.totalChangeRequests
 
-  page.state.forEach((element) => {
-    element.isPendingReview = isPendingReview(element)
-    //   console.log(element.element.code, 'isPending', element.isPendingReview)
-  })
+  newStructure.info.isChangeRequest = !!newStructure?.sortedPages?.find(isPageRequest)
 }
 
 // Simple helper that will iterate over elements and sum up all of the values for keys

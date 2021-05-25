@@ -1,9 +1,8 @@
 import { Decision, ReviewResponseDecision } from '../../generated/graphql'
 
-import { FullStructure, SectionState, Page, ReviewProgress, PageElement } from '../../types'
+import { FullStructure, SectionState, Page, ReviewProgress } from '../../types'
 
 const generateReviewerResponsesProgress = (newStructure: FullStructure) => {
-  newStructure?.sortedPages?.forEach(setPendingReviews)
   newStructure?.sortedPages?.forEach(generatePageReviewProgress)
   newStructure?.sortedSections?.forEach(generateSectionReviewProgress)
 
@@ -48,18 +47,6 @@ const generatePageReviewProgress = (page: Page) => {
     totalActive: totalReviewable.length,
     totalPendingReview: totalPendingReview.length,
   }
-}
-
-const setPendingReviews = (page: Page) => {
-  const isPendingReview = ({ response, thisReviewLatestResponse }: PageElement) =>
-    !!response && response?.id !== thisReviewLatestResponse?.applicationResponseId
-
-  page.state.forEach((element) => {
-    element.isPendingReview = isPendingReview(element)
-    // console.log(element.element.code, 'isPending', element.isPendingReview)
-    // const { response, thisReviewLatestResponse } = element
-    // console.log(!!response, response?.id !== thisReviewLatestResponse?.applicationResponseId)
-  })
 }
 
 const generateReviewValidity = (newStructure: FullStructure) => {

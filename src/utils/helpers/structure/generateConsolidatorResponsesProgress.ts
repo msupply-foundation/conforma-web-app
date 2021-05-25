@@ -2,7 +2,6 @@ import { Decision, ReviewResponseDecision } from '../../generated/graphql'
 import { FullStructure, SectionState, Page, PageElement, ConsolidationProgress } from '../../types'
 
 const generateConsolidatorResponsesProgress = (newStructure: FullStructure) => {
-  newStructure?.sortedPages?.forEach(setPendingReviews)
   newStructure?.sortedPages?.forEach(generatePageConsolidationProgress)
   newStructure?.sortedSections?.forEach(generateSectionConsolidationProgress)
 
@@ -66,24 +65,6 @@ const generatePageConsolidationProgress = (page: Page) => {
     totalPendingReview: totalPendingReview.length,
     totalActive: totalActive.length,
   }
-}
-
-const setPendingReviews = (page: Page) => {
-  const isPendingReview = ({
-    lowerLevelReviewLatestResponse,
-    thisReviewLatestResponse,
-  }: PageElement) =>
-    !!lowerLevelReviewLatestResponse &&
-    lowerLevelReviewLatestResponse?.id !== thisReviewLatestResponse?.reviewResponseLinkId
-
-  page.state.forEach((element) => {
-    element.isPendingReview = isPendingReview(element)
-    // console.log(element.element.code, 'isPending', element.isPendingReview)
-    // const { lowerLevelReviewLatestResponse, thisReviewLatestResponse } = element
-    // console.log(
-    //   lowerLevelReviewLatestResponse?.id !== thisReviewLatestResponse?.reviewResponseLinkId
-    // )
-  })
 }
 
 const generateReviewValidity = (newStructure: FullStructure) => {
