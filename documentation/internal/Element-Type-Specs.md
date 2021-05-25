@@ -376,6 +376,8 @@ Response object is populated after file upload, based on the server response. No
 
 <a name="list-builder"/>
 
+### List Builder (Ingredients list)
+
 - **type/code**: `listBuilder`
 - **category**: `Question`
 
@@ -394,36 +396,64 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 - **inputFields** `array[Elements]` -- an ordered list of input fields -- these are template questions/elements, just like all the ones on this page, but are "children" of the listBuilder element and display in the item editing modal. Not all fields are required or respected:
 
   - `index` -- not required, order follows listed order
-  - `visibility_condition` / `is_editable` -- always `true` (for now, may be implemented later)
+  - `visibility_condition` / `is_editable` -- not required, always `true` (for now, may be implemented later)
   - `parameters`, `title`, and `code` are essential
 
-- **fileCountLimit**: `number` -- maximum number of files allowed to upload for this question (default: 1)
-- **fileExtensions**: `array[string]` -- list of allowed file extensions (default: no restrictions). e.g. `["pdf", "doc", "txt", "jpg", "png"]`
-- **fileSizeLimit**: `number` -- maximum file size in KB (default: no limit)
+- **displayType** `string` (must be either `table` or `cards` (default)) -- how to present the list of items, as shown here:
 
-displayFormat = getDefaultDisplayFormat(inputFields),
-displayType
+  - **table** view:
+
+    ![Table View](images/Element-Type-Specs-listBuilder-table-view.png)
+
+    For table view, the column headers are taken from the **title** fields of each element
+
+  - **card** view:
+
+    ![Card View](images/Element-Type-Specs-listBuilder-card-view.png)
+
+    The display string(s) for card view are defined in the `displayFormat` field (below)
+
+- **displayFormat** `object` (only relevant for **card** view) -- defines how to present the input information on the displayed cards. The object defines three fields, representing the Header (`header`), the Subheading (`meta`) and Body (`description`).  
+  Each is a **Markdown** formatted string, with the values to be substituted from the input `text` values represented by their element `code` wrapped in `${...}`. An example `displayFormat` object representing the card layout shown above is:
+
+  ```
+  {
+    header: "${LB1}"
+    meta: "${LB2}"
+    description: "**Quantity**: ${LB4} ${LB5}  \\n
+        **Substance present?**: ${LB3}  \\n**Type**: ${LB6}"
+  }
+  ```
+
+  where `LB1`...`LB6` are the element codes from the template.
+
+  If a `displayFormat` parameter is not specified, the card view will just show a simplified list of fields representing `title: value` for each input.
 
 #### Response type
-
-Response object is populated after file upload, based on the server response. Note: only successful uploads are included in the response. Error files or files currently loading are displayed in the UI but filtered out before saving.
 
 ```
 
 {
-  text: <string> -- comma separated list of all filenames
-  files: [
+  list: [
     {
-      filename: <string>
-      fileUrl: <string>
-      thumbnailUrl: <string>
-      mimetype: <string>
+      <code> : {
+                value: <Response object (text, etc, as per other elements)>,
+                isValid: <boolean>
+                },
+                ...
     },
     ...
-  ]
+  ],
+  text: <simple text representation of a list of comma-seperated
+        "title: value" rows>
 }
 
 ```
+
+**Notes**:
+
+- the `text` value is never actually presented to the user.
+- the `isValid` field should always be `true` when the response is saved, since items won't be permitted to be added to the list if all input fields are not valid. There is currently no additional validity checking of the reponses after they've been entered into the list, although this might be improved in future.
 
 ---
 
