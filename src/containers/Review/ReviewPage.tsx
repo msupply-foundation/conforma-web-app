@@ -9,11 +9,9 @@ import {
 } from '../../components'
 import {
   AssignmentDetails,
-  ChangeRequestsProgress,
   FullStructure,
   Page,
   ResponsesByCode,
-  ReviewProgress,
   SectionAssignment,
   SectionState,
 } from '../../utils/types'
@@ -134,7 +132,7 @@ const ReviewPage: React.FC<{
 }
 
 const SectionRowStatus: React.FC<SectionState> = (section) => {
-  const { assignment, reviewProgress, changeRequestsProgress, consolidationProgress } = section
+  const { assignment } = section
   const { isConsolidation, isReviewable, isAssignedToCurrentUser } = assignment as SectionAssignment
 
   if (!isAssignedToCurrentUser)
@@ -146,15 +144,10 @@ const SectionRowStatus: React.FC<SectionState> = (section) => {
         content={strings.LABEL_ASSIGNED_TO_YOU}
       />
     )
-
-  if (isConsolidation && consolidationProgress)
-    return <ConsolidationSectionProgressBar consolidationProgress={consolidationProgress} />
-  if (reviewProgress)
-    return (
-      <ReviewSectionProgressBar
-        reviewProgress={reviewProgress as ReviewProgress & ChangeRequestsProgress}
-      />
-    )
+  if (isConsolidation && section.consolidationProgress)
+    return <ConsolidationSectionProgressBar consolidationProgress={section.consolidationProgress} />
+  if (section.reviewProgress)
+    return <ReviewSectionProgressBar reviewProgress={section.reviewProgress} />
   return null // Unexpected
 }
 
