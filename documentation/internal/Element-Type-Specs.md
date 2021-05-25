@@ -13,6 +13,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - [Radio Buttons](#radio)
   - [Checkboxes](#checkbox)
   - [File Upload](#file)
+  - [List Builder](#list-builder)
   - [Page Break](#page)
 
 <a name="element-fields"/>
@@ -349,6 +350,56 @@ _Interface for uploading documents or other files_
 - **fileCountLimit**: `number` -- maximum number of files allowed to upload for this question (default: 1)
 - **fileExtensions**: `array[string]` -- list of allowed file extensions (default: no restrictions). e.g. `["pdf", "doc", "txt", "jpg", "png"]`
 - **fileSizeLimit**: `number` -- maximum file size in KB (default: no limit)
+
+#### Response type
+
+Response object is populated after file upload, based on the server response. Note: only successful uploads are included in the response. Error files or files currently loading are displayed in the UI but filtered out before saving.
+
+```
+
+{
+  text: <string> -- comma separated list of all filenames
+  files: [
+    {
+      filename: <string>
+      fileUrl: <string>
+      thumbnailUrl: <string>
+      mimetype: <string>
+    },
+    ...
+  ]
+}
+
+```
+
+---
+
+<a name="list-builder"/>
+
+- **type/code**: `listBuilder`
+- **category**: `Question`
+
+_Allows user to build a list of items, such as an **Ingredients List**_
+
+#### Input parameters
+
+- **label\***: `string` -- as above
+- **description\***: `string` -- as above [Optional]
+- **createModalButtonText** `string` -- text to display on the button to launch the new item interface (modal) (default: "Add item")
+- **addButtonText** `string` -- text to display on the button to add a new item (default: "Add")
+- **updateButtonText** `string` -- text to display on the button to add a new item (default: "Add item")
+
+- **fileCountLimit**: `number` -- maximum number of files allowed to upload for this question (default: 1)
+- **fileExtensions**: `array[string]` -- list of allowed file extensions (default: no restrictions). e.g. `["pdf", "doc", "txt", "jpg", "png"]`
+- **fileSizeLimit**: `number` -- maximum file size in KB (default: no limit)
+
+createModalButtonText = strings.BUTTON_LAUNCH_MODAL,
+modalText,
+updateButtonText = strings.BUTTON_UPDATE,
+deleteItemText = strings.BUTTON_DELETE,
+inputFields,
+displayFormat = getDefaultDisplayFormat(inputFields),
+displayType
 
 #### Response type
 
