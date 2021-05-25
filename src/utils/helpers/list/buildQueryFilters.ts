@@ -34,8 +34,6 @@ export default function buildQueryFilters(filters: BasicStringObject) {
   For generic types, mapping is provided via generiTypes -> getGenericTypes, and custom mapping is declared in mapQueryToFilterField
   for example getGenericTypes will return an object like this: 
   {
-    reviewAssignedNotStartedCount: ...
-    reviewAssignedCount: ..
     ...
     isFullyAssignedLevel1: (filterString) => { isFullyAssigneLevel1: { equalTo: String(filterString).toLowerCase() === 'true' } }
   }
@@ -51,18 +49,7 @@ const genericTypes: { computeFilter: GenericTypesMethod; columns: string[] }[] =
 
       return { greaterThanOrEqualTo, lessThanOrEqualTo }
     },
-    columns: [
-      'reviewAssignedNotStartedCount',
-      'reviewAssignedCount',
-      'reviewAvailableForSelfAssignmentCount',
-      'reviewDraftCount',
-      'reviewPendingCount',
-      'reviewChangeRequestCount',
-      'reviewSubmittedCount',
-      'assignReviewerAssignedCount',
-      'assignReviewersCount',
-      'assignCount',
-    ],
+    columns: ['assignReviewerAssignedCount', 'assignReviewersCount', 'assignCount'],
   },
   // DATE TYPE
   {
@@ -111,8 +98,6 @@ const mapQueryToFilterField: FilterMap = {
 
   outcome: (values: string) => ({ outcome: inEnumList(values, ApplicationOutcome) }),
 
-  // action
-
   applicant: (values: string) => ({
     or: [
       { applicant: inList(values) },
@@ -122,11 +107,15 @@ const mapQueryToFilterField: FilterMap = {
     ],
   }),
 
-  reviewer: (value: string) => ({ reviewerUsernames: inArray(value) }),
+  reviewer: (values: string) => ({ reviewerUsernames: inArray(values) }),
 
-  assigner: (value: string) => ({ assignerUsernames: inArray(value) }),
+  assigner: (values: string) => ({ assignerUsernames: inArray(values) }),
 
   org: (values: string) => ({ orgName: inList(values) }),
+
+  reviewerAction: (value: string) => ({ reviewerAction: { equalTo: value } }),
+
+  assignerAction: (value: string) => ({ assignerAction: { equalTo: value } }),
 
   // deadlineDate (TBD)
 
