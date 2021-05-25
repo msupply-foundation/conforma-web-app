@@ -109,9 +109,11 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
     })
   }, [])
 
-  const changeFilters = (filterType: keyof Filters) => (_: any, { value }: any) => {
-    if (filters) setFilters({ ...filters, [filterType]: value })
-  }
+  const changeFilters =
+    (filterType: keyof Filters) =>
+    (_: any, { value }: any) => {
+      if (filters) setFilters({ ...filters, [filterType]: value })
+    }
 
   if (!filters) return null
 
