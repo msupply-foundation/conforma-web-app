@@ -235,7 +235,7 @@ const anyIncompleteItems = (currentInput: ListItem, inputFields: TemplateElement
 const anyErrorItems = (currentInput: ListItem, inputFields: TemplateElement[]) =>
   anyInvalidItems(currentInput) || anyIncompleteItems(currentInput, inputFields)
 
-const substituteValues = (parameterisedString: string, item: any) => {
+const substituteValues = (parameterisedString: string, item: ListItem) => {
   const getValueFromCode = (_: string, $: string, code: string) => item[code].value.text || ''
   return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromCode)
 }
