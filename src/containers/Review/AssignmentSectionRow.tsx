@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Dropdown, Grid, Label, Message } from 'semantic-ui-react'
-import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
 import { ReviewAssignmentStatus } from '../../utils/generated/graphql'
 import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
@@ -17,9 +16,6 @@ type AssignmentSectionRowProps = {
 // Component renders options calculated in getAssignmentOptions, and will execute assignment mutation on drop down change
 const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
   const { assignments, sectionCode, structure } = props
-  const {
-    userState: { currentUser },
-  } = useUserState()
   const [assignmentError, setAssignmentError] = useState(false)
 
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
@@ -31,7 +27,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     if (!assignment) return
 
     try {
-      await assignSectionToUser({ assignment, assignerId: currentUser?.userId, sectionCode })
+      await assignSectionToUser({ assignment, sectionCode })
     } catch (e) {
       console.log(e)
       setAssignmentError(true)

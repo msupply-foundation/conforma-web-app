@@ -1,3 +1,4 @@
+import { useUserState } from '../../contexts/UserState'
 import {
   useUpdateReviewAssignmentMutation,
   ReviewAssignmentStatus,
@@ -17,7 +18,6 @@ type UseUpdateReviewAssignment = (structure: FullStructure) => {
   assignSectionToUser: (props: {
     // Section code is optional if omitted all sections are assigned
     sectionCode?: string
-    assignerId?: number
     assignment: AssignmentDetails
     // isSelfAssignment defaults to false
     isSelfAssignment?: boolean
@@ -25,16 +25,17 @@ type UseUpdateReviewAssignment = (structure: FullStructure) => {
 }
 
 type ConstructAssignSectionPatch = (
-  assignerId?: number,
   sectionCode?: string,
   isSelfAssignment?: boolean
 ) => ReviewAssignmentPatch
 
 const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
+  const {
+    userState: { currentUser },
+  } = useUserState()
   const [updateAssignment] = useUpdateReviewAssignmentMutation()
 
   const constructAssignSectionPatch: ConstructAssignSectionPatch = (
-    assignerId,
     sectionCode,
     isSelfAssignment
   ) => {
@@ -53,7 +54,7 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
 
     return {
       status: ReviewAssignmentStatus.Assigned,
-      assignerId: assignerId ? assignerId : null,
+      assignerId: currentUser?.userId || null,
       // onReviewSelfAssign will trigger core action to disallow other reviewers to self assign
       trigger: isSelfAssignment ? Trigger.OnReviewSelfAssign : Trigger.OnReviewAssign,
       timeUpdated: new Date().toISOString(),

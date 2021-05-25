@@ -7,7 +7,6 @@ import {
   ReviewSectionRowProgress,
   ReviewSectionRowAction,
 } from '../../components/Review'
-import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
 import useGetReviewStructureForSections from '../../utils/hooks/useGetReviewStructureForSection'
 import {
@@ -30,10 +29,6 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   assignment,
   fullApplicationStructure,
 }) => {
-  const {
-    userState: { currentUser },
-  } = useUserState()
-
   const { fullReviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment: assignment,
     fullApplicationStructure,
@@ -53,7 +48,6 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   const isAssignedToCurrentUser = !!section?.assignment?.isAssignedToCurrentUser
 
   const props: ReviewSectionComponentProps = {
-    userId: currentUser?.userId || 0,
     fullStructure: fullReviewStructure,
     section,
     assignment,
