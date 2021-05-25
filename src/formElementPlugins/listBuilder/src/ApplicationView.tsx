@@ -23,10 +23,7 @@ enum DisplayType {
 }
 
 interface InputResponseField {
-  id?: number
-  code?: string
   isValid?: boolean
-  title?: string | null | undefined
   value: ResponseFull
 }
 
@@ -57,7 +54,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     displayType = DisplayType.CARDS,
   } = parameters
 
-  const [currentInputResponses, setCurrentInputResponses] = useState<InputResponseField[]>(
+  const [currentInputResponses, setCurrentInputResponses] = useState<ListItem>(
     resetCurrentResponses(inputFields)
   )
 
@@ -68,18 +65,19 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   useEffect(() => {
     onSave({
-      text: 'Not required', // Text value never displayed to user
+      text: listItems.length > 0 ? createTextString(listItems, inputFields) : undefined,
       list: listItems,
     })
   }, [listItems])
 
   // This is sent to ApplicationViewWrapper and runs instead of the default responseMutation
-  const innerElementUpdate = async ({ variables: response }: { variables: InputResponseField }) => {
-    const newResponses = [...currentInputResponses]
-    newResponses[response.id as number] = response
-    setCurrentInputResponses(newResponses)
-    if (!anyErrorItems(newResponses, inputFields)) setInputError(false)
-  }
+  const innerElementUpdate =
+    (code: string) =>
+    async ({ variables: response }: { variables: InputResponseField }) => {
+      const newResponses = { ...currentInputResponses, [code]: response }
+      setCurrentInputResponses(newResponses)
+      if (!anyErrorItems(newResponses, inputFields)) setInputError(false)
+    }
 
   const updateList = async () => {
     if (anyErrorItems(currentInputResponses, inputFields)) {
@@ -87,12 +85,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       return
     }
     // Add item
-    if (selectedListItem === null)
-      setListItems([...listItems, buildListItem(currentInputResponses, inputFields)])
-    else {
+    if (selectedListItem === null) {
+      setListItems([...listItems, currentInputResponses])
+    } else {
       // Or update existing item
       const newList = [...listItems]
-      newList[selectedListItem] = buildListItem(currentInputResponses, inputFields)
+      newList[selectedListItem] = currentInputResponses
       setListItems(newList)
     }
     setCurrentInputResponses(resetCurrentResponses(inputFields))
@@ -102,7 +100,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const editItem = async (index: number) => {
     setSelectedListItem(index)
-    setCurrentInputResponses(getInputResponses(listItems[index], inputFields))
+    setCurrentInputResponses(listItems[index])
     setOpen(true)
   }
 
@@ -137,7 +135,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Markdown text={description} />
       <Modal
         size="tiny"
-        // closeIcon
         onClose={() => {
           setOpen(false)
           setSelectedListItem(null)
@@ -159,16 +156,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                   element={element}
                   isStrictPage={inputError}
                   allResponses={allResponses}
-                  currentResponse={
-                    selectedListItem === null
-                      ? {
-                          id: index,
-                          code: element.code,
-                          text: currentInputResponses?.[index]?.value.text,
-                        }
-                      : { code: element.code, ...currentInputResponses?.[index]?.value, id: index }
-                  }
-                  onSaveUpdateMethod={innerElementUpdate}
+                  currentResponse={currentInputResponses[element.code].value}
+                  onSaveUpdateMethod={innerElementUpdate(element.code)}
                   applicationData={applicationData}
                 />
               )
@@ -197,7 +186,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 export default ApplicationView
 
 const buildElement = (field: TemplateElement, index: number) => ({
-  id: index, // This is the only link between element and the response
+  id: index,
   code: field.code,
   pluginCode: field.elementTypePluginCode as string,
   category: field.category as TemplateElementCategory,
@@ -226,40 +215,35 @@ const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
 }
 
 const resetCurrentResponses = (inputFields: TemplateElement[]) =>
-  new Array(inputFields.length).fill({ value: { text: undefined } })
+  inputFields.reduce((acc, { code }) => ({ ...acc, [code]: { value: { text: undefined } } }), {})
 
-const buildListItem = (item: InputResponseField[], inputFields: TemplateElement[]) =>
-  item.reduce(
-    (acc, field, index) => ({
-      ...acc,
-      [inputFields[index].code]: {
-        code: inputFields[index].code,
-        id: field.id,
-        title: inputFields[index].title,
-        value: field.value,
-      },
-    }),
-    {}
+const anyInvalidItems = (currentInput: ListItem) =>
+  Object.values(currentInput).some((response) => response.isValid === false)
+
+const anyIncompleteItems = (currentInput: ListItem, inputFields: TemplateElement[]) =>
+  Object.values(currentInput).some(
+    (response, index) => inputFields[index]?.isRequired !== false && !response.value?.text
   )
 
-const getInputResponses = (listItem: ListItem, inputFields: TemplateElement[]) =>
-  inputFields.reduce((acc: InputResponseField[], { code }) => [...acc, listItem[code]], [])
-
-const anyInvalidItems = (currentInput: InputResponseField[]) =>
-  currentInput.some((response) => response.isValid === false)
-
-const anyIncompleteItems = (currentInput: InputResponseField[], inputFields: TemplateElement[]) =>
-  currentInput.some(
-    (response, index) => inputFields[index]?.isRequired !== false && !response.value.text
-  )
-
-const anyErrorItems = (currentInput: InputResponseField[], inputFields: TemplateElement[]) =>
+const anyErrorItems = (currentInput: ListItem, inputFields: TemplateElement[]) =>
   anyInvalidItems(currentInput) || anyIncompleteItems(currentInput, inputFields)
 
 const substituteValues = (parameterisedString: string, item: any) => {
   const getValueFromCode = (_: string, $: string, code: string) => item[code].value.text || ''
   return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromCode)
 }
+
+const createTextString = (listItems: ListItem[], inputFields: TemplateElement[]) =>
+  listItems.reduce(
+    (outputAcc, item) =>
+      outputAcc +
+      inputFields.reduce(
+        (innerAcc, field) => innerAcc + `${field.title}: ${item[field.code].value.text}, `,
+        ''
+      ) +
+      '\n',
+    ''
+  )
 
 // Separate components, so can be shared with SummaryView
 export interface ListLayoutProps {
