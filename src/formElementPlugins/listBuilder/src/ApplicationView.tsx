@@ -99,6 +99,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const editItem = async (index: number) => {
+    if (!isEditable) return
     setSelectedListItem(index)
     setCurrentInputResponses(listItems[index])
     setOpen(true)
@@ -118,6 +119,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     fieldTitles: inputFields.map((e: TemplateElement) => e.title),
     codes: inputFields.map((e: TemplateElement) => e.code),
     Markdown,
+    isEditable,
   }
 
   const DisplayComponent =
@@ -133,6 +135,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Markdown text={label} semanticComponent="noParagraph" />
       </label>
       <Markdown text={description} />
+      <Button
+        primary
+        content={createModalButtonText}
+        onClick={() => setOpen(true)}
+        disabled={!isEditable}
+      />
       <Modal
         size="tiny"
         onClose={() => {
@@ -143,7 +151,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         }}
         onOpen={() => setOpen(true)}
         open={open}
-        trigger={<Button primary content={createModalButtonText} />}
       >
         <Segment>
           <Form>
@@ -307,9 +314,10 @@ export const ListTableLayout: React.FC<ListLayoutProps> = ({
   codes = [],
   editItem = () => {},
   // deleteItem = () => {},
+  isEditable = true,
 }) => {
   return (
-    <Table celled selectable>
+    <Table celled selectable={isEditable}>
       <Table.Header>
         <Table.Row>
           {fieldTitles.map((title) => (
