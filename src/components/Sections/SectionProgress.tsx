@@ -1,11 +1,16 @@
 import React from 'react'
 import { Label, Progress } from 'semantic-ui-react'
-import { ApplicationProgress, ConsolidationProgress, ReviewProgress } from '../../utils/types'
+import {
+  ApplicationProgress,
+  ChangeRequestsProgress,
+  ConsolidationProgress,
+  ReviewProgress,
+} from '../../utils/types'
 import strings from '../../utils/constants'
 
 interface SectionProgressBarProps {
   consolidationProgress?: ConsolidationProgress
-  reviewProgress?: ReviewProgress
+  reviewProgress?: ReviewProgress & ChangeRequestsProgress
 }
 
 /**
@@ -102,6 +107,8 @@ const getReviewProgressDefaults = ({ reviewProgress }: SectionProgressBarProps) 
   doneNonConform: reviewProgress?.doneNonConform || 0,
   doneConform: reviewProgress?.doneConform || 0,
   totalReviewable: reviewProgress?.totalReviewable || 0,
+  doneChangeRequests: reviewProgress?.doneChangeRequests || 0,
+  totalChangeRequests: reviewProgress?.totalChangeRequests || 0,
 })
 
 const getReviewProgressTitle = (props: SectionProgressBarProps) => {
@@ -112,8 +119,14 @@ const getReviewProgressTitle = (props: SectionProgressBarProps) => {
 }
 
 const ReviewSectionProgressBar: React.FC<SectionProgressBarProps> = (props) => {
-  const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(props)
+  const { doneNonConform, doneConform, totalReviewable, doneChangeRequests, totalChangeRequests } =
+    getReviewProgressDefaults(props)
   const progressLabel = getReviewProgressTitle(props)
+
+  // doneConform and doneNonConform counts every existing review - so in case review has change requests
+  // it needs to display as totalDone discounting what has a review but no update to changes requests
+  const totalDone = doneConform + doneNonConform - totalChangeRequests + doneChangeRequests
+
   return (
     <div className="progress-box">
       {progressLabel && (
@@ -123,7 +136,7 @@ const ReviewSectionProgressBar: React.FC<SectionProgressBarProps> = (props) => {
       )}
       <Progress
         className="progress"
-        percent={(100 * (doneConform + doneNonConform)) / totalReviewable}
+        percent={(100 * totalDone) / totalReviewable}
         size="tiny"
         success={doneNonConform === 0}
         error={doneNonConform > 0}

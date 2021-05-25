@@ -19,7 +19,6 @@ const generatePageChangeRequestProgress = (page: Page) => {
     totalChangeRequests: totalChangeRequests.length,
     doneChangeRequests: doneChangeRequests.length,
   }
-  console.log('Changes request', page.sectionCode, page.name, page.changeRequestsProgress)
 }
 
 // Simple helper that will iterate over elements and sum up all of the values for keys

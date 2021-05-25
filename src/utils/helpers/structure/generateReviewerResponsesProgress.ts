@@ -1,6 +1,12 @@
 import { Decision, ReviewResponseDecision } from '../../generated/graphql'
 
-import { FullStructure, SectionState, Page, ReviewProgress } from '../../types'
+import {
+  FullStructure,
+  SectionState,
+  Page,
+  ReviewProgress,
+  ChangeRequestsProgress,
+} from '../../types'
 
 const generateReviewerResponsesProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach(generatePageReviewProgress)
@@ -25,10 +31,12 @@ const generatePageReviewProgress = (page: Page) => {
   )
 
   const doneConform = totalReviewableLinkedToLatestApplicationResponse.filter(
-    (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Approve
+    ({ thisReviewLatestResponse }) =>
+      thisReviewLatestResponse?.decision === ReviewResponseDecision.Approve
   )
   const doneNonConform = totalReviewableLinkedToLatestApplicationResponse.filter(
-    (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Decline
+    ({ thisReviewLatestResponse }) =>
+      thisReviewLatestResponse?.decision === ReviewResponseDecision.Decline
   )
   const totalNewReviewable = totalReviewable.filter((element) => element.isNewApplicationResponse)
   const doneNewReviewable = totalNewReviewable.filter(
@@ -55,7 +63,10 @@ const generateReviewValidity = (newStructure: FullStructure) => {
 
   let firstIncompleteReviewPage
 
-  if (sums.doneNonConform === 0 && sums.totalReviewable > sums.doneConform) {
+  const incompletedUpdatesToChangesRequest = sums.totalChangeRequests > sums.doneChangeRequests
+  const incompletedReviews = sums.doneNonConform === 0 && sums.totalReviewable > sums.doneConform
+
+  if (incompletedUpdatesToChangesRequest || incompletedReviews) {
     const firstIncomplete = sortedPages.find(
       ({ reviewProgress }) =>
         reviewProgress?.totalReviewable !==
@@ -84,7 +95,7 @@ const generateReviewValidity = (newStructure: FullStructure) => {
  * @returns ReviewProgress of return sum of progresses
  */
 const getReviewProgressSums = (elements: (Page | SectionState)[]) => {
-  const initial: ReviewProgress = {
+  const initial: ReviewProgress & ChangeRequestsProgress = {
     doneConform: 0,
     doneNonConform: 0,
     totalNewReviewable: 0,
@@ -93,9 +104,12 @@ const getReviewProgressSums = (elements: (Page | SectionState)[]) => {
     totalActive: 0,
     totalReviewable: 0,
     totalPendingReview: 0,
+    // ChangeRequestsProgress
+    doneChangeRequests: 0,
+    totalChangeRequests: 0,
   }
 
-  return elements.reduce((sum, page) => {
+  return elements.reduce((sum, { reviewProgress, changeRequestsProgress }) => {
     const {
       doneConform,
       doneNonConform,
@@ -104,7 +118,9 @@ const getReviewProgressSums = (elements: (Page | SectionState)[]) => {
       totalActive,
       totalReviewable,
       totalPendingReview,
-    } = page.reviewProgress || initial
+      doneChangeRequests,
+      totalChangeRequests,
+    } = { ...(reviewProgress || initial), ...(changeRequestsProgress || initial) }
     return {
       doneConform: sum.doneConform + doneConform,
       doneNonConform: sum.doneNonConform + doneNonConform,
@@ -114,6 +130,9 @@ const getReviewProgressSums = (elements: (Page | SectionState)[]) => {
       totalActive: sum.totalActive + totalActive,
       totalReviewable: sum.totalReviewable + totalReviewable,
       totalPendingReview: sum.totalPendingReview + totalPendingReview,
+      // ChangeRequestsProgress
+      doneChangeRequests: sum.doneChangeRequests + doneChangeRequests,
+      totalChangeRequests: sum.totalChangeRequests + totalChangeRequests,
     }
   }, initial)
 }
