@@ -128,7 +128,6 @@ const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
 const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   assignment,
   fullStructure: structure,
-  userId,
 }) => {
   const [assignmentError, setAssignmentError] = useState(false)
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
@@ -136,7 +135,7 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   const selfAssignReview = async () => {
     {
       try {
-        await assignSectionToUser({ assignment, assignerId: userId, isSelfAssignment: true })
+        await assignSectionToUser({ assignment, isSelfAssignment: true })
       } catch (e) {
         console.log(e)
         setAssignmentError(true)

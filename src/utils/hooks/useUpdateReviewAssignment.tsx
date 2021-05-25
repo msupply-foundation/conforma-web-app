@@ -65,16 +65,11 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
   }
 
   return {
-    assignSectionToUser: async ({
-      assignerId,
-      sectionCode,
-      assignment,
-      isSelfAssignment = false,
-    }) => {
+    assignSectionToUser: async ({ sectionCode, assignment, isSelfAssignment = false }) => {
       const result = await updateAssignment({
         variables: {
           assignmentId: assignment.id,
-          assignmentPatch: constructAssignSectionPatch(assignerId, sectionCode, isSelfAssignment),
+          assignmentPatch: constructAssignSectionPatch(sectionCode, isSelfAssignment),
         },
       })
 
