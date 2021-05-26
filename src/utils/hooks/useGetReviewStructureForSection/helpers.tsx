@@ -4,17 +4,20 @@ import {
   ReviewResponse,
   ReviewQuestionAssignment,
   TemplateElement,
-  ReviewStatus,
   ReviewResponseStatus,
 } from '../../generated/graphql'
 import {
+  addChangeRequestForReviewer,
   addElementsById,
   addSortedSectionsAndPages,
-  generateReviewProgress,
+  generateConsolidationValidity,
+  generateConsolidatorResponsesProgress,
+  generateReviewerChangesRequestedProgress,
+  generateReviewerResponsesProgress,
   generateReviewSectionActions,
+  generateReviewValidity,
 } from '../../helpers/structure'
 import addReviewResponses from '../../helpers/structure/addReviewResponses'
-import generateConsolidationProgress from '../../helpers/structure/generateConsolidationProgress'
 
 import {
   UseGetReviewStructureForSectionProps,
@@ -87,13 +90,23 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // review info comes from reviewAssignment that's passed to this hook
   newStructure.thisReview = review
 
+  // when changes requested by consolidator (included in thisReviewPreviousResponse OR thisReviewLatestResponse)
+  addChangeRequestForReviewer(newStructure)
+
   newStructure = addIsPendingReview(newStructure, level)
   newStructure = addIsActiveReviewResponse(newStructure)
 
+  // This needs to run before generateReveiwerProgress or generateConsolidatorProgress
+  // since the reviews with isChangeRequest (and not changed) need to be removed from done accountings
+  generateReviewerChangesRequestedProgress(newStructure)
+
   if (level === 1) {
-    generateReviewProgress(newStructure)
+    generateReviewerResponsesProgress(newStructure)
+    generateReviewValidity(newStructure)
   } else {
-    generateConsolidationProgress(newStructure)
+    // This progress is NOT removing done from changes requested not changed yet!
+    generateConsolidatorResponsesProgress(newStructure)
+    generateConsolidationValidity(newStructure)
   }
 
   // filter by supplied sections or by all sections if none supplied to the hook
@@ -150,12 +163,14 @@ const addIsActiveReviewResponse = (structure: FullStructure) => {
 
 const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponsesQuery) => {
   // add thisReviewLatestResponse and thisReviewPreviousResponse
+  // includes for a consolidation also has reviewResponsesByReviewResponseLinkId with Consolidator decision
   structure = addReviewResponses(
     structure,
     data?.thisReviewResponses?.nodes as ReviewResponse[], // Sorted in useGetReviewResponsesQuery
     (element, response) => (element.thisReviewLatestResponse = response),
     (element, response) => (element.thisReviewPreviousResponse = response)
   )
+
   // add lowerLevelReviewLatestResponse and previousPreviousReviewLevelResponse
   structure = addReviewResponses(
     structure,

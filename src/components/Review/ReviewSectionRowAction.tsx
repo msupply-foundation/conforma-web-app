@@ -29,9 +29,13 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
       }
 
       case ReviewAction.canView: {
+        if (isAssignedToCurrentUser) {
+          return <ViewSubmittedReviewButton {...props} />
+        }
         return <ViewReviewIcon {...props} />
       }
 
+      case ReviewAction.canUpdate:
       case ReviewAction.canStartReview: {
         if (isAssignedToCurrentUser) {
           return <StartContinueOrRestartButton {...props} />
@@ -61,7 +65,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
 const reReviewableCount = (reviewProgress?: ReviewProgress) =>
   (reviewProgress?.totalNewReviewable || 0) - (reviewProgress?.doneNewReviewable || 0)
 
-// START REVIEW, CONTINUE REVIEW OR RE-REVIEW BUTTON
+// START REVIEW, CONTINUE REVIEW, UPDATE REVIEW OR RE-REVIEW BUTTON
 const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
   section: { details, reviewProgress },
@@ -90,7 +94,14 @@ const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   const getButtonName = () => {
     const reReviewCount = reReviewableCount(reviewProgress)
     if (reReviewCount > 0) return `${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewCount})`
-    return action === ReviewAction.canContinue ? strings.ACTION_CONTINUE : strings.ACTION_START
+    switch (action) {
+      case ReviewAction.canUpdate:
+        return strings.ACTION_UPDATE
+      case ReviewAction.canContinue:
+        return strings.ACTION_CONTINUE
+      default:
+        return strings.ACTION_START
+    }
   }
 
   const doAction = async () => {
@@ -123,7 +134,6 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure: structure,
 }) => {
   const [assignmentError, setAssignmentError] = useState(false)
-
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
 
   const selfAssignReview = async () => {
@@ -142,6 +152,22 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   return (
     <a className="user-action clickable" onClick={selfAssignReview}>
       {strings.BUTTON_SELF_ASSIGN}
+    </a>
+  )
+}
+
+const ViewSubmittedReviewButton: React.FC<ReviewSectionComponentProps> = ({
+  fullStructure,
+  section: { details },
+}) => {
+  const { pathname, push } = useRouter()
+  const reviewId = fullStructure.thisReview?.id
+  return (
+    <a
+      className="user-action clickable"
+      onClick={() => push(`${pathname}/${reviewId}?activeSections=${details.code}`)}
+    >
+      {strings.ACTION_VIEW}
     </a>
   )
 }
