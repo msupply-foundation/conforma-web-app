@@ -133,7 +133,6 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure: structure,
 }) => {
   const [assignmentError, setAssignmentError] = useState(false)
-
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
 
   const selfAssignReview = async () => {
