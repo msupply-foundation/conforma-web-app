@@ -13,17 +13,28 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   applicationData,
 }) => {
-  const { label, description, placeholder, icon = 'search' } = parameters
+  const {
+    label,
+    description,
+    placeholder = 'Search...',
+    icon = 'search',
+    multiSelect,
+    minCharacters = 1,
+    resultFormat,
+    displayFormat,
+  } = parameters
   const { source } = parameterExpressions
 
   const graphQLEndpoint = applicationData.config.serverGraphQL
 
   // const [searchText, setSearchText] = useState('')
-  const [results, setResults] = useState<any[]>()
-  const [selectedIndex, setSelectedIndex] = useState<number>()
+  const [results, setResults] = useState<any[]>([])
+  const [selected, setSelected] = useState<any[]>([])
   const { isEditable } = element
 
-  function handleChange(e: any, data: any) {
+  function handleChange(e: any) {
+    const text = e.target.value
+    if (text.length < minCharacters) return
     const search = { text: e.target.value }
     evaluateExpression(source, {
       objects: { search },
@@ -35,21 +46,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     })
   }
 
-  // function handleChange(e: any, data: any) {
-  //   const { value: optionIndex } = data
-  //   setSelectedIndex(optionIndex === '' ? undefined : optionIndex)
-  //   if (optionIndex !== '')
-  //     onSave({
-  //       text: optionsDisplayProperty
-  //         ? options[optionIndex][optionsDisplayProperty]
-  //         : options[optionIndex],
-  //       selection: options[optionIndex],
-  //       optionIndex,
-  //     })
-  //   // Reset response if selection cleared
-  //   else onSave(null)
-  // }
-
   return (
     <>
       <label>
@@ -58,7 +54,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Markdown text={description} />
       <Search
         onSearchChange={handleChange}
-        // results={results?.map((e) => e.username)}
+        minCharacters={minCharacters}
+        placeholder={placeholder}
+        results={createResultsObject(results, resultFormat)}
+        disabled={!isEditable}
+        className="flex-grow-1"
+        // size="large"
+        input={{ icon: icon, iconPosition: 'left' }}
       />
 
       {validationState.isValid ? null : (
@@ -71,3 +73,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 }
 
 export default ApplicationView
+
+const createResultsObject = (results: any, resultsFormat: any) =>
+  results.map((r: any) => ({
+    key: Math.random(),
+    title: substituteValues(resultsFormat.title, r),
+    description: substituteValues(resultsFormat.description, r),
+  }))
+
+const substituteValues = (parameterisedString: string, object: any) => {
+  const getValueFromObject = (_: string, $: string, property: string) => object[property] || ''
+  return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromObject)
+}
