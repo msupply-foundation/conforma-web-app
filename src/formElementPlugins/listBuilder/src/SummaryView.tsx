@@ -1,7 +1,7 @@
 import React from 'react'
 import { TemplateElement } from '../../../utils/generated/graphql'
 import { SummaryViewProps } from '../../types'
-import { ListCardLayout, ListTableLayout, ListLayoutProps } from './ApplicationView'
+import { ListCardLayout, ListTableLayout, ListLayoutProps, DisplayType } from './ApplicationView'
 
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, response }) => {
   const { displayType, displayFormat, inputFields } = parameters
@@ -14,7 +14,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
     isEditable: false,
   }
 
-  return displayType === 'table' ? (
+  return displayType === DisplayType.TABLE ? (
     <ListTableLayout {...listDisplayProps} />
   ) : (
     <ListCardLayout {...listDisplayProps} />
