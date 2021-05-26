@@ -1,7 +1,7 @@
 {
   "isCore": true,
   "code": "search",
-  "displayName": "SearchField",
+  "displayName": "Search Field",
   "parameterLoadingValues": {
     "label": "Loading...",
     "description": "",
