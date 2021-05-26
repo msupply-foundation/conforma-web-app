@@ -17,7 +17,7 @@ import { TemplateElement, TemplateElementCategory } from '../../../utils/generat
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
 import strings from '../constants'
 
-enum DisplayType {
+export enum DisplayType {
   CARDS = 'cards',
   TABLE = 'table',
 }
