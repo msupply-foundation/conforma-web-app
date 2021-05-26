@@ -97,7 +97,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const editItem = async (index: number) => {
-    // if (!isEditable) return
     setSelectedListItem(index)
     setCurrentInputResponses(listItems[index])
     setOpen(true)
@@ -253,8 +252,8 @@ export interface ListLayoutProps {
   Markdown: any
   fieldTitles?: string[]
   codes?: string[]
-  editItem?: Function
-  deleteItem?: Function
+  editItem?: (index: number) => void
+  deleteItem?: (index: number) => void
   isEditable?: boolean
 }
 
