@@ -365,6 +365,7 @@ a:hover {
   margin-bottom: -14px;
   border-top: 1px solid @surfacesMed;
   border-bottom: 1px solid @surfacesMed;
+  padding: 10px 20px;
 }
 
 .review-approve-all-button {
@@ -585,7 +586,6 @@ a:hover {
 // }
 
 .element-grid.ui.grid {
-  padding: 10px 20px;
   font-size: @smallerText;
   color: @headersInteractiveLow;
 }
