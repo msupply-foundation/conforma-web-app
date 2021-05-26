@@ -91,15 +91,15 @@ const generateReviewStructure: GenerateReviewStructure = ({
   newStructure.thisReview = review
 
   // when changes requested by consolidator (included in thisReviewPreviousResponse OR thisReviewLatestResponse)
-  const isChangeResquest = addChangeRequestForReviewer(newStructure)
+  addChangeRequestForReviewer(newStructure)
 
   newStructure = addIsPendingReview(newStructure, level)
   newStructure = addIsActiveReviewResponse(newStructure)
 
-  if (isChangeResquest) {
-    generateReviewerChangesRequestedProgress(newStructure)
-    newStructure.info.isChangeRequest = true
-  }
+  // This needs to run before generateReveiwerProgress or generateConsolidatorProgress
+  // since the reviews with isChangeRequest (and not changed) need to be removed from done accountings
+  generateReviewerChangesRequestedProgress(newStructure)
+
   if (level === 1) {
     generateReviewerResponsesProgress(newStructure)
     generateReviewValidity(newStructure)

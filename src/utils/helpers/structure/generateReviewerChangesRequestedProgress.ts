@@ -3,6 +3,7 @@ import { FullStructure, SectionState, Page } from '../../types'
 const generateReviewerChangesRequestedProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach(generatePageChangeRequestProgress)
   newStructure?.sortedSections?.forEach(generateSectionReviewProgress)
+  addIsChangeRequest(newStructure)
 }
 
 const generateSectionReviewProgress = (section: SectionState) => {
@@ -19,6 +20,13 @@ const generatePageChangeRequestProgress = (page: Page) => {
     totalChangeRequests: totalChangeRequests.length,
     doneChangeRequests: doneChangeRequests.length,
   }
+}
+
+const addIsChangeRequest = (newStructure: FullStructure) => {
+  const isPageRequest = ({ changeRequestsProgress }: Page) =>
+    changeRequestsProgress?.totalChangeRequests
+
+  newStructure.info.isChangeRequest = !!newStructure?.sortedPages?.find(isPageRequest)
 }
 
 /**
