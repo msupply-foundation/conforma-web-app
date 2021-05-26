@@ -24159,6 +24159,17 @@ export type ApplicationFragment = (
   & Pick<Application, 'id' | 'serial' | 'name' | 'outcome' | 'trigger'>
 );
 
+export type ConsolidatorResponseFragmentFragment = (
+  { __typename?: 'ReviewResponse' }
+  & { reviewResponsesByReviewResponseLinkId: (
+    { __typename?: 'ReviewResponsesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ReviewResponse' }
+      & ReviewResponseFragmentFragment
+    )>> }
+  ) }
+);
+
 export type ElementFragment = (
   { __typename?: 'TemplateElement' }
   & Pick<TemplateElement, 'id' | 'code' | 'index' | 'title' | 'elementTypePluginCode' | 'category' | 'visibilityCondition' | 'isRequired' | 'isEditable' | 'validation' | 'validationMessage' | 'helpText' | 'parameters'>
@@ -24698,6 +24709,7 @@ export type GetReviewResponsesQuery = (
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewResponse' }
       & ReviewResponseFragmentFragment
+      & ConsolidatorResponseFragmentFragment
     )>> }
   )>, previousLevelReviewResponses?: Maybe<(
     { __typename?: 'ReviewResponsesConnection' }
@@ -24790,6 +24802,49 @@ export const ApplicationFragmentDoc = gql`
   trigger
 }
     `;
+export const UserFragmentDoc = gql`
+    fragment User on User {
+  id
+  username
+  firstName
+  lastName
+  email
+  dateOfBirth
+}
+    `;
+export const ReviewResponseFragmentFragmentDoc = gql`
+    fragment reviewResponseFragment on ReviewResponse {
+  applicationResponseId
+  decision
+  comment
+  id
+  status
+  timeUpdated
+  originalReviewResponseId
+  reviewResponseLinkId
+  templateElementId
+  applicationResponse {
+    id
+    templateElementId
+  }
+  review {
+    id
+    status
+    reviewer {
+      ...User
+    }
+  }
+}
+    ${UserFragmentDoc}`;
+export const ConsolidatorResponseFragmentFragmentDoc = gql`
+    fragment consolidatorResponseFragment on ReviewResponse {
+  reviewResponsesByReviewResponseLinkId(orderBy: TIME_UPDATED_DESC, filter: {status: {notEqualTo: DRAFT}}) {
+    nodes {
+      ...reviewResponseFragment
+    }
+  }
+}
+    ${ReviewResponseFragmentFragmentDoc}`;
 export const ElementFragmentDoc = gql`
     fragment Element on TemplateElement {
   id
@@ -24828,40 +24883,6 @@ export const ResponseFragmentDoc = gql`
   timeUpdated
 }
     `;
-export const UserFragmentDoc = gql`
-    fragment User on User {
-  id
-  username
-  firstName
-  lastName
-  email
-  dateOfBirth
-}
-    `;
-export const ReviewResponseFragmentFragmentDoc = gql`
-    fragment reviewResponseFragment on ReviewResponse {
-  applicationResponseId
-  decision
-  comment
-  id
-  status
-  timeUpdated
-  originalReviewResponseId
-  reviewResponseLinkId
-  templateElementId
-  applicationResponse {
-    id
-    templateElementId
-  }
-  review {
-    id
-    status
-    reviewer {
-      ...User
-    }
-  }
-}
-    ${UserFragmentDoc}`;
 export const SectionFragmentDoc = gql`
     fragment Section on TemplateSection {
   id
@@ -25722,6 +25743,7 @@ export const GetReviewResponsesDocument = gql`
   thisReviewResponses: reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {review: {reviewAssignmentId: {equalTo: $reviewAssignmentId}}, templateElement: {section: {id: {in: $sectionIds}}}, or: [{status: {notEqualTo: DRAFT}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
     nodes {
       ...reviewResponseFragment
+      ...consolidatorResponseFragment
     }
   }
   previousLevelReviewResponses: reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {review: {applicationId: {equalTo: $applicationId}, levelNumber: {equalTo: $previousLevel}, stageNumber: {equalTo: $stageNumber}}, templateElement: {section: {id: {in: $sectionIds}}}, status: {notEqualTo: DRAFT}}) {
@@ -25735,7 +25757,8 @@ export const GetReviewResponsesDocument = gql`
     }
   }
 }
-    ${ReviewResponseFragmentFragmentDoc}`;
+    ${ReviewResponseFragmentFragmentDoc}
+${ConsolidatorResponseFragmentFragmentDoc}`;
 
 /**
  * __useGetReviewResponsesQuery__
