@@ -74,9 +74,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const innerElementUpdate =
     (code: string) =>
     async ({ variables: response }: { variables: InputResponseField }) => {
-      const newResponses = { ...currentInputResponses, [code]: response }
-      setCurrentInputResponses(newResponses)
-      if (!anyErrorItems(newResponses, inputFields)) setInputError(false)
+      // need to get most recent state of currentInputResponse, thus using callback
+      setCurrentInputResponses((currentInputResponses) => {
+        const newResponses = { ...currentInputResponses, [code]: response }
+        if (!anyErrorItems(newResponses, inputFields)) setInputError(false)
+        return newResponses
+      })
     }
 
   const updateList = async () => {
