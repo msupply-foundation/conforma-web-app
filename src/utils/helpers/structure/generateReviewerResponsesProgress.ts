@@ -5,12 +5,10 @@ import { FullStructure, SectionState, Page, ReviewProgress } from '../../types'
 const generateReviewerResponsesProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach(generatePageReviewProgress)
   newStructure?.sortedSections?.forEach(generateSectionReviewProgress)
-
-  generateReviewValidity(newStructure)
 }
 
 const generateSectionReviewProgress = (section: SectionState) => {
-  section.reviewProgress = getReviewProgressSums(Object.values(section.pages))
+  section.reviewProgress = getReviewProgress(Object.values(section.pages))
 }
 
 const generatePageReviewProgress = (page: Page) => {
@@ -20,8 +18,10 @@ const generatePageReviewProgress = (page: Page) => {
   )
 
   // Only consider review responses that are linked to latest application response
+  // or if part of changes requested if they have already been changed
   const totalReviewableLinkedToLatestApplicationResponse = totalReviewable.filter(
-    ({ isPendingReview }) => !isPendingReview
+    ({ isPendingReview, isChangeRequest, isChanged }) =>
+      !isPendingReview && (!isChangeRequest || isChanged)
   )
 
   const doneConform = totalReviewableLinkedToLatestApplicationResponse.filter(
@@ -49,41 +49,13 @@ const generatePageReviewProgress = (page: Page) => {
   }
 }
 
-const generateReviewValidity = (newStructure: FullStructure) => {
-  const sortedPages = newStructure?.sortedPages || []
-  const sums = getReviewProgressSums(Object.values(newStructure.sections))
-
-  let firstIncompleteReviewPage
-
-  if (sums.doneNonConform === 0 && sums.totalReviewable > sums.doneConform) {
-    const firstIncomplete = sortedPages.find(
-      ({ reviewProgress }) =>
-        reviewProgress?.totalReviewable !==
-        (reviewProgress?.doneConform || 0) + (reviewProgress?.doneNonConform || 0)
-    )
-
-    if (!firstIncomplete) return
-    else
-      firstIncompleteReviewPage = {
-        sectionCode: firstIncomplete.sectionCode,
-        pageNumber: firstIncomplete.number,
-      }
-  }
-
-  newStructure.firstIncompleteReviewPage = firstIncompleteReviewPage
-  if (firstIncompleteReviewPage) newStructure.canSubmitReviewAs === null
-  else
-    newStructure.canSubmitReviewAs =
-      sums.doneNonConform === 0 ? Decision.Conform : Decision.NonConform
-}
-
 /**
  * @function: getReviewProgressSums
  * Helper to iterate over progress and return sums of progress keys
  * @param elements Pages or Sections
  * @returns ReviewProgress of return sum of progresses
  */
-const getReviewProgressSums = (elements: (Page | SectionState)[]) => {
+export const getReviewProgress = (elements: (Page | SectionState)[]) => {
   const initial: ReviewProgress = {
     doneConform: 0,
     doneNonConform: 0,

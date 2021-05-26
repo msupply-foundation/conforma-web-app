@@ -10,10 +10,12 @@ import {
   addChangeRequestForReviewer,
   addElementsById,
   addSortedSectionsAndPages,
+  generateConsolidationValidity,
   generateConsolidatorResponsesProgress,
   generateReviewerChangesRequestedProgress,
   generateReviewerResponsesProgress,
   generateReviewSectionActions,
+  generateReviewValidity,
 } from '../../helpers/structure'
 import addReviewResponses from '../../helpers/structure/addReviewResponses'
 
@@ -100,8 +102,11 @@ const generateReviewStructure: GenerateReviewStructure = ({
   }
   if (level === 1) {
     generateReviewerResponsesProgress(newStructure)
+    generateReviewValidity(newStructure)
   } else {
+    // This progress is NOT removing done from changes requested not changed yet!
     generateConsolidatorResponsesProgress(newStructure)
+    generateConsolidationValidity(newStructure)
   }
 
   // filter by supplied sections or by all sections if none supplied to the hook

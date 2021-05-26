@@ -6,7 +6,7 @@ const generateReviewerChangesRequestedProgress = (newStructure: FullStructure) =
 }
 
 const generateSectionReviewProgress = (section: SectionState) => {
-  section.changeRequestsProgress = getSums(Object.values(section.pages))
+  section.changeRequestsProgress = getChangeRequestsPropress(Object.values(section.pages))
 }
 
 const generatePageChangeRequestProgress = (page: Page) => {
@@ -19,12 +19,15 @@ const generatePageChangeRequestProgress = (page: Page) => {
     totalChangeRequests: totalChangeRequests.length,
     doneChangeRequests: doneChangeRequests.length,
   }
-  console.log('Changes request', page.sectionCode, page.name, page.changeRequestsProgress)
 }
 
-// Simple helper that will iterate over elements and sum up all of the values for keys
-// returning an object of keys with sums
-const getSums = (elements: Page[]) => {
+/**
+ * @function: getChangeRequestsProgressSums
+ * Helper to iterate over progress and return sums of change request progress keys
+ * @param elements Pages or Sections
+ * @returns ChangesRequestProgress of return sum of progresses
+ */
+export const getChangeRequestsPropress = (elements: (Page | SectionState)[]) => {
   const initial = {
     totalChangeRequests: 0,
     doneChangeRequests: 0,

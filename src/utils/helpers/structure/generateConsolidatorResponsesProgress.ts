@@ -1,11 +1,9 @@
-import { Decision, ReviewResponseDecision } from '../../generated/graphql'
+import { ReviewResponseDecision } from '../../generated/graphql'
 import { FullStructure, SectionState, Page, PageElement, ConsolidationProgress } from '../../types'
 
 const generateConsolidatorResponsesProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach(generatePageConsolidationProgress)
   newStructure?.sortedSections?.forEach(generateSectionConsolidationProgress)
-
-  generateReviewValidity(newStructure)
 }
 
 const generateSectionConsolidationProgress = (section: SectionState) => {
@@ -67,46 +65,9 @@ const generatePageConsolidationProgress = (page: Page) => {
   }
 }
 
-const generateReviewValidity = (newStructure: FullStructure) => {
-  const sortedPages = newStructure?.sortedPages || []
-  const sums = getConsolidationProgress(Object.values(newStructure.sections))
-
-  newStructure.firstIncompleteReviewPage = undefined
-
-  if (sums.doneActiveDisagree > 0) {
-    newStructure.canSubmitReviewAs = Decision.ChangesRequested
-    return
-  }
-
-  if (sums.doneAgreeNonConform > 0) {
-    newStructure.canSubmitReviewAs = Decision.NonConform
-    return
-  }
-
-  if (sums.totalReviewable === sums.doneActiveAgreeConform) {
-    newStructure.canSubmitReviewAs = Decision.Conform
-    return
-  }
-
-  const firstIncomplete = sortedPages.find(
-    ({ consolidationProgress }) =>
-      consolidationProgress?.totalReviewable !==
-      (consolidationProgress?.doneActiveAgreeConform || 0)
-  )
-
-  if (!firstIncomplete) return
-
-  const firstIncompleteReviewPage = {
-    sectionCode: firstIncomplete.sectionCode,
-    pageNumber: firstIncomplete.number,
-  }
-
-  newStructure.firstIncompleteReviewPage = firstIncompleteReviewPage
-  newStructure.canSubmitReviewAs === null
-}
 // Simple helper that will iterate over elements and sum up all of the values for keys
 // returning an object of keys with sums
-const getConsolidationProgress = (elements: (Page | SectionState)[]) => {
+export const getConsolidationProgress = (elements: (Page | SectionState)[]) => {
   const initial: ConsolidationProgress = {
     doneAgreeConform: 0,
     doneAgreeNonConform: 0,
