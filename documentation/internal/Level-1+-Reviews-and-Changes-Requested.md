@@ -1,13 +1,14 @@
 # Level 1+ Reviews and Changes Requested
 
-The [Level 1 Reviews](Level-1-Review-And-LOQ.md) explains how reviews with only 1 level works. Which is a subset of how a review with more than one level should work. The aim of this page is to outline the structure and flow of:
+The [Level 1 Reviews](Level-1-Review-And-LOQ.md) explains how reviews with only 1 level works. Which is a subset of how a review with more levels (per stage) should work. The aim of this page is to outline the structure and flow of:
 
 - Reviewer (Level 1) - reviewing an application
 - Reviewer (Level 1) - submitting `LOQ (List of Questions)`, `Conform` or `Non Conform` advise to upper level reviewer
-- Reviewer (Level 2) - reviewing the lower level review
-- Reviewer (Level 2) - submitting `Changes Requested`
-- Reviewer (Level 1) - making changes in response to `Changes Requested`
-- Reviewer (Level 2) - reviewing the lower level review and Agreeing with advised decisions to submit to Applicant
+- Reviewer (Level 2) - reviewing the lower level review and `disagree` with some advised decisions
+- Reviewer (Level 2) - submitting `Changes Requested` back to reviewer
+- Reviewer (Level 1) - making changes in response to `Changes Requested` and re-submitting to upper level reviewer
+- Reviewer (Level 2) - reviewing the lower level review and `agree` with all advised decisions
+- Reviewer (Level 2) - submitting `LOQ (List of Questions)`, `Conform` or `Non Conform` to Applicant - if `is_last_level` or upper level reviewer. In case there is a Level 3, the same process will happen again between Level 2 and Level 3 reveiwers.
 
 ### Back End
 
