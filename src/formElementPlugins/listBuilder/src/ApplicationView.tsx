@@ -112,6 +112,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setCurrentInputResponses(resetCurrentResponses(inputFields))
     setOpen(false)
     setSelectedListItem(null)
+    setInputError(false)
   }
 
   const listDisplayProps: ListLayoutProps = {
@@ -144,17 +145,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         onClick={() => setOpen(true)}
         disabled={!isEditable}
       />
-      <Modal
-        size="tiny"
-        onClose={() => {
-          setOpen(false)
-          setSelectedListItem(null)
-          setCurrentInputResponses(resetCurrentResponses(inputFields))
-          setInputError(false)
-        }}
-        onOpen={() => setOpen(true)}
-        open={open}
-      >
+      <Modal size="tiny" onClose={() => resetModalState()} onOpen={() => setOpen(true)} open={open}>
         <Segment>
           <Form>
             <Markdown text={modalText} />
