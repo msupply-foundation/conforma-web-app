@@ -1,5 +1,5 @@
 import { Decision } from '../../generated/graphql'
-import { FullStructure } from '../../types'
+import { FullStructure, Page } from '../../types'
 import { getChangeRequestsPropress } from './generateReviewerChangesRequestedProgress'
 import { getReviewProgress } from './generateReviewerResponsesProgress'
 
@@ -31,15 +31,6 @@ const generateReviewValidity = (newStructure: FullStructure) => {
 
   if (incompletedUpdatesToChangesRequest || incompletedReviews) {
     const firstIncomplete = sortedPages.find(pageIsNotValid)
-
-    if (!firstIncomplete) return
-    else
-      firstIncompleteReviewPage = {
-        sectionCode: firstIncomplete.sectionCode,
-        pageNumber: firstIncomplete.number,
-      }
-  }
-
 
     if (!firstIncomplete) return
     else
