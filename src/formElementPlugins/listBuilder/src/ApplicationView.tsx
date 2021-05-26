@@ -93,9 +93,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       newList[selectedListItem] = currentInputResponses
       setListItems(newList)
     }
-    setCurrentInputResponses(resetCurrentResponses(inputFields))
-    setOpen(false)
-    setSelectedListItem(null)
+    resetModalState()
   }
 
   const editItem = async (index: number) => {
@@ -107,8 +105,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const deleteItem = async (index: number) => {
     setListItems(listItems.filter((_, i) => i !== index))
-    setOpen(false)
+    resetModalState()
+  }
+
+  const resetModalState = () => {
     setCurrentInputResponses(resetCurrentResponses(inputFields))
+    setOpen(false)
+    setSelectedListItem(null)
   }
 
   const listDisplayProps: ListLayoutProps = {
