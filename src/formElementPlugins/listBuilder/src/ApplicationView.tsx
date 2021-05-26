@@ -177,7 +177,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 onClick={() => deleteItem(selectedListItem)}
               />
             )}
-            {inputError && <p>{strings.ERROR_LIST_ITEMS_NOT_VALID}</p>}
+            {inputError && (
+              <p className="alert">
+                <Icon name="attention" />
+                {strings.ERROR_LIST_ITEMS_NOT_VALID}
+              </p>
+            )}
           </Form>
         </Segment>
       </Modal>
