@@ -219,7 +219,7 @@ const RenderElementWrapper: React.FC<RenderElementWrapperProps> = ({
   isResponseUpdated = false,
   children,
 }) => {
-  // const [isActiveEdit, setIsActiveEdit] = useState(false)
+  const [isActiveEdit, setIsActiveEdit] = useState(false)
   const backgroundColour = isResponseUpdated ? 'changeable-background' : ''
   return (
     <Segment basic className={`summary-page-element ${backgroundColour}`}>
