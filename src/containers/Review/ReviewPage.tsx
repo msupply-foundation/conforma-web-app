@@ -1,11 +1,12 @@
-import React from 'react'
-import { Button, Header, Icon, Label, Message } from 'semantic-ui-react'
+import React, { useEffect, useState } from 'react'
+import { Button, Header, Icon, Label, Message, ModalProps } from 'semantic-ui-react'
 import {
   Loading,
   ConsolidationSectionProgressBar,
   ReviewHeader,
   ReviewSectionProgressBar,
   SectionWrapper,
+  ModalWarning,
 } from '../../components'
 import {
   AssignmentDetails,
@@ -29,6 +30,8 @@ import useScrollableAttachments, {
 } from '../../utils/hooks/useScrollableAttachments'
 import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
+import { useRouter } from '../../utils/hooks/useRouter'
+import messages from '../../utils/messages'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetails
@@ -37,6 +40,8 @@ const ReviewPage: React.FC<{
   const {
     userState: { currentUser },
   } = useUserState()
+
+  const { push } = useRouter()
 
   const { fullReviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment,
@@ -48,6 +53,8 @@ const ReviewPage: React.FC<{
   })
 
   const { addScrollable, scrollTo } = useScrollableAttachments()
+
+  const [showWarningModal, setShowWarningModal] = useState<ModalProps>({ open: false })
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!fullReviewStructure) return <Loading />
@@ -67,9 +74,28 @@ const ReviewPage: React.FC<{
       current: { stage },
       name,
     },
+    thisReview,
     attemptSubmission,
     firstIncompleteReviewPage,
   } = fullReviewStructure
+
+  if (thisReview?.status === ReviewStatus.Pending && showWarningModal.open === false) {
+    const { title, message, option } = messages.REVIEW_STATUS_PENDING
+    setShowWarningModal({
+      open: true,
+      title,
+      message,
+      option,
+      onClick: () => {
+        setShowWarningModal({ open: false })
+        push(`/application/${fullReviewStructure.info.serial}/review`)
+      },
+      onClose: () => {
+        setShowWarningModal({ open: false })
+        push(`/application/${fullReviewStructure.info.serial}/review`)
+      },
+    })
+  }
 
   const isMissingReviewResponses = (section: string): boolean =>
     attemptSubmission && firstIncompleteReviewPage?.sectionCode === section
@@ -125,8 +151,13 @@ const ReviewPage: React.FC<{
             }
           />
         ))}
-        <ReviewSubmit structure={fullReviewStructure} scrollTo={scrollTo} />
+        <ReviewSubmit
+          structure={fullReviewStructure}
+          assignment={reviewAssignment}
+          scrollTo={scrollTo}
+        />
       </div>
+      <ModalWarning {...showWarningModal} />
     </ReviewHeader>
   )
 }
