@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Form, Icon, Segment } from 'semantic-ui-react'
 import {
   ApplicationDetails,
@@ -159,7 +159,7 @@ const PageElements: React.FC<PageElementProps> = ({
               latestApplicationResponse,
               latestOriginalReviewResponse,
             }) => {
-              const toggleDecision = openResponse === element.code
+              const toggleHistoryPanel = openResponse === element.code
               const summaryViewProps = getSummaryViewProps(element)
 
               // Information - no review
@@ -181,6 +181,8 @@ const PageElements: React.FC<PageElementProps> = ({
                       isActiveReviewResponse={!!isActiveReviewResponse}
                       isNewApplicationResponse={!!isNewApplicationResponse}
                       showModal={() => updateQuery({ openResponse: element.code })}
+                      // isActiveEdit={isActiveEdit}
+                      // setIsActiveEdit={setIsActiveEdit}
                     />
                   ) : (
                     <ReviewApplicantResponse
@@ -192,7 +194,7 @@ const PageElements: React.FC<PageElementProps> = ({
                       showModal={() => updateQuery({ openResponse: element.code })}
                     />
                   )}
-                  {toggleDecision && thisReviewLatestResponse && (
+                  {toggleHistoryPanel && thisReviewLatestResponse && (
                     <DecisionArea
                       isConsolidation={isConsolidation}
                       reviewResponse={thisReviewLatestResponse}
@@ -210,7 +212,6 @@ const PageElements: React.FC<PageElementProps> = ({
 
   return null
 }
-
 interface RenderElementWrapperProps {
   isResponseUpdated?: boolean
 }
@@ -218,6 +219,7 @@ const RenderElementWrapper: React.FC<RenderElementWrapperProps> = ({
   isResponseUpdated = false,
   children,
 }) => {
+  // const [isActiveEdit, setIsActiveEdit] = useState(false)
   const backgroundColour = isResponseUpdated ? 'changeable-background' : ''
   return (
     <Segment basic className={`summary-page-element ${backgroundColour}`}>

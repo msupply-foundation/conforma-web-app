@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon, Grid } from 'semantic-ui-react'
+import { Icon, Grid, Button } from 'semantic-ui-react'
 import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/graphql'
 import { ElementDecisionLabel } from '../../Review'
 
@@ -9,6 +9,8 @@ interface ReviewResponseElementProps {
   applicationResponse: ApplicationResponse
   reviewResponse: ReviewResponse
   originalReviewResponse?: ReviewResponse
+  isActiveEdit?: boolean
+  setIsActiveEdit?: Function
 }
 
 const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
@@ -17,11 +19,15 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
   reviewResponse,
   originalReviewResponse,
   children,
+  isActiveEdit,
+  setIsActiveEdit,
 }) => {
   if (!reviewResponse) return null
   if (!reviewResponse?.decision) return null
 
   const backgroudColour = isCurrentReview ? 'changeable-background' : ''
+
+  if (isActiveEdit) return <ReviewInlineEntry setIsActiveEdit={setIsActiveEdit} />
 
   return (
     <div className={`review-comment-area ${backgroudColour}`}>
@@ -52,3 +58,7 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
 }
 
 export default ReviewResponseElement
+
+const ReviewInlineEntry: React.FC<any> = ({ setIsActiveEdit }) => {
+  return <Button content="Toggle editable review" onClick={() => setIsActiveEdit(false)} />
+}

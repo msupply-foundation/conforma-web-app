@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Icon } from 'semantic-ui-react'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/graphql'
@@ -23,6 +23,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   showModal,
 }) => {
   const decisionExists = !!reviewResponse?.decision
+  const [isActiveEdit, setIsActiveEdit] = useState(false)
 
   return (
     <div>
@@ -38,7 +39,8 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                 ? strings.BUTTON_RE_REVIEW_RESPONSE
                 : strings.BUTTON_REVIEW_RESPONSE
             }
-            onClick={showModal}
+            // onClick={showModal}
+            onClick={() => setIsActiveEdit(true)}
           />
         )}
       </ApplicantResponseElement>
@@ -49,8 +51,15 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
           isConsolidation={false}
           applicationResponse={applicationResponse}
           reviewResponse={reviewResponse}
+          isActiveEdit={isActiveEdit}
+          setIsActiveEdit={setIsActiveEdit}
         >
-          {isActiveReviewResponse && decisionExists && <UpdateIcon onClick={showModal} />}
+          {isActiveReviewResponse && decisionExists && (
+            <UpdateIcon
+              // onClick={showModal}
+              onClick={() => setIsActiveEdit(true)}
+            />
+          )}
         </ReviewResponseElement>
       )}
     </div>
