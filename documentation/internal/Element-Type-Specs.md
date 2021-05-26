@@ -418,14 +418,14 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 
   ```
   {
-    header: "${LB1}"
-    meta: "${LB2}"
-    description: "**Quantity**: ${LB4} ${LB5}  \\n
-        **Substance present?**: ${LB3}  \\n**Type**: ${LB6}"
+    header: "\${LB1}"
+    meta: "\${LB2}"
+    description: "**Quantity**: \${LB4} \${LB5}  \\n
+        **Substance present?**: \${LB3}  \\n**Type**: \${LB6}"
   }
   ```
 
-  where `LB1`...`LB6` are the element codes from the template.
+  where `LB1`...`LB6` are the element codes from the template. (Note, also, the additional escape `\` characters required if used inside a GraphQL query string)
 
   If a `displayFormat` parameter is not specified, the card view will just show a simplified list of fields representing `title: value` for each input.
 
