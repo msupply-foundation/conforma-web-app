@@ -4,8 +4,10 @@
   "displayName": "Secure Password Input",
   "parameterLoadingValues": {
     "label": "Loading...",
+    "default": "",
     "description": ""
   },
+  "internalParameters": ["validationInternal"],
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"
 }
