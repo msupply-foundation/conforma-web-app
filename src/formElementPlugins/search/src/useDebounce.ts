@@ -14,7 +14,7 @@ export default function useDebounce<T>(initialValue: T, delay: number): [T, Reac
     return () => {
       clearTimeout(debounce)
     }
-  }, [debounceInput, delay])
+  }, [debounceInput])
 
   return [debounceOutput, setDebounceInput]
 }

@@ -1,4 +1,4 @@
-const DEBOUNCE_TIMEOUT = 400 //milliseconds
+const DEBOUNCE_TIMEOUT = 350 //milliseconds
 
 import React, { useEffect, useState } from 'react'
 import { Search, Label, Card, Icon } from 'semantic-ui-react'
@@ -18,7 +18,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   parameterExpressions,
   currentResponse,
-  validationState,
+  // validationState,
   onSave,
   Markdown,
   applicationData,
@@ -30,7 +30,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     icon = 'search',
     multiSelect = false,
     minCharacters = 1,
-    displayFormat,
+    displayFormat = {},
     resultFormat = displayFormat,
   } = parameters
   const { source } = parameterExpressions
@@ -47,7 +47,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   useEffect(() => {
     onSave({
-      text: selection.length > 0 ? createTextString(selection) : undefined,
+      text: selection.length > 0 ? JSON.stringify(selection) : undefined,
       selection: selection,
     })
   }, [selection])
@@ -117,7 +117,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         onResultSelect={handleSelect}
         minCharacters={minCharacters}
         placeholder={placeholder}
-        results={loading ? [{ title: 'Loading...' }] : createResultsObject(results, resultFormat)}
+        results={loading ? [{ title: 'Loading...' }] : createResultsArray(results, resultFormat)}
         disabled={!isEditable}
         input={{ icon: icon, iconPosition: 'left' }}
         noResultsMessage={strings.MESSAGE_NO_RESULTS}
@@ -127,16 +127,37 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   )
 }
 
-export default ApplicationView
+const createResultsArray = (results: any[], resultsFormat: DisplayFormat) => {
+  const { title, description } = resultsFormat
+  return results.map((result: any, index: number) => {
+    const titleString = title ? substituteValues(title, result) : getDefaultString(result)
+    const descriptionString = description
+      ? substituteValues(description, result)
+      : getDefaultString(result, 'description')
+    return {
+      index,
+      key: `result-${index}`,
+      title: titleString,
+      description: descriptionString,
+    }
+  })
+}
 
-const createResultsObject = (results: any[], resultsFormat: DisplayFormat) => {
-  // TO-DO Add DEFAULT format if format not defined
-  return results.map((res: any, index: number) => ({
-    index,
-    key: `result-${index}`,
-    title: resultsFormat?.title && substituteValues(resultsFormat.title, res),
-    description: resultsFormat?.description && substituteValues(resultsFormat.description, res),
-  }))
+type ResultsField = 'title' | 'description'
+
+const getDefaultString = (result: any, fieldType: ResultsField = 'title') => {
+  if (!(result instanceof Object)) return result
+  const fields = Object.keys(result)
+  switch (fields.length) {
+    case 0:
+      return fieldType === 'title' ? strings.MESSAGE_NO_RESULTS : ''
+    case 1:
+      return fieldType === 'title' ? fields[0] : result[fields[0]]
+    default:
+      return fieldType === 'title'
+        ? `${fields[0]}: ${result[fields[0]]}`
+        : `${fields[1]}: ${result[fields[1]]}`
+  }
 }
 
 const substituteValues = (parameterisedString: string, object: { [key: string]: any }) => {
@@ -144,9 +165,6 @@ const substituteValues = (parameterisedString: string, object: { [key: string]: 
   const getValueFromObject = (_: string, $: string, property: string) => object?.[property] || ''
   return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromObject)
 }
-
-const createTextString = (input: any[]) => JSON.stringify(input)
-
 export interface DisplayProps {
   selection: any[]
   displayFormat: DisplayFormat
@@ -163,6 +181,7 @@ export const DisplaySelection: React.FC<DisplayProps> = ({
   isEditable = true,
 }) => {
   const { title, subtitle, description } = displayFormat
+  const showFallbackString = !title && !subtitle && !description
   return (
     <>
       {selection.map((item, index) => (
@@ -183,17 +202,26 @@ export const DisplaySelection: React.FC<DisplayProps> = ({
                 <Markdown text={substituteValues(subtitle, item)} semanticComponent="noParagraph" />
               </Card.Meta>
             )}
-            {description && (
-              <Card.Description>
-                <Markdown
-                  text={substituteValues(description, item)}
-                  semanticComponent="noParagraph"
-                />
-              </Card.Description>
-            )}
+            <Card.Description>
+              <Markdown
+                text={
+                  description
+                    ? substituteValues(description, item)
+                    : getFallbackString(item, showFallbackString)
+                }
+                semanticComponent="noParagraph"
+              />
+            </Card.Description>
           </Card.Content>
         </Card>
       ))}
     </>
   )
 }
+
+const getFallbackString = (item: any, showFallbackString: boolean) =>
+  showFallbackString
+    ? Object.keys(item).reduce((str, field) => str + `${field}: ${item[field]}  \n`, '')
+    : ''
+
+export default ApplicationView
