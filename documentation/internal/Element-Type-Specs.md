@@ -413,13 +413,13 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 
     The display string(s) for card view are defined in the `displayFormat` field (below)
 
-- **displayFormat** `object` (only relevant for **card** view) -- defines how to present the input information on the displayed cards. The object defines three fields, representing the Header (`header`), the Subheading (`meta`) and Body (`description`).  
+- **displayFormat** `object` (only relevant for **card** view) -- defines how to present the input information on the displayed cards. The object defines three fields, representing the Title/Heading (`title`), the Subheading (`subtitle`) and Body (`description`).  
   Each is a **Markdown** formatted string, with the values to be substituted from the input `text` values represented by their element `code` wrapped in `${...}`. An example `displayFormat` object representing the card layout shown above is:
 
   ```
   {
-    header: "\${LB1}"
-    meta: "\${LB2}"
+    title: "\${LB1}"
+    subtitle: "\${LB2}"
     description: "**Quantity**: \${LB4} \${LB5}  \\n
         **Substance present?**: \${LB3}  \\n**Type**: \${LB6}"
   }
