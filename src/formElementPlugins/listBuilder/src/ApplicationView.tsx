@@ -219,7 +219,7 @@ const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
     (acc: string, { code, title }) => acc + `**${title}**: \${${code}}  \n`,
     ''
   )
-  return { header: '', meta: '', description: displayString }
+  return { title: '', subtitle: '', description: displayString }
 }
 
 const resetCurrentResponses = (inputFields: TemplateElement[]) =>
