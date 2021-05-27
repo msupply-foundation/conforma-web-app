@@ -219,7 +219,7 @@ const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
     (acc: string, { code, title }) => acc + `**${title}**: \${${code}}  \n`,
     ''
   )
-  return { header: '', meta: '', description: displayString }
+  return { title: '', subtitle: '', description: displayString }
 }
 
 const resetCurrentResponses = (inputFields: TemplateElement[]) =>
@@ -256,7 +256,7 @@ const createTextString = (listItems: ListItem[], inputFields: TemplateElement[])
 // Separate components, so can be shared with SummaryView
 export interface ListLayoutProps {
   listItems: ListItem[]
-  displayFormat: { header?: string; meta?: string; description: string }
+  displayFormat: { title?: string; subtitle?: string; description: string }
   Markdown: any
   fieldTitles?: string[]
   codes?: string[]
@@ -273,7 +273,7 @@ export const ListCardLayout: React.FC<ListLayoutProps> = ({
   Markdown,
   isEditable = true,
 }) => {
-  const { header, meta, description } = displayFormat
+  const { title, subtitle, description } = displayFormat
   return (
     <>
       {listItems.map((item, index) => (
@@ -284,14 +284,14 @@ export const ListCardLayout: React.FC<ListLayoutProps> = ({
                 <Icon name="delete" />
               </Label>
             )}
-            {header && (
+            {title && (
               <Card.Header onClick={() => editItem(index)}>
-                <Markdown text={substituteValues(header, item)} semanticComponent="noParagraph" />
+                <Markdown text={substituteValues(title, item)} semanticComponent="noParagraph" />
               </Card.Header>
             )}
-            {meta && (
+            {subtitle && (
               <Card.Meta onClick={() => editItem(index)}>
-                <Markdown text={substituteValues(meta, item)} semanticComponent="noParagraph" />
+                <Markdown text={substituteValues(subtitle, item)} semanticComponent="noParagraph" />
               </Card.Meta>
             )}
             {description && (
