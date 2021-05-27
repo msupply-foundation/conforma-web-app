@@ -30,6 +30,12 @@
   padding-left: @fontLarge;
 }
 
+.ui.table td:last-child,
+.ui.table thead th:last-child {
+  text-align: right;
+  padding-right: @fontLarge;
+}
+
 // Prevents column headers having different background when selected
 // and on hover
 .ui.sortable.table thead th.sorted {
