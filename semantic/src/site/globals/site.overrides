@@ -445,7 +445,6 @@ a:hover {
 }
 
 .user-action {
-  text-align: right;
   font-size: @fontXsmall;
   font-weight: @semiboldWeight;
 }
