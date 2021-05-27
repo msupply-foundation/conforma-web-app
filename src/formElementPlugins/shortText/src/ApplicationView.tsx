@@ -24,12 +24,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   } = parameters
 
   useEffect(() => {
-    console.log('Value', value)
-    console.log('defaultValue', defaultValue)
-    if (value !== defaultValue) setValue(defaultValue)
-  }, [defaultValue])
-
-  useEffect(() => {
     if (!value && defaultValue) {
       onSave({ text: defaultValue })
       setValue(defaultValue)

@@ -59,9 +59,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const { ApplicationView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
   const parameterLoadingValues = config?.parameterLoadingValues
+  const internalParameters = config?.internalParameters || []
   const [simpleParameters, parameterExpressions] = buildParameters(
     parameters,
-    parameterLoadingValues
+    parameterLoadingValues,
+    internalParameters
   )
 
   // Update dynamic parameters when responses change
@@ -250,12 +252,14 @@ const getDefaultIndex = (defaultOption: string | number, options: string[]) => {
 
 export const buildParameters = (
   parameters: ElementPluginParameters,
-  parameterLoadingValues: any
+  parameterLoadingValues: any,
+  internalParameters: string[]
 ) => {
   const simpleParameters: any = {}
   const parameterExpressions: any = {}
   for (const [key, value] of Object.entries(parameters)) {
-    if (value instanceof Object && !Array.isArray(value) && 'operator' in value) {
+    if (internalParameters.includes(key)) simpleParameters[key] = value
+    else if (value instanceof Object && !Array.isArray(value)) {
       parameterExpressions[key] = value
       simpleParameters[key] = parameterLoadingValues?.[key] ?? 'Loading...'
     } else simpleParameters[key] = value
