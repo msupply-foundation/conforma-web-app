@@ -35,16 +35,10 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
         return <ViewReviewIcon {...props} />
       }
 
+      case ReviewAction.canUpdate:
       case ReviewAction.canStartReview: {
         if (isAssignedToCurrentUser) {
           return <StartContinueOrRestartButton {...props} />
-        }
-        return <NotStartedLabel />
-      }
-
-      case ReviewAction.canUpdate: {
-        if (isAssignedToCurrentUser) {
-          return <div>TODO</div>
         }
         return <NotStartedLabel />
       }
@@ -71,7 +65,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
 const reReviewableCount = (reviewProgress?: ReviewProgress) =>
   (reviewProgress?.totalNewReviewable || 0) - (reviewProgress?.doneNewReviewable || 0)
 
-// START REVIEW, CONTINUE REVIEW OR RE-REVIEW BUTTON
+// START REVIEW, CONTINUE REVIEW, UPDATE REVIEW OR RE-REVIEW BUTTON
 const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
   section: { details, reviewProgress },
@@ -100,7 +94,14 @@ const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   const getButtonName = () => {
     const reReviewCount = reReviewableCount(reviewProgress)
     if (reReviewCount > 0) return `${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewCount})`
-    return action === ReviewAction.canContinue ? strings.ACTION_CONTINUE : strings.ACTION_START
+    switch (action) {
+      case ReviewAction.canUpdate:
+        return strings.ACTION_UPDATE
+      case ReviewAction.canContinue:
+        return strings.ACTION_CONTINUE
+      default:
+        return strings.ACTION_START
+    }
   }
 
   const doAction = async () => {

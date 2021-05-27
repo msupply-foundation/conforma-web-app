@@ -8,8 +8,6 @@ import strings from '../constants'
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
-  value,
-  // setValue
   setIsActive,
   validationState,
   onSave,
@@ -46,7 +44,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   // Reset saved value when re-loading form (since password can't be stored)
   useEffect(() => {
-    if (value !== undefined) {
+    if (currentResponse?.text !== undefined) {
       onSave({ hash: '', text: '', customValidation: { isValid: null } })
     }
   }, [])

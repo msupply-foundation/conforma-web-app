@@ -23,8 +23,16 @@ import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic'
 const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
-  const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
-    props
+  const [responseMutation] = useUpdateResponseMutation()
+  const {
+    element,
+    isStrictPage,
+    changesRequired,
+    currentResponse,
+    allResponses,
+    applicationData,
+    onSaveUpdateMethod = responseMutation,
+  } = props
 
   const {
     code,
@@ -39,13 +47,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const isValid = currentResponse?.isValid || true
 
-  const [responseMutation] = useUpdateResponseMutation()
   const { setState: setUpdateTrackerState } = useFormElementUpdateTracker()
 
   const {
     userState: { currentUser },
   } = useUserState()
-  const [value, setValue] = useState<any>(currentResponse?.text)
   const [validationState, setValidationState] = useState<ValidationState>({
     isValid,
   })
@@ -100,7 +106,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       // Validate and Save response -- generic
       const validationResult: ValidationState = await onUpdate(jsonValue?.text)
       if (jsonValue?.text !== undefined)
-        await responseMutation({
+        await onSaveUpdateMethod({
           variables: {
             id: currentResponse?.id as number,
             value: jsonValue,
@@ -109,7 +115,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         })
       if (jsonValue === null)
         // Reset response if cleared
-        await responseMutation({
+        await onSaveUpdateMethod({
           variables: {
             id: currentResponse?.id as number,
             value: null,
@@ -125,7 +131,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       const { isValid, validationMessage } = jsonValue.customValidation
       setValidationState({ isValid, validationMessage })
       delete jsonValue.customValidation // Don't want to save this field
-      await responseMutation({
+      await onSaveUpdateMethod({
         variables: {
           id: currentResponse?.id as number,
           value: jsonValue,
@@ -143,7 +149,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     // Tells application state that a plugin field is in focus
     setUpdateTrackerState({
       type: 'setElementEntered',
-      textValue: value || '',
+      textValue: currentResponse?.text || '',
     })
   }
 
@@ -157,8 +163,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       {...props}
       {...element}
       parameters={{ ...simpleParameters, ...evaluatedParameters }}
-      value={value}
-      setValue={setValue}
       setIsActive={setIsActive}
       Markdown={Markdown}
       validationState={validationState || { isValid: true }}
@@ -238,7 +242,7 @@ export const buildParameters = (
   const simpleParameters: any = {}
   const parameterExpressions: any = {}
   for (const [key, value] of Object.entries(parameters)) {
-    if (value instanceof Object && !Array.isArray(value)) {
+    if (value instanceof Object && !Array.isArray(value) && 'operator' in value) {
       parameterExpressions[key] = value
       simpleParameters[key] = parameterLoadingValues?.[key] ?? 'Loading...'
     } else simpleParameters[key] = value

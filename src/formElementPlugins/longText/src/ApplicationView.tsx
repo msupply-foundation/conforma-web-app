@@ -6,14 +6,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
   onUpdate,
-  value,
-  setValue,
   setIsActive,
   currentResponse,
   validationState,
   onSave,
   Markdown,
 }) => {
+  const [value, setValue] = useState<string | null | undefined>(currentResponse?.text)
+
   const { label, description, placeholder, lines, default: defaultValue, maxLength } = parameters
 
   const { isEditable } = element
