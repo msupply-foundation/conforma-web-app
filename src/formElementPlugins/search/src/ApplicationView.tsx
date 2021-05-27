@@ -1,8 +1,17 @@
+const DEBOUNCE_TIMEOUT = 400 //milliseconds
+
 import React, { useEffect, useState } from 'react'
 import { Search, Label, Card, Icon } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import strings from '../constants'
 import evaluateExpression from '@openmsupply/expression-evaluator'
+import useDebounce from './useDebounce'
+
+interface DisplayFormat {
+  title?: string
+  subtitle?: string
+  description?: string
+}
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -17,12 +26,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const {
     label,
     description,
-    placeholder = 'Search...',
+    placeholder = strings.DEFAULT_PLACEHOLDER,
     icon = 'search',
     multiSelect = false,
     minCharacters = 1,
-    resultFormat,
-    displayFormat = resultFormat,
+    displayFormat,
+    resultFormat = displayFormat,
   } = parameters
   const { source } = parameterExpressions
 
@@ -34,6 +43,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [selection, setSelection] = useState<any[]>(currentResponse?.selection || [])
   const { isEditable } = element
 
+  const [debounceOutput, setDebounceInput] = useDebounce<string>('', DEBOUNCE_TIMEOUT)
+
   useEffect(() => {
     onSave({
       text: selection.length > 0 ? createTextString(selection) : undefined,
@@ -41,12 +52,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     })
   }, [selection])
 
-  const handleChange = (e: any) => {
-    const text = e.target.value
-    setSearchText(text)
-    if (text.length < minCharacters) return
-    const search = { text: e.target.value }
-    setLoading(true)
+  useEffect(() => {
+    if (!debounceOutput) return
+    evaluateSearchQuery(debounceOutput)
+  }, [debounceOutput])
+
+  const evaluateSearchQuery = (text: string) => {
+    const search = { text }
     evaluateExpression(source, {
       objects: { search },
       APIfetch: fetch,
@@ -60,11 +72,20 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         setLoading(false)
       })
       .catch((err) => {
-        console.log('Search error:', err.message)
+        console.error('Search error:', err.message)
+        setLoading(false)
       })
   }
 
-  const handleSelect = (e: any, data: any) => {
+  const handleChange = (e: any) => {
+    const text = e.target.value
+    setSearchText(text)
+    if (text.length < minCharacters) return
+    setDebounceInput(text)
+    setLoading(true)
+  }
+
+  const handleSelect = (_: any, data: any) => {
     const selectedResult = results[data.result.index]
     if (!multiSelect) setSelection([selectedResult])
     else setSelection([...selection, selectedResult])
@@ -72,8 +93,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const deleteItem = async (index: number) => {
-    // setListItems(listItems.filter((_, i) => i !== index))
-    // resetModalState()
+    setSelection(selection.filter((_, i) => i !== index))
   }
 
   const displayProps: DisplayProps = {
@@ -99,7 +119,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         placeholder={placeholder}
         results={loading ? [{ title: 'Loading...' }] : createResultsObject(results, resultFormat)}
         disabled={!isEditable}
-        // className="flex-grow-1"
         input={{ icon: icon, iconPosition: 'left' }}
         noResultsMessage={strings.MESSAGE_NO_RESULTS}
       />
@@ -110,25 +129,27 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
 export default ApplicationView
 
-const createResultsObject = (results: any, resultsFormat: any) => {
-  return results.map((r: any, index: number) => ({
+const createResultsObject = (results: any[], resultsFormat: DisplayFormat) => {
+  // TO-DO Add DEFAULT format if format not defined
+  return results.map((res: any, index: number) => ({
     index,
     key: `result-${index}`,
-    title: substituteValues(resultsFormat.title, r),
-    description: substituteValues(resultsFormat.description, r),
+    title: resultsFormat?.title && substituteValues(resultsFormat.title, res),
+    description: resultsFormat?.description && substituteValues(resultsFormat.description, res),
   }))
 }
 
-const substituteValues = (parameterisedString: string, object: any) => {
+const substituteValues = (parameterisedString: string, object: { [key: string]: any }) => {
+  // TO-DO: Get "nested" object prop (e.g. "user.name")
   const getValueFromObject = (_: string, $: string, property: string) => object?.[property] || ''
   return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromObject)
 }
 
-const createTextString = (input: any) => JSON.stringify(input)
+const createTextString = (input: any[]) => JSON.stringify(input)
 
 export interface DisplayProps {
   selection: any[]
-  displayFormat: { title?: string; subtitle?: string; description: string }
+  displayFormat: DisplayFormat
   Markdown: any
   deleteItem?: (index: number) => void
   isEditable?: boolean
