@@ -126,7 +126,6 @@ const getInitialState = (initialValue: CheckboxSavedState, checkboxes: Checkbox[
 
 const createTextString = (checkboxes: Checkbox[]) =>
   checkboxes
-    // .filter((cb) => cb.selected)
     .reduce((output, cb) => {
       const text = cb.selected ? cb.text : cb.textNegative
       return output + (output === '' ? text : ', ' + text)
