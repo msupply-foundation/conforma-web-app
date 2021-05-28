@@ -1,6 +1,4 @@
 export default {
-  APPLICATION_CHANGES_REQUIRED:
-    'There are issues with some of the information you supplied. Please update and resubmit the form.',
   APPLICATIONS_LIST_EMPTY: 'No applications found',
   APPLICATION_MISSING_TEMPLATE: '',
   APPLICATION_OTHER_CHANGES_MADE: 'This is a new submission and will require a review.',

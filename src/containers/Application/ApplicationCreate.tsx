@@ -36,7 +36,11 @@ const ApplicationCreate: React.FC = () => {
     if (template && !template.startMessage) handleCreate()
   }, [template])
 
-  const { processing, error: creationError, create } = useCreateApplication({
+  const {
+    processing,
+    error: creationError,
+    create,
+  } = useCreateApplication({
     onCompleted: () => {
       if (serialNumber && template?.sections && template?.sections.length > 0) {
         // Call Application page on first section
@@ -104,6 +108,8 @@ const ApplicationCreate: React.FC = () => {
       <ApplicationHomeWrapper
         startMessage={template.startMessage}
         name={template.name}
+        title={strings.TITLE_INTRODUCTION}
+        subtitle={strings.SUBTITLE_APPLICATION_STEPS}
         ButtonSegment={StartButtonSegment}
       >
         <SectionsList sections={template.sections} />
