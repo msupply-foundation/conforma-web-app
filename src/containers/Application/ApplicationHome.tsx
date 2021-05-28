@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Button, Header, Message, Segment } from 'semantic-ui-react'
+import { Button, Message, Segment } from 'semantic-ui-react'
 import { FullStructure, StageAndStatus, TemplateDetails } from '../../utils/types'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { ApplicationSections, Loading } from '../../components'
@@ -8,7 +8,6 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { Link } from 'react-router-dom'
-import messages from '../../utils/messages'
 import ApplicationHomeWrapper from '../../components/Application/ApplicationHomeWrapper'
 
 interface ApplicationProps {
