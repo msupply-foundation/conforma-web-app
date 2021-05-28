@@ -100,6 +100,7 @@ export default {
   TITLE_REVIEW_DECISION: 'Submitted decision',
   TITLE_REVIEW_SUMMARY: 'Review Summary',
   TITLE_STEPS: 'Steps to complete',
+  TITLE_OVERVIEW: 'Overview',
   STAGE_PLACEHOLDER: 'Assessment',
   STATUS_IN_PROGRESS: 'In progress',
   STATUS_NOT_STARTED: 'Not started',
@@ -111,6 +112,8 @@ export default {
   REVIEW_FILTER_STAGE: 'Stage',
   SUBTITLE_APPLICATION_STEPS:
     'The following steps will need to be completed before the form can be submitted',
+  SUBTITLE_APPLICATION_CHANGES_REQUIRED:
+    'There are issues with some of the information you supplied. Please update and resubmit the form.',
   SUBTITLE_APPLICATION_SUMMARY: 'Please review each section before submitting form',
   SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you',
   SUBTITLE_SUBMISSION_STEPS: 'It will be going through the following stages before approval',

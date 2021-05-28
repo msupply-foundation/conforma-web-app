@@ -2,9 +2,8 @@ import React, { useEffect } from 'react'
 import { Button, Header, Message, Segment } from 'semantic-ui-react'
 import { FullStructure, StageAndStatus, TemplateDetails } from '../../utils/types'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
-import { ApplicationContainer, ApplicationSections, Loading } from '../../components'
+import { ApplicationSections, Loading } from '../../components'
 import strings from '../../utils/constants'
-import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { ApplicationStatus } from '../../utils/generated/graphql'
@@ -23,9 +22,6 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     replace,
     push,
   } = useRouter()
-  const {
-    userState: { currentUser },
-  } = useUserState()
 
   const { error, fullStructure } = useGetApplicationStructure({
     structure,
@@ -63,30 +59,17 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
 
   return (
     <>
-      <ChangesRequestedTitle status={current?.status} isChangeRequest={isChangeRequest} />
       <ApplicationHomeWrapper
         startMessage={structure.info.startMessage}
         name={template.name}
+        title={strings.TITLE_OVERVIEW}
+        subtitle={strings.SUBTITLE_APPLICATION_CHANGES_REQUIRED}
         ButtonSegment={SummaryButtonSegment}
       >
         <ApplicationSections fullStructure={fullStructure} />
       </ApplicationHomeWrapper>
     </>
   )
-}
-
-interface ChangesRequestedTitleProps {
-  status?: ApplicationStatus
-  isChangeRequest: boolean
-}
-
-const ChangesRequestedTitle: React.FC<ChangesRequestedTitleProps> = ({
-  status,
-  isChangeRequest,
-}) => {
-  return status !== ApplicationStatus.Submitted && isChangeRequest ? (
-    <Header content={messages.APPLICATION_CHANGES_REQUIRED} />
-  ) : null
 }
 
 export default ApplicationHome
