@@ -164,7 +164,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       {...props}
       {...element}
       parameters={{ ...simpleParameters, ...evaluatedParameters }}
-      parameterExpressions={parameters}
       setIsActive={setIsActive}
       Markdown={Markdown}
       validationState={validationState || { isValid: true }}

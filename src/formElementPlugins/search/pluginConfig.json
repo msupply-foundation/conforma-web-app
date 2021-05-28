@@ -7,6 +7,7 @@
     "description": "",
     "options": ["Loading..."]
   },
+  "internalParameters": ["source"],
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"
 }

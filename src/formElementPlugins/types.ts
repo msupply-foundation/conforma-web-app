@@ -38,7 +38,6 @@ interface ApplicationViewProps extends ApplicationViewWrapperProps {
   Markdown: any
   getDefaultIndex: Function
   parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement)s
-  parameterExpressions: any
   validate: Function
 }
 

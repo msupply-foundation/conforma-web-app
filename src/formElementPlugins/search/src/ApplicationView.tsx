@@ -16,7 +16,6 @@ interface DisplayFormat {
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
-  parameterExpressions,
   currentResponse,
   // validationState,
   onSave,
@@ -27,13 +26,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     label,
     description,
     placeholder = strings.DEFAULT_PLACEHOLDER,
+    source,
     icon = 'search',
     multiSelect = false,
     minCharacters = 1,
     displayFormat = {},
     resultFormat = displayFormat,
   } = parameters
-  const { source } = parameterExpressions
 
   const graphQLEndpoint = applicationData.config.serverGraphQL
 
@@ -87,6 +86,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const handleSelect = (_: any, data: any) => {
     const selectedResult = results[data.result.index]
+    if (!selectedResult) return // Don't select "Loading" item
     if (!multiSelect) setSelection([selectedResult])
     else setSelection([...selection, selectedResult])
     setSearchText('')
@@ -117,7 +117,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         onResultSelect={handleSelect}
         minCharacters={minCharacters}
         placeholder={placeholder}
-        results={loading ? [{ title: 'Loading...' }] : createResultsArray(results, resultFormat)}
+        results={
+          loading ? [{ title: strings.MESSAGE_LOADING }] : createResultsArray(results, resultFormat)
+        }
         disabled={!isEditable}
         input={{ icon: icon, iconPosition: 'left' }}
         noResultsMessage={strings.MESSAGE_NO_RESULTS}
@@ -144,7 +146,8 @@ const createResultsArray = (results: any[], resultsFormat: DisplayFormat) => {
 }
 
 type ResultsField = 'title' | 'description'
-
+// If a displayFormat is not defined, results will be displayed some combination
+// of the first two fields in the object
 const getDefaultString = (result: any, fieldType: ResultsField = 'title') => {
   if (!(result instanceof Object)) return result
   const fields = Object.keys(result)
@@ -161,7 +164,7 @@ const getDefaultString = (result: any, fieldType: ResultsField = 'title') => {
 }
 
 const substituteValues = (parameterisedString: string, object: { [key: string]: any }) => {
-  // TO-DO: Get "nested" object prop (e.g. "user.name")
+  // TO-DO: Get "nested" object prop (e.g. "user.name"), and display arrays nicely
   const getValueFromObject = (_: string, $: string, property: string) => object?.[property] || ''
   return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromObject)
 }
