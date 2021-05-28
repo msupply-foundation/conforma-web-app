@@ -23,6 +23,12 @@ export default {
     message: 'Please select a decision: List Of Questions or Non Conformity',
     option: 'OK',
   },
+  REVIEW_STATUS_PENDING: {
+    title: 'New review has been submitted',
+    message:
+      'All your eixsing decision will be kept.\nYou will be redirected to the home page now, click "start" in there to reload page with latest responses to review.',
+    option: 'OK',
+  },
   REDIRECT_TO_REGISTRATION: 'Re-directing to user registration application...',
   REVIEW_RESUBMIT_COMMENT: 'Please enter a comment before asking for a re-submission',
   TRIGGER_RUNNING: 'Trigger is running. Please wait to reload page again.',

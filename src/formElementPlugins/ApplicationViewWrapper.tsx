@@ -144,11 +144,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     }
   }
 
-  const setIsActive = (text: string | undefined | null = '') => {
+  const setIsActive = () => {
     // Tells application state that a plugin field is in focus
     setUpdateTrackerState({
       type: 'setElementEntered',
-      textValue: text || '',
+      textValue: currentResponse?.text || '',
     })
   }
 
@@ -283,7 +283,9 @@ const calculateValidationState = async ({
   const validationResult = validationExpression
     ? await validate(validationExpression, validationMessage as string, evaluationParameters)
     : { isValid: true }
+
   if (!validationResult.isValid && currentResponse?.text !== undefined) return validationResult
+  // !responses.thisResponse, check for null, undefined, empty string
   if (isRequired && isStrictPage && !responses?.thisResponse)
     return {
       isValid: false,
