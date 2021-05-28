@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Icon } from 'semantic-ui-react'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/graphql'
 import ApplicantResponseElement from './ApplicantResponseElement'
 import ReviewResponseElement from './ReviewResponseElement'
 import strings from '../../../utils/constants'
+import { UpdateIcon } from '../PageElements'
+
 interface ReviewApplicantResponseProps {
   applicationResponse: ApplicationResponse
   summaryViewProps: SummaryViewWrapperProps
@@ -22,47 +23,45 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   isActiveReviewResponse,
   showModal,
 }) => {
-  const decisionExists = !!reviewResponse?.decision
   const [isActiveEdit, setIsActiveEdit] = useState(false)
+  const decisionExists = !!reviewResponse?.decision
+  const triggerTitle = isNewApplicationResponse // can add check for isNewReviewResponseAlso
+    ? strings.BUTTON_RE_REVIEW_RESPONSE
+    : strings.BUTTON_REVIEW_RESPONSE
 
   return (
-    <div>
+    <>
       {/* Application Response */}
       <ApplicantResponseElement
         applicationResponse={applicationResponse}
         summaryViewProps={summaryViewProps}
       >
         {isActiveReviewResponse && !decisionExists && (
-          <ReviewElementTrigger
-            title={
-              isNewApplicationResponse /* can add check for isNewReviewResponseAlso */
-                ? strings.BUTTON_RE_REVIEW_RESPONSE
-                : strings.BUTTON_REVIEW_RESPONSE
-            }
-            // onClick={showModal}
-            onClick={() => setIsActiveEdit(true)}
-          />
+          <ReviewElementTrigger title={triggerTitle} onClick={showModal} />
         )}
       </ApplicantResponseElement>
       {/* Review Response */}
-      {reviewResponse && (
-        <ReviewResponseElement
-          isCurrentReview={true}
-          isConsolidation={false}
-          applicationResponse={applicationResponse}
-          reviewResponse={reviewResponse}
-          isActiveEdit={isActiveEdit}
-          setIsActiveEdit={setIsActiveEdit}
-        >
-          {isActiveReviewResponse && decisionExists && (
-            <UpdateIcon
-              // onClick={showModal}
-              onClick={() => setIsActiveEdit(true)}
-            />
-          )}
-        </ReviewResponseElement>
+      {decisionExists && (
+        <>
+          <ReviewResponseElement
+            isCurrentReview={true}
+            isConsolidation={false}
+            reviewResponse={
+              reviewResponse as ReviewResponse /* Casting to ReviewResponse since decision would exist if reviewResponse is defined */
+            }
+          >
+            {isActiveReviewResponse && (
+              <UpdateIcon
+                // onClick={showModal}
+                onClick={() => setIsActiveEdit(true)}
+              />
+            )}
+          </ReviewResponseElement>
+          {/* div below forced border on review response to be square */}
+          <div />
+        </>
       )}
-    </div>
+    </>
   )
 }
 
@@ -73,10 +72,6 @@ const ReviewElementTrigger: React.FC<{ title: string; onClick: () => void }> = (
   <p className="link-style clickable" onClick={onClick}>
     <strong>{title}</strong>
   </p>
-)
-
-const UpdateIcon: React.FC<{ onClick: Function }> = ({ onClick }) => (
-  <Icon className="clickable" name="pencil" size="large" color="blue" onClick={onClick} />
 )
 
 export default ReviewApplicantResponse

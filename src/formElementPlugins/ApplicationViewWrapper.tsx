@@ -18,12 +18,21 @@ import strings from '../utils/constants'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'
 import messages from '../utils/messages'
 import globalConfig from '../config.json'
+import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
-  const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
-    props
+  const [responseMutation] = useUpdateResponseMutation()
+  const {
+    element,
+    isStrictPage,
+    changesRequired,
+    currentResponse,
+    allResponses,
+    applicationData,
+    onSaveUpdateMethod = responseMutation,
+  } = props
 
   const {
     code,
@@ -38,13 +47,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   const isValid = currentResponse?.isValid || true
 
-  const [responseMutation] = useUpdateResponseMutation()
   const { setState: setUpdateTrackerState } = useFormElementUpdateTracker()
 
   const {
     userState: { currentUser },
   } = useUserState()
-  const [value, setValue] = useState<any>(currentResponse?.text)
   const [validationState, setValidationState] = useState<ValidationState>({
     isValid,
   })
@@ -99,7 +106,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       // Validate and Save response -- generic
       const validationResult: ValidationState = await onUpdate(jsonValue?.text)
       if (jsonValue?.text !== undefined)
-        await responseMutation({
+        await onSaveUpdateMethod({
           variables: {
             id: currentResponse?.id as number,
             value: jsonValue,
@@ -108,7 +115,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         })
       if (jsonValue === null)
         // Reset response if cleared
-        await responseMutation({
+        await onSaveUpdateMethod({
           variables: {
             id: currentResponse?.id as number,
             value: null,
@@ -124,7 +131,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       const { isValid, validationMessage } = jsonValue.customValidation
       setValidationState({ isValid, validationMessage })
       delete jsonValue.customValidation // Don't want to save this field
-      await responseMutation({
+      await onSaveUpdateMethod({
         variables: {
           id: currentResponse?.id as number,
           value: jsonValue,
@@ -142,7 +149,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     // Tells application state that a plugin field is in focus
     setUpdateTrackerState({
       type: 'setElementEntered',
-      textValue: value || '',
+      textValue: currentResponse?.text || '',
     })
   }
 
@@ -156,8 +163,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       {...props}
       {...element}
       parameters={{ ...simpleParameters, ...evaluatedParameters }}
-      value={value}
-      setValue={setValue}
       setIsActive={setIsActive}
       Markdown={Markdown}
       validationState={validationState || { isValid: true }}
@@ -166,69 +171,55 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     />
   )
 
-  const getResponseAndBorder = () => {
-    if (!changesRequired) return null
-    const { isChangeRequest, isChanged } = changesRequired
-    const isValid = validationState ? (validationState.isValid as boolean) : true
-    const borderClass = isChangeRequest || (isChanged && isValid) ? 'element-warning-border' : ''
-    const borderColorClass = isChangeRequest ? (!isChanged ? 'alert-border' : '') : 'blue-border'
+  const {
+    isChangeRequest = false,
+    isChanged = false,
+    reviewerComment = messages.APPLICATION_OTHER_CHANGES_MADE,
+  } = changesRequired || {}
 
-    return (
-      <>
-        <Form.Field
-          className={`element-application-view ${borderClass} ${borderColorClass}`}
-          required={isRequired}
-        >
-          {PluginComponent}
-          <ChangesToResponseWarning {...changesRequired} isValid={isValid} />
-        </Form.Field>
-        : <Loader active inline />
-      </>
-    )
+  const getChangeRequestClassesAndIcon = () => {
+    const isValid = validationState ? (validationState.isValid as boolean) : true
+    if (!isValid) return
+    if (isChangeRequest && isChanged)
+      return {
+        extraClasses: 'changes change-request-changed',
+        iconName: 'comment alternate outline',
+      }
+    if (isChangeRequest && !isChanged)
+      return { extraClasses: 'changes change-request-unchanged', iconName: 'exclamation circle' }
+    // Updated withouth change request
+    if (isChanged) return { extraClasses: 'changes updated', iconName: 'info circle' }
+    return
   }
+
+  const { extraClasses = '', iconName = '' } = getChangeRequestClassesAndIcon() || {}
 
   return (
     <ErrorBoundary pluginCode={pluginCode}>
       <React.Suspense fallback="Loading Plugin">
-        {changesRequired ? (
-          getResponseAndBorder()
-        ) : (
-          <Form.Field className="element-application-view" required={isRequired}>
-            {PluginComponent}
-          </Form.Field>
-        )}
+        <Form.Field className={`element-application-view ${extraClasses}`} required={isRequired}>
+          {PluginComponent}
+          <ChangesComment reviewerComment={reviewerComment} iconName={iconName} />
+        </Form.Field>
       </React.Suspense>
     </ErrorBoundary>
   )
 }
 
-interface ChangesToResponseWarningProps {
-  isChangeRequest: boolean
-  isChanged: boolean
+interface ChangesCommentProps {
   reviewerComment: string
-  isValid: boolean
+  iconName: string
 }
 
-const ChangesToResponseWarning: React.FC<ChangesToResponseWarningProps> = ({
-  isChangeRequest,
-  isChanged,
-  reviewerComment,
-  isValid,
-}) => {
-  const visibilityClass = isChangeRequest || (isChanged && isValid) ? '' : 'invisible'
-  const colourClass = isChangeRequest ? (!isChanged ? 'alert' : '') : 'interactive-color'
-  const iconSelection = isChangeRequest
-    ? isChanged
-      ? 'comment alternate outline'
-      : 'exclamation circle'
-    : 'info circle'
-  return (
-    <p className={`${colourClass} ${visibilityClass} reviewer-comment`}>
-      <Icon name={iconSelection} className="colourClass" />
-      {isChangeRequest ? reviewerComment : messages.APPLICATION_OTHER_CHANGES_MADE}
+const ChangesComment: React.FC<ChangesCommentProps> = ({ reviewerComment, iconName }) => (
+  <>
+    {/* reviewer-comment is only visibility when parent class matches ".element-application-view.changes" */}
+    <p className="reviewer-comment">
+      <Icon name={iconName as SemanticICONS} />
+      {reviewerComment}
     </p>
-  )
-}
+  </>
+)
 
 export default ApplicationViewWrapper
 
@@ -251,7 +242,7 @@ export const buildParameters = (
   const simpleParameters: any = {}
   const parameterExpressions: any = {}
   for (const [key, value] of Object.entries(parameters)) {
-    if (value instanceof Object && !Array.isArray(value)) {
+    if (value instanceof Object && !Array.isArray(value) && 'operator' in value) {
       parameterExpressions[key] = value
       simpleParameters[key] = parameterLoadingValues?.[key] ?? 'Loading...'
     } else simpleParameters[key] = value
