@@ -92,22 +92,18 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   }
 
   const showPendingReviewWarning = () => {
-    const { title, message, option } = messages.REVIEW_STATUS_PENDING
+    const { title, message, option } = messages.REVIEW_STATUS_LOCKED
     setShowWarningModal({
       open: true,
       title,
       message,
       option,
-      onClick: () => {
-        setShowWarningModal({ open: false })
-        push(`/application/${structure.info.serial}/review`)
-      },
-      onClose: () => {
-        setShowWarningModal({ open: false })
-        push(`/application/${structure.info.serial}/review`)
-      },
+      onClick: () => setShowWarningModal({ open: false }),
+      onClose: () => setShowWarningModal({ open: false }),
     })
   }
+
+  const showLockedReviewWarning = () => {}
 
   const showConfirmation = () => {
     const { title, message, option } = messages.REVIEW_SUBMISSION_CONFIRM
@@ -141,10 +137,16 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       return
     }
 
-    // Check review status != PENDING
+    // Check if review has pending new review_responses - For Consolidators
     const { thisReview } = await getFullReviewStructureAsync()
     if (thisReview?.status === ReviewStatus.Pending) {
       showPendingReviewWarning()
+      return
+    }
+
+    // Check review is lcoked for submission - For Reviewer
+    if (thisReview?.status === ReviewStatus.Locked) {
+      showLockedReviewWarning()
       return
     }
 
