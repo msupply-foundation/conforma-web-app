@@ -37,6 +37,13 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   const consolidationReviewResponse = previousReviewResponse?.reviewResponsesByReviewResponseLinkId
     .nodes[0] as ReviewResponse // There is only one reviewResponse associated per review cycle
 
+  const getReviewDecisionOption = () => {
+    if (!isActiveReviewResponse) return null
+    if (isChangeRequest && !isNewReviewResponse)
+      return <ReviewElementTrigger title={strings.LABEL_RESPONSE_UPDATE} onClick={showModal} />
+    return <UpdateIcon onClick={showModal} />
+  }
+
   return (
     <>
       {/* Application Response */}
@@ -58,12 +65,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               reviewResponse as ReviewResponse /* Casting to ReviewResponse since decision would exist if reviewResponse is defined */
             }
           >
-            {isActiveReviewResponse &&
-              (isChangeRequest && !isNewApplicationResponse ? (
-                <ReviewElementTrigger title={strings.LABEL_RESPONSE_UPDATE} onClick={showModal} />
-              ) : (
-                <UpdateIcon onClick={showModal} />
-              ))}
+            {getReviewDecisionOption()}
           </ReviewResponseElement>
           {/* div below forced border on review response to be square */}
           <div />
@@ -82,7 +84,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   )
 }
 
-// TODO: Unify code with ReviewElementTrigger
+// TODO: Unify code with other ReviewElementTrigger
 const ReviewElementTrigger: React.FC<{ title: string; onClick: () => void }> = ({
   title,
   onClick,
