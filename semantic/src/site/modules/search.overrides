@@ -2,6 +2,7 @@
          Site Overrides
 *******************************/
 
-// .ui.search .prompt {
-//   border-radius: @promptBorderRadius !important;
-// }
+.ui.search > .results {
+  max-height: @searchResultsMaxHeight;
+  overflow-y: auto;
+}
