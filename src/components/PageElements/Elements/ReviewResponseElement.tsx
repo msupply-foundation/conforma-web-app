@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon, Grid } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 import { ReviewResponse } from '../../../utils/generated/graphql'
 import { ElementDecisionLabel } from '../../Review'
 
@@ -14,13 +14,15 @@ interface ReviewResponseElementProps {
 const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
   isCurrentReview,
   isConsolidation,
-  reviewResponse,
   shouldDim = false,
-  children,
   shouldHideDecision = false,
+  reviewResponse,
+  children,
 }) => {
   const backgroundClass = isCurrentReview ? 'changeable-background' : ''
   const dimClass = shouldDim ? 'dim' : ''
+
+  const canReviewerEdit = (isCurrentReview && !!reviewResponse?.comment) as boolean
 
   return (
     <div className={`response-container ${backgroundClass} ${dimClass}`}>
@@ -28,12 +30,12 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
         {!shouldHideDecision && (
           <ElementDecisionLabel isConsolidation={isConsolidation} reviewResponse={reviewResponse} />
         )}
-        {!reviewResponse.comment ? null : (
+        {canReviewerEdit ? (
           <div className="comment-container">
             <Icon name="comment alternate outline" color="grey" />
             <p className="secondary">{reviewResponse.comment}</p>
           </div>
-        )}
+        ) : null}
       </div>
 
       <div className="action-container">{children}</div>
