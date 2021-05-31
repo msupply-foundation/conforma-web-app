@@ -7,6 +7,7 @@ import config from '../pluginConfig.json'
 interface Checkbox {
   label: string
   text: string
+  textNegative?: string
   key: string | number
   selected: boolean
 }
@@ -41,7 +42,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     onSave({
       text: createTextString(checkboxElements),
       values: Object.fromEntries(
-        checkboxElements.map((cb) => [cb.key, { text: cb.text, selected: cb.selected }])
+        checkboxElements.map((cb) => [
+          cb.key,
+          { text: cb.text, textNegative: cb.textNegative, selected: cb.selected },
+        ])
       ),
     })
   }, [checkboxElements])
@@ -96,11 +100,18 @@ const getInitialState = (initialValue: CheckboxSavedState, checkboxes: Checkbox[
     checkboxes
       .map((cb: Checkbox, index: number) => {
         if (typeof cb === 'string' || typeof cb === 'number')
-          return { label: String(cb), text: String(cb), key: index, selected: false }
+          return {
+            label: String(cb),
+            text: String(cb),
+            textNegative: '',
+            key: index,
+            selected: false,
+          }
         else
           return {
             label: cb.label,
             text: cb?.text || cb.label,
+            textNegative: cb?.textNegative || '',
             key: cb?.key || index,
             selected: cb?.selected || false,
           }
@@ -115,8 +126,8 @@ const getInitialState = (initialValue: CheckboxSavedState, checkboxes: Checkbox[
 
 const createTextString = (checkboxes: Checkbox[]) =>
   checkboxes
-    .filter((cb) => cb.selected)
     .reduce((output, cb) => {
-      return output + (output === '' ? cb.text : ', ' + cb.text)
+      const text = cb.selected ? cb.text : cb.textNegative
+      return output + (output === '' ? text : ', ' + text)
     }, '')
     .replace(/^$/, `*<${strings.LABEL_SUMMMARY_NOTHING_SELECTED}>*`)
