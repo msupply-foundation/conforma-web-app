@@ -219,6 +219,7 @@ const PageElements: React.FC<PageElementProps> = ({
                     <ReviewApplicantResponse
                       {...props}
                       previousReviewResponse={thisReviewPreviousResponse}
+                      isChangeRequest={isChangeRequest}
                     />
                   )}
                   {toggleDecision && thisReviewLatestResponse && (
@@ -254,7 +255,7 @@ export const UpdatedLabel: React.FC = () => (
   <div className="updated-label">
     <Icon name="circle" size="tiny" color="blue" />
     <Label className="simple-label">
-      <strong>{strings.LABEL_UPDATED}</strong>
+      <strong>{strings.LABEL_RESPONSE_UPDATED}</strong>
     </Label>
   </div>
 )

@@ -14,6 +14,7 @@ interface ReviewApplicantResponseProps {
   isActiveReviewResponse: boolean
   isNewApplicationResponse: boolean
   isNewReviewResponse?: boolean
+  isChangeRequest?: boolean
   showModal: () => void
 }
 
@@ -24,7 +25,8 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   previousReviewResponse,
   isNewApplicationResponse,
   isActiveReviewResponse,
-  isNewReviewResponse: isUpdatedReviewResponse = false,
+  isNewReviewResponse = false,
+  isChangeRequest = false,
   showModal,
 }) => {
   const decisionExists = !!reviewResponse?.decision
@@ -56,7 +58,12 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               reviewResponse as ReviewResponse /* Casting to ReviewResponse since decision would exist if reviewResponse is defined */
             }
           >
-            {isActiveReviewResponse && <UpdateIcon onClick={showModal} />}
+            {isActiveReviewResponse &&
+              (isChangeRequest && !isNewApplicationResponse ? (
+                <ReviewElementTrigger title={strings.LABEL_RESPONSE_UPDATE} onClick={showModal} />
+              ) : (
+                <UpdateIcon onClick={showModal} />
+              ))}
           </ReviewResponseElement>
           {/* div below forced border on review response to be square */}
           <div />
@@ -66,7 +73,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               isCurrentReview={false}
               isConsolidation={true}
               reviewResponse={consolidationReviewResponse}
-              shouldDim={isUpdatedReviewResponse}
+              shouldDim={isNewReviewResponse}
             ></ReviewResponseElement>
           )}
         </>
@@ -75,6 +82,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   )
 }
 
+// TODO: Unify code with ReviewElementTrigger
 const ReviewElementTrigger: React.FC<{ title: string; onClick: () => void }> = ({
   title,
   onClick,
