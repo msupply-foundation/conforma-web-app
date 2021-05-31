@@ -467,6 +467,14 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 
 _Live "search-as-you-type" lookups for user to find and select items_
 
+Search results show in pop-up below the search box:
+
+![Search Results](images/Element-Type-Specs-search-results.png)
+
+Once selected, items are displayed in a "card" view:
+
+![Search Selected](images/Element-Type-Specs-search-selected.png)
+
 #### Input parameters
 
 - **label**: `string` -- as above
@@ -492,7 +500,7 @@ _Live "search-as-you-type" lookups for user to find and select items_
   }
   ```
   If not specified, a generic "default" display will be shown, using the first 1-2 properties on the result object.
-- **resultFormat**: `object` -- same as `displayFormat`, but used when specifying a format for the "result" display that is different to the selection card display. If not specified, `resultFormat` will just be the same as `displayFormat`.  
+- **resultFormat**: `object` -- same as `displayFormat`, but used when specifying a format for the "result" display that is different to the selection card display. If not specified, `resultFormat` will just be the same as `displayFormat`.
   Note that for the "result" display, only the `title` and `description` fields are used (`subtitle` is not shown).
 
 #### Response type
