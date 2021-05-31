@@ -96,7 +96,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     layout === 'inline'
       ? {
           display: 'inline',
-          marginRight: 10,
+          marginRight: 30,
         }
       : {}
 
