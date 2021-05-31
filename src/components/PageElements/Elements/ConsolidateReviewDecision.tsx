@@ -4,7 +4,6 @@ import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/gr
 import ApplicantResponseElement from './ApplicantResponseElement'
 import ReviewResponseElement from './ReviewResponseElement'
 import strings from '../../../utils/constants'
-import { Icon } from 'semantic-ui-react'
 import { UpdateIcon } from '../PageElements'
 
 interface ConsolidateReviewDecisionProps {

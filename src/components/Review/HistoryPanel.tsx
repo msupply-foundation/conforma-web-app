@@ -8,36 +8,13 @@ import SummaryViewWrapper from '../../formElementPlugins/SummaryViewWrapper'
 import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
 
-interface DecisionAreaProps {
+interface HistoryPanelProps {
   summaryViewProps: SummaryViewWrapperProps
   reviewResponse: ReviewResponse
   isConsolidation: boolean
 }
 
-const optionsMap = {
-  consolidation: [
-    {
-      label: strings.LABEL_CONSOLIDATION_AGREE,
-      decision: ReviewResponseDecision.Agree,
-    },
-    {
-      label: strings.LABEL_CONSOLIDATION_DISAGREE,
-      decision: ReviewResponseDecision.Disagree,
-    },
-  ],
-  review: [
-    {
-      label: strings.LABEL_REVIEW_APPROVE,
-      decision: ReviewResponseDecision.Approve,
-    },
-    {
-      label: strings.LABEL_REVIEW_RESSUBMIT,
-      decision: ReviewResponseDecision.Decline,
-    },
-  ],
-}
-
-const DecisionArea: React.FC<DecisionAreaProps> = ({
+const DecisionArea: React.FC<HistoryPanelProps> = ({
   summaryViewProps,
   reviewResponse: initialReviewResponse,
   isConsolidation,
@@ -60,8 +37,6 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
     (isConsolidation
       ? reviewResponse?.decision === ReviewResponseDecision.Disagree
       : reviewResponse?.decision === ReviewResponseDecision.Decline)
-
-  const options = isConsolidation ? optionsMap.consolidation : optionsMap.review
 
   return (
     <Modal
@@ -90,22 +65,6 @@ const DecisionArea: React.FC<DecisionAreaProps> = ({
                     {isConsolidation ? strings.LABEL_CONSOLIDATE : strings.LABEL_REVIEW}
                   </strong>
                 </Form.Field>
-                {options.map(({ decision, label }) => (
-                  <Form.Field key={decision}>
-                    <Radio
-                      label={label}
-                      value={decision}
-                      name="decisionGroup"
-                      checked={reviewResponse.decision === decision}
-                      onChange={() =>
-                        setReviewResponse({
-                          ...reviewResponse,
-                          decision: decision,
-                        })
-                      }
-                    />
-                  </Form.Field>
-                ))}
               </Segment>
               <Segment basic>
                 <Form.Field>

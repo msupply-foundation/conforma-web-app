@@ -27,11 +27,9 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
   const backgroundClass = isCurrentReview ? 'changeable-background' : ''
   const dimClass = shouldDim ? 'dim' : ''
 
-  if (isActiveEdit) return <ReviewInlineEntry setIsActiveEdit={setIsActiveEdit} />
-
   return (
     <div className={`response-container ${backgroundClass} ${dimClass}`}>
-      <div className="review-response-content ">
+      <div className="review-response-content">
         {!shouldHideDecision && (
           <ElementDecisionLabel isConsolidation={isConsolidation} reviewResponse={reviewResponse} />
         )}
@@ -49,7 +47,3 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
 }
 
 export default ReviewResponseElement
-
-const ReviewInlineEntry: React.FC<any> = ({ setIsActiveEdit }) => {
-  return <Button content="Toggle editable review" onClick={() => setIsActiveEdit(false)} />
-}

@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+import { Icon } from 'semantic-ui-react'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/graphql'
 import ApplicantResponseElement from './ApplicantResponseElement'
 import ReviewResponseElement from './ReviewResponseElement'
+import ReviewInlineInput from './ReviewInlineInput'
 import strings from '../../../utils/constants'
 import { UpdateIcon } from '../PageElements'
 
@@ -37,11 +39,23 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
         summaryViewProps={summaryViewProps}
       >
         {isActiveReviewResponse && !decisionExists && (
-          <ReviewElementTrigger title={triggerTitle} onClick={showModal} />
+          <ReviewElementTrigger
+            title={triggerTitle}
+            // onClick={showModal}
+            onClick={() => setIsActiveEdit(true)}
+          />
         )}
       </ApplicantResponseElement>
+      {/* Inline Review area */}
+      {isActiveEdit && (
+        <ReviewInlineInput
+          setIsActiveEdit={setIsActiveEdit}
+          reviewResponse={reviewResponse as ReviewResponse}
+          isConsolidation={false}
+        />
+      )}
       {/* Review Response */}
-      {decisionExists && (
+      {decisionExists && !isActiveEdit && (
         <>
           <ReviewResponseElement
             isCurrentReview={true}

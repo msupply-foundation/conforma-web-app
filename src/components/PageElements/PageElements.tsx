@@ -11,7 +11,7 @@ import { ApplicationViewWrapper } from '../../formElementPlugins'
 import { ApplicationViewWrapperProps } from '../../formElementPlugins/types'
 import { ReviewResponse, TemplateElementCategory } from '../../utils/generated/graphql'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
-import DecisionArea from '../Review/DecisionArea'
+import HistoryPanel from '../Review/HistoryPanel'
 import SummaryInformationElement from './Elements/SummaryInformationElement'
 import ApplicantResponseElement from './Elements/ApplicantResponseElement'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -206,8 +206,6 @@ const PageElements: React.FC<PageElementProps> = ({
                       isActiveReviewResponse={!!isActiveReviewResponse}
                       isNewApplicationResponse={!!isNewApplicationResponse}
                       showModal={() => updateQuery({ openResponse: element.code })}
-                      // isActiveEdit={isActiveEdit}
-                      // setIsActiveEdit={setIsActiveEdit}
                     />
                   ) : (
                     <ReviewApplicantResponse
@@ -220,7 +218,7 @@ const PageElements: React.FC<PageElementProps> = ({
                     />
                   )}
                   {toggleHistoryPanel && thisReviewLatestResponse && (
-                    <DecisionArea
+                    <HistoryPanel
                       isConsolidation={isConsolidation}
                       reviewResponse={thisReviewLatestResponse}
                       summaryViewProps={summaryViewProps}
