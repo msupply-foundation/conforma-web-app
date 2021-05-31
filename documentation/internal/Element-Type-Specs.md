@@ -486,10 +486,10 @@ _Live "search-as-you-type" lookups for user to find and select items_
 - **minCharacters**: `number` -- the minimum number of characters the user must type before the search query executes (default: 1). This is useful in situations where need the user to look up a specific item without being able to freely browse through the entire results list. For example, to look up organisation in our system using "registration" code, we set `minCharacters = 6`, so the user will need to know an exact code rather than being able to try characters one at a time.
 - **displayFormat**: `object` -- defines how to display the search results and the user's selection cards. See `displayFormat` for the [List Builder](#list-builder) (above) for detailed explanation. In this case, however, instead of a `code` substitution, the display string should contain property names from the result object. For example:
   ```
-  displayFormat:  {
-                    title: "\${firstName} \${lastName}"
-                    description: "\${username}"
-                  }
+  displayFormat: {
+    title: "\${firstName} \${lastName}"
+    description: "\${username}"
+  }
   ```
   If not specified, a generic "default" display will be shown, using the first 1-2 properties on the result object.
 - **resultFormat**: `object` -- same as `displayFormat`, but used when specifying a format for the "result" display that is different to the selection card display. If not specified, `resultFormat` will just be the same as `displayFormat`.  
