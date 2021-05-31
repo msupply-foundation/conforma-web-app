@@ -22,6 +22,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     optionsDisplayProperty,
     hasOther,
     otherPlaceholder,
+    layout,
   } = parameters
 
   const { code, isEditable } = element
@@ -93,6 +94,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     }
   })
 
+  const styles = {
+    display: 'inline',
+    marginRight: 10,
+  }
+  // const styles =
+  //   layout === 'inline'
+  //     ? {
+  //         display: 'inline',
+  //         marginRight: 10,
+  //       }
+  //     : {}
+
   return (
     <>
       <label>
@@ -102,7 +115,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {radioButtonOptions.map((option: any, index: number) => {
         const showOther = hasOther && index === allOptions.length - 1
         return (
-          <Form.Field key={option.key} disabled={!isEditable} inline={showOther}>
+          <Form.Field key={option.key} disabled={!isEditable} style={styles}>
             <Radio
               label={option.text}
               name={`${code}_radio_${index}`} // This is GROUP name
