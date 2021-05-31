@@ -121,7 +121,7 @@ const PageElements: React.FC<PageElementProps> = ({
 
           const isResponseUpdated = !!isChangeRequest || !!isChanged
           const reviewResponse = previousApplicationResponse?.reviewResponses.nodes[0]
-          const canRenderReviewResponse = !!isChangeRequest && reviewResponse
+          const canRenderReviewResponse = !!isChangeRequest && !!reviewResponse
           // Applicant can edit the summary page when is first submission (canEdit true when draft)
           // Or when changes required for any question that have been updated (isUpdating true)
           const canApplicantEdit = isUpdating ? isResponseUpdated && canEdit : canEdit
@@ -154,8 +154,8 @@ const PageElements: React.FC<PageElementProps> = ({
                   <ReviewResponseElement
                     key="review-response"
                     shouldDim={true}
-                    shouldHideDecision={true}
                     isCurrentReview={false}
+                    isDecisionVisible={false}
                     isConsolidation={false}
                     reviewResponse={reviewResponse as ReviewResponse}
                   />
