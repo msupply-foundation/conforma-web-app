@@ -49,7 +49,7 @@ const PageElements: React.FC<PageElementProps> = ({
 }) => {
   const {
     push,
-    query: { openResponse },
+    query: { showHistory },
     updateQuery,
   } = useRouter()
   const visibleElements = elements.filter(({ element }) => element.isVisible)
@@ -184,7 +184,7 @@ const PageElements: React.FC<PageElementProps> = ({
               latestApplicationResponse,
               latestOriginalReviewResponse,
             }) => {
-              const toggleHistoryPanel = openResponse === element.code
+              const toggleHistoryPanel = showHistory === element.code
               const summaryViewProps = getSummaryViewProps(element)
 
               // Information - no review
@@ -205,7 +205,7 @@ const PageElements: React.FC<PageElementProps> = ({
                       originalReviewResponse={latestOriginalReviewResponse}
                       isActiveReviewResponse={!!isActiveReviewResponse}
                       isNewApplicationResponse={!!isNewApplicationResponse}
-                      showModal={() => updateQuery({ openResponse: element.code })}
+                      showModal={() => updateQuery({ showHistory: element.code })}
                     />
                   ) : (
                     <ReviewApplicantResponse
@@ -214,7 +214,7 @@ const PageElements: React.FC<PageElementProps> = ({
                       reviewResponse={thisReviewLatestResponse}
                       isActiveReviewResponse={!!isActiveReviewResponse}
                       isNewApplicationResponse={!!isNewApplicationResponse}
-                      showModal={() => updateQuery({ openResponse: element.code })}
+                      showModal={() => updateQuery({ showHistory: element.code })}
                     />
                   )}
                   {toggleHistoryPanel && thisReviewLatestResponse && (

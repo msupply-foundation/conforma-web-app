@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Form, Radio, Icon, TextArea } from 'semantic-ui-react'
+import { Button, Form, Radio, TextArea } from 'semantic-ui-react'
 import strings from '../../../utils/constants'
 import { ReviewResponse, ReviewResponseDecision } from '../../../utils/generated/graphql'
 import useUpdateReviewResponse from '../../../utils/hooks/useUpdateReviewResponse'
@@ -79,6 +79,9 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
             </Form.Field>
           ))}
           <Form.Field>
+            <label>{strings.LABEL_COMMENT}</label>
+          </Form.Field>
+          <Form.Field>
             <TextArea
               rows={4}
               defaultValue={reviewResponse.comment}
@@ -87,21 +90,22 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
               }
             />
           </Form.Field>
-          <Button
-            primary
-            // inverted
-            disabled={isInvalidComment}
-            content={strings.BUTTON_ADD_REVIEW}
-            onClick={submit}
-            className="button-med"
-          />
-          <Button
-            primary
-            inverted
-            content={strings.BUTTON_CANCEL}
-            onClick={() => setIsActiveEdit(false)}
-            className="button-med"
-          />
+          <div className="button-container">
+            <Button
+              primary
+              disabled={isInvalidComment}
+              content={strings.BUTTON_ADD_REVIEW}
+              onClick={submit}
+              className="button-med"
+            />
+            <Button
+              primary
+              inverted
+              content={strings.BUTTON_CANCEL}
+              onClick={() => setIsActiveEdit(false)}
+              className="button-med"
+            />
+          </div>
         </Form>
       </div>
     </div>

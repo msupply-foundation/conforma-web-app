@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon, Button } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 import { ReviewResponse } from '../../../utils/generated/graphql'
 import { ElementDecisionLabel } from '../../Review'
 

@@ -20,30 +20,17 @@ const DecisionArea: React.FC<HistoryPanelProps> = ({
   isConsolidation,
 }) => {
   const {
-    query: { openResponse },
+    query: { showHistory },
     updateQuery,
   } = useRouter()
   const [reviewResponse, setReviewResponse] = useState(initialReviewResponse)
-  const updateResponse = useUpdateReviewResponse()
-
-  const submit = async () => {
-    updateQuery({ openResponse: null })
-    // TODO do we need to handle update error ?
-    await updateResponse(reviewResponse)
-  }
-
-  const isInvalidComment =
-    (!reviewResponse.comment || reviewResponse.comment?.trim() === '') &&
-    (isConsolidation
-      ? reviewResponse?.decision === ReviewResponseDecision.Disagree
-      : reviewResponse?.decision === ReviewResponseDecision.Decline)
 
   return (
     <Modal
       closeIcon
-      open={!!openResponse}
+      open={!!showHistory}
       onClose={() => {
-        updateQuery({ openResponse: null })
+        updateQuery({ showHistory: null })
       }}
       size="fullscreen"
       style={{ margin: 0, background: 'transparent' }} // TODO: Move style to overrides
@@ -66,30 +53,7 @@ const DecisionArea: React.FC<HistoryPanelProps> = ({
                   </strong>
                 </Form.Field>
               </Segment>
-              <Segment basic>
-                <Form.Field>
-                  <strong>{strings.LABEL_COMMENT}</strong>
-                </Form.Field>
-                <TextArea
-                  rows={8}
-                  defaultValue={reviewResponse.comment}
-                  onChange={(_, { value }) =>
-                    setReviewResponse({ ...reviewResponse, comment: String(value) })
-                  }
-                />
-              </Segment>
-              <Segment basic>
-                <Form.Field>
-                  <Button
-                    primary
-                    className="button-wide"
-                    onClick={submit}
-                    disabled={isInvalidComment}
-                    content={strings.BUTTON_SUBMIT}
-                  />
-                </Form.Field>
-                {isInvalidComment && <p className="alert">{messages.REVIEW_RESUBMIT_COMMENT}</p>}
-              </Segment>
+              {/* TO-DO: HISTORY PANEL */}
               <Segment basic id="history-panel">
                 <p>
                   <em>History panel goes here</em>
