@@ -90,7 +90,7 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
               }
             />
           </Form.Field>
-          <div className="button-container">
+          <div className="review-button-container">
             <Button
               primary
               disabled={isInvalidComment}
