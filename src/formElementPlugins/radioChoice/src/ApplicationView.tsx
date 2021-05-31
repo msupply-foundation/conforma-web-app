@@ -8,8 +8,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   onUpdate,
   currentResponse,
-  // value,
-  // setValue,
   onSave,
   Markdown,
   getDefaultIndex,
@@ -94,17 +92,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     }
   })
 
-  const styles = {
-    display: 'inline',
-    marginRight: 10,
-  }
-  // const styles =
-  //   layout === 'inline'
-  //     ? {
-  //         display: 'inline',
-  //         marginRight: 10,
-  //       }
-  //     : {}
+  const styles =
+    layout === 'inline'
+      ? {
+          display: 'inline',
+          marginRight: 10,
+        }
+      : {}
 
   return (
     <>
@@ -132,6 +126,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 onChange={handleOtherChange}
                 onBlur={handleOtherLoseFocus}
                 value={otherText}
+                style={{ maxWidth: 200 }}
               />
             )}
           </Form.Field>
