@@ -109,7 +109,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {radioButtonOptions.map((option: any, index: number) => {
         const showOther = hasOther && index === allOptions.length - 1
         return (
-          <Form.Field key={option.key} disabled={!isEditable} style={styles}>
+          <Form.Field key={option.key} disabled={!isEditable} style={styles} inline={showOther}>
             <Radio
               label={option.text}
               name={`${code}_radio_${index}`} // This is GROUP name
@@ -126,7 +126,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 onChange={handleOtherChange}
                 onBlur={handleOtherLoseFocus}
                 value={otherText}
-                style={{ maxWidth: 200 }}
               />
             )}
           </Form.Field>

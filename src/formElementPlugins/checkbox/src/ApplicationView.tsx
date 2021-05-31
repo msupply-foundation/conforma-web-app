@@ -57,16 +57,23 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setCheckboxElements(checkboxElements.map((cb, i) => (i === index ? changedCheckbox : cb)))
   }
 
+  const styles =
+    layout === 'inline'
+      ? {
+          display: 'inline',
+          marginRight: 10,
+        }
+      : {}
+
   return (
     <>
       <label>
         <Markdown text={label} semanticComponent="noParagraph" />
       </label>
       <Markdown text={description} />
-      {checkboxElements.map((cb: Checkbox, index: number) => {
-        return layout === 'inline' ? (
+      {checkboxElements.map((cb: Checkbox, index: number) => (
+        <Form.Field key={`${index}_${cb.label}`} disabled={!isEditable} style={styles}>
           <Checkbox
-            key={`${index}_${cb.label}`}
             label={cb.label}
             checked={cb.selected}
             onChange={toggle}
@@ -74,19 +81,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
             toggle={type === 'toggle'}
             slider={type === 'slider'}
           />
-        ) : (
-          <Form.Field key={`${index}_${cb.label}`} disabled={!isEditable}>
-            <Checkbox
-              label={cb.label}
-              checked={cb.selected}
-              onChange={toggle}
-              index={index}
-              toggle={type === 'toggle'}
-              slider={type === 'slider'}
-            />
-          </Form.Field>
-        )
-      })}
+        </Form.Field>
+      ))}
     </>
   )
 }
