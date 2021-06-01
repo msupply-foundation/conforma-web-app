@@ -6,8 +6,8 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
   const { displayFormat } = parameters
 
   const displayProps: DisplayProps = {
-    selection: response?.selection,
-    displayFormat,
+    selection: response?.selection ?? [],
+    displayFormat: displayFormat ?? {},
     Markdown,
     isEditable: false,
   }
