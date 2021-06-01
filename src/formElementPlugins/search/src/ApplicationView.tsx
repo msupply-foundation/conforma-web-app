@@ -68,10 +68,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           setResults([])
         } else if (!Array.isArray(results)) setResults([results])
         else setResults(results)
+        setDebounceInput('')
         setLoading(false)
       })
       .catch((err) => {
         console.error('Search error:', err.message)
+        setDebounceInput('')
         setLoading(false)
       })
   }
