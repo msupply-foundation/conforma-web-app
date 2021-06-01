@@ -62,6 +62,7 @@ _Free-form, single-line text input element_
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
 - **default**: `string` -- value to set as response before user enters anything. Note that this is different from `placeholder` -- `placeholder` is just temporary display text, wheras `default` is an actual response that will be saved if the user doesn't explicitly change it. In general a `default` for a text input would not be desired; it would usually only be useful for editing _existing_ data.[Optional]
 - **maskedInput**: `boolean` -- if `true`, displays user input as masked (hidden) characters -- i.e. for passwords. [Optional]
+- **maxWidth**: `number` -- the maximum width (in pixels) for the text input box (defaults to fill the width of the container)
 - **maxLength**: `number` -- response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length.  
    _Note_: if you want to show an error state for trying to exceed the maximum, you'll need to specify a validation expression with a REGEX operator, and the range will need to be one character less than the `maxLength`, so the error state is triggered. So to set limit of 100 characters, you'd set `maxLength` to 101 and use the following expression for "validation":
   ```
@@ -269,6 +270,7 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 - **options\***: `array[string | object]` -- as above (in [Drop-down](#dropdown))
 - **default**: `string`/`number` -- the value initially selected before user input. If `number`, refers to the index of the options array. If not provided, no options will be pre-selected.
 - **optionsDisplayProperty**: -- as above (in Drop-down)
+- **layout**: `string` -- if "inline", displays radio buttons horizontally, rather than stacked vertically (default)
 - **hasOther**: `boolean` (default `false`) -- if `true`, displays an additional "Other" option with a free text field for inputting additional user-defined option.
 - **otherPlaceholder**: `string` -- placeholder text to show in the text input if `hasOther` is enabled.
 
