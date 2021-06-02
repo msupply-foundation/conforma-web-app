@@ -1,14 +1,22 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import SemanticDatepicker from 'react-semantic-ui-datepickers'
-import { DateTime, Duration } from 'luxon'
-import './temp.less'
+import { DateTime } from 'luxon'
+import './styles.less'
 // import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css'
 
 interface DateRange {
-  start: Date
-  end?: Date
+  start: string // ISO Date strings
+  end?: string
+}
+
+type DateFormats = 'short' | 'med' | 'med_weekday' | 'full' | 'huge'
+const dateFormats = {
+  short: DateTime.DATE_SHORT,
+  med: DateTime.DATE_MED,
+  med_weekday: DateTime.DATE_MED_WITH_WEEKDAY,
+  full: DateTime.DATE_FULL,
+  huge: DateTime.DATE_HUGE,
 }
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
@@ -21,7 +29,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   currentResponse,
 }) => {
-  const [selectedDate, setSelectedDate] = useState<DateRange | undefined>()
+  const [selectedDate, setSelectedDate] = useState<DateRange | null>(currentResponse?.date)
   const { isEditable } = element
   const {
     label,
@@ -29,10 +37,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     default: defaultDate,
     allowRange = false,
     locale = 'en-US',
-    format = 'DD-MM-YYYY',
+    displayFormat = 'short',
+    entryFormat = 'YYYY-MM-DD',
     minDate,
     maxDate,
-    minAge = 18,
+    minAge = -1000,
     maxAge = 1000,
     showToday = true,
     firstDayOfWeek = 0,
@@ -44,19 +53,32 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     [minDate, maxDate, minAge, maxAge]
   )
 
+  // Set "default" date if present
   useEffect(() => {
-    onSave({ text: dateToString(selectedDate), date: selectedDate })
+    if (!selectedDate && defaultDate) {
+      const date = dateFromDefault(defaultDate)
+      onSave({ text: dateToString(date, locale, displayFormat), date })
+      setSelectedDate(date)
+    }
+  }, [defaultDate])
+
+  useEffect(() => {
+    onSave({ text: dateToString(selectedDate, locale, displayFormat), date: selectedDate })
   }, [selectedDate])
 
   const handleSelect = (event: any, data: any) => {
+    console.log(data.value)
     const date = data.value
-    console.log('Date', date)
-    console.log('DateISO', date.toISOString())
-    console.log('DateViaLuxon', DateTime.fromJSDate(date))
-    console.log('DateLuxonISO', DateTime.fromJSDate(date).toISO())
-
-    if (Array.isArray(date)) setSelectedDate({ start: date[0], end: date[1] })
-    else setSelectedDate({ start: date })
+    if (!date) {
+      setSelectedDate(null)
+      return
+    }
+    if (Array.isArray(date))
+      setSelectedDate({
+        start: DateTime.fromJSDate(date[0]).toISODate(),
+        end: DateTime.fromJSDate(date[1]).toISODate(),
+      })
+    else setSelectedDate({ start: DateTime.fromJSDate(date).toISODate() })
   }
 
   return (
@@ -69,19 +91,44 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         locale={locale}
         onChange={handleSelect}
         type={allowRange ? 'range' : 'basic'}
-        // value={new Date('1976-12-23')}
-        // maxDate={new Date()}
-        format={format}
+        value={toJSDate(selectedDate)}
+        format={entryFormat}
         firstDayOfWeek={firstDayOfWeek}
         showToday={showToday}
         maxDate={maxDateValue}
         minDate={minDateValue}
+        disabled={!isEditable}
       />
     </>
   )
 }
 
-const dateToString = (date: DateRange | undefined) => JSON.stringify(date)
+const toJSDate = (date: DateRange | null) => {
+  if (!date) return undefined
+  if (!date.end) return new Date(date.start)
+  return [new Date(date.start), new Date(date.end)]
+}
+
+const dateToString = (date: DateRange | null, locale: string, format: DateFormats) => {
+  const dateStartString =
+    date && DateTime.fromISO(date.start).setLocale(locale).toLocaleString(dateFormats[format])
+  // single date
+  if (!date?.end) return dateStartString
+  // date range
+  const dateEndString = DateTime.fromISO(date.end)
+    .setLocale(locale)
+    .toLocaleString(dateFormats[format])
+  return `${dateStartString} – ${dateEndString}`
+}
+
+const dateFromDefault = (defaultDate: string | string[]) => {
+  if (Array.isArray(defaultDate))
+    return {
+      start: defaultDate[0],
+      end: defaultDate[1],
+    }
+  else return { start: defaultDate }
+}
 
 const getDateLimits = (
   minDate: string | undefined,
