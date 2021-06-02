@@ -39,6 +39,7 @@ export {
   ElementState,
   EvaluatorNode,
   EvaluatorParameters,
+  Filters,
   FullStructure,
   LooseString,
   MethodRevalidate,
@@ -208,6 +209,11 @@ interface EvaluatorParameters {
 }
 
 type ElementsById = { [templateElementId: string]: PageElement }
+
+interface Filters {
+  selectedReviewer: number
+  selectedStage: number
+}
 
 interface FullStructure {
   thisReview?: ReviewDetails | null
