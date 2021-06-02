@@ -1,0 +1,13 @@
+{
+  "isCore": true,
+  "code": "datePicker",
+  "displayName": "Date Picker",
+  "parameterLoadingValues": {
+    "label": "Loading...",
+    "description": "",
+    "minAge": -1000,
+    "maxAge": 1000
+  },
+  "//": "categories types: 'Input'|'Informative'",
+  "category": "Input"
+}
