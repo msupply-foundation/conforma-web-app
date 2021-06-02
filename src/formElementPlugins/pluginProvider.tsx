@@ -94,6 +94,13 @@ class pluginProvider {
         folderName: 'listBuilder',
         category: 'Input',
       },
+      search: {
+        code: 'search',
+        displayName: 'Search',
+        isCore: true,
+        folderName: 'search',
+        category: 'Input',
+      },
       datePicker: {
         code: 'datePicker',
         displayName: 'Date Picker',
