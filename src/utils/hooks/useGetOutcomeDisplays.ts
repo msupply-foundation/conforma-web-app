@@ -160,12 +160,10 @@ const buildCountQuery = ({ pluralTableName }: OutcomeDisplay) => {
 }
 
 const buildApplicationLinkQuery = ({ tableName }: OutcomeDisplay) => {
-  const capitalise = (text: string) => `${text.slice(0, 1).toUpperCase()}${text.slice(1)}`
-
-  const applicationJoin = `application${capitalise(tableName)}Joins`
+  const applicationJoin = `${tableName}ApplicationJoins`
 
   const query = gql`
-    query get${tableName} ($id: Int!) {
+    query get${tableName}Applications ($id: Int!) {
       ${tableName}(id: $id) {
         ${applicationJoin} {
           nodes {
