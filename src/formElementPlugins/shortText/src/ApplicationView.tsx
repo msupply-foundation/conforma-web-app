@@ -20,6 +20,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     label,
     description,
     default: defaultValue,
+    maxWidth,
     maxLength = Infinity,
   } = parameters
 
@@ -43,6 +44,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     onSave({ text: value })
   }
 
+  const styles = maxWidth
+    ? {
+        maxWidth,
+      }
+    : {}
+
   return (
     <>
       <label>
@@ -58,6 +65,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         value={value ? value : ''}
         disabled={!isEditable}
         type={maskedInput ? 'password' : undefined}
+        style={styles}
         error={
           !validationState.isValid
             ? {
