@@ -6,15 +6,15 @@ import './styles.less'
 // import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css'
 
 interface DateRange {
-  start: string // ISO Date strings
-  end?: string
+  start: Date
+  end?: Date
 }
 
-type DateFormats = 'short' | 'med' | 'med_weekday' | 'full' | 'huge'
+type DateFormats = 'short' | 'med' | 'medWeekday' | 'full' | 'huge'
 const dateFormats = {
   short: DateTime.DATE_SHORT,
   med: DateTime.DATE_MED,
-  med_weekday: DateTime.DATE_MED_WITH_WEEKDAY,
+  medWeekday: DateTime.DATE_MED_WITH_WEEKDAY,
   full: DateTime.DATE_FULL,
   huge: DateTime.DATE_HUGE,
 }
@@ -29,7 +29,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   currentResponse,
 }) => {
-  const [selectedDate, setSelectedDate] = useState<DateRange | null>(currentResponse?.date)
+  const [selectedDate, setSelectedDate] = useState<DateRange | null>(
+    dateFromISOStrings(currentResponse?.date)
+  )
   const { isEditable } = element
   const {
     label,
@@ -53,21 +55,25 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     [minDate, maxDate, minAge, maxAge]
   )
 
+  console.log('date', selectedDate)
+
   // Set "default" date if present
   useEffect(() => {
     if (!selectedDate && defaultDate) {
       const date = dateFromDefault(defaultDate)
-      onSave({ text: dateToString(date, locale, displayFormat), date })
+      onSave({ text: dateToDisplayString(date, locale, displayFormat), date })
       setSelectedDate(date)
     }
   }, [defaultDate])
 
   useEffect(() => {
-    onSave({ text: dateToString(selectedDate, locale, displayFormat), date: selectedDate })
+    onSave({
+      text: dateToDisplayString(selectedDate, locale, displayFormat),
+      date: dateToISOStrings(selectedDate),
+    })
   }, [selectedDate])
 
   const handleSelect = (event: any, data: any) => {
-    console.log(data.value)
     const date = data.value
     if (!date) {
       setSelectedDate(null)
@@ -75,10 +81,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     }
     if (Array.isArray(date))
       setSelectedDate({
-        start: DateTime.fromJSDate(date[0]).toISODate(),
-        end: DateTime.fromJSDate(date[1]).toISODate(),
+        start: date[0],
+        end: date[1],
       })
-    else setSelectedDate({ start: DateTime.fromJSDate(date).toISODate() })
+    else setSelectedDate({ start: date })
   }
 
   return (
@@ -91,7 +97,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         locale={locale}
         onChange={handleSelect}
         type={allowRange ? 'range' : 'basic'}
-        value={toJSDate(selectedDate)}
+        // value={toJSDate(selectedDate)}
         format={entryFormat}
         firstDayOfWeek={firstDayOfWeek}
         showToday={showToday}
@@ -109,13 +115,29 @@ const toJSDate = (date: DateRange | null) => {
   return [new Date(date.start), new Date(date.end)]
 }
 
-const dateToString = (date: DateRange | null, locale: string, format: DateFormats) => {
+const dateToISOStrings = (date: DateRange | null) => {
+  if (!date) return null
+  return Object.entries(date).reduce(
+    (newObj, [key, value]) => ({ ...newObj, [key]: DateTime.fromJSDate(value).toISODate() }),
+    {}
+  )
+}
+
+const dateFromISOStrings = (date: { start: string; end?: string } | null) => {
+  if (!date) return null
+  return Object.entries(date).reduce(
+    (newObj, [key, value]: any) => ({ ...newObj, [key]: DateTime.fromISO(value).toJSDate() }),
+    {}
+  )
+}
+
+const dateToDisplayString = (date: DateRange | null, locale: string, format: DateFormats) => {
   const dateStartString =
-    date && DateTime.fromISO(date.start).setLocale(locale).toLocaleString(dateFormats[format])
+    date && DateTime.fromJSDate(date.start).setLocale(locale).toLocaleString(dateFormats[format])
   // single date
   if (!date?.end) return dateStartString
   // date range
-  const dateEndString = DateTime.fromISO(date.end)
+  const dateEndString = DateTime.fromJSDate(date.end)
     .setLocale(locale)
     .toLocaleString(dateFormats[format])
   return `${dateStartString} – ${dateEndString}`
@@ -124,10 +146,10 @@ const dateToString = (date: DateRange | null, locale: string, format: DateFormat
 const dateFromDefault = (defaultDate: string | string[]) => {
   if (Array.isArray(defaultDate))
     return {
-      start: defaultDate[0],
-      end: defaultDate[1],
+      start: DateTime.fromISO(defaultDate[0]).toJSDate(),
+      end: DateTime.fromISO(defaultDate[1]).toJSDate(),
     }
-  else return { start: defaultDate }
+  else return { start: DateTime.fromISO(defaultDate).toJSDate() }
 }
 
 const getDateLimits = (
