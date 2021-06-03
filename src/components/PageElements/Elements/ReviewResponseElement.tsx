@@ -22,8 +22,6 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
   const backgroundClass = isCurrentReview ? 'changeable-background' : ''
   const dimClass = shouldDim ? 'dim' : ''
 
-  const canReviewerEdit = (isCurrentReview && !!reviewResponse?.comment) as boolean
-
   return (
     <div className={`response-container ${backgroundClass} ${dimClass}`}>
       <div className="review-response-content ">
@@ -32,10 +30,12 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
           reviewResponse={reviewResponse}
           isDecisionVisible={isDecisionVisible}
         />
-        <div className="comment-container">
-          {canReviewerEdit ? <Icon name="comment alternate outline" color="grey" /> : null}
-          <p className="secondary">{reviewResponse.comment}</p>
-        </div>
+        {!!reviewResponse?.comment && (
+          <div className="comment-container">
+            <Icon name="comment alternate outline" color="grey" />
+            <p className="secondary">{reviewResponse.comment}</p>
+          </div>
+        )}
       </div>
 
       <div className="action-container">{children}</div>
