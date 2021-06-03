@@ -27,9 +27,11 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   const { SummaryView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
   const parameterLoadingValues = config?.parameterLoadingValues
+  const internalParameters = config?.internalParameters || []
   const [simpleParameters, parameterExpressions] = buildParameters(
     parameters,
-    parameterLoadingValues
+    parameterLoadingValues,
+    internalParameters
   )
 
   useEffect(() => {

@@ -7,7 +7,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
   const { displayType, displayFormat, inputFields } = parameters
 
   const listDisplayProps: ListLayoutProps = {
-    listItems: response?.list,
+    listItems: response?.list ?? [],
     displayFormat,
     fieldTitles: inputFields.map((e: TemplateElement) => e.title),
     Markdown,

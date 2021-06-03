@@ -14,6 +14,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - [Checkboxes](#checkbox)
   - [File Upload](#file)
   - [List Builder](#list-builder)
+  - [Search](#search)
   - [Page Break](#page)
 
 <a name="element-fields"/>
@@ -62,6 +63,7 @@ _Free-form, single-line text input element_
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
 - **default**: `string` -- value to set as response before user enters anything. Note that this is different from `placeholder` -- `placeholder` is just temporary display text, wheras `default` is an actual response that will be saved if the user doesn't explicitly change it. In general a `default` for a text input would not be desired; it would usually only be useful for editing _existing_ data.[Optional]
 - **maskedInput**: `boolean` -- if `true`, displays user input as masked (hidden) characters -- i.e. for passwords. [Optional]
+- **maxWidth**: `number` -- the maximum width (in pixels) for the text input box (defaults to fill the width of the container)
 - **maxLength**: `number` -- response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length.  
    _Note_: if you want to show an error state for trying to exceed the maximum, you'll need to specify a validation expression with a REGEX operator, and the range will need to be one character less than the `maxLength`, so the error state is triggered. So to set limit of 100 characters, you'd set `maxLength` to 101 and use the following expression for "validation":
   ```
@@ -269,6 +271,7 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 - **options\***: `array[string | object]` -- as above (in [Drop-down](#dropdown))
 - **default**: `string`/`number` -- the value initially selected before user input. If `number`, refers to the index of the options array. If not provided, no options will be pre-selected.
 - **optionsDisplayProperty**: -- as above (in Drop-down)
+- **layout**: `string` -- if "inline", displays radio buttons horizontally, rather than stacked vertically (default)
 - **hasOther**: `boolean` (default `false`) -- if `true`, displays an additional "Other" option with a free text field for inputting additional user-defined option.
 - **otherPlaceholder**: `string` -- placeholder text to show in the text input if `hasOther` is enabled.
 
@@ -301,13 +304,14 @@ _One or more checkboxes, any number of which can be selected/toggled_
 
 - **label\***: `string` -- as above
 - **description\***: `string` -- as above [Optional]
-- **checkboxes\***: `array[string | checkbox]` -- an array of labels, one per checkbox. For more complexity, an array of Checkbox objects can be provided with the following properties:
+- **checkboxes\***: `array[string | checkbox]` -- an array of labels, one per checkbox. For more complexity, an array of Checkbox objects can be provided, with the following properties:
 
 ```
 
 {
   label: <string> - text to display next to checkbox (Can be empty string but not omitted)
   text: <string> - value to store in Response "text" field and shown in Summary View. Will be same as label if omitted.
+  textNegative: <string> - value to store in Response "text" field if checkbox is un-selected. (Optional -- defaults to empty string)
   key: <string | number> - unique code used as key/property name for Response object. Defaults to numerical index of array if omitted
   selected: <boolean> - initial state of checkbox
 }
@@ -457,6 +461,64 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 
 ---
 
+<a name="search"/>
+
+### Search (Lookup)
+
+- **type/code**: `search`
+- **category**: `Question`
+
+_Live "search-as-you-type" lookups for user to find and select items_
+
+Search results show in pop-up below the search box:
+
+![Search Results](images/Element-Type-Specs-search-results.png)
+
+Once selected, items are displayed in a "card" view:
+
+![Search Selected](images/Element-Type-Specs-search-selected.png)
+
+#### Input parameters
+
+- **label**: `string` -- as above
+- **description**: `string` -- as above [Optional]
+- **placeholder**: `string` -- text to show in search field before user input (default: "Search...")
+- **source**: `EvaluatorExpression` -- query to retrieve results for user selection. In order to make this dynamic in response to user input, there should be at least one input node that uses an `objectProperties` operator to fetch user input. In this case, user input is contained within a special object named `search`, and can be acquired with the following query node:
+
+  ```
+  {
+    operator: "objectProperties",
+    children: [ "search.text" ]
+  }
+  ```
+
+- **icon**: `string` -- the name of the icon shown in the search box, from Semantic-UI icons. (default: "search" : 🔍 )
+- **multiSelect**: `boolean` -- whether or not the user can select multiple items for their response (default: `false`)
+- **minCharacters**: `number` -- the minimum number of characters the user must type before the search query executes (default: 1). This is useful in situations where need the user to look up a specific item without being able to freely browse through the entire results list. For example, to look up organisation in our system using "registration" code, we set `minCharacters = 6`, so the user will need to know an exact code rather than being able to try characters one at a time.
+- **displayFormat**: `object` -- defines how to display the search results and the user's selection cards. See `displayFormat` for the [List Builder](#list-builder) (above) for detailed explanation. In this case, however, instead of a `code` substitution, the display string should contain property names from the result object. For example:
+  ```
+  displayFormat: {
+    title: "\${firstName} \${lastName}"
+    description: "\${username}"
+  }
+  ```
+  If not specified, a generic "default" display will be shown, using the first 1-2 properties on the result object.
+- **resultFormat**: `object` -- same as `displayFormat`, but used when specifying a format for the "result" display that is different to the selection card display. If not specified, `resultFormat` will just be the same as `displayFormat`.
+  Note that for the "result" display, only the `title` and `description` fields are used (`subtitle` is not shown).
+
+#### Response type
+
+```
+
+{
+  selection: [ { <result object> }, ... ],
+  text: <JSON string representation of "selection">
+}
+
+```
+
+---
+
 <a name="page"/>
 
 ### Page Break
@@ -472,6 +534,10 @@ _For specifying where the list of questions is broken into UI pages/steps. The *
   - ~~default: `false`~~
 
 ---
+
+```
+
+```
 
 ```
 

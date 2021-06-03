@@ -14,7 +14,7 @@ const ApplicantActionCell: React.FC<CellProps> = ({ application: { status, seria
   if (!action)
     return (
       <Link className="user-action" to={`/application/${serial}`}>
-        <Icon name="angle right" />
+        <Icon name="chevron right" />
       </Link>
     )
 

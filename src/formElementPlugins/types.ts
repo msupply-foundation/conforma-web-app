@@ -79,6 +79,7 @@ interface PluginConfig {
   code: string
   folderName: string
   displayName: string
+  internalParameters?: string[]
   parameterLoadingValues?: { [key: string]: string | string[] }
   category: 'Input' | 'Informative'
 }
