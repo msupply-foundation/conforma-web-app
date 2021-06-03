@@ -4,11 +4,9 @@ import { SummaryViewWrapper } from '../../../formElementPlugins'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 
 const SummaryInformationElement: React.FC<SummaryViewWrapperProps> = (summaryViewProps) => (
-  <Grid>
-    <Grid.Column stretched>
-      <SummaryViewWrapper {...summaryViewProps} />
-    </Grid.Column>
-  </Grid>
+  <div className={`response-container information`}>
+    <SummaryViewWrapper {...summaryViewProps} />
+  </div>
 )
 
 export default SummaryInformationElement
