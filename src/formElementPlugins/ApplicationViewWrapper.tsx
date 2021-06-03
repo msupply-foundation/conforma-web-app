@@ -60,9 +60,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const { ApplicationView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
   const parameterLoadingValues = config?.parameterLoadingValues
+  const internalParameters = config?.internalParameters || []
   const [simpleParameters, parameterExpressions] = buildParameters(
     parameters,
-    parameterLoadingValues
+    parameterLoadingValues,
+    internalParameters
   )
 
   // Update dynamic parameters when responses change
@@ -103,19 +105,19 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     return newValidationState
   }
 
-  const onSave = async (jsonValue: ResponseFull) => {
-    if (!jsonValue?.customValidation) {
+  const onSave = async (response: ResponseFull) => {
+    if (!response?.customValidation) {
       // Validate and Save response -- generic
-      const validationResult: ValidationState = await onUpdate(jsonValue?.text)
-      if (jsonValue?.text !== undefined)
+      const validationResult: ValidationState = await onUpdate(response?.text)
+      if (response?.text !== undefined)
         await onSaveUpdateMethod({
           variables: {
             id: currentResponse?.id as number,
-            value: jsonValue,
+            value: response,
             isValid: validationResult.isValid,
           },
         })
-      if (jsonValue === null)
+      if (response === null || response?.text == undefined)
         // Reset response if cleared
         await onSaveUpdateMethod({
           variables: {
@@ -126,23 +128,23 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         })
       setUpdateTrackerState({
         type: 'setElementUpdated',
-        textValue: jsonValue?.text || '',
+        textValue: response?.text || '',
       })
     } else {
       // Save response for plugins with internal validation
-      const { isValid, validationMessage } = jsonValue.customValidation
+      const { isValid, validationMessage } = response.customValidation
       setValidationState({ isValid, validationMessage })
-      delete jsonValue.customValidation // Don't want to save this field
+      delete response.customValidation // Don't want to save this field
       await onSaveUpdateMethod({
         variables: {
           id: currentResponse?.id as number,
-          value: jsonValue,
+          value: response,
           isValid,
         },
       })
       setUpdateTrackerState({
         type: 'setElementUpdated',
-        textValue: jsonValue?.text || '',
+        textValue: response?.text || '',
       })
     }
   }
@@ -239,12 +241,14 @@ const getDefaultIndex = (defaultOption: string | number, options: string[]) => {
 
 export const buildParameters = (
   parameters: ElementPluginParameters,
-  parameterLoadingValues: any
+  parameterLoadingValues: any,
+  internalParameters: string[]
 ) => {
   const simpleParameters: any = {}
   const parameterExpressions: any = {}
   for (const [key, value] of Object.entries(parameters)) {
-    if (value instanceof Object && !Array.isArray(value) && 'operator' in value) {
+    if (internalParameters.includes(key)) simpleParameters[key] = value
+    else if (value instanceof Object && !Array.isArray(value)) {
       parameterExpressions[key] = value
       simpleParameters[key] = parameterLoadingValues?.[key] ?? 'Loading...'
     } else simpleParameters[key] = value
