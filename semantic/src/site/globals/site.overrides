@@ -495,7 +495,7 @@ a:hover {
 }
 
 .form-element {
-  width: @applicationFormContentWdith;
+  width: @applicationFormContentWidth;
 }
 
 .help-tips {
@@ -629,7 +629,7 @@ a:hover {
 #app-navigation-content {
   .flex-row();
   flex-wrap: wrap;
-  width: @applicationFormContentWdith;
+  width: @applicationFormContentWidth;
   
   .prev-next-links {
     .flex-row();
