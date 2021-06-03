@@ -44,7 +44,7 @@ const ReviewerActionCell: React.FC<CellProps> = ({
   if (actions.length == 0)
     return (
       <Link className="user-action" to={`/application/${serial}/review`}>
-        <Icon name="angle right" />
+        <Icon name="chevron right" />
       </Link>
     )
 
