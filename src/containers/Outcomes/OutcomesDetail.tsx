@@ -6,7 +6,13 @@ import { Loading } from '../../components'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import strings from '../../utils/constants'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
-import { DetailDisplay, DetailDisplayQuery, ResponseFull } from '../../utils/types'
+import {
+  ApplicationDetails,
+  DetailDisplay,
+  DetailDisplayQuery,
+  ResponseFull,
+} from '../../utils/types'
+import config from '../../config.json'
 
 const OutcomeDetails: React.FC<{
   detailDisplayColumns: DetailDisplay[]
@@ -31,9 +37,14 @@ const OutcomeDetails: React.FC<{
         <div className="detail-container">
           {detailDisplayColumns.map((detail, index) => {
             return (
-              <Segment className="summary-page-element">
+              <Segment key={index} className="summary-page-element">
                 <SummaryViewWrapper
                   element={constructElement(detail, index)}
+                  applicationData={
+                    {
+                      config /* TODO this is a hacky way of passing through server URL, I think it needs to be decoupled from applicationData. Config is needed for log_url in organisation to be displayed with imageDisplays plugin */,
+                    } as ApplicationDetails
+                  }
                   response={getDetailValue(detailData, detail.columnName, detail.isTextColumn)}
                   allResponses={{}}
                   displayTitle={true}
