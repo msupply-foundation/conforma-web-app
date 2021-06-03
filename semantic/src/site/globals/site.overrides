@@ -766,6 +766,12 @@ a:hover {
     margin: 0px;
     margin-bottom: 2px;
 
+    &.information {
+      >div{
+        width: 100%;
+      }
+    }
+
     &.dim {
       div {
         opacity: 0.6;

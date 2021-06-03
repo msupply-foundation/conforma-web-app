@@ -20,6 +20,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     label,
     description,
     default: defaultValue,
+    maxWidth,
     maxLength = Infinity,
   } = parameters
 
@@ -28,7 +29,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       onSave({ text: defaultValue })
       setValue(defaultValue)
     } else onUpdate(value)
-  }, [])
+  }, [defaultValue])
 
   function handleChange(e: any) {
     let text = e.target.value
@@ -42,6 +43,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   function handleLoseFocus(e: any) {
     onSave({ text: value })
   }
+
+  const styles = maxWidth
+    ? {
+        maxWidth,
+      }
+    : {}
 
   return (
     <>
@@ -58,6 +65,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         value={value ? value : ''}
         disabled={!isEditable}
         type={maskedInput ? 'password' : undefined}
+        style={styles}
         error={
           !validationState.isValid
             ? {

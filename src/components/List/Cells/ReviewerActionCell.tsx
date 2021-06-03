@@ -51,13 +51,13 @@ const ReviewerActionCell: React.FC<CellProps> = ({
   return (
     <>
       {actions.map((action, index) => (
-        <>
+<div key={index}>
           {/* To-do: style the | once we can see it properly */}
           {index > 0 ? <span key={`divider_${index}`}>{' | '}</span> : ''}
-          <Link key={index} className="user-action" to={`/application/${serial}/review`}>
+          <Link className="user-action" to={`/application/${serial}/review`}>
             {action}
           </Link>
-        </>
+        </div>
       ))}
     </>
   )

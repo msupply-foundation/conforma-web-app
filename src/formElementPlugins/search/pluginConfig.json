@@ -1,13 +1,13 @@
 {
   "isCore": true,
-  "code": "password",
-  "displayName": "Secure Password Input",
+  "code": "search",
+  "displayName": "Search Field",
   "parameterLoadingValues": {
     "label": "Loading...",
-    "default": "",
-    "description": ""
+    "description": "",
+    "options": ["Loading..."]
   },
-  "internalParameters": ["validationInternal"],
+  "internalParameters": ["source"],
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"
 }
