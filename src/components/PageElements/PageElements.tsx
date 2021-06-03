@@ -203,7 +203,7 @@ const PageElements: React.FC<PageElementProps> = ({
                 reviewResponse: thisReviewLatestResponse,
                 isActiveReviewResponse: !!isActiveReviewResponse,
                 isNewApplicationResponse: !!isNewApplicationResponse,
-                isNewReviewResponse: isChangeRequest && isChanged,
+                isNewReviewResponse: isChanged,
                 showModal: () => updateQuery({ openResponse: element.code }),
                 summaryViewProps: summaryViewProps,
               }
