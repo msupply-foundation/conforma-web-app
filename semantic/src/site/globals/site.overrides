@@ -86,8 +86,6 @@ a:hover {
   justify-content: center;
 }
 
-
-
 /*--------------------------------
    Login page
 ---------------------------------*/
@@ -316,6 +314,7 @@ a:hover {
   padding-right: 50px;
   height: 30px;
   display: flex;
+  justify-content: center;
   flex-direction: column;
 }
 
@@ -367,6 +366,14 @@ a:hover {
   margin-bottom: -14px;
   border-top: 1px solid @surfacesMed;
   border-bottom: 1px solid @surfacesMed;
+  padding: 10px 20px;
+}
+
+.review-button-container {
+  margin: 30px 0 20px;
+  .button {
+    margin-right: 40px !important;
+  }
 }
 
 .review-approve-all-button {
@@ -395,10 +402,6 @@ a:hover {
   display: flex;
   justify-content: flex-end;
   height: 100vh;
-}
-
-#review-decision-content {
-  display: flex;
 }
 
 #document-viewer {
@@ -498,14 +501,14 @@ a:hover {
 }
 
 .form-element {
-  width: clamp(350px, 70%, 480px);
+  width: @applicationFormContentWidth;
 }
 
 .help-tips {
   width: clamp(50px, 30%, 250px);
   margin-top: 20px; // height of label, so flush with input field
-  margin-right: -10px;
-  max-height: 80px; // less than element height, so overflows
+  margin-left: 10px;
+  max-height: 0px; // help tips overflow
   position: relative;
 }
 
@@ -580,80 +583,79 @@ a:hover {
 // Element plugins
 
 .element-application-view {
-  margin-bottom: 40px !important;
-}
+  margin-bottom: 20px !important;
+  .reviewer-comment {
+    font-size: 0.9em;
+    display: none;
+  }
+  // .element-application-view.changes
+  &.changes {
+    border: 1px solid;
+    border-radius: @borderRadius;
+    padding: 10px;
+    // Make review-comment visible
+    .reviewer-comment {
+      .flex-row();
+    }
+  }
 
-// .element-summary-view {
-// }
+  &.changes.updated {
+    border-color: @interactiveHigh;
+    .reviewer-comment {
+      color: @interactiveHigh;
+    }
+  }
+
+  &.changes.change-request-changed {
+    border-color: @headersInteractiveMed;
+    .reviewer-comment {
+      color: @headersInteractiveMed;
+    }
+  }
+
+  &.changes.change-request-unchanged {
+    border-color: @attention;
+    .reviewer-comment {
+      color: @attention;
+    }
+  }
+}
 
 .element-grid.ui.grid {
-  padding: 10px 20px;
   font-size: @smallerText;
   color: @headersInteractiveLow;
-}
-
-// For change request borders
-.element-warning-border {
-  border: 1px solid @headersInteractiveMed;
-  padding: 10px;
-  border-radius: @borderRadius;
-  margin-left: -10px !important;
-  margin-right: -10px !important;
-}
-
-.alert-border {
-  border-color: @attention;
-}
-
-.blue-border {
-  border-color: @interactiveHigh;
-}
-
-.reviewer-comment {
-  font-size: 0.9em;
 }
 
 /*--------------------------------
       Application Navigation area
 ---------------------------------*/
 
-#app-navigation {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: @footerHeight;
-  box-shadow: @basicBoxShadow;
-  background: @surfacesWhite;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  box-shadow: @basicBoxShadow;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-  z-index: 1000;
-}
-
 #app-navigation-content {
-  display: flex;
-  width: @applicationFormWidth;
-  padding-left: 20px;
-  padding-right: 20px;
+  .flex-row();
   flex-wrap: wrap;
+  width: @applicationFormContentWidth;
+
+  .prev-next-links {
+    .flex-row();
+    align-items: center;
+
+    p {
+      margin: 10px;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  .button-container {
+    .flex-row();
+    flex-grow: 1;
+    justify-content: flex-end;
+  }
 }
 
-#prev-next-links {
-  display: flex;
-  flex-grow: 1;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#prev-next-links p {
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-left: 10px;
-  padding-right: 20px;
+.scrollable-attachment {
+  margin: 0px;
+  height: 0px;
 }
 
 /*--------------------------------
@@ -694,25 +696,165 @@ a:hover {
 .summary-section {
   background-color: @surfacesLight;
   border-radius: @borderRadius;
-  padding: 15px 20px;
-  padding-bottom: 1px;
+  padding: 0px;
   margin-bottom: 15px;
+
+  &.invalid-section {
+    border: 3px solid @attention;
+  }
+
+  .summary-section-header {
+    .flex-row();
+    width: 100%;
+    align-items: center;
+    height: 58px;
+    padding-left: 20px;
+    padding-right: 25px;
+    background: @surfacesLight;
+    border-radius: @borderRadius;
+    // From accordion
+    .title {
+      padding: 0px;
+    }
+
+    .header {
+      margin: 0px;
+    }
+
+    .extra-content {
+      .flex-row();
+      flex-grow: 1;
+      justify-content: flex-end;
+    }
+
+    // From accordion
+    .content {
+      padding: 0px;
+    }
+  }
 }
 
-.summary-section-header {
-  background-color: @surfacesLight;
+.summary-page-header {
+  margin: 0px !important;
+  margin-bottom: 10px !important;
 }
 
 .summary-page {
-  margin-bottom: 30px;
+  padding-right: 21px;
+  padding-left: 21px;
+  padding-top: 0px;
+  padding-bottom: 26px;
 }
 
-.ui.basic.segment.summary-page-element {
-  background-color: @surfacesWhite;
+.ui.basic.segment.summary-page-element-container {
   margin-bottom: 10px;
-  border-radius: @borderRadius;
-  padding-left: 20px;
-  padding-right: 20px;
+  margin-top: 0px;
+  padding: 0px;
+
+  // Background for Active elements changes (Summary/Review/Consolidation)
+  .changeable-background {
+    background-color: @activeCommentBackground !important;
+  }
+
+  .response-container {
+    .flex-row-center();
+    width: 100%;
+    padding: 14px;
+    padding-right: 20px;
+    padding-left: 20px;
+    background: @surfacesWhite;
+    margin: 0px;
+    margin-bottom: 2px;
+
+    &.information {
+      >div{
+        width: 100%;
+      }
+    }
+
+    &.dim {
+      div {
+        opacity: 0.6;
+      }
+    }
+
+    .review-response-content {
+      .flex-column();
+      flex-grow: 1;
+
+      .decision-container {
+        .flex-row();
+        align-items: center;
+
+        .reviewer-name {
+          padding: 0px;
+          margin: 0px;
+          margin-right: 10px;
+        }
+
+        p {
+          line-height: unset;
+        }
+
+        .decision {
+          margin: 0px;
+          margin-right: 10px;
+        }
+
+        &.positive-decision {
+          .decision {
+            color: @success;
+          }
+          i {
+            color: @success;
+          }
+        }
+
+        &.negative-decision {
+          .decision {
+            color: @attention;
+          }
+          i {
+            color: @attention;
+          }
+        }
+      }
+
+      .comment-container {
+        .flex-row();
+
+        i {
+          margin-right: 10px;
+        }
+      }
+
+      // If comment is present add margin, if it's just commen or decision don't add margin
+      > :nth-child(2) {
+        margin-top: 5px;
+      }
+    }
+
+    .action-container {
+      .flex-column-center();
+      align-items: center;
+      margin-left: 10px;
+    }
+  }
+
+  > :first-child {
+    border-top-left-radius: @borderRadius;
+    border-top-right-radius: @borderRadius;
+  }
+
+  > :last-child {
+    border-bottom-left-radius: @borderRadius;
+    border-bottom-right-radius: @borderRadius;
+  }
+}
+
+.updated-label {
+  .flex-row();
+  align-items: center;
 }
 
 #application-submit {
@@ -799,7 +941,7 @@ a:hover {
     .flex-column();
     flex-grow: 1;
   }
-  
+
   .filter {
     display: flex;
     align-items: center;
@@ -811,7 +953,7 @@ a:hover {
   }
 
   .view-all {
-    .flex-row-center() ;
+    .flex-row-center();
     align-items: center;
     text-align: center;
     flex-grow: 1;
@@ -831,7 +973,7 @@ a:hover {
     border-radius: @borderRadius;
     background-color: @surfacesWhite;
     box-shadow: @templateBoxShadow;
-    
+
     .title {
       padding: 10px;
       padding-bottom: 3px;
@@ -846,7 +988,6 @@ a:hover {
     margin: 10px;
 
     .title {
-     
       a {
         margin-left: 10px;
       }
@@ -859,21 +1000,20 @@ a:hover {
 
   .filters {
     margin: 5px;
-    padding: 3px
+    padding: 3px;
   }
 
   .view-all {
     padding: 5px;
     font-weight: @semiboldWeight;
-    color:grey !important;
-    border-top: 1px solid rgba(0,0,0,.08);
+    color: grey !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
 
     i {
       padding-right: 6px;
     }
   }
 }
-
 
 // #dashboard .template-category  .category-header {
 
@@ -911,11 +1051,6 @@ a:hover {
 .right-justify-content {
   width: 100%;
   text-align: right;
-}
-
-// Background for Active elements changes (Summary/Review/Consolidation)
-.changeable-background {
-  background-color: @activeCommentBackground !important;
 }
 
 /*******************************
@@ -988,9 +1123,6 @@ h5:last-child,
 h6:first-child {
   margin-bottom: 0em;
 }
-
-
-
 
 /*-----------------------------------------------------
       Mobile & Desktop
