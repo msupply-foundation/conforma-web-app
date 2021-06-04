@@ -371,6 +371,14 @@ a:hover {
   margin-bottom: -14px;
   border-top: 1px solid @surfacesMed;
   border-bottom: 1px solid @surfacesMed;
+  padding: 10px 20px;
+}
+
+.review-button-container {
+  margin: 30px 0 20px;
+  .button {
+    margin-right: 40px !important;
+  }
 }
 
 .review-approve-all-button {
@@ -619,7 +627,6 @@ a:hover {
 }
 
 .element-grid.ui.grid {
-  padding: 10px 20px;
   font-size: @smallerText;
   color: @headersInteractiveLow;
 }
@@ -632,6 +639,7 @@ a:hover {
   .flex-row();
   flex-wrap: wrap;
   width: @applicationFormContentWidth;
+
   .prev-next-links {
     .flex-row();
     align-items: center;
