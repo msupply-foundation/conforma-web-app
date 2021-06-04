@@ -16,8 +16,7 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
   isConsolidation,
   isDecisionVisible = true,
   shouldDim = false,
-  reviewResponse,
-  children,
+  reviewResponse
 }) => {
   const backgroundClass = isCurrentReview ? 'changeable-background' : ''
   const dimClass = shouldDim ? 'dim' : ''

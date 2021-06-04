@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Icon } from 'semantic-ui-react'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/graphql'
 import ApplicantResponseElement from './ApplicantResponseElement'
 import ReviewResponseElement from './ReviewResponseElement'
+import ReviewInlineInput from './ReviewInlineInput'
 import strings from '../../../utils/constants'
 import { UpdateIcon } from '../PageElements'
 
@@ -29,6 +31,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   isChangeRequest = false,
   showModal,
 }) => {
+  const [isActiveEdit, setIsActiveEdit] = useState(false)
   const decisionExists = !!reviewResponse?.decision
   const triggerTitle = isNewApplicationResponse // can add check for isNewReviewResponseAlso
     ? strings.BUTTON_RE_REVIEW_RESPONSE
@@ -52,11 +55,23 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
         summaryViewProps={summaryViewProps}
       >
         {isActiveReviewResponse && !decisionExists && (
-          <ReviewElementTrigger title={triggerTitle} onClick={showModal} />
+          <ReviewElementTrigger
+            title={triggerTitle}
+            // onClick={showModal}
+            onClick={() => setIsActiveEdit(true)}
+          />
         )}
       </ApplicantResponseElement>
+      {/* Inline Review area */}
+      {isActiveEdit && (
+        <ReviewInlineInput
+          setIsActiveEdit={setIsActiveEdit}
+          reviewResponse={reviewResponse as ReviewResponse}
+          isConsolidation={false}
+        />
+      )}
       {/* Review Response */}
-      {decisionExists && (
+      {decisionExists && !isActiveEdit && (
         <>
           <ReviewResponseElement
             isCurrentReview={true}
@@ -65,7 +80,12 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               reviewResponse as ReviewResponse /* Casting to ReviewResponse since decision would exist if reviewResponse is defined */
             }
           >
-            {getReviewDecisionOption()}
+            {isActiveReviewResponse && (
+              <UpdateIcon
+                // onClick={showModal}
+                onClick={() => setIsActiveEdit(true)}
+              />
+            )}
           </ReviewResponseElement>
           {/* div below forced border on review response to be square */}
           <div />
