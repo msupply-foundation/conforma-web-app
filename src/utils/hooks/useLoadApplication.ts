@@ -136,7 +136,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
             isEditableExpression: element.isEditable,
             isRequiredExpression: element.isRequired,
             isVisibleExpression: element.visibilityCondition,
-            parameters: element.parameters,
+            parametersExpressions: element.parameters,
             validationExpression: element.validation,
             validationMessage: element.validationMessage || '',
             helpText: element.helpText || '',
@@ -189,6 +189,7 @@ export const defaultEvaluatedElement: EvaluatedElement = {
   isRequired: true,
   isVisible: true,
   isValid: undefined,
+  evaluatedParameters: undefined,
   defaultValue: null,
 }
 

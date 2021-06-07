@@ -1,5 +1,11 @@
 import { ReviewResponse, TemplateElement } from '../utils/generated/graphql'
-import { ApplicationDetails, ElementState, ResponseFull, ResponsesByCode } from '../utils/types'
+import {
+  ApplicationDetails,
+  ElementState,
+  EvaluatorNode,
+  ResponseFull,
+  ResponsesByCode,
+} from '../utils/types'
 
 interface OnUpdateApplicationView {
   (updateObject: { value?: any; isValid: boolean | undefined }): void
@@ -35,14 +41,15 @@ interface ApplicationViewProps extends ApplicationViewWrapperProps {
   initialValue: any
   setIsActive: () => void
   validationState: ValidationState
+  evaluatedParameters?: any
+  parametersExpressions?: any
   Markdown: any
   getDefaultIndex: Function
-  parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement)s
   validate: Function
 }
 
 interface SummaryViewProps {
-  parameters: BasicObject
+  evaluatedParameters?: any
   response: ResponseFull | null
   Markdown: any
   DefaultSummaryView: React.FC

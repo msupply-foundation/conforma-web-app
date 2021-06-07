@@ -176,6 +176,7 @@ export type ElementForEvaluation = {
   isVisibleExpression?: EvaluatorNode
   validationExpression?: EvaluatorNode
   defaultValueExpression?: EvaluatorNode
+  parametersExpressions?: EvaluatorNode
   code: string
 }
 
@@ -190,7 +191,6 @@ interface ElementBase extends ElementForEvaluation {
   category: TemplateElementCategory
   validationMessage: string | null
   helpText: string | null
-  parameters: any
 }
 
 export type EvaluatedElement = {
@@ -198,6 +198,7 @@ export type EvaluatedElement = {
   isRequired: boolean
   isVisible: boolean
   isValid: boolean | undefined
+  evaluatedParameters: any
   defaultValue: any
 }
 

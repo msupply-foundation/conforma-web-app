@@ -4,7 +4,7 @@ import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
-  parameters,
+  evaluatedParameters,
   onUpdate,
   setIsActive,
   validationState,
@@ -21,7 +21,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     description,
     maxWidth,
     maxLength = Infinity,
-  } = parameters
+  } = evaluatedParameters
 
   function handleChange(e: any) {
     let text = e.target.value

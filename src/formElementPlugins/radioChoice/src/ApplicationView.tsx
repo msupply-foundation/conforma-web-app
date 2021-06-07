@@ -5,7 +5,7 @@ import strings from '../constants'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
-  parameters,
+  evaluatedParameters,
   onUpdate,
   currentResponse,
   onSave,
@@ -21,7 +21,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     hasOther,
     otherPlaceholder,
     layout,
-  } = parameters
+  } = evaluatedParameters
 
   const { code, isEditable } = element
 

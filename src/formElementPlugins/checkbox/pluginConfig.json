@@ -2,11 +2,6 @@
   "isCore": true,
   "code": "checkbox",
   "displayName": "Checkbox Selectors",
-  "parameterLoadingValues": {
-    "label": "Loading...",
-    "description": "",
-    "checkboxes": ["Loading..."]
-  },
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"
 }

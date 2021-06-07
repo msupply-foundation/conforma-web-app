@@ -2,8 +2,8 @@ import React from 'react'
 import { Image } from 'semantic-ui-react'
 import { SummaryViewProps } from '../../types'
 
-const SummaryView: React.FC<SummaryViewProps> = ({ parameters }) => {
-  const { url, size, alignment, altText } = parameters
+const SummaryView: React.FC<SummaryViewProps> = ({ evaluatedParameters }) => {
+  const { url, size, alignment, altText } = evaluatedParameters
 
   return (
     <Image

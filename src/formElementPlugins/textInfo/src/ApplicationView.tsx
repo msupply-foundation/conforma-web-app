@@ -70,8 +70,8 @@ export const TextInfoElement: React.FC<TextInfoProps> = (props) => {
     )
 }
 
-const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters, Markdown }) => {
-  return <TextInfoElement parameters={parameters} Markdown={Markdown} />
+const ApplicationView: React.FC<ApplicationViewProps> = ({ evaluatedParameters, Markdown }) => {
+  return <TextInfoElement parameters={evaluatedParameters} Markdown={Markdown} />
 }
 
 export default ApplicationView

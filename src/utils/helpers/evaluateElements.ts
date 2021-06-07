@@ -1,4 +1,6 @@
 import evaluateExpression, { isEvaluationExpression } from '@openmsupply/expression-evaluator'
+import { IParameters } from '@openmsupply/expression-evaluator/lib/types'
+import { ValueNode } from 'graphql'
 import config from '../../config.json'
 import {
   EvaluatedElement,
@@ -29,6 +31,7 @@ const evaluationMapping: { [resultKey in keyof EvaluatedElement]: keyof ElementF
   isRequired: 'isRequiredExpression',
   isVisible: 'isVisibleExpression',
   isValid: 'validationExpression',
+  evaluatedParameters: 'parametersExpressions',
   defaultValue: 'defaultValueExpression',
 }
 
@@ -40,13 +43,13 @@ export const evaluateElements: EvaluateElements = async (elements, evaluationOpt
   return await Promise.all<PartialEvaluatedElement>(elementPromiseArray)
 }
 
-type EvaluatElement = (
+type EvaluateElement = (
   element: ElementForEvaluation,
   evaluationOptions: EvaluationOptions,
   objects: EvaluationObject
 ) => Promise<PartialEvaluatedElement>
 
-const evaluateSingleElement: EvaluatElement = async (
+const evaluateSingleElement: EvaluateElement = async (
   element,
   evaluationOptions,
   { responseObject, currentUser, applicationData }
@@ -67,6 +70,16 @@ const evaluateSingleElement: EvaluatElement = async (
     expressionOrValue: EvaluatorNode,
     elementResultKey: keyof EvaluatedElement
   ) => {
+    if (typeof expressionOrValue === 'undefined') return
+
+    if (elementResultKey === 'evaluatedParameters') {
+      evaluatedElement[elementResultKey] = await evaluateParameters(
+        expressionOrValue,
+        evaluationParameters
+      )
+      return
+    }
+
     try {
       evaluatedElement[elementResultKey] = isEvaluationExpression(expressionOrValue)
         ? await evaluateExpression(expressionOrValue, evaluationParameters)
@@ -86,4 +99,31 @@ const evaluateSingleElement: EvaluatElement = async (
   await Promise.all(evaluations)
 
   return evaluatedElement
+}
+
+type EvaluateParameters = (
+  parameters: EvaluatorNode,
+  evaluationParameters: IParameters | undefined
+) => Promise<EvaluatorNode>
+
+const evaluateParameters: EvaluateParameters = async (parameters, evaluationParameters) => {
+  if (!parameters) return {}
+  if (!(parameters instanceof Object)) return {}
+
+  const resultParameters: { [parameter: string]: ValueNode } = {}
+
+  const evaluations = Object.entries(parameters).map(async ([parameter, expressionOrValue]) => {
+    if (typeof expressionOrValue === 'undefined') return
+    try {
+      resultParameters[parameter] = isEvaluationExpression(expressionOrValue)
+        ? await evaluateExpression(expressionOrValue, evaluationParameters)
+        : expressionOrValue
+    } catch (e) {
+      console.log(e, expressionOrValue)
+    }
+  })
+
+  await Promise.all(evaluations)
+
+  return resultParameters
 }

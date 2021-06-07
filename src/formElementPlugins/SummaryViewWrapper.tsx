@@ -1,68 +1,29 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { Form } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents } from './types'
-import evaluateExpression from '@openmsupply/expression-evaluator'
-import { EvaluatorNode } from '../utils/types'
-import { buildParameters } from './ApplicationViewWrapper'
-import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
-import globalConfig from '../config.json'
-
-const graphQLEndpoint = globalConfig.serverGraphQL
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   element,
   response,
-  allResponses,
-  applicationData = {},
   displayTitle = true,
 }) => {
-  const { parameters, pluginCode, isRequired, isVisible } = element
-  const {
-    userState: { currentUser },
-  } = useUserState()
-  const [evaluatedParameters, setEvaluatedParameters] = useState({})
+  const { pluginCode, isRequired, isVisible, evaluatedParameters } = element
 
-  const { SummaryView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
-
-  const parameterLoadingValues = config?.parameterLoadingValues
-  const internalParameters = config?.internalParameters || []
-  const [simpleParameters, parameterExpressions] = buildParameters(
-    parameters,
-    parameterLoadingValues,
-    internalParameters
-  )
-
-  useEffect(() => {
-    // Runs once on component mount
-    Object.entries(parameterExpressions).forEach(([field, expression]) => {
-      evaluateExpression(expression as EvaluatorNode, {
-        objects: {
-          responses: { ...allResponses, thisResponse: response?.text },
-          currentUser,
-          applicationData,
-        },
-        APIfetch: fetch,
-        graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-      }).then((result: any) =>
-        setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
-      )
-    })
-  }, [])
+  const { SummaryView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
   if (!pluginCode || !isVisible) return null
 
   const DefaultSummaryView: React.FC = () => {
-    const combinedParams = { ...simpleParameters, ...evaluatedParameters }
     return (
       <Form.Field className="element-summary-view" required={isRequired}>
         {displayTitle && (
           <>
             <label style={{ color: 'black' }}>
-              <Markdown text={combinedParams.label} semanticComponent="noParagraph" />
+              <Markdown text={evaluatedParameters.label} semanticComponent="noParagraph" />
             </label>
-            <Markdown text={combinedParams.description} />
+            <Markdown text={evaluatedParameters.description} />
           </>
         )}
         <Markdown text={(response ? response?.text : '') as string} />
@@ -72,7 +33,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
 
   const PluginComponent = (
     <SummaryView
-      parameters={{ ...simpleParameters, ...evaluatedParameters }}
+      evaluatedParameters={evaluatedParameters}
       response={response}
       Markdown={Markdown}
       DefaultSummaryView={DefaultSummaryView}

@@ -84,7 +84,12 @@ const useGetApplicationStructure = ({
     const applicationResponses = data?.applicationBySerial?.applicationResponses
       ?.nodes as ApplicationResponse[]
 
-    const evaluationOptions: EvaluationOptions = ['isEditable', 'isVisible', 'isRequired']
+    const evaluationOptions: EvaluationOptions = [
+      'isEditable',
+      'isVisible',
+      'isRequired',
+      'evaluatedParameters',
+    ]
 
     if (shouldDoValidation) evaluationOptions.push('isValid')
 

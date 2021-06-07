@@ -2,12 +2,6 @@
   "isCore": true,
   "code": "imageDisplay",
   "displayName": "Image Display",
-  "parameterLoadingValues": {
-    "label": "Loading...",
-    "description": "",
-    "size": "small",
-    "alignment": "center"
-  },
   "//": "categories types: 'Input'|'Informative'",
   "category": "Informative"
 }

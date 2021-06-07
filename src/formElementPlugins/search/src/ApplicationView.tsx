@@ -15,9 +15,9 @@ interface DisplayFormat {
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
-  parameters,
+  evaluatedParameters,
+  parametersExpressions,
   currentResponse,
-  // validationState,
   onSave,
   Markdown,
   applicationData,
@@ -26,13 +26,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     label,
     description,
     placeholder = strings.DEFAULT_PLACEHOLDER,
-    source,
     icon = 'search',
     multiSelect = false,
     minCharacters = 1,
     displayFormat = {},
     resultFormat = displayFormat,
-  } = parameters
+  } = evaluatedParameters
+
+  const { source } = parametersExpressions
 
   const graphQLEndpoint = applicationData.config.serverGraphQL
 

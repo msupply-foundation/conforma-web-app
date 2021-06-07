@@ -4,7 +4,7 @@ import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
-  parameters,
+  evaluatedParameters,
   onUpdate,
   setIsActive,
   currentResponse,
@@ -14,7 +14,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 }) => {
   const [value, setValue] = useState<string | null | undefined>(currentResponse?.text)
 
-  const { label, description, placeholder, lines, maxLength } = parameters
+  const { label, description, placeholder, lines, maxLength } = evaluatedParameters
 
   const { isEditable } = element
 

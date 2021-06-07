@@ -7,7 +7,8 @@ import strings from '../constants'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
-  parameters,
+  evaluatedParameters,
+  parametersExpressions,
   setIsActive,
   validationState,
   onSave,
@@ -26,9 +27,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     label,
     requireConfirmation = true,
     showPasswordToggle,
-    validationInternal,
     validationMessageInternal,
-  } = parameters
+  } = evaluatedParameters
+  const { validationInternal } = parametersExpressions
 
   const {
     userState: { currentUser },

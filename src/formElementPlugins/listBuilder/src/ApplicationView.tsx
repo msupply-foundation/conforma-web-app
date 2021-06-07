@@ -12,33 +12,36 @@ import {
   Label,
 } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
-import { ResponseFull } from '../../../utils/types'
+import { ElementState, EvaluationOptions, ResponsesByCode } from '../../../utils/types'
 import { TemplateElement, TemplateElementCategory } from '../../../utils/generated/graphql'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
 import strings from '../constants'
+import { evaluateElements } from '../../../utils/helpers/evaluateElements'
+import { defaultEvaluatedElement } from '../../../utils/hooks/useLoadApplication'
+import { useUserState } from '../../../contexts/UserState'
 
 export enum DisplayType {
   CARDS = 'cards',
   TABLE = 'table',
 }
 
-interface InputResponseField {
-  isValid?: boolean
-  value: ResponseFull
+type InputState = {
+  allResponses?: ResponsesByCode
+  elements?: ElementState[]
+  isOpen: boolean
+  selectedItemIndex: number | null
+  inputError: boolean
 }
 
-type ListItem = { [code: string]: InputResponseField }
+const defaultInputState: InputState = { isOpen: false, selectedItemIndex: null, inputError: false }
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
-  parameters,
+  evaluatedParameters,
   onSave,
-  onUpdate,
   Markdown,
   initialValue,
-  currentResponse,
   applicationData,
-  allResponses,
 }) => {
   const { isEditable } = element
   const {
@@ -52,16 +55,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     inputFields,
     displayFormat = getDefaultDisplayFormat(inputFields),
     displayType = DisplayType.CARDS,
-  } = parameters
+  } = evaluatedParameters
 
-  const [currentInputResponses, setCurrentInputResponses] = useState<ListItem>(
-    resetCurrentResponses(inputFields)
-  )
-
-  const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
-  const [selectedListItem, setSelectedListItem] = useState<number | null>(null)
-  const [open, setOpen] = useState(false)
-  const [inputError, setInputError] = useState(false)
+  const {
+    userState: { currentUser },
+  } = useUserState()
+  const [inputState, setInputState] = useState<InputState>(defaultInputState)
+  const [listItems, setListItems] = useState<ResponsesByCode[]>(initialValue?.list ?? [])
 
   useEffect(() => {
     onSave({
@@ -70,51 +70,105 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     })
   }, [listItems])
 
+  const resetInputState = () => setInputState(defaultInputState)
+
+  const setActiveItem = async (selectedItemIndex: number | null) => {
+    const selectedItem = selectedItemIndex === null ? {} : listItems[selectedItemIndex]
+    const allResponses: ResponsesByCode = {}
+    const elements: ElementState[] = []
+
+    inputFields.forEach((field: TemplateElement, index: number) => {
+      elements.push(buildElement(field, index))
+      if (selectedItem[field.code]) allResponses[field.code] = selectedItem[field.code]
+    })
+
+    setInputState({
+      ...inputState,
+      allResponses,
+      elements: await _evaluateElements(allResponses, elements),
+      selectedItemIndex,
+      isOpen: true,
+    })
+  }
+
+  const _evaluateElements = async (allResponses: ResponsesByCode, elements: ElementState[]) => {
+    const evaluationOptions: EvaluationOptions = [
+      'isEditable',
+      'isVisible',
+      'isRequired',
+      'evaluatedParameters',
+    ]
+
+    const results = await evaluateElements(elements, evaluationOptions, {
+      responseObject: allResponses,
+      currentUser,
+      applicationData,
+    })
+
+    const resultElements = results.map((evaluatedElement, index) => ({
+      ...elements[index],
+      ...evaluatedElement,
+    }))
+
+    return resultElements
+  }
+
+  const evaluateAndSetElements = async (
+    allResponses: ResponsesByCode,
+    elements: ElementState[]
+  ) => {
+    const newElements = await _evaluateElements(allResponses, elements)
+    setInputState((currentInputState) => ({
+      ...currentInputState,
+      elements: newElements,
+      inputError: inputError && anyErrorItems(currentInputState.allResponses || {}, elements),
+    }))
+  }
+
   // This is sent to ApplicationViewWrapper and runs instead of the default responseMutation
   const innerElementUpdate =
     (code: string) =>
-    async ({ variables: response }: { variables: InputResponseField }) => {
+    async ({ variables: response }: { variables: { value: any; isValid: boolean } }) => {
       // need to get most recent state of currentInputResponse, thus using callback
-      setCurrentInputResponses((currentInputResponses) => {
-        const newResponses = { ...currentInputResponses, [code]: response }
-        if (!anyErrorItems(newResponses, inputFields)) setInputError(false)
-        return newResponses
+      setInputState((currentInputState) => {
+        const allResponses = {
+          ...currentInputState.allResponses,
+          // when we built allResponse originally we've destructure value into the response
+          [code]: { ...response, ...(response?.value || {}) },
+        }
+        evaluateAndSetElements(allResponses, currentInputState.elements || [])
+        return {
+          ...currentInputState,
+          allResponses,
+        }
       })
     }
 
   const updateList = async () => {
-    if (anyErrorItems(currentInputResponses, inputFields)) {
-      setInputError(true)
+    const { allResponses = {}, selectedItemIndex, elements = [] } = inputState
+    if (anyErrorItems(allResponses, elements)) {
+      setInputState({ ...inputState, inputError: true })
       return
     }
     // Add item
-    if (selectedListItem === null) {
-      setListItems([...listItems, currentInputResponses])
+    if (selectedItemIndex === null) {
+      setListItems([...listItems, allResponses])
     } else {
       // Or update existing item
       const newList = [...listItems]
-      newList[selectedListItem] = currentInputResponses
+      newList[selectedItemIndex] = allResponses
       setListItems(newList)
     }
-    resetModalState()
+    resetInputState()
   }
 
   const editItem = async (index: number) => {
-    setSelectedListItem(index)
-    setCurrentInputResponses(listItems[index])
-    setOpen(true)
+    setActiveItem(index)
   }
 
   const deleteItem = async (index: number) => {
     setListItems(listItems.filter((_, i) => i !== index))
-    resetModalState()
-  }
-
-  const resetModalState = () => {
-    setCurrentInputResponses(resetCurrentResponses(inputFields))
-    setOpen(false)
-    setSelectedListItem(null)
-    setInputError(false)
+    resetInputState()
   }
 
   const listDisplayProps: ListLayoutProps = {
@@ -135,6 +189,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <ListCardLayout {...listDisplayProps} />
     )
 
+  const { isOpen, elements = [], allResponses = {}, inputError, selectedItemIndex } = inputState
+
   return (
     <>
       <label>
@@ -144,37 +200,34 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Button
         primary
         content={createModalButtonText}
-        onClick={() => setOpen(true)}
+        onClick={() => setActiveItem(null)}
         disabled={!isEditable}
       />
-      <Modal size="tiny" onClose={() => resetModalState()} onOpen={() => setOpen(true)} open={open}>
+      <Modal size="tiny" onClose={resetInputState} open={isOpen}>
         <Segment>
           <Form>
             <Markdown text={modalText} />
-            {inputFields.map((field: TemplateElement, index: number) => {
-              const element = buildElement(field, index)
-              return (
-                <ApplicationViewWrapper
-                  key={`list-${element.code}`}
-                  element={element}
-                  isStrictPage={inputError}
-                  allResponses={allResponses}
-                  currentResponse={currentInputResponses[element.code].value}
-                  onSaveUpdateMethod={innerElementUpdate(element.code)}
-                  applicationData={applicationData}
-                />
-              )
-            })}
+            {elements.map((element) => (
+              <ApplicationViewWrapper
+                key={`list-${element.code}`}
+                element={element}
+                isStrictPage={inputError}
+                allResponses={allResponses}
+                currentResponse={allResponses[element.code]}
+                onSaveUpdateMethod={innerElementUpdate(element.code)}
+                applicationData={applicationData}
+              />
+            ))}
             <Button
               primary
-              content={selectedListItem !== null ? updateButtonText : addButtonText}
+              content={selectedItemIndex !== null ? updateButtonText : addButtonText}
               onClick={updateList}
             />
-            {displayType === 'table' && selectedListItem !== null && (
+            {displayType === 'table' && selectedItemIndex !== null && (
               <Button
                 secondary
                 content={deleteItemText}
-                onClick={() => deleteItem(selectedListItem)}
+                onClick={() => deleteItem(selectedItemIndex)}
               />
             )}
             {inputError && (
@@ -200,20 +253,19 @@ const buildElement = (field: TemplateElement, index: number) => ({
   category: field.category as TemplateElementCategory,
   title: field.title as string,
   parameters: field.parameters,
-  validationExpression: field?.validation || true,
-  validationMessage: field?.validationMessage || '',
-  isRequired: field.isRequired ?? true,
-  // Hard-coded visisbility and editability (for now)
-  isEditable: true,
-  isVisible: true,
+  isEditableExpression: field.isEditable,
+  isRequiredExpression: field.isRequired,
+  isVisibleExpression: field.visibilityCondition,
+  parametersExpressions: field.parameters,
+  validationExpression: field.validation,
+  validationMessage: field.validationMessage || '',
   // "Dummy" values, but required for element props:
   elementIndex: 0,
-  isValid: undefined,
-  defaultValue: null,
   page: 0,
   sectionIndex: 0,
   helpText: null,
   sectionCode: '0',
+  ...defaultEvaluatedElement,
 })
 
 const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
@@ -224,31 +276,27 @@ const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
   return { title: '', subtitle: '', description: displayString }
 }
 
-const resetCurrentResponses = (inputFields: TemplateElement[]) =>
-  inputFields.reduce((acc, { code }) => ({ ...acc, [code]: { value: { text: undefined } } }), {})
+const anyInvalidItems = (allResponses: ResponsesByCode) =>
+  Object.values(allResponses).some((response) => response.isValid === false)
 
-const anyInvalidItems = (currentInput: ListItem) =>
-  Object.values(currentInput).some((response) => response.isValid === false)
+const anyIncompleteItems = (allResponses: ResponsesByCode, elements: ElementState[]) =>
+  elements.some((element) => element.isRequired !== false && !allResponses[element.code]?.text)
 
-const anyIncompleteItems = (currentInput: ListItem, inputFields: TemplateElement[]) =>
-  Object.values(currentInput).some(
-    (response, index) => inputFields[index]?.isRequired !== false && !response.value?.text
-  )
+const anyErrorItems = (allResponses: ResponsesByCode, elements: ElementState[]) => {
+  return anyInvalidItems(allResponses) || anyIncompleteItems(allResponses, elements)
+}
 
-const anyErrorItems = (currentInput: ListItem, inputFields: TemplateElement[]) =>
-  anyInvalidItems(currentInput) || anyIncompleteItems(currentInput, inputFields)
-
-const substituteValues = (parameterisedString: string, item: ListItem) => {
-  const getValueFromCode = (_: string, $: string, code: string) => item[code].value.text || ''
+const substituteValues = (parameterisedString: string, item: ResponsesByCode) => {
+  const getValueFromCode = (_: string, $: string, code: string) => item[code]?.text || ''
   return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromCode)
 }
 
-const createTextString = (listItems: ListItem[], inputFields: TemplateElement[]) =>
+const createTextString = (listItems: ResponsesByCode[], inputFields: TemplateElement[]) =>
   listItems.reduce(
     (outputAcc, item) =>
       outputAcc +
       inputFields.reduce(
-        (innerAcc, field) => innerAcc + `${field.title}: ${item[field.code].value.text}, `,
+        (innerAcc, field) => innerAcc + `${field.title}: ${item[field.code].text}, `,
         ''
       ) +
       '\n',
@@ -257,7 +305,7 @@ const createTextString = (listItems: ListItem[], inputFields: TemplateElement[])
 
 // Separate components, so can be shared with SummaryView
 export interface ListLayoutProps {
-  listItems: ListItem[]
+  listItems: ResponsesByCode[]
   displayFormat: { title?: string; subtitle?: string; description: string }
   Markdown: any
   fieldTitles?: string[]
@@ -332,7 +380,7 @@ export const ListTableLayout: React.FC<ListLayoutProps> = ({
         {listItems.map((item, index) => (
           <Table.Row key={`list-row-${index}`} onClick={() => editItem(index)}>
             {codes.map((code, cellIndex) => (
-              <TableCell key={`list-cell-${index}-${cellIndex}`}>{item[code].value.text}</TableCell>
+              <TableCell key={`list-cell-${index}-${cellIndex}`}>{item[code].text}</TableCell>
             ))}
           </Table.Row>
         ))}

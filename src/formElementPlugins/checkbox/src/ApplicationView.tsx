@@ -19,13 +19,13 @@ interface CheckboxSavedState {
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
-  parameters,
+  evaluatedParameters,
   onSave,
   Markdown,
   initialValue,
 }) => {
   const { isEditable } = element
-  const { label, description, checkboxes, type, layout } = parameters
+  const { label, description, checkboxes, type, layout } = evaluatedParameters
 
   const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
     getInitialState(initialValue, checkboxes)
@@ -38,7 +38,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   useEffect(() => {
     // Don't save response if parameters are still loading
-    if (checkboxElements[0].text === config.parameterLoadingValues.label) return
+    if (checkboxElements[0].text === evaluatedParameters.label) return
     onSave({
       text: createTextString(checkboxElements),
       values: Object.fromEntries(

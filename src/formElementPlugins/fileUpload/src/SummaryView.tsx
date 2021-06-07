@@ -5,13 +5,13 @@ import { SummaryViewProps } from '../../types'
 
 const host = config.serverREST
 
-const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, response }) => {
+const SummaryView: React.FC<SummaryViewProps> = ({ evaluatedParameters, Markdown, response }) => {
   return (
-    <Form.Field required={parameters.isRequired}>
+    <Form.Field required={evaluatedParameters.isRequired}>
       <label style={{ color: 'black' }}>
-        <Markdown text={parameters.label} semanticComponent="noParagraph" />
+        <Markdown text={evaluatedParameters.label} semanticComponent="noParagraph" />
       </label>
-      <Markdown text={parameters.description} />
+      <Markdown text={evaluatedParameters.description} />
       <List horizontal verticalAlign="top">
         {response?.files &&
           response.files.map((file) => (

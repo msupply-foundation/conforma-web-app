@@ -2,8 +2,8 @@ import React from 'react'
 import { Image } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
-const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters }) => {
-  const { url, size, alignment, altText } = parameters
+const ApplicationView: React.FC<ApplicationViewProps> = ({ evaluatedParameters }) => {
+  const { url, size, alignment, altText } = evaluatedParameters
 
   return (
     <Image

@@ -4,11 +4,8 @@ import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
-  parameters,
-  onUpdate,
+  evaluatedParameters,
   currentResponse,
-  // value,
-  // setValue,
   validationState,
   onSave,
   Markdown,
@@ -22,7 +19,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     options,
     optionsDisplayProperty,
     default: defaultOption,
-  } = parameters
+  } = evaluatedParameters
 
   const [selectedIndex, setSelectedIndex] = useState<number>()
   const { isEditable } = element

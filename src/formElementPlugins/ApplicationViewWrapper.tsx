@@ -2,16 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
-import {
-  EvaluatorNode,
-  EvaluatorParameters,
-  LooseString,
-  ResponseFull,
-  ElementPluginParameters,
-} from '../utils/types'
+import { EvaluatorNode, EvaluatorParameters, LooseString, ResponseFull } from '../utils/types'
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
-import evaluateExpression, { isEvaluationExpression } from '@openmsupply/expression-evaluator'
 import { Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 import strings from '../utils/constants'
@@ -34,16 +27,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     onSaveUpdateMethod = responseMutation,
   } = props
 
-  const {
-    code,
-    pluginCode,
-    parameters,
-    isVisible,
-    isEditable,
-    isRequired,
-    validationExpression,
-    validationMessage,
-  } = element
+  const { pluginCode, isVisible, isEditable, isRequired, validationExpression, validationMessage } =
+    element
 
   const isValid = currentResponse?.isValid || true
 
@@ -55,30 +40,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const [validationState, setValidationState] = useState<ValidationState>({
     isValid,
   })
-  const [evaluatedParameters, setEvaluatedParameters] = useState({})
 
-  const { ApplicationView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
-
-  const parameterLoadingValues = config?.parameterLoadingValues
-  const internalParameters = config?.internalParameters || []
-  const [simpleParameters, parameterExpressions] = buildParameters(
-    parameters,
-    parameterLoadingValues,
-    internalParameters
-  )
-
-  // Update dynamic parameters when responses change
-  useEffect(() => {
-    Object.entries(parameterExpressions).forEach(([field, expression]) => {
-      evaluateExpression(expression as EvaluatorNode, {
-        objects: { responses: allResponses, currentUser, applicationData },
-        APIfetch: fetch,
-        graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-      }).then((result: any) =>
-        setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
-      )
-    })
-  }, [allResponses])
+  const { ApplicationView }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
   useEffect(() => {
     onUpdate(currentResponse?.text)
@@ -99,6 +62,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       },
       currentResponse,
     })
+
     setValidationState(newValidationState)
     return newValidationState
   }
@@ -164,7 +128,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       initialValue={currentResponse}
       {...props}
       {...element}
-      parameters={{ ...simpleParameters, ...evaluatedParameters }}
       setIsActive={setIsActive}
       Markdown={Markdown}
       validationState={validationState || { isValid: true }}
@@ -235,23 +198,6 @@ const getDefaultIndex = (defaultOption: string | number, options: string[]) => {
   if (typeof defaultOption === 'number') {
     return defaultOption
   } else return options.indexOf(defaultOption)
-}
-
-export const buildParameters = (
-  parameters: ElementPluginParameters,
-  parameterLoadingValues: any,
-  internalParameters: string[]
-) => {
-  const simpleParameters: any = {}
-  const parameterExpressions: any = {}
-  for (const [key, value] of Object.entries(parameters)) {
-    if (internalParameters.includes(key)) simpleParameters[key] = value
-    else if (isEvaluationExpression(value)) {
-      parameterExpressions[key] = value
-      simpleParameters[key] = parameterLoadingValues?.[key] ?? 'Loading...'
-    } else simpleParameters[key] = value
-  }
-  return [simpleParameters, parameterExpressions]
 }
 
 const calculateValidationState = async ({
