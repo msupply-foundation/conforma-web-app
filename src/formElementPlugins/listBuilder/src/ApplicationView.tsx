@@ -296,7 +296,7 @@ const createTextString = (listItems: ResponsesByCode[], inputFields: TemplateEle
     (outputAcc, item) =>
       outputAcc +
       inputFields.reduce(
-        (innerAcc, field) => innerAcc + `${field.title}: ${item[field.code].text}, `,
+        (innerAcc, field) => innerAcc + `${field.title}: ${item[field.code]?.text || ''}, `,
         ''
       ) +
       '\n',
@@ -380,7 +380,9 @@ export const ListTableLayout: React.FC<ListLayoutProps> = ({
         {listItems.map((item, index) => (
           <Table.Row key={`list-row-${index}`} onClick={() => editItem(index)}>
             {codes.map((code, cellIndex) => (
-              <TableCell key={`list-cell-${index}-${cellIndex}`}>{item[code].text}</TableCell>
+              <TableCell key={`list-cell-${index}-${cellIndex}`}>
+                {item[code]?.text || ''}
+              </TableCell>
             ))}
           </Table.Row>
         ))}
