@@ -43,7 +43,12 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   const getReviewDecisionOption = () => {
     if (!isActiveReviewResponse) return null
     if (isChangeRequest && !isNewReviewResponse)
-      return <ReviewElementTrigger title={strings.LABEL_RESPONSE_UPDATE} onClick={showModal} />
+      return (
+        <ReviewElementTrigger
+          title={strings.LABEL_RESPONSE_UPDATE}
+          onClick={() => setIsActiveEdit(true)}
+        />
+      )
     return <UpdateIcon onClick={() => setIsActiveEdit(true)} />
   }
 
