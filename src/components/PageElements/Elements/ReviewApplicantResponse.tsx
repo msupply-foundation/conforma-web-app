@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Icon } from 'semantic-ui-react'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/graphql'
 import ApplicantResponseElement from './ApplicantResponseElement'
 import ReviewResponseElement from './ReviewResponseElement'
+import ReviewInlineInput from './ReviewInlineInput'
 import strings from '../../../utils/constants'
 import { UpdateIcon } from '../PageElements'
 
@@ -29,6 +31,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   isChangeRequest = false,
   showModal,
 }) => {
+  const [isActiveEdit, setIsActiveEdit] = useState(false)
   const decisionExists = !!reviewResponse?.decision
   const triggerTitle = isNewApplicationResponse // can add check for isNewReviewResponseAlso
     ? strings.BUTTON_RE_REVIEW_RESPONSE
@@ -41,7 +44,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
     if (!isActiveReviewResponse) return null
     if (isChangeRequest && !isNewReviewResponse)
       return <ReviewElementTrigger title={strings.LABEL_RESPONSE_UPDATE} onClick={showModal} />
-    return <UpdateIcon onClick={showModal} />
+    return <UpdateIcon onClick={() => setIsActiveEdit(true)} />
   }
 
   return (
@@ -52,11 +55,23 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
         summaryViewProps={summaryViewProps}
       >
         {isActiveReviewResponse && !decisionExists && (
-          <ReviewElementTrigger title={triggerTitle} onClick={showModal} />
+          <ReviewElementTrigger
+            title={triggerTitle}
+            // onClick={showModal}
+            onClick={() => setIsActiveEdit(true)}
+          />
         )}
       </ApplicantResponseElement>
+      {/* Inline Review area */}
+      {isActiveEdit && (
+        <ReviewInlineInput
+          setIsActiveEdit={setIsActiveEdit}
+          reviewResponse={reviewResponse as ReviewResponse}
+          isConsolidation={false}
+        />
+      )}
       {/* Review Response */}
-      {decisionExists && (
+      {decisionExists && !isActiveEdit && (
         <>
           <ReviewResponseElement
             isCurrentReview={true}
@@ -75,7 +90,8 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               isCurrentReview={false}
               isConsolidation={true}
               reviewResponse={consolidationReviewResponse}
-              shouldDim={isNewReviewResponse}/>
+              shouldDim={isNewReviewResponse}
+            />
           )}
         </>
       )}

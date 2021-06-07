@@ -9,6 +9,9 @@ interface ReviewResponseElementProps {
   isDecisionVisible?: boolean
   shouldDim?: boolean
   reviewResponse: ReviewResponse
+  originalReviewResponse?: ReviewResponse
+  isActiveEdit?: boolean
+  setIsActiveEdit?: Function
 }
 
 const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
