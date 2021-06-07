@@ -121,7 +121,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setInputState((currentInputState) => ({
       ...currentInputState,
       elements: newElements,
-      inputError: inputError && anyErrorItems(currentInputState.allResponses || {}, elements),
+      inputError: inputError && anyErrorItems(currentInputState.allResponses || {}, newElements),
     }))
   }
 
@@ -280,7 +280,9 @@ const anyInvalidItems = (allResponses: ResponsesByCode) =>
   Object.values(allResponses).some((response) => response.isValid === false)
 
 const anyIncompleteItems = (allResponses: ResponsesByCode, elements: ElementState[]) =>
-  elements.some((element) => element.isRequired !== false && !allResponses[element.code]?.text)
+  elements.some(
+    (element) => element.isRequired && element.isVisible && !allResponses[element.code]?.text
+  )
 
 const anyErrorItems = (allResponses: ResponsesByCode, elements: ElementState[]) => {
   return anyInvalidItems(allResponses) || anyIncompleteItems(allResponses, elements)
