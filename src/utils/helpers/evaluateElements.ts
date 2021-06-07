@@ -1,4 +1,4 @@
-import evaluateExpression from '@openmsupply/expression-evaluator'
+import evaluateExpression, { isEvaluationExpression } from '@openmsupply/expression-evaluator'
 import config from '../../config.json'
 import {
   EvaluatedElement,
@@ -87,10 +87,3 @@ const evaluateSingleElement: EvaluatElement = async (
 
   return evaluatedElement
 }
-
-// This method should come from evaluationExpression
-export const isEvaluationExpression = (evaluationExpression: EvaluatorNode) =>
-  evaluationExpression instanceof Object &&
-  evaluationExpression !== null &&
-  !Array.isArray(evaluationExpression) &&
-  !!evaluationExpression.operator

@@ -18,7 +18,7 @@ import {
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
-import { OperatorNode, ValueNode } from '@openmsupply/expression-evaluator/lib/types'
+import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic'
 import { DocumentNode } from '@apollo/client'
 
@@ -77,8 +77,6 @@ export {
   LoginPayload,
   BasicStringObject,
 }
-
-type EvaluatorNode = OperatorNode | ValueNode
 
 interface ApplicationDetails {
   id: number
