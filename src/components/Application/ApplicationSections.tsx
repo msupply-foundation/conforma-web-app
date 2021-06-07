@@ -151,7 +151,7 @@ const ActionsChangesRequest: React.FC<ActionisChangesRequestProps> = (props) => 
     return (
       <Button
         color="blue"
-        content={`${strings.LABEL_APPLICATION_UPDATE} (${totalRemainingUpdate})`}
+        content={`${strings.LABEL_RESPONSE_UPDATE} (${totalRemainingUpdate})`}
         onClick={() =>
           isDraftStatus
             ? resumeApplication({

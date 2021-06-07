@@ -75,6 +75,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
   )
 }
 
+// TODO: Unify code with other ReviewElementTrigger
 const ReviewElementTrigger: React.FC<{ title: string; onClick: () => void }> = ({
   title,
   onClick,

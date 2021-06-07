@@ -6,8 +6,8 @@ import { ElementDecisionLabel } from '../../Review'
 interface ReviewResponseElementProps {
   isCurrentReview: boolean
   isConsolidation: boolean
+  isDecisionVisible?: boolean
   shouldDim?: boolean
-  shouldHideDecision?: boolean
   reviewResponse: ReviewResponse
   originalReviewResponse?: ReviewResponse
   isActiveEdit?: boolean
@@ -17,23 +17,23 @@ interface ReviewResponseElementProps {
 const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
   isCurrentReview,
   isConsolidation,
-  reviewResponse,
+  isDecisionVisible = true,
   shouldDim = false,
+  reviewResponse,
   children,
-  isActiveEdit,
-  setIsActiveEdit,
-  shouldHideDecision = false,
 }) => {
   const backgroundClass = isCurrentReview ? 'changeable-background' : ''
   const dimClass = shouldDim ? 'dim' : ''
 
   return (
     <div className={`response-container ${backgroundClass} ${dimClass}`}>
-      <div className="review-response-content">
-        {!shouldHideDecision && (
-          <ElementDecisionLabel isConsolidation={isConsolidation} reviewResponse={reviewResponse} />
-        )}
-        {!reviewResponse.comment ? null : (
+      <div className="review-response-content ">
+        <ElementDecisionLabel
+          isConsolidation={isConsolidation}
+          reviewResponse={reviewResponse}
+          isDecisionVisible={isDecisionVisible}
+        />
+        {!!reviewResponse?.comment && (
           <div className="comment-container">
             <Icon name="comment alternate outline" color="grey" />
             <p className="secondary">{reviewResponse.comment}</p>

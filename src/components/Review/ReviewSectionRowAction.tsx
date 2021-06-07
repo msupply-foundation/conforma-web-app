@@ -1,7 +1,12 @@
 import React, { useState } from 'react'
 import { Grid, Icon, Label, Message } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ReviewAction, ReviewProgress, ReviewSectionComponentProps } from '../../utils/types'
+import {
+  ChangeRequestsProgress,
+  ReviewAction,
+  ReviewProgress,
+  ReviewSectionComponentProps,
+} from '../../utils/types'
 import strings from '../../utils/constants'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
@@ -36,17 +41,12 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
       }
 
       case ReviewAction.canUpdate:
-      case ReviewAction.canStartReview: {
+      case ReviewAction.canStartReview:
+      case ReviewAction.canReReview: {
         if (isAssignedToCurrentUser) {
           return <StartContinueOrRestartButton {...props} />
         }
         return <NotStartedLabel />
-      }
-
-      case ReviewAction.canReReview: {
-        if (isAssignedToCurrentUser) return <StartContinueOrRestartButton {...props} />
-
-        return null
       }
 
       case ReviewAction.canSelfAssign: {
@@ -65,10 +65,13 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
 const reReviewableCount = (reviewProgress?: ReviewProgress) =>
   (reviewProgress?.totalNewReviewable || 0) - (reviewProgress?.doneNewReviewable || 0)
 
+const changesRequestedCount = (progress?: ChangeRequestsProgress) =>
+  (progress?.totalChangeRequests || 0) - (progress?.doneChangeRequests || 0)
+
 // START REVIEW, CONTINUE REVIEW, UPDATE REVIEW OR RE-REVIEW BUTTON
 const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
-  section: { details, reviewProgress },
+  section: { details, reviewProgress, changeRequestsProgress },
   assignment,
   thisReview,
   action,
@@ -92,11 +95,19 @@ const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   })
 
   const getButtonName = () => {
-    const reReviewCount = reReviewableCount(reviewProgress)
-    if (reReviewCount > 0) return `${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewCount})`
     switch (action) {
-      case ReviewAction.canUpdate:
-        return strings.ACTION_UPDATE
+      case ReviewAction.canUpdate: {
+        const changeRequestsCount = changesRequestedCount(changeRequestsProgress)
+        return strings.ACTION_UPDATE.concat(
+          changeRequestsCount > 0 ? ` (${changeRequestsCount})` : ''
+        )
+      }
+      case ReviewAction.canReReview: {
+        const reReviewCount = reReviewableCount(reviewProgress)
+        return strings.BUTTON_REVIEW_RE_REVIEW.concat(
+          reReviewCount > 0 ? ` (${reReviewCount})` : ''
+        )
+      }
       case ReviewAction.canContinue:
         return strings.ACTION_CONTINUE
       default:

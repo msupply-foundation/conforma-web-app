@@ -141,7 +141,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       return
     }
 
-    // Check review status != PENDING
+    // Check (consolidator) review status != PENDING
     const { thisReview } = await getFullReviewStructureAsync()
     if (thisReview?.status === ReviewStatus.Pending) {
       showPendingReviewWarning()
