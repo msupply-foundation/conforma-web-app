@@ -40,13 +40,13 @@ export const evaluateElements: EvaluateElements = async (elements, evaluationOpt
   return await Promise.all<PartialEvaluatedElement>(elementPromiseArray)
 }
 
-type EvaluatElement = (
+type EvaluateElement = (
   element: ElementForEvaluation,
   evaluationOptions: EvaluationOptions,
   objects: EvaluationObject
 ) => Promise<PartialEvaluatedElement>
 
-const evaluateSingleElement: EvaluatElement = async (
+const evaluateSingleElement: EvaluateElement = async (
   element,
   evaluationOptions,
   { responseObject, currentUser, applicationData }
