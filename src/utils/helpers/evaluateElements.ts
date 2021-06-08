@@ -13,7 +13,7 @@ const graphQLEndpoint = config.serverGraphQL
 
 type PartialEvaluatedElement = Partial<EvaluatedElement>
 type EvaluationObject = {
-  responseObject?: ResponsesByCode
+  responses?: ResponsesByCode
   currentUser?: User | null
   applicationData?: ApplicationDetails
 }
@@ -49,11 +49,11 @@ type EvaluateElement = (
 const evaluateSingleElement: EvaluateElement = async (
   element,
   evaluationOptions,
-  { responseObject, currentUser, applicationData }
+  { responses, currentUser, applicationData }
 ) => {
   const evaluationParameters = {
     objects: {
-      responses: { ...responseObject, thisResponse: responseObject?.[element.code]?.text },
+      responses: { ...responses, thisResponse: responses?.[element.code]?.text },
       currentUser,
       applicationData,
     },

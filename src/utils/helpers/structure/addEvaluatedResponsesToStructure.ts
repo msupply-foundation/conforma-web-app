@@ -22,14 +22,14 @@ const addEvaluatedResponsesToStructure = async ({
   const newStructure = { ...structure } // This MIGHT need to be deep-copied
 
   // Build responses by code (and only keep latest)
-  const responseObject: any = {}
+  const responses: any = {}
   const reviewResponses: { [templateElementId: string]: ReviewResponse } = {}
 
   applicationResponses?.forEach((response) => {
     const { id, isValid, value, templateElement, templateElementId, timeUpdated } = response
     const code = templateElement?.code as string
-    if (!(code in responseObject) || timeUpdated > responseObject[code].timeCreated) {
-      responseObject[code] = {
+    if (!(code in responses) || timeUpdated > responses[code].timeCreated) {
+      responses[code] = {
         id,
         isValid,
         timeUpdated,
@@ -52,7 +52,7 @@ const addEvaluatedResponsesToStructure = async ({
     flattenedElements.map((elem: PageElement) => elem.element as ElementForEvaluation),
     evaluationOptions,
     {
-      responseObject,
+      responses,
       currentUser,
       applicationData: structure.info,
     }
@@ -62,7 +62,7 @@ const addEvaluatedResponsesToStructure = async ({
     const flattenedElement = flattenedElements[index]
     const { element } = flattenedElement
     flattenedElement.element = { ...element, ...evaluatedElement }
-    flattenedElement.response = responseObject[element.code]
+    flattenedElement.response = responses[element.code]
 
     if (!flattenedElement.response) return
 
@@ -72,7 +72,7 @@ const addEvaluatedResponsesToStructure = async ({
 
     flattenedElement.response.reviewResponse = reviewResponses[flattenedElement.element.id]
   })
-  newStructure.responsesByCode = responseObject
+  newStructure.responsesByCode = responses
   return newStructure
 }
 
