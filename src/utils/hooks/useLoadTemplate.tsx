@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   GetTemplateQuery,
   Template,
+  TemplateElementCategory,
   TemplateSection,
   useGetTemplateQuery,
 } from '../generated/graphql'
