@@ -16,6 +16,7 @@ import { ResponseFull } from '../../../utils/types'
 import { TemplateElement, TemplateElementCategory } from '../../../utils/generated/graphql'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
 import strings from '../constants'
+import { defaultEvaluatedElement } from '../../../utils/hooks/useLoadApplication'
 
 export enum DisplayType {
   CARDS = 'cards',
@@ -194,6 +195,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 export default ApplicationView
 
 const buildElement = (field: TemplateElement, index: number) => ({
+  ...defaultEvaluatedElement,
   id: index,
   code: field.code,
   pluginCode: field.elementTypePluginCode as string,
@@ -204,12 +206,9 @@ const buildElement = (field: TemplateElement, index: number) => ({
   validationMessage: field?.validationMessage || '',
   isRequired: field.isRequired ?? true,
   // Hard-coded visisbility and editability (for now)
-  isEditable: true,
-  isVisible: true,
   // "Dummy" values, but required for element props:
   elementIndex: 0,
   isValid: undefined,
-  defaultValue: null,
   page: 0,
   sectionIndex: 0,
   helpText: null,
