@@ -215,7 +215,7 @@ const buildElement = (field: TemplateElement, index: number) => ({
   sectionCode: '0',
 })
 
-const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
+export const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
   const displayString = inputFields.reduce(
     (acc: string, { code, title }) => acc + `**${title}**: \${${code}}  \n`,
     ''
