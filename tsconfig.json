@@ -8,11 +8,11 @@
     "allowJs": true /* Allow javascript files to be compiled. */,
     "sourceMap": true /* Generates corresponding '.map' file. */,
     "outDir": "./build/" /* Redirect output structure to the directory. */,
-    "baseUrl": "src",
-       "rootDir": "src" /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */,
+    "rootDir": "src" /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */,
     "preserveConstEnums": true /* Do not erase const enum declarations in generated code. */,
     "removeComments": true /* Do not emit comments to output. */,
-    
+
+    "baseUrl": "src" /* paths are relative to baseUrl */, 
     "paths": {
       "semantic-ui-react": ["semanticUiReactReExport"]
     },
