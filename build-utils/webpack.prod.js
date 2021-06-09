@@ -7,7 +7,7 @@ const config = {
   output: {
     filename: 'static/[name].[hash].js',
   },
-  plugins: [new BundleAnalyzerPlugin()],
+  //  plugins: [new BundleAnalyzerPlugin()],
   optimization: {
     minimize: true,
     minimizer: [
