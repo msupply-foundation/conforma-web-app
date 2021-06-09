@@ -2,8 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { ApplicationViewProps } from '../../types'
 import SemanticDatepicker from 'react-semantic-ui-datepickers'
 import { DateTime } from 'luxon'
-import './styles.less'
-// import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css'
+import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css'
 
 interface DateSaved {
   start: string // ISO Date strings: YYYY-MM-DD
