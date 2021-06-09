@@ -29,9 +29,11 @@ const config = {
         use: 'url-loader',
       },
       {
-        // Load other files, images etc
-        test: /\.(png|j?g|gif|ico)?$/,
-        use: 'url-loader',
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[ext]',
+        },
       },
       {
         rules: [

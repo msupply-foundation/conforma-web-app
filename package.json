@@ -14,7 +14,6 @@
     "dev": "webpack-dev-server --env.env=dev",
     "prebuild": "rimraf dist",
     "build": "cross-env NODE_ENV=production webpack -p --env.env=prod",
-    "postbuild": "copyfiles images/**/* dist",
     "serve": "serve dist",
     "generate": "graphql-codegen --config codegen.yml",
     "push_docs": "exec ./utils/push_docs_to_wiki.sh"
@@ -79,6 +78,7 @@
     "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^5.1.2"
+    "webpack-merge": "^5.1.2",
+    "file-loader": "5.1.0"
   }
 }
