@@ -18,7 +18,7 @@ import strings from '../utils/constants'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'
 import messages from '../utils/messages'
 import globalConfig from '../config'
-import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic'
+import { SemanticICONS } from 'semantic-ui-react'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
 
