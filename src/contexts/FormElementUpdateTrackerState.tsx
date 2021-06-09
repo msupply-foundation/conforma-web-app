@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer } from 'react'
 
 interface ContextFormElementUpdateTrackerState {
   elementEnteredTimestamp: number
-  elementEnteredTextValue: string
+  elementEnteredTextValue?: string
   elementUpdatedTimestamp: number
   elementUpdatedTextValue: string
   isLastElementUpdateProcessed: boolean
@@ -17,6 +17,7 @@ export type UpdateAction =
   | {
       type: 'setElementUpdated'
       textValue: string
+      previousValue: string
     }
 
 type FormElementUpdateTrackerProps = { children: React.ReactNode }
@@ -35,11 +36,17 @@ const reducer = (
         elementUpdatedTimestamp: Date.now(),
         elementUpdatedTextValue: action.textValue,
       }
+
+      const notEntryState = typeof newState.elementEnteredTextValue === 'undefined'
+      let wasElementChanged = action.textValue !== newState.elementEnteredTextValue
+      if (notEntryState) wasElementChanged = action.textValue !== action.previousValue
+
       return {
         ...newState,
         isLastElementUpdateProcessed:
           newState.elementUpdatedTimestamp >= newState.elementEnteredTimestamp,
-        wasElementChanged: newState.elementUpdatedTextValue !== newState.elementEnteredTextValue,
+        wasElementChanged,
+        elementEnteredTextValue: undefined,
       }
     }
     case 'setElementEntered': {
@@ -63,7 +70,7 @@ const initialState: ContextFormElementUpdateTrackerState = {
   isLastElementUpdateProcessed: true,
   elementEnteredTimestamp: Date.now(),
   elementUpdatedTimestamp: Date.now(),
-  elementEnteredTextValue: '',
+  elementEnteredTextValue: undefined,
   elementUpdatedTextValue: '',
   wasElementChanged: false,
 }
