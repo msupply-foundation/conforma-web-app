@@ -35,18 +35,15 @@ const config = {
           name: '[path][name].[ext]',
         },
       },
+
       {
-        rules: [
+        test: /\.less$/,
+        use: [
           {
-            test: /\.less$/,
-            use: [
-              {
-                loader: MiniCssExtractPlugin.loader,
-              },
-              'css-loader',
-              'less-loader',
-            ],
+            loader: MiniCssExtractPlugin.loader,
           },
+          'css-loader',
+          'less-loader',
         ],
       },
     ],
