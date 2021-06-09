@@ -18,7 +18,7 @@ import {
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
-import { OperatorNode, ValueNode } from '@openmsupply/expression-evaluator/lib/types'
+import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic'
 import { DocumentNode } from '@apollo/client'
 
@@ -66,7 +66,6 @@ export {
   StageAndStatus,
   TemplateDetails,
   TemplateCategoryDetails,
-  TemplateElementState,
   TemplatePermissions,
   TemplateInList,
   TemplatesDetails,
@@ -78,8 +77,6 @@ export {
   LoginPayload,
   BasicStringObject,
 }
-
-type EvaluatorNode = OperatorNode | ValueNode
 
 interface ApplicationDetails {
   id: number
@@ -173,9 +170,17 @@ interface ElementPluginParameters {
   [key: string]: ElementPluginParameterValue
 }
 
-interface ElementBase {
-  id: number
+export type ElementForEvaluation = {
+  isEditableExpression?: EvaluatorNode
+  isRequiredExpression?: EvaluatorNode
+  isVisibleExpression?: EvaluatorNode
+  validationExpression?: EvaluatorNode
+  defaultValueExpression?: EvaluatorNode
   code: string
+}
+
+interface ElementBase extends ElementForEvaluation {
+  id: number
   title: string
   pluginCode: string
   sectionIndex: number
@@ -183,17 +188,22 @@ interface ElementBase {
   elementIndex: number
   page: number
   category: TemplateElementCategory
-  validationExpression: EvaluatorNode
   validationMessage: string | null
   helpText: string | null
   parameters: any
 }
 
-interface ElementState extends ElementBase {
+export type EvaluatedElement = {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
+  isValid: boolean | undefined
+  defaultValue: any
 }
+
+export type EvaluationOptions = (keyof EvaluatedElement)[]
+
+type ElementState = ElementBase & EvaluatedElement
 
 interface ElementsActivityState {
   elementEnteredTimestamp: number
@@ -460,14 +470,9 @@ interface TemplateDetails {
   name: string
   code: string
   elementsIds?: number[] // TODO: Change to not optional after re-structure
+  elementsDefaults?: EvaluatorNode[]
   sections?: SectionDetails[] // TODO: Change to not optional after re-structure
   startMessage?: string
-}
-
-interface TemplateElementState extends ElementBase {
-  isRequiredExpression: EvaluatorNode
-  isVisibleExpression: EvaluatorNode
-  isEditableExpression: EvaluatorNode
 }
 
 interface TemplatePermissions {

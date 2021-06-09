@@ -13,6 +13,7 @@ import {
   ResponseFull,
 } from '../../utils/types'
 import config from '../../config.json'
+import { defaultEvaluatedElement } from '../../utils/hooks/useLoadApplication'
 
 const OutcomeDetails: React.FC<{
   detailDisplayColumns: DetailDisplay[]
@@ -79,14 +80,13 @@ const constructElement = (detail: DetailDisplay, index: number) => ({
   parameters: detail.parameters,
   validationExpression: true,
   validationMessage: '',
-  isRequired: false,
-  isEditable: true,
-  isVisible: true,
   elementIndex: 0,
   page: 0,
   sectionIndex: 0,
   helpText: null,
   sectionCode: '0',
+  ...defaultEvaluatedElement,
+  isRequired: false,
 })
 
 export default OutcomeDetails
