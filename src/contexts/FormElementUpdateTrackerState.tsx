@@ -37,9 +37,10 @@ const reducer = (
         elementUpdatedTextValue: action.textValue,
       }
 
-      const notEntryState = typeof newState.elementEnteredTextValue === 'undefined'
-      let wasElementChanged = action.textValue !== newState.elementEnteredTextValue
-      if (notEntryState) wasElementChanged = action.textValue !== action.previousValue
+      const wasElementChanged =
+        typeof newState.elementEnteredTextValue === 'undefined'
+          ? action.textValue !== action.previousValue
+          : action.textValue !== newState.elementEnteredTextValue
 
       return {
         ...newState,
