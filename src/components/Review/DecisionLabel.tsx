@@ -5,6 +5,7 @@ import getSimplifiedTimeDifference from '../../utils/dateAndTime/getSimplifiedTi
 
 interface DecisionLabelProps {
   isConsolidation: boolean
+  isDecisionVisible: boolean
   reviewResponse: ReviewResponse
 }
 
@@ -20,7 +21,11 @@ const getDecisionString = (isPositiveDecision: boolean, isConsolidation: boolean
     : strings.LABEL_REVIEW_DECISION_NON_CONFORM
 }
 
-const DecisionLabel: React.FC<DecisionLabelProps> = ({ isConsolidation, reviewResponse }) => {
+const DecisionLabel: React.FC<DecisionLabelProps> = ({
+  isConsolidation,
+  isDecisionVisible,
+  reviewResponse,
+}) => {
   const isPositiveDecision =
     reviewResponse?.decision === ReviewResponseDecision.Agree ||
     reviewResponse?.decision === ReviewResponseDecision.Approve
@@ -29,11 +34,14 @@ const DecisionLabel: React.FC<DecisionLabelProps> = ({ isConsolidation, reviewRe
 
   return (
     <div className={`decision-container ${decisionClass}`}>
-      <p className="secondary reviewer-name">
-        {reviewResponse.review?.reviewer?.firstName} {reviewResponse.review?.reviewer?.lastName}
-      </p>
-
-      <h5 className="decision">{getDecisionString(isPositiveDecision, isConsolidation)}</h5>
+      {isDecisionVisible && (
+        <>
+          <p className="secondary reviewer-name">
+            {reviewResponse.review?.reviewer?.firstName} {reviewResponse.review?.reviewer?.lastName}
+          </p>
+          <h5 className="decision">{getDecisionString(isPositiveDecision, isConsolidation)}</h5>
+        </>
+      )}
       <p className="secondary date-indicator">
         <strong>{getSimplifiedTimeDifference(reviewResponse.timeUpdated)}</strong>
       </p>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   GetTemplateQuery,
   Template,
+  TemplateElementCategory,
   TemplateSection,
   useGetTemplateQuery,
 } from '../generated/graphql'
@@ -25,11 +26,16 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
     userState: { currentUser },
   } = useUserState()
 
-  const { data, loading: apolloLoading, error: apolloError } = useGetTemplateQuery({
+  const {
+    data,
+    loading: apolloLoading,
+    error: apolloError,
+  } = useGetTemplateQuery({
     variables: {
       code: templateCode || '',
     },
     skip: !templateCode,
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
@@ -54,11 +60,15 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
     const templateSections = template.templateSections.nodes as TemplateSection[]
     const sections = getTemplateSections(templateSections)
     const elementsIds: number[] = []
+    const elementsDefaults: any[] = []
 
     templateSections.forEach((section) => {
       const { templateElementsBySectionId } = section as TemplateSection
       templateElementsBySectionId.nodes.forEach((element) => {
-        if (element?.id && element.category === 'QUESTION') elementsIds.push(element.id)
+        if (element?.id && element.category === TemplateElementCategory.Question) {
+          elementsIds.push(element.id)
+          elementsDefaults.push(element.defaultValue)
+        }
       })
     })
 
@@ -73,6 +83,7 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
         code,
         name: name as string,
         elementsIds,
+        elementsDefaults,
         sections,
         startMessage,
       })

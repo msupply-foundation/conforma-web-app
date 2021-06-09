@@ -121,7 +121,7 @@ const PageElements: React.FC<PageElementProps> = ({
 
           const isResponseUpdated = !!isChangeRequest || !!isChanged
           const reviewResponse = previousApplicationResponse?.reviewResponses.nodes[0]
-          const canRenderReviewResponse = !!isChangeRequest && reviewResponse
+          const canRenderReviewResponse = !!isChangeRequest && !!reviewResponse
           // Applicant can edit the summary page when is first submission (canEdit true when draft)
           // Or when changes required for any question that have been updated (isUpdating true)
           const canApplicantEdit = isUpdating ? isResponseUpdated && canEdit : canEdit
@@ -154,8 +154,8 @@ const PageElements: React.FC<PageElementProps> = ({
                   <ReviewResponseElement
                     key="review-response"
                     shouldDim={true}
-                    shouldHideDecision={true}
                     isCurrentReview={false}
+                    isDecisionVisible={false}
                     isConsolidation={false}
                     reviewResponse={reviewResponse as ReviewResponse}
                   />
@@ -179,8 +179,11 @@ const PageElements: React.FC<PageElementProps> = ({
             ({
               element,
               thisReviewLatestResponse,
+              thisReviewPreviousResponse,
               isNewApplicationResponse,
               isActiveReviewResponse,
+              isChangeRequest,
+              isChanged,
               latestApplicationResponse,
               latestOriginalReviewResponse,
             }) => {
@@ -195,26 +198,28 @@ const PageElements: React.FC<PageElementProps> = ({
                   </RenderElementWrapper>
                 )
 
+              const props = {
+                applicationResponse: latestApplicationResponse,
+                reviewResponse: thisReviewLatestResponse,
+                isActiveReviewResponse: !!isActiveReviewResponse,
+                isNewApplicationResponse: !!isNewApplicationResponse,
+                isNewReviewResponse: isChanged,
+                showModal: () => updateQuery({ showHistory: element.code }),
+                summaryViewProps: summaryViewProps,
+              }
+
               return (
                 <RenderElementWrapper key={element.code}>
                   {isConsolidation ? (
                     <ConsolidateReviewDecision
-                      applicationResponse={latestApplicationResponse}
-                      summaryViewProps={summaryViewProps}
-                      reviewResponse={thisReviewLatestResponse}
+                      {...props}
                       originalReviewResponse={latestOriginalReviewResponse}
-                      isActiveReviewResponse={!!isActiveReviewResponse}
-                      isNewApplicationResponse={!!isNewApplicationResponse}
-                      showModal={() => updateQuery({ showHistory: element.code })}
                     />
                   ) : (
                     <ReviewApplicantResponse
-                      applicationResponse={latestApplicationResponse}
-                      summaryViewProps={summaryViewProps}
-                      reviewResponse={thisReviewLatestResponse}
-                      isActiveReviewResponse={!!isActiveReviewResponse}
-                      isNewApplicationResponse={!!isNewApplicationResponse}
-                      showModal={() => updateQuery({ showHistory: element.code })}
+                      {...props}
+                      previousReviewResponse={thisReviewPreviousResponse}
+                      isChangeRequest={isChangeRequest}
                     />
                   )}
                   {toggleHistoryPanel && thisReviewLatestResponse && (
@@ -250,7 +255,7 @@ export const UpdatedLabel: React.FC = () => (
   <div className="updated-label">
     <Icon name="circle" size="tiny" color="blue" />
     <Label className="simple-label">
-      <strong>{strings.LABEL_UPDATED}</strong>
+      <strong>{strings.LABEL_RESPONSE_UPDATED}</strong>
     </Label>
   </div>
 )
