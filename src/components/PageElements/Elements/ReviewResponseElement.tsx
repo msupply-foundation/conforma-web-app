@@ -1,23 +1,26 @@
 import React from 'react'
-import { Icon, Grid } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 import { ReviewResponse } from '../../../utils/generated/graphql'
 import { ElementDecisionLabel } from '../../Review'
 
 interface ReviewResponseElementProps {
   isCurrentReview: boolean
   isConsolidation: boolean
+  isDecisionVisible?: boolean
   shouldDim?: boolean
-  shouldHideDecision?: boolean
   reviewResponse: ReviewResponse
+  originalReviewResponse?: ReviewResponse
+  isActiveEdit?: boolean
+  setIsActiveEdit?: Function
 }
 
 const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
   isCurrentReview,
   isConsolidation,
-  reviewResponse,
+  isDecisionVisible = true,
   shouldDim = false,
+  reviewResponse,
   children,
-  shouldHideDecision = false,
 }) => {
   const backgroundClass = isCurrentReview ? 'changeable-background' : ''
   const dimClass = shouldDim ? 'dim' : ''
@@ -25,10 +28,12 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
   return (
     <div className={`response-container ${backgroundClass} ${dimClass}`}>
       <div className="review-response-content ">
-        {!shouldHideDecision && (
-          <ElementDecisionLabel isConsolidation={isConsolidation} reviewResponse={reviewResponse} />
-        )}
-        {!reviewResponse.comment ? null : (
+        <ElementDecisionLabel
+          isConsolidation={isConsolidation}
+          reviewResponse={reviewResponse}
+          isDecisionVisible={isDecisionVisible}
+        />
+        {!!reviewResponse?.comment && (
           <div className="comment-container">
             <Icon name="comment alternate outline" color="grey" />
             <p className="secondary">{reviewResponse.comment}</p>
