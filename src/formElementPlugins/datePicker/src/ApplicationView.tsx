@@ -4,11 +4,13 @@ import SemanticDatepicker from 'react-semantic-ui-datepickers'
 import { DateTime } from 'luxon'
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css'
 
+// Stored response date format
 interface DateSaved {
   start: string // ISO Date strings: YYYY-MM-DD
   end?: string
 }
 
+// This is the type used by react-semantic-ui-datepicker, and what we use for local "value" here
 type SelectedDateRange = Date[] | Date | null
 
 type DateFormats = 'short' | 'med' | 'medWeekday' | 'full' | 'huge'
