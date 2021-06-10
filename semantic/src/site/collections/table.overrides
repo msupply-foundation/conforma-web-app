@@ -30,13 +30,13 @@
 
   .ui.table td:first-child,
   .ui.table thead th:first-child {
-    padding-left: @fontLarge;
+    padding-left: @tableRowLeftAndRightPadding;
   }
 
   .ui.table td:last-child,
   .ui.table thead th:last-child {
     text-align: right;
-    padding-right: @fontLarge;
+    padding-right: @tableRowLeftAndRightPadding;
   }
 
   // Prevents column headers having different background when selected
