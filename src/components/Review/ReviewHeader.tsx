@@ -1,33 +1,31 @@
 import React from 'react'
-import { Container, Header } from 'semantic-ui-react'
+import { Header } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import Stage from './Stage'
+import { useRouter } from '../../utils/hooks/useRouter'
 
 export interface ReviewHeaderProps {
-  applicationStage: string
-  applicationStageColour: string
   applicationName: string
 }
 
-const ReviewHeader: React.FC<ReviewHeaderProps> = ({
-  applicationStage,
-  applicationStageColour,
-  applicationName,
-  children,
-}) => {
+const ReviewHeader: React.FC<ReviewHeaderProps> = ({ applicationName }) => {
+  const {
+    query: { serialNumber },
+    push,
+  } = useRouter()
+
   return (
-    <Container id="application-summary">
-      <Stage name={applicationStage} colour={applicationStageColour} />
-      <div id="application-summary-header">
-        <Header as="h2" textAlign="center">
-          <strong>{applicationName}</strong>
-          <Header.Subheader>{strings.DATE_APPLICATION_PLACEHOLDER}</Header.Subheader>
-        </Header>
-        <Header as="h2" textAlign="center" content={strings.LABEL_REVIEW} />
-        <p>{strings.SUBTITLE_REVIEW}</p>
-      </div>
-      {children}
-    </Container>
+    <div id="application-summary-header">
+      <Header
+        as="h2"
+        className="clickable"
+        textAlign="center"
+        onClick={() => push(`/application/${serialNumber}`)}
+      >
+        <strong>{applicationName}</strong>
+      </Header>
+      <Header as="h2" textAlign="center" content={strings.LABEL_REVIEW} />
+      <p>{strings.SUBTITLE_REVIEW}</p>
+    </div>
   )
 }
 

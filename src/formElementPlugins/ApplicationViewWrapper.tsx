@@ -127,6 +127,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       setUpdateTrackerState({
         type: 'setElementUpdated',
         textValue: response?.text || '',
+        previousValue: currentResponse?.text || '',
       })
     } else {
       // Save response for plugins with internal validation
@@ -143,6 +144,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       setUpdateTrackerState({
         type: 'setElementUpdated',
         textValue: response?.text || '',
+        previousValue: currentResponse?.text || '',
       })
     }
   }
