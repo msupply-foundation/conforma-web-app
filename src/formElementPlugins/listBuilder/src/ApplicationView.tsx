@@ -215,7 +215,7 @@ const buildElement = (field: TemplateElement, index: number) => ({
   sectionCode: '0',
 })
 
-const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
+export const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
   const displayString = inputFields.reduce(
     (acc: string, { code, title }) => acc + `**${title}**: \${${code}}  \n`,
     ''
@@ -238,7 +238,7 @@ const anyErrorItems = (currentInput: ListItem, inputFields: TemplateElement[]) =
   anyInvalidItems(currentInput) || anyIncompleteItems(currentInput, inputFields)
 
 const substituteValues = (parameterisedString: string, item: ListItem) => {
-  const getValueFromCode = (_: string, $: string, code: string) => item[code].value.text || ''
+  const getValueFromCode = (_: string, $: string, code: string) => item[code]?.value?.text || ''
   return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromCode)
 }
 
@@ -247,7 +247,7 @@ const createTextString = (listItems: ListItem[], inputFields: TemplateElement[])
     (outputAcc, item) =>
       outputAcc +
       inputFields.reduce(
-        (innerAcc, field) => innerAcc + `${field.title}: ${item[field.code].value.text}, `,
+        (innerAcc, field) => innerAcc + `${field.title}: ${item[field.code]?.value?.text}, `,
         ''
       ) +
       '\n',
