@@ -8,9 +8,9 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { FullStructure } from '../../utils/types'
 import strings from '../../utils/constants'
-import ReviewPageWrapper from './ReviewPageWrapper'
-import ReviewHome from './ReviewHome'
 import { ReviewContainer } from '../../components/Review'
+import ReviewPageWrapper from './ReviewPageWrapper'
+import ReviewHomeWrapper from './ReviewHomeWrapper'
 
 interface ReviewWrapperProps {
   structure: FullStructure
@@ -43,7 +43,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     <ReviewContainer application={structure.info}>
       <Switch>
         <Route exact path={path}>
-          <ReviewHome {...{ assignments, structure }} />
+          <ReviewHomeWrapper {...{ assignments, structure }} />
         </Route>
         <Route exact path={`${path}/:reviewId`}>
           <ReviewPageWrapper {...{ structure, reviewAssignments: assignments }} />
