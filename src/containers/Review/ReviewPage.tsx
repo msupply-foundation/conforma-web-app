@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, Header, Icon, Label, Message, ModalProps } from 'semantic-ui-react'
 import {
   Loading,
@@ -69,11 +69,7 @@ const ReviewPage: React.FC<{
   const {
     sections,
     responsesByCode,
-    info: {
-      serial,
-      current: { stage },
-      name,
-    },
+    info: { serial, name },
     thisReview,
     attemptSubmission,
     firstIncompleteReviewPage,
@@ -103,11 +99,8 @@ const ReviewPage: React.FC<{
   return error ? (
     <Message error title={strings.ERROR_GENERIC} list={[error]} />
   ) : (
-    <ReviewHeader
-      applicationStage={stage.name || ''}
-      applicationStageColour={stage.colour}
-      applicationName={name}
-    >
+    <>
+      <ReviewHeader applicationName={name} />
       <div id="application-summary-content">
         {Object.values(sections).map((section) => (
           <SectionWrapper
@@ -158,7 +151,7 @@ const ReviewPage: React.FC<{
         />
       </div>
       <ModalWarning {...showWarningModal} />
-    </ReviewHeader>
+    </>
   )
 }
 

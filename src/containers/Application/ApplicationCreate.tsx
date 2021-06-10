@@ -111,6 +111,8 @@ const ApplicationCreate: React.FC = () => {
       <ApplicationHomeWrapper
         startMessage={template.startMessage}
         name={template.name}
+        title={strings.TITLE_INTRODUCTION}
+        subtitle={strings.SUBTITLE_APPLICATION_STEPS}
         ButtonSegment={StartButtonSegment}
       >
         <SectionsList sections={template.sections} />

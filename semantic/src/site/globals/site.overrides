@@ -344,6 +344,11 @@ a:hover {
   font-weight: @semiboldWeight;
 }
 
+.ui.segment.review-application-segment {
+  margin: 0px;
+  padding: 0px;
+}
+
 .reviewer-dropdown {
   border: 1px solid @headersInteractiveMed;
   border-radius: 3px;
