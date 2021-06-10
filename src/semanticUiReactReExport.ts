@@ -1,3 +1,15 @@
+// To add new module/component, copy import from /node_modules/semanti-ui-react/index.d.ts, and change 'from'
+
+export {
+  default as GridColumn,
+  GridColumnProps,
+  StrictGridColumnProps,
+} from 'semantic-ui-react/dist/commonjs/collections/Grid/GridColumn'
+export {
+  default as Portal,
+  PortalProps,
+  StrictPortalProps,
+} from 'semantic-ui-react/dist/commonjs/addons/Portal'
 export {
   default as Button,
   ButtonProps,
