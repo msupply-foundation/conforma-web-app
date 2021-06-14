@@ -220,7 +220,8 @@ const PageElements: React.FC<PageElementProps> = ({
                     <ReviewApplicantResponse
                       {...props}
                       isNewApplicationResponse={!!isNewApplicationResponse}
-                      isChangeRequest={isChangeRequest}
+                      isChangeRequest={!!isChangeRequest}
+                      isChanged={!!isChanged}
                     />
                   )}
                   {toggleHistoryPanel && thisReviewLatestResponse && (

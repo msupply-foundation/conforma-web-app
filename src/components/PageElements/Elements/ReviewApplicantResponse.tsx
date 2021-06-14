@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Icon } from 'semantic-ui-react'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/graphql'
 import ApplicantResponseElement from './ApplicantResponseElement'
@@ -15,8 +14,8 @@ interface ReviewApplicantResponseProps {
   previousReviewResponse?: ReviewResponse
   isActiveReviewResponse: boolean
   isNewApplicationResponse: boolean
-  isNewReviewResponse?: boolean
-  isChangeRequest?: boolean
+  isChangeRequest: boolean
+  isChanged: boolean
   showModal: () => void
 }
 
@@ -27,13 +26,13 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   previousReviewResponse,
   isNewApplicationResponse,
   isActiveReviewResponse,
-  isNewReviewResponse = false,
-  isChangeRequest = false,
+  isChangeRequest,
+  isChanged,
   showModal,
 }) => {
   const [isActiveEdit, setIsActiveEdit] = useState(false)
   const decisionExists = !!reviewResponse?.decision
-  const triggerTitle = isNewApplicationResponse // can add check for isNewReviewResponseAlso
+  const triggerTitle = isNewApplicationResponse
     ? strings.BUTTON_RE_REVIEW_RESPONSE
     : strings.BUTTON_REVIEW_RESPONSE
 
@@ -42,7 +41,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
 
   const getReviewDecisionOption = () => {
     if (!isActiveReviewResponse) return null
-    if (isChangeRequest && !isNewReviewResponse)
+    if (isChangeRequest && !isChanged)
       return (
         <ReviewElementTrigger
           title={strings.LABEL_RESPONSE_UPDATE}
@@ -95,7 +94,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               isCurrentReview={false}
               isConsolidation={true}
               reviewResponse={consolidationReviewResponse}
-              shouldDim={isNewReviewResponse}
+              shouldDim={isChangeRequest && isChanged}
             />
           )}
         </>
