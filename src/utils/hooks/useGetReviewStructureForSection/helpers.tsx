@@ -138,8 +138,8 @@ const setIsNewReviewResponse = (structure: FullStructure) => {
     const {
       isAssigned,
       lowerLevelReviewLatestResponse,
-      lowerLevelReviewPreviousResponse,
       thisReviewPreviousResponse,
+      thisReviewLatestResponse,
     } = element
 
     // Just update field in assigned elements
@@ -150,8 +150,7 @@ const setIsNewReviewResponse = (structure: FullStructure) => {
           lowerLevelReviewLatestResponse?.timeUpdated > thisReviewPreviousResponse?.timeUpdated
       } else {
         element.isNewReviewResponse =
-          lowerLevelReviewLatestResponse?.timeUpdated >
-          lowerLevelReviewPreviousResponse?.timeUpdated
+          lowerLevelReviewLatestResponse?.timeUpdated > thisReviewLatestResponse?.timeUpdated
       }
     }
   })
@@ -197,8 +196,6 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
     (element, response) => (element.thisReviewLatestResponse = response),
     (element, response) => (element.thisReviewPreviousResponse = response)
   )
-
-  console.log('PreviousLevelReview', data?.previousLevelReviewResponses?.nodes)
 
   // add lowerLevelReviewLatestResponse and previousPreviousReviewLevelResponse
   structure = addReviewResponses(
