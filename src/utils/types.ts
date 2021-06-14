@@ -284,6 +284,7 @@ type PageElement = {
   latestOriginalReviewResponse?: ReviewResponse
   previousOriginalReviewResponse?: ReviewResponse
   isNewApplicationResponse?: boolean
+  isNewReviewResponse?: boolean
   review?: ReviewQuestionDecision
   isPendingReview?: boolean
   reviewQuestionAssignmentId: number
@@ -378,13 +379,13 @@ interface BaseReviewProgress {
   totalReviewable: number
   totalPendingReview: number
   totalActive: number // review or application responses that are in progress (as oppose to awaiting review to be started)
+  totalNewReviewable: number // new reviable are updates from re-submission (after changes requested to applicant or lower level reviewer)
 }
 
 interface ReviewProgress extends BaseReviewProgress {
   doneConform: number
   doneNonConform: number
-  doneNewReviewable: number
-  totalNewReviewable: number
+  doneNewReviewable: number // Review of applicant re-submission
 }
 
 interface ConsolidationProgress extends BaseReviewProgress {
@@ -394,6 +395,7 @@ interface ConsolidationProgress extends BaseReviewProgress {
   doneActiveDisagree: number
   doneActiveAgreeConform: number
   doneActiveAgreeNonConform: number
+  doneNewReviewable: number // Review of reviewer re-submission
   totalConform: number
   totalNonConform: number
 }
