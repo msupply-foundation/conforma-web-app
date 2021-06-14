@@ -408,6 +408,7 @@ enum ReviewAction {
   canSelfAssign = 'CAN_SELF_ASSIGN',
   canSelfAssignLocked = 'CAN_SELF_ASSIGN_LOCKED',
   canStartReview = 'CAN_START_REVIEW',
+  canReStartReview = 'CAN_RE_START_REVIEW', // User for second review (for consolidator)
   canContinueLocked = 'CAN_CONTINUE_LOCKED',
   canUpdate = 'CAN_UPDATE',
   unknown = 'UNKNOWN',
