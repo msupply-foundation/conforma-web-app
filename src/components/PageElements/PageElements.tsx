@@ -181,6 +181,7 @@ const PageElements: React.FC<PageElementProps> = ({
               thisReviewLatestResponse,
               thisReviewPreviousResponse,
               isNewApplicationResponse,
+              isNewReviewResponse,
               isActiveReviewResponse,
               isChangeRequest,
               isChanged,
@@ -201,9 +202,8 @@ const PageElements: React.FC<PageElementProps> = ({
               const props = {
                 applicationResponse: latestApplicationResponse,
                 reviewResponse: thisReviewLatestResponse,
+                previousReviewResponse: thisReviewPreviousResponse,
                 isActiveReviewResponse: !!isActiveReviewResponse,
-                isNewApplicationResponse: !!isNewApplicationResponse,
-                isNewReviewResponse: isChanged,
                 showModal: () => updateQuery({ showHistory: element.code }),
                 summaryViewProps: summaryViewProps,
               }
@@ -213,12 +213,13 @@ const PageElements: React.FC<PageElementProps> = ({
                   {isConsolidation ? (
                     <ConsolidateReviewDecision
                       {...props}
+                      isNewReviewResponse={!!isNewReviewResponse}
                       originalReviewResponse={latestOriginalReviewResponse}
                     />
                   ) : (
                     <ReviewApplicantResponse
                       {...props}
-                      previousReviewResponse={thisReviewPreviousResponse}
+                      isNewApplicationResponse={!!isNewApplicationResponse}
                       isChangeRequest={isChangeRequest}
                     />
                   )}

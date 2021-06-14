@@ -11,9 +11,9 @@ interface ConsolidateReviewDecisionProps {
   applicationResponse: ApplicationResponse
   summaryViewProps: SummaryViewWrapperProps
   isActiveReviewResponse: boolean
-  isNewApplicationResponse: boolean
-  /* can add check for isNewReviewResponse */
+  isNewReviewResponse: boolean
   reviewResponse?: ReviewResponse
+  previousReviewResponse?: ReviewResponse
   originalReviewResponse?: ReviewResponse
   showModal: () => void
 }
@@ -21,7 +21,9 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
   applicationResponse,
   summaryViewProps,
   isActiveReviewResponse,
+  isNewReviewResponse,
   reviewResponse,
+  previousReviewResponse,
   originalReviewResponse,
   showModal,
 }) => {
@@ -70,6 +72,14 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
             />
           )}
         </ReviewResponseElement>
+      )}
+      {isNewReviewResponse && previousReviewResponse && (
+        <ReviewResponseElement
+          isCurrentReview={false}
+          isConsolidation={true}
+          shouldDim={true}
+          reviewResponse={previousReviewResponse}
+        />
       )}
     </>
   )
