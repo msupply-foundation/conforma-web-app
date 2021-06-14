@@ -1,5 +1,4 @@
 import React from 'react'
-import { Icon } from 'semantic-ui-react'
 import { ReviewResponse } from '../../../utils/generated/graphql'
 import { ElementDecisionLabel } from '../../Review'
 
@@ -27,20 +26,11 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
 
   return (
     <div className={`response-container ${backgroundClass} ${dimClass}`}>
-      <div className="review-response-content ">
-        <ElementDecisionLabel
-          isConsolidation={isConsolidation}
-          reviewResponse={reviewResponse}
-          isDecisionVisible={isDecisionVisible}
-        />
-        {!!reviewResponse?.comment && (
-          <div className="comment-container">
-            <Icon name="comment alternate outline" color="grey" />
-            <p className="secondary">{reviewResponse.comment}</p>
-          </div>
-        )}
-      </div>
-
+      <ElementDecisionLabel
+        isConsolidation={isConsolidation}
+        reviewResponse={reviewResponse}
+        isDecisionVisible={isDecisionVisible}
+      />
       <div className="action-container">{children}</div>
     </div>
   )
