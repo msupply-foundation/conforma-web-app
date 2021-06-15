@@ -5,7 +5,16 @@
   "parameterLoadingValues": {
     "label": "Loading...",
     "default": "",
-    "description": ""
+    "description": "",
+    "maxWidth": null,
+    "type": "float",
+    "minValue": -999999999,
+    "maxValue": 999999999,
+    "locale": "en-US",
+    "currency": null,
+    "prefix": "",
+    "suffix": "null",
+    "maxSignificantDigits": 999
   },
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"

@@ -36,6 +36,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     maxSignificantDigits = undefined,
   } = parameters
 
+  console.log('LOCALE', locale)
+
   const formatOptions = {
     style: currency ? 'currency' : undefined,
     currency: currency ?? undefined,
@@ -52,11 +54,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   function handleLoseFocus(e: any) {
-    const [number, newText] = parseInput(textValue, numberFormatter)
-    console.log('newText', newText)
-    if (internalValidation.isValid) onSave({ text: newText, number, type, currency, locale })
+    const [number, text] = parseInput(textValue, numberFormatter)
+    if (internalValidation.isValid) onSave({ text, number, type, currency, locale })
     else onSave(null)
-    setTextValue(newText)
+    setTextValue(text)
   }
 
   const styles = maxWidth
@@ -95,7 +96,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 }
 
 const parseInput = (textInput: string | null | undefined, numberFormatter: any) => {
-  if (textInput === '') return [null, null]
+  if (!textInput) return [null, null]
   const number: number = Number(textInput?.replace(/[^\d\.\-]/g, ''))
   return [number, numberFormatter.format(number)]
 }
@@ -106,7 +107,7 @@ const customValidate = (
   minValue: number = -Infinity,
   maxValue: number = Infinity
 ): { isValid: boolean; validationMessage?: string } => {
-  if (number === NaN) return { isValid: true }
+  if (number === NaN || number === null) return { isValid: true }
   if (type === NumberType.INTEGER && !Number.isInteger(number))
     return {
       isValid: false,
