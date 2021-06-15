@@ -1,0 +1,12 @@
+{
+  "isCore": true,
+  "code": "number",
+  "displayName": "Number Input",
+  "parameterLoadingValues": {
+    "label": "Loading...",
+    "default": "",
+    "description": ""
+  },
+  "//": "categories types: 'Input'|'Informative'",
+  "category": "Input"
+}
