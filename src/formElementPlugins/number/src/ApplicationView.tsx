@@ -53,6 +53,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   function handleLoseFocus(e: any) {
     const [number, newText] = parseInput(textValue, numberFormatter)
+    console.log('newText', newText)
     if (internalValidation.isValid) onSave({ text: newText, number, type, currency, locale })
     else onSave(null)
     setTextValue(newText)
@@ -105,6 +106,7 @@ const customValidate = (
   minValue: number = -Infinity,
   maxValue: number = Infinity
 ): { isValid: boolean; validationMessage?: string } => {
+  if (number === NaN) return { isValid: true }
   if (type === NumberType.INTEGER && !Number.isInteger(number))
     return {
       isValid: false,
