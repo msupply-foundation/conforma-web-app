@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
+import strings from '../constants'
 
 export enum NumberType {
   INTEGER = 'integer',
@@ -42,32 +43,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
   const numberFormatter = new Intl.NumberFormat(locale, formatOptions)
 
-  useEffect(() => {
-    console.log(internalValidation, validationState)
-  }, [internalValidation, validationState])
-
   function handleChange(e: any) {
     const text = e.target.value
-    const [number, _] = parseInput(textValue, numberFormatter)
+    const [number, _] = parseInput(text, numberFormatter)
+    setInternalValidation(customValidate(number, type, minValue, maxValue))
     onUpdate(text)
-    if (type === NumberType.INTEGER) {
-      if (Number.isInteger(number))
-        setInternalValidation({
-          isValid: true,
-          validationMessage: '',
-        })
-      else
-        setInternalValidation({
-          isValid: false,
-          validationMessage: 'Number must be an integer',
-        })
-    }
     setTextValue(text)
   }
 
   function handleLoseFocus(e: any) {
     const [number, newText] = parseInput(textValue, numberFormatter)
-    onSave({ text: newText, number, customValidation: internalValidation })
+    if (internalValidation.isValid) onSave({ text: newText, number, type, currency, locale })
+    else onSave(null)
     setTextValue(newText)
   }
 
@@ -93,9 +80,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         disabled={!isEditable}
         style={styles}
         error={
-          !validationState.isValid
+          !validationState.isValid || !internalValidation.isValid
             ? {
-                content: validationState?.validationMessage,
+                content:
+                  internalValidation?.validationMessage || validationState?.validationMessage,
                 pointing: 'above',
               }
             : null
@@ -107,9 +95,32 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
 const parseInput = (textInput: string | null | undefined, numberFormatter: any) => {
   if (textInput === '') return [null, null]
-  let number: number = Number(textInput?.replace(/[^\d\.]/g, ''))
-  console.log(number)
+  const number: number = Number(textInput?.replace(/[^\d\.\-]/g, ''))
   return [number, numberFormatter.format(number)]
+}
+
+const customValidate = (
+  number: number | null | undefined,
+  type: NumberType,
+  minValue: number = -Infinity,
+  maxValue: number = Infinity
+): { isValid: boolean; validationMessage?: string } => {
+  if (type === NumberType.INTEGER && !Number.isInteger(number))
+    return {
+      isValid: false,
+      validationMessage: strings.ERROR_NOT_INTEGER,
+    }
+  if ((number as number) < minValue)
+    return {
+      isValid: false,
+      validationMessage: strings.ERROR_TOO_SMALL,
+    }
+  if ((number as number) > maxValue)
+    return {
+      isValid: false,
+      validationMessage: strings.ERROR_TOO_BIG,
+    }
+  return { isValid: true }
 }
 
 export default ApplicationView
