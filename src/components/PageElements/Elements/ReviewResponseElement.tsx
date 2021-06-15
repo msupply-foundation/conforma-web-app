@@ -7,7 +7,7 @@ interface ReviewResponseElementProps {
   isConsolidation: boolean
   isDecisionVisible?: boolean
   shouldDim?: boolean
-  reviewResponse: ReviewResponse
+  reviewResponse?: ReviewResponse
   originalReviewResponse?: ReviewResponse
   isActiveEdit?: boolean
   setIsActiveEdit?: Function
@@ -23,6 +23,8 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
 }) => {
   const backgroundClass = isCurrentReview ? 'changeable-background' : ''
   const dimClass = shouldDim ? 'dim' : ''
+
+  if (!reviewResponse) return null
 
   return (
     <div className={`response-container ${backgroundClass} ${dimClass}`}>
