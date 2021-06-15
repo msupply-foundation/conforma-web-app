@@ -39,6 +39,37 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   const consolidationReviewResponse = previousReviewResponse?.reviewResponsesByReviewResponseLinkId
     .nodes[0] as ReviewResponse // There is only one reviewResponse associated per review cycle
 
+  const getConsolidationAndReview = () => (
+    <>
+      {isChangeRequest && isChanged && (
+        <ReviewResponseElement
+          isCurrentReview={true}
+          isConsolidation={false}
+          reviewResponse={reviewResponse as ReviewResponse}
+        >
+          {getReviewDecisionOption()}
+        </ReviewResponseElement>
+      )}
+      {consolidationReviewResponse && (
+        <ReviewResponseElement
+          isCurrentReview={false}
+          isConsolidation={true}
+          reviewResponse={consolidationReviewResponse}
+          shouldDim={isChangeRequest && isChanged}
+        />
+      )}
+      {previousReviewResponse && !isChanged && (
+        <ReviewResponseElement
+          isCurrentReview={true}
+          isConsolidation={false}
+          reviewResponse={previousReviewResponse as ReviewResponse}
+        >
+          {getReviewDecisionOption()}
+        </ReviewResponseElement>
+      )}
+    </>
+  )
+
   const getReviewDecisionOption = () => {
     if (!isActiveReviewResponse) return null
     if (isChangeRequest && !isChanged)
@@ -53,52 +84,56 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
 
   return (
     <>
-      {/* Application Response */}
-      <ApplicantResponseElement
-        applicationResponse={applicationResponse}
-        summaryViewProps={summaryViewProps}
-      >
-        {isActiveReviewResponse && !decisionExists && (
-          <ReviewElementTrigger
-            title={triggerTitle}
-            // onClick={showModal}
-            onClick={() => setIsActiveEdit(true)}
+      {isActiveEdit && !consolidationReviewResponse ? (
+        /* Inline Review area + Applicant response in context*/
+        <div className="blue-border">
+          <ApplicantResponseElement
+            applicationResponse={applicationResponse}
+            summaryViewProps={summaryViewProps}
           />
-        )}
-      </ApplicantResponseElement>
-      {/* Inline Review area */}
-      {isActiveEdit && (
-        <ReviewInlineInput
-          setIsActiveEdit={setIsActiveEdit}
-          reviewResponse={reviewResponse as ReviewResponse}
-          isConsolidation={false}
-        />
-      )}
-      {/* Review Response */}
-      {decisionExists && !isActiveEdit && (
-        <>
-          <ReviewResponseElement
-            isCurrentReview={true}
+          <ReviewInlineInput
+            setIsActiveEdit={setIsActiveEdit}
+            reviewResponse={reviewResponse as ReviewResponse}
             isConsolidation={false}
-            reviewResponse={
-              reviewResponse as ReviewResponse /* Casting to ReviewResponse since decision would exist if reviewResponse is defined */
-            }
-          >
-            {getReviewDecisionOption()}
-          </ReviewResponseElement>
-          {/* div below forced border on review response to be square */}
-          <div />
-          {/* Consolidation Response */}
-          {consolidationReviewResponse && (
+          />
+        </div>
+      ) : (
+        /* Application Response */
+        <ApplicantResponseElement
+          applicationResponse={applicationResponse}
+          summaryViewProps={summaryViewProps}
+        >
+          {isActiveReviewResponse && !decisionExists && (
+            <ReviewElementTrigger
+              title={triggerTitle}
+              // onClick={showModal}
+              onClick={() => setIsActiveEdit(true)}
+            />
+          )}
+        </ApplicantResponseElement>
+      )}
+      {decisionExists &&
+        (isActiveEdit && consolidationReviewResponse ? (
+          /* Inline Review area + Previous review and consolidation in context*/
+          <div className="blue-border">
             <ReviewResponseElement
               isCurrentReview={false}
               isConsolidation={true}
               reviewResponse={consolidationReviewResponse}
               shouldDim={isChangeRequest && isChanged}
             />
-          )}
-        </>
-      )}
+            <ReviewInlineInput
+              setIsActiveEdit={setIsActiveEdit}
+              reviewResponse={reviewResponse as ReviewResponse}
+              isConsolidation={false}
+            />
+          </div>
+        ) : (
+          /* Consolidation Response + current or previous review (in cronological order) */
+          getConsolidationAndReview()
+        ))}
+      {/* div below forced border on review response to be square */}
+      <div />
     </>
   )
 }
