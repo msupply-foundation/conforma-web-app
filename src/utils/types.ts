@@ -313,6 +313,7 @@ interface ResponseFull {
   code?: string // Used in ListBuilder
   list?: any // Used in ListBuilder
   date?: any // Used in DatePicker
+  number?: number | null // Used in Number plugin
   timeCreated?: Date
   reviewResponse?: ReviewResponse
   customValidation?: ValidationState

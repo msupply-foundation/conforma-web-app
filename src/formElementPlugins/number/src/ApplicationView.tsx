@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
+export enum NumberType {
+  INTEGER = 'integer',
+  FLOAT = 'float',
+}
+
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
@@ -12,28 +17,58 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   currentResponse,
 }) => {
-  const [value, setValue] = useState<string | null | undefined>(currentResponse?.text)
+  const [textValue, setTextValue] = useState<string | null | undefined>(currentResponse?.text)
+  const [internalValidation, setInternalValidation] = useState(validationState)
   const { isEditable } = element
   const {
     placeholder,
-    maskedInput,
     label,
     description,
     maxWidth,
-    maxLength = Infinity,
+    type = NumberType.FLOAT,
+    minValue = -Infinity,
+    maxValue = Infinity,
+    locale = undefined,
+    currency = undefined,
+    prefix = '',
+    suffix = '',
+    maxSignificantDigits = undefined,
   } = parameters
 
+  const formatOptions = {
+    style: currency ? 'currency' : undefined,
+    currency: currency ?? undefined,
+    maximumSignificantDigits: maxSignificantDigits,
+  }
+  const numberFormatter = new Intl.NumberFormat(locale, formatOptions)
+
+  useEffect(() => {
+    console.log(internalValidation, validationState)
+  }, [internalValidation, validationState])
+
   function handleChange(e: any) {
-    let text = e.target.value
-    if (text.length > maxLength) {
-      text = text.substring(0, maxLength)
-    }
+    const text = e.target.value
+    const [number, _] = parseInput(textValue, numberFormatter)
     onUpdate(text)
-    setValue(text)
+    if (type === NumberType.INTEGER) {
+      if (Number.isInteger(number))
+        setInternalValidation({
+          isValid: true,
+          validationMessage: '',
+        })
+      else
+        setInternalValidation({
+          isValid: false,
+          validationMessage: 'Number must be an integer',
+        })
+    }
+    setTextValue(text)
   }
 
   function handleLoseFocus(e: any) {
-    onSave({ text: value })
+    const [number, newText] = parseInput(textValue, numberFormatter)
+    onSave({ text: newText, number, customValidation: internalValidation })
+    setTextValue(newText)
   }
 
   const styles = maxWidth
@@ -54,9 +89,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         onChange={handleChange}
         onBlur={handleLoseFocus}
         onFocus={setIsActive}
-        value={value ? value : ''}
+        value={textValue ? textValue : ''}
         disabled={!isEditable}
-        type={maskedInput ? 'password' : undefined}
         style={styles}
         error={
           !validationState.isValid
@@ -69,6 +103,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       />
     </>
   )
+}
+
+const parseInput = (textInput: string | null | undefined, numberFormatter: any) => {
+  if (textInput === '') return [null, null]
+  let number: number = Number(textInput?.replace(/[^\d\.]/g, ''))
+  console.log(number)
+  return [number, numberFormatter.format(number)]
 }
 
 export default ApplicationView

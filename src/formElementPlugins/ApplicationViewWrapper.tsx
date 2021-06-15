@@ -133,6 +133,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       // Save response for plugins with internal validation
       const { isValid, validationMessage } = response.customValidation
       setValidationState({ isValid, validationMessage })
+      console.log('Wrapper validation', isValid, validationMessage)
       delete response.customValidation // Don't want to save this field
       await onSaveUpdateMethod({
         variables: {
