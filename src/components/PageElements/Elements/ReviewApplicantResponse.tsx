@@ -64,8 +64,6 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
     return null
   }
 
-  console.log(reviewType)
-
   switch (reviewType) {
     case 'UpdateChangesRequested':
       return (
