@@ -108,6 +108,13 @@ class pluginProvider {
         folderName: 'number',
         category: 'Input',
       },
+      datePicker: {
+        code: 'datePicker',
+        displayName: 'Date Picker',
+        isCore: true,
+        folderName: 'datePicker',
+        category: 'Input',
+      },
     }
   }
 
