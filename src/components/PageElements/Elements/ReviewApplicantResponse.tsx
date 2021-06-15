@@ -98,19 +98,30 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
           />
         </div>
       ) : (
-        /* Application Response */
-        <ApplicantResponseElement
-          applicationResponse={applicationResponse}
-          summaryViewProps={summaryViewProps}
-        >
-          {isActiveReviewResponse && !decisionExists && (
-            <ReviewElementTrigger
-              title={triggerTitle}
-              // onClick={showModal}
-              onClick={() => setIsActiveEdit(true)}
+        <>
+          {/* Application Response */}
+          <ApplicantResponseElement
+            applicationResponse={applicationResponse}
+            summaryViewProps={summaryViewProps}
+          >
+            {isActiveReviewResponse && !decisionExists && (
+              <ReviewElementTrigger
+                title={triggerTitle}
+                // onClick={showModal}
+                onClick={() => setIsActiveEdit(true)}
+              />
+            )}
+          </ApplicantResponseElement>
+          {/* Previous review */}
+          {previousReviewResponse && (
+            <ReviewResponseElement
+              isCurrentReview={false}
+              isConsolidation={false}
+              reviewResponse={previousReviewResponse}
+              shouldDim={isChangeRequest && isChanged}
             />
           )}
-        </ApplicantResponseElement>
+        </>
       )}
       {decisionExists &&
         (isActiveEdit && consolidationReviewResponse ? (
