@@ -1,6 +1,7 @@
 const commonPaths = require('./common-paths')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const transform = require('@formatjs/ts-transformer').transform
 
 const config = {
   entry: {
@@ -18,7 +19,23 @@ const config = {
     rules: [
       {
         test: /\.(ts|tsx)$/,
-        loader: "awesome-typescript-loader",
+        use: [
+          {
+            loader: "ts-loader",
+            options: {
+              getCustomTransformers() {
+                return {
+                  before: [
+                    transform({
+                      overrideIdFn: '[sha512:contenthash:base64:6]',
+                    }),
+                  ],
+                }
+              },
+            },
+          }
+        ]
+
       },
       // {
       //   enforce: "pre",
@@ -45,7 +62,7 @@ const config = {
           test: /\.css$/,
           chunks: 'all',
           enforce: true
-        },        
+        },
         vendor: {
           chunks: 'initial',
           test: 'vendor',
