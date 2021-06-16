@@ -6,6 +6,7 @@ import ReviewResponseElement from './ReviewResponseElement'
 import ReviewInlineInput from './ReviewInlineInput'
 import strings from '../../../utils/constants'
 import { UpdateIcon } from '../PageElements'
+import ViewHistoryButton from '../ViewHistoryButton'
 
 type ReviewType =
   | 'NotReviewable'
@@ -119,8 +120,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               )}
             </>
           )}
-          {/* div below forced border on review response to be square */}
-          <div />
+          {isChangeRequest && isChanged && <ViewHistoryButton />}
         </>
       )
 
@@ -173,7 +173,6 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                   reviewResponse={previousReviewResponse}
                 />
               )}
-              {/*TODO: Add Previous Applicant response here - Or show history icon */}
             </>
           )}
         </>
