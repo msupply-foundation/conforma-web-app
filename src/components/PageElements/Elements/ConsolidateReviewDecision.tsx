@@ -6,6 +6,7 @@ import ReviewResponseElement from './ReviewResponseElement'
 import ReviewInlineInput from './ReviewInlineInput'
 import strings from '../../../utils/constants'
 import { UpdateIcon } from '../PageElements'
+import ViewHistoryButton from '../ViewHistoryButton'
 
 interface ConsolidateReviewDecisionProps {
   applicationResponse: ApplicationResponse
@@ -91,7 +92,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
           reviewResponse={previousReviewResponse}
         />
       )}
-      {/*TODO: Add Previous lower level Review response here - Or show history icon */}
+      {isNewReviewResponse && decisionExists && <ViewHistoryButton />}
     </>
   )
 }
