@@ -22,8 +22,6 @@ const useQuerySectionActivation = ({
   const {
     query: { activeSections },
     updateQuery,
-    replace,
-    location,
   } = useRouter()
 
   useEffect(() => {
