@@ -37,6 +37,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
 
   return (
     <>
+      {/* Applicant Response */}
       <ApplicantResponseElement
         applicationResponse={applicationResponse}
         summaryViewProps={summaryViewProps}
