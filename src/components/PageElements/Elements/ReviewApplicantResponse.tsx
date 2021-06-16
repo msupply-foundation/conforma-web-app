@@ -68,6 +68,11 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
     case 'UpdateChangesRequested':
       return (
         <>
+          {/* Applicant Response */}
+          <ApplicantResponseElement
+            applicationResponse={applicationResponse}
+            summaryViewProps={summaryViewProps}
+          />
           {isActiveEdit ? (
             /* Inline Review area + Consolidation in context*/
             <div className="blue-border">
@@ -84,8 +89,8 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               />
             </div>
           ) : (
-            /* Consolidation Response + current or previous review (in cronological order) */
             <>
+              {/* Consolidation Response (in cronological order) */}
               {isChangeRequest && isChanged && (
                 <ReviewResponseElement
                   isCurrentReview={true}
@@ -143,10 +148,9 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                 applicationResponse={applicationResponse}
                 summaryViewProps={summaryViewProps}
               >
-                {isActiveReviewResponse && !decisionExists && (
+                {!decisionExists && (
                   <ReviewElementTrigger
                     title={triggerTitle} // Review or Re-review
-                    // onClick={showModal}
                     onClick={() => setIsActiveEdit(true)}
                   />
                 )}
@@ -162,14 +166,14 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                 </ReviewResponseElement>
               )}
               {/* Previous review response */}
-              {isNewApplicationResponse && (
+              {isNewApplicationResponse && !decisionExists && (
                 <ReviewResponseElement
                   isCurrentReview={false}
                   isConsolidation={false}
                   reviewResponse={previousReviewResponse}
                 />
               )}
-              {/*TODO: Add Previous Applicant response here */}
+              {/*TODO: Add Previous Applicant response here - Or show history icon */}
             </>
           )}
           {/* div below forced border on review response to be square */}
