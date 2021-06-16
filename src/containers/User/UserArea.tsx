@@ -9,7 +9,7 @@ import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 
 const UserArea: React.FC = () => {
   const {
-    userState: { currentUser },
+    userState: { currentUser, orgList },
   } = useUserState()
 
   if (!currentUser || currentUser?.username === strings.USER_NONREGISTERED) return null
