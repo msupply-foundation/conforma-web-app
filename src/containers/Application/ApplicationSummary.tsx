@@ -15,7 +15,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
   structure: fullStructure,
   requestRevalidation,
 }) => {
-  const { replace, push } = useRouter()
+  const { replace, push, query } = useRouter()
   const [error, setError] = useState(false)
 
   const {
@@ -36,6 +36,8 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
   useEffect(() => {
     if (!fullStructure) return
 
+    if (query.dev === 'true') return // TO-DO: only allow in development mode
+
     // Re-direct based on application status
     if (fullStructure.info.current?.status === ApplicationStatus.ChangesRequired)
       replace(`/application/${fullStructure.info.serial}`)
@@ -51,7 +53,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     requestRevalidation &&
       requestRevalidation(
         async ({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
-          if (firstStrictInvalidPage) {
+          if (firstStrictInvalidPage && query.dev !== 'true') {
             const { sectionCode, pageNumber } = firstStrictInvalidPage
             setStrictSectionPage(firstStrictInvalidPage)
             replace(`/application/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
