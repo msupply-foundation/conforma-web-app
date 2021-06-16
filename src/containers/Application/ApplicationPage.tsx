@@ -7,7 +7,6 @@ import {
   ApplicationProps,
 } from '../../utils/types'
 import { Loading, Navigation, PageElements, ProgressArea } from '../../components'
-import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { checkPageIsAccessible } from '../../utils/helpers/structure'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -19,9 +18,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   requestRevalidation,
   strictSectionPage,
 }) => {
-  const {
-    userState: { currentUser },
-  } = useUserState()
   const {
     query: { serialNumber, sectionCode, page },
     push,

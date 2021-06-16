@@ -9,14 +9,14 @@ export interface ReviewContainerProps {
 }
 
 const ReviewContainer: React.FC<ReviewContainerProps> = ({ application, children }) => {
-  const { replace } = useRouter()
+  const { push } = useRouter()
   const { template, name, org } = application
   return (
     <Container id="review-area">
       <div className="top-container">
         <Label
           className="back-label clickable"
-          onClick={() => replace(`/applications?type=${template.code}`)}
+          onClick={() => push(`/applications?type=${template.code}`)}
           content={
             <>
               <Icon name="chevron left" className="dark-grey" />

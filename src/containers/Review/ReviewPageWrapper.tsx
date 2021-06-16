@@ -1,12 +1,13 @@
 import React from 'react'
 import { Route, Switch } from 'react-router'
-import { Message } from 'semantic-ui-react'
+import { Container, Message } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 import ReviewPage from './ReviewPage'
+import { Stage } from '../../components/Review'
 
 const ReviewPageWrapper: React.FC<{
   structure: FullStructure
@@ -29,6 +30,12 @@ const ReviewPageWrapper: React.FC<{
 
   if (!fullApplicationStructure) return <Loading />
 
+  const {
+    info: {
+      current: { stage },
+    },
+  } = fullApplicationStructure
+
   // Find the review id used in URL in reviewAssignments
   const reviewAssignment = reviewAssignments.find(
     (reviewAssignment) => reviewAssignment?.review?.id === Number(reviewId)
@@ -38,14 +45,17 @@ const ReviewPageWrapper: React.FC<{
   // Pass through structure and reviewAssignment associated to review
   return (
     <>
-      <Switch>
-        <Route exact path={path}>
-          <ReviewPage {...{ fullApplicationStructure, reviewAssignment }} />
-        </Route>
-        <Route>
-          <NoMatch />
-        </Route>
-      </Switch>
+      <Container id="application-summary">
+        <Stage name={stage.name || ''} colour={stage.colour} />
+        <Switch>
+          <Route exact path={path}>
+            <ReviewPage {...{ fullApplicationStructure, reviewAssignment }} />
+          </Route>
+          <Route>
+            <NoMatch />
+          </Route>
+        </Switch>
+      </Container>
     </>
   )
 }

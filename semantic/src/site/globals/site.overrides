@@ -43,9 +43,9 @@ a:hover {
   color: @attention;
 }
 
-.information {
-  color: @information;
-}
+//.information {
+//  color: @information;
+//}
 
 .clickable {
   cursor: pointer;
@@ -342,6 +342,11 @@ a:hover {
   color: @headersInteractiveMed;
   font-size: @fontSmall;
   font-weight: @semiboldWeight;
+}
+
+.ui.segment.review-application-segment {
+  margin: 0px;
+  padding: 0px;
 }
 
 .reviewer-dropdown {
