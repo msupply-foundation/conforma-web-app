@@ -772,7 +772,7 @@ a:hover {
     margin-bottom: 2px;
 
     &.information {
-      >div{
+      > div {
         width: 100%;
       }
     }
@@ -855,6 +855,11 @@ a:hover {
     border-bottom-left-radius: @borderRadius;
     border-bottom-right-radius: @borderRadius;
   }
+}
+
+// when SummaryView elements used on Application pages
+.summary-extra-spacing {
+  margin-bottom: 20px !important;
 }
 
 .updated-label {
@@ -1051,13 +1056,12 @@ a:hover {
   .summary-page-element {
     margin: 10px;
   }
-  
+
   .detail-container {
     .flex-row();
     align-items: center;
     flex-wrap: 1;
   }
-
 }
 
 /*--------------------------------

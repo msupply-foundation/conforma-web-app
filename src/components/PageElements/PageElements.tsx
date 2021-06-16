@@ -90,7 +90,7 @@ const PageElements: React.FC<PageElementProps> = ({
               <div className="form-element-wrapper" key={`question_${element.code}`}>
                 <div className="form-element">
                   {element.category === TemplateElementCategory.Information ? (
-                    <RenderElementWrapper key={element.code}>
+                    <RenderElementWrapper key={element.code} extraSpacing>
                       <SummaryViewWrapper {...getSummaryViewProps(element)} />
                     </RenderElementWrapper>
                   ) : (
@@ -248,8 +248,11 @@ const PageElements: React.FC<PageElementProps> = ({
   return null
 }
 
-const RenderElementWrapper: React.FC = ({ children }) => (
-  <Segment basic className="summary-page-element-container">
+const RenderElementWrapper: React.FC<{ extraSpacing?: boolean }> = ({ children, extraSpacing }) => (
+  <Segment
+    basic
+    className={`summary-page-element-container${extraSpacing ? ' summary-extra-spacing' : ''}`}
+  >
     {children}
   </Segment>
 )
