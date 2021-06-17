@@ -1,16 +1,20 @@
-import React from 'react'
-import { Button, Container, Icon, Image, List } from 'semantic-ui-react'
+import React, { SyntheticEvent } from 'react'
+import { Button, Container, Icon, Image, List, Dropdown } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
+import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { Link } from 'react-router-dom'
 import strings from '../../utils/constants'
-import { User } from '../../utils/types'
+import { OrganisationSimple, User, LoginPayload } from '../../utils/types'
 import config from '../../config.json'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 
 const UserArea: React.FC = () => {
   const {
     userState: { currentUser, orgList },
+    onLogin,
   } = useUserState()
+
+  console.log('User', currentUser)
 
   if (!currentUser || currentUser?.username === strings.USER_NONREGISTERED) return null
 
@@ -18,7 +22,9 @@ const UserArea: React.FC = () => {
     <Container id="user-area">
       <div id="user-area-left">
         <MainMenuBar />
-        {currentUser?.organisation?.orgName && <OrgSelector user={currentUser} />}
+        {currentUser?.organisation?.orgName && (
+          <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />
+        )}
       </div>
       <UserMenu user={currentUser as User} />
     </Container>
@@ -54,16 +60,42 @@ const MainMenuBar: React.FC = () => {
   )
 }
 
-const OrgSelector: React.FC<{ user: User }> = ({ user }) => {
+const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: Function }> = ({
+  user,
+  orgs,
+  onLogin,
+}) => {
   // TO-DO: Make into Dropdown so Org can be selected
+  console.log('orgs', orgs)
+  const onLoginOrgSuccess = async ({ user, orgList, templatePermissions, JWT }: any) => {
+    console.log('RESULT', JWT)
+    onLogin({ JWT, user, permissions: templatePermissions, orgList })
+  }
+  const JWT = localStorage.getItem('persistJWT') as string
+  const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
+    console.log('data', orgId)
+    await attemptLoginOrg({ orgId, JWT, onLoginOrgSuccess })
+  }
+
+  const dropdownOptions = orgs.map(({ orgId, orgName }) => ({
+    key: orgId,
+    text: orgName,
+    value: orgId,
+  }))
+  dropdownOptions.push({ key: 0, text: 'No Organisation', value: 0 })
   return (
     <div id="org-selector">
       {user?.organisation?.logoUrl && (
         <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST)} />
       )}
       <div>
-        {user?.organisation?.orgName || ''}
-        <Icon size="small" name="chevron down" />
+        <Dropdown
+          text={user?.organisation?.orgName || 'No Org'}
+          options={dropdownOptions}
+          fluid
+          direction="right"
+          onChange={handleChange}
+        ></Dropdown>
       </div>
     </div>
   )
