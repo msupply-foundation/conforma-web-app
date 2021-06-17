@@ -1,7 +1,6 @@
 import React from 'react'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/graphql'
-import { useRouter } from '../../../utils/hooks/useRouter'
 import { UpdateIcon } from '../PageElements'
 import ViewHistoryButton from '../ViewHistoryButton'
 import ApplicantResponseElement from './ApplicantResponseElement'
@@ -28,8 +27,11 @@ const ApplicantElementWrapper: React.FC<ApplicantElementWrapperProps> = ({
   isChanged,
   isChangeRequest,
 }) => {
-  const { push } = useRouter()
   const canRenderReviewResponse = !!isChangeRequest && !!reviewResponse
+  const isNewApplicationResponse =
+    !!previousApplicationResponse &&
+    previousApplicationResponse.value.text !== latestApplicationResponse.value.text
+
   return (
     <>
       <ApplicantResponseElement
@@ -50,7 +52,8 @@ const ApplicantElementWrapper: React.FC<ApplicantElementWrapperProps> = ({
           reviewResponse={reviewResponse as ReviewResponse}
         />
       )}
-      {!!previousApplicationResponse && <ViewHistoryButton />}
+      {/* Show history - for previous Applicant responses */}
+      {isNewApplicationResponse && <ViewHistoryButton />}
     </>
   )
 }
