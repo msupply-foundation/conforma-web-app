@@ -1,48 +1,65 @@
-import React from 'react'
-import { FormattedMessage, IntlProvider, FormattedNumber } from 'react-intl'
+import React, { useContext } from 'react'
+import { useIntl, FormattedMessage, FormattedNumber } from 'react-intl'
 import { Link } from 'react-router-dom'
-import { List, Label, Container, Header } from 'semantic-ui-react'
+import { Label, Container, Header } from 'semantic-ui-react'
 import { useRouter } from '../utils/hooks/useRouter'
-
-const messagesInFrench = {
-  myMessage: "Aujourd'hui, c'est le {ts, date, ::yyyyMMdd}",
-}
+import { LanguageContext } from './contexts/Language.context'
 
 const ProductListDemo: React.FC = () => {
   const { pathname } = useRouter()
+  const intl = useIntl()
+  const { state, changeLanguage } = useContext(LanguageContext)
+
+  const updateLocale = async (event: any) => await changeLanguage(event.target.value)
 
   return (
-    <IntlProvider messages={messagesInFrench} locale="fr" defaultLocale="en">
-      <Container text>
-        <Header as="h1" content="Registered Products" />
-        <Header as="h2" content="List of (public) registered products in the system" />
-        <Header as="h3" content="Can be filtered with query parameters, e.g:" />
-        <List>
-          <List.Item content="Pharamaceutical products" as={Link} to="?type=pharmaceutical" />
-          <List.Item
-            content="Products expiring in the next 20 days."
-            as={Link}
-            to="?expiration=20"
-          />
-          <List.Item content="Expired Class A drugs." as={Link} to="?class=A&expired=true" />
-          <List.Item content="Reset query" as={Link} to={pathname} />
-        </List>
-        <p>
+    <Container text>
+      <select value={state.language} onChange={updateLocale}>
+        <option value="en">English</option>
+        <option value="fr">French</option>
+      </select>
+      <Header
+        as="h1"
+        content={intl.formatMessage({
+          description: 'Header 1', // Description should be a string literal
+          defaultMessage: 'Registered Products', // Message should be a string literal
+        })}
+      />
+      <Header
+        as="h2"
+        content={intl.formatMessage({
+          description: 'Header 2',
+          defaultMessage: 'List of (public) registered products in the system',
+        })}
+      />
+      <Header
+        as="h3"
+        content={intl.formatMessage({
+          description: 'Header 3',
+          defaultMessage: 'Can be filtered with query parameters, e.g:',
+        })}
+      />
+      <FormattedMessage description="Paragraph" defaultMessage="Just a simple try of addition" />
+      <p>
+        <FormattedMessage
+          description="Paragraph"
+          defaultMessage="Today is {ts, date, ::yyyyMMdd}"
+          values={{ ts: Date.now() }}
+        />
+        <br />
+        <FormattedNumber value={19} style="currency" currency="EUR" />
+        <br />
+      </p>
+      <Label>
+        <Link to={'/products/XYZ276'}>
           <FormattedMessage
-            id="myMessage"
-            defaultMessage="Today is {ts, date, ::yyyyMMdd}"
-            values={{ ts: Date.now() }}
+            description="Product Link"
+            defaultMessage="{val1} - registered by {val2}. {exp, date, ::yyyy/MM/dd}"
+            values={{ exp: new Date('December 10, 2020'), val1: 'Drug A', val2: 'Company B' }}
           />
-          <br />
-          <FormattedNumber value={19} style="currency" currency="EUR" />
-          <br />
-        </p>
-        <Header as="h4" content="Product List:" />
-        <Label>
-          <Link to={'/products/XYZ276'}>Drug A - registered by Company B. Exp: 2020/12/10</Link>
-        </Label>
-      </Container>
-    </IntlProvider>
+        </Link>
+      </Label>
+    </Container>
   )
 }
 

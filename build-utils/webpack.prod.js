@@ -22,6 +22,11 @@ const config = {
       },
     ]
   },
+  resolve: {
+    alias: {
+      '@formatjs/icu-messageformat-parser':'@formatjs/icu-messageformat-parser/no-parser',
+    },
+  },
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash:4].css'
