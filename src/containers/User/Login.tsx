@@ -24,7 +24,7 @@ const Login: React.FC = () => {
 
   const noOrgOption: OrganisationSimple = {
     orgId: LOGIN_AS_NO_ORG,
-    orgName: strings.LABEL_NO_ORG,
+    orgName: strings.LABEL_NO_ORG_OPTION,
     userRole: null,
   }
 

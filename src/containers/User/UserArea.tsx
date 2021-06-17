@@ -1,7 +1,7 @@
 import React, { SyntheticEvent } from 'react'
 import { Button, Container, Icon, Image, List, Dropdown } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
-import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
+import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { Link } from 'react-router-dom'
 import strings from '../../utils/constants'
 import { OrganisationSimple, User, LoginPayload } from '../../utils/types'
@@ -14,17 +14,13 @@ const UserArea: React.FC = () => {
     onLogin,
   } = useUserState()
 
-  console.log('User', currentUser)
-
   if (!currentUser || currentUser?.username === strings.USER_NONREGISTERED) return null
 
   return (
     <Container id="user-area">
       <div id="user-area-left">
         <MainMenuBar />
-        {currentUser?.organisation?.orgName && (
-          <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />
-        )}
+        {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
       <UserMenu user={currentUser as User} />
     </Container>
@@ -65,24 +61,27 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   orgs,
   onLogin,
 }) => {
-  // TO-DO: Make into Dropdown so Org can be selected
-  console.log('orgs', orgs)
-  const onLoginOrgSuccess = async ({ user, orgList, templatePermissions, JWT }: any) => {
-    console.log('RESULT', JWT)
-    onLogin({ JWT, user, permissions: templatePermissions, orgList })
-  }
+  const LOGIN_AS_NO_ORG = 0 // Ensures server returns no organisation
+
   const JWT = localStorage.getItem('persistJWT') as string
+
   const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
-    console.log('data', orgId)
     await attemptLoginOrg({ orgId, JWT, onLoginOrgSuccess })
   }
-
+  const onLoginOrgSuccess = async ({ user, orgList, templatePermissions, JWT }: LoginPayload) => {
+    console.log('templatePermissions', templatePermissions)
+    await onLogin(JWT, user, templatePermissions, orgList)
+  }
   const dropdownOptions = orgs.map(({ orgId, orgName }) => ({
     key: orgId,
     text: orgName,
     value: orgId,
   }))
-  dropdownOptions.push({ key: 0, text: 'No Organisation', value: 0 })
+  dropdownOptions.push({
+    key: LOGIN_AS_NO_ORG,
+    text: strings.LABEL_NO_ORG,
+    value: LOGIN_AS_NO_ORG,
+  })
   return (
     <div id="org-selector">
       {user?.organisation?.logoUrl && (
@@ -90,7 +89,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
       )}
       <div>
         <Dropdown
-          text={user?.organisation?.orgName || 'No Org'}
+          text={user?.organisation?.orgName || strings.LABEL_NO_ORG}
           options={dropdownOptions}
           fluid
           direction="right"
