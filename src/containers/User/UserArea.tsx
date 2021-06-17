@@ -90,8 +90,6 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
         <Dropdown
           text={user?.organisation?.orgName || strings.LABEL_NO_ORG}
           options={dropdownOptions}
-          fluid
-          direction="right"
           onChange={handleChange}
         ></Dropdown>
       </div>
