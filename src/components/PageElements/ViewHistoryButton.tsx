@@ -5,7 +5,11 @@ import strings from '../../utils/constants'
 const ViewHistoryButton: React.FC = () => {
   return (
     <div className="history-container">
-      <Label className="clickable" icon="history" content={strings.BUTTON_VIEW_HISTORY} />
+      <Label
+        className="link-label clickable"
+        icon="history"
+        content={strings.BUTTON_VIEW_HISTORY}
+      />
     </div>
   )
 }
