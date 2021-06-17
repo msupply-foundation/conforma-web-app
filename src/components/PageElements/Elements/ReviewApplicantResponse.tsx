@@ -120,6 +120,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               )}
             </>
           )}
+          {/* Show history - for previous reviews done */}
           {isChangeRequest && isChanged && <ViewHistoryButton />}
         </>
       )
@@ -175,6 +176,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               )}
             </>
           )}
+          {/* Show history - for previous reviews done */}
           {isNewApplicationResponse && decisionExists && <ViewHistoryButton />}
         </>
       )

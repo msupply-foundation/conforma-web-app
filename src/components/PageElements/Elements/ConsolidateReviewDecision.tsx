@@ -92,6 +92,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
           reviewResponse={previousReviewResponse}
         />
       )}
+      {/* Show history - for previous consolidations done */}
       {isNewReviewResponse && decisionExists && <ViewHistoryButton />}
     </>
   )
