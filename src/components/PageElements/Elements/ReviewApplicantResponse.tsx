@@ -120,6 +120,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               )}
             </>
           )}
+          {/* Show history - for previous reviews done */}
           {isChangeRequest && isChanged && <ViewHistoryButton />}
         </>
       )
