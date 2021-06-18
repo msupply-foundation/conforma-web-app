@@ -874,8 +874,9 @@ a:hover {
 }
 
 .blue-border {
-  border: 1px solid @interactiveHigh;
-  border-radius: 5px !important;
+  border: 2px solid @interactiveHigh;
+  border-radius: 10px !important;
+  overflow: clip;
 }
 
 .updated-label {
