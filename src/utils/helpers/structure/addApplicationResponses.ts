@@ -27,8 +27,10 @@ const addApplicationResponses = (
 
       element.enableViewHistory =
         groupedApplicationResponses.length > 2 ||
-        element.latestApplicationResponse.value.text !==
-          element.previousApplicationResponse.value.text
+        (element.latestApplicationResponse && element.previousApplicationResponse
+          ? element.latestApplicationResponse.value.text !==
+            element.previousApplicationResponse.value.text
+          : false)
     }
   )
 }
