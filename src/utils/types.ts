@@ -291,7 +291,6 @@ type PageElement = {
   isChangeRequest?: boolean
   isChanged?: boolean
   isActiveReviewResponse?: boolean
-  allResponsesInStage: (ApplicationResponse | ReviewResponse)[]
 }
 
 interface ApplicationProgress {
