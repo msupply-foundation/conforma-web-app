@@ -225,9 +225,21 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
       ({ templateElementId }) => templateElementId && String(templateElementId) === id
     )
 
-    // First 2 can be just 1 duplicated...
+    const hasThisReviewResponsesHistory =
+      element.thisReviewLatestResponse?.decision !== element.thisReviewPreviousResponse?.decision ||
+      elementThisReviewResponses.length > 2
+
+    const hasLowerLevelReviewResponsesHistory =
+      element.lowerLevelReviewLatestResponse?.decision !==
+        element.lowerLevelReviewPreviousResponse?.decision ||
+      elementLowerLevelReviewResponses.length > 2
+
+    // Check if enableViewHistory already set to true (when there is more than 2 ApplicantResponseElements)
+    // Or more than 2 thisReview or lowerLevelReview (that aren't duplications)
     element.enableViewHistory =
-      elementThisReviewResponses.length + elementLowerLevelReviewResponses.length > 4
+      element.enableViewHistory ||
+      hasLowerLevelReviewResponsesHistory ||
+      hasThisReviewResponsesHistory
   })
 
   return structure
