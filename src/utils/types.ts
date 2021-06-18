@@ -292,6 +292,7 @@ type PageElement = {
   isChangeRequest?: boolean
   isChanged?: boolean
   isActiveReviewResponse?: boolean
+  enableViewHistory: boolean
 }
 
 interface ApplicationProgress {

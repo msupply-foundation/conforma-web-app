@@ -121,6 +121,7 @@ const PageElements: React.FC<PageElementProps> = ({
             element,
             isChanged,
             isChangeRequest,
+            enableViewHistory,
             latestApplicationResponse,
             previousApplicationResponse,
           } = state
@@ -146,6 +147,7 @@ const PageElements: React.FC<PageElementProps> = ({
             summaryViewProps,
             reviewResponse: reviewResponse as ReviewResponse,
             canApplicantEdit,
+            enableViewHistory,
             isChanged,
             isChangeRequest,
             updateMethod: () => push(`/application/${serial}/${sectionCode}/Page${pageNumber}`),
@@ -174,6 +176,7 @@ const PageElements: React.FC<PageElementProps> = ({
               isNewApplicationResponse,
               isNewReviewResponse,
               isActiveReviewResponse,
+              enableViewHistory,
               isChangeRequest,
               isChanged,
               latestApplicationResponse,
@@ -195,6 +198,7 @@ const PageElements: React.FC<PageElementProps> = ({
                 reviewResponse: thisReviewLatestResponse,
                 previousReviewResponse: thisReviewPreviousResponse,
                 isActiveReviewResponse: !!isActiveReviewResponse,
+                enableViewHistory,
                 showModal: () => updateQuery({ showHistory: element.code }),
                 summaryViewProps: summaryViewProps,
               }

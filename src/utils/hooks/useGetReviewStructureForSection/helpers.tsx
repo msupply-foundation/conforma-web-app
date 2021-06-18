@@ -188,11 +188,16 @@ const addIsActiveReviewResponse = (structure: FullStructure) => {
 }
 
 const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponsesQuery) => {
+  // Following arrays have been sorted in useGetReviewResponsesQuery
+  const thisReviewResponses = data?.thisReviewResponses?.nodes as ReviewResponse[]
+  const lowerLevelReviewResponses = data?.previousLevelReviewResponses?.nodes as ReviewResponse[]
+  const originalReviewResponses = data?.originalReviewResponses?.nodes as ReviewResponse[]
+
   // add thisReviewLatestResponse and thisReviewPreviousResponse
   // includes for a consolidation also has reviewResponsesByReviewResponseLinkId with Consolidator decision
   structure = addReviewResponses(
     structure,
-    data?.thisReviewResponses?.nodes as ReviewResponse[], // Sorted in useGetReviewResponsesQuery
+    thisReviewResponses,
     (element, response) => (element.thisReviewLatestResponse = response),
     (element, response) => (element.thisReviewPreviousResponse = response)
   )
@@ -200,17 +205,30 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
   // add lowerLevelReviewLatestResponse and previousPreviousReviewLevelResponse
   structure = addReviewResponses(
     structure,
-    data?.previousLevelReviewResponses?.nodes as ReviewResponse[], // Sorted in useGetReviewResponsesQuery
+    lowerLevelReviewResponses,
     (element, response) => (element.lowerLevelReviewLatestResponse = response),
     (element, response) => (element.lowerLevelReviewPreviousResponse = response)
   )
   // add latestOriginalReviewResponse and previousOriginalReviewResponse
   structure = addReviewResponses(
     structure,
-    data?.originalReviewResponses?.nodes as ReviewResponse[], // Sorted in useGetReviewResponsesQuery
+    originalReviewResponses,
     (element, response) => (element.latestOriginalReviewResponse = response),
     (element, response) => (element.previousOriginalReviewResponse = response)
   )
+
+  Object.entries(structure?.elementsById || {}).forEach(([id, element]) => {
+    const elementThisReviewResponses = thisReviewResponses.filter(
+      ({ templateElementId }) => templateElementId && String(templateElementId) === id
+    )
+    const elementLowerLevelReviewResponses = lowerLevelReviewResponses.filter(
+      ({ templateElementId }) => templateElementId && String(templateElementId) === id
+    )
+
+    // First 2 can be just 1 duplicated...
+    element.enableViewHistory =
+      elementThisReviewResponses.length + elementLowerLevelReviewResponses.length > 4
+  })
 
   return structure
 }

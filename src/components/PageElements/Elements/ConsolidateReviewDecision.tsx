@@ -13,6 +13,7 @@ interface ConsolidateReviewDecisionProps {
   summaryViewProps: SummaryViewWrapperProps
   isActiveReviewResponse: boolean
   isNewReviewResponse: boolean
+  enableViewHistory: boolean
   reviewResponse?: ReviewResponse
   previousReviewResponse?: ReviewResponse
   originalReviewResponse?: ReviewResponse
@@ -23,6 +24,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
   summaryViewProps,
   isActiveReviewResponse,
   isNewReviewResponse,
+  enableViewHistory,
   reviewResponse,
   previousReviewResponse,
   originalReviewResponse,
@@ -93,7 +95,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
         />
       )}
       {/* Show history - for previous consolidations done */}
-      {isNewReviewResponse && decisionExists && <ViewHistoryButton />}
+      {enableViewHistory && <ViewHistoryButton />}
     </>
   )
 }
