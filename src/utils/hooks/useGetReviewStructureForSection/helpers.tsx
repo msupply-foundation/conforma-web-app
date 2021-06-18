@@ -226,13 +226,18 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
     )
 
     const hasThisReviewResponsesHistory =
-      element.thisReviewLatestResponse?.decision !== element.thisReviewPreviousResponse?.decision ||
-      elementThisReviewResponses.length > 2
+      elementThisReviewResponses.length > 2 ||
+      (element.thisReviewLatestResponse && element.thisReviewPreviousResponse
+        ? element.thisReviewLatestResponse?.decision !==
+          element.thisReviewPreviousResponse?.decision
+        : false)
 
     const hasLowerLevelReviewResponsesHistory =
-      element.lowerLevelReviewLatestResponse?.decision !==
-        element.lowerLevelReviewPreviousResponse?.decision ||
-      elementLowerLevelReviewResponses.length > 2
+      elementLowerLevelReviewResponses.length > 2 ||
+      (element.lowerLevelReviewLatestResponse && element.lowerLevelReviewPreviousResponse
+        ? element.lowerLevelReviewLatestResponse?.decision !==
+          element.lowerLevelReviewPreviousResponse?.decision
+        : false)
 
     // Check if enableViewHistory already set to true (when there is more than 2 ApplicantResponseElements)
     // Or more than 2 thisReview or lowerLevelReview (that aren't duplications)
