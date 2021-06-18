@@ -111,7 +111,7 @@ const Snapshots: React.FC = () => {
     }
   }
 
-  const reanderSnapshotList = () => {
+  const renderSnapshotList = () => {
     // const compareLinkRef = useRef<HTMLAnchorElement>(null)
     if (!data) return null
     return (
@@ -206,7 +206,7 @@ const Snapshots: React.FC = () => {
     )
   }
 
-  const randerUploadSnapshot = () => {
+  const renderUploadSnapshot = () => {
     const fileInputRef = useRef<HTMLInputElement>(null)
     if (compareFrom !== '') return null
     // />
@@ -243,8 +243,8 @@ const Snapshots: React.FC = () => {
         <Grid textAlign="center" divided columns="equal">
           <GridColumn>
             {newSnapshot()}
-            {reanderSnapshotList()}
-            {randerUploadSnapshot()}
+            {renderSnapshotList()}
+            {renderUploadSnapshot()}
           </GridColumn>
         </Grid>
       </Popup>
