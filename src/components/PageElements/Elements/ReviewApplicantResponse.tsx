@@ -21,6 +21,7 @@ interface ReviewApplicantResponseProps {
   previousReviewResponse?: ReviewResponse
   isActiveReviewResponse: boolean
   isNewApplicationResponse: boolean
+  enableViewHistory: boolean
   isChangeRequest: boolean
   isChanged: boolean
   showModal: () => void
@@ -33,6 +34,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   previousReviewResponse,
   isNewApplicationResponse,
   isActiveReviewResponse,
+  enableViewHistory,
   isChangeRequest,
   isChanged,
   showModal,
@@ -121,7 +123,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
             </>
           )}
           {/* Show history - for previous reviews done */}
-          {isChangeRequest && isChanged && <ViewHistoryButton />}
+          {enableViewHistory && <ViewHistoryButton />}
         </>
       )
 

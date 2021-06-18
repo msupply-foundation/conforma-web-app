@@ -8,9 +8,9 @@ import ReviewResponseElement from './ReviewResponseElement'
 
 interface ApplicantElementWrapperProps {
   latestApplicationResponse: ApplicationResponse
-  previousApplicationResponse?: ApplicationResponse
   summaryViewProps: SummaryViewWrapperProps
   canApplicantEdit: boolean
+  enableViewHistory: boolean
   reviewResponse?: ReviewResponse
   updateMethod: () => void
   isChanged?: boolean
@@ -19,18 +19,15 @@ interface ApplicantElementWrapperProps {
 
 const ApplicantElementWrapper: React.FC<ApplicantElementWrapperProps> = ({
   latestApplicationResponse,
-  previousApplicationResponse,
   summaryViewProps,
   reviewResponse,
   canApplicantEdit,
+  enableViewHistory,
   updateMethod,
   isChanged,
   isChangeRequest,
 }) => {
   const canRenderReviewResponse = !!isChangeRequest && !!reviewResponse
-  const isNewApplicationResponse =
-    !!previousApplicationResponse &&
-    previousApplicationResponse.value.text !== latestApplicationResponse.value.text
 
   return (
     <>
@@ -53,7 +50,7 @@ const ApplicantElementWrapper: React.FC<ApplicantElementWrapperProps> = ({
         />
       )}
       {/* Show history - for previous Applicant responses */}
-      {isNewApplicationResponse && <ViewHistoryButton />}
+      {enableViewHistory && <ViewHistoryButton />}
     </>
   )
 }
