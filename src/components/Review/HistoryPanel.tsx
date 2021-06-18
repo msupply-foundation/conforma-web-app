@@ -8,33 +8,18 @@ import SummaryViewWrapper from '../../formElementPlugins/SummaryViewWrapper'
 import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
 import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
 
-interface HistoryPanelProps {
-  summaryViewProps: SummaryViewWrapperProps
-  reviewResponse: ReviewResponse
-  isConsolidation: boolean
-}
+interface HistoryPanelProps {}
 
-const DecisionArea: React.FC<HistoryPanelProps> = ({
-  summaryViewProps,
-  reviewResponse: initialReviewResponse,
-  isConsolidation,
-}) => {
+const DecisionArea: React.FC<HistoryPanelProps> = ({}) => {
   const {
     query: { showHistory },
     updateQuery,
   } = useRouter()
-  const [reviewResponse, setReviewResponse] = useState(initialReviewResponse)
+
+  console.log('showHistory', showHistory)
 
   return (
-    <Modal
-      closeIcon
-      open={!!showHistory}
-      onClose={() => {
-        updateQuery({ showHistory: null })
-      }}
-      size="fullscreen"
-      style={{ margin: 0, background: 'transparent' }} // TODO: Move style to overrides
-    >
+    <Modal closeIcon open={!!showHistory} onClose={() => updateQuery({ showHistory: null })}>
       <div id="review-decision-container">
         <div id="review-decision-content">
           <div id="document-viewer" className="hidden-element">
@@ -44,13 +29,13 @@ const DecisionArea: React.FC<HistoryPanelProps> = ({
             <Form>
               <Segment basic>
                 <Header as="h3">{strings.TITLE_DETAILS}</Header>
-                <SummaryViewWrapper {...summaryViewProps} />
+                {/* <SummaryViewWrapper {...summaryViewProps} /> */}
               </Segment>
               <Segment basic>
                 <Form.Field>
-                  <strong>
+                  {/* <strong>
                     {isConsolidation ? strings.LABEL_CONSOLIDATE : strings.LABEL_REVIEW}
-                  </strong>
+                  </strong> */}
                 </Form.Field>
               </Segment>
               {/* TO-DO: HISTORY PANEL */}
