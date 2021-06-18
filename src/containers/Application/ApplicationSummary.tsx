@@ -11,6 +11,8 @@ import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivati
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { Link } from 'react-router-dom'
 
+const isProductionBuild = process.env.NODE_ENV === 'production' // To-do: add to config
+
 const ApplicationSummary: React.FC<ApplicationProps> = ({
   structure: fullStructure,
   requestRevalidation,
@@ -36,7 +38,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
   useEffect(() => {
     if (!fullStructure) return
 
-    if (query.dev === 'true') return // TO-DO: only allow in development mode
+    if (query.dev === 'true' && !isProductionBuild) return
 
     // Re-direct based on application status
     if (fullStructure.info.current?.status === ApplicationStatus.ChangesRequired)
@@ -53,7 +55,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     requestRevalidation &&
       requestRevalidation(
         async ({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
-          if (firstStrictInvalidPage && query.dev !== 'true') {
+          if (firstStrictInvalidPage && query.dev !== 'true' && isProductionBuild) {
             const { sectionCode, pageNumber } = firstStrictInvalidPage
             setStrictSectionPage(firstStrictInvalidPage)
             replace(`/application/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
