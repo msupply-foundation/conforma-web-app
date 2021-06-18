@@ -176,8 +176,6 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               {/*TODO: Add Previous Applicant response here - Or show history icon */}
             </>
           )}
-          {/* div below forced border on review response to be square */}
-          <div />
         </>
       )
     default:
