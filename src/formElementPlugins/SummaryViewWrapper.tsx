@@ -7,7 +7,7 @@ import { EvaluatorNode } from '../utils/types'
 import { buildParameters } from './ApplicationViewWrapper'
 import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
-import globalConfig from '../config.json'
+import globalConfig from '../config'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
