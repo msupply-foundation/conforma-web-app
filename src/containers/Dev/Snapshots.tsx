@@ -7,9 +7,8 @@ import {
   Input,
   Label,
   Loader,
+  Modal,
   Popup,
-  Portal,
-  Segment,
 } from 'semantic-ui-react'
 import config from '../../config'
 
@@ -24,8 +23,9 @@ const uploadSnapshotUrl = `${snapshotsBaseUrl}/upload`
 const Snapshots: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [compareFrom, setCompareFrom] = useState('')
-  const [isPortalOpen, setIsPortalOpen] = useState(false)
-  const [isSnapshotError, setIsSnapshotError] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [snapshotError, setSnapshotError] =
+    useState<{ message: string; error: string } | null>(null)
 
   const [data, setData] = useState<string[] | null>(null)
 
@@ -33,7 +33,7 @@ const Snapshots: React.FC = () => {
     if (isOpen) {
       setData(null)
       setCompareFrom('')
-      setIsSnapshotError(false)
+      setSnapshotError(null)
       getList()
     }
   }, [isOpen])
@@ -54,35 +54,35 @@ const Snapshots: React.FC = () => {
   const takeSnapshot = async (name: string) => {
     if (!name) return
     setIsOpen(false)
-    setIsPortalOpen(true)
+    setIsLoading(true)
     try {
       const resultRaw = await fetch(`${takeSnapshotUrl}?name=${normaliseSnapshotName(name)}`, {
         method: 'POST',
       })
       const resultJson = await resultRaw.json()
 
-      if (resultJson.success) return setIsPortalOpen(false)
+      if (resultJson.success) return setIsLoading(false)
 
-      setIsSnapshotError(true)
-    } catch (e) {
-      setIsSnapshotError(true)
+      setSnapshotError(resultJson)
+    } catch (error) {
+      setSnapshotError({ message: 'Front end error while taking snapshot', error })
     }
   }
 
   const useSnapshot = async (name: string) => {
     setIsOpen(false)
-    setIsPortalOpen(true)
+    setIsLoading(true)
     try {
       const resultRaw = await fetch(`${useSnapshotUrl}?name=${name}`, {
         method: 'POST',
       })
       const resultJson = await resultRaw.json()
 
-      if (resultJson.success) return setIsPortalOpen(false)
+      if (resultJson.success) return setIsLoading(false)
 
-      setIsSnapshotError(true)
-    } catch (e) {
-      setIsSnapshotError(true)
+      setSnapshotError(resultJson)
+    } catch (error) {
+      setSnapshotError({ message: 'Front end error while loading snapshot', error })
     }
   }
 
@@ -93,7 +93,7 @@ const Snapshots: React.FC = () => {
     const snapshotName = normaliseSnapshotName(file.name.replace('.zip', ''))
 
     setIsOpen(false)
-    setIsPortalOpen(true)
+    setIsLoading(true)
     try {
       const data = new FormData()
       data.append('file', file)
@@ -104,10 +104,11 @@ const Snapshots: React.FC = () => {
       })
       const resultJson = await resultRaw.json()
 
-      if (resultJson.success) return setIsPortalOpen(false)
-      console.log('setting erro')
-      setIsSnapshotError(true)
-    } catch (e) {}
+      if (resultJson.success) return setIsLoading(false)
+      setSnapshotError(resultJson)
+    } catch (error) {
+      setSnapshotError({ message: 'Front end error while uploading snapshot', error })
+    }
   }
 
   const reanderSnapshotList = () => {
@@ -167,36 +168,25 @@ const Snapshots: React.FC = () => {
     )
   }
 
+  const resetLoading = () => {
+    setSnapshotError(null)
+    setIsLoading(false)
+  }
+
   const renderLoadingAndError = () => (
-    <Portal open={isPortalOpen}>
-      <Segment
-        style={{
-          left: '40%',
-          position: 'fixed',
-          top: '50%',
-          minWidth: 100,
-          minHeight: 100,
-          zIndex: 1000,
-        }}
-      >
-        {isSnapshotError ? (
+    <Modal open={isLoading} onClick={resetLoading} onClose={resetLoading}>
+      {snapshotError ? (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Label size="large" color="red">
-            Error{' '}
-            <Icon
-              name="close"
-              onClick={() => {
-                setIsSnapshotError(false)
-                setIsPortalOpen(false)
-              }}
-            />
+            {snapshotError.message}
+            <Icon name="close" onClick={resetLoading} />
           </Label>
-        ) : (
-          <Loader active size="small">
-            Loading
-          </Loader>
-        )}
-      </Segment>
-    </Portal>
+          <div style={{ margin: 20 }}>{snapshotError.error}</div>
+        </div>
+      ) : (
+        <Loader active>Loading</Loader>
+      )}
+    </Modal>
   )
 
   const newSnapshot = () => {

@@ -5,11 +5,7 @@ export {
   GridColumnProps,
   StrictGridColumnProps,
 } from 'semantic-ui-react/dist/commonjs/collections/Grid/GridColumn'
-export {
-  default as Portal,
-  PortalProps,
-  StrictPortalProps,
-} from 'semantic-ui-react/dist/commonjs/addons/Portal'
+
 export {
   default as Button,
   ButtonProps,
