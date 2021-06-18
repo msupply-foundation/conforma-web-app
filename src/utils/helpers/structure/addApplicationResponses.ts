@@ -23,6 +23,8 @@ const addApplicationResponses = (
 
       element.latestApplicationResponse = groupedApplicationResponses[0]
       element.previousApplicationResponse = groupedApplicationResponses[1] // will be undefined if doesn't exist
+
+      element.enableViewHistory = groupedApplicationResponses.length > 2 // First 2 can be just 1 duplicated...
     }
   )
 }
