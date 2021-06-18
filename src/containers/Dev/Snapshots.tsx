@@ -49,7 +49,7 @@ const Snapshots: React.FC = () => {
 
   const normaliseSnapshotName = (name: string) =>
     // not word, not digit
-    name.replace(/[^\w\d]/g, '')
+    name.replace(/[^\w\d]/g, '_')
 
   const takeSnapshot = async (name: string) => {
     if (!name) return
