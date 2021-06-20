@@ -5,11 +5,11 @@ import {
   AssignerAction,
   ReviewerAction,
 } from '../generated/graphql'
-import getApplicantFilterList from '../graphql/queries/applicationListFilters.ts/getApplicantFilterList'
-import getAssignerFilterList from '../graphql/queries/applicationListFilters.ts/getAssignerFilterList'
-import getOrganisationFilterList from '../graphql/queries/applicationListFilters.ts/getOrganisationFilterList'
-import getReviewersFilterList from '../graphql/queries/applicationListFilters.ts/getReviewersFilterList'
-import getStageFilterList from '../graphql/queries/applicationListFilters.ts/getStageFilterList'
+import getApplicantFilterList from '../graphql/queries/applicationListFilters/getApplicantFilterList'
+import getAssignerFilterList from '../graphql/queries/applicationListFilters/getAssignerFilterList'
+import getOrganisationFilterList from '../graphql/queries/applicationListFilters/getOrganisationFilterList'
+import getReviewersFilterList from '../graphql/queries/applicationListFilters/getReviewersFilterList'
+import getStageFilterList from '../graphql/queries/applicationListFilters/getStageFilterList'
 import { FilterDefinitions, GetFilterListQuery } from '../types'
 
 const constructFilterListQuery = (query: DocumentNode, queryMethod: string) => {
