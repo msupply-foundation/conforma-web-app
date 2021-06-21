@@ -92,6 +92,7 @@ export default {
   LABEL_SECTION_COMPLETED: 'Completed',
   LINK_LOGIN_USER: 'Create new account',
   MENU_ITEM_DASHBOARD: 'Dashboard',
+  TITLE_HISTORY_SUBMITTED_BY_APPLICANT: 'Submitted by applicant',
   TITLE_LOGIN_HEADER: 'IRIMS Application Manager',
   TITLE_LOGIN: 'Login',
   TITLE_APPLICATION_FORM: 'application form',
