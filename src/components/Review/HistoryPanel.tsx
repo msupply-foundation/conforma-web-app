@@ -1,55 +1,51 @@
-import React, { useState } from 'react'
-import { Button, Form, Header, Modal, Radio, Segment, TextArea } from 'semantic-ui-react'
+import React from 'react'
+import { Form, Header, Modal, Segment } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ReviewResponse, ReviewResponseDecision } from '../../utils/generated/graphql'
-import strings from '../../utils/constants'
-import messages from '../../utils/messages'
-import SummaryViewWrapper from '../../formElementPlugins/SummaryViewWrapper'
-import { SummaryViewWrapperProps } from '../../formElementPlugins/types'
-import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
+import useGetQuestionHistory from '../../utils/hooks/useGetQuestionHistory'
+import HistoryResponseElement from '../PageElements/Elements/HistoryResponseElement'
+interface HistoryPanelProps {
+  templateCode: string
+  userId: number
+  userLevel?: number
+  isApplicant?: boolean
+}
 
-interface HistoryPanelProps {}
-
-const DecisionArea: React.FC<HistoryPanelProps> = ({}) => {
+const HistoryPanel: React.FC<HistoryPanelProps> = ({
+  templateCode,
+  userId,
+  userLevel = 1,
+  isApplicant = false,
+}) => {
   const {
-    query: { showHistory },
+    query: { serialNumber, showHistory },
     updateQuery,
   } = useRouter()
 
-  console.log('showHistory', showHistory)
+  const { historyList } = useGetQuestionHistory({
+    serial: serialNumber,
+    questionCode: showHistory,
+    templateCode,
+    userId,
+    userLevel,
+    isApplicant,
+  })
 
   return (
-    <Modal closeIcon open={!!showHistory} onClose={() => updateQuery({ showHistory: null })}>
-      <div id="review-decision-container">
-        <div id="review-decision-content">
-          <div id="document-viewer" className="hidden-element">
-            TO-DO: DOCUMENT VIEWER
+    <Modal
+      className="history-panel"
+      closeIcon
+      open={!!showHistory}
+      onClose={() => updateQuery({ showHistory: null })}
+    >
+      {historyList.map((historyElement, index) => (
+        <Segment basic className="summary-page-element-container">
+          <div className="response-container" key={index}>
+            <HistoryResponseElement {...historyElement} />
           </div>
-          <div id="details-panel">
-            <Form>
-              <Segment basic>
-                <Header as="h3">{strings.TITLE_DETAILS}</Header>
-                {/* <SummaryViewWrapper {...summaryViewProps} /> */}
-              </Segment>
-              <Segment basic>
-                <Form.Field>
-                  {/* <strong>
-                    {isConsolidation ? strings.LABEL_CONSOLIDATE : strings.LABEL_REVIEW}
-                  </strong> */}
-                </Form.Field>
-              </Segment>
-              {/* TO-DO: HISTORY PANEL */}
-              <Segment basic id="history-panel">
-                <p>
-                  <em>History panel goes here</em>
-                </p>
-              </Segment>
-            </Form>
-          </div>
-        </div>
-      </div>
+        </Segment>
+      ))}
     </Modal>
   )
 }
 
-export default DecisionArea
+export default HistoryPanel

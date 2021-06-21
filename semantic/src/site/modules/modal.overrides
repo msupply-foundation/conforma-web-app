@@ -6,3 +6,9 @@
 .ui.fullscreen.modal {
   width: 100% !important;
 }
+
+.ui.modal.history-panel {
+  padding: 10px;
+  height: 75%;
+  scroll-behavior: auto;
+}
