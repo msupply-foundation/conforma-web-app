@@ -18,6 +18,7 @@ export default gql`
     review {
       id
       status
+      stageNumber
       reviewer {
         ...User
       }
