@@ -762,7 +762,7 @@ a:hover {
   }
 
   .response-container {
-    .flex-row-center();
+    .flex-row();
     width: 100%;
     padding: 14px;
     padding-right: 20px;
@@ -860,6 +860,12 @@ a:hover {
     border-bottom-left-radius: @borderRadius;
     border-bottom-right-radius: @borderRadius;
   }
+}
+
+.blue-border {
+  border: 2px solid @interactiveHigh;
+  border-radius: 10px !important;
+  overflow: clip;
 }
 
 .updated-label {
