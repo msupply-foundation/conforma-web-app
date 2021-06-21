@@ -26377,6 +26377,15 @@ export type ApplicationFragment = (
   & Pick<Application, 'id' | 'serial' | 'name' | 'outcome' | 'trigger'>
 );
 
+export type ApplicationResponseFragmentFragment = (
+  { __typename?: 'ApplicationResponse' }
+  & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'templateElementId' | 'timeUpdated'>
+  & { templateElement?: Maybe<(
+    { __typename?: 'TemplateElement' }
+    & Pick<TemplateElement, 'code'>
+  )> }
+);
+
 export type ConsolidatorResponseFragmentFragment = (
   { __typename?: 'ReviewResponse' }
   & { reviewResponsesByReviewResponseLinkId: (
@@ -26398,15 +26407,6 @@ export type OrganisationFragment = (
   & Pick<Organisation, 'id' | 'name' | 'address' | 'registration' | 'logoUrl'>
 );
 
-export type ResponseFragment = (
-  { __typename?: 'ApplicationResponse' }
-  & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'templateElementId' | 'timeUpdated'>
-  & { templateElement?: Maybe<(
-    { __typename?: 'TemplateElement' }
-    & Pick<TemplateElement, 'code'>
-  )> }
-);
-
 export type ReviewResponseFragmentFragment = (
   { __typename?: 'ReviewResponse' }
   & Pick<ReviewResponse, 'applicationResponseId' | 'decision' | 'comment' | 'id' | 'status' | 'timeUpdated' | 'originalReviewResponseId' | 'reviewResponseLinkId' | 'templateElementId'>
@@ -26415,7 +26415,7 @@ export type ReviewResponseFragmentFragment = (
     & Pick<ApplicationResponse, 'id' | 'templateElementId'>
   )>, review?: Maybe<(
     { __typename?: 'Review' }
-    & Pick<Review, 'id' | 'status'>
+    & Pick<Review, 'id' | 'status' | 'stageNumber'>
     & { reviewer?: Maybe<(
       { __typename?: 'User' }
       & UserFragment
@@ -26541,7 +26541,7 @@ export type RestartApplicationMutation = (
         { __typename?: 'ApplicationResponsesConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'ApplicationResponse' }
-          & ResponseFragment
+          & ApplicationResponseFragmentFragment
         )>> }
       ) }
       & ApplicationFragment
@@ -26602,7 +26602,7 @@ export type UpdateResponseMutation = (
         { __typename?: 'TemplateElement' }
         & ElementFragment
       )> }
-      & ResponseFragment
+      & ApplicationResponseFragmentFragment
     )> }
   )> }
 );
@@ -26741,7 +26741,7 @@ export type GetAllResponsesQuery = (
             & ReviewResponseFragmentFragment
           )>> }
         ) }
-        & ResponseFragment
+        & ApplicationResponseFragmentFragment
       )>> }
     ) }
   )> }
@@ -26820,6 +26820,70 @@ export type GetApplicationListQuery = (
     )>>, pageInfo: (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
+    ) }
+  )> }
+);
+
+export type GetHistoryForReviewerQueryVariables = Exact<{
+  serial: Scalars['String'];
+  questionCode: Scalars['String'];
+  templateCode: Scalars['String'];
+  userId: Scalars['Int'];
+  userLevel: Scalars['Int'];
+}>;
+
+
+export type GetHistoryForReviewerQuery = (
+  { __typename?: 'Query' }
+  & { templateElementByTemplateCodeAndCode?: Maybe<(
+    { __typename?: 'TemplateElement' }
+    & { reviewResponses: (
+      { __typename?: 'ReviewResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ReviewResponse' }
+        & ReviewResponseFragmentFragment
+      )>> }
+    ), applicationResponses: (
+      { __typename?: 'ApplicationResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ApplicationResponse' }
+        & ApplicationResponseFragmentFragment
+      )>> }
+    ) }
+  )> }
+);
+
+export type GetHistoryForApplicantQueryVariables = Exact<{
+  serial: Scalars['String'];
+  questionCode: Scalars['String'];
+  templateCode: Scalars['String'];
+}>;
+
+
+export type GetHistoryForApplicantQuery = (
+  { __typename?: 'Query' }
+  & { templateElementByTemplateCodeAndCode?: Maybe<(
+    { __typename?: 'TemplateElement' }
+    & { reviewResponses: (
+      { __typename?: 'ReviewResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ReviewResponse' }
+        & ReviewResponseFragmentFragment
+      )>> }
+    ), applicationResponses: (
+      { __typename?: 'ApplicationResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ApplicationResponse' }
+        & { application?: Maybe<(
+          { __typename?: 'Application' }
+          & { user?: Maybe<(
+            { __typename?: 'User' }
+            & UserFragment
+          )> }
+          & ApplicationFragment
+        )> }
+        & ApplicationResponseFragmentFragment
+      )>> }
     ) }
   )> }
 );
@@ -27051,6 +27115,18 @@ export const ApplicationFragmentDoc = gql`
   trigger
 }
     `;
+export const ApplicationResponseFragmentFragmentDoc = gql`
+    fragment applicationResponseFragment on ApplicationResponse {
+  id
+  isValid
+  value
+  templateElement {
+    code
+  }
+  templateElementId
+  timeUpdated
+}
+    `;
 export const UserFragmentDoc = gql`
     fragment User on User {
   id
@@ -27079,6 +27155,7 @@ export const ReviewResponseFragmentFragmentDoc = gql`
   review {
     id
     status
+    stageNumber
     reviewer {
       ...User
     }
@@ -27119,18 +27196,6 @@ export const OrganisationFragmentDoc = gql`
   address
   registration
   logoUrl
-}
-    `;
-export const ResponseFragmentDoc = gql`
-    fragment Response on ApplicationResponse {
-  id
-  isValid
-  value
-  templateElement {
-    code
-  }
-  templateElementId
-  timeUpdated
 }
     `;
 export const SectionFragmentDoc = gql`
@@ -27290,14 +27355,14 @@ export const RestartApplicationDocument = gql`
       ...Application
       applicationResponses {
         nodes {
-          ...Response
+          ...applicationResponseFragment
         }
       }
     }
   }
 }
     ${ApplicationFragmentDoc}
-${ResponseFragmentDoc}`;
+${ApplicationResponseFragmentFragmentDoc}`;
 export type RestartApplicationMutationFn = Apollo.MutationFunction<RestartApplicationMutation, RestartApplicationMutationVariables>;
 
 /**
@@ -27401,14 +27466,14 @@ export const UpdateResponseDocument = gql`
     mutation updateResponse($id: Int!, $value: JSON, $isValid: Boolean) {
   updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid}}) {
     applicationResponse {
-      ...Response
+      ...applicationResponseFragment
       templateElement {
         ...Element
       }
     }
   }
 }
-    ${ResponseFragmentDoc}
+    ${ApplicationResponseFragmentFragmentDoc}
 ${ElementFragmentDoc}`;
 export type UpdateResponseMutationFn = Apollo.MutationFunction<UpdateResponseMutation, UpdateResponseMutationVariables>;
 
@@ -27654,7 +27719,7 @@ export const GetAllResponsesDocument = gql`
     serial
     applicationResponses(orderBy: TIME_UPDATED_DESC, filter: {status: {in: $responseStatuses}}) {
       nodes {
-        ...Response
+        ...applicationResponseFragment
         reviewResponses(condition: {isVisibleToApplicant: true}) {
           nodes {
             ...reviewResponseFragment
@@ -27664,7 +27729,7 @@ export const GetAllResponsesDocument = gql`
     }
   }
 }
-    ${ResponseFragmentDoc}
+    ${ApplicationResponseFragmentFragmentDoc}
 ${ReviewResponseFragmentFragmentDoc}`;
 
 /**
@@ -27828,6 +27893,106 @@ export function useGetApplicationListLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetApplicationListQueryHookResult = ReturnType<typeof useGetApplicationListQuery>;
 export type GetApplicationListLazyQueryHookResult = ReturnType<typeof useGetApplicationListLazyQuery>;
 export type GetApplicationListQueryResult = Apollo.QueryResult<GetApplicationListQuery, GetApplicationListQueryVariables>;
+export const GetHistoryForReviewerDocument = gql`
+    query getHistoryForReviewer($serial: String!, $questionCode: String!, $templateCode: String!, $userId: Int!, $userLevel: Int!) {
+  templateElementByTemplateCodeAndCode(code: $questionCode, templateCode: $templateCode) {
+    reviewResponses(filter: {review: {application: {serial: {equalTo: $serial}}, levelNumber: {lessThanOrEqualTo: $userLevel}}, or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
+      nodes {
+        ...reviewResponseFragment
+      }
+    }
+    applicationResponses(filter: {application: {serial: {equalTo: $serial}}, status: {equalTo: SUBMITTED}}) {
+      nodes {
+        ...applicationResponseFragment
+      }
+    }
+  }
+}
+    ${ReviewResponseFragmentFragmentDoc}
+${ApplicationResponseFragmentFragmentDoc}`;
+
+/**
+ * __useGetHistoryForReviewerQuery__
+ *
+ * To run a query within a React component, call `useGetHistoryForReviewerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHistoryForReviewerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHistoryForReviewerQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *      questionCode: // value for 'questionCode'
+ *      templateCode: // value for 'templateCode'
+ *      userId: // value for 'userId'
+ *      userLevel: // value for 'userLevel'
+ *   },
+ * });
+ */
+export function useGetHistoryForReviewerQuery(baseOptions?: Apollo.QueryHookOptions<GetHistoryForReviewerQuery, GetHistoryForReviewerQueryVariables>) {
+        return Apollo.useQuery<GetHistoryForReviewerQuery, GetHistoryForReviewerQueryVariables>(GetHistoryForReviewerDocument, baseOptions);
+      }
+export function useGetHistoryForReviewerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetHistoryForReviewerQuery, GetHistoryForReviewerQueryVariables>) {
+          return Apollo.useLazyQuery<GetHistoryForReviewerQuery, GetHistoryForReviewerQueryVariables>(GetHistoryForReviewerDocument, baseOptions);
+        }
+export type GetHistoryForReviewerQueryHookResult = ReturnType<typeof useGetHistoryForReviewerQuery>;
+export type GetHistoryForReviewerLazyQueryHookResult = ReturnType<typeof useGetHistoryForReviewerLazyQuery>;
+export type GetHistoryForReviewerQueryResult = Apollo.QueryResult<GetHistoryForReviewerQuery, GetHistoryForReviewerQueryVariables>;
+export const GetHistoryForApplicantDocument = gql`
+    query getHistoryForApplicant($serial: String!, $questionCode: String!, $templateCode: String!) {
+  templateElementByTemplateCodeAndCode(code: $questionCode, templateCode: $templateCode) {
+    reviewResponses(filter: {isVisibleToApplicant: {equalTo: true}}) {
+      nodes {
+        ...reviewResponseFragment
+      }
+    }
+    applicationResponses(filter: {application: {serial: {equalTo: $serial}}}) {
+      nodes {
+        ...applicationResponseFragment
+        application {
+          ...Application
+          user {
+            ...User
+          }
+        }
+      }
+    }
+  }
+}
+    ${ReviewResponseFragmentFragmentDoc}
+${ApplicationResponseFragmentFragmentDoc}
+${ApplicationFragmentDoc}
+${UserFragmentDoc}`;
+
+/**
+ * __useGetHistoryForApplicantQuery__
+ *
+ * To run a query within a React component, call `useGetHistoryForApplicantQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHistoryForApplicantQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHistoryForApplicantQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *      questionCode: // value for 'questionCode'
+ *      templateCode: // value for 'templateCode'
+ *   },
+ * });
+ */
+export function useGetHistoryForApplicantQuery(baseOptions?: Apollo.QueryHookOptions<GetHistoryForApplicantQuery, GetHistoryForApplicantQueryVariables>) {
+        return Apollo.useQuery<GetHistoryForApplicantQuery, GetHistoryForApplicantQueryVariables>(GetHistoryForApplicantDocument, baseOptions);
+      }
+export function useGetHistoryForApplicantLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetHistoryForApplicantQuery, GetHistoryForApplicantQueryVariables>) {
+          return Apollo.useLazyQuery<GetHistoryForApplicantQuery, GetHistoryForApplicantQueryVariables>(GetHistoryForApplicantDocument, baseOptions);
+        }
+export type GetHistoryForApplicantQueryHookResult = ReturnType<typeof useGetHistoryForApplicantQuery>;
+export type GetHistoryForApplicantLazyQueryHookResult = ReturnType<typeof useGetHistoryForApplicantLazyQuery>;
+export type GetHistoryForApplicantQueryResult = Apollo.QueryResult<GetHistoryForApplicantQuery, GetHistoryForApplicantQueryVariables>;
 export const GetLookupTableStructureByIdDocument = gql`
     query getLookupTableStructureById($lookupTableID: Int!) {
   lookupTable(id: $lookupTableID) {
