@@ -33,7 +33,7 @@ const useGetQuestionHistory = ({ isApplicant, ...variables }: UseGetQuestionHist
     if (!data) return
     // Organise ReviewResponse and Applicant Responses from latest to oldest
     const { applicationResponses, reviewResponses } =
-      data?.templateElementByTemplateCodeAndCode as TemplateElement
+      data?.templateElementByTemplateCodeAndCodeAndTemplateVersion as TemplateElement
 
     const allResponses: ResponsesByDate = {}
 
@@ -69,6 +69,8 @@ const useGetQuestionHistory = ({ isApplicant, ...variables }: UseGetQuestionHist
       }
       // TODO: Need to check for 2 responses in the same time?
     })
+
+    console.log(allResponses)
 
     setHistoryList(Object.values(allResponses).reverse()) // Change order to show latest on the top
 
