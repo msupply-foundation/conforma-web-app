@@ -4,6 +4,8 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import useGetQuestionHistory from '../../utils/hooks/useGetQuestionHistory'
 import HistoryResponseElement from '../PageElements/Elements/HistoryResponseElement'
 import { useUserState } from '../../contexts/UserState'
+import strings from 'utils/constants'
+
 interface HistoryPanelProps {
   templateCode: string
   // userLevel?: number
@@ -39,7 +41,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({
       open={!!showHistory}
       onClose={() => updateQuery({ showHistory: null })}
     >
-      <Modal.Header>Review History</Modal.Header>
+      <Modal.Header>{strings.TITLE_HISTORY_PANEL}</Modal.Header>
       <Modal.Content scrolling>
         <Modal.Description>
           {historyList.map((historyElement, index) => (
@@ -52,9 +54,11 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
-        <Button onClick={() => updateQuery({ showHistory: null })} primary>
-          Back
-        </Button>
+        <Button
+          onClick={() => updateQuery({ showHistory: null })}
+          primary
+          content={strings.BUTTON_BACK}
+        />
       </Modal.Actions>
     </Modal>
   )
