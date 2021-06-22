@@ -45,8 +45,8 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({
       <Modal.Content scrolling>
         <Modal.Description>
           {historyList.map((historyElement, index) => (
-            <Segment basic className="summary-page-element-container">
-              <div className="response-container" key={index}>
+            <Segment basic className="summary-page-element-container" key={index}>
+              <div className="response-container">
                 <HistoryResponseElement {...historyElement} />
               </div>
             </Segment>
