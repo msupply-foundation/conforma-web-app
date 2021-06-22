@@ -7,7 +7,13 @@ export default gql`
     $templateCode: String!
     $userId: Int!
   ) {
-    templateElementByTemplateCodeAndCode(code: $questionCode, templateCode: $templateCode) {
+    # TODO - Send correct version for template instead of hardcoded: templateVersion: 1
+    templateElementByTemplateCodeAndCodeAndTemplateVersion(
+      code: $questionCode
+      templateCode: $templateCode
+      templateVersion: 1
+    ) {
+      ...TemplateElement
       reviewResponses(
         filter: {
           review: {
