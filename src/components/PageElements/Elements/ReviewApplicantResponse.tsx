@@ -108,7 +108,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                   isCurrentReview={false}
                   isConsolidation={true}
                   reviewResponse={consolidationReviewResponse}
-                  shouldDim={isChangeRequest && isChanged}
+                  shouldDim={isChanged}
                 />
               )}
               {!isChanged && (
