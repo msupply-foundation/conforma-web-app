@@ -70,8 +70,6 @@ const useGetQuestionHistory = ({ isApplicant, ...variables }: UseGetQuestionHist
       // TODO: Need to check for 2 responses in the same time?
     })
 
-    console.log(allResponses)
-
     setHistoryList(Object.values(allResponses).reverse()) // Change order to show latest on the top
 
     // Find stages - Maybe done straight into HistoryPanel - or have in HistoryStructure?
