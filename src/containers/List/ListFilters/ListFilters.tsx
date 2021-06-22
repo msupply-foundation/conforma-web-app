@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Dropdown } from 'semantic-ui-react'
+import { Dropdown, Icon } from 'semantic-ui-react'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import { FilterDefinitions } from '../../../utils/types'
 import BooleanFilter from './BooleanFilter'
+import DateFilter from './DateFilter/DateFilter'
 import { EnumFilter, SearchableListFilter, StaticListFilter } from './OptionFilters'
-import { GetMethodsForOptionFilter } from './types'
+import { FilterIconMapping, GetMethodsForOptionFilter } from './types'
 
 const getArrayFromString = (string: string = '') =>
   string.split(',').filter((option) => !!option.trim())
@@ -67,7 +68,13 @@ const ListFilters: React.FC<{ filterDefinitions: FilterDefinitions; filterListPa
           <Dropdown.Menu>
             {availableFilterNames.map((filterName) => (
               <Dropdown.Item key={filterName} onClick={() => addFilter(filterName)}>
-                {displayableFilters[filterName].title}
+                <Icon
+                  size="small"
+                  color="grey"
+                  name={
+                    iconMapping[displayableFilters[filterName].type] || 'list alternate outline'
+                  }
+                />
               </Dropdown.Item>
             ))}
           </Dropdown.Menu>
@@ -136,10 +143,36 @@ const ListFilters: React.FC<{ filterDefinitions: FilterDefinitions; filterListPa
               />
             )
           }
+
+          if (filter.type === 'date') {
+            return (
+              <DateFilter
+                key={filterName}
+                title={filter.title}
+                namedDates={filter.options?.namedDates}
+                dateString={query[filterName]}
+                onRemove={getOnRemove(filterName)}
+                setDateString={(dateFtiler: string) => {
+                  updateQuery({
+                    [filterName]: dateFtiler,
+                  })
+                }}
+              />
+            )
+          }
           return null
         })}
       </div>
     )
   }
+
+const iconMapping: FilterIconMapping = {
+  staticList: 'list alternate outline',
+  enumList: 'list alternate outline',
+  searchableListIn: 'search',
+  searchableListInArray: 'search',
+  date: 'calendar alternate',
+  boolean: 'toggle on',
+}
 
 export default ListFilters
