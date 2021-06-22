@@ -26774,6 +26774,14 @@ export type GetHistoryForReviewerQuery = (
       { __typename?: 'ApplicationResponsesConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'ApplicationResponse' }
+        & { application?: Maybe<(
+          { __typename?: 'Application' }
+          & { user?: Maybe<(
+            { __typename?: 'User' }
+            & UserFragment
+          )> }
+          & ApplicationFragment
+        )> }
         & ApplicationResponseFragmentFragment
       )>> }
     ) }
@@ -27849,12 +27857,20 @@ export const GetHistoryForReviewerDocument = gql`
     applicationResponses(filter: {application: {serial: {equalTo: $serial}}, status: {equalTo: SUBMITTED}}) {
       nodes {
         ...applicationResponseFragment
+        application {
+          ...Application
+          user {
+            ...User
+          }
+        }
       }
     }
   }
 }
     ${ReviewResponseFragmentFragmentDoc}
-${ApplicationResponseFragmentFragmentDoc}`;
+${ApplicationResponseFragmentFragmentDoc}
+${ApplicationFragmentDoc}
+${UserFragmentDoc}`;
 
 /**
  * __useGetHistoryForReviewerQuery__

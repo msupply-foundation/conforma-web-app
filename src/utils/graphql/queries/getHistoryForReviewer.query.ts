@@ -35,6 +35,12 @@ export default gql`
       ) {
         nodes {
           ...applicationResponseFragment
+          application {
+            ...Application
+            user {
+              ...User
+            }
+          }
         }
       }
     }
