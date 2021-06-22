@@ -6,14 +6,13 @@ export default gql`
     $questionCode: String!
     $templateCode: String!
     $userId: Int!
-    $userLevel: Int!
   ) {
     templateElementByTemplateCodeAndCode(code: $questionCode, templateCode: $templateCode) {
       reviewResponses(
         filter: {
           review: {
             application: { serial: { equalTo: $serial } }
-            levelNumber: { lessThanOrEqualTo: $userLevel }
+            # levelNumber: { lessThanOrEqualTo: $userLevel }
           }
           or: [
             { status: { equalTo: SUBMITTED } }

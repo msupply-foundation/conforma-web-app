@@ -26756,7 +26756,6 @@ export type GetHistoryForReviewerQueryVariables = Exact<{
   questionCode: Scalars['String'];
   templateCode: Scalars['String'];
   userId: Scalars['Int'];
-  userLevel: Scalars['Int'];
 }>;
 
 
@@ -27847,9 +27846,9 @@ export type GetHistoryForApplicantQueryHookResult = ReturnType<typeof useGetHist
 export type GetHistoryForApplicantLazyQueryHookResult = ReturnType<typeof useGetHistoryForApplicantLazyQuery>;
 export type GetHistoryForApplicantQueryResult = Apollo.QueryResult<GetHistoryForApplicantQuery, GetHistoryForApplicantQueryVariables>;
 export const GetHistoryForReviewerDocument = gql`
-    query getHistoryForReviewer($serial: String!, $questionCode: String!, $templateCode: String!, $userId: Int!, $userLevel: Int!) {
+    query getHistoryForReviewer($serial: String!, $questionCode: String!, $templateCode: String!, $userId: Int!) {
   templateElementByTemplateCodeAndCode(code: $questionCode, templateCode: $templateCode) {
-    reviewResponses(filter: {review: {application: {serial: {equalTo: $serial}}, levelNumber: {lessThanOrEqualTo: $userLevel}}, or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
+    reviewResponses(filter: {review: {application: {serial: {equalTo: $serial}}}, or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
       nodes {
         ...reviewResponseFragment
       }
@@ -27888,7 +27887,6 @@ ${UserFragmentDoc}`;
  *      questionCode: // value for 'questionCode'
  *      templateCode: // value for 'templateCode'
  *      userId: // value for 'userId'
- *      userLevel: // value for 'userLevel'
  *   },
  * });
  */

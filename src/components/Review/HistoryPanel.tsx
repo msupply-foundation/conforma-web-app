@@ -1,21 +1,23 @@
 import React from 'react'
-import { Form, Header, Modal, Segment } from 'semantic-ui-react'
+import { Modal, Segment } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useGetQuestionHistory from '../../utils/hooks/useGetQuestionHistory'
 import HistoryResponseElement from '../PageElements/Elements/HistoryResponseElement'
+import { useUserState } from '../../contexts/UserState'
 interface HistoryPanelProps {
   templateCode: string
-  userId: number
-  userLevel?: number
+  // userLevel?: number
   isApplicant?: boolean
 }
 
 const HistoryPanel: React.FC<HistoryPanelProps> = ({
   templateCode,
-  userId,
-  userLevel = 1,
+  // userLevel = 1,
   isApplicant = false,
 }) => {
+  const {
+    userState: { currentUser },
+  } = useUserState()
   const {
     query: { serialNumber, showHistory },
     updateQuery,
@@ -25,8 +27,8 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({
     serial: serialNumber,
     questionCode: showHistory,
     templateCode,
-    userId,
-    userLevel,
+    userId: currentUser?.userId || 0,
+    // userLevel,
     isApplicant,
   })
 
