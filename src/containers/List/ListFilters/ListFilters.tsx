@@ -75,6 +75,7 @@ const ListFilters: React.FC<{ filterDefinitions: FilterDefinitions; filterListPa
                     iconMapping[displayableFilters[filterName].type] || 'list alternate outline'
                   }
                 />
+                {displayableFilters[filterName].title}
               </Dropdown.Item>
             ))}
           </Dropdown.Menu>
