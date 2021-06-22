@@ -33,7 +33,7 @@ const HistoryResponseElement: React.FC<HistoryResponseElementProps> = ({
         </div>
         <p>{message}</p>
         {!!reviewerComment && (
-          <div>
+          <div className="comment-container">
             <Icon name="comment alternate outline" color="grey" />
             <p className="secondary">{reviewerComment}</p>
           </div>
