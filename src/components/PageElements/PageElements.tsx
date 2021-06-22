@@ -239,8 +239,7 @@ const PageElements: React.FC<PageElementProps> = ({
           <HistoryPanel
             templateCode={applicationData.template.code}
             userId={applicationData.user?.id as number}
-            isApplicant={true}
-            userLevel={userLevel}
+            userLevel={userLevel || 1 + 1}
           />
         )}
       </div>
