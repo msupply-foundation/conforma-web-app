@@ -6,7 +6,7 @@ export default gql`
       applicationResponse {
         ...applicationResponseFragment
         templateElement {
-          ...Element
+          ...elementFragment
         }
       }
     }

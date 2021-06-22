@@ -13,7 +13,7 @@ export default gql`
       templateCode: $templateCode
       templateVersion: 1
     ) {
-      ...TemplateElement
+      ...elementFragment
       reviewResponses(
         filter: {
           review: {

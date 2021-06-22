@@ -26397,7 +26397,7 @@ export type ConsolidatorResponseFragmentFragment = (
   ) }
 );
 
-export type ElementFragment = (
+export type ElementFragmentFragment = (
   { __typename?: 'TemplateElement' }
   & Pick<TemplateElement, 'id' | 'code' | 'index' | 'title' | 'elementTypePluginCode' | 'category' | 'visibilityCondition' | 'isRequired' | 'isEditable' | 'validation' | 'validationMessage' | 'helpText' | 'defaultValue' | 'parameters'>
 );
@@ -26600,7 +26600,7 @@ export type UpdateResponseMutation = (
       { __typename?: 'ApplicationResponse' }
       & { templateElement?: Maybe<(
         { __typename?: 'TemplateElement' }
-        & ElementFragment
+        & ElementFragmentFragment
       )> }
       & ApplicationResponseFragmentFragment
     )> }
@@ -26777,7 +26777,7 @@ export type GetApplicationQuery = (
             { __typename?: 'TemplateElementsConnection' }
             & { nodes: Array<Maybe<(
               { __typename?: 'TemplateElement' }
-              & ElementFragment
+              & ElementFragmentFragment
             )>> }
           ) }
           & SectionFragment
@@ -26856,6 +26856,7 @@ export type GetHistoryForApplicantQuery = (
         & ApplicationResponseFragmentFragment
       )>> }
     ) }
+    & ElementFragmentFragment
   )> }
 );
 
@@ -26892,6 +26893,7 @@ export type GetHistoryForReviewerQuery = (
         & ApplicationResponseFragmentFragment
       )>> }
     ) }
+    & ElementFragmentFragment
   )> }
 );
 
@@ -27062,7 +27064,7 @@ export type GetTemplateQuery = (
             { __typename?: 'TemplateElementsConnection' }
             & { nodes: Array<Maybe<(
               { __typename?: 'TemplateElement' }
-              & ElementFragment
+              & ElementFragmentFragment
             )>> }
           ) }
           & SectionFragment
@@ -27175,8 +27177,8 @@ export const ConsolidatorResponseFragmentFragmentDoc = gql`
   }
 }
     ${ReviewResponseFragmentFragmentDoc}`;
-export const ElementFragmentDoc = gql`
-    fragment Element on TemplateElement {
+export const ElementFragmentFragmentDoc = gql`
+    fragment elementFragment on TemplateElement {
   id
   code
   index
@@ -27472,13 +27474,13 @@ export const UpdateResponseDocument = gql`
     applicationResponse {
       ...applicationResponseFragment
       templateElement {
-        ...Element
+        ...elementFragment
       }
     }
   }
 }
     ${ApplicationResponseFragmentFragmentDoc}
-${ElementFragmentDoc}`;
+${ElementFragmentFragmentDoc}`;
 export type UpdateResponseMutationFn = Apollo.MutationFunction<UpdateResponseMutation, UpdateResponseMutationVariables>;
 
 /**
@@ -27781,7 +27783,7 @@ export const GetApplicationDocument = gql`
           ...Section
           templateElementsBySectionId(orderBy: INDEX_ASC) {
             nodes {
-              ...Element
+              ...elementFragment
             }
           }
         }
@@ -27804,7 +27806,7 @@ export const GetApplicationDocument = gql`
 ${TemplateFragmentDoc}
 ${TemplateStageFragmentDoc}
 ${SectionFragmentDoc}
-${ElementFragmentDoc}
+${ElementFragmentFragmentDoc}
 ${UserFragmentDoc}
 ${OrganisationFragmentDoc}
 ${StageFragmentDoc}`;
@@ -27900,6 +27902,7 @@ export type GetApplicationListQueryResult = Apollo.QueryResult<GetApplicationLis
 export const GetHistoryForApplicantDocument = gql`
     query getHistoryForApplicant($serial: String!, $questionCode: String!, $templateCode: String!) {
   templateElementByTemplateCodeAndCodeAndTemplateVersion(code: $questionCode, templateCode: $templateCode, templateVersion: 1) {
+    ...elementFragment
     reviewResponses(filter: {isVisibleToApplicant: {equalTo: true}}) {
       nodes {
         ...reviewResponseFragment
@@ -27918,7 +27921,8 @@ export const GetHistoryForApplicantDocument = gql`
     }
   }
 }
-    ${ReviewResponseFragmentFragmentDoc}
+    ${ElementFragmentFragmentDoc}
+${ReviewResponseFragmentFragmentDoc}
 ${ApplicationResponseFragmentFragmentDoc}
 ${ApplicationFragmentDoc}
 ${UserFragmentDoc}`;
@@ -27953,6 +27957,7 @@ export type GetHistoryForApplicantQueryResult = Apollo.QueryResult<GetHistoryFor
 export const GetHistoryForReviewerDocument = gql`
     query getHistoryForReviewer($serial: String!, $questionCode: String!, $templateCode: String!, $userId: Int!) {
   templateElementByTemplateCodeAndCodeAndTemplateVersion(code: $questionCode, templateCode: $templateCode, templateVersion: 1) {
+    ...elementFragment
     reviewResponses(filter: {review: {application: {serial: {equalTo: $serial}}}, or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
       nodes {
         ...reviewResponseFragment
@@ -27971,7 +27976,8 @@ export const GetHistoryForReviewerDocument = gql`
     }
   }
 }
-    ${ReviewResponseFragmentFragmentDoc}
+    ${ElementFragmentFragmentDoc}
+${ReviewResponseFragmentFragmentDoc}
 ${ApplicationResponseFragmentFragmentDoc}
 ${ApplicationFragmentDoc}
 ${UserFragmentDoc}`;
@@ -28284,7 +28290,7 @@ export const GetTemplateDocument = gql`
           ...Section
           templateElementsBySectionId {
             nodes {
-              ...Element
+              ...elementFragment
             }
           }
         }
@@ -28302,7 +28308,7 @@ export const GetTemplateDocument = gql`
 }
     ${TemplateFragmentDoc}
 ${SectionFragmentDoc}
-${ElementFragmentDoc}`;
+${ElementFragmentFragmentDoc}`;
 
 /**
  * __useGetTemplateQuery__
