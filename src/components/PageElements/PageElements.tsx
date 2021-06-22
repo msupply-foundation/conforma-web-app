@@ -29,7 +29,7 @@ interface PageElementProps {
   isStrictPage?: boolean
   isSummary?: boolean
   isUpdating?: boolean
-  userLevel?: number
+  // userLevel?: number
   serial?: string
   sectionAndPage?: SectionAndPage
 }
@@ -44,7 +44,7 @@ const PageElements: React.FC<PageElementProps> = ({
   isStrictPage = false,
   isSummary = false,
   isUpdating = false,
-  userLevel,
+  // userLevel,
   serial,
   sectionAndPage,
 }) => {
@@ -165,11 +165,7 @@ const PageElements: React.FC<PageElementProps> = ({
           })}
         </Form>
         {showHistory && (
-          <HistoryPanel
-            templateCode={applicationData.template.code}
-            userId={applicationData.user?.id as number}
-            isApplicant={true}
-          />
+          <HistoryPanel templateCode={applicationData.template.code} isApplicant={true} />
         )}
       </div>
     )
@@ -238,8 +234,7 @@ const PageElements: React.FC<PageElementProps> = ({
         {showHistory && (
           <HistoryPanel
             templateCode={applicationData.template.code}
-            userId={applicationData.user?.id as number}
-            userLevel={userLevel || 1 + 1} // Get reviews for current level and level+1
+            // userLevel={userLevel || 1 + 1} // Get reviews for current level and level+1
           />
         )}
       </div>

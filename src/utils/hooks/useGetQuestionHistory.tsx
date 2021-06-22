@@ -14,7 +14,7 @@ interface UseGetQuestionHistoryProps {
   templateCode: string
   questionCode: string
   userId: number
-  userLevel: number
+  // userLevel: number
   isApplicant: boolean
 }
 
