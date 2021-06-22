@@ -19,6 +19,7 @@ export default gql`
       id
       status
       stageNumber
+      levelNumber
       reviewer {
         ...User
       }

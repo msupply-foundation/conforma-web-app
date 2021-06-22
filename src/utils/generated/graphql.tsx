@@ -26307,7 +26307,7 @@ export type ReviewResponseFragmentFragment = (
     & Pick<ApplicationResponse, 'id' | 'templateElementId'>
   )>, review?: Maybe<(
     { __typename?: 'Review' }
-    & Pick<Review, 'id' | 'status' | 'stageNumber'>
+    & Pick<Review, 'id' | 'status' | 'stageNumber' | 'levelNumber'>
     & { reviewer?: Maybe<(
       { __typename?: 'User' }
       & UserFragment
@@ -27055,6 +27055,7 @@ export const ReviewResponseFragmentFragmentDoc = gql`
     id
     status
     stageNumber
+    levelNumber
     reviewer {
       ...User
     }

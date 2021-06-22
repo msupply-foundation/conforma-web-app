@@ -4,7 +4,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import useGetQuestionHistory from '../../utils/hooks/useGetQuestionHistory'
 import HistoryResponseElement from '../PageElements/Elements/HistoryResponseElement'
 import { useUserState } from '../../contexts/UserState'
-import strings from 'utils/constants'
+import strings from '../../utils/constants'
 
 interface HistoryPanelProps {
   templateCode: string
