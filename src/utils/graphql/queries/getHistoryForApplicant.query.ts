@@ -8,7 +8,7 @@ export default gql`
       templateCode: $templateCode
       templateVersion: 1
     ) {
-      ...TemplateElement
+      ...elementFragment
       reviewResponses(filter: { isVisibleToApplicant: { equalTo: true } }) {
         nodes {
           ...reviewResponseFragment
