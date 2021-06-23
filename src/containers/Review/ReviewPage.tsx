@@ -8,14 +8,18 @@ import {
   SectionWrapper,
   ModalWarning,
 } from '../../components'
+<<<<<<< HEAD
 import { ReviewByLabel, ConsolidationByLabel } from '../../components/Review/ReviewLabel'
+=======
+
+>>>>>>> a1d5308fc3b772c15cce2d260bbb8c7b98ec5011
 import {
   AssignmentDetails,
   FullStructure,
   Page,
   ResponsesByCode,
   SectionAssignment,
-  SectionState,
+  SectionState
 } from '../../utils/types'
 import {
   ReviewResponseDecision,
@@ -65,6 +69,7 @@ const ReviewPage: React.FC<{
     reviewAssignment?.reviewer?.id !== currentUser?.userId &&
     fullReviewStructure?.thisReview?.status !== ReviewStatus.Submitted
   ) {
+<<<<<<< HEAD
     const {
       info: { name, current },
     } = fullReviewStructure
@@ -76,6 +81,16 @@ const ReviewPage: React.FC<{
       </>
     )
   }
+=======
+      const { info: {name, current } } = fullReviewStructure
+      return (
+      <>
+        <ReviewHeader applicationName={name} stage={current.stage}/>
+        <Label className="simple-label" content={strings.LABEL_REVIEW_IN_PROGRESS}/>
+      </>
+      )
+    }
+>>>>>>> a1d5308fc3b772c15cce2d260bbb8c7b98ec5011
 
   const {
     sections,
