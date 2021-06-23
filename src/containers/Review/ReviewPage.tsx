@@ -8,14 +8,14 @@ import {
   SectionWrapper,
   ModalWarning,
 } from '../../components'
-
+import { ReviewByLabel, ConsolidationByLabel } from '../../components/Review/ReviewLabel'
 import {
   AssignmentDetails,
   FullStructure,
   Page,
   ResponsesByCode,
   SectionAssignment,
-  SectionState
+  SectionState,
 } from '../../utils/types'
 import {
   ReviewResponseDecision,
@@ -65,14 +65,17 @@ const ReviewPage: React.FC<{
     reviewAssignment?.reviewer?.id !== currentUser?.userId &&
     fullReviewStructure?.thisReview?.status !== ReviewStatus.Submitted
   ) {
-      const { info: {name, current } } = fullReviewStructure
-      return (
+    const {
+      info: { name, current },
+    } = fullReviewStructure
+
+    return (
       <>
-        <ReviewHeader applicationName={name} stage={current.stage}/>
-        <Label className="simple-label" content={strings.LABEL_REVIEW_IN_PROGRESS}/>
+        <ReviewHeader applicationName={name} stage={current.stage} />
+        <Label className="simple-label" content={strings.LABEL_REVIEW_IN_PROGRESS} />
       </>
-      )
-    }
+    )
+  }
 
   const {
     sections,
@@ -82,6 +85,8 @@ const ReviewPage: React.FC<{
     attemptSubmission,
     firstIncompleteReviewPage,
   } = fullReviewStructure
+
+  console.log('thisReview', thisReview)
 
   if (thisReview?.status === ReviewStatus.Pending && showWarningModal.open === false) {
     const { title, message, option } = messages.REVIEW_STATUS_PENDING
@@ -104,11 +109,34 @@ const ReviewPage: React.FC<{
   const isMissingReviewResponses = (section: string): boolean =>
     attemptSubmission && firstIncompleteReviewPage?.sectionCode === section
 
+  const isAssignedToCurrentUser = Object.values(sections).some(
+    (section) => section.assignment?.isAssignedToCurrentUser
+  )
+
+  const isConsolidation = Object.values(sections).some(
+    (section) => section.assignment?.isConsolidation
+  )
+
+  console.log('isConsolidation', isConsolidation, sections)
+
   return error ? (
     <Message error title={strings.ERROR_GENERIC} list={[error]} />
   ) : (
     <>
-    <ReviewHeader applicationName={name} stage={current.stage}/>
+      <ReviewHeader applicationName={name} stage={current.stage} />
+      <div style={{ display: 'flex' }}>
+        {isConsolidation ? (
+          isAssignedToCurrentUser ? (
+            <ConsolidationByLabel />
+          ) : (
+            <ConsolidationByLabel user={thisReview?.reviewer} />
+          )
+        ) : isAssignedToCurrentUser ? (
+          <ReviewByLabel />
+        ) : (
+          <ReviewByLabel user={thisReview?.reviewer} />
+        )}
+      </div>
       <div id="application-summary-content">
         {Object.values(sections).map((section) => (
           <SectionWrapper

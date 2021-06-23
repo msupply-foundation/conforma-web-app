@@ -116,6 +116,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
               level: review.levelNumber || 0,
               stage,
               reviewDecision: review.reviewDecisions.nodes[0], // this will be the latest, sorted in query
+              reviewer: reviewer as User,
             }
           : null,
         status,
