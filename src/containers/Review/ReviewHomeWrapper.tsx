@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Dropdown, Label, Message } from 'semantic-ui-react'
+import { Container, Dropdown, Header, Icon, Label, Message } from 'semantic-ui-react'
 import Loading from '../../components/Loading'
 import ReviewHome from './ReviewHome'
 import { useUserState } from '../../contexts/UserState'
@@ -7,6 +7,7 @@ import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStruc
 import { AssignmentDetails, Filters, FullStructure } from '../../utils/types'
 import strings from '../../utils/constants'
 import { Stage } from '../../components/Review'
+import { useRouter } from '../../utils/hooks/useRouter'
 
 const ALL_REVIEWERS = 0
 
@@ -53,6 +54,11 @@ const ReviewHomeWrapper: React.FC<{
 
   return (
     <Container id="review-area">
+      <ReviewHomeHeader 
+        templateCode={template.code}
+        applicationName={name}
+        orgName={org?.name as string}
+      />
       <ReviewerAndStageSelection {...reviewerAndStageSelectionProps} />
       {filters && (
         <ReviewHome
@@ -72,6 +78,7 @@ interface ReviewHomeProps {
 }
 
 const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
+<<<<<<< HEAD
   templateCode,
   applicationName,
   orgName,
@@ -92,6 +99,27 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
     </div>
   )
 }
+=======
+  templateCode, 
+  applicationName, 
+  orgName
+}) => {
+  const { push } = useRouter()
+  return (
+  <div id="review-home-header">
+    <Label
+      className="simple-label clickable"
+      onClick={() => push(`/applications?type=${templateCode}`)}
+      icon={<Icon name="chevron left" className="dark-grey" />}
+    />
+    <Header
+      as="h2"
+      content={applicationName}
+      subheader={<Header as="h5" content={orgName || strings.TITLE_NO_ORGANISATION}/>}
+    />
+  </div>
+)}
+>>>>>>> 6a050c81... Layout improvement for Review home page
 
 type ReviewerAndStageSelectionProps = {
   filters: Filters | null
