@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Dropdown, Label, Message } from 'semantic-ui-react'
+import { Container, Dropdown, Label, Message } from 'semantic-ui-react'
 import Loading from '../../components/Loading'
 import ReviewHome from './ReviewHome'
 import { useUserState } from '../../contexts/UserState'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { AssignmentDetails, Filters, FullStructure } from '../../utils/types'
 import strings from '../../utils/constants'
-import { ReviewHeader, Stage } from '../../components/Review'
+import { Stage } from '../../components/Review'
 
 const ALL_REVIEWERS = 0
 
@@ -48,8 +48,7 @@ const ReviewHomeWrapper: React.FC<{
   }
 
   return (
-    <>
-      <ReviewHeader applicationName={fullApplicationStructure.info.name} />
+    <Container id="review-area">
       <ReviewerAndStageSelection {...reviewerAndStageSelectionProps} />
       {filters && (
         <ReviewHome
@@ -58,7 +57,7 @@ const ReviewHomeWrapper: React.FC<{
           fullApplicationStructure={fullApplicationStructure}
         />
       )}
-    </>
+    </Container>
   )
 }
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Header, Icon, Label, Message, ModalProps } from 'semantic-ui-react'
+import { Button, Icon, Label, Message, ModalProps } from 'semantic-ui-react'
 import {
   Loading,
   ConsolidationSectionProgressBar,
@@ -8,13 +8,14 @@ import {
   SectionWrapper,
   ModalWarning,
 } from '../../components'
+
 import {
   AssignmentDetails,
   FullStructure,
   Page,
   ResponsesByCode,
   SectionAssignment,
-  SectionState,
+  SectionState
 } from '../../utils/types'
 import {
   ReviewResponseDecision,
@@ -63,13 +64,20 @@ const ReviewPage: React.FC<{
   if (
     reviewAssignment?.reviewer?.id !== currentUser?.userId &&
     fullReviewStructure?.thisReview?.status !== ReviewStatus.Submitted
-  )
-    return <Header>Review in Progress</Header>
+  ) {
+      const { info: {name, current } } = fullReviewStructure
+      return (
+      <>
+        <ReviewHeader applicationName={name} stage={current.stage}/>
+        <Label className="simple-label" content={strings.LABEL_REVIEW_IN_PROGRESS}/>
+      </>
+      )
+    }
 
   const {
     sections,
     responsesByCode,
-    info: { serial, name },
+    info: { serial, name, current },
     thisReview,
     attemptSubmission,
     firstIncompleteReviewPage,
@@ -100,7 +108,7 @@ const ReviewPage: React.FC<{
     <Message error title={strings.ERROR_GENERIC} list={[error]} />
   ) : (
     <>
-      <ReviewHeader applicationName={name} />
+    <ReviewHeader applicationName={name} stage={current.stage}/>
       <div id="application-summary-content">
         {Object.values(sections).map((section) => (
           <SectionWrapper
