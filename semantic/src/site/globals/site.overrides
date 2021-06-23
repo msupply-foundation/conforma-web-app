@@ -772,7 +772,7 @@ a:hover {
     margin-bottom: 2px;
 
     &.information {
-      >div{
+      > div {
         width: 100%;
       }
     }
@@ -1051,13 +1051,12 @@ a:hover {
   .summary-page-element {
     margin: 10px;
   }
-  
+
   .detail-container {
     .flex-row();
     align-items: center;
     flex-wrap: 1;
   }
-
 }
 
 /*--------------------------------
@@ -1078,6 +1077,14 @@ a:hover {
 
 .information-colour {
   color: @information !important;
+}
+
+.success-colour {
+  color: @success !important;
+}
+
+.error-colour {
+  color: @attention !important;
 }
 
 .interactive-color {
