@@ -269,7 +269,6 @@ a:hover {
   max-width: 350px;
   background-color: transparent;
   font-size: @fontSmall;
-  color: @black;
   font-weight: @regularWeight;
 }
 
@@ -299,7 +298,7 @@ a:hover {
   flex-wrap: wrap;
   min-height: 30px; // TODO: Need to be updated for mobile
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 // Inner steps line (left side - icon & header)
@@ -342,6 +341,12 @@ a:hover {
   color: @headersInteractiveMed;
   font-size: @fontSmall;
   font-weight: @semiboldWeight;
+}
+
+#review-home-header {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
 }
 
 .ui.segment.review-application-segment {
