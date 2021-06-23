@@ -1195,7 +1195,7 @@ a:hover {
     }
 
     .selected-named-date {
-      background-color: @lightBlue;
+      background-color: @dateFilterLightBlue;
     }
   }
 
@@ -1265,7 +1265,7 @@ a:hover {
           height: 35px;
 
           &.day-in-range {
-            background-color: @lightBlue;
+            background-color: @dateFilterLightBlue;
           }
 
           >div {
