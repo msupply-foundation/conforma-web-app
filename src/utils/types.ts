@@ -352,6 +352,7 @@ interface ReviewDetails {
   level: number
   reviewDecision?: ReviewDecision | null
   stage: ReviewStage
+  reviewer: GraphQLUser
 }
 
 interface ReviewQuestion {

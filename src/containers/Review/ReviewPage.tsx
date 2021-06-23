@@ -8,7 +8,7 @@ import {
   SectionWrapper,
   ModalWarning,
 } from '../../components'
-
+import { ReviewByLabel, ConsolidationByLabel } from '../../components/Review/ReviewLabel'
 import {
   AssignmentDetails,
   FullStructure,
@@ -106,11 +106,34 @@ const ReviewPage: React.FC<{
   const isMissingReviewResponses = (section: string): boolean =>
     attemptSubmission && firstIncompleteReviewPage?.sectionCode === section
 
+  const isAssignedToCurrentUser = Object.values(sections).some(
+    (section) => section.assignment?.isAssignedToCurrentUser
+  )
+
+  const isConsolidation = Object.values(sections).some(
+    (section) => section.assignment?.isConsolidation
+  )
+
+  console.log('isConsolidation', isConsolidation, sections)
+
   return error ? (
     <Message error title={strings.ERROR_GENERIC} list={[error]} />
   ) : (
     <>
       <ReviewHeader applicationName={name} stage={currentStage} />
+      <div style={{ display: 'flex' }}>
+        {isConsolidation ? (
+          isAssignedToCurrentUser ? (
+            <ConsolidationByLabel />
+          ) : (
+            <ConsolidationByLabel user={thisReview?.reviewer} />
+          )
+        ) : isAssignedToCurrentUser ? (
+          <ReviewByLabel />
+        ) : (
+          <ReviewByLabel user={thisReview?.reviewer} />
+        )}
+      </div>
       <div id="application-summary-content">
         {Object.values(sections).map((section) => (
           <SectionWrapper
