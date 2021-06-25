@@ -28,7 +28,6 @@ export {
   ApplicationListRow,
   ApplicationStage,
   ApplicationProps,
-  ApplicationStage,
   AssignmentDetails,
   CellProps,
   ChangeRequestsProgress,
