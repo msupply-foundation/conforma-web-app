@@ -10,6 +10,7 @@ const ViewHistoryButton: React.FC<{ elementCode: string }> = ({ elementCode }) =
       <Label
         className="link-label clickable"
         icon="history"
+        size="large"
         content={strings.BUTTON_VIEW_HISTORY}
         onClick={() => updateQuery({ showHistory: elementCode })}
       />
