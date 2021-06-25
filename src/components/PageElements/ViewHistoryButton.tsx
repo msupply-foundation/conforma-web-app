@@ -8,6 +8,7 @@ const ViewHistoryButton: React.FC = () => {
       <Label
         className="link-label clickable"
         icon="history"
+        size="large"
         content={strings.BUTTON_VIEW_HISTORY}
       />
     </div>
