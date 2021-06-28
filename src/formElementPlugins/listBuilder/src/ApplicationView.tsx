@@ -12,12 +12,19 @@ import {
   Label,
 } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
-import { ResponseFull, ResponsesByCode } from '../../../utils/types'
+import {
+  ApplicationDetails,
+  EvaluationOptions,
+  ResponseFull,
+  ResponsesByCode,
+  User,
+} from '../../../utils/types'
 import { TemplateElement, TemplateElementCategory } from '../../../utils/generated/graphql'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
 import strings from '../constants'
+import { evaluateElements } from '../../../utils/helpers/evaluateElements'
 import { defaultEvaluatedElement } from '../../../utils/hooks/useLoadApplication'
-import evaluateExpression from '@openmsupply/expression-evaluator'
+import { useUserState } from '../../../contexts/UserState'
 
 export enum DisplayType {
   CARDS = 'cards',
@@ -55,18 +62,28 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     displayFormat = getDefaultDisplayFormat(inputFields),
     displayType = DisplayType.CARDS,
   } = parameters
-
+  const {
+    userState: { currentUser },
+  } = useUserState()
   const [currentInputResponses, setCurrentInputResponses] = useState<ListItem>(
     resetCurrentResponses(inputFields)
   )
-  const [currentInputElements, setCurrentInputElements] = useState()
+  const [currentResponseElementsState, setCurrentResponseElementsState] = useState<any>()
+
+  useEffect(() => {
+    buildElements(
+      inputFields,
+      allResponses,
+      currentInputResponses,
+      currentUser as User,
+      applicationData
+    ).then((elements) => setCurrentResponseElementsState(elements))
+  }, [currentInputResponses])
 
   const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
   const [selectedListItem, setSelectedListItem] = useState<number | null>(null)
   const [open, setOpen] = useState(false)
   const [inputError, setInputError] = useState(false)
-  // responses = allResponses + internal listbuilder responses (for current item)
-  const [responses, setResponses] = useState(allResponses)
 
   useEffect(() => {
     onSave({
@@ -156,22 +173,22 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Segment>
           <Form>
             <Markdown text={modalText} />
-            {inputFields.map((field: TemplateElement, index: number) => {
-              const element = buildElement(field, index)
-              return (
-                <ApplicationViewWrapper
-                  key={`list-${element.code}`}
-                  element={element}
-                  isStrictPage={inputError}
-                  allResponses={
-                    combineResponses(allResponses, currentInputResponses) as ResponsesByCode
-                  }
-                  currentResponse={currentInputResponses[element.code].value}
-                  onSaveUpdateMethod={innerElementUpdate(element.code)}
-                  applicationData={applicationData}
-                />
-              )
-            })}
+            {currentResponseElementsState &&
+              inputFields.map((field: TemplateElement, index: number) => {
+                const element = currentResponseElementsState?.[field.code]
+                // console.log('Element', element)
+                return (
+                  <ApplicationViewWrapper
+                    key={`list-${element.code}`}
+                    element={element}
+                    isStrictPage={inputError}
+                    allResponses={allResponses}
+                    currentResponse={currentInputResponses[element.code].value}
+                    onSaveUpdateMethod={innerElementUpdate(element.code)}
+                    applicationData={applicationData}
+                  />
+                )
+              })}
             <Button
               primary
               content={selectedListItem !== null ? updateButtonText : addButtonText}
@@ -208,6 +225,50 @@ const combineResponses = (allResponses: ResponsesByCode, currentInputResponses: 
   return { ...allResponses, ...currentResponses }
 }
 
+const buildElements = async (
+  fields: TemplateElement[],
+  allResponses: ResponsesByCode,
+  currentInputResponses: ListItem,
+  currentUser: User,
+  applicationData: ApplicationDetails
+) => {
+  const elements = fields.map((field, index) => ({
+    ...defaultEvaluatedElement,
+    id: index,
+    code: field.code,
+    pluginCode: field.elementTypePluginCode as string,
+    category: field.category as TemplateElementCategory,
+    title: field.title as string,
+    parameters: field.parameters,
+    validationExpression: field?.validation || true,
+    validationMessage: field?.validationMessage || '',
+    isVisibleExpression: field?.visibilityCondition || true,
+    isEditableExpression: field?.isEditable || true,
+    isRequiredExpression: field?.isRequired || false,
+    // Hard-coded visibility and editability (for now)
+    // "Dummy" values, but required for element props:
+    elementIndex: 0,
+    isValid: undefined,
+    page: 0,
+    sectionIndex: 0,
+    helpText: null,
+    sectionCode: '0',
+  }))
+  const evaluationOptions: EvaluationOptions = ['isEditable', 'isVisible', 'isRequired']
+  const evaluatedElements = await evaluateElements(elements, evaluationOptions, {
+    responses: combineResponses(allResponses, currentInputResponses),
+    currentUser,
+    applicationData,
+  })
+  const outputElements: any = {}
+  for (let i = 0; i < elements.length; i++) {
+    const code = elements[i].code
+    outputElements[code] = { ...elements[i], ...evaluatedElements[i] }
+  }
+  console.log('outputElements', outputElements)
+  return outputElements
+}
+
 const buildElement = (field: TemplateElement, index: number) => ({
   ...defaultEvaluatedElement,
   id: index,
@@ -218,8 +279,8 @@ const buildElement = (field: TemplateElement, index: number) => ({
   parameters: field.parameters,
   validationExpression: field?.validation || true,
   validationMessage: field?.validationMessage || '',
-  isRequired: field.isRequired ?? true,
-  isVisible: field.visibilityCondition ?? true,
+  // isRequired: field.isRequired ?? true,
+  // isVisible: field.visibilityCondition ?? true,
   // Hard-coded visibility and editability (for now)
   // "Dummy" values, but required for element props:
   elementIndex: 0,
