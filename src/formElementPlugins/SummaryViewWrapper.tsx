@@ -36,7 +36,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   )
 
   useEffect(() => {
-    // Runs once on component mount
+    // Update dynamic parameters when responses change
     Object.entries(parameterExpressions).forEach(([field, expression]) => {
       evaluateExpression(expression as EvaluatorNode, {
         objects: {
