@@ -12,11 +12,12 @@ import {
   Label,
 } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
-import { ResponseFull } from '../../../utils/types'
+import { ResponseFull, ResponsesByCode } from '../../../utils/types'
 import { TemplateElement, TemplateElementCategory } from '../../../utils/generated/graphql'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
 import strings from '../constants'
 import { defaultEvaluatedElement } from '../../../utils/hooks/useLoadApplication'
+import evaluateExpression from '@openmsupply/expression-evaluator'
 
 export enum DisplayType {
   CARDS = 'cards',
@@ -58,11 +59,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [currentInputResponses, setCurrentInputResponses] = useState<ListItem>(
     resetCurrentResponses(inputFields)
   )
+  const [currentInputElements, setCurrentInputElements] = useState()
 
   const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
   const [selectedListItem, setSelectedListItem] = useState<number | null>(null)
   const [open, setOpen] = useState(false)
   const [inputError, setInputError] = useState(false)
+  // responses = allResponses + internal listbuilder responses (for current item)
+  const [responses, setResponses] = useState(allResponses)
 
   useEffect(() => {
     onSave({
@@ -159,7 +163,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                   key={`list-${element.code}`}
                   element={element}
                   isStrictPage={inputError}
-                  allResponses={allResponses}
+                  allResponses={
+                    combineResponses(allResponses, currentInputResponses) as ResponsesByCode
+                  }
                   currentResponse={currentInputResponses[element.code].value}
                   onSaveUpdateMethod={innerElementUpdate(element.code)}
                   applicationData={applicationData}
@@ -194,6 +200,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
 export default ApplicationView
 
+const combineResponses = (allResponses: ResponsesByCode, currentInputResponses: ListItem) => {
+  console.log('currentInputResponses', currentInputResponses)
+  console.log('allResponses', allResponses)
+  const combinedResponses = { ...allResponses, ...currentInputResponses }
+  console.log('combinedResponses', combinedResponses)
+  return combinedResponses
+}
+
 const buildElement = (field: TemplateElement, index: number) => ({
   ...defaultEvaluatedElement,
   id: index,
@@ -205,7 +219,8 @@ const buildElement = (field: TemplateElement, index: number) => ({
   validationExpression: field?.validation || true,
   validationMessage: field?.validationMessage || '',
   isRequired: field.isRequired ?? true,
-  // Hard-coded visisbility and editability (for now)
+  isVisible: field.visibilityCondition ?? true,
+  // Hard-coded visibility and editability (for now)
   // "Dummy" values, but required for element props:
   elementIndex: 0,
   isValid: undefined,
