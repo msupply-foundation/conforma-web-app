@@ -30,6 +30,7 @@ import { useUserState } from '../../../contexts/UserState'
 export enum DisplayType {
   CARDS = 'cards',
   TABLE = 'table',
+  INLINE = 'inline',
 }
 
 interface InputResponseField {
