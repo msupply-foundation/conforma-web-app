@@ -50,7 +50,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
         setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
       )
     })
-  }, [])
+  }, [allResponses])
 
   if (!pluginCode || !isVisible) return null
 
