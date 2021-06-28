@@ -201,11 +201,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 export default ApplicationView
 
 const combineResponses = (allResponses: ResponsesByCode, currentInputResponses: ListItem) => {
-  console.log('currentInputResponses', currentInputResponses)
-  console.log('allResponses', allResponses)
-  const combinedResponses = { ...allResponses, ...currentInputResponses }
-  console.log('combinedResponses', combinedResponses)
-  return combinedResponses
+  const currentResponses = Object.entries(currentInputResponses).reduce(
+    (responses, [code, value]) => ({ ...responses, [code]: value?.value }),
+    {}
+  )
+  return { ...allResponses, ...currentResponses }
 }
 
 const buildElement = (field: TemplateElement, index: number) => ({
