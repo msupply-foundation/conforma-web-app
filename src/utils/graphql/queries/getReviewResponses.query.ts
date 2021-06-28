@@ -30,9 +30,6 @@ export default gql`
       nodes {
         ...reviewResponseFragment
         ...consolidatorResponseFragment
-        reviewResponseLink {
-          ...reviewResponseFragment
-        }
       }
     }
     previousLevelReviewResponses: reviewResponses(
