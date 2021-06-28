@@ -14,6 +14,7 @@ import {
 import { ApplicationViewProps } from '../../types'
 import {
   ApplicationDetails,
+  ElementState,
   EvaluationOptions,
   ResponseFull,
   ResponsesByCode,
@@ -68,6 +69,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [currentInputResponses, setCurrentInputResponses] = useState<ListItem>(
     resetCurrentResponses(inputFields)
   )
+
+  const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
+  const [selectedListItem, setSelectedListItem] = useState<number | null>(null)
+  const [open, setOpen] = useState(false)
+  const [inputError, setInputError] = useState(false)
+
   const [currentResponseElementsState, setCurrentResponseElementsState] = useState<any>()
 
   useEffect(() => {
@@ -79,11 +86,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       applicationData
     ).then((elements) => setCurrentResponseElementsState(elements))
   }, [currentInputResponses])
-
-  const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
-  const [selectedListItem, setSelectedListItem] = useState<number | null>(null)
-  const [open, setOpen] = useState(false)
-  const [inputError, setInputError] = useState(false)
 
   useEffect(() => {
     onSave({
@@ -245,7 +247,6 @@ const buildElements = async (
     isVisibleExpression: field?.visibilityCondition || true,
     isEditableExpression: field?.isEditable || true,
     isRequiredExpression: field?.isRequired || false,
-    // Hard-coded visibility and editability (for now)
     // "Dummy" values, but required for element props:
     elementIndex: 0,
     isValid: undefined,
@@ -255,41 +256,18 @@ const buildElements = async (
     sectionCode: '0',
   }))
   const evaluationOptions: EvaluationOptions = ['isEditable', 'isVisible', 'isRequired']
-  const evaluatedElements = await evaluateElements(elements, evaluationOptions, {
+  const evaluationObjects = {
     responses: combineResponses(allResponses, currentInputResponses),
     currentUser,
     applicationData,
-  })
-  const outputElements: any = {}
-  for (let i = 0; i < elements.length; i++) {
-    const code = elements[i].code
-    outputElements[code] = { ...elements[i], ...evaluatedElements[i] }
   }
-  console.log('outputElements', outputElements)
+  const evaluatedElements = await evaluateElements(elements, evaluationOptions, evaluationObjects)
+  const outputElements: { [key: string]: ElementState } = {}
+  for (let i = 0; i < elements.length; i++) {
+    outputElements[elements[i].code] = { ...elements[i], ...evaluatedElements[i] }
+  }
   return outputElements
 }
-
-const buildElement = (field: TemplateElement, index: number) => ({
-  ...defaultEvaluatedElement,
-  id: index,
-  code: field.code,
-  pluginCode: field.elementTypePluginCode as string,
-  category: field.category as TemplateElementCategory,
-  title: field.title as string,
-  parameters: field.parameters,
-  validationExpression: field?.validation || true,
-  validationMessage: field?.validationMessage || '',
-  // isRequired: field.isRequired ?? true,
-  // isVisible: field.visibilityCondition ?? true,
-  // Hard-coded visibility and editability (for now)
-  // "Dummy" values, but required for element props:
-  elementIndex: 0,
-  isValid: undefined,
-  page: 0,
-  sectionIndex: 0,
-  helpText: null,
-  sectionCode: '0',
-})
 
 export const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
   const displayString = inputFields.reduce(

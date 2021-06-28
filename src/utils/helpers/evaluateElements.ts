@@ -51,7 +51,6 @@ const evaluateSingleElement: EvaluateElement = async (
   evaluationOptions,
   { responses, currentUser, applicationData }
 ) => {
-  console.log('responses', responses)
   const evaluationParameters = {
     objects: {
       responses: { ...responses, thisResponse: responses?.[element.code]?.text },
