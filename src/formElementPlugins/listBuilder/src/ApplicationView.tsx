@@ -430,7 +430,7 @@ export const ListInlineLayout: React.FC<ListLayoutProps> = ({
   codes = [],
   Markdown,
   editItem = () => {},
-  // deleteItem = () => {},
+  deleteItem = () => {},
   isEditable = true,
   inputFields,
   responses,
@@ -438,7 +438,7 @@ export const ListInlineLayout: React.FC<ListLayoutProps> = ({
   applicationData,
 }) => {
   // Inner component -- one for each Item in list
-  const ItemAccordion: React.FC<any> = ({ item, header }) => {
+  const ItemAccordion: React.FC<any> = ({ item, header, index }) => {
     const [open, setOpen] = useState(false)
     const [currentItemElementsState, setItemResponseElementsState] = useState<any>()
     useEffect(() => {
@@ -460,11 +460,14 @@ export const ListInlineLayout: React.FC<ListLayoutProps> = ({
         <Accordion.Content active={open}>
           {codes.map((code, cellIndex) => (
             <SummaryViewWrapper
+              key={`item_${cellIndex}`}
               element={currentItemElementsState[code]}
               response={item[code].value}
               allResponses={responses}
             />
           ))}
+          <Button primary content={'EDIT'} onClick={() => editItem(index)} />
+          <Button secondary content={'DELETE'} onClick={() => deleteItem(index)} />
         </Accordion.Content>
       </Accordion>
     )
@@ -473,7 +476,7 @@ export const ListInlineLayout: React.FC<ListLayoutProps> = ({
   return (
     <>
       {listItems.map((item, index) => (
-        <ItemAccordion item={item} header={displayFormat.title} key={index} />
+        <ItemAccordion item={item} header={displayFormat.title} key={index} index={index} />
       ))}
     </>
   )
