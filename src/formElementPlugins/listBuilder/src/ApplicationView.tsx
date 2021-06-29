@@ -10,6 +10,7 @@ import {
   Card,
   Icon,
   Label,
+  Accordion,
 } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import {
@@ -22,6 +23,7 @@ import {
 } from '../../../utils/types'
 import { TemplateElement, TemplateElementCategory } from '../../../utils/generated/graphql'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
+import SummaryViewWrapper from '../../SummaryViewWrapper'
 import strings from '../constants'
 import { evaluateElements } from '../../../utils/helpers/evaluateElements'
 import { defaultEvaluatedElement } from '../../../utils/hooks/useLoadApplication'
@@ -153,12 +155,60 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     isEditable,
   }
 
-  const DisplayComponent =
-    displayType === DisplayType.TABLE ? (
-      <ListTableLayout {...listDisplayProps} />
-    ) : (
-      <ListCardLayout {...listDisplayProps} />
-    )
+  let DisplayComponent
+  switch (displayType) {
+    case DisplayType.TABLE:
+      DisplayComponent = <ListTableLayout {...listDisplayProps} />
+      break
+    case DisplayType.INLINE:
+      listDisplayProps.inputFields = inputFields
+      listDisplayProps.responses = allResponses
+      listDisplayProps.currentUser = currentUser as User
+      listDisplayProps.applicationData = applicationData
+      DisplayComponent = <ListInlineLayout {...listDisplayProps} />
+      break
+    default:
+      DisplayComponent = <ListCardLayout {...listDisplayProps} />
+  }
+
+  const ListInputForm = (
+    <>
+      <Markdown text={modalText} />
+      {currentResponseElementsState &&
+        inputFields.map((field: TemplateElement, index: number) => {
+          const element = currentResponseElementsState?.[field.code]
+          // console.log('Element', element)
+          return (
+            <ApplicationViewWrapper
+              key={`list-${element.code}`}
+              element={element}
+              isStrictPage={inputError}
+              allResponses={allResponses}
+              currentResponse={currentInputResponses[element.code].value}
+              onSaveUpdateMethod={innerElementUpdate(element.code)}
+              applicationData={applicationData}
+            />
+          )
+        })}
+      <Button
+        primary
+        content={selectedListItem !== null ? updateButtonText : addButtonText}
+        onClick={updateList}
+      />
+      {displayType === DisplayType.TABLE && selectedListItem !== null && (
+        <Button secondary content={deleteItemText} onClick={() => deleteItem(selectedListItem)} />
+      )}
+      {displayType === DisplayType.INLINE && (
+        <Button secondary content={strings.BUTTON_CANCEL} onClick={() => setOpen(false)} />
+      )}
+      {inputError && (
+        <p className="alert">
+          <Icon name="attention" />
+          {strings.ERROR_LIST_ITEMS_NOT_VALID}
+        </p>
+      )}
+    </>
+  )
 
   return (
     <>
@@ -172,47 +222,19 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         onClick={() => setOpen(true)}
         disabled={!isEditable}
       />
-      <Modal size="tiny" onClose={() => resetModalState()} onOpen={() => setOpen(true)} open={open}>
-        <Segment>
-          <Form>
-            <Markdown text={modalText} />
-            {currentResponseElementsState &&
-              inputFields.map((field: TemplateElement, index: number) => {
-                const element = currentResponseElementsState?.[field.code]
-                // console.log('Element', element)
-                return (
-                  <ApplicationViewWrapper
-                    key={`list-${element.code}`}
-                    element={element}
-                    isStrictPage={inputError}
-                    allResponses={allResponses}
-                    currentResponse={currentInputResponses[element.code].value}
-                    onSaveUpdateMethod={innerElementUpdate(element.code)}
-                    applicationData={applicationData}
-                  />
-                )
-              })}
-            <Button
-              primary
-              content={selectedListItem !== null ? updateButtonText : addButtonText}
-              onClick={updateList}
-            />
-            {displayType === 'table' && selectedListItem !== null && (
-              <Button
-                secondary
-                content={deleteItemText}
-                onClick={() => deleteItem(selectedListItem)}
-              />
-            )}
-            {inputError && (
-              <p className="alert">
-                <Icon name="attention" />
-                {strings.ERROR_LIST_ITEMS_NOT_VALID}
-              </p>
-            )}
-          </Form>
-        </Segment>
-      </Modal>
+      {displayType !== DisplayType.INLINE && (
+        <Modal
+          size="tiny"
+          onClose={() => resetModalState()}
+          onOpen={() => setOpen(true)}
+          open={open}
+        >
+          <Segment>
+            <Form>{ListInputForm}</Form>
+          </Segment>
+        </Modal>
+      )}
+      {displayType === DisplayType.INLINE && open && <Segment>{ListInputForm}</Segment>}
       {DisplayComponent}
     </>
   )
@@ -319,6 +341,12 @@ export interface ListLayoutProps {
   editItem?: (index: number) => void
   deleteItem?: (index: number) => void
   isEditable?: boolean
+  // These values required for SummaryView in Inline layout
+  elements?: any
+  inputFields?: any
+  responses?: any
+  currentUser?: User
+  applicationData?: ApplicationDetails
 }
 
 export const ListCardLayout: React.FC<ListLayoutProps> = ({
@@ -392,5 +420,61 @@ export const ListTableLayout: React.FC<ListLayoutProps> = ({
         ))}
       </Table.Body>
     </Table>
+  )
+}
+
+export const ListInlineLayout: React.FC<ListLayoutProps> = ({
+  listItems,
+  displayFormat,
+  fieldTitles = [],
+  codes = [],
+  Markdown,
+  editItem = () => {},
+  // deleteItem = () => {},
+  isEditable = true,
+  inputFields,
+  responses,
+  currentUser,
+  applicationData,
+}) => {
+  // Inner component -- one for each Item in list
+  const ItemAccordion: React.FC<any> = ({ item, header }) => {
+    const [open, setOpen] = useState(false)
+    const [currentItemElementsState, setItemResponseElementsState] = useState<any>()
+    useEffect(() => {
+      buildElements(
+        inputFields,
+        responses,
+        item,
+        currentUser as User,
+        applicationData as ApplicationDetails
+      ).then((elements) => setItemResponseElementsState(elements))
+    }, [])
+    if (!currentItemElementsState) return null
+    return (
+      <Accordion styled style={{ marginBottom: 5, marginTop: 10 }}>
+        <Accordion.Title active={open} onClick={() => setOpen(!open)}>
+          <Icon name="dropdown" />
+          <Markdown text={substituteValues(header, item)} semanticComponent="noParagraph" />
+        </Accordion.Title>
+        <Accordion.Content active={open}>
+          {codes.map((code, cellIndex) => (
+            <SummaryViewWrapper
+              element={currentItemElementsState[code]}
+              response={item[code].value}
+              allResponses={responses}
+            />
+          ))}
+        </Accordion.Content>
+      </Accordion>
+    )
+  }
+
+  return (
+    <>
+      {listItems.map((item, index) => (
+        <ItemAccordion item={item} header={displayFormat.title} key={index} />
+      ))}
+    </>
   )
 }
