@@ -1,19 +1,5 @@
 import { ApplicationViewProps } from '../../types'
-import {
-  ApplicationDetails,
-  ElementState,
-  EvaluationOptions,
-  ResponseFull,
-  ResponsesByCode,
-  User,
-} from '../../../utils/types'
-import { TemplateElement, TemplateElementCategory } from '../../../utils/generated/graphql'
-import ApplicationViewWrapper from '../../ApplicationViewWrapper'
-import SummaryViewWrapper from '../../SummaryViewWrapper'
-import strings from '../constants'
-import { evaluateElements } from '../../../utils/helpers/evaluateElements'
-import { defaultEvaluatedElement } from '../../../utils/hooks/useLoadApplication'
-import { useUserState } from '../../../contexts/UserState'
+import { ApplicationDetails, ResponseFull, User } from '../../../utils/types'
 
 export enum DisplayType {
   CARDS = 'cards',
