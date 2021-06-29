@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { Button, Icon, Accordion } from 'semantic-ui-react'
 import { ApplicationDetails, User } from '../../../../utils/types'
 import { ListLayoutProps } from '../types'
-
 import ApplicationViewWrapper from '../../../ApplicationViewWrapper'
 import SummaryViewWrapper from '../../../SummaryViewWrapper'
 import { buildElements, substituteValues } from '../helpers'
+import '../styles.css'
 
 const ListInlineLayout: React.FC<ListLayoutProps> = ({
   listItems,
@@ -36,7 +36,11 @@ const ListInlineLayout: React.FC<ListLayoutProps> = ({
     }, [])
     if (!currentItemElementsState) return null
     return (
-      <Accordion styled style={{ marginBottom: 5, marginTop: 10 }}>
+      <Accordion
+        styled
+        className="accordion-container"
+        style={{ maxWidth: open ? 'none' : '100%' }}
+      >
         <Accordion.Title active={open} onClick={() => setOpen(!open)}>
           <Icon name="dropdown" />
           <Markdown text={substituteValues(header, item)} semanticComponent="noParagraph" />
