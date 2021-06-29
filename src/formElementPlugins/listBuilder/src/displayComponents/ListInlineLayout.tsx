@@ -48,7 +48,7 @@ const ListInlineLayout: React.FC<ListLayoutProps> = ({
         <Accordion.Content active={open}>
           {codes.map((code, cellIndex) => (
             <SummaryViewWrapper
-              key={`item_${cellIndex}`}
+              key={`item_accordion_${cellIndex}`}
               element={currentItemElementsState[code]}
               response={item[code].value}
               allResponses={responses}
