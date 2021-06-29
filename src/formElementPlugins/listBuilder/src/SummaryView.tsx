@@ -1,13 +1,9 @@
 import React from 'react'
 import { TemplateElement } from '../../../utils/generated/graphql'
 import { SummaryViewProps } from '../../types'
-import {
-  ListCardLayout,
-  ListTableLayout,
-  ListLayoutProps,
-  DisplayType,
-  getDefaultDisplayFormat,
-} from './ApplicationView'
+import { ListCardLayout, ListTableLayout, ListInlineLayout } from './displayComponents'
+import { getDefaultDisplayFormat } from './helpers'
+import { DisplayType, ListLayoutProps } from './types'
 
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, response }) => {
   const {

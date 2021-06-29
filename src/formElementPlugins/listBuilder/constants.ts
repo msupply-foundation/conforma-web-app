@@ -2,6 +2,7 @@ export default {
   BUTTON_LAUNCH_MODAL: 'Add item',
   BUTTON_ADD: 'Add',
   BUTTON_UPDATE: 'Update',
+  BUTTON_EDIT: 'Edit',
   BUTTON_DELETE: 'Delete item',
   BUTTON_CANCEL: 'Cancel',
   ERROR_LIST_ITEMS_NOT_VALID:
