@@ -61,6 +61,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const [inputState, setInputState] = useState<InputState>(defaultInputState)
   const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
+  const [DisplayComponent, setDisplayComponent] = useState(getDisplayComponent(displayType))
+
+  useEffect(() => {
+    setDisplayComponent(getDisplayComponent(displayType))
+  }, [displayType])
 
   useEffect(() => {
     console.log('Building elements')
@@ -87,9 +92,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     (code: string) =>
     async ({ variables: response }: { variables: InputResponseField }) => {
       console.log('UPDATING')
-      // need to get most recent state of currentInputResponse, thus using callback
+      // need to get most recent state of inputState, thus using callback
       setInputState((currentInputState) => {
         const newResponses = { ...currentInputState.currentResponses, [code]: response }
+        console.log('newResponses', newResponses)
         const error = !anyErrorItems(newResponses, inputFields) ? false : inputState.error
         return { ...currentInputState, currentResponses: newResponses, error }
       })
@@ -106,58 +112,59 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     } else {
       // Or update existing item
       const newList = [...listItems]
+      console.log('UPdating', inputState.currentResponses)
       newList[inputState.selectedListItemIndex] = inputState.currentResponses
-      setListItems(newList)
+      console.log('Updated', newList)
+      setListItems([...newList])
+      console.log('List items', listItems)
     }
     setInputState(defaultInputState)
   }
 
   const editItem = async (index: number) => {
-    // setSelectedListItem(index)
-    setInputState({
+    setInputState((prev) => ({
       ...inputState,
       currentResponses: listItems[index],
       selectedListItemIndex: index,
       isOpen: true,
-    })
+    }))
   }
 
   const deleteItem = async (index: number) => {
     setListItems(listItems.filter((_, i) => i !== index))
-    setInputState(defaultInputState)
+    setInputState((prev) => defaultInputState)
   }
 
-  const listDisplayProps: ListLayoutProps = {
-    listItems,
-    displayFormat,
-    editItem: isEditable ? editItem : () => {},
-    deleteItem: isEditable ? deleteItem : () => {},
-    fieldTitles: inputFields.map((e: TemplateElement) => e.title),
-    codes: inputFields.map((e: TemplateElement) => e.code),
-    Markdown,
-    isEditable,
-  }
-
-  let DisplayComponent
-  switch (displayType) {
-    case DisplayType.TABLE:
-      DisplayComponent = <ListTableLayout {...listDisplayProps} />
-      break
-    case DisplayType.INLINE:
-      DisplayComponent = (
-        <ListInlineLayout
-          {...listDisplayProps}
-          inputFields={inputFields}
-          responses={allResponses}
-          currentUser={currentUser as User}
-          applicationData={applicationData}
-          editItemText={strings.BUTTON_EDIT}
-          deleteItemText={deleteItemText}
-        />
-      )
-      break
-    default:
-      DisplayComponent = <ListCardLayout {...listDisplayProps} />
+  function getDisplayComponent(displayType: DisplayType) {
+    const listDisplayProps: ListLayoutProps = {
+      listItems,
+      displayFormat,
+      editItem: isEditable ? editItem : () => {},
+      deleteItem: isEditable ? deleteItem : () => {},
+      fieldTitles: inputFields.map((e: TemplateElement) => e.title),
+      codes: inputFields.map((e: TemplateElement) => e.code),
+      Markdown,
+      isEditable,
+    }
+    switch (displayType) {
+      case DisplayType.TABLE:
+        return <ListTableLayout {...listDisplayProps} />
+      case DisplayType.INLINE:
+        console.log('Checking Display')
+        return (
+          <ListInlineLayout
+            {...listDisplayProps}
+            inputFields={inputFields}
+            responses={allResponses}
+            currentUser={currentUser as User}
+            applicationData={applicationData}
+            editItemText={strings.BUTTON_EDIT}
+            deleteItemText={deleteItemText}
+          />
+        )
+      default:
+        return <ListCardLayout {...listDisplayProps} />
+    }
   }
 
   const ListInputForm = (
