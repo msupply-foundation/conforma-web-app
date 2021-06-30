@@ -193,7 +193,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {inputState.currentElementsState &&
         inputFields.map((field: TemplateElement, index: number) => {
           const element = inputState.currentElementsState?.[field.code]
-          console.log('current Response', field.code, inputState.currentResponses[element.code])
           return (
             <ApplicationViewWrapper
               key={`list-${element.code}`}
