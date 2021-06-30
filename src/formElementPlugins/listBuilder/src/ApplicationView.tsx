@@ -60,19 +60,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const [inputState, setInputState] = useState<InputState>(defaultInputState)
-
-  // const [currentInputResponses, setCurrentInputResponses] = useState<ListItem>(
-  //   resetCurrentResponses(inputFields)
-  // )
-
   const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
-  // const [selectedListItem, setSelectedListItem] = useState<number | null>(null)
-  // const [open, setOpen] = useState(false)
-  // const [inputError, setInputError] = useState(false)
-
-  // const [currentResponseElementsState, setCurrentResponseElementsState] = useState<any>()
-
-  // console.log('currentResponseElementsState', currentResponseElementsState)
 
   useEffect(() => {
     console.log('Building elements')
@@ -102,21 +90,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       // need to get most recent state of currentInputResponse, thus using callback
       setInputState((currentInputState) => {
         const newResponses = { ...currentInputState.currentResponses, [code]: response }
-        const error = anyErrorItems(newResponses, inputFields)
-        console.log('ERROR', error)
+        const error = !anyErrorItems(newResponses, inputFields) ? false : inputState.error
         return { ...currentInputState, currentResponses: newResponses, error }
       })
-      // setCurrentInputResponses((currentInputResponses) => {
-      //   const newResponses = { ...currentInputResponses, [code]: response }
-      //   if (!anyErrorItems(newResponses, inputFields)) setInputError(false)
-      //   return newResponses
-      // })
     }
 
   const updateList = async () => {
     if (anyErrorItems(inputState.currentResponses, inputFields)) {
       setInputState({ ...inputState, error: true })
-      // setInputError(true)
       return
     }
     // Add item
@@ -128,7 +109,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       newList[inputState.selectedListItemIndex] = inputState.currentResponses
       setListItems(newList)
     }
-    resetFormState()
+    setInputState(defaultInputState)
   }
 
   const editItem = async (index: number) => {
@@ -139,21 +120,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       selectedListItemIndex: index,
       isOpen: true,
     })
-    // setCurrentInputResponses(listItems[index])
-    // setOpen(true)
   }
 
   const deleteItem = async (index: number) => {
     setListItems(listItems.filter((_, i) => i !== index))
-    resetFormState()
-  }
-
-  const resetFormState = () => {
     setInputState(defaultInputState)
-    // setCurrentInputResponses(resetCurrentResponses(inputFields))
-    // setOpen(false)
-    // setSelectedListItem(null)
-    // setInputError(false)
   }
 
   const listDisplayProps: ListLayoutProps = {
@@ -235,7 +206,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     </>
   )
 
-  console.log('InputState', inputState)
   return (
     <>
       <label>
@@ -251,7 +221,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {displayType !== DisplayType.INLINE && (
         <Modal
           size="tiny"
-          onClose={() => resetFormState()}
+          onClose={() => setInputState(defaultInputState)}
           onOpen={() => setInputState({ ...inputState, isOpen: true })}
           open={inputState.isOpen}
         >
@@ -260,7 +230,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           </Segment>
         </Modal>
       )}
-      {displayType === DisplayType.INLINE && open && <Segment>{ListInputForm}</Segment>}
+      {displayType === DisplayType.INLINE && inputState.isOpen && (
+        <Segment>{ListInputForm}</Segment>
+      )}
       {DisplayComponent}
     </>
   )
