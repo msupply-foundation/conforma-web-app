@@ -98,10 +98,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const innerElementUpdate =
     (code: string) =>
     async ({ variables: response }: { variables: InputResponseField }) => {
+      console.log('UPDATING')
       // need to get most recent state of currentInputResponse, thus using callback
       setInputState((currentInputState) => {
         const newResponses = { ...currentInputState.currentResponses, [code]: response }
         const error = anyErrorItems(newResponses, inputFields)
+        console.log('ERROR', error)
         return { ...currentInputState, currentResponses: newResponses, error }
       })
       // setCurrentInputResponses((currentInputResponses) => {
@@ -193,7 +195,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {inputState.currentElementsState &&
         inputFields.map((field: TemplateElement, index: number) => {
           const element = inputState.currentElementsState?.[field.code]
-          console.log(element.code, inputState.error)
           return (
             <ApplicationViewWrapper
               key={`list-${element.code}`}
@@ -234,6 +235,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     </>
   )
 
+  console.log('InputState', inputState)
   return (
     <>
       <label>

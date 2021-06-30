@@ -159,10 +159,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   if (!pluginCode || !isVisible) return null
 
-  console.log('element', element.code)
-  console.log('response', currentResponse)
-  console.log('validationState', validationState)
-
   const PluginComponent = (
     <ApplicationView
       onUpdate={onUpdate}
