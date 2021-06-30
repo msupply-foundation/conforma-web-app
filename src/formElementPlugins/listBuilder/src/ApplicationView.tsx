@@ -102,7 +102,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       setInputState((currentInputState) => {
         const newResponses = { ...currentInputState.currentResponses, [code]: response }
         const error = anyErrorItems(newResponses, inputFields)
-        return { ...currentInputState, currentResponses: newResponses, error: error }
+        return { ...currentInputState, currentResponses: newResponses, error }
       })
       // setCurrentInputResponses((currentInputResponses) => {
       //   const newResponses = { ...currentInputResponses, [code]: response }
@@ -193,6 +193,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {inputState.currentElementsState &&
         inputFields.map((field: TemplateElement, index: number) => {
           const element = inputState.currentElementsState?.[field.code]
+          console.log(element.code, inputState.error)
           return (
             <ApplicationViewWrapper
               key={`list-${element.code}`}
