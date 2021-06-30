@@ -43,26 +43,49 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const {
     userState: { currentUser },
   } = useUserState()
-  const [currentInputResponses, setCurrentInputResponses] = useState<ListItem>(
-    resetCurrentResponses(inputFields)
-  )
+
+  interface InputState {
+    currentResponses: ListItem
+    currentElementsState?: any
+    selectedListItemIndex: number | null
+    isOpen: boolean
+    error: boolean
+  }
+
+  const defaultInputState: InputState = {
+    currentResponses: resetCurrentResponses(inputFields),
+    selectedListItemIndex: null,
+    isOpen: false,
+    error: false,
+  }
+
+  const [inputState, setInputState] = useState<InputState>(defaultInputState)
+
+  // const [currentInputResponses, setCurrentInputResponses] = useState<ListItem>(
+  //   resetCurrentResponses(inputFields)
+  // )
 
   const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
-  const [selectedListItem, setSelectedListItem] = useState<number | null>(null)
-  const [open, setOpen] = useState(false)
-  const [inputError, setInputError] = useState(false)
+  // const [selectedListItem, setSelectedListItem] = useState<number | null>(null)
+  // const [open, setOpen] = useState(false)
+  // const [inputError, setInputError] = useState(false)
 
-  const [currentResponseElementsState, setCurrentResponseElementsState] = useState<any>()
+  // const [currentResponseElementsState, setCurrentResponseElementsState] = useState<any>()
+
+  // console.log('currentResponseElementsState', currentResponseElementsState)
 
   useEffect(() => {
+    console.log('Building elemens')
     buildElements(
       inputFields,
       allResponses,
-      currentInputResponses,
+      inputState.currentResponses,
       currentUser as User,
       applicationData
-    ).then((elements) => setCurrentResponseElementsState(elements))
-  }, [currentInputResponses])
+    ).then((elements) =>
+      setInputState((prevState) => ({ ...prevState, currentElementsState: elements }))
+    )
+  }, [inputState.currentResponses])
 
   useEffect(() => {
     onSave({
@@ -76,46 +99,59 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     (code: string) =>
     async ({ variables: response }: { variables: InputResponseField }) => {
       // need to get most recent state of currentInputResponse, thus using callback
-      setCurrentInputResponses((currentInputResponses) => {
-        const newResponses = { ...currentInputResponses, [code]: response }
-        if (!anyErrorItems(newResponses, inputFields)) setInputError(false)
-        return newResponses
+      setInputState((currentInputState) => {
+        const newResponses = { ...currentInputState.currentResponses, [code]: response }
+        const error = anyErrorItems(newResponses, inputFields)
+        return { ...currentInputState, currentResponses: newResponses, error: error }
       })
+      // setCurrentInputResponses((currentInputResponses) => {
+      //   const newResponses = { ...currentInputResponses, [code]: response }
+      //   if (!anyErrorItems(newResponses, inputFields)) setInputError(false)
+      //   return newResponses
+      // })
     }
 
   const updateList = async () => {
-    if (anyErrorItems(currentInputResponses, inputFields)) {
-      setInputError(true)
+    if (anyErrorItems(inputState.currentResponses, inputFields)) {
+      setInputState({ ...inputState, error: true })
+      // setInputError(true)
       return
     }
     // Add item
-    if (selectedListItem === null) {
-      setListItems([...listItems, currentInputResponses])
+    if (inputState.selectedListItemIndex === null) {
+      setListItems([...listItems, inputState.currentResponses])
     } else {
       // Or update existing item
       const newList = [...listItems]
-      newList[selectedListItem] = currentInputResponses
+      newList[inputState.selectedListItemIndex] = inputState.currentResponses
       setListItems(newList)
     }
-    resetModalState()
+    resetFormState()
   }
 
   const editItem = async (index: number) => {
-    setSelectedListItem(index)
-    setCurrentInputResponses(listItems[index])
-    setOpen(true)
+    // setSelectedListItem(index)
+    setInputState({
+      ...inputState,
+      currentResponses: listItems[index],
+      selectedListItemIndex: index,
+      isOpen: true,
+    })
+    // setCurrentInputResponses(listItems[index])
+    // setOpen(true)
   }
 
   const deleteItem = async (index: number) => {
     setListItems(listItems.filter((_, i) => i !== index))
-    resetModalState()
+    resetFormState()
   }
 
-  const resetModalState = () => {
-    setCurrentInputResponses(resetCurrentResponses(inputFields))
-    setOpen(false)
-    setSelectedListItem(null)
-    setInputError(false)
+  const resetFormState = () => {
+    setInputState(defaultInputState)
+    // setCurrentInputResponses(resetCurrentResponses(inputFields))
+    // setOpen(false)
+    // setSelectedListItem(null)
+    // setInputError(false)
   }
 
   const listDisplayProps: ListLayoutProps = {
@@ -154,16 +190,16 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const ListInputForm = (
     <>
       <Markdown text={modalText} />
-      {currentResponseElementsState &&
+      {inputState.currentElementsState &&
         inputFields.map((field: TemplateElement, index: number) => {
-          const element = currentResponseElementsState?.[field.code]
+          const element = inputState.currentElementsState?.[field.code]
           return (
             <ApplicationViewWrapper
               key={`list-${element.code}`}
               element={element}
-              isStrictPage={inputError}
+              isStrictPage={inputState.error}
               allResponses={allResponses}
-              currentResponse={currentInputResponses[element.code].value}
+              currentResponse={inputState.currentResponses[element.code].value}
               onSaveUpdateMethod={innerElementUpdate(element.code)}
               applicationData={applicationData}
             />
@@ -171,16 +207,24 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         })}
       <Button
         primary
-        content={selectedListItem !== null ? updateButtonText : addButtonText}
+        content={inputState.selectedListItemIndex !== null ? updateButtonText : addButtonText}
         onClick={updateList}
       />
-      {displayType === DisplayType.TABLE && selectedListItem !== null && (
-        <Button secondary content={deleteItemText} onClick={() => deleteItem(selectedListItem)} />
+      {displayType === DisplayType.TABLE && inputState.selectedListItemIndex !== null && (
+        <Button
+          secondary
+          content={deleteItemText}
+          onClick={() => deleteItem(inputState.selectedListItemIndex as number)}
+        />
       )}
       {displayType === DisplayType.INLINE && (
-        <Button secondary content={strings.BUTTON_CANCEL} onClick={() => setOpen(false)} />
+        <Button
+          secondary
+          content={strings.BUTTON_CANCEL}
+          onClick={() => setInputState({ ...inputState, isOpen: false })}
+        />
       )}
-      {inputError && (
+      {inputState.error && (
         <p className="alert">
           <Icon name="attention" />
           {strings.ERROR_LIST_ITEMS_NOT_VALID}
@@ -198,15 +242,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Button
         primary
         content={createModalButtonText}
-        onClick={() => setOpen(true)}
+        onClick={() => setInputState({ ...inputState, isOpen: true })}
         disabled={!isEditable}
       />
       {displayType !== DisplayType.INLINE && (
         <Modal
           size="tiny"
-          onClose={() => resetModalState()}
-          onOpen={() => setOpen(true)}
-          open={open}
+          onClose={() => resetFormState()}
+          onOpen={() => setInputState({ ...inputState, isOpen: true })}
+          open={inputState.isOpen}
         >
           <Segment>
             <Form>{ListInputForm}</Form>
