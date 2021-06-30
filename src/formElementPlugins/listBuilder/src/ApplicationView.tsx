@@ -61,11 +61,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const [inputState, setInputState] = useState<InputState>(defaultInputState)
   const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
-  const [DisplayComponent, setDisplayComponent] = useState(getDisplayComponent(displayType))
-
-  useEffect(() => {
-    setDisplayComponent(getDisplayComponent(displayType))
-  }, [displayType])
 
   useEffect(() => {
     console.log('Building elements')
@@ -113,9 +108,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       // Or update existing item
       const newList = [...listItems]
       console.log('UPdating', inputState.currentResponses)
-      newList[inputState.selectedListItemIndex] = inputState.currentResponses
+      newList[inputState.selectedListItemIndex] = { ...inputState.currentResponses }
       console.log('Updated', newList)
-      setListItems([...newList])
+      setListItems(newList)
       console.log('List items', listItems)
     }
     setInputState(defaultInputState)
@@ -135,37 +130,33 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setInputState((prev) => defaultInputState)
   }
 
-  function getDisplayComponent(displayType: DisplayType) {
-    const listDisplayProps: ListLayoutProps = {
-      listItems,
-      displayFormat,
-      editItem: isEditable ? editItem : () => {},
-      deleteItem: isEditable ? deleteItem : () => {},
-      fieldTitles: inputFields.map((e: TemplateElement) => e.title),
-      codes: inputFields.map((e: TemplateElement) => e.code),
-      Markdown,
-      isEditable,
-    }
-    switch (displayType) {
-      case DisplayType.TABLE:
-        return <ListTableLayout {...listDisplayProps} />
-      case DisplayType.INLINE:
-        console.log('Checking Display')
-        return (
-          <ListInlineLayout
-            {...listDisplayProps}
-            inputFields={inputFields}
-            responses={allResponses}
-            currentUser={currentUser as User}
-            applicationData={applicationData}
-            editItemText={strings.BUTTON_EDIT}
-            deleteItemText={deleteItemText}
-          />
-        )
-      default:
-        return <ListCardLayout {...listDisplayProps} />
-    }
+  const listDisplayProps: ListLayoutProps = {
+    listItems,
+    displayFormat,
+    editItem: isEditable ? editItem : () => {},
+    deleteItem: isEditable ? deleteItem : () => {},
+    fieldTitles: inputFields.map((e: TemplateElement) => e.title),
+    codes: inputFields.map((e: TemplateElement) => e.code),
+    Markdown,
+    isEditable,
   }
+
+  const DisplayComponent =
+    displayType === DisplayType.TABLE ? (
+      <ListTableLayout {...listDisplayProps} />
+    ) : displayType === DisplayType.INLINE ? (
+      <ListInlineLayout
+        {...listDisplayProps}
+        inputFields={inputFields}
+        responses={allResponses}
+        currentUser={currentUser as User}
+        applicationData={applicationData}
+        editItemText={strings.BUTTON_EDIT}
+        deleteItemText={deleteItemText}
+      />
+    ) : (
+      <ListCardLayout {...listDisplayProps} />
+    )
 
   const ListInputForm = (
     <>
