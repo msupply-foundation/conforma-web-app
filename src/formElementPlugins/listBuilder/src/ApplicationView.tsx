@@ -153,7 +153,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         applicationData={applicationData}
         editItemText={strings.BUTTON_EDIT}
         deleteItemText={deleteItemText}
-        ListInputForm={ListInlineLayout}
+        innerElementUpdate={innerElementUpdate}
+        updateList={updateList}
       />
     ) : (
       <ListCardLayout {...listDisplayProps} />

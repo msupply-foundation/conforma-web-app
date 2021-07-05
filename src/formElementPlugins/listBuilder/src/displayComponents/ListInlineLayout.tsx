@@ -20,7 +20,8 @@ const ListInlineLayout: React.FC<ListLayoutProps> = ({
   responses,
   currentUser,
   applicationData,
-  ListInputForm,
+  innerElementUpdate,
+  updateList,
 }) => {
   return (
     <>
@@ -38,7 +39,8 @@ const ListInlineLayout: React.FC<ListLayoutProps> = ({
           codes={codes}
           editItem={editItem}
           deleteItem={deleteItem}
-          ListInputForm={ListInputForm}
+          innerElementUpdate={innerElementUpdate}
+          updateList={updateList}
         />
       ))}
     </>
@@ -60,7 +62,8 @@ const ItemAccordion: React.FC<any> = ({
   codes,
   editItem,
   deleteItem,
-  ListInputForm,
+  innerElementUpdate,
+  updateList,
 }) => {
   const [open, setOpen] = useState(false)
   const [edit, setEdit] = useState(false)
@@ -85,12 +88,12 @@ const ItemAccordion: React.FC<any> = ({
         {codes.map((code: string, cellIndex: number) =>
           edit ? (
             <ApplicationViewWrapper
-              key={`list-${element.code}`}
-              element={element}
-              isStrictPage={inputState.error}
-              allResponses={allResponses}
-              currentResponse={inputState.currentResponses[element.code].value}
-              onSaveUpdateMethod={innerElementUpdate(element.code)}
+              key={`list-${cellIndex}`}
+              element={currentItemElementsState[code]}
+              isStrictPage={false}
+              allResponses={responses}
+              currentResponse={item[code].value}
+              onSaveUpdateMethod={innerElementUpdate(currentItemElementsState[code].code)}
               applicationData={applicationData}
             />
           ) : (
@@ -102,7 +105,8 @@ const ItemAccordion: React.FC<any> = ({
             />
           )
         )}
-        <Button primary content={'EDIT'} onClick={() => setEdit(true)} />
+        {!edit && <Button primary content={'EDIT'} onClick={() => setEdit(true)} />}
+        {edit && <Button primary content={'UPDATE'} onClick={updateList} />}
         <Button secondary content={'DELETE'} onClick={() => deleteItem(index)} />
       </Accordion.Content>
     </Accordion>
