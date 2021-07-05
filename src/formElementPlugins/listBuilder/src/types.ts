@@ -24,14 +24,13 @@ export interface ListLayoutProps {
   deleteItem?: (index: number) => void
   isEditable?: boolean
   // These values required for SummaryView in Inline layout
-  elements?: any
   inputFields?: any
   responses?: any
   currentUser?: User
   applicationData?: ApplicationDetails
   editItemText?: string
   deleteItemText?: string
-  innerElementUpdate?: any
-  updateList?: any
-  setInputState?: any
+  updateButtonText?: string
+  innerElementUpdate?: (code: string) => void
+  updateList?: () => void
 }

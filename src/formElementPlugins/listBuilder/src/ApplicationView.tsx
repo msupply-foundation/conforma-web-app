@@ -135,7 +135,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     codes: inputFields.map((e: TemplateElement) => e.code),
     Markdown,
     isEditable,
-    setInputState,
   }
 
   const DisplayComponent =
@@ -150,6 +149,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         applicationData={applicationData}
         editItemText={strings.BUTTON_EDIT}
         deleteItemText={deleteItemText}
+        updateButtonText={updateButtonText}
         innerElementUpdate={innerElementUpdate}
         updateList={updateList}
       />

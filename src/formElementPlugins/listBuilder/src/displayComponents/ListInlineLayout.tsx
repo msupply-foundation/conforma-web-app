@@ -7,43 +7,12 @@ import SummaryViewWrapper from '../../../SummaryViewWrapper'
 import { buildElements, substituteValues } from '../helpers'
 import '../styles.css'
 
-const ListInlineLayout: React.FC<ListLayoutProps> = ({
-  listItems,
-  displayFormat,
-  fieldTitles = [],
-  codes = [],
-  Markdown,
-  editItem = () => {},
-  deleteItem = () => {},
-  isEditable = true,
-  inputFields,
-  responses,
-  currentUser,
-  applicationData,
-  innerElementUpdate,
-  updateList,
-  setInputState,
-}) => {
+const ListInlineLayout: React.FC<ListLayoutProps> = (props) => {
+  const { listItems, displayFormat } = props
   return (
     <>
       {listItems.map((item, index) => (
-        <ItemAccordion
-          item={item}
-          header={displayFormat.title}
-          key={index}
-          index={index}
-          inputFields={inputFields}
-          responses={responses}
-          currentUser={currentUser}
-          applicationData={applicationData}
-          Markdown={Markdown}
-          codes={codes}
-          editItem={editItem}
-          deleteItem={deleteItem}
-          innerElementUpdate={innerElementUpdate}
-          updateList={updateList}
-          setInputState={setInputState}
-        />
+        <ItemAccordion key={index} item={item} header={displayFormat.title} {...props} />
       ))}
     </>
   )
@@ -64,9 +33,11 @@ const ItemAccordion: React.FC<any> = ({
   codes,
   editItem,
   deleteItem,
+  editItemText,
+  updateButtonText,
+  deleteItemText,
   innerElementUpdate,
   updateList,
-  setInputState,
 }) => {
   const [open, setOpen] = useState(false)
   const [edit, setEdit] = useState(false)
@@ -119,9 +90,9 @@ const ItemAccordion: React.FC<any> = ({
             />
           )
         )}
-        {!edit && <Button primary content={'EDIT'} onClick={editItemInline} />}
-        {edit && <Button primary content={'UPDATE'} onClick={updateListInline} />}
-        <Button secondary content={'DELETE'} onClick={() => deleteItem(index)} />
+        {!edit && <Button primary content={editItemText} onClick={editItemInline} />}
+        {edit && <Button primary content={updateButtonText} onClick={updateListInline} />}
+        <Button secondary content={deleteItemText} onClick={() => deleteItem(index)} />
       </Accordion.Content>
     </Accordion>
   )
