@@ -107,14 +107,16 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       serial: application.serial as string,
       name: application.name as string,
       outcome: application.outcome as string,
-      currentStage: {
-        id: stageId as number,
-        name: stage as string,
-        number: stageNumber as number,
-        colour: stageColour as string,
-        createdDate: stageHistoryTimeCreated,
+      current: {
+        stage: {
+          id: stageId as number,
+          name: stage as string,
+          number: stageNumber as number,
+          colour: stageColour as string,
+        },
         status: status as ApplicationStatus,
-        statusCreatedDate: statusHistoryTimeCreated,
+        timeStageCreated: stageHistoryTimeCreated,
+        timeStatusCreated: statusHistoryTimeCreated,
       },
       firstStrictInvalidPage: null,
       isChangeRequest: false,

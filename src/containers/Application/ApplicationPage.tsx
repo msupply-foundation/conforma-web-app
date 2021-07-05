@@ -32,7 +32,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
     if (!fullStructure) return
 
     // Re-direct based on application status
-    if (fullStructure.info.currentStage.status !== ApplicationStatus.Draft)
+    if (fullStructure.info.current.status !== ApplicationStatus.Draft)
       replace(`/application/${fullStructure.info.serial}`)
 
     // Re-direct if trying to access page higher than allowed
@@ -49,7 +49,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
 
   const {
     info: {
-      currentStage: { status },
+      current: { status },
       isLinear,
       isChangeRequest,
     },

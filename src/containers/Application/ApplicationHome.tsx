@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Button, Message, Segment } from 'semantic-ui-react'
-import { ApplicationStage, FullStructure, StageDetails, TemplateDetails } from '../../utils/types'
+import { FullStructure, StageAndStatus, TemplateDetails } from '../../utils/types'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { ApplicationSections, Loading } from '../../components'
 import strings from '../../utils/constants'
@@ -30,7 +30,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
 
   useEffect(() => {
     if (!fullStructure) return
-    const { status } = fullStructure.info.currentStage as ApplicationStage
+    const { status } = fullStructure.info.current as StageAndStatus
     if (status !== ApplicationStatus.Draft && status !== ApplicationStatus.ChangesRequired)
       replace(`/application/${serialNumber}/summary`)
   }, [fullStructure])
@@ -44,7 +44,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
 
   const {
     info: {
-      currentStage: { status },
+      current: { status },
       firstStrictInvalidPage,
     },
   } = fullStructure
