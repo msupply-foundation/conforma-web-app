@@ -31,4 +31,5 @@ export interface ListLayoutProps {
   applicationData?: ApplicationDetails
   editItemText?: string
   deleteItemText?: string
+  ListInputForm?: any
 }
