@@ -81,21 +81,30 @@ const ItemAccordion: React.FC<any> = ({
         <Icon name="dropdown" />
         <Markdown text={substituteValues(header, item)} semanticComponent="noParagraph" />
       </Accordion.Title>
-      {!edit && (
-        <Accordion.Content active={open}>
-          {codes.map((code: string, cellIndex: number) => (
+      <Accordion.Content active={open}>
+        {codes.map((code: string, cellIndex: number) =>
+          edit ? (
+            <ApplicationViewWrapper
+              key={`list-${element.code}`}
+              element={element}
+              isStrictPage={inputState.error}
+              allResponses={allResponses}
+              currentResponse={inputState.currentResponses[element.code].value}
+              onSaveUpdateMethod={innerElementUpdate(element.code)}
+              applicationData={applicationData}
+            />
+          ) : (
             <SummaryViewWrapper
               key={`item_accordion_${cellIndex}`}
               element={currentItemElementsState[code]}
               response={item[code].value}
               allResponses={responses}
             />
-          ))}
-          <Button primary content={'EDIT'} onClick={() => setEdit(true)} />
-          <Button secondary content={'DELETE'} onClick={() => deleteItem(index)} />
-        </Accordion.Content>
-      )}
-      {edit && <p>Editing</p>}
+          )
+        )}
+        <Button primary content={'EDIT'} onClick={() => setEdit(true)} />
+        <Button secondary content={'DELETE'} onClick={() => deleteItem(index)} />
+      </Accordion.Content>
     </Accordion>
   )
 }
