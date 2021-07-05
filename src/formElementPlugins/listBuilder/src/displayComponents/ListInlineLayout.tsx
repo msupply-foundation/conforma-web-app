@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Icon, Accordion } from 'semantic-ui-react'
-import { ApplicationDetails, User } from '../../../../utils/types'
+import { ApplicationDetails, ElementState, User } from '../../../../utils/types'
 import { ListLayoutProps } from '../types'
 import ApplicationViewWrapper from '../../../ApplicationViewWrapper'
 import SummaryViewWrapper from '../../../SummaryViewWrapper'
@@ -41,7 +41,8 @@ const ItemAccordion: React.FC<any> = ({
 }) => {
   const [open, setOpen] = useState(false)
   const [edit, setEdit] = useState(false)
-  const [currentItemElementsState, setItemResponseElementsState] = useState<any>()
+  const [currentItemElementsState, setItemResponseElementsState] =
+    useState<{ [key: string]: ElementState }>()
 
   const editItemInline = () => {
     setEdit(true)
@@ -62,6 +63,7 @@ const ItemAccordion: React.FC<any> = ({
       applicationData as ApplicationDetails
     ).then((elements) => setItemResponseElementsState(elements))
   }, [])
+
   if (!currentItemElementsState) return null
   return (
     <Accordion styled className="accordion-container" style={{ maxWidth: open ? 'none' : '100%' }}>
