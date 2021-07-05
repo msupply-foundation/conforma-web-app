@@ -85,8 +85,8 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         id,
         status: assignmentStatus,
         stage: assignmentStage,
-        stageDate,
-        timeUpdated,
+        timeStageCreated,
+        timeUpdated: timeStatusUpdated,
         levelNumber,
         reviewer,
         reviewAssignmentAssignerJoins,
@@ -104,34 +104,37 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
         name: assignmentStage?.title as string,
         number: assignmentStage?.number as number,
         colour: assignmentStage?.colour as string,
-        createdDate: stageDate,
       }
 
       const assignment: AssignmentDetails = {
         id,
-        review: review
-          ? {
-              id: review.id,
-              isLastLevel: !!review?.isLastLevel,
-              level: review.levelNumber || 0,
-              stage: {
-                ...stage,
-                statusCreatedDate: review.timeStatusCreated,
-                status: review.status as ReviewStatus,
-              },
-              reviewDecision: review.reviewDecisions.nodes[0], // this will be the latest, sorted in query
-            }
-          : null,
-        stage, // No status defined (ReviewStatus is defined inside review)
-        status: assignmentStatus,
         reviewer: reviewer as User,
         level: levelNumber || 1,
+        current: {
+          stage,
+          assignmentStatus,
+          timeStageCreated,
+          timeStatusUpdated,
+        },
         isCurrentUserReviewer: reviewer?.id === (currentUser?.userId as number),
         isCurrentUserAssigner: reviewAssignmentAssignerJoins.nodes.length > 0,
         assignableSectionRestrictions: allowedSections || [],
         totalAssignedQuestions,
         reviewQuestionAssignments,
-        timeUpdated,
+        review: review
+          ? {
+              id: review.id,
+              isLastLevel: !!review?.isLastLevel,
+              level: review.levelNumber || 0,
+              current: {
+                stage,
+                timeStageCreated,
+                reviewStatus: review.status as ReviewStatus,
+                timeStatusCreated: review.timeStatusCreated,
+              },
+              reviewDecision: review.reviewDecisions.nodes[0], // this will be the latest, sorted in query
+            }
+          : null,
       }
 
       return assignment

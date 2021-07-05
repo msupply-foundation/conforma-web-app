@@ -18,7 +18,7 @@ export default gql`
           title
           colour
         }
-        stageDate
+        timeStageCreated
         trigger
         reviewer {
           id

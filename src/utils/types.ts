@@ -26,7 +26,6 @@ export {
   ApplicationDetails,
   ApplicationElementStates,
   ApplicationListRow,
-  ApplicationStage,
   ApplicationProps,
   AssignmentDetails,
   CellProps,
@@ -65,6 +64,7 @@ export {
   SectionsStructure,
   SetStrictSectionPage,
   SortQuery,
+  StageAndStatus,
   StageDetails,
   TemplateDetails,
   TemplateCategoryDetails,
@@ -88,7 +88,7 @@ interface ApplicationDetails {
   outcome: string
   isLinear: boolean
   isChangeRequest: boolean
-  currentStage: ApplicationStage
+  current: StageAndStatus
   firstStrictInvalidPage: SectionAndPage | null
   submissionMessage?: string
   startMessage?: string
@@ -111,29 +111,26 @@ interface ApplicationProps {
   strictSectionPage?: SectionAndPage | null
 }
 
-interface ApplicationStage extends StageDetails {
-  createdDate: Date
-  statusCreatedDate: Date
-  status: ApplicationStatus
-}
-
 interface AssignmentDetails {
   id: number
-  status: ReviewAssignmentStatus | null
-  timeUpdated: Date
   level: number
   reviewerId?: number
   review: ReviewDetails | null
   reviewer: GraphQLUser
+  current: AssignmentStageAndStatus
   totalAssignedQuestions: number
-  stage: {
-    // Not storing ReviewStatus
-    createdDate: Date
-  } & StageDetails
   reviewQuestionAssignments: ReviewQuestionAssignment[]
   isCurrentUserAssigner: boolean
   assignableSectionRestrictions: (string | null)[]
   isCurrentUserReviewer: boolean
+}
+
+interface AssignmentStageAndStatus {
+  stage: StageDetails
+  assignmentStatus: ReviewAssignmentStatus | null
+  timeStageCreated: Date
+  timeStatusUpdated: Date
+  // Doesn't store ReviewStatus
 }
 
 interface BasicStringObject {
@@ -340,7 +337,7 @@ interface ReviewDetails {
   isLastLevel: boolean
   level: number
   reviewDecision?: ReviewDecision | null
-  stage: ReviewStage
+  current: ReviewStageAndStatus
 }
 
 interface ReviewQuestion {
@@ -356,10 +353,11 @@ interface ReviewQuestionDecision {
   decision?: ReviewResponseDecision | null
 }
 
-interface ReviewStage extends StageDetails {
-  createdDate: Date
-  statusCreatedDate: Date
-  status: ReviewStatus
+interface ReviewStageAndStatus {
+  stage: StageDetails
+  reviewStatus: ReviewStatus
+  timeStageCreated: Date
+  timeStatusCreated: Date
 }
 
 type SectionAndPage = {
@@ -449,6 +447,13 @@ interface SetStrictSectionPage {
 interface SortQuery {
   sortColumn?: string
   sortDirection?: 'ascending' | 'descending'
+}
+
+interface StageAndStatus {
+  stage: StageDetails
+  status: ApplicationStatus
+  timeStageCreated: Date
+  timeStatusCreated: Date
 }
 
 interface StageDetails {

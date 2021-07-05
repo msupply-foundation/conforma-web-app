@@ -21,7 +21,7 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
   } = useRouter()
   const {
     info: {
-      currentStage: { status },
+      current: { status },
       submissionMessage,
       name,
     },

@@ -24,7 +24,7 @@ const ReviewHomeWrapper: React.FC<{
 
   const getFilteredByStage = (assignments: AssignmentDetails[]) => {
     if (!filters) return []
-    return assignments.filter((assignment) => assignment.stage.id === filters.selectedStage)
+    return assignments.filter((assignment) => assignment.current.stage.id === filters.selectedStage)
   }
 
   const getFilteredReviewer = (assignments: AssignmentDetails[]) => {
@@ -82,7 +82,7 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
   useEffect(() => {
     setFilters({
       selectedReviewer: currentUser?.userId as number,
-      selectedStage: structure.info.currentStage.id,
+      selectedStage: structure.info.current.stage.id,
     })
   }, [])
 
@@ -121,7 +121,7 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
 
 const getStageOptions = (structure: FullStructure, assignments: AssignmentDetails[]) =>
   structure.stages
-    .filter(({ id }) => assignments.some(({ stage }) => id === stage.id))
+    .filter(({ id }) => assignments.some(({ current: { stage } }) => id === stage.id))
     .map(({ id, name, colour }) => ({
       className: 'padding-zero',
       key: id,

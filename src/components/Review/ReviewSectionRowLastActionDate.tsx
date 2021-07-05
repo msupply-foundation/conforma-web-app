@@ -16,7 +16,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
         return (
           <LastDate
             title={strings.ACTION_DATE_REVIEW_STARTED}
-            indicator={getSimplifiedTimeDifference(thisReview?.stage.statusCreatedDate)}
+            indicator={getSimplifiedTimeDifference(thisReview?.current.timeStatusCreated)}
           />
         )
       }
@@ -24,7 +24,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
         return (
           <LastDate
             title={strings.ACTION_DATE_REVIEW_SUBMITTED}
-            indicator={getSimplifiedTimeDifference(thisReview?.stage.statusCreatedDate)}
+            indicator={getSimplifiedTimeDifference(thisReview?.current.timeStatusCreated)}
           />
         )
       }
@@ -32,7 +32,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
         return (
           <LastDate
             title={strings.ACTION_DATE_ASSIGNED}
-            indicator={getSimplifiedTimeDifference(assignment.timeUpdated)}
+            indicator={getSimplifiedTimeDifference(assignment.current.timeStatusUpdated)}
           />
         )
       }
@@ -41,9 +41,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
         return (
           <LastDate
             title={strings.ACTION_DATE_RE_SUBMITTED}
-            indicator={getSimplifiedTimeDifference(
-              fullStructure?.info.currentStage?.statusCreatedDate
-            )}
+            indicator={getSimplifiedTimeDifference(fullStructure?.info.current?.timeStatusCreated)}
           />
         )
       }
@@ -52,9 +50,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
         return (
           <LastDate
             title={strings.LABEL_APPLICATION_SUBMITTED}
-            indicator={getSimplifiedTimeDifference(
-              fullStructure?.info.currentStage?.statusCreatedDate
-            )}
+            indicator={getSimplifiedTimeDifference(fullStructure?.info.current?.timeStatusCreated)}
           />
         )
       }

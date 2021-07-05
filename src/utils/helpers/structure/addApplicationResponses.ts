@@ -21,7 +21,6 @@ const addApplicationResponses = (
     ([templateElementId, groupedApplicationResponses]) => {
       const element = structure?.elementsById?.[templateElementId]
       if (!element) return
-
       element.latestApplicationResponse = groupedApplicationResponses[0]
       element.previousApplicationResponse = groupedApplicationResponses[1] // will be undefined if doesn't exist
     }
