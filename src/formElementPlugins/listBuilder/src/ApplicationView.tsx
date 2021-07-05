@@ -86,7 +86,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const innerElementUpdate =
     (code: string) =>
     async ({ variables: response }: { variables: InputResponseField }) => {
-      console.log('UPDATING')
       // need to get most recent state of inputState, thus using callback
       setInputState((currentInputState) => {
         const newResponses = { ...currentInputState.currentResponses, [code]: response }
@@ -107,11 +106,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     } else {
       // Or update existing item
       const newList = [...listItems]
-      console.log('UPdating', inputState.currentResponses)
       newList[inputState.selectedListItemIndex] = { ...inputState.currentResponses }
-      console.log('Updated', newList)
       setListItems(newList)
-      console.log('List items', listItems)
     }
     setInputState(defaultInputState)
   }
@@ -139,6 +135,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     codes: inputFields.map((e: TemplateElement) => e.code),
     Markdown,
     isEditable,
+    setInputState,
   }
 
   const DisplayComponent =

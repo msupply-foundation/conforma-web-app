@@ -22,6 +22,7 @@ const ListInlineLayout: React.FC<ListLayoutProps> = ({
   applicationData,
   innerElementUpdate,
   updateList,
+  setInputState,
 }) => {
   return (
     <>
@@ -41,6 +42,7 @@ const ListInlineLayout: React.FC<ListLayoutProps> = ({
           deleteItem={deleteItem}
           innerElementUpdate={innerElementUpdate}
           updateList={updateList}
+          setInputState={setInputState}
         />
       ))}
     </>
@@ -64,10 +66,22 @@ const ItemAccordion: React.FC<any> = ({
   deleteItem,
   innerElementUpdate,
   updateList,
+  setInputState,
 }) => {
   const [open, setOpen] = useState(false)
   const [edit, setEdit] = useState(false)
   const [currentItemElementsState, setItemResponseElementsState] = useState<any>()
+
+  const editItemInline = () => {
+    setEdit(true)
+    editItem(index)
+  }
+
+  const updateListInline = () => {
+    updateList()
+    setEdit(false)
+  }
+
   useEffect(() => {
     buildElements(
       inputFields,
@@ -105,8 +119,8 @@ const ItemAccordion: React.FC<any> = ({
             />
           )
         )}
-        {!edit && <Button primary content={'EDIT'} onClick={() => setEdit(true)} />}
-        {edit && <Button primary content={'UPDATE'} onClick={updateList} />}
+        {!edit && <Button primary content={'EDIT'} onClick={editItemInline} />}
+        {edit && <Button primary content={'UPDATE'} onClick={updateListInline} />}
         <Button secondary content={'DELETE'} onClick={() => deleteItem(index)} />
       </Accordion.Content>
     </Accordion>

@@ -33,4 +33,5 @@ export interface ListLayoutProps {
   deleteItemText?: string
   innerElementUpdate?: any
   updateList?: any
+  setInputState?: any
 }
