@@ -26,6 +26,7 @@ const ItemAccordion: React.FC<any> = ({
   header,
   index,
   inputFields,
+  isEditable = true,
   responses,
   currentUser,
   applicationData,
@@ -92,9 +93,11 @@ const ItemAccordion: React.FC<any> = ({
             />
           )
         )}
-        {!edit && <Button primary content={editItemText} onClick={editItemInline} />}
+        {!edit && isEditable && <Button primary content={editItemText} onClick={editItemInline} />}
         {edit && <Button primary content={updateButtonText} onClick={updateListInline} />}
-        <Button secondary content={deleteItemText} onClick={() => deleteItem(index)} />
+        {isEditable && (
+          <Button secondary content={deleteItemText} onClick={() => deleteItem(index)} />
+        )}
       </Accordion.Content>
     </Accordion>
   )

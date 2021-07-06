@@ -1,4 +1,3 @@
-import { ApplicationViewProps } from '../../types'
 import { ApplicationDetails, ResponseFull, User } from '../../../utils/types'
 
 export enum DisplayType {
@@ -23,7 +22,7 @@ export interface ListLayoutProps {
   editItem?: (index: number) => void
   deleteItem?: (index: number) => void
   isEditable?: boolean
-  // These values required for SummaryView in Inline layout
+  // These properties required for Inline layout
   inputFields?: any
   responses?: any
   currentUser?: User
