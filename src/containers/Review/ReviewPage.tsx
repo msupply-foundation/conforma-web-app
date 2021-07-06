@@ -138,6 +138,7 @@ const ReviewPage: React.FC<{
             )}
             responsesByCode={responsesByCode as ResponsesByCode}
             applicationData={fullApplicationStructure.info}
+            stages={fullApplicationStructure.stages}
             serial={serial}
             isReview
             isConsolidation={section.assignment?.isConsolidation}

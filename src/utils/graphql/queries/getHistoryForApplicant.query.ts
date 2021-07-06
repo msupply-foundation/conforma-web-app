@@ -12,6 +12,10 @@ export default gql`
       reviewResponses(filter: { isVisibleToApplicant: { equalTo: true } }) {
         nodes {
           ...reviewResponseFragment
+          review {
+            stageNumber
+            timeStageCreated
+          }
         }
       }
       applicationResponses(filter: { application: { serial: { equalTo: $serial } } }) {
@@ -22,6 +26,7 @@ export default gql`
             user {
               ...User
             }
+            stageNumber
           }
         }
       }

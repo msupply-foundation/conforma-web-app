@@ -33,6 +33,10 @@ export default gql`
       ) {
         nodes {
           ...reviewResponseFragment
+          review {
+            stageNumber
+            timeStageCreated
+          }
         }
       }
       applicationResponses(
@@ -45,6 +49,7 @@ export default gql`
             user {
               ...User
             }
+            stageNumber
           }
         }
       }
