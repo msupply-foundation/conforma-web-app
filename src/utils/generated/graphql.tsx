@@ -189,7 +189,7 @@ export type Query = Node & {
   reviewList?: Maybe<ReviewListConnection>;
   reviewReviewerId?: Maybe<Scalars['Int']>;
   reviewStage?: Maybe<Scalars['Int']>;
-  reviewStageDate?: Maybe<Scalars['Datetime']>;
+  reviewTimeStageCreated?: Maybe<Scalars['Datetime']>;
   templateQuestionsCount?: Maybe<Scalars['BigInt']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
@@ -1295,7 +1295,7 @@ export type QueryReviewStageArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryReviewStageDateArgs = {
+export type QueryReviewTimeStageCreatedArgs = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
 };
 
@@ -2369,8 +2369,8 @@ export type ReviewAssignmentFilter = {
   stageId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageNumber` field. */
   stageNumber?: Maybe<IntFilter>;
-  /** Filter by the object’s `stageDate` field. */
-  stageDate?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `timeStageCreated` field. */
+  timeStageCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ReviewAssignmentStatusFilter>;
   /** Filter by the object’s `applicationId` field. */
@@ -3193,8 +3193,12 @@ export type ApplicationResponseFilter = {
   value?: Maybe<JsonFilter>;
   /** Filter by the object’s `isValid` field. */
   isValid?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `timeCreated` field. */
+  timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `timeUpdated` field. */
   timeUpdated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `timeSubmitted` field. */
+  timeSubmitted?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
   reviewResponses?: Maybe<ApplicationResponseToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
@@ -3278,8 +3282,12 @@ export type ReviewResponseFilter = {
   originalReviewResponseId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewId` field. */
   reviewId?: Maybe<IntFilter>;
+  /** Filter by the object’s `timeCreated` field. */
+  timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `timeUpdated` field. */
   timeUpdated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `timeSubmitted` field. */
+  timeSubmitted?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `isVisibleToApplicant` field. */
   isVisibleToApplicant?: Maybe<BooleanFilter>;
   /** Filter by the object’s `templateElementId` field. */
@@ -3487,8 +3495,8 @@ export type ReviewFilter = {
   levelNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `stageNumber` field. */
   stageNumber?: Maybe<IntFilter>;
-  /** Filter by the object’s `stageDate` field. */
-  stageDate?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `timeStageCreated` field. */
+  timeStageCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `isLastLevel` field. */
   isLastLevel?: Maybe<BooleanFilter>;
   /** Filter by the object’s `status` field. */
@@ -4759,8 +4767,8 @@ export enum ReviewAssignmentsOrderBy {
   StageIdDesc = 'STAGE_ID_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
   StageNumberDesc = 'STAGE_NUMBER_DESC',
-  StageDateAsc = 'STAGE_DATE_ASC',
-  StageDateDesc = 'STAGE_DATE_DESC',
+  TimeStageCreatedAsc = 'TIME_STAGE_CREATED_ASC',
+  TimeStageCreatedDesc = 'TIME_STAGE_CREATED_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
@@ -4799,8 +4807,8 @@ export type ReviewAssignmentCondition = {
   stageId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageNumber` field. */
   stageNumber?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `stageDate` field. */
-  stageDate?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeStageCreated` field. */
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<ReviewAssignmentStatus>;
   /** Checks for equality with the object’s `applicationId` field. */
@@ -4846,7 +4854,7 @@ export type ReviewAssignment = Node & {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -5898,8 +5906,12 @@ export enum ApplicationResponsesOrderBy {
   ValueDesc = 'VALUE_DESC',
   IsValidAsc = 'IS_VALID_ASC',
   IsValidDesc = 'IS_VALID_DESC',
+  TimeCreatedAsc = 'TIME_CREATED_ASC',
+  TimeCreatedDesc = 'TIME_CREATED_DESC',
   TimeUpdatedAsc = 'TIME_UPDATED_ASC',
   TimeUpdatedDesc = 'TIME_UPDATED_DESC',
+  TimeSubmittedAsc = 'TIME_SUBMITTED_ASC',
+  TimeSubmittedDesc = 'TIME_SUBMITTED_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -5918,8 +5930,12 @@ export type ApplicationResponseCondition = {
   value?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isValid` field. */
   isValid?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `timeCreated` field. */
+  timeCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `timeUpdated` field. */
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeSubmitted` field. */
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
 };
 
 /** A connection to a list of `ApplicationResponse` values. */
@@ -5945,7 +5961,9 @@ export type ApplicationResponse = Node & {
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   /** Reads a single `TemplateElement` that is related to this `ApplicationResponse`. */
   templateElement?: Maybe<TemplateElement>;
   /** Reads a single `Application` that is related to this `ApplicationResponse`. */
@@ -5999,8 +6017,12 @@ export enum ReviewResponsesOrderBy {
   OriginalReviewResponseIdDesc = 'ORIGINAL_REVIEW_RESPONSE_ID_DESC',
   ReviewIdAsc = 'REVIEW_ID_ASC',
   ReviewIdDesc = 'REVIEW_ID_DESC',
+  TimeCreatedAsc = 'TIME_CREATED_ASC',
+  TimeCreatedDesc = 'TIME_CREATED_DESC',
   TimeUpdatedAsc = 'TIME_UPDATED_ASC',
   TimeUpdatedDesc = 'TIME_UPDATED_DESC',
+  TimeSubmittedAsc = 'TIME_SUBMITTED_ASC',
+  TimeSubmittedDesc = 'TIME_SUBMITTED_DESC',
   IsVisibleToApplicantAsc = 'IS_VISIBLE_TO_APPLICANT_ASC',
   IsVisibleToApplicantDesc = 'IS_VISIBLE_TO_APPLICANT_DESC',
   TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
@@ -6031,8 +6053,12 @@ export type ReviewResponseCondition = {
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewId` field. */
   reviewId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `timeCreated` field. */
+  timeCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `timeUpdated` field. */
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeSubmitted` field. */
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `isVisibleToApplicant` field. */
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `templateElementId` field. */
@@ -6068,7 +6094,9 @@ export type ReviewResponse = Node & {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -6153,7 +6181,7 @@ export type Review = Node & {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   /** Reads a single `ReviewAssignment` that is related to this `Review`. */
   reviewAssignment?: Maybe<ReviewAssignment>;
@@ -6806,8 +6834,8 @@ export enum ReviewsOrderBy {
   LevelNumberDesc = 'LEVEL_NUMBER_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
   StageNumberDesc = 'STAGE_NUMBER_DESC',
-  StageDateAsc = 'STAGE_DATE_ASC',
-  StageDateDesc = 'STAGE_DATE_DESC',
+  TimeStageCreatedAsc = 'TIME_STAGE_CREATED_ASC',
+  TimeStageCreatedDesc = 'TIME_STAGE_CREATED_DESC',
   IsLastLevelAsc = 'IS_LAST_LEVEL_ASC',
   IsLastLevelDesc = 'IS_LAST_LEVEL_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -6830,8 +6858,8 @@ export type ReviewCondition = {
   levelNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageNumber` field. */
   stageNumber?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `stageDate` field. */
-  stageDate?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeStageCreated` field. */
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `isLastLevel` field. */
   isLastLevel?: Maybe<Scalars['Boolean']>;
 };
@@ -13274,7 +13302,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateI
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -13488,7 +13516,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -13596,7 +13624,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -13811,7 +13839,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisat
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -14309,7 +14337,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -14443,7 +14471,9 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -14670,7 +14700,9 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -14767,7 +14799,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -14962,7 +14994,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFk
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -15252,7 +15284,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignm
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -15458,7 +15490,7 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -15538,7 +15570,7 @@ export type UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch = {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -15582,7 +15614,7 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -15621,7 +15653,7 @@ export type ReviewAssignmentPatch = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -15652,7 +15684,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -15765,7 +15797,7 @@ export type UpdateReviewOnReviewForReviewApplicationIdFkeyPatch = {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -15862,7 +15894,7 @@ export type UpdateReviewOnReviewForReviewReviewerIdFkeyPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -15931,7 +15963,9 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPat
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -16015,7 +16049,9 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionA
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -16061,7 +16097,9 @@ export type UpdateApplicationResponseOnReviewResponseForReviewResponseApplicatio
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -16104,7 +16142,9 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResp
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -16151,7 +16191,9 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseL
   applicationResponseId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -16198,7 +16240,9 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseOriginalReviewR
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -16245,7 +16289,7 @@ export type UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -16348,7 +16392,7 @@ export type UpdateReviewOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -16451,7 +16495,7 @@ export type UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyP
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -16990,7 +17034,7 @@ export type UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch = {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -17018,7 +17062,7 @@ export type ReviewPatch = {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -17038,7 +17082,7 @@ export type NotificationReviewIdFkeyReviewCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -17132,7 +17176,9 @@ export type UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -17339,7 +17385,9 @@ export type ApplicationResponsePatch = {
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -17354,7 +17402,9 @@ export type FileApplicationResponseIdFkeyApplicationResponseCreateInput = {
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -17739,7 +17789,7 @@ export type ReviewStatusHistoryReviewIdFkeyReviewCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -17794,7 +17844,7 @@ export type ReviewDecisionReviewIdFkeyReviewCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -17849,7 +17899,7 @@ export type ReviewResponseReviewIdFkeyReviewCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -17953,7 +18003,9 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseTemplateElement
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
@@ -17983,7 +18035,9 @@ export type ReviewResponsePatch = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -18006,7 +18060,9 @@ export type ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
@@ -18102,7 +18158,9 @@ export type ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput 
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -18132,7 +18190,9 @@ export type ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput = {
   applicationResponseId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -18162,7 +18222,9 @@ export type ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -18191,7 +18253,9 @@ export type ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInpu
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -18215,7 +18279,9 @@ export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInpu
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -18273,7 +18339,9 @@ export type ReviewResponseReviewIdFkeyReviewResponseCreateInput = {
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -18302,7 +18370,7 @@ export type ReviewReviewerIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -18364,7 +18432,7 @@ export type ReviewApplicationIdFkeyReviewCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -18430,7 +18498,7 @@ export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -18457,7 +18525,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -18572,7 +18640,7 @@ export type ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCr
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -18761,7 +18829,7 @@ export type ReviewAssignmentLevelIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -18829,7 +18897,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -18905,7 +18973,9 @@ export type ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInp
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -19159,7 +19229,9 @@ export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput =
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -19220,7 +19292,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -19645,7 +19717,7 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -19793,7 +19865,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -19866,7 +19938,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -20013,7 +20085,7 @@ export type ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -21251,7 +21323,9 @@ export type ApplicationResponseInput = {
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -22278,7 +22352,7 @@ export type ReviewInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -22330,7 +22404,7 @@ export type ReviewAssignmentInput = {
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  stageDate?: Maybe<Scalars['Datetime']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -22528,7 +22602,9 @@ export type ReviewResponseInput = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -26962,7 +27038,7 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'status' | 'timeUpdated' | 'levelNumber' | 'reviewerId' | 'isLastLevel' | 'allowedSections' | 'stageDate' | 'trigger'>
+      & Pick<ReviewAssignment, 'id' | 'status' | 'timeUpdated' | 'levelNumber' | 'reviewerId' | 'isLastLevel' | 'allowedSections' | 'timeStageCreated' | 'trigger'>
       & { stage?: Maybe<(
         { __typename?: 'TemplateStage' }
         & Pick<TemplateStage, 'id' | 'number' | 'title' | 'colour'>
@@ -27026,6 +27102,10 @@ export type GetReviewResponsesQuery = (
     { __typename?: 'ReviewResponsesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewResponse' }
+      & { reviewResponseLink?: Maybe<(
+        { __typename?: 'ReviewResponse' }
+        & ReviewResponseFragmentFragment
+      )> }
       & ReviewResponseFragmentFragment
       & ConsolidatorResponseFragmentFragment
     )>> }
@@ -28154,7 +28234,7 @@ export const GetReviewInfoDocument = gql`
         title
         colour
       }
-      stageDate
+      timeStageCreated
       trigger
       reviewer {
         id
@@ -28234,6 +28314,9 @@ export const GetReviewResponsesDocument = gql`
     nodes {
       ...reviewResponseFragment
       ...consolidatorResponseFragment
+      reviewResponseLink {
+        ...reviewResponseFragment
+      }
     }
   }
   previousLevelReviewResponses: reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {review: {applicationId: {equalTo: $applicationId}, levelNumber: {equalTo: $previousLevel}, stageNumber: {equalTo: $stageNumber}}, templateElement: {section: {id: {in: $sectionIds}}}, status: {notEqualTo: DRAFT}}) {

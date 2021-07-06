@@ -63,14 +63,17 @@ const ReviewPage: React.FC<{
   // TODO decide how to handle this, and localise if not deleted
   if (
     reviewAssignment?.reviewer?.id !== currentUser?.userId &&
-    fullReviewStructure?.thisReview?.stage.status !== ReviewStatus.Submitted
+    fullReviewStructure?.thisReview?.current.reviewStatus !== ReviewStatus.Submitted
   ) {
     const {
-      info: { name, currentStage },
+      info: {
+        name,
+        current: { stage },
+      },
     } = fullReviewStructure
     return (
       <>
-        <ReviewHeader applicationName={name} stage={currentStage} />
+        <ReviewHeader applicationName={name} stage={stage} />
         <Label className="simple-label" content={strings.LABEL_REVIEW_IN_PROGRESS} />
       </>
     )
@@ -79,13 +82,20 @@ const ReviewPage: React.FC<{
   const {
     sections,
     responsesByCode,
-    info: { serial, name, currentStage },
+    info: {
+      serial,
+      name,
+      current: { stage },
+    },
     thisReview,
     attemptSubmission,
     firstIncompleteReviewPage,
   } = fullReviewStructure
 
-  if (thisReview?.stage.status === ReviewStatus.Pending && showWarningModal.open === false) {
+  if (
+    thisReview?.current.reviewStatus === ReviewStatus.Pending &&
+    showWarningModal.open === false
+  ) {
     const { title, message, option } = messages.REVIEW_STATUS_PENDING
     setShowWarningModal({
       open: true,
@@ -120,7 +130,7 @@ const ReviewPage: React.FC<{
     <Message error title={strings.ERROR_GENERIC} list={[error]} />
   ) : (
     <>
-      <ReviewHeader applicationName={name} stage={currentStage} />
+      <ReviewHeader applicationName={name} stage={stage} />
       <div style={{ display: 'flex' }}>
         {isConsolidation ? (
           isAssignedToCurrentUser ? (
@@ -172,8 +182,8 @@ const ReviewPage: React.FC<{
             isReview
             isConsolidation={section.assignment?.isConsolidation}
             canEdit={
-              reviewAssignment?.review?.stage.status === ReviewStatus.Draft ||
-              reviewAssignment?.review?.stage.status === ReviewStatus.Locked
+              reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Draft ||
+              reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Locked
             }
           />
         ))}
