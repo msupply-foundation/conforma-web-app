@@ -58,7 +58,6 @@ const ItemAccordion: React.FC<any> = ({
   const updateListInline = () => {
     updateList()
     setEdit(false)
-    // setOpen(false)
   }
 
   const deleteItemInline = () => {
