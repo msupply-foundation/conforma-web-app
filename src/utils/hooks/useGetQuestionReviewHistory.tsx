@@ -8,7 +8,7 @@ import {
   User,
 } from '../generated/graphql'
 import { HistoryElement } from '../types'
-import strings from '../../utils/constants'
+import strings from '../constants'
 
 interface UseGetQuestionHistoryProps {
   serial: string
@@ -23,7 +23,7 @@ interface ResponsesByDate {
   [date: string]: HistoryElement
 }
 
-const useGetQuestionHistory = ({ isApplicant, ...variables }: UseGetQuestionHistoryProps) => {
+const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuestionHistoryProps) => {
   const [historyList, setHistoryList] = useState<HistoryElement[]>([])
   const { data, error, loading } = isApplicant
     ? useGetHistoryForApplicantQuery({ variables })
@@ -41,6 +41,7 @@ const useGetQuestionHistory = ({ isApplicant, ...variables }: UseGetQuestionHist
       if (!applicantResponse) return
       const { timeUpdated, application, value } = applicantResponse
       const { firstName, lastName } = application?.user as User
+
       // Set each entry using HistoryElement values
       allResponses[timeUpdated] = {
         author: firstName || '' + ' ' + lastName || '',
@@ -67,10 +68,16 @@ const useGetQuestionHistory = ({ isApplicant, ...variables }: UseGetQuestionHist
         timeUpdated,
         reviewerComment: comment || '',
       }
-      // TODO: Need to check for 2 responses in the same time?
     })
 
-    setHistoryList(Object.values(allResponses).reverse()) // Change order to show latest on the top
+    const responsesOrderedByLatest: HistoryElement[] = []
+
+    Object.keys(allResponses)
+      .sort()
+      .reverse()
+      .forEach((key) => responsesOrderedByLatest.push(allResponses[key]))
+
+    setHistoryList(responsesOrderedByLatest) // Change order to show latest on the top
 
     // Find stages - Maybe done straight into HistoryPanel - or have in HistoryStructure?
   }, [data])
@@ -82,4 +89,4 @@ const useGetQuestionHistory = ({ isApplicant, ...variables }: UseGetQuestionHist
   }
 }
 
-export default useGetQuestionHistory
+export default useGetQuestionReviewHistory
