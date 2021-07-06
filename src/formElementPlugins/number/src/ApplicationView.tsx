@@ -1,3 +1,5 @@
+// Number format reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat
+
 import React, { useEffect, useState } from 'react'
 import { Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
@@ -36,14 +38,19 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     maxSignificantDigits = undefined,
   } = parameters
 
-  console.log('LOCALE', locale)
-
   const formatOptions = {
     style: currency ? 'currency' : undefined,
     currency: currency ?? undefined,
     maximumSignificantDigits: maxSignificantDigits,
   }
   const numberFormatter = new Intl.NumberFormat(locale, formatOptions)
+  // const [numberFormatter, setNumberFormatter] = useState(
+  //   new Intl.NumberFormat(locale, formatOptions)
+  // )
+
+  useEffect(() => {
+    handleLoseFocus()
+  }, [locale])
 
   function handleChange(e: any) {
     const text = e.target.value
@@ -53,10 +60,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setTextValue(text)
   }
 
-  function handleLoseFocus(e: any) {
+  function handleLoseFocus() {
     const [number, text] = parseInput(textValue, numberFormatter)
     if (internalValidation.isValid) onSave({ text, number, type, currency, locale })
     else onSave(null)
+    console.log('Text', text)
     setTextValue(text)
   }
 
