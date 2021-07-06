@@ -63,7 +63,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
 
   useEffect(() => {
-    console.log('Building elements')
     buildElements(
       inputFields,
       allResponses,
@@ -89,7 +88,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       // need to get most recent state of inputState, thus using callback
       setInputState((currentInputState) => {
         const newResponses = { ...currentInputState.currentResponses, [code]: response }
-        console.log('newResponses', newResponses)
         const error = !anyErrorItems(newResponses, inputFields) ? false : inputState.error
         return { ...currentInputState, currentResponses: newResponses, error }
       })
@@ -112,12 +110,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setInputState(defaultInputState)
   }
 
-  const editItem = async (index: number) => {
+  const editItem = async (index: number, openPanel = true) => {
     setInputState((prev) => ({
       ...inputState,
       currentResponses: listItems[index],
       selectedListItemIndex: index,
-      isOpen: true,
+      isOpen: openPanel,
     }))
   }
 
@@ -228,7 +226,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         </Modal>
       )}
       {displayType === DisplayType.INLINE && inputState.isOpen && (
-        <Segment>{ListInputForm}</Segment>
+        <Segment className="inline-form fit-content">{ListInputForm}</Segment>
       )}
       {DisplayComponent}
     </>
