@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Modal, Segment } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import useGetQuestionHistory from '../../utils/hooks/useGetQuestionHistory'
+import useGetQuestionReviewHistory from '../../utils/hooks/useGetQuestionReviewHistory'
 import HistoryResponseElement from '../PageElements/Elements/HistoryResponseElement'
 import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
@@ -25,7 +25,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({
     updateQuery,
   } = useRouter()
 
-  const { historyList } = useGetQuestionHistory({
+  const { historyList } = useGetQuestionReviewHistory({
     serial: serialNumber,
     questionCode: showHistory,
     templateCode,
