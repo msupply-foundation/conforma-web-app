@@ -178,6 +178,8 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               )}
             </>
           )}
+          {/* Show history - for previous reviews done */}
+          {enableViewHistory && <ViewHistoryButton elementCode={elementCode} />}
         </>
       )
     default:
