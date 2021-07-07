@@ -142,6 +142,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
           id: currentResponse?.id as number,
           value: response,
           isValid,
+          stageNumber,
         },
       })
       setUpdateTrackerState({

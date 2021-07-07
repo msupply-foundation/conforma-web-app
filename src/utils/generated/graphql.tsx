@@ -26682,6 +26682,7 @@ export type UpdateResponseMutationVariables = Exact<{
   id: Scalars['Int'];
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  stageNumber?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -27577,8 +27578,8 @@ export type UpdateApplicationMutationHookResult = ReturnType<typeof useUpdateApp
 export type UpdateApplicationMutationResult = Apollo.MutationResult<UpdateApplicationMutation>;
 export type UpdateApplicationMutationOptions = Apollo.BaseMutationOptions<UpdateApplicationMutation, UpdateApplicationMutationVariables>;
 export const UpdateResponseDocument = gql`
-    mutation updateResponse($id: Int!, $value: JSON, $isValid: Boolean) {
-  updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid}}) {
+    mutation updateResponse($id: Int!, $value: JSON, $isValid: Boolean, $stageNumber: Int) {
+  updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid, stageNumber: $stageNumber}}) {
     applicationResponse {
       ...applicationResponseFragment
       templateElement {
@@ -27607,6 +27608,7 @@ export type UpdateResponseMutationFn = Apollo.MutationFunction<UpdateResponseMut
  *      id: // value for 'id'
  *      value: // value for 'value'
  *      isValid: // value for 'isValid'
+ *      stageNumber: // value for 'stageNumber'
  *   },
  * });
  */
