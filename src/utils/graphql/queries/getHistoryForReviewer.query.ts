@@ -35,7 +35,6 @@ export default gql`
           ...reviewResponseFragment
           review {
             stageNumber
-            timeStageCreated
           }
         }
       }

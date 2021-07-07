@@ -3187,6 +3187,8 @@ export type ApplicationResponseFilter = {
   templateElementId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ApplicationResponseStatusFilter>;
   /** Filter by the object’s `value` field. */
@@ -5900,6 +5902,8 @@ export enum ApplicationResponsesOrderBy {
   TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
   ValueAsc = 'VALUE_ASC',
@@ -5924,6 +5928,8 @@ export type ApplicationResponseCondition = {
   templateElementId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageNumber` field. */
+  stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<ApplicationResponseStatus>;
   /** Checks for equality with the object’s `value` field. */
@@ -5958,6 +5964,7 @@ export type ApplicationResponse = Node & {
   id: Scalars['Int'];
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -14468,6 +14475,7 @@ export type ApplicationResponseOnApplicationResponseForApplicationResponseApplic
 export type UpdateApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -14697,6 +14705,7 @@ export type ApplicationResponseOnApplicationResponseForApplicationResponseTempla
 export type UpdateApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -16094,6 +16103,7 @@ export type UpdateApplicationResponseOnReviewResponseForReviewResponseApplicatio
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -17173,6 +17183,7 @@ export type UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -17382,6 +17393,7 @@ export type ApplicationResponsePatch = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -17399,6 +17411,7 @@ export type FileApplicationResponseIdFkeyApplicationResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -18250,6 +18263,7 @@ export type ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInpu
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -18970,6 +18984,7 @@ export type TemplateElementOnApplicationResponseForApplicationResponseTemplateEl
 export type ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -19226,6 +19241,7 @@ export type ApplicationOnApplicationResponseForApplicationResponseApplicationIdF
 export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -21320,6 +21336,7 @@ export type ApplicationResponseInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -26455,7 +26472,7 @@ export type ApplicationFragment = (
 
 export type ApplicationResponseFragmentFragment = (
   { __typename?: 'ApplicationResponse' }
-  & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'templateElementId' | 'timeUpdated'>
+  & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'stageNumber' | 'templateElementId' | 'timeUpdated'>
   & { templateElement?: Maybe<(
     { __typename?: 'TemplateElement' }
     & Pick<TemplateElement, 'code'>
@@ -26917,7 +26934,7 @@ export type GetHistoryForApplicantQuery = (
         { __typename?: 'ReviewResponse' }
         & { review?: Maybe<(
           { __typename?: 'Review' }
-          & Pick<Review, 'stageNumber' | 'timeStageCreated'>
+          & Pick<Review, 'stageNumber'>
         )> }
         & ReviewResponseFragmentFragment
       )>> }
@@ -26959,7 +26976,7 @@ export type GetHistoryForReviewerQuery = (
         { __typename?: 'ReviewResponse' }
         & { review?: Maybe<(
           { __typename?: 'Review' }
-          & Pick<Review, 'stageNumber' | 'timeStageCreated'>
+          & Pick<Review, 'stageNumber'>
         )> }
         & ReviewResponseFragmentFragment
       )>> }
@@ -27215,6 +27232,7 @@ export const ApplicationResponseFragmentFragmentDoc = gql`
   id
   isValid
   value
+  stageNumber
   templateElement {
     code
   }
@@ -27998,7 +28016,6 @@ export const GetHistoryForApplicantDocument = gql`
         ...reviewResponseFragment
         review {
           stageNumber
-          timeStageCreated
         }
       }
     }
@@ -28058,7 +28075,6 @@ export const GetHistoryForReviewerDocument = gql`
         ...reviewResponseFragment
         review {
           stageNumber
-          timeStageCreated
         }
       }
     }
