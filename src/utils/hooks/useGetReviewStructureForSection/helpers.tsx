@@ -56,7 +56,7 @@ const compileVariablesForReviewResponseQuery = ({
   sectionIds,
   userId: currentUser?.userId as number,
   previousLevel: reviewAssignment.level - 1,
-  stageNumber: reviewAssignment.stage.number,
+  stageNumber: reviewAssignment.current.stage.number,
   applicationId: fullApplicationStructure.info.id,
 })
 
@@ -128,7 +128,7 @@ const generateReviewStructure: GenerateReviewStructure = ({
 const setIsNewApplicationResponse = (structure: FullStructure) => {
   Object.values(structure.elementsById || {}).forEach((element) => {
     element.isNewApplicationResponse =
-      element?.latestApplicationResponse?.timeUpdated === structure.info.current?.date &&
+      element?.latestApplicationResponse?.timeUpdated === structure.info.current.timeStageCreated &&
       !!element?.previousApplicationResponse
   })
 }
@@ -144,7 +144,7 @@ const setIsNewReviewResponse = (structure: FullStructure) => {
 
     // Just update field in assigned elements
     if (isAssigned) {
-      if (structure.thisReview?.status === ReviewStatus.Draft) {
+      if (structure.thisReview?.current?.reviewStatus === ReviewStatus.Draft) {
         element.isNewReviewResponse =
           !!thisReviewPreviousResponse &&
           lowerLevelReviewLatestResponse?.timeUpdated > thisReviewPreviousResponse?.timeUpdated

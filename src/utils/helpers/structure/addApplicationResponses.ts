@@ -7,6 +7,7 @@ const addApplicationResponses = (
 ) => {
   // Application response are ordered by timestamps, if we group them by template element, should be easy to get latest and previous
   const groupedApplicationResponse: { [key: string]: ApplicationResponse[] } = {}
+
   // Group Application responses by templateElement id
   applicationResponses.forEach((applicationResponse) => {
     const templateElementId = applicationResponse?.templateElementId || ''
@@ -20,7 +21,6 @@ const addApplicationResponses = (
     ([templateElementId, groupedApplicationResponses]) => {
       const element = structure?.elementsById?.[templateElementId]
       if (!element) return
-
       element.latestApplicationResponse = groupedApplicationResponses[0]
       element.previousApplicationResponse = groupedApplicationResponses[1] // will be undefined if doesn't exist
 

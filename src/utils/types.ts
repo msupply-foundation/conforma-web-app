@@ -65,6 +65,7 @@ export {
   SetStrictSectionPage,
   SortQuery,
   StageAndStatus,
+  StageDetails,
   TemplateDetails,
   TemplateCategoryDetails,
   TemplatePermissions,
@@ -110,27 +111,26 @@ interface ApplicationProps {
   strictSectionPage?: SectionAndPage | null
 }
 
-interface ApplicationStage {
-  id: number
-  name: string
-  number: number
-  colour: string
-}
-
 interface AssignmentDetails {
   id: number
-  status: ReviewAssignmentStatus | null
-  timeUpdated: Date
   level: number
   reviewerId?: number
   review: ReviewDetails | null
   reviewer: GraphQLUser
+  current: AssignmentStageAndStatus
   totalAssignedQuestions: number
-  stage: ApplicationStage
   reviewQuestionAssignments: ReviewQuestionAssignment[]
   isCurrentUserAssigner: boolean
   assignableSectionRestrictions: (string | null)[]
   isCurrentUserReviewer: boolean
+}
+
+interface AssignmentStageAndStatus {
+  stage: StageDetails
+  assignmentStatus: ReviewAssignmentStatus | null
+  timeStageCreated: Date
+  timeStatusUpdated: Date
+  // Doesn't store ReviewStatus
 }
 
 interface BasicStringObject {
@@ -335,12 +335,10 @@ type ReviewSectionComponentProps = {
 
 interface ReviewDetails {
   id: number
-  status: ReviewStatus
-  timeStatusCreated?: Date
-  stage: ApplicationStage
   isLastLevel: boolean
   level: number
   reviewDecision?: ReviewDecision | null
+  current: ReviewStageAndStatus
 }
 
 interface ReviewQuestion {
@@ -354,6 +352,13 @@ interface ReviewQuestionDecision {
   id: number
   comment?: string | null
   decision?: ReviewResponseDecision | null
+}
+
+interface ReviewStageAndStatus {
+  stage: StageDetails
+  reviewStatus: ReviewStatus
+  timeStageCreated: Date
+  timeStatusCreated: Date
 }
 
 type SectionAndPage = {
@@ -446,16 +451,17 @@ interface SortQuery {
 }
 
 interface StageAndStatus {
-  stage: ApplicationStage
+  stage: StageDetails
   status: ApplicationStatus
-  date: Date
+  timeStageCreated: Date
+  timeStatusCreated: Date
 }
 
 interface StageDetails {
-  number: number
   id: number
-  title: string
-  colour?: string
+  name: string
+  number: number
+  colour: string
   description?: string
 }
 
