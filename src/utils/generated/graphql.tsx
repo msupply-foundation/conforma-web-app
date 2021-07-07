@@ -3193,8 +3193,12 @@ export type ApplicationResponseFilter = {
   value?: Maybe<JsonFilter>;
   /** Filter by the object’s `isValid` field. */
   isValid?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `timeCreated` field. */
+  timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `timeUpdated` field. */
   timeUpdated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `timeSubmitted` field. */
+  timeSubmitted?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
   reviewResponses?: Maybe<ApplicationResponseToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
@@ -3278,8 +3282,12 @@ export type ReviewResponseFilter = {
   originalReviewResponseId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewId` field. */
   reviewId?: Maybe<IntFilter>;
+  /** Filter by the object’s `timeCreated` field. */
+  timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `timeUpdated` field. */
   timeUpdated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `timeSubmitted` field. */
+  timeSubmitted?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `isVisibleToApplicant` field. */
   isVisibleToApplicant?: Maybe<BooleanFilter>;
   /** Filter by the object’s `templateElementId` field. */
@@ -5898,8 +5906,12 @@ export enum ApplicationResponsesOrderBy {
   ValueDesc = 'VALUE_DESC',
   IsValidAsc = 'IS_VALID_ASC',
   IsValidDesc = 'IS_VALID_DESC',
+  TimeCreatedAsc = 'TIME_CREATED_ASC',
+  TimeCreatedDesc = 'TIME_CREATED_DESC',
   TimeUpdatedAsc = 'TIME_UPDATED_ASC',
   TimeUpdatedDesc = 'TIME_UPDATED_DESC',
+  TimeSubmittedAsc = 'TIME_SUBMITTED_ASC',
+  TimeSubmittedDesc = 'TIME_SUBMITTED_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -5918,8 +5930,12 @@ export type ApplicationResponseCondition = {
   value?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isValid` field. */
   isValid?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `timeCreated` field. */
+  timeCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `timeUpdated` field. */
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeSubmitted` field. */
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
 };
 
 /** A connection to a list of `ApplicationResponse` values. */
@@ -5945,7 +5961,9 @@ export type ApplicationResponse = Node & {
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   /** Reads a single `TemplateElement` that is related to this `ApplicationResponse`. */
   templateElement?: Maybe<TemplateElement>;
   /** Reads a single `Application` that is related to this `ApplicationResponse`. */
@@ -5999,8 +6017,12 @@ export enum ReviewResponsesOrderBy {
   OriginalReviewResponseIdDesc = 'ORIGINAL_REVIEW_RESPONSE_ID_DESC',
   ReviewIdAsc = 'REVIEW_ID_ASC',
   ReviewIdDesc = 'REVIEW_ID_DESC',
+  TimeCreatedAsc = 'TIME_CREATED_ASC',
+  TimeCreatedDesc = 'TIME_CREATED_DESC',
   TimeUpdatedAsc = 'TIME_UPDATED_ASC',
   TimeUpdatedDesc = 'TIME_UPDATED_DESC',
+  TimeSubmittedAsc = 'TIME_SUBMITTED_ASC',
+  TimeSubmittedDesc = 'TIME_SUBMITTED_DESC',
   IsVisibleToApplicantAsc = 'IS_VISIBLE_TO_APPLICANT_ASC',
   IsVisibleToApplicantDesc = 'IS_VISIBLE_TO_APPLICANT_DESC',
   TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
@@ -6031,8 +6053,12 @@ export type ReviewResponseCondition = {
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewId` field. */
   reviewId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `timeCreated` field. */
+  timeCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `timeUpdated` field. */
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeSubmitted` field. */
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `isVisibleToApplicant` field. */
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `templateElementId` field. */
@@ -6068,7 +6094,9 @@ export type ReviewResponse = Node & {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -14443,7 +14471,9 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -14670,7 +14700,9 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -15931,7 +15963,9 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPat
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -16015,7 +16049,9 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionA
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -16061,7 +16097,9 @@ export type UpdateApplicationResponseOnReviewResponseForReviewResponseApplicatio
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -16104,7 +16142,9 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResp
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -16151,7 +16191,9 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseL
   applicationResponseId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -16198,7 +16240,9 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseOriginalReviewR
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -17132,7 +17176,9 @@ export type UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -17339,7 +17385,9 @@ export type ApplicationResponsePatch = {
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -17354,7 +17402,9 @@ export type FileApplicationResponseIdFkeyApplicationResponseCreateInput = {
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -17953,7 +18003,9 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseTemplateElement
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
@@ -17983,7 +18035,9 @@ export type ReviewResponsePatch = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -18006,7 +18060,9 @@ export type ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
@@ -18102,7 +18158,9 @@ export type ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput 
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -18132,7 +18190,9 @@ export type ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput = {
   applicationResponseId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -18162,7 +18222,9 @@ export type ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -18191,7 +18253,9 @@ export type ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInpu
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -18215,7 +18279,9 @@ export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInpu
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -18273,7 +18339,9 @@ export type ReviewResponseReviewIdFkeyReviewResponseCreateInput = {
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -18905,7 +18973,9 @@ export type ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInp
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -19159,7 +19229,9 @@ export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput =
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -21251,7 +21323,9 @@ export type ApplicationResponseInput = {
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -22528,7 +22602,9 @@ export type ReviewResponseInput = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -26377,6 +26453,15 @@ export type ApplicationFragment = (
   & Pick<Application, 'id' | 'serial' | 'name' | 'outcome' | 'trigger'>
 );
 
+export type ApplicationResponseFragmentFragment = (
+  { __typename?: 'ApplicationResponse' }
+  & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'templateElementId' | 'timeUpdated'>
+  & { templateElement?: Maybe<(
+    { __typename?: 'TemplateElement' }
+    & Pick<TemplateElement, 'code'>
+  )> }
+);
+
 export type ConsolidatorResponseFragmentFragment = (
   { __typename?: 'ReviewResponse' }
   & { reviewResponsesByReviewResponseLinkId: (
@@ -26388,7 +26473,7 @@ export type ConsolidatorResponseFragmentFragment = (
   ) }
 );
 
-export type ElementFragment = (
+export type ElementFragmentFragment = (
   { __typename?: 'TemplateElement' }
   & Pick<TemplateElement, 'id' | 'code' | 'index' | 'title' | 'elementTypePluginCode' | 'category' | 'visibilityCondition' | 'isRequired' | 'isEditable' | 'validation' | 'validationMessage' | 'helpText' | 'defaultValue' | 'parameters'>
 );
@@ -26396,15 +26481,6 @@ export type ElementFragment = (
 export type OrganisationFragment = (
   { __typename?: 'Organisation' }
   & Pick<Organisation, 'id' | 'name' | 'address' | 'registration' | 'logoUrl'>
-);
-
-export type ResponseFragment = (
-  { __typename?: 'ApplicationResponse' }
-  & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'templateElementId' | 'timeUpdated'>
-  & { templateElement?: Maybe<(
-    { __typename?: 'TemplateElement' }
-    & Pick<TemplateElement, 'code'>
-  )> }
 );
 
 export type ReviewResponseFragmentFragment = (
@@ -26415,7 +26491,7 @@ export type ReviewResponseFragmentFragment = (
     & Pick<ApplicationResponse, 'id' | 'templateElementId'>
   )>, review?: Maybe<(
     { __typename?: 'Review' }
-    & Pick<Review, 'id' | 'status'>
+    & Pick<Review, 'id' | 'status' | 'stageNumber' | 'levelNumber'>
     & { reviewer?: Maybe<(
       { __typename?: 'User' }
       & UserFragment
@@ -26541,7 +26617,7 @@ export type RestartApplicationMutation = (
         { __typename?: 'ApplicationResponsesConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'ApplicationResponse' }
-          & ResponseFragment
+          & ApplicationResponseFragmentFragment
         )>> }
       ) }
       & ApplicationFragment
@@ -26600,9 +26676,9 @@ export type UpdateResponseMutation = (
       { __typename?: 'ApplicationResponse' }
       & { templateElement?: Maybe<(
         { __typename?: 'TemplateElement' }
-        & ElementFragment
+        & ElementFragmentFragment
       )> }
-      & ResponseFragment
+      & ApplicationResponseFragmentFragment
     )> }
   )> }
 );
@@ -26741,7 +26817,7 @@ export type GetAllResponsesQuery = (
             & ReviewResponseFragmentFragment
           )>> }
         ) }
-        & ResponseFragment
+        & ApplicationResponseFragmentFragment
       )>> }
     ) }
   )> }
@@ -26777,7 +26853,7 @@ export type GetApplicationQuery = (
             { __typename?: 'TemplateElementsConnection' }
             & { nodes: Array<Maybe<(
               { __typename?: 'TemplateElement' }
-              & ElementFragment
+              & ElementFragmentFragment
             )>> }
           ) }
           & SectionFragment
@@ -26821,6 +26897,79 @@ export type GetApplicationListQuery = (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
     ) }
+  )> }
+);
+
+export type GetHistoryForApplicantQueryVariables = Exact<{
+  serial: Scalars['String'];
+  questionCode: Scalars['String'];
+  templateCode: Scalars['String'];
+}>;
+
+
+export type GetHistoryForApplicantQuery = (
+  { __typename?: 'Query' }
+  & { templateElementByTemplateCodeAndCodeAndTemplateVersion?: Maybe<(
+    { __typename?: 'TemplateElement' }
+    & { reviewResponses: (
+      { __typename?: 'ReviewResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ReviewResponse' }
+        & ReviewResponseFragmentFragment
+      )>> }
+    ), applicationResponses: (
+      { __typename?: 'ApplicationResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ApplicationResponse' }
+        & { application?: Maybe<(
+          { __typename?: 'Application' }
+          & { user?: Maybe<(
+            { __typename?: 'User' }
+            & UserFragment
+          )> }
+          & ApplicationFragment
+        )> }
+        & ApplicationResponseFragmentFragment
+      )>> }
+    ) }
+    & ElementFragmentFragment
+  )> }
+);
+
+export type GetHistoryForReviewerQueryVariables = Exact<{
+  serial: Scalars['String'];
+  questionCode: Scalars['String'];
+  templateCode: Scalars['String'];
+  userId: Scalars['Int'];
+}>;
+
+
+export type GetHistoryForReviewerQuery = (
+  { __typename?: 'Query' }
+  & { templateElementByTemplateCodeAndCodeAndTemplateVersion?: Maybe<(
+    { __typename?: 'TemplateElement' }
+    & { reviewResponses: (
+      { __typename?: 'ReviewResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ReviewResponse' }
+        & ReviewResponseFragmentFragment
+      )>> }
+    ), applicationResponses: (
+      { __typename?: 'ApplicationResponsesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'ApplicationResponse' }
+        & { application?: Maybe<(
+          { __typename?: 'Application' }
+          & { user?: Maybe<(
+            { __typename?: 'User' }
+            & UserFragment
+          )> }
+          & ApplicationFragment
+        )> }
+        & ApplicationResponseFragmentFragment
+      )>> }
+    ) }
+    & ElementFragmentFragment
   )> }
 );
 
@@ -26995,7 +27144,7 @@ export type GetTemplateQuery = (
             { __typename?: 'TemplateElementsConnection' }
             & { nodes: Array<Maybe<(
               { __typename?: 'TemplateElement' }
-              & ElementFragment
+              & ElementFragmentFragment
             )>> }
           ) }
           & SectionFragment
@@ -27051,6 +27200,18 @@ export const ApplicationFragmentDoc = gql`
   trigger
 }
     `;
+export const ApplicationResponseFragmentFragmentDoc = gql`
+    fragment applicationResponseFragment on ApplicationResponse {
+  id
+  isValid
+  value
+  templateElement {
+    code
+  }
+  templateElementId
+  timeUpdated
+}
+    `;
 export const UserFragmentDoc = gql`
     fragment User on User {
   id
@@ -27079,6 +27240,8 @@ export const ReviewResponseFragmentFragmentDoc = gql`
   review {
     id
     status
+    stageNumber
+    levelNumber
     reviewer {
       ...User
     }
@@ -27094,8 +27257,8 @@ export const ConsolidatorResponseFragmentFragmentDoc = gql`
   }
 }
     ${ReviewResponseFragmentFragmentDoc}`;
-export const ElementFragmentDoc = gql`
-    fragment Element on TemplateElement {
+export const ElementFragmentFragmentDoc = gql`
+    fragment elementFragment on TemplateElement {
   id
   code
   index
@@ -27119,18 +27282,6 @@ export const OrganisationFragmentDoc = gql`
   address
   registration
   logoUrl
-}
-    `;
-export const ResponseFragmentDoc = gql`
-    fragment Response on ApplicationResponse {
-  id
-  isValid
-  value
-  templateElement {
-    code
-  }
-  templateElementId
-  timeUpdated
 }
     `;
 export const SectionFragmentDoc = gql`
@@ -27291,14 +27442,14 @@ export const RestartApplicationDocument = gql`
       ...Application
       applicationResponses {
         nodes {
-          ...Response
+          ...applicationResponseFragment
         }
       }
     }
   }
 }
     ${ApplicationFragmentDoc}
-${ResponseFragmentDoc}`;
+${ApplicationResponseFragmentFragmentDoc}`;
 export type RestartApplicationMutationFn = Apollo.MutationFunction<RestartApplicationMutation, RestartApplicationMutationVariables>;
 
 /**
@@ -27402,15 +27553,15 @@ export const UpdateResponseDocument = gql`
     mutation updateResponse($id: Int!, $value: JSON, $isValid: Boolean) {
   updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid}}) {
     applicationResponse {
-      ...Response
+      ...applicationResponseFragment
       templateElement {
-        ...Element
+        ...elementFragment
       }
     }
   }
 }
-    ${ResponseFragmentDoc}
-${ElementFragmentDoc}`;
+    ${ApplicationResponseFragmentFragmentDoc}
+${ElementFragmentFragmentDoc}`;
 export type UpdateResponseMutationFn = Apollo.MutationFunction<UpdateResponseMutation, UpdateResponseMutationVariables>;
 
 /**
@@ -27655,7 +27806,7 @@ export const GetAllResponsesDocument = gql`
     serial
     applicationResponses(orderBy: TIME_UPDATED_DESC, filter: {status: {in: $responseStatuses}}) {
       nodes {
-        ...Response
+        ...applicationResponseFragment
         reviewResponses(condition: {isVisibleToApplicant: true}) {
           nodes {
             ...reviewResponseFragment
@@ -27665,7 +27816,7 @@ export const GetAllResponsesDocument = gql`
     }
   }
 }
-    ${ResponseFragmentDoc}
+    ${ApplicationResponseFragmentFragmentDoc}
 ${ReviewResponseFragmentFragmentDoc}`;
 
 /**
@@ -27713,7 +27864,7 @@ export const GetApplicationDocument = gql`
           ...Section
           templateElementsBySectionId(orderBy: INDEX_ASC) {
             nodes {
-              ...Element
+              ...elementFragment
             }
           }
         }
@@ -27736,7 +27887,7 @@ export const GetApplicationDocument = gql`
 ${TemplateFragmentDoc}
 ${TemplateStageFragmentDoc}
 ${SectionFragmentDoc}
-${ElementFragmentDoc}
+${ElementFragmentFragmentDoc}
 ${UserFragmentDoc}
 ${OrganisationFragmentDoc}
 ${StageFragmentDoc}`;
@@ -27829,6 +27980,117 @@ export function useGetApplicationListLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetApplicationListQueryHookResult = ReturnType<typeof useGetApplicationListQuery>;
 export type GetApplicationListLazyQueryHookResult = ReturnType<typeof useGetApplicationListLazyQuery>;
 export type GetApplicationListQueryResult = Apollo.QueryResult<GetApplicationListQuery, GetApplicationListQueryVariables>;
+export const GetHistoryForApplicantDocument = gql`
+    query getHistoryForApplicant($serial: String!, $questionCode: String!, $templateCode: String!) {
+  templateElementByTemplateCodeAndCodeAndTemplateVersion(code: $questionCode, templateCode: $templateCode, templateVersion: 1) {
+    ...elementFragment
+    reviewResponses(filter: {isVisibleToApplicant: {equalTo: true}}) {
+      nodes {
+        ...reviewResponseFragment
+      }
+    }
+    applicationResponses(filter: {application: {serial: {equalTo: $serial}}}) {
+      nodes {
+        ...applicationResponseFragment
+        application {
+          ...Application
+          user {
+            ...User
+          }
+        }
+      }
+    }
+  }
+}
+    ${ElementFragmentFragmentDoc}
+${ReviewResponseFragmentFragmentDoc}
+${ApplicationResponseFragmentFragmentDoc}
+${ApplicationFragmentDoc}
+${UserFragmentDoc}`;
+
+/**
+ * __useGetHistoryForApplicantQuery__
+ *
+ * To run a query within a React component, call `useGetHistoryForApplicantQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHistoryForApplicantQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHistoryForApplicantQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *      questionCode: // value for 'questionCode'
+ *      templateCode: // value for 'templateCode'
+ *   },
+ * });
+ */
+export function useGetHistoryForApplicantQuery(baseOptions?: Apollo.QueryHookOptions<GetHistoryForApplicantQuery, GetHistoryForApplicantQueryVariables>) {
+        return Apollo.useQuery<GetHistoryForApplicantQuery, GetHistoryForApplicantQueryVariables>(GetHistoryForApplicantDocument, baseOptions);
+      }
+export function useGetHistoryForApplicantLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetHistoryForApplicantQuery, GetHistoryForApplicantQueryVariables>) {
+          return Apollo.useLazyQuery<GetHistoryForApplicantQuery, GetHistoryForApplicantQueryVariables>(GetHistoryForApplicantDocument, baseOptions);
+        }
+export type GetHistoryForApplicantQueryHookResult = ReturnType<typeof useGetHistoryForApplicantQuery>;
+export type GetHistoryForApplicantLazyQueryHookResult = ReturnType<typeof useGetHistoryForApplicantLazyQuery>;
+export type GetHistoryForApplicantQueryResult = Apollo.QueryResult<GetHistoryForApplicantQuery, GetHistoryForApplicantQueryVariables>;
+export const GetHistoryForReviewerDocument = gql`
+    query getHistoryForReviewer($serial: String!, $questionCode: String!, $templateCode: String!, $userId: Int!) {
+  templateElementByTemplateCodeAndCodeAndTemplateVersion(code: $questionCode, templateCode: $templateCode, templateVersion: 1) {
+    ...elementFragment
+    reviewResponses(filter: {review: {application: {serial: {equalTo: $serial}}}, or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
+      nodes {
+        ...reviewResponseFragment
+      }
+    }
+    applicationResponses(filter: {application: {serial: {equalTo: $serial}}, status: {equalTo: SUBMITTED}}) {
+      nodes {
+        ...applicationResponseFragment
+        application {
+          ...Application
+          user {
+            ...User
+          }
+        }
+      }
+    }
+  }
+}
+    ${ElementFragmentFragmentDoc}
+${ReviewResponseFragmentFragmentDoc}
+${ApplicationResponseFragmentFragmentDoc}
+${ApplicationFragmentDoc}
+${UserFragmentDoc}`;
+
+/**
+ * __useGetHistoryForReviewerQuery__
+ *
+ * To run a query within a React component, call `useGetHistoryForReviewerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHistoryForReviewerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHistoryForReviewerQuery({
+ *   variables: {
+ *      serial: // value for 'serial'
+ *      questionCode: // value for 'questionCode'
+ *      templateCode: // value for 'templateCode'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetHistoryForReviewerQuery(baseOptions?: Apollo.QueryHookOptions<GetHistoryForReviewerQuery, GetHistoryForReviewerQueryVariables>) {
+        return Apollo.useQuery<GetHistoryForReviewerQuery, GetHistoryForReviewerQueryVariables>(GetHistoryForReviewerDocument, baseOptions);
+      }
+export function useGetHistoryForReviewerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetHistoryForReviewerQuery, GetHistoryForReviewerQueryVariables>) {
+          return Apollo.useLazyQuery<GetHistoryForReviewerQuery, GetHistoryForReviewerQueryVariables>(GetHistoryForReviewerDocument, baseOptions);
+        }
+export type GetHistoryForReviewerQueryHookResult = ReturnType<typeof useGetHistoryForReviewerQuery>;
+export type GetHistoryForReviewerLazyQueryHookResult = ReturnType<typeof useGetHistoryForReviewerLazyQuery>;
+export type GetHistoryForReviewerQueryResult = Apollo.QueryResult<GetHistoryForReviewerQuery, GetHistoryForReviewerQueryVariables>;
 export const GetLookupTableStructureByIdDocument = gql`
     query getLookupTableStructureById($lookupTableID: Int!) {
   lookupTable(id: $lookupTableID) {
@@ -28112,7 +28374,7 @@ export const GetTemplateDocument = gql`
           ...Section
           templateElementsBySectionId {
             nodes {
-              ...Element
+              ...elementFragment
             }
           }
         }
@@ -28130,7 +28392,7 @@ export const GetTemplateDocument = gql`
 }
     ${TemplateFragmentDoc}
 ${SectionFragmentDoc}
-${ElementFragmentDoc}`;
+${ElementFragmentFragmentDoc}`;
 
 /**
  * __useGetTemplateQuery__
