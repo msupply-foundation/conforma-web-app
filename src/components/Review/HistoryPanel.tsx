@@ -48,14 +48,14 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({
       <Modal.Header>{strings.TITLE_HISTORY_PANEL}</Modal.Header>
       <Modal.Content scrolling>
         <Modal.Description>
-          {Object.entries(historyList).map(([stage, historyElements]) => {
-            const stageDetails = stages.find(({ number }) => String(number) === stage)
+          {historyList.map(({ stageNumber, historyElements }) => {
+            const stageDetails = stages.find(({ number }) => number === stageNumber)
             const stageName = stageDetails?.name || ''
             const stageColour = stageDetails?.colour || ''
             return (
               <div>
                 <Stage name={stageName} colour={stageColour} />
-                {Object.values(historyElements).map((historyElement, index) => (
+                {historyElements.map((historyElement, index) => (
                   <Segment basic className="summary-page-element-container" key={index}>
                     <div className="response-container">
                       <HistoryResponseElement {...historyElement} />

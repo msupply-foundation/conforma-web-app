@@ -19,8 +19,11 @@ interface UseGetQuestionHistoryProps {
   isApplicant: boolean
 }
 
-interface ResponsesByStage {
-  [stage: string]: HistoryElement[]
+type HistoryElementsByStage = StageHistoryElements[]
+
+interface StageHistoryElements {
+  stageNumber: number
+  historyElements: HistoryElement[]
 }
 
 interface ResponsesByStageByDate {
@@ -30,7 +33,7 @@ interface ResponsesByStageByDate {
 }
 
 const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuestionHistoryProps) => {
-  const [historyList, setHistoryList] = useState<ResponsesByStage>({})
+  const [historyList, setHistoryList] = useState<HistoryElementsByStage>([])
   const { data, error, loading } = isApplicant
     ? useGetHistoryForApplicantQuery({ variables })
     : useGetHistoryForReviewerQuery({ variables })
@@ -83,19 +86,25 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
     })
 
     // Order by latest per stage
-    const allResponseByStageOrdered: ResponsesByStage = {}
+    const orderedHistoryElementsByStage: HistoryElementsByStage = []
 
-    Object.entries(allResponsesByStage).map(([stage, elements]) => {
-      allResponseByStageOrdered[stage] = []
-      Object.keys(elements)
-        .sort()
-        .reverse()
-        .forEach((key) => allResponseByStageOrdered[stage].push(allResponsesByStage[stage][key]))
-    })
+    Object.entries(allResponsesByStage)
+      .reverse()
+      .map(([stage, elements]) => {
+        const stageHistoryElementsList: HistoryElement[] = []
 
-    setHistoryList(allResponseByStageOrdered)
+        Object.keys(elements)
+          .sort()
+          .reverse()
+          .forEach((key) => stageHistoryElementsList.push(allResponsesByStage[stage][key]))
 
-    // Find stages - Maybe done straight into HistoryPanel - or have in HistoryStructure?
+        orderedHistoryElementsByStage.push({
+          stageNumber: Number(stage),
+          historyElements: stageHistoryElementsList,
+        })
+      })
+
+    setHistoryList(orderedHistoryElementsByStage)
   }, [data])
 
   return {
