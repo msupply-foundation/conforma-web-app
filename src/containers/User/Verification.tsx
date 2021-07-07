@@ -5,6 +5,7 @@ import { Header, Icon, Segment, Container } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { getRequest } from '../../utils/helpers/fetchMethods'
+import isLoggedIn from '../../utils/helpers/loginCheck'
 import config from '../../config'
 
 interface Verification {
@@ -48,7 +49,7 @@ const Verify: React.FC = () => {
       <Segment basic textAlign="center" id="submission-nav">
         <p>
           <Link to={'/'}>
-            <strong>{strings.MENU_ITEM_DASHBOARD}</strong>
+            <strong>{isLoggedIn() ? strings.MENU_ITEM_DASHBOARD : strings.LABEL_LOG_IN}</strong>
           </Link>
         </p>
       </Segment>
