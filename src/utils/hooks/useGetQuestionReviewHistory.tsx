@@ -48,9 +48,13 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
 
     applicationResponses.nodes.forEach((applicantResponse) => {
       if (!applicantResponse) return
-      const { timeUpdated, application, value } = applicantResponse
-      const stageNumber = application?.stageNumber as number
+      const { timeUpdated, stageNumber, application, id, value } = applicantResponse
       const { firstName, lastName } = application?.user as User
+
+      if (!stageNumber) {
+        console.log(`application_reponse ${id} without stage_number: not added to History`)
+        return
+      }
 
       if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = {}
 
