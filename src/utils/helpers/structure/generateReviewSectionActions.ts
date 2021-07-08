@@ -47,7 +47,7 @@ const actionDefinitions: ActionDefinition[] = [
       reviewStatus === ReviewStatus.Pending && reviewLevel === 1,
   },
   {
-    action: ReviewAction.canStartReview,
+    action: ReviewAction.canReStartReview,
     checkMethod: ({ reviewStatus, reviewLevel, isReviewActive }) =>
       reviewStatus === ReviewStatus.Pending && reviewLevel > 1 && !isReviewActive,
   },
@@ -112,9 +112,9 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       isAssignedToCurrentUser,
       isCurrentUserReview,
       reviewLevel: reviewAssignment.level,
-      reviewAssignmentStatus: reviewAssignment.status,
+      reviewAssignmentStatus: reviewAssignment.current.assignmentStatus,
       isReviewExisting: !!thisReview,
-      reviewStatus: thisReview?.status,
+      reviewStatus: thisReview?.current.reviewStatus,
       isPendingReview: (totalPendingReview || 0) > 0,
       isReviewActive: (totalActive || 0) > 0,
     }

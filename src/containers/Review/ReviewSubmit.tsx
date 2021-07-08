@@ -32,10 +32,10 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
         decisionOptions={decisionOptions}
         setDecision={setDecision}
         isDecisionError={isDecisionError}
-        isEditable={thisReview?.status == ReviewStatus.Draft}
+        isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
       />
       <ReviewComment
-        isEditable={thisReview?.status == ReviewStatus.Draft}
+        isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
         reviewDecisionId={Number(reviewDecision?.id)}
       />
       <ReviewSubmitButton
@@ -143,7 +143,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
 
     // Check (consolidator) review status != PENDING
     const { thisReview } = await getFullReviewStructureAsync()
-    if (thisReview?.status === ReviewStatus.Pending) {
+    if (thisReview?.current.reviewStatus === ReviewStatus.Pending) {
       showPendingReviewWarning()
       return
     }
@@ -162,7 +162,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     }
   }
 
-  if (structure.thisReview?.status !== ReviewStatus.Draft) return null
+  if (structure.thisReview?.current.reviewStatus !== ReviewStatus.Draft) return null
 
   return (
     <Form.Field>

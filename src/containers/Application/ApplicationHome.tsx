@@ -43,11 +43,14 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
   const {
-    info: { current, isChangeRequest, firstStrictInvalidPage },
+    info: {
+      current: { status },
+      firstStrictInvalidPage,
+    },
   } = fullStructure
 
   const SummaryButtonSegment: React.FC = () => {
-    return current?.status === ApplicationStatus.Draft && !firstStrictInvalidPage ? (
+    return status === ApplicationStatus.Draft && !firstStrictInvalidPage ? (
       <Segment basic className="padding-zero" textAlign="right">
         <Button as={Link} color="blue" onClick={handleSummaryClicked}>
           {strings.BUTTON_SUMMARY}
