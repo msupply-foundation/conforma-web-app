@@ -82,7 +82,7 @@ const convertFromTemplateToTemplateDetails = (
   template: Template,
   templatePermissions: TemplatePermissions
 ) => {
-  const { id, code, name } = template
+  const { id, code, name, plural } = template
   const permissions = templatePermissions[code] || []
 
   let categoryTitle: string = template?.templateCategory?.title || ''
@@ -104,6 +104,7 @@ const convertFromTemplateToTemplateDetails = (
     id,
     code,
     name: String(name),
+    plural: String(plural),
     permissions,
     filters,
     hasApplyPermission,

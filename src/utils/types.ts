@@ -482,6 +482,7 @@ interface TemplateCategoryDetails {
 interface TemplateInList {
   id: number
   name: string
+  plural: string
   code: string
   templateCategory: TemplateCategoryDetails
   permissions: PermissionPolicyType[]

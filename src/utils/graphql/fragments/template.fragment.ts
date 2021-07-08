@@ -5,6 +5,7 @@ export default gql`
     code
     id
     name
+    plural
     isLinear
     startMessage
     submissionMessage
@@ -16,8 +17,6 @@ export default gql`
       nodes {
         filter {
           id
-          iconColor
-          icon
           query
           title
           userRole
