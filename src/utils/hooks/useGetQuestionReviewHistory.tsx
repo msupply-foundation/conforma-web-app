@@ -70,15 +70,17 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
     reviewResponses.nodes.forEach((reviewResponse) => {
       if (!reviewResponse) return
       const { timeUpdated, decision, comment, review } = reviewResponse
-      const { levelNumber, reviewer } = review as Review
-      const stageNumber = review?.stageNumber as number
-      const { id, firstName, lastName } = reviewer as User
+      // Avoid breaking app when review is restricted so not returned in query (for Applicant)
+      const { levelNumber, reviewer } = review ? review : { levelNumber: 1, reviewer: null }
+      console.log(levelNumber, reviewer)
+
+      const stageNumber = review?.stageNumber || 0
 
       if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = {}
 
       // Set each entry using HistoryElement values
       allResponsesByStage[stageNumber][timeUpdated] = {
-        author: firstName || '' + ' ' + lastName || '',
+        author: reviewer ? reviewer?.firstName || '' + ' ' + reviewer?.lastName || '' : '',
         title:
           (levelNumber || 1) > 1
             ? strings.TITLE_HISTORY_CONSOLIDATION
