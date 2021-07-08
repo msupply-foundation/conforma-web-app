@@ -1095,6 +1095,14 @@ a:hover {
   color: @information !important;
 }
 
+.success-colour {
+  color: @success !important;
+}
+
+.error-colour {
+  color: @attention !important;
+}
+
 .interactive-color {
   color: @interactiveHigh !important;
 }
