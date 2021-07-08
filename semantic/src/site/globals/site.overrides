@@ -949,86 +949,56 @@ a:hover {
   }
 
   .template {
-    .flex-column();
+    .flex-row();
 
-    .title {
-      .flex-row-center();
-      align-items: start;
-    }
-  }
+    .content {
+      justify-content: space-between;
+      .header {
+        .flex-row-center();
+        align-items: start;
+      }
 
-  .filters {
-    .flex-column();
-    flex-grow: 1;
-  }
+      .filters {
+        .flex-column();
+        flex-grow: 1;
+      }
 
-  .filter {
-    display: flex;
-    align-items: center;
-  }
-
-  .view-all-area {
-    display: flex;
-    max-width: 100%;
-  }
-
-  .view-all {
-    .flex-row-center();
-    align-items: center;
-    text-align: center;
-    flex-grow: 1;
-
-    div {
-      display: flex;
-      align-items: center;
+      .filter {
+        display: flex;
+        align-items: center;
+      }
     }
   }
 }
 
 // Margin and padding
 #dashboard {
-  .template {
-    margin: 15px 15px 0px 0px;
-    width: 330px;
-    border: 1px solid @surfacesLight;
-    border-radius: @borderRadius;
-    background-color: @surfacesWhite;
-    box-shadow: @templateBoxShadow;
-
-    .title {
-      padding: 10px;
-      padding-bottom: 3px;
-      justify-content: space-between;
-
-      .header {
-        margin: 2px;
-      }
-    }
-  }
-
   .template-category {
-    margin: 10px;
-
     .title {
+      margin-left: 10px;
       .header {
         margin: 10px;
       }
     }
   }
+  .template {
+    margin: 10px 10px 5px 0px;
+    width: 330px;
+    padding: 10px;
+    justify-content: space-between;
+    border: 1px solid @surfacesDark;
+    border-radius: @borderRadius;
+    background-color: @surfacesWhite;
+    box-shadow: @templateBoxShadow;
 
-  .filters {
-    margin: 5px;
-    padding: 3px;
-  }
-
-  .view-all {
-    padding: 5px;
-    font-weight: @semiboldWeight;
-    color: grey !important;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-
-    i {
-      padding-right: 6px;
+    .filters {
+      margin: 2px;
+      .label {
+        padding-left: 0px !important;
+        .icon {
+          margin-left: 5px;
+        }
+      }
     }
   }
 }

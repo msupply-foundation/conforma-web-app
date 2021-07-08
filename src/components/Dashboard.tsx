@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Header, Button, Icon, SemanticCOLORS, SemanticICONS } from 'semantic-ui-react'
+import { Header, Button, Icon, Label } from 'semantic-ui-react'
 import { useUserState } from '../contexts/UserState'
 import constants from '../utils/constants'
 import strings from '../utils/constants'
@@ -48,26 +48,36 @@ const Dashboard: React.FC = () => {
 }
 
 const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template }) => {
-  const { name, code, hasApplyPermission, filters } = template
+  const { name, code, hasApplyPermission, filters, permissions } = template
+
+  const userRole = permissions.filter((type) => type !== PermissionPolicyType.Apply)
+    ? USER_ROLES.REVIEWER
+    : USER_ROLES.APPLICANT
+
   return (
     <div className="template">
-      <div className="title">
-        <Header as="h5">{name}</Header>
-
+      <div className="content">
+        <div className="filters">
+          <Label
+            className="strong-label"
+            as={Link}
+            to={`/applications?type=${code}&user-role=${userRole}`}
+          >
+            {name}
+            <Icon name="chevron right" />
+          </Label>
+          {filters.map((filter) => (
+            <FilterComponent key={filter.id} template={template} filter={filter} />
+          ))}
+        </div>
+      </div>
+      <div>
         {hasApplyPermission && (
           <Button inverted size="small" as={Link} to={`/application/new?type=${code}`} primary>
             {constants.BUTTON_DASHBOARD_NEW}
           </Button>
         )}
       </div>
-
-      <div className="filters">
-        {filters.map((filter) => (
-          <FilterComponent key={filter.id} template={template} filter={filter} />
-        ))}
-      </div>
-
-      <ViewAll template={template} />
     </div>
   )
 }
@@ -98,61 +108,58 @@ const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter }> =
 
   return (
     <div className="filter">
-      <Link to={constructLink()}>
-        {filter.icon && (
-          <Icon style={{ color: filter.iconColor }} name={filter.icon as SemanticICONS} />
-        )}
-        {`${applicationCount} ${filter.title}`}
-      </Link>
+      <Label className="simple-label" as={Link} to={constructLink()}>
+        {`${filter.title} (${applicationCount})`}
+      </Label>
     </div>
   )
 }
 
-const rolesDisplay: {
-  [key: string]: {
-    icon: SemanticICONS
-  }
-} = {
-  [PermissionPolicyType.Apply]: {
-    icon: 'edit',
-  },
-  [PermissionPolicyType.Review]: {
-    icon: 'gavel',
-  },
-  [PermissionPolicyType.Assign]: {
-    icon: 'user plus',
-  },
-}
+// const rolesDisplay: {
+//   [key: string]: {
+//     icon: SemanticICONS
+//   }
+// } = {
+//   [PermissionPolicyType.Apply]: {
+//     icon: 'edit',
+//   },
+//   [PermissionPolicyType.Review]: {
+//     icon: 'gavel',
+//   },
+//   [PermissionPolicyType.Assign]: {
+//     icon: 'user plus',
+//   },
+// }
 
-const ViewAll: React.FC<{ template: TemplateInList }> = ({ template: { code, permissions } }) => {
-  const applicantRoles = permissions.filter((type) => type === PermissionPolicyType.Apply)
-  const reviewerRoles = permissions.filter((type) => type !== PermissionPolicyType.Apply)
+// const ViewAll: React.FC<{ template: TemplateInList }> = ({ template: { code, permissions } }) => {
+//   const applicantRoles = permissions.filter((type) => type === PermissionPolicyType.Apply)
+//   const reviewerRoles = permissions.filter((type) => type !== PermissionPolicyType.Apply)
 
-  const renderLink = (permissionTypes: string[], applicationListRole: USER_ROLES) => {
-    if (permissionTypes.length === 0) return null
-    return (
-      <Link
-        key={applicationListRole}
-        className="view-all clickable"
-        to={`/applications?type=${code}&user-role=${applicationListRole}`}
-      >
-        <div>
-          {permissionTypes.map((policyType) => {
-            const roleDisplay = rolesDisplay[policyType]
-            return <Icon key={policyType} name={roleDisplay.icon} size="small" />
-          })}
-          {constants.BUTTON_DASHBOARD_VIEW_ALL}
-        </div>
-      </Link>
-    )
-  }
+//   const renderLink = (permissionTypes: string[], applicationListRole: USER_ROLES) => {
+//     if (permissionTypes.length === 0) return null
+//     return (
+//       <Link
+//         key={applicationListRole}
+//         className="view-all clickable"
+//         to={`/applications?type=${code}&user-role=${applicationListRole}`}
+//       >
+//         <div>
+//           {permissionTypes.map((policyType) => {
+//             const roleDisplay = rolesDisplay[policyType]
+//             return <Icon key={policyType} name={roleDisplay.icon} size="small" />
+//           })}
+//           {constants.BUTTON_DASHBOARD_VIEW_ALL}
+//         </div>
+//       </Link>
+//     )
+//   }
 
-  return (
-    <div className="view-all-area">
-      {renderLink(applicantRoles, USER_ROLES.APPLICANT)}
-      {renderLink(reviewerRoles, USER_ROLES.REVIEWER)}
-    </div>
-  )
-}
+//   return (
+//     <div className="view-all-area">
+//       {renderLink(applicantRoles, USER_ROLES.APPLICANT)}
+//       {renderLink(reviewerRoles, USER_ROLES.REVIEWER)}
+//     </div>
+//   )
+// }
 
 export default Dashboard
