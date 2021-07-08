@@ -930,12 +930,12 @@ a:hover {
 
 // Layouts
 #dashboard {
-  .flex-row-center();
-  flex-wrap: wrap;
+  .flex-column();
+  width: 100%;
 
   .template-category {
     .flex-column-center();
-    align-items: center;
+    flex-wrap: wrap;
 
     .title {
       .flex-row();
@@ -944,9 +944,8 @@ a:hover {
   }
 
   .templates {
-    .flex-row-center();
+    .flex-row();
     flex-wrap: wrap;
-    align-items: center;
   }
 
   .template {
@@ -989,8 +988,9 @@ a:hover {
 // Margin and padding
 #dashboard {
   .template {
-    margin: 15px;
-    max-width: 330px;
+    margin: 15px 15px 0px 0px;
+    width: 330px;
+    border: 1px solid @surfacesLight;
     border-radius: @borderRadius;
     background-color: @surfacesWhite;
     box-shadow: @templateBoxShadow;
@@ -998,6 +998,7 @@ a:hover {
     .title {
       padding: 10px;
       padding-bottom: 3px;
+      justify-content: space-between;
 
       .header {
         margin: 2px;
@@ -1009,12 +1010,8 @@ a:hover {
     margin: 10px;
 
     .title {
-      a {
-        margin-left: 10px;
-      }
-
       .header {
-        margin: 2px;
+        margin: 10px;
       }
     }
   }
