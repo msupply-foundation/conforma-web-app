@@ -50,9 +50,10 @@ const Dashboard: React.FC = () => {
 const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template }) => {
   const { name, code, hasApplyPermission, filters, permissions } = template
 
-  const userRole = permissions.filter((type) => type !== PermissionPolicyType.Apply)
-    ? USER_ROLES.REVIEWER
-    : USER_ROLES.APPLICANT
+  const userRole =
+    permissions.filter((type) => type === PermissionPolicyType.Apply).length > 0
+      ? USER_ROLES.APPLICANT
+      : USER_ROLES.REVIEWER
 
   return (
     <div className="template">
