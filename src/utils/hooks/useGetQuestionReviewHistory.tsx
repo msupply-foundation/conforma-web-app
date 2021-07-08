@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import {
-  Review,
   ReviewResponseDecision,
   TemplateElement,
   useGetHistoryForApplicantQuery,
@@ -48,12 +47,13 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
 
     applicationResponses.nodes.forEach((applicantResponse) => {
       if (!applicantResponse) return
-      const { timeUpdated, stageNumber, application, id, value } = applicantResponse
+      let { stageNumber } = applicantResponse
+      const { timeUpdated, application, id, value } = applicantResponse
       const { firstName, lastName } = application?.user as User
 
       if (!stageNumber) {
-        console.log(`application_reponse ${id} without stage_number: not added to History`)
-        return
+        console.log(`Warning: application_reponse ${id} without any stage_number`)
+        stageNumber = 0
       }
 
       if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = {}
@@ -72,8 +72,6 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
       const { timeUpdated, decision, comment, review } = reviewResponse
       // Avoid breaking app when review is restricted so not returned in query (for Applicant)
       const { levelNumber, reviewer } = review ? review : { levelNumber: 1, reviewer: null }
-      console.log(levelNumber, reviewer)
-
       const stageNumber = review?.stageNumber || 0
 
       if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = {}

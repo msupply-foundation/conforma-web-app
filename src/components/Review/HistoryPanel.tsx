@@ -50,10 +50,10 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({
         <Modal.Description>
           {historyList.map(({ stageNumber, historyElements }) => {
             const stageDetails = stages.find(({ number }) => number === stageNumber)
-            const stageName = stageDetails?.name || ''
+            const stageName = stageDetails?.name || strings.STAGE_NOT_FOUND
             const stageColour = stageDetails?.colour || ''
             return (
-              <div>
+              <div key={`history_stage_${stageName}`}>
                 <Stage name={stageName} colour={stageColour} />
                 {historyElements.map((historyElement, index) => (
                   <Segment basic className="summary-page-element-container" key={index}>
