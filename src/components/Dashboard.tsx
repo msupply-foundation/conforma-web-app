@@ -48,7 +48,8 @@ const Dashboard: React.FC = () => {
 }
 
 const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template }) => {
-  const { plural, code, hasApplyPermission, filters, permissions } = template
+  const { plural, name, code, hasApplyPermission, filters, permissions, totalApplications } =
+    template
 
   const userRole =
     permissions.filter((type) => type === PermissionPolicyType.Apply).length > 0
@@ -60,7 +61,9 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
       <div className="content">
         <div className="filters">
           <Label className="strong-label clickable">
-            <a href={`/applications?type=${code}&user-role=${userRole}`}>{plural}</a>
+            <a href={`/applications?type=${code}&user-role=${userRole}`}>
+              {!!plural ? `${name} ${strings.LABEL_APPLICATIONS}` : plural}
+            </a>
             <Icon name="chevron right" />
           </Label>
           {filters.map((filter) => (
