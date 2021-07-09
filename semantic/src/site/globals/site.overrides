@@ -993,10 +993,14 @@ a:hover {
 
     .filters {
       margin: 2px;
+      .strong-label {
+        padding-top: 0px;
+      }
       .label {
         padding-left: 0px !important;
         .icon {
           margin-left: 5px;
+          margin-right: 0px;
         }
       }
     }

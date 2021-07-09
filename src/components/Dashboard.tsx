@@ -59,12 +59,8 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
     <div className="template">
       <div className="content">
         <div className="filters">
-          <Label
-            className="strong-label"
-            as={Link}
-            to={`/applications?type=${code}&user-role=${userRole}`}
-          >
-            {plural}
+          <Label className="strong-label clickable">
+            <a href={`/applications?type=${code}&user-role=${userRole}`}>{plural}</a>
             <Icon name="chevron right" />
           </Label>
           {filters.map((filter) => (
