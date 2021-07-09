@@ -934,7 +934,7 @@ a:hover {
   width: 100%;
 
   .template-category {
-    .flex-column-center();
+    .flex-column();
     flex-wrap: wrap;
 
     .title {
@@ -982,7 +982,7 @@ a:hover {
     }
   }
   .template {
-    margin: 10px 10px 5px 0px;
+    margin: 0px 10px 5px 0px;
     width: 330px;
     padding: 10px;
     justify-content: space-between;
