@@ -105,9 +105,7 @@ const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter }> =
 
   return (
     <div className="filter">
-      <Label className="simple-label" as={Link} to={constructLink()}>
-        {`${filter.title} (${applicationCount})`}
-      </Label>
+      <Link to={constructLink()}>{`${filter.title} (${applicationCount})`}</Link>
     </div>
   )
 }

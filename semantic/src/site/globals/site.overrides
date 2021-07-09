@@ -43,10 +43,6 @@ a:hover {
   color: @attention;
 }
 
-//.information {
-//  color: @information;
-//}
-
 .clickable {
   cursor: pointer;
 }
@@ -980,6 +976,10 @@ a:hover {
         margin: 10px;
       }
     }
+
+    .templates {
+      padding-bottom: 10px;
+    }
   }
   .template {
     margin: 0px 10px 5px 0px;
@@ -989,7 +989,10 @@ a:hover {
     border: 1px solid @surfacesDark;
     border-radius: @borderRadius;
     background-color: @surfacesWhite;
-    box-shadow: @templateBoxShadow;
+
+    .content {
+      min-height: 65px;
+    }
 
     .filters {
       margin: 2px;
