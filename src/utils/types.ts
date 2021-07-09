@@ -482,13 +482,14 @@ interface TemplateCategoryDetails {
 interface TemplateInList {
   id: number
   name: string
-  plural: string
+  plural?: string
   code: string
   templateCategory: TemplateCategoryDetails
   permissions: PermissionPolicyType[]
   hasApplyPermission: boolean
   hasNonApplyPermissions: boolean
   filters: Filter[]
+  totalApplications: number
 }
 
 interface TemplateDetails {

@@ -48,8 +48,7 @@ const Dashboard: React.FC = () => {
 }
 
 const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template }) => {
-  const { plural, name, code, hasApplyPermission, filters, permissions, totalApplications } =
-    template
+  const { name, code, hasApplyPermission, filters, permissions, totalApplications } = template
 
   const userRole =
     permissions.filter((type) => type === PermissionPolicyType.Apply).length > 0
@@ -62,7 +61,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
         <div className="filters">
           <Label className="strong-label clickable">
             <a href={`/applications?type=${code}&user-role=${userRole}`}>
-              {!!plural ? `${name} ${strings.LABEL_APPLICATIONS}` : plural}
+              {template?.plural || `${name} ${strings.LABEL_APPLICATIONS}`}
             </a>
             <Icon name="chevron right" />
           </Label>
@@ -70,9 +69,10 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
             <FilterComponent key={filter.id} template={template} filter={filter} />
           ))}
         </div>
+        {totalApplications === 0 && hasApplyPermission && <StartNewTemplate template={template} />}
       </div>
       <div>
-        {hasApplyPermission && (
+        {totalApplications > 0 && hasApplyPermission && (
           <Button as={Link} to={`/application/new?type=${code}`} inverted color="blue">
             <Icon name="plus" size="tiny" color="blue" />
             {strings.BUTTON_DASHBOARD_NEW}
@@ -113,5 +113,17 @@ const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter }> =
     </div>
   )
 }
+
+const StartNewTemplate: React.FC<{ template: TemplateInList }> = ({ template: { name, code } }) => (
+  <div className="no-applications">
+    <Label
+      className="simple-label"
+      content={strings.LABEL_DASHBOARD_NO_APPLICATIONS.replace('%1', name)}
+    />
+    <Link to={`/application/new?type=${code}`}>
+      {strings.LABEL_DASHBOARD_START_NEW.replace('%1', name)}
+    </Link>
+  </div>
+)
 
 export default Dashboard

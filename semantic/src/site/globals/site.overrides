@@ -965,14 +965,17 @@ a:hover {
       }
     }
   }
+
+  .no-applications {
+    text-align: center;
+    .label {
+      width: 100%;
+    }
+  }
 }
 
 // Margin and padding
 #dashboard {
-  .header {
-    padding-top: 15px;
-  }
-
   .template-category {
     .title {
       margin-left: 10px;

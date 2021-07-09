@@ -23,5 +23,8 @@ export default gql`
         }
       }
     }
+    applications {
+      totalCount
+    }
   }
 `

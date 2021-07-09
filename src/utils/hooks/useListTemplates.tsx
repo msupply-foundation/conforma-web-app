@@ -85,6 +85,8 @@ const convertFromTemplateToTemplateDetails = (
   const { id, code, name, plural } = template
   const permissions = templatePermissions[code] || []
 
+  const totalApplications = template?.applications.totalCount || 0
+
   let categoryTitle: string = template?.templateCategory?.title || ''
   let categoryIcon: SemanticICONS
   if (!categoryTitle) {
@@ -104,7 +106,7 @@ const convertFromTemplateToTemplateDetails = (
     id,
     code,
     name: String(name),
-    plural: String(plural),
+    plural: plural || undefined,
     permissions,
     filters,
     hasApplyPermission,
@@ -113,6 +115,7 @@ const convertFromTemplateToTemplateDetails = (
       icon: categoryIcon,
       title: categoryTitle,
     },
+    totalApplications,
   }
 
   return result
