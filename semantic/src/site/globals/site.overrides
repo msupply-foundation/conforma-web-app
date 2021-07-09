@@ -969,6 +969,10 @@ a:hover {
 
 // Margin and padding
 #dashboard {
+  .header {
+    padding-top: 15px;
+  }
+
   .template-category {
     .title {
       margin-left: 10px;
@@ -986,12 +990,17 @@ a:hover {
     width: 330px;
     padding: 10px;
     justify-content: space-between;
-    border: 1px solid @surfacesDark;
+    border: 2px solid @surfacesDark;
     border-radius: @borderRadius;
     background-color: @surfacesWhite;
 
     .content {
       min-height: 65px;
+    }
+
+    .button {
+      padding: 10px;
+      width: 70px;
     }
 
     .filters {
