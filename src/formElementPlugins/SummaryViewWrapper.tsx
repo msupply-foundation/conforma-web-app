@@ -7,7 +7,7 @@ import { EvaluatorNode } from '../utils/types'
 import { buildParameters } from './ApplicationViewWrapper'
 import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
-import globalConfig from '../config.json'
+import globalConfig from '../config'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
@@ -36,7 +36,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   )
 
   useEffect(() => {
-    // Runs once on component mount
+    // Update dynamic parameters when responses change
     Object.entries(parameterExpressions).forEach(([field, expression]) => {
       evaluateExpression(expression as EvaluatorNode, {
         objects: {
@@ -50,7 +50,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
         setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
       )
     })
-  }, [])
+  }, [allResponses])
 
   if (!pluginCode || !isVisible) return null
 

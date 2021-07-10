@@ -1,19 +1,22 @@
 const commonPaths = require('./common-paths')
-const webpack = require('webpack')
+const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const transform = require('@formatjs/ts-transformer').transform
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const config = {
   entry: {
     app: `${commonPaths.appEntry}/index.tsx`,
-    vendor: ['semantic-ui-react']
   },
   output: {
     path: commonPaths.outputPath,
-    publicPath: '/'
+    publicPath: '/',
   },
   resolve: {
-    extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
+    alias: {
+      'semantic-ui-react$': path.resolve(__dirname, '../src/semanticUiReactReExport'),
+    },
+    extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
   },
   module: {
     rules: [
@@ -35,49 +38,39 @@ const config = {
             },
           }
         ]
-
       },
-      // {
-      //   enforce: "pre",
-      //   test: /\.js$/,
-      //   loader: "source-map-loader",
-      // },
       {
         // Load fonts
         test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
         use: 'url-loader',
       },
       {
-        // Load other files, images etc
-        test: /\.(png|j?g|gif|ico)?$/,
-        use: 'url-loader',
-      }
-    ]
-  },
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        styles: {
-          name: 'styles',
-          test: /\.css$/,
-          chunks: 'all',
-          enforce: true
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[ext]',
         },
-        vendor: {
-          chunks: 'initial',
-          test: 'vendor',
-          name: 'vendor',
-          enforce: true
-        }
-      }
-    }
+      },
+
+      {
+        test: /\.(less|css)$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          'css-loader',
+          'less-loader',
+        ],
+      },
+    ],
   },
   plugins: [
+    new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
       template: 'public/index.html',
-      favicon: 'public/favicon.ico'
-    })
-  ]
+      favicon: 'public/favicon.ico',
+    }),
+  ],
 }
 
 module.exports = config
