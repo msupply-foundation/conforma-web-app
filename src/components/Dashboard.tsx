@@ -61,7 +61,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
         <div className="filters">
           <Label className="strong-label clickable">
             <a href={`/applications?type=${code}&user-role=${userRole}`}>
-              {template?.plural || `${name} ${strings.LABEL_APPLICATIONS}`}
+              {template?.namePlural || `${name} ${strings.LABEL_APPLICATIONS}`}
             </a>
             <Icon name="chevron right" />
           </Label>

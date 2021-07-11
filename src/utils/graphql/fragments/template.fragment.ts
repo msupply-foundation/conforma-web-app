@@ -5,7 +5,7 @@ export default gql`
     code
     id
     name
-    plural
+    namePlural
     isLinear
     startMessage
     submissionMessage
