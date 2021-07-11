@@ -41,7 +41,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     if (query.dev === 'true' && !isProductionBuild) return
 
     // Re-direct based on application status
-    if (fullStructure.info.current?.status === ApplicationStatus.ChangesRequired)
+    if (fullStructure.info.current.status === ApplicationStatus.ChangesRequired)
       replace(`/application/${fullStructure.info.serial}`)
 
     // Re-direct if application is not valid
