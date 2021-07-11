@@ -1,5 +1,5 @@
-import React, { CSSProperties, useRef } from 'react'
-import { Accordion, Grid, Header, Icon, Sticky } from 'semantic-ui-react'
+import React, { useRef } from 'react'
+import { Accordion, Header, Icon, Sticky } from 'semantic-ui-react'
 import {
   ResponsesByCode,
   SectionState,

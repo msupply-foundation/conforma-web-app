@@ -216,6 +216,7 @@ const PageElements: React.FC<PageElementProps> = ({
                 isActiveReviewResponse: !!isActiveReviewResponse,
                 enableViewHistory,
                 summaryViewProps: summaryViewProps,
+                stageNumber: applicationData.current.stage.number,
               }
 
               return (

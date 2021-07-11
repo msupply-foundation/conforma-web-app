@@ -69,10 +69,15 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
 
     reviewResponses.nodes.forEach((reviewResponse) => {
       if (!reviewResponse) return
-      const { timeUpdated, decision, comment, review } = reviewResponse
+      let { stageNumber } = reviewResponse
+      const { id, timeUpdated, decision, comment, review } = reviewResponse
       // Avoid breaking app when review is restricted so not returned in query (for Applicant)
       const { levelNumber, reviewer } = review ? review : { levelNumber: 1, reviewer: null }
-      const stageNumber = review?.stageNumber || 0
+
+      if (!stageNumber) {
+        console.log(`Warning: review_reponse ${id} without any stage_number`)
+        stageNumber = 0
+      }
 
       if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = {}
 

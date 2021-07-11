@@ -69,7 +69,11 @@ const ReviewPage: React.FC<{
   const {
     sections,
     responsesByCode,
-    info: { serial, name },
+    info: {
+      serial,
+      name,
+      current: { stage },
+    },
     thisReview,
     attemptSubmission,
     firstIncompleteReviewPage,
@@ -127,6 +131,7 @@ const ReviewPage: React.FC<{
             extraPageContent={(page: Page) => (
               <ApproveAllButton
                 isConsolidation={!!section.assignment?.isConsolidation}
+                stageNumber={stage.number}
                 page={page}
               />
             )}
@@ -179,8 +184,15 @@ const SectionRowStatus: React.FC<SectionState> = (section) => {
   return null // Unexpected
 }
 
-const ApproveAllButton: React.FC<{ isConsolidation: boolean; page: Page }> = ({
+interface ApproveAllButtonProps {
+  isConsolidation: boolean
+  stageNumber: number
+  page: Page
+}
+
+const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
   isConsolidation,
+  stageNumber,
   page,
 }) => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
@@ -198,6 +210,7 @@ const ApproveAllButton: React.FC<{ isConsolidation: boolean; page: Page }> = ({
         variables: {
           id: reviewResponse.id,
           decision: isConsolidation ? ReviewResponseDecision.Agree : ReviewResponseDecision.Approve,
+          stageNumber,
         },
       })
     })
