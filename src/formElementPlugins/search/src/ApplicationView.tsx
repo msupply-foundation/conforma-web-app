@@ -22,6 +22,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onSave,
   Markdown,
   applicationData,
+  allResponses,
 }) => {
   const {
     label,
@@ -69,7 +70,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const evaluateSearchQuery = (text: string) => {
     const search = { text }
     evaluateExpression(source, {
-      objects: { search, currentUser, applicationData },
+      objects: { search, currentUser, applicationData, responses: allResponses },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
     })
