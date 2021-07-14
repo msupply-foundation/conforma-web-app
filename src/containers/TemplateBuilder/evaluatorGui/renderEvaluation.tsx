@@ -28,7 +28,7 @@ const Evaluate: React.FC<{ typedEvaluation: EvaluationType; evaluatorParamers?: 
   typedEvaluation,
   evaluatorParamers,
 }) => {
-  const [evaluationResult, setEvaluationResult] = useState<ValueNode | undefined | null>(null)
+  const [evaluationResult, setEvaluationResult] = useState<ValueNode | undefined | null>(undefined)
 
   const evaluateNode = async () => {
     try {
@@ -47,8 +47,8 @@ const Evaluate: React.FC<{ typedEvaluation: EvaluationType; evaluatorParamers?: 
       <Icon className="clickable" name="lightning" onClick={() => evaluateNode()} />
       <Modal
         className="config-modal"
-        open={evaluationResult !== null}
-        onClose={() => setEvaluationResult(null)}
+        open={evaluationResult !== undefined}
+        onClose={() => setEvaluationResult(undefined)}
       >
         <div className="config-modal-container ">
           <Header>Evaluation Result</Header>

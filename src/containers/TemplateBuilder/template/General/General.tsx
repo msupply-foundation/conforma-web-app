@@ -3,7 +3,7 @@ import { Header } from 'semantic-ui-react'
 
 import {
   TemplateStatus,
-  useGetTeplatesAvailableForCodeQuery,
+  useGetTemplatesAvailableForCodeQuery,
 } from '../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import Markdown from '../../../../utils/helpers/semanticReactMarkdown'
@@ -19,9 +19,9 @@ import MessagesConfig from './MessagesConfig'
 const General: React.FC = () => {
   const { updateTemplate } = useOperationState()
   const { structure } = useApplicationState()
-  const { template, fromQuery } = useTemplateState()
+  const { template } = useTemplateState()
   const { data: availableTemplatesData, refetch: refetchAvailable } =
-    useGetTeplatesAvailableForCodeQuery({
+    useGetTemplatesAvailableForCodeQuery({
       variables: { code: template.code },
     })
   const [isMessageConfigOpen, setIsMessageConfigOpen] = useState(false)

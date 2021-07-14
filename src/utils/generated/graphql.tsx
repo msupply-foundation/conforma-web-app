@@ -27494,36 +27494,6 @@ export type SubmitReviewMutation = (
   )> }
 );
 
-export type CreateSectionMutationVariables = Exact<{
-  templateId: Scalars['Int'];
-  index: Scalars['Int'];
-  code?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-}>;
-
-
-export type CreateSectionMutation = (
-  { __typename?: 'Mutation' }
-  & { createTemplateSection?: Maybe<(
-    { __typename?: 'CreateTemplateSectionPayload' }
-    & { templateSection?: Maybe<(
-      { __typename?: 'TemplateSection' }
-      & Pick<TemplateSection, 'id' | 'code' | 'index' | 'title' | 'templateId'>
-      & { template?: Maybe<(
-        { __typename?: 'Template' }
-        & Pick<Template, 'id'>
-        & { templateSections: (
-          { __typename?: 'TemplateSectionsConnection' }
-          & { nodes: Array<Maybe<(
-            { __typename?: 'TemplateSection' }
-            & Pick<TemplateSection, 'id'>
-          )>> }
-        ) }
-      )> }
-    )> }
-  )> }
-);
-
 export type DeleteWholeApplicationMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -28399,12 +28369,12 @@ export type GetTemplateElementsByPluginQuery = (
   )> }
 );
 
-export type GetTeplatesAvailableForCodeQueryVariables = Exact<{
+export type GetTemplatesAvailableForCodeQueryVariables = Exact<{
   code: Scalars['String'];
 }>;
 
 
-export type GetTeplatesAvailableForCodeQuery = (
+export type GetTemplatesAvailableForCodeQuery = (
   { __typename?: 'Query' }
   & { templates?: Maybe<(
     { __typename?: 'TemplatesConnection' }
@@ -28826,55 +28796,6 @@ export function useSubmitReviewMutation(baseOptions?: Apollo.MutationHookOptions
 export type SubmitReviewMutationHookResult = ReturnType<typeof useSubmitReviewMutation>;
 export type SubmitReviewMutationResult = Apollo.MutationResult<SubmitReviewMutation>;
 export type SubmitReviewMutationOptions = Apollo.BaseMutationOptions<SubmitReviewMutation, SubmitReviewMutationVariables>;
-export const CreateSectionDocument = gql`
-    mutation createSection($templateId: Int!, $index: Int!, $code: String = "newSection", $title: String = "New Section") {
-  createTemplateSection(input: {templateSection: {code: $code, index: $index, templateId: $templateId, title: $title}}) {
-    templateSection {
-      id
-      template {
-        id
-        templateSections {
-          nodes {
-            id
-          }
-        }
-      }
-      code
-      index
-      title
-      templateId
-    }
-  }
-}
-    `;
-export type CreateSectionMutationFn = Apollo.MutationFunction<CreateSectionMutation, CreateSectionMutationVariables>;
-
-/**
- * __useCreateSectionMutation__
- *
- * To run a mutation, you first call `useCreateSectionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateSectionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createSectionMutation, { data, loading, error }] = useCreateSectionMutation({
- *   variables: {
- *      templateId: // value for 'templateId'
- *      index: // value for 'index'
- *      code: // value for 'code'
- *      title: // value for 'title'
- *   },
- * });
- */
-export function useCreateSectionMutation(baseOptions?: Apollo.MutationHookOptions<CreateSectionMutation, CreateSectionMutationVariables>) {
-        return Apollo.useMutation<CreateSectionMutation, CreateSectionMutationVariables>(CreateSectionDocument, baseOptions);
-      }
-export type CreateSectionMutationHookResult = ReturnType<typeof useCreateSectionMutation>;
-export type CreateSectionMutationResult = Apollo.MutationResult<CreateSectionMutation>;
-export type CreateSectionMutationOptions = Apollo.BaseMutationOptions<CreateSectionMutation, CreateSectionMutationVariables>;
 export const DeleteWholeApplicationDocument = gql`
     mutation deleteWholeApplication($id: Int!) {
   deleteWholeApplication(input: {applicationId: $id}) {
@@ -30519,8 +30440,8 @@ export function useGetTemplateElementsByPluginLazyQuery(baseOptions?: Apollo.Laz
 export type GetTemplateElementsByPluginQueryHookResult = ReturnType<typeof useGetTemplateElementsByPluginQuery>;
 export type GetTemplateElementsByPluginLazyQueryHookResult = ReturnType<typeof useGetTemplateElementsByPluginLazyQuery>;
 export type GetTemplateElementsByPluginQueryResult = Apollo.QueryResult<GetTemplateElementsByPluginQuery, GetTemplateElementsByPluginQueryVariables>;
-export const GetTeplatesAvailableForCodeDocument = gql`
-    query getTeplatesAvailableForCode($code: String!) {
+export const GetTemplatesAvailableForCodeDocument = gql`
+    query getTemplatesAvailableForCode($code: String!) {
   templates(filter: {status: {equalTo: AVAILABLE}, code: {equalTo: $code}}) {
     nodes {
       id
@@ -30532,27 +30453,27 @@ export const GetTeplatesAvailableForCodeDocument = gql`
     `;
 
 /**
- * __useGetTeplatesAvailableForCodeQuery__
+ * __useGetTemplatesAvailableForCodeQuery__
  *
- * To run a query within a React component, call `useGetTeplatesAvailableForCodeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTeplatesAvailableForCodeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetTemplatesAvailableForCodeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTemplatesAvailableForCodeQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetTeplatesAvailableForCodeQuery({
+ * const { data, loading, error } = useGetTemplatesAvailableForCodeQuery({
  *   variables: {
  *      code: // value for 'code'
  *   },
  * });
  */
-export function useGetTeplatesAvailableForCodeQuery(baseOptions?: Apollo.QueryHookOptions<GetTeplatesAvailableForCodeQuery, GetTeplatesAvailableForCodeQueryVariables>) {
-        return Apollo.useQuery<GetTeplatesAvailableForCodeQuery, GetTeplatesAvailableForCodeQueryVariables>(GetTeplatesAvailableForCodeDocument, baseOptions);
+export function useGetTemplatesAvailableForCodeQuery(baseOptions?: Apollo.QueryHookOptions<GetTemplatesAvailableForCodeQuery, GetTemplatesAvailableForCodeQueryVariables>) {
+        return Apollo.useQuery<GetTemplatesAvailableForCodeQuery, GetTemplatesAvailableForCodeQueryVariables>(GetTemplatesAvailableForCodeDocument, baseOptions);
       }
-export function useGetTeplatesAvailableForCodeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTeplatesAvailableForCodeQuery, GetTeplatesAvailableForCodeQueryVariables>) {
-          return Apollo.useLazyQuery<GetTeplatesAvailableForCodeQuery, GetTeplatesAvailableForCodeQueryVariables>(GetTeplatesAvailableForCodeDocument, baseOptions);
+export function useGetTemplatesAvailableForCodeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTemplatesAvailableForCodeQuery, GetTemplatesAvailableForCodeQueryVariables>) {
+          return Apollo.useLazyQuery<GetTemplatesAvailableForCodeQuery, GetTemplatesAvailableForCodeQueryVariables>(GetTemplatesAvailableForCodeDocument, baseOptions);
         }
-export type GetTeplatesAvailableForCodeQueryHookResult = ReturnType<typeof useGetTeplatesAvailableForCodeQuery>;
-export type GetTeplatesAvailableForCodeLazyQueryHookResult = ReturnType<typeof useGetTeplatesAvailableForCodeLazyQuery>;
-export type GetTeplatesAvailableForCodeQueryResult = Apollo.QueryResult<GetTeplatesAvailableForCodeQuery, GetTeplatesAvailableForCodeQueryVariables>;
+export type GetTemplatesAvailableForCodeQueryHookResult = ReturnType<typeof useGetTemplatesAvailableForCodeQuery>;
+export type GetTemplatesAvailableForCodeLazyQueryHookResult = ReturnType<typeof useGetTemplatesAvailableForCodeLazyQuery>;
+export type GetTemplatesAvailableForCodeQueryResult = Apollo.QueryResult<GetTemplatesAvailableForCodeQuery, GetTemplatesAvailableForCodeQueryVariables>;

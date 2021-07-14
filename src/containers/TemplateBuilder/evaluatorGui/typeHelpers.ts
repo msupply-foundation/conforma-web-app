@@ -1,5 +1,4 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
-import { debug } from 'webpack'
 import {
   GetEvaluationType,
   EvaluationType,

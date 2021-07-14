@@ -116,7 +116,7 @@ export function UserProvider({ children }: UserProviderProps) {
 
   // Initial check for persisted user in local storage
   const JWT = localStorage.getItem('persistJWT')
-  if (JWT == 'undefined') logout()
+  if (JWT == undefined) logout()
   if (JWT && !userState.currentUser && !userState.isLoading) {
     onLogin(JWT)
   }

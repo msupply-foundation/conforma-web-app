@@ -227,38 +227,6 @@ export const guis: GuisType = [
       </React.Fragment>
     ),
   },
-  // {
-  //   selector: 'root object',
-  //   default: getTypedEvaluation({ operator: 'rootObject', children: [] }),
-  //   match: (typedEvaluation) =>
-  //     typedEvaluation.asOperator.operator === 'rootObject',
-  //   render: () => null,
-  // },
-  // {
-  //   selector: 'generic object properties',
-  //   default: getTypedEvaluation({
-  //     operator: 'genericObjectProperties',
-  //     children: [{ property: 'value' }, 'property', null],
-  //   }),
-  //   match: (typedEvaluation) =>
-  //     typedEvaluation.asOperator.operator === 'genericObjectProperties',
-  //   render: (evaluation, setEvaluation, ComponentLibrary) => (
-  //     <>
-  //       <ComponentLibrary.Label key='object' title='Object ' />
-  //       {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary)}
-  //       <ComponentLibrary.Label
-  //         key='objectPath'
-  //         title='Object path (i.e. thisResponse.text): '
-  //       />
-  //       {renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary)}
-  //       <ComponentLibrary.Label
-  //         key='fallback'
-  //         title='Fallback (in case object path is not found): '
-  //       />
-  //       {renderSingleChild(evaluation, 2, setEvaluation, ComponentLibrary)}
-  //     </>
-  //   ),
-  // },
   {
     selector: 'api call',
     default: getTypedEvaluation({
