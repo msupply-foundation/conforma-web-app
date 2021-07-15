@@ -45,7 +45,7 @@ export const APPLICATION_FILTERS: FilterDefinitions = {
       },
     },
   },
-  assignReviewerAssignedCount: {
+  reviewersAssignedCount: {
     type: 'number',
   },
   type: {
