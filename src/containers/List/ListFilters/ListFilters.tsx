@@ -31,8 +31,8 @@ const ListFilters: React.FC<{ filterDefinitions: FilterDefinitions; filterListPa
 
     // Add fitlers from URL to activeFilters, filters may not have criteria/options yet thus we have to use activeFilter state variable
     useEffect(() => {
-      const filersInQuery = filterNames.filter((filterName) => !!query[filterName])
-      const newFilters = filersInQuery.filter((filterName) => !activeFilters.includes(filterName))
+      const filtersInQuery = filterNames.filter((filterName) => !!query[filterName])
+      const newFilters = filtersInQuery.filter((filterName) => !activeFilters.includes(filterName))
       setActiveFilters([...activeFilters, ...newFilters])
     }, [query])
 
