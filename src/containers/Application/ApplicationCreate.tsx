@@ -43,7 +43,11 @@ const ApplicationCreate: React.FC = () => {
 
   // Need to re-query the created application to get the new serial
   const [refetchAttempts, setRefetchAttempts] = useState(0)
-  const { data, error: newApplicationError } = useGetApplicationSerialQuery({
+  const {
+    data,
+    loading: newApplicationLoading,
+    error: newApplicationError,
+  } = useGetApplicationSerialQuery({
     variables: {
       id: id as number,
     },
@@ -108,7 +112,7 @@ const ApplicationCreate: React.FC = () => {
 
   if (!template) return null
   // if (!template) return <ApplicationSelectType /> // TODO
-  if (loading || !template?.startMessage) return <Loading />
+  if (loading || !template?.startMessage || refetchAttempts > 0) return <Loading />
 
   const StartButtonSegment: React.FC = () => {
     return (
