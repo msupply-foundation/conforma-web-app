@@ -139,6 +139,7 @@ export default {
   FOOTER_COPYRIGHT: '© 2020',
   FILTER_ADD_FILTER: 'Filter',
   FILTER_START_TYPING: 'Start typing...',
+  FILTER_REMOVE: 'Remove filter',
   PAGE_TITLE_HOME: 'Dashboard | Application Manager',
   PAGE_TITLE_LIST: 'Applications List |  Application Manager',
   PAGE_TITLE_CREATE: 'New Application | Application Manager',
