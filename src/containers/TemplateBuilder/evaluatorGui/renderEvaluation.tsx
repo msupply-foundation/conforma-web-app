@@ -1,7 +1,7 @@
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { IParameters, ValueNode } from '@openmsupply/expression-evaluator/lib/types'
 import React, { useState } from 'react'
-import { Header, Icon, Modal, Portal, Segment } from 'semantic-ui-react'
+import { Header, Icon, Modal } from 'semantic-ui-react'
 import { Loading } from '../../../components'
 import { guis } from './guiDefinitions'
 import Markdown from '../../../utils/helpers/semanticReactMarkdown'
