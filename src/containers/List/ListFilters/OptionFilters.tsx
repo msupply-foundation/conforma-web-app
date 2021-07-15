@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client'
 import { Dropdown, Input } from 'semantic-ui-react'
 import { EnumFilterProps, StaticListFilterProps, SearchableListFilterProps } from './types'
 import { FilterContainer, FilterOptions } from './common'
+import strings from '../../../utils/constants'
 
 const EnumFilter: React.FC<EnumFilterProps> = ({
   getActiveOptions,
@@ -88,7 +89,7 @@ const SearchableListFilter: React.FC<SearchableListFilterProps> = ({
     <FilterContainer selectedCount={activeOptions.length} title={title} onRemove={onRemove}>
       <Input
         icon="search"
-        placeholder="Start typing..."
+        placeholder={strings.FILTER_START_TYPING}
         iconPosition="left"
         className="search"
         onClick={(e: any) => e.stopPropagation()}

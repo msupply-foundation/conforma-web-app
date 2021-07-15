@@ -86,6 +86,11 @@ a:hover {
   justify-content: center;
 }
 
+.flex-row-center-center {
+  .flex-row-center();
+  align-items: center;
+}
+
 /*--------------------------------
    Login page
 ---------------------------------*/
@@ -1070,8 +1075,9 @@ a:hover {
   padding-left: 10px;
   padding-right: 10px;
   background-color: @surfacesWhite;
-  margin-right:10px;
+  margin:5px;
   color: @darkGrey;
+  border: solid 1px @fullyTransperant;
 
   &.visible {
     border: solid 1px @blue;
@@ -1089,6 +1095,13 @@ a:hover {
 
   align-items: center;
   flex-wrap: wrap;
+
+  .list-filter-title {
+    .flex-row-center-center();
+    .icon {
+      line-height: normal;
+    }
+  }
 
   .ui.dropdown {
     .clickable();
