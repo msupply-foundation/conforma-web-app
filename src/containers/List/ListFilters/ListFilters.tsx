@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Dropdown, Icon } from 'semantic-ui-react'
-import strings from 'utils/constants'
+import strings from '../../../utils/constants'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import { FilterDefinitions } from '../../../utils/types'
 import BooleanFilter from './BooleanFilter'

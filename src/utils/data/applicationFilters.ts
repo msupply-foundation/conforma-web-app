@@ -33,7 +33,7 @@ const constructFilterListQuery = (query: DocumentNode, queryMethod: string) => {
 export const APPLICATION_FILTERS: FilterDefinitions = {
   lastActiveDate: {
     type: 'date',
-    title: 'check',
+    title: '',
   },
   isFullyAssignedLevel1: {
     type: 'boolean',
