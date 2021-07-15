@@ -61,7 +61,6 @@ const ApplicationCreate: React.FC = () => {
         if (serialNumber && template?.sections && template?.sections.length > 0) {
           // Call Application page on first section
           const firstSection = template.sections[0].code
-          console.log('serial', serialNumber)
           // The pageNumber starts in 1 when is a new application
           push(`${serialNumber}/${firstSection}/Page1`)
         }
