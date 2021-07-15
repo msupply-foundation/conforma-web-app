@@ -1070,7 +1070,7 @@ a:hover {
   padding-left: 10px;
   padding-right: 10px;
   background-color: @surfacesWhite;
-  margin-right:10px;
+  margin:5px;
   color: @darkGrey;
   border: solid 1px @fullyTransperant;
 
@@ -1094,8 +1094,7 @@ a:hover {
   .ui.dropdown {
     .clickable();
     .filterItem();
-    border: solid 1px @fullyTransperant;
-    
+
     .menu {
       top: 120%;
       border: solid 1px @blue;
