@@ -85,66 +85,51 @@ const ListFilters: React.FC<{ filterDefinitions: FilterDefinitions; filterListPa
           const filter = displayableFilters[filterName]
           if (!filter.title) return null
 
-          if (filter.type === 'enumList') {
-            if (!filter?.options?.enumList) return null
-            return (
-              <EnumFilter
-                key={filterName}
-                title={filter.title}
-                enumList={filter.options?.enumList}
-                onRemove={getOnRemove(filterName)}
-                {...getMethodsForOptionFilter(filterName)}
-              />
-            )
-          }
+          switch (filter.type) {
+            case 'enumList':
+              if (!filter?.options?.enumList) return null
+              return (
+                <EnumFilter
+                  key={filterName}
+                  title={filter.title}
+                  enumList={filter.options?.enumList}
+                  onRemove={getOnRemove(filterName)}
+                  {...getMethodsForOptionFilter(filterName)}
+                />
+              )
+            case 'searchableListIn':
+            case 'searchableListInArray':
+              if (!filter?.options?.getListQuery) return null
+              return (
+                <SearchableListFilter
+                  key={filterName}
+                  title={filter.title}
+                  filterListParameters={filterListParameters}
+                  getFilterListQuery={filter.options?.getListQuery}
+                  {...getMethodsForOptionFilter(filterName)}
+                  onRemove={getOnRemove(filterName)}
+                />
+              )
+            case 'boolean':
+              if (!filter?.options?.booleanMapping) return null
 
-          if (filter.type === 'searchableListIn' || filter.type === 'searchableListInArray') {
-            if (!filter?.options?.getListQuery) return null
-            return (
-              <SearchableListFilter
-                key={filterName}
-                title={filter.title}
-                filterListParameters={filterListParameters}
-                getFilterListQuery={filter.options?.getListQuery}
-                {...getMethodsForOptionFilter(filterName)}
-                onRemove={getOnRemove(filterName)}
-              />
-            )
+              return (
+                <BooleanFilter
+                  key={filterName}
+                  title={filter.title}
+                  onRemove={getOnRemove(filterName)}
+                  activeOptions={getArrayFromString(query[filterName])}
+                  booleanMapping={filter?.options?.booleanMapping}
+                  toggleFilter={(value: boolean) =>
+                    updateQuery({
+                      [filterName]: String(value),
+                    })
+                  }
+                />
+              )
+            default:
+              return null
           }
-
-          if (filter.type === 'staticList') {
-            if (!filter?.options?.getListQuery) return null
-            return (
-              <StaticListFilter
-                key={filterName}
-                title={filter.title}
-                filterListParameters={filterListParameters}
-                getFilterListQuery={filter.options?.getListQuery}
-                {...getMethodsForOptionFilter(filterName)}
-                onRemove={getOnRemove(filterName)}
-              />
-            )
-          }
-
-          if (filter.type === 'boolean') {
-            if (!filter?.options?.booleanMapping) return null
-
-            return (
-              <BooleanFilter
-                key={filterName}
-                title={filter.title}
-                onRemove={getOnRemove(filterName)}
-                activeOptions={getArrayFromString(query[filterName])}
-                booleanMapping={filter?.options?.booleanMapping}
-                toggleFilter={(value: boolean) =>
-                  updateQuery({
-                    [filterName]: String(value),
-                  })
-                }
-              />
-            )
-          }
-          return null
         })}
       </div>
     )
