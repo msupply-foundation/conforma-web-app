@@ -45,9 +45,9 @@ export const APPLICATION_FILTERS: FilterDefinitions = {
       },
     },
   },
-  reviewersAssignedCount: {
-    type: 'number',
-  },
+  // reviewersAssignedCount: {
+  //   type: 'number',
+  // },
   type: {
     type: 'equals',
     options: { substituteColumnName: 'templateCode' },
