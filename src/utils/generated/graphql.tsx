@@ -27346,7 +27346,7 @@ export type UserFragment = (
 
 export type CreateApplicationMutationVariables = Exact<{
   name: Scalars['String'];
-  serial: Scalars['String'];
+  serial?: Maybe<Scalars['String']>;
   templateId: Scalars['Int'];
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
@@ -27682,6 +27682,19 @@ export type GetApplicationQuery = (
       { __typename?: 'ApplicationStageStatusLatest' }
       & StageFragment
     )>> }
+  )> }
+);
+
+export type GetApplicationSerialQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type GetApplicationSerialQuery = (
+  { __typename?: 'Query' }
+  & { application?: Maybe<(
+    { __typename?: 'Application' }
+    & Pick<Application, 'serial' | 'name' | 'trigger'>
   )> }
 );
 
@@ -28160,7 +28173,7 @@ export const TemplateStageFragmentDoc = gql`
 }
     `;
 export const CreateApplicationDocument = gql`
-    mutation createApplication($name: String!, $serial: String!, $templateId: Int!, $userId: Int, $orgId: Int, $sessionId: String!, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE, $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!], $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]) {
+    mutation createApplication($name: String!, $serial: String, $templateId: Int!, $userId: Int, $orgId: Int, $sessionId: String!, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE, $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!], $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]) {
   createApplication(input: {application: {name: $name, serial: $serial, templateId: $templateId, userId: $userId, orgId: $orgId, sessionId: $sessionId, isActive: true, outcome: $outcome, trigger: $trigger, applicationSectionsUsingId: {create: $sections}, applicationResponsesUsingId: {create: $responses}}}) {
     application {
       userId
@@ -28740,6 +28753,41 @@ export function useGetApplicationLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetApplicationQueryHookResult = ReturnType<typeof useGetApplicationQuery>;
 export type GetApplicationLazyQueryHookResult = ReturnType<typeof useGetApplicationLazyQuery>;
 export type GetApplicationQueryResult = Apollo.QueryResult<GetApplicationQuery, GetApplicationQueryVariables>;
+export const GetApplicationSerialDocument = gql`
+    query getApplicationSerial($id: Int!) {
+  application(id: $id) {
+    serial
+    name
+    trigger
+  }
+}
+    `;
+
+/**
+ * __useGetApplicationSerialQuery__
+ *
+ * To run a query within a React component, call `useGetApplicationSerialQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetApplicationSerialQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetApplicationSerialQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetApplicationSerialQuery(baseOptions?: Apollo.QueryHookOptions<GetApplicationSerialQuery, GetApplicationSerialQueryVariables>) {
+        return Apollo.useQuery<GetApplicationSerialQuery, GetApplicationSerialQueryVariables>(GetApplicationSerialDocument, baseOptions);
+      }
+export function useGetApplicationSerialLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApplicationSerialQuery, GetApplicationSerialQueryVariables>) {
+          return Apollo.useLazyQuery<GetApplicationSerialQuery, GetApplicationSerialQueryVariables>(GetApplicationSerialDocument, baseOptions);
+        }
+export type GetApplicationSerialQueryHookResult = ReturnType<typeof useGetApplicationSerialQuery>;
+export type GetApplicationSerialLazyQueryHookResult = ReturnType<typeof useGetApplicationSerialLazyQuery>;
+export type GetApplicationSerialQueryResult = Apollo.QueryResult<GetApplicationSerialQuery, GetApplicationSerialQueryVariables>;
 export const GetApplicationListDocument = gql`
     query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $userId: Int! = 0) {
   applicationList(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch, userid: $userId) {
