@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Dropdown } from 'semantic-ui-react'
+import { Dropdown, Icon } from 'semantic-ui-react'
+import strings from 'utils/constants'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import { FilterDefinitions } from '../../../utils/types'
 import BooleanFilter from './BooleanFilter'
@@ -61,9 +62,16 @@ const ListFilters: React.FC<{ filterDefinitions: FilterDefinitions; filterListPa
       (filterName) => !activeFilters.includes(filterName)
     )
 
+    const renderTitle = () => (
+      <div className="list-filter-title">
+        <Icon name="plus" size="tiny" color="blue" />
+        {strings.FILTER_ADD_FILTER}
+      </div>
+    )
+
     return (
       <div id="list-filter">
-        <Dropdown text="+ Filter" icon={null}>
+        <Dropdown trigger={renderTitle()} icon={null}>
           <Dropdown.Menu>
             {availableFilterNames.map((filterName) => (
               <Dropdown.Item key={filterName} onClick={() => addFilter(filterName)}>

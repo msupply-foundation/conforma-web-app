@@ -137,6 +137,7 @@ export default {
   DATE_YEARS_AGO: 'years ago',
   FOOTER_TEXT: 'Powered by mSupply Application Manager',
   FOOTER_COPYRIGHT: '© 2020',
+  FILTER_ADD_FILTER: 'Filter',
   PAGE_TITLE_HOME: 'Dashboard | Application Manager',
   PAGE_TITLE_LIST: 'Applications List |  Application Manager',
   PAGE_TITLE_CREATE: 'New Application | Application Manager',
