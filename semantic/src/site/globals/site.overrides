@@ -672,7 +672,8 @@ a:hover {
 
 // Note: these layout ids/classes also shared with Review page
 
-#application-summary, #review-page-summary {
+#application-summary,
+#review-page-summary {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -780,8 +781,8 @@ a:hover {
     padding-left: 20px;
     background: @surfacesWhite;
     border: 2px solid @surfacesMed;
+    border-top: none;
     margin: 0px;
-    margin-bottom: 2px;
 
     &.information {
       > div {
@@ -864,6 +865,7 @@ a:hover {
   }
 
   > :first-child {
+    border-top: 2px solid @surfacesMed;
     border-top-left-radius: @borderRadius;
     border-top-right-radius: @borderRadius;
   }
@@ -883,6 +885,8 @@ a:hover {
   background: @surfacesWhite;
   border-bottom-left-radius: @borderRadius;
   border-bottom-right-radius: @borderRadius;
+  border: 2px solid @surfacesMed;
+  border-top: none;
 }
 
 .blue-border {
