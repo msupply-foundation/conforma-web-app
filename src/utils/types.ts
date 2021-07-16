@@ -347,6 +347,7 @@ interface ReviewDetails {
   isLastLevel: boolean
   level: number
   reviewDecision?: ReviewDecision | null
+  reviewer: GraphQLUser
   current: ReviewStageAndStatus
 }
 
