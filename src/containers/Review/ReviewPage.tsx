@@ -124,8 +124,6 @@ const ReviewPage: React.FC<{
     (section) => section.assignment?.isConsolidation
   )
 
-  console.log('isConsolidation', isConsolidation, sections)
-
   return error ? (
     <Message error title={strings.ERROR_GENERIC} list={[error]} />
   ) : (
