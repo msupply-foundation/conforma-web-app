@@ -32,19 +32,18 @@ type ActionDefinition = {
 
 const actionDefinitions: ActionDefinition[] = [
   {
-    action: ReviewAction.canStartReview,
-    checkMethod: ({
-      reviewAssignmentStatus,
+    action: ReviewAction.canMakeDecision,
+    checkMethod: ({ reviewAssignmentStatus, isFinalDecision, isReviewExisting }) =>
+      reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
+      !isReviewExisting &&
       isFinalDecision,
+  },
+  {
+    action: ReviewAction.canStartReview,
+    checkMethod: ({ reviewAssignmentStatus, isPendingReview, isReviewExisting }) =>
+      reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
+      !isReviewExisting &&
       isPendingReview,
-      isReviewExisting,
-    }) => {
-      return (
-        reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
-        !isReviewExisting &&
-        (isFinalDecision || isPendingReview)
-      )
-    },
   },
   {
     action: ReviewAction.canReReview,

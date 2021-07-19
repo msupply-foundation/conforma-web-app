@@ -20,14 +20,6 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
           />
         )
       }
-      case ReviewAction.canView: {
-        return (
-          <LastDate
-            title={strings.ACTION_DATE_REVIEW_SUBMITTED}
-            indicator={getSimplifiedTimeDifference(thisReview?.current.timeStatusCreated)}
-          />
-        )
-      }
       case ReviewAction.canStartReview: {
         return (
           <LastDate
@@ -36,27 +28,13 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
           />
         )
       }
-
-      case ReviewAction.canReReview: {
-        return (
-          <LastDate
-            title={strings.ACTION_DATE_RE_SUBMITTED}
-            indicator={getSimplifiedTimeDifference(fullStructure?.info.current?.timeStatusCreated)}
-          />
-        )
-      }
-
-      case ReviewAction.canSelfAssign: {
+      default:
         return (
           <LastDate
             title={strings.LABEL_APPLICATION_SUBMITTED}
             indicator={getSimplifiedTimeDifference(fullStructure?.info.current?.timeStatusCreated)}
           />
         )
-      }
-
-      default:
-        return null
     }
   }
 
