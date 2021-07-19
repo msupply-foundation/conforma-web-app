@@ -27615,7 +27615,7 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'status' | 'timeUpdated' | 'levelNumber' | 'reviewerId' | 'allowedSections' | 'isFinalDecision' | 'timeStageCreated' | 'trigger'>
+      & Pick<ReviewAssignment, 'id' | 'status' | 'timeUpdated' | 'levelNumber' | 'reviewerId' | 'isLastLevel' | 'isFinalDecision' | 'allowedSections' | 'timeStageCreated' | 'trigger'>
       & { stage?: Maybe<(
         { __typename?: 'TemplateStage' }
         & Pick<TemplateStage, 'id' | 'number' | 'title' | 'colour'>
@@ -27626,7 +27626,7 @@ export type GetReviewInfoQuery = (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'Review' }
-          & Pick<Review, 'id' | 'status' | 'timeStatusCreated' | 'trigger' | 'isLastLevel'>
+          & Pick<Review, 'id' | 'status' | 'timeStatusCreated' | 'trigger'>
           & { reviewDecisions: (
             { __typename?: 'ReviewDecisionsConnection' }
             & { nodes: Array<Maybe<(
@@ -28816,8 +28816,9 @@ export const GetReviewInfoDocument = gql`
       timeUpdated
       levelNumber
       reviewerId
-      allowedSections
+      isLastLevel
       isFinalDecision
+      allowedSections
       stage {
         id
         number
@@ -28837,7 +28838,6 @@ export const GetReviewInfoDocument = gql`
           status
           timeStatusCreated
           trigger
-          isLastLevel
           reviewDecisions(orderBy: TIME_UPDATED_DESC) {
             nodes {
               id

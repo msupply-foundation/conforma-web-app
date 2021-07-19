@@ -20,11 +20,17 @@ type ReviewSubmitProps = {
 }
 
 const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
-  const { structure } = props
-  const thisReview = structure?.thisReview
+  const {
+    structure: { thisReview, assignment },
+  } = props
+
   const reviewDecision = thisReview?.reviewDecision
   const { decisionOptions, getDecision, setDecision, getAndSetDecisionError, isDecisionError } =
-    useGetDecisionOptions(structure.canSubmitReviewAs, thisReview)
+    useGetDecisionOptions(
+      assignment?.isLastLevel || false,
+      assignment?.canSubmitReviewAs,
+      thisReview
+    )
 
   return (
     <Form id="review-submit-area">

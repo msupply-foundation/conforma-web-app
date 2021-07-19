@@ -10,9 +10,9 @@ export default gql`
         timeUpdated
         levelNumber
         reviewerId
-        # isLastLevel - I don't think this is needed here?
-        allowedSections
+        isLastLevel
         isFinalDecision
+        allowedSections
         stage {
           id
           number
@@ -32,7 +32,6 @@ export default gql`
             status
             timeStatusCreated
             trigger
-            isLastLevel
             reviewDecisions(orderBy: TIME_UPDATED_DESC) {
               nodes {
                 id

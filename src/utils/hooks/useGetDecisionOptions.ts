@@ -32,6 +32,7 @@ const initilDecisionOptions: DecisionOption[] = [
 
 // hook used to manage state of options shown in review submit, as per type definition below
 type UseGetDecisionOptions = (
+  isLastLevel: boolean,
   canSubmitReviewAs?: Decision | null,
   thisReview?: ReviewDetails | null
 ) => {
@@ -42,13 +43,17 @@ type UseGetDecisionOptions = (
   isDecisionError: boolean
 }
 
-const useGetDecisionOptions: UseGetDecisionOptions = (canSubmitReviewAs, thisReview) => {
+const useGetDecisionOptions: UseGetDecisionOptions = (
+  isLastLevel,
+  canSubmitReviewAs,
+  thisReview
+) => {
   const [decisionOptions, setDecisionOptions] = useState<DecisionOption[]>(initilDecisionOptions)
   const [isDecisionError, setIsDecisionError] = useState(false)
 
   const isDraft = thisReview?.current.reviewStatus === ReviewStatus.Draft
   const decisionInStructure = thisReview?.reviewDecision?.decision || Decision.NoDecision
-  const reviewerNeedsToMakeDecision = thisReview?.isLastLevel || (thisReview?.level || 0) > 1
+  const reviewerNeedsToMakeDecision = isLastLevel || (thisReview?.level || 0) > 1
 
   useEffect(() => {
     setIsDecisionError(false)

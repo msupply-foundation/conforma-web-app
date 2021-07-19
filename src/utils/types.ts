@@ -122,6 +122,7 @@ interface AssignmentDetails {
   isCurrentUserAssigner: boolean
   isCurrentUserReviewer: boolean
   isFinalDecision: boolean
+  isLastLevel: boolean
   totalAssignedQuestions: number
   reviewQuestionAssignments: ReviewQuestionAssignment[]
   assignableSectionRestrictions: (string | null)[]
@@ -230,6 +231,11 @@ interface Filters {
 }
 
 interface FullStructure {
+  assignment?: {
+    canSubmitReviewAs?: Decision | null
+    isLastLevel: boolean
+    isFinalDecision: boolean
+  }
   thisReview?: ReviewDetails | null
   elementsById?: ElementsById
   lastValidationTimestamp?: number
@@ -239,7 +245,6 @@ interface FullStructure {
   stages: StageDetails[]
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
-  canSubmitReviewAs?: Decision | null
   sortedSections?: SectionState[]
   sortedPages?: Page[]
 }
@@ -345,8 +350,6 @@ type ReviewSectionComponentProps = {
 
 interface ReviewDetails {
   id: number
-  isLastLevel: boolean
-  isFinalDecision: boolean
   level: number
   reviewDecision?: ReviewDecision | null
   current: ReviewStageAndStatus
