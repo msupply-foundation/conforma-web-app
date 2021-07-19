@@ -8,6 +8,7 @@ export default {
   ACTION_DATE_ASSIGNED: 'Assigned',
   ACTION_DATE_REVIEW_SUBMITTED: 'Review Submitted',
   ACTION_DATE_REVIEW_STARTED: 'Review Started',
+  ACTION_MAKE_DECISION: 'Make decision',
   ACTION_RE_REVIEW: 'Re-review',
   ACTION_RE_ASSIGN: 'Re-Assign',
   ACTION_SELF_ASSIGN: 'Self-Assign',

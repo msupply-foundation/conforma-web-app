@@ -75,7 +75,7 @@ const getReviewerChangesUpdatedCount = (consolidationProgress?: ConsolidationPro
 const getConsolidatorChangesRequestedCount = (progress?: ChangeRequestsProgress) =>
   progress?.totalChangeRequests || 0
 
-// START REVIEW, CONTINUE REVIEW, UPDATE REVIEW OR RE-REVIEW BUTTON
+// Possible generate action button: START REVIEW, CONTINUE REVIEW, UPDATE REVIEW, RE-REVIEW or MAKE DECISION
 const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
   section: { details, reviewProgress, consolidationProgress, changeRequestsProgress },
@@ -93,6 +93,7 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
 
   const remakeReview = useRemakePreviousReview({
     structure: fullStructure,
+    assignment,
     previousAssignment,
   })
 
@@ -127,6 +128,8 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
           reviewerChangesCount > 0 ? ` (${reviewerChangesCount})` : ''
         )
       }
+      case ReviewAction.canMakeDecision:
+        return strings.ACTION_MAKE_DECISION
       case ReviewAction.canContinue:
         return strings.ACTION_CONTINUE
       default:
@@ -141,7 +144,8 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
       return push(`${pathname}/${reviewId}?activeSections=${details.code}`)
 
     try {
-      if (isFinalDecision) await remakeReview()
+      if (isFinalDecision)
+        reviewId = (await remakeReview()).data?.createReview?.review?.id as number
       else if (thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
       push(`${pathname}/${reviewId}?activeSections=${details.code}`)

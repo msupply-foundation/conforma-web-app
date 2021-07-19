@@ -2,70 +2,71 @@ import { ReviewResponseDecision } from '../../generated/graphql'
 import { FullStructure, SectionState, Page, PageElement, ConsolidationProgress } from '../../types'
 
 const generateConsolidatorResponsesProgress = (newStructure: FullStructure) => {
+  const isFinalDecision = newStructure.assignment?.isFinalDecision ?? false
+
+  const generateSectionConsolidationProgress = (section: SectionState) => {
+    section.consolidationProgress = getConsolidationProgress(Object.values(section.pages))
+  }
+
+  const conformOriginal = (element: PageElement) =>
+    element.latestOriginalReviewResponse?.decision === ReviewResponseDecision.Approve
+  const nonConformOriginal = (element: PageElement) =>
+    element.latestOriginalReviewResponse?.decision === ReviewResponseDecision.Decline
+  const agreeThisReview = (element: PageElement) =>
+    element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Agree
+  const disagreeThiReview = (element: PageElement) =>
+    element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Disagree
+  const activeThisReview = (element: PageElement) => element.isActiveReviewResponse
+  const reviewLowerLevelUpdates = (element: PageElement) => element.isNewReviewResponse
+  const reviewedLowerLevelUpdates = (element: PageElement) =>
+    element.thisReviewLatestResponse?.decision
+
+  const generatePageConsolidationProgress = (page: Page) => {
+    const totalReviewable = page.state.filter(
+      ({ isAssigned, element }) => (isAssigned || isFinalDecision) && element.isVisible
+    )
+
+    const totalActive = totalReviewable.filter(activeThisReview)
+    const totalNewReviewable = totalReviewable.filter(reviewLowerLevelUpdates)
+
+    // totalConform of originalReviewResponse
+    const totalConform = totalReviewable.filter(conformOriginal)
+    // totalNonConform of originalReviewResponse
+    const totalNonConform = totalReviewable.filter(nonConformOriginal)
+    // reviews pending - used before starting a new review (also need to check isAssigned)
+    const totalPendingReview = totalReviewable.filter(({ isPendingReview }) => isPendingReview)
+
+    const totalAgree = totalReviewable.filter(agreeThisReview)
+
+    const doneDisagree = totalReviewable.filter(disagreeThiReview)
+    const doneAgreeConform = totalAgree.filter(conformOriginal)
+    const doneAgreeNonConform = totalAgree.filter(nonConformOriginal)
+
+    const doneActiveDisagree = doneDisagree.filter(activeThisReview)
+    const doneActiveAgreeConform = doneAgreeConform.filter(activeThisReview)
+    const doneActiveAgreeNonConform = doneAgreeNonConform.filter(activeThisReview)
+
+    const doneNewReviewable = totalNewReviewable.filter(reviewedLowerLevelUpdates)
+
+    page.consolidationProgress = {
+      doneAgreeConform: doneAgreeConform.length,
+      doneAgreeNonConform: doneAgreeNonConform.length,
+      doneDisagree: doneDisagree.length,
+      doneActiveDisagree: doneActiveDisagree.length,
+      doneActiveAgreeConform: doneActiveAgreeConform.length,
+      doneActiveAgreeNonConform: doneActiveAgreeNonConform.length,
+      doneNewReviewable: doneNewReviewable.length,
+      totalConform: totalConform.length,
+      totalNonConform: totalNonConform.length,
+      // BaseReviewProgress
+      totalReviewable: totalReviewable.length,
+      totalPendingReview: totalPendingReview.length,
+      totalActive: totalActive.length,
+      totalNewReviewable: totalNewReviewable.length,
+    }
+  }
   newStructure?.sortedPages?.forEach(generatePageConsolidationProgress)
   newStructure?.sortedSections?.forEach(generateSectionConsolidationProgress)
-}
-
-const generateSectionConsolidationProgress = (section: SectionState) => {
-  section.consolidationProgress = getConsolidationProgress(Object.values(section.pages))
-}
-
-const conformOriginal = (element: PageElement) =>
-  element.latestOriginalReviewResponse?.decision === ReviewResponseDecision.Approve
-const nonConformOriginal = (element: PageElement) =>
-  element.latestOriginalReviewResponse?.decision === ReviewResponseDecision.Decline
-const agreeThisReview = (element: PageElement) =>
-  element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Agree
-const disagreeThiReview = (element: PageElement) =>
-  element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Disagree
-const activeThisReview = (element: PageElement) => element.isActiveReviewResponse
-const reviewLowerLevelUpdates = (element: PageElement) => element.isNewReviewResponse
-const reviewedLowerLevelUpdates = (element: PageElement) =>
-  element.thisReviewLatestResponse?.decision
-
-const generatePageConsolidationProgress = (page: Page) => {
-  const totalReviewable = page.state.filter(
-    ({ isAssigned, element }) => isAssigned && element.isVisible
-  )
-
-  const totalActive = totalReviewable.filter(activeThisReview)
-  const totalNewReviewable = totalReviewable.filter(reviewLowerLevelUpdates)
-
-  // totalConform of originalReviewResponse
-  const totalConform = totalReviewable.filter(conformOriginal)
-  // totalNonConform of originalReviewResponse
-  const totalNonConform = totalReviewable.filter(nonConformOriginal)
-  // reviews pending - used before starting a new review (also need to check isAssigned)
-  const totalPendingReview = totalReviewable.filter(({ isPendingReview }) => isPendingReview)
-
-  const totalAgree = totalReviewable.filter(agreeThisReview)
-
-  const doneDisagree = totalReviewable.filter(disagreeThiReview)
-  const doneAgreeConform = totalAgree.filter(conformOriginal)
-  const doneAgreeNonConform = totalAgree.filter(nonConformOriginal)
-
-  const doneActiveDisagree = doneDisagree.filter(activeThisReview)
-  const doneActiveAgreeConform = doneAgreeConform.filter(activeThisReview)
-  const doneActiveAgreeNonConform = doneAgreeNonConform.filter(activeThisReview)
-
-  const doneNewReviewable = totalNewReviewable.filter(reviewedLowerLevelUpdates)
-
-  page.consolidationProgress = {
-    doneAgreeConform: doneAgreeConform.length,
-    doneAgreeNonConform: doneAgreeNonConform.length,
-    doneDisagree: doneDisagree.length,
-    doneActiveDisagree: doneActiveDisagree.length,
-    doneActiveAgreeConform: doneActiveAgreeConform.length,
-    doneActiveAgreeNonConform: doneActiveAgreeNonConform.length,
-    doneNewReviewable: doneNewReviewable.length,
-    totalConform: totalConform.length,
-    totalNonConform: totalNonConform.length,
-    // BaseReviewProgress
-    totalReviewable: totalReviewable.length,
-    totalPendingReview: totalPendingReview.length,
-    totalActive: totalActive.length,
-    totalNewReviewable: totalNewReviewable.length,
-  }
 }
 
 // Simple helper that will iterate over elements and sum up all of the values for keys
