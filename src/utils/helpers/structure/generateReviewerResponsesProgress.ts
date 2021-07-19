@@ -3,54 +3,50 @@ import { ReviewResponseDecision } from '../../generated/graphql'
 import { FullStructure, SectionState, Page, ReviewProgress } from '../../types'
 
 const generateReviewerResponsesProgress = (newStructure: FullStructure) => {
-  const isFinalDecision = newStructure.assignment?.isFinalDecision ?? false
-
-  const generateSectionReviewProgress = (section: SectionState) => {
-    section.reviewProgress = getReviewProgress(Object.values(section.pages))
-  }
-
-  const generatePageReviewProgress = (page: Page) => {
-    const totalReviewable = page.state.filter(
-      (element) =>
-        (element.isAssigned || isFinalDecision) &&
-        element?.element.isVisible &&
-        element?.latestApplicationResponse?.id
-    )
-
-    // Only consider review responses that are linked to latest application response
-    // or if part of changes requested if they have already been changed
-    const totalReviewableLinkedToLatestApplicationResponse = totalReviewable.filter(
-      ({ isPendingReview, isChangeRequest, isChanged }) =>
-        !isPendingReview && (!isChangeRequest || isChanged)
-    )
-
-    const doneConform = totalReviewableLinkedToLatestApplicationResponse.filter(
-      (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Approve
-    )
-    const doneNonConform = totalReviewableLinkedToLatestApplicationResponse.filter(
-      (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Decline
-    )
-    const totalNewReviewable = totalReviewable.filter((element) => element.isNewApplicationResponse)
-    const doneNewReviewable = totalNewReviewable.filter(
-      (element) => !element.isPendingReview && element.thisReviewLatestResponse?.decision
-    )
-
-    const totalPendingReview = totalReviewable.filter(({ isPendingReview }) => isPendingReview)
-
-    page.reviewProgress = {
-      doneConform: doneConform.length,
-      doneNonConform: doneNonConform.length,
-      doneNewReviewable: doneNewReviewable.length,
-      // BaseReviewProgress
-      totalReviewable: totalReviewable.length,
-      totalActive: totalReviewable.length,
-      totalPendingReview: totalPendingReview.length,
-      totalNewReviewable: totalNewReviewable.length,
-    }
-  }
-
   newStructure?.sortedPages?.forEach(generatePageReviewProgress)
   newStructure?.sortedSections?.forEach(generateSectionReviewProgress)
+}
+
+const generateSectionReviewProgress = (section: SectionState) => {
+  section.reviewProgress = getReviewProgress(Object.values(section.pages))
+}
+
+const generatePageReviewProgress = (page: Page) => {
+  const totalReviewable = page.state.filter(
+    ({ thisReviewLatestResponse, latestApplicationResponse, element }) =>
+      !!thisReviewLatestResponse && element.isVisible && latestApplicationResponse?.id
+  )
+
+  // Only consider review responses that are linked to latest application response
+  // or if part of changes requested if they have already been changed
+  const totalReviewableLinkedToLatestApplicationResponse = totalReviewable.filter(
+    ({ isPendingReview, isChangeRequest, isChanged }) =>
+      !isPendingReview && (!isChangeRequest || isChanged)
+  )
+
+  const doneConform = totalReviewableLinkedToLatestApplicationResponse.filter(
+    (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Approve
+  )
+  const doneNonConform = totalReviewableLinkedToLatestApplicationResponse.filter(
+    (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Decline
+  )
+  const totalNewReviewable = totalReviewable.filter((element) => element.isNewApplicationResponse)
+  const doneNewReviewable = totalNewReviewable.filter(
+    (element) => !element.isPendingReview && element.thisReviewLatestResponse?.decision
+  )
+
+  const totalPendingReview = totalReviewable.filter(({ isPendingReview }) => isPendingReview)
+
+  page.reviewProgress = {
+    doneConform: doneConform.length,
+    doneNonConform: doneNonConform.length,
+    doneNewReviewable: doneNewReviewable.length,
+    // BaseReviewProgress
+    totalReviewable: totalReviewable.length,
+    totalActive: totalReviewable.length,
+    totalPendingReview: totalPendingReview.length,
+    totalNewReviewable: totalNewReviewable.length,
+  }
 }
 
 /**

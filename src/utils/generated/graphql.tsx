@@ -2127,7 +2127,6 @@ export enum Trigger {
   OnReviewCreate = 'ON_REVIEW_CREATE',
   OnReviewSubmit = 'ON_REVIEW_SUBMIT',
   OnReviewRestart = 'ON_REVIEW_RESTART',
-  OnReviewStart = 'ON_REVIEW_START',
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
   OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
@@ -27670,6 +27669,8 @@ export type GetReviewResponsesQueryVariables = Exact<{
   applicationId: Scalars['Int'];
   previousLevel: Scalars['Int'];
   stageNumber: Scalars['Int'];
+  shouldIncludePreviousStage?: Scalars['Boolean'];
+  previousStage?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -27693,6 +27694,12 @@ export type GetReviewResponsesQuery = (
       & ReviewResponseFragmentFragment
     )>> }
   )>, originalReviewResponses?: Maybe<(
+    { __typename?: 'ReviewResponsesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ReviewResponse' }
+      & ReviewResponseFragmentFragment
+    )>> }
+  )>, previousOriginalReviewResponses?: Maybe<(
     { __typename?: 'ReviewResponsesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewResponse' }
@@ -28899,7 +28906,7 @@ export type GetReviewInfoQueryHookResult = ReturnType<typeof useGetReviewInfoQue
 export type GetReviewInfoLazyQueryHookResult = ReturnType<typeof useGetReviewInfoLazyQuery>;
 export type GetReviewInfoQueryResult = Apollo.QueryResult<GetReviewInfoQuery, GetReviewInfoQueryVariables>;
 export const GetReviewResponsesDocument = gql`
-    query getReviewResponses($reviewAssignmentId: Int!, $userId: Int!, $sectionIds: [Int!], $applicationId: Int!, $previousLevel: Int!, $stageNumber: Int!) {
+    query getReviewResponses($reviewAssignmentId: Int!, $userId: Int!, $sectionIds: [Int!], $applicationId: Int!, $previousLevel: Int!, $stageNumber: Int!, $shouldIncludePreviousStage: Boolean! = false, $previousStage: Int) {
   thisReviewResponses: reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {review: {reviewAssignmentId: {equalTo: $reviewAssignmentId}}, templateElement: {section: {id: {in: $sectionIds}}}, or: [{status: {notEqualTo: DRAFT}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
     nodes {
       ...reviewResponseFragment
@@ -28915,6 +28922,11 @@ export const GetReviewResponsesDocument = gql`
     }
   }
   originalReviewResponses: reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {review: {applicationId: {equalTo: $applicationId}, levelNumber: {equalTo: 1}, stageNumber: {equalTo: $stageNumber}}, templateElement: {section: {id: {in: $sectionIds}}}, status: {notEqualTo: DRAFT}}) {
+    nodes {
+      ...reviewResponseFragment
+    }
+  }
+  previousOriginalReviewResponses: reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {review: {applicationId: {equalTo: $applicationId}, levelNumber: {equalTo: 1}, stageNumber: {equalTo: $previousStage}}, templateElement: {section: {id: {in: $sectionIds}}}, status: {notEqualTo: DRAFT}}) @include(if: $shouldIncludePreviousStage) {
     nodes {
       ...reviewResponseFragment
     }
@@ -28941,6 +28953,8 @@ ${ConsolidatorResponseFragmentFragmentDoc}`;
  *      applicationId: // value for 'applicationId'
  *      previousLevel: // value for 'previousLevel'
  *      stageNumber: // value for 'stageNumber'
+ *      shouldIncludePreviousStage: // value for 'shouldIncludePreviousStage'
+ *      previousStage: // value for 'previousStage'
  *   },
  * });
  */
