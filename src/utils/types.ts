@@ -342,6 +342,7 @@ type ReviewSectionComponentProps = {
   fullStructure: FullStructure
   section: SectionState
   assignment: AssignmentDetails
+  previousAssignment: AssignmentDetails
   thisReview?: ReviewDetails | null
   action: ReviewAction
   isAssignedToCurrentUser: boolean
@@ -423,6 +424,7 @@ enum ReviewAction {
   canStartReview = 'CAN_START_REVIEW',
   canReStartReview = 'CAN_RE_START_REVIEW', // User for second review (for consolidator)
   canContinueLocked = 'CAN_CONTINUE_LOCKED',
+  canMakeDecision = 'CAN_MAKE_DECISION',
   canUpdate = 'CAN_UPDATE',
   unknown = 'UNKNOWN',
 }

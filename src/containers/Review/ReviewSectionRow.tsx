@@ -21,12 +21,14 @@ import {
 type ReviewSectionRowProps = {
   sectionId: number
   assignment: AssignmentDetails
+  previousAssignment: AssignmentDetails
   fullApplicationStructure: FullStructure
 }
 
 const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   sectionId,
   assignment,
+  previousAssignment,
   fullApplicationStructure,
 }) => {
   const { fullReviewStructure, error } = useGetReviewStructureForSections({
@@ -51,6 +53,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     fullStructure: fullReviewStructure,
     section,
     assignment,
+    previousAssignment,
     thisReview,
     action: section?.assignment?.action || ReviewAction.unknown,
     isConsolidation: section.assignment?.isConsolidation || false,

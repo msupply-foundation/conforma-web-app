@@ -71,7 +71,16 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // mutate fullApplicationStructure
   let newStructure: FullStructure = cloneDeep(fullApplicationStructure)
 
-  const { reviewQuestionAssignments, level, review } = reviewAssignment
+  const { reviewQuestionAssignments, level, isLastLevel, isFinalDecision, review } =
+    reviewAssignment
+
+  // review info comes from reviewAssignment that's passed to this hook
+  newStructure.thisReview = review
+  newStructure.assignment = {
+    isLastLevel,
+    isFinalDecision,
+    canSubmitReviewAs: null,
+  }
 
   // This is usefull for linking assignments to elements
   newStructure = addElementsById(newStructure)
@@ -86,9 +95,6 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // lowerLevelReviewLatestResponse and previousPreviousReviewLevelResponse
   // latestOriginalReviewResponse and previousOriginalReviewResponse
   newStructure = addAllReviewResponses(newStructure, data)
-
-  // review info comes from reviewAssignment that's passed to this hook
-  newStructure.thisReview = review
 
   // Update fields element.isNewReviewResponse for reviews re-submitted to a consolidator
   setIsNewReviewResponse(newStructure)

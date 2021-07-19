@@ -13,6 +13,7 @@ import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
 import { ReviewStatus } from '../../utils/generated/graphql'
 import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
+import useRemakePreviousReview from '../../utils/hooks/useRemakePreviousReview'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const {
@@ -25,7 +26,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
     switch (action) {
       case ReviewAction.canContinue: {
         if (isAssignedToCurrentUser) {
-          return <StartContinueOrRestartButton {...props} />
+          return <GenerateActionButton {...props} />
         }
         return (
           <Label className="simple-label">
@@ -44,9 +45,10 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
       case ReviewAction.canUpdate:
       case ReviewAction.canStartReview:
       case ReviewAction.canReStartReview:
-      case ReviewAction.canReReview: {
+      case ReviewAction.canReReview:
+      case ReviewAction.canMakeDecision: {
         if (isAssignedToCurrentUser) {
-          return <StartContinueOrRestartButton {...props} />
+          return <GenerateActionButton {...props} />
         }
         return <NotStartedLabel />
       }
@@ -74,10 +76,11 @@ const getConsolidatorChangesRequestedCount = (progress?: ChangeRequestsProgress)
   progress?.totalChangeRequests || 0
 
 // START REVIEW, CONTINUE REVIEW, UPDATE REVIEW OR RE-REVIEW BUTTON
-const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
+const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
   section: { details, reviewProgress, consolidationProgress, changeRequestsProgress },
   assignment,
+  previousAssignment,
   thisReview,
   action,
 }) => {
@@ -87,6 +90,11 @@ const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   } = useRouter()
 
   const [error, setError] = useState(false)
+
+  const remakeReview = useRemakePreviousReview({
+    structure: fullStructure,
+    previousAssignment,
+  })
 
   const restartReview = useRestartReview({
     reviewId: thisReview?.id || 0,
@@ -127,12 +135,14 @@ const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   }
 
   const doAction = async () => {
+    const { isFinalDecision } = assignment
     let reviewId = thisReview?.id as number
     if (thisReview?.current.reviewStatus == ReviewStatus.Draft)
       return push(`${pathname}/${reviewId}?activeSections=${details.code}`)
 
     try {
-      if (thisReview) await restartReview()
+      if (isFinalDecision) await remakeReview()
+      else if (thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
       push(`${pathname}/${reviewId}?activeSections=${details.code}`)
     } catch (e) {

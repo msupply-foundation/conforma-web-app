@@ -7,6 +7,7 @@ import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStruc
 import { AssignmentDetails, Filters, FullStructure } from '../../utils/types'
 import strings from '../../utils/constants'
 import { ReviewHeader, Stage } from '../../components/Review'
+import { ReviewAssignmentStatus } from '../../utils/generated/graphql'
 
 const ALL_REVIEWERS = 0
 
@@ -22,9 +23,13 @@ const ReviewHomeWrapper: React.FC<{
 
   const [filters, setFilters] = useState<Filters | null>(null)
 
-  const getFilteredByStage = (assignments: AssignmentDetails[]) => {
+  const getFilteredByStage = (assignments: AssignmentDetails[], stage?: number) => {
     if (!filters) return []
-    return assignments.filter((assignment) => assignment.current.stage.id === filters.selectedStage)
+    return assignments.filter((assignment) =>
+      stage
+        ? assignment.current.stage.number === stage
+        : assignment.current.stage.number === filters.selectedStage
+    )
   }
 
   const getFilteredReviewer = (assignments: AssignmentDetails[]) => {
@@ -47,6 +52,16 @@ const ReviewHomeWrapper: React.FC<{
     assignments,
   }
 
+  const previousStage = (filters?.selectedStage || 1) - 1
+  const assignmentInPreviousStage = getFilteredByStage(assignments, previousStage).filter(
+    ({ isLastLevel, current: { assignmentStatus } }) =>
+      assignmentStatus === ReviewAssignmentStatus.Assigned && isLastLevel
+  ) // TODO: Deal with case of more than one lastLevel in stage
+
+  console.log('assignmentsByStage', getFilteredByStage(assignments))
+
+  console.log('assignmentInPreviousStage', assignmentInPreviousStage)
+
   return (
     <>
       <ReviewHeader applicationName={fullApplicationStructure.info.name} />
@@ -55,6 +70,7 @@ const ReviewHomeWrapper: React.FC<{
         <ReviewHome
           assignmentsByStage={getFilteredByStage(assignments)}
           assignmentsByUserAndStage={getFilteredReviewer(assignments)}
+          assignmentInPreviousStage={assignmentInPreviousStage[0]}
           fullApplicationStructure={fullApplicationStructure}
         />
       )}
@@ -82,7 +98,7 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
   useEffect(() => {
     setFilters({
       selectedReviewer: currentUser?.userId as number,
-      selectedStage: structure.info.current.stage.id,
+      selectedStage: structure.info.current.stage.number,
     })
   }, [])
 
@@ -121,11 +137,11 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
 
 const getStageOptions = (structure: FullStructure, assignments: AssignmentDetails[]) =>
   structure.stages
-    .filter(({ id }) => assignments.some(({ current: { stage } }) => id === stage.id))
-    .map(({ id, name, colour }) => ({
+    .filter(({ number }) => assignments.some(({ current: { stage } }) => number === stage.number))
+    .map(({ number, name, colour }) => ({
       className: 'padding-zero',
-      key: id,
-      value: id,
+      key: number,
+      value: number,
       text: <Stage name={name} colour={colour || ''} />,
     }))
 
