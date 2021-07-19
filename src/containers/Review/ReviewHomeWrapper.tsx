@@ -56,11 +56,7 @@ const ReviewHomeWrapper: React.FC<{
   const assignmentInPreviousStage = getFilteredByStage(assignments, previousStage).filter(
     ({ isLastLevel, current: { assignmentStatus } }) =>
       assignmentStatus === ReviewAssignmentStatus.Assigned && isLastLevel
-  ) // TODO: Deal with case of more than one lastLevel in stage
-
-  console.log('assignmentsByStage', getFilteredByStage(assignments))
-
-  console.log('assignmentInPreviousStage', assignmentInPreviousStage)
+  )[0] // TODO: Deal with case of more than one lastLevel in stage
 
   return (
     <>
@@ -70,7 +66,7 @@ const ReviewHomeWrapper: React.FC<{
         <ReviewHome
           assignmentsByStage={getFilteredByStage(assignments)}
           assignmentsByUserAndStage={getFilteredReviewer(assignments)}
-          assignmentInPreviousStage={assignmentInPreviousStage[0]}
+          assignmentInPreviousStage={assignmentInPreviousStage}
           fullApplicationStructure={fullApplicationStructure}
         />
       )}
