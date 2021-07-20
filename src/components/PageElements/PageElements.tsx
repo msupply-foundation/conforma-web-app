@@ -192,6 +192,7 @@ const PageElements: React.FC<PageElementProps> = ({
               isNewApplicationResponse,
               isNewReviewResponse,
               isActiveReviewResponse,
+              isAssigned,
               enableViewHistory,
               isChangeRequest,
               isChanged,
@@ -233,6 +234,7 @@ const PageElements: React.FC<PageElementProps> = ({
                       isNewApplicationResponse={!!isNewApplicationResponse}
                       isChangeRequest={!!isChangeRequest}
                       isChanged={!!isChanged}
+                      isAssigned={!!isAssigned}
                     />
                   )}
                 </RenderElementWrapper>

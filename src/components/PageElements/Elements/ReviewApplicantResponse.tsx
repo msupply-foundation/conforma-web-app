@@ -22,6 +22,7 @@ interface ReviewApplicantResponseProps {
   reviewResponse?: ReviewResponse
   previousReviewResponse?: ReviewResponse
   isActiveReviewResponse: boolean
+  isAssigned: boolean
   isNewApplicationResponse: boolean
   enableViewHistory: boolean
   isChangeRequest: boolean
@@ -37,6 +38,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   previousReviewResponse,
   isNewApplicationResponse,
   isActiveReviewResponse,
+  isAssigned,
   enableViewHistory,
   isChangeRequest,
   isChanged,
@@ -54,7 +56,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
     ? 'ReReviewApplication'
     : isChangeRequest
     ? 'UpdateChangesRequested'
-    : isActiveReviewResponse
+    : isAssigned
     ? 'FirstReviewApplication'
     : 'NotReviewable'
 
