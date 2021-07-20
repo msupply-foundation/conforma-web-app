@@ -141,14 +141,16 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
     const { isFinalDecision } = assignment
     let reviewId = thisReview?.id as number
     if (thisReview?.current.reviewStatus == ReviewStatus.Draft)
-      return push(`${pathname}/${reviewId}?activeSections=${details.code}`)
+      return push(
+        `${pathname}/${reviewId}?activeSections=${isFinalDecision ? 'none' : details.code}`
+      )
 
     try {
       if (isFinalDecision)
         reviewId = (await remakeReview()).data?.createReview?.review?.id as number
       else if (thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
-      push(`${pathname}/${reviewId}?activeSections=${details.code}`)
+      push(`${pathname}/${reviewId}?activeSections=${isFinalDecision ? 'none' : details.code}`)
     } catch (e) {
       console.log(e)
       return setError(true)

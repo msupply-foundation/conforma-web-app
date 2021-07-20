@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Decision, ReviewStatus } from '../generated/graphql'
 import strings from '../constants'
-import { DecisionOption, ReviewDetails } from '../types'
+import { AssignmentDetails, DecisionOption, ReviewAssignment, ReviewDetails } from '../types'
 
 const initilDecisionOptions: DecisionOption[] = [
   {
@@ -32,8 +32,7 @@ const initilDecisionOptions: DecisionOption[] = [
 
 // hook used to manage state of options shown in review submit, as per type definition below
 type UseGetDecisionOptions = (
-  isLastLevel: boolean,
-  canSubmitReviewAs?: Decision | null,
+  assignment?: ReviewAssignment,
   thisReview?: ReviewDetails | null
 ) => {
   decisionOptions: DecisionOption[]
@@ -43,11 +42,8 @@ type UseGetDecisionOptions = (
   isDecisionError: boolean
 }
 
-const useGetDecisionOptions: UseGetDecisionOptions = (
-  isLastLevel,
-  canSubmitReviewAs,
-  thisReview
-) => {
+const useGetDecisionOptions: UseGetDecisionOptions = (assignment, thisReview) => {
+  const { isLastLevel, isFinalDecision, canSubmitReviewAs } = assignment as ReviewAssignment
   const [decisionOptions, setDecisionOptions] = useState<DecisionOption[]>(initilDecisionOptions)
   const [isDecisionError, setIsDecisionError] = useState(false)
 
@@ -62,6 +58,10 @@ const useGetDecisionOptions: UseGetDecisionOptions = (
       let value = false
       // if review is NOT DRAFT then use decision from DB (and make it the only one visible)
       if (!isDraft) isVisible = value = code === decisionInStructure
+      else if (isFinalDecision) {
+        isVisible = code === Decision.NonConform || code === Decision.Conform
+        value = false
+      }
       // if review IS DRAFT, can can submit review with non conform decision and reviewer has
       // ability to make a decsion, present them with NonConform or LOQ, both unchecked
       else if (canSubmitReviewAs === Decision.NonConform && reviewerNeedsToMakeDecision) {

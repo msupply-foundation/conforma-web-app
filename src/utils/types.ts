@@ -57,6 +57,7 @@ export {
   ReviewProgress,
   ConsolidationProgress,
   ReviewQuestion,
+  ReviewAssignment,
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
@@ -231,11 +232,7 @@ interface Filters {
 }
 
 interface FullStructure {
-  assignment?: {
-    canSubmitReviewAs?: Decision | null
-    isLastLevel: boolean
-    isFinalDecision: boolean
-  }
+  assignment?: ReviewAssignment
   thisReview?: ReviewDetails | null
   elementsById?: ElementsById
   lastValidationTimestamp?: number
@@ -336,6 +333,12 @@ interface ResponseFull {
 
 interface ResponsesByCode {
   [key: string]: ResponseFull
+}
+
+interface ReviewAssignment {
+  canSubmitReviewAs?: Decision | null
+  isLastLevel: boolean
+  isFinalDecision: boolean
 }
 
 type ReviewSectionComponentProps = {

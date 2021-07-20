@@ -26,11 +26,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
 
   const reviewDecision = thisReview?.reviewDecision
   const { decisionOptions, getDecision, setDecision, getAndSetDecisionError, isDecisionError } =
-    useGetDecisionOptions(
-      assignment?.isLastLevel || false,
-      assignment?.canSubmitReviewAs,
-      thisReview
-    )
+    useGetDecisionOptions(assignment, thisReview)
 
   return (
     <Form id="review-submit-area">
