@@ -136,6 +136,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
                 timeStatusCreated: review.timeStatusCreated,
               },
               reviewDecision: review.reviewDecisions.nodes[0], // this will be the latest, sorted in query
+              reviewer: reviewer as User,
             }
           : null,
       }

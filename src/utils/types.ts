@@ -356,6 +356,7 @@ interface ReviewDetails {
   id: number
   level: number
   reviewDecision?: ReviewDecision | null
+  reviewer: GraphQLUser
   current: ReviewStageAndStatus
 }
 

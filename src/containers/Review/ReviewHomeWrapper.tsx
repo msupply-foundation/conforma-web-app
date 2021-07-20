@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Dropdown, Label, Message } from 'semantic-ui-react'
+import { Container, Dropdown, Header, Icon, Label, Message } from 'semantic-ui-react'
 import Loading from '../../components/Loading'
 import ReviewHome from './ReviewHome'
 import { useUserState } from '../../contexts/UserState'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { AssignmentDetails, Filters, FullStructure } from '../../utils/types'
 import strings from '../../utils/constants'
-import { ReviewHeader, Stage } from '../../components/Review'
+import { Stage } from '../../components/Review'
+import { useRouter } from '../../utils/hooks/useRouter'
 import { ReviewAssignmentStatus } from '../../utils/generated/graphql'
 
 const ALL_REVIEWERS = 0
@@ -57,10 +58,17 @@ const ReviewHomeWrapper: React.FC<{
     ({ isLastLevel, current: { assignmentStatus } }) =>
       assignmentStatus === ReviewAssignmentStatus.Assigned && isLastLevel
   )[0] // TODO: Deal with case of more than one lastLevel in stage
+  const {
+    info: { template, org, name },
+  } = fullApplicationStructure
 
   return (
-    <>
-      <ReviewHeader applicationName={fullApplicationStructure.info.name} />
+    <Container id="review-area">
+      <ReviewHomeHeader
+        templateCode={template.code}
+        applicationName={name}
+        orgName={org?.name as string}
+      />
       <ReviewerAndStageSelection {...reviewerAndStageSelectionProps} />
       {filters && (
         <ReviewHome
@@ -70,7 +78,35 @@ const ReviewHomeWrapper: React.FC<{
           fullApplicationStructure={fullApplicationStructure}
         />
       )}
-    </>
+    </Container>
+  )
+}
+
+interface ReviewHomeProps {
+  templateCode: string
+  applicationName: string
+  orgName?: string
+}
+
+const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
+  templateCode,
+  applicationName,
+  orgName,
+}) => {
+  const { push } = useRouter()
+  return (
+    <div id="review-home-header">
+      <Label
+        className="simple-label clickable"
+        onClick={() => push(`/applications?type=${templateCode}`)}
+        icon={<Icon name="chevron left" className="dark-grey" />}
+      />
+      <Header
+        as="h2"
+        content={applicationName}
+        subheader={<Header as="h5" content={orgName || strings.TITLE_NO_ORGANISATION} />}
+      />
+    </div>
   )
 }
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Header, Icon, Label, Message, ModalProps } from 'semantic-ui-react'
+import { Button, Icon, Label, Message, ModalProps } from 'semantic-ui-react'
 import {
   Loading,
   ConsolidationSectionProgressBar,
@@ -8,6 +8,7 @@ import {
   SectionWrapper,
   ModalWarning,
 } from '../../components'
+import { ReviewByLabel, ConsolidationByLabel } from '../../components/Review/ReviewLabel'
 import {
   AssignmentDetails,
   FullStructure,
@@ -63,8 +64,20 @@ const ReviewPage: React.FC<{
   if (
     reviewAssignment?.reviewer?.id !== currentUser?.userId &&
     fullReviewStructure?.thisReview?.current.reviewStatus !== ReviewStatus.Submitted
-  )
-    return <Header>Review in Progress</Header>
+  ) {
+    const {
+      info: {
+        name,
+        current: { stage },
+      },
+    } = fullReviewStructure
+    return (
+      <>
+        <ReviewHeader applicationName={name} stage={stage} />
+        <Label className="simple-label" content={strings.LABEL_REVIEW_IN_PROGRESS} />
+      </>
+    )
+  }
 
   const {
     sections,
@@ -103,11 +116,32 @@ const ReviewPage: React.FC<{
   const isMissingReviewResponses = (section: string): boolean =>
     attemptSubmission && firstIncompleteReviewPage?.sectionCode === section
 
+  const isAssignedToCurrentUser = Object.values(sections).some(
+    (section) => section.assignment?.isAssignedToCurrentUser
+  )
+
+  const isConsolidation = Object.values(sections).some(
+    (section) => section.assignment?.isConsolidation
+  )
+
   return error ? (
     <Message error title={strings.ERROR_GENERIC} list={[error]} />
   ) : (
     <>
-      <ReviewHeader applicationName={name} />
+      <ReviewHeader applicationName={name} stage={stage} />
+      <div style={{ display: 'flex' }}>
+        {isConsolidation ? (
+          isAssignedToCurrentUser ? (
+            <ConsolidationByLabel />
+          ) : (
+            <ConsolidationByLabel user={thisReview?.reviewer} />
+          )
+        ) : isAssignedToCurrentUser ? (
+          <ReviewByLabel />
+        ) : (
+          <ReviewByLabel user={thisReview?.reviewer} />
+        )}
+      </div>
       <div id="application-summary-content">
         {Object.values(sections).map((section) => (
           <SectionWrapper
