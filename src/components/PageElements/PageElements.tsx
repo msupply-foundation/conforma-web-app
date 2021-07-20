@@ -215,6 +215,7 @@ const PageElements: React.FC<PageElementProps> = ({
                 reviewResponse: thisReviewLatestResponse,
                 previousReviewResponse: thisReviewPreviousResponse,
                 isActiveReviewResponse: !!isActiveReviewResponse,
+                isAssigned: !!isAssigned,
                 enableViewHistory,
                 summaryViewProps: summaryViewProps,
                 stageNumber: applicationData.current.stage.number,
@@ -234,7 +235,6 @@ const PageElements: React.FC<PageElementProps> = ({
                       isNewApplicationResponse={!!isNewApplicationResponse}
                       isChangeRequest={!!isChangeRequest}
                       isChanged={!!isChanged}
-                      isAssigned={!!isAssigned}
                     />
                   )}
                 </RenderElementWrapper>
