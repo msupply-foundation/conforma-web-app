@@ -25,7 +25,8 @@ const reviewedLowerLevelUpdates = (element: PageElement) =>
 
 const generatePageConsolidationProgress = (page: Page) => {
   const totalReviewable = page.state.filter(
-    ({ thisReviewLatestResponse, element }) => !!thisReviewLatestResponse && element.isVisible
+    ({ isAssigned, thisReviewLatestResponse, element }) =>
+      (isAssigned || !!thisReviewLatestResponse) && element.isVisible
   )
 
   const totalActive = totalReviewable.filter(activeThisReview)
