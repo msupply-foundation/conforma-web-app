@@ -2,40 +2,43 @@ import React, { ReactNode } from 'react'
 import { Icon, Label } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import { User } from '../../utils/generated/graphql'
+interface ReviewLabelProps {
+  reviewer?: User
+  message?: string
+}
 
-export const CurrentReviewInProgressLabel: React.FC = () => (
+export const ReviewInProgressLabel: React.FC<ReviewLabelProps> = ({ reviewer }) =>
+  reviewer ? (
+    <LabelWrapper labelContent={`${strings.LABEL_REVIEW_REVIEWED_BY} `} reviewer={reviewer} />
+  ) : (
+    <LabelWrapper
+      labelContent={strings.LABEL_ASSIGNED_TO_YOU}
+      iconNode={<Icon name="circle" size="tiny" color="blue" />}
+      showAsRelevantInfo={true}
+    />
+  )
+
+export const ReviewLockedLabel: React.FC<ReviewLabelProps> = ({ reviewer }) => (
   <LabelWrapper
-    labelContent={strings.LABEL_ASSIGNED_TO_YOU}
-    iconNode={<Icon name="circle" size="tiny" color="blue" />}
-    showAsRelevantInfo={true}
-  />
-)
-
-export const CurrentSelfAssignmentLabel: React.FC = () => (
-  <LabelWrapper labelContent={strings.LABEL_ASSIGNMENT_SELF} />
-)
-
-export const CurrentReviewLockedLabel: React.FC = () => (
-  <LabelWrapper
-    labelContent={`${strings.LABEL_ASSIGNMENT_LOCKED} ${strings.REVIEW_FILTER_YOURSELF}`}
-    iconNode={<Icon name="ban" size="small" color="pink" />}
-  />
-)
-
-export const TheirReviewLockedLabel: React.FC<User> = (reviewer) => (
-  <LabelWrapper
-    labelContent={`${strings.LABEL_ASSIGNMENT_LOCKED} `}
+    labelContent={`${strings.LABEL_ASSIGNMENT_LOCKED}${
+      reviewer ? ' ' : strings.REVIEW_FILTER_YOURSELF
+    }`}
     iconNode={<Icon name="ban" size="small" color="pink" />}
     reviewer={reviewer}
   />
 )
 
-export const TheirSelfAssignmentLabel: React.FC<User> = (reviewer) => (
-  <LabelWrapper labelContent={`${strings.LABEL_ASSIGNMENT_AVAILABLE} `} reviewer={reviewer} />
+export const ReviewLabel: React.FC<ReviewLabelProps> = ({ reviewer, message }) => (
+  <LabelWrapper labelContent={message || strings.REVIEW_NOT_FOUND} reviewer={reviewer} />
 )
 
-export const TheirReviewInProgressLabel: React.FC<User> = (reviewer) => (
-  <LabelWrapper labelContent={`${strings.LABEL_REVIEW_REVIEWED_BY} `} reviewer={reviewer} />
+export const ReviewSelfAssignmentLabel: React.FC<ReviewLabelProps> = ({ reviewer }) => (
+  <LabelWrapper
+    labelContent={
+      reviewer ? `${strings.LABEL_ASSIGNMENT_AVAILABLE} ` : strings.LABEL_ASSIGNMENT_SELF
+    }
+    reviewer={reviewer}
+  />
 )
 
 export const ReviewByLabel: React.FC<{ user?: User }> = ({ user }) => {

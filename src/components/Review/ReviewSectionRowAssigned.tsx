@@ -1,17 +1,18 @@
 import React from 'react'
 import { Grid } from 'semantic-ui-react'
+import strings from '../../utils/constants'
+import { ReviewStatus } from '../../utils/generated/graphql'
 import { ReviewAction, ReviewSectionComponentProps } from '../../utils/types'
 import {
-  CurrentSelfAssignmentLabel,
-  TheirSelfAssignmentLabel,
-  CurrentReviewInProgressLabel,
-  TheirReviewInProgressLabel,
-  CurrentReviewLockedLabel,
-  TheirReviewLockedLabel,
+  ReviewLabel,
+  ReviewLockedLabel,
+  ReviewSelfAssignmentLabel,
+  ReviewInProgressLabel,
 } from './ReviewLabel'
 
 const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
   isAssignedToCurrentUser,
+  thisReview,
   action,
   assignment,
 }) => {
@@ -19,22 +20,34 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
     switch (action) {
       case ReviewAction.canSelfAssign:
         return isAssignedToCurrentUser ? (
-          <CurrentSelfAssignmentLabel />
+          <ReviewSelfAssignmentLabel />
         ) : (
-          <TheirSelfAssignmentLabel {...assignment.reviewer} />
+          <ReviewSelfAssignmentLabel reviewer={assignment.reviewer} />
         )
       case ReviewAction.canSelfAssignLocked:
       case ReviewAction.canContinueLocked:
         return isAssignedToCurrentUser ? (
-          <CurrentReviewLockedLabel />
+          <ReviewLockedLabel />
         ) : (
-          <TheirReviewLockedLabel {...assignment.reviewer} />
+          <ReviewLockedLabel reviewer={assignment.reviewer} />
+        )
+      case ReviewAction.canView:
+        return isAssignedToCurrentUser ? (
+          thisReview?.current.reviewStatus === ReviewStatus.Submitted ? (
+            <ReviewLabel
+              message={`${strings.REVIEW_SUBMITTED_BY} ${strings.REVIEW_FILTER_YOURSELF}`}
+            />
+          ) : (
+            <ReviewLabel message={strings.REVIEW_NOT_READY} />
+          )
+        ) : (
+          <ReviewLabel message={`${strings.REVIEW_SUBMITTED_BY} `} reviewer={assignment.reviewer} />
         )
       default:
         return isAssignedToCurrentUser ? (
-          <CurrentReviewInProgressLabel />
+          <ReviewInProgressLabel />
         ) : (
-          <TheirReviewInProgressLabel {...assignment.reviewer} />
+          <ReviewInProgressLabel reviewer={assignment.reviewer} />
         )
     }
   }
