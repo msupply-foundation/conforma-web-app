@@ -927,7 +927,7 @@ a:hover {
 // Layouts
 #dashboard {
   .flex-column();
-  width: 100%;
+
 
   .template-category {
     .flex-column();
