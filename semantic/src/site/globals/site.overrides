@@ -354,6 +354,14 @@ a:hover {
   padding: 0px;
 }
 
+.review-section-row {
+  .section-single-row-box-container();
+
+  .assigned-column {
+    text-align: center;
+  }
+}
+
 .reviewer-dropdown {
   border: 1px solid @headersInteractiveMed;
   border-radius: 3px;
