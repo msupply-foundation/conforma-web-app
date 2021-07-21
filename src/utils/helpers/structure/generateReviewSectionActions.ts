@@ -105,13 +105,14 @@ const generateReviewSectionActions: GenerateSectionActions = ({
   thisReview,
   currentUserId,
 }) => {
-  const isAssignedToCurrentUser = reviewer.id === currentUserId
   const isConsolidation = level > 1 || isFinalDecision
 
   sections.forEach((section) => {
     const { totalReviewable, totalPendingReview, totalActive } = isConsolidation
       ? (section.consolidationProgress as ConsolidationProgress)
       : (section.reviewProgress as ReviewProgress)
+
+    const isAssignedToCurrentUser = reviewer.id === currentUserId && totalReviewable > 0
 
     const isReviewable = (totalReviewable || 0) > 0
 

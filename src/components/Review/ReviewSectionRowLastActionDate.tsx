@@ -12,6 +12,8 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
 }) => {
   const getContent = () => {
     switch (action) {
+      case ReviewAction.unknown:
+        return null
       case ReviewAction.canContinue: {
         return (
           <LastDate

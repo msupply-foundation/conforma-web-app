@@ -4,6 +4,7 @@ import {
   Loading,
   ConsolidationSectionProgressBar,
   ReviewHeader,
+  ReviewInProgressLabel,
   ReviewSectionProgressBar,
   SectionWrapper,
   ModalWarning,
@@ -199,23 +200,27 @@ const ReviewPage: React.FC<{
 }
 
 const SectionRowStatus: React.FC<SectionState> = (section) => {
-  const { assignment } = section
+  const { assignment, reviewProgress, consolidationProgress } = section
   const { isConsolidation, isReviewable, isAssignedToCurrentUser } = assignment as SectionAssignment
 
-  if (!isAssignedToCurrentUser)
-    return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
-  if (!isReviewable)
-    return (
-      <Label
-        icon={<Icon name="circle" size="mini" color="blue" />}
-        content={strings.LABEL_ASSIGNED_TO_YOU}
-      />
-    )
-  if (isConsolidation && section.consolidationProgress)
-    return <ConsolidationSectionProgressBar consolidationProgress={section.consolidationProgress} />
-  if (section.reviewProgress)
-    return <ReviewSectionProgressBar reviewProgress={section.reviewProgress} />
-  return null // Unexpected
+  console.log(isConsolidation, isReviewable, isAssignedToCurrentUser)
+
+  if (isReviewable) {
+    if (!isAssignedToCurrentUser)
+      return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
+    if (isConsolidation) {
+      const totalDone =
+        (consolidationProgress?.totalConform || 0) + (consolidationProgress?.totalNonConform || 0)
+      if (totalDone > 0)
+        return <ConsolidationSectionProgressBar consolidationProgress={consolidationProgress} />
+    } else {
+      const totalDone = (reviewProgress?.doneConform || 0) + (reviewProgress?.doneNonConform || 0)
+      if (totalDone > 0) return <ReviewSectionProgressBar reviewProgress={reviewProgress} />
+    }
+    return <ReviewInProgressLabel />
+  }
+  // else: not reviewable
+  return null
 }
 
 interface ApproveAllButtonProps {

@@ -18,6 +18,8 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
 }) => {
   const getLabel = () => {
     switch (action) {
+      case ReviewAction.unknown:
+        return null
       case ReviewAction.canSelfAssign:
         return isAssignedToCurrentUser ? (
           <ReviewSelfAssignmentLabel />
@@ -40,8 +42,10 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
           ) : (
             <ReviewLabel message={strings.REVIEW_NOT_READY} />
           )
-        ) : (
+        ) : thisReview?.current.reviewStatus === ReviewStatus.Submitted ? (
           <ReviewLabel message={`${strings.REVIEW_SUBMITTED_BY} `} reviewer={assignment.reviewer} />
+        ) : (
+          <ReviewInProgressLabel reviewer={assignment.reviewer} />
         )
       default:
         return isAssignedToCurrentUser ? (
@@ -51,7 +55,7 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
         )
     }
   }
-  return <Grid.Column className="padding-zero">{getLabel()}</Grid.Column>
+  return <Grid.Column className="assigned-column">{getLabel()}</Grid.Column>
 }
 
 export default ReviewSectionRowAssigned

@@ -20,8 +20,8 @@ export const ReviewInProgressLabel: React.FC<ReviewLabelProps> = ({ reviewer }) 
 
 export const ReviewLockedLabel: React.FC<ReviewLabelProps> = ({ reviewer }) => (
   <LabelWrapper
-    labelContent={`${strings.LABEL_ASSIGNMENT_LOCKED}${
-      reviewer ? ' ' : strings.REVIEW_FILTER_YOURSELF
+    labelContent={`${strings.LABEL_ASSIGNMENT_LOCKED} ${
+      reviewer ? '' : strings.REVIEW_FILTER_YOURSELF
     }`}
     iconNode={<Icon name="ban" size="small" color="pink" />}
     reviewer={reviewer}
