@@ -215,7 +215,6 @@ const PageElements: React.FC<PageElementProps> = ({
                 reviewResponse: thisReviewLatestResponse,
                 previousReviewResponse: thisReviewPreviousResponse,
                 isActiveReviewResponse: !!isActiveReviewResponse,
-                isAssigned: !!isAssigned,
                 enableViewHistory,
                 summaryViewProps: summaryViewProps,
                 stageNumber: applicationData.current.stage.number,
@@ -227,6 +226,7 @@ const PageElements: React.FC<PageElementProps> = ({
                     <ConsolidateReviewDecision
                       {...props}
                       isNewReviewResponse={!!isNewReviewResponse}
+                      isAssigned={!!isAssigned}
                       originalReviewResponse={latestOriginalReviewResponse}
                     />
                   ) : (

@@ -68,8 +68,8 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   return (
     <>
       {canRenderRow && (
-        <Grid columns="equal" className="section-single-row-box-container" verticalAlign="middle">
-          <Grid.Row>
+        <Grid className="section-single-row-box-container" verticalAlign="middle">
+          <Grid.Row columns={4}>
             <ReviewSectionRowAssigned {...props} />
             <ReviewSectionRowLastActionDate {...props} />
             <ReviewSectionRowProgress {...props} />
