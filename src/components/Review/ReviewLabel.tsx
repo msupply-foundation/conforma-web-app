@@ -9,7 +9,7 @@ interface ReviewLabelProps {
 
 export const ReviewInProgressLabel: React.FC<ReviewLabelProps> = ({ reviewer }) =>
   reviewer ? (
-    <LabelWrapper labelContent={`${strings.LABEL_REVIEW_REVIEWED_BY} `} reviewer={reviewer} />
+    <LabelWrapper labelContent={`${strings.REVIEW_IN_PROGRESS_BY} `} reviewer={reviewer} />
   ) : (
     <LabelWrapper
       labelContent={strings.LABEL_ASSIGNED_TO_YOU}
@@ -43,7 +43,7 @@ export const ReviewSelfAssignmentLabel: React.FC<ReviewLabelProps> = ({ reviewer
 
 export const ReviewByLabel: React.FC<{ user?: User }> = ({ user }) => {
   const doneByYourself = !user
-  const reviewLabel = `${strings.LABEL_REVIEW_REVIEWED_BY} ${
+  const reviewLabel = `${strings.REVIEW_IN_PROGRESS_BY} ${
     doneByYourself ? strings.ASSIGNMENT_YOURSELF : ''
   }`
   return <LabelWrapper labelContent={reviewLabel} reviewer={user} />
@@ -51,7 +51,7 @@ export const ReviewByLabel: React.FC<{ user?: User }> = ({ user }) => {
 
 export const ConsolidationByLabel: React.FC<{ user?: User }> = ({ user }) => {
   const doneByYourself = !user
-  const consolidationLabel = `${strings.LABEL_REVIEW_CONSOLIDATION_BY} ${
+  const consolidationLabel = `${strings.REVIEW_CONSOLIDATION_BY} ${
     doneByYourself ? strings.ASSIGNMENT_YOURSELF : ''
   }`
   return <LabelWrapper labelContent={consolidationLabel} reviewer={user} />
