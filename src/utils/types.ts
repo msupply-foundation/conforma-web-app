@@ -43,6 +43,7 @@ export {
   EvaluatorParameters,
   Filters,
   FullStructure,
+  HistoryElement,
   LooseString,
   MethodRevalidate,
   MethodToCallProps,
@@ -65,6 +66,7 @@ export {
   SetStrictSectionPage,
   SortQuery,
   StageAndStatus,
+  StageDetails,
   TemplateDetails,
   TemplateCategoryDetails,
   TemplatePermissions,
@@ -110,27 +112,26 @@ interface ApplicationProps {
   strictSectionPage?: SectionAndPage | null
 }
 
-interface ApplicationStage {
-  id: number
-  name: string
-  number: number
-  colour: string
-}
-
 interface AssignmentDetails {
   id: number
-  status: ReviewAssignmentStatus | null
-  timeUpdated: Date
   level: number
   reviewerId?: number
   review: ReviewDetails | null
   reviewer: GraphQLUser
+  current: AssignmentStageAndStatus
   totalAssignedQuestions: number
-  stage: ApplicationStage
   reviewQuestionAssignments: ReviewQuestionAssignment[]
   isCurrentUserAssigner: boolean
   assignableSectionRestrictions: (string | null)[]
   isCurrentUserReviewer: boolean
+}
+
+interface AssignmentStageAndStatus {
+  stage: StageDetails
+  assignmentStatus: ReviewAssignmentStatus | null
+  timeStageCreated: Date
+  timeStatusUpdated: Date
+  // Doesn't store ReviewStatus
 }
 
 interface BasicStringObject {
@@ -242,6 +243,14 @@ interface FullStructure {
   sortedPages?: Page[]
 }
 
+interface HistoryElement {
+  author?: string
+  title: string
+  message: string
+  timeUpdated: Date
+  reviewerComment?: string
+}
+
 interface IGraphQLConnection {
   fetch: Function
   endpoint: string
@@ -281,6 +290,7 @@ type PageElement = {
   latestOriginalReviewResponse?: ReviewResponse
   previousOriginalReviewResponse?: ReviewResponse
   isNewApplicationResponse?: boolean
+  isNewReviewResponse?: boolean
   review?: ReviewQuestionDecision
   isPendingReview?: boolean
   reviewQuestionAssignmentId: number
@@ -288,6 +298,7 @@ type PageElement = {
   isChangeRequest?: boolean
   isChanged?: boolean
   isActiveReviewResponse?: boolean
+  enableViewHistory: boolean
 }
 
 interface ApplicationProgress {
@@ -333,12 +344,11 @@ type ReviewSectionComponentProps = {
 
 interface ReviewDetails {
   id: number
-  status: ReviewStatus
-  timeStatusCreated?: Date
-  stage: ApplicationStage
   isLastLevel: boolean
   level: number
   reviewDecision?: ReviewDecision | null
+  reviewer: GraphQLUser
+  current: ReviewStageAndStatus
 }
 
 interface ReviewQuestion {
@@ -352,6 +362,13 @@ interface ReviewQuestionDecision {
   id: number
   comment?: string | null
   decision?: ReviewResponseDecision | null
+}
+
+interface ReviewStageAndStatus {
+  stage: StageDetails
+  reviewStatus: ReviewStatus
+  timeStageCreated: Date
+  timeStatusCreated: Date
 }
 
 type SectionAndPage = {
@@ -371,13 +388,13 @@ interface BaseReviewProgress {
   totalReviewable: number
   totalPendingReview: number
   totalActive: number // review or application responses that are in progress (as oppose to awaiting review to be started)
+  totalNewReviewable: number // new reviable are updates from re-submission (after changes requested to applicant or lower level reviewer)
 }
 
 interface ReviewProgress extends BaseReviewProgress {
   doneConform: number
   doneNonConform: number
-  doneNewReviewable: number
-  totalNewReviewable: number
+  doneNewReviewable: number // Review of applicant re-submission
 }
 
 interface ConsolidationProgress extends BaseReviewProgress {
@@ -387,6 +404,7 @@ interface ConsolidationProgress extends BaseReviewProgress {
   doneActiveDisagree: number
   doneActiveAgreeConform: number
   doneActiveAgreeNonConform: number
+  doneNewReviewable: number // Review of reviewer re-submission
   totalConform: number
   totalNonConform: number
 }
@@ -399,6 +417,7 @@ enum ReviewAction {
   canSelfAssign = 'CAN_SELF_ASSIGN',
   canSelfAssignLocked = 'CAN_SELF_ASSIGN_LOCKED',
   canStartReview = 'CAN_START_REVIEW',
+  canReStartReview = 'CAN_RE_START_REVIEW', // User for second review (for consolidator)
   canContinueLocked = 'CAN_CONTINUE_LOCKED',
   canUpdate = 'CAN_UPDATE',
   unknown = 'UNKNOWN',
@@ -442,16 +461,17 @@ interface SortQuery {
 }
 
 interface StageAndStatus {
-  stage: ApplicationStage
+  stage: StageDetails
   status: ApplicationStatus
-  date: Date
+  timeStageCreated: Date
+  timeStatusCreated: Date
 }
 
 interface StageDetails {
-  number: number
   id: number
-  title: string
-  colour?: string
+  name: string
+  number: number
+  colour: string
   description?: string
 }
 
@@ -463,12 +483,14 @@ interface TemplateCategoryDetails {
 interface TemplateInList {
   id: number
   name: string
+  namePlural?: string
   code: string
   templateCategory: TemplateCategoryDetails
   permissions: PermissionPolicyType[]
   hasApplyPermission: boolean
   hasNonApplyPermissions: boolean
   filters: Filter[]
+  totalApplications: number
 }
 
 interface TemplateDetails {

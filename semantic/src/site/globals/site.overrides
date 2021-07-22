@@ -43,10 +43,6 @@ a:hover {
   color: @attention;
 }
 
-//.information {
-//  color: @information;
-//}
-
 .clickable {
   cursor: pointer;
 }
@@ -274,7 +270,6 @@ a:hover {
   max-width: 350px;
   background-color: transparent;
   font-size: @fontSmall;
-  color: @black;
   font-weight: @regularWeight;
 }
 
@@ -304,7 +299,7 @@ a:hover {
   flex-wrap: wrap;
   min-height: 30px; // TODO: Need to be updated for mobile
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 // Inner steps line (left side - icon & header)
@@ -347,6 +342,12 @@ a:hover {
   color: @headersInteractiveMed;
   font-size: @fontSmall;
   font-weight: @semiboldWeight;
+}
+
+#review-home-header {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
 }
 
 .ui.segment.review-application-segment {
@@ -427,12 +428,6 @@ a:hover {
   overflow: scroll;
 }
 
-#history-panel {
-  // Temp - replace when real History Panel built
-  border: 1px solid lightgray;
-  height: 250px;
-}
-
 /*--------------------------------
       Application List
 ---------------------------------*/
@@ -498,9 +493,13 @@ a:hover {
   padding-right: 0;
 }
 
-// Seperation between Section title and form elements
 .form-area {
+  // Seperation between Section title and form elements
   margin-top: 30px;
+  // When SummaryView elements are displayed in application form
+  .summary-page-element-container {
+    margin-bottom: @summaryViewElementSpacing !important;
+  }
 }
 
 // Contains form-element and help-tips
@@ -593,7 +592,7 @@ a:hover {
 // Element plugins
 
 .element-application-view {
-  margin-bottom: 20px !important;
+  margin-bottom: @applicationViewElementSpacing !important;
   .reviewer-comment {
     font-size: 0.9em;
     display: none;
@@ -674,12 +673,15 @@ a:hover {
 
 // Note: these layout ids/classes also shared with Review page
 
-#application-summary {
+#application-summary,
+#review-page-summary {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: @applicationSummaryWidth;
   background-color: @surfacesWhite;
+  border: 2px solid @surfacesMed;
+  border-radius: @borderRadius;
   padding-left: 20px;
   padding-right: 20px;
 }
@@ -687,6 +689,11 @@ a:hover {
 #application-summary-header {
   padding-top: 30px;
   padding-bottom: 20px;
+  text-align: center;
+
+  h2.ui.header {
+    padding-top: 10px;
+  }
 }
 
 #application-summary-content {
@@ -705,6 +712,7 @@ a:hover {
 
 .summary-section {
   background-color: @surfacesLight;
+  border: 2px solid @surfacesMed;
   border-radius: @borderRadius;
   padding: 0px;
   margin-bottom: 15px;
@@ -767,17 +775,18 @@ a:hover {
   }
 
   .response-container {
-    .flex-row-center();
+    .flex-row();
     width: 100%;
     padding: 14px;
     padding-right: 20px;
     padding-left: 20px;
     background: @surfacesWhite;
+    border: 2px solid @surfacesMed;
+    border-top: none;
     margin: 0px;
-    margin-bottom: 2px;
 
     &.information {
-      >div{
+      > div {
         width: 100%;
       }
     }
@@ -788,19 +797,19 @@ a:hover {
       }
     }
 
-    .review-response-content {
-      .flex-column();
+    .response-element-content {
+      .flex-row();
       flex-grow: 1;
 
-      .decision-container {
-        .flex-row();
-        align-items: center;
+      .author-name {
+        width: 20%;
+        padding: 0px;
+        margin: 0px;
+        margin-right: 10px;
+      }
 
-        .reviewer-name {
-          padding: 0px;
-          margin: 0px;
-          margin-right: 10px;
-        }
+      .decision-container {
+        align-items: center;
 
         p {
           line-height: unset;
@@ -809,6 +818,7 @@ a:hover {
         .decision {
           margin: 0px;
           margin-right: 10px;
+          margin-bottom: 10px;
         }
 
         &.positive-decision {
@@ -836,6 +846,10 @@ a:hover {
         i {
           margin-right: 10px;
         }
+
+        .date-indicator {
+          margin-left: 10px;
+        }
       }
 
       // If comment is present add margin, if it's just commen or decision don't add margin
@@ -852,6 +866,7 @@ a:hover {
   }
 
   > :first-child {
+    border-top: 2px solid @surfacesMed;
     border-top-left-radius: @borderRadius;
     border-top-right-radius: @borderRadius;
   }
@@ -860,6 +875,25 @@ a:hover {
     border-bottom-left-radius: @borderRadius;
     border-bottom-right-radius: @borderRadius;
   }
+}
+
+.history-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px;
+  padding-right: 20px;
+  padding-left: 20px;
+  background: @surfacesWhite;
+  border-bottom-left-radius: @borderRadius;
+  border-bottom-right-radius: @borderRadius;
+  border: 2px solid @surfacesMed;
+  border-top: none;
+}
+
+.blue-border {
+  border: 2px solid @interactiveHigh;
+  border-radius: 10px !important;
+  overflow: clip;
 }
 
 .updated-label {
@@ -919,12 +953,12 @@ a:hover {
 
 // Layouts
 #dashboard {
-  .flex-row-center();
-  flex-wrap: wrap;
+  .flex-column();
+
 
   .template-category {
-    .flex-column-center();
-    align-items: center;
+    .flex-column();
+    flex-wrap: wrap;
 
     .title {
       .flex-row();
@@ -933,94 +967,84 @@ a:hover {
   }
 
   .templates {
-    .flex-row-center();
+    .flex-row();
     flex-wrap: wrap;
-    align-items: center;
   }
 
   .template {
-    .flex-column();
+    .flex-row();
 
-    .title {
-      .flex-row-center();
-      align-items: start;
+    .content {
+      justify-content: space-between;
+      .header {
+        .flex-row-center();
+        align-items: start;
+      }
+
+      .filters {
+        .flex-column();
+        flex-grow: 1;
+      }
+
+      .filter {
+        display: flex;
+        align-items: center;
+      }
     }
   }
 
-  .filters {
-    .flex-column();
-    flex-grow: 1;
-  }
-
-  .filter {
-    display: flex;
-    align-items: center;
-  }
-
-  .view-all-area {
-    display: flex;
-    max-width: 100%;
-  }
-
-  .view-all {
-    .flex-row-center();
-    align-items: center;
+  .no-applications {
     text-align: center;
-    flex-grow: 1;
-
-    div {
-      display: flex;
-      align-items: center;
+    .label {
+      width: 100%;
     }
   }
 }
 
 // Margin and padding
 #dashboard {
+  .template-category {
+    .title {
+      margin-left: 10px;
+      .header {
+        margin: 10px;
+      }
+    }
+
+    .templates {
+      padding-bottom: 10px;
+    }
+  }
   .template {
-    margin: 15px;
-    max-width: 330px;
+    margin: 0px 10px 5px 0px;
+    width: 330px;
+    padding: 10px;
+    justify-content: space-between;
+    border: 2px solid @surfacesDark;
     border-radius: @borderRadius;
     background-color: @surfacesWhite;
-    box-shadow: @templateBoxShadow;
 
-    .title {
+    .content {
+      min-height: 65px;
+    }
+
+    .button {
       padding: 10px;
-      padding-bottom: 3px;
-
-      .header {
-        margin: 2px;
-      }
+      width: 70px;
     }
-  }
 
-  .template-category {
-    margin: 10px;
-
-    .title {
-      a {
-        margin-left: 10px;
+    .filters {
+      margin: 2px;
+      .strong-label {
+        padding-top: 0px;
       }
-
-      .header {
-        margin: 2px;
+      .label {
+        padding-left: 0px !important;
+        .icon {
+          margin-left: 5px;
+          margin-right: 0px;
+        }
       }
-    }
-  }
-
-  .filters {
-    margin: 5px;
-    padding: 3px;
-  }
-
-  .view-all {
-    padding: 5px;
-    font-weight: @semiboldWeight;
-    color: grey !important;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-
-    i {
-      padding-right: 6px;
     }
   }
 }
@@ -1056,13 +1080,12 @@ a:hover {
   .summary-page-element {
     margin: 10px;
   }
-  
+
   .detail-container {
     .flex-row();
     align-items: center;
     flex-wrap: 1;
   }
-
 }
 
 /*--------------------------------
@@ -1161,6 +1184,14 @@ a:hover {
 
 .information-colour {
   color: @information !important;
+}
+
+.success-colour {
+  color: @success !important;
+}
+
+.error-colour {
+  color: @attention !important;
 }
 
 .interactive-color {

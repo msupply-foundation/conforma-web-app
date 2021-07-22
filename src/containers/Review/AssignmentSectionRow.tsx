@@ -45,7 +45,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     <Grid className="section-single-row-box-container">
       <Grid.Row>
         <Grid.Column className="centered-flex-box-row">
-          <Label className="simple-label" content={strings.LABEL_REVIEWED_BY} />
+          <Label className="simple-label" content={strings.LABEL_REVIEW_REVIEWED_BY} />
           <Dropdown
             className="reviewer-dropdown"
             options={options}
@@ -95,7 +95,7 @@ const getAssignmentOptions = ({
   // This could differ from currentUserAssignable list because self assignable assignments don't have assigner
   const currentlyAssigned = assignments.find(
     (assignment) =>
-      assignment.status === ReviewAssignmentStatus.Assigned &&
+      assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned &&
       matchAssignmentToSection(assignment, sectionCode)
   )
 
