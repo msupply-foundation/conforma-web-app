@@ -75,7 +75,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [open, setOpen] = useState(false)
   const [inputError, setInputError] = useState(false)
 
-  const [currentResponseElementsState, setCurrentResponseElementsState] = useState<any>()
+  const [currentResponseElementsState, setCurrentResponseElementsState] =
+    useState<{ [key: string]: ElementState }>()
 
   useEffect(() => {
     buildElements(
