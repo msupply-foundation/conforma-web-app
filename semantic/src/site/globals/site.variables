@@ -51,6 +51,12 @@
 @activeCommentBackground: azure;
 //
 @boxShadowColor: #d4d4d5;
+@fullyTransperant: rgba(0,0,0,0);
+
+// For date filters
+@weekDayHeaderColor: rgba(0,0,0, 0.5);
+@selectedDayColor: rgb(153, 183, 249);
+@dateFilterLightBlue: rgb(222, 232, 254);
 
 /*------------------------
       Headers and Text
@@ -170,3 +176,7 @@
 
 // Box shadow -- used in Dashboard
 @templateBoxShadow: 0 1px 3px 0 @boxShadowColor, 0 0 0 1px @boxShadowColor;
+
+// Spacing for elements in Application Form
+@applicationViewElementSpacing: 20px;
+@summaryViewElementSpacing: @applicationViewElementSpacing;
