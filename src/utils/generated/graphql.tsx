@@ -177,6 +177,11 @@ export type Query = Node & {
   verificationByUniqueId?: Maybe<Verification>;
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
   applicationList?: Maybe<ApplicationListShapesConnection>;
+  applicationListFilterApplicant?: Maybe<ApplicationListFilterApplicantConnection>;
+  applicationListFilterAssigner?: Maybe<ApplicationListFilterAssignerConnection>;
+  applicationListFilterOrganisation?: Maybe<ApplicationListFilterOrganisationConnection>;
+  applicationListFilterReviewer?: Maybe<ApplicationListFilterReviewerConnection>;
+  applicationListFilterStage?: Maybe<ApplicationListFilterStageConnection>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
   assignedQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignerList?: Maybe<AssignerListConnection>;
@@ -1208,6 +1213,70 @@ export type QueryApplicationListArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryApplicationListFilterApplicantArgs = {
+  applicant?: Maybe<Scalars['String']>;
+  templateCode?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<StringFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationListFilterAssignerArgs = {
+  assigner?: Maybe<Scalars['String']>;
+  templateCode?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<StringFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationListFilterOrganisationArgs = {
+  organisation?: Maybe<Scalars['String']>;
+  templateCode?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<StringFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationListFilterReviewerArgs = {
+  reviewer?: Maybe<Scalars['String']>;
+  templateCode?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<StringFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationListFilterStageArgs = {
+  templateCode?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<StringFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryApplicationStatusHistoryApplicationIdArgs = {
   applicationStageHistoryId?: Maybe<Scalars['Int']>;
 };
@@ -2179,6 +2248,8 @@ export type TemplateFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `name` field. */
   name?: Maybe<StringFilter>;
+  /** Filter by the object’s `namePlural` field. */
+  namePlural?: Maybe<StringFilter>;
   /** Filter by the object’s `code` field. */
   code?: Maybe<StringFilter>;
   /** Filter by the object’s `isLinear` field. */
@@ -2796,6 +2867,8 @@ export type TemplatePermissionFilter = {
   allowedSections?: Maybe<StringListFilter>;
   /** Filter by the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<BooleanFilter>;
   /** Filter by the object’s `stageNumber` field. */
   stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `levelNumber` field. */
@@ -3229,6 +3302,8 @@ export type ApplicationResponseFilter = {
   templateElementId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ApplicationResponseStatusFilter>;
   /** Filter by the object’s `value` field. */
@@ -3324,6 +3399,8 @@ export type ReviewResponseFilter = {
   originalReviewResponseId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewId` field. */
   reviewId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `timeCreated` field. */
   timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `timeUpdated` field. */
@@ -4213,10 +4290,6 @@ export type FilterFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `code` field. */
   code?: Maybe<StringFilter>;
-  /** Filter by the object’s `iconColor` field. */
-  iconColor?: Maybe<StringFilter>;
-  /** Filter by the object’s `icon` field. */
-  icon?: Maybe<StringFilter>;
   /** Filter by the object’s `title` field. */
   title?: Maybe<StringFilter>;
   /** Filter by the object’s `query` field. */
@@ -4426,6 +4499,7 @@ export type Template = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -4581,6 +4655,8 @@ export enum TemplatesOrderBy {
   IdDesc = 'ID_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
+  NamePluralAsc = 'NAME_PLURAL_ASC',
+  NamePluralDesc = 'NAME_PLURAL_DESC',
   CodeAsc = 'CODE_ASC',
   CodeDesc = 'CODE_DESC',
   IsLinearAsc = 'IS_LINEAR_ASC',
@@ -4607,6 +4683,8 @@ export type TemplateCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `name` field. */
   name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `namePlural` field. */
+  namePlural?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `code` field. */
   code?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `isLinear` field. */
@@ -5446,6 +5524,8 @@ export enum TemplatePermissionsOrderBy {
   AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
   CanSelfAssignAsc = 'CAN_SELF_ASSIGN_ASC',
   CanSelfAssignDesc = 'CAN_SELF_ASSIGN_DESC',
+  CanMakeFinalDecisionAsc = 'CAN_MAKE_FINAL_DECISION_ASC',
+  CanMakeFinalDecisionDesc = 'CAN_MAKE_FINAL_DECISION_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
   StageNumberDesc = 'STAGE_NUMBER_DESC',
   LevelNumberAsc = 'LEVEL_NUMBER_ASC',
@@ -5468,6 +5548,8 @@ export type TemplatePermissionCondition = {
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `stageNumber` field. */
   stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `levelNumber` field. */
@@ -5498,6 +5580,7 @@ export type TemplatePermission = Node & {
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign: Scalars['Boolean'];
+  canMakeFinalDecision: Scalars['Boolean'];
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -5984,6 +6067,8 @@ export enum ApplicationResponsesOrderBy {
   TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
   ValueAsc = 'VALUE_ASC',
@@ -6008,6 +6093,8 @@ export type ApplicationResponseCondition = {
   templateElementId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageNumber` field. */
+  stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<ApplicationResponseStatus>;
   /** Checks for equality with the object’s `value` field. */
@@ -6042,6 +6129,7 @@ export type ApplicationResponse = Node & {
   id: Scalars['Int'];
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -6101,6 +6189,8 @@ export enum ReviewResponsesOrderBy {
   OriginalReviewResponseIdDesc = 'ORIGINAL_REVIEW_RESPONSE_ID_DESC',
   ReviewIdAsc = 'REVIEW_ID_ASC',
   ReviewIdDesc = 'REVIEW_ID_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
   TimeCreatedAsc = 'TIME_CREATED_ASC',
   TimeCreatedDesc = 'TIME_CREATED_DESC',
   TimeUpdatedAsc = 'TIME_UPDATED_ASC',
@@ -6137,6 +6227,8 @@ export type ReviewResponseCondition = {
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewId` field. */
   reviewId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageNumber` field. */
+  stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `timeCreated` field. */
   timeCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `timeUpdated` field. */
@@ -6178,6 +6270,7 @@ export type ReviewResponse = Node & {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -7273,8 +7366,6 @@ export type Filter = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   code: Scalars['String'];
-  iconColor?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
@@ -7401,12 +7492,6 @@ export enum ApplicationListShapesOrderBy {
   TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
   TemplateNameAsc = 'TEMPLATE_NAME_ASC',
   TemplateNameDesc = 'TEMPLATE_NAME_DESC',
-  ApplicantUsernameAsc = 'APPLICANT_USERNAME_ASC',
-  ApplicantUsernameDesc = 'APPLICANT_USERNAME_DESC',
-  ApplicantFirstNameAsc = 'APPLICANT_FIRST_NAME_ASC',
-  ApplicantFirstNameDesc = 'APPLICANT_FIRST_NAME_DESC',
-  ApplicantLastNameAsc = 'APPLICANT_LAST_NAME_ASC',
-  ApplicantLastNameDesc = 'APPLICANT_LAST_NAME_DESC',
   ApplicantAsc = 'APPLICANT_ASC',
   ApplicantDesc = 'APPLICANT_DESC',
   OrgNameAsc = 'ORG_NAME_ASC',
@@ -7421,10 +7506,10 @@ export enum ApplicationListShapesOrderBy {
   OutcomeDesc = 'OUTCOME_DESC',
   LastActiveDateAsc = 'LAST_ACTIVE_DATE_ASC',
   LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC',
-  AssignerUsernamesAsc = 'ASSIGNER_USERNAMES_ASC',
-  AssignerUsernamesDesc = 'ASSIGNER_USERNAMES_DESC',
-  ReviewerUsernamesAsc = 'REVIEWER_USERNAMES_ASC',
-  ReviewerUsernamesDesc = 'REVIEWER_USERNAMES_DESC',
+  AssignersAsc = 'ASSIGNERS_ASC',
+  AssignersDesc = 'ASSIGNERS_DESC',
+  ReviewersAsc = 'REVIEWERS_ASC',
+  ReviewersDesc = 'REVIEWERS_DESC',
   ReviewerActionAsc = 'REVIEWER_ACTION_ASC',
   ReviewerActionDesc = 'REVIEWER_ACTION_DESC',
   AssignerActionAsc = 'ASSIGNER_ACTION_ASC',
@@ -7449,12 +7534,6 @@ export type ApplicationListShapeCondition = {
   templateCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateName` field. */
   templateName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicantUsername` field. */
-  applicantUsername?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicantFirstName` field. */
-  applicantFirstName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicantLastName` field. */
-  applicantLastName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `applicant` field. */
   applicant?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `orgName` field. */
@@ -7469,10 +7548,10 @@ export type ApplicationListShapeCondition = {
   outcome?: Maybe<ApplicationOutcome>;
   /** Checks for equality with the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `assignerUsernames` field. */
-  assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `reviewerUsernames` field. */
-  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `assigners` field. */
+  assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `reviewers` field. */
+  reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `reviewerAction` field. */
   reviewerAction?: Maybe<ReviewerAction>;
   /** Checks for equality with the object’s `assignerAction` field. */
@@ -7512,12 +7591,6 @@ export type ApplicationListShapeFilter = {
   templateCode?: Maybe<StringFilter>;
   /** Filter by the object’s `templateName` field. */
   templateName?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicantUsername` field. */
-  applicantUsername?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicantFirstName` field. */
-  applicantFirstName?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicantLastName` field. */
-  applicantLastName?: Maybe<StringFilter>;
   /** Filter by the object’s `applicant` field. */
   applicant?: Maybe<StringFilter>;
   /** Filter by the object’s `orgName` field. */
@@ -7532,10 +7605,10 @@ export type ApplicationListShapeFilter = {
   outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Filter by the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `assignerUsernames` field. */
-  assignerUsernames?: Maybe<StringListFilter>;
-  /** Filter by the object’s `reviewerUsernames` field. */
-  reviewerUsernames?: Maybe<StringListFilter>;
+  /** Filter by the object’s `assigners` field. */
+  assigners?: Maybe<StringListFilter>;
+  /** Filter by the object’s `reviewers` field. */
+  reviewers?: Maybe<StringListFilter>;
   /** Filter by the object’s `reviewerAction` field. */
   reviewerAction?: Maybe<ReviewerActionFilter>;
   /** Filter by the object’s `assignerAction` field. */
@@ -7652,9 +7725,6 @@ export type ApplicationListShape = {
   name?: Maybe<Scalars['String']>;
   templateCode?: Maybe<Scalars['String']>;
   templateName?: Maybe<Scalars['String']>;
-  applicantUsername?: Maybe<Scalars['String']>;
-  applicantFirstName?: Maybe<Scalars['String']>;
-  applicantLastName?: Maybe<Scalars['String']>;
   applicant?: Maybe<Scalars['String']>;
   orgName?: Maybe<Scalars['String']>;
   stage?: Maybe<Scalars['String']>;
@@ -7662,8 +7732,8 @@ export type ApplicationListShape = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
-  assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
+  reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
@@ -8372,10 +8442,6 @@ export enum FiltersOrderBy {
   IdDesc = 'ID_DESC',
   CodeAsc = 'CODE_ASC',
   CodeDesc = 'CODE_DESC',
-  IconColorAsc = 'ICON_COLOR_ASC',
-  IconColorDesc = 'ICON_COLOR_DESC',
-  IconAsc = 'ICON_ASC',
-  IconDesc = 'ICON_DESC',
   TitleAsc = 'TITLE_ASC',
   TitleDesc = 'TITLE_DESC',
   QueryAsc = 'QUERY_ASC',
@@ -8392,10 +8458,6 @@ export type FilterCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `code` field. */
   code?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `iconColor` field. */
-  iconColor?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `icon` field. */
-  icon?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `title` field. */
   title?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `query` field. */
@@ -8973,6 +9035,8 @@ export enum PermissionsAllsOrderBy {
   AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
   CanSelfAssignAsc = 'CAN_SELF_ASSIGN_ASC',
   CanSelfAssignDesc = 'CAN_SELF_ASSIGN_DESC',
+  CanMakeFinalDecisionAsc = 'CAN_MAKE_FINAL_DECISION_ASC',
+  CanMakeFinalDecisionDesc = 'CAN_MAKE_FINAL_DECISION_DESC',
   RestrictionsAsc = 'RESTRICTIONS_ASC',
   RestrictionsDesc = 'RESTRICTIONS_DESC',
   PolicyNameAsc = 'POLICY_NAME_ASC',
@@ -9013,6 +9077,8 @@ export type PermissionsAllCondition = {
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `restrictions` field. */
   restrictions?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `policyName` field. */
@@ -9053,6 +9119,8 @@ export type PermissionsAllFilter = {
   allowedSections?: Maybe<StringListFilter>;
   /** Filter by the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<BooleanFilter>;
   /** Filter by the object’s `restrictions` field. */
   restrictions?: Maybe<JsonFilter>;
   /** Filter by the object’s `policyName` field. */
@@ -9104,6 +9172,7 @@ export type PermissionsAll = {
   reviewLevel?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   restrictions?: Maybe<Scalars['JSON']>;
   policyName?: Maybe<Scalars['String']>;
   permissionType?: Maybe<PermissionPolicyType>;
@@ -9619,6 +9688,106 @@ export type UserOrgJoinsEdge = {
   node?: Maybe<UserOrgJoin>;
 };
 
+/** A connection to a list of `String` values. */
+export type ApplicationListFilterApplicantConnection = {
+  __typename?: 'ApplicationListFilterApplicantConnection';
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']>>;
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<ApplicationListFilterApplicantEdge>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `String` edge in the connection. */
+export type ApplicationListFilterApplicantEdge = {
+  __typename?: 'ApplicationListFilterApplicantEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']>;
+};
+
+/** A connection to a list of `String` values. */
+export type ApplicationListFilterAssignerConnection = {
+  __typename?: 'ApplicationListFilterAssignerConnection';
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']>>;
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<ApplicationListFilterAssignerEdge>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `String` edge in the connection. */
+export type ApplicationListFilterAssignerEdge = {
+  __typename?: 'ApplicationListFilterAssignerEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']>;
+};
+
+/** A connection to a list of `String` values. */
+export type ApplicationListFilterOrganisationConnection = {
+  __typename?: 'ApplicationListFilterOrganisationConnection';
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']>>;
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<ApplicationListFilterOrganisationEdge>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `String` edge in the connection. */
+export type ApplicationListFilterOrganisationEdge = {
+  __typename?: 'ApplicationListFilterOrganisationEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']>;
+};
+
+/** A connection to a list of `String` values. */
+export type ApplicationListFilterReviewerConnection = {
+  __typename?: 'ApplicationListFilterReviewerConnection';
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']>>;
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<ApplicationListFilterReviewerEdge>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `String` edge in the connection. */
+export type ApplicationListFilterReviewerEdge = {
+  __typename?: 'ApplicationListFilterReviewerEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']>;
+};
+
+/** A connection to a list of `String` values. */
+export type ApplicationListFilterStageConnection = {
+  __typename?: 'ApplicationListFilterStageConnection';
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']>>;
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<ApplicationListFilterStageEdge>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `String` edge in the connection. */
+export type ApplicationListFilterStageEdge = {
+  __typename?: 'ApplicationListFilterStageEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']>;
+};
+
 /** A filter to be used against `AssignerListRecord` object types. All fields are combined with a logical ‘and.’ */
 export type AssignerListRecordFilter = {
   /** Filter by the object’s `applicationId` field. */
@@ -9673,10 +9842,10 @@ export type AssignerListEdge = {
 export type AssignmentListRecordFilter = {
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewerUsernames` field. */
-  reviewerUsernames?: Maybe<StringListFilter>;
-  /** Filter by the object’s `assignerUsernames` field. */
-  assignerUsernames?: Maybe<StringListFilter>;
+  /** Filter by the object’s `reviewers` field. */
+  reviewers?: Maybe<StringListFilter>;
+  /** Filter by the object’s `assigners` field. */
+  assigners?: Maybe<StringListFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<AssignmentListRecordFilter>>;
   /** Checks for any expressions in this list. */
@@ -9700,8 +9869,8 @@ export type AssignmentListConnection = {
 export type AssignmentListRecord = {
   __typename?: 'AssignmentListRecord';
   applicationId?: Maybe<Scalars['Int']>;
-  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** A `AssignmentListRecord` edge in the connection. */
@@ -11782,6 +11951,7 @@ export type TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplatePkeyUp
 export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -11904,6 +12074,7 @@ export type TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplatePkey
 export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -12013,6 +12184,7 @@ export type TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplatePk
 export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -12121,6 +12293,7 @@ export type TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTempla
 export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -12226,6 +12399,7 @@ export type TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsing
 export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -12300,6 +12474,7 @@ export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTem
   permissionNameId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -13075,6 +13250,7 @@ export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionPer
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -13111,6 +13287,7 @@ export type TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyUsing
 export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -13248,6 +13425,7 @@ export type TemplateOnApplicationForApplicationTemplateIdFkeyUsingTemplatePkeyUp
 export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -13452,6 +13630,7 @@ export type TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplate
 export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -14699,6 +14878,7 @@ export type ApplicationResponseOnApplicationResponseForApplicationResponseApplic
 export type UpdateApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -14928,6 +15108,7 @@ export type ApplicationResponseOnApplicationResponseForApplicationResponseTempla
 export type UpdateApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -15082,6 +15263,7 @@ export type TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyUsingTemp
 export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -15113,6 +15295,7 @@ export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyN
 export type TemplatePatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -15136,6 +15319,7 @@ export type TemplatePatch = {
 export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -16196,6 +16380,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPat
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -16282,6 +16467,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionA
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -16327,6 +16513,7 @@ export type UpdateApplicationResponseOnReviewResponseForReviewResponseApplicatio
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -16375,6 +16562,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResp
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -16424,6 +16612,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseL
   applicationResponseId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -16473,6 +16662,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseOriginalReviewR
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -17684,6 +17874,7 @@ export type UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -17809,6 +18000,7 @@ export type ApplicationResponsePatch = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -17826,6 +18018,7 @@ export type FileApplicationResponseIdFkeyApplicationResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -18311,6 +18504,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseTemplateElement
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -18343,6 +18537,7 @@ export type ReviewResponsePatch = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -18368,6 +18563,7 @@ export type ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -18466,6 +18662,7 @@ export type ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput 
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -18498,6 +18695,7 @@ export type ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput = {
   applicationResponseId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -18530,6 +18728,7 @@ export type ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -18558,6 +18757,7 @@ export type ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInpu
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -18587,6 +18787,7 @@ export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInpu
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -18647,6 +18848,7 @@ export type ReviewResponseReviewIdFkeyReviewResponseCreateInput = {
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -19280,6 +19482,7 @@ export type TemplateElementOnApplicationResponseForApplicationResponseTemplateEl
 export type ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -19536,6 +19739,7 @@ export type ApplicationOnApplicationResponseForApplicationResponseApplicationIdF
 export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -20434,6 +20638,7 @@ export type TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdU
 export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -20496,6 +20701,7 @@ export type ApplicationOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate = {
 export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -20566,6 +20772,7 @@ export type TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateI
 export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -20600,6 +20807,7 @@ export type TemplatePermissionPatch = {
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -20613,6 +20821,7 @@ export type TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput 
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -21006,6 +21215,7 @@ export type TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput = {
   permissionNameId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -21025,6 +21235,7 @@ export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateI
 export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -21111,8 +21322,6 @@ export type FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilt
 export type UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   code?: Maybe<Scalars['String']>;
-  iconColor?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
@@ -21198,8 +21407,6 @@ export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdF
 export type FilterPatch = {
   id?: Maybe<Scalars['Int']>;
   code?: Maybe<Scalars['String']>;
-  iconColor?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
@@ -21210,8 +21417,6 @@ export type FilterPatch = {
 export type TemplateFilterJoinFilterIdFkeyFilterCreateInput = {
   id?: Maybe<Scalars['Int']>;
   code: Scalars['String'];
-  iconColor?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
@@ -21246,6 +21451,7 @@ export type TemplateSectionOnTemplateSectionForTemplateSectionTemplateIdFkeyNode
 export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -21296,6 +21502,7 @@ export type TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpda
 export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -21348,6 +21555,7 @@ export type TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpd
 export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -21411,6 +21619,7 @@ export type ActionQueueOnActionQueueForActionQueueTemplateIdFkeyNodeIdUpdate = {
 export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -21586,9 +21795,6 @@ export type ApplicationListShapeInput = {
   name?: Maybe<Scalars['String']>;
   templateCode?: Maybe<Scalars['String']>;
   templateName?: Maybe<Scalars['String']>;
-  applicantUsername?: Maybe<Scalars['String']>;
-  applicantFirstName?: Maybe<Scalars['String']>;
-  applicantLastName?: Maybe<Scalars['String']>;
   applicant?: Maybe<Scalars['String']>;
   orgName?: Maybe<Scalars['String']>;
   stage?: Maybe<Scalars['String']>;
@@ -21596,8 +21802,8 @@ export type ApplicationListShapeInput = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
-  assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
+  reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
@@ -21637,6 +21843,7 @@ export type ApplicationResponseInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
@@ -21897,8 +22104,6 @@ export type CreateFilterInput = {
 export type FilterInput = {
   id?: Maybe<Scalars['Int']>;
   code: Scalars['String'];
-  iconColor?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
@@ -22917,6 +23122,7 @@ export type ReviewResponseInput = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
@@ -23014,6 +23220,7 @@ export type CreateTemplateInput = {
 export type TemplateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -23240,6 +23447,7 @@ export type TemplatePermissionInput = {
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -26903,7 +27111,7 @@ export type ApplicationFragment = (
 
 export type ApplicationResponseFragmentFragment = (
   { __typename?: 'ApplicationResponse' }
-  & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'templateElementId' | 'timeUpdated'>
+  & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'stageNumber' | 'templateElementId' | 'timeUpdated'>
   & { templateElement?: Maybe<(
     { __typename?: 'TemplateElement' }
     & Pick<TemplateElement, 'code'>
@@ -26933,7 +27141,7 @@ export type OrganisationFragment = (
 
 export type ReviewResponseFragmentFragment = (
   { __typename?: 'ReviewResponse' }
-  & Pick<ReviewResponse, 'applicationResponseId' | 'decision' | 'comment' | 'id' | 'status' | 'timeUpdated' | 'originalReviewResponseId' | 'reviewResponseLinkId' | 'templateElementId'>
+  & Pick<ReviewResponse, 'id' | 'applicationResponseId' | 'decision' | 'comment' | 'stageNumber' | 'status' | 'timeUpdated' | 'originalReviewResponseId' | 'reviewResponseLinkId' | 'templateElementId'>
   & { applicationResponse?: Maybe<(
     { __typename?: 'ApplicationResponse' }
     & Pick<ApplicationResponse, 'id' | 'templateElementId'>
@@ -26959,7 +27167,7 @@ export type StageFragment = (
 
 export type TemplateFragment = (
   { __typename?: 'Template' }
-  & Pick<Template, 'code' | 'id' | 'name' | 'isLinear' | 'startMessage' | 'submissionMessage'>
+  & Pick<Template, 'code' | 'id' | 'name' | 'namePlural' | 'isLinear' | 'startMessage' | 'submissionMessage'>
   & { templateCategory?: Maybe<(
     { __typename?: 'TemplateCategory' }
     & Pick<TemplateCategory, 'title' | 'icon'>
@@ -26969,9 +27177,12 @@ export type TemplateFragment = (
       { __typename?: 'TemplateFilterJoin' }
       & { filter?: Maybe<(
         { __typename?: 'Filter' }
-        & Pick<Filter, 'id' | 'iconColor' | 'icon' | 'query' | 'title' | 'userRole'>
+        & Pick<Filter, 'id' | 'query' | 'title' | 'userRole'>
       )> }
     )>> }
+  ), applications: (
+    { __typename?: 'ApplicationsConnection' }
+    & Pick<ApplicationsConnection, 'totalCount'>
   ) }
 );
 
@@ -27113,6 +27324,7 @@ export type UpdateResponseMutationVariables = Exact<{
   id: Scalars['Int'];
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
+  stageNumber?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -27214,6 +27426,7 @@ export type UpdateReviewResponseMutationVariables = Exact<{
   id: Scalars['Int'];
   decision?: Maybe<ReviewResponseDecision>;
   comment?: Maybe<Scalars['String']>;
+  stageNumber: Scalars['Int'];
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
 }>;
 
@@ -27226,6 +27439,75 @@ export type UpdateReviewResponseMutation = (
       { __typename?: 'ReviewResponse' }
       & ReviewResponseFragmentFragment
     )> }
+  )> }
+);
+
+export type GetAppplicantFilterListQueryVariables = Exact<{
+  searchValue: Scalars['String'];
+  templateCode: Scalars['String'];
+}>;
+
+
+export type GetAppplicantFilterListQuery = (
+  { __typename?: 'Query' }
+  & { applicationListFilterApplicant?: Maybe<(
+    { __typename?: 'ApplicationListFilterApplicantConnection' }
+    & Pick<ApplicationListFilterApplicantConnection, 'nodes' | 'totalCount'>
+  )> }
+);
+
+export type GetAssignerFilterListQueryVariables = Exact<{
+  searchValue: Scalars['String'];
+  templateCode: Scalars['String'];
+}>;
+
+
+export type GetAssignerFilterListQuery = (
+  { __typename?: 'Query' }
+  & { applicationListFilterAssigner?: Maybe<(
+    { __typename?: 'ApplicationListFilterAssignerConnection' }
+    & Pick<ApplicationListFilterAssignerConnection, 'nodes' | 'totalCount'>
+  )> }
+);
+
+export type GetOrganisationFilterListQueryVariables = Exact<{
+  searchValue: Scalars['String'];
+  templateCode: Scalars['String'];
+}>;
+
+
+export type GetOrganisationFilterListQuery = (
+  { __typename?: 'Query' }
+  & { applicationListFilterOrganisation?: Maybe<(
+    { __typename?: 'ApplicationListFilterOrganisationConnection' }
+    & Pick<ApplicationListFilterOrganisationConnection, 'nodes' | 'totalCount'>
+  )> }
+);
+
+export type GetReviewersFilterListQueryVariables = Exact<{
+  searchValue: Scalars['String'];
+  templateCode: Scalars['String'];
+}>;
+
+
+export type GetReviewersFilterListQuery = (
+  { __typename?: 'Query' }
+  & { applicationListFilterReviewer?: Maybe<(
+    { __typename?: 'ApplicationListFilterReviewerConnection' }
+    & Pick<ApplicationListFilterReviewerConnection, 'nodes' | 'totalCount'>
+  )> }
+);
+
+export type GetStageFilterListQueryVariables = Exact<{
+  templateCode: Scalars['String'];
+}>;
+
+
+export type GetStageFilterListQuery = (
+  { __typename?: 'Query' }
+  & { applicationListFilterStage?: Maybe<(
+    { __typename?: 'ApplicationListFilterStageConnection' }
+    & Pick<ApplicationListFilterStageConnection, 'nodes' | 'totalCount'>
   )> }
 );
 
@@ -27340,7 +27622,7 @@ export type GetApplicationListQuery = (
     & Pick<ApplicationListShapesConnection, 'totalCount'>
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationListShape' }
-      & Pick<ApplicationListShape, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'applicant' | 'applicantFirstName' | 'applicantLastName' | 'applicantUsername' | 'orgName' | 'stage' | 'stageColour' | 'status' | 'outcome' | 'lastActiveDate' | 'reviewerAction' | 'assignerAction' | 'isFullyAssignedLevel1' | 'assignedQuestionsLevel1' | 'totalQuestions'>
+      & Pick<ApplicationListShape, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'applicant' | 'orgName' | 'stage' | 'stageColour' | 'status' | 'outcome' | 'lastActiveDate' | 'reviewerAction' | 'assignerAction' | 'assigners' | 'reviewers' | 'isFullyAssignedLevel1' | 'assignedQuestionsLevel1' | 'totalQuestions'>
     )>>, pageInfo: (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
@@ -27363,6 +27645,10 @@ export type GetHistoryForApplicantQuery = (
       { __typename?: 'ReviewResponsesConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'ReviewResponse' }
+        & { review?: Maybe<(
+          { __typename?: 'Review' }
+          & Pick<Review, 'stageNumber'>
+        )> }
         & ReviewResponseFragmentFragment
       )>> }
     ), applicationResponses: (
@@ -27371,6 +27657,7 @@ export type GetHistoryForApplicantQuery = (
         { __typename?: 'ApplicationResponse' }
         & { application?: Maybe<(
           { __typename?: 'Application' }
+          & Pick<Application, 'stageNumber'>
           & { user?: Maybe<(
             { __typename?: 'User' }
             & UserFragment
@@ -27400,6 +27687,10 @@ export type GetHistoryForReviewerQuery = (
       { __typename?: 'ReviewResponsesConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'ReviewResponse' }
+        & { review?: Maybe<(
+          { __typename?: 'Review' }
+          & Pick<Review, 'stageNumber'>
+        )> }
         & ReviewResponseFragmentFragment
       )>> }
     ), applicationResponses: (
@@ -27408,6 +27699,7 @@ export type GetHistoryForReviewerQuery = (
         { __typename?: 'ApplicationResponse' }
         & { application?: Maybe<(
           { __typename?: 'Application' }
+          & Pick<Application, 'stageNumber'>
           & { user?: Maybe<(
             { __typename?: 'User' }
             & UserFragment
@@ -27653,6 +27945,7 @@ export const ApplicationResponseFragmentFragmentDoc = gql`
   id
   isValid
   value
+  stageNumber
   templateElement {
     code
   }
@@ -27672,10 +27965,11 @@ export const UserFragmentDoc = gql`
     `;
 export const ReviewResponseFragmentFragmentDoc = gql`
     fragment reviewResponseFragment on ReviewResponse {
+  id
   applicationResponseId
   decision
   comment
-  id
+  stageNumber
   status
   timeUpdated
   originalReviewResponseId
@@ -27756,6 +28050,7 @@ export const TemplateFragmentDoc = gql`
   code
   id
   name
+  namePlural
   isLinear
   startMessage
   submissionMessage
@@ -27767,13 +28062,14 @@ export const TemplateFragmentDoc = gql`
     nodes {
       filter {
         id
-        iconColor
-        icon
         query
         title
         userRole
       }
     }
+  }
+  applications {
+    totalCount
   }
 }
     `;
@@ -27998,8 +28294,8 @@ export type UpdateApplicationMutationHookResult = ReturnType<typeof useUpdateApp
 export type UpdateApplicationMutationResult = Apollo.MutationResult<UpdateApplicationMutation>;
 export type UpdateApplicationMutationOptions = Apollo.BaseMutationOptions<UpdateApplicationMutation, UpdateApplicationMutationVariables>;
 export const UpdateResponseDocument = gql`
-    mutation updateResponse($id: Int!, $value: JSON, $isValid: Boolean) {
-  updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid}}) {
+    mutation updateResponse($id: Int!, $value: JSON, $isValid: Boolean, $stageNumber: Int) {
+  updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid, stageNumber: $stageNumber}}) {
     applicationResponse {
       ...applicationResponseFragment
       templateElement {
@@ -28028,6 +28324,7 @@ export type UpdateResponseMutationFn = Apollo.MutationFunction<UpdateResponseMut
  *      id: // value for 'id'
  *      value: // value for 'value'
  *      isValid: // value for 'isValid'
+ *      stageNumber: // value for 'stageNumber'
  *   },
  * });
  */
@@ -28174,8 +28471,8 @@ export type UpdateReviewDecisionCommentMutationHookResult = ReturnType<typeof us
 export type UpdateReviewDecisionCommentMutationResult = Apollo.MutationResult<UpdateReviewDecisionCommentMutation>;
 export type UpdateReviewDecisionCommentMutationOptions = Apollo.BaseMutationOptions<UpdateReviewDecisionCommentMutation, UpdateReviewDecisionCommentMutationVariables>;
 export const UpdateReviewResponseDocument = gql`
-    mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String, $recommendedApplicantVisibility: ReviewResponseRecommendedApplicantVisibility = ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT) {
-  updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment, recommendedApplicantVisibility: $recommendedApplicantVisibility}}) {
+    mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String, $stageNumber: Int!, $recommendedApplicantVisibility: ReviewResponseRecommendedApplicantVisibility = ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT) {
+  updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment, stageNumber: $stageNumber, recommendedApplicantVisibility: $recommendedApplicantVisibility}}) {
     reviewResponse {
       ...reviewResponseFragment
     }
@@ -28200,6 +28497,7 @@ export type UpdateReviewResponseMutationFn = Apollo.MutationFunction<UpdateRevie
  *      id: // value for 'id'
  *      decision: // value for 'decision'
  *      comment: // value for 'comment'
+ *      stageNumber: // value for 'stageNumber'
  *      recommendedApplicantVisibility: // value for 'recommendedApplicantVisibility'
  *   },
  * });
@@ -28210,6 +28508,180 @@ export function useUpdateReviewResponseMutation(baseOptions?: Apollo.MutationHoo
 export type UpdateReviewResponseMutationHookResult = ReturnType<typeof useUpdateReviewResponseMutation>;
 export type UpdateReviewResponseMutationResult = Apollo.MutationResult<UpdateReviewResponseMutation>;
 export type UpdateReviewResponseMutationOptions = Apollo.BaseMutationOptions<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>;
+export const GetAppplicantFilterListDocument = gql`
+    query getAppplicantFilterList($searchValue: String!, $templateCode: String!) {
+  applicationListFilterApplicant(applicant: $searchValue, templateCode: $templateCode) {
+    nodes
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useGetAppplicantFilterListQuery__
+ *
+ * To run a query within a React component, call `useGetAppplicantFilterListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAppplicantFilterListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAppplicantFilterListQuery({
+ *   variables: {
+ *      searchValue: // value for 'searchValue'
+ *      templateCode: // value for 'templateCode'
+ *   },
+ * });
+ */
+export function useGetAppplicantFilterListQuery(baseOptions?: Apollo.QueryHookOptions<GetAppplicantFilterListQuery, GetAppplicantFilterListQueryVariables>) {
+        return Apollo.useQuery<GetAppplicantFilterListQuery, GetAppplicantFilterListQueryVariables>(GetAppplicantFilterListDocument, baseOptions);
+      }
+export function useGetAppplicantFilterListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAppplicantFilterListQuery, GetAppplicantFilterListQueryVariables>) {
+          return Apollo.useLazyQuery<GetAppplicantFilterListQuery, GetAppplicantFilterListQueryVariables>(GetAppplicantFilterListDocument, baseOptions);
+        }
+export type GetAppplicantFilterListQueryHookResult = ReturnType<typeof useGetAppplicantFilterListQuery>;
+export type GetAppplicantFilterListLazyQueryHookResult = ReturnType<typeof useGetAppplicantFilterListLazyQuery>;
+export type GetAppplicantFilterListQueryResult = Apollo.QueryResult<GetAppplicantFilterListQuery, GetAppplicantFilterListQueryVariables>;
+export const GetAssignerFilterListDocument = gql`
+    query getAssignerFilterList($searchValue: String!, $templateCode: String!) {
+  applicationListFilterAssigner(assigner: $searchValue, templateCode: $templateCode) {
+    nodes
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useGetAssignerFilterListQuery__
+ *
+ * To run a query within a React component, call `useGetAssignerFilterListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAssignerFilterListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAssignerFilterListQuery({
+ *   variables: {
+ *      searchValue: // value for 'searchValue'
+ *      templateCode: // value for 'templateCode'
+ *   },
+ * });
+ */
+export function useGetAssignerFilterListQuery(baseOptions?: Apollo.QueryHookOptions<GetAssignerFilterListQuery, GetAssignerFilterListQueryVariables>) {
+        return Apollo.useQuery<GetAssignerFilterListQuery, GetAssignerFilterListQueryVariables>(GetAssignerFilterListDocument, baseOptions);
+      }
+export function useGetAssignerFilterListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAssignerFilterListQuery, GetAssignerFilterListQueryVariables>) {
+          return Apollo.useLazyQuery<GetAssignerFilterListQuery, GetAssignerFilterListQueryVariables>(GetAssignerFilterListDocument, baseOptions);
+        }
+export type GetAssignerFilterListQueryHookResult = ReturnType<typeof useGetAssignerFilterListQuery>;
+export type GetAssignerFilterListLazyQueryHookResult = ReturnType<typeof useGetAssignerFilterListLazyQuery>;
+export type GetAssignerFilterListQueryResult = Apollo.QueryResult<GetAssignerFilterListQuery, GetAssignerFilterListQueryVariables>;
+export const GetOrganisationFilterListDocument = gql`
+    query getOrganisationFilterList($searchValue: String!, $templateCode: String!) {
+  applicationListFilterOrganisation(organisation: $searchValue, templateCode: $templateCode) {
+    nodes
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useGetOrganisationFilterListQuery__
+ *
+ * To run a query within a React component, call `useGetOrganisationFilterListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrganisationFilterListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrganisationFilterListQuery({
+ *   variables: {
+ *      searchValue: // value for 'searchValue'
+ *      templateCode: // value for 'templateCode'
+ *   },
+ * });
+ */
+export function useGetOrganisationFilterListQuery(baseOptions?: Apollo.QueryHookOptions<GetOrganisationFilterListQuery, GetOrganisationFilterListQueryVariables>) {
+        return Apollo.useQuery<GetOrganisationFilterListQuery, GetOrganisationFilterListQueryVariables>(GetOrganisationFilterListDocument, baseOptions);
+      }
+export function useGetOrganisationFilterListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrganisationFilterListQuery, GetOrganisationFilterListQueryVariables>) {
+          return Apollo.useLazyQuery<GetOrganisationFilterListQuery, GetOrganisationFilterListQueryVariables>(GetOrganisationFilterListDocument, baseOptions);
+        }
+export type GetOrganisationFilterListQueryHookResult = ReturnType<typeof useGetOrganisationFilterListQuery>;
+export type GetOrganisationFilterListLazyQueryHookResult = ReturnType<typeof useGetOrganisationFilterListLazyQuery>;
+export type GetOrganisationFilterListQueryResult = Apollo.QueryResult<GetOrganisationFilterListQuery, GetOrganisationFilterListQueryVariables>;
+export const GetReviewersFilterListDocument = gql`
+    query getReviewersFilterList($searchValue: String!, $templateCode: String!) {
+  applicationListFilterReviewer(reviewer: $searchValue, templateCode: $templateCode) {
+    nodes
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useGetReviewersFilterListQuery__
+ *
+ * To run a query within a React component, call `useGetReviewersFilterListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReviewersFilterListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReviewersFilterListQuery({
+ *   variables: {
+ *      searchValue: // value for 'searchValue'
+ *      templateCode: // value for 'templateCode'
+ *   },
+ * });
+ */
+export function useGetReviewersFilterListQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewersFilterListQuery, GetReviewersFilterListQueryVariables>) {
+        return Apollo.useQuery<GetReviewersFilterListQuery, GetReviewersFilterListQueryVariables>(GetReviewersFilterListDocument, baseOptions);
+      }
+export function useGetReviewersFilterListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewersFilterListQuery, GetReviewersFilterListQueryVariables>) {
+          return Apollo.useLazyQuery<GetReviewersFilterListQuery, GetReviewersFilterListQueryVariables>(GetReviewersFilterListDocument, baseOptions);
+        }
+export type GetReviewersFilterListQueryHookResult = ReturnType<typeof useGetReviewersFilterListQuery>;
+export type GetReviewersFilterListLazyQueryHookResult = ReturnType<typeof useGetReviewersFilterListLazyQuery>;
+export type GetReviewersFilterListQueryResult = Apollo.QueryResult<GetReviewersFilterListQuery, GetReviewersFilterListQueryVariables>;
+export const GetStageFilterListDocument = gql`
+    query getStageFilterList($templateCode: String!) {
+  applicationListFilterStage(templateCode: $templateCode) {
+    nodes
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useGetStageFilterListQuery__
+ *
+ * To run a query within a React component, call `useGetStageFilterListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStageFilterListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStageFilterListQuery({
+ *   variables: {
+ *      templateCode: // value for 'templateCode'
+ *   },
+ * });
+ */
+export function useGetStageFilterListQuery(baseOptions?: Apollo.QueryHookOptions<GetStageFilterListQuery, GetStageFilterListQueryVariables>) {
+        return Apollo.useQuery<GetStageFilterListQuery, GetStageFilterListQueryVariables>(GetStageFilterListDocument, baseOptions);
+      }
+export function useGetStageFilterListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStageFilterListQuery, GetStageFilterListQueryVariables>) {
+          return Apollo.useLazyQuery<GetStageFilterListQuery, GetStageFilterListQueryVariables>(GetStageFilterListDocument, baseOptions);
+        }
+export type GetStageFilterListQueryHookResult = ReturnType<typeof useGetStageFilterListQuery>;
+export type GetStageFilterListLazyQueryHookResult = ReturnType<typeof useGetStageFilterListLazyQuery>;
+export type GetStageFilterListQueryResult = Apollo.QueryResult<GetStageFilterListQuery, GetStageFilterListQueryVariables>;
 export const GetAllLookupTableStructuresDocument = gql`
     query getAllLookupTableStructures {
   lookupTables {
@@ -28375,9 +28847,6 @@ export const GetApplicationListDocument = gql`
       templateCode
       templateName
       applicant
-      applicantFirstName
-      applicantLastName
-      applicantUsername
       orgName
       stage
       stageColour
@@ -28386,6 +28855,8 @@ export const GetApplicationListDocument = gql`
       lastActiveDate
       reviewerAction
       assignerAction
+      assigners
+      reviewers
       isFullyAssignedLevel1
       assignedQuestionsLevel1
       totalQuestions
@@ -28435,6 +28906,9 @@ export const GetHistoryForApplicantDocument = gql`
     reviewResponses(filter: {isVisibleToApplicant: {equalTo: true}}) {
       nodes {
         ...reviewResponseFragment
+        review {
+          stageNumber
+        }
       }
     }
     applicationResponses(filter: {application: {serial: {equalTo: $serial}}}) {
@@ -28445,6 +28919,7 @@ export const GetHistoryForApplicantDocument = gql`
           user {
             ...User
           }
+          stageNumber
         }
       }
     }
@@ -28490,6 +28965,9 @@ export const GetHistoryForReviewerDocument = gql`
     reviewResponses(filter: {review: {application: {serial: {equalTo: $serial}}}, or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
       nodes {
         ...reviewResponseFragment
+        review {
+          stageNumber
+        }
       }
     }
     applicationResponses(filter: {application: {serial: {equalTo: $serial}}, status: {equalTo: SUBMITTED}}) {
@@ -28500,6 +28978,7 @@ export const GetHistoryForReviewerDocument = gql`
           user {
             ...User
           }
+          stageNumber
         }
       }
     }

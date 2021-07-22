@@ -76,6 +76,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
   if (!fullStructure) return <Loading />
   const {
     sections,
+    stages,
     responsesByCode,
     info: {
       serial,
@@ -99,6 +100,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
               section={section}
               responsesByCode={responsesByCode as ResponsesByCode}
               applicationData={fullStructure.info}
+              stages={stages}
               serial={serial}
               isSummary
               canEdit={status === ApplicationStatus.Draft}

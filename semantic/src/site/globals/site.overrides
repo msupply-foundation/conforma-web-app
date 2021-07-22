@@ -43,10 +43,6 @@ a:hover {
   color: @attention;
 }
 
-//.information {
-//  color: @information;
-//}
-
 .clickable {
   cursor: pointer;
 }
@@ -84,6 +80,11 @@ a:hover {
 .flex-column-center {
   .flex-column();
   justify-content: center;
+}
+
+.flex-row-center-center {
+  .flex-row-center();
+  align-items: center;
 }
 
 /*--------------------------------
@@ -269,7 +270,6 @@ a:hover {
   max-width: 350px;
   background-color: transparent;
   font-size: @fontSmall;
-  color: @black;
   font-weight: @regularWeight;
 }
 
@@ -299,7 +299,7 @@ a:hover {
   flex-wrap: wrap;
   min-height: 30px; // TODO: Need to be updated for mobile
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 // Inner steps line (left side - icon & header)
@@ -342,6 +342,12 @@ a:hover {
   color: @headersInteractiveMed;
   font-size: @fontSmall;
   font-weight: @semiboldWeight;
+}
+
+#review-home-header {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
 }
 
 .ui.segment.review-application-segment {
@@ -667,12 +673,15 @@ a:hover {
 
 // Note: these layout ids/classes also shared with Review page
 
-#application-summary {
+#application-summary,
+#review-page-summary {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: @applicationSummaryWidth;
   background-color: @surfacesWhite;
+  border: 2px solid @surfacesMed;
+  border-radius: @borderRadius;
   padding-left: 20px;
   padding-right: 20px;
 }
@@ -680,6 +689,11 @@ a:hover {
 #application-summary-header {
   padding-top: 30px;
   padding-bottom: 20px;
+  text-align: center;
+
+  h2.ui.header {
+    padding-top: 10px;
+  }
 }
 
 #application-summary-content {
@@ -698,6 +712,7 @@ a:hover {
 
 .summary-section {
   background-color: @surfacesLight;
+  border: 2px solid @surfacesMed;
   border-radius: @borderRadius;
   padding: 0px;
   margin-bottom: 15px;
@@ -766,8 +781,9 @@ a:hover {
     padding-right: 20px;
     padding-left: 20px;
     background: @surfacesWhite;
+    border: 2px solid @surfacesMed;
+    border-top: none;
     margin: 0px;
-    margin-bottom: 2px;
 
     &.information {
       > div {
@@ -850,6 +866,7 @@ a:hover {
   }
 
   > :first-child {
+    border-top: 2px solid @surfacesMed;
     border-top-left-radius: @borderRadius;
     border-top-right-radius: @borderRadius;
   }
@@ -869,6 +886,8 @@ a:hover {
   background: @surfacesWhite;
   border-bottom-left-radius: @borderRadius;
   border-bottom-right-radius: @borderRadius;
+  border: 2px solid @surfacesMed;
+  border-top: none;
 }
 
 .blue-border {
@@ -934,12 +953,12 @@ a:hover {
 
 // Layouts
 #dashboard {
-  .flex-row-center();
-  flex-wrap: wrap;
+  .flex-column();
+
 
   .template-category {
-    .flex-column-center();
-    align-items: center;
+    .flex-column();
+    flex-wrap: wrap;
 
     .title {
       .flex-row();
@@ -948,94 +967,84 @@ a:hover {
   }
 
   .templates {
-    .flex-row-center();
+    .flex-row();
     flex-wrap: wrap;
-    align-items: center;
   }
 
   .template {
-    .flex-column();
+    .flex-row();
 
-    .title {
-      .flex-row-center();
-      align-items: start;
+    .content {
+      justify-content: space-between;
+      .header {
+        .flex-row-center();
+        align-items: start;
+      }
+
+      .filters {
+        .flex-column();
+        flex-grow: 1;
+      }
+
+      .filter {
+        display: flex;
+        align-items: center;
+      }
     }
   }
 
-  .filters {
-    .flex-column();
-    flex-grow: 1;
-  }
-
-  .filter {
-    display: flex;
-    align-items: center;
-  }
-
-  .view-all-area {
-    display: flex;
-    max-width: 100%;
-  }
-
-  .view-all {
-    .flex-row-center();
-    align-items: center;
+  .no-applications {
     text-align: center;
-    flex-grow: 1;
-
-    div {
-      display: flex;
-      align-items: center;
+    .label {
+      width: 100%;
     }
   }
 }
 
 // Margin and padding
 #dashboard {
+  .template-category {
+    .title {
+      margin-left: 10px;
+      .header {
+        margin: 10px;
+      }
+    }
+
+    .templates {
+      padding-bottom: 10px;
+    }
+  }
   .template {
-    margin: 15px;
-    max-width: 330px;
+    margin: 0px 10px 5px 0px;
+    width: 330px;
+    padding: 10px;
+    justify-content: space-between;
+    border: 2px solid @surfacesDark;
     border-radius: @borderRadius;
     background-color: @surfacesWhite;
-    box-shadow: @templateBoxShadow;
 
-    .title {
+    .content {
+      min-height: 65px;
+    }
+
+    .button {
       padding: 10px;
-      padding-bottom: 3px;
-
-      .header {
-        margin: 2px;
-      }
+      width: 70px;
     }
-  }
 
-  .template-category {
-    margin: 10px;
-
-    .title {
-      a {
-        margin-left: 10px;
+    .filters {
+      margin: 2px;
+      .strong-label {
+        padding-top: 0px;
       }
-
-      .header {
-        margin: 2px;
+      .label {
+        padding-left: 0px !important;
+        .icon {
+          margin-left: 5px;
+          margin-right: 0px;
+        }
       }
-    }
-  }
-
-  .filters {
-    margin: 5px;
-    padding: 3px;
-  }
-
-  .view-all {
-    padding: 5px;
-    font-weight: @semiboldWeight;
-    color: grey !important;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-
-    i {
-      padding-right: 6px;
     }
   }
 }
@@ -1076,6 +1085,238 @@ a:hover {
     .flex-row();
     align-items: center;
     flex-wrap: 1;
+  }
+}
+
+/*--------------------------------
+      Filters
+---------------------------------*/
+
+.filterItem {
+  border-radius: 4px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: @surfacesWhite;
+  margin:5px;
+  color: @darkGrey;
+  border: solid 1px @fullyTransperant;
+
+  &.visible {
+    border: solid 1px @blue;
+  }
+
+  .dropdown.icon {
+    margin-left: 6px;
+  }
+
+}
+
+// Layouts
+#list-filter {
+  .flex-row();
+
+  align-items: center;
+  flex-wrap: wrap;
+
+  .list-filter-title {
+    .flex-row-center-center();
+    .icon {
+      line-height: normal;
+    }
+  }
+
+  .ui.dropdown {
+    .clickable();
+    .filterItem();
+
+    .menu {
+      top: 120%;
+      border: solid 1px @blue;
+    }
+  }
+
+  // multiple is used to make sure filter menu stays open, but it adds extra margin on text
+  .ui.multiple.dropdown > .text {
+    margin: 0px;
+  }
+
+  // Add filter selector
+  >.ui.dropdown {
+    color: @blue !important;
+  }
+  
+  .active-filter {
+    // Needed for relative position of floating label
+    position: relative;
+
+    .label.floating {
+      top: -0.8em;
+      left: 95%;
+    }
+  }
+
+  .remove-filter {
+    color: @blue;
+    .icon {
+      margin: 0px;
+      margin-right: 7px;
+    }
+  }
+
+}
+
+/*--------------------------------
+      Date Picker
+---------------------------------*/
+@weekDayRowBorder: 1px solid rgba(0,0,0, 0.05);
+
+.not-clickable {
+  cursor: default;
+}
+
+.in-range-left-border {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.in-range-right-border {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.date-filter-title {
+  .flex-row();
+  align-items: center;
+
+  >div {
+    .flex-column();
+    margin-left: 5px;
+    align-items: center;
+    
+    &.title-and-criteria {
+      :first-child {
+        align-self: flex-start;
+        font-size: 10px;
+        line-height: 10px;
+        color: @darkGrey;
+      }
+    }
+  }
+}
+
+.date-filter {
+  .flex-row();
+  padding: 5px;
+  padding-top:15px;
+  padding-bottom: 5px;
+
+
+
+  .named-dates {
+    .flex-column();
+    padding-left: 10px;
+    padding-right: 10px;
+    align-items: stretch;
+    margin-right:5px;
+    overflow-y: auto;
+    max-height: 300px;
+
+    div {
+      .clickable();
+      border-radius: @borderRadius;
+      padding: 10px;
+      margin-top: 5px;
+      text-align: center;
+    }
+
+    .selected-named-date {
+      background-color: @dateFilterLightBlue;
+    }
+  }
+
+  .calendar-container {
+    .flex-column();
+    margin-left: 10px;
+
+    .month-selector {
+      .flex-row();
+      margin-bottom: 10px;
+
+      .month-name {
+        flex-grow: 1;
+        text-align: center;
+        font-size: 24px;
+      }
+
+      .month-button {
+        .clickable();
+      }
+    }
+
+    .calendar-days-container {
+      .flex-column();
+
+      .week-day-headers {
+        .flex-row();
+        margin-bottom: 5px;
+        div {
+          width: 40px;
+          color: @weekDayHeaderColor;
+          font-size: 12px;
+          text-align: center;
+        }
+      }
+
+      .week-day-row {
+        .flex-row();
+        padding-top: 2px;
+        padding-bottom: 2px;
+        border-top: @weekDayRowBorder;
+
+        :first-child.day-in-range {
+          .in-range-left-border
+        } 
+
+        :last-child.day-in-range {
+          .in-range-right-border
+          
+        }         
+
+        .first-in-range {
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
+        }
+    
+        .last-in-range {
+          border-top-right-radius: 5px;
+          border-bottom-right-radius: 5px;
+        }
+
+        div {
+          .flex-row();
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 35px;
+
+          &.day-in-range {
+            background-color: @dateFilterLightBlue;
+          }
+
+          >div {
+            border-radius: 200px;
+            width: 32px;
+            height: 32px;
+
+            &.day-selected {
+              background-color: @selectedDayColor;
+            }
+          }
+          
+        }
+      }
+    }
   }
 }
 
