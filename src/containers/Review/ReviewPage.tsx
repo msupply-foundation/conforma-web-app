@@ -203,8 +203,6 @@ const SectionRowStatus: React.FC<SectionState> = (section) => {
   const { assignment, reviewProgress, consolidationProgress } = section
   const { isConsolidation, isReviewable, isAssignedToCurrentUser } = assignment as SectionAssignment
 
-  console.log(isConsolidation, isReviewable, isAssignedToCurrentUser)
-
   if (isReviewable) {
     if (!isAssignedToCurrentUser)
       return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
