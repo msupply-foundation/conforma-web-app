@@ -7,7 +7,6 @@ import {
   ApplicationProps,
 } from '../../utils/types'
 import { Loading, Navigation, PageElements, ProgressArea } from '../../components'
-import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { checkPageIsAccessible } from '../../utils/helpers/structure'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -19,9 +18,6 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   requestRevalidation,
   strictSectionPage,
 }) => {
-  const {
-    userState: { currentUser },
-  } = useUserState()
   const {
     query: { serialNumber, sectionCode, page },
     push,
@@ -36,7 +32,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
     if (!fullStructure) return
 
     // Re-direct based on application status
-    if (fullStructure.info.current?.status !== ApplicationStatus.Draft)
+    if (fullStructure.info.current.status !== ApplicationStatus.Draft)
       replace(`/application/${fullStructure.info.serial}`)
 
     // Re-direct if trying to access page higher than allowed
@@ -52,7 +48,11 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
   const {
-    info: { isLinear, isChangeRequest, current },
+    info: {
+      current: { status },
+      isLinear,
+      isChangeRequest,
+    },
   } = fullStructure
 
   return (
@@ -69,10 +69,11 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
           <Segment basic>
             <Header as="h4" content={fullStructure.sections[sectionCode].details.title} />
             <PageElements
-              canEdit={current?.status === ApplicationStatus.Draft}
+              canEdit={status === ApplicationStatus.Draft}
               isUpdating={isChangeRequest}
               elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
               responsesByCode={fullStructure.responsesByCode}
+              stages={fullStructure.stages}
               applicationData={fullStructure.info}
               isStrictPage={
                 sectionCode === strictSectionPage?.sectionCode &&

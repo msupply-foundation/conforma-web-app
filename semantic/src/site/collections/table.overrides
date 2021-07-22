@@ -12,7 +12,7 @@
   }
   .ui.table td {
     background: @surfacesWhite;
-    padding: 0;
+    padding: 5px;
   }
 
   .ui.table tr {
@@ -33,21 +33,21 @@
     padding-left: @tableRowLeftAndRightPadding;
   }
 
-.ui.table td:last-child,
-.ui.table thead th:last-child {
-  text-align: right;
-  padding-right: @tableRowLeftAndRightPadding;
-}
+  .ui.table td:last-child,
+  .ui.table thead th:last-child {
+    text-align: right;
+    padding-right: @tableRowLeftAndRightPadding;
+  }
 
-// Prevents column headers having different background when selected
-// and on hover
-.ui.sortable.table thead th.sorted {
-  background: none;
-}
-.ui.sortable.table thead th:hover {
-  background: none;
-  opacity: 0.8;
-}
+  // Prevents column headers having different background when selected
+  // and on hover
+  .ui.sortable.table thead th.sorted {
+    background: none;
+  }
+  .ui.sortable.table thead th:hover {
+    background: none;
+    opacity: 0.8;
+  }
 
   // Removes the faint background that is visibile behind the list row
   // when hovering

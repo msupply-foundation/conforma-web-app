@@ -6,30 +6,32 @@ import {
   PageElement,
   ResponsesByCode,
   SectionAndPage,
+  StageDetails,
 } from '../../utils/types'
-import { ApplicationViewWrapper } from '../../formElementPlugins'
+import { ApplicationViewWrapper, SummaryViewWrapper } from '../../formElementPlugins'
 import { ApplicationViewWrapperProps } from '../../formElementPlugins/types'
 import { ReviewResponse, TemplateElementCategory } from '../../utils/generated/graphql'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import HistoryPanel from '../Review/HistoryPanel'
 import SummaryInformationElement from './Elements/SummaryInformationElement'
-import ApplicantResponseElement from './Elements/ApplicantResponseElement'
-import { useRouter } from '../../utils/hooks/useRouter'
+import ApplicantElementWrapper from './Elements/ApplicantElementWrapper'
 import ConsolidateReviewDecision from './Elements/ConsolidateReviewDecision'
 import ReviewApplicantResponse from './Elements/ReviewApplicantResponse'
-import ReviewResponseElement from './Elements/ReviewResponseElement'
+import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 
 interface PageElementProps {
   elements: PageElement[]
   responsesByCode: ResponsesByCode
   applicationData: ApplicationDetails
+  stages: StageDetails[]
   canEdit: boolean
   isConsolidation?: boolean
   isReview?: boolean
   isStrictPage?: boolean
   isSummary?: boolean
   isUpdating?: boolean
+  // userLevel?: number
   serial?: string
   sectionAndPage?: SectionAndPage
 }
@@ -38,22 +40,30 @@ const PageElements: React.FC<PageElementProps> = ({
   elements,
   responsesByCode,
   applicationData,
+  stages,
   canEdit = false,
   isConsolidation = false,
   isReview = false,
   isStrictPage = false,
   isSummary = false,
   isUpdating = false,
+  // userLevel,
   serial,
   sectionAndPage,
 }) => {
   const {
     push,
     query: { showHistory },
-    updateQuery,
   } = useRouter()
+
   const visibleElements = elements.filter(({ element }) => element.isVisible)
 
+  const getSummaryViewProps = (element: ElementState) => ({
+    element,
+    response: responsesByCode?.[element.code],
+    allResponses: responsesByCode,
+    applicationData,
+  })
   // Editable Application page
   if (canEdit && !isReview && !isSummary)
     return (
@@ -78,12 +88,20 @@ const PageElements: React.FC<PageElementProps> = ({
               applicationData,
               currentResponse: responsesByCode?.[element.code],
             }
+
             // Wrapper displays response & changes requested warning for LOQ re-submission
             return (
               <div className="form-element-wrapper" key={`question_${element.code}`}>
                 <div className="form-element">
-                  <ApplicationViewWrapper {...props} />
+                  {element.category === TemplateElementCategory.Information ? (
+                    <RenderElementWrapper key={element.code}>
+                      <SummaryViewWrapper {...getSummaryViewProps(element)} />
+                    </RenderElementWrapper>
+                  ) : (
+                    <ApplicationViewWrapper {...props} />
+                  )}
                 </div>
+
                 {element.helpText && (
                   <div className="help-tips hide-on-mobile">
                     <div className="help-tips-content">
@@ -98,75 +116,66 @@ const PageElements: React.FC<PageElementProps> = ({
       </Form>
     )
 
-  const getSummaryViewProps = (element: ElementState) => ({
-    element,
-    response: responsesByCode?.[element.code],
-    allResponses: responsesByCode,
-    applicationData,
-  })
-
   // Summary Page
   if (isSummary) {
     const { sectionCode, pageNumber } = sectionAndPage as SectionAndPage
     return (
-      <Form>
-        {visibleElements.map((state) => {
-          const {
-            element,
-            isChanged,
-            isChangeRequest,
-            latestApplicationResponse,
-            previousApplicationResponse,
-          } = state
+      <div>
+        <Form>
+          {visibleElements.map((state) => {
+            const {
+              element,
+              isChanged,
+              isChangeRequest,
+              enableViewHistory,
+              latestApplicationResponse,
+              previousApplicationResponse,
+            } = state
 
-          const isResponseUpdated = !!isChangeRequest || !!isChanged
-          const reviewResponse = previousApplicationResponse?.reviewResponses.nodes[0]
-          const canRenderReviewResponse = !!isChangeRequest && !!reviewResponse
-          // Applicant can edit the summary page when is first submission (canEdit true when draft)
-          // Or when changes required for any question that have been updated (isUpdating true)
-          const canApplicantEdit = isUpdating ? isResponseUpdated && canEdit : canEdit
-          const summaryViewProps = getSummaryViewProps(element)
+            const isResponseUpdated = !!isChangeRequest || !!isChanged
+            // Applicant can edit the summary page when is first submission and a response has been added
+            // Or when changes required for any question that have been updated (isUpdating true)
+            const canApplicantEdit =
+              canEdit && isUpdating ? isResponseUpdated : !!latestApplicationResponse?.value
+            const reviewResponse = previousApplicationResponse?.reviewResponses.nodes[0]
+            const summaryViewProps = getSummaryViewProps(element)
 
-          if (element.category === TemplateElementCategory.Information) {
+            if (element.category === TemplateElementCategory.Information) {
+              return (
+                <RenderElementWrapper key={element.code}>
+                  <SummaryInformationElement {...summaryViewProps} />
+                </RenderElementWrapper>
+              )
+            }
+
+            const props = {
+              elementCode: element.code,
+              latestApplicationResponse,
+              previousApplicationResponse,
+              summaryViewProps,
+              reviewResponse: reviewResponse as ReviewResponse,
+              canApplicantEdit,
+              enableViewHistory,
+              isChanged,
+              isChangeRequest,
+              updateMethod: () => push(`/application/${serial}/${sectionCode}/Page${pageNumber}`),
+            }
+
             return (
               <RenderElementWrapper key={element.code}>
-                <SummaryInformationElement {...summaryViewProps} />
+                <ApplicantElementWrapper {...props} />
               </RenderElementWrapper>
             )
-          }
-
-          return (
-            <RenderElementWrapper key={element.code}>
-              <ApplicantResponseElement
-                key="application-response"
-                applicationResponse={latestApplicationResponse}
-                summaryViewProps={summaryViewProps}
-                isResponseUpdated={isResponseUpdated}
-              >
-                {canApplicantEdit && (
-                  <UpdateIcon
-                    onClick={() => push(`/application/${serial}/${sectionCode}/Page${pageNumber}`)}
-                  />
-                )}
-              </ApplicantResponseElement>
-              {canRenderReviewResponse && (
-                <>
-                  <ReviewResponseElement
-                    key="review-response"
-                    shouldDim={true}
-                    isCurrentReview={false}
-                    isDecisionVisible={false}
-                    isConsolidation={false}
-                    reviewResponse={reviewResponse as ReviewResponse}
-                  />
-                  {/* div below forced border on review response to be square */}
-                  <div />
-                </>
-              )}
-            </RenderElementWrapper>
-          )
-        })}
-      </Form>
+          })}
+        </Form>
+        {showHistory && (
+          <HistoryPanel
+            templateCode={applicationData.template.code}
+            stages={stages}
+            isApplicant={true}
+          />
+        )}
+      </div>
     )
   }
 
@@ -181,13 +190,14 @@ const PageElements: React.FC<PageElementProps> = ({
               thisReviewLatestResponse,
               thisReviewPreviousResponse,
               isNewApplicationResponse,
+              isNewReviewResponse,
               isActiveReviewResponse,
+              enableViewHistory,
               isChangeRequest,
               isChanged,
               latestApplicationResponse,
               latestOriginalReviewResponse,
             }) => {
-              const toggleHistoryPanel = showHistory === element.code
               const summaryViewProps = getSummaryViewProps(element)
 
               // Information - no review
@@ -199,13 +209,14 @@ const PageElements: React.FC<PageElementProps> = ({
                 )
 
               const props = {
+                elementCode: element.code,
                 applicationResponse: latestApplicationResponse,
                 reviewResponse: thisReviewLatestResponse,
+                previousReviewResponse: thisReviewPreviousResponse,
                 isActiveReviewResponse: !!isActiveReviewResponse,
-                isNewApplicationResponse: !!isNewApplicationResponse,
-                isNewReviewResponse: isChanged,
-                showModal: () => updateQuery({ showHistory: element.code }),
+                enableViewHistory,
                 summaryViewProps: summaryViewProps,
+                stageNumber: applicationData.current.stage.number,
               }
 
               return (
@@ -213,20 +224,15 @@ const PageElements: React.FC<PageElementProps> = ({
                   {isConsolidation ? (
                     <ConsolidateReviewDecision
                       {...props}
+                      isNewReviewResponse={!!isNewReviewResponse}
                       originalReviewResponse={latestOriginalReviewResponse}
                     />
                   ) : (
                     <ReviewApplicantResponse
                       {...props}
-                      previousReviewResponse={thisReviewPreviousResponse}
-                      isChangeRequest={isChangeRequest}
-                    />
-                  )}
-                  {toggleHistoryPanel && thisReviewLatestResponse && (
-                    <HistoryPanel
-                      isConsolidation={isConsolidation}
-                      reviewResponse={thisReviewLatestResponse}
-                      summaryViewProps={summaryViewProps}
+                      isNewApplicationResponse={!!isNewApplicationResponse}
+                      isChangeRequest={!!isChangeRequest}
+                      isChanged={!!isChanged}
                     />
                   )}
                 </RenderElementWrapper>
@@ -234,6 +240,13 @@ const PageElements: React.FC<PageElementProps> = ({
             }
           )}
         </Form>
+        {showHistory && (
+          <HistoryPanel
+            templateCode={applicationData.template.code}
+            stages={stages}
+            // userLevel={userLevel || 1 + 1} // Get reviews for current level and level+1
+          />
+        )}
       </div>
     )
   }
@@ -241,7 +254,7 @@ const PageElements: React.FC<PageElementProps> = ({
   return null
 }
 
-const RenderElementWrapper: React.FC = ({ children }) => (
+const RenderElementWrapper: React.FC<{ extraSpacing?: boolean }> = ({ children, extraSpacing }) => (
   <Segment basic className="summary-page-element-container">
     {children}
   </Segment>

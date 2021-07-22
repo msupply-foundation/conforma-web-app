@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Switch } from 'react-router'
-import { Message } from 'semantic-ui-react'
-import { Loading, NoMatch } from '../../components'
+import { Container, Message } from 'semantic-ui-react'
+import { Loading, NoMatch, ReviewContainer } from '../../components'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
@@ -29,6 +29,8 @@ const ReviewPageWrapper: React.FC<{
 
   if (!fullApplicationStructure) return <Loading />
 
+  const { info } = fullApplicationStructure
+
   // Find the review id used in URL in reviewAssignments
   const reviewAssignment = reviewAssignments.find(
     (reviewAssignment) => reviewAssignment?.review?.id === Number(reviewId)
@@ -37,16 +39,18 @@ const ReviewPageWrapper: React.FC<{
   if (!reviewAssignment) return <NoMatch />
   // Pass through structure and reviewAssignment associated to review
   return (
-    <>
-      <Switch>
-        <Route exact path={path}>
-          <ReviewPage {...{ fullApplicationStructure, reviewAssignment }} />
-        </Route>
-        <Route>
-          <NoMatch />
-        </Route>
-      </Switch>
-    </>
+    <ReviewContainer application={info}>
+      <Container id="review-page-summary">
+        <Switch>
+          <Route exact path={path}>
+            <ReviewPage {...{ fullApplicationStructure, reviewAssignment }} />
+          </Route>
+          <Route>
+            <NoMatch />
+          </Route>
+        </Switch>
+      </Container>
+    </ReviewContainer>
   )
 }
 

@@ -46,6 +46,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   } = element
 
   const isValid = currentResponse?.isValid || true
+  const stageNumber = applicationData.current.stage.number
 
   const { setState: setUpdateTrackerState } = useFormElementUpdateTracker()
 
@@ -113,6 +114,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
             id: currentResponse?.id as number,
             value: response,
             isValid: validationResult.isValid,
+            stageNumber,
           },
         })
       if (response === null || response?.text == undefined)
@@ -122,11 +124,13 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
             id: currentResponse?.id as number,
             value: null,
             isValid: null,
+            stageNumber,
           },
         })
       setUpdateTrackerState({
         type: 'setElementUpdated',
         textValue: response?.text || '',
+        previousValue: currentResponse?.text || '',
       })
     } else {
       // Save response for plugins with internal validation
@@ -138,11 +142,13 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
           id: currentResponse?.id as number,
           value: response,
           isValid,
+          stageNumber,
         },
       })
       setUpdateTrackerState({
         type: 'setElementUpdated',
         textValue: response?.text || '',
+        previousValue: currentResponse?.text || '',
       })
     }
   }
