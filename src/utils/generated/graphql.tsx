@@ -2798,6 +2798,8 @@ export type TemplatePermissionFilter = {
   allowedSections?: Maybe<StringListFilter>;
   /** Filter by the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<BooleanFilter>;
   /** Filter by the object’s `stageNumber` field. */
   stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `levelNumber` field. */
@@ -5453,6 +5455,8 @@ export enum TemplatePermissionsOrderBy {
   AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
   CanSelfAssignAsc = 'CAN_SELF_ASSIGN_ASC',
   CanSelfAssignDesc = 'CAN_SELF_ASSIGN_DESC',
+  CanMakeFinalDecisionAsc = 'CAN_MAKE_FINAL_DECISION_ASC',
+  CanMakeFinalDecisionDesc = 'CAN_MAKE_FINAL_DECISION_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
   StageNumberDesc = 'STAGE_NUMBER_DESC',
   LevelNumberAsc = 'LEVEL_NUMBER_ASC',
@@ -5475,6 +5479,8 @@ export type TemplatePermissionCondition = {
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `stageNumber` field. */
   stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `levelNumber` field. */
@@ -5505,6 +5511,7 @@ export type TemplatePermission = Node & {
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign: Scalars['Boolean'];
+  canMakeFinalDecision: Scalars['Boolean'];
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -8980,6 +8987,8 @@ export enum PermissionsAllsOrderBy {
   AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
   CanSelfAssignAsc = 'CAN_SELF_ASSIGN_ASC',
   CanSelfAssignDesc = 'CAN_SELF_ASSIGN_DESC',
+  CanMakeFinalDecisionAsc = 'CAN_MAKE_FINAL_DECISION_ASC',
+  CanMakeFinalDecisionDesc = 'CAN_MAKE_FINAL_DECISION_DESC',
   RestrictionsAsc = 'RESTRICTIONS_ASC',
   RestrictionsDesc = 'RESTRICTIONS_DESC',
   PolicyNameAsc = 'POLICY_NAME_ASC',
@@ -9020,6 +9029,8 @@ export type PermissionsAllCondition = {
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `restrictions` field. */
   restrictions?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `policyName` field. */
@@ -9060,6 +9071,8 @@ export type PermissionsAllFilter = {
   allowedSections?: Maybe<StringListFilter>;
   /** Filter by the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<BooleanFilter>;
   /** Filter by the object’s `restrictions` field. */
   restrictions?: Maybe<JsonFilter>;
   /** Filter by the object’s `policyName` field. */
@@ -9111,6 +9124,7 @@ export type PermissionsAll = {
   reviewLevel?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   restrictions?: Maybe<Scalars['JSON']>;
   policyName?: Maybe<Scalars['String']>;
   permissionType?: Maybe<PermissionPolicyType>;
@@ -12312,6 +12326,7 @@ export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTem
   permissionNameId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -13087,6 +13102,7 @@ export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionPer
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -20643,6 +20659,7 @@ export type TemplatePermissionPatch = {
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -20656,6 +20673,7 @@ export type TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput 
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -21049,6 +21067,7 @@ export type TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput = {
   permissionNameId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -23283,6 +23302,7 @@ export type TemplatePermissionInput = {
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
