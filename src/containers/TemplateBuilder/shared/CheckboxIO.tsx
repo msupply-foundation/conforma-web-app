@@ -21,7 +21,6 @@ const CheckboxIO: React.FC<CheckboxIOprops> = ({
   const [innerValue, setInnerValue] = useState(value)
 
   useEffect(() => {
-    console.log(value)
     if (isPropUpdated) setInnerValue(() => value)
   }, [value])
 
@@ -39,7 +38,6 @@ const CheckboxIO: React.FC<CheckboxIOprops> = ({
               disabled={disabled}
               size="small"
               onChange={() => {
-                console.log('yow')
                 const newValue = !innerValue
                 const result = setValue(newValue)
                 if (typeof result === 'boolean') setInnerValue(result)

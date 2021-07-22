@@ -93,7 +93,6 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           <FromExistingAction
             pluginCode={state.actionCode}
             setTemplateAction={(templateAction) => {
-              console.log(templateAction)
               setState({ ...state, ...templateAction })
             }}
           />
@@ -112,7 +111,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           <Evaluation
             label="Condition"
             currentElementCode={''}
-            evaluation={templateAction?.condition}
+            evaluation={state?.condition}
             setEvaluation={(condition) => setState({ ...state, condition })}
           />
         </div>

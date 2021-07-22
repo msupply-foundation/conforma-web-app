@@ -68,7 +68,7 @@ export const guis: GuisType = [
         evaluation,
         offset: 0,
         setEvaluation,
-        newValue: getTypedEvaluation(['array element']),
+        newValue: getTypedEvaluation('array element'),
         ComponentLibrary,
         evaluatorParameters,
       })
@@ -161,7 +161,7 @@ export const guis: GuisType = [
         <ComponentLibrary.Label key="compare" title="Compare this Value: " />
         {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
         <ComponentLibrary.Label key="compareTo" title="To these Values: " />
-        {renderSingleChild(evaluation, 2, setEvaluation, ComponentLibrary, evaluatorParameters)}
+        {renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary, evaluatorParameters)}
       </>
     ),
   },

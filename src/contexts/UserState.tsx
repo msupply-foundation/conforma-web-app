@@ -38,13 +38,11 @@ export type UserActions =
 type UserProviderProps = { children: React.ReactNode }
 
 const reducer = (state: UserState, action: UserActions) => {
-  console.log(state, action)
   switch (action.type) {
     case 'resetCurrentUser':
       return initialState
     case 'setCurrentUser':
       const { newUser, newPermissions, newOrgList, newIsAdmin } = action
-      console.log(action)
       return {
         ...state,
         currentUser: newUser,
