@@ -90,7 +90,15 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     const stages = data.applicationStageStatusLatests?.nodes as ApplicationStageStatusAll[]
     if (stages.length > 1) console.log('StageStatusAll More than one results for 1 application!')
-    const { stageId, stage, stageColour, stageNumber, status, statusHistoryTimeCreated } = stages[0] // Should only have one result
+    const {
+      stageId,
+      stage,
+      stageColour,
+      stageNumber,
+      status,
+      statusHistoryTimeCreated,
+      stageHistoryTimeCreated,
+    } = stages[0] // Should only have one result
 
     const applicationDetails: ApplicationDetails = {
       id: application.id,
@@ -107,7 +115,8 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           colour: stageColour as string,
         },
         status: status as ApplicationStatus,
-        date: statusHistoryTimeCreated,
+        timeStageCreated: stageHistoryTimeCreated,
+        timeStatusCreated: statusHistoryTimeCreated,
       },
       firstStrictInvalidPage: null,
       isChangeRequest: false,
@@ -162,9 +171,9 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       let newStructure: FullStructure = {
         info: { ...applicationDetails, submissionMessage, startMessage },
         stages: templateStages.map((stage) => ({
-          number: stage.number as number,
           id: stage.id,
-          title: stage.title as string,
+          name: stage.title as string,
+          number: stage.number as number,
           description: stage.description ? stage.description : undefined,
           colour: stage.colour as string,
         })),
