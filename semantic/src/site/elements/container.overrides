@@ -1,9 +1,0 @@
-/*******************************
-         Site Overrides
-*******************************/
-
-// Overrides container width
-@maxWidth: 1024px;
-
-// Overrides to remove left and right margin on mobile
-@mobileGutter: 0;

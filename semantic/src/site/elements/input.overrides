@@ -1,7 +1,0 @@
-/*******************************
-         Site Overrides
-*******************************/
-
-.ui.input > input {
-  border-color: @darkGrey;
-}

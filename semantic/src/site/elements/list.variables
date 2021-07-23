@@ -1,6 +1,0 @@
-/*******************************
-    User Variable Overrides
-*******************************/
-
-/* Override List.item "Very Relaxed" padding */
-@veryRelaxedItemVerticalPadding: 15px;

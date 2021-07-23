@@ -1,7 +1,0 @@
-/*******************************
-         Site Overrides
-*******************************/
-
-.ui.checkbox {
-  color: @headersInteractiveLow;
-}
