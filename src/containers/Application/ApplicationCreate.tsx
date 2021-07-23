@@ -17,7 +17,6 @@ import { useGetApplicationSerialQuery } from '../../utils/generated/graphql'
 const MAX_REFETCH = 10
 
 const ApplicationCreate: React.FC = () => {
-  console.log('Loading component...')
   const {
     applicationState: { serialNumber, id },
     setApplicationState,
@@ -37,14 +36,9 @@ const ApplicationCreate: React.FC = () => {
     userState: { currentUser },
   } = useUserState()
 
-  const [startedCreating, setStartedCreating] = useState(false)
-
   // If template has no start message, go straight to first page of new application
   useEffect(() => {
-    console.log('Template changed..')
-    if (template && !template.startMessage && !startedCreating) {
-      console.log('Creating a new one...')
-      setStartedCreating(true)
+    if (template && !template.startMessage && !id) {
       handleCreate()
     }
   }, [template])
