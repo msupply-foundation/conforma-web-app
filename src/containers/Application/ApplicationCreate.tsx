@@ -17,6 +17,7 @@ import { useGetApplicationSerialQuery } from '../../utils/generated/graphql'
 const MAX_REFETCH = 10
 
 const ApplicationCreate: React.FC = () => {
+  console.log('Loading component...')
   const {
     applicationState: { serialNumber, id },
     setApplicationState,
