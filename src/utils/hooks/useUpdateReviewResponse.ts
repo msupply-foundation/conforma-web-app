@@ -50,7 +50,7 @@ const computeVisibility = (reviewResponse: ReviewResponse | undefined) => {
   // consolidator
   if (
     reviewResponse.decision === ReviewResponseDecision.Agree &&
-    reviewResponse.originalReviewResponse?.decision === ReviewResponseDecision.Decline
+    reviewResponse.reviewResponseLink?.decision === ReviewResponseDecision.Decline
   )
     return ReviewResponseRecommendedApplicantVisibility.OriginalResponseVisibleToApplicant
   return ReviewResponseRecommendedApplicantVisibility.OriginalResponseNotVisibleToApplicant
