@@ -912,6 +912,10 @@ a:hover {
   border: 2px solid @interactiveHigh;
   border-radius: 10px !important;
   overflow: clip;
+
+  > :nth-child(n) {
+    border: none !important;
+  }
 }
 
 .updated-label {
