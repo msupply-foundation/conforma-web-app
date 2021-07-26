@@ -872,8 +872,11 @@ a:hover {
     }
   }
 
-  > :first-child {
+  .response-container:first-of-type {
     border-top: 2px solid @surfacesMed;
+  }
+
+  > :first-child {
     border-top-left-radius: @borderRadius;
     border-top-right-radius: @borderRadius;
   }
@@ -961,7 +964,6 @@ a:hover {
 // Layouts
 #dashboard {
   .flex-column();
-
 
   .template-category {
     .flex-column();
@@ -1105,7 +1107,7 @@ a:hover {
   padding-left: 10px;
   padding-right: 10px;
   background-color: @surfacesWhite;
-  margin:5px;
+  margin: 5px;
   color: @darkGrey;
   border: solid 1px @fullyTransperant;
 
@@ -1116,7 +1118,6 @@ a:hover {
   .dropdown.icon {
     margin-left: 6px;
   }
-
 }
 
 // Layouts
@@ -1149,10 +1150,10 @@ a:hover {
   }
 
   // Add filter selector
-  >.ui.dropdown {
+  > .ui.dropdown {
     color: @blue !important;
   }
-  
+
   .active-filter {
     // Needed for relative position of floating label
     position: relative;
@@ -1170,13 +1171,12 @@ a:hover {
       margin-right: 7px;
     }
   }
-
 }
 
 /*--------------------------------
       Date Picker
 ---------------------------------*/
-@weekDayRowBorder: 1px solid rgba(0,0,0, 0.05);
+@weekDayRowBorder: 1px solid rgba(0, 0, 0, 0.05);
 
 .not-clickable {
   cursor: default;
@@ -1196,11 +1196,11 @@ a:hover {
   .flex-row();
   align-items: center;
 
-  >div {
+  > div {
     .flex-column();
     margin-left: 5px;
     align-items: center;
-    
+
     &.title-and-criteria {
       :first-child {
         align-self: flex-start;
@@ -1215,17 +1215,15 @@ a:hover {
 .date-filter {
   .flex-row();
   padding: 5px;
-  padding-top:15px;
+  padding-top: 15px;
   padding-bottom: 5px;
-
-
 
   .named-dates {
     .flex-column();
     padding-left: 10px;
     padding-right: 10px;
     align-items: stretch;
-    margin-right:5px;
+    margin-right: 5px;
     overflow-y: auto;
     max-height: 300px;
 
@@ -1282,19 +1280,18 @@ a:hover {
         border-top: @weekDayRowBorder;
 
         :first-child.day-in-range {
-          .in-range-left-border
-        } 
+          .in-range-left-border;
+        }
 
         :last-child.day-in-range {
-          .in-range-right-border
-          
-        }         
+          .in-range-right-border;
+        }
 
         .first-in-range {
           border-top-left-radius: 5px;
           border-bottom-left-radius: 5px;
         }
-    
+
         .last-in-range {
           border-top-right-radius: 5px;
           border-bottom-right-radius: 5px;
@@ -1311,7 +1308,7 @@ a:hover {
             background-color: @dateFilterLightBlue;
           }
 
-          >div {
+          > div {
             border-radius: 200px;
             width: 32px;
             height: 32px;
@@ -1320,7 +1317,6 @@ a:hover {
               background-color: @selectedDayColor;
             }
           }
-          
         }
       }
     }
