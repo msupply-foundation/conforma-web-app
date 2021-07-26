@@ -913,6 +913,7 @@ a:hover {
   border-radius: 10px !important;
   overflow: clip;
 
+  // Turns off border of inner elements
   > :nth-child(n) {
     border: none !important;
   }
