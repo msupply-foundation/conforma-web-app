@@ -900,6 +900,14 @@ a:hover {
   border-top: none;
 }
 
+.history-block {
+  margin-bottom: 20px;
+}
+
+.stage-label-spacing {
+  margin-bottom: 10px;
+}
+
 .blue-border {
   border: 2px solid @interactiveHigh;
   border-radius: 10px !important;
