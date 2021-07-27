@@ -528,7 +528,7 @@ Once selected, items are displayed in a "card" view:
 
 _A date picker for entering standardised dates or date ranges_
 
-![Search Results](images/Element-Type-Specs-date-picker.png)
+![Date picker](images/Element-Type-Specs-date-picker.png)
 
 Uses [React Semantic-UI Datepickers](https://www.npmjs.com/package/react-semantic-ui-datepickers)
 
