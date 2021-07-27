@@ -237,7 +237,11 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)
 
   const responsesToReview = reviewResponses.filter(
-    (reviewResponse) => reviewResponse && !reviewResponse?.decision
+    (reviewResponse) =>
+      reviewResponse &&
+      !reviewResponse?.decision &&
+      // Prevention to count reviewResponse without linked application OR another review
+      (!!reviewResponse.applicationResponseId || !!reviewResponse.reviewResponseLinkId)
   )
 
   const massApprove = () => {
