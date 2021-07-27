@@ -49,8 +49,11 @@ const actionDefinitions: ActionDefinition[] = [
   {
     // Show "start" when is new review submitted to consolidation (even for partial reviews)
     action: ReviewAction.canStartReview,
-    checkMethod: ({ reviewStatus, reviewLevel, isSecondReview }) =>
-      reviewStatus === ReviewStatus.Pending && reviewLevel > 1 && !isSecondReview,
+    checkMethod: ({ reviewStatus, reviewLevel, isSecondReview, isPendingReview }) =>
+      reviewStatus === ReviewStatus.Pending &&
+      reviewLevel > 1 &&
+      !isSecondReview &&
+      isPendingReview,
   },
   {
     action: ReviewAction.canReReview,
@@ -138,7 +141,11 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       isReviewActive: (totalActive || 0) > 0,
     }
 
+    console.log(section.details, checkMethodProps)
+
     const foundAction = actionDefinitions.find(({ checkMethod }) => checkMethod(checkMethodProps))
+
+    console.log(foundAction)
 
     section.assignment = {
       isAssignedToCurrentUser,
