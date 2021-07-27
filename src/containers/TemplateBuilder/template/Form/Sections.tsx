@@ -4,6 +4,7 @@ import { IconButton } from '../../shared/IconButton'
 
 import { useOperationState } from '../../shared/OperationContext'
 import { getRandomNumber } from '../../shared/OperationContextHelpers'
+import { useConfirmationState } from '../../shared/ConfirmationContext'
 import TextIO from '../../shared/TextIO'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 
@@ -75,6 +76,7 @@ const Sections: React.FC = () => {
 const Section: React.FC = () => {
   const { selectedSectionId, unselect } = useFormState()
   const { updateTemplate, updateTemplateSection, updateApplication } = useOperationState()
+  const { askForConfirmation } = useConfirmationState()
   const { structure } = useFullApplicationState()
   const {
     template: { isDraft, id: templateId },
@@ -131,6 +133,7 @@ const Section: React.FC = () => {
   }
 
   const deleteSection = async () => {
+    if (!(await askForConfirmation('Are you sure you want to delete this section'))) return
     const applicationResponseIds = Object.values(selectedSection.pages)
       .map((page) => page.state)
       .flat()

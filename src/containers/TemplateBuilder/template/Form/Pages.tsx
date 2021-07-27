@@ -4,6 +4,7 @@ import { TemplateElementCategory } from '../../../../utils/generated/graphql'
 import { IconButton } from '../../shared/IconButton'
 import { useOperationState } from '../../shared/OperationContext'
 import { getRandomNumber } from '../../shared/OperationContextHelpers'
+import { useConfirmationState } from '../../shared/ConfirmationContext'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import { useFullApplicationState } from '../ApplicationWrapper'
 import { useFormState } from './Form'
@@ -82,6 +83,7 @@ const Pages: React.FC = () => {
 
 const Page: React.FC = () => {
   const { selectedPageNumber, selectedSectionId, setSelectedPageNumber } = useFormState()
+  const { askForConfirmation } = useConfirmationState()
   const {
     template: { isDraft },
   } = useTemplateState()
@@ -94,6 +96,7 @@ const Page: React.FC = () => {
   if (!currentPage) return null
 
   const deletePage = async () => {
+    if (!(await askForConfirmation('Are you sure you want to delete this page'))) return
     const selectedPage = Object.values(structure.sections).find(
       (section) => section.details.id === selectedSectionId
     )?.pages[selectedPageNumber]

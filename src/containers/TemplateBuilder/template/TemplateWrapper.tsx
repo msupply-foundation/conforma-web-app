@@ -18,6 +18,7 @@ import {
   useGetFullTemplateInfoQuery,
 } from '../../../utils/generated/graphql'
 import { useRouter } from '../../../utils/hooks/useRouter'
+import ConfirmationContext from '../shared/ConfirmationContext'
 import OperationContext from '../shared/OperationContext'
 import TextIO from '../shared/TextIO'
 import Actions from './Actions/Actions'
@@ -191,15 +192,17 @@ const TemplateWrapper: React.FC = () => {
   return (
     <Context.Provider value={state}>
       <OperationContext>
-        <FormWrapper>
-          <CreateApplicationWrapper>
-            <ApplicationWrapper>
-              <FullAppllicationWrapper>
-                <TemplateContainer />
-              </FullAppllicationWrapper>
-            </ApplicationWrapper>
-          </CreateApplicationWrapper>
-        </FormWrapper>
+        <ConfirmationContext>
+          <FormWrapper>
+            <CreateApplicationWrapper>
+              <ApplicationWrapper>
+                <FullAppllicationWrapper>
+                  <TemplateContainer />
+                </FullAppllicationWrapper>
+              </ApplicationWrapper>
+            </CreateApplicationWrapper>
+          </FormWrapper>
+        </ConfirmationContext>
       </OperationContext>
     </Context.Provider>
   )
