@@ -53,8 +53,10 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({
             const stageName = stageDetails?.name || strings.STAGE_NOT_FOUND
             const stageColour = stageDetails?.colour || ''
             return (
-              <div key={`history_stage_${stageName}`}>
-                <Stage name={stageName} colour={stageColour} />
+              <div key={`history_stage_${stageName}`} className="history-block">
+                <div className="stage-label-spacing">
+                  <Stage name={stageName} colour={stageColour} />
+                </div>
                 {historyElements.map((historyElement, index) => (
                   <Segment basic className="summary-page-element-container" key={index}>
                     <div className="response-container">
