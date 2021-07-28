@@ -7,7 +7,7 @@ import { CellProps } from '../../../utils/types'
 enum ACTIONS {
   EDIT_DRAFT = 'Edit draft',
   MAKE_CHANGES = 'Make changes',
-  RENEW = 'Renew',
+  VIEW = 'View',
 }
 
 const StatusCell: React.FC<CellProps> = ({ application }) => {
@@ -31,12 +31,12 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
           <Icon name="trash alternate outline" />
         </>
       )
-    case ApplicationStatus.Expired:
+    case ApplicationStatus.Completed:
       return (
-        <Link to={`/application/${serial}/renew`} className="user-action">
-          {ACTIONS.RENEW}
+        <Link to={`/application/${serial}`} className="user-action">
+          {ACTIONS.VIEW}
         </Link>
-      ) // TODO: Add Renew page (and logic)
+      )
     case ApplicationStatus.ChangesRequired:
       return (
         <Link to={`/application/${serial}`} className="user-action">
