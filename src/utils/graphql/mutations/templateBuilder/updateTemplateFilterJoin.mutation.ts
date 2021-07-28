@@ -9,8 +9,6 @@ export default gql`
         filterId
         filter {
           id
-          iconColor
-          icon
           code
           query
           title

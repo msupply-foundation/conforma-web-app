@@ -5,8 +5,6 @@ export default gql`
     filters {
       nodes {
         code
-        icon
-        iconColor
         id
         query
         title

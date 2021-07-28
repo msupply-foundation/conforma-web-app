@@ -20,9 +20,7 @@ export default gql`
         id
         filter {
           id
-          icon
           code
-          iconColor
           query
           title
           userRole
