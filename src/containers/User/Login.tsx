@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
 import { Link } from 'react-router-dom'
-import { Form, Button, Container, Icon, Image, Header, Dropdown, List } from 'semantic-ui-react'
+import { Form, Button, Container, Icon, Image, Header, List } from 'semantic-ui-react'
 import isLoggedIn from '../../utils/helpers/loginCheck'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
@@ -25,7 +25,7 @@ const Login: React.FC = () => {
 
   const noOrgOption: OrganisationSimple = {
     orgId: LOGIN_AS_NO_ORG,
-    orgName: strings.LABEL_NO_ORG,
+    orgName: strings.LABEL_NO_ORG_OPTION,
     userRole: null,
   }
 

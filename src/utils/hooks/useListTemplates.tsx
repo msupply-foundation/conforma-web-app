@@ -87,8 +87,10 @@ const convertFromTemplateToTemplateDetails = (
   template: Template,
   templatePermissions: TemplatePermissions
 ) => {
-  const { id, code, name } = template
+  const { id, code, name, namePlural } = template
   const permissions = templatePermissions[code] || []
+
+  const totalApplications = template?.applications.totalCount || 0
 
   let categoryTitle: string = template?.templateCategory?.title || ''
   let categoryIcon: SemanticICONS
@@ -109,6 +111,7 @@ const convertFromTemplateToTemplateDetails = (
     id,
     code,
     name: String(name),
+    namePlural: namePlural || undefined,
     permissions,
     filters,
     hasApplyPermission,
@@ -117,6 +120,7 @@ const convertFromTemplateToTemplateDetails = (
       icon: categoryIcon,
       title: categoryTitle,
     },
+    totalApplications,
   }
 
   return result

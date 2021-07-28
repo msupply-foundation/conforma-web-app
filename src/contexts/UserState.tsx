@@ -6,6 +6,7 @@ import strings from '../utils/constants'
 type UserState = {
   currentUser: User | null
   templatePermissions: TemplatePermissions
+  orgList: OrganisationSimple[]
   isLoading: boolean
   isNonRegistered: boolean | null
   isAdmin: boolean
@@ -65,6 +66,7 @@ const reducer = (state: UserState, action: UserActions) => {
 const initialState: UserState = {
   currentUser: null,
   templatePermissions: {},
+  orgList: [],
   isLoading: false,
   isNonRegistered: null,
   isAdmin: false,

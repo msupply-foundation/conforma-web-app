@@ -26,15 +26,17 @@
     "clone-deep": "^4.0.1",
     "deep-equal": "^2.0.5",
     "graphql": "^15.3.0",
+    "luxon": "^1.27.0",
     "lodash": "^4.17.21",
-    "luxon": "^1.25.0",
     "nanoid": "^3.1.22",
     "query-string": "^6.13.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-json-view": "^1.21.3",
     "react-markdown": "^5.0.3",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "react-semantic-ui-datepickers": "^2.13.1",
+    "serve": "^11.3.2"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.17.8",
@@ -46,7 +48,7 @@
     "@types/clone-deep": "^4.0.1",
     "@types/deep-equal": "^1.0.1",
     "@types/lodash": "^4.14.171",
-    "@types/luxon": "^1.25.1",
+    "@types/luxon": "^1.27.0",
     "@types/node": "^14.6.4",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",

@@ -1,31 +1,24 @@
 import { ApolloError } from '@apollo/client'
 import { useState } from 'react'
-import { useUserState } from '../../contexts/UserState'
 import { useCreateApplicationMutation } from '../../utils/generated/graphql'
 
-export interface CreateApplicationProps {
-  serial: string
+interface CreateApplicationProps {
   name: string
   templateId: number
-  isConfig?: boolean
+  userId?: number
+  orgId?: number
+  sessionId: string
+  templateSections: { templateSectionId: number }[]
   templateResponses: { templateElementId: number; value: any }[]
 }
 
-interface UseCreateApplicationProps {
-  onCompleted: () => void
-}
-
-const useCreateApplication = ({ onCompleted }: UseCreateApplicationProps) => {
+const useCreateApplication = () => {
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState<ApolloError | undefined>()
-  const {
-    userState: { currentUser },
-  } = useUserState()
 
   const [applicationMutation] = useCreateApplicationMutation({
     onCompleted: () => {
       setProcessing(false)
-      onCompleted()
     },
     onError: (error) => {
       setProcessing(false)
@@ -33,31 +26,28 @@ const useCreateApplication = ({ onCompleted }: UseCreateApplicationProps) => {
     },
   })
 
-  const userId = currentUser?.userId
-  const orgId = currentUser?.organisation?.orgId
-  const sessionId = currentUser?.sessionId || ''
-
   const createApplication = async ({
-    serial,
     name,
     templateId,
+    userId,
+    orgId,
+    sessionId,
+    templateSections,
     templateResponses,
-    isConfig = false,
   }: CreateApplicationProps) => {
     setProcessing(true)
-    const result = await applicationMutation({
+    const mutationResult = await applicationMutation({
       variables: {
-        isConfig,
         name,
-        serial,
         templateId,
         userId,
         orgId,
         sessionId,
+        sections: templateSections,
         responses: templateResponses,
       },
     })
-    return result
+    return mutationResult
   }
 
   return {

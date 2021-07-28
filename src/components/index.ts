@@ -11,7 +11,7 @@ import FilterList from './FilterList'
 import Dashboard from './Dashboard'
 import Loading from './Loading'
 import { Footer, ModalWarning } from './Main'
-import { ReviewHeader } from './Review'
+import { ReviewContainer, ReviewHeader } from './Review'
 import {
   ApplicationProgressBar,
   ConsolidationSectionProgressBar,
@@ -50,6 +50,7 @@ export {
   Product,
   ProductList,
   ProgressArea,
+  ReviewContainer,
   ReviewHeader,
   ReviewSectionProgressBar,
   SectionWrapper,

@@ -6,6 +6,7 @@ export default gql`
     id
     name
     status
+    namePlural
     isLinear
     startMessage
     submissionMessage
@@ -26,6 +27,9 @@ export default gql`
           userRole
         }
       }
+    }
+    applications {
+      totalCount
     }
   }
 `
