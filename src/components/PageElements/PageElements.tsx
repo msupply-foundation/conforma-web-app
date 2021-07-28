@@ -136,7 +136,8 @@ const PageElements: React.FC<PageElementProps> = ({
             // Applicant can edit the summary page when is first submission and a response has been added
             // Or when changes required for any question that have been updated (isUpdating true)
             const canApplicantEdit =
-              canEdit && isUpdating ? isResponseUpdated : !!latestApplicationResponse?.value
+              canEdit && (isUpdating ? isResponseUpdated : !!latestApplicationResponse?.value)
+
             const reviewResponse = previousApplicationResponse?.reviewResponses.nodes[0]
             const summaryViewProps = getSummaryViewProps(element)
 
