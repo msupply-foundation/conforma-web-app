@@ -5,7 +5,7 @@ import { useRouter } from '../../../utils/hooks/useRouter'
 import { FilterDefinitions } from '../../../utils/types'
 import BooleanFilter from './BooleanFilter'
 import DateFilter from './DateFilter/DateFilter'
-import { EnumFilter, SearchableListFilter } from './OptionFilters'
+import { EnumFilter, SearchableListFilter, StaticListFilter } from './OptionFilters'
 import { FilterIconMapping, GetMethodsForOptionFilter } from './types'
 
 const getArrayFromString = (string: string = '') =>
@@ -118,6 +118,21 @@ const ListFilters: React.FC<{ filterDefinitions: FilterDefinitions; filterListPa
                   onRemove={getOnRemove(filterName)}
                 />
               )
+
+            case 'staticList':
+              if (!filter?.options?.getListQuery) return null
+
+              return (
+                <StaticListFilter
+                  key={filterName}
+                  title={filter.title}
+                  filterListParameters={filterListParameters}
+                  getFilterListQuery={filter.options?.getListQuery}
+                  {...getMethodsForOptionFilter(filterName)}
+                  onRemove={getOnRemove(filterName)}
+                />
+              )
+
             case 'boolean':
               if (!filter?.options?.booleanMapping) return null
 
