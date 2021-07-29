@@ -4,6 +4,7 @@ import strings from '../../../utils/constants'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import { FilterDefinitions } from '../../../utils/types'
 import BooleanFilter from './BooleanFilter'
+import { startCase } from './common'
 import DateFilter from './DateFilter/DateFilter'
 import { EnumFilter, SearchableListFilter, StaticListFilter } from './OptionFilters'
 import { FilterIconMapping, GetMethodsForOptionFilter } from './types'
@@ -46,7 +47,7 @@ const ListFilters: React.FC<{ filterDefinitions: FilterDefinitions; filterListPa
       setInactiveOption: (option: string) =>
         updateQuery({
           [filterName]: getArrayFromString(query[filterName])
-            .filter((_option) => _option != option)
+            .filter((_option) => startCase(_option) !== startCase(option))
             .join(','),
         }),
     })
