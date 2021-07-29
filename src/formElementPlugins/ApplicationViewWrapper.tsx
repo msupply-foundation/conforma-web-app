@@ -39,7 +39,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     pluginCode,
     parameters,
     isVisible,
-    isEditable,
     isRequired,
     validationExpression,
     validationMessage,
@@ -129,6 +128,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         })
       setUpdateTrackerState({
         type: 'setElementUpdated',
+        elementCode: code,
         textValue: response?.text || '',
         previousValue: currentResponse?.text || '',
       })
@@ -147,6 +147,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       })
       setUpdateTrackerState({
         type: 'setElementUpdated',
+        elementCode: code,
         textValue: response?.text || '',
         previousValue: currentResponse?.text || '',
       })
@@ -157,6 +158,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     // Tells application state that a plugin field is in focus
     setUpdateTrackerState({
       type: 'setElementEntered',
+      elementCode: code,
       textValue: currentResponse?.text || '',
     })
   }
