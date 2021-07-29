@@ -111,6 +111,7 @@ interface ApplicationProps {
   structure: FullStructure
   requestRevalidation?: MethodRevalidate
   strictSectionPage?: SectionAndPage | null
+  isValidating?: boolean
 }
 
 interface AssignmentDetails {
