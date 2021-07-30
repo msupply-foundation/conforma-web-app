@@ -21,6 +21,12 @@ export default {
     message: 'Please select a decision: List Of Questions or Non Conformity',
     option: 'OK',
   },
+  REVIEW_DECISION_MISMATCH: {
+    title: 'Final decision',
+    message:
+      'You made a different decision than previous reviewer.\nWould you like to proceed wiith your decision?',
+    option: 'OK',
+  },
   REVIEW_STATUS_LOCKED: {
     title: 'Currently not available for submission',
     message:

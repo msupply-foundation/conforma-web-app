@@ -16,12 +16,14 @@ import { AssignmentDetails, FullStructure } from '../../utils/types'
 type ReviewSubmitProps = {
   structure: FullStructure
   assignment: AssignmentDetails
+  previousAssignment: AssignmentDetails
   scrollTo: (code: string) => void
 }
 
 const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
   const {
     structure: { thisReview, assignment },
+    previousAssignment,
   } = props
 
   const reviewDecision = thisReview?.reviewDecision
@@ -60,6 +62,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   getDecision,
   getAndSetDecisionError,
   assignment,
+  previousAssignment,
 }) => {
   const {
     location: { pathname },
@@ -111,6 +114,18 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     })
   }
 
+  const showDecisionMismatchWarning = () => {
+    const { title, message, option } = messages.REVIEW_DECISION_MISMATCH
+    setShowWarningModal({
+      open: true,
+      title,
+      message,
+      option,
+      onClick: () => submission(),
+      onClose: () => setShowWarningModal({ open: false }),
+    })
+  }
+
   const showConfirmation = () => {
     const { title, message, option } = messages.REVIEW_SUBMISSION_CONFIRM
     setShowModalConfirmation({
@@ -147,6 +162,17 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     const { thisReview } = await getFullReviewStructureAsync()
     if (thisReview?.current.reviewStatus === ReviewStatus.Pending) {
       showPendingReviewWarning()
+      return
+    }
+
+    // Check MISMATCH previous (when is Final Decision)
+    if (
+      assignment.isFinalDecision &&
+      !!previousAssignment &&
+      previousAssignment.review?.reviewDecision?.decision !== getDecision()
+    ) {
+      // Should submit when user clicks OK
+      showDecisionMismatchWarning()
       return
     }
 

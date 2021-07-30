@@ -37,9 +37,9 @@ import messages from '../../utils/messages'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetails
-  previousReviewAssignment: AssignmentDetails
+  previousAssignment: AssignmentDetails
   fullApplicationStructure: FullStructure
-}> = ({ reviewAssignment, previousReviewAssignment, fullApplicationStructure }) => {
+}> = ({ reviewAssignment, previousAssignment, fullApplicationStructure }) => {
   const {
     userState: { currentUser },
   } = useUserState()
@@ -191,11 +191,12 @@ const ReviewPage: React.FC<{
         ))}
         <PreviousStageDecision
           isFinalDecision={reviewAssignment.isFinalDecision}
-          review={previousReviewAssignment.review}
+          review={previousAssignment.review}
         />
         <ReviewSubmit
           structure={fullReviewStructure}
           assignment={reviewAssignment}
+          previousAssignment={previousAssignment}
           scrollTo={scrollTo}
         />
       </div>

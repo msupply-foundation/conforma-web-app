@@ -39,7 +39,7 @@ const ReviewPageWrapper: React.FC<{
 
   if (!reviewAssignment) return <NoMatch />
 
-  const previousReviewAssignment = getPreviousStageAssignment(
+  const previousAssignment = getPreviousStageAssignment(
     reviewAssignments,
     reviewAssignment.current.stage.number
   )
@@ -50,9 +50,7 @@ const ReviewPageWrapper: React.FC<{
       <Container id="review-page-summary">
         <Switch>
           <Route exact path={path}>
-            <ReviewPage
-              {...{ fullApplicationStructure, reviewAssignment, previousReviewAssignment }}
-            />
+            <ReviewPage {...{ fullApplicationStructure, reviewAssignment, previousAssignment }} />
           </Route>
           <Route>
             <NoMatch />
