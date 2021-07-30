@@ -38,7 +38,7 @@ const ApplicationCreate: React.FC = () => {
 
   // If template has no start message, go straight to first page of new application
   useEffect(() => {
-    if (template && !template.startMessage) handleCreate()
+    if (template && !template.startMessage && !id) handleCreate()
   }, [template])
 
   // Need to re-query the created application to get the new serial
