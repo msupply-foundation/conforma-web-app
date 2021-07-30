@@ -14,6 +14,7 @@ import {
   FullStructure,
   Page,
   ResponsesByCode,
+  ReviewDetails,
   SectionAssignment,
   SectionState,
 } from '../../utils/types'
@@ -188,9 +189,10 @@ const ReviewPage: React.FC<{
             }
           />
         ))}
-        {reviewAssignment.isFinalDecision && (
-          <div>{previousReviewAssignment.review?.reviewDecision?.decision}</div>
-        )}
+        <PreviousStageDecision
+          isFinalDecision={reviewAssignment.isFinalDecision}
+          review={previousReviewAssignment.review}
+        />
         <ReviewSubmit
           structure={fullReviewStructure}
           assignment={reviewAssignment}
@@ -272,8 +274,24 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
   )
 }
 
-interface PreviousStageDecisionProps {}
+interface PreviousStageDecisionProps {
+  review?: ReviewDetails | null
+  isFinalDecision: boolean
+}
 
-const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = () => null
+const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({ review, isFinalDecision }) =>
+  isFinalDecision && !!review ? (
+    <div>
+      {!!review.reviewDecision?.decision && (
+        <Label className="simple-label">
+          <p>
+            <strong>{strings.LABEL_REVIEW_SUBMIT_AS}:</strong>
+          </p>
+          {strings[review.reviewDecision.decision]}
+        </Label>
+      )}
+      <ReviewByLabel user={review.reviewer} />
+    </div>
+  ) : null
 
 export default ReviewPage
