@@ -51,16 +51,19 @@ const compileVariablesForReviewResponseQuery = ({
   sectionIds,
   fullApplicationStructure,
   currentUser,
-}: CompileVariablesForReviewResponseQueryProps) => ({
-  applicationId: fullApplicationStructure.info.id,
-  reviewAssignmentId: reviewAssignment.id as number,
-  sectionIds,
-  userId: currentUser?.userId as number,
-  previousLevel: reviewAssignment.level - 1,
-  stageNumber: reviewAssignment.current.stage.number,
-  previousStage: reviewAssignment.current.stage.number - 1,
-  shouldIncludePreviousStage: !!reviewAssignment.isFinalDecision,
-})
+}: CompileVariablesForReviewResponseQueryProps) =>
+  reviewAssignment
+    ? {
+        applicationId: fullApplicationStructure.info.id,
+        reviewAssignmentId: reviewAssignment.id as number,
+        sectionIds,
+        userId: currentUser?.userId as number,
+        previousLevel: reviewAssignment.level - 1,
+        stageNumber: reviewAssignment.current.stage.number,
+        previousStage: reviewAssignment.current.stage.number - 1,
+        shouldIncludePreviousStage: !!reviewAssignment.isFinalDecision,
+      }
+    : undefined
 
 const generateReviewStructure: GenerateReviewStructure = ({
   data,
