@@ -15,10 +15,12 @@ const useGetReviewStructureForSections = (props: UseGetReviewStructureForSection
   } = useUserState()
 
   const sectionIds = getSectionIds(props)
+  const variables = compileVariablesForReviewResponseQuery({ ...props, sectionIds, currentUser })
 
   const { data, error } = useGetReviewResponsesQuery({
-    variables: compileVariablesForReviewResponseQuery({ ...props, sectionIds, currentUser }),
+    variables,
     fetchPolicy: 'network-only',
+    skip: !variables,
   })
 
   useEffect(() => {
