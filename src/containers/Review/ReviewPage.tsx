@@ -36,8 +36,9 @@ import messages from '../../utils/messages'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetails
+  previousReviewAssignment: AssignmentDetails
   fullApplicationStructure: FullStructure
-}> = ({ reviewAssignment, fullApplicationStructure }) => {
+}> = ({ reviewAssignment, previousReviewAssignment, fullApplicationStructure }) => {
   const {
     userState: { currentUser },
   } = useUserState()
@@ -187,6 +188,9 @@ const ReviewPage: React.FC<{
             }
           />
         ))}
+        {reviewAssignment.isFinalDecision && (
+          <div>{previousReviewAssignment.review?.reviewDecision?.decision}</div>
+        )}
         <ReviewSubmit
           structure={fullReviewStructure}
           assignment={reviewAssignment}
@@ -267,5 +271,9 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
     </div>
   )
 }
+
+interface PreviousStageDecisionProps {}
+
+const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = () => null
 
 export default ReviewPage

@@ -37,6 +37,8 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
 
   if (loading) return <Loading />
 
+  console.log('assignments', assignments)
+
   if (!assignments || assignments.length === 0) return <NoMatch />
 
   return (

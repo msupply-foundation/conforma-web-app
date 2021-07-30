@@ -7,6 +7,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 import ReviewPage from './ReviewPage'
+import { getPreviousStageAssignment } from '../../utils/helpers/assignment/getPreviousStageAssignment'
 
 const ReviewPageWrapper: React.FC<{
   structure: FullStructure
@@ -37,13 +38,21 @@ const ReviewPageWrapper: React.FC<{
   )
 
   if (!reviewAssignment) return <NoMatch />
+
+  const previousReviewAssignment = getPreviousStageAssignment(
+    reviewAssignments,
+    reviewAssignment.current.stage.number
+  )
+
   // Pass through structure and reviewAssignment associated to review
   return (
     <ReviewContainer application={info}>
       <Container id="review-page-summary">
         <Switch>
           <Route exact path={path}>
-            <ReviewPage {...{ fullApplicationStructure, reviewAssignment }} />
+            <ReviewPage
+              {...{ fullApplicationStructure, reviewAssignment, previousReviewAssignment }}
+            />
           </Route>
           <Route>
             <NoMatch />
