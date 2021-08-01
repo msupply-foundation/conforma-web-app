@@ -2,7 +2,6 @@ import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Approval, Admin, Dashboard, NoMatch, Footer } from '../../components'
 import { ApplicationCreate, ApplicationWrapper } from '../Application'
-import { ApplicationProvider } from '../../contexts/ApplicationState'
 import UserArea from '../User/UserArea'
 import Login from '../User/Login'
 import ListWrapper from '../List/ListWrapper'
@@ -34,9 +33,7 @@ const SiteLayout: React.FC = () => {
               <ListWrapper />
             </Route>
             <Route path="/application/new">
-              <ApplicationProvider>
-                <ApplicationCreate />
-              </ApplicationProvider>
+              <ApplicationCreate />
             </Route>
             <Route path="/application/:serialNumber">
               <FormElementUpdateTrackerProvider>

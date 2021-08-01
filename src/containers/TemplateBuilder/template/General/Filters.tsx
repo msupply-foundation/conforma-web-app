@@ -17,9 +17,7 @@ import { useTemplateState } from '../TemplateWrapper'
 type UpdateFilter = {
   code: string
   title: string
-  icon: string
   id?: number
-  iconColor: string
   userRole: PermissionPolicyType
   query: object
 }
@@ -34,8 +32,6 @@ const newFilter = {
   id: -1,
   code: 'new code',
   title: 'new filter',
-  icon: 'globe',
-  iconColor: 'blue',
   userRole: PermissionPolicyType.Apply,
   query: { status: 'SUBMITTED' },
 }
@@ -61,8 +57,6 @@ const Filters: React.FC = () => {
         code: filter?.code || '',
         title: filter?.title || '',
         id: filter?.id || 0,
-        icon: filter?.icon || '',
-        iconColor: filter?.iconColor || '',
         userRole: filter?.userRole || PermissionPolicyType.Apply,
         query: filter?.query,
       })
@@ -165,21 +159,6 @@ const Filters: React.FC = () => {
             title="Code"
             setText={(value: string) => setUpdateState({ ...updateState, title: value })}
           />
-          <TextIO
-            text={updateState.icon}
-            title="Icon"
-            color={updateState.iconColor}
-            icon={updateState.icon}
-            link={iconLink}
-            setText={(value: string) => setUpdateState({ ...updateState, icon: value })}
-          />
-          <TextIO
-            text={updateState.iconColor}
-            title="Icon Color"
-            color={updateState.iconColor}
-            setText={(value: string) => setUpdateState({ ...updateState, iconColor: value })}
-          />
-
           <DropdownIO
             value={updateState.userRole}
             options={userRoleOptions}

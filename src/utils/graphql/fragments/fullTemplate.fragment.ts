@@ -10,9 +10,6 @@ export default gql`
         id
       }
     }
-    applications(filter: { isConfig: { equalTo: false } }) {
-      totalCount
-    }
     version
     versionTimestamp
     templateSections(orderBy: INDEX_ASC) {

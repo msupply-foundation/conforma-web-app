@@ -51,13 +51,11 @@ const CreateApplicationWrapper: React.FC = ({ children }) => {
   }
 
   const create = async () => {
-    const serial = Math.round(Math.random() * 10000).toString()
     const elementsDefaults = allElements.map((element) => element.defaultValue)
     const defaultValues = await getDefaultValues(elementsDefaults || [], currentUser)
 
     await createApplication({
       name: 'Config Application',
-      serial,
       templateId,
       isConfig: true,
       templateResponses: allElements

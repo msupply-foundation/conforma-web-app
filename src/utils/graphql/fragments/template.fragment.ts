@@ -28,7 +28,7 @@ export default gql`
         }
       }
     }
-    applications {
+    applications(filter: { isConfig: { equalTo: false } }) {
       totalCount
     }
   }

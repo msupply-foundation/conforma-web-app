@@ -8,6 +8,7 @@ import {
   useUpdateTemplateStageMutation,
 } from '../../../utils/generated/graphql'
 import useCreateApplication from '../../../utils/hooks/useCreateApplication'
+import useGetApplicationSerial from '../../../utils/hooks/useGetApplicationSerial'
 import {
   ImportTemplate,
   UpdateTemplate,
@@ -58,7 +59,8 @@ type DeleteApplicationHelper = (
 
 type CreateApplicationHelper = (
   setErrorAndLoadingState: SetErrorAndLoadingState,
-  create: ReturnType<typeof useCreateApplication>['create']
+  create: ReturnType<typeof useCreateApplication>['create'],
+  getSerialAsync: ReturnType<typeof useGetApplicationSerial>['getSerialAsync']
 ) => CreateApplication
 
 type UpdateApplicationHelper = (
@@ -167,10 +169,19 @@ export const deleteApplication: DeleteApplicationHelper =
   }
 
 export const createApplication: CreateApplicationHelper =
-  (setErrorAndLoadingState: SetErrorAndLoadingState, create) => async (props) => {
+  (setErrorAndLoadingState: SetErrorAndLoadingState, create, getSerialAsync) => async (props) => {
     try {
       const result = await create(props)
-      return checkMutationResult(result, setErrorAndLoadingState)
+      if (!checkMutationResult) return false
+
+      const serial = await getSerialAsync(result?.data?.createApplication?.application?.id || 0)
+      if (serial) return true
+
+      setErrorAndLoadingState({
+        isLoading: false,
+        error: { error: 'error', message: 'cannot get newly created application serial' },
+      })
+      return false
     } catch (e) {
       setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: e.message } })
       return false

@@ -4,7 +4,7 @@ export default gql`
   mutation createApplication(
     $name: String!
     $isConfig: Boolean = false
-    $serial: String!
+    $serial: String
     $templateId: Int!
     $userId: Int
     $orgId: Int

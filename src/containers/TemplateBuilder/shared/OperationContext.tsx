@@ -16,6 +16,7 @@ import {
 import useCreateApplication, {
   CreateApplicationProps,
 } from '../../../utils/hooks/useCreateApplication'
+import useGetApplicationSerial from '../../../utils/hooks/useGetApplicationSerial'
 import {
   exportTemplate,
   duplicateTemplate,
@@ -91,9 +92,8 @@ const OperationContext: React.FC = ({ children }) => {
   const [updateApplicationMutation] = useRestartApplicationMutation()
   const [updateTemplateStageMutation] = useUpdateTemplateStageMutation()
   const [innerState, setInnerState] = useState<ErrorAndLoadingState>({ isLoading: false })
-  const { create } = useCreateApplication({
-    onCompleted: () => {},
-  })
+  const { create } = useCreateApplication()
+  const { getSerialAsync } = useGetApplicationSerial()
   const [contextState] = useState<OperationContextState>({
     fetch: () => {},
     exportTemplate: (props) => exportTemplate(props, setInnerState),
@@ -106,7 +106,7 @@ const OperationContext: React.FC = ({ children }) => {
     ),
     updateTemplateSection: updateTemplateSection(setInnerState, updateTemplateSectionMutation),
     deleteApplication: deleteApplication(setInnerState, deleteApplicationMutation),
-    createApplication: createApplication(setInnerState, create),
+    createApplication: createApplication(setInnerState, create, getSerialAsync),
     updateApplication: updateApplication(setInnerState, updateApplicationMutation),
     updateTemplateStage: updateTemplateStage(setInnerState, updateTemplateStageMutation),
   })
