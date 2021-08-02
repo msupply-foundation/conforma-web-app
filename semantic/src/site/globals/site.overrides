@@ -72,6 +72,11 @@ a:hover {
   justify-content: center;
 }
 
+.flex-row-space_between {
+  .flex-row();
+  justify-content: space-between;
+}
+
 .flex-row-start {
   .flex-row();
   justify-content: flex-start;
@@ -92,6 +97,12 @@ a:hover {
   align-items: center;
 }
 
+
+.flex-row-space_between-center {
+  .flex-row-space_between();
+  align-items: center;
+}
+
 .flex-row-start-start {
   .flex-row-start();
   align-items: flex-start;
@@ -106,8 +117,6 @@ a:hover {
   .flex-row-center-center();
   flex-wrap: wrap;
 }
-
-
 
 .flex-row-start-center-wrap {
   .flex-row-start-center;

@@ -1,17 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import ReactJson from 'react-json-view'
-import {
-  Popup,
-  Header,
-  Dropdown,
-  Icon,
-  Label,
-  Modal,
-  Accordion,
-  Button,
-  Checkbox,
-} from 'semantic-ui-react'
-import { Loading } from '../../../../components'
+import React from 'react'
+import { Header } from 'semantic-ui-react'
+
 import { Stage } from '../../../../components/Review'
 import {
   PermissionPolicyType,
@@ -22,7 +11,7 @@ import {
 import { IconButton } from '../../shared/IconButton'
 import { useOperationState } from '../../shared/OperationContext'
 
-import TextIO, { iconLink } from '../../shared/TextIO'
+import TextIO, { colourLink, iconLink } from '../../shared/TextIO'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import PermissionNameList from './PermissionNameList'
 import PermissionNamesContext from './PermissionNamesContext'
@@ -112,8 +101,8 @@ const Permissions: React.FC = () => {
               />
               <TextIO title="Number" text={String(stage?.number)} />
               <TextIO
-                title="Color"
-                link={iconLink}
+                title="Colour"
+                link={colourLink}
                 text={stage?.colour || ''}
                 color={stage?.colour || ''}
                 setText={(colour) => updateStage(stage.id, { colour })}

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { matchPath } from 'react-router'
-import { Header, Message } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { Header, Icon, Message } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../../components'
 import strings from '../../../utils/constants'
 
@@ -78,12 +79,18 @@ const TemplateContainer: React.FC = () => {
 
   return (
     <div className="template-builder-wrapper">
-      <div className="template-builder-info-bar">
-        <TextIO title="version" text={String(version)} />
-        <TextIO title="name" text={name} />
-        <TextIO title="code" text={code} />
-        <TextIO title="status" text={status} />
-        <TextIO title="# applications" text={String(applicationCount)} />
+      <div className="flex-row-space_between-center">
+        <Link to="/admin/templates">
+          <Icon name="angle left" />
+          {'Templates/Procedures'}
+        </Link>
+        <div className="template-builder-info-bar">
+          <TextIO title="version" text={String(version)} />
+          <TextIO title="name" text={name} />
+          <TextIO title="code" text={code} />
+          <TextIO title="status" text={status} />
+          <TextIO title="# applications" text={String(applicationCount)} />
+        </div>
       </div>
       <div className="template-builder-tabs">
         {tabs.map(({ route, title }) => (

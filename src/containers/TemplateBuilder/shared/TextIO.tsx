@@ -3,6 +3,7 @@ import { Form, Icon, Input, Popup, SemanticICONS, TextArea } from 'semantic-ui-r
 import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic'
 
 const iconLink = 'https://react.semantic-ui.com/elements/icon/'
+const colourLink = 'https://htmlcolorcodes.com/'
 
 type TextIOprops = {
   text?: string
@@ -141,4 +142,4 @@ const TextIO: React.FC<TextIOprops> = ({
 }
 
 export default TextIO
-export { iconLink }
+export { iconLink, colourLink }

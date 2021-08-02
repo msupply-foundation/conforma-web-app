@@ -88,7 +88,7 @@ const Actions: React.FC = () => {
           Triggers
         </Header>
         <DropdownIO
-          title="Permission Name"
+          title=""
           isPropUpdated={true}
           value={String(selectedTrigger)}
           disabled={!isDraft}
