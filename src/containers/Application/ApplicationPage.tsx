@@ -12,11 +12,13 @@ import { checkPageIsAccessible } from '../../utils/helpers/structure'
 import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import strings from '../../utils/constants'
+import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
 
 const ApplicationPage: React.FC<ApplicationProps> = ({
   structure: fullStructure,
   requestRevalidation,
   strictSectionPage,
+  isValidating,
 }) => {
   const {
     query: { serialNumber, sectionCode, page },
@@ -24,6 +26,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
     replace,
   } = useRouter()
 
+  const { setState: setUpdateTrackerState } = useFormElementUpdateTracker()
   usePageTitle(strings.PAGE_TITLE_APPLICATION.replace('%1', serialNumber))
 
   const pageNumber = Number(page)
@@ -44,6 +47,11 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
       push(`/application/${fullStructure.info.serial}/${sectionCode}/Page${pageNumber}`)
     }
   }, [fullStructure, sectionCode, page])
+
+  // update tracker state when page or section changes
+  useEffect(() => {
+    setUpdateTrackerState({ type: 'resetElementsTracker' })
+  }, [sectionCode, page])
 
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
@@ -84,6 +92,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
           <Navigation
             current={{ sectionCode, pageNumber }}
             isLinear={isLinear}
+            isValidating={!!isValidating}
             sections={fullStructure.sections}
             serialNumber={serialNumber}
             requestRevalidation={requestRevalidation as MethodRevalidate}

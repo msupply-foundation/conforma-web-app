@@ -39,6 +39,7 @@ export default {
   BUTTON_SELF_ASSIGN: 'Self Assign',
   BUTTON_SUMMARY: 'Review & Summary',
   BUTTON_SUBMIT: 'Submit',
+  BUTTON_VALIDATING: 'Validating',
   BUTTON_CANCEL: 'Cancel',
   BUTTON_SUBMIT_APPLICATION: 'Submit application',
   BUTTON_SUMMARY_EDIT: 'Edit',

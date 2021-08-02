@@ -756,6 +756,9 @@ a:hover {
     .flex-row();
     flex-grow: 1;
     justify-content: flex-end;
+    .loader {
+      margin-left: 10px;
+    }
   }
 }
 
