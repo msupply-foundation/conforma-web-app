@@ -248,7 +248,6 @@ a:hover {
 }
 
 #user-area.ui.container {
-  // padding-left: 40px;
   padding-right: 60px;
 }
 
@@ -279,9 +278,12 @@ a:hover {
   }
 }
 // Menu bar links
-#user-area a {
-  color: @userAreaText;
-  font-size: @fontSmall;
+#user-area {
+  width: clamp(150px, 20%, 300px);
+  a {
+    color: @userAreaText;
+    font-size: @fontSmall;
+  }
 }
 
 // Not currently used, but should be appplied to the Link in the menu
