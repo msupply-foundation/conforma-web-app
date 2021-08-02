@@ -17,7 +17,7 @@ const UserArea: React.FC = () => {
   if (!currentUser || currentUser?.username === strings.USER_NONREGISTERED) return null
 
   return (
-    <Container id="user-area">
+    <Container id="user-area" fluid>
       <div id="user-area-left">
         <MainMenuBar />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
