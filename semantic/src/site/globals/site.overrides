@@ -279,11 +279,15 @@ a:hover {
 }
 // Menu bar links
 #user-area {
-  width: clamp(150px, 20%, 300px);
   a {
     color: @userAreaText;
     font-size: @fontSmall;
   }
+}
+
+#user-menu {
+  width: clamp(150px, 20%, 300px);
+  text-align: right;
 }
 
 // Not currently used, but should be appplied to the Link in the menu
