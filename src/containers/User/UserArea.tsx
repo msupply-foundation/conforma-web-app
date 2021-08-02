@@ -79,33 +79,31 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates, showLook
     return link === basepath ? 'selected-link' : ''
   }
 
+const MainMenuBar: React.FC = () => {
+  // TO-DO: Logic for deducing what should show in menu bar
+  // Probably passed in as props
+  const {
+    userState: { isAdmin },
+  } = useUserState()
+
   return (
     <div id="menu-bar">
       <List horizontal>
-        <List.Item className={getSelectedLinkClass('')}>
-          <Link to="/">{strings.MENU_ITEM_DASHBOARD}</Link>
+        <List.Item>
+          <Link to="/" className="selected-link">
+            {/* <Icon name="home" /> */}
+            {strings.MENU_ITEM_DASHBOARD}
+          </Link>
         </List.Item>
-        {templateOptions.length > 0 && (
-          <List.Item className={getSelectedLinkClass('applications')}>
-            <Dropdown
-              text={strings.MENU_ITEM_APPLICATION_LIST}
-              options={templateOptions}
-              onChange={handleTemplateChange}
-            />
-          </List.Item>
-        )}
-        {outcomeOptions.length > 1 && (
-          <List.Item className={getSelectedLinkClass('outcomes')}>
-            <Dropdown
-              text={strings.MENU_ITEM_OUTCOMES}
-              options={outcomeOptions}
-              onChange={handleOutcomeChange}
-            />
-          </List.Item>
-        )}
-        {showLookupTables && (
-          <List.Item className={getSelectedLinkClass('lookup-tables')}>
-            <Link to="/lookup-tables">{strings.MENU_ITEM_LOOKUP_TABLES}</Link>
+        <List.Item>
+          <Link to="/outcomes">Outcomes</Link>
+        </List.Item>
+        <List.Item>
+          <Link to="/application/new?type=UserEdit">Edit User Account</Link>
+        </List.Item>
+        {isAdmin && (
+          <List.Item>
+            <Link to="/admin">Admin Configurations</Link>
           </List.Item>
         )}
       </List>
@@ -139,8 +137,14 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
     await attemptLoginOrg({ orgId, JWT, onLoginOrgSuccess })
   }
-  const onLoginOrgSuccess = async ({ user, orgList, templatePermissions, JWT }: LoginPayload) => {
-    await onLogin(JWT, user, templatePermissions, orgList)
+  const onLoginOrgSuccess = async ({
+    user,
+    orgList,
+    templatePermissions,
+    JWT,
+    isAdmin,
+  }: LoginPayload) => {
+    await onLogin(JWT, user, templatePermissions, orgList, isAdmin)
   }
   const dropdownOptions = orgs.map(({ orgId, orgName }) => ({
     key: orgId,
