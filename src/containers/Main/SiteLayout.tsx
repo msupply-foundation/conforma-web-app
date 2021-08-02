@@ -37,7 +37,7 @@ const SiteLayout: React.FC = () => {
       <Container id="main-container" fluid>
         <UserArea />
         <DevOptions />
-        <Container id="content-area">
+        <Container id="content-area" fluid>
           <Switch>
             <Route exact path="/">
               <Dashboard />

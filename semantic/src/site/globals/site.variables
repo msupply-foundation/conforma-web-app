@@ -166,7 +166,7 @@
 
 // Widths for various key containers
 @applicationFormWidth: 900px;
-@applicationListWidth: 900px; // Could be wider if table is getting cluttered?
+@applicationListWidth: clamp(751px, 90%, 1127px);
 @applicationSummaryWidth: 900px;
 @applicationSummaryContentWidth: 700px;
 @applicationFormContentWidth: clamp(350px, 70%, 480px);

@@ -1,6 +1,8 @@
 import { Decision } from './generated/graphql'
 
 export default {
+  APP_NAME: 'mFlow',
+  APP_NAME_SUBHEADER: 'Application Manager',
   ACTION_ASSIGN: 'Assign',
   ACTION_CONTINUE: 'Continue',
   ACTION_START: 'Start',
@@ -99,6 +101,9 @@ export default {
   LABEL_VERIFICATION_FAILED: 'Verificaton Failed',
   LINK_LOGIN_USER: 'Create new account',
   MENU_ITEM_DASHBOARD: 'Dashboard',
+  MENU_ITEM_APPLICATION_LIST: 'Application List',
+  MENU_ITEM_OUTCOMES: 'Outcomes',
+  MENU_ITEM_LOOKUP_TABLES: 'Lookup Tables',
   TITLE_HISTORY_CHANGED_BY_APPLICANT: 'Changed by applicant',
   TITLE_HISTORY_CONSOLIDATION: 'Consolidation',
   TITLE_HISTORY_REVIEW: 'Review',

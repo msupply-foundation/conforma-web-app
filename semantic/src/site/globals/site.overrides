@@ -161,8 +161,22 @@ a:hover {
 }
 
 #user-area.ui.container {
-  padding-left: 40px;
+  // padding-left: 40px;
   padding-right: 60px;
+}
+
+#brand-area {
+  width: clamp(100px, 25%, 400px);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  .image {
+    height: 100%;
+  }
+  .brand-area-text {
+    color: @userAreaText !important;
+    margin: 0;
+  }
 }
 
 #user-area-left {
@@ -441,7 +455,7 @@ a:hover {
 
 #list-container {
   padding: 25px 0;
-  max-width: @applicationListWidth;
+  width: @applicationListWidth;
 }
 
 #list-top {
