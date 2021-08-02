@@ -115,6 +115,7 @@ export default {
   MENU_ITEM_APPLICATION_LIST: 'Application List',
   MENU_ITEM_OUTCOMES: 'Outcomes',
   MENU_ITEM_LOOKUP_TABLES: 'Lookup Tables',
+  MENU_ITEM_ADMIN_CONFIG: 'Admin Configurations',
   MENU_EDIT_USER: 'Edit User Details',
   MENU_LOGOUT: 'Log out',
   TITLE_HISTORY_CHANGED_BY_APPLICANT: 'Changed by applicant',
