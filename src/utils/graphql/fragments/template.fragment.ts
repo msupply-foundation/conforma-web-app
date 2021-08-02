@@ -5,6 +5,7 @@ export default gql`
     code
     id
     name
+    status
     namePlural
     isLinear
     startMessage
@@ -12,18 +13,22 @@ export default gql`
     templateCategory {
       title
       icon
+      code
+      id
     }
     templateFilterJoins {
       nodes {
+        id
         filter {
           id
+          code
           query
           title
           userRole
         }
       }
     }
-    applications {
+    applications(filter: { isConfig: { equalTo: false } }) {
       totalCount
     }
   }
