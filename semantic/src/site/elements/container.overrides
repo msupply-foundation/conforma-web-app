@@ -3,7 +3,16 @@
 *******************************/
 
 // Overrides container width
-@maxWidth: 1024px;
+@maxWidth: 100%;
 
 // Overrides to remove left and right margin on mobile
 @mobileGutter: 0;
+
+/* Mobile  -- keep full width on mobile */
+@media only screen and (max-width: @largestMobileScreen) {
+  .ui.container {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
