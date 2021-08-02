@@ -4,8 +4,11 @@ import { useUserState } from '../../contexts/UserState'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { Link } from 'react-router-dom'
 import strings from '../../utils/constants'
-import { OrganisationSimple, User, LoginPayload } from '../../utils/types'
+import { OrganisationSimple, User, LoginPayload, TemplateInList } from '../../utils/types'
 import useGetOutcomeDisplays from '../../utils/hooks/useGetOutcomeDisplays'
+import useListTemplates from '../../utils/hooks/useListTemplates'
+import { AllLookupTableStructuresType } from '../../LookupTable/types'
+import { useGetAllTableStructures } from '../../LookupTable/hooks'
 import { useRouter } from '../../utils/hooks/useRouter'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
@@ -17,8 +20,13 @@ const UserArea: React.FC = () => {
     userState: { currentUser, orgList, templatePermissions },
     onLogin,
   } = useUserState()
+  const {
+    templatesData: { templates },
+  } = useListTemplates(templatePermissions, false)
 
   const { displays } = useGetOutcomeDisplays()
+
+  const { allTableStructures } = useGetAllTableStructures()
 
   if (!currentUser || currentUser?.username === strings.USER_NONREGISTERED) return null
 
@@ -27,8 +35,9 @@ const UserArea: React.FC = () => {
       <BrandArea />
       <div id="user-area-left">
         <MainMenuBar
-          templates={Object.entries(templatePermissions)}
+          templates={templates}
           outcomes={(displays?.outcomeDisplays as OutcomeDisplay[]) || []}
+          showLookupTables={(allTableStructures && allTableStructures?.length > 0) || false}
         />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
@@ -36,12 +45,12 @@ const UserArea: React.FC = () => {
     </Container>
   )
 }
-
 interface MainMenuBarProps {
-  templates: Array<[string, unknown]>
+  templates: TemplateInList[]
   outcomes: OutcomeDisplay[]
+  showLookupTables: boolean
 }
-const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
+const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates, showLookupTables }) => {
   const { push, pathname } = useRouter()
   const outcomeOptions = outcomes.map(({ code, title, tableName }): any => ({
     key: code,
@@ -55,10 +64,10 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
     else push(`/outcomes/${value}`)
   }
 
-  const templateOptions = templates.map((templatePerm) => ({
-    key: templatePerm[0],
-    text: templatePerm[0],
-    value: templatePerm[0],
+  const templateOptions = templates.map((template) => ({
+    key: template.code,
+    text: template.name,
+    value: template.code,
   }))
 
   const handleTemplateChange = (_: SyntheticEvent, { value }: any) => {
@@ -73,42 +82,32 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
   return (
     <div id="menu-bar">
       <List horizontal>
-        <List.Item>
-          <Link to="/" className={getSelectedLinkClass('')}>
-            {/* <Icon name="home" /> */}
-            {strings.MENU_ITEM_DASHBOARD}
-          </Link>
+        <List.Item className={getSelectedLinkClass('')}>
+          <Link to="/">{strings.MENU_ITEM_DASHBOARD}</Link>
         </List.Item>
-        {/* <List.Item>
-          <Link to="/layout">Layout helpers</Link>
-        </List.Item> */}
         {templateOptions.length > 0 && (
-          <List.Item>
+          <List.Item className={getSelectedLinkClass('applications')}>
             <Dropdown
               text={strings.MENU_ITEM_APPLICATION_LIST}
-              // TO-DO: Show template NAME (needs to come from back-end userInfo)
               options={templateOptions}
               onChange={handleTemplateChange}
-            ></Dropdown>
+            />
           </List.Item>
         )}
         {outcomeOptions.length > 1 && (
-          <List.Item>
+          <List.Item className={getSelectedLinkClass('outcomes')}>
             <Dropdown
               text={strings.MENU_ITEM_OUTCOMES}
               options={outcomeOptions}
               onChange={handleOutcomeChange}
-            ></Dropdown>
+            />
           </List.Item>
         )}
-        <List.Item>
-          <Link to="/lookup-tables" className={getSelectedLinkClass('lookup-tables')}>
-            Lookup Tables
-          </Link>
-        </List.Item>
-        <List.Item>
-          <Link to="/application/new?type=UserEdit">Edit User Account</Link>
-        </List.Item>
+        {showLookupTables && (
+          <List.Item className={getSelectedLinkClass('lookup-tables')}>
+            <Link to="/lookup-tables">{strings.MENU_ITEM_LOOKUP_TABLES}</Link>
+          </List.Item>
+        )}
       </List>
     </div>
   )
@@ -171,14 +170,21 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
 
 const UserMenu: React.FC<{ user: User }> = ({ user }) => {
   const { logout } = useUserState()
+  const { push } = useRouter()
   return (
     <div id="user-menu">
-      <Button animated onClick={() => logout()}>
+      <Button>
         <Button.Content visible>
-          {user?.firstName || ''} {user?.lastName || ''}
-        </Button.Content>
-        <Button.Content hidden>
-          <Icon name="log out" />
+          <Dropdown text={`${user?.firstName || ''} ${user?.lastName || ''}`}>
+            <Dropdown.Menu>
+              <Dropdown.Item
+                icon="edit"
+                text={strings.MENU_EDIT_USER}
+                onClick={() => push('/application/new?type=UserEdit')}
+              />
+              <Dropdown.Item icon="log out" text={strings.MENU_LOGOUT} onClick={() => logout()} />
+            </Dropdown.Menu>
+          </Dropdown>
         </Button.Content>
       </Button>
     </div>

@@ -63,8 +63,6 @@ export type Query = Node & {
   filters?: Maybe<FiltersConnection>;
   /** Reads and enables pagination through a set of `LookupTable`. */
   lookupTables?: Maybe<LookupTablesConnection>;
-  /** Reads and enables pagination through a set of `LookupTableIngredient`. */
-  lookupTableIngredients?: Maybe<LookupTableIngredientsConnection>;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications?: Maybe<NotificationsConnection>;
   /** Reads and enables pagination through a set of `Organisation`. */
@@ -144,7 +142,6 @@ export type Query = Node & {
   filter?: Maybe<Filter>;
   filterByCode?: Maybe<Filter>;
   lookupTable?: Maybe<LookupTable>;
-  lookupTableIngredient?: Maybe<LookupTableIngredient>;
   notification?: Maybe<Notification>;
   organisation?: Maybe<Organisation>;
   organisationByName?: Maybe<Organisation>;
@@ -232,8 +229,6 @@ export type Query = Node & {
   filterByNodeId?: Maybe<Filter>;
   /** Reads a single `LookupTable` using its globally unique `ID`. */
   lookupTableByNodeId?: Maybe<LookupTable>;
-  /** Reads a single `LookupTableIngredient` using its globally unique `ID`. */
-  lookupTableIngredientByNodeId?: Maybe<LookupTableIngredient>;
   /** Reads a single `Notification` using its globally unique `ID`. */
   notificationByNodeId?: Maybe<Notification>;
   /** Reads a single `Organisation` using its globally unique `ID`. */
@@ -504,19 +499,6 @@ export type QueryLookupTablesArgs = {
   orderBy?: Maybe<Array<LookupTablesOrderBy>>;
   condition?: Maybe<LookupTableCondition>;
   filter?: Maybe<LookupTableFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryLookupTableIngredientsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<LookupTableIngredientsOrderBy>>;
-  condition?: Maybe<LookupTableIngredientCondition>;
-  filter?: Maybe<LookupTableIngredientFilter>;
 };
 
 
@@ -1026,12 +1008,6 @@ export type QueryLookupTableArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryLookupTableIngredientArgs = {
-  id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryNotificationArgs = {
   id: Scalars['Int'];
 };
@@ -1536,12 +1512,6 @@ export type QueryFilterByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLookupTableByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryLookupTableIngredientByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -8799,76 +8769,6 @@ export type LookupTablesEdge = {
   node?: Maybe<LookupTable>;
 };
 
-/** Methods to use when ordering `LookupTableIngredient`. */
-export enum LookupTableIngredientsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  ActiveIngredientAsc = 'ACTIVE_INGREDIENT_ASC',
-  ActiveIngredientDesc = 'ACTIVE_INGREDIENT_DESC',
-  ApiManufacturerAsc = 'API_MANUFACTURER_ASC',
-  ApiManufacturerDesc = 'API_MANUFACTURER_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `LookupTableIngredient` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type LookupTableIngredientCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `activeIngredient` field. */
-  activeIngredient?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `apiManufacturer` field. */
-  apiManufacturer?: Maybe<Scalars['String']>;
-};
-
-/** A filter to be used against `LookupTableIngredient` object types. All fields are combined with a logical ‘and.’ */
-export type LookupTableIngredientFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `activeIngredient` field. */
-  activeIngredient?: Maybe<StringFilter>;
-  /** Filter by the object’s `apiManufacturer` field. */
-  apiManufacturer?: Maybe<StringFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<LookupTableIngredientFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<LookupTableIngredientFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<LookupTableIngredientFilter>;
-};
-
-/** A connection to a list of `LookupTableIngredient` values. */
-export type LookupTableIngredientsConnection = {
-  __typename?: 'LookupTableIngredientsConnection';
-  /** A list of `LookupTableIngredient` objects. */
-  nodes: Array<Maybe<LookupTableIngredient>>;
-  /** A list of edges which contains the `LookupTableIngredient` and cursor to aid in pagination. */
-  edges: Array<LookupTableIngredientsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `LookupTableIngredient` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type LookupTableIngredient = Node & {
-  __typename?: 'LookupTableIngredient';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  activeIngredient?: Maybe<Scalars['String']>;
-  apiManufacturer?: Maybe<Scalars['String']>;
-};
-
-/** A `LookupTableIngredient` edge in the connection. */
-export type LookupTableIngredientsEdge = {
-  __typename?: 'LookupTableIngredientsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `LookupTableIngredient` at the end of the edge. */
-  node?: Maybe<LookupTableIngredient>;
-};
-
 /** Methods to use when ordering `Organisation`. */
 export enum OrganisationsOrderBy {
   Natural = 'NATURAL',
@@ -10256,8 +10156,6 @@ export type Mutation = {
   createFilter?: Maybe<CreateFilterPayload>;
   /** Creates a single `LookupTable`. */
   createLookupTable?: Maybe<CreateLookupTablePayload>;
-  /** Creates a single `LookupTableIngredient`. */
-  createLookupTableIngredient?: Maybe<CreateLookupTableIngredientPayload>;
   /** Creates a single `Notification`. */
   createNotification?: Maybe<CreateNotificationPayload>;
   /** Creates a single `Organisation`. */
@@ -10372,10 +10270,6 @@ export type Mutation = {
   updateLookupTableByNodeId?: Maybe<UpdateLookupTablePayload>;
   /** Updates a single `LookupTable` using a unique key and a patch. */
   updateLookupTable?: Maybe<UpdateLookupTablePayload>;
-  /** Updates a single `LookupTableIngredient` using its globally unique id and a patch. */
-  updateLookupTableIngredientByNodeId?: Maybe<UpdateLookupTableIngredientPayload>;
-  /** Updates a single `LookupTableIngredient` using a unique key and a patch. */
-  updateLookupTableIngredient?: Maybe<UpdateLookupTableIngredientPayload>;
   /** Updates a single `Notification` using its globally unique id and a patch. */
   updateNotificationByNodeId?: Maybe<UpdateNotificationPayload>;
   /** Updates a single `Notification` using a unique key and a patch. */
@@ -10564,10 +10458,6 @@ export type Mutation = {
   deleteLookupTableByNodeId?: Maybe<DeleteLookupTablePayload>;
   /** Deletes a single `LookupTable` using a unique key. */
   deleteLookupTable?: Maybe<DeleteLookupTablePayload>;
-  /** Deletes a single `LookupTableIngredient` using its globally unique id. */
-  deleteLookupTableIngredientByNodeId?: Maybe<DeleteLookupTableIngredientPayload>;
-  /** Deletes a single `LookupTableIngredient` using a unique key. */
-  deleteLookupTableIngredient?: Maybe<DeleteLookupTableIngredientPayload>;
   /** Deletes a single `Notification` using its globally unique id. */
   deleteNotificationByNodeId?: Maybe<DeleteNotificationPayload>;
   /** Deletes a single `Notification` using a unique key. */
@@ -10776,12 +10666,6 @@ export type MutationCreateFilterArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateLookupTableArgs = {
   input: CreateLookupTableInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateLookupTableIngredientArgs = {
-  input: CreateLookupTableIngredientInput;
 };
 
 
@@ -11124,18 +11008,6 @@ export type MutationUpdateLookupTableByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateLookupTableArgs = {
   input: UpdateLookupTableInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateLookupTableIngredientByNodeIdArgs = {
-  input: UpdateLookupTableIngredientByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateLookupTableIngredientArgs = {
-  input: UpdateLookupTableIngredientInput;
 };
 
 
@@ -11700,18 +11572,6 @@ export type MutationDeleteLookupTableByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteLookupTableArgs = {
   input: DeleteLookupTableInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteLookupTableIngredientByNodeIdArgs = {
-  input: DeleteLookupTableIngredientByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteLookupTableIngredientArgs = {
-  input: DeleteLookupTableIngredientInput;
 };
 
 
@@ -22861,40 +22721,6 @@ export type CreateLookupTablePayloadLookupTableEdgeArgs = {
   orderBy?: Maybe<Array<LookupTablesOrderBy>>;
 };
 
-/** All input for the create `LookupTableIngredient` mutation. */
-export type CreateLookupTableIngredientInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `LookupTableIngredient` to be created by this mutation. */
-  lookupTableIngredient: LookupTableIngredientInput;
-};
-
-/** An input for mutations affecting `LookupTableIngredient` */
-export type LookupTableIngredientInput = {
-  id?: Maybe<Scalars['Int']>;
-  activeIngredient?: Maybe<Scalars['String']>;
-  apiManufacturer?: Maybe<Scalars['String']>;
-};
-
-/** The output of our create `LookupTableIngredient` mutation. */
-export type CreateLookupTableIngredientPayload = {
-  __typename?: 'CreateLookupTableIngredientPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `LookupTableIngredient` that was created by this mutation. */
-  lookupTableIngredient?: Maybe<LookupTableIngredient>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `LookupTableIngredient`. May be used by Relay 1. */
-  lookupTableIngredientEdge?: Maybe<LookupTableIngredientsEdge>;
-};
-
-
-/** The output of our create `LookupTableIngredient` mutation. */
-export type CreateLookupTableIngredientPayloadLookupTableIngredientEdgeArgs = {
-  orderBy?: Maybe<Array<LookupTableIngredientsOrderBy>>;
-};
-
 /** All input for the create `Notification` mutation. */
 export type CreateNotificationInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -25080,51 +24906,6 @@ export type UpdateLookupTableInput = {
   id: Scalars['Int'];
 };
 
-/** All input for the `updateLookupTableIngredientByNodeId` mutation. */
-export type UpdateLookupTableIngredientByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `LookupTableIngredient` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `LookupTableIngredient` being updated. */
-  patch: LookupTableIngredientPatch;
-};
-
-/** Represents an update to a `LookupTableIngredient`. Fields that are set will be updated. */
-export type LookupTableIngredientPatch = {
-  id?: Maybe<Scalars['Int']>;
-  activeIngredient?: Maybe<Scalars['String']>;
-  apiManufacturer?: Maybe<Scalars['String']>;
-};
-
-/** The output of our update `LookupTableIngredient` mutation. */
-export type UpdateLookupTableIngredientPayload = {
-  __typename?: 'UpdateLookupTableIngredientPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `LookupTableIngredient` that was updated by this mutation. */
-  lookupTableIngredient?: Maybe<LookupTableIngredient>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `LookupTableIngredient`. May be used by Relay 1. */
-  lookupTableIngredientEdge?: Maybe<LookupTableIngredientsEdge>;
-};
-
-
-/** The output of our update `LookupTableIngredient` mutation. */
-export type UpdateLookupTableIngredientPayloadLookupTableIngredientEdgeArgs = {
-  orderBy?: Maybe<Array<LookupTableIngredientsOrderBy>>;
-};
-
-/** All input for the `updateLookupTableIngredient` mutation. */
-export type UpdateLookupTableIngredientInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `LookupTableIngredient` being updated. */
-  patch: LookupTableIngredientPatch;
-  id: Scalars['Int'];
-};
-
 /** All input for the `updateNotificationByNodeId` mutation. */
 export type UpdateNotificationByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -26844,41 +26625,6 @@ export type DeleteLookupTablePayloadLookupTableEdgeArgs = {
 
 /** All input for the `deleteLookupTable` mutation. */
 export type DeleteLookupTableInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
-/** All input for the `deleteLookupTableIngredientByNodeId` mutation. */
-export type DeleteLookupTableIngredientByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `LookupTableIngredient` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The output of our delete `LookupTableIngredient` mutation. */
-export type DeleteLookupTableIngredientPayload = {
-  __typename?: 'DeleteLookupTableIngredientPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `LookupTableIngredient` that was deleted by this mutation. */
-  lookupTableIngredient?: Maybe<LookupTableIngredient>;
-  deletedLookupTableIngredientNodeId?: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `LookupTableIngredient`. May be used by Relay 1. */
-  lookupTableIngredientEdge?: Maybe<LookupTableIngredientsEdge>;
-};
-
-
-/** The output of our delete `LookupTableIngredient` mutation. */
-export type DeleteLookupTableIngredientPayloadLookupTableIngredientEdgeArgs = {
-  orderBy?: Maybe<Array<LookupTableIngredientsOrderBy>>;
-};
-
-/** All input for the `deleteLookupTableIngredient` mutation. */
-export type DeleteLookupTableIngredientInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
