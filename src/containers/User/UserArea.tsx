@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from 'react'
+import React, { SyntheticEvent } from 'react'
 import { Button, Container, Icon, Image, List, Dropdown } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'

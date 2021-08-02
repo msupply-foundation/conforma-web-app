@@ -1,8 +1,7 @@
 import React, { Fragment } from 'react'
 import { Table, Message } from 'semantic-ui-react'
-import { useRouter } from '../../utils/hooks/useRouter'
 import messages from '../../utils/messages'
-import { ApplicationListRow, BasicStringObject, ColumnDetails, SortQuery } from '../../utils/types'
+import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
 
 interface ApplicationsListProps {

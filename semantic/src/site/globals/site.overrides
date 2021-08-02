@@ -187,6 +187,9 @@ a:hover {
 
 #menu-bar {
   font-size: inherit;
+  .item {
+    margin-right: 10px;
+  }
 }
 // Menu bar links
 #user-area a {
@@ -474,6 +477,10 @@ a:hover {
 
 .flex-grow-1 {
   flex-grow: 1;
+}
+
+.application-name-cell-name {
+  font-size: @slightlySmallerText;
 }
 
 .user-action {

@@ -29,7 +29,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
         }
         return (
           <Label className="simple-label">
-            <em>{strings.STATUS_IN_PROGRESS}</em>
+            <em>{strings.REVIEW_STATUS_IN_PROGRESS}</em>
           </Label>
         )
       }
@@ -213,7 +213,7 @@ const ViewReviewIcon: React.FC<ReviewSectionComponentProps> = ({
 
 // NOT_STARTED LABEL
 const NotStartedLabel: React.FC = () => (
-  <Label className="simple-label" content={strings.STATUS_NOT_STARTED} />
+  <Label className="simple-label" content={strings.REVIEW_STATUS_NOT_STARTED} />
 )
 
 export default ReviewSectionRowAction
