@@ -54,11 +54,9 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
     text: title,
     value: tableName,
   }))
-  outcomeOptions.push({ key: 'all', text: 'See all', value: '' })
 
   const handleOutcomeChange = (_: SyntheticEvent, { value }: any) => {
-    if (value === '') push('/outcomes')
-    else push(`/outcomes/${value}`)
+    push(`/outcomes/${value}`)
   }
 
   const templateOptions = templates.map((template) => ({
@@ -101,13 +99,35 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
           </List.Item>
         )}
         {isAdmin && (
-          <List.Item className={getSelectedLinkClass('lookup-tables')}>
-            <Link to="/lookup-tables">{strings.MENU_ITEM_LOOKUP_TABLES}</Link>
-          </List.Item>
-        )}
-        {isAdmin && (
           <List.Item className={getSelectedLinkClass('admin')}>
-            <Link to="/admin">{strings.MENU_ITEM_ADMIN_CONFIG}</Link>
+            <Dropdown text={strings.MENU_ITEM_ADMIN_CONFIG}>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  text={strings.MENU_ITEM_ADMIN_TEMPLATES}
+                  onClick={() => push('/admin/templates')}
+                />
+                <Dropdown.Item
+                  text={strings.MENU_ITEM_ADMIN_LOOKUP_TABLES}
+                  onClick={() => push('/admin/lookup-tables')}
+                />
+                <Dropdown.Item
+                  text={strings.MENU_ITEM_ADMIN_OUTCOME_CONFIG}
+                  onClick={() => push('/admin/outcomes')}
+                />
+                <Dropdown.Item
+                  text={strings.MENU_ITEM_ADMIN_PERMISSIONS}
+                  onClick={() => push('/admin/permissions')}
+                />
+                <Dropdown.Item
+                  text={strings.MENU_ITEM_ADMIN_PLUGINS}
+                  onClick={() => push('/admin/plugins')}
+                />
+                <Dropdown.Item
+                  text={strings.MENU_ITEM_ADMIN_LOCALISATION}
+                  onClick={() => push('/admin/localisations')}
+                />
+              </Dropdown.Menu>
+            </Dropdown>
           </List.Item>
         )}
       </List>
