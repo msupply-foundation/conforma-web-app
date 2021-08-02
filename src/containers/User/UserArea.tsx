@@ -42,7 +42,7 @@ interface MainMenuBarProps {
   outcomes: OutcomeDisplay[]
 }
 const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
-  const { push } = useRouter()
+  const { push, pathname } = useRouter()
   const outcomeOptions = outcomes.map(({ code, title, tableName }): any => ({
     key: code,
     text: title,
@@ -65,11 +65,16 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
     push(`/applications?type=${value}`)
   }
 
+  const getSelectedLinkClass = (link: string) => {
+    const basepath = pathname.split('/')?.[1]
+    return link === basepath ? 'selected-link' : ''
+  }
+
   return (
     <div id="menu-bar">
       <List horizontal>
         <List.Item>
-          <Link to="/" className="selected-link">
+          <Link to="/" className={getSelectedLinkClass('')}>
             {/* <Icon name="home" /> */}
             {strings.MENU_ITEM_DASHBOARD}
           </Link>
@@ -97,7 +102,9 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
           </List.Item>
         )}
         <List.Item>
-          <Link to="/lookup-tables">Lookup Tables</Link>
+          <Link to="/lookup-tables" className={getSelectedLinkClass('lookup-tables')}>
+            Lookup Tables
+          </Link>
         </List.Item>
         <List.Item>
           <Link to="/application/new?type=UserEdit">Edit User Account</Link>
