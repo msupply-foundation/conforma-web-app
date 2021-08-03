@@ -23,6 +23,7 @@ type ActionDefinition = {
     isAssignedToCurrentUser: boolean
     isFinalDecision: boolean
     reviewAssignmentStatus: ReviewAssignmentStatus | null
+    isSecondReview: boolean
     isPendingReview: boolean
     isReviewExisting: boolean
     reviewStatus: ReviewStatus | undefined
@@ -43,6 +44,15 @@ const actionDefinitions: ActionDefinition[] = [
     checkMethod: ({ reviewAssignmentStatus, isPendingReview, isReviewExisting }) =>
       reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
       !isReviewExisting &&
+      isPendingReview,
+  },
+  {
+    // Show "start" when is new review submitted to consolidation (even for partial reviews)
+    action: ReviewAction.canStartReview,
+    checkMethod: ({ reviewStatus, reviewLevel, isSecondReview, isPendingReview }) =>
+      reviewStatus === ReviewStatus.Pending &&
+      reviewLevel > 1 &&
+      !isSecondReview &&
       isPendingReview,
   },
   {
@@ -105,13 +115,16 @@ const generateReviewSectionActions: GenerateSectionActions = ({
   thisReview,
   currentUserId,
 }) => {
-  const isAssignedToCurrentUser = reviewer.id === currentUserId
   const isConsolidation = level > 1 || isFinalDecision
 
   sections.forEach((section) => {
     const { totalReviewable, totalPendingReview, totalActive } = isConsolidation
       ? (section.consolidationProgress as ConsolidationProgress)
       : (section.reviewProgress as ReviewProgress)
+
+    const totalNewReviewable = section?.consolidationProgress?.totalNewReviewable
+
+    const isAssignedToCurrentUser = reviewer.id === currentUserId && totalReviewable > 0
 
     const isReviewable = (totalReviewable || 0) > 0
 
@@ -123,6 +136,7 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       reviewAssignmentStatus: assignmentStatus,
       isReviewExisting: !!thisReview,
       reviewStatus: thisReview?.current.reviewStatus,
+      isSecondReview: (totalNewReviewable || 0) > 0,
       isPendingReview: (totalPendingReview || 0) > 0,
       isReviewActive: (totalActive || 0) > 0,
     }

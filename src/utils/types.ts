@@ -112,6 +112,7 @@ interface ApplicationProps {
   structure: FullStructure
   requestRevalidation?: MethodRevalidate
   strictSectionPage?: SectionAndPage | null
+  isValidating?: boolean
 }
 
 interface AssignmentDetails {
@@ -564,6 +565,7 @@ interface LoginPayload {
   JWT: string
   templatePermissions: TemplatePermissions
   orgList?: OrganisationSimple[]
+  isAdmin: boolean
 }
 
 interface UseGetReviewStructureForSectionProps {

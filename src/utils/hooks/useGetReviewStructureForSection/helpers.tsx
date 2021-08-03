@@ -233,6 +233,16 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
     (element, response) => (element.previousOriginalReviewResponse = response)
   )
 
+  const isUpdatedDecision = (
+    latestReviewResponse?: ReviewResponse,
+    previousReviewResponse?: ReviewResponse
+  ) => {
+    if (!latestReviewResponse || !previousReviewResponse) return false
+    const { decision: latestDecision, comment: lastestComment } = latestReviewResponse
+    const { decision: previousDecision, comment: previousComment } = previousReviewResponse
+    return latestDecision !== previousDecision || lastestComment !== previousComment
+  }
+
   Object.entries(structure?.elementsById || {}).forEach(([id, element]) => {
     const elementThisReviewResponses = thisReviewResponses.filter(
       ({ templateElementId }) => templateElementId && String(templateElementId) === id
@@ -243,17 +253,14 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
 
     const hasThisReviewResponsesHistory =
       elementThisReviewResponses.length > 2 ||
-      (element.thisReviewLatestResponse && element.thisReviewPreviousResponse
-        ? element.thisReviewLatestResponse?.decision !==
-          element.thisReviewPreviousResponse?.decision
-        : false)
+      isUpdatedDecision(element.thisReviewLatestResponse, element.thisReviewPreviousResponse)
 
     const hasLowerLevelReviewResponsesHistory =
       elementLowerLevelReviewResponses.length > 2 ||
-      (element.lowerLevelReviewLatestResponse && element.lowerLevelReviewPreviousResponse
-        ? element.lowerLevelReviewLatestResponse?.decision !==
-          element.lowerLevelReviewPreviousResponse?.decision
-        : false)
+      isUpdatedDecision(
+        element.lowerLevelReviewLatestResponse,
+        element.lowerLevelReviewPreviousResponse
+      )
 
     // Will enable the viewHistory option for elements if is Final Decision or if
     // enableViewHistory already set to true (when there is more than 2 ApplicantResponseElements)

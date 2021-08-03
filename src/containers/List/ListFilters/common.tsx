@@ -4,7 +4,7 @@ import { Checkbox, Dropdown, Icon, Label } from 'semantic-ui-react'
 import { FilterContainerProps, FilterOptionsProps } from './types'
 import constants from '../../../utils/constants'
 
-const startCase = (string: string) => lodashStartCase(string.toLowerCase())
+export const startCase = (string: string) => lodashStartCase(string.toLowerCase())
 
 const FilterContainer: React.FC<FilterContainerProps> = ({
   children,
@@ -51,7 +51,9 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
   return (
     <>
       {availableOptions.map((option) => {
-        const isOptionActive = activeOptions.includes(option)
+        const isOptionActive = !!activeOptions.find(
+          (_option) => startCase(option) === startCase(_option)
+        )
         return (
           <Dropdown.Item
             key={option}

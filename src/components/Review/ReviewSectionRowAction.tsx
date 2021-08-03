@@ -42,15 +42,29 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
         return <ViewReviewIcon {...props} />
       }
 
-      case ReviewAction.canUpdate:
       case ReviewAction.canStartReview:
-      case ReviewAction.canReStartReview:
-      case ReviewAction.canReReview:
       case ReviewAction.canMakeDecision: {
         if (isAssignedToCurrentUser) {
           return <GenerateActionButton {...props} />
         }
-        return <NotStartedLabel />
+        return (
+          <Label className="simple-label">
+            <em>{strings.STATUS_NOT_STARTED}</em>
+          </Label>
+        )
+      }
+
+      case ReviewAction.canUpdate:
+      case ReviewAction.canReStartReview:
+      case ReviewAction.canReReview: {
+        if (isAssignedToCurrentUser) {
+          return <GenerateActionButton {...props} />
+        }
+        return (
+          <Label className="simple-label">
+            <em>{strings.STATUS_PENDING_ACTION}</em>
+          </Label>
+        )
       }
 
       case ReviewAction.canSelfAssign: {
@@ -226,10 +240,5 @@ const ViewReviewIcon: React.FC<ReviewSectionComponentProps> = ({
     />
   )
 }
-
-// NOT_STARTED LABEL
-const NotStartedLabel: React.FC = () => (
-  <Label className="simple-label" content={strings.STATUS_NOT_STARTED} />
-)
 
 export default ReviewSectionRowAction
