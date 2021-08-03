@@ -93,7 +93,7 @@ export default {
   LABEL_REVIEW_RESSUBMIT: 'Non conform',
   LABEL_REVIEW_SECTION: 'Please complete the section',
   LABEL_REVIEW_SUBMIT_AS: 'Submit as',
-  LABEL_REVIEW_SUBMITED_AS: 'Submited as',
+ LABEL_REVIEW_SUBMITTED_AS: 'Submitted as',
   LABEL_REVIEW_REVIEWED_BY: 'Reviewed by',
   LABEL_REVIEW_CONSOLIDATION_BY: 'Consolidation by',
   LABEL_REVIEWER: 'Reviewer',
