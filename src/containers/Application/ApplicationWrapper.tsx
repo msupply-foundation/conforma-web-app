@@ -17,7 +17,7 @@ const ApplicationWrapper: React.FC = () => {
     query: { serialNumber },
   } = useRouter()
   const {
-    userState: { currentUser, isNonRegistered },
+    userState: { currentUser },
   } = useUserState()
 
   const { error, isLoading, structure } = useLoadApplication({
