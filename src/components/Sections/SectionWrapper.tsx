@@ -63,7 +63,6 @@ const SectionWrapper: React.FC<SectionProps> = ({
           <Sticky
             context={stickyRef}
             offset={!isNonRegistered ? styleConstants.HEADER_OFFSET : 0}
-            bottomOffset={styleConstants.BOTTOM_OFFSET}
             pushing
           >
             <div className="summary-section-header">
