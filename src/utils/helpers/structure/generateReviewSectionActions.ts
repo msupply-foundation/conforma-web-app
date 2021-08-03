@@ -141,11 +141,7 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       isReviewActive: (totalActive || 0) > 0,
     }
 
-    console.log(section.details, checkMethodProps)
-
     const foundAction = actionDefinitions.find(({ checkMethod }) => checkMethod(checkMethodProps))
-
-    console.log(foundAction)
 
     section.assignment = {
       isAssignedToCurrentUser,
