@@ -58,6 +58,7 @@ export {
   ReviewProgress,
   ConsolidationProgress,
   ReviewQuestion,
+  ReviewAssignment,
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
@@ -111,6 +112,7 @@ interface ApplicationProps {
   structure: FullStructure
   requestRevalidation?: MethodRevalidate
   strictSectionPage?: SectionAndPage | null
+  isValidating?: boolean
 }
 
 interface AssignmentDetails {
@@ -120,11 +122,13 @@ interface AssignmentDetails {
   review: ReviewDetails | null
   reviewer: GraphQLUser
   current: AssignmentStageAndStatus
+  isCurrentUserAssigner: boolean
+  isCurrentUserReviewer: boolean
+  isFinalDecision: boolean
+  isLastLevel: boolean
   totalAssignedQuestions: number
   reviewQuestionAssignments: ReviewQuestionAssignment[]
-  isCurrentUserAssigner: boolean
   assignableSectionRestrictions: (string | null)[]
-  isCurrentUserReviewer: boolean
 }
 
 interface AssignmentStageAndStatus {
@@ -230,6 +234,7 @@ interface Filters {
 }
 
 interface FullStructure {
+  assignment?: ReviewAssignment
   thisReview?: ReviewDetails | null
   elementsById?: ElementsById
   lastValidationTimestamp?: number
@@ -239,7 +244,6 @@ interface FullStructure {
   stages: StageDetails[]
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
-  canSubmitReviewAs?: Decision | null
   sortedSections?: SectionState[]
   sortedPages?: Page[]
 }
@@ -334,10 +338,17 @@ interface ResponsesByCode {
   [key: string]: ResponseFull
 }
 
+interface ReviewAssignment {
+  canSubmitReviewAs?: Decision | null
+  isLastLevel: boolean
+  isFinalDecision: boolean
+}
+
 type ReviewSectionComponentProps = {
   fullStructure: FullStructure
   section: SectionState
   assignment: AssignmentDetails
+  previousAssignment: AssignmentDetails
   thisReview?: ReviewDetails | null
   action: ReviewAction
   isAssignedToCurrentUser: boolean
@@ -346,7 +357,6 @@ type ReviewSectionComponentProps = {
 
 interface ReviewDetails {
   id: number
-  isLastLevel: boolean
   level: number
   reviewDecision?: ReviewDecision | null
   reviewer: GraphQLUser
@@ -421,6 +431,7 @@ enum ReviewAction {
   canStartReview = 'CAN_START_REVIEW',
   canReStartReview = 'CAN_RE_START_REVIEW', // User for second review (for consolidator)
   canContinueLocked = 'CAN_CONTINUE_LOCKED',
+  canMakeDecision = 'CAN_MAKE_DECISION',
   canUpdate = 'CAN_UPDATE',
   unknown = 'UNKNOWN',
 }

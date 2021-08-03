@@ -7,12 +7,14 @@ import ReviewSectionRow from './ReviewSectionRow'
 interface ReviewHomeProps {
   assignmentsByStage: AssignmentDetails[]
   assignmentsByUserAndStage: AssignmentDetails[]
+  assignmentInPreviousStage: AssignmentDetails
   fullApplicationStructure: FullStructure
 }
 
 const ReviewHome: React.FC<ReviewHomeProps> = ({
   assignmentsByStage,
   assignmentsByUserAndStage,
+  assignmentInPreviousStage,
   fullApplicationStructure,
 }) => (
   <>
@@ -33,6 +35,7 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({
               sectionId: id,
               assignment,
               fullApplicationStructure,
+              previousAssignment: assignmentInPreviousStage,
             }}
           />
         ))}

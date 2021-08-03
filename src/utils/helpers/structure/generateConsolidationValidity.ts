@@ -9,18 +9,20 @@ const generateConsolidationValidity = (newStructure: FullStructure) => {
 
   newStructure.firstIncompleteReviewPage = undefined
 
+  if (!newStructure.assignment) return
+
   if (doneActiveDisagree > 0) {
-    newStructure.canSubmitReviewAs = Decision.ChangesRequested
+    newStructure.assignment.canSubmitReviewAs = Decision.ChangesRequested
     return
   }
 
   if (doneAgreeNonConform > 0) {
-    newStructure.canSubmitReviewAs = Decision.NonConform
+    newStructure.assignment.canSubmitReviewAs = Decision.NonConform
     return
   }
 
   if (totalReviewable === doneActiveAgreeConform) {
-    newStructure.canSubmitReviewAs = Decision.Conform
+    newStructure.assignment.canSubmitReviewAs = Decision.Conform
     return
   }
 
@@ -38,7 +40,7 @@ const generateConsolidationValidity = (newStructure: FullStructure) => {
   }
 
   newStructure.firstIncompleteReviewPage = firstIncompleteReviewPage
-  newStructure.canSubmitReviewAs === null
+  newStructure.assignment?.canSubmitReviewAs === null
 }
 
 export default generateConsolidationValidity

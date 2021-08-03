@@ -21,25 +21,39 @@ type ActionDefinition = {
     reviewLevel: number
     isReviewable: boolean
     isAssignedToCurrentUser: boolean
+    isFinalDecision: boolean
     reviewAssignmentStatus: ReviewAssignmentStatus | null
+    isSecondReview: boolean
     isPendingReview: boolean
     isReviewExisting: boolean
     reviewStatus: ReviewStatus | undefined
-    isCurrentUserReview: boolean
     isReviewActive: boolean
   }) => boolean
 }
 
 const actionDefinitions: ActionDefinition[] = [
   {
+    action: ReviewAction.canMakeDecision,
+    checkMethod: ({ reviewAssignmentStatus, isFinalDecision, isReviewExisting }) =>
+      reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
+      !isReviewExisting &&
+      isFinalDecision,
+  },
+  {
     action: ReviewAction.canStartReview,
-    checkMethod: ({ reviewAssignmentStatus, isPendingReview, isReviewExisting }) => {
-      return (
-        reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
-        !isReviewExisting &&
-        isPendingReview
-      )
-    },
+    checkMethod: ({ reviewAssignmentStatus, isPendingReview, isReviewExisting }) =>
+      reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
+      !isReviewExisting &&
+      isPendingReview,
+  },
+  {
+    // Show "start" when is new review submitted to consolidation (even for partial reviews)
+    action: ReviewAction.canStartReview,
+    checkMethod: ({ reviewStatus, reviewLevel, isSecondReview, isPendingReview }) =>
+      reviewStatus === ReviewStatus.Pending &&
+      reviewLevel > 1 &&
+      !isSecondReview &&
+      isPendingReview,
   },
   {
     action: ReviewAction.canReReview,
@@ -92,29 +106,37 @@ const actionDefinitions: ActionDefinition[] = [
 
 const generateReviewSectionActions: GenerateSectionActions = ({
   sections,
-  reviewAssignment,
+  reviewAssignment: {
+    isFinalDecision,
+    reviewer,
+    level,
+    current: { assignmentStatus },
+  },
   thisReview,
   currentUserId,
 }) => {
-  const isCurrentUserReview = reviewAssignment.reviewer.id === currentUserId
-  const isConsolidation = reviewAssignment.level > 1
+  const isConsolidation = level > 1 || isFinalDecision
 
   sections.forEach((section) => {
     const { totalReviewable, totalPendingReview, totalActive } = isConsolidation
       ? (section.consolidationProgress as ConsolidationProgress)
       : (section.reviewProgress as ReviewProgress)
 
+    const totalNewReviewable = section?.consolidationProgress?.totalNewReviewable
+
+    const isAssignedToCurrentUser = reviewer.id === currentUserId && totalReviewable > 0
+
     const isReviewable = (totalReviewable || 0) > 0
-    const isAssignedToCurrentUser = isCurrentUserReview && isReviewable
 
     const checkMethodProps = {
       isReviewable,
       isAssignedToCurrentUser,
-      isCurrentUserReview,
-      reviewLevel: reviewAssignment.level,
-      reviewAssignmentStatus: reviewAssignment.current.assignmentStatus,
+      isFinalDecision,
+      reviewLevel: level,
+      reviewAssignmentStatus: assignmentStatus,
       isReviewExisting: !!thisReview,
       reviewStatus: thisReview?.current.reviewStatus,
+      isSecondReview: (totalNewReviewable || 0) > 0,
       isPendingReview: (totalPendingReview || 0) > 0,
       isReviewActive: (totalActive || 0) > 0,
     }

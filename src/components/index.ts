@@ -11,7 +11,13 @@ import FilterList from './FilterList'
 import Dashboard from './Dashboard'
 import Loading from './Loading'
 import { Footer, ModalWarning } from './Main'
-import { ReviewContainer, ReviewHeader } from './Review'
+import {
+  ReviewContainer,
+  ReviewHeader,
+  ReviewInProgressLabel,
+  ReviewLabel,
+  ReviewLockedLabel,
+} from './Review'
 import {
   ApplicationProgressBar,
   ConsolidationSectionProgressBar,
@@ -52,6 +58,9 @@ export {
   ProgressArea,
   ReviewContainer,
   ReviewHeader,
+  ReviewInProgressLabel,
+  ReviewLabel,
+  ReviewLockedLabel,
   ReviewSectionProgressBar,
   SectionWrapper,
   Organisation,

@@ -51,14 +51,19 @@ const compileVariablesForReviewResponseQuery = ({
   sectionIds,
   fullApplicationStructure,
   currentUser,
-}: CompileVariablesForReviewResponseQueryProps) => ({
-  reviewAssignmentId: reviewAssignment.id as number,
-  sectionIds,
-  userId: currentUser?.userId as number,
-  previousLevel: reviewAssignment.level - 1,
-  stageNumber: reviewAssignment.current.stage.number,
-  applicationId: fullApplicationStructure.info.id,
-})
+}: CompileVariablesForReviewResponseQueryProps) =>
+  reviewAssignment
+    ? {
+        applicationId: fullApplicationStructure.info.id,
+        reviewAssignmentId: reviewAssignment.id as number,
+        sectionIds,
+        userId: currentUser?.userId as number,
+        previousLevel: reviewAssignment.level - 1,
+        stageNumber: reviewAssignment.current.stage.number,
+        previousStage: reviewAssignment.current.stage.number - 1,
+        shouldIncludePreviousStage: !!reviewAssignment.isFinalDecision,
+      }
+    : undefined
 
 const generateReviewStructure: GenerateReviewStructure = ({
   data,
@@ -71,7 +76,16 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // mutate fullApplicationStructure
   let newStructure: FullStructure = cloneDeep(fullApplicationStructure)
 
-  const { reviewQuestionAssignments, level, review } = reviewAssignment
+  const { reviewQuestionAssignments, level, isLastLevel, isFinalDecision, review } =
+    reviewAssignment
+
+  // review info comes from reviewAssignment that's passed to this hook
+  newStructure.thisReview = review
+  newStructure.assignment = {
+    isLastLevel,
+    isFinalDecision,
+    canSubmitReviewAs: null,
+  }
 
   // This is usefull for linking assignments to elements
   newStructure = addElementsById(newStructure)
@@ -87,9 +101,6 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // latestOriginalReviewResponse and previousOriginalReviewResponse
   newStructure = addAllReviewResponses(newStructure, data)
 
-  // review info comes from reviewAssignment that's passed to this hook
-  newStructure.thisReview = review
-
   // Update fields element.isNewReviewResponse for reviews re-submitted to a consolidator
   setIsNewReviewResponse(newStructure)
 
@@ -103,7 +114,7 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // since the reviews with isChangeRequest (and not changed) need to be removed from done accountings
   generateReviewerChangesRequestedProgress(newStructure)
 
-  if (level === 1) {
+  if (level === 1 && !isFinalDecision) {
     generateReviewerResponsesProgress(newStructure)
     generateReviewValidity(newStructure)
   } else {
@@ -192,6 +203,10 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
   const thisReviewResponses = data?.thisReviewResponses?.nodes as ReviewResponse[]
   const lowerLevelReviewResponses = data?.previousLevelReviewResponses?.nodes as ReviewResponse[]
   const originalReviewResponses = data?.originalReviewResponses?.nodes as ReviewResponse[]
+  const previousOriginalReviewResponses = data?.previousOriginalReviewResponses
+    ?.nodes as ReviewResponse[]
+
+  const isFinalDecision = !!structure.assignment?.isFinalDecision
 
   // add thisReviewLatestResponse and thisReviewPreviousResponse
   // includes for a consolidation also has reviewResponsesByReviewResponseLinkId with Consolidator decision
@@ -210,12 +225,23 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
     (element, response) => (element.lowerLevelReviewPreviousResponse = response)
   )
   // add latestOriginalReviewResponse and previousOriginalReviewResponse
+  // or previousStage originalResponses - when it s final decision (and original is in previous stage)
   structure = addReviewResponses(
     structure,
-    originalReviewResponses,
+    isFinalDecision ? previousOriginalReviewResponses : originalReviewResponses,
     (element, response) => (element.latestOriginalReviewResponse = response),
     (element, response) => (element.previousOriginalReviewResponse = response)
   )
+
+  const isUpdatedDecision = (
+    latestReviewResponse?: ReviewResponse,
+    previousReviewResponse?: ReviewResponse
+  ) => {
+    if (!latestReviewResponse || !previousReviewResponse) return false
+    const { decision: latestDecision, comment: lastestComment } = latestReviewResponse
+    const { decision: previousDecision, comment: previousComment } = previousReviewResponse
+    return latestDecision !== previousDecision || lastestComment !== previousComment
+  }
 
   Object.entries(structure?.elementsById || {}).forEach(([id, element]) => {
     const elementThisReviewResponses = thisReviewResponses.filter(
@@ -227,21 +253,21 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
 
     const hasThisReviewResponsesHistory =
       elementThisReviewResponses.length > 2 ||
-      (element.thisReviewLatestResponse && element.thisReviewPreviousResponse
-        ? element.thisReviewLatestResponse?.decision !==
-          element.thisReviewPreviousResponse?.decision
-        : false)
+      isUpdatedDecision(element.thisReviewLatestResponse, element.thisReviewPreviousResponse)
 
     const hasLowerLevelReviewResponsesHistory =
       elementLowerLevelReviewResponses.length > 2 ||
-      (element.lowerLevelReviewLatestResponse && element.lowerLevelReviewPreviousResponse
-        ? element.lowerLevelReviewLatestResponse?.decision !==
-          element.lowerLevelReviewPreviousResponse?.decision
-        : false)
+      isUpdatedDecision(
+        element.lowerLevelReviewLatestResponse,
+        element.lowerLevelReviewPreviousResponse
+      )
 
-    // Check if enableViewHistory already set to true (when there is more than 2 ApplicantResponseElements)
-    // Or more than 2 thisReview or lowerLevelReview (that aren't duplications)
+    // Will enable the viewHistory option for elements if is Final Decision or if
+    // enableViewHistory already set to true (when there is more than 2 ApplicantResponseElements)
+    // - At least 2 reviews in same level (re-review)
+    // - At least 2 reviews in previous level lowerLevelReview (that aren't duplications)
     element.enableViewHistory =
+      (isFinalDecision && elementThisReviewResponses.length > 0) ||
       element.enableViewHistory ||
       hasLowerLevelReviewResponsesHistory ||
       hasThisReviewResponsesHistory
