@@ -21,25 +21,29 @@ type ActionDefinition = {
     reviewLevel: number
     isReviewable: boolean
     isAssignedToCurrentUser: boolean
+    isFinalDecision: boolean
     reviewAssignmentStatus: ReviewAssignmentStatus | null
     isPendingReview: boolean
     isReviewExisting: boolean
     reviewStatus: ReviewStatus | undefined
-    isCurrentUserReview: boolean
     isReviewActive: boolean
   }) => boolean
 }
 
 const actionDefinitions: ActionDefinition[] = [
   {
+    action: ReviewAction.canMakeDecision,
+    checkMethod: ({ reviewAssignmentStatus, isFinalDecision, isReviewExisting }) =>
+      reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
+      !isReviewExisting &&
+      isFinalDecision,
+  },
+  {
     action: ReviewAction.canStartReview,
-    checkMethod: ({ reviewAssignmentStatus, isPendingReview, isReviewExisting }) => {
-      return (
-        reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
-        !isReviewExisting &&
-        isPendingReview
-      )
-    },
+    checkMethod: ({ reviewAssignmentStatus, isPendingReview, isReviewExisting }) =>
+      reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
+      !isReviewExisting &&
+      isPendingReview,
   },
   {
     action: ReviewAction.canReReview,
@@ -92,12 +96,17 @@ const actionDefinitions: ActionDefinition[] = [
 
 const generateReviewSectionActions: GenerateSectionActions = ({
   sections,
-  reviewAssignment,
+  reviewAssignment: {
+    isFinalDecision,
+    reviewer,
+    level,
+    current: { assignmentStatus },
+  },
   thisReview,
   currentUserId,
 }) => {
-  const isCurrentUserReview = reviewAssignment.reviewer.id === currentUserId
-  const isConsolidation = reviewAssignment.level > 1
+  const isAssignedToCurrentUser = reviewer.id === currentUserId
+  const isConsolidation = level > 1 || isFinalDecision
 
   sections.forEach((section) => {
     const { totalReviewable, totalPendingReview, totalActive } = isConsolidation
@@ -105,14 +114,13 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       : (section.reviewProgress as ReviewProgress)
 
     const isReviewable = (totalReviewable || 0) > 0
-    const isAssignedToCurrentUser = isCurrentUserReview && isReviewable
 
     const checkMethodProps = {
       isReviewable,
       isAssignedToCurrentUser,
-      isCurrentUserReview,
-      reviewLevel: reviewAssignment.level,
-      reviewAssignmentStatus: reviewAssignment.current.assignmentStatus,
+      isFinalDecision,
+      reviewLevel: level,
+      reviewAssignmentStatus: assignmentStatus,
       isReviewExisting: !!thisReview,
       reviewStatus: thisReview?.current.reviewStatus,
       isPendingReview: (totalPendingReview || 0) > 0,

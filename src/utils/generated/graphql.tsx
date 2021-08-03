@@ -202,6 +202,7 @@ export type Query = Node & {
   reviewAssignmentTemplateId?: Maybe<Scalars['Int']>;
   reviewIsFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewIsLastLevel?: Maybe<Scalars['Boolean']>;
+  reviewIsLastStage?: Maybe<Scalars['Boolean']>;
   reviewLevel?: Maybe<Scalars['Int']>;
   reviewList?: Maybe<ReviewListConnection>;
   reviewReviewerId?: Maybe<Scalars['Int']>;
@@ -1420,6 +1421,12 @@ export type QueryReviewIsFinalDecisionArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewIsLastLevelArgs = {
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewIsLastStageArgs = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
 };
 
@@ -3698,6 +3705,8 @@ export type ReviewFilter = {
   timeStageCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `isLastLevel` field. */
   isLastLevel?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isLastStage` field. */
+  isLastStage?: Maybe<BooleanFilter>;
   /** Filter by the object’s `isFinalDecision` field. */
   isFinalDecision?: Maybe<BooleanFilter>;
   /** Filter by the object’s `status` field. */
@@ -6493,6 +6502,7 @@ export type Review = Node & {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   /** Reads a single `ReviewAssignment` that is related to this `Review`. */
   reviewAssignment?: Maybe<ReviewAssignment>;
@@ -7150,6 +7160,8 @@ export enum ReviewsOrderBy {
   TimeStageCreatedDesc = 'TIME_STAGE_CREATED_DESC',
   IsLastLevelAsc = 'IS_LAST_LEVEL_ASC',
   IsLastLevelDesc = 'IS_LAST_LEVEL_DESC',
+  IsLastStageAsc = 'IS_LAST_STAGE_ASC',
+  IsLastStageDesc = 'IS_LAST_STAGE_DESC',
   IsFinalDecisionAsc = 'IS_FINAL_DECISION_ASC',
   IsFinalDecisionDesc = 'IS_FINAL_DECISION_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -7176,6 +7188,8 @@ export type ReviewCondition = {
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `isLastLevel` field. */
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isLastStage` field. */
+  isLastStage?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `isFinalDecision` field. */
   isFinalDecision?: Maybe<Scalars['Boolean']>;
 };
@@ -16082,6 +16096,7 @@ export type UpdateReviewOnReviewForReviewReviewerIdFkeyPatch = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -16673,6 +16688,7 @@ export type UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -16777,6 +16793,7 @@ export type UpdateReviewOnReviewForReviewApplicationIdFkeyPatch = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -17640,6 +17657,7 @@ export type UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -18063,6 +18081,7 @@ export type UpdateReviewOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -18167,6 +18186,7 @@ export type UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyP
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -18608,6 +18628,7 @@ export type UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -18637,6 +18658,7 @@ export type ReviewPatch = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -18658,6 +18680,7 @@ export type NotificationReviewIdFkeyReviewCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -18983,6 +19006,7 @@ export type ReviewStatusHistoryReviewIdFkeyReviewCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -19039,6 +19063,7 @@ export type ReviewDecisionReviewIdFkeyReviewCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -19095,6 +19120,7 @@ export type ReviewResponseReviewIdFkeyReviewCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -19453,6 +19479,7 @@ export type ReviewApplicationIdFkeyReviewCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -19522,6 +19549,7 @@ export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -19949,6 +19977,7 @@ export type ReviewReviewerIdFkeyReviewCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -23697,6 +23726,7 @@ export type ReviewInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -28928,7 +28958,7 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'status' | 'timeUpdated' | 'levelNumber' | 'reviewerId' | 'isLastLevel' | 'allowedSections' | 'timeStageCreated' | 'trigger'>
+      & Pick<ReviewAssignment, 'id' | 'status' | 'timeUpdated' | 'levelNumber' | 'reviewerId' | 'isLastLevel' | 'isFinalDecision' | 'allowedSections' | 'timeStageCreated' | 'trigger'>
       & { stage?: Maybe<(
         { __typename?: 'TemplateStage' }
         & Pick<TemplateStage, 'id' | 'number' | 'title' | 'colour'>
@@ -28939,7 +28969,7 @@ export type GetReviewInfoQuery = (
         { __typename?: 'ReviewsConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'Review' }
-          & Pick<Review, 'id' | 'status' | 'timeStatusCreated' | 'trigger' | 'isLastLevel'>
+          & Pick<Review, 'id' | 'status' | 'timeStatusCreated' | 'trigger'>
           & { reviewDecisions: (
             { __typename?: 'ReviewDecisionsConnection' }
             & { nodes: Array<Maybe<(
@@ -28983,6 +29013,8 @@ export type GetReviewResponsesQueryVariables = Exact<{
   applicationId: Scalars['Int'];
   previousLevel: Scalars['Int'];
   stageNumber: Scalars['Int'];
+  shouldIncludePreviousStage?: Scalars['Boolean'];
+  previousStage?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -29006,6 +29038,12 @@ export type GetReviewResponsesQuery = (
       & ReviewResponseFragmentFragment
     )>> }
   )>, originalReviewResponses?: Maybe<(
+    { __typename?: 'ReviewResponsesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ReviewResponse' }
+      & ReviewResponseFragmentFragment
+    )>> }
+  )>, previousOriginalReviewResponses?: Maybe<(
     { __typename?: 'ReviewResponsesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewResponse' }
@@ -30854,6 +30892,7 @@ export const GetReviewInfoDocument = gql`
       levelNumber
       reviewerId
       isLastLevel
+      isFinalDecision
       allowedSections
       stage {
         id
@@ -30874,7 +30913,6 @@ export const GetReviewInfoDocument = gql`
           status
           timeStatusCreated
           trigger
-          isLastLevel
           reviewDecisions(orderBy: TIME_UPDATED_DESC) {
             nodes {
               id
@@ -30936,7 +30974,7 @@ export type GetReviewInfoQueryHookResult = ReturnType<typeof useGetReviewInfoQue
 export type GetReviewInfoLazyQueryHookResult = ReturnType<typeof useGetReviewInfoLazyQuery>;
 export type GetReviewInfoQueryResult = Apollo.QueryResult<GetReviewInfoQuery, GetReviewInfoQueryVariables>;
 export const GetReviewResponsesDocument = gql`
-    query getReviewResponses($reviewAssignmentId: Int!, $userId: Int!, $sectionIds: [Int!], $applicationId: Int!, $previousLevel: Int!, $stageNumber: Int!) {
+    query getReviewResponses($reviewAssignmentId: Int!, $userId: Int!, $sectionIds: [Int!], $applicationId: Int!, $previousLevel: Int!, $stageNumber: Int!, $shouldIncludePreviousStage: Boolean! = false, $previousStage: Int) {
   thisReviewResponses: reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {review: {reviewAssignmentId: {equalTo: $reviewAssignmentId}}, templateElement: {section: {id: {in: $sectionIds}}}, or: [{status: {notEqualTo: DRAFT}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
     nodes {
       ...reviewResponseFragment
@@ -30952,6 +30990,11 @@ export const GetReviewResponsesDocument = gql`
     }
   }
   originalReviewResponses: reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {review: {applicationId: {equalTo: $applicationId}, levelNumber: {equalTo: 1}, stageNumber: {equalTo: $stageNumber}}, templateElement: {section: {id: {in: $sectionIds}}}, status: {notEqualTo: DRAFT}}) {
+    nodes {
+      ...reviewResponseFragment
+    }
+  }
+  previousOriginalReviewResponses: reviewResponses(orderBy: TIME_UPDATED_DESC, filter: {review: {applicationId: {equalTo: $applicationId}, levelNumber: {equalTo: 1}, stageNumber: {equalTo: $previousStage}}, templateElement: {section: {id: {in: $sectionIds}}}, status: {notEqualTo: DRAFT}}) @include(if: $shouldIncludePreviousStage) {
     nodes {
       ...reviewResponseFragment
     }
@@ -30978,6 +31021,8 @@ ${ConsolidatorResponseFragmentFragmentDoc}`;
  *      applicationId: // value for 'applicationId'
  *      previousLevel: // value for 'previousLevel'
  *      stageNumber: // value for 'stageNumber'
+ *      shouldIncludePreviousStage: // value for 'shouldIncludePreviousStage'
+ *      previousStage: // value for 'previousStage'
  *   },
  * });
  */

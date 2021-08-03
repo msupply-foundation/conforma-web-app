@@ -23,16 +23,6 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
         ) : (
           <TheirSelfAssignmentLabel {...assignment.reviewer} />
         )
-      case ReviewAction.canStartReview:
-      case ReviewAction.canContinue:
-      case ReviewAction.canReReview:
-      case ReviewAction.canUpdate:
-      case ReviewAction.canView:
-        return isAssignedToCurrentUser ? (
-          <CurrentReviewInProgressLabel />
-        ) : (
-          <TheirReviewInProgressLabel {...assignment.reviewer} />
-        )
       case ReviewAction.canSelfAssignLocked:
       case ReviewAction.canContinueLocked:
         return isAssignedToCurrentUser ? (
@@ -41,7 +31,11 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
           <TheirReviewLockedLabel {...assignment.reviewer} />
         )
       default:
-        return null
+        return isAssignedToCurrentUser ? (
+          <CurrentReviewInProgressLabel />
+        ) : (
+          <TheirReviewInProgressLabel {...assignment.reviewer} />
+        )
     }
   }
   return <Grid.Column className="padding-zero">{getLabel()}</Grid.Column>

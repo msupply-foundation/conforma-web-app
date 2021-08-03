@@ -14,6 +14,7 @@ interface ConsolidateReviewDecisionProps {
   summaryViewProps: SummaryViewWrapperProps
   isActiveReviewResponse: boolean
   isNewReviewResponse: boolean
+  isAssigned: boolean
   enableViewHistory: boolean
   stageNumber: number
   reviewResponse?: ReviewResponse
@@ -26,6 +27,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
   summaryViewProps,
   isActiveReviewResponse,
   isNewReviewResponse,
+  isAssigned,
   enableViewHistory,
   stageNumber,
   reviewResponse,
@@ -71,7 +73,9 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
               isConsolidation={true}
               reviewResponse={reviewResponse}
             >
-              {isActiveReviewResponse && <UpdateIcon onClick={() => setIsActiveEdit(true)} />}
+              {isActiveReviewResponse && isAssigned && (
+                <UpdateIcon onClick={() => setIsActiveEdit(true)} />
+              )}
             </ReviewResponseElement>
           )}
           {/* Lower level Review Response */}

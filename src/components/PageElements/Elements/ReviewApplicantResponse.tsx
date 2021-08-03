@@ -54,7 +54,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
     ? 'ReReviewApplication'
     : isChangeRequest
     ? 'UpdateChangesRequested'
-    : isActiveReviewResponse
+    : reviewResponse
     ? 'FirstReviewApplication'
     : 'NotReviewable'
 

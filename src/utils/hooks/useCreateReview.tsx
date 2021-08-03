@@ -14,7 +14,7 @@ type UseCreateReview = (props: {
 type ConstructReviewInput = (structure: FullStructure) => ReviewInput
 
 const useCreateReview: UseCreateReview = ({ structure, assignment }) => {
-  const [updateReview] = useCreateReviewMutation()
+  const [createReview] = useCreateReviewMutation()
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
     fullApplicationStructure: structure,
@@ -56,7 +56,7 @@ const useCreateReview: UseCreateReview = ({ structure, assignment }) => {
   }
 
   return async () => {
-    const result = await updateReview({
+    const result = await createReview({
       variables: {
         // See comment at the bottom of file for resulting shape
         reviewInput: constructReviewInput(await getFullReviewStructureAsync()),
