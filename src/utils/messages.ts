@@ -11,7 +11,7 @@ export default {
   },
   REVIEW_SUBMISSION_CONFIRM: {
     title: 'Submitting Review',
-    message: 'Are you sure',
+    message: 'Are you sure?',
     option: 'SUBMIT',
   },
   REVIEW_SUBMISSION_FAIL: 'Not all sections have been reviewed',
