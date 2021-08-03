@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Icon, Progress } from 'semantic-ui-react'
 import { ApplicationStatus } from '../../../utils/generated/graphql'
 import { CellProps } from '../../../utils/types'
+import { enumsToLocalStringsMap } from '../../../containers/List/ListFilters/common'
 import strings from '../../../utils/constants'
 
 const StatusCell: React.FC<CellProps> = ({ application }) => {
@@ -42,16 +43,8 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
       console.log('Problem getting status of application serial ', serial)
       return null
     default:
-      return <p>{statusStringMap[status as ApplicationStatus]}</p>
+      return <p>{enumsToLocalStringsMap[status as ApplicationStatus]}</p>
   }
-}
-
-const statusStringMap: { [key in ApplicationStatus]: string } = {
-  SUBMITTED: strings.STATUS_SUBMITTED,
-  DRAFT: '',
-  CHANGES_REQUIRED: '',
-  RE_SUBMITTED: '',
-  COMPLETED: '',
 }
 
 export default StatusCell

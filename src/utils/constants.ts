@@ -219,6 +219,8 @@ export default {
   FILTER_ASSIGNER: 'Assigner',
   FILTER_REVIEWER_ACTION: 'Reviewer Action',
   FILTER_ASSIGNER_ACTION: 'Assigner Action',
+  FILTER_DATE_BEFORE: 'Before',
+  FILTER_DATE_AFTER: 'After',
   PAGE_TITLE_HOME: 'Dashboard | Application Manager',
   PAGE_TITLE_LIST: 'Applications List |  Application Manager',
   PAGE_TITLE_CREATE: 'New Application | Application Manager',

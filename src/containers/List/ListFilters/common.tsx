@@ -2,7 +2,8 @@ import React from 'react'
 import { startCase as lodashStartCase } from 'lodash'
 import { Checkbox, Dropdown, Icon, Label } from 'semantic-ui-react'
 import { FilterContainerProps, FilterOptionsProps } from './types'
-import constants from '../../../utils/constants'
+import strings from '../../../utils/constants'
+import { ApplicationOutcome, ApplicationStatus } from '../../../utils/generated/graphql'
 
 export const startCase = (string: string) => lodashStartCase(string.toLowerCase())
 
@@ -30,7 +31,7 @@ const FilterContainer: React.FC<FilterContainerProps> = ({
         <Dropdown.Divider />
         <Dropdown.Item className="remove-filter" key="removeFilter" onClick={() => onRemove()}>
           <Icon name="remove circle" />
-          {constants.FILTER_REMOVE}
+          {strings.FILTER_REMOVE}
         </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
@@ -63,7 +64,13 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
               else setActiveOption(option)
             }}
           >
-            <Checkbox label={startCase(option)} checked={isOptionActive} />
+            <Checkbox
+              label={
+                enumsToLocalStringsMap?.[option as ApplicationOutcome | ApplicationStatus] ||
+                startCase(option)
+              }
+              checked={isOptionActive}
+            />
           </Dropdown.Item>
         )
       })}
@@ -72,3 +79,16 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
 }
 
 export { FilterOptions, FilterContainer }
+
+export const enumsToLocalStringsMap: { [key in ApplicationStatus | ApplicationOutcome]: string } = {
+  DRAFT: strings.STATUS_DRAFT,
+  SUBMITTED: strings.STATUS_SUBMITTED,
+  CHANGES_REQUIRED: strings.STATUS_CHANGES_REQUIRED,
+  RE_SUBMITTED: strings.STATUS_RE_SUBMITTED,
+  COMPLETED: strings.STATUS_COMPLETED,
+  PENDING: strings.OUTCOME_PENDING,
+  APPROVED: strings.OUTCOME_APPROVED,
+  REJECTED: strings.OUTCOME_REJECTED,
+  EXPIRED: strings.OUTCOME_EXPIRED,
+  WITHDRAWN: strings.OUTCOME_WITHDRAWN,
+}
