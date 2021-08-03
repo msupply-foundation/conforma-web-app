@@ -4,6 +4,7 @@ import { Checkbox, Dropdown, Icon, Label } from 'semantic-ui-react'
 import { FilterContainerProps, FilterOptionsProps } from './types'
 import strings from '../../../utils/constants'
 import { ApplicationOutcome, ApplicationStatus } from '../../../utils/generated/graphql'
+import enumsToLocalStrings from '../../../utils/data/enumsToLocalisedStrings'
 
 export const startCase = (string: string) => lodashStartCase(string.toLowerCase())
 
@@ -66,7 +67,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
           >
             <Checkbox
               label={
-                enumsToLocalStringsMap?.[option as ApplicationOutcome | ApplicationStatus] ||
+                enumsToLocalStrings?.[option as ApplicationOutcome | ApplicationStatus] ||
                 startCase(option)
               }
               checked={isOptionActive}
@@ -79,16 +80,3 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
 }
 
 export { FilterOptions, FilterContainer }
-
-export const enumsToLocalStringsMap: { [key in ApplicationStatus | ApplicationOutcome]: string } = {
-  DRAFT: strings.STATUS_DRAFT,
-  SUBMITTED: strings.STATUS_SUBMITTED,
-  CHANGES_REQUIRED: strings.STATUS_CHANGES_REQUIRED,
-  RE_SUBMITTED: strings.STATUS_RE_SUBMITTED,
-  COMPLETED: strings.STATUS_COMPLETED,
-  PENDING: strings.OUTCOME_PENDING,
-  APPROVED: strings.OUTCOME_APPROVED,
-  REJECTED: strings.OUTCOME_REJECTED,
-  EXPIRED: strings.OUTCOME_EXPIRED,
-  WITHDRAWN: strings.OUTCOME_WITHDRAWN,
-}
