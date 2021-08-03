@@ -24,7 +24,7 @@ export default {
   REVIEW_DECISION_MISMATCH: {
     title: 'Final decision',
     message:
-      'You made a different decision than previous reviewer.\nWould you like to proceed wiith your decision?',
+      'You have made a different decision than the previous reviewer.\nAre you sure you wish to proceed with your decision?',
     option: 'OK',
   },
   REVIEW_STATUS_LOCKED: {
