@@ -40,6 +40,7 @@ const ReviewPageWrapper: React.FC<{
   if (!reviewAssignment) return <NoMatch />
 
   const previousAssignment = getPreviousStageAssignment(
+    info.serial,
     reviewAssignments,
     reviewAssignment.current.stage.number
   )

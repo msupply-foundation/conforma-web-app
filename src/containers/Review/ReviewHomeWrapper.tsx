@@ -52,7 +52,11 @@ const ReviewHomeWrapper: React.FC<{
   }
 
   // Get Previous stage (last level reviewer) assignment
-  const assignmentInPreviousStage = getPreviousStageAssignment(assignments, filters?.selectedStage)
+  const assignmentInPreviousStage = getPreviousStageAssignment(
+    structure.info.serial,
+    assignments,
+    filters?.selectedStage
+  )
 
   const {
     info: { template, org, name },
