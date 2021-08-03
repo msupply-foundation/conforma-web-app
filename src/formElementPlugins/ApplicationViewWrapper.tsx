@@ -12,6 +12,7 @@ import {
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
 import evaluateExpression, { isEvaluationExpression } from '@openmsupply/expression-evaluator'
+import { isEqual } from 'lodash'
 import { Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 import strings from '../utils/constants'
@@ -55,7 +56,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const [validationState, setValidationState] = useState<ValidationState>({
     isValid,
   })
-  const [evaluatedParameters, setEvaluatedParameters] = useState({})
+  const [evaluatedParameters, setEvaluatedParameters] = useState<{ [key: string]: any }>({})
 
   const { ApplicationView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
@@ -74,9 +75,14 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         objects: { responses: allResponses, currentUser, applicationData },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-      }).then((result: any) =>
-        setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
-      )
+      }).then((result: any) => {
+        // Need to do our own equality check since React treats 'result' as
+        // different object to original and causes a re-render even when not
+        // really changed
+        if (!isEqual(result, evaluatedParameters?.[field])) {
+          setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
+        }
+      })
     })
   }, [allResponses])
 
