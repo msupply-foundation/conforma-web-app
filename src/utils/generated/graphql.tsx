@@ -3163,7 +3163,9 @@ export type ApplicationOutcomeFilter = {
 export enum ApplicationOutcome {
   Pending = 'PENDING',
   Approved = 'APPROVED',
-  Rejected = 'REJECTED'
+  Rejected = 'REJECTED',
+  Expired = 'EXPIRED',
+  Withdrawn = 'WITHDRAWN'
 }
 
 /** A filter to be used against ApplicationStatus fields. All fields are combined with a logical ‘and.’ */
@@ -3194,12 +3196,10 @@ export type ApplicationStatusFilter = {
 
 export enum ApplicationStatus {
   Draft = 'DRAFT',
-  Withdrawn = 'WITHDRAWN',
   Submitted = 'SUBMITTED',
   ChangesRequired = 'CHANGES_REQUIRED',
   ReSubmitted = 'RE_SUBMITTED',
-  Completed = 'COMPLETED',
-  Expired = 'EXPIRED'
+  Completed = 'COMPLETED'
 }
 
 /** A filter to be used against many `ApplicationSection` object types. All fields are combined with a logical ‘and.’ */
