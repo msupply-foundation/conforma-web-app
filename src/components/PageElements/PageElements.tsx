@@ -204,8 +204,11 @@ const PageElements: React.FC<PageElementProps> = ({
             }) => {
               const summaryViewProps = getSummaryViewProps(element)
 
-              // Information - no review
-              if (element.category === TemplateElementCategory.Information)
+              // Information or no review
+              if (
+                element.category === TemplateElementCategory.Information ||
+                !thisReviewLatestResponse
+              )
                 return (
                   <RenderElementWrapper key={element.code}>
                     <SummaryInformationElement {...summaryViewProps} />
