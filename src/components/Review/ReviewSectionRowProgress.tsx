@@ -11,10 +11,24 @@ const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
 }) => {
   const getContent = () => {
     switch (action) {
-      case ReviewAction.canStartReview: {
-        return null
-      }
+      case ReviewAction.canStartReview:
       case ReviewAction.canView:
+        if (isAssignedToCurrentUser) {
+          if (isConsolidation) {
+            const totalDone =
+              (consolidationProgress?.totalConform || 0) +
+              (consolidationProgress?.totalNonConform || 0)
+            if (totalDone > 0)
+              return (
+                <ConsolidationSectionProgressBar consolidationProgress={consolidationProgress} />
+              )
+          } else {
+            const totalDone =
+              (reviewProgress?.doneConform || 0) + (reviewProgress?.doneNonConform || 0)
+            if (totalDone > 0) return <ReviewSectionProgressBar reviewProgress={reviewProgress} />
+          }
+        }
+        return null
       case ReviewAction.canReReview:
         if (isConsolidation)
           return <ConsolidationSectionProgressBar consolidationProgress={consolidationProgress} />
@@ -24,6 +38,7 @@ const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
         if (isConsolidation)
           return <ConsolidationSectionProgressBar consolidationProgress={consolidationProgress} />
         return <ReviewSectionProgressBar reviewProgress={reviewProgress} />
+
       default:
         return null
     }

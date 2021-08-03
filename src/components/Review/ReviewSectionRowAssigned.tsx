@@ -1,50 +1,61 @@
 import React from 'react'
 import { Grid } from 'semantic-ui-react'
+import strings from '../../utils/constants'
+import { ReviewStatus } from '../../utils/generated/graphql'
 import { ReviewAction, ReviewSectionComponentProps } from '../../utils/types'
 import {
-  CurrentSelfAssignmentLabel,
-  TheirSelfAssignmentLabel,
-  CurrentReviewInProgressLabel,
-  TheirReviewInProgressLabel,
-  CurrentReviewLockedLabel,
-  TheirReviewLockedLabel,
+  ReviewLabel,
+  ReviewLockedLabel,
+  ReviewSelfAssignmentLabel,
+  ReviewInProgressLabel,
 } from './ReviewLabel'
 
 const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
   isAssignedToCurrentUser,
+  thisReview,
   action,
   assignment,
 }) => {
   const getLabel = () => {
     switch (action) {
+      case ReviewAction.unknown:
+        return null
       case ReviewAction.canSelfAssign:
         return isAssignedToCurrentUser ? (
-          <CurrentSelfAssignmentLabel />
+          <ReviewSelfAssignmentLabel />
         ) : (
-          <TheirSelfAssignmentLabel {...assignment.reviewer} />
-        )
-      case ReviewAction.canStartReview:
-      case ReviewAction.canContinue:
-      case ReviewAction.canReReview:
-      case ReviewAction.canUpdate:
-      case ReviewAction.canView:
-        return isAssignedToCurrentUser ? (
-          <CurrentReviewInProgressLabel />
-        ) : (
-          <TheirReviewInProgressLabel {...assignment.reviewer} />
+          <ReviewSelfAssignmentLabel reviewer={assignment.reviewer} />
         )
       case ReviewAction.canSelfAssignLocked:
       case ReviewAction.canContinueLocked:
         return isAssignedToCurrentUser ? (
-          <CurrentReviewLockedLabel />
+          <ReviewLockedLabel />
         ) : (
-          <TheirReviewLockedLabel {...assignment.reviewer} />
+          <ReviewLockedLabel reviewer={assignment.reviewer} />
+        )
+      case ReviewAction.canView:
+        return isAssignedToCurrentUser ? (
+          thisReview?.current.reviewStatus === ReviewStatus.Submitted ? (
+            <ReviewLabel
+              message={`${strings.REVIEW_SUBMITTED_BY} ${strings.REVIEW_FILTER_YOURSELF}`}
+            />
+          ) : (
+            <ReviewLabel message={strings.REVIEW_NOT_READY} />
+          )
+        ) : thisReview?.current.reviewStatus === ReviewStatus.Submitted ? (
+          <ReviewLabel message={`${strings.REVIEW_SUBMITTED_BY} `} reviewer={assignment.reviewer} />
+        ) : (
+          <ReviewInProgressLabel reviewer={assignment.reviewer} />
         )
       default:
-        return null
+        return isAssignedToCurrentUser ? (
+          <ReviewInProgressLabel />
+        ) : (
+          <ReviewInProgressLabel reviewer={assignment.reviewer} />
+        )
     }
   }
-  return <Grid.Column className="padding-zero">{getLabel()}</Grid.Column>
+  return <Grid.Column className="assigned-column">{getLabel()}</Grid.Column>
 }
 
 export default ReviewSectionRowAssigned

@@ -21,12 +21,14 @@ import {
 type ReviewSectionRowProps = {
   sectionId: number
   assignment: AssignmentDetails
+  previousAssignment: AssignmentDetails
   fullApplicationStructure: FullStructure
 }
 
 const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   sectionId,
   assignment,
+  previousAssignment,
   fullApplicationStructure,
 }) => {
   const { fullReviewStructure, error } = useGetReviewStructureForSections({
@@ -51,6 +53,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     fullStructure: fullReviewStructure,
     section,
     assignment,
+    previousAssignment,
     thisReview,
     action: section?.assignment?.action || ReviewAction.unknown,
     isConsolidation: section.assignment?.isConsolidation || false,
@@ -60,13 +63,13 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   const canRenderRow =
     section?.assignment?.isAssignedToCurrentUser ||
     section?.assignment?.action === ReviewAction.canSelfAssign ||
-    (section?.assignment?.action === ReviewAction.canView && section?.assignment?.isReviewable)
+    section?.assignment?.isReviewable
 
   return (
     <>
       {canRenderRow && (
-        <Grid columns="equal" className="section-single-row-box-container" verticalAlign="middle">
-          <Grid.Row>
+        <Grid className="review-section-row" verticalAlign="middle">
+          <Grid.Row columns={4}>
             <ReviewSectionRowAssigned {...props} />
             <ReviewSectionRowLastActionDate {...props} />
             <ReviewSectionRowProgress {...props} />

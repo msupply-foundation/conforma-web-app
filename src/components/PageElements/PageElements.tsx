@@ -195,6 +195,7 @@ const PageElements: React.FC<PageElementProps> = ({
               isNewApplicationResponse,
               isNewReviewResponse,
               isActiveReviewResponse,
+              isAssigned,
               enableViewHistory,
               isChangeRequest,
               isChanged,
@@ -203,8 +204,11 @@ const PageElements: React.FC<PageElementProps> = ({
             }) => {
               const summaryViewProps = getSummaryViewProps(element)
 
-              // Information - no review
-              if (element.category === TemplateElementCategory.Information)
+              // Information or no review
+              if (
+                element.category === TemplateElementCategory.Information ||
+                !thisReviewLatestResponse
+              )
                 return (
                   <RenderElementWrapper key={element.code}>
                     <SummaryInformationElement {...summaryViewProps} />
@@ -228,6 +232,7 @@ const PageElements: React.FC<PageElementProps> = ({
                     <ConsolidateReviewDecision
                       {...props}
                       isNewReviewResponse={!!isNewReviewResponse}
+                      isAssigned={!!isAssigned}
                       originalReviewResponse={latestOriginalReviewResponse}
                     />
                   ) : (

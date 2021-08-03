@@ -137,7 +137,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
 
 const BrandArea: React.FC = () => {
   return (
-    <div id="brand-area">
+    <div id="brand-area" className="hide-on-mobile">
       <Image src={brandLogo} />
       <div>
         <Link to="/">

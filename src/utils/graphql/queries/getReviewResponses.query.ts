@@ -10,6 +10,8 @@ export default gql`
     $applicationId: Int!
     $previousLevel: Int!
     $stageNumber: Int!
+    $shouldIncludePreviousStage: Boolean! = false
+    $previousStage: Int
   ) {
     thisReviewResponses: reviewResponses(
       orderBy: TIME_UPDATED_DESC
@@ -51,6 +53,7 @@ export default gql`
         ...reviewResponseFragment
       }
     }
+
     originalReviewResponses: reviewResponses(
       orderBy: TIME_UPDATED_DESC
       filter: {
@@ -63,6 +66,23 @@ export default gql`
         status: { notEqualTo: DRAFT }
       }
     ) {
+      nodes {
+        ...reviewResponseFragment
+      }
+    }
+
+    previousOriginalReviewResponses: reviewResponses(
+      orderBy: TIME_UPDATED_DESC
+      filter: {
+        review: {
+          applicationId: { equalTo: $applicationId }
+          levelNumber: { equalTo: 1 }
+          stageNumber: { equalTo: $previousStage }
+        }
+        templateElement: { section: { id: { in: $sectionIds } } }
+        status: { notEqualTo: DRAFT }
+      }
+    ) @include(if: $shouldIncludePreviousStage) {
       nodes {
         ...reviewResponseFragment
       }

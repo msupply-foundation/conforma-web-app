@@ -20,6 +20,7 @@ import {
   formatDateUrl,
   parseDateRange,
 } from '../../../../utils/dateAndTime/parseDateRange'
+import strings from '../../../../utils/constants'
 
 const WEEKDAYS = Info.weekdays('short')
 
@@ -44,8 +45,8 @@ const DateFilter: React.FC<DateFilterProps> = ({
     if (!startDate.date && !endDate.date) return ''
     if (startDate.named) return namedDates[startDate.named].title
 
-    if (!startDate.date) return `Before ${formatDateLabel(endDate)}`
-    if (!endDate.date) return `After ${formatDateLabel(startDate)}`
+    if (!startDate.date) return `${strings.FILTER_DATE_BEFORE} ${formatDateLabel(endDate)}`
+    if (!endDate.date) return `${strings.FILTER_DATE_AFTER} ${formatDateLabel(startDate)}`
 
     return `${formatDateLabel(startDate)} - ${formatDateLabel(endDate)}`
   }

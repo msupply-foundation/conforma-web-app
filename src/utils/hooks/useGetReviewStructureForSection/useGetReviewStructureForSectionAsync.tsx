@@ -20,11 +20,12 @@ const useGetReviewStructureForSectionAsync = (props: UseGetReviewStructureForSec
   const [awaitModeResolver, setAwaitModeResolver] = useState<AwaitModeResolver | null>(null)
 
   const sectionIds = getSectionIds(props)
+  const variables = compileVariablesForReviewResponseQuery({ ...props, sectionIds, currentUser })
 
   const { data, error } = useGetReviewResponsesQuery({
-    variables: compileVariablesForReviewResponseQuery({ ...props, sectionIds, currentUser }),
+    variables,
     fetchPolicy: 'network-only',
-    skip: !awaitModeResolver,
+    skip: !variables || !awaitModeResolver,
   })
 
   useEffect(() => {

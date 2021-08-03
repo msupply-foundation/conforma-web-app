@@ -22,6 +22,8 @@ const ReviewerActionCell: React.FC<CellProps> = ({
         return strings.ACTION_CONTINUE
       case ReviewerAction.StartReview:
         return strings.ACTION_START
+      case ReviewerAction.MakeDecision:
+        return strings.ACTION_MAKE_DECISION
       default:
         // ReviewerAction.ViewReview
         return strings.ACTION_VIEW
@@ -51,7 +53,7 @@ const ReviewerActionCell: React.FC<CellProps> = ({
   return (
     <>
       {actions.map((action, index) => (
-<div key={index}>
+        <div key={index}>
           {/* To-do: style the | once we can see it properly */}
           {index > 0 ? <span key={`divider_${index}`}>{' | '}</span> : ''}
           <Link className="user-action" to={`/application/${serial}/review`}>
