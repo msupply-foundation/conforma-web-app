@@ -308,7 +308,7 @@ const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
       {!!review.reviewDecision?.decision && (
         <Segment>
           <p>
-            <strong>{strings.LABEL_REVIEW_SUBMITED_AS}:</strong>
+            <strong>{strings.LABEL_REVIEW_SUBMITTED_AS}:</strong>
           </p>
           {strings[review.reviewDecision.decision]}
         </Segment>
