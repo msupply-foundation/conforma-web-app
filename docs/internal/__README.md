@@ -14,13 +14,7 @@ The subfolder `docs/_wiki` is a clone of the repo's [**wiki**](https://github.co
 - Clone repo with submodule in specific branch:  
   `git clone --recurse-submodules -b <branch_name> https://github.com/openmsupply/application-manager-web-app.git`
 
-- Init and pull submodule folder:  
-  `git submodule update --init`
-
-- If already on master, you can clone + pull submodules:  
-  `git clone --recurse-submodules https://github.com/openmsupply/application-manager-web-app.git`
-
-- Or after changing branches the command to init and pull:  
+- Then Init and pull submodule folder:  
   `git submodule update --init`
 
 ## Wiki info
