@@ -1,4 +1,4 @@
 python3 ./utils/convert_docs_to_wiki.py
-git -C ./documentation/_wiki add -A
-git -C ./documentation/_wiki commit -m "Update documentation"
-git -C ./documentation/_wiki push
+git -C ./docs/_wiki add -A
+git -C ./docs/_wiki commit -m "Update docs"
+git -C ./docs/_wiki push
