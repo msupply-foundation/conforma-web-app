@@ -6,7 +6,7 @@ const ModalWarning: React.FC<ModalProps> = (showModal) => {
 
   // TOOD: Use more props from ModalProps for more general configuration of modal (e.g. Shorthand for different actions)
   return (
-    <Modal open={open} basic size="small">
+    <Modal closeIcon open={open} basic size="small">
       <Header icon>
         <Icon name="exclamation triangle" color="orange" />
         {title}
