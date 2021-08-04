@@ -21,6 +21,7 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
       case ReviewAction.unknown:
         return null
       case ReviewAction.canSelfAssign:
+      case ReviewAction.canMakeDecision:
         return isAssignedToCurrentUser ? (
           <ReviewSelfAssignmentLabel />
         ) : (

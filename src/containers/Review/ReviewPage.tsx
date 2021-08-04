@@ -194,7 +194,7 @@ const ReviewPage: React.FC<{
         ))}
         <PreviousStageDecision
           isFinalDecision={reviewAssignment.isFinalDecision}
-          review={previousAssignment.review}
+          review={previousAssignment?.review}
           serial={serial}
         />
         <ReviewSubmit
@@ -286,7 +286,7 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
 }
 
 interface PreviousStageDecisionProps {
-  review?: ReviewDetails | null
+  review: ReviewDetails | null | undefined
   isFinalDecision: boolean
   serial: string
 }
@@ -300,10 +300,14 @@ const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
     <Segment.Group horizontal>
       <Segment>
         <Header as="h3">{strings.LABEL_PREVIOUS_REVIEW}:</Header>
-        <Link className="user-action" to={`/application/${serial}/review/${review.id}`}>
+        <ReviewByLabel user={review.reviewer} />
+        <Link
+          className="user-action"
+          to={`/application/${serial}/review/${review.id}`}
+          target="_blank"
+        >
           {strings.ACTION_VIEW}
         </Link>
-        <ReviewByLabel user={review.reviewer} />
       </Segment>
       {!!review.reviewDecision?.decision && (
         <Segment>
