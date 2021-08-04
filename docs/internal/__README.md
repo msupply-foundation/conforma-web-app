@@ -1,7 +1,7 @@
 ## Guidelines for maintaining documentation.
 
 The `./docs` folder is the root documentation folder for this repository. It has 2 subfolders: **internal** and **public**.
-Pages and images from `/docs/internal` will be published in **this** repo wiki after running the script (described in Wiki info below).
+Pages and images from `docs/internal` will be published in **this** repo wiki after running the script (described in Wiki info below).
 Pages and images from `docs/public` will be published to our Public docs [TODO: Add link to page] when a PR is merged - by automation.
 
 The subfolder `docs/_wiki` is a clone of the repo's [**wiki**](https://github.com/openmsupply/application-manager-web-app/wiki) repository, which appears as a submodule in the main repo (see `.gitmodules`)
