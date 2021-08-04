@@ -97,12 +97,6 @@ const convertFromTemplateToTemplateDetails = (
     (template?.templateCategory?.icon as SemanticICONS) || undefined
   const categoryUILocation: UiLocation[] =
     (template?.templateCategory?.uiLocation as UiLocation[]) || []
-  // if (!categoryTitle) {
-  //   categoryIcon = constants.DEFAULT_TEMPLATE_CATEGORY_ICON as SemanticICONS
-  //   categoryTitle = constants.DEFAULT_TEMPLATE_CATEGORY_TITLE
-  // } else {
-  //   categoryIcon = (template?.templateCategory?.icon as SemanticICONS) || undefined
-  // }
 
   const hasApplyPermission = permissions.includes(PermissionPolicyType.Apply)
   // This is already checked (permission.length > 0), but added to avoid confusion
