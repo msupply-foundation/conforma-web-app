@@ -15,6 +15,7 @@ import {
   Organisation as GraphQLOrg,
   Filter,
   Application,
+  UiLocation,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
@@ -491,6 +492,7 @@ interface StageDetails {
 interface TemplateCategoryDetails {
   title: string
   icon: SemanticICONS | undefined
+  uiLocation: UiLocation[]
 }
 
 interface TemplateInList {

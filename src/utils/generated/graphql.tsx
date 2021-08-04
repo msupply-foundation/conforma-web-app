@@ -4517,6 +4517,8 @@ export type TemplateCategoryFilter = {
   title?: Maybe<StringFilter>;
   /** Filter by the object’s `icon` field. */
   icon?: Maybe<StringFilter>;
+  /** Filter by the object’s `uiLocation` field. */
+  uiLocation?: Maybe<UiLocationListFilter>;
   /** Filter by the object’s `templates` relation. */
   templates?: Maybe<TemplateCategoryToManyTemplateFilter>;
   /** Some related `templates` exist. */
@@ -4528,6 +4530,52 @@ export type TemplateCategoryFilter = {
   /** Negates the expression. */
   not?: Maybe<TemplateCategoryFilter>;
 };
+
+/** A filter to be used against UiLocation List fields. All fields are combined with a logical ‘and.’ */
+export type UiLocationListFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Contains the specified list of values. */
+  contains?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Contained by the specified list of values. */
+  containedBy?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Overlaps the specified list of values. */
+  overlaps?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Any array item is equal to the specified value. */
+  anyEqualTo?: Maybe<UiLocation>;
+  /** Any array item is not equal to the specified value. */
+  anyNotEqualTo?: Maybe<UiLocation>;
+  /** Any array item is less than the specified value. */
+  anyLessThan?: Maybe<UiLocation>;
+  /** Any array item is less than or equal to the specified value. */
+  anyLessThanOrEqualTo?: Maybe<UiLocation>;
+  /** Any array item is greater than the specified value. */
+  anyGreaterThan?: Maybe<UiLocation>;
+  /** Any array item is greater than or equal to the specified value. */
+  anyGreaterThanOrEqualTo?: Maybe<UiLocation>;
+};
+
+export enum UiLocation {
+  Dashboard = 'DASHBOARD',
+  Menu = 'MENU',
+  User = 'USER'
+}
 
 /** A filter to be used against many `Template` object types. All fields are combined with a logical ‘and.’ */
 export type TemplateCategoryToManyTemplateFilter = {
@@ -4757,6 +4805,7 @@ export type TemplateCategory = Node & {
   code: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
+  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   /** Reads and enables pagination through a set of `Template`. */
   templates: TemplatesConnection;
 };
@@ -9768,6 +9817,8 @@ export enum TemplateCategoriesOrderBy {
   TitleDesc = 'TITLE_DESC',
   IconAsc = 'ICON_ASC',
   IconDesc = 'ICON_DESC',
+  UiLocationAsc = 'UI_LOCATION_ASC',
+  UiLocationDesc = 'UI_LOCATION_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -9782,6 +9833,8 @@ export type TemplateCategoryCondition = {
   title?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `icon` field. */
   icon?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uiLocation` field. */
+  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
 };
 
 /** A connection to a list of `TemplateCategory` values. */
@@ -12496,6 +12549,7 @@ export type UpdateTemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyPat
   code?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
+  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -22406,6 +22460,7 @@ export type TemplateCategoryPatch = {
   code?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
+  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -22415,6 +22470,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCategoryCreateInput = {
   code: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
+  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -24174,6 +24230,7 @@ export type TemplateCategoryInput = {
   code: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
+  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -28222,7 +28279,7 @@ export type TemplateFragment = (
   & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'startMessage' | 'submissionMessage'>
   & { templateCategory?: Maybe<(
     { __typename?: 'TemplateCategory' }
-    & Pick<TemplateCategory, 'title' | 'icon' | 'code' | 'id'>
+    & Pick<TemplateCategory, 'id' | 'code' | 'title' | 'icon' | 'uiLocation'>
   )>, templateFilterJoins: (
     { __typename?: 'TemplateFilterJoinsConnection' }
     & { nodes: Array<Maybe<(
@@ -29415,10 +29472,11 @@ export const TemplateFragmentDoc = gql`
   startMessage
   submissionMessage
   templateCategory {
+    id
+    code
     title
     icon
-    code
-    id
+    uiLocation
   }
   templateFilterJoins {
     nodes {
