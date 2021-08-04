@@ -4,7 +4,7 @@ import strings from '../../utils/constants'
 const logo = require('../../../images/logos/logo_512.png').default
 
 const Footer: React.FC = () => (
-  <Container id="footer">
+  <Container id="footer" fluid>
     <div id="footer-content">
       <Image src={logo} />
       <p>

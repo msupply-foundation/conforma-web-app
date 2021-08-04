@@ -1,14 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Progress, Segment } from 'semantic-ui-react'
+import { Icon, Progress } from 'semantic-ui-react'
 import { ApplicationStatus } from '../../../utils/generated/graphql'
 import { CellProps } from '../../../utils/types'
-
-enum ACTIONS {
-  EDIT_DRAFT = 'Edit draft',
-  MAKE_CHANGES = 'Make changes',
-  VIEW = 'View',
-}
+import enumsToLocalStrings from '../../../utils/data/enumsToLocalisedStrings'
+import strings from '../../../utils/constants'
 
 const StatusCell: React.FC<CellProps> = ({ application }) => {
   const { serial, status } = application
@@ -17,7 +13,7 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
       return (
         <Link to={`/application/${serial}`} className="user-action">
           <Icon name="exclamation circle" className="alert" />
-          {ACTIONS.MAKE_CHANGES}
+          {strings.ACTION_MAKE_CHANGES}
         </Link>
       )
     case ApplicationStatus.Draft:
@@ -25,7 +21,7 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
         <>
           <Progress size="tiny" />
           <Link to={`/application/${serial}`} className="user-action">
-            {ACTIONS.EDIT_DRAFT}
+            {strings.ACTION_EDIT_DRAFT}
           </Link>
           {/* TO DO: Trash icon should link to application delete */}
           <Icon name="trash alternate outline" />
@@ -34,20 +30,20 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
     case ApplicationStatus.Completed:
       return (
         <Link to={`/application/${serial}`} className="user-action">
-          {ACTIONS.VIEW}
+          {strings.ACTION_VIEW}
         </Link>
       )
     case ApplicationStatus.ChangesRequired:
       return (
         <Link to={`/application/${serial}`} className="user-action">
-          {ACTIONS.MAKE_CHANGES}
+          {strings.ACTION_MAKE_CHANGES}
         </Link>
       ) // TODO: Show number of responses to make changes
     case undefined:
-      console.log('Problem to get status of application serial ', serial)
+      console.log('Problem getting status of application serial ', serial)
       return null
     default:
-      return <p>{status}</p>
+      return <p>{enumsToLocalStrings[status as ApplicationStatus]}</p>
   }
 }
 

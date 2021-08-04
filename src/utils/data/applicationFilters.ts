@@ -13,6 +13,7 @@ import getOrganisationFilterList from '../graphql/queries/applicationListFilters
 import getReviewersFilterList from '../graphql/queries/applicationListFilters/getReviewersFilterList'
 import getStageFilterList from '../graphql/queries/applicationListFilters/getStageFilterList'
 import { FilterDefinitions, GetFilterListQuery, NamedDates } from '../types'
+import strings from '../constants'
 
 const constructFilterListQuery = (query: DocumentNode, queryMethod: string) => {
   const getListQuery: GetFilterListQuery = ({ searchValue, filterListParameters }) => {
@@ -49,59 +50,59 @@ const getDateRangeForUnit: GetDateRangeForUnit = (unit, value = 0) => {
 }
 
 const NAMED_DATE_RANGES: NamedDates = {
-  today: { getDates: () => [today(), today()], title: 'Today' },
+  today: { getDates: () => [today(), today()], title: strings.FILTER_NAMED_DATE_TODAY },
   yesterday: {
     getDates: () => getDateRangeForUnit('day', -1),
-    title: 'Yesterday',
+    title: strings.FILTER_NAMED_DATE_YESTERDAY,
   },
   'this-week': {
     getDates: () => getDateRangeForUnit('week'),
-    title: 'This Week',
+    title: strings.FILTER_NAMED_DATE_THIS_WEEK,
   },
   'last-week': {
     getDates: () => getDateRangeForUnit('week', -1),
-    title: 'Last Week',
+    title: strings.FILTER_NAMED_DATE_LAST_WEEK,
   },
   'this-month': {
     getDates: () => getDateRangeForUnit('month'),
-    title: 'This Month',
+    title: strings.FILTER_NAMED_DATE_THIS_MONTH,
   },
   'last-month': {
     getDates: () => getDateRangeForUnit('month', -1),
 
-    title: 'Last Month',
+    title: strings.FILTER_NAMED_DATE_LAST_MONTH,
   },
   'next-month': {
     getDates: () => getDateRangeForUnit('month', 1),
-    title: 'Next Month',
+    title: strings.FILTER_NAMED_DATE_NEXT_MONTH,
   },
   'this-year': {
     getDates: () => getDateRangeForUnit('year'),
-    title: 'This Year',
+    title: strings.FILTER_NAMED_DATE_THIS_YEAR,
   },
   'last-year': {
     getDates: () => getDateRangeForUnit('year', -1),
-    title: 'Last Year',
+    title: strings.FILTER_NAMED_DATE_LAST_YEAR,
   },
   'next-year': {
     getDates: () => getDateRangeForUnit('year', 1),
-    title: 'Next Year',
+    title: strings.FILTER_NAMED_DATE_NEXT_YEAR,
   },
 }
 
 export const APPLICATION_FILTERS: FilterDefinitions = {
   lastActiveDate: {
     type: 'date',
-    title: 'Last Active',
+    title: strings.FILTER_LAST_ACTIVE,
     options: { namedDates: NAMED_DATE_RANGES },
   },
   isFullyAssignedLevel1: {
     type: 'boolean',
-    title: 'Assignment Status',
+    title: strings.FILTER_ASSIGNMENT_STATUS,
     options: {
       booleanMapping: {
-        true: 'Fully Assigned',
-        false: 'Not Fully Assigned',
+        true: strings.FILTER_ASSIGNMENT_STATUS_TRUE,
+        false: strings.FILTER_ASSIGNMENT_STATUS_FALSE,
       },
     },
   },
@@ -114,17 +115,17 @@ export const APPLICATION_FILTERS: FilterDefinitions = {
   },
   status: {
     type: 'enumList',
-    title: 'Status',
+    title: strings.FILTER_STATUS,
     options: { enumList: Object.values(ApplicationStatus) },
   },
   outcome: {
     type: 'enumList',
-    title: 'Outcome',
+    title: strings.FILTER_OUTCOME,
     options: { enumList: Object.values(ApplicationOutcome) },
   },
   orgName: {
     type: 'searchableListIn',
-    title: 'Organisation',
+    title: strings.FILTER_ORGANISATION,
     options: {
       getListQuery: constructFilterListQuery(
         getOrganisationFilterList,
@@ -134,7 +135,7 @@ export const APPLICATION_FILTERS: FilterDefinitions = {
   },
   stage: {
     type: 'staticList',
-    title: 'Stage',
+    title: strings.FILTER_STAGE,
     options: {
       getListQuery: constructFilterListQuery(getStageFilterList, 'applicationListFilterStage'),
     },
@@ -147,7 +148,7 @@ export const APPLICATION_FILTERS: FilterDefinitions = {
   },
   applicant: {
     type: 'searchableListIn',
-    title: 'Applicant',
+    title: strings.FILTER_APPLICANT,
     options: {
       getListQuery: constructFilterListQuery(
         getApplicantFilterList,
@@ -157,7 +158,7 @@ export const APPLICATION_FILTERS: FilterDefinitions = {
   },
   reviewers: {
     type: 'searchableListInArray',
-    title: 'Reviewer',
+    title: strings.FILTER_REVIEWER,
     options: {
       getListQuery: constructFilterListQuery(
         getReviewersFilterList,
@@ -167,7 +168,7 @@ export const APPLICATION_FILTERS: FilterDefinitions = {
   },
   assigner: {
     type: 'searchableListInArray',
-    title: 'Assigner',
+    title: strings.FILTER_ASSIGNER,
     options: {
       getListQuery: constructFilterListQuery(
         getAssignerFilterList,
@@ -177,12 +178,12 @@ export const APPLICATION_FILTERS: FilterDefinitions = {
   },
   reviewerAction: {
     type: 'enumList',
-    title: 'Reviewer Action',
+    title: strings.FILTER_REVIEWER_ACTION,
     options: { enumList: Object.values(ReviewerAction) },
   },
   assignerAction: {
     type: 'enumList',
-    title: 'Assigner Action',
+    title: strings.FILTER_ASSIGNER_ACTION,
     options: { enumList: Object.values(AssignerAction) },
   },
 }
