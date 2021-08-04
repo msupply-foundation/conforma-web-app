@@ -17,5 +17,5 @@ highlight_code = true
 [extra]
 # Put all your custom variables here
 logo = "https://easydocs.codeandmedia.com/logo.svg"
-release = "https://api.github.com/repos/getzola/zola/releases/latest"
+release = "https://api.github.com/repos/openmsupply/application-manager-web-app/releases/latest"
 favicon = "https://www.getzola.org/favicon.ico"
