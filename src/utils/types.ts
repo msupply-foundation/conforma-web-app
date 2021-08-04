@@ -500,6 +500,7 @@ interface TemplateInList {
   name: string
   namePlural?: string
   code: string
+  icon: string | null | undefined
   templateCategory: TemplateCategoryDetails
   permissions: PermissionPolicyType[]
   hasApplyPermission: boolean

@@ -10,6 +10,7 @@ export default gql`
     isLinear
     startMessage
     submissionMessage
+    icon
     templateCategory {
       id
       code

@@ -7,7 +7,6 @@ import {
   useGetTemplatesQuery,
   UiLocation,
 } from '../../utils/generated/graphql'
-import constants from '../constants'
 import { TemplateCategoryDetails, TemplateInList, TemplatePermissions } from '../types'
 
 type TemplatesByCategory = {
@@ -88,7 +87,7 @@ const convertFromTemplateToTemplateDetails = (
   template: Template,
   templatePermissions: TemplatePermissions
 ) => {
-  const { id, code, name, namePlural } = template
+  const { id, code, name, namePlural, icon } = template
   const permissions = templatePermissions[code] || []
 
   const totalApplications = template?.applications.totalCount || 0
@@ -116,6 +115,7 @@ const convertFromTemplateToTemplateDetails = (
     code,
     name: String(name),
     namePlural: namePlural || undefined,
+    icon,
     permissions,
     filters,
     hasApplyPermission,
