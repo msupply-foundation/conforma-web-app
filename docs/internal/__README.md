@@ -1,8 +1,10 @@
 ## Guidelines for maintaining documentation.
 
-The `./documentation` folder is the root documentation folder for this repository.
+The `./docs` folder is the root documentation folder for this repository. It has 2 subfolders: **internal** and **public**.
+Pages and images from `/docs/internal` will be published in **this** repo wiki after running the script (described in Wiki info below).
+Pages and images from `docs/public` will be published to our Public docs [TODO: Add link to page] when a PR is merged - by automation.
 
-Within this documentation folder is a clone of the repo's [**wiki**](https://github.com/openmsupply/application-manager-web-app/wiki) repository, which appears as a submodule in the main repo, in `./documentation/_wiki`
+The subfolder `docs/_wiki` is a clone of the repo's [**wiki**](https://github.com/openmsupply/application-manager-web-app/wiki) repository, which appears as a submodule in the main repo (see `.gitmodules`)
 
 ### To configure with submodule:
 
@@ -23,9 +25,9 @@ Within this documentation folder is a clone of the repo's [**wiki**](https://git
 
 ## Wiki info
 
-The wiki contents is essentially exactly the same as the main documentation folder. However, the way the wiki software handles internal links when online is different, and all pages are presented at the wiki root level, which means some relative links need to be adjusted accordingly.
+The wiki contents is essentially exactly the same as the `docs/internal` folder. However, the way the wiki software handles internal links when online is different, and all pages are presented at the wiki root level, which means some relative links need to be adjusted accordingly.
 
-In order to update the wiki from the current documentation state, and push the wiki docs online, simply run:
+In order to update the wiki from the current internal documentation state, and push the wiki docs online, simply run:
 
 `yarn push_docs`
 
@@ -41,4 +43,4 @@ In order to update the wiki from the current documentation state, and push the w
 
 - Only push documentation to the wiki from the `master` branch. This ensures that all documentation updates have been through PR and merged before being pushed "live".
 
-- Docs should only go "one-way" -- from the main `documentation` folder _to_ the wiki, not the other way. So please don't edit the wiki directly on Github, or else you risk any changes being over-written the next time the docs folder is "published".
+- Docs should only go "one-way" -- from the subfolder `docs/internal` _to_ the wiki, not the other way. So please don't edit the wiki directly on Github, or else you risk any changes being over-written the next time the docs folder is "published".
