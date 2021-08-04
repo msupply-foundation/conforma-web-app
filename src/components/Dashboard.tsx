@@ -4,7 +4,7 @@ import { Header, Button, Icon, Label } from 'semantic-ui-react'
 import { useUserState } from '../contexts/UserState'
 import strings from '../utils/constants'
 import { USER_ROLES } from '../utils/data'
-import { PermissionPolicyType, Filter } from '../utils/generated/graphql'
+import { PermissionPolicyType, Filter, UiLocation } from '../utils/generated/graphql'
 import useListApplications from '../utils/hooks/useListApplications'
 import useListTemplates from '../utils/hooks/useListTemplates'
 import usePageTitle from '../utils/hooks/usePageTitle'
@@ -28,8 +28,9 @@ const Dashboard: React.FC = () => {
   return (
     <div id="dashboard">
       <Header as="h2" content={strings.MENU_ITEM_DASHBOARD} />
-      {templatesByCategory.map(
-        ({ templates, templateCategory: { icon: categoryIcon, title: categoryTitle } }) => (
+      {templatesByCategory
+        .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Dashboard))
+        .map(({ templates, templateCategory: { icon: categoryIcon, title: categoryTitle } }) => (
           <div key={categoryTitle} className="template-category">
             <div className="title">
               {categoryIcon && <Icon size="large" color="grey" name={categoryIcon} />}
@@ -41,8 +42,7 @@ const Dashboard: React.FC = () => {
               ))}
             </div>
           </div>
-        )
-      )}
+        ))}
     </div>
   )
 }

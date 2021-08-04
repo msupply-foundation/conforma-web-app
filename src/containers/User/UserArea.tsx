@@ -10,7 +10,7 @@ import useListTemplates from '../../utils/hooks/useListTemplates'
 import { useRouter } from '../../utils/hooks/useRouter'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
-import { OutcomeDisplay } from '../../utils/generated/graphql'
+import { OutcomeDisplay, UiLocation } from '../../utils/generated/graphql'
 const brandLogo = require('../../../images/brand_logo.png').default
 
 const UserArea: React.FC = () => {
@@ -36,7 +36,12 @@ const UserArea: React.FC = () => {
         />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
-      <UserMenu user={currentUser as User} />
+      <UserMenu
+        user={currentUser as User}
+        templates={templates.filter(({ templateCategory: { uiLocation } }) =>
+          uiLocation.includes(UiLocation.User)
+        )}
+      />
     </Container>
   )
 }
@@ -59,11 +64,14 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
     push(`/outcomes/${value}`)
   }
 
-  const templateOptions = templates.map((template) => ({
-    key: template.code,
-    text: template.name,
-    value: template.code,
-  }))
+  const templateOptions = templates
+    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Menu))
+    .sort((t1, t2) => (t1.templateCategory.title > t2.templateCategory.title ? 1 : -1))
+    .map((template) => ({
+      key: template.code,
+      text: template.name,
+      value: template.code,
+    }))
 
   const handleTemplateChange = (_: SyntheticEvent, { value }: any) => {
     push(`/applications?type=${value}`)
@@ -196,7 +204,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   )
 }
 
-const UserMenu: React.FC<{ user: User }> = ({ user }) => {
+const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user, templates }) => {
   const { logout } = useUserState()
   const { push } = useRouter()
   return (
@@ -205,11 +213,14 @@ const UserMenu: React.FC<{ user: User }> = ({ user }) => {
         <Button.Content visible>
           <Dropdown text={`${user?.firstName || ''} ${user?.lastName || ''}`}>
             <Dropdown.Menu>
-              <Dropdown.Item
-                icon="edit"
-                text={strings.MENU_EDIT_USER}
-                onClick={() => push('/application/new?type=UserEdit')}
-              />
+              {templates.map(({ code, name, icon, templateCategory: { icon: catIcon } }) => (
+                <Dropdown.Item
+                  key={code}
+                  icon={icon || catIcon}
+                  text={name}
+                  onClick={() => push(`/application/new?type=${code}`)}
+                />
+              ))}
               <Dropdown.Item icon="log out" text={strings.MENU_LOGOUT} onClick={() => logout()} />
             </Dropdown.Menu>
           </Dropdown>

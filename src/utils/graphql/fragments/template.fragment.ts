@@ -10,11 +10,13 @@ export default gql`
     isLinear
     startMessage
     submissionMessage
+    icon
     templateCategory {
+      id
+      code
       title
       icon
-      code
-      id
+      uiLocation
     }
     templateFilterJoins {
       nodes {
