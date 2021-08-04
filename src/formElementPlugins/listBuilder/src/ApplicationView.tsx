@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Modal, Form, Segment, Icon } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
-import { ElementState, User } from '../../../utils/types'
+import { User } from '../../../utils/types'
 import { DisplayType, InputResponseField, ListItem, ListLayoutProps } from './types'
 import { TemplateElement } from '../../../utils/generated/graphql'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
@@ -59,8 +59,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     error: false,
   }
 
-  const [currentResponseElementsState, setCurrentResponseElementsState] =
-    useState<{ [key: string]: ElementState }>()
   const [inputState, setInputState] = useState<InputState>(defaultInputState)
   const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
 
