@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Icon, Label, Message, ModalProps } from 'semantic-ui-react'
+import { Button, Header, Icon, Label, Message, ModalProps, Segment } from 'semantic-ui-react'
 import {
   Loading,
   ConsolidationSectionProgressBar,
@@ -10,11 +10,13 @@ import {
   ModalWarning,
 } from '../../components'
 import { ReviewByLabel, ConsolidationByLabel } from '../../components/Review/ReviewLabel'
+import ReviewComment from '../../components/Review/ReviewComment'
 import {
   AssignmentDetails,
   FullStructure,
   Page,
   ResponsesByCode,
+  ReviewDetails,
   SectionAssignment,
   SectionState,
 } from '../../utils/types'
@@ -34,11 +36,13 @@ import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import messages from '../../utils/messages'
+import { Link } from 'react-router-dom'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetails
+  previousAssignment: AssignmentDetails
   fullApplicationStructure: FullStructure
-}> = ({ reviewAssignment, fullApplicationStructure }) => {
+}> = ({ reviewAssignment, previousAssignment, fullApplicationStructure }) => {
   const {
     userState: { currentUser },
   } = useUserState()
@@ -188,9 +192,15 @@ const ReviewPage: React.FC<{
             }
           />
         ))}
+        <PreviousStageDecision
+          isFinalDecision={reviewAssignment.isFinalDecision}
+          review={previousAssignment?.review}
+          serial={serial}
+        />
         <ReviewSubmit
           structure={fullReviewStructure}
           assignment={reviewAssignment}
+          previousAssignment={previousAssignment}
           scrollTo={scrollTo}
         />
       </div>
@@ -274,5 +284,45 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
     </div>
   )
 }
+
+interface PreviousStageDecisionProps {
+  review: ReviewDetails | null | undefined
+  isFinalDecision: boolean
+  serial: string
+}
+
+const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
+  review,
+  isFinalDecision,
+  serial,
+}) =>
+  isFinalDecision && !!review ? (
+    <Segment.Group horizontal>
+      <Segment>
+        <Header as="h3">{strings.LABEL_PREVIOUS_REVIEW}:</Header>
+        <ReviewByLabel user={review.reviewer} />
+        <Link
+          className="user-action"
+          to={`/application/${serial}/review/${review.id}`}
+          target="_blank"
+        >
+          {strings.ACTION_VIEW}
+        </Link>
+      </Segment>
+      {!!review.reviewDecision?.decision && (
+        <Segment>
+          <p>
+            <strong>{strings.LABEL_REVIEW_SUBMITTED_AS}:</strong>
+          </p>
+          {strings[review.reviewDecision.decision]}
+        </Segment>
+      )}
+      {review.reviewDecision?.comment !== '' && (
+        <Segment>
+          <ReviewComment reviewDecisionId={review?.reviewDecision?.id} isEditable={false} />
+        </Segment>
+      )}
+    </Segment.Group>
+  ) : null
 
 export default ReviewPage
