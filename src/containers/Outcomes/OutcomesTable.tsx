@@ -66,7 +66,6 @@ const getTableValue = (
   isTextValue: boolean
 ) => {
   const value = row[columnName]
-  console.log(row)
   if (!value) return ''
   return isTextValue || typeof value === 'string' ? value : value.text
 }

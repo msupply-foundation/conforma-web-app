@@ -15,10 +15,10 @@ import Outcomes from '../Outcomes/Outcomes'
 const SiteLayout: React.FC = () => {
   return (
     <Router>
-      <Container id="main-container">
+      <Container id="main-container" fluid>
         <UserArea />
         <DevOptions />
-        <Container id="content-area">
+        <Container id="content-area" fluid>
           <Switch>
             <Route exact path="/">
               <Dashboard />

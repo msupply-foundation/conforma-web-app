@@ -219,23 +219,24 @@ const Templates: React.FC = () => {
         <TextIO icon="copy" text="duplicate" />
         {renderImportButton()}
       </div>
-
-      <div key="listContainer" id="list-container" className="outcome-table-container">
-        <Table sortable stackable selectable>
-          {renderHeader()}
-          <Table.Body key="body">
-            {templates.map(({ all, main, applicationCount, numberOfTemplates }, rowIndex) => (
-              <React.Fragment key={`fragment_${rowIndex}`}>
-                {renderTemplate(
-                  { ...main, applicationCount, numberOfTemplates },
-                  refetch,
-                  rowIndex
-                )}
-                {renderInnerTemplates(all, refetch, rowIndex)}
-              </React.Fragment>
-            ))}
-          </Table.Body>
-        </Table>
+      <div className="flex-column-center">
+        <div key="listContainer" id="list-container" className="outcome-table-container">
+          <Table sortable stackable selectable>
+            {renderHeader()}
+            <Table.Body key="body">
+              {templates.map(({ all, main, applicationCount, numberOfTemplates }, rowIndex) => (
+                <React.Fragment key={`fragment_${rowIndex}`}>
+                  {renderTemplate(
+                    { ...main, applicationCount, numberOfTemplates },
+                    refetch,
+                    rowIndex
+                  )}
+                  {renderInnerTemplates(all, refetch, rowIndex)}
+                </React.Fragment>
+              ))}
+            </Table.Body>
+          </Table>
+        </div>
       </div>
     </div>
   )

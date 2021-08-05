@@ -30,7 +30,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
         }
         return (
           <Label className="simple-label">
-            <em>{strings.STATUS_IN_PROGRESS}</em>
+            <em>{strings.REVIEW_STATUS_IN_PROGRESS}</em>
           </Label>
         )
       }
@@ -49,7 +49,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
         }
         return (
           <Label className="simple-label">
-            <em>{strings.STATUS_NOT_STARTED}</em>
+            <em>{strings.REVIEW_STATUS_NOT_STARTED}</em>
           </Label>
         )
       }
@@ -62,7 +62,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
         }
         return (
           <Label className="simple-label">
-            <em>{strings.STATUS_PENDING_ACTION}</em>
+            <em>{strings.REVIEW_STATUS_PENDING_ACTION}</em>
           </Label>
         )
       }
