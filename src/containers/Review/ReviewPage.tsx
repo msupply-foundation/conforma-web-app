@@ -1,5 +1,14 @@
 import React, { useState } from 'react'
-import { Button, Header, Icon, Label, Message, ModalProps, Segment } from 'semantic-ui-react'
+import {
+  Button,
+  Divider,
+  Header,
+  Icon,
+  Label,
+  Message,
+  ModalProps,
+  Segment,
+} from 'semantic-ui-react'
 import {
   Loading,
   ConsolidationSectionProgressBar,
@@ -295,19 +304,21 @@ const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
   review,
   isFinalDecision,
   serial,
-}) =>
-  isFinalDecision && !!review ? (
+}) => {
+  console.log(review?.reviewDecision?.comment, review?.reviewDecision?.comment != '')
+
+  return isFinalDecision && !!review ? (
     <Segment.Group horizontal>
       <Segment>
         <Header as="h3">{strings.LABEL_PREVIOUS_REVIEW}:</Header>
         <ReviewByLabel user={review.reviewer} />
-        <Link
-          className="user-action"
+        <Button
+          className="button-med"
+          as={Link}
           to={`/application/${serial}/review/${review.id}`}
           target="_blank"
-        >
-          {strings.ACTION_VIEW}
-        </Link>
+          content={strings.ACTION_VIEW}
+        />
       </Segment>
       {!!review.reviewDecision?.decision && (
         <Segment>
@@ -317,12 +328,13 @@ const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
           {strings[review.reviewDecision.decision]}
         </Segment>
       )}
-      {review.reviewDecision?.comment !== '' && (
+      {review?.reviewDecision?.comment && review.reviewDecision?.comment !== '' && (
         <Segment>
           <ReviewComment reviewDecisionId={review?.reviewDecision?.id} isEditable={false} />
         </Segment>
       )}
     </Segment.Group>
   ) : null
+}
 
 export default ReviewPage
