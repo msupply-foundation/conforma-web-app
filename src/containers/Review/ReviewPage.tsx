@@ -304,11 +304,9 @@ const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
   review,
   isFinalDecision,
   serial,
-}) => {
-  console.log(review?.reviewDecision?.comment, review?.reviewDecision?.comment != '')
-
-  return isFinalDecision && !!review ? (
-    <Segment.Group horizontal>
+}) =>
+  isFinalDecision && !!review ? (
+    <Segment.Group horizontal id="previous-review">
       <Segment>
         <Header as="h3">{strings.LABEL_PREVIOUS_REVIEW}:</Header>
         <ReviewByLabel user={review.reviewer} />
@@ -322,19 +320,18 @@ const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
       </Segment>
       {!!review.reviewDecision?.decision && (
         <Segment>
-          <p>
+          <p style={{ width: '150px' }}>
             <strong>{strings.LABEL_REVIEW_SUBMITTED_AS}:</strong>
           </p>
           {strings[review.reviewDecision.decision]}
         </Segment>
       )}
-      {review?.reviewDecision?.comment && review.reviewDecision?.comment !== '' && (
+      {!review?.reviewDecision?.comment && review.reviewDecision?.comment !== '' && (
         <Segment>
           <ReviewComment reviewDecisionId={review?.reviewDecision?.id} isEditable={false} />
         </Segment>
       )}
     </Segment.Group>
   ) : null
-}
 
 export default ReviewPage
