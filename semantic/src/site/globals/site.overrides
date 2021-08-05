@@ -97,7 +97,6 @@ a:hover {
   align-items: center;
 }
 
-
 .flex-row-space_between-center {
   .flex-row-space_between();
   align-items: center;
@@ -162,20 +161,18 @@ a:hover {
   align-items: flex-start;
 }
 
-.spacer-20 { 
-  height: 20px
+.spacer-20 {
+  height: 20px;
 }
 
-.spacer-10 { 
-  height: 10px
+.spacer-10 {
+  height: 10px;
 }
 
 .no-margin-no-padding {
-  padding:0px !important;
-  margin:0px !important;
+  padding: 0px !important;
+  margin: 0px !important;
 }
-
-
 
 /*--------------------------------
    Login page
@@ -531,6 +528,12 @@ a:hover {
   width: 400px;
   padding: 15px;
   overflow: scroll;
+}
+
+#previous-review {
+  .segment {
+    width: 30%;
+  }
 }
 
 /*--------------------------------
@@ -1508,13 +1511,13 @@ a:hover {
       Template Builder
 ---------------------------------*/
 
-@indicatorColor: #E8E8E8;
+@indicatorColor: #e8e8e8;
 
 .io-wrapper {
   .flex-row();
   align-items: stretch;
   margin: 2px;
-  .io-component  {
+  .io-component {
     flex-grow: 1;
     margin: 0px;
     text-align: center;
@@ -1523,8 +1526,8 @@ a:hover {
     border-radius: @borderRadius;
     font-size: 12px;
     padding: 2px;
-    padding-left:10px;
-    padding-right:10px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   input,
@@ -1533,7 +1536,7 @@ a:hover {
     margin: 0px !important;
     padding: 0px !important;
     font-size: 12px !important;
-    width: none  !important;
+    width: none !important;
     min-width: 200px;
   }
 
@@ -1568,7 +1571,6 @@ a:hover {
   margin-left: 5px !important;
 }
 
-
 .longer {
   input,
   textarea {
@@ -1589,14 +1591,14 @@ a:hover {
   }
 }
 
-.collapsed-start-row{
+.collapsed-start-row {
   height: 10px !important;
   td {
     text-align: center !important;
   }
 }
 
-.collapsed-end-row{
+.collapsed-end-row {
   height: 2px !important;
 }
 
@@ -1619,7 +1621,6 @@ a:hover {
     }
   }
 }
-
 
 .template-buider-category-input {
   .flex-column-center-start();
@@ -1649,8 +1650,8 @@ a:hover {
     .flex-row();
     align-items: flex-start;
     justify-content: flex-end;
-    width:100px;
-    margin-right:30px;
+    width: 100px;
+    margin-right: 30px;
     margin: 5px;
   }
   .form-element-wrapper {
@@ -1662,12 +1663,12 @@ a:hover {
   border-radius: @borderRadius;
   border: 1px solid @indicatorColor;
   padding: 2px;
-  padding-left:5px;
-  padding-right:5px;
+  padding-left: 5px;
+  padding-right: 5px;
   margin: 2px;
   background-color: @surfacesWhite;
   .evaluation-container-title {
-      .flex-row-center-center();
+    .flex-row-center-center();
   }
   .evaluation-container-content {
     .flex-row() !important;
@@ -1682,7 +1683,7 @@ a:hover {
   .config-modal-container {
     .flex-column-center-center();
     padding: 10px;
-  } 
+  }
   .config-modal-info {
     background-color: @surfacesWhite !important;
   }
@@ -1690,15 +1691,15 @@ a:hover {
 
 .object-properties-container {
   .flex-column-start-center();
-  margin-left:30px;
+  margin-left: 30px;
 }
 .evaluator-operator-container {
   .flex-column-start-start();
-  background: rgba(0,0,0, 0.03);
+  background: rgba(0, 0, 0, 0.03);
   padding: 5px;
-  margin:2px;
+  margin: 2px;
   border-radius: @borderRadius;
-  border: 2px solid rgba(0,0,0,0.2);
+  border: 2px solid rgba(0, 0, 0, 0.2);
   background-color: rgba(50, 252, 50, 0.01);
 }
 
@@ -1712,7 +1713,7 @@ a:hover {
 
 .config-container-alternate {
   .config-container();
-  background-color: rgba(0,0,0, 0.03);
+  background-color: rgba(0, 0, 0, 0.03);
 }
 
 /*******************************

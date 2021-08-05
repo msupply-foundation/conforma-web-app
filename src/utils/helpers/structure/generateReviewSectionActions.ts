@@ -124,7 +124,8 @@ const generateReviewSectionActions: GenerateSectionActions = ({
 
     const totalNewReviewable = section?.consolidationProgress?.totalNewReviewable
 
-    const isAssignedToCurrentUser = reviewer.id === currentUserId && totalReviewable > 0
+    const isAssignedToCurrentUser =
+      reviewer.id === currentUserId && (totalReviewable > 0 || isFinalDecision)
 
     const isReviewable = (totalReviewable || 0) > 0
 
