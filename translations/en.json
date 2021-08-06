@@ -7,6 +7,10 @@
     "defaultMessage": "Just a simple try of addition",
     "description": "Paragraph"
   },
+  "AnWbp7": {
+    "defaultMessage": "Registered Products",
+    "description": "Testing if this would be seperate instance even though default message are same"
+  },
   "CbGkFv": {
     "defaultMessage": "{val1} - registered by {val2}. {exp, date, ::yyyy/MM/dd}",
     "description": "Product Link"
@@ -18,6 +22,10 @@
   "ZJcj0x": {
     "defaultMessage": "List of (public) registered products in the system",
     "description": "Header 2"
+  },
+  "manual-id-00222": {
+    "defaultMessage": "Manual id test",
+    "description": "Manual id test"
   },
   "tm0XCA": {
     "defaultMessage": "Today is {ts, date, ::yyyyMMdd}",

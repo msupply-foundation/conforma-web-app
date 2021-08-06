@@ -4,11 +4,15 @@ import { Link } from 'react-router-dom'
 import { Label, Container, Header } from 'semantic-ui-react'
 import { useRouter } from '../utils/hooks/useRouter'
 import { LanguageContext } from './contexts/Language.context'
+import messages from './messages'
 
 const ProductListDemo: React.FC = () => {
   const { pathname } = useRouter()
   const intl = useIntl()
   const { state, changeLanguage } = useContext(LanguageContext)
+
+  // Create an alias to shorten the method
+  const translate = intl.formatMessage
 
   const updateLocale = async (event: any) => await changeLanguage(event.target.value)
 
@@ -18,13 +22,13 @@ const ProductListDemo: React.FC = () => {
         <option value="en">English</option>
         <option value="fr">French</option>
       </select>
-      <Header
-        as="h1"
-        content={intl.formatMessage({
-          description: 'Header 1', // Description should be a string literal
-          defaultMessage: 'Registered Products', // Message should be a string literal
-        })}
-      />
+
+      {/* Getting messages from an external file */}
+      <Header as="h1" content={translate(messages.registered_products)} />
+      <Header as="h2" content={translate(messages.registered_products)} />
+      <Header as="h1" content={intl.formatMessage(messages.registered_products2)} />
+      <Header as="h5" content={intl.formatMessage(messages.demo_manual_id_00222)} />
+
       <Header
         as="h2"
         content={intl.formatMessage({
