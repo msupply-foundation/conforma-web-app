@@ -25,6 +25,7 @@
     "./dist/*",
     "./semantic/*",
     "./build-utils/*",
+    "./docs/*",
     "apollo.config.js",
     "webpack.config.js"
   ]
