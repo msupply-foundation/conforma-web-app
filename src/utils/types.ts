@@ -19,8 +19,9 @@ import {
 
 import { ValidationState } from '../formElementPlugins/types'
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
-import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic'
+import { SemanticICONS } from 'semantic-ui-react'
 import { DocumentNode } from '@apollo/client'
+import { DateTime } from 'luxon'
 
 export {
   ApplicationDetails,
@@ -43,6 +44,7 @@ export {
   EvaluatorParameters,
   Filters,
   FullStructure,
+  HistoryElement,
   LooseString,
   MethodRevalidate,
   MethodToCallProps,
@@ -56,6 +58,7 @@ export {
   ReviewProgress,
   ConsolidationProgress,
   ReviewQuestion,
+  ReviewAssignment,
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
@@ -65,6 +68,7 @@ export {
   SetStrictSectionPage,
   SortQuery,
   StageAndStatus,
+  StageDetails,
   TemplateDetails,
   TemplateCategoryDetails,
   TemplatePermissions,
@@ -108,29 +112,31 @@ interface ApplicationProps {
   structure: FullStructure
   requestRevalidation?: MethodRevalidate
   strictSectionPage?: SectionAndPage | null
-}
-
-interface ApplicationStage {
-  id: number
-  name: string
-  number: number
-  colour: string
+  isValidating?: boolean
 }
 
 interface AssignmentDetails {
   id: number
-  status: ReviewAssignmentStatus | null
-  timeUpdated: Date
   level: number
   reviewerId?: number
   review: ReviewDetails | null
   reviewer: GraphQLUser
-  totalAssignedQuestions: number
-  stage: ApplicationStage
-  reviewQuestionAssignments: ReviewQuestionAssignment[]
+  current: AssignmentStageAndStatus
   isCurrentUserAssigner: boolean
-  assignableSectionRestrictions: (string | null)[]
   isCurrentUserReviewer: boolean
+  isFinalDecision: boolean
+  isLastLevel: boolean
+  totalAssignedQuestions: number
+  reviewQuestionAssignments: ReviewQuestionAssignment[]
+  assignableSectionRestrictions: (string | null)[]
+}
+
+interface AssignmentStageAndStatus {
+  stage: StageDetails
+  assignmentStatus: ReviewAssignmentStatus | null
+  timeStageCreated: Date
+  timeStatusUpdated: Date
+  // Doesn't store ReviewStatus
 }
 
 interface BasicStringObject {
@@ -228,6 +234,7 @@ interface Filters {
 }
 
 interface FullStructure {
+  assignment?: ReviewAssignment
   thisReview?: ReviewDetails | null
   elementsById?: ElementsById
   lastValidationTimestamp?: number
@@ -237,9 +244,16 @@ interface FullStructure {
   stages: StageDetails[]
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
-  canSubmitReviewAs?: Decision | null
   sortedSections?: SectionState[]
   sortedPages?: Page[]
+}
+
+interface HistoryElement {
+  author?: string
+  title: string
+  message: string
+  timeUpdated: Date
+  reviewerComment?: string
 }
 
 interface IGraphQLConnection {
@@ -281,6 +295,7 @@ type PageElement = {
   latestOriginalReviewResponse?: ReviewResponse
   previousOriginalReviewResponse?: ReviewResponse
   isNewApplicationResponse?: boolean
+  isNewReviewResponse?: boolean
   review?: ReviewQuestionDecision
   isPendingReview?: boolean
   reviewQuestionAssignmentId: number
@@ -288,6 +303,7 @@ type PageElement = {
   isChangeRequest?: boolean
   isChanged?: boolean
   isActiveReviewResponse?: boolean
+  enableViewHistory: boolean
 }
 
 interface ApplicationProgress {
@@ -323,10 +339,17 @@ interface ResponsesByCode {
   [key: string]: ResponseFull
 }
 
+interface ReviewAssignment {
+  canSubmitReviewAs?: Decision | null
+  isLastLevel: boolean
+  isFinalDecision: boolean
+}
+
 type ReviewSectionComponentProps = {
   fullStructure: FullStructure
   section: SectionState
   assignment: AssignmentDetails
+  previousAssignment: AssignmentDetails
   thisReview?: ReviewDetails | null
   action: ReviewAction
   isAssignedToCurrentUser: boolean
@@ -335,12 +358,10 @@ type ReviewSectionComponentProps = {
 
 interface ReviewDetails {
   id: number
-  status: ReviewStatus
-  timeStatusCreated?: Date
-  stage: ApplicationStage
-  isLastLevel: boolean
   level: number
   reviewDecision?: ReviewDecision | null
+  reviewer: GraphQLUser
+  current: ReviewStageAndStatus
 }
 
 interface ReviewQuestion {
@@ -354,6 +375,13 @@ interface ReviewQuestionDecision {
   id: number
   comment?: string | null
   decision?: ReviewResponseDecision | null
+}
+
+interface ReviewStageAndStatus {
+  stage: StageDetails
+  reviewStatus: ReviewStatus
+  timeStageCreated: Date
+  timeStatusCreated: Date
 }
 
 type SectionAndPage = {
@@ -373,13 +401,13 @@ interface BaseReviewProgress {
   totalReviewable: number
   totalPendingReview: number
   totalActive: number // review or application responses that are in progress (as oppose to awaiting review to be started)
+  totalNewReviewable: number // new reviable are updates from re-submission (after changes requested to applicant or lower level reviewer)
 }
 
 interface ReviewProgress extends BaseReviewProgress {
   doneConform: number
   doneNonConform: number
-  doneNewReviewable: number
-  totalNewReviewable: number
+  doneNewReviewable: number // Review of applicant re-submission
 }
 
 interface ConsolidationProgress extends BaseReviewProgress {
@@ -389,6 +417,7 @@ interface ConsolidationProgress extends BaseReviewProgress {
   doneActiveDisagree: number
   doneActiveAgreeConform: number
   doneActiveAgreeNonConform: number
+  doneNewReviewable: number // Review of reviewer re-submission
   totalConform: number
   totalNonConform: number
 }
@@ -401,7 +430,9 @@ enum ReviewAction {
   canSelfAssign = 'CAN_SELF_ASSIGN',
   canSelfAssignLocked = 'CAN_SELF_ASSIGN_LOCKED',
   canStartReview = 'CAN_START_REVIEW',
+  canReStartReview = 'CAN_RE_START_REVIEW', // User for second review (for consolidator)
   canContinueLocked = 'CAN_CONTINUE_LOCKED',
+  canMakeDecision = 'CAN_MAKE_DECISION',
   canUpdate = 'CAN_UPDATE',
   unknown = 'UNKNOWN',
 }
@@ -444,16 +475,17 @@ interface SortQuery {
 }
 
 interface StageAndStatus {
-  stage: ApplicationStage
+  stage: StageDetails
   status: ApplicationStatus
-  date: Date
+  timeStageCreated: Date
+  timeStatusCreated: Date
 }
 
 interface StageDetails {
-  number: number
   id: number
-  title: string
-  colour?: string
+  name: string
+  number: number
+  colour: string
   description?: string
 }
 
@@ -465,12 +497,14 @@ interface TemplateCategoryDetails {
 interface TemplateInList {
   id: number
   name: string
+  namePlural?: string
   code: string
   templateCategory: TemplateCategoryDetails
   permissions: PermissionPolicyType[]
   hasApplyPermission: boolean
   hasNonApplyPermissions: boolean
   filters: Filter[]
+  totalApplications: number
 }
 
 interface TemplateDetails {
@@ -532,6 +566,7 @@ interface LoginPayload {
   JWT: string
   templatePermissions: TemplatePermissions
   orgList?: OrganisationSimple[]
+  isAdmin: boolean
 }
 
 interface UseGetReviewStructureForSectionProps {
@@ -546,7 +581,9 @@ interface SortQuery {
   sortDirection?: 'ascending' | 'descending'
 }
 
-// Outcomes Display Related
+// *****************
+// OUTCOMES DISPLAY
+// *****************
 
 export type OutcomeDisplay = {
   code: string
@@ -650,4 +687,74 @@ export type OutcomeDisplaysStructure = {
   detailDisplayQueryByCode: DetailDisplayQueryByCode
   outcomeCountQueryByCode: OutcomeCountQueryByCode
   applicationLinkQueryByCode: ApplicationLinkQueryByCode
+}
+
+// *****************
+// LIST FILTERS
+// *****************
+
+export type FilterTypeMethod = (filterKey: string, options?: FilterTypeOptions) => object
+
+export type FilterTypeDefinitions = {
+  [filterType in
+    | 'number'
+    | 'date'
+    | 'boolean'
+    | 'equals'
+    | 'enumList'
+    | 'searchableListIn'
+    | 'searchableListInArray'
+    | 'staticList'
+    | 'search']: FilterTypeMethod
+}
+
+export type FilterTypes = keyof FilterTypeDefinitions
+
+export type FilterListQueryResult = { [queryName: string]: any }
+export type FilterListResultExtractor = (props: FilterListQueryResult) => {
+  list: string[]
+  totalCount: number
+}
+
+export type GetFilterListQueryResult = {
+  query: DocumentNode
+  variables: object
+  resultExtractor: FilterListResultExtractor
+}
+
+export type GetFilterListQuery = (props: {
+  searchValue?: string
+  filterListParameters?: any
+}) => GetFilterListQueryResult
+
+export type NamedDates = {
+  [key: string]: { getDates: () => [DateTime, DateTime]; title: string }
+}
+export type BooleanFilterMapping = { true: string; false: string }
+
+export type FilterTypeOptions = {
+  // For know enum list
+  enumList?: string[]
+  // For option list that requires api query
+  getListQuery?: GetFilterListQuery
+  // Or statement instead of columnOrIdentifier
+  orFieldNames?: string[]
+  // Substitue columnOrIdentifier
+  substituteColumnName?: string
+  // For named dates
+  namedDates?: NamedDates
+  // For boolean to show on and of criteria
+  booleanMapping?: BooleanFilterMapping
+}
+
+export type FilterDefinition = {
+  type: FilterTypes
+  // Empty or undefined title will be excluded from generic fitler UI display (ListFilters)
+  title?: string
+  options?: FilterTypeOptions
+}
+
+export type FilterDefinitions = {
+  // columnOrIdentifier as graphQL filter key unless orFieldNames or substituteColumnName is present in filter options
+  [columnOrIdentifier: string]: FilterDefinition
 }

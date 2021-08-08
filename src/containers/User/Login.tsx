@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
 import { Link } from 'react-router-dom'
-import { Form, Button, Container, Icon, Image, Header, Dropdown, List } from 'semantic-ui-react'
+import { Form, Button, Container, Icon, Image, Header, List } from 'semantic-ui-react'
 import isLoggedIn from '../../utils/helpers/loginCheck'
 import strings from '../../utils/constants'
 import messages from '../../utils/messages'
 import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { LoginPayload, OrganisationSimple } from '../../utils/types'
+const logo = require('../../../images/logos/logo_512.png').default
 
 const LOGIN_AS_NO_ORG = 0
 const NO_ORG_SELECTED = -1
@@ -24,7 +25,7 @@ const Login: React.FC = () => {
 
   const noOrgOption: OrganisationSimple = {
     orgId: LOGIN_AS_NO_ORG,
-    orgName: strings.LABEL_NO_ORG,
+    orgName: strings.LABEL_NO_ORG_OPTION,
     userRole: null,
   }
 
@@ -55,8 +56,8 @@ const Login: React.FC = () => {
   }
 
   const finishLogin = async (loginPayload: LoginPayload) => {
-    const { JWT, user, templatePermissions } = loginPayload
-    await onLogin(JWT, user, templatePermissions)
+    const { JWT, user, templatePermissions, orgList, isAdmin } = loginPayload
+    await onLogin(JWT, user, templatePermissions, orgList, isAdmin)
     if (history.location?.state?.from) push(history.location.state.from)
     else push('/')
   }
@@ -93,7 +94,7 @@ const Login: React.FC = () => {
     <Container id="login-container">
       <div id="login-box">
         <div className="flex-centered">
-          <Image src="/images/logos/logo_512.png" className="image-icon" />
+          <Image src={logo} className="image-icon" />
           <Header as="h3" className="login-header">
             {strings.TITLE_LOGIN_HEADER}
           </Header>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Container, Icon } from 'semantic-ui-react'
+import { Button, Container, Icon, Loader } from 'semantic-ui-react'
 import {
   MethodRevalidate,
   MethodToCallProps,
@@ -16,6 +16,7 @@ interface NavigationProps {
   sections: SectionsStructure
   serialNumber: string
   requestRevalidation: MethodRevalidate
+  isValidating: boolean
 }
 
 const Navigation: React.FC<NavigationProps> = ({
@@ -24,6 +25,7 @@ const Navigation: React.FC<NavigationProps> = ({
   sections,
   serialNumber,
   requestRevalidation,
+  isValidating,
 }) => {
   const { push } = useRouter()
 
@@ -120,7 +122,15 @@ const Navigation: React.FC<NavigationProps> = ({
           </p>
         </div>
         <div className="button-container">
-          <Button primary onClick={summaryButtonHandler} content={strings.BUTTON_SUMMARY} />
+          <Button
+            primary
+            inverted={isValidating}
+            disabled={isValidating}
+            onClick={summaryButtonHandler}
+          >
+            {isValidating ? strings.BUTTON_VALIDATING : strings.BUTTON_SUMMARY}
+            {isValidating && <Loader active inline size="tiny" />}
+          </Button>
         </div>
       </div>
     </Container>

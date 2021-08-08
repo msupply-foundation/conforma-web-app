@@ -41,9 +41,11 @@ const generateReviewValidity = (newStructure: FullStructure) => {
   }
 
   newStructure.firstIncompleteReviewPage = firstIncompleteReviewPage
-  if (firstIncompleteReviewPage) newStructure.canSubmitReviewAs === null
+  if (firstIncompleteReviewPage || !newStructure.assignment)
+    newStructure.assignment?.canSubmitReviewAs === null
   else
-    newStructure.canSubmitReviewAs = doneNonConform === 0 ? Decision.Conform : Decision.NonConform
+    newStructure.assignment.canSubmitReviewAs =
+      doneNonConform === 0 ? Decision.Conform : Decision.NonConform
 }
 
 export default generateReviewValidity

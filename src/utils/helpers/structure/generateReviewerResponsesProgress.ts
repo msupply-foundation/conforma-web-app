@@ -1,4 +1,4 @@
-import { Decision, ReviewResponseDecision } from '../../generated/graphql'
+import { ReviewResponseDecision } from '../../generated/graphql'
 
 import { FullStructure, SectionState, Page, ReviewProgress } from '../../types'
 
@@ -13,8 +13,10 @@ const generateSectionReviewProgress = (section: SectionState) => {
 
 const generatePageReviewProgress = (page: Page) => {
   const totalReviewable = page.state.filter(
-    (element) =>
-      element.isAssigned && element?.element.isVisible && element?.latestApplicationResponse?.id
+    ({ isAssigned, thisReviewLatestResponse, latestApplicationResponse, element }) =>
+      (isAssigned || !!thisReviewLatestResponse) &&
+      element.isVisible &&
+      latestApplicationResponse?.id
   )
 
   // Only consider review responses that are linked to latest application response
@@ -41,11 +43,11 @@ const generatePageReviewProgress = (page: Page) => {
     doneConform: doneConform.length,
     doneNonConform: doneNonConform.length,
     doneNewReviewable: doneNewReviewable.length,
-    totalNewReviewable: totalNewReviewable.length,
     // BaseReviewProgress
     totalReviewable: totalReviewable.length,
     totalActive: totalReviewable.length,
     totalPendingReview: totalPendingReview.length,
+    totalNewReviewable: totalNewReviewable.length,
   }
 }
 
@@ -59,12 +61,12 @@ export const getReviewProgress = (elements: (Page | SectionState)[]) => {
   const initial: ReviewProgress = {
     doneConform: 0,
     doneNonConform: 0,
-    totalNewReviewable: 0,
     doneNewReviewable: 0,
     // BaseReviewProgress
     totalActive: 0,
     totalReviewable: 0,
     totalPendingReview: 0,
+    totalNewReviewable: 0,
   }
 
   return elements.reduce((sum, page) => {
@@ -80,12 +82,12 @@ export const getReviewProgress = (elements: (Page | SectionState)[]) => {
     return {
       doneConform: sum.doneConform + doneConform,
       doneNonConform: sum.doneNonConform + doneNonConform,
-      totalNewReviewable: sum.totalNewReviewable + totalNewReviewable,
       doneNewReviewable: sum.doneNewReviewable + doneNewReviewable,
       // BaseReviewProgress
       totalActive: sum.totalActive + totalActive,
       totalReviewable: sum.totalReviewable + totalReviewable,
       totalPendingReview: sum.totalPendingReview + totalPendingReview,
+      totalNewReviewable: sum.totalNewReviewable + totalNewReviewable,
     }
   }, initial)
 }

@@ -1,5 +1,5 @@
 import { Dispatch } from 'react'
-import config from '../../config.json'
+import config from '../../config'
 import { UserActions } from '../../contexts/UserState'
 
 const userInfoUrl = `${config.serverREST}/user-info`
@@ -17,16 +17,17 @@ const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
 
   fetch(userInfoUrl, { headers: createAuthorisationHeader(JWT) })
     .then((res: any) => res.json())
-    .then(({ templatePermissions, JWT, user, success }) => {
+    .then(({ templatePermissions, JWT, user, success, orgList, isAdmin }) => {
       if (!success) logout()
       localStorage.setItem(LOCAL_STORAGE_JWT_KEY, JWT)
-
       // Set userinfo to context after receiving it from endpoint
       if (user && templatePermissions) {
         dispatch({
           type: 'setCurrentUser',
           newUser: user,
-          newPermissions: templatePermissions,
+          newPermissions: templatePermissions || {},
+          newOrgList: orgList || [],
+          newIsAdmin: !!isAdmin,
         })
       }
 

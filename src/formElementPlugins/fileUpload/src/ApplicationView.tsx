@@ -40,7 +40,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const { isEditable } = element
   const { label, description, fileCountLimit, fileExtensions, fileSizeLimit } = parameters
 
-  const { config } = applicationData
+  const { config, template } = applicationData
   const host = config.serverREST
   const { uploadEndpoint } = config
 
@@ -59,6 +59,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const fileInputRef = useRef<any>(null)
 
   useEffect(() => {
+    // Set response to null if no files
+    if (uploadedFiles.length === 0) {
+      onSave(null)
+      return
+    }
     // Only store files that aren't error or loading
     const fileDataToSave = uploadedFiles
       .filter(({ loading, error, fileData }) => !(loading || error) && fileData)
@@ -244,7 +249,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const fileData = new FormData()
     await fileData.append('file', file)
     const response = await fetch(
-      `${host}${uploadEndpoint}?user_id=${currentUser?.userId}&application_serial=${serialNumber}&application_response_id=${application_response_id}`,
+      `${host}${uploadEndpoint}?user_id=${currentUser?.userId}&application_serial=${serialNumber}&application_response_id=${application_response_id}&template_id=${template.id}`,
       { method: 'POST', body: fileData }
     )
     return await response.json()

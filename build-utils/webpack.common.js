@@ -1,11 +1,11 @@
 const commonPaths = require('./common-paths')
-const webpack = require('webpack')
+const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const config = {
   entry: {
     app: `${commonPaths.appEntry}/index.tsx`,
-    vendor: ['semantic-ui-react'],
   },
   output: {
     path: commonPaths.outputPath,
@@ -20,46 +20,33 @@ const config = {
         test: /\.(ts|tsx)$/,
         loader: 'awesome-typescript-loader',
       },
-      // {
-      //   enforce: "pre",
-      //   test: /\.js$/,
-      //   loader: "source-map-loader",
-      // },
       {
         // Load fonts
         test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
         use: 'url-loader',
       },
       {
-        // Load other files, images etc
-        test: /\.(png|j?g|gif|ico)?$/,
-        use: 'url-loader',
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[ext]',
+        },
       },
+
       {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        test: /\.(less|css)$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          'css-loader',
+          'less-loader',
+        ],
       },
     ],
   },
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        styles: {
-          name: 'styles',
-          test: /\.css$/,
-          chunks: 'all',
-          enforce: true,
-        },
-        vendor: {
-          chunks: 'initial',
-          test: 'vendor',
-          name: 'vendor',
-          enforce: true,
-        },
-      },
-    },
-  },
   plugins: [
+    new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
       template: 'public/index.html',
       favicon: 'public/favicon.ico',
