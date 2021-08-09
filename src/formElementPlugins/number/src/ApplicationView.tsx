@@ -20,23 +20,26 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   currentResponse,
 }) => {
-  const [textValue, setTextValue] = useState<string | null | undefined>(currentResponse?.text)
-  const [internalValidation, setInternalValidation] = useState(validationState)
   const { isEditable } = element
   const {
     placeholder,
     label,
     description,
+    default: defaultValue,
     maxWidth,
     type = NumberType.FLOAT,
+    simple = true,
     minValue = -Infinity,
     maxValue = Infinity,
+    step = 1,
     locale = undefined,
     currency = undefined,
     prefix = '',
     suffix = '',
     maxSignificantDigits = undefined,
   } = parameters
+  const [textValue, setTextValue] = useState<string | null | undefined>(currentResponse?.text)
+  const [internalValidation, setInternalValidation] = useState(validationState)
 
   const formatOptions = {
     style: currency ? 'currency' : undefined,
@@ -46,19 +49,37 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const numberFormatter = new Intl.NumberFormat(locale, formatOptions)
 
   useEffect(() => {
+    // Ensures defaultValue is saved on first load
+    if (!currentResponse?.text && defaultValue !== undefined) {
+      const [number, text] = parseInput(
+        String(defaultValue),
+        numberFormatter,
+        simple,
+        prefix,
+        suffix
+      )
+      const validation = customValidate(number, type, minValue, maxValue)
+      setInternalValidation(validation)
+      if (validation.isValid) onSave({ text, number, type, currency, locale })
+      setTextValue(text)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!textValue) return
     handleLoseFocus()
   }, [locale, minValue, maxValue, currency, prefix, suffix, maxSignificantDigits, type])
 
   function handleChange(e: any) {
     const text = e.target.value
-    const [number, _] = parseInput(text, numberFormatter, prefix, suffix)
+    const [number, _] = parseInput(text, numberFormatter, simple, prefix, suffix)
     setInternalValidation(customValidate(number, type, minValue, maxValue))
     onUpdate(text)
     setTextValue(text)
   }
 
   function handleLoseFocus() {
-    const [number, text] = parseInput(textValue, numberFormatter, prefix, suffix)
+    const [number, text] = parseInput(textValue, numberFormatter, simple, prefix, suffix)
     const validation = customValidate(number, type, minValue, maxValue)
     setInternalValidation(validation)
     if (validation.isValid) onSave({ text, number, type, currency, locale })
@@ -80,6 +101,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Markdown text={description} />
       <Form.Input
         fluid
+        type={simple ? 'number' : 'text'}
+        min={minValue}
+        max={maxValue}
+        step={step}
         placeholder={placeholder}
         onChange={handleChange}
         onBlur={handleLoseFocus}
@@ -104,12 +129,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 const parseInput = (
   textInput: string | null | undefined,
   numberFormatter: any,
+  simple: boolean,
   prefix: string,
   suffix: string
 ): [number | null, string | null] => {
   if (!textInput) return [null, null]
   const number: number = Number(textInput?.replace(/[^\d\.\-]/g, ''))
-  const text: string = (prefix + numberFormatter.format(number) + suffix) as string
+  const text: string = simple
+    ? String(number)
+    : ((prefix + numberFormatter.format(number) + suffix) as string)
   return [number, text]
 }
 
