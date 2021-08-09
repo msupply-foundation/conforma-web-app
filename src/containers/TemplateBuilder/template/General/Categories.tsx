@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Icon, Header } from 'semantic-ui-react'
 import { Loading } from '../../../../components'
-import { useGetTemplateCategoriesQuery } from '../../../../utils/generated/graphql'
+import { useGetTemplateCategoriesQuery, UiLocation } from '../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import DropdownIO from '../../shared/DropdownIO'
 import { useOperationState } from '../../shared/OperationContext'
@@ -13,12 +13,14 @@ const noCategory = {
   id: -1,
   code: '',
   icon: '',
+  uiLocation: [],
 }
 
 const newCategory = {
   code: 'new code',
   icon: 'globe',
   title: 'new title',
+  uiLocation: [UiLocation.Menu],
 }
 
 type CategoryUpdate = {
@@ -26,6 +28,7 @@ type CategoryUpdate = {
   id?: number
   icon: string
   title: string
+  uiLocation: UiLocation[]
 }
 
 const Category: React.FC<{}> = () => {
@@ -46,6 +49,7 @@ const Category: React.FC<{}> = () => {
   const renderAddEdit = () => {
     if (updateState) return null
     const canRenderEdit = selectedCategory.id !== noCategory.id
+    console.log('selectedCategory', selectedCategory)
     return (
       <>
         <Icon className="clickable" name="add square" onClick={() => setUpdateState(newCategory)} />
@@ -59,6 +63,7 @@ const Category: React.FC<{}> = () => {
                 icon: selectedCategory?.icon || '',
                 id: selectedCategory?.id,
                 title: selectedCategory?.title || '',
+                uiLocation: (selectedCategory?.uiLocation || []) as UiLocation[],
               })
             }}
           />

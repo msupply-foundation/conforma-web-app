@@ -4808,7 +4808,7 @@ export type TemplateCategory = Node & {
   code: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
-  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
+  uiLocation: Array<Maybe<UiLocation>>;
   /** Reads and enables pagination through a set of `Template`. */
   templates: TemplatesConnection;
 };
@@ -29301,7 +29301,7 @@ export type GetTemplateCategoriesQuery = (
     { __typename?: 'TemplateCategoriesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'TemplateCategory' }
-      & Pick<TemplateCategory, 'code' | 'icon' | 'id' | 'title'>
+      & Pick<TemplateCategory, 'code' | 'icon' | 'id' | 'title' | 'uiLocation'>
     )>> }
   )> }
 );
@@ -31468,6 +31468,7 @@ export const GetTemplateCategoriesDocument = gql`
       icon
       id
       title
+      uiLocation
     }
   }
 }
