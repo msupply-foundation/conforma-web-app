@@ -3,6 +3,7 @@ import { Icon, Header } from 'semantic-ui-react'
 import { Loading } from '../../../../components'
 import { useGetTemplateCategoriesQuery, UiLocation } from '../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
+import CheckboxIO from '../../shared/CheckboxIO'
 import DropdownIO from '../../shared/DropdownIO'
 import { useOperationState } from '../../shared/OperationContext'
 import TextIO, { iconLink } from '../../shared/TextIO'
@@ -31,6 +32,12 @@ type CategoryUpdate = {
   uiLocation: UiLocation[]
 }
 
+const uiLocationMap: { [key in UiLocation]: string } = {
+  MENU: 'Menu',
+  DASHBOARD: 'Dashboard',
+  USER: 'User',
+}
+
 const Category: React.FC<{}> = () => {
   const { category, template } = useTemplateState()
   const { updateTemplate } = useOperationState()
@@ -49,7 +56,6 @@ const Category: React.FC<{}> = () => {
   const renderAddEdit = () => {
     if (updateState) return null
     const canRenderEdit = selectedCategory.id !== noCategory.id
-    console.log('selectedCategory', selectedCategory)
     return (
       <>
         <Icon className="clickable" name="add square" onClick={() => setUpdateState(newCategory)} />
@@ -81,6 +87,7 @@ const Category: React.FC<{}> = () => {
       })
     )
       refetchCategories()
+    setUpdateState(null)
   }
 
   const editCategory = async () => {
@@ -96,6 +103,12 @@ const Category: React.FC<{}> = () => {
       })
     )
       setUpdateState(null)
+  }
+
+  const updateUiLocationArray = (location: UiLocation, value: boolean): UiLocation[] => {
+    const newLocations = (updateState?.uiLocation as UiLocation[]).filter((loc) => loc !== location)
+    if (value) newLocations.push(location)
+    return newLocations
   }
 
   return (
@@ -136,8 +149,23 @@ const Category: React.FC<{}> = () => {
             icon={updateState.icon}
             setText={(value: string) => setUpdateState({ ...updateState, icon: value })}
           />
+          <div>
+            <p>Appears in:</p>
+            {Object.entries(uiLocationMap).map(([key, locationName]) => (
+              <CheckboxIO
+                key={key}
+                value={updateState.uiLocation.includes(key as UiLocation)}
+                title={locationName}
+                setValue={(value: boolean) =>
+                  setUpdateState({
+                    ...updateState,
+                    uiLocation: updateUiLocationArray(key as UiLocation, value),
+                  })
+                }
+              />
+            ))}
+          </div>
           <div className="spacer-20" />
-
           <div className="flex-row">
             <ButtonWithFallback
               title={updateState.id ? 'Save' : 'Add'}
