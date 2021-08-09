@@ -4,17 +4,17 @@ insert_anchor_links = "right"
 weight = 1
 +++
 
-## Introduction
+## What is mFlow?
 
 Content here.
 
-### Subheading 1
+### What can mFlow do?
 
 Content here.
 
-### Subheading 2
+### Can you put that in diagrams?
 
-Content here.
+![adam](images/adam.png)
 
 ### Subheading 3
 
