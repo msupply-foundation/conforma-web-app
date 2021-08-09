@@ -11,7 +11,7 @@
     "minValue": -999999999,
     "maxValue": 999999999,
     "locale": "en-US",
-    "currency": null,
+    "currency": "",
     "prefix": "",
     "suffix": "null",
     "maxSignificantDigits": 999

@@ -16,6 +16,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - [List Builder](#list-builder)
   - [Search](#search)
   - [Date Picker](#date-picker)
+  - [Number](#number)
   - [Page Break](#page)
 
 <a name="element-fields"/>
@@ -527,6 +528,47 @@ Once selected, items are displayed in a "card" view:
 - **category**: `Question`
 
 _A date picker for entering standardised dates or date ranges_
+
+![Date picker](images/Element-Type-Specs-date-picker.png)
+
+Uses [React Semantic-UI Datepickers](https://www.npmjs.com/package/react-semantic-ui-datepickers)
+
+#### Input parameters
+
+- **label**: `string` -- as above
+- **description**: `string` -- as above [Optional]
+- **default**: `(ISO) string` -- a pre-selected date [Optional]
+- **allowRange**: `boolean` -- if `true`, input is expected to be a date _range_ (a start and end date). Default: `false` (i.e. can only enter single date)
+- **minDate**/**maxDate**: `(ISO) string` -- specifies how far into the future or past the selector can go
+- **minAge**/**maxAge**: `(ISO) string` -- same as above, but a number (in years) relative to the _current_ date. For example, if an applicant was required to be over 18 years old, you'd set `minAge` to `18`.
+- **locale**: `string` -- specifies the international "locale" code (e.g `'ja-JP'`) for displaying the calendar in local format. Default is `'en-US'`.
+- **displayFormat**: `string` -- how to present the date when written as text (e.g. in Summary view). Uses [Luxon](https://moment.github.io/luxon/#/formatting) shorthand -- options are: `short`, `med`, `medWeekday`, `full`, `huge`. Will format according to the international stanard specified in `locale`. Default: `short`
+- **entryFormat**: `string` -- date format to expect when user enters a date manually (rather then selecting from the picker) in [date-fns](https://date-fns.org/v1.29.0/docs/format) format. Default is `YYYY-MM-DD`
+- **firstDayOfWeek**: `string` -- self explanatory, default is "Sunday"
+
+#### Response type
+
+```
+{
+  text: <text format of date (range) as specified in "displayFormat">
+  date: {
+     start: <ISO YYYY-MM-DD date>
+     end?:  <ISO YYYY-MM-DD date>
+  }
+```
+
+Note, if response is a single date (i.e. not a range), only `start` will be specified.
+
+---
+
+<a name="number"/>
+
+### Number
+
+- **type/code**: `number`
+- **category**: `Question`
+
+_Input for numeric fields_
 
 ![Date picker](images/Element-Type-Specs-date-picker.png)
 

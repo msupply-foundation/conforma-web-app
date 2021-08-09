@@ -40,31 +40,29 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const formatOptions = {
     style: currency ? 'currency' : undefined,
-    currency: currency ?? undefined,
+    currency: currency !== '' ? currency : undefined,
     maximumSignificantDigits: maxSignificantDigits,
   }
   const numberFormatter = new Intl.NumberFormat(locale, formatOptions)
-  // const [numberFormatter, setNumberFormatter] = useState(
-  //   new Intl.NumberFormat(locale, formatOptions)
-  // )
 
   useEffect(() => {
     handleLoseFocus()
-  }, [locale])
+  }, [locale, minValue, maxValue, currency, prefix, suffix, maxSignificantDigits, type])
 
   function handleChange(e: any) {
     const text = e.target.value
-    const [number, _] = parseInput(text, numberFormatter)
+    const [number, _] = parseInput(text, numberFormatter, prefix, suffix)
     setInternalValidation(customValidate(number, type, minValue, maxValue))
     onUpdate(text)
     setTextValue(text)
   }
 
   function handleLoseFocus() {
-    const [number, text] = parseInput(textValue, numberFormatter)
-    if (internalValidation.isValid) onSave({ text, number, type, currency, locale })
+    const [number, text] = parseInput(textValue, numberFormatter, prefix, suffix)
+    const validation = customValidate(number, type, minValue, maxValue)
+    setInternalValidation(validation)
+    if (validation.isValid) onSave({ text, number, type, currency, locale })
     else onSave(null)
-    console.log('Text', text)
     setTextValue(text)
   }
 
@@ -103,10 +101,16 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   )
 }
 
-const parseInput = (textInput: string | null | undefined, numberFormatter: any) => {
+const parseInput = (
+  textInput: string | null | undefined,
+  numberFormatter: any,
+  prefix: string,
+  suffix: string
+): [number | null, string | null] => {
   if (!textInput) return [null, null]
   const number: number = Number(textInput?.replace(/[^\d\.\-]/g, ''))
-  return [number, numberFormatter.format(number)]
+  const text: string = (prefix + numberFormatter.format(number) + suffix) as string
+  return [number, text]
 }
 
 const customValidate = (
