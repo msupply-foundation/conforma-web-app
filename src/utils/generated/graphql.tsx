@@ -4808,7 +4808,7 @@ export type TemplateCategory = Node & {
   code: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
-  uiLocation: Array<Maybe<UiLocation>>;
+  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   /** Reads and enables pagination through a set of `Template`. */
   templates: TemplatesConnection;
 };
