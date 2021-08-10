@@ -11,7 +11,7 @@ export default {
   },
   REVIEW_SUBMISSION_CONFIRM: {
     title: 'Submitting Review',
-    message: 'Are you sure',
+    message: 'Are you sure?',
     option: 'SUBMIT',
   },
   REVIEW_SUBMISSION_FAIL: 'Not all sections have been reviewed',
@@ -19,6 +19,12 @@ export default {
   REVIEW_DECISION_SET_FAIL: {
     title: 'Problem submitting review',
     message: 'Please select a decision: List Of Questions or Non Conformity',
+    option: 'OK',
+  },
+  REVIEW_DECISION_MISMATCH: {
+    title: 'Final decision',
+    message:
+      'You have made a different decision than the previous reviewer.\nAre you sure you wish to proceed with your decision?',
     option: 'OK',
   },
   REVIEW_STATUS_LOCKED: {

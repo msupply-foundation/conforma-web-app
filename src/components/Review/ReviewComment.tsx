@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Container, Form, Label, Message, TextArea } from 'semantic-ui-react'
+import { Form, Message, TextArea } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import {
   useGetReviewDecisionCommentQuery,

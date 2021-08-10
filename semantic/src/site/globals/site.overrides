@@ -552,6 +552,12 @@ a:hover {
   overflow: scroll;
 }
 
+#previous-review {
+  .segment {
+    width: 30%;
+  }
+}
+
 /*--------------------------------
       Application List
 ---------------------------------*/

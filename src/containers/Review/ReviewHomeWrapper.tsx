@@ -8,7 +8,7 @@ import { AssignmentDetails, Filters, FullStructure } from '../../utils/types'
 import strings from '../../utils/constants'
 import { Stage } from '../../components/Review'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ReviewAssignmentStatus } from '../../utils/generated/graphql'
+import { getPreviousStageAssignment } from '../../utils/helpers/assignment/getPreviousStageAssignment'
 
 const ALL_REVIEWERS = 0
 
@@ -24,12 +24,10 @@ const ReviewHomeWrapper: React.FC<{
 
   const [filters, setFilters] = useState<Filters | null>(null)
 
-  const getFilteredByStage = (assignments: AssignmentDetails[], stage?: number) => {
+  const getFilteredByStage = (assignments: AssignmentDetails[]) => {
     if (!filters) return []
-    return assignments.filter((assignment) =>
-      stage
-        ? assignment.current.stage.number === stage
-        : assignment.current.stage.number === filters.selectedStage
+    return assignments.filter(
+      (assignment) => assignment.current.stage.number === filters.selectedStage
     )
   }
 
@@ -53,11 +51,13 @@ const ReviewHomeWrapper: React.FC<{
     assignments,
   }
 
-  const previousStage = (filters?.selectedStage || 1) - 1
-  const assignmentInPreviousStage = getFilteredByStage(assignments, previousStage).filter(
-    ({ isLastLevel, current: { assignmentStatus } }) =>
-      assignmentStatus === ReviewAssignmentStatus.Assigned && isLastLevel
-  )[0] // TODO: Deal with case of more than one lastLevel in stage
+  // Get Previous stage (last level reviewer) assignment
+  const assignmentInPreviousStage = getPreviousStageAssignment(
+    structure.info.serial,
+    assignments,
+    filters?.selectedStage
+  )
+
   const {
     info: { template, org, name },
   } = fullApplicationStructure
