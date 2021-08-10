@@ -1654,6 +1654,11 @@ a:hover {
   padding: 20px;
   border-radius: @borderRadius;
   background: @surfacesWhite;
+  p {
+    font-size: @slightlySmallerText;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
 }
 
 .template-bulder-filter-input {
