@@ -8,9 +8,10 @@ import DropdownIO from '../../shared/DropdownIO'
 import { useOperationState } from '../../shared/OperationContext'
 import TextIO, { iconLink } from '../../shared/TextIO'
 import { useTemplateState } from '../TemplateWrapper'
+import strings from '../../../../utils/constants'
 
 const noCategory = {
-  title: 'no category',
+  title: strings.TEMPLATE_NO_CATEGORY,
   id: -1,
   code: '',
   icon: '',
@@ -18,9 +19,9 @@ const noCategory = {
 }
 
 const newCategory = {
-  code: 'new code',
-  icon: 'globe',
-  title: 'new title',
+  code: strings.TEMPLATE_NEW_CODE,
+  icon: strings.DEFAULT_TEMPLATE_CATEGORY_ICON,
+  title: strings.TEMPLATE_NEW_TITLE,
   uiLocation: [UiLocation.Menu],
 }
 
@@ -33,9 +34,9 @@ type CategoryUpdate = {
 }
 
 const uiLocationMap: { [key in UiLocation]: string } = {
-  MENU: 'Menu',
-  DASHBOARD: 'Dashboard',
-  USER: 'User',
+  MENU: strings.TEMPLATE_UI_MENU,
+  DASHBOARD: strings.TEMPLATE_UI_DASHBOARD,
+  USER: strings.TEMPLATE_UI_USER,
 }
 
 const Category: React.FC<{}> = () => {
@@ -116,7 +117,7 @@ const Category: React.FC<{}> = () => {
       <div className="flex-row-start-center">
         <DropdownIO
           value={selectedCategory.id}
-          title="Categories"
+          title={strings.TEMPLATE_CATEGORIES}
           options={categoryOptions}
           disabled={!!updateState}
           getKey={'id'}
@@ -131,20 +132,22 @@ const Category: React.FC<{}> = () => {
       </div>
       {updateState && (
         <div className="template-buider-category-input">
-          <Header as="h5">{`${updateState.id ? 'Edit' : 'Add'} Category`}</Header>
+          <Header as="h5">{`${
+            updateState.id ? strings.TEMPLATE_EDIT_CATEGORY : strings.TEMPLATE_ADD_CATEGORY
+          }`}</Header>
           <TextIO
             text={updateState.code}
-            title="Code"
+            title={strings.TEMPLATE_CODE}
             setText={(text) => setUpdateState({ ...updateState, code: text })}
           />
           <TextIO
             text={updateState.title}
-            title="Title"
+            title={strings.TEMPLATE_TITLE}
             setText={(value: string) => setUpdateState({ ...updateState, title: value })}
           />
           <TextIO
             text={updateState.icon}
-            title="Icon"
+            title={strings.TEMPLATE_TITLE}
             link={iconLink}
             icon={updateState.icon}
             setText={(value: string) => setUpdateState({ ...updateState, icon: value })}
@@ -168,10 +171,13 @@ const Category: React.FC<{}> = () => {
           <div className="spacer-20" />
           <div className="flex-row">
             <ButtonWithFallback
-              title={updateState.id ? 'Save' : 'Add'}
+              title={updateState.id ? strings.TEMPLATE_BUTTON_SAVE : strings.TEMPLATE_BUTTON_ADD}
               onClick={updateState.id ? editCategory : addCategory}
             />
-            <ButtonWithFallback title="Cancel" onClick={() => setUpdateState(null)} />
+            <ButtonWithFallback
+              title={strings.BUTTON_CANCEL}
+              onClick={() => setUpdateState(null)}
+            />
           </div>
         </div>
       )}
