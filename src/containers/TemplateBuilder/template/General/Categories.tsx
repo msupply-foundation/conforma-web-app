@@ -153,7 +153,7 @@ const Category: React.FC<{}> = () => {
             setText={(value: string) => setUpdateState({ ...updateState, icon: value })}
           />
           <div>
-            <p>Appears in:</p>
+            <p>{strings.TEMPLATE_APPEARS_IN}:</p>
             {Object.entries(uiLocationMap).map(([key, locationName]) => (
               <CheckboxIO
                 key={key}

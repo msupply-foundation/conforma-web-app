@@ -246,4 +246,5 @@ export default {
   TEMPLATE_ICON: 'Icon',
   TEMPLATE_BUTTON_SAVE: 'Save',
   TEMPLATE_BUTTON_ADD: 'Add',
+  TEMPLATE_APPEARS_IN: 'Appears in',
 }
