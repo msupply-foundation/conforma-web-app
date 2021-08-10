@@ -3,11 +3,11 @@ import os
 import re
 
 # Change these values to customise:
-docs_path = "./documentation"
-output_path = "./documentation/_wiki"
+docs_path = "./docs/internal"
+output_path = "./docs/_wiki"
 markup_formats = [".md", ".markdown"]
 media_types = [".png", ".jpg", ".gif", ".svg"]
-ignore = ["external"]  # File or folder names to ignore
+ignore = []  # File or folder names to ignore
 ext_ignore = [".DS_Store"]  # File extensions to ignore
 
 

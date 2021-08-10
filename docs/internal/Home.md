@@ -1,6 +1,6 @@
 # Internal Documentation for Front-end
 
-Please see [ReadMe](../__README.md) for information about maintaining this documentation.
+Please see [ReadMe](__README.md) for information about maintaining this documentation.
 
 ## Contents
 
