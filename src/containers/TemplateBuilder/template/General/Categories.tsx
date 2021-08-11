@@ -33,11 +33,11 @@ type CategoryUpdate = {
   uiLocation: UiLocation[]
 }
 
-const uiLocationMap: { [key in UiLocation]: string } = {
-  MENU: strings.TEMPLATE_UI_MENU,
-  DASHBOARD: strings.TEMPLATE_UI_DASHBOARD,
-  USER: strings.TEMPLATE_UI_USER,
-}
+const uiLocationOptions: { key: UiLocation; locationName: string }[] = [
+  { key: UiLocation.Menu, locationName: strings.TEMPLATE_UI_MENU },
+  { key: UiLocation.Dashboard, locationName: strings.TEMPLATE_UI_DASHBOARD },
+  { key: UiLocation.User, locationName: strings.TEMPLATE_UI_USER },
+]
 
 const Category: React.FC<{}> = () => {
   const { category, template } = useTemplateState()
@@ -107,7 +107,7 @@ const Category: React.FC<{}> = () => {
   }
 
   const updateUiLocationArray = (location: UiLocation, value: boolean): UiLocation[] => {
-    const newLocations = (updateState?.uiLocation as UiLocation[]).filter((loc) => loc !== location)
+    const newLocations = (updateState?.uiLocation || []).filter((loc) => loc !== location)
     if (value) newLocations.push(location)
     return newLocations
   }
@@ -147,22 +147,22 @@ const Category: React.FC<{}> = () => {
           />
           <TextIO
             text={updateState.icon}
-            title={strings.TEMPLATE_TITLE}
+            title={strings.TEMPLATE_ICON}
             link={iconLink}
             icon={updateState.icon}
             setText={(value: string) => setUpdateState({ ...updateState, icon: value })}
           />
           <div>
             <p>{strings.TEMPLATE_APPEARS_IN}:</p>
-            {Object.entries(uiLocationMap).map(([key, locationName]) => (
+            {uiLocationOptions.map(({ key, locationName }) => (
               <CheckboxIO
                 key={key}
-                value={updateState.uiLocation.includes(key as UiLocation)}
+                value={updateState.uiLocation.includes(key)}
                 title={locationName}
                 setValue={(value: boolean) =>
                   setUpdateState({
                     ...updateState,
-                    uiLocation: updateUiLocationArray(key as UiLocation, value),
+                    uiLocation: updateUiLocationArray(key, value),
                   })
                 }
               />
