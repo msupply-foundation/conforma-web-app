@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useGetApplicationSerialQuery } from '../generated/graphql'
 
-const MAX_REFETCH = 10
-const POLL_INTERVAL = 500
+const MAX_REFETCH = 30
+const POLL_INTERVAL = 1000
 
 type UseGetApplicationSerial = () => {
   getSerialAsync: (applicationId: number) => Promise<string>
