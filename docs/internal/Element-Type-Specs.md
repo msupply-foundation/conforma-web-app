@@ -331,6 +331,9 @@ _One or more checkboxes, any number of which can be selected/toggled_
         <key-name-2> : { text: <text value>, isSelected: <boolean>}
         ... for all checkbox keys
         }
+    selectedValuesArray: [
+      <checkbox elements -- same as the values above but filtered for selected-only>
+    ]
 }
 
 ```
