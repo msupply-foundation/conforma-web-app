@@ -134,6 +134,7 @@ const parseInput = (
   suffix: string
 ): [number | null, string | null] => {
   if (!textInput) return [null, null]
+  // Strip out any text that isn't a digit, or "-" or "." to create the number
   const number: number = Number(textInput?.replace(/[^\d\.\-]/g, ''))
   const text: string = simple
     ? String(number)
