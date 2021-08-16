@@ -65,6 +65,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
               context={stickyRef}
               offset={!isNonRegistered ? styleConstants.HEADER_OFFSET : 0}
               pushing
+              active={isActive}
             >
               <div className="summary-section-header">
                 <Header as="h4" content={details.title} />
