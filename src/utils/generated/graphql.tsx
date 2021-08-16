@@ -2333,6 +2333,8 @@ export type TemplateFilter = {
   status?: Maybe<TemplateStatusFilter>;
   /** Filter by the object’s `submissionMessage` field. */
   submissionMessage?: Maybe<JsonFilter>;
+  /** Filter by the object’s `icon` field. */
+  icon?: Maybe<StringFilter>;
   /** Filter by the object’s `templateCategoryId` field. */
   templateCategoryId?: Maybe<IntFilter>;
   /** Filter by the object’s `versionTimestamp` field. */
@@ -4517,6 +4519,8 @@ export type TemplateCategoryFilter = {
   title?: Maybe<StringFilter>;
   /** Filter by the object’s `icon` field. */
   icon?: Maybe<StringFilter>;
+  /** Filter by the object’s `uiLocation` field. */
+  uiLocation?: Maybe<UiLocationListFilter>;
   /** Filter by the object’s `templates` relation. */
   templates?: Maybe<TemplateCategoryToManyTemplateFilter>;
   /** Some related `templates` exist. */
@@ -4528,6 +4532,52 @@ export type TemplateCategoryFilter = {
   /** Negates the expression. */
   not?: Maybe<TemplateCategoryFilter>;
 };
+
+/** A filter to be used against UiLocation List fields. All fields are combined with a logical ‘and.’ */
+export type UiLocationListFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Contains the specified list of values. */
+  contains?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Contained by the specified list of values. */
+  containedBy?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Overlaps the specified list of values. */
+  overlaps?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Any array item is equal to the specified value. */
+  anyEqualTo?: Maybe<UiLocation>;
+  /** Any array item is not equal to the specified value. */
+  anyNotEqualTo?: Maybe<UiLocation>;
+  /** Any array item is less than the specified value. */
+  anyLessThan?: Maybe<UiLocation>;
+  /** Any array item is less than or equal to the specified value. */
+  anyLessThanOrEqualTo?: Maybe<UiLocation>;
+  /** Any array item is greater than the specified value. */
+  anyGreaterThan?: Maybe<UiLocation>;
+  /** Any array item is greater than or equal to the specified value. */
+  anyGreaterThanOrEqualTo?: Maybe<UiLocation>;
+};
+
+export enum UiLocation {
+  Dashboard = 'DASHBOARD',
+  Menu = 'MENU',
+  User = 'USER'
+}
 
 /** A filter to be used against many `Template` object types. All fields are combined with a logical ‘and.’ */
 export type TemplateCategoryToManyTemplateFilter = {
@@ -4616,6 +4666,7 @@ export type Template = Node & {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -4757,6 +4808,7 @@ export type TemplateCategory = Node & {
   code: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
+  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   /** Reads and enables pagination through a set of `Template`. */
   templates: TemplatesConnection;
 };
@@ -4792,6 +4844,8 @@ export enum TemplatesOrderBy {
   StatusDesc = 'STATUS_DESC',
   SubmissionMessageAsc = 'SUBMISSION_MESSAGE_ASC',
   SubmissionMessageDesc = 'SUBMISSION_MESSAGE_DESC',
+  IconAsc = 'ICON_ASC',
+  IconDesc = 'ICON_DESC',
   TemplateCategoryIdAsc = 'TEMPLATE_CATEGORY_ID_ASC',
   TemplateCategoryIdDesc = 'TEMPLATE_CATEGORY_ID_DESC',
   VersionTimestampAsc = 'VERSION_TIMESTAMP_ASC',
@@ -4820,6 +4874,8 @@ export type TemplateCondition = {
   status?: Maybe<TemplateStatus>;
   /** Checks for equality with the object’s `submissionMessage` field. */
   submissionMessage?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `icon` field. */
+  icon?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateCategoryId` field. */
   templateCategoryId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `versionTimestamp` field. */
@@ -9768,6 +9824,8 @@ export enum TemplateCategoriesOrderBy {
   TitleDesc = 'TITLE_DESC',
   IconAsc = 'ICON_ASC',
   IconDesc = 'ICON_DESC',
+  UiLocationAsc = 'UI_LOCATION_ASC',
+  UiLocationDesc = 'UI_LOCATION_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -9782,6 +9840,8 @@ export type TemplateCategoryCondition = {
   title?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `icon` field. */
   icon?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uiLocation` field. */
+  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
 };
 
 /** A connection to a list of `TemplateCategory` values. */
@@ -12412,6 +12472,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -12496,6 +12557,7 @@ export type UpdateTemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyPat
   code?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
+  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -12536,6 +12598,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
@@ -12647,6 +12710,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -12775,6 +12839,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -12882,6 +12947,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -13772,6 +13838,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -13912,6 +13979,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -14119,6 +14187,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -15777,6 +15846,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -16942,6 +17012,7 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -16975,6 +17046,7 @@ export type TemplatePatch = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -17000,6 +17072,7 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -20128,6 +20201,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -21435,6 +21509,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -21501,6 +21576,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -21574,6 +21650,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -22040,6 +22117,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -22257,6 +22335,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -22317,6 +22396,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -22371,6 +22451,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
@@ -22406,6 +22487,7 @@ export type TemplateCategoryPatch = {
   code?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
+  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -22415,6 +22497,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCategoryCreateInput = {
   code: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
+  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -22436,6 +22519,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -24082,6 +24166,7 @@ export type TemplateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
@@ -24174,6 +24259,7 @@ export type TemplateCategoryInput = {
   code: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
+  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -28219,10 +28305,10 @@ export type StageFragment = (
 
 export type TemplateFragment = (
   { __typename?: 'Template' }
-  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'startMessage' | 'submissionMessage'>
+  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'startMessage' | 'submissionMessage' | 'icon'>
   & { templateCategory?: Maybe<(
     { __typename?: 'TemplateCategory' }
-    & Pick<TemplateCategory, 'title' | 'icon' | 'code' | 'id'>
+    & Pick<TemplateCategory, 'id' | 'code' | 'title' | 'icon' | 'uiLocation'>
   )>, templateFilterJoins: (
     { __typename?: 'TemplateFilterJoinsConnection' }
     & { nodes: Array<Maybe<(
@@ -29215,7 +29301,7 @@ export type GetTemplateCategoriesQuery = (
     { __typename?: 'TemplateCategoriesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'TemplateCategory' }
-      & Pick<TemplateCategory, 'code' | 'icon' | 'id' | 'title'>
+      & Pick<TemplateCategory, 'code' | 'icon' | 'id' | 'title' | 'uiLocation'>
     )>> }
   )> }
 );
@@ -29414,11 +29500,13 @@ export const TemplateFragmentDoc = gql`
   isLinear
   startMessage
   submissionMessage
+  icon
   templateCategory {
+    id
+    code
     title
     icon
-    code
-    id
+    uiLocation
   }
   templateFilterJoins {
     nodes {
@@ -31380,6 +31468,7 @@ export const GetTemplateCategoriesDocument = gql`
       icon
       id
       title
+      uiLocation
     }
   }
 }
