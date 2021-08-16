@@ -9,7 +9,7 @@ The list of applications to display for the current user is based on:
 - other optional filters selected
 
 The user has access to links to see each type of application list from the top menu or from their dashboard - the link will set basic filters in the main URL route of the list: `/applications`.
-For example to see the list of Applications for "Drug Registration" applyed by you has this link: `/applications?type=user-registration&user-role=applicant`.
+For example to see the list of Applications for "Drug Registration" applied by you has this link: `/applications?type=user-registration&user-role=applicant`.
 
 The `type` is the template code related to the applications type to be listed.
 The `user-role` is used to determine which columns should be displayed.
@@ -98,12 +98,10 @@ After is converted to Graphql: `status: {in: ["SUBMITTED", "CHANGES_REQUIRED"]}`
 Options: Set of static statuses from ApplicationStatus ENUM
 
 - `draft` or `DRAFT`
-- `withdrawn` or `WITHDRAWN` _not implemented_
 - `submitted` or `SUBMITTED`
-- `changes required` or `CHANGES_REQUIRED`
-- `re submitted` or `RE_SUBMITTED` _not implemented_
+- `changes-required` or `CHANGES_REQUIRED`
+- `re-submitted` or `RE_SUBMITTED` _not implemented_
 - `completed`or `COMPLETED`
-- `expired` or `EXPIRED` _not implemented_
 
 <a name="sort-by"></a>
 
@@ -222,8 +220,8 @@ Options:
 
 Included: **Yes**
 Can have combined values: **Yes**
-Exmples: `applicant=Carl` or `applicant=Carl Smith`
-After is converted to Graphql: **TODO**
+Exmples: `applicant=Andrei E` or `applicant=Andrei E,Nicole M`
+After is converted to Graphql: `applicant: { inInsensitive: ["Andrei E", "Nicole M"]}`
 Options:
 
 - `username`
