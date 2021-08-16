@@ -128,7 +128,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
 const parseInput = (
   textInput: string | null | undefined,
-  numberFormatter: any,
+  numberFormatter: Intl.NumberFormat,
   simple: boolean,
   prefix: string,
   suffix: string
