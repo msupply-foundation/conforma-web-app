@@ -6,6 +6,8 @@ import OperationContext, { useOperationState } from './shared/OperationContext'
 import { snapshotFilesUrl } from './shared/OperationContextHelpers'
 import TextIO from './shared/TextIO'
 import useGetTemplates, { Template } from './useGetTemplates'
+import strings from '../../utils/constants'
+import usePageTitle from '../../utils/hooks/usePageTitle'
 
 type CellPropsTemplate = Template & { numberOfTemplates?: number }
 type CellProps = { template: CellPropsTemplate; refetch: () => void }
@@ -132,6 +134,8 @@ const Templates: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { templates, refetch } = useGetTemplates()
   const { importTemplate } = useOperationState()
+
+  usePageTitle(strings.PAGE_TITLE_TEMPLATES)
 
   const renderHeader = () => (
     <Table.Header key="header">
