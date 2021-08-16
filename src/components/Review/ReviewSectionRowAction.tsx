@@ -1,12 +1,19 @@
 import React, { useState } from 'react'
 import { Grid, Icon, Label, Message } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ReviewAction, ReviewProgress, ReviewSectionComponentProps } from '../../utils/types'
+import {
+  ChangeRequestsProgress,
+  ConsolidationProgress,
+  ReviewAction,
+  ReviewProgress,
+  ReviewSectionComponentProps,
+} from '../../utils/types'
 import strings from '../../utils/constants'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
 import { ReviewStatus } from '../../utils/generated/graphql'
 import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
+import useRemakePreviousReview from '../../utils/hooks/useRemakePreviousReview'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const {
@@ -19,37 +26,45 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
     switch (action) {
       case ReviewAction.canContinue: {
         if (isAssignedToCurrentUser) {
-          return <StartContinueOrRestartButton {...props} />
+          return <GenerateActionButton {...props} />
         }
         return (
           <Label className="simple-label">
-            <em>{strings.STATUS_IN_PROGRESS}</em>
+            <em>{strings.REVIEW_STATUS_IN_PROGRESS}</em>
           </Label>
         )
       }
 
       case ReviewAction.canView: {
+        if (isAssignedToCurrentUser) {
+          return <ViewSubmittedReviewButton {...props} />
+        }
         return <ViewReviewIcon {...props} />
       }
 
-      case ReviewAction.canStartReview: {
+      case ReviewAction.canStartReview:
+      case ReviewAction.canMakeDecision: {
         if (isAssignedToCurrentUser) {
-          return <StartContinueOrRestartButton {...props} />
+          return <GenerateActionButton {...props} />
         }
-        return <NotStartedLabel />
+        return (
+          <Label className="simple-label">
+            <em>{strings.REVIEW_STATUS_NOT_STARTED}</em>
+          </Label>
+        )
       }
 
-      case ReviewAction.canUpdate: {
-        if (isAssignedToCurrentUser) {
-          return <div>TODO</div>
-        }
-        return <NotStartedLabel />
-      }
-
+      case ReviewAction.canUpdate:
+      case ReviewAction.canReStartReview:
       case ReviewAction.canReReview: {
-        if (isAssignedToCurrentUser) return <StartContinueOrRestartButton {...props} />
-
-        return null
+        if (isAssignedToCurrentUser) {
+          return <GenerateActionButton {...props} />
+        }
+        return (
+          <Label className="simple-label">
+            <em>{strings.REVIEW_STATUS_PENDING_ACTION}</em>
+          </Label>
+        )
       }
 
       case ReviewAction.canSelfAssign: {
@@ -65,14 +80,21 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
   return <Grid.Column textAlign="right">{getContent()}</Grid.Column>
 }
 
-const reReviewableCount = (reviewProgress?: ReviewProgress) =>
-  (reviewProgress?.totalNewReviewable || 0) - (reviewProgress?.doneNewReviewable || 0)
+const getApplicantChangesUpdatedCount = (reviewProgress?: ReviewProgress) =>
+  reviewProgress?.totalNewReviewable || 0
 
-// START REVIEW, CONTINUE REVIEW OR RE-REVIEW BUTTON
-const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
+const getReviewerChangesUpdatedCount = (consolidationProgress?: ConsolidationProgress) =>
+  consolidationProgress?.totalNewReviewable || 0
+
+const getConsolidatorChangesRequestedCount = (progress?: ChangeRequestsProgress) =>
+  progress?.totalChangeRequests || 0
+
+// Possible generate action button: START REVIEW, CONTINUE REVIEW, UPDATE REVIEW, RE-REVIEW or MAKE DECISION
+const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
-  section: { details, reviewProgress },
+  section: { details, reviewProgress, consolidationProgress, changeRequestsProgress },
   assignment,
+  previousAssignment,
   thisReview,
   action,
 }) => {
@@ -82,6 +104,12 @@ const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   } = useRouter()
 
   const [error, setError] = useState(false)
+
+  const remakeReview = useRemakePreviousReview({
+    structure: fullStructure,
+    assignment,
+    previousAssignment,
+  })
 
   const restartReview = useRestartReview({
     reviewId: thisReview?.id || 0,
@@ -95,20 +123,48 @@ const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   })
 
   const getButtonName = () => {
-    const reReviewCount = reReviewableCount(reviewProgress)
-    if (reReviewCount > 0) return `${strings.BUTTON_REVIEW_RE_REVIEW} (${reReviewCount})`
-    return action === ReviewAction.canContinue ? strings.ACTION_CONTINUE : strings.ACTION_START
+    switch (action) {
+      case ReviewAction.canUpdate: {
+        const changeRequestsCount = getConsolidatorChangesRequestedCount(changeRequestsProgress)
+        return strings.ACTION_UPDATE.concat(
+          changeRequestsCount > 0 ? ` (${changeRequestsCount})` : ''
+        )
+      }
+      case ReviewAction.canReReview: {
+        const applicantChangesCount = getApplicantChangesUpdatedCount(reviewProgress)
+        return strings.BUTTON_REVIEW_RE_REVIEW.concat(
+          applicantChangesCount > 0 ? ` (${applicantChangesCount})` : ''
+        )
+      }
+      case ReviewAction.canReStartReview: {
+        const reviewerChangesCount = getReviewerChangesUpdatedCount(consolidationProgress)
+        return strings.BUTTON_REVIEW_RE_REVIEW.concat(
+          reviewerChangesCount > 0 ? ` (${reviewerChangesCount})` : ''
+        )
+      }
+      case ReviewAction.canMakeDecision:
+        return strings.ACTION_MAKE_DECISION
+      case ReviewAction.canContinue:
+        return strings.ACTION_CONTINUE
+      default:
+        return strings.ACTION_START
+    }
   }
 
   const doAction = async () => {
+    const { isFinalDecision } = assignment
     let reviewId = thisReview?.id as number
-    if (thisReview?.status == ReviewStatus.Draft)
-      return push(`${pathname}/${reviewId}?activeSections=${details.code}`)
+    if (thisReview?.current.reviewStatus == ReviewStatus.Draft)
+      return push(
+        `${pathname}/${reviewId}?activeSections=${isFinalDecision ? 'none' : details.code}`
+      )
 
     try {
-      if (thisReview) await restartReview()
+      if (isFinalDecision)
+        reviewId = (await remakeReview()).data?.createReview?.review?.id as number
+      else if (thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
-      push(`${pathname}/${reviewId}?activeSections=${details.code}`)
+      push(`${pathname}/${reviewId}?activeSections=${isFinalDecision ? 'none' : details.code}`)
     } catch (e) {
       console.log(e)
       return setError(true)
@@ -130,7 +186,6 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure: structure,
 }) => {
   const [assignmentError, setAssignmentError] = useState(false)
-
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
 
   const selfAssignReview = async () => {
@@ -153,6 +208,22 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   )
 }
 
+const ViewSubmittedReviewButton: React.FC<ReviewSectionComponentProps> = ({
+  fullStructure,
+  section: { details },
+}) => {
+  const { pathname, push } = useRouter()
+  const reviewId = fullStructure.thisReview?.id
+  return (
+    <a
+      className="user-action clickable"
+      onClick={() => push(`${pathname}/${reviewId}?activeSections=${details.code}`)}
+    >
+      {strings.ACTION_VIEW}
+    </a>
+  )
+}
+
 // VIEW REVIEW Icon
 const ViewReviewIcon: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
@@ -169,10 +240,5 @@ const ViewReviewIcon: React.FC<ReviewSectionComponentProps> = ({
     />
   )
 }
-
-// NOT_STARTED LABEL
-const NotStartedLabel: React.FC = () => (
-  <Label className="simple-label" content={strings.STATUS_NOT_STARTED} />
-)
 
 export default ReviewSectionRowAction

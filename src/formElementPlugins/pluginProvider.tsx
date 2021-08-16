@@ -87,6 +87,27 @@ class pluginProvider {
         folderName: 'fileUpload',
         category: 'Input',
       },
+      listBuilder: {
+        code: 'listBuilder',
+        displayName: 'List Builder',
+        isCore: true,
+        folderName: 'listBuilder',
+        category: 'Input',
+      },
+      search: {
+        code: 'search',
+        displayName: 'Search',
+        isCore: true,
+        folderName: 'search',
+        category: 'Input',
+      },
+      datePicker: {
+        code: 'datePicker',
+        displayName: 'Date Picker',
+        isCore: true,
+        folderName: 'datePicker',
+        category: 'Input',
+      },
     }
   }
 

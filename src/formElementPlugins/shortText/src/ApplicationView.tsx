@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
@@ -6,33 +6,26 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
   onUpdate,
-  value,
-  setValue,
   setIsActive,
   validationState,
   onSave,
   Markdown,
+  currentResponse,
 }) => {
+  const [value, setValue] = useState<string | null | undefined>(currentResponse?.text)
   const { isEditable } = element
   const {
     placeholder,
     maskedInput,
     label,
     description,
-    default: defaultValue,
-    maxLength,
+    maxWidth,
+    maxLength = Infinity,
   } = parameters
-
-  useEffect(() => {
-    if (!value && defaultValue) {
-      onSave({ text: defaultValue })
-      setValue(defaultValue)
-    } else onUpdate(value)
-  }, [])
 
   function handleChange(e: any) {
     let text = e.target.value
-    if (maxLength && text.length > maxLength) {
+    if (text.length > maxLength) {
       text = text.substring(0, maxLength)
     }
     onUpdate(text)
@@ -42,6 +35,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   function handleLoseFocus(e: any) {
     onSave({ text: value })
   }
+
+  const styles = maxWidth
+    ? {
+        maxWidth,
+      }
+    : {}
 
   return (
     <>
@@ -58,6 +57,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         value={value ? value : ''}
         disabled={!isEditable}
         type={maskedInput ? 'password' : undefined}
+        style={styles}
         error={
           !validationState.isValid
             ? {

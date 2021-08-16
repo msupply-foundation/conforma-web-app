@@ -7,27 +7,28 @@ import ReviewDecision from '../../components/Review/ReviewDecision'
 import strings from '../../utils/constants'
 import { Decision, ReviewStatus } from '../../utils/generated/graphql'
 import useGetDecisionOptions from '../../utils/hooks/useGetDecisionOptions'
+import { useGetFullReviewStructureAsync } from '../../utils/hooks/useGetReviewStructureForSection'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useSubmitReview from '../../utils/hooks/useSubmitReview'
 import messages from '../../utils/messages'
-import { FullStructure } from '../../utils/types'
+import { AssignmentDetails, FullStructure } from '../../utils/types'
 
 type ReviewSubmitProps = {
   structure: FullStructure
+  assignment: AssignmentDetails
+  previousAssignment: AssignmentDetails
   scrollTo: (code: string) => void
 }
 
 const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
-  const { structure } = props
-  const thisReview = structure?.thisReview
-  const reviewDecision = thisReview?.reviewDecision
   const {
-    decisionOptions,
-    getDecision,
-    setDecision,
-    getAndSetDecisionError,
-    isDecisionError,
-  } = useGetDecisionOptions(structure.canSubmitReviewAs, thisReview)
+    structure: { thisReview, assignment },
+    previousAssignment,
+  } = props
+
+  const reviewDecision = thisReview?.reviewDecision
+  const { decisionOptions, getDecision, setDecision, getAndSetDecisionError, isDecisionError } =
+    useGetDecisionOptions(assignment, thisReview)
 
   return (
     <Form id="review-submit-area">
@@ -35,11 +36,11 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
         decisionOptions={decisionOptions}
         setDecision={setDecision}
         isDecisionError={isDecisionError}
-        isEditable={thisReview?.status == ReviewStatus.Draft}
+        isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
       />
       <ReviewComment
-        isEditable={thisReview?.status == ReviewStatus.Draft}
-        reviewDecisionId={Number(reviewDecision?.id)}
+        isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
+        reviewDecisionId={reviewDecision?.id}
       />
       <ReviewSubmitButton
         {...props}
@@ -60,11 +61,20 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   structure,
   getDecision,
   getAndSetDecisionError,
+  assignment,
+  previousAssignment,
 }) => {
   const {
     location: { pathname },
     replace,
+    push,
   } = useRouter()
+
+  // Need to refetch review status before submission, in case it's pending
+  const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
+    fullApplicationStructure: structure,
+    reviewAssignment: assignment,
+  })
 
   const [showModalConfirmation, setShowModalConfirmation] = useState<ModalProps>({ open: false })
   const [showWarningModal, setShowWarningModal] = useState<ModalProps>({ open: false })
@@ -74,7 +84,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   const setAttemptSubmission = () => (structure.attemptSubmission = true)
   const attemptSubmissionFailed = structure.attemptSubmission && structure.firstIncompleteReviewPage
 
-  const showWarning = () => {
+  const showIncompleteSectionWarning = () => {
     const { title, message, option } = messages.REVIEW_DECISION_SET_FAIL
     setShowWarningModal({
       open: true,
@@ -82,6 +92,36 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       message,
       option,
       onClick: () => setShowWarningModal({ open: false }),
+      onClose: () => setShowWarningModal({ open: false }),
+    })
+  }
+
+  const showPendingReviewWarning = () => {
+    const { title, message, option } = messages.REVIEW_STATUS_PENDING
+    setShowWarningModal({
+      open: true,
+      title,
+      message,
+      option,
+      onClick: () => {
+        setShowWarningModal({ open: false })
+        push(`/application/${structure.info.serial}/review`)
+      },
+      onClose: () => {
+        setShowWarningModal({ open: false })
+        push(`/application/${structure.info.serial}/review`)
+      },
+    })
+  }
+
+  const showDecisionMismatchWarning = () => {
+    const { title, message, option } = messages.REVIEW_DECISION_MISMATCH
+    setShowWarningModal({
+      open: true,
+      title,
+      message,
+      option,
+      onClick: () => submission(),
       onClose: () => setShowWarningModal({ open: false }),
     })
   }
@@ -98,7 +138,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     })
   }
 
-  const onClick = () => {
+  const onClick = async () => {
     const firstIncompleteReviewPage = structure.firstIncompleteReviewPage
 
     // Check INCOMPLETE
@@ -114,7 +154,25 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     // Check DECISION was made
     const decisionError = getAndSetDecisionError()
     if (decisionError) {
-      showWarning()
+      showIncompleteSectionWarning()
+      return
+    }
+
+    // Check (consolidator) review status != PENDING
+    const { thisReview } = await getFullReviewStructureAsync()
+    if (thisReview?.current.reviewStatus === ReviewStatus.Pending) {
+      showPendingReviewWarning()
+      return
+    }
+
+    // Check MISMATCH previous (when is Final Decision)
+    if (
+      assignment.isFinalDecision &&
+      !!previousAssignment &&
+      previousAssignment.review?.reviewDecision?.decision !== getDecision()
+    ) {
+      // Should submit when user clicks OK
+      showDecisionMismatchWarning()
       return
     }
 
@@ -132,7 +190,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     }
   }
 
-  if (structure.thisReview?.status !== ReviewStatus.Draft) return null
+  if (structure.thisReview?.current.reviewStatus !== ReviewStatus.Draft) return null
 
   return (
     <Form.Field>

@@ -1,64 +1,47 @@
 import { ApolloError } from '@apollo/client'
 import { useState } from 'react'
+import { useUserState } from '../../contexts/UserState'
 import { useCreateApplicationMutation } from '../../utils/generated/graphql'
 
-interface CreateApplicationProps {
-  serial: string
+export interface CreateApplicationProps {
   name: string
   templateId: number
-  userId?: number
-  orgId?: number
-  sessionId: string
-  templateSections: { templateSectionId: number }[]
-  templateResponses: { templateElementId: number }[]
+  isConfig?: boolean
+  templateResponses: { templateElementId: number; value: any }[]
 }
 
-interface UseCreateApplicationProps {
-  onCompleted: () => void
-}
-
-const useCreateApplication = ({ onCompleted }: UseCreateApplicationProps) => {
-  const [processing, setProcessing] = useState(false)
+const useCreateApplication = () => {
   const [error, setError] = useState<ApolloError | undefined>()
-
+  const {
+    userState: { currentUser },
+  } = useUserState()
   const [applicationMutation] = useCreateApplicationMutation({
-    onCompleted: () => {
-      setProcessing(false)
-      onCompleted()
-    },
     onError: (error) => {
-      setProcessing(false)
       setError(error)
     },
   })
 
-  const createApplication = ({
-    serial,
+  const createApplication = async ({
     name,
     templateId,
-    userId,
-    orgId,
-    sessionId,
-    templateSections,
     templateResponses,
+    isConfig = false,
   }: CreateApplicationProps) => {
-    setProcessing(true)
-    applicationMutation({
+    const mutationResult = await applicationMutation({
       variables: {
+        isConfig,
         name,
-        serial,
         templateId,
-        userId,
-        orgId,
-        sessionId,
-        sections: templateSections,
+        userId: currentUser?.userId,
+        orgId: currentUser?.organisation?.orgId,
+        sessionId: currentUser?.sessionId as string,
         responses: templateResponses,
       },
     })
+    return mutationResult
   }
 
   return {
-    processing,
     error,
     create: createApplication,
   }

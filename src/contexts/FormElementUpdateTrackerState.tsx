@@ -1,72 +1,146 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
-interface ContextFormElementUpdateTrackerState {
-  elementEnteredTimestamp: number
-  elementEnteredTextValue: string
-  elementUpdatedTimestamp: number
-  elementUpdatedTextValue: string
-  isLastElementUpdateProcessed: boolean
-  wasElementChanged: boolean
+interface SingleFormElementUpdateState {
+  enteredTimestamp: number
+  enteredSequence: number // See calculateLatestChangedTimestamp timestamps for explanation
+  previousEnteredTextValue?: string
+  enteredTextValue?: string
+  updatedSequence: number
+  changedTimestamp: number
 }
 
+const elementStateDefault: SingleFormElementUpdateState = {
+  enteredTimestamp: 0,
+  enteredSequence: 0,
+  updatedSequence: 0,
+  changedTimestamp: 0,
+}
+
+interface ContextFormElementUpdateTrackerState {
+  elementsUpdateState: { [elementCode: string]: SingleFormElementUpdateState }
+  // if still waiting for element to update (i.e. it's still in focus, then it will be set to 'infinity')
+  // if no elements were updated, it will be set to 0
+  latestChangedElementUpdateTimestamp: number
+}
+
+const contextStateDefault: ContextFormElementUpdateTrackerState = {
+  elementsUpdateState: {},
+  latestChangedElementUpdateTimestamp: 0,
+}
+
+const calculateLatestChangedTimestamp = (elementsUpdateState: {
+  [elementCode: string]: SingleFormElementUpdateState
+}) =>
+  Object.values(elementsUpdateState).reduce((latestUpdateTimestamp, singleElementState) => {
+    if (latestUpdateTimestamp === Infinity) return Infinity
+    const { enteredSequence, updatedSequence, changedTimestamp } = singleElementState
+    // Element is in focus still when entered sequence is higher then updated seqeunce, using sequence to accomodate plugins like password
+    // which have two fields for the same element, and there is a race condition when second field entered
+    // occurs before first field exit (because exit is triggered after mutation)
+    if (enteredSequence > updatedSequence) return Infinity
+
+    return Math.max(latestUpdateTimestamp, changedTimestamp)
+  }, 0)
+
 export type UpdateAction =
+  // this action should be called whenever an application page is refreshed on navigated
+  | {
+      type: 'resetElementsTracker'
+    }
   | {
       type: 'setElementEntered'
+      elementCode: string
       textValue: string
     }
   | {
       type: 'setElementUpdated'
+      elementCode: string
       textValue: string
+      previousValue: string
     }
 
 type FormElementUpdateTrackerProps = { children: React.ReactNode }
 
-// TODO will have to think about storing elementEnteredTimestamp and elementUpdatedTimestamp by element code/application
-// think of a use case where API query take a long time, and focus is changed to another field and submit is pressed
-// straight away
-const reducer = (
+type Reducer = (
   state: ContextFormElementUpdateTrackerState,
   action: UpdateAction
-): ContextFormElementUpdateTrackerState => {
+) => ContextFormElementUpdateTrackerState
+
+const reducer: Reducer = (state, action) => {
   switch (action.type) {
-    case 'setElementUpdated': {
-      const newState = {
-        ...state,
-        elementUpdatedTimestamp: Date.now(),
-        elementUpdatedTextValue: action.textValue,
-      }
-      return {
-        ...newState,
-        isLastElementUpdateProcessed:
-          newState.elementUpdatedTimestamp >= newState.elementEnteredTimestamp,
-        wasElementChanged: newState.elementUpdatedTextValue !== newState.elementEnteredTextValue,
-      }
-    }
+    case 'resetElementsTracker':
+      return contextStateDefault
     case 'setElementEntered': {
-      const newState = {
-        ...state,
-        elementEnteredTimestamp: Date.now(),
-        elementEnteredTextValue: action.textValue,
+      const { elementCode } = action
+      const previousElementState = state.elementsUpdateState[elementCode] || elementStateDefault
+
+      const newState: ContextFormElementUpdateTrackerState = {
+        latestChangedElementUpdateTimestamp: Infinity, // signaling that at least one elements is awaiting update
+        elementsUpdateState: {
+          ...state.elementsUpdateState,
+          [elementCode]: {
+            ...previousElementState,
+            enteredSequence: previousElementState.enteredSequence + 1,
+            enteredTimestamp: Date.now(),
+            previousEnteredTextValue: previousElementState.enteredTextValue,
+            enteredTextValue: action.textValue,
+          },
+        },
       }
 
-      return {
-        ...newState,
-        isLastElementUpdateProcessed: false,
+      return newState
+    }
+    case 'setElementUpdated': {
+      const { elementCode } = action
+      const previousElementState = state.elementsUpdateState[elementCode] || elementStateDefault
+      const { updatedSequence, enteredSequence } = previousElementState
+      // It's possible for element update sequence to get ahead of element entered sequence, want to restrict this
+      // btw this could happen when element is updated when it's created or when 'entered' activity is not recorded
+      const newUpdateSequence =
+        updatedSequence >= enteredSequence ? enteredSequence : updatedSequence + 1
+
+      const previousTextValue =
+        newUpdateSequence === enteredSequence
+          ? previousElementState.enteredTextValue
+          : previousElementState.previousEnteredTextValue
+
+      const wasElementChanged =
+        typeof previousTextValue === 'undefined'
+          ? action.textValue !== action.previousValue
+          : action.textValue !== previousTextValue
+
+      const changedTimestamp = wasElementChanged
+        ? Date.now()
+        : previousElementState.changedTimestamp
+
+      const newElementState: SingleFormElementUpdateState = {
+        ...previousElementState,
+        updatedSequence: newUpdateSequence,
+        enteredTextValue: action.textValue,
+        changedTimestamp,
       }
+
+      const newElementsUpdateState = {
+        ...state.elementsUpdateState,
+        [elementCode]: newElementState,
+      }
+
+      const latestChangedElementUpdateTimestamp =
+        calculateLatestChangedTimestamp(newElementsUpdateState)
+
+      const newState: ContextFormElementUpdateTrackerState = {
+        latestChangedElementUpdateTimestamp,
+        elementsUpdateState: newElementsUpdateState,
+      }
+
+      return newState
     }
     default:
       return state
   }
 }
 
-const initialState: ContextFormElementUpdateTrackerState = {
-  isLastElementUpdateProcessed: true,
-  elementEnteredTimestamp: Date.now(),
-  elementUpdatedTimestamp: Date.now(),
-  elementEnteredTextValue: '',
-  elementUpdatedTextValue: '',
-  wasElementChanged: false,
-}
+const initialState: ContextFormElementUpdateTrackerState = contextStateDefault
 
 // By setting the typings here, we ensure we get intellisense in VS Code
 const initialContext: {

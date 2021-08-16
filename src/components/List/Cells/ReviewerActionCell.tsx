@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { CellProps } from '../../../utils/types'
 import strings from '../../../utils/constants'
 import { AssignerAction, ReviewerAction } from '../../../utils/generated/graphql'
+import { Icon } from 'semantic-ui-react'
 
 const ReviewerActionCell: React.FC<CellProps> = ({
   application: { serial, reviewerAction, assignerAction },
@@ -21,6 +22,8 @@ const ReviewerActionCell: React.FC<CellProps> = ({
         return strings.ACTION_CONTINUE
       case ReviewerAction.StartReview:
         return strings.ACTION_START
+      case ReviewerAction.MakeDecision:
+        return strings.ACTION_MAKE_DECISION
       default:
         // ReviewerAction.ViewReview
         return strings.ACTION_VIEW
@@ -40,19 +43,24 @@ const ReviewerActionCell: React.FC<CellProps> = ({
   if (!!reviewerAction) actions.push(getReviewActionString(reviewerAction))
   if (!!assignerAction) actions.push(getAssignActionString(assignerAction))
 
+  if (actions.length == 0)
+    return (
+      <Link className="user-action" to={`/application/${serial}/review`}>
+        <Icon name="chevron right" />
+      </Link>
+    )
+
   return (
     <>
-      {actions.map((action, index) => {
-        return (
-          <React.Fragment key={index}>
-            {/* To-do: style the | once we can see it properly */}
-            {index > 0 ? <span>{' | '}</span> : ''}
-            <Link className="user-action" to={`/application/${serial}/review`}>
-              {action}
-            </Link>
-          </React.Fragment>
-        )
-      })}
+      {actions.map((action, index) => (
+        <div key={index}>
+          {/* To-do: style the | once we can see it properly */}
+          {index > 0 ? <span key={`divider_${index}`}>{' | '}</span> : ''}
+          <Link className="user-action" to={`/application/${serial}/review`}>
+            {action}
+          </Link>
+        </div>
+      ))}
     </>
   )
 }

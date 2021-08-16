@@ -6,22 +6,19 @@ export default gql`
       ...Application
       template {
         ...Template
-        templateStages {
+        templateSections(orderBy: INDEX_ASC) {
           nodes {
-            ...TemplateStage
-          }
-        }
-      }
-      applicationSections {
-        nodes {
-          id
-          templateSection {
             ...Section
             templateElementsBySectionId(orderBy: INDEX_ASC) {
               nodes {
-                ...Element
+                ...elementFragment
               }
             }
+          }
+        }
+        templateStages {
+          nodes {
+            ...TemplateStage
           }
         }
       }

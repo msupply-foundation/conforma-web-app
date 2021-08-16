@@ -1,69 +1,113 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/graphql'
 import ApplicantResponseElement from './ApplicantResponseElement'
 import ReviewResponseElement from './ReviewResponseElement'
+import ReviewInlineInput from './ReviewInlineInput'
 import strings from '../../../utils/constants'
-import { Icon } from 'semantic-ui-react'
+import { UpdateIcon } from '../PageElements'
+import ViewHistoryButton from '../ViewHistoryButton'
 
 interface ConsolidateReviewDecisionProps {
+  elementCode: string
   applicationResponse: ApplicationResponse
   summaryViewProps: SummaryViewWrapperProps
   isActiveReviewResponse: boolean
-  isNewApplicationResponse: boolean
-  /* can add check for isNewReviewResponse */
+  isNewReviewResponse: boolean
+  isAssigned: boolean
+  enableViewHistory: boolean
+  stageNumber: number
   reviewResponse?: ReviewResponse
+  previousReviewResponse?: ReviewResponse
   originalReviewResponse?: ReviewResponse
-  showModal: () => void
 }
 const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
+  elementCode,
   applicationResponse,
   summaryViewProps,
   isActiveReviewResponse,
-  isNewApplicationResponse,
+  isNewReviewResponse,
+  isAssigned,
+  enableViewHistory,
+  stageNumber,
   reviewResponse,
+  previousReviewResponse,
   originalReviewResponse,
-  showModal,
 }) => {
+  const [isActiveEdit, setIsActiveEdit] = useState(false)
   const isConsolidation = true
   const decisionExists = !!reviewResponse?.decision
 
+  const triggerTitle = isNewReviewResponse
+    ? strings.BUTTON_RE_REVIEW_RESPONSE
+    : strings.BUTTON_REVIEW_RESPONSE
+
   return (
-    <div>
-      {/* Application Response */}
+    <>
+      {/* Applicant Response */}
       <ApplicantResponseElement
         applicationResponse={applicationResponse}
         summaryViewProps={summaryViewProps}
       />
-      {/* Consolidation Response */}
-      {reviewResponse && (
-        <ReviewResponseElement
-          isCurrentReview={true}
-          isConsolidation={isConsolidation}
-          applicationResponse={applicationResponse}
-          reviewResponse={reviewResponse}
-          originalReviewResponse={originalReviewResponse}
-        >
-          {isActiveReviewResponse && decisionExists && <UpdateIcon onClick={showModal} />}
-        </ReviewResponseElement>
+      {isActiveEdit ? (
+        /* Inline Review area + Review response in context*/
+        <div className="blue-border">
+          <ReviewResponseElement
+            isCurrentReview={false}
+            isConsolidation={false}
+            reviewResponse={originalReviewResponse as ReviewResponse}
+          />
+          <ReviewInlineInput
+            setIsActiveEdit={setIsActiveEdit}
+            reviewResponse={reviewResponse as ReviewResponse}
+            isConsolidation={isConsolidation}
+            stageNumber={stageNumber}
+          />
+        </div>
+      ) : (
+        <>
+          {/* Current consolidator review response */}
+          {decisionExists && (
+            <ReviewResponseElement
+              isCurrentReview={true}
+              isConsolidation={true}
+              reviewResponse={reviewResponse}
+            >
+              {isActiveReviewResponse && isAssigned && (
+                <UpdateIcon onClick={() => setIsActiveEdit(true)} />
+              )}
+            </ReviewResponseElement>
+          )}
+          {/* Lower level Review Response */}
+          <ReviewResponseElement
+            isCurrentReview={false}
+            isConsolidation={false}
+            reviewResponse={originalReviewResponse as ReviewResponse}
+          >
+            {!decisionExists && (
+              <ReviewElementTrigger
+                title={triggerTitle} // Review or Re-review
+                onClick={() => setIsActiveEdit(true)}
+              />
+            )}
+          </ReviewResponseElement>
+        </>
       )}
-      {/* Review Response */}
-      {originalReviewResponse && (
+      {/* Previous Consolidation Response */}
+      {isNewReviewResponse && !decisionExists && (
         <ReviewResponseElement
           isCurrentReview={false}
-          isConsolidation={false}
-          applicationResponse={applicationResponse}
-          reviewResponse={originalReviewResponse}
-        >
-          {isActiveReviewResponse && !decisionExists && (
-            <ReviewElementTrigger title={strings.BUTTON_REVIEW_RESPONSE} onClick={showModal} />
-          )}
-        </ReviewResponseElement>
+          isConsolidation={isConsolidation}
+          reviewResponse={previousReviewResponse}
+        />
       )}
-    </div>
+      {/* Show history - for previous consolidations done */}
+      {enableViewHistory && <ViewHistoryButton elementCode={elementCode} />}
+    </>
   )
 }
 
+// TODO: Unify code with other ReviewElementTrigger
 const ReviewElementTrigger: React.FC<{ title: string; onClick: () => void }> = ({
   title,
   onClick,
@@ -71,10 +115,6 @@ const ReviewElementTrigger: React.FC<{ title: string; onClick: () => void }> = (
   <p className="link-style clickable" onClick={onClick}>
     <strong>{title}</strong>
   </p>
-)
-
-const UpdateIcon: React.FC<{ onClick: Function }> = ({ onClick }) => (
-  <Icon className="clickable" name="pencil" size="large" color="blue" onClick={onClick} />
 )
 
 export default ConsolidateReviewDecision

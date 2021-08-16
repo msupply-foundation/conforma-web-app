@@ -1,17 +1,31 @@
-import React from 'react'
-import { Button, Header, Icon, Label, Message } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import {
+  Button,
+  Divider,
+  Header,
+  Icon,
+  Label,
+  Message,
+  ModalProps,
+  Segment,
+} from 'semantic-ui-react'
 import {
   Loading,
   ConsolidationSectionProgressBar,
   ReviewHeader,
+  ReviewInProgressLabel,
   ReviewSectionProgressBar,
   SectionWrapper,
+  ModalWarning,
 } from '../../components'
+import { ReviewByLabel, ConsolidationByLabel } from '../../components/Review/ReviewLabel'
+import ReviewComment from '../../components/Review/ReviewComment'
 import {
   AssignmentDetails,
   FullStructure,
   Page,
   ResponsesByCode,
+  ReviewDetails,
   SectionAssignment,
   SectionState,
 } from '../../utils/types'
@@ -29,14 +43,20 @@ import useScrollableAttachments, {
 } from '../../utils/hooks/useScrollableAttachments'
 import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
+import { useRouter } from '../../utils/hooks/useRouter'
+import messages from '../../utils/messages'
+import { Link } from 'react-router-dom'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetails
+  previousAssignment: AssignmentDetails
   fullApplicationStructure: FullStructure
-}> = ({ reviewAssignment, fullApplicationStructure }) => {
+}> = ({ reviewAssignment, previousAssignment, fullApplicationStructure }) => {
   const {
     userState: { currentUser },
   } = useUserState()
+
+  const { push } = useRouter()
 
   const { fullReviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment,
@@ -49,39 +69,93 @@ const ReviewPage: React.FC<{
 
   const { addScrollable, scrollTo } = useScrollableAttachments()
 
+  const [showWarningModal, setShowWarningModal] = useState<ModalProps>({ open: false })
+
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!fullReviewStructure) return <Loading />
 
   // TODO decide how to handle this, and localise if not deleted
   if (
     reviewAssignment?.reviewer?.id !== currentUser?.userId &&
-    fullReviewStructure?.thisReview?.status !== ReviewStatus.Submitted
-  )
-    return <Header>Review in Progress</Header>
+    fullReviewStructure?.thisReview?.current.reviewStatus !== ReviewStatus.Submitted
+  ) {
+    const {
+      info: {
+        name,
+        current: { stage },
+      },
+    } = fullReviewStructure
+    return (
+      <>
+        <ReviewHeader applicationName={name} stage={stage} />
+        <Label className="simple-label" content={strings.LABEL_REVIEW_IN_PROGRESS} />
+      </>
+    )
+  }
 
   const {
     sections,
     responsesByCode,
     info: {
       serial,
-      current: { stage },
       name,
+      current: { stage },
     },
+    thisReview,
     attemptSubmission,
     firstIncompleteReviewPage,
   } = fullReviewStructure
 
+  if (
+    thisReview?.current.reviewStatus === ReviewStatus.Pending &&
+    showWarningModal.open === false
+  ) {
+    const { title, message, option } = messages.REVIEW_STATUS_PENDING
+    setShowWarningModal({
+      open: true,
+      title,
+      message,
+      option,
+      onClick: () => {
+        setShowWarningModal({ open: false })
+        push(`/application/${fullReviewStructure.info.serial}/review`)
+      },
+      onClose: () => {
+        setShowWarningModal({ open: false })
+        push(`/application/${fullReviewStructure.info.serial}/review`)
+      },
+    })
+  }
+
   const isMissingReviewResponses = (section: string): boolean =>
     attemptSubmission && firstIncompleteReviewPage?.sectionCode === section
+
+  const isAssignedToCurrentUser = Object.values(sections).some(
+    (section) => section.assignment?.isAssignedToCurrentUser
+  )
+
+  const isConsolidation = Object.values(sections).some(
+    (section) => section.assignment?.isConsolidation
+  )
 
   return error ? (
     <Message error title={strings.ERROR_GENERIC} list={[error]} />
   ) : (
-    <ReviewHeader
-      applicationStage={stage.name || ''}
-      applicationStageColour={stage.colour}
-      applicationName={name}
-    >
+    <>
+      <ReviewHeader applicationName={name} stage={stage} />
+      <div style={{ display: 'flex' }}>
+        {isConsolidation ? (
+          isAssignedToCurrentUser ? (
+            <ConsolidationByLabel />
+          ) : (
+            <ConsolidationByLabel user={thisReview?.reviewer} />
+          )
+        ) : isAssignedToCurrentUser ? (
+          <ReviewByLabel />
+        ) : (
+          <ReviewByLabel user={thisReview?.reviewer} />
+        )}
+      </div>
       <div id="application-summary-content">
         {Object.values(sections).map((section) => (
           <SectionWrapper
@@ -89,7 +163,7 @@ const ReviewPage: React.FC<{
             isActive={isSectionActive(section.details.code)}
             toggleSection={toggleSection(section.details.code)}
             section={section}
-            failed={isMissingReviewResponses(section.details.code)}
+            isSectionInvalid={isMissingReviewResponses(section.details.code)}
             extraSectionTitleContent={(section: SectionState) => (
               <div>
                 {isMissingReviewResponses(section.details.code) && (
@@ -105,6 +179,7 @@ const ReviewPage: React.FC<{
             extraPageContent={(page: Page) => (
               <ApproveAllButton
                 isConsolidation={!!section.assignment?.isConsolidation}
+                stageNumber={stage.number}
                 page={page}
               />
             )}
@@ -116,43 +191,64 @@ const ReviewPage: React.FC<{
             )}
             responsesByCode={responsesByCode as ResponsesByCode}
             applicationData={fullApplicationStructure.info}
+            stages={fullApplicationStructure.stages}
             serial={serial}
             isReview
             isConsolidation={section.assignment?.isConsolidation}
             canEdit={
-              reviewAssignment?.review?.status === ReviewStatus.Draft ||
-              reviewAssignment?.review?.status === ReviewStatus.Locked
+              reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Draft ||
+              reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Locked
             }
           />
         ))}
-        <ReviewSubmit structure={fullReviewStructure} scrollTo={scrollTo} />
+        <PreviousStageDecision
+          isFinalDecision={reviewAssignment.isFinalDecision}
+          review={previousAssignment?.review}
+          serial={serial}
+        />
+        <ReviewSubmit
+          structure={fullReviewStructure}
+          assignment={reviewAssignment}
+          previousAssignment={previousAssignment}
+          scrollTo={scrollTo}
+        />
       </div>
-    </ReviewHeader>
+      <ModalWarning {...showWarningModal} />
+    </>
   )
 }
 
 const SectionRowStatus: React.FC<SectionState> = (section) => {
-  const { assignment } = section
+  const { assignment, reviewProgress, consolidationProgress } = section
   const { isConsolidation, isReviewable, isAssignedToCurrentUser } = assignment as SectionAssignment
 
-  if (!isAssignedToCurrentUser)
-    return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
-  if (!isReviewable)
-    return (
-      <Label
-        icon={<Icon name="circle" size="mini" color="blue" />}
-        content={strings.LABEL_ASSIGNED_TO_YOU}
-      />
-    )
-  if (isConsolidation && section.consolidationProgress)
-    return <ConsolidationSectionProgressBar consolidationProgress={section.consolidationProgress} />
-  if (section.reviewProgress)
-    return <ReviewSectionProgressBar reviewProgress={section.reviewProgress} />
-  return null // Unexpected
+  if (isReviewable) {
+    if (!isAssignedToCurrentUser)
+      return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
+    if (isConsolidation) {
+      const totalDone =
+        (consolidationProgress?.totalConform || 0) + (consolidationProgress?.totalNonConform || 0)
+      if (totalDone > 0)
+        return <ConsolidationSectionProgressBar consolidationProgress={consolidationProgress} />
+    } else {
+      const totalDone = (reviewProgress?.doneConform || 0) + (reviewProgress?.doneNonConform || 0)
+      if (totalDone > 0) return <ReviewSectionProgressBar reviewProgress={reviewProgress} />
+    }
+    return <ReviewInProgressLabel />
+  }
+  // else: not reviewable
+  return null
 }
 
-const ApproveAllButton: React.FC<{ isConsolidation: boolean; page: Page }> = ({
+interface ApproveAllButtonProps {
+  isConsolidation: boolean
+  stageNumber: number
+  page: Page
+}
+
+const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
   isConsolidation,
+  stageNumber,
   page,
 }) => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
@@ -160,7 +256,11 @@ const ApproveAllButton: React.FC<{ isConsolidation: boolean; page: Page }> = ({
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)
 
   const responsesToReview = reviewResponses.filter(
-    (reviewResponse) => reviewResponse && !reviewResponse?.decision
+    (reviewResponse) =>
+      reviewResponse &&
+      !reviewResponse?.decision &&
+      // Prevention to count reviewResponse without linked application OR another review
+      (!!reviewResponse.applicationResponseId || !!reviewResponse.reviewResponseLinkId)
   )
 
   const massApprove = () => {
@@ -170,6 +270,7 @@ const ApproveAllButton: React.FC<{ isConsolidation: boolean; page: Page }> = ({
         variables: {
           id: reviewResponse.id,
           decision: isConsolidation ? ReviewResponseDecision.Agree : ReviewResponseDecision.Approve,
+          stageNumber,
         },
       })
     })
@@ -192,5 +293,45 @@ const ApproveAllButton: React.FC<{ isConsolidation: boolean; page: Page }> = ({
     </div>
   )
 }
+
+interface PreviousStageDecisionProps {
+  review: ReviewDetails | null | undefined
+  isFinalDecision: boolean
+  serial: string
+}
+
+const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
+  review,
+  isFinalDecision,
+  serial,
+}) =>
+  isFinalDecision && !!review ? (
+    <Segment.Group horizontal id="previous-review">
+      <Segment>
+        <Header as="h3">{strings.LABEL_PREVIOUS_REVIEW}:</Header>
+        <ReviewByLabel user={review.reviewer} />
+        <Button
+          className="button-med"
+          as={Link}
+          to={`/application/${serial}/review/${review.id}`}
+          target="_blank"
+          content={strings.ACTION_VIEW}
+        />
+      </Segment>
+      {!!review.reviewDecision?.decision && (
+        <Segment>
+          <p style={{ width: '150px' }}>
+            <strong>{strings.LABEL_REVIEW_SUBMITTED_AS}:</strong>
+          </p>
+          {strings[review.reviewDecision.decision]}
+        </Segment>
+      )}
+      {!review?.reviewDecision?.comment && review.reviewDecision?.comment !== '' && (
+        <Segment>
+          <ReviewComment reviewDecisionId={review?.reviewDecision?.id} isEditable={false} />
+        </Segment>
+      )}
+    </Segment.Group>
+  ) : null
 
 export default ReviewPage

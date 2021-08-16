@@ -7,7 +7,8 @@ import { EvaluatorNode } from '../utils/types'
 import { buildParameters } from './ApplicationViewWrapper'
 import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
-import globalConfig from '../config.json'
+import globalConfig from '../config'
+import { TemplateElementCategory } from '../utils/generated/graphql'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
 
@@ -15,7 +16,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   element,
   response,
   allResponses,
-  applicationData,
+  applicationData = {},
   displayTitle = true,
 }) => {
   const { parameters, pluginCode, isRequired, isVisible } = element
@@ -27,30 +28,39 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   const { SummaryView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
 
   const parameterLoadingValues = config?.parameterLoadingValues
+  const internalParameters = config?.internalParameters || []
   const [simpleParameters, parameterExpressions] = buildParameters(
     parameters,
-    parameterLoadingValues
+    parameterLoadingValues,
+    internalParameters
   )
 
   useEffect(() => {
-    // Runs once on component mount
+    // Update dynamic parameters when responses change
     Object.entries(parameterExpressions).forEach(([field, expression]) => {
       evaluateExpression(expression as EvaluatorNode, {
-        objects: { responses: allResponses, currentUser, applicationData },
+        objects: {
+          responses: { ...allResponses, thisResponse: response?.text },
+          currentUser,
+          applicationData,
+        },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
       }).then((result: any) =>
         setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
       )
     })
-  }, [])
+  }, [allResponses])
 
   if (!pluginCode || !isVisible) return null
 
   const DefaultSummaryView: React.FC = () => {
     const combinedParams = { ...simpleParameters, ...evaluatedParameters }
     return (
-      <Form.Field className="element-summary-view" required={isRequired}>
+      <Form.Field
+        className="element-summary-view"
+        required={isRequired && element.category !== TemplateElementCategory.Information}
+      >
         {displayTitle && (
           <>
             <label style={{ color: 'black' }}>

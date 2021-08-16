@@ -2,5 +2,5 @@
     User Variable Overrides
 *******************************/
 
-@border: none;
-@borderSpacing: 1em;
+
+@tableRowLeftAndRightPadding: 20px;

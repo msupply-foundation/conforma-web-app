@@ -1,6 +1,12 @@
-import React, { CSSProperties, useRef } from 'react'
-import { Accordion, Grid, Header, Icon, Sticky } from 'semantic-ui-react'
-import { ResponsesByCode, SectionState, Page, ApplicationDetails } from '../../utils/types'
+import React, { useRef } from 'react'
+import { Accordion, Header, Icon, Ref, Sticky } from 'semantic-ui-react'
+import {
+  ResponsesByCode,
+  SectionState,
+  Page,
+  ApplicationDetails,
+  StageDetails,
+} from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
 import styleConstants from '../../utils/data/styleConstants'
 import { PageElements } from '../'
@@ -13,6 +19,7 @@ interface SectionProps {
   section: SectionState
   responsesByCode: ResponsesByCode
   applicationData: ApplicationDetails
+  stages: StageDetails[]
   isActive: boolean
   isConsolidation?: boolean
   isReview?: boolean
@@ -20,7 +27,7 @@ interface SectionProps {
   isUpdating?: boolean
   serial: string
   canEdit?: boolean
-  failed?: boolean
+  isSectionInvalid?: boolean
 }
 
 const SectionWrapper: React.FC<SectionProps> = ({
@@ -32,76 +39,75 @@ const SectionWrapper: React.FC<SectionProps> = ({
   serial,
   responsesByCode,
   applicationData,
+  stages,
   isActive,
   isConsolidation = false,
   isReview = false,
   isSummary = false,
   isUpdating = false,
   canEdit = false,
-  failed,
+  isSectionInvalid = false,
 }) => {
   const { details, pages } = section
   const stickyRef = useRef(null)
   const {
     userState: { isNonRegistered },
   } = useUserState()
+
+  const validationStateStyle = isSectionInvalid ? 'invalid-section' : ''
+
   return (
-    <div ref={stickyRef} key={`${section.details.id}`}>
-      <Accordion className="summary-section" style={sectionStyles.sup(!!failed)}>
-        <Accordion.Title active={isActive} onClick={toggleSection}>
-          <Sticky
-            context={stickyRef}
-            offset={!isNonRegistered ? styleConstants.HEADER_OFFSET : 0}
-            bottomOffset={styleConstants.BOTTOM_OFFSET}
-          >
-            <Grid columns="equal" className="summary-section-header">
-              <Grid.Column width={10}>
+    <div key={`${section.details.id}`}>
+      <Ref innerRef={stickyRef}>
+        <Accordion className={`summary-section ${validationStateStyle}`}>
+          <Accordion.Title active={isActive} onClick={toggleSection}>
+            <Sticky
+              context={stickyRef}
+              offset={!isNonRegistered ? styleConstants.HEADER_OFFSET : 0}
+              pushing
+              active={isActive}
+            >
+              <div className="summary-section-header">
                 <Header as="h4" content={details.title} />
-              </Grid.Column>
-              <Grid.Column textAlign="left">
-                {extraSectionTitleContent && extraSectionTitleContent(section)}
-              </Grid.Column>
-              <Grid.Column textAlign="right" width={1}>
+                <div className="extra-content">
+                  {extraSectionTitleContent && extraSectionTitleContent(section)}
+                </div>
                 <Icon name={isActive ? 'chevron up' : 'chevron down'} className="dark-grey" />
-              </Grid.Column>
-            </Grid>
-          </Sticky>
-        </Accordion.Title>
-        <Accordion.Content active={isActive}>
-          {Object.values(pages).map((page) => (
-            <div key={`${section.details.id}Page_${page.number}Container`} className="summary-page">
-              {scrollableAttachment && scrollableAttachment(page)}
-              <Header as="h6" className="summary-page-header">
-                {page.name}
-              </Header>
-              <PageElements
-                key={`${section.details.id}Page_${page.number}`}
-                elements={page.state}
-                responsesByCode={responsesByCode}
-                applicationData={applicationData}
-                serial={serial}
-                sectionAndPage={{ sectionCode: details.code, pageNumber: page.number }}
-                isReview={isReview}
-                isConsolidation={isConsolidation}
-                isSummary={isSummary}
-                isUpdating={isUpdating}
-                canEdit={canEdit}
-              />
-              {extraPageContent && extraPageContent(page)}
-            </div>
-          ))}
-        </Accordion.Content>
-      </Accordion>
+              </div>
+            </Sticky>
+          </Accordion.Title>
+          <Accordion.Content active={isActive}>
+            {Object.values(pages).map((page) => (
+              <div
+                key={`${section.details.id}Page_${page.number}Container`}
+                className="summary-page"
+              >
+                {scrollableAttachment && scrollableAttachment(page)}
+                <Header as="h6" className="summary-page-header">
+                  {page.name}
+                </Header>
+                <PageElements
+                  key={`${section.details.id}Page_${page.number}`}
+                  elements={page.state}
+                  responsesByCode={responsesByCode}
+                  applicationData={applicationData}
+                  stages={stages}
+                  serial={serial}
+                  sectionAndPage={{ sectionCode: details.code, pageNumber: page.number }}
+                  isReview={isReview}
+                  isConsolidation={isConsolidation}
+                  isSummary={isSummary}
+                  isUpdating={isUpdating}
+                  canEdit={canEdit}
+                />
+                {extraPageContent && extraPageContent(page)}
+              </div>
+            ))}
+          </Accordion.Content>
+        </Accordion>
+      </Ref>
     </div>
   )
-}
-
-// Styles - TODO: Move to LESS || Global class style (semantic)
-const sectionStyles = {
-  sup: (failed: boolean) =>
-    ({
-      border: failed ? '2px solid pink' : 'none',
-    } as CSSProperties),
 }
 
 export default SectionWrapper

@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Checkbox } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
-import config from '../../../config.json'
+import config from '../../../config'
 import { useUserState } from '../../../contexts/UserState'
 import strings from '../constants'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
-  value,
-  // setValue
   setIsActive,
   validationState,
   onSave,
@@ -46,7 +44,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   // Reset saved value when re-loading form (since password can't be stored)
   useEffect(() => {
-    if (value !== undefined) {
+    if (currentResponse?.text !== undefined) {
       onSave({ hash: '', text: '', customValidation: { isValid: null } })
     }
   }, [])

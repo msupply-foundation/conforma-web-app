@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react'
 import {
   ApplicationDetails,
   ElementBase,
+  EvaluatedElement,
   FullStructure,
   TemplateDetails,
-  TemplateElementState,
   UseGetApplicationProps,
 } from '../types'
 import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
 import { EvaluatorParameters } from '../types'
-import { getApplicationSections } from '../helpers/application/getSectionsDetails'
 import {
   Application,
   ApplicationSection,
@@ -18,13 +17,16 @@ import {
   ApplicationStatus,
   Organisation,
   TemplateElement,
+  TemplateElementCategory,
+  TemplateSection,
   TemplateStage,
   useGetApplicationQuery,
   User,
 } from '../generated/graphql'
 import messages from '../messages'
 import { buildSectionsStructure } from '../helpers/structure'
-import config from '../../config.json'
+import config from '../../config'
+import { getSectionDetails } from '../helpers/application/getSectionsDetails'
 
 const graphQLEndpoint = config.serverGraphQL
 
@@ -76,7 +78,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     } else {
       if (refetchAttempts < MAX_REFETCH) {
         setTimeout(() => {
-          console.log('Will refetch loadApplication', refetchAttempts) // TODO: Remove log
           setRefetchAttempts(refetchAttempts + 1)
           refetch()
         }, 500)
@@ -84,12 +85,20 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       return
     }
 
-    const applicationSection = application.applicationSections.nodes as ApplicationSection[]
-    const sections = getApplicationSections(applicationSection)
+    const sections = (application?.template?.templateSections?.nodes || []) as TemplateSection[]
+    const sectionDetails = getSectionDetails(sections)
 
     const stages = data.applicationStageStatusLatests?.nodes as ApplicationStageStatusAll[]
     if (stages.length > 1) console.log('StageStatusAll More than one results for 1 application!')
-    const { stageId, stage, stageColour, stageNumber, status, statusHistoryTimeCreated } = stages[0] // Should only have one result
+    const {
+      stageId,
+      stage,
+      stageColour,
+      stageNumber,
+      status,
+      statusHistoryTimeCreated,
+      stageHistoryTimeCreated,
+    } = stages[0] // Should only have one result
 
     const applicationDetails: ApplicationDetails = {
       id: application.id,
@@ -106,7 +115,8 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           colour: stageColour as string,
         },
         status: status as ApplicationStatus,
-        date: statusHistoryTimeCreated,
+        timeStageCreated: stageHistoryTimeCreated,
+        timeStatusCreated: statusHistoryTimeCreated,
       },
       firstStrictInvalidPage: null,
       isChangeRequest: false,
@@ -116,31 +126,32 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     }
 
     const baseElements: ElementBase[] = []
-    application.applicationSections.nodes.forEach((sectionNode) => {
+    sections.forEach((section) => {
       let pageCount = 1
-      const elementsInSection = sectionNode?.templateSection?.templateElementsBySectionId
-        ?.nodes as TemplateElement[]
+      const elementsInSection = section?.templateElementsBySectionId?.nodes as TemplateElement[]
       elementsInSection.forEach((element) => {
         if (element.elementTypePluginCode === 'pageBreak') pageCount++
         else
           baseElements.push({
-            // ...element,
-            category: element.category,
+            category: element.category || TemplateElementCategory.Information,
             id: element.id,
             code: element.code,
-            pluginCode: element.elementTypePluginCode,
-            sectionIndex: sectionNode?.templateSection?.index,
-            sectionCode: sectionNode?.templateSection?.code,
-            elementIndex: element.index,
+            pluginCode: element.elementTypePluginCode || '',
+            sectionIndex: section?.index || 0,
+            sectionCode: section?.code || '',
+            elementIndex: element.index || 0,
             page: pageCount,
             isEditableExpression: element.isEditable,
             isRequiredExpression: element.isRequired,
             isVisibleExpression: element.visibilityCondition,
             parameters: element.parameters,
             validationExpression: element.validation,
-            validationMessage: element.validationMessage,
-            helpText: element.helpText,
-          } as TemplateElementState)
+            validationMessage: element.validationMessage || '',
+            helpText: element.helpText || '',
+            title: element.title || '',
+            defaultValueExpression: element.defaultValue,
+            ...defaultEvaluatedElement,
+          })
       })
     })
 
@@ -159,13 +170,13 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       let newStructure: FullStructure = {
         info: { ...applicationDetails, submissionMessage, startMessage },
         stages: templateStages.map((stage) => ({
-          number: stage.number as number,
           id: stage.id,
-          title: stage.title as string,
+          name: stage.title as string,
+          number: stage.number as number,
           description: stage.description ? stage.description : undefined,
           colour: stage.colour as string,
         })),
-        sections: buildSectionsStructure({ sections, baseElements }),
+        sections: buildSectionsStructure({ sectionDetails, baseElements }),
         attemptSubmission: false,
       }
 
@@ -179,6 +190,14 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     isLoading: loading || isLoading,
     structure,
   }
+}
+
+export const defaultEvaluatedElement: EvaluatedElement = {
+  isEditable: true,
+  isRequired: true,
+  isVisible: true,
+  isValid: undefined,
+  defaultValue: null,
 }
 
 export default useLoadApplication

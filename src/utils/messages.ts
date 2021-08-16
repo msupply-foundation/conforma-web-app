@@ -1,6 +1,4 @@
 export default {
-  APPLICATION_CHANGES_REQUIRED:
-    'There are issues with some of the information you supplied. Please update and resubmit the form.',
   APPLICATIONS_LIST_EMPTY: 'No applications found',
   APPLICATION_MISSING_TEMPLATE: '',
   APPLICATION_OTHER_CHANGES_MADE: 'This is a new submission and will require a review.',
@@ -13,7 +11,7 @@ export default {
   },
   REVIEW_SUBMISSION_CONFIRM: {
     title: 'Submitting Review',
-    message: 'Are you sure',
+    message: 'Are you sure?',
     option: 'SUBMIT',
   },
   REVIEW_SUBMISSION_FAIL: 'Not all sections have been reviewed',
@@ -21,6 +19,24 @@ export default {
   REVIEW_DECISION_SET_FAIL: {
     title: 'Problem submitting review',
     message: 'Please select a decision: List Of Questions or Non Conformity',
+    option: 'OK',
+  },
+  REVIEW_DECISION_MISMATCH: {
+    title: 'Final decision',
+    message:
+      'You have made a different decision than the previous reviewer.\nAre you sure you wish to proceed with your decision?',
+    option: 'OK',
+  },
+  REVIEW_STATUS_LOCKED: {
+    title: 'Currently not available for submission',
+    message:
+      'All your eixsing decision will be kept.\nYour review can be submitted after a new application is received from the applicant.',
+    option: 'OK',
+  },
+  REVIEW_STATUS_PENDING: {
+    title: 'Please reload review before submitting',
+    message:
+      'All your existing decision will be kept.\nYou will be redirected to the home page now, click "start" in there to reload page with latest responses to review.',
     option: 'OK',
   },
   REDIRECT_TO_REGISTRATION: 'Re-directing to user registration application...',

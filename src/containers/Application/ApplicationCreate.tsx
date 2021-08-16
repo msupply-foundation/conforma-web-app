@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Message, Segment } from 'semantic-ui-react'
-import { ApplicationContainer, ApplicationSelectType, Loading } from '../../components'
-import { useApplicationState } from '../../contexts/ApplicationState'
+import { ApplicationContainer, Loading } from '../../components'
 import { useUserState } from '../../contexts/UserState'
 import useCreateApplication from '../../utils/hooks/useCreateApplication'
 import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
@@ -10,89 +9,86 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import strings from '../../utils/constants'
 import { SectionsList } from '../../components/Sections'
 import ApplicationHomeWrapper from '../../components/Application/ApplicationHomeWrapper'
+import { ElementForEvaluation, EvaluatorNode, User } from '../../utils/types'
+import { evaluateElements } from '../../utils/helpers/evaluateElements'
+import useGetApplicationSerial from '../../utils/hooks/useGetApplicationSerial'
 
 const ApplicationCreate: React.FC = () => {
-  const {
-    applicationState: { serialNumber },
-    setApplicationState,
-  } = useApplicationState()
   const {
     push,
     query: { type },
   } = useRouter()
-
-  const { error, loading, template } = useLoadTemplate({
-    templateCode: type,
-  })
-
-  usePageTitle(strings.PAGE_TITLE_CREATE)
-
   const {
     userState: { currentUser },
   } = useUserState()
-
-  // If template has no start message, go straight to first page of new application
-  useEffect(() => {
-    if (template && !template.startMessage) handleCreate()
-  }, [template])
-
-  const { processing, error: creationError, create } = useCreateApplication({
-    onCompleted: () => {
-      if (serialNumber && template?.sections && template?.sections.length > 0) {
-        // Call Application page on first section
-        const firstSection = template.sections[0].code
-        // The pageNumber starts in 1 when is a new application
-        push(`${serialNumber}/${firstSection}/Page1`)
-      }
-    },
+  const { error, loading, template } = useLoadTemplate({
+    templateCode: type,
   })
+  const { getSerialAsync } = useGetApplicationSerial()
+  const [newApplicationError, setNewApplicationError] = useState<Error | null>(null)
+  const [newApplicationLoading, setNewApplicationLoading] = useState<boolean>(false)
+  usePageTitle(strings.PAGE_TITLE_CREATE)
 
-  const handleCreate = (_?: any) => {
-    setApplicationState({ type: 'reset' })
+  const { error: creationError, create } = useCreateApplication()
 
-    if (!template?.sections) {
-      console.log('Problem to create application - unexpected parameters')
-      return
+  useEffect(() => {
+    if (template && !template?.startMessage) handleCreate()
+  }, [template?.startMessage])
+
+  const handleCreate = async (_?: any) => {
+    try {
+      if (!template?.sections) {
+        throw new Error('Problem creating application, template information is missing')
+      }
+      setNewApplicationLoading(true)
+
+      const { name, elementsIds, elementsDefaults } = template
+      const defaultValues = await getDefaultValues(elementsDefaults || [], currentUser)
+
+      const mutationResult = await create({
+        name,
+        templateId: template.id,
+        templateResponses: (elementsIds as number[]).map((id, index) => ({
+          templateElementId: id,
+          value: defaultValues[index],
+        })),
+      })
+      const applicationId = mutationResult.data?.createApplication?.application?.id
+      if (!applicationId) throw new Error('Application mutation did not return id')
+
+      const serial = await getSerialAsync(applicationId)
+
+      const firstSection = template.sections[0].code
+      // The pageNumber starts in 1 when is a new application
+      push(`${serial}/${firstSection}/Page1`)
+    } catch (e) {
+      setNewApplicationError(e)
     }
-    // TODO: New issue to generate serial - should be done in server?
-    const serialNumber = Math.round(Math.random() * 10000).toString()
-    setApplicationState({ type: 'setSerialNumber', serialNumber })
-
-    const { name, elementsIds, sections } = template
-
-    create({
-      name,
-      serial: serialNumber,
-      templateId: template.id,
-      userId: currentUser?.userId,
-      orgId: currentUser?.organisation?.orgId,
-      sessionId: currentUser?.sessionId as string,
-      templateSections: sections.map(({ id }) => {
-        return { templateSectionId: id }
-      }),
-      templateResponses: (elementsIds as number[]).map((id) => {
-        return { templateElementId: id }
-      }),
-    })
   }
 
-  if (error || creationError)
+  if (error || creationError || newApplicationError)
     return (
       <Message
         error
         title={strings.ERROR_APPLICATION_CREATE}
-        list={[error, creationError?.message]}
+        list={[error, creationError?.message || '', newApplicationError?.message || '']}
       />
     )
 
-  if (!template) return null
   // if (!template) return <ApplicationSelectType /> // TODO
-  if (loading || !template?.startMessage) return <Loading />
+  if (loading || !template?.startMessage || newApplicationLoading) return <Loading />
+
+  if (!template) return null
 
   const StartButtonSegment: React.FC = () => {
     return (
       <Segment basic className="padding-zero">
-        <Button color="blue" className="button-wide" loading={processing} onClick={handleCreate}>
+        <Button
+          color="blue"
+          className="button-wide"
+          loading={newApplicationLoading}
+          onClick={handleCreate}
+        >
           {strings.BUTTON_APPLICATION_START}
         </Button>
       </Segment>
@@ -104,12 +100,28 @@ const ApplicationCreate: React.FC = () => {
       <ApplicationHomeWrapper
         startMessage={template.startMessage}
         name={template.name}
+        title={strings.TITLE_INTRODUCTION}
+        subtitle={strings.SUBTITLE_APPLICATION_STEPS}
         ButtonSegment={StartButtonSegment}
       >
         <SectionsList sections={template.sections} />
       </ApplicationHomeWrapper>
     </ApplicationContainer>
   ) : null
+}
+
+export const getDefaultValues = async (
+  defaultValueExpressions: EvaluatorNode[],
+  currentUser: User | null
+) => {
+  const evaluationElements: ElementForEvaluation[] = defaultValueExpressions.map(
+    (defaultValueExpression) => ({ defaultValueExpression, code: '' })
+  )
+
+  const evaluatedElements = await evaluateElements(evaluationElements, ['defaultValue'], {
+    currentUser,
+  })
+  return evaluatedElements.map(({ defaultValue }) => defaultValue)
 }
 
 export default ApplicationCreate

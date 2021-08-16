@@ -3,11 +3,11 @@ import os
 import re
 
 # Change these values to customise:
-docs_path = "./documentation"
-output_path = "./documentation/_wiki"
+docs_path = "./docs/internal"
+output_path = "./docs/_wiki"
 markup_formats = [".md", ".markdown"]
 media_types = [".png", ".jpg", ".gif", ".svg"]
-ignore = ["external"]  # File or folder names to ignore
+ignore = []  # File or folder names to ignore
 ext_ignore = [".DS_Store"]  # File extensions to ignore
 
 
@@ -16,19 +16,19 @@ def in_ignore_list(path, ignore_list):
 
 
 def build_file_ext_regex_opts(ext_list):
-    return "|".join(["(\{}\))".format(ext) for ext in ext_list])
+    return "|".join(["(\{})".format(ext) for ext in ext_list])
 
 
 def file_convert_links(file):
     f = open(file, 'r')
     original_markup = f.read()
     markup_regex = re.compile(
-        "(\[.+\])(\()(\S*/)?(\S+)({})".format(build_file_ext_regex_opts(markup_formats)))
-    markup_substitution = r"\1\2\4)"
+        "(\[.+\])(\()(\S*/)?(\S+)({})\)".format(build_file_ext_regex_opts(markup_formats)))
+    markup_substitution = r"\1(\4)"
     new_markup = re.sub(markup_regex, markup_substitution, original_markup)
     media_link_regex = re.compile(
-        "(\[.*\])(\()(\.*\/)?(\S*/)?(\S+)({})".format(build_file_ext_regex_opts(media_types)))
-    media_link_substitution = r"\1\2\4\5\6"
+        "(!\[)(.+)(\]\()(\.\/)?(.*)({})\)".format(build_file_ext_regex_opts(media_types)))
+    media_link_substitution = r"[[\5\6|\2]]"
     new_markup = re.sub(media_link_regex, media_link_substitution, new_markup)
     f.close()
     return new_markup

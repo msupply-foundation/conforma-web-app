@@ -14,11 +14,14 @@ import {
   User as GraphQLUser,
   Organisation as GraphQLOrg,
   Filter,
+  Application,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
-import { OperatorNode, ValueNode } from '@openmsupply/expression-evaluator/lib/types'
-import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic'
+import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { SemanticICONS } from 'semantic-ui-react'
+import { DocumentNode } from '@apollo/client'
+import { DateTime } from 'luxon'
 
 export {
   ApplicationDetails,
@@ -39,7 +42,9 @@ export {
   ElementState,
   EvaluatorNode,
   EvaluatorParameters,
+  Filters,
   FullStructure,
+  HistoryElement,
   LooseString,
   MethodRevalidate,
   MethodToCallProps,
@@ -53,6 +58,7 @@ export {
   ReviewProgress,
   ConsolidationProgress,
   ReviewQuestion,
+  ReviewAssignment,
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
@@ -62,9 +68,9 @@ export {
   SetStrictSectionPage,
   SortQuery,
   StageAndStatus,
+  StageDetails,
   TemplateDetails,
   TemplateCategoryDetails,
-  TemplateElementState,
   TemplatePermissions,
   TemplateInList,
   TemplatesDetails,
@@ -76,8 +82,6 @@ export {
   LoginPayload,
   BasicStringObject,
 }
-
-type EvaluatorNode = OperatorNode | ValueNode
 
 interface ApplicationDetails {
   id: number
@@ -108,29 +112,31 @@ interface ApplicationProps {
   structure: FullStructure
   requestRevalidation?: MethodRevalidate
   strictSectionPage?: SectionAndPage | null
-}
-
-interface ApplicationStage {
-  id: number
-  name: string
-  number: number
-  colour: string
+  isValidating?: boolean
 }
 
 interface AssignmentDetails {
   id: number
-  status: ReviewAssignmentStatus | null
-  timeUpdated: Date
   level: number
   reviewerId?: number
   review: ReviewDetails | null
   reviewer: GraphQLUser
-  totalAssignedQuestions: number
-  stage: ApplicationStage
-  reviewQuestionAssignments: ReviewQuestionAssignment[]
+  current: AssignmentStageAndStatus
   isCurrentUserAssigner: boolean
-  assignableSectionRestrictions: (string | null)[]
   isCurrentUserReviewer: boolean
+  isFinalDecision: boolean
+  isLastLevel: boolean
+  totalAssignedQuestions: number
+  reviewQuestionAssignments: ReviewQuestionAssignment[]
+  assignableSectionRestrictions: (string | null)[]
+}
+
+interface AssignmentStageAndStatus {
+  stage: StageDetails
+  assignmentStatus: ReviewAssignmentStatus | null
+  timeStageCreated: Date
+  timeStatusUpdated: Date
+  // Doesn't store ReviewStatus
 }
 
 interface BasicStringObject {
@@ -171,9 +177,17 @@ interface ElementPluginParameters {
   [key: string]: ElementPluginParameterValue
 }
 
-interface ElementBase {
-  id: number
+export type ElementForEvaluation = {
+  isEditableExpression?: EvaluatorNode
+  isRequiredExpression?: EvaluatorNode
+  isVisibleExpression?: EvaluatorNode
+  validationExpression?: EvaluatorNode
+  defaultValueExpression?: EvaluatorNode
   code: string
+}
+
+interface ElementBase extends ElementForEvaluation {
+  id: number
   title: string
   pluginCode: string
   sectionIndex: number
@@ -181,17 +195,22 @@ interface ElementBase {
   elementIndex: number
   page: number
   category: TemplateElementCategory
-  validationExpression: EvaluatorNode
   validationMessage: string | null
   helpText: string | null
   parameters: any
 }
 
-interface ElementState extends ElementBase {
+export type EvaluatedElement = {
   isEditable: boolean
   isRequired: boolean
   isVisible: boolean
+  isValid: boolean | undefined
+  defaultValue: any
 }
+
+export type EvaluationOptions = (keyof EvaluatedElement)[]
+
+type ElementState = ElementBase & EvaluatedElement
 
 interface ElementsActivityState {
   elementEnteredTimestamp: number
@@ -209,7 +228,13 @@ interface EvaluatorParameters {
 
 type ElementsById = { [templateElementId: string]: PageElement }
 
+interface Filters {
+  selectedReviewer: number
+  selectedStage: number
+}
+
 interface FullStructure {
+  assignment?: ReviewAssignment
   thisReview?: ReviewDetails | null
   elementsById?: ElementsById
   lastValidationTimestamp?: number
@@ -219,9 +244,16 @@ interface FullStructure {
   stages: StageDetails[]
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
-  canSubmitReviewAs?: Decision | null
   sortedSections?: SectionState[]
   sortedPages?: Page[]
+}
+
+interface HistoryElement {
+  author?: string
+  title: string
+  message: string
+  timeUpdated: Date
+  reviewerComment?: string
 }
 
 interface IGraphQLConnection {
@@ -263,6 +295,7 @@ type PageElement = {
   latestOriginalReviewResponse?: ReviewResponse
   previousOriginalReviewResponse?: ReviewResponse
   isNewApplicationResponse?: boolean
+  isNewReviewResponse?: boolean
   review?: ReviewQuestionDecision
   isPendingReview?: boolean
   reviewQuestionAssignmentId: number
@@ -270,6 +303,7 @@ type PageElement = {
   isChangeRequest?: boolean
   isChanged?: boolean
   isActiveReviewResponse?: boolean
+  enableViewHistory: boolean
 }
 
 interface ApplicationProgress {
@@ -291,6 +325,10 @@ interface ResponseFull {
   hash?: string // Used in Password plugin
   files?: any[] // Used in FileUpload plugin
   other?: string // Used in RadioChoice plugin
+  selection?: any // Used in Dropdown/Radio selectors
+  code?: string // Used in ListBuilder
+  list?: any // Used in ListBuilder
+  date?: any // Used in DatePicker
   timeCreated?: Date
   reviewResponse?: ReviewResponse
   customValidation?: ValidationState
@@ -300,10 +338,17 @@ interface ResponsesByCode {
   [key: string]: ResponseFull
 }
 
+interface ReviewAssignment {
+  canSubmitReviewAs?: Decision | null
+  isLastLevel: boolean
+  isFinalDecision: boolean
+}
+
 type ReviewSectionComponentProps = {
   fullStructure: FullStructure
   section: SectionState
   assignment: AssignmentDetails
+  previousAssignment: AssignmentDetails
   thisReview?: ReviewDetails | null
   action: ReviewAction
   isAssignedToCurrentUser: boolean
@@ -312,12 +357,10 @@ type ReviewSectionComponentProps = {
 
 interface ReviewDetails {
   id: number
-  status: ReviewStatus
-  timeStatusCreated?: Date
-  stage: ApplicationStage
-  isLastLevel: boolean
   level: number
   reviewDecision?: ReviewDecision | null
+  reviewer: GraphQLUser
+  current: ReviewStageAndStatus
 }
 
 interface ReviewQuestion {
@@ -331,6 +374,13 @@ interface ReviewQuestionDecision {
   id: number
   comment?: string | null
   decision?: ReviewResponseDecision | null
+}
+
+interface ReviewStageAndStatus {
+  stage: StageDetails
+  reviewStatus: ReviewStatus
+  timeStageCreated: Date
+  timeStatusCreated: Date
 }
 
 type SectionAndPage = {
@@ -350,13 +400,13 @@ interface BaseReviewProgress {
   totalReviewable: number
   totalPendingReview: number
   totalActive: number // review or application responses that are in progress (as oppose to awaiting review to be started)
+  totalNewReviewable: number // new reviable are updates from re-submission (after changes requested to applicant or lower level reviewer)
 }
 
 interface ReviewProgress extends BaseReviewProgress {
   doneConform: number
   doneNonConform: number
-  doneNewReviewable: number
-  totalNewReviewable: number
+  doneNewReviewable: number // Review of applicant re-submission
 }
 
 interface ConsolidationProgress extends BaseReviewProgress {
@@ -366,6 +416,7 @@ interface ConsolidationProgress extends BaseReviewProgress {
   doneActiveDisagree: number
   doneActiveAgreeConform: number
   doneActiveAgreeNonConform: number
+  doneNewReviewable: number // Review of reviewer re-submission
   totalConform: number
   totalNonConform: number
 }
@@ -378,7 +429,9 @@ enum ReviewAction {
   canSelfAssign = 'CAN_SELF_ASSIGN',
   canSelfAssignLocked = 'CAN_SELF_ASSIGN_LOCKED',
   canStartReview = 'CAN_START_REVIEW',
+  canReStartReview = 'CAN_RE_START_REVIEW', // User for second review (for consolidator)
   canContinueLocked = 'CAN_CONTINUE_LOCKED',
+  canMakeDecision = 'CAN_MAKE_DECISION',
   canUpdate = 'CAN_UPDATE',
   unknown = 'UNKNOWN',
 }
@@ -421,16 +474,17 @@ interface SortQuery {
 }
 
 interface StageAndStatus {
-  stage: ApplicationStage
+  stage: StageDetails
   status: ApplicationStatus
-  date: Date
+  timeStageCreated: Date
+  timeStatusCreated: Date
 }
 
 interface StageDetails {
-  number: number
   id: number
-  title: string
-  colour?: string
+  name: string
+  number: number
+  colour: string
   description?: string
 }
 
@@ -442,12 +496,14 @@ interface TemplateCategoryDetails {
 interface TemplateInList {
   id: number
   name: string
+  namePlural?: string
   code: string
   templateCategory: TemplateCategoryDetails
   permissions: PermissionPolicyType[]
   hasApplyPermission: boolean
   hasNonApplyPermissions: boolean
   filters: Filter[]
+  totalApplications: number
 }
 
 interface TemplateDetails {
@@ -455,14 +511,9 @@ interface TemplateDetails {
   name: string
   code: string
   elementsIds?: number[] // TODO: Change to not optional after re-structure
+  elementsDefaults?: EvaluatorNode[]
   sections?: SectionDetails[] // TODO: Change to not optional after re-structure
   startMessage?: string
-}
-
-interface TemplateElementState extends ElementBase {
-  isRequiredExpression: EvaluatorNode
-  isVisibleExpression: EvaluatorNode
-  isEditableExpression: EvaluatorNode
 }
 
 interface TemplatePermissions {
@@ -514,6 +565,7 @@ interface LoginPayload {
   JWT: string
   templatePermissions: TemplatePermissions
   orgList?: OrganisationSimple[]
+  isAdmin: boolean
 }
 
 interface UseGetReviewStructureForSectionProps {
@@ -526,4 +578,182 @@ interface UseGetReviewStructureForSectionProps {
 interface SortQuery {
   sortColumn?: string
   sortDirection?: 'ascending' | 'descending'
+}
+
+// *****************
+// OUTCOMES DISPLAY
+// *****************
+
+export type OutcomeDisplay = {
+  code: string
+  detailColumnName: string
+  pluralTableName: string
+  tableName: string
+  title: string
+}
+
+export type OutcomeDisplays = OutcomeDisplay[]
+
+export type TableDisplay = {
+  columnName: string
+  isTextColumn: boolean
+  title: string
+}
+
+export type TableDisplaysByCode = {
+  [code: string]: TableDisplay[]
+}
+
+export type DetailDisplay = {
+  columnName: string
+  elementTypePluginCode: string
+  isTextColumn: boolean
+  title: string
+  parameters: object
+}
+
+export type DetailDisplaysByCode = {
+  [code: string]: DetailDisplay[]
+}
+
+export type GenericNode = {
+  [field: string]: object | string
+}
+
+export type TableQueryResult = { [queryName: string]: { nodes: GenericNode[] } }
+
+export type TableDisplayQuery = {
+  query: DocumentNode
+  getNodes: (queryResult: TableQueryResult) => GenericNode[]
+}
+
+export type TableDisplaysQueryByCode = {
+  [code: string]: TableDisplayQuery
+}
+
+export type DetailQueryResult = { [queryName: string]: GenericNode }
+
+export type DetailDisplayQuery = {
+  query: DocumentNode
+  getNode: (queryResult: DetailQueryResult) => GenericNode
+}
+
+export type DetailDisplayQueryByCode = {
+  [code: string]: DetailDisplayQuery
+}
+
+export type ApplicationLinkQueryResult = {
+  [tableName: string]: {
+    [applicationJoin: string]: {
+      nodes: {
+        application: Application
+      }[]
+    }
+  }
+}
+
+export type ApplicationLinkQuery = {
+  query: DocumentNode
+  getApplications: (queryResult: ApplicationLinkQueryResult) => {
+    name: string
+    serial: string
+    templateName: string
+  }[]
+}
+
+export type ApplicationLinkQueryByCode = {
+  [code: string]: ApplicationLinkQuery
+}
+
+export type OutcomeCountQueryResult = {
+  [tableName: string]: { totalCount: number }
+}
+
+export type OutcomeCountQuery = {
+  query: DocumentNode
+  getCount: (queryResult: OutcomeCountQueryResult) => number
+}
+
+export type OutcomeCountQueryByCode = {
+  [code: string]: OutcomeCountQuery
+}
+
+export type OutcomeDisplaysStructure = {
+  outcomeDisplays: OutcomeDisplays
+  tableDisplaysByCode: TableDisplaysByCode
+  detailDisplaysByCode: DetailDisplaysByCode
+  tableDisplayQueryByCode: TableDisplaysQueryByCode
+  detailDisplayQueryByCode: DetailDisplayQueryByCode
+  outcomeCountQueryByCode: OutcomeCountQueryByCode
+  applicationLinkQueryByCode: ApplicationLinkQueryByCode
+}
+
+// *****************
+// LIST FILTERS
+// *****************
+
+export type FilterTypeMethod = (filterKey: string, options?: FilterTypeOptions) => object
+
+export type FilterTypeDefinitions = {
+  [filterType in
+    | 'number'
+    | 'date'
+    | 'boolean'
+    | 'equals'
+    | 'enumList'
+    | 'searchableListIn'
+    | 'searchableListInArray'
+    | 'staticList'
+    | 'search']: FilterTypeMethod
+}
+
+export type FilterTypes = keyof FilterTypeDefinitions
+
+export type FilterListQueryResult = { [queryName: string]: any }
+export type FilterListResultExtractor = (props: FilterListQueryResult) => {
+  list: string[]
+  totalCount: number
+}
+
+export type GetFilterListQueryResult = {
+  query: DocumentNode
+  variables: object
+  resultExtractor: FilterListResultExtractor
+}
+
+export type GetFilterListQuery = (props: {
+  searchValue?: string
+  filterListParameters?: any
+}) => GetFilterListQueryResult
+
+export type NamedDates = {
+  [key: string]: { getDates: () => [DateTime, DateTime]; title: string }
+}
+export type BooleanFilterMapping = { true: string; false: string }
+
+export type FilterTypeOptions = {
+  // For know enum list
+  enumList?: string[]
+  // For option list that requires api query
+  getListQuery?: GetFilterListQuery
+  // Or statement instead of columnOrIdentifier
+  orFieldNames?: string[]
+  // Substitue columnOrIdentifier
+  substituteColumnName?: string
+  // For named dates
+  namedDates?: NamedDates
+  // For boolean to show on and of criteria
+  booleanMapping?: BooleanFilterMapping
+}
+
+export type FilterDefinition = {
+  type: FilterTypes
+  // Empty or undefined title will be excluded from generic fitler UI display (ListFilters)
+  title?: string
+  options?: FilterTypeOptions
+}
+
+export type FilterDefinitions = {
+  // columnOrIdentifier as graphQL filter key unless orFieldNames or substituteColumnName is present in filter options
+  [columnOrIdentifier: string]: FilterDefinition
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FullStructure } from '../types'
+import { EvaluationOptions, FullStructure } from '../types'
 import {
   ApplicationResponse,
   ApplicationResponseStatus,
@@ -12,9 +12,9 @@ import {
   addElementsById,
   addSortedSectionsAndPages,
   addApplicationResponses,
-  addApplicantChangeRequestStatusToElement,
+  addChangeRequestForApplicant,
   generateApplicantChangesRequestedProgress,
-  generateResponsesProgress,
+  generateApplicantResponsesProgress,
 } from '../helpers/structure'
 
 interface UseGetApplicationStructureProps {
@@ -24,6 +24,7 @@ interface UseGetApplicationStructureProps {
   firstRunValidation?: boolean
   shouldCalculateProgress?: boolean
   shouldGetDraftResponses?: boolean
+  forceRun?: boolean
 }
 
 const useGetApplicationStructure = ({
@@ -33,6 +34,7 @@ const useGetApplicationStructure = ({
   firstRunValidation = true,
   shouldCalculateProgress = true,
   shouldGetDraftResponses = true,
+  forceRun = false,
 }: UseGetApplicationStructureProps) => {
   const {
     info: { serial },
@@ -48,8 +50,6 @@ const useGetApplicationStructure = ({
   const [lastRefetchedTimestamp, setLastRefetchedTimestamp] = useState<number>(0)
   const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState<number>(0)
 
-  const networkFetch = true // To-DO: make this conditional
-
   const { data, error } = useGetAllResponsesQuery({
     variables: {
       serial,
@@ -58,7 +58,7 @@ const useGetApplicationStructure = ({
         : [ApplicationResponseStatus.Submitted],
     },
     skip: !serial,
-    fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
+    fetchPolicy: 'network-only',
   })
 
   // TODO - might need a use effect if serial is changes (navigated to another application from current page)
@@ -78,22 +78,21 @@ const useGetApplicationStructure = ({
       minRefetchTimestampForRevalidation > lastRefetchedTimestamp
     const shouldRevalidateThisRun = shouldRevalidate && !shouldRevalidationWaitForRefetech
 
-    if (isDataUpToDate && !shouldRevalidateThisRun) return
+    if (isDataUpToDate && !shouldRevalidateThisRun && !forceRun) return
 
     const shouldDoValidation = shouldRevalidateThisRun || firstRunProcessValidation
     const applicationResponses = data?.applicationBySerial?.applicationResponses
       ?.nodes as ApplicationResponse[]
 
+    const evaluationOptions: EvaluationOptions = ['isEditable', 'isVisible', 'isRequired']
+
+    if (shouldDoValidation) evaluationOptions.push('isValid')
+
     addEvaluatedResponsesToStructure({
       structure,
       applicationResponses,
       currentUser,
-      evaluationOptions: {
-        isEditable: true,
-        isVisible: true,
-        isRequired: true,
-        isValid: shouldDoValidation,
-      },
+      evaluationOptions,
     }).then((newStructure: FullStructure) => {
       if (shouldDoValidation) {
         newStructure.lastValidationTimestamp = Date.now()
@@ -106,12 +105,12 @@ const useGetApplicationStructure = ({
       addApplicationResponses(newStructure, applicationResponses)
 
       if (shouldCalculateProgress) {
-        addApplicantChangeRequestStatusToElement(newStructure)
+        addChangeRequestForApplicant(newStructure)
 
         generateApplicantChangesRequestedProgress(newStructure)
 
         // generateResponseProgress uses change statuses calculated in generateApplicantChangesRequestedProgress
-        generateResponsesProgress(newStructure)
+        generateApplicantResponsesProgress(newStructure)
 
         // For change requests we treat application as not linear
         newStructure.info.isLinear =
@@ -120,10 +119,15 @@ const useGetApplicationStructure = ({
 
       setLastProcessedTimestamp(Date.now())
       setFirstRunProcessValidation(false)
-
       setFullStructure(newStructure)
     })
-  }, [lastRefetchedTimestamp, shouldRevalidate, minRefetchTimestampForRevalidation, error])
+  }, [
+    lastRefetchedTimestamp,
+    shouldRevalidate,
+    minRefetchTimestampForRevalidation,
+    error,
+    structure,
+  ])
 
   return {
     fullStructure,

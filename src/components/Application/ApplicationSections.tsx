@@ -115,7 +115,7 @@ const SectionEdit: React.FC<SectionEditProps> = ({ sectionCode, resumeApplicatio
     <Icon
       link
       inverted
-      name="pencil square"
+      name="edit"
       size="large"
       color="blue"
       onClick={() => resumeApplication({ sectionCode, pageNumber: 1 })}
@@ -151,7 +151,7 @@ const ActionsChangesRequest: React.FC<ActionisChangesRequestProps> = (props) => 
     return (
       <Button
         color="blue"
-        content={`${strings.LABEL_APPLICATION_UPDATE} (${totalRemainingUpdate})`}
+        content={`${strings.LABEL_RESPONSE_UPDATE} (${totalRemainingUpdate})`}
         onClick={() =>
           isDraftStatus
             ? resumeApplication({

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Grid, Icon, Message, Popup } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import { postRequest as attemptLogin } from '../../utils/helpers/fetchMethods'
-import config from '../../config.json'
+import config from '../../config'
 import { useGetUsersQuery } from '../../utils/generated/graphql'
 import { User } from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
@@ -38,9 +38,9 @@ const UserSelection: React.FC = () => {
     }
 
     // Organisation login (auto-select first in list)
-    const { JWT, user, templatePermissions, orgList } = loginResult
+    const { JWT, user, templatePermissions, orgList, isAdmin } = loginResult
     if (orgList.length === 0) {
-      await onLogin(JWT, user, templatePermissions)
+      await onLogin(JWT, user, templatePermissions, orgList, isAdmin)
       return
     }
     const selectedOrg = orgList[0]
@@ -56,7 +56,13 @@ const UserSelection: React.FC = () => {
       return
     }
 
-    await onLogin(verifyOrgResult.JWT, verifyOrgResult.user, verifyOrgResult.templatePermissions)
+    await onLogin(
+      verifyOrgResult.JWT,
+      verifyOrgResult.user,
+      verifyOrgResult.templatePermissions,
+      orgList,
+      verifyOrgResult.isAdmin
+    )
   }
 
   return (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Dropdown, Grid, Label, Message } from 'semantic-ui-react'
 import strings from '../../utils/constants'
-import { ReviewAssignmentStatus } from '../../utils/generated/graphql'
+import { ReviewAssignmentStatus, TemplateElementCategory } from '../../utils/generated/graphql'
 import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 
@@ -15,7 +15,7 @@ type AssignmentSectionRowProps = {
 }
 // Component renders options calculated in getAssignmentOptions, and will execute assignment mutation on drop down change
 const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
-  const { structure, sectionCode, assignments } = props
+  const { assignments, sectionCode, structure } = props
   const [assignmentError, setAssignmentError] = useState(false)
 
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
@@ -45,7 +45,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     <Grid className="section-single-row-box-container">
       <Grid.Row>
         <Grid.Column className="centered-flex-box-row">
-          <Label className="simple-label" content={strings.LABEL_REVIEWED_BY} />
+          <Label className="simple-label" content={strings.LABEL_REVIEWER} />
           <Dropdown
             className="reviewer-dropdown"
             options={options}
@@ -66,7 +66,11 @@ const getOptionFromAssignment = ({ reviewer, isCurrentUserReviewer }: Assignment
     : `${reviewer.firstName || ''} ${reviewer.lastName || ''}`,
 })
 
-const getAssignmentOptions = ({ assignments, sectionCode }: AssignmentSectionRowProps) => {
+const getAssignmentOptions = ({
+  assignments,
+  sectionCode,
+  structure,
+}: AssignmentSectionRowProps) => {
   const currentSectionAssignable = assignments.filter(
     ({ assignableSectionRestrictions }) =>
       assignableSectionRestrictions.length === 0 ||
@@ -79,11 +83,19 @@ const getAssignmentOptions = ({ assignments, sectionCode }: AssignmentSectionRow
 
   // Dont' want to render assignment section row if they have no actions
   if (currentUserAssignable.length === 0) return null
+  const elements = Object.values(structure?.elementsById || {})
+  const numberOfAssignableElements = elements.filter(
+    ({ element }) =>
+      (!sectionCode || element.sectionCode === sectionCode) &&
+      element.category === TemplateElementCategory.Question
+  ).length
+
+  if (numberOfAssignableElements === 0) return null
 
   // This could differ from currentUserAssignable list because self assignable assignments don't have assigner
   const currentlyAssigned = assignments.find(
     (assignment) =>
-      assignment.status === ReviewAssignmentStatus.Assigned &&
+      assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned &&
       matchAssignmentToSection(assignment, sectionCode)
   )
 

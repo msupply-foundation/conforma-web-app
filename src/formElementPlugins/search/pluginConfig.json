@@ -1,0 +1,13 @@
+{
+  "isCore": true,
+  "code": "search",
+  "displayName": "Search Field",
+  "parameterLoadingValues": {
+    "label": "Loading...",
+    "description": "",
+    "options": ["Loading..."]
+  },
+  "internalParameters": ["source"],
+  "//": "categories types: 'Input'|'Informative'",
+  "category": "Input"
+}

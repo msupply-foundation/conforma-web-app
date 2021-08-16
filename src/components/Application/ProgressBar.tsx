@@ -4,7 +4,7 @@ const PIXELS_PER_PAGE = 27.8
 const TOP_PAD = 5
 const BOTTOM_PAD = 10
 
-import React from 'react'
+import React, { RefObject } from 'react'
 import { Accordion, Container, Grid, Icon, List, Sticky, Progress } from 'semantic-ui-react'
 import strings from '../../utils/constants'
 import styleConstants from '../../utils/data/styleConstants'
@@ -23,6 +23,7 @@ interface ProgressAreaProps {
   structure: FullStructure
   requestRevalidation: MethodRevalidate
   strictSectionPage: SectionAndPage | null
+  context: RefObject<HTMLDivElement>
 }
 
 interface ProgressBarProps {
@@ -40,6 +41,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
   structure,
   requestRevalidation,
   strictSectionPage,
+  context,
 }) => {
   const {
     info: { isLinear },
@@ -227,6 +229,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
       id="application-progress"
       offset={styleConstants.HEADER_OFFSET}
       className="hide-on-mobile"
+      context={context}
     >
       <Grid className="progress-row">
         <Grid.Column

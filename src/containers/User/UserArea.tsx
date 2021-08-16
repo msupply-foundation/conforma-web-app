@@ -1,63 +1,196 @@
-import React from 'react'
-import { Button, Container, Icon, Image, List } from 'semantic-ui-react'
+import React, { SyntheticEvent } from 'react'
+import { Button, Container, Image, List, Dropdown } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
+import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { Link } from 'react-router-dom'
 import strings from '../../utils/constants'
-import { User } from '../../utils/types'
-import config from '../../config.json'
+import { OrganisationSimple, User, LoginPayload, TemplateInList } from '../../utils/types'
+import useGetOutcomeDisplays from '../../utils/hooks/useGetOutcomeDisplays'
+import useListTemplates from '../../utils/hooks/useListTemplates'
+import { useRouter } from '../../utils/hooks/useRouter'
+import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
+import { OutcomeDisplay } from '../../utils/generated/graphql'
+const brandLogo = require('../../../images/brand_logo.png').default
 
 const UserArea: React.FC = () => {
   const {
-    userState: { currentUser },
+    userState: { currentUser, orgList, templatePermissions },
+    onLogin,
   } = useUserState()
+  const {
+    templatesData: { templates },
+  } = useListTemplates(templatePermissions, false)
+
+  const { displays } = useGetOutcomeDisplays()
 
   if (!currentUser || currentUser?.username === strings.USER_NONREGISTERED) return null
 
   return (
-    <Container id="user-area">
+    <Container id="user-area" fluid>
+      <BrandArea />
       <div id="user-area-left">
-        <MainMenuBar />
-        {currentUser?.organisation?.orgName && <OrgSelector user={currentUser} />}
+        <MainMenuBar
+          templates={templates}
+          outcomes={(displays?.outcomeDisplays as OutcomeDisplay[]) || []}
+        />
+        {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
       <UserMenu user={currentUser as User} />
     </Container>
   )
 }
+interface MainMenuBarProps {
+  templates: TemplateInList[]
+  outcomes: OutcomeDisplay[]
+}
+const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
+  const { push, pathname } = useRouter()
+  const {
+    userState: { isAdmin },
+  } = useUserState()
+  const outcomeOptions = outcomes.map(({ code, title, tableName }): any => ({
+    key: code,
+    text: title,
+    value: tableName,
+  }))
 
-const MainMenuBar: React.FC = () => {
-  // TO-DO: Logic for deducing what should show in menu bar
-  // Probably passed in as props
+  const handleOutcomeChange = (_: SyntheticEvent, { value }: any) => {
+    push(`/outcomes/${value}`)
+  }
+
+  const templateOptions = templates.map((template) => ({
+    key: template.code,
+    text: template.name,
+    value: template.code,
+  }))
+
+  const handleTemplateChange = (_: SyntheticEvent, { value }: any) => {
+    push(`/applications?type=${value}`)
+  }
+
+  const getSelectedLinkClass = (link: string) => {
+    const basepath = pathname.split('/')?.[1]
+    return link === basepath ? 'selected-link' : ''
+  }
+
   return (
     <div id="menu-bar">
       <List horizontal>
-        <List.Item>
-          <Link to="/" className="selected-link">
-            {/* <Icon name="home" /> */}
-            {strings.MENU_ITEM_DASHBOARD}
-          </Link>
+        <List.Item className={getSelectedLinkClass('')}>
+          <Link to="/">{strings.MENU_ITEM_DASHBOARD}</Link>
         </List.Item>
-        <List.Item>
-          <Link to="/layout">Layout helpers</Link>
-        </List.Item>
-        <List.Item>
-          <Link to="/application/new?type=UserEdit">Edit User Account</Link>
-        </List.Item>
+        {templateOptions.length > 0 && (
+          <List.Item className={getSelectedLinkClass('applications')}>
+            <Dropdown
+              text={strings.MENU_ITEM_APPLICATION_LIST}
+              options={templateOptions}
+              onChange={handleTemplateChange}
+            />
+          </List.Item>
+        )}
+        {outcomeOptions.length > 1 && (
+          <List.Item className={getSelectedLinkClass('outcomes')}>
+            <Dropdown
+              text={strings.MENU_ITEM_OUTCOMES}
+              options={outcomeOptions}
+              onChange={handleOutcomeChange}
+            />
+          </List.Item>
+        )}
+        {isAdmin && (
+          <List.Item className={getSelectedLinkClass('admin')}>
+            <Dropdown text={strings.MENU_ITEM_ADMIN_CONFIG}>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  text={strings.MENU_ITEM_ADMIN_TEMPLATES}
+                  onClick={() => push('/admin/templates')}
+                />
+                <Dropdown.Item
+                  text={strings.MENU_ITEM_ADMIN_LOOKUP_TABLES}
+                  onClick={() => push('/admin/lookup-tables')}
+                />
+                <Dropdown.Item
+                  text={strings.MENU_ITEM_ADMIN_OUTCOME_CONFIG}
+                  onClick={() => push('/admin/outcomes')}
+                />
+                <Dropdown.Item
+                  text={strings.MENU_ITEM_ADMIN_PERMISSIONS}
+                  onClick={() => push('/admin/permissions')}
+                />
+                <Dropdown.Item
+                  text={strings.MENU_ITEM_ADMIN_PLUGINS}
+                  onClick={() => push('/admin/plugins')}
+                />
+                <Dropdown.Item
+                  text={strings.MENU_ITEM_ADMIN_LOCALISATION}
+                  onClick={() => push('/admin/localisations')}
+                />
+              </Dropdown.Menu>
+            </Dropdown>
+          </List.Item>
+        )}
       </List>
     </div>
   )
 }
 
-const OrgSelector: React.FC<{ user: User }> = ({ user }) => {
-  // TO-DO: Make into Dropdown so Org can be selected
+const BrandArea: React.FC = () => {
+  return (
+    <div id="brand-area" className="hide-on-mobile">
+      <Image src={brandLogo} />
+      <div>
+        <Link to="/">
+          <h2 className="brand-area-text">{strings.APP_NAME}</h2>
+          <h3 className="brand-area-text">{strings.APP_NAME_SUBHEADER}</h3>
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: Function }> = ({
+  user,
+  orgs,
+  onLogin,
+}) => {
+  const LOGIN_AS_NO_ORG = 0 // Ensures server returns no organisation
+
+  const JWT = localStorage.getItem('persistJWT') as string
+
+  const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
+    await attemptLoginOrg({ orgId, JWT, onLoginOrgSuccess })
+  }
+  const onLoginOrgSuccess = async ({
+    user,
+    orgList,
+    templatePermissions,
+    JWT,
+    isAdmin,
+  }: LoginPayload) => {
+    await onLogin(JWT, user, templatePermissions, orgList, isAdmin)
+  }
+  const dropdownOptions = orgs.map(({ orgId, orgName }) => ({
+    key: orgId,
+    text: orgName,
+    value: orgId,
+  }))
+  dropdownOptions.push({
+    key: LOGIN_AS_NO_ORG,
+    text: strings.LABEL_NO_ORG,
+    value: LOGIN_AS_NO_ORG,
+  })
   return (
     <div id="org-selector">
       {user?.organisation?.logoUrl && (
         <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST)} />
       )}
       <div>
-        {user?.organisation?.orgName || ''}
-        <Icon size="small" name="chevron down" />
+        <Dropdown
+          text={user?.organisation?.orgName || strings.LABEL_NO_ORG}
+          options={dropdownOptions}
+          onChange={handleChange}
+        ></Dropdown>
       </div>
     </div>
   )
@@ -65,14 +198,21 @@ const OrgSelector: React.FC<{ user: User }> = ({ user }) => {
 
 const UserMenu: React.FC<{ user: User }> = ({ user }) => {
   const { logout } = useUserState()
+  const { push } = useRouter()
   return (
     <div id="user-menu">
-      <Button animated onClick={() => logout()}>
+      <Button>
         <Button.Content visible>
-          {user?.firstName || ''} {user?.lastName || ''}
-        </Button.Content>
-        <Button.Content hidden>
-          <Icon name="log out" />
+          <Dropdown text={`${user?.firstName || ''} ${user?.lastName || ''}`}>
+            <Dropdown.Menu>
+              <Dropdown.Item
+                icon="edit"
+                text={strings.MENU_EDIT_USER}
+                onClick={() => push('/application/new?type=UserEdit')}
+              />
+              <Dropdown.Item icon="log out" text={strings.MENU_LOGOUT} onClick={() => logout()} />
+            </Dropdown.Menu>
+          </Dropdown>
         </Button.Content>
       </Button>
     </div>

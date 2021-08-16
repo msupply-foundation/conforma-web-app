@@ -30,7 +30,7 @@ const ApplicationPageWrapper: React.FC<ApplicationProps> = ({ structure }) => {
   } = useRouter()
 
   const {
-    state: { isLastElementUpdateProcessed, elementUpdatedTimestamp, wasElementChanged },
+    state: { latestChangedElementUpdateTimestamp },
   } = useFormElementUpdateTracker()
 
   const [strictSectionPage, setStrictSectionPage] = useState<SectionAndPage | null>(null)
@@ -40,26 +40,20 @@ const ApplicationPageWrapper: React.FC<ApplicationProps> = ({ structure }) => {
     lastRevalidationRequest: Date.now(),
   })
 
-  const shouldRevalidate = isLastElementUpdateProcessed && revalidationState.shouldProcessValidation
-  const minRefetchTimestampForRevalidation =
-    shouldRevalidate && wasElementChanged ? elementUpdatedTimestamp : 0
-
   const { error, fullStructure } = useGetApplicationStructure({
     structure,
-    shouldRevalidate,
-    minRefetchTimestampForRevalidation,
+    shouldRevalidate: revalidationState.shouldProcessValidation,
+    minRefetchTimestampForRevalidation: latestChangedElementUpdateTimestamp,
   })
 
   /* Method to pass to progress bar, next button and submit button to cause revalidation before action can be proceeded
      Should always be called on submit, but only be called on next or progress bar navigation when isLinear */
-  // TODO may rename if we want to display loading modal ?
   const requestRevalidation: MethodRevalidate = (methodToCall) => {
     setRevalidationState({
       methodToCallOnRevalidation: methodToCall,
       shouldProcessValidation: true,
       lastRevalidationRequest: Date.now(),
     })
-    // TODO show loading modal ?
   }
 
   // Revalidation Effect
@@ -78,7 +72,6 @@ const ApplicationPageWrapper: React.FC<ApplicationProps> = ({ structure }) => {
         methodToCallOnRevalidation: null,
         shouldProcessValidation: false,
       })
-      // TODO hide loading modal
     }
   }, [revalidationState, fullStructure])
 
@@ -93,6 +86,7 @@ const ApplicationPageWrapper: React.FC<ApplicationProps> = ({ structure }) => {
           structure={fullStructure}
           requestRevalidation={requestRevalidation as MethodRevalidate}
           strictSectionPage={strictSectionPage}
+          isValidating={revalidationState.shouldProcessValidation}
         />
       </Route>
       <Route exact path={`${path}/summary`}>
