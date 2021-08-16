@@ -82,8 +82,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const [number, text] = parseInput(textValue, numberFormatter, simple, prefix, suffix)
     const validation = customValidate(number, type, minValue, maxValue)
     setInternalValidation(validation)
-    if (validation.isValid && !(number === NaN || number === null))
-      onSave({ text, number, type, currency, locale })
+    if (validation.isValid) onSave({ text, number, type, currency, locale })
     else onSave(null)
     setTextValue(text)
   }
@@ -137,7 +136,7 @@ const parseInput = (
   if (!textInput) return [null, null]
   // Strip out any text that isn't a digit, "-" or "." to create the number
   const rawDigits = textInput?.replace(/[^\d\.\-]/g, '')
-  if (rawDigits === '') return [null, null]
+  if (rawDigits === '') return [null, textInput]
   const number: number = Number(rawDigits)
   const text: string = simple
     ? String(number)
@@ -151,7 +150,8 @@ const customValidate = (
   minValue: number = -Infinity,
   maxValue: number = Infinity
 ): { isValid: boolean; validationMessage?: string } => {
-  if (number === NaN || number === null) return { isValid: true }
+  if (number === NaN || number === null)
+    return { isValid: false, validationMessage: strings.ERROR_NOT_NUMBER }
   if (type === NumberType.INTEGER && !Number.isInteger(number))
     return {
       isValid: false,
