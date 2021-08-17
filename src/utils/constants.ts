@@ -178,7 +178,7 @@ export default {
     'There are issues with some of the information you supplied. Please update and resubmit the form.',
   SUBTITLE_APPLICATION_SUMMARY: 'Please review each section before submitting form',
   SUBTITLE_REVIEW: 'Please complete the sections that have been assigned to you',
-  SUBTITLE_SUBMISSION_STEPS: 'It will be going through the following stages before approval',
+  SUBTITLE_SUBMISSION_STEPS: 'Stages for this application:',
   USER_NONREGISTERED: 'nonRegistered',
   VALIDATION_REQUIRED_ERROR: 'Field is required',
   [Decision.ListOfQuestions]: 'List Of Questions',
