@@ -11,6 +11,7 @@ import {
   getTypedEvaluationAsString,
 } from './typeHelpers'
 import { EvaluationType, ParseAndRenderEvaluationType, RenderEvaluationElementType } from './types'
+import EvaluationOutputType from './EvaluationOutputType'
 
 export const renderEvaluation: ParseAndRenderEvaluationType = (
   evaluation,
@@ -94,8 +95,15 @@ export const renderEvaluationElement: RenderEvaluationElementType = (
                 setSelected={onSelect}
                 title="operator"
               />
+              <ComponentLibrary.Selector
+                selections={selections}
+                selected={gui.selector}
+                setSelected={onSelect}
+                title="operator"
+              />
               <Evaluate typedEvaluation={typedEvaluation} evaluatorParamers={evaluatorParamers} />
             </ComponentLibrary.FlexRow>
+            <EvaluationOutputType evaluation={typedEvaluation} setEvaluation={setEvaluation} />
             {gui.render(typedEvaluation, setEvaluation, ComponentLibrary, evaluatorParamers)}
           </ComponentLibrary.OperatorContainer>
         </ComponentLibrary.FlexRow>
