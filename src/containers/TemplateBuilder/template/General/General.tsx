@@ -15,6 +15,7 @@ import Category from './Categories'
 import Filters from './Filters'
 import { IconButton } from '../../shared/IconButton'
 import MessagesConfig from './MessagesConfig'
+import CheckboxIO from '../../shared/CheckboxIO'
 
 const General: React.FC = () => {
   const { updateTemplate } = useOperationState()
@@ -73,12 +74,29 @@ const General: React.FC = () => {
           setText={(text) => updateTemplate(template.id, { name: text })}
         />
       </div>
+      <div className="longer">
+        <TextIO
+          text={String(template.namePlural)}
+          disabledMessage="Can only change code of draft template"
+          title="Name Plural"
+          setText={(text) => updateTemplate(template.id, { namePlural: text })}
+        />
+      </div>
       <TextIO
         text={String(template.code)}
         disabled={!template.isDraft}
         disabledMessage="Can only change code of draft template"
         title="Code"
         setText={(text) => updateTemplate(template.id, { code: text })}
+      />
+      <CheckboxIO
+        title="Linear"
+        value={!!template?.isLinear}
+        setValue={(checked) => {
+          updateTemplate(template.id, { isLinear: checked })
+        }}
+        disabled={!template.isDraft}
+        disabledMessage="Can only change code of draft template"
       />
 
       <Category />
