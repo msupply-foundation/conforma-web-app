@@ -16,6 +16,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - [List Builder](#list-builder)
   - [Search](#search)
   - [Date Picker](#date-picker)
+  - [Number](#number)
   - [Page Break](#page)
 
 <a name="element-fields"/>
@@ -36,6 +37,7 @@ These fields are common to all element types and have their own field in the `te
   - default: `{"value": true}`
 - **is_editable**: `JSON` -- dynamic query determining whether can be edited (Would only be false in rare circumstances)
   - default: `{"value": true}`
+- **defaultValue**: `JSON` - the default value for the response. Can be a dynamic query. Note: several plugins have their own "default" parameter, which may be easier to use in many situations but doesn't support dynamic lookups. If you need a dynamic value, use this field. For this field, the returned object must conform to the object shape for the respective question type (i.e. it needs a `text` field) -- see individual element types for response shape
 - **validation**: `JSON` -- a dynamic expression for checking if the user's response is a valid input.
   - default: `{"value": true}` or just `true`
 - **validation_message**: `string` -- the message that shows in the UI when validation fails.  
@@ -557,6 +559,42 @@ Uses [React Semantic-UI Datepickers](https://www.npmjs.com/package/react-semanti
 ```
 
 Note, if response is a single date (i.e. not a range), only `start` will be specified.
+
+---
+
+<a name="number"/>
+
+### Number
+
+- **type/code**: `number`
+- **category**: `Question`
+
+_Input for numeric fields_
+
+#### Input parameters
+
+- **label** / **description** / **placeholder** / **maxWidth**: `string` -- as above
+- **default** -- default value (Note: if you require a dynamic value for "default", please use the "defaultValue" field on `template_element`)
+- **type** -- `enum` -- either "integer" or "float" (default: "integer")
+- **simple** -- `boolean` (default: `true`) If `true`, the input field will always show only a non-formatted version of the number (i.e. "1000", not "1,000"), but it will have a "stepper" which can be clicked to increment the number up and down.
+- **minValue** -- minimum allowed value (default: no limit)
+- **maxValue** -- maximum allowed value (default: no limit)
+- **step** -- `number` (default: `1`) If `simple == true` (above), the `step` value specifies the amount the number will be incremented or decremented by when using the stepper.
+  **NOTE**: The parameters below are only relevant is `simple == false` (above)
+- **locale** -- `string` specifies the international "locale" code (e.g `'ja-JP'`) for displaying the calendar in local format. Default is the local setting.
+- **currency** -- `string` If specified, number will be formatted as a currency value (e.g. $4.95). Should be specified in ISO4217 country code format (e.g. "USD", "JPY") See: [https://www.iban.com/currency-codes](https://www.iban.com/currency-codes)
+- **maxSignificantDigits** -- `number` If specified, number will be rounded to the specified number of significant figures
+- **prefix** / **suffix** -- `string` If specified, formatted number will include these values in the string. Useful if you want to define units with the input number (e.g. `12 km`)
+
+#### Response type
+
+```
+{
+  text: <Formatted version of number (as specifed in parameters)>
+  number: <number>
+  type: <integer | float>
+}
+```
 
 ---
 
