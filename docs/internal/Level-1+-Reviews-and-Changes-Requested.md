@@ -25,7 +25,7 @@ The aim of this page is to outline the structure changes and flows:
 
 #### Consolidation
 
-- There is just one specific progress for a consolidation of lower level reviews (`consolidationProgress`).
+- There is just one specific progress-bar on consolidation which considers only (one or many) lower level reviews agreement/disagreements (`consolidationProgress`).
 - On the consolidation, each element `state` has:
   - the decision done in this current **consolidation** in `thisReviewLatestResponse`
   - the decision done in a previous **consolidation** (if any) in `thisReviewPreviousResponse` to track changes between this and a previous consolidation (of the same user)
@@ -48,7 +48,7 @@ The aim of this page is to outline the structure changes and flows:
 
 ## Submitting back to Applicant
 
-When a upper level reviewer disagrees with some decision on loewer level it needs to be changed by lower level on a new review.
+When a upper level reviewer disagrees with some decision on lower level it needs to be changed by lower level on a new review.
 
 The consolidation **needs to happen again and be in agreement** so it can be send to Applicant (with Reviewer Level 1 comments) in the form of `LOQ (List of Questions)`.
 
@@ -56,43 +56,45 @@ Currently we don't allow submitting directly to Applicant when there is a disagr
 
 ### Back End workflow
 
-- After `assignment` or `self-assignment` happens (more details about this in [Assignment Process](Assignment-Process.md))
-- On review level 1 **start**:
+- The following changes are done through work of [Actions plugins](https://github.com/openmsupply/application-manager-server/wiki/Triggers-and-Actions).
+
+* After `assignment` or `self-assignment` happens (more details about this in [Assignment Process](Assignment-Process.md))
+* On review level 1 **start**:
   - creates new `review` with status `DRAFT`
   - create `review_response` with status `DRAFT` for each `review_question_assignment` associated to `application_response`
   - in the list of applications the action `CONTINUE_REVIEW` is available for this user now
-- On review level 1 **submission**:
+* On review level 1 **submission**:
   - trim `review_responses` that have been created but not reviewed by user
   - update remaining `review_response` status to `SUBMITTED`
   - update `review` status to `SUBMITTED`
   - create new `review_assignment` for each user that can do reviewer level 2
   - in the list of applications the action `VIEW_REVIEW` is available for this user now (review is not editable)
-- On review level 2 **self-assign**:
+* On review level 2 **self-assign**:
   - update `review_assignment` status `ASSIGNED`
   - update other `review_assignment` status to `SELF_ASSIGNED_BY_ANOTHER` to inform front end that other reviews cannot be assigned
   - create `review_question_assignment` to each `review_response` that have latest status as `SUBMITTED` (to get only from submitted reviews)
   - in the list of applications the action `START_REVIEW` is available for this user
-- On review level 2 **start**:
+* On review level 2 **start**:
   - creates new `review` with status as `DRAFT`
   - create `review_response` with status `DRAFT` for each `review_question_assignment` associated to `review_response`
   - in the list of applications the action `CONTINUE_REVIEW` is available for this user now
-- On review level 2 **submission**:
+* On review level 2 **submission**:
   - trim `review_response` that have been created but not reviewed by user
   - update other `review_response` status to `SUBMITTED`
   - update `review` status to `SUBMITTED`
   - update reviews with associated `review_response` (by `review_response_link_id`) that have decision of `disagree` by level 2 reviewer with status to `CHANGES_REQUESTED`
   - in the list of applications the action `VIEW_REVIEW` is available for this user now (review is not editable)
   - in the list of applications the action `UPDATE_REVIEW` is available for users owner of the Review with status `CHANGES_REQUESTED`
-- On review level 1 **update**:
+* On review level 1 **update**:
   - creates new `review` with status as `DRAFT`
   - create `review_response` with status `DRAFT` duplicating lastest `review_response` with status `SUBMITTED` from this user
   - in the list of applications the action `CONTINUE_REVIEW` is available for this user now
-- On review level 1 **submission**:
+* On review level 1 **submission**:
   - trim `review_responses` that are duplicated and not changed
   - update `review` status to `SUBMITTED`
-  - update other `review` of level 2 with `review_question_assignment` associated to `review_response` status to `PENDIND`
+  - update other `review` of level 2 with `review_question_assignment` associated to `review_response` status to `PENDING`
   - in the list of applications the action `VIEW_REVIEW` is available for this user now (review is not editable)
-  - in the list of applications the action `RESTART_REVIEW` is available for users owner of the Review with status `PENDIND`
+  - in the list of applications the action `RESTART_REVIEW` is available for users owner of the Review with status `PENDING`
 
 ### Front End
 
@@ -120,7 +122,7 @@ Logic to check validation of a **changes-requested review** is:
 
 Logic to check validation is:
 
-- One `disagreeement` it will configure a **changes-quested** decision and submitted back to other reviewers
+- On `disagreeement` it will configure a **changes-quested** decision and submitted back to other reviewers
 - If all `agreement` and every decision is `conform` then the decision can only be `Conform`, the application goes to the next stage - and Applicant would receive a message informing that (not implemented).
 - If all `agreement` and some decision is `non-conform` then the decision can be either `LOQ` or and submitted back to Applicant for changes. Or decision is `Non-conform` which should change the outcome and Applicant would receive a message informing that (not implemented).
 
