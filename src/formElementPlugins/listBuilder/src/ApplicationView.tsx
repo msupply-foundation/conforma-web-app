@@ -243,10 +243,10 @@ const buildElements = async (
     category: field.category as TemplateElementCategory,
     title: field.title as string,
     parameters: field.parameters,
-    validationExpression: field?.validation || true,
+    validationExpression: !!field?.validation,
     validationMessage: field?.validationMessage || '',
-    isVisibleExpression: field?.visibilityCondition || true,
-    isEditableExpression: field?.isEditable || true,
+    isVisibleExpression: !!field?.visibilityCondition,
+    isEditableExpression: !!field?.isEditable,
     isRequiredExpression: field?.isRequired || false,
     // "Dummy" values, but required for element props:
     elementIndex: 0,

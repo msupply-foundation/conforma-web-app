@@ -45,7 +45,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     validationMessage,
   } = element
 
-  const isValid = currentResponse?.isValid || true
+  const isValid = !!currentResponse?.isValid
   const stageNumber = applicationData.current.stage.number
 
   const { setState: setUpdateTrackerState } = useFormElementUpdateTracker()

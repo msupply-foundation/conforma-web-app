@@ -73,11 +73,11 @@ const FromExistingElement: React.FC<FromExistingElementProps> = ({
         helpText: templateElement?.helpText || '',
         parameters: templateElement?.parameters || {},
         defaultValue: templateElement?.defaultValue || '',
-        visibilityCondition: templateElement?.visibilityCondition || true,
+        visibilityCondition: !!templateElement?.visibilityCondition,
         validationMessage: templateElement?.validationMessage || '',
-        isRequired: templateElement?.isRequired || false,
-        isEditable: templateElement?.isEditable || true,
-        validation: templateElement?.validation || true,
+        isRequired: !!templateElement?.isRequired,
+        isEditable: !!templateElement?.isEditable,
+        validation: !!templateElement?.validation,
       },
     }))
 
