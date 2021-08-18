@@ -66,10 +66,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
     value: tableName,
   }))
 
-  const handleOutcomeChange = (_: SyntheticEvent, { value }: any) => {
-    console.log('here', value)
-    push(`/outcomes/${value}`)
-  }
+  const handleOutcomeChange = (_: SyntheticEvent, { value }: any) => push(`/outcomes/${value}`)
 
   const templateOptions = templates
     .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Menu))
