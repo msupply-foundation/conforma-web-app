@@ -2516,8 +2516,6 @@ export type TemplateStageFilter = {
   reviewAssignmentsByStageIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateStageFilter>>;
   /** Checks for any expressions in this list. */
@@ -2554,8 +2552,6 @@ export type TemplateStageReviewLevelFilter = {
   reviewAssignmentsByLevelIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `stage` relation. */
   stage?: Maybe<TemplateStageFilter>;
-  /** A related `stage` exists. */
-  stageExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateStageReviewLevelFilter>>;
   /** Checks for any expressions in this list. */
@@ -2632,20 +2628,14 @@ export type ReviewAssignmentFilter = {
   assignerExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewer` relation. */
   reviewer?: Maybe<UserFilter>;
-  /** A related `reviewer` exists. */
-  reviewerExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `organisation` relation. */
   organisation?: Maybe<OrganisationFilter>;
   /** A related `organisation` exists. */
   organisationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `stage` relation. */
   stage?: Maybe<TemplateStageFilter>;
-  /** A related `stage` exists. */
-  stageExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** A related `template` exists. */
@@ -2725,8 +2715,6 @@ export type ReviewAssignmentAssignerJoinFilter = {
   organisationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewAssignment` relation. */
   reviewAssignment?: Maybe<ReviewAssignmentFilter>;
-  /** A related `reviewAssignment` exists. */
-  reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ReviewAssignmentAssignerJoinFilter>>;
   /** Checks for any expressions in this list. */
@@ -2817,12 +2805,8 @@ export type UserOrganisationFilter = {
   userRole?: Maybe<StringFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
-  /** A related `user` exists. */
-  userExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `organisation` relation. */
   organisation?: Maybe<OrganisationFilter>;
-  /** A related `organisation` exists. */
-  organisationExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<UserOrganisationFilter>>;
   /** Checks for any expressions in this list. */
@@ -2843,6 +2827,8 @@ export type OrganisationFilter = {
   address?: Maybe<StringFilter>;
   /** Filter by the object’s `logoUrl` field. */
   logoUrl?: Maybe<StringFilter>;
+  /** Filter by the object’s `isSystemOrg` field. */
+  isSystemOrg?: Maybe<BooleanFilter>;
   /** Filter by the object’s `userOrganisations` relation. */
   userOrganisations?: Maybe<OrganisationToManyUserOrganisationFilter>;
   /** Some related `userOrganisations` exist. */
@@ -2901,6 +2887,8 @@ export type PermissionJoinFilter = {
   organisationId?: Maybe<IntFilter>;
   /** Filter by the object’s `permissionNameId` field. */
   permissionNameId?: Maybe<IntFilter>;
+  /** Filter by the object’s `isActive` field. */
+  isActive?: Maybe<BooleanFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -2911,8 +2899,6 @@ export type PermissionJoinFilter = {
   organisationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `permissionName` relation. */
   permissionName?: Maybe<PermissionNameFilter>;
-  /** A related `permissionName` exists. */
-  permissionNameExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<PermissionJoinFilter>>;
   /** Checks for any expressions in this list. */
@@ -2995,8 +2981,6 @@ export type TemplatePermissionFilter = {
   permissionNameExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplatePermissionFilter>>;
   /** Checks for any expressions in this list. */
@@ -3153,8 +3137,6 @@ export type ApplicationFilter = {
   notificationsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -3259,12 +3241,8 @@ export type ApplicationSectionFilter = {
   templateSectionId?: Maybe<IntFilter>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `templateSection` relation. */
   templateSection?: Maybe<TemplateSectionFilter>;
-  /** A related `templateSection` exists. */
-  templateSectionExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationSectionFilter>>;
   /** Checks for any expressions in this list. */
@@ -3295,8 +3273,6 @@ export type TemplateSectionFilter = {
   applicationSectionsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateSectionFilter>>;
   /** Checks for any expressions in this list. */
@@ -3367,8 +3343,6 @@ export type TemplateElementFilter = {
   reviewResponsesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `section` relation. */
   section?: Maybe<TemplateSectionFilter>;
-  /** A related `section` exists. */
-  sectionExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateElementFilter>>;
   /** Checks for any expressions in this list. */
@@ -3450,12 +3424,8 @@ export type ApplicationResponseFilter = {
   filesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `templateElement` relation. */
   templateElement?: Maybe<TemplateElementFilter>;
-  /** A related `templateElement` exists. */
-  templateElementExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationResponseFilter>>;
   /** Checks for any expressions in this list. */
@@ -3698,12 +3668,8 @@ export type ReviewQuestionAssignmentFilter = {
   reviewResponsesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `templateElement` relation. */
   templateElement?: Maybe<TemplateElementFilter>;
-  /** A related `templateElement` exists. */
-  templateElementExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewAssignment` relation. */
   reviewAssignment?: Maybe<ReviewAssignmentFilter>;
-  /** A related `reviewAssignment` exists. */
-  reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ReviewQuestionAssignmentFilter>>;
   /** Checks for any expressions in this list. */
@@ -3854,8 +3820,6 @@ export type ReviewDecisionFilter = {
   timeUpdated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `review` relation. */
   review?: Maybe<ReviewFilter>;
-  /** A related `review` exists. */
-  reviewExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ReviewDecisionFilter>>;
   /** Checks for any expressions in this list. */
@@ -3922,8 +3886,6 @@ export type ReviewStatusHistoryFilter = {
   isCurrent?: Maybe<BooleanFilter>;
   /** Filter by the object’s `review` relation. */
   review?: Maybe<ReviewFilter>;
-  /** A related `review` exists. */
-  reviewExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ReviewStatusHistoryFilter>>;
   /** Checks for any expressions in this list. */
@@ -4102,12 +4064,8 @@ export type ApplicationStageHistoryFilter = {
   applicationStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `stage` relation. */
   stage?: Maybe<TemplateStageFilter>;
-  /** A related `stage` exists. */
-  stageExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationStageHistoryFilter>>;
   /** Checks for any expressions in this list. */
@@ -4142,8 +4100,6 @@ export type ApplicationStatusHistoryFilter = {
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationStageHistory` relation. */
   applicationStageHistory?: Maybe<ApplicationStageHistoryFilter>;
-  /** A related `applicationStageHistory` exists. */
-  applicationStageHistoryExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationStatusHistoryFilter>>;
   /** Checks for any expressions in this list. */
@@ -4446,12 +4402,8 @@ export type TemplateFilterJoinFilter = {
   filterId?: Maybe<IntFilter>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `filter` relation. */
   filter?: Maybe<FilterFilter>;
-  /** A related `filter` exists. */
-  filterExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateFilterJoinFilter>>;
   /** Checks for any expressions in this list. */
@@ -4560,8 +4512,6 @@ export type TemplateActionFilter = {
   parametersQueriesString?: Maybe<StringFilter>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateActionFilter>>;
   /** Checks for any expressions in this list. */
@@ -4666,8 +4616,9 @@ export type UiLocationListFilter = {
 
 export enum UiLocation {
   Dashboard = 'DASHBOARD',
-  Menu = 'MENU',
-  User = 'USER'
+  List = 'LIST',
+  User = 'USER',
+  Admin = 'ADMIN'
 }
 
 /** A filter to be used against many `Template` object types. All fields are combined with a logical ‘and.’ */
@@ -5069,7 +5020,7 @@ export type TemplateStage = Node & {
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   colour?: Maybe<Scalars['String']>;
-  templateId?: Maybe<Scalars['Int']>;
+  templateId: Scalars['Int'];
   /** Reads a single `Template` that is related to this `TemplateStage`. */
   template?: Maybe<Template>;
   /** Reads and enables pagination through a set of `TemplateStageReviewLevel`. */
@@ -5165,7 +5116,7 @@ export type TemplateStageReviewLevel = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  stageId?: Maybe<Scalars['Int']>;
+  stageId: Scalars['Int'];
   number: Scalars['Int'];
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
@@ -5293,13 +5244,13 @@ export type ReviewAssignment = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   assignerId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
+  reviewerId: Scalars['Int'];
   organisationId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
+  stageId: Scalars['Int'];
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -5552,8 +5503,8 @@ export type UserOrganisation = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  userId?: Maybe<Scalars['Int']>;
-  organisationId?: Maybe<Scalars['Int']>;
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
   userRole?: Maybe<Scalars['String']>;
   /** Reads a single `User` that is related to this `UserOrganisation`. */
   user?: Maybe<User>;
@@ -5570,6 +5521,7 @@ export type Organisation = Node & {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
   /** Reads and enables pagination through a set of `PermissionJoin`. */
@@ -5653,6 +5605,8 @@ export enum PermissionJoinsOrderBy {
   OrganisationIdDesc = 'ORGANISATION_ID_DESC',
   PermissionNameIdAsc = 'PERMISSION_NAME_ID_ASC',
   PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
+  IsActiveAsc = 'IS_ACTIVE_ASC',
+  IsActiveDesc = 'IS_ACTIVE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -5667,6 +5621,8 @@ export type PermissionJoinCondition = {
   organisationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `permissionNameId` field. */
   permissionNameId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `isActive` field. */
+  isActive?: Maybe<Scalars['Boolean']>;
 };
 
 /** A connection to a list of `PermissionJoin` values. */
@@ -5689,7 +5645,8 @@ export type PermissionJoin = Node & {
   id: Scalars['Int'];
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
-  permissionNameId?: Maybe<Scalars['Int']>;
+  permissionNameId: Scalars['Int'];
+  isActive?: Maybe<Scalars['Boolean']>;
   /** Reads a single `User` that is related to this `PermissionJoin`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `PermissionJoin`. */
@@ -5875,7 +5832,7 @@ export type TemplatePermission = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   permissionNameId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
+  templateId: Scalars['Int'];
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign: Scalars['Boolean'];
   canMakeFinalDecision: Scalars['Boolean'];
@@ -5979,7 +5936,7 @@ export type Application = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  templateId?: Maybe<Scalars['Int']>;
+  templateId: Scalars['Int'];
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
@@ -6167,8 +6124,8 @@ export type ApplicationSection = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  applicationId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
+  templateSectionId: Scalars['Int'];
   /** Reads a single `Application` that is related to this `ApplicationSection`. */
   application?: Maybe<Application>;
   /** Reads a single `TemplateSection` that is related to this `ApplicationSection`. */
@@ -6180,7 +6137,7 @@ export type TemplateSection = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  templateId?: Maybe<Scalars['Int']>;
+  templateId: Scalars['Int'];
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
@@ -6313,7 +6270,7 @@ export type TemplateElement = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  sectionId?: Maybe<Scalars['Int']>;
+  sectionId: Scalars['Int'];
   code: Scalars['String'];
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
@@ -6445,8 +6402,8 @@ export type ApplicationResponse = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  templateElementId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  templateElementId: Scalars['Int'];
+  applicationId: Scalars['Int'];
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
@@ -6643,8 +6600,8 @@ export type ReviewQuestionAssignment = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  templateElementId?: Maybe<Scalars['Int']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  templateElementId: Scalars['Int'];
+  reviewAssignmentId: Scalars['Int'];
   /** Reads a single `TemplateElement` that is related to this `ReviewQuestionAssignment`. */
   templateElement?: Maybe<TemplateElement>;
   /** Reads a single `ReviewAssignment` that is related to this `ReviewQuestionAssignment`. */
@@ -6796,7 +6753,7 @@ export type ReviewDecision = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  reviewId?: Maybe<Scalars['Int']>;
+  reviewId: Scalars['Int'];
   decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -6862,7 +6819,7 @@ export type ReviewStatusHistory = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  reviewId?: Maybe<Scalars['Int']>;
+  reviewId: Scalars['Int'];
   status?: Maybe<ReviewStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
@@ -7211,8 +7168,8 @@ export type ApplicationStageHistory = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  applicationId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
+  stageId: Scalars['Int'];
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
   /** Reads a single `Application` that is related to this `ApplicationStageHistory`. */
@@ -7288,7 +7245,7 @@ export type ApplicationStatusHistory = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  applicationStageHistoryId?: Maybe<Scalars['Int']>;
+  applicationStageHistoryId: Scalars['Int'];
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
@@ -7622,7 +7579,7 @@ export type ReviewAssignmentAssignerJoin = Node & {
   id: Scalars['Int'];
   assignerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewAssignmentId: Scalars['Int'];
   /** Reads a single `User` that is related to this `ReviewAssignmentAssignerJoin`. */
   assigner?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `ReviewAssignmentAssignerJoin`. */
@@ -7770,8 +7727,8 @@ export type TemplateFilterJoin = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  templateId?: Maybe<Scalars['Int']>;
-  filterId?: Maybe<Scalars['Int']>;
+  templateId: Scalars['Int'];
+  filterId: Scalars['Int'];
   /** Reads a single `Template` that is related to this `TemplateFilterJoin`. */
   template?: Maybe<Template>;
   /** Reads a single `Filter` that is related to this `TemplateFilterJoin`. */
@@ -7881,7 +7838,7 @@ export type TemplateAction = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  templateId?: Maybe<Scalars['Int']>;
+  templateId: Scalars['Int'];
   code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
   eventCode?: Maybe<Scalars['String']>;
@@ -9111,6 +9068,8 @@ export enum OrganisationsOrderBy {
   AddressDesc = 'ADDRESS_DESC',
   LogoUrlAsc = 'LOGO_URL_ASC',
   LogoUrlDesc = 'LOGO_URL_DESC',
+  IsSystemOrgAsc = 'IS_SYSTEM_ORG_ASC',
+  IsSystemOrgDesc = 'IS_SYSTEM_ORG_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -9127,6 +9086,8 @@ export type OrganisationCondition = {
   address?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `logoUrl` field. */
   logoUrl?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `isSystemOrg` field. */
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
 };
 
 /** A connection to a list of `Organisation` values. */
@@ -10244,7 +10205,9 @@ export enum UserOrgJoinsOrderBy {
   AddressAsc = 'ADDRESS_ASC',
   AddressDesc = 'ADDRESS_DESC',
   LogoUrlAsc = 'LOGO_URL_ASC',
-  LogoUrlDesc = 'LOGO_URL_DESC'
+  LogoUrlDesc = 'LOGO_URL_DESC',
+  IsSystemOrgAsc = 'IS_SYSTEM_ORG_ASC',
+  IsSystemOrgDesc = 'IS_SYSTEM_ORG_DESC'
 }
 
 /** A condition to be used against `UserOrgJoin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -10275,6 +10238,8 @@ export type UserOrgJoinCondition = {
   address?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `logoUrl` field. */
   logoUrl?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `isSystemOrg` field. */
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `UserOrgJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -10305,6 +10270,8 @@ export type UserOrgJoinFilter = {
   address?: Maybe<StringFilter>;
   /** Filter by the object’s `logoUrl` field. */
   logoUrl?: Maybe<StringFilter>;
+  /** Filter by the object’s `isSystemOrg` field. */
+  isSystemOrg?: Maybe<BooleanFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<UserOrgJoinFilter>>;
   /** Checks for any expressions in this list. */
@@ -10341,6 +10308,7 @@ export type UserOrgJoin = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
 };
 
 /** A `UserOrgJoin` edge in the connection. */
@@ -13543,6 +13511,7 @@ export type UpdatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameI
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -13772,6 +13741,7 @@ export type UpdatePermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyPatch
   id?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -13863,6 +13833,7 @@ export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFke
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -13950,6 +13921,7 @@ export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationI
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -13989,6 +13961,7 @@ export type UpdatePermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdF
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -14753,6 +14726,7 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -15849,6 +15823,7 @@ export type UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationI
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -16906,6 +16881,7 @@ export type UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentA
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -20389,6 +20365,7 @@ export type OrganisationPatch = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -20403,6 +20380,7 @@ export type ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInpu
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -21190,6 +21168,7 @@ export type ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -21992,6 +21971,7 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -22407,6 +22387,7 @@ export type PermissionJoinPatch = {
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -22417,6 +22398,7 @@ export type PermissionJoinOrganisationIdFkeyPermissionJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -22451,6 +22433,7 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -22514,6 +22497,7 @@ export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -22534,6 +22518,7 @@ export type PermissionJoinUserIdFkeyPermissionJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -22639,6 +22624,7 @@ export type PermissionJoinPermissionNameIdFkeyPermissionJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -23828,6 +23814,7 @@ export type OrganisationInput = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -24347,6 +24334,7 @@ export type PermissionJoinInput = {
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -29933,6 +29921,22 @@ export type GetReviewResponsesQuery = (
   )> }
 );
 
+export type GetSchemaColumnsQueryVariables = Exact<{
+  tableNames?: Maybe<Array<Scalars['SqlIdentifier']>>;
+}>;
+
+
+export type GetSchemaColumnsQuery = (
+  { __typename?: 'Query' }
+  & { schemaColumns?: Maybe<(
+    { __typename?: 'SchemaColumnsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'SchemaColumn' }
+      & Pick<SchemaColumn, 'columnName' | 'tableName'>
+    )>> }
+  )> }
+);
+
 export type GetTemplateQueryVariables = Exact<{
   code: Scalars['String'];
   status?: Maybe<TemplateStatus>;
@@ -31918,6 +31922,42 @@ export function useGetReviewResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetReviewResponsesQueryHookResult = ReturnType<typeof useGetReviewResponsesQuery>;
 export type GetReviewResponsesLazyQueryHookResult = ReturnType<typeof useGetReviewResponsesLazyQuery>;
 export type GetReviewResponsesQueryResult = Apollo.QueryResult<GetReviewResponsesQuery, GetReviewResponsesQueryVariables>;
+export const GetSchemaColumnsDocument = gql`
+    query getSchemaColumns($tableNames: [SqlIdentifier!]) {
+  schemaColumns(filter: {tableName: {in: $tableNames}}) {
+    nodes {
+      columnName
+      tableName
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetSchemaColumnsQuery__
+ *
+ * To run a query within a React component, call `useGetSchemaColumnsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSchemaColumnsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSchemaColumnsQuery({
+ *   variables: {
+ *      tableNames: // value for 'tableNames'
+ *   },
+ * });
+ */
+export function useGetSchemaColumnsQuery(baseOptions?: Apollo.QueryHookOptions<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>) {
+        return Apollo.useQuery<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>(GetSchemaColumnsDocument, baseOptions);
+      }
+export function useGetSchemaColumnsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>) {
+          return Apollo.useLazyQuery<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>(GetSchemaColumnsDocument, baseOptions);
+        }
+export type GetSchemaColumnsQueryHookResult = ReturnType<typeof useGetSchemaColumnsQuery>;
+export type GetSchemaColumnsLazyQueryHookResult = ReturnType<typeof useGetSchemaColumnsLazyQuery>;
+export type GetSchemaColumnsQueryResult = Apollo.QueryResult<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>;
 export const GetTemplateDocument = gql`
     query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE) {
   templates(condition: {code: $code, status: $status}) {
