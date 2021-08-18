@@ -204,11 +204,15 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
         <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST)} />
       )}
       <div>
-        <Dropdown
-          text={user?.organisation?.orgName || strings.LABEL_NO_ORG}
-          options={dropdownOptions}
-          onChange={handleChange}
-        ></Dropdown>
+        {dropdownOptions.length === 1 ? (
+          user?.organisation?.orgName || strings.LABEL_NO_ORG
+        ) : (
+          <Dropdown
+            text={user?.organisation?.orgName || strings.LABEL_NO_ORG}
+            options={dropdownOptions}
+            onChange={handleChange}
+          ></Dropdown>
+        )}
       </div>
     </div>
   )

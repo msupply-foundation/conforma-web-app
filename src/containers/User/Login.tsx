@@ -105,7 +105,7 @@ const Login: React.FC = () => {
           </Header>
         </div>
         <Header as="h2" className="centered header-space-around-medium">
-          {loginPayload
+          {loginPayload && selectedOrgId === NO_ORG_SELECTED
             ? messages.LOGIN_WELCOME.replace('%1', loginPayload.user.firstName)
             : strings.TITLE_LOGIN}
         </Header>
@@ -154,7 +154,7 @@ const Login: React.FC = () => {
               </p>
             </>
           )}
-          {loginPayload && loginPayload?.orgList && (
+          {loginPayload?.orgList && loginPayload?.orgList?.length > 1 && (
             <>
               <p>
                 <strong>{messages.LOGIN_ORG_SELECT}</strong>
