@@ -4,13 +4,19 @@ import { useUserState } from '../../contexts/UserState'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { Link } from 'react-router-dom'
 import strings from '../../utils/constants'
-import { OrganisationSimple, User, LoginPayload, TemplateInList } from '../../utils/types'
-import useGetOutcomeDisplays from '../../utils/hooks/useGetOutcomeDisplays'
+import {
+  OrganisationSimple,
+  User,
+  LoginPayload,
+  TemplateInList,
+  OutcomeDisplay,
+} from '../../utils/types'
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import { useRouter } from '../../utils/hooks/useRouter'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
-import { OutcomeDisplay, UiLocation } from '../../utils/generated/graphql'
+import OutcomeDisplaysContext, { useOutcomeDisplayState } from '../Outcomes/contexts/outcomesState'
+import { UiLocation } from '../../utils/generated/graphql'
 const brandLogo = require('../../../images/brand_logo.png').default
 
 const UserArea: React.FC = () => {
@@ -22,18 +28,15 @@ const UserArea: React.FC = () => {
     templatesData: { templates },
   } = useListTemplates(templatePermissions, false)
 
-  const { displays } = useGetOutcomeDisplays()
-
   if (!currentUser || currentUser?.username === strings.USER_NONREGISTERED) return null
 
   return (
     <Container id="user-area" fluid>
       <BrandArea />
       <div id="user-area-left">
-        <MainMenuBar
-          templates={templates}
-          outcomes={(displays?.outcomeDisplays as OutcomeDisplay[]) || []}
-        />
+        <OutcomeDisplaysContext>
+          <MainMenuBar templates={templates} />
+        </OutcomeDisplaysContext>
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
       <UserMenu
@@ -47,13 +50,16 @@ const UserArea: React.FC = () => {
 }
 interface MainMenuBarProps {
   templates: TemplateInList[]
-  outcomes: OutcomeDisplay[]
 }
-const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
+const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
   const { push, pathname } = useRouter()
   const {
     userState: { isAdmin },
   } = useUserState()
+  const outcomeDisplayState = useOutcomeDisplayState()
+  const outcomes =
+    (outcomeDisplayState?.outcomeDisplaysStructure?.outcomeDisplays as OutcomeDisplay[]) || []
+
   const outcomeOptions = outcomes.map(({ code, title, tableName }): any => ({
     key: code,
     text: title,
@@ -61,11 +67,12 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
   }))
 
   const handleOutcomeChange = (_: SyntheticEvent, { value }: any) => {
+    console.log('here', value)
     push(`/outcomes/${value}`)
   }
 
   const templateOptions = templates
-    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Menu))
+    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.List))
     .sort((t1, t2) => (t1.templateCategory.title > t2.templateCategory.title ? 1 : -1))
     .map((template) => ({
       key: template.code,
