@@ -72,7 +72,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
   }
 
   const templateOptions = templates
-    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.List))
+    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Menu))
     .sort((t1, t2) => (t1.templateCategory.title > t2.templateCategory.title ? 1 : -1))
     .map((template) => ({
       key: template.code,

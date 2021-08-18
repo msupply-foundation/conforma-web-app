@@ -22,7 +22,7 @@ const newCategory = {
   code: strings.TEMPLATE_NEW_CODE,
   icon: strings.DEFAULT_TEMPLATE_CATEGORY_ICON,
   title: strings.TEMPLATE_NEW_TITLE,
-  uiLocation: [UiLocation.List],
+  uiLocation: [UiLocation.Menu],
 }
 
 type CategoryUpdate = {
@@ -34,8 +34,7 @@ type CategoryUpdate = {
 }
 
 const uiLocationOptions: { key: UiLocation; locationName: string }[] = [
-  { key: UiLocation.List, locationName: strings.TEMPLATE_UI_MENU },
-  { key: UiLocation.Admin, locationName: strings.TEMPLATE_UI_MENU },
+  { key: UiLocation.Menu, locationName: strings.TEMPLATE_UI_MENU },
   { key: UiLocation.Dashboard, locationName: strings.TEMPLATE_UI_DASHBOARD },
   { key: UiLocation.User, locationName: strings.TEMPLATE_UI_USER },
 ]
