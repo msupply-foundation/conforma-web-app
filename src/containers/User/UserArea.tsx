@@ -144,34 +144,6 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
               options={adminOptions}
               onChange={handleAdminChange}
             />
-            {/* <Dropdown text={strings.MENU_ITEM_ADMIN_CONFIG}>
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  text={strings.MENU_ITEM_ADMIN_TEMPLATES}
-                  onClick={() => push('/admin/templates')}
-                />
-                <Dropdown.Item
-                  text={strings.MENU_ITEM_ADMIN_LOOKUP_TABLES}
-                  onClick={() => push('/admin/lookup-tables')}
-                />
-                <Dropdown.Item
-                  text={strings.MENU_ITEM_ADMIN_OUTCOME_CONFIG}
-                  onClick={() => push('/admin/outcomes')}
-                />
-                <Dropdown.Item
-                  text={strings.MENU_ITEM_ADMIN_PERMISSIONS}
-                  onClick={() => push('/admin/permissions')}
-                />
-                <Dropdown.Item
-                  text={strings.MENU_ITEM_ADMIN_PLUGINS}
-                  onClick={() => push('/admin/plugins')}
-                />
-                <Dropdown.Item
-                  text={strings.MENU_ITEM_ADMIN_LOCALISATION}
-                  onClick={() => push('/admin/localisations')}
-                />
-              </Dropdown.Menu>
-            </Dropdown> */}
           </List.Item>
         )}
       </List>
@@ -219,11 +191,13 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
     text: orgName,
     value: orgId,
   }))
-  dropdownOptions.push({
-    key: LOGIN_AS_NO_ORG,
-    text: strings.LABEL_NO_ORG,
-    value: LOGIN_AS_NO_ORG,
-  })
+  // Only add "No Org" option if user not part of "Admin" org (e.g. FDA)
+  if (!orgs.some(({ isSystemOrg }) => isSystemOrg))
+    dropdownOptions.push({
+      key: LOGIN_AS_NO_ORG,
+      text: `> ${strings.LABEL_NO_ORG_SELECT}`,
+      value: LOGIN_AS_NO_ORG,
+    })
   return (
     <div id="org-selector">
       {user?.organisation?.logoUrl && (

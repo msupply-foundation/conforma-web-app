@@ -555,6 +555,7 @@ interface OrganisationSimple {
   orgId: number
   userRole: string | null
   orgName: string
+  isSystemOrg: boolean
 }
 
 interface Organisation extends OrganisationSimple {
