@@ -42,7 +42,7 @@ const OutcomeTable: React.FC<{
             {tableData.map((row: any) => {
               return (
                 <Table.Row
-                  key={row}
+                  key={row.id}
                   className="clickable"
                   onClick={() => showDetailsForRow(row.id)}
                 >
