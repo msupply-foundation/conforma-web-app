@@ -1,6 +1,5 @@
-import { gql } from '@apollo/client'
 import { useState, useEffect } from 'react'
-import { useGetOutcomeDisplaysQuery } from '../generated/graphql'
+import { useGetOutcomeDisplaysQuery } from '../../../utils/generated/graphql'
 import {
   OutcomeDisplaysStructure,
   TableDisplaysByCode,
@@ -8,16 +7,15 @@ import {
   OutcomeDisplays,
   TableDisplaysQueryByCode,
   DetailDisplayQueryByCode,
-  TableDisplay,
-  TableQueryResult,
-  DetailDisplay,
-  DetailQueryResult,
-  OutcomeDisplay,
-  ApplicationLinkQueryResult,
   ApplicationLinkQueryByCode,
-  OutcomeCountQueryResult,
   OutcomeCountQueryByCode,
-} from '../types'
+} from '../../../utils/types'
+import {
+  buildTableQuery,
+  buildDetailsQuery,
+  buildApplicationLinkQuery,
+  buildCountQuery,
+} from './helpers'
 
 type UseGetOutcomeDisplays = () => {
   error: string
@@ -101,95 +99,6 @@ const useGetOutcomeDisplays: UseGetOutcomeDisplays = () => {
     error: error?.message || '',
     displays,
   }
-}
-
-const getColumns = (columns: { columnName: string }[], extraColumns: string[]) => {
-  const columnNamesObject: { [columnName: string]: boolean } = { id: true }
-  columns.forEach(({ columnName }) => (columnNamesObject[columnName] = true))
-  extraColumns.forEach((columnName) => (columnNamesObject[columnName] = true))
-
-  return Object.keys(columnNamesObject).join(' ')
-}
-
-const buildTableQuery = ({ pluralTableName }: OutcomeDisplay, tableColumns: TableDisplay[]) => {
-  const query = gql`
-    query ${pluralTableName} {
-      ${pluralTableName} {
-        nodes {
-          ${getColumns(tableColumns, ['id'])}
-        }
-      }
-    }
-  `
-
-  const getNodes = (queryResult: TableQueryResult) => queryResult?.[pluralTableName]?.nodes || []
-
-  return { query, getNodes }
-}
-
-const buildDetailsQuery = (
-  { tableName, detailColumnName }: OutcomeDisplay,
-  tableColumns: DetailDisplay[]
-) => {
-  const query = gql`
-    query ${tableName} ($id: Int!) {
-      ${tableName} (id: $id ) {
-        ${getColumns(tableColumns, [detailColumnName])}
-      }
-    }
-  `
-
-  const getNode = (queryResult: DetailQueryResult) => queryResult?.[tableName] || {}
-
-  return { query, getNode }
-}
-
-const buildCountQuery = ({ pluralTableName }: OutcomeDisplay) => {
-  const query = gql`
-      query ${pluralTableName}Count {
-        ${pluralTableName} (first: 0) {
-          totalCount
-        }
-      }
-  `
-
-  const getCount = (queryResult: OutcomeCountQueryResult) =>
-    queryResult?.[pluralTableName]?.totalCount || 0
-
-  return { query, getCount }
-}
-
-const buildApplicationLinkQuery = ({ tableName }: OutcomeDisplay) => {
-  const applicationJoin = `${tableName}ApplicationJoins`
-
-  const query = gql`
-    query get${tableName}Applications ($id: Int!) {
-      ${tableName}(id: $id) {
-        ${applicationJoin} {
-          nodes {
-            application {
-              name
-              serial
-              template {
-                name
-              }
-            }
-          }
-        }
-      }
-    }`
-
-  const getApplications = (queryResult: ApplicationLinkQueryResult) => {
-    const applicationJoins = queryResult?.[tableName]?.[applicationJoin]?.nodes || []
-    if (applicationJoins.length === 0) return []
-    return applicationJoins.map(({ application }) => ({
-      name: String(application.name),
-      serial: String(application.serial),
-      templateName: String(application?.template?.name),
-    }))
-  }
-
-  return { query, getApplications }
 }
 
 export default useGetOutcomeDisplays
