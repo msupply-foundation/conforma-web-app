@@ -27,6 +27,7 @@ const Login: React.FC = () => {
     orgId: LOGIN_AS_NO_ORG,
     orgName: strings.LABEL_NO_ORG_OPTION,
     userRole: null,
+    isSystemOrg: false,
   }
 
   // useEffect ensures isLoggedIn only runs on first mount, not re-renders
