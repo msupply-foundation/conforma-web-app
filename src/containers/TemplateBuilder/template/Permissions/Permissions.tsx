@@ -136,6 +136,7 @@ const Permissions: React.FC = () => {
             type={PermissionPolicyType.Assign}
             header={'Level 1 Assign'}
             stageNumber={stage?.number || 0}
+            levelNumber={1}
           />
           <PermissionNameList stageNumber={stage?.number || 0} type={PermissionPolicyType.Assign} />
           <div className="spacer-10" />
