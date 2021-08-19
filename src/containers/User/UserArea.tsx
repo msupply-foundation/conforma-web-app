@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react'
+import React, { SyntheticEvent, useEffect, useState } from 'react'
 import { Button, Container, Image, List, Dropdown } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
@@ -51,7 +51,19 @@ const UserArea: React.FC = () => {
 interface MainMenuBarProps {
   templates: TemplateInList[]
 }
+interface DropdownsState {
+  dashboard: { active: boolean }
+  templates: { active: boolean; selection: string }
+  outcomes: { active: boolean; selection: string }
+  admin: { active: boolean; selection: string }
+}
 const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
+  const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
+    dashboard: { active: false },
+    templates: { active: false, selection: '' },
+    outcomes: { active: false, selection: '' },
+    admin: { active: false, selection: '' },
+  })
   const { push, pathname } = useRouter()
   const {
     userState: { isAdmin },
@@ -59,6 +71,12 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
   const outcomeDisplayState = useOutcomeDisplayState()
   const outcomes =
     (outcomeDisplayState?.outcomeDisplaysStructure?.outcomeDisplays as OutcomeDisplay[]) || []
+
+  // Ensures the "selected" state of other dropdowns gets disabled
+  useEffect(() => {
+    const basepath = pathname.split('/')?.[1]
+    setDropDownsState((currState) => getNewDropdownsState(basepath, currState))
+  }, [pathname])
 
   const outcomeOptions = outcomes.map(({ code, title, tableName }): any => ({
     key: code,
@@ -103,30 +121,28 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
   )
 
   const handleOutcomeChange = (_: SyntheticEvent, { value }: any) => {
+    setDropDownsState({ ...dropdownsState, outcomes: { active: true, selection: value } })
     push(`/outcomes/${value}`)
   }
 
   const handleTemplateChange = (_: SyntheticEvent, { value }: any) => {
+    setDropDownsState({ ...dropdownsState, templates: { active: true, selection: value } })
     push(`/applications?type=${value}`)
   }
 
   const handleAdminChange = (_: SyntheticEvent, { value }: any) => {
+    setDropDownsState({ ...dropdownsState, admin: { active: true, selection: value } })
     push(value)
-  }
-
-  const getSelectedLinkClass = (link: string) => {
-    const basepath = pathname.split('/')?.[1]
-    return link === basepath ? 'selected-link' : ''
   }
 
   return (
     <div id="menu-bar">
       <List horizontal>
-        <List.Item className={getSelectedLinkClass('')}>
+        <List.Item className={dropdownsState.dashboard.active ? 'selected-link' : ''}>
           <Link to="/">{strings.MENU_ITEM_DASHBOARD}</Link>
         </List.Item>
         {templateOptions.length > 0 && (
-          <List.Item className={getSelectedLinkClass('applications')}>
+          <List.Item className={dropdownsState.templates.active ? 'selected-link' : ''}>
             <Dropdown
               text={strings.MENU_ITEM_APPLICATION_LIST}
               options={templateOptions}
@@ -135,7 +151,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
           </List.Item>
         )}
         {outcomeOptions.length > 1 && (
-          <List.Item className={getSelectedLinkClass('outcomes')}>
+          <List.Item className={dropdownsState.outcomes.active ? 'selected-link' : ''}>
             <Dropdown
               text={strings.MENU_ITEM_OUTCOMES}
               options={outcomeOptions}
@@ -144,7 +160,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
           </List.Item>
         )}
         {isAdmin && (
-          <List.Item className={getSelectedLinkClass('admin')}>
+          <List.Item className={dropdownsState.admin.active ? 'selected-link' : ''}>
             <Dropdown
               text={strings.MENU_ITEM_ADMIN_CONFIG}
               options={adminOptions}
@@ -251,3 +267,42 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
 }
 
 export default UserArea
+
+const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState): DropdownsState => {
+  switch (basepath) {
+    case '':
+      return {
+        dashboard: { active: true },
+        templates: { active: false, selection: '' },
+        outcomes: { active: false, selection: '' },
+        admin: { active: false, selection: '' },
+      }
+    case 'applications':
+      return {
+        dashboard: { active: false },
+        templates: { active: true, selection: dropdownsState.templates.selection },
+        outcomes: { active: false, selection: '' },
+        admin: { active: false, selection: '' },
+      }
+    case 'outcomes':
+      return {
+        dashboard: { active: false },
+        templates: { active: false, selection: '' },
+        outcomes: { active: true, selection: dropdownsState.outcomes.selection },
+        admin: { active: false, selection: '' },
+      }
+    case 'admin':
+      return {
+        dashboard: { active: false },
+        templates: { active: false, selection: '' },
+        outcomes: { active: false, selection: '' },
+        admin: { active: true, selection: dropdownsState.admin.selection },
+      }
+  }
+  return {
+    dashboard: { active: false },
+    templates: { active: false, selection: '' },
+    outcomes: { active: false, selection: '' },
+    admin: { active: false, selection: '' },
+  }
+}
