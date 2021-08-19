@@ -249,7 +249,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const fileData = new FormData()
     await fileData.append('file', file)
     const response = await fetch(
-      `${host}${uploadEndpoint}?user_id=${currentUser?.userId}&application_serial=${serialNumber}&application_response_id=${application_response_id}&template_id=${template.id}`,
+      `${host}${uploadEndpoint}?user_id=${currentUser?.userId}&application_serial=${serialNumber}&application_response_id=${application_response_id}`,
       { method: 'POST', body: fileData }
     )
     return await response.json()

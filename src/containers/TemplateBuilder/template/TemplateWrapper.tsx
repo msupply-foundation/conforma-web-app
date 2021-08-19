@@ -117,6 +117,8 @@ type TemplateContextState = {
     code: string
     status: string
     applicationCount: number
+    namePlural: string
+    isLinear: boolean
   }
   refetch: () => void
   category?: TemplateCategory
@@ -138,6 +140,8 @@ const defaultTemplateContextState: TemplateContextState = {
     code: '',
     status: '',
     applicationCount: 0,
+    namePlural: '',
+    isLinear: false,
   },
   refetch: () => {},
   sections: [],
@@ -175,6 +179,8 @@ const TemplateWrapper: React.FC = () => {
           version: template?.version || 0,
           name: template?.name || '',
           code: template?.code || '',
+          namePlural: template?.namePlural || '',
+          isLinear: !!template?.isLinear,
           status: template?.status || TemplateStatus.Disabled,
           applicationCount: template?.applications?.totalCount || 0,
           isDraft: template.status === TemplateStatus.Draft,

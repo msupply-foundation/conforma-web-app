@@ -78,6 +78,7 @@ export type EvaluationVariations =
 
 export type OperatorType = {
   operator: Operator
+  type?: string
   children: EvaluationType[]
 }
 
