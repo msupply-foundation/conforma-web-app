@@ -9556,7 +9556,9 @@ export enum PermissionsAllsOrderBy {
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC',
   OrgIdAsc = 'ORG_ID_ASC',
-  OrgIdDesc = 'ORG_ID_DESC'
+  OrgIdDesc = 'ORG_ID_DESC',
+  IsUserCategoryAsc = 'IS_USER_CATEGORY_ASC',
+  IsUserCategoryDesc = 'IS_USER_CATEGORY_DESC'
 }
 
 /** A condition to be used against `PermissionsAll` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -9601,6 +9603,8 @@ export type PermissionsAllCondition = {
   userId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `orgId` field. */
   orgId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `isUserCategory` field. */
+  isUserCategory?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `PermissionsAll` object types. All fields are combined with a logical ‘and.’ */
@@ -9645,6 +9649,8 @@ export type PermissionsAllFilter = {
   userId?: Maybe<IntFilter>;
   /** Filter by the object’s `orgId` field. */
   orgId?: Maybe<IntFilter>;
+  /** Filter by the object’s `isUserCategory` field. */
+  isUserCategory?: Maybe<BooleanFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<PermissionsAllFilter>>;
   /** Checks for any expressions in this list. */
@@ -9688,6 +9694,7 @@ export type PermissionsAll = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  isUserCategory?: Maybe<Scalars['Boolean']>;
 };
 
 /** A `PermissionsAll` edge in the connection. */
