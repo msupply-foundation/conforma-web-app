@@ -191,22 +191,28 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
     text: orgName,
     value: orgId,
   }))
-  dropdownOptions.push({
-    key: LOGIN_AS_NO_ORG,
-    text: strings.LABEL_NO_ORG,
-    value: LOGIN_AS_NO_ORG,
-  })
+  // Only add "No Org" option if user not part of "Admin" org (e.g. FDA)
+  if (!orgs.some(({ isSystemOrg }) => isSystemOrg))
+    dropdownOptions.push({
+      key: LOGIN_AS_NO_ORG,
+      text: `> ${strings.LABEL_NO_ORG_SELECT}`,
+      value: LOGIN_AS_NO_ORG,
+    })
   return (
     <div id="org-selector">
       {user?.organisation?.logoUrl && (
         <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST)} />
       )}
       <div>
-        <Dropdown
-          text={user?.organisation?.orgName || strings.LABEL_NO_ORG}
-          options={dropdownOptions}
-          onChange={handleChange}
-        ></Dropdown>
+        {dropdownOptions.length === 1 ? (
+          user?.organisation?.orgName || strings.LABEL_NO_ORG
+        ) : (
+          <Dropdown
+            text={user?.organisation?.orgName || strings.LABEL_NO_ORG}
+            options={dropdownOptions}
+            onChange={handleChange}
+          ></Dropdown>
+        )}
       </div>
     </div>
   )

@@ -104,6 +104,7 @@ export default {
   LABEL_LOGIN_USERNAME: 'Username',
   LABEL_LOG_IN: 'Log in',
   LABEL_NO_ORG: 'No organisation',
+  LABEL_NO_ORG_SELECT: 'No organisation (act as user only)',
   LABEL_NO_ORG_OPTION: 'Log in without organisation',
   LABEL_PROCESSING: 'Processing...',
   LABEL_PREVIOUS_REVIEW: 'Previous review',
