@@ -87,7 +87,7 @@ const convertFromTemplateToTemplateDetails = (
   template: Template,
   templatePermissions: TemplatePermissions
 ) => {
-  const { id, code, name, namePlural, icon } = template
+  const { id, code, name, namePlural, icon, version } = template
   const permissions = templatePermissions[code] || []
 
   const totalApplications = template?.applications.totalCount || 0
@@ -108,6 +108,7 @@ const convertFromTemplateToTemplateDetails = (
     id,
     code,
     name: String(name),
+    version: Number(version),
     namePlural: namePlural || undefined,
     icon,
     permissions,
