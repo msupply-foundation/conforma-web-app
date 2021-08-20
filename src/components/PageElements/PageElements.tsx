@@ -172,11 +172,7 @@ const PageElements: React.FC<PageElementProps> = ({
           })}
         </Form>
         {showHistory && (
-          <HistoryPanel
-            templateCode={applicationData.template.code}
-            stages={stages}
-            isApplicant={true}
-          />
+          <HistoryPanel template={applicationData.template} stages={stages} isApplicant={true} />
         )}
       </div>
     )
@@ -250,7 +246,7 @@ const PageElements: React.FC<PageElementProps> = ({
         </Form>
         {showHistory && (
           <HistoryPanel
-            templateCode={applicationData.template.code}
+            template={applicationData.template}
             stages={stages}
             // userLevel={userLevel || 1 + 1} // Get reviews for current level and level+1
           />
