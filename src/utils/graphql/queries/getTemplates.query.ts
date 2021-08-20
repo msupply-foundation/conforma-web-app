@@ -4,7 +4,7 @@ export default gql`
   query getTemplates($status: TemplateStatus = AVAILABLE) {
     templates(condition: { status: $status }) {
       nodes {
-        ...Template
+        ...templateFragment
       }
     }
   }

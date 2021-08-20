@@ -12,6 +12,7 @@ import strings from '../constants'
 interface UseGetQuestionHistoryProps {
   serial: string
   templateCode: string
+  templateVersion: number
   questionCode: string
   userId: number
   // userLevel: number

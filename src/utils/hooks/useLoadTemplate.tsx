@@ -56,7 +56,7 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
       return
     }
 
-    const { id, code, name } = template
+    const { id, code, name, version } = template
     const templateSections = template.templateSections.nodes as TemplateSection[]
     const sections = getTemplateSections(templateSections)
     const elementsIds: number[] = []
@@ -84,7 +84,8 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
       setTemplate({
         id,
         code,
-        name: name as string,
+        name: String(name),
+        version: Number(version),
         elementsIds,
         elementsDefaults,
         sections,
