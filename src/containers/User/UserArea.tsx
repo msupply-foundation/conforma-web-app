@@ -142,6 +142,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
               text={strings.MENU_ITEM_APPLICATION_LIST}
               options={templateOptions}
               onChange={handleTemplateChange}
+              value={dropdownsState.templates.selection}
             />
           </List.Item>
         )}
@@ -151,6 +152,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
               text={strings.MENU_ITEM_OUTCOMES}
               options={outcomeOptions}
               onChange={handleOutcomeChange}
+              value={dropdownsState.outcomes.selection}
             />
           </List.Item>
         )}
@@ -160,6 +162,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ outcomes, templates }) => {
               text={strings.MENU_ITEM_ADMIN_CONFIG}
               options={adminOptions}
               onChange={handleAdminChange}
+              value={dropdownsState.admin.selection}
             />
           </List.Item>
         )}
