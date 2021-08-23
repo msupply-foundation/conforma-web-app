@@ -27,14 +27,14 @@ Should take a while to run, will build a local image
 - List local images to get the “image ID” and "tag name"  
   `docker image ls`
 - Create tag:  
-  `docker tag <image_id> <organisation>/<docker-repo>:<tag-name>`
+  `docker tag <image_id> <account-name>/<docker-repo>:<tag-name>`
 - Push new tag:  
-   `docker push <image_id> <organisation>/<docker-repo>:<tag-name>`  
+   `docker push <image_id> <account-name>/<docker-repo>:<tag-name>`  
   Image will upload to Docker hub
 
 Example:
 
-- organisation: `msupplyfoundation`
+- account-name: `msupplyfoundation`
 - docker-repo: `mflow-demo`
 - tag-name: `front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14`
 
@@ -71,7 +71,13 @@ docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2
 - Remove container: `sudo docker rm <name>`
 - Re-run as above. Note: this resets the container to initial state, including database reset. If you want to preserve existing data, you’ll need to take a snapshot first, then reload after restart.
 
-### To document:
+### Other:
 
-- How do I check logs?
-- How to check Env vars?
+You can access the command line of a particular container instance with the following:
+
+`sudo docker exec -ti <name-or-container-id> /bin/bash`
+
+From there the following commands might be useful:
+
+- view environment variables: `printenv`
+- check the server log: `tail -n 100 /var/log/application-manager/server.log`
