@@ -8,23 +8,23 @@ weight = 1
 
 Demo can be accessed at: [https://irims-demo.msupply.org:50000/](https://irims-demo.msupply.org:50000/)
 
-This demo allows you to use the **mFlow** system to experience the following workflow:
+This demo allows you to use the **mFlow Application Manager** system to experience the following workflow:
 
 1. **Create a user account**
 
-This is an automated process that requires email verification.
+   This is an automated process that requires email verification.
 
 2. **Register a company**
 
-A reviewer will approve this application, which will create your organisation in the system.
+   A reviewer will approve this application, which will create your organisation in the system.
 
 3. **Apply for a license for your company to register products**
 
-This will require 2 levels of review -- an initial screening, and an an assessment by a more senior reviewer. You will receive a PDF license and permission to register a product (for 3 days)
+   This will require 2 levels of review -- an initial screening, and an an assessment by a more senior reviewer. You will receive a PDF license and permission to register a product (for 3 days)
 
 4. **Register a product**
 
-This requires a full review process:
+   This requires a full review process:
 
 - initial screening
 - assessment by senior reviewer
