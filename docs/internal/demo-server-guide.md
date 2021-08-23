@@ -63,7 +63,7 @@ docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2
   - port 8000
   - WEB_HOST url
 
-  The system will be launched with “basic_snapshot” data. Upload and run a new snapshot as required\*
+  The system will be launched with “basic_snapshot” data. Upload and run a new snapshot as required
 
 ## To restart an instance
 
