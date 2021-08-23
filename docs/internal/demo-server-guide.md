@@ -27,9 +27,9 @@ Should take a while to run, will build a local image
 - List local images to get the “image ID” and "tag name"  
   `docker image ls`
 - Create tag:  
-  `docker tag <image_id> /<docker-repo>:<tag-name>`
+  `docker tag <image_id> <organisation>/<docker-repo>:<tag-name>`
 - Push new tag:  
-   `docker push <image_id> /<docker-repo>:<tag-name>`  
+   `docker push <image_id> <organisation>/<docker-repo>:<tag-name>`  
   Image will upload to Docker hub
 
 Example:
