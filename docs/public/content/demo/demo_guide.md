@@ -31,7 +31,7 @@ This demo allows you to use the **mFlow Application Manager** system to experien
 - consoloidation of review (this means a more senior staff member comments on and approves the review before it gets sent back to the applicant)
 - a final decision by a chief, who can over-rule lower-level review decisions if they see fit
 
-For the purposes of this demo, you can switch to alternative "reviewer" accounts to review the applications (more on that below).
+For the purposes of this demo, you can switch to alternative "reviewer" accounts to review the applications (more on that [below](#reviewer-experience)).
 
 ### 1. Create a user account
 
@@ -77,6 +77,8 @@ There are two ways to act as a reviewer in this demo:
 2. (for more advanced users) Create your own new user accounts and assign them appropriate review permissions. To do this log in as Administrator (user: admin, pw: 123456), then:
    - from the "Admin" menu, select "Add user to company". Fill in the form and add a new user to the "Food & Drug Agency" organisation
    - from the same menu, select "Grant user permissions", and assign appropriate permissions to a user (and Food & Drug Agency)
+
+When switching to reviewer accounts, it's a good idea to you use a different browser, or use private/icognito mode in a different tab in order to easily switch between "reviewer" and "applicant" logins.
 
 ### Reviewer accounts
 
