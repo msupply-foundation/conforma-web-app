@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Radio, Form, Input } from 'semantic-ui-react'
+import { Radio, Form, Input, Label } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import strings from '../constants'
 
@@ -8,6 +8,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   onUpdate,
   currentResponse,
+  validationState,
   onSave,
   Markdown,
   getDefaultIndex,
@@ -110,7 +111,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {radioButtonOptions.map((option: any, index: number) => {
         const showOther = hasOther && index === allOptions.length - 1
         return (
-          <Form.Field key={option.key} disabled={!isEditable} style={styles} inline={showOther}>
+          <Form.Field
+            key={option.key}
+            disabled={!isEditable}
+            style={styles}
+            inline={showOther}
+            error={!validationState.isValid}
+          >
             <Radio
               label={option.text}
               name={`${code}_radio_${index}`} // This is GROUP name
@@ -132,6 +139,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           </Form.Field>
         )
       })}
+      {validationState.isValid ? null : (
+        <Label pointing prompt content={validationState?.validationMessage} />
+      )}
     </>
   )
 }
