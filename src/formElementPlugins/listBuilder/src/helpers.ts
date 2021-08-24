@@ -87,8 +87,8 @@ export const buildElements = async (
     validationExpression: field?.validation || true,
     validationMessage: field?.validationMessage || '',
     isVisibleExpression: field?.visibilityCondition || true,
-    isEditableExpression: field?.isEditable || true,
-    isRequiredExpression: field?.isRequired || true,
+    isEditableExpression: field?.isEditable ?? true,
+    isRequiredExpression: field?.isRequired ?? true,
     // "Dummy" values, but required for element props:
     elementIndex: 0,
     isValid: undefined,
