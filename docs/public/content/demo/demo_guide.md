@@ -28,7 +28,7 @@ This demo allows you to use the **mFlow Application Manager** system to experien
 
 - initial screening
 - assessment by senior reviewer
-- consoloidation of review (this means a more senior staff member comments on and approves the review before it gets sent back to the applicant)
+- consolidation of review (this means a more senior staff member comments on and approves the review before it gets sent back to the applicant)
 - a final decision by a chief, who can over-rule lower-level review decisions if they see fit
 
 For the purposes of this demo, you can switch to alternative "reviewer" accounts to review the applications (more on that [below](#reviewer-experience)).
