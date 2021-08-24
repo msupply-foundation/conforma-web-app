@@ -13,7 +13,7 @@ const ListInlineLayout: React.FC<ListLayoutProps> = (props) => {
     <>
       {listItems.map((item, index) => (
         <ItemAccordion
-          key={index} // Not ideal, but there isn't any other unique identifier
+          key={`${displayFormat.title}-${index}`}
           index={index}
           item={item}
           header={displayFormat.title}
