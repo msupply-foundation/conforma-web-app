@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Icon, Accordion } from 'semantic-ui-react'
 import { ApplicationDetails, ElementState, User } from '../../../../utils/types'
-import { ListLayoutProps } from '../types'
+import { ListItem, ListLayoutProps } from '../types'
 import ApplicationViewWrapper from '../../../ApplicationViewWrapper'
 import SummaryViewWrapper from '../../../SummaryViewWrapper'
 import { buildElements, substituteValues } from '../helpers'
@@ -25,10 +25,15 @@ const ListInlineLayout: React.FC<ListLayoutProps> = (props) => {
 }
 export default ListInlineLayout
 
+interface ItemAccordionProps extends ListLayoutProps {
+  item: ListItem
+  header: string | undefined
+  index: number
+}
 // Inner component -- one for each Item in list
-const ItemAccordion: React.FC<any> = ({
+const ItemAccordion: React.FC<ItemAccordionProps> = ({
   item,
-  header,
+  header = '',
   index,
   inputFields,
   isEditable = true,
@@ -36,14 +41,14 @@ const ItemAccordion: React.FC<any> = ({
   currentUser,
   applicationData,
   Markdown,
-  codes,
-  editItem,
-  deleteItem,
+  codes = [],
+  editItem = (index: number, value: boolean) => {},
+  deleteItem = (index: number) => {},
   editItemText,
   updateButtonText,
   deleteItemText,
-  innerElementUpdate,
-  updateList,
+  innerElementUpdate = () => {},
+  updateList = () => {},
 }) => {
   const [open, setOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
@@ -96,8 +101,10 @@ const ItemAccordion: React.FC<any> = ({
               isStrictPage={false}
               allResponses={responses}
               currentResponse={item[code].value}
-              onSaveUpdateMethod={innerElementUpdate(currentItemElementsState[code].code)}
-              applicationData={applicationData}
+              onSaveUpdateMethod={
+                innerElementUpdate(currentItemElementsState[code].code) as Function | undefined
+              }
+              applicationData={applicationData as ApplicationDetails}
             />
           ) : (
             <SummaryViewWrapper
