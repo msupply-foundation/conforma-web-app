@@ -80,4 +80,4 @@ You can access the command line of a particular container instance with the foll
 From there the following commands might be useful:
 
 - view environment variables: `printenv`
-- check the server log: `tail -n 100 /var/log/application-manager/server.log`
+- check the server log: `tail -n 100 /var/log/application_manager/server.log`
