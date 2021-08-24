@@ -21,6 +21,7 @@ export const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
 
 export const substituteValues = (parameterisedString: string, item: ListItem) => {
   const getValueFromCode = (_: string, $: string, code: string) => item[code]?.value?.text || ''
+  // Replaces ${} formatted substitutions with their values
   return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromCode)
 }
 
