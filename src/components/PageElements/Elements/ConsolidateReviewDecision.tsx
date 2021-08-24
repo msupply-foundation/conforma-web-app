@@ -6,26 +6,33 @@ import ReviewResponseElement from './ReviewResponseElement'
 import ReviewInlineInput from './ReviewInlineInput'
 import strings from '../../../utils/constants'
 import { UpdateIcon } from '../PageElements'
+import ViewHistoryButton from '../ViewHistoryButton'
 
 interface ConsolidateReviewDecisionProps {
+  elementCode: string
   applicationResponse: ApplicationResponse
   summaryViewProps: SummaryViewWrapperProps
   isActiveReviewResponse: boolean
   isNewReviewResponse: boolean
+  isAssigned: boolean
+  enableViewHistory: boolean
+  stageNumber: number
   reviewResponse?: ReviewResponse
   previousReviewResponse?: ReviewResponse
   originalReviewResponse?: ReviewResponse
-  showModal: () => void
 }
 const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
+  elementCode,
   applicationResponse,
   summaryViewProps,
   isActiveReviewResponse,
   isNewReviewResponse,
+  isAssigned,
+  enableViewHistory,
+  stageNumber,
   reviewResponse,
   previousReviewResponse,
   originalReviewResponse,
-  showModal,
 }) => {
   const [isActiveEdit, setIsActiveEdit] = useState(false)
   const isConsolidation = true
@@ -54,6 +61,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
             setIsActiveEdit={setIsActiveEdit}
             reviewResponse={reviewResponse as ReviewResponse}
             isConsolidation={isConsolidation}
+            stageNumber={stageNumber}
           />
         </div>
       ) : (
@@ -65,7 +73,9 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
               isConsolidation={true}
               reviewResponse={reviewResponse}
             >
-              {isActiveReviewResponse && <UpdateIcon onClick={() => setIsActiveEdit(true)} />}
+              {isActiveReviewResponse && isAssigned && (
+                <UpdateIcon onClick={() => setIsActiveEdit(true)} />
+              )}
             </ReviewResponseElement>
           )}
           {/* Lower level Review Response */}
@@ -91,7 +101,8 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
           reviewResponse={previousReviewResponse}
         />
       )}
-      {/*TODO: Add Previous lower level Review response here - Or show history icon */}
+      {/* Show history - for previous consolidations done */}
+      {enableViewHistory && <ViewHistoryButton elementCode={elementCode} />}
     </>
   )
 }

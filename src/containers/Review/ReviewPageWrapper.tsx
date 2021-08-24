@@ -1,13 +1,13 @@
 import React from 'react'
 import { Route, Switch } from 'react-router'
 import { Container, Message } from 'semantic-ui-react'
-import { Loading, NoMatch } from '../../components'
+import { Loading, NoMatch, ReviewContainer } from '../../components'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { useRouter } from '../../utils/hooks/useRouter'
 import strings from '../../utils/constants'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 import ReviewPage from './ReviewPage'
-import { Stage } from '../../components/Review'
+import { getPreviousStageAssignment } from '../../utils/helpers/assignment/getPreviousStageAssignment'
 
 const ReviewPageWrapper: React.FC<{
   structure: FullStructure
@@ -30,11 +30,7 @@ const ReviewPageWrapper: React.FC<{
 
   if (!fullApplicationStructure) return <Loading />
 
-  const {
-    info: {
-      current: { stage },
-    },
-  } = fullApplicationStructure
+  const { info } = fullApplicationStructure
 
   // Find the review id used in URL in reviewAssignments
   const reviewAssignment = reviewAssignments.find(
@@ -42,21 +38,27 @@ const ReviewPageWrapper: React.FC<{
   )
 
   if (!reviewAssignment) return <NoMatch />
+
+  const previousAssignment = getPreviousStageAssignment(
+    info.serial,
+    reviewAssignments,
+    reviewAssignment.current.stage.number
+  )
+
   // Pass through structure and reviewAssignment associated to review
   return (
-    <>
-      <Container id="application-summary">
-        <Stage name={stage.name || ''} colour={stage.colour} />
+    <ReviewContainer application={info}>
+      <Container id="review-page-summary">
         <Switch>
           <Route exact path={path}>
-            <ReviewPage {...{ fullApplicationStructure, reviewAssignment }} />
+            <ReviewPage {...{ fullApplicationStructure, reviewAssignment, previousAssignment }} />
           </Route>
           <Route>
             <NoMatch />
           </Route>
         </Switch>
       </Container>
-    </>
+    </ReviewContainer>
   )
 }
 

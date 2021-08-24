@@ -16,6 +16,7 @@ import {
 import { APPLICATION_COLUMNS, USER_ROLES } from '../../data'
 import COLUMNS_PER_ROLE from '../../data/columnsPerUserRole'
 import { ColumnDetails } from '../../types'
+import strings from '../../constants'
 
 /**
  * @function: mapColumnsByRole
@@ -30,67 +31,67 @@ import { ColumnDetails } from '../../types'
 
 const allColumns: { [key in APPLICATION_COLUMNS]: ColumnDetails } = {
   SERIAL_NUMBER: {
-    headerName: 'Serial',
+    headerName: strings.COLUMN_SERIAL,
     sortName: 'serial',
     ColumnComponent: SerialNumberCell,
   },
   LAST_ACTIVE_DATE: {
-    headerName: 'Last active',
+    headerName: strings.COLUMN_LAST_ACTIVE_DATE,
     sortName: 'last-active-date',
     ColumnComponent: LastActiveDateCell,
   },
   DEADLINE_DATE: {
-    headerName: 'Deadline date',
+    headerName: strings.COLUMN_DEADLINE_DATE,
     sortName: '', // Not yet implemented
     ColumnComponent: DeadlineCell,
   },
   APPLICATION_NAME: {
-    headerName: 'Name',
+    headerName: strings.COLUMN_APPLICATION,
     sortName: 'name',
     ColumnComponent: ApplicationNameCell,
   },
   APPLICATION_NAME_REVIEW_LINK: {
-    headerName: 'Name',
+    headerName: strings.COLUMN_APPLICATION_REVIEW,
     sortName: 'name',
     ColumnComponent: ApplicationNameReviewLinkCell,
   },
   APPLICANT: {
-    headerName: 'Applicant',
+    headerName: strings.COLUMN_APPLICANT,
     sortName: 'applicant',
     ColumnComponent: ApplicantCell,
   },
   ORGANISATION: {
-    headerName: 'Organisation',
+    headerName: strings.COLUMN_ORGANISATION,
     sortName: 'org',
     ColumnComponent: OrganisationCell,
   },
   CONSOLIDATOR: {
-    headerName: 'Consolidator',
+    headerName: strings.COLUMN_CONSOLIDATOR,
     sortName: 'consolidator', // Not implemented in query
     ColumnComponent: ConsolidatorCell,
   },
   STAGE: {
-    headerName: 'Stage',
+    headerName: strings.COLUMN_STAGE,
     sortName: 'stage',
     ColumnComponent: StageCell,
   },
   STATUS: {
-    headerName: 'Status',
+    headerName: strings.COLUMN_STATUS,
     sortName: 'status',
     ColumnComponent: StatusCell,
   },
   OUTCOME: {
-    headerName: 'Outcome',
+    headerName: strings.COLUMN_OUTCOME,
     sortName: 'outcome',
     ColumnComponent: OutcomeCell,
   },
   REVIEWER_ACTION: {
-    headerName: '',
+    headerName: strings.COLUMN_REVIEWER_ACTION,
     sortName: 'outcome',
     ColumnComponent: ReviewerActionCell,
   },
   APPLICANT_ACTION: {
-    headerName: '',
+    headerName: strings.COLUMN_APPLICANT_ACTION,
     sortName: 'outcome',
     ColumnComponent: ApplicantActionCell,
   },

@@ -6,6 +6,7 @@ import ReviewResponseElement from './ReviewResponseElement'
 import ReviewInlineInput from './ReviewInlineInput'
 import strings from '../../../utils/constants'
 import { UpdateIcon } from '../PageElements'
+import ViewHistoryButton from '../ViewHistoryButton'
 
 type ReviewType =
   | 'NotReviewable'
@@ -14,27 +15,31 @@ type ReviewType =
   | 'ReReviewApplication' // 'Consolidation' is done in separated component
 
 interface ReviewApplicantResponseProps {
+  elementCode: string
   applicationResponse: ApplicationResponse
   summaryViewProps: SummaryViewWrapperProps
+  stageNumber: number
   reviewResponse?: ReviewResponse
   previousReviewResponse?: ReviewResponse
   isActiveReviewResponse: boolean
   isNewApplicationResponse: boolean
+  enableViewHistory: boolean
   isChangeRequest: boolean
   isChanged: boolean
-  showModal: () => void
 }
 
 const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
+  elementCode,
   applicationResponse,
   summaryViewProps,
+  stageNumber,
   reviewResponse,
   previousReviewResponse,
   isNewApplicationResponse,
   isActiveReviewResponse,
+  enableViewHistory,
   isChangeRequest,
   isChanged,
-  showModal,
 }) => {
   const [isActiveEdit, setIsActiveEdit] = useState(false)
   const decisionExists = !!reviewResponse?.decision
@@ -49,7 +54,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
     ? 'ReReviewApplication'
     : isChangeRequest
     ? 'UpdateChangesRequested'
-    : isActiveReviewResponse
+    : reviewResponse
     ? 'FirstReviewApplication'
     : 'NotReviewable'
 
@@ -86,6 +91,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                 setIsActiveEdit={setIsActiveEdit}
                 reviewResponse={reviewResponse as ReviewResponse}
                 isConsolidation={false}
+                stageNumber={stageNumber}
               />
             </div>
           ) : (
@@ -119,8 +125,8 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               )}
             </>
           )}
-          {/* div below forced border on review response to be square */}
-          <div />
+          {/* Show history - for previous reviews done */}
+          {enableViewHistory && <ViewHistoryButton elementCode={elementCode} />}
         </>
       )
 
@@ -139,6 +145,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                 setIsActiveEdit={setIsActiveEdit}
                 reviewResponse={reviewResponse as ReviewResponse}
                 isConsolidation={false}
+                stageNumber={stageNumber}
               />
             </div>
           ) : (
@@ -173,9 +180,10 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                   reviewResponse={previousReviewResponse}
                 />
               )}
-              {/*TODO: Add Previous Applicant response here - Or show history icon */}
             </>
           )}
+          {/* Show history - for previous reviews done */}
+          {enableViewHistory && <ViewHistoryButton elementCode={elementCode} />}
         </>
       )
     default:

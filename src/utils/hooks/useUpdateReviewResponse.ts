@@ -11,17 +11,21 @@ type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 
 // hook used to update review response, comment and decision, use as per type definition below
 // also computes and updates recommendedApplicantVisibility
-type UseUpdateReviewResponse = () => (reviewResponse: ReviewResponse) => PromiseReturnType
+type UseUpdateReviewResponse = () => (
+  reviewResponse: ReviewResponse,
+  stageNumber: number
+) => PromiseReturnType
 
 const useUpdateReviewResponse: UseUpdateReviewResponse = () => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
 
-  return async (reviewResponse) =>
+  return async (reviewResponse, stageNumber) =>
     updateReviewResponse({
       variables: {
         id: reviewResponse.id,
         comment: reviewResponse.comment,
         decision: reviewResponse.decision,
+        stageNumber: stageNumber,
         recommendedApplicantVisibility: computeVisibility(reviewResponse),
       },
     })
@@ -46,7 +50,7 @@ const computeVisibility = (reviewResponse: ReviewResponse | undefined) => {
   // consolidator
   if (
     reviewResponse.decision === ReviewResponseDecision.Agree &&
-    reviewResponse.originalReviewResponse?.decision === ReviewResponseDecision.Decline
+    reviewResponse.reviewResponseLink?.decision === ReviewResponseDecision.Decline
   )
     return ReviewResponseRecommendedApplicantVisibility.OriginalResponseVisibleToApplicant
   return ReviewResponseRecommendedApplicantVisibility.OriginalResponseNotVisibleToApplicant

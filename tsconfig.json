@@ -11,11 +11,6 @@
     "rootDir": "src" /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */,
     "preserveConstEnums": true /* Do not erase const enum declarations in generated code. */,
     "removeComments": true /* Do not emit comments to output. */,
-
-    "baseUrl": "src" /* paths are relative to baseUrl */, 
-    "paths": {
-      "semantic-ui-react": ["semanticUiReactReExport"]
-    },
     /* Module Resolution Options */
     "esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */,
     
@@ -30,6 +25,7 @@
     "./dist/*",
     "./semantic/*",
     "./build-utils/*",
+    "./docs/*",
     "apollo.config.js",
     "webpack.config.js"
   ]

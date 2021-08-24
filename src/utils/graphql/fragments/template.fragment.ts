@@ -5,24 +5,33 @@ export default gql`
     code
     id
     name
+    status
+    namePlural
     isLinear
     startMessage
     submissionMessage
+    icon
     templateCategory {
+      id
+      code
       title
       icon
+      uiLocation
     }
     templateFilterJoins {
       nodes {
+        id
         filter {
           id
-          iconColor
-          icon
+          code
           query
           title
           userRole
         }
       }
+    }
+    applications(filter: { isConfig: { equalTo: false } }) {
+      totalCount
     }
   }
 `

@@ -43,10 +43,6 @@ a:hover {
   color: @attention;
 }
 
-//.information {
-//  color: @information;
-//}
-
 .clickable {
   cursor: pointer;
 }
@@ -76,6 +72,55 @@ a:hover {
   justify-content: center;
 }
 
+.flex-row-space_between {
+  .flex-row();
+  justify-content: space-between;
+}
+
+.flex-row-start {
+  .flex-row();
+  justify-content: flex-start;
+}
+
+.flex-row-space {
+  .flex-row();
+  justify-content: space-between;
+}
+
+.flex-row-space-start {
+  .flex-row-space();
+  align-items: start;
+}
+
+.flex-row-start-center {
+  .flex-row-start();
+  align-items: center;
+}
+
+.flex-row-space_between-center {
+  .flex-row-space_between();
+  align-items: center;
+}
+
+.flex-row-start-start {
+  .flex-row-start();
+  align-items: flex-start;
+}
+
+.flex-row-center-center {
+  .flex-row-center();
+  align-items: center;
+}
+
+.flex-row-center-center-wrap {
+  .flex-row-center-center();
+  flex-wrap: wrap;
+}
+
+.flex-row-start-center-wrap {
+  .flex-row-start-center;
+  flex-wrap: wrap;
+}
 .flex-column {
   display: flex;
   flex-direction: column;
@@ -83,7 +128,50 @@ a:hover {
 
 .flex-column-center {
   .flex-column();
-  justify-content: center;
+  align-items: center;
+}
+
+.flex-column-start {
+  .flex-column();
+  justify-content: flex-start;
+}
+
+.flex-column-start-stretch {
+  .flex-column-start();
+  align-items: stretch;
+}
+
+.flex-column-center-start {
+  .flex-column-center();
+  align-items: flex-start;
+}
+
+.flex-column-start-center {
+  .flex-column-center();
+  align-items: flex-start;
+}
+
+.flex-column-center-center {
+  .flex-column-center();
+  align-items: center;
+}
+
+.flex-column-start-start {
+  .flex-column-start();
+  align-items: flex-start;
+}
+
+.spacer-20 {
+  height: 20px;
+}
+
+.spacer-10 {
+  height: 10px;
+}
+
+.no-margin-no-padding {
+  padding: 0px !important;
+  margin: 0px !important;
 }
 
 /*--------------------------------
@@ -142,7 +230,6 @@ a:hover {
   padding: 0;
   position: relative;
   min-height: 100vh;
-  // Max width is 1027px, from Semantic-UI Container
 }
 
 #user-area {
@@ -161,8 +248,21 @@ a:hover {
 }
 
 #user-area.ui.container {
-  margin-left: 0px !important;
-  margin-right: 0px !important;
+  padding-right: 60px;
+}
+
+#brand-area {
+  width: clamp(100px, 25%, 400px);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  .image {
+    height: 100%;
+  }
+  .brand-area-text {
+    color: @userAreaText !important;
+    margin: 0;
+  }
 }
 
 #user-area-left {
@@ -173,11 +273,21 @@ a:hover {
 
 #menu-bar {
   font-size: inherit;
+  .item {
+    margin-right: 10px;
+  }
 }
 // Menu bar links
-#user-area a {
-  color: @userAreaText;
-  font-size: @fontSmall;
+#user-area {
+  a {
+    color: @userAreaText;
+    font-size: @fontSmall;
+  }
+}
+
+#user-menu {
+  width: clamp(150px, 20%, 300px);
+  text-align: right;
 }
 
 // Not currently used, but should be appplied to the Link in the menu
@@ -194,12 +304,19 @@ a:hover {
   align-items: center;
   height: 100%;
   max-height: 55px;
-  margin-top: 10px;
+
+  .ui.dropdown .menu {
+    letter-spacing: @letterSpacingRegular;
+    min-width: 90%;
+    left: revert;
+    right: 0;
+  }
 }
 
 #org-selector .image {
   margin-right: 20px;
   height: 100%;
+  max-width: 100px;
 }
 
 #user-menu .button {
@@ -225,6 +342,7 @@ a:hover {
   background-color: white;
   margin-top: 20px;
   padding: 10px;
+  padding-left: 50px;
   height: @footerHeight;
   position: absolute;
   bottom: 0;
@@ -269,7 +387,6 @@ a:hover {
   max-width: 350px;
   background-color: transparent;
   font-size: @fontSmall;
-  color: @black;
   font-weight: @regularWeight;
 }
 
@@ -299,7 +416,7 @@ a:hover {
   flex-wrap: wrap;
   min-height: 30px; // TODO: Need to be updated for mobile
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 // Inner steps line (left side - icon & header)
@@ -344,9 +461,23 @@ a:hover {
   font-weight: @semiboldWeight;
 }
 
+#review-home-header {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
 .ui.segment.review-application-segment {
   margin: 0px;
   padding: 0px;
+}
+
+.review-section-row {
+  .section-single-row-box-container();
+
+  .assigned-column {
+    text-align: center;
+  }
 }
 
 .reviewer-dropdown {
@@ -355,7 +486,7 @@ a:hover {
   padding-left: 10px;
   padding-right: 10px;
   margin-left: 10px;
-  max-width: 150px;
+  max-width: 250px;
 }
 
 /*---------------------------------------
@@ -422,10 +553,10 @@ a:hover {
   overflow: scroll;
 }
 
-#history-panel {
-  // Temp - replace when real History Panel built
-  border: 1px solid lightgray;
-  height: 250px;
+#previous-review {
+  .segment {
+    width: 30%;
+  }
 }
 
 /*--------------------------------
@@ -434,7 +565,7 @@ a:hover {
 
 #list-container {
   padding: 25px 0;
-  max-width: @applicationListWidth;
+  width: @applicationListWidth;
 }
 
 #list-top {
@@ -453,6 +584,10 @@ a:hover {
 
 .flex-grow-1 {
   flex-grow: 1;
+}
+
+.application-name-cell-name {
+  font-size: @slightlySmallerText;
 }
 
 .user-action {
@@ -493,9 +628,13 @@ a:hover {
   padding-right: 0;
 }
 
-// Seperation between Section title and form elements
 .form-area {
+  // Seperation between Section title and form elements
   margin-top: 30px;
+  // When SummaryView elements are displayed in application form
+  .summary-page-element-container {
+    margin-bottom: @summaryViewElementSpacing !important;
+  }
 }
 
 // Contains form-element and help-tips
@@ -588,7 +727,7 @@ a:hover {
 // Element plugins
 
 .element-application-view {
-  margin-bottom: 20px !important;
+  margin-bottom: @applicationViewElementSpacing !important;
   .reviewer-comment {
     font-size: 0.9em;
     display: none;
@@ -655,6 +794,9 @@ a:hover {
     .flex-row();
     flex-grow: 1;
     justify-content: flex-end;
+    .loader {
+      margin-left: 10px;
+    }
   }
 }
 
@@ -669,12 +811,15 @@ a:hover {
 
 // Note: these layout ids/classes also shared with Review page
 
-#application-summary {
+#application-summary,
+#review-page-summary {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: @applicationSummaryWidth;
   background-color: @surfacesWhite;
+  border: 2px solid @surfacesMed;
+  border-radius: @borderRadius;
   padding-left: 20px;
   padding-right: 20px;
 }
@@ -682,6 +827,11 @@ a:hover {
 #application-summary-header {
   padding-top: 30px;
   padding-bottom: 20px;
+  text-align: center;
+
+  h2.ui.header {
+    padding-top: 10px;
+  }
 }
 
 #application-summary-content {
@@ -700,6 +850,7 @@ a:hover {
 
 .summary-section {
   background-color: @surfacesLight;
+  border: 2px solid @surfacesMed;
   border-radius: @borderRadius;
   padding: 0px;
   margin-bottom: 15px;
@@ -768,8 +919,9 @@ a:hover {
     padding-right: 20px;
     padding-left: 20px;
     background: @surfacesWhite;
+    border: 2px solid @surfacesMed;
+    border-top: none;
     margin: 0px;
-    margin-bottom: 2px;
 
     &.information {
       > div {
@@ -783,15 +935,16 @@ a:hover {
       }
     }
 
-    .review-response-content {
+    .response-element-content {
       .flex-row();
       flex-grow: 1;
 
-      .reviewer-name {
+      .author-name {
         width: 20%;
         padding: 0px;
         margin: 0px;
-        margin-right: 10px;
+        margin-top: 5px;
+        margin-right: 15px;
       }
 
       .decision-container {
@@ -851,6 +1004,10 @@ a:hover {
     }
   }
 
+  .response-container:first-of-type {
+    border-top: 2px solid @surfacesMed;
+  }
+
   > :first-child {
     border-top-left-radius: @borderRadius;
     border-top-right-radius: @borderRadius;
@@ -862,10 +1019,36 @@ a:hover {
   }
 }
 
+.history-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px;
+  padding-right: 20px;
+  padding-left: 20px;
+  background: @surfacesWhite;
+  border-bottom-left-radius: @borderRadius;
+  border-bottom-right-radius: @borderRadius;
+  border: 2px solid @surfacesMed;
+  border-top: none;
+}
+
+.history-block {
+  margin-bottom: 20px;
+}
+
+.stage-label-spacing {
+  margin-bottom: 10px;
+}
+
 .blue-border {
   border: 2px solid @interactiveHigh;
   border-radius: 10px !important;
   overflow: clip;
+
+  // Turns off border of inner elements
+  > :nth-child(n) {
+    border: none !important;
+  }
 }
 
 .updated-label {
@@ -925,12 +1108,11 @@ a:hover {
 
 // Layouts
 #dashboard {
-  .flex-row-center();
-  flex-wrap: wrap;
+  .flex-column();
 
   .template-category {
-    .flex-column-center();
-    align-items: center;
+    .flex-column();
+    flex-wrap: wrap;
 
     .title {
       .flex-row();
@@ -939,94 +1121,84 @@ a:hover {
   }
 
   .templates {
-    .flex-row-center();
+    .flex-row();
     flex-wrap: wrap;
-    align-items: center;
   }
 
   .template {
-    .flex-column();
+    .flex-row();
 
-    .title {
-      .flex-row-center();
-      align-items: start;
+    .content {
+      justify-content: space-between;
+      .header {
+        .flex-row-center();
+        align-items: start;
+      }
+
+      .filters {
+        .flex-column();
+        flex-grow: 1;
+      }
+
+      .filter {
+        display: flex;
+        align-items: center;
+      }
     }
   }
 
-  .filters {
-    .flex-column();
-    flex-grow: 1;
-  }
-
-  .filter {
-    display: flex;
-    align-items: center;
-  }
-
-  .view-all-area {
-    display: flex;
-    max-width: 100%;
-  }
-
-  .view-all {
-    .flex-row-center();
-    align-items: center;
+  .no-applications {
     text-align: center;
-    flex-grow: 1;
-
-    div {
-      display: flex;
-      align-items: center;
+    .label {
+      width: 100%;
     }
   }
 }
 
 // Margin and padding
 #dashboard {
+  .template-category {
+    .title {
+      margin-left: 10px;
+      .header {
+        margin: 10px;
+      }
+    }
+
+    .templates {
+      padding-bottom: 10px;
+    }
+  }
   .template {
-    margin: 15px;
-    max-width: 330px;
+    margin: 0px 10px 5px 0px;
+    width: 330px;
+    padding: 10px;
+    justify-content: space-between;
+    border: 2px solid @surfacesDark;
     border-radius: @borderRadius;
     background-color: @surfacesWhite;
-    box-shadow: @templateBoxShadow;
 
-    .title {
+    .content {
+      min-height: 65px;
+    }
+
+    .button {
       padding: 10px;
-      padding-bottom: 3px;
-
-      .header {
-        margin: 2px;
-      }
+      width: 70px;
     }
-  }
 
-  .template-category {
-    margin: 10px;
-
-    .title {
-      a {
-        margin-left: 10px;
+    .filters {
+      margin: 2px;
+      .strong-label {
+        padding-top: 0px;
       }
-
-      .header {
-        margin: 2px;
+      .label {
+        padding-left: 0px !important;
+        .icon {
+          margin-left: 5px;
+          margin-right: 0px;
+        }
       }
-    }
-  }
-
-  .filters {
-    margin: 5px;
-    padding: 3px;
-  }
-
-  .view-all {
-    padding: 5px;
-    font-weight: @semiboldWeight;
-    color: grey !important;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-
-    i {
-      padding-right: 6px;
     }
   }
 }
@@ -1066,7 +1238,257 @@ a:hover {
   .detail-container {
     .flex-row();
     align-items: center;
+    flex-wrap: wrap;
+  }
+}
+
+/*--------------------------------
+      Admin Menu
+---------------------------------*/
+
+#admin-display {
+  .flex-column();
+  align-items: center;
+
+  .admin-options-container {
+    .flex-row();
+    align-items: center;
     flex-wrap: 1;
+
+    .admin-option {
+      margin: 15px;
+      max-width: 330px;
+      border-radius: @borderRadius;
+      background-color: @surfacesWhite;
+      box-shadow: @templateBoxShadow;
+      padding: 10px;
+    }
+  }
+}
+
+/*--------------------------------
+      Filters
+---------------------------------*/
+
+.filterItem {
+  border-radius: 4px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: @surfacesWhite;
+  margin: 5px;
+  color: @darkGrey;
+  border: solid 1px @fullyTransperant;
+
+  &.visible {
+    border: solid 1px @blue;
+  }
+
+  .dropdown.icon {
+    margin-left: 6px;
+  }
+}
+
+// Layouts
+#list-filter {
+  .flex-row();
+
+  align-items: center;
+  flex-wrap: wrap;
+
+  .list-filter-title {
+    .flex-row-center-center();
+    .icon {
+      line-height: normal;
+    }
+  }
+
+  .ui.dropdown {
+    .clickable();
+    .filterItem();
+
+    .menu {
+      top: 120%;
+      border: solid 1px @blue;
+    }
+  }
+
+  // multiple is used to make sure filter menu stays open, but it adds extra margin on text
+  .ui.multiple.dropdown > .text {
+    margin: 0px;
+  }
+
+  // Add filter selector
+  > .ui.dropdown {
+    color: @blue !important;
+  }
+
+  .active-filter {
+    // Needed for relative position of floating label
+    position: relative;
+
+    .label.floating {
+      top: -0.8em;
+      left: 95%;
+    }
+  }
+
+  .remove-filter {
+    color: @blue;
+    .icon {
+      margin: 0px;
+      margin-right: 7px;
+    }
+  }
+}
+
+/*--------------------------------
+      Date Picker
+---------------------------------*/
+@weekDayRowBorder: 1px solid rgba(0, 0, 0, 0.05);
+
+.not-clickable {
+  cursor: default;
+}
+
+.in-range-left-border {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.in-range-right-border {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.date-filter-title {
+  .flex-row();
+  align-items: center;
+
+  > div {
+    .flex-column();
+    margin-left: 5px;
+    align-items: center;
+
+    &.title-and-criteria {
+      :first-child {
+        align-self: flex-start;
+        font-size: 10px;
+        line-height: 10px;
+        color: @darkGrey;
+      }
+    }
+  }
+}
+
+.date-filter {
+  .flex-row();
+  padding: 5px;
+  padding-top: 15px;
+  padding-bottom: 5px;
+
+  .named-dates {
+    .flex-column();
+    padding-left: 10px;
+    padding-right: 10px;
+    align-items: stretch;
+    margin-right: 5px;
+    overflow-y: auto;
+    max-height: 300px;
+
+    div {
+      .clickable();
+      border-radius: @borderRadius;
+      padding: 10px;
+      margin-top: 5px;
+      text-align: center;
+    }
+
+    .selected-named-date {
+      background-color: @dateFilterLightBlue;
+    }
+  }
+
+  .calendar-container {
+    .flex-column();
+    margin-left: 10px;
+
+    .month-selector {
+      .flex-row();
+      margin-bottom: 10px;
+
+      .month-name {
+        flex-grow: 1;
+        text-align: center;
+        font-size: 24px;
+      }
+
+      .month-button {
+        .clickable();
+      }
+    }
+
+    .calendar-days-container {
+      .flex-column();
+
+      .week-day-headers {
+        .flex-row();
+        margin-bottom: 5px;
+        div {
+          width: 40px;
+          color: @weekDayHeaderColor;
+          font-size: 12px;
+          text-align: center;
+        }
+      }
+
+      .week-day-row {
+        .flex-row();
+        padding-top: 2px;
+        padding-bottom: 2px;
+        border-top: @weekDayRowBorder;
+
+        :first-child.day-in-range {
+          .in-range-left-border;
+        }
+
+        :last-child.day-in-range {
+          .in-range-right-border;
+        }
+
+        .first-in-range {
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
+        }
+
+        .last-in-range {
+          border-top-right-radius: 5px;
+          border-bottom-right-radius: 5px;
+        }
+
+        div {
+          .flex-row();
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 35px;
+
+          &.day-in-range {
+            background-color: @dateFilterLightBlue;
+          }
+
+          > div {
+            border-radius: 200px;
+            width: 32px;
+            height: 32px;
+
+            &.day-selected {
+              background-color: @selectedDayColor;
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -1090,6 +1512,14 @@ a:hover {
   color: @information !important;
 }
 
+.success-colour {
+  color: @success !important;
+}
+
+.error-colour {
+  color: @attention !important;
+}
+
 .interactive-color {
   color: @interactiveHigh !important;
 }
@@ -1102,6 +1532,220 @@ a:hover {
 .right-justify-content {
   width: 100%;
   text-align: right;
+}
+
+/*--------------------------------
+      Template Builder
+---------------------------------*/
+
+@indicatorColor: #e8e8e8;
+
+.io-wrapper {
+  .flex-row();
+  align-items: stretch;
+  margin: 2px;
+  .io-component {
+    flex-grow: 1;
+    margin: 0px;
+    text-align: center;
+    white-space: nowrap;
+    border: 2px solid @indicatorColor;
+    border-radius: @borderRadius;
+    font-size: 12px;
+    padding: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  input,
+  textarea {
+    border: none !important;
+    margin: 0px !important;
+    padding: 0px !important;
+    font-size: 12px !important;
+    width: none !important;
+    min-width: 200px;
+  }
+
+  .key {
+    border-end-end-radius: 0px;
+    border-start-end-radius: 0px;
+    background-color: @indicatorColor;
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  .value {
+    border-start-start-radius: 0px !important;
+    border-end-start-radius: 0px !important;
+    background-color: @surfacesWhite !important;
+    max-width: 600px !important;
+  }
+}
+
+.from-existing-dropdown {
+  font-size: 12px !important;
+  border: 2px solid @indicatorColor !important;
+  border-radius: @borderRadius !important;
+  margin: 2px !important;
+}
+
+.icon-button {
+  padding: 0px !important;
+  margin: 0px !important;
+  margin-right: 5px !important;
+  margin-left: 5px !important;
+}
+
+.longer {
+  input,
+  textarea {
+    min-width: 600px !important;
+  }
+}
+.long {
+  input,
+  textarea {
+    min-width: 400px !important;
+  }
+}
+.template-builder-templates {
+  width: @applicationListWidth;
+  .top-bar {
+    .flex-row();
+    align-items: center;
+  }
+}
+
+.collapsed-start-row {
+  height: 10px !important;
+  td {
+    text-align: center !important;
+  }
+}
+
+.collapsed-end-row {
+  height: 2px !important;
+}
+
+.template-builder-wrapper {
+  width: @applicationListWidth;
+  .template-builder-info-bar {
+    .flex-row();
+    justify-content: center;
+  }
+  .template-builder-tabs {
+    .flex-row();
+    margin: 5px;
+
+    div {
+      .clickable();
+      padding: 5px;
+      flex-grow: 1;
+      text-align: center;
+      border-radius: @borderRadius;
+    }
+  }
+}
+
+.template-buider-category-input {
+  .flex-column-center-start();
+  margin: 3px;
+  padding: 20px;
+  border-radius: @borderRadius;
+  background: @surfacesWhite;
+  p {
+    font-size: @slightlySmallerText;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+}
+
+.template-bulder-filter-input {
+  .template-buider-category-input();
+}
+
+.builder-selected {
+  background-color: @darkGrey !important;
+  color: @surfacesWhite !important;
+  .header {
+    color: @surfacesWhite !important;
+  }
+}
+
+.builder-page-elements-wrapper {
+  background: white;
+  padding: 10px;
+  margin: 10px;
+  .element-config-options-container {
+    .flex-row();
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: 100px;
+    margin-right: 30px;
+    margin: 5px;
+  }
+  .form-element-wrapper {
+    justify-content: flex-start !important;
+  }
+}
+
+.evaluation-container {
+  border-radius: @borderRadius;
+  border: 1px solid @indicatorColor;
+  padding: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 2px;
+  background-color: @surfacesWhite;
+  .evaluation-container-title {
+    .flex-row-center-center();
+  }
+  .evaluation-container-content {
+    .flex-row() !important;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+}
+
+.config-modal {
+  width: 90% !important;
+
+  .config-modal-container {
+    .flex-column-center-center();
+    padding: 10px;
+  }
+  .config-modal-info {
+    background-color: @surfacesWhite !important;
+  }
+}
+
+.object-properties-container {
+  .flex-column-start-center();
+  margin-left: 30px;
+}
+.evaluator-operator-container {
+  .flex-column-start-start();
+  background: rgba(0, 0, 0, 0.03);
+  padding: 5px;
+  margin: 2px;
+  border-radius: @borderRadius;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  background-color: rgba(50, 252, 50, 0.01);
+}
+
+.config-container {
+  .flex-column-start-start();
+  padding: 10px;
+  border-radius: @borderRadius;
+  background-color: @surfacesWhite;
+  margin: 5px;
+}
+
+.config-container-alternate {
+  .config-container();
+  background-color: rgba(0, 0, 0, 0.03);
 }
 
 /*******************************

@@ -1,8 +1,8 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
-import { Message, Header, Table } from 'semantic-ui-react'
+import { Header, Table } from 'semantic-ui-react'
 import { Loading } from '../../components'
-import strings from '../../utils/constants'
+import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { OutcomeDisplay, TableDisplay, TableDisplayQuery } from '../../utils/types'
 
@@ -14,6 +14,7 @@ const OutcomeTable: React.FC<{
 }> = ({ outcomeDisplay, tableDisplayColumns, tableQuery, outcomeCode }) => {
   const { push } = useRouter()
   const { data, error } = useQuery(tableQuery.query, { fetchPolicy: 'network-only' })
+  usePageTitle(outcomeDisplay.title)
 
   // if (error) return <Message error title={strings.ERROR_GENERIC} list={[error.message]} />
   // Silently ignore errors for demo
@@ -66,7 +67,6 @@ const getTableValue = (
   isTextValue: boolean
 ) => {
   const value = row[columnName]
-  console.log(row)
   if (!value) return ''
   return isTextValue || typeof value === 'string' ? value : value.text
 }

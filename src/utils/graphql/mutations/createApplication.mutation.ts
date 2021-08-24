@@ -3,19 +3,20 @@ import { gql } from '@apollo/client'
 export default gql`
   mutation createApplication(
     $name: String!
-    $serial: String!
+    $isConfig: Boolean = false
+    $serial: String
     $templateId: Int!
     $userId: Int
     $orgId: Int
     $sessionId: String!
     $outcome: ApplicationOutcome = PENDING
     $trigger: Trigger = ON_APPLICATION_CREATE
-    $sections: [ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput!]
     $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]
   ) {
     createApplication(
       input: {
         application: {
+          isConfig: $isConfig
           name: $name
           serial: $serial
           templateId: $templateId
@@ -25,7 +26,6 @@ export default gql`
           isActive: true
           outcome: $outcome
           trigger: $trigger
-          applicationSectionsUsingId: { create: $sections }
           applicationResponsesUsingId: { create: $responses }
         }
       }

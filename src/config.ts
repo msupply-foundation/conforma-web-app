@@ -10,6 +10,7 @@ const config = {
   serverREST: isProductionBuild ? getUrl('server') : 'http://localhost:8080',
   uploadEndpoint: '/upload',
   paginationPresets: [2, 5, 10, 20, 50],
+  version: 'dev',
 }
 
 export default config

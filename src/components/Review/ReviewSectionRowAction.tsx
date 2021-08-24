@@ -13,6 +13,7 @@ import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
 import { ReviewStatus } from '../../utils/generated/graphql'
 import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
+import useRemakePreviousReview from '../../utils/hooks/useRemakePreviousReview'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const {
@@ -25,11 +26,11 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
     switch (action) {
       case ReviewAction.canContinue: {
         if (isAssignedToCurrentUser) {
-          return <StartContinueOrRestartButton {...props} />
+          return <GenerateActionButton {...props} />
         }
         return (
           <Label className="simple-label">
-            <em>{strings.STATUS_IN_PROGRESS}</em>
+            <em>{strings.REVIEW_STATUS_IN_PROGRESS}</em>
           </Label>
         )
       }
@@ -41,14 +42,29 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
         return <ViewReviewIcon {...props} />
       }
 
-      case ReviewAction.canUpdate:
       case ReviewAction.canStartReview:
+      case ReviewAction.canMakeDecision: {
+        if (isAssignedToCurrentUser) {
+          return <GenerateActionButton {...props} />
+        }
+        return (
+          <Label className="simple-label">
+            <em>{strings.REVIEW_STATUS_NOT_STARTED}</em>
+          </Label>
+        )
+      }
+
+      case ReviewAction.canUpdate:
       case ReviewAction.canReStartReview:
       case ReviewAction.canReReview: {
         if (isAssignedToCurrentUser) {
-          return <StartContinueOrRestartButton {...props} />
+          return <GenerateActionButton {...props} />
         }
-        return <NotStartedLabel />
+        return (
+          <Label className="simple-label">
+            <em>{strings.REVIEW_STATUS_PENDING_ACTION}</em>
+          </Label>
+        )
       }
 
       case ReviewAction.canSelfAssign: {
@@ -73,11 +89,12 @@ const getReviewerChangesUpdatedCount = (consolidationProgress?: ConsolidationPro
 const getConsolidatorChangesRequestedCount = (progress?: ChangeRequestsProgress) =>
   progress?.totalChangeRequests || 0
 
-// START REVIEW, CONTINUE REVIEW, UPDATE REVIEW OR RE-REVIEW BUTTON
-const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
+// Possible generate action button: START REVIEW, CONTINUE REVIEW, UPDATE REVIEW, RE-REVIEW or MAKE DECISION
+const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
   section: { details, reviewProgress, consolidationProgress, changeRequestsProgress },
   assignment,
+  previousAssignment,
   thisReview,
   action,
 }) => {
@@ -87,6 +104,12 @@ const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   } = useRouter()
 
   const [error, setError] = useState(false)
+
+  const remakeReview = useRemakePreviousReview({
+    structure: fullStructure,
+    assignment,
+    previousAssignment,
+  })
 
   const restartReview = useRestartReview({
     reviewId: thisReview?.id || 0,
@@ -119,6 +142,8 @@ const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
           reviewerChangesCount > 0 ? ` (${reviewerChangesCount})` : ''
         )
       }
+      case ReviewAction.canMakeDecision:
+        return strings.ACTION_MAKE_DECISION
       case ReviewAction.canContinue:
         return strings.ACTION_CONTINUE
       default:
@@ -127,14 +152,19 @@ const StartContinueOrRestartButton: React.FC<ReviewSectionComponentProps> = ({
   }
 
   const doAction = async () => {
+    const { isFinalDecision } = assignment
     let reviewId = thisReview?.id as number
-    if (thisReview?.status == ReviewStatus.Draft)
-      return push(`${pathname}/${reviewId}?activeSections=${details.code}`)
+    if (thisReview?.current.reviewStatus == ReviewStatus.Draft)
+      return push(
+        `${pathname}/${reviewId}?activeSections=${isFinalDecision ? 'none' : details.code}`
+      )
 
     try {
-      if (thisReview) await restartReview()
+      if (isFinalDecision)
+        reviewId = (await remakeReview()).data?.createReview?.review?.id as number
+      else if (thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
-      push(`${pathname}/${reviewId}?activeSections=${details.code}`)
+      push(`${pathname}/${reviewId}?activeSections=${isFinalDecision ? 'none' : details.code}`)
     } catch (e) {
       console.log(e)
       return setError(true)
@@ -210,10 +240,5 @@ const ViewReviewIcon: React.FC<ReviewSectionComponentProps> = ({
     />
   )
 }
-
-// NOT_STARTED LABEL
-const NotStartedLabel: React.FC = () => (
-  <Label className="simple-label" content={strings.STATUS_NOT_STARTED} />
-)
 
 export default ReviewSectionRowAction

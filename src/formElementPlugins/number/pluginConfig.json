@@ -1,0 +1,21 @@
+{
+  "isCore": true,
+  "code": "number",
+  "displayName": "Number Input",
+  "parameterLoadingValues": {
+    "label": "Loading...",
+    "default": "",
+    "description": "",
+    "maxWidth": null,
+    "type": "float",
+    "minValue": -999999999,
+    "maxValue": 999999999,
+    "locale": "en-US",
+    "currency": "",
+    "prefix": "",
+    "suffix": "null",
+    "maxSignificantDigits": 999
+  },
+  "//": "categories types: 'Input'|'Informative'",
+  "category": "Input"
+}

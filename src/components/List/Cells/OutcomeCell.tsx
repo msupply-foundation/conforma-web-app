@@ -1,7 +1,27 @@
 import React from 'react'
-import { Segment } from 'semantic-ui-react'
 import { CellProps } from '../../../utils/types'
+import { Label, SemanticCOLORS, SemanticICONS } from 'semantic-ui-react'
+import strings from '../../../utils/constants'
+import { ApplicationOutcome } from '../../../utils/generated/graphql'
 
-const OutcomeCell: React.FC<CellProps> = ({ application }) => <p>{application.outcome}</p>
+const outcomeDisplayMap: {
+  [key in ApplicationOutcome]: { icon: SemanticICONS; color: SemanticCOLORS; text: string }
+} = {
+  PENDING: { icon: 'hourglass half', color: 'grey', text: '' }, // Not used
+  APPROVED: { icon: 'check circle', color: 'green', text: strings.OUTCOME_APPROVED },
+  REJECTED: { icon: 'cancel', color: 'pink', text: strings.OUTCOME_REJECTED },
+  EXPIRED: { icon: 'time', color: 'orange', text: strings.OUTCOME_EXPIRED },
+  WITHDRAWN: { icon: 'user cancel', color: 'yellow', text: strings.OUTCOME_WITHDRAWN },
+}
+
+const OutcomeCell: React.FC<CellProps> = ({ application }) => {
+  const { outcome } = application
+  if (outcome === ApplicationOutcome.Pending) return null
+  // Only show label if no longer in progress
+  else {
+    const { icon, color, text } = outcomeDisplayMap[outcome as ApplicationOutcome]
+    return <Label className="stage-label" icon={icon} color={color} content={text} />
+  }
+}
 
 export default OutcomeCell
