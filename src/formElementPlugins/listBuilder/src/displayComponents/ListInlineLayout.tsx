@@ -46,23 +46,23 @@ const ItemAccordion: React.FC<any> = ({
   updateList,
 }) => {
   const [open, setOpen] = useState(false)
-  const [edit, setEdit] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
   const [currentItemElementsState, setItemResponseElementsState] =
     useState<{ [key: string]: ElementState }>()
 
   const editItemInline = () => {
-    setEdit(true)
+    setIsEditing(true)
     editItem(index, false)
   }
 
   const updateListInline = () => {
     updateList()
-    setEdit(false)
+    setIsEditing(false)
   }
 
   const deleteItemInline = () => {
     deleteItem(index)
-    setEdit(false)
+    setIsEditing(false)
     setOpen(false)
   }
 
@@ -89,7 +89,7 @@ const ItemAccordion: React.FC<any> = ({
       </Accordion.Title>
       <Accordion.Content active={open}>
         {codes.map((code: string, cellIndex: number) =>
-          edit ? (
+          isEditing ? (
             <ApplicationViewWrapper
               key={`list-${cellIndex}`}
               element={currentItemElementsState[code]}
@@ -108,8 +108,10 @@ const ItemAccordion: React.FC<any> = ({
             />
           )
         )}
-        {!edit && isEditable && <Button primary content={editItemText} onClick={editItemInline} />}
-        {edit && <Button primary content={updateButtonText} onClick={updateListInline} />}
+        {!isEditing && isEditable && (
+          <Button primary content={editItemText} onClick={editItemInline} />
+        )}
+        {isEditing && <Button primary content={updateButtonText} onClick={updateListInline} />}
         {isEditable && <Button secondary content={deleteItemText} onClick={deleteItemInline} />}
       </Accordion.Content>
     </Accordion>
