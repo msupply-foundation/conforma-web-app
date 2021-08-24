@@ -45,7 +45,7 @@ Click "Start a new Company Registration", fill in the application form, and subm
 
 Your application now has to be reviewed. In the meantime, you can see its status on the Dashboard, or from the **Applications List**, which can be accessed from the main menu bar (select "Company Registration" from the Dropdown menu)
 
-Once it has been reviewed, you'll receive an email stating your company has been created in the system, and your Dashboard will show you now have permission to apply for a licence.
+Once it has been reviewed, you'll receive an email stating your company has been created in the system, and your Dashboard will show you now have permission to apply for a license.
 
 ### 3. Apply for a license for your company to register products
 
@@ -55,7 +55,7 @@ Now, from the Dashboard, you should see a link to "Start a new Company License -
 
 Then wait to have your application reviewed. Be aware that you may be required to make amendments to your application if a reviewer requests it.
 
-Once your application has been approved, you'll receive a copy of your licence via email (as a PDF document), and your Dashboard will show that you can now apply to register a product.
+Once your application has been approved, you'll receive a copy of your license via email (as a PDF document), and your Dashboard will show that you can now apply to register a product.
 
 ### 4. Apply to register a product
 
@@ -84,8 +84,8 @@ When switching to reviewer accounts, it's a good idea to you use a different bro
 
 | Username        | Permissions                                                                                                                                    |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| basic_reviewer  | - can approve company registrations<br>- can perform initial Screening for License applications and Product registrations                      |
-| senior_reviewer | - can do "Assessment" stage reviews for License applications and Product registrations                                                         |
+| basic_reviewer  | - can approve company registrations<br>- can perform initial Screening for license applications and Product registrations                      |
+| senior_reviewer | - can do "Assessment" stage reviews for license applications and Product registrations                                                         |
 | supervisor      | - can consolidate product registrations<br>- can assign (for review levels that can't self-assign)                                             |
 | chief           | - can make final decision for product registrations                                                                                            |
 | admin           | - can control whole system, including template management, adding users to organisations, granting permissions, etc. (For advanced users only) |
