@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Modal, Form, Segment, Icon } from 'semantic-ui-react'
+import { Button, Modal, Form, Segment, Icon, Label } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { User } from '../../../utils/types'
 import { DisplayType, InputResponseField, ListItem, ListLayoutProps } from './types'
@@ -22,6 +22,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onSave,
   onUpdate,
   Markdown,
+  validationState,
   initialValue,
   currentResponse,
   applicationData,
@@ -213,6 +214,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         onClick={() => setInputState({ ...inputState, isOpen: true })}
         disabled={!isEditable}
       />
+      {!validationState.isValid && (
+        <p className="alert">
+          <Icon name="attention" />
+          {validationState.validationMessage || strings.VALIDATION_MESSAGE_DEFAULT}
+        </p>
+      )}
       {displayType !== DisplayType.INLINE && (
         <Modal
           size="tiny"

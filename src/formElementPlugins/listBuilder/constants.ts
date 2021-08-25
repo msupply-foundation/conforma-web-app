@@ -7,4 +7,5 @@ export default {
   BUTTON_CANCEL: 'Cancel',
   ERROR_LIST_ITEMS_NOT_VALID:
     "Can't add item to list. There are invalid entries or incomplete required fields",
+  VALIDATION_MESSAGE_DEFAULT: 'This is a required question',
 }
