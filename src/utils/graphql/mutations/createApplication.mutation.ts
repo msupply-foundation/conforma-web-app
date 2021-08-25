@@ -35,7 +35,7 @@ export default gql`
         orgId
         ...Application
         template {
-          ...Template
+          ...templateFragment
           templateSections {
             nodes {
               ...Section

@@ -501,6 +501,7 @@ interface TemplateInList {
   name: string
   namePlural?: string
   code: string
+  version: number
   icon: string | null | undefined
   templateCategory: TemplateCategoryDetails
   permissions: PermissionPolicyType[]
@@ -514,6 +515,7 @@ interface TemplateDetails {
   id: number
   name: string
   code: string
+  version: number
   elementsIds?: number[] // TODO: Change to not optional after re-structure
   elementsDefaults?: EvaluatorNode[]
   sections?: SectionDetails[] // TODO: Change to not optional after re-structure
@@ -555,6 +557,7 @@ interface OrganisationSimple {
   orgId: number
   userRole: string | null
   orgName: string
+  isSystemOrg: boolean
 }
 
 interface Organisation extends OrganisationSimple {

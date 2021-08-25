@@ -66,10 +66,8 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
     value: tableName,
   }))
 
-  const handleOutcomeChange = (_: SyntheticEvent, { value }: any) => push(`/outcomes/${value}`)
-
   const templateOptions = templates
-    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Menu))
+    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.List))
     .sort((t1, t2) => (t1.templateCategory.title > t2.templateCategory.title ? 1 : -1))
     .map((template) => ({
       key: template.code,
@@ -77,8 +75,43 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
       value: template.code,
     }))
 
+  const adminOptions: any = [
+    { key: 'templates', text: strings.MENU_ITEM_ADMIN_TEMPLATES, value: '/admin/templates' },
+    {
+      key: 'lookup_tables',
+      text: strings.MENU_ITEM_ADMIN_LOOKUP_TABLES,
+      value: '/admin/lookup-tables',
+    },
+    { key: 'outcomes', text: strings.MENU_ITEM_ADMIN_OUTCOME_CONFIG, value: '/admin/outcomes' },
+    { key: 'permissions', text: strings.MENU_ITEM_ADMIN_PERMISSIONS, value: '/admin/permissions' },
+    { key: 'plugins', text: strings.MENU_ITEM_ADMIN_PLUGINS, value: '/admin/plugins' },
+    {
+      key: 'localisations',
+      text: strings.MENU_ITEM_ADMIN_LOCALISATION,
+      value: '/admin/localisations',
+    },
+  ]
+  // Add Admin templates to Admin menu
+  adminOptions.push(
+    ...templates
+      .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Admin))
+      .map((template) => ({
+        key: template.code,
+        text: template.name,
+        value: `/application/new?type=${template.code}`,
+      }))
+  )
+
+  const handleOutcomeChange = (_: SyntheticEvent, { value }: any) => {
+    push(`/outcomes/${value}`)
+  }
+
   const handleTemplateChange = (_: SyntheticEvent, { value }: any) => {
     push(`/applications?type=${value}`)
+  }
+
+  const handleAdminChange = (_: SyntheticEvent, { value }: any) => {
+    push(value)
   }
 
   const getSelectedLinkClass = (link: string) => {
@@ -112,34 +145,11 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
         )}
         {isAdmin && (
           <List.Item className={getSelectedLinkClass('admin')}>
-            <Dropdown text={strings.MENU_ITEM_ADMIN_CONFIG}>
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  text={strings.MENU_ITEM_ADMIN_TEMPLATES}
-                  onClick={() => push('/admin/templates')}
-                />
-                <Dropdown.Item
-                  text={strings.MENU_ITEM_ADMIN_LOOKUP_TABLES}
-                  onClick={() => push('/admin/lookup-tables')}
-                />
-                <Dropdown.Item
-                  text={strings.MENU_ITEM_ADMIN_OUTCOME_CONFIG}
-                  onClick={() => push('/admin/outcomes')}
-                />
-                <Dropdown.Item
-                  text={strings.MENU_ITEM_ADMIN_PERMISSIONS}
-                  onClick={() => push('/admin/permissions')}
-                />
-                <Dropdown.Item
-                  text={strings.MENU_ITEM_ADMIN_PLUGINS}
-                  onClick={() => push('/admin/plugins')}
-                />
-                <Dropdown.Item
-                  text={strings.MENU_ITEM_ADMIN_LOCALISATION}
-                  onClick={() => push('/admin/localisations')}
-                />
-              </Dropdown.Menu>
-            </Dropdown>
+            <Dropdown
+              text={strings.MENU_ITEM_ADMIN_CONFIG}
+              options={adminOptions}
+              onChange={handleAdminChange}
+            />
           </List.Item>
         )}
       </List>
@@ -187,22 +197,28 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
     text: orgName,
     value: orgId,
   }))
-  dropdownOptions.push({
-    key: LOGIN_AS_NO_ORG,
-    text: strings.LABEL_NO_ORG,
-    value: LOGIN_AS_NO_ORG,
-  })
+  // Only add "No Org" option if user not part of "Admin" org (e.g. FDA)
+  if (!orgs.some(({ isSystemOrg }) => isSystemOrg))
+    dropdownOptions.push({
+      key: LOGIN_AS_NO_ORG,
+      text: `> ${strings.LABEL_NO_ORG_SELECT}`,
+      value: LOGIN_AS_NO_ORG,
+    })
   return (
     <div id="org-selector">
       {user?.organisation?.logoUrl && (
         <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST)} />
       )}
       <div>
-        <Dropdown
-          text={user?.organisation?.orgName || strings.LABEL_NO_ORG}
-          options={dropdownOptions}
-          onChange={handleChange}
-        ></Dropdown>
+        {dropdownOptions.length === 1 ? (
+          user?.organisation?.orgName || strings.LABEL_NO_ORG
+        ) : (
+          <Dropdown
+            text={user?.organisation?.orgName || strings.LABEL_NO_ORG}
+            options={dropdownOptions}
+            onChange={handleChange}
+          ></Dropdown>
+        )}
       </div>
     </div>
   )
