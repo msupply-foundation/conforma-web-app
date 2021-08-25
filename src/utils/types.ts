@@ -588,6 +588,16 @@ interface SortQuery {
 }
 
 // *****************
+// SCHEMA INFO
+// *****************
+
+export type SchemaColumn = { columnName: string }
+
+export type SchemaInfo = {
+  [tableName: string]: SchemaColumn[]
+}
+
+// *****************
 // OUTCOMES DISPLAY
 // *****************
 

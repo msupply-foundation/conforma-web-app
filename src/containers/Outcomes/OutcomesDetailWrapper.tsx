@@ -34,7 +34,9 @@ const OutcomeDetailsWrapper: React.FC<{ displays: OutcomeDisplaysStructure }> = 
         headerColumn={outcomeDisplay.detailColumnName}
         detailQuery={detailQuery}
       />
-      <ApplicationLinks applicationLinkQuery={applicationLinkQuery} id={id} />
+      {applicationLinkQuery && (
+        <ApplicationLinks applicationLinkQuery={applicationLinkQuery} id={id} />
+      )}
     </div>
   )
 }

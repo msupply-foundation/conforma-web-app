@@ -31409,6 +31409,22 @@ export type GetReviewResponsesQuery = (
   )> }
 );
 
+export type GetSchemaColumnsQueryVariables = Exact<{
+  tableNames?: Maybe<Array<Scalars['SqlIdentifier']>>;
+}>;
+
+
+export type GetSchemaColumnsQuery = (
+  { __typename?: 'Query' }
+  & { schemaColumns?: Maybe<(
+    { __typename?: 'SchemaColumnsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'SchemaColumn' }
+      & Pick<SchemaColumn, 'columnName' | 'tableName'>
+    )>> }
+  )> }
+);
+
 export type GetTemplateQueryVariables = Exact<{
   code: Scalars['String'];
   status?: Maybe<TemplateStatus>;
@@ -33397,6 +33413,42 @@ export function useGetReviewResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetReviewResponsesQueryHookResult = ReturnType<typeof useGetReviewResponsesQuery>;
 export type GetReviewResponsesLazyQueryHookResult = ReturnType<typeof useGetReviewResponsesLazyQuery>;
 export type GetReviewResponsesQueryResult = Apollo.QueryResult<GetReviewResponsesQuery, GetReviewResponsesQueryVariables>;
+export const GetSchemaColumnsDocument = gql`
+    query getSchemaColumns($tableNames: [SqlIdentifier!]) {
+  schemaColumns(filter: {tableName: {in: $tableNames}}) {
+    nodes {
+      columnName
+      tableName
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetSchemaColumnsQuery__
+ *
+ * To run a query within a React component, call `useGetSchemaColumnsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSchemaColumnsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSchemaColumnsQuery({
+ *   variables: {
+ *      tableNames: // value for 'tableNames'
+ *   },
+ * });
+ */
+export function useGetSchemaColumnsQuery(baseOptions?: Apollo.QueryHookOptions<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>) {
+        return Apollo.useQuery<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>(GetSchemaColumnsDocument, baseOptions);
+      }
+export function useGetSchemaColumnsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>) {
+          return Apollo.useLazyQuery<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>(GetSchemaColumnsDocument, baseOptions);
+        }
+export type GetSchemaColumnsQueryHookResult = ReturnType<typeof useGetSchemaColumnsQuery>;
+export type GetSchemaColumnsLazyQueryHookResult = ReturnType<typeof useGetSchemaColumnsLazyQuery>;
+export type GetSchemaColumnsQueryResult = Apollo.QueryResult<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>;
 export const GetTemplateDocument = gql`
     query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE) {
   templates(condition: {code: $code, status: $status}) {
