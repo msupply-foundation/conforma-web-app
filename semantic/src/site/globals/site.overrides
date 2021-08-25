@@ -822,6 +822,9 @@ a:hover {
   border-radius: @borderRadius;
   padding-left: 20px;
   padding-right: 20px;
+  .summary-width {
+    max-width: 550px;
+  }
 }
 
 #application-summary-header {

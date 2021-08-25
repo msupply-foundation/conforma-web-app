@@ -1,20 +1,14 @@
-import { ApplicationViewProps } from '../../types'
 import {
   ApplicationDetails,
   ElementState,
   EvaluationOptions,
-  ResponseFull,
   ResponsesByCode,
   User,
 } from '../../../utils/types'
 import { TemplateElement, TemplateElementCategory } from '../../../utils/generated/graphql'
-import ApplicationViewWrapper from '../../ApplicationViewWrapper'
-import SummaryViewWrapper from '../../SummaryViewWrapper'
-import strings from '../constants'
 import { evaluateElements } from '../../../utils/helpers/evaluateElements'
 import { defaultEvaluatedElement } from '../../../utils/hooks/useLoadApplication'
-import { useUserState } from '../../../contexts/UserState'
-import { DisplayType, InputResponseField, ListItem, ListLayoutProps } from './types'
+import { ListItem } from './types'
 
 // Formatting and Text manipulation
 export const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
@@ -27,6 +21,7 @@ export const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
 
 export const substituteValues = (parameterisedString: string, item: ListItem) => {
   const getValueFromCode = (_: string, $: string, code: string) => item[code]?.value?.text || ''
+  // Replaces ${ } formatted substitutions with their values
   return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromCode)
 }
 
@@ -87,8 +82,8 @@ export const buildElements = async (
     validationExpression: field?.validation || true,
     validationMessage: field?.validationMessage || '',
     isVisibleExpression: field?.visibilityCondition || true,
-    isEditableExpression: field?.isEditable || true,
-    isRequiredExpression: field?.isRequired || true,
+    isEditableExpression: field?.isEditable ?? true,
+    isRequiredExpression: field?.isRequired ?? true,
     // "Dummy" values, but required for element props:
     elementIndex: 0,
     isValid: undefined,
