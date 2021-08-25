@@ -28,9 +28,14 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, c
             </>
           }
         />
-        <Header as="h2" className="heading-alt" textAlign="center">
-          {currentUser?.organisation?.orgName || strings.TITLE_NO_ORGANISATION}
-        </Header>
+        {currentUser?.organisation?.orgName && (
+          <Header
+            as="h2"
+            className="heading-alt"
+            textAlign="center"
+            content={currentUser?.organisation?.orgName}
+          />
+        )}
       </div>
       {children}
     </Container>
