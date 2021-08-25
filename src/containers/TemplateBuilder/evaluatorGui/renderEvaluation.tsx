@@ -95,12 +95,6 @@ export const renderEvaluationElement: RenderEvaluationElementType = (
                 setSelected={onSelect}
                 title="operator"
               />
-              <ComponentLibrary.Selector
-                selections={selections}
-                selected={gui.selector}
-                setSelected={onSelect}
-                title="operator"
-              />
               <Evaluate typedEvaluation={typedEvaluation} evaluatorParamers={evaluatorParamers} />
             </ComponentLibrary.FlexRow>
             <EvaluationOutputType evaluation={typedEvaluation} setEvaluation={setEvaluation} />
