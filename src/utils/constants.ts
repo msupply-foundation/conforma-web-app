@@ -151,7 +151,6 @@ export default {
   TITLE_LOGIN: 'Login',
   TITLE_APPLICATION_FORM: 'application form',
   TITLE_APPLICATION_SUMMARY: 'Review and Submit',
-  TITLE_NO_ORGANISATION: 'No Organisation',
   TITLE_DETAILS: 'Details',
   TITLE_INTRODUCTION: 'Introduction',
   TITLE_REVIEW_COMMENT: 'Overall comment',
