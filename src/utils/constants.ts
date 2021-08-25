@@ -96,7 +96,7 @@ export default {
   LABEL_CONSOLIDATION_DISAGREE: 'Disagree',
   LABEL_CONSOLIDATION_AGREEMENT: 'Agreed',
   LABEL_CONSOLIDATION_DISAGREEMENT: 'Disagreed',
-  LABEL_DASHBOARD_NO_APPLICATIONS: "You don't have any %1 yet.",
+  LABEL_DASHBOARD_NO_APPLICATIONS: "You don't have any applications in progress",
   LABEL_DASHBOARD_START_NEW: 'Start a new %1',
   LABEL_LIST_PER_PAGE: 'Applications per page',
   LABEL_LOADING: 'Loading...',

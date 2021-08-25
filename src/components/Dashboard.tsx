@@ -30,19 +30,23 @@ const Dashboard: React.FC = () => {
       <Header as="h2" content={strings.MENU_ITEM_DASHBOARD} />
       {templatesByCategory
         .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Dashboard))
-        .map(({ templates, templateCategory: { icon: categoryIcon, title: categoryTitle } }) => (
-          <div key={categoryTitle} className="template-category">
-            <div className="title">
-              {categoryIcon && <Icon size="large" color="grey" name={categoryIcon} />}
-              <Header as="h4">{categoryTitle}</Header>
+        .map(({ templates, templateCategory: { icon: categoryIcon, title: categoryTitle } }) => {
+          console.log(categoryTitle, templates)
+
+          return (
+            <div key={categoryTitle} className="template-category">
+              <div className="title">
+                {categoryIcon && <Icon size="large" color="grey" name={categoryIcon} />}
+                <Header as="h4">{categoryTitle}</Header>
+              </div>
+              <div className="templates">
+                {templates.map((template) => (
+                  <TemplateComponent key={template.code} template={template} />
+                ))}
+              </div>
             </div>
-            <div className="templates">
-              {templates.map((template) => (
-                <TemplateComponent key={template.code} template={template} />
-              ))}
-            </div>
-          </div>
-        ))}
+          )
+        })}
     </div>
   )
 }
@@ -116,10 +120,7 @@ const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter }> =
 
 const StartNewTemplate: React.FC<{ template: TemplateInList }> = ({ template: { name, code } }) => (
   <div className="no-applications">
-    <Label
-      className="simple-label"
-      content={strings.LABEL_DASHBOARD_NO_APPLICATIONS.replace('%1', name)}
-    />
+    <Label className="simple-label" content={strings.LABEL_DASHBOARD_NO_APPLICATIONS} />
     <Link to={`/application/new?type=${code}`}>
       {strings.LABEL_DASHBOARD_START_NEW.replace('%1', name)}
     </Link>
