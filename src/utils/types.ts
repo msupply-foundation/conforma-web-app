@@ -15,6 +15,7 @@ import {
   Organisation as GraphQLOrg,
   Filter,
   Application,
+  UiLocation,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
@@ -329,6 +330,7 @@ interface ResponseFull {
   code?: string // Used in ListBuilder
   list?: any // Used in ListBuilder
   date?: any // Used in DatePicker
+  number?: number | null // Used in Number plugin
   timeCreated?: Date
   reviewResponse?: ReviewResponse
   customValidation?: ValidationState
@@ -491,6 +493,7 @@ interface StageDetails {
 interface TemplateCategoryDetails {
   title: string
   icon: SemanticICONS | undefined
+  uiLocation: UiLocation[]
 }
 
 interface TemplateInList {
@@ -498,6 +501,8 @@ interface TemplateInList {
   name: string
   namePlural?: string
   code: string
+  version: number
+  icon: string | null | undefined
   templateCategory: TemplateCategoryDetails
   permissions: PermissionPolicyType[]
   hasApplyPermission: boolean
@@ -510,6 +515,7 @@ interface TemplateDetails {
   id: number
   name: string
   code: string
+  version: number
   elementsIds?: number[] // TODO: Change to not optional after re-structure
   elementsDefaults?: EvaluatorNode[]
   sections?: SectionDetails[] // TODO: Change to not optional after re-structure
@@ -551,6 +557,7 @@ interface OrganisationSimple {
   orgId: number
   userRole: string | null
   orgName: string
+  isSystemOrg: boolean
 }
 
 interface Organisation extends OrganisationSimple {
@@ -578,6 +585,16 @@ interface UseGetReviewStructureForSectionProps {
 interface SortQuery {
   sortColumn?: string
   sortDirection?: 'ascending' | 'descending'
+}
+
+// *****************
+// SCHEMA INFO
+// *****************
+
+export type SchemaColumn = { columnName: string }
+
+export type SchemaInfo = {
+  [tableName: string]: SchemaColumn[]
 }
 
 // *****************

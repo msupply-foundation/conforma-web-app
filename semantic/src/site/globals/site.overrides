@@ -316,6 +316,7 @@ a:hover {
 #org-selector .image {
   margin-right: 20px;
   height: 100%;
+  max-width: 100px;
 }
 
 #user-menu .button {
@@ -821,6 +822,9 @@ a:hover {
   border-radius: @borderRadius;
   padding-left: 20px;
   padding-right: 20px;
+  .summary-width {
+    max-width: 550px;
+  }
 }
 
 #application-summary-header {
@@ -1654,6 +1658,11 @@ a:hover {
   padding: 20px;
   border-radius: @borderRadius;
   background: @surfacesWhite;
+  p {
+    font-size: @slightlySmallerText;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
 }
 
 .template-bulder-filter-input {

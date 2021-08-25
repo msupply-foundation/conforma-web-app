@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  fragment Template on Template {
+  fragment templateFragment on Template {
     code
     id
     name
@@ -10,11 +10,14 @@ export default gql`
     isLinear
     startMessage
     submissionMessage
+    version
+    icon
     templateCategory {
+      id
+      code
       title
       icon
-      code
-      id
+      uiLocation
     }
     templateFilterJoins {
       nodes {

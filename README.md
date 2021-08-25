@@ -40,3 +40,10 @@ Apollo client for data fetching from a GraphQL server [Application-manager-serve
 * Serve bundled App:
 
 `yarn serve`
+
+## Development
+
+* `main` branch - only has features which have been released (on a demo-tag)
+* `develop` - to be used for development (to create a feature-branch before making a new PR) and selected as base for PRs
+
+The organisation-team will transfer approved changes from `develop` into the `main` periodically once all new features are stable and tested.

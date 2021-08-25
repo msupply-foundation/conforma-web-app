@@ -6,21 +6,15 @@ import HistoryResponseElement from '../PageElements/Elements/HistoryResponseElem
 import { useUserState } from '../../contexts/UserState'
 import { Stage } from '../Review'
 import strings from '../../utils/constants'
-import { StageDetails } from '../../utils/types'
+import { StageDetails, TemplateDetails } from '../../utils/types'
 
 interface HistoryPanelProps {
-  templateCode: string
-  // userLevel?: number
+  template: TemplateDetails
   stages: StageDetails[]
   isApplicant?: boolean
 }
 
-const HistoryPanel: React.FC<HistoryPanelProps> = ({
-  templateCode,
-  // userLevel = 1,
-  stages,
-  isApplicant = false,
-}) => {
+const HistoryPanel: React.FC<HistoryPanelProps> = ({ template, stages, isApplicant = false }) => {
   const {
     userState: { currentUser },
   } = useUserState()
@@ -32,7 +26,8 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({
   const { historyList } = useGetQuestionReviewHistory({
     serial: serialNumber,
     questionCode: showHistory,
-    templateCode,
+    templateCode: template.code,
+    templateVersion: template.version,
     userId: currentUser?.userId || 0,
     // userLevel,
     isApplicant,

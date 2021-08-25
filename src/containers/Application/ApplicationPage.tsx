@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Container, Grid, Header, Segment } from 'semantic-ui-react'
+import React, { useEffect, useRef } from 'react'
+import { Container, Grid, Header, Ref, Segment } from 'semantic-ui-react'
 import {
   FullStructure,
   SectionAndPage,
@@ -28,6 +28,8 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
 
   const { setState: setUpdateTrackerState } = useFormElementUpdateTracker()
   usePageTitle(strings.PAGE_TITLE_APPLICATION.replace('%1', serialNumber))
+
+  const contextRef = useRef<HTMLDivElement>(null)
 
   const pageNumber = Number(page)
 
@@ -66,13 +68,16 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   return (
     <Container id="application-form">
       <Grid stackable>
-        <Grid.Column width={4} id="progress-column" className="dev-border">
-          <ProgressArea
-            structure={fullStructure}
-            requestRevalidation={requestRevalidation as MethodRevalidate}
-            strictSectionPage={strictSectionPage as SectionAndPage}
-          />
-        </Grid.Column>
+        <Ref innerRef={contextRef}>
+          <Grid.Column width={4} id="progress-column" className="dev-border">
+            <ProgressArea
+              structure={fullStructure}
+              requestRevalidation={requestRevalidation as MethodRevalidate}
+              strictSectionPage={strictSectionPage as SectionAndPage}
+              context={contextRef}
+            />
+          </Grid.Column>
+        </Ref>
         <Grid.Column width={12} stretched id="form-column">
           <Segment basic>
             <Header as="h4" content={fullStructure.sections[sectionCode].details.title} />

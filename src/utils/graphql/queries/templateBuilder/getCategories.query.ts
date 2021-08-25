@@ -8,6 +8,7 @@ export default gql`
         icon
         id
         title
+        uiLocation
       }
     }
   }

@@ -5,7 +5,7 @@ export default gql`
     applicationBySerial(serial: $serial) {
       ...Application
       template {
-        ...Template
+        ...templateFragment
         templateSections(orderBy: INDEX_ASC) {
           nodes {
             ...Section
