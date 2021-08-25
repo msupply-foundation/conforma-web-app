@@ -14,7 +14,7 @@ Content here.
 
 ### Can you put that in diagrams?
 
-![adam](images/adam.png)
+![adam](mFlow_feature_diagram.svg)
 
 ### Subheading 3
 
@@ -23,3 +23,5 @@ Content here.
 ### Subheading 4
 
 Content here.
+
+#### another
