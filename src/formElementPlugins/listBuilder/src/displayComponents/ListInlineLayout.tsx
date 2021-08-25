@@ -85,6 +85,7 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
   return (
     <Accordion
       styled
+      fluid={open ? false : true}
       className="accordion-container fit-content"
       style={{ maxWidth: open ? 'none' : '100%' }}
     >
