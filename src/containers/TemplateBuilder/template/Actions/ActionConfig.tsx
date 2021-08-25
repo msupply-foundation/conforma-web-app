@@ -79,7 +79,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             <Icon name="info circle" size="big" color="blue" />
           </a>
         </Label>
-        <div className="flex-row-center-center">
+        <div className="flex-row-center-center-wrap">
           <DropdownIO
             title="Type"
             value={templateAction?.actionCode || ''}
