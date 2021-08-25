@@ -1,12 +1,16 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getHistoryForApplicant($serial: String!, $questionCode: String!, $templateCode: String!) {
-    # TODO - Send correct version for template instead of hardcoded: templateVersion: 1
+  query getHistoryForApplicant(
+    $serial: String!
+    $questionCode: String!
+    $templateCode: String!
+    $templateVersion: Int!
+  ) {
     templateElementByTemplateCodeAndCodeAndTemplateVersion(
       code: $questionCode
       templateCode: $templateCode
-      templateVersion: 1
+      templateVersion: $templateVersion
     ) {
       ...elementFragment
       reviewResponses(filter: { isVisibleToApplicant: { equalTo: true } }) {

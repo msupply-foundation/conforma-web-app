@@ -5,13 +5,13 @@ export default gql`
     $serial: String!
     $questionCode: String!
     $templateCode: String!
+    $templateVersion: Int!
     $userId: Int!
   ) {
-    # TODO - Send correct version for template instead of hardcoded: templateVersion: 1
     templateElementByTemplateCodeAndCodeAndTemplateVersion(
       code: $questionCode
       templateCode: $templateCode
-      templateVersion: 1
+      templateVersion: $templateVersion
     ) {
       ...elementFragment
       reviewResponses(

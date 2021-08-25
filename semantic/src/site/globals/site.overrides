@@ -316,6 +316,7 @@ a:hover {
 #org-selector .image {
   margin-right: 20px;
   height: 100%;
+  max-width: 100px;
 }
 
 #user-menu .button {

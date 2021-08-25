@@ -48,6 +48,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         selection: allOptions[optionIndex],
         optionIndex,
       })
+      setSelectedIndex(optionIndex)
     }
     if (currentResponse?.text) {
       const { optionIndex } = currentResponse
