@@ -7,3 +7,4 @@
 // Replace error-handling colors
 @negativeBackgroundColor: @surfacesWhite;
 @negativeBorderColor: @attention;
+@negativeTextColor: @grey;
