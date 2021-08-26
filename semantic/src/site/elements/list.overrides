@@ -12,7 +12,6 @@
   color: @darkGrey;
   font-weight: @regularWeight;
   font-size: @fontMedium;
-  width: 200px;
   overflow: hidden; // So long titles don't overflow the header area
 }
 

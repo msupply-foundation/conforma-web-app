@@ -206,7 +206,6 @@ a:hover {
 
 .login-header {
   margin: 0 !important;
-  text-transform: uppercase !important;
   letter-spacing: @letterSpacingRegular !important;
 }
 
