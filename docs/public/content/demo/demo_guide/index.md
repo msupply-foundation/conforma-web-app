@@ -1,5 +1,5 @@
 +++
-title = "mFlow Demo"
+title = "mFlow demo"
 insert_anchor_links = "right"
 weight = 1
 +++
@@ -18,9 +18,9 @@ This demo allows you to use the **mFlow Application Manager** system to experien
 
    A reviewer will approve this application, which will create your organisation in the system.
 
-3. **Apply for a license for your company to register products**
+3. **Apply for a licence for your company to register products**
 
-   This will require 2 levels of review -- an initial screening, and an an assessment by a more senior reviewer. You will receive a PDF license and permission to register a product (for 3 days)
+   This will require 2 levels of review -- an initial screening, and an an assessment by a more senior reviewer. You will receive a PDF licence and permission to register a product (for 3 days)
 
 4. **Register a product**
 
@@ -28,7 +28,7 @@ This demo allows you to use the **mFlow Application Manager** system to experien
 
 - initial screening
 - assessment by senior reviewer
-- consoloidation of review (this means a more senior staff member comments on and approves the review before it gets sent back to the applicant)
+- consolidation of review (this means a more senior staff member comments on and approves the review before it gets sent back to the applicant)
 - a final decision by a chief, who can over-rule lower-level review decisions if they see fit
 
 For the purposes of this demo, you can switch to alternative "reviewer" accounts to review the applications (more on that [below](#reviewer-experience)).
@@ -47,11 +47,11 @@ Your application now has to be reviewed. In the meantime, you can see its status
 
 Once it has been reviewed, you'll receive an email stating your company has been created in the system, and your Dashboard will show you now have permission to apply for a licence.
 
-### 3. Apply for a license for your company to register products
+### 3. Apply for a licence for your company to register products
 
 Further applications must be done on behalf of the company you registered, so please make sure you are logged in with your company selected -- your company name (and logo) should show in the main header. If it's not there, try logging out and in again, and be sure to select your company name if asked during the login process.
 
-Now, from the Dashboard, you should see a link to "Start a new Company License -- Modern medicines or Medical devices". Follow this link and complete the application as before.
+Now, from the Dashboard, you should see a link to "Start a new Company Licence -- Modern medicines or Medical devices". Follow this link and complete the application as before.
 
 Then wait to have your application reviewed. Be aware that you may be required to make amendments to your application if a reviewer requests it.
 
@@ -84,8 +84,8 @@ When switching to reviewer accounts, it's a good idea to you use a different bro
 
 | Username        | Permissions                                                                                                                                    |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| basic_reviewer  | - can approve company registrations<br>- can perform initial Screening for License applications and Product registrations                      |
-| senior_reviewer | - can do "Assessment" stage reviews for License applications and Product registrations                                                         |
+| basic_reviewer  | - can approve company registrations<br>- can perform initial Screening for licence applications and Product registrations                      |
+| senior_reviewer | - can do "Assessment" stage reviews for licence applications and Product registrations                                                         |
 | supervisor      | - can consolidate product registrations<br>- can assign (for review levels that can't self-assign)                                             |
 | chief           | - can make final decision for product registrations                                                                                            |
 | admin           | - can control whole system, including template management, adding users to organisations, granting permissions, etc. (For advanced users only) |
@@ -102,7 +102,7 @@ See detailed documentation for more on the concept of **stages**, **review level
 
    One stage, one review. Reviewer must have `reviewScreening` permission. Can be self-assigned.
 
-3. **Apply for license**
+3. **Apply for licence**
 
    2 stages:
 
