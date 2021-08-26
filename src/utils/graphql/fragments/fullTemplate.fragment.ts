@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  fragment FullTemplate on Template {
+  fragment fullTemplateFragment on Template {
     ...templateFragment
     nodeId
     configApplications: applications(filter: { isConfig: { equalTo: true } }) {
@@ -26,6 +26,7 @@ export default gql`
       nodes {
         actionCode
         condition
+        eventCode
         id
         parameterQueries
         sequence
