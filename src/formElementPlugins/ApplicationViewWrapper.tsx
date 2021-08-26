@@ -25,15 +25,8 @@ const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const [responseMutation] = useUpdateResponseMutation()
-  const {
-    element,
-    isStrictPage,
-    changesRequired,
-    currentResponse,
-    allResponses,
-    applicationData,
-    onSaveUpdateMethod = responseMutation,
-  } = props
+  const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
+    props
 
   const {
     code,
@@ -46,6 +39,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   } = element
 
   const isValid = currentResponse?.isValid || true
+
+  const isInnerFormElement = !!props.onSaveUpdateMethod
+  // Default update method is a mutation
+  const onSaveUpdateMethod = props.onSaveUpdateMethod || responseMutation
+
   const stageNumber = applicationData.current.stage.number
 
   const { setState: setUpdateTrackerState } = useFormElementUpdateTracker()
@@ -132,12 +130,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
             stageNumber,
           },
         })
-      setUpdateTrackerState({
-        type: 'setElementUpdated',
-        elementCode: code,
-        textValue: response?.text || '',
-        previousValue: currentResponse?.text || '',
-      })
+      notifyTrackerElementUpdated(response?.text)
     } else {
       // Save response for plugins with internal validation
       const { isValid, validationMessage } = response.customValidation
@@ -151,22 +144,35 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
           stageNumber,
         },
       })
-      setUpdateTrackerState({
-        type: 'setElementUpdated',
-        elementCode: code,
-        textValue: response?.text || '',
-        previousValue: currentResponse?.text || '',
-      })
+      notifyTrackerElementUpdated(response?.text)
     }
   }
 
-  const setIsActive = () => {
-    // Tells application state that a plugin field is in focus
+  // Tells application state that plugin field was updated
+  const notifyTrackerElementUpdated = (textValue?: string | null) => {
+    // Avoid tracking changes for inner elements
+    if (isInnerFormElement) return
+    setUpdateTrackerState({
+      type: 'setElementUpdated',
+      elementCode: code,
+      textValue: textValue || '',
+      previousValue: currentResponse?.text || '',
+    })
+  }
+
+  // Tells application state that plugin field is in focus
+  const notifyTrackerElementEntered = (textValue?: string | null) => {
+    // Avoid tracking changes for inner elements
+    if (isInnerFormElement) return
     setUpdateTrackerState({
       type: 'setElementEntered',
       elementCode: code,
-      textValue: currentResponse?.text || '',
+      textValue: textValue || '',
     })
+  }
+
+  const setIsActive = () => {
+    notifyTrackerElementEntered(currentResponse?.text)
   }
 
   if (!pluginCode || !isVisible) return null
