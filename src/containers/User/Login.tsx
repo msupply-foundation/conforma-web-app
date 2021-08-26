@@ -102,7 +102,6 @@ const Login: React.FC = () => {
           <Image src={logo} className="image-icon" />
           <Header as="h3" className="login-header">
             {strings.TITLE_LOGIN_HEADER}
-            <Header.Subheader>{strings.TITLE_LOGIN_SUBHEADER}</Header.Subheader>
           </Header>
         </div>
         <Header as="h2" className="centered header-space-around-medium">
