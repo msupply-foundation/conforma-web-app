@@ -48,7 +48,7 @@ const PermissionNameList: React.FC<PermissionNameListProps> = ({
               />
               <TextIO
                 title="Permission Policy"
-                text={templatePermission?.permissionName?.name || ''}
+                text={templatePermission?.permissionName?.permissionPolicy?.name || ''}
               />
               <IconButton
                 name="window close"

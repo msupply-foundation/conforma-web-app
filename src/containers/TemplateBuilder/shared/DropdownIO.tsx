@@ -75,6 +75,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
         placeholder={placeholder}
         className="io-component value"
         options={calculatedOptions}
+        scrolling
         size="small"
         onChange={(_, { value }) => {
           if (typeof value !== 'string' && typeof value !== 'number') return
