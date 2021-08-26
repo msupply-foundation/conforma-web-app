@@ -1,12 +1,12 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import {
-  GetEvaluationType,
-  EvaluationType,
-  GetTypedEvaluationAsStringType,
   ConvertTypedEvaluationToBaseType,
-  Operator,
+  EvaluationType,
+  GetEvaluationType,
+  GetTypedEvaluationAsStringType,
   NonGenericEvaluations,
   NonGenericTypes,
+  Operator,
 } from './types'
 
 const nonGenericEvaluations: NonGenericEvaluations = {
@@ -81,7 +81,7 @@ export const getTypedEvaluation: GetEvaluationType = (evaluation) => {
     const operator = String(evaluation.operator)
     resultEvaluation.type = 'operator'
     resultEvaluation.asOperator.operator = evaluation.operator
-
+    resultEvaluation.asOperator.type = evaluation.type
     if (operator in nonGenericEvaluations) {
       return nonGenericEvaluations[operator as NonGenericTypes].toTyped(
         evaluation,
@@ -149,9 +149,11 @@ export const convertTypedEvaluationToBaseType: ConvertTypedEvaluationToBaseType 
       }
       const operatorResult: {
         operator: Operator
+        type?: string
         children: EvaluatorNode[]
       } = {
         operator: evaluation.asOperator.operator,
+        type: evaluation.asOperator.type,
         children: [],
       }
       evaluation.asOperator.children.forEach((evaluation) => {

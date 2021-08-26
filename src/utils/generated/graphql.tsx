@@ -29106,7 +29106,7 @@ export type FullTemplateFragment = (
       ) }
     )>> }
   ) }
-  & TemplateFragment
+  & TemplateFragmentFragment
 );
 
 export type OrganisationFragment = (
@@ -29140,9 +29140,9 @@ export type StageFragment = (
   & Pick<ApplicationStageStatusLatest, 'stage' | 'stageId' | 'stageColour' | 'status' | 'stageNumber' | 'statusHistoryTimeCreated' | 'stageHistoryTimeCreated'>
 );
 
-export type TemplateFragment = (
+export type TemplateFragmentFragment = (
   { __typename?: 'Template' }
-  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'startMessage' | 'submissionMessage' | 'icon'>
+  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'startMessage' | 'submissionMessage' | 'version' | 'icon'>
   & { templateCategory?: Maybe<(
     { __typename?: 'TemplateCategory' }
     & Pick<TemplateCategory, 'id' | 'code' | 'title' | 'icon' | 'uiLocation'>
@@ -29202,7 +29202,7 @@ export type CreateApplicationMutation = (
             & SectionFragment
           )>> }
         ) }
-        & TemplateFragment
+        & TemplateFragmentFragment
       )> }
       & ApplicationFragment
     )> }
@@ -29678,7 +29678,7 @@ export type GetApplicationQuery = (
           & TemplateStageFragment
         )>> }
       ) }
-      & TemplateFragment
+      & TemplateFragmentFragment
     )>, user?: Maybe<(
       { __typename?: 'User' }
       & UserFragment
@@ -29737,6 +29737,7 @@ export type GetHistoryForApplicantQueryVariables = Exact<{
   serial: Scalars['String'];
   questionCode: Scalars['String'];
   templateCode: Scalars['String'];
+  templateVersion: Scalars['Int'];
 }>;
 
 
@@ -29778,6 +29779,7 @@ export type GetHistoryForReviewerQueryVariables = Exact<{
   serial: Scalars['String'];
   questionCode: Scalars['String'];
   templateCode: Scalars['String'];
+  templateVersion: Scalars['Int'];
   userId: Scalars['Int'];
 }>;
 
@@ -29975,6 +29977,22 @@ export type GetReviewResponsesQuery = (
   )> }
 );
 
+export type GetSchemaColumnsQueryVariables = Exact<{
+  tableNames?: Maybe<Array<Scalars['SqlIdentifier']>>;
+}>;
+
+
+export type GetSchemaColumnsQuery = (
+  { __typename?: 'Query' }
+  & { schemaColumns?: Maybe<(
+    { __typename?: 'SchemaColumnsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'SchemaColumn' }
+      & Pick<SchemaColumn, 'columnName' | 'tableName'>
+    )>> }
+  )> }
+);
+
 export type GetTemplateQueryVariables = Exact<{
   code: Scalars['String'];
   status?: Maybe<TemplateStatus>;
@@ -30007,7 +30025,7 @@ export type GetTemplateQuery = (
           & Pick<TemplateStage, 'id' | 'number' | 'title' | 'description'>
         )>> }
       ) }
-      & TemplateFragment
+      & TemplateFragmentFragment
     )>> }
   )> }
 );
@@ -30023,7 +30041,7 @@ export type GetTemplatesQuery = (
     { __typename?: 'TemplatesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'Template' }
-      & TemplateFragment
+      & TemplateFragmentFragment
     )>> }
   )> }
 );
@@ -30327,8 +30345,8 @@ export const ConsolidatorResponseFragmentFragmentDoc = gql`
   }
 }
     ${ReviewResponseFragmentFragmentDoc}`;
-export const TemplateFragmentDoc = gql`
-    fragment Template on Template {
+export const TemplateFragmentFragmentDoc = gql`
+    fragment templateFragment on Template {
   code
   id
   name
@@ -30337,6 +30355,7 @@ export const TemplateFragmentDoc = gql`
   isLinear
   startMessage
   submissionMessage
+  version
   icon
   templateCategory {
     id
@@ -30390,7 +30409,7 @@ export const ElementFragmentFragmentDoc = gql`
     `;
 export const FullTemplateFragmentDoc = gql`
     fragment FullTemplate on Template {
-  ...Template
+  ...templateFragment
   nodeId
   configApplications: applications(filter: {isConfig: {equalTo: true}}) {
     nodes {
@@ -30464,7 +30483,7 @@ export const FullTemplateFragmentDoc = gql`
     }
   }
 }
-    ${TemplateFragmentDoc}
+    ${TemplateFragmentFragmentDoc}
 ${SectionFragmentDoc}
 ${ElementFragmentFragmentDoc}`;
 export const OrganisationFragmentDoc = gql`
@@ -30504,7 +30523,7 @@ export const CreateApplicationDocument = gql`
       orgId
       ...Application
       template {
-        ...Template
+        ...templateFragment
         templateSections {
           nodes {
             ...Section
@@ -30515,7 +30534,7 @@ export const CreateApplicationDocument = gql`
   }
 }
     ${ApplicationFragmentDoc}
-${TemplateFragmentDoc}
+${TemplateFragmentFragmentDoc}
 ${SectionFragmentDoc}`;
 export type CreateApplicationMutationFn = Apollo.MutationFunction<CreateApplicationMutation, CreateApplicationMutationVariables>;
 
@@ -31400,7 +31419,7 @@ export const GetApplicationDocument = gql`
   applicationBySerial(serial: $serial) {
     ...Application
     template {
-      ...Template
+      ...templateFragment
       templateSections(orderBy: INDEX_ASC) {
         nodes {
           ...Section
@@ -31431,7 +31450,7 @@ export const GetApplicationDocument = gql`
   }
 }
     ${ApplicationFragmentDoc}
-${TemplateFragmentDoc}
+${TemplateFragmentFragmentDoc}
 ${SectionFragmentDoc}
 ${ElementFragmentFragmentDoc}
 ${TemplateStageFragmentDoc}
@@ -31562,8 +31581,8 @@ export type GetApplicationListQueryHookResult = ReturnType<typeof useGetApplicat
 export type GetApplicationListLazyQueryHookResult = ReturnType<typeof useGetApplicationListLazyQuery>;
 export type GetApplicationListQueryResult = Apollo.QueryResult<GetApplicationListQuery, GetApplicationListQueryVariables>;
 export const GetHistoryForApplicantDocument = gql`
-    query getHistoryForApplicant($serial: String!, $questionCode: String!, $templateCode: String!) {
-  templateElementByTemplateCodeAndCodeAndTemplateVersion(code: $questionCode, templateCode: $templateCode, templateVersion: 1) {
+    query getHistoryForApplicant($serial: String!, $questionCode: String!, $templateCode: String!, $templateVersion: Int!) {
+  templateElementByTemplateCodeAndCodeAndTemplateVersion(code: $questionCode, templateCode: $templateCode, templateVersion: $templateVersion) {
     ...elementFragment
     reviewResponses(filter: {isVisibleToApplicant: {equalTo: true}}) {
       nodes {
@@ -31608,6 +31627,7 @@ ${UserFragmentDoc}`;
  *      serial: // value for 'serial'
  *      questionCode: // value for 'questionCode'
  *      templateCode: // value for 'templateCode'
+ *      templateVersion: // value for 'templateVersion'
  *   },
  * });
  */
@@ -31621,8 +31641,8 @@ export type GetHistoryForApplicantQueryHookResult = ReturnType<typeof useGetHist
 export type GetHistoryForApplicantLazyQueryHookResult = ReturnType<typeof useGetHistoryForApplicantLazyQuery>;
 export type GetHistoryForApplicantQueryResult = Apollo.QueryResult<GetHistoryForApplicantQuery, GetHistoryForApplicantQueryVariables>;
 export const GetHistoryForReviewerDocument = gql`
-    query getHistoryForReviewer($serial: String!, $questionCode: String!, $templateCode: String!, $userId: Int!) {
-  templateElementByTemplateCodeAndCodeAndTemplateVersion(code: $questionCode, templateCode: $templateCode, templateVersion: 1) {
+    query getHistoryForReviewer($serial: String!, $questionCode: String!, $templateCode: String!, $templateVersion: Int!, $userId: Int!) {
+  templateElementByTemplateCodeAndCodeAndTemplateVersion(code: $questionCode, templateCode: $templateCode, templateVersion: $templateVersion) {
     ...elementFragment
     reviewResponses(filter: {review: {application: {serial: {equalTo: $serial}}}, or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
       nodes {
@@ -31667,6 +31687,7 @@ ${UserFragmentDoc}`;
  *      serial: // value for 'serial'
  *      questionCode: // value for 'questionCode'
  *      templateCode: // value for 'templateCode'
+ *      templateVersion: // value for 'templateVersion'
  *      userId: // value for 'userId'
  *   },
  * });
@@ -31960,11 +31981,47 @@ export function useGetReviewResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetReviewResponsesQueryHookResult = ReturnType<typeof useGetReviewResponsesQuery>;
 export type GetReviewResponsesLazyQueryHookResult = ReturnType<typeof useGetReviewResponsesLazyQuery>;
 export type GetReviewResponsesQueryResult = Apollo.QueryResult<GetReviewResponsesQuery, GetReviewResponsesQueryVariables>;
+export const GetSchemaColumnsDocument = gql`
+    query getSchemaColumns($tableNames: [SqlIdentifier!]) {
+  schemaColumns(filter: {tableName: {in: $tableNames}}) {
+    nodes {
+      columnName
+      tableName
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetSchemaColumnsQuery__
+ *
+ * To run a query within a React component, call `useGetSchemaColumnsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSchemaColumnsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSchemaColumnsQuery({
+ *   variables: {
+ *      tableNames: // value for 'tableNames'
+ *   },
+ * });
+ */
+export function useGetSchemaColumnsQuery(baseOptions?: Apollo.QueryHookOptions<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>) {
+        return Apollo.useQuery<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>(GetSchemaColumnsDocument, baseOptions);
+      }
+export function useGetSchemaColumnsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>) {
+          return Apollo.useLazyQuery<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>(GetSchemaColumnsDocument, baseOptions);
+        }
+export type GetSchemaColumnsQueryHookResult = ReturnType<typeof useGetSchemaColumnsQuery>;
+export type GetSchemaColumnsLazyQueryHookResult = ReturnType<typeof useGetSchemaColumnsLazyQuery>;
+export type GetSchemaColumnsQueryResult = Apollo.QueryResult<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>;
 export const GetTemplateDocument = gql`
     query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE) {
   templates(condition: {code: $code, status: $status}) {
     nodes {
-      ...Template
+      ...templateFragment
       templateSections {
         nodes {
           ...Section
@@ -31986,7 +32043,7 @@ export const GetTemplateDocument = gql`
     }
   }
 }
-    ${TemplateFragmentDoc}
+    ${TemplateFragmentFragmentDoc}
 ${SectionFragmentDoc}
 ${ElementFragmentFragmentDoc}`;
 
@@ -32020,11 +32077,11 @@ export const GetTemplatesDocument = gql`
     query getTemplates($status: TemplateStatus = AVAILABLE) {
   templates(condition: {status: $status}) {
     nodes {
-      ...Template
+      ...templateFragment
     }
   }
 }
-    ${TemplateFragmentDoc}`;
+    ${TemplateFragmentFragmentDoc}`;
 
 /**
  * __useGetTemplatesQuery__
