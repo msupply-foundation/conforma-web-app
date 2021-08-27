@@ -18,7 +18,7 @@ const ApplicantResponseElement: React.FC<ApplicantResponseElementProps> = ({
   const backgroundClass = isResponseUpdated ? 'changeable-background' : ''
   return (
     <div className={`response-container ${backgroundClass}`}>
-      <div className="flex-grow-1">
+      <div className="flex-grow-1 summary-width">
         <SummaryViewWrapper {...summaryViewProps} />
       </div>
       <div className="action-container">
