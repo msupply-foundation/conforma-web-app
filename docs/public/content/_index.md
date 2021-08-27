@@ -11,7 +11,7 @@ mFlow has been developed by the team at [The mSupply Foundation](https://msupply
 
 Creating mFlow has been a labour of love — thousands of hours of work. We hope you find it a joy to use, and that it results in your regulatory organisation being able to perform its role accurately, quickly and to a high standard.
 
-mFlow's development was kindly sponsored by the Australian Government's Deptartment for Foreign Affairs and Trade.
+mFlow's development was kindly sponsored by the Australian Government's Department for Foreign Affairs and Trade.
 
 ## What can it do?
 
