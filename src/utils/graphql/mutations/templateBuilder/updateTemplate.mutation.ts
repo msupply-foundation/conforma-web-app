@@ -4,7 +4,7 @@ export default gql`
   mutation updateTemplate($id: Int!, $templatePatch: TemplatePatch!) {
     updateTemplate(input: { id: $id, patch: $templatePatch }) {
       template {
-        ...fullTemplateFragment
+        ...FullTemplate
       }
     }
   }

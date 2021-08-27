@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  fragment fullTemplateFragment on Template {
+  fragment FullTemplate on Template {
     ...templateFragment
     nodeId
     configApplications: applications(filter: { isConfig: { equalTo: true } }) {
