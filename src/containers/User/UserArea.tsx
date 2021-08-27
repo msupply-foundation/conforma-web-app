@@ -302,11 +302,12 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         outcomes: { active: false, selection: '' },
         admin: { active: true, selection: dropdownsState.admin.selection },
       }
-  }
-  return {
-    dashboard: { active: false },
-    templates: { active: false, selection: '' },
-    outcomes: { active: false, selection: '' },
-    admin: { active: false, selection: '' },
+    default:
+      return {
+        dashboard: { active: false },
+        templates: { active: false, selection: '' },
+        outcomes: { active: false, selection: '' },
+        admin: { active: false, selection: '' },
+      }
   }
 }
