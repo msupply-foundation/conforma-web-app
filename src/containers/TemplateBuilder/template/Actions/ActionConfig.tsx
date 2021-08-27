@@ -99,7 +99,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             }}
           />
           <TextIO
-            text={state.description}
+            text={state.eventCode}
             title="Scheduled Event Code"
             setText={(text) => setState({ ...state, eventCode: text })}
             isPropUpdated={true}

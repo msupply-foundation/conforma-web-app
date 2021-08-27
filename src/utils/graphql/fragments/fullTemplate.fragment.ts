@@ -26,6 +26,7 @@ export default gql`
       nodes {
         actionCode
         condition
+        eventCode
         id
         parameterQueries
         sequence
