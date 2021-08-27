@@ -16,6 +16,6 @@ highlight_code = true
 
 [extra]
 # Put all your custom variables here
-logo = "https://irims-demo.msupply.org:50000/images/logos/logo_512.png"
+logo = "https://msupply.foundation/themes/open-msupply/img/mFlow.svg"
 release = "https://api.github.com/repos/openmsupply/application-manager-web-app/releases/latest"
 favicon = "https://www.getzola.org/favicon.ico"
