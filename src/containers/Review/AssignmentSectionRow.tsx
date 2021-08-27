@@ -1,28 +1,41 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dropdown, Grid, Label, Message } from 'semantic-ui-react'
 import strings from '../../utils/constants'
+import { AssignmentOption } from '../../utils/data/assignmentOptions'
 import { ReviewAssignmentStatus, TemplateElementCategory } from '../../utils/generated/graphql'
 import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
-
-const NOT_ASSIGNED = 0
-const UNASSIGN = -1
 
 type AssignmentSectionRowProps = {
   assignments: AssignmentDetails[]
   sectionCode: string
   structure: FullStructure
+  shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
 }
 // Component renders options calculated in getAssignmentOptions, and will execute assignment mutation on drop down change
 const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
-  const { assignments, sectionCode, structure } = props
+  const {
+    assignments,
+    sectionCode,
+    structure,
+    shouldAssignState: [shouldAssign, setShouldAssign],
+  } = props
   const [assignmentError, setAssignmentError] = useState(false)
+
+  // Do auto-assign for other sections when assignee is selected
+  // for assignment in another row when shouldAssign == assignee index
+  // Note: This is required to be passed on as props to be processed
+  // in each row since the fullStructure is related to each section
+  useEffect(() => {
+    if (shouldAssign as boolean) return
+    onAssignment(shouldAssign as number)
+  }, [shouldAssign])
 
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
 
-  const onAssignment = async (_: any, { value: newValue }: any) => {
-    if (newValue === NOT_ASSIGNED || newValue === value) return
-    if (newValue === UNASSIGN) return console.log('un assignment not implemented')
+  const onAssignment = async (newValue: number) => {
+    if (newValue === AssignmentOption.NOT_ASSIGNED || newValue === value) return
+    if (newValue === AssignmentOption.UNASSIGN) return console.log('un assignment not implemented')
     const assignment = assignments.find((assignment) => assignment.reviewer.id === newValue)
     if (!assignment) return
 
@@ -50,7 +63,10 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
             className="reviewer-dropdown"
             options={options}
             value={value}
-            onChange={onAssignment}
+            onChange={(_, { value }) => {
+              onAssignment(value as number)
+              setShouldAssign(value as number)
+            }}
           />
         </Grid.Column>
       </Grid.Row>
@@ -106,20 +122,20 @@ const getAssignmentOptions = ({
       options: [
         getOptionFromAssignment(currentlyAssigned),
         {
-          key: UNASSIGN,
-          value: UNASSIGN,
+          key: AssignmentOption.UNASSIGN,
+          value: AssignmentOption.UNASSIGN,
           text: strings.ASSIGNMENT_UNASSIGN,
         },
       ],
     }
 
   return {
-    selected: NOT_ASSIGNED,
+    selected: AssignmentOption.NOT_ASSIGNED,
     options: [
       ...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment)),
       {
-        key: NOT_ASSIGNED,
-        value: NOT_ASSIGNED,
+        key: AssignmentOption.NOT_ASSIGNED,
+        value: AssignmentOption.NOT_ASSIGNED,
         text: strings.ASSIGNMENT_NOT_ASSIGNED,
       },
     ],
