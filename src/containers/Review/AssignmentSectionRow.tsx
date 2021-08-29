@@ -34,12 +34,11 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
 
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
 
-  const onAssignment = async (newValue: number) => {
-    if (newValue === AssignmentOption.NOT_ASSIGNED || newValue === value) return
-    if (newValue === AssignmentOption.UNASSIGN) return console.log('un assignment not implemented')
-    const assignment = assignments.find((assignment) => assignment.reviewer.id === newValue)
+  const onAssignment = async (value: number) => {
+    if (value === AssignmentOption.NOT_ASSIGNED || value === selected) return
+    if (value === AssignmentOption.UNASSIGN) return console.log('un assignment not implemented')
+    const assignment = assignments.find((assignment) => assignment.reviewer.id === value)
     if (!assignment) return
-
     try {
       await assignSectionToUser({ assignment, sectionCode })
     } catch (e) {
@@ -48,11 +47,18 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     }
   }
 
+  const onAssigneeSelection = async (_: any, { value }: any) => {
+    const assignment = assignments.find((assignment) => assignment.reviewer.id === value)
+    onAssignment(value as number)
+    // When review isLastLevel then all sections are assigned to same user (similar to consolidation)
+    if (assignment?.isLastLevel) setShouldAssign(value as number)
+  }
+
   const assignmentOptions = getAssignmentOptions(props)
 
   if (!assignmentOptions) return null
 
-  const { options, selected: value } = assignmentOptions
+  const { options, selected } = assignmentOptions
 
   if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
   return (
@@ -63,11 +69,8 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
           <Dropdown
             className="reviewer-dropdown"
             options={options}
-            value={value}
-            onChange={(_, { value }) => {
-              onAssignment(value as number)
-              setShouldAssign(value as number)
-            }}
+            value={selected}
+            onChange={onAssigneeSelection}
           />
         </Grid.Column>
       </Grid.Row>
