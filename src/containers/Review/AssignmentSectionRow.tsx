@@ -157,8 +157,6 @@ const getAssignmentOptions = (
 
   if (numberOfAssignableElements === 0) return null
 
-  console.log('current', currentUser)
-
   // This could differ from currentUserAssignable list because self assignable assignments don't have assigner
   const currentlyAssigned = assignments.find(
     (assignment) =>
@@ -166,8 +164,6 @@ const getAssignmentOptions = (
       assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned &&
       matchAssignmentToSection(assignment, sectionCode)
   )
-
-  console.log('currentlyAssigned', currentlyAssigned)
 
   // For now just show an option to un assign
   if (currentlyAssigned)
@@ -183,8 +179,6 @@ const getAssignmentOptions = (
         },
       ],
     }
-
-  console.log('currentUserAssignable', currentUserAssignable)
 
   return {
     selected: AssignmentOption.NOT_ASSIGNED,
