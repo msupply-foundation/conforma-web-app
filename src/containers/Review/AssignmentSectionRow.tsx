@@ -27,7 +27,8 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
   // Note: This is required to be passed on as props to be processed
   // in each row since the fullStructure is related to each section
   useEffect(() => {
-    if (shouldAssign as boolean) return
+    // Option -1 (UNASSIGNED) or 0 (Re-assign) shouldn't change others
+    if ((shouldAssign as number) < 1) return
     onAssignment(shouldAssign as number)
   }, [shouldAssign])
 
