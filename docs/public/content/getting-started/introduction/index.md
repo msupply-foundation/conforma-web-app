@@ -12,7 +12,7 @@ mFlow has been developed by the team at [The mSupply Foundation](https://msupply
 
 Creating mFlow has been a labour of love — thousands of hours of work. We hope you find it a joy to use, and that it results in your regulatory organisation being able to perform its role accurately, quickly and to a high standard.
 
-mFlow's development was kindly sponsored by the Australian Government's Department for Foreign Affairs and Trade.
+mFlow's development was kindly sponsored by the [Australian Government's Department of Foreign Affairs and Trade](https://www.dfat.gov.au/).
 
 ### What can it do?
 
@@ -34,10 +34,25 @@ mFlow's flexibility means that it can be used in a wide range of situations. For
 
 ### Can you put that in diagrams?
 
-![adam](mFlow_feature_diagram.svg)
 
-#### diagram 1
+#### Worfklow overview
 
-#### diagram 2
+![mFlow features diagram 1](mFlow_features_1.svg)
+
+#### Application stage
+
+![mFlow features diagram 2](mFlow_features_2.svg)
+
+#### Evaluation stage
+
+![mFlow features diagram 3](mFlow_features_3.svg)
+
+#### Decision stage
+
+![mFlow features diagram 4](mFlow_features_4.svg)
+
+#### Configurability
+
+![mFlow features diagram 5](mFlow_features_5.svg)
 
 
