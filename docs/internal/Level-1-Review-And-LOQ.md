@@ -23,7 +23,7 @@ Below is the summary of logic aspects of this topic
 
 ### Front End
 
-- Fetch actions and calculates progress of review and application
+- Fetches actions and calculates progress of review and application
 - GraphQL mutation to create review and application responses
 - GraphQL mutation to update `application_response` or `review_response`
 - Validates submission of review and application
