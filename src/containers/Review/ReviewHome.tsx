@@ -17,8 +17,6 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({
   assignmentInPreviousStage,
   fullApplicationStructure,
 }) => {
-  console.log('Render')
-
   const [shouldAssign, setShouldAssign] = useState<number | boolean>(false)
   return (
     <>
