@@ -7,16 +7,16 @@ The aim of this page is to outline the structure changes and flows:
 ## Consolidation in agreement
 
 - Reviewer (Level 1) - reviewing an application
-- Reviewer (Level 1) - submit `Conform` or `Non Conform` advise higher level reviewer
+- Reviewer (Level 1) - submitting `Conform` or `Non Conform` advise higher level reviewer
 - Reviewer (Level 2) - reviewing the lower level review and `agree` with all advised decisions
-- Reviewer (Level 2) - submit a review decision - if user has `is_last_level` will send back to Applicant when `LOQ (List of Questions)` or change outcome and stage when submitting `Non Conform` or `Conform`. If consolidation not `is_last_level` submission of review goes to upper level reviewer (e.g. Level 3) and the same process repeats for Level 2 and Level 3 reveiwers.
+- Reviewer (Level 2) - submitting a review decision - if user has `is_last_level` will send back to Applicant when `LOQ (List of Questions)` or change outcome and stage when submitting `Non Conform` or `Conform`. If consolidation not `is_last_level` submission of review goes to upper level reviewer (e.g. Level 3) and the same process repeats for Level 2 and Level 3 reveiwers.
 
 ## Consolidation in disagreement (Changes-requested)
 
 - Reviewer (Level 1) - reviewing an application
-- Reviewer (Level 1) - submit `Conform` or `Non Conform` advise higher level reviewer
-- Reviewer (Level 2) - consolidate lower level review(s) and `disagree` with some advised decisions
-- Reviewer (Level 2) - submit `Changes Requested` back to reviewer (e.g. Level 1)
+- Reviewer (Level 1) - submitting `Conform` or `Non Conform` advise higher level reviewer
+- Reviewer (Level 2) - consolidatting lower level review(s) and `disagree` with some advised decisions
+- Reviewer (Level 2) - submitting `Changes Requested` back to reviewer (e.g. Level 1)
 - Reviewer (Level 1) - makes changes in response to `Changes Requested` and re-submit to upper level reviewer.
 
 ### Schema changes
