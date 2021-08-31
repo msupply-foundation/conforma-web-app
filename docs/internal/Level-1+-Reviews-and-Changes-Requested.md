@@ -1,6 +1,6 @@
 # Level 1+ Reviews and Changes Requested
 
-The [Level 1 Reviews](Level-1-Review-And-LOQ.md) explains how reviews with only 1 level works. Which is a subset of how a review with more levels (per stage) should work.
+The [Level 1 Reviews](Level-1-Review-And-LOQ.md) page explains how reviews with only one level work, which is a subset of how a review with more levels (per stage) should work.
 
 The aim of this page is to outline the structure changes and flows:
 
