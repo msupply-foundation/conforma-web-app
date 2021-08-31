@@ -48,7 +48,7 @@ The aim of this page is to outline the structure changes and flows:
 
 ## Submitting back to Applicant
 
-When a upper level reviewer disagrees with some decision on lower level it needs to be changed by lower level on a new review.
+When an upper level reviewer disagrees with some decision on a lower level it needs to be changed by the lower level reviewer on a new review.
 
 The consolidation **needs to happen again and be in agreement** so it can be send to Applicant (with Reviewer Level 1 comments) in the form of `LOQ (List of Questions)`.
 
