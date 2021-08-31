@@ -122,7 +122,7 @@ Logic to check validation of a **changes-requested review** is:
 
 Logic to check validation is:
 
-- On `disagreeement` it will configure a **changes-quested** decision and submitted back to other reviewers
+- On `disagreement` it will create a **changes-requested** decision and be submitted back to other reviewers
 - If all `agreement` and every decision is `conform` then the decision can only be `Conform`, the application goes to the next stage - and Applicant would receive a message informing that (not implemented).
 - If all `agreement` and some decision is `non-conform` then the decision can be either `LOQ` or and submitted back to Applicant for changes. Or decision is `Non-conform` which should change the outcome and Applicant would receive a message informing that (not implemented).
 
