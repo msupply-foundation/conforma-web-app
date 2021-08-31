@@ -19,7 +19,7 @@ The aim of this page is to outline the structure changes and flows:
 - Reviewer (Level 2) - submitting `Changes Requested` back to reviewer (e.g. Level 1)
 - Reviewer (Level 1) - makes changes in response to `Changes Requested` and re-submit to upper level reviewer.
 
-### Schema changes
+### Structure changes
 
 ![Level-1+-Review-Structure-Changes](images/Level-1+-Review-Structure-Changes.png)
 
