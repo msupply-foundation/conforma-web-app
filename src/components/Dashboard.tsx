@@ -30,23 +30,19 @@ const Dashboard: React.FC = () => {
       <Header as="h2" content={strings.MENU_ITEM_DASHBOARD} />
       {templatesByCategory
         .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Dashboard))
-        .map(({ templates, templateCategory: { icon: categoryIcon, title: categoryTitle } }) => {
-          console.log(categoryTitle, templates)
-
-          return (
-            <div key={categoryTitle} className="template-category">
-              <div className="title">
-                {categoryIcon && <Icon size="large" color="grey" name={categoryIcon} />}
-                <Header as="h4">{categoryTitle}</Header>
-              </div>
-              <div className="templates">
-                {templates.map((template) => (
-                  <TemplateComponent key={template.code} template={template} />
-                ))}
-              </div>
+        .map(({ templates, templateCategory: { icon: categoryIcon, title: categoryTitle } }) => (
+          <div key={categoryTitle} className="template-category">
+            <div className="title">
+              {categoryIcon && <Icon size="large" color="grey" name={categoryIcon} />}
+              <Header as="h4">{categoryTitle}</Header>
             </div>
-          )
-        })}
+            <div className="templates">
+              {templates.map((template) => (
+                <TemplateComponent key={template.code} template={template} />
+              ))}
+            </div>
+          </div>
+        ))}
     </div>
   )
 }
