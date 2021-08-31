@@ -25,8 +25,10 @@ type UseUpdateReviewAssignment = (structure: FullStructure) => {
 }
 
 type ConstructAssignSectionPatch = (
-  sectionCode?: string,
-  isSelfAssignment?: boolean
+  reviewLevel: number,
+  isFinalDecision: boolean,
+  isSelfAssignment: boolean,
+  sectionCode?: string
 ) => ReviewAssignmentPatch
 
 const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
@@ -36,14 +38,24 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
   const [updateAssignment] = useUpdateReviewAssignmentMutation()
 
   const constructAssignSectionPatch: ConstructAssignSectionPatch = (
-    sectionCode,
-    isSelfAssignment
+    reviewLevel,
+    isFinalDecision,
+    isSelfAssignment,
+    sectionCode
   ) => {
     const elements = Object.values(structure?.elementsById || {})
 
-    // filter elements by question category or by section code (if one passed through)
+    // Will get assignment questions filtering elements by:
+    // - level 1 (or finalDecision) -> if existing response linked
+    // - level 1+ -> if existing review linked
+    // - question category
+    // - [Optional] section code (if one passed through)
+    //
+    // TODO: Would be nice to replace this to use something similar
+    // to what is in addIsPendingReview (useGetReviewStructureForSection/helpers)
     const assignableElements = elements.filter(
-      ({ element }) =>
+      ({ element, response, lowerLevelReviewLatestResponse }) =>
+        (reviewLevel === 1 || isFinalDecision ? !!response : !!lowerLevelReviewLatestResponse) &&
         (!sectionCode || element.sectionCode === sectionCode) &&
         element.category === TemplateElementCategory.Question
     )
@@ -66,10 +78,16 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
 
   return {
     assignSectionToUser: async ({ sectionCode, assignment, isSelfAssignment = false }) => {
+      const { id, isFinalDecision, level } = assignment
       const result = await updateAssignment({
         variables: {
-          assignmentId: assignment.id,
-          assignmentPatch: constructAssignSectionPatch(sectionCode, isSelfAssignment),
+          assignmentId: id,
+          assignmentPatch: constructAssignSectionPatch(
+            level,
+            isFinalDecision,
+            isSelfAssignment,
+            sectionCode
+          ),
         },
       })
 

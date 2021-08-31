@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Grid, Icon, Label, Message } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import {
@@ -184,8 +184,20 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
 const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   assignment,
   fullStructure: structure,
+  shouldAssignState: [shouldAssign, setShouldAssign],
 }) => {
   const [assignmentError, setAssignmentError] = useState(false)
+
+  // Do auto-assign for other sections when one is selected
+  // for auto-assignment in another row when shouldAssign == true
+  // Note: This is required to be passed on as props to be processed
+  // in each row since the fullStructure is related to each section
+  useEffect(() => {
+    if (shouldAssign == true) {
+      selfAssignReview()
+    }
+  }, [shouldAssign])
+
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
 
   const selfAssignReview = async () => {
@@ -202,7 +214,13 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
 
   return (
-    <a className="user-action clickable" onClick={selfAssignReview}>
+    <a
+      className="user-action clickable"
+      onClick={() => {
+        selfAssignReview()
+        setShouldAssign(true)
+      }}
+    >
       {strings.BUTTON_SELF_ASSIGN}
     </a>
   )
