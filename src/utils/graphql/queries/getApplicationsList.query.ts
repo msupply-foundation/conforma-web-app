@@ -32,8 +32,6 @@ export default gql`
         assignerAction
         assigners
         reviewers
-        # isFullyAssignedLevel1
-        # assignedQuestionsLevel1
         totalQuestions
         totalAssigned
         totalAssignLocked
