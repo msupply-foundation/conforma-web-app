@@ -27,6 +27,7 @@ const Login: React.FC = () => {
     orgId: LOGIN_AS_NO_ORG,
     orgName: strings.LABEL_NO_ORG_OPTION,
     userRole: null,
+    isSystemOrg: false,
   }
 
   // useEffect ensures isLoggedIn only runs on first mount, not re-renders
@@ -63,10 +64,14 @@ const Login: React.FC = () => {
   }
 
   useEffect(() => {
-    if (loginPayload?.orgList?.length === LOGIN_AS_NO_ORG) {
+    if (loginPayload?.orgList?.length === 0) {
       // No orgs, so skip org login
       finishLogin(loginPayload)
       return
+    }
+    if (loginPayload?.orgList?.length === 1) {
+      // Only one org, so select it by default
+      setSelectedOrgId(loginPayload.orgList[0].orgId)
     }
   }, [loginPayload])
 
@@ -100,7 +105,7 @@ const Login: React.FC = () => {
           </Header>
         </div>
         <Header as="h2" className="centered header-space-around-medium">
-          {loginPayload
+          {loginPayload && selectedOrgId === NO_ORG_SELECTED
             ? messages.LOGIN_WELCOME.replace('%1', loginPayload.user.firstName)
             : strings.TITLE_LOGIN}
         </Header>
@@ -149,7 +154,7 @@ const Login: React.FC = () => {
               </p>
             </>
           )}
-          {loginPayload && loginPayload?.orgList && (
+          {loginPayload?.orgList && loginPayload?.orgList?.length > 1 && (
             <>
               <p>
                 <strong>{messages.LOGIN_ORG_SELECT}</strong>

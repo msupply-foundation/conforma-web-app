@@ -1,31 +1,31 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dropdown, Grid, Label, Message } from 'semantic-ui-react'
 import strings from '../../utils/constants'
+import { AssignmentOption } from '../../utils/data/assignmentOptions'
 import { ReviewAssignmentStatus, TemplateElementCategory } from '../../utils/generated/graphql'
 import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
-
-const NOT_ASSIGNED = 0
-const UNASSIGN = -1
 
 type AssignmentSectionRowProps = {
   assignments: AssignmentDetails[]
   sectionCode: string
   structure: FullStructure
+  shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
 }
 // Component renders options calculated in getAssignmentOptions, and will execute assignment mutation on drop down change
 const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
-  const { assignments, sectionCode, structure } = props
+  const { assignments, sectionCode, structure, shouldAssignState } = props
   const [assignmentError, setAssignmentError] = useState(false)
-
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
 
-  const onAssignment = async (_: any, { value: newValue }: any) => {
-    if (newValue === NOT_ASSIGNED || newValue === value) return
-    if (newValue === UNASSIGN) return console.log('un assignment not implemented')
-    const assignment = assignments.find((assignment) => assignment.reviewer.id === newValue)
-    if (!assignment) return
+  const assignmentOptions = getAssignmentOptions(props)
+  if (!assignmentOptions) return null
 
+  const onAssignment = async (value: number) => {
+    if (value === AssignmentOption.NOT_ASSIGNED || value === assignmentOptions.selected) return
+    if (value === AssignmentOption.UNASSIGN) return console.log('un assignment not implemented')
+    const assignment = assignments.find((assignment) => assignment.reviewer.id === value)
+    if (!assignment) return
     try {
       await assignSectionToUser({ assignment, sectionCode })
     } catch (e) {
@@ -34,27 +34,71 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     }
   }
 
-  const assignmentOptions = getAssignmentOptions(props)
+  const isLastLevel = (selected: number): boolean => {
+    const assignment = assignments.find((assignment) => assignment.reviewer.id === selected)
+    if (!assignment) return false
+    return assignment.isLastLevel
+  }
 
-  if (!assignmentOptions) return null
-
-  const { options, selected: value } = assignmentOptions
-
-  if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
   return (
     <Grid className="section-single-row-box-container">
       <Grid.Row>
         <Grid.Column className="centered-flex-box-row">
           <Label className="simple-label" content={strings.LABEL_REVIEWER} />
-          <Dropdown
-            className="reviewer-dropdown"
-            options={options}
-            value={value}
-            onChange={onAssignment}
+          <Assignee
+            assignmentError={assignmentError}
+            assignmentOptions={assignmentOptions}
+            checkIsLastLevel={isLastLevel}
+            onAssignment={onAssignment}
+            shouldAssignState={shouldAssignState}
           />
         </Grid.Column>
       </Grid.Row>
     </Grid>
+  )
+}
+
+interface AssigneeProps {
+  assignmentError: boolean
+  assignmentOptions: { selected: number; options: { key: number; value: number; text: string }[] }
+  checkIsLastLevel: (assignee: number) => boolean
+  onAssignment: (assignee: number) => void
+  shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
+}
+
+const Assignee: React.FC<AssigneeProps> = ({
+  assignmentError,
+  assignmentOptions,
+  checkIsLastLevel,
+  onAssignment,
+  shouldAssignState: [shouldAssign, setShouldAssign],
+}) => {
+  // Do auto-assign for other sections when assignee is selected
+  // for assignment in another row when shouldAssign == assignee index
+  // Note: This is required to be passed on as props to be processed
+  // in each row since the fullStructure is related to each section
+  useEffect(() => {
+    // Option -1 (UNASSIGNED) or 0 (Re-assign) shouldn't change others
+    if ((shouldAssign as number) < 1) return
+    onAssignment(shouldAssign as number)
+  }, [shouldAssign])
+
+  const onAssigneeSelection = async (_: any, { value }: any) => {
+    onAssignment(value as number)
+    // When review isLastLevel then all sections are assigned to same user (similar to consolidation)
+    if (checkIsLastLevel(value)) setShouldAssign(value as number)
+  }
+
+  const { options, selected } = assignmentOptions
+
+  if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
+  return (
+    <Dropdown
+      className="reviewer-dropdown"
+      options={options}
+      value={selected}
+      onChange={onAssigneeSelection}
+    />
   )
 }
 
@@ -106,20 +150,20 @@ const getAssignmentOptions = ({
       options: [
         getOptionFromAssignment(currentlyAssigned),
         {
-          key: UNASSIGN,
-          value: UNASSIGN,
+          key: AssignmentOption.UNASSIGN,
+          value: AssignmentOption.UNASSIGN,
           text: strings.ASSIGNMENT_UNASSIGN,
         },
       ],
     }
 
   return {
-    selected: NOT_ASSIGNED,
+    selected: AssignmentOption.NOT_ASSIGNED,
     options: [
       ...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment)),
       {
-        key: NOT_ASSIGNED,
-        value: NOT_ASSIGNED,
+        key: AssignmentOption.NOT_ASSIGNED,
+        value: AssignmentOption.NOT_ASSIGNED,
         text: strings.ASSIGNMENT_NOT_ASSIGNED,
       },
     ],

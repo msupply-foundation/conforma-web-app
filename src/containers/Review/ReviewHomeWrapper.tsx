@@ -101,11 +101,7 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
         onClick={() => push(`/applications?type=${templateCode}`)}
         icon={<Icon name="chevron left" className="dark-grey" />}
       />
-      <Header
-        as="h2"
-        content={applicationName}
-        subheader={<Header as="h5" content={orgName || strings.TITLE_NO_ORGANISATION} />}
-      />
+      <Header content={applicationName} subheader={<Header as="h5" content={orgName} />} />
     </div>
   )
 }

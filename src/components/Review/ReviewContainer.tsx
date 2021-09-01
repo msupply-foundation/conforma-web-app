@@ -24,9 +24,9 @@ const ReviewContainer: React.FC<ReviewContainerProps> = ({ application, children
             </>
           }
         />
-        <Header as="h3" className="heading-alt" textAlign="center">
-          {org?.name || strings.TITLE_NO_ORGANISATION}
-        </Header>
+        {org?.name && (
+          <Header as="h3" className="heading-alt" textAlign="center" content={org?.name} />
+        )}
       </div>
       {children}
     </Container>

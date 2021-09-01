@@ -249,7 +249,15 @@ export const importTemplate: ImportTemplateHelper =
   }
 
 const getFitlerBody = (id: number) => {
-  const filters = { filters: { template: { id: { equalTo: id } } } }
+  const equalToTemplateId = { equalTo: id }
+  const allElementsMatchTemplateId = { some: { templateId: equalToTemplateId } }
+  const filters = {
+    filters: {
+      template: { id: equalToTemplateId },
+      filter: { templateFilterJoins: allElementsMatchTemplateId },
+      permissionName: { templatePermissions: allElementsMatchTemplateId },
+    },
+  }
   return JSON.stringify(filters)
 }
 const safeFetch = async (

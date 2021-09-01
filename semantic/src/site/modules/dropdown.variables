@@ -3,3 +3,8 @@
 *******************************/
 
 @selectionBorder: 1px solid @borderColourDark;
+
+// Replace error-handling colors
+@negativeBackgroundColor: @surfacesWhite;
+@negativeBorderColor: @attention;
+@negativeTextColor: @grey;

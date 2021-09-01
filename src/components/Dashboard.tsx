@@ -116,10 +116,7 @@ const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter }> =
 
 const StartNewTemplate: React.FC<{ template: TemplateInList }> = ({ template: { name, code } }) => (
   <div className="no-applications">
-    <Label
-      className="simple-label"
-      content={strings.LABEL_DASHBOARD_NO_APPLICATIONS.replace('%1', name)}
-    />
+    <Label className="simple-label" content={strings.LABEL_DASHBOARD_NO_APPLICATIONS} />
     <Link to={`/application/new?type=${code}`}>
       {strings.LABEL_DASHBOARD_START_NEW.replace('%1', name)}
     </Link>

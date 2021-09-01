@@ -84,13 +84,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         options={dropdownOptions}
         onChange={handleChange}
         value={selectedIndex}
-        disabled={!isEditable}
         error={!validationState.isValid ? true : undefined}
       />
       {validationState.isValid ? null : (
-        <Label basic color="red" pointing>
-          {validationState?.validationMessage}
-        </Label>
+        <Label pointing prompt content={validationState?.validationMessage} />
       )}
     </>
   )

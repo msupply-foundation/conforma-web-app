@@ -1,7 +1,7 @@
 const DEBOUNCE_TIMEOUT = 350 //milliseconds
 
 import React, { useEffect, useState } from 'react'
-import { Search, Label, Card, Icon } from 'semantic-ui-react'
+import { Search, Label, Card, Icon, Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { useUserState } from '../../../contexts/UserState'
 import strings from '../constants'
@@ -18,7 +18,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
   currentResponse,
-  // validationState,
+  validationState,
   onSave,
   Markdown,
   applicationData,
@@ -123,20 +123,27 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Markdown text={label} semanticComponent="noParagraph" />
       </label>
       <Markdown text={description} />
-      <Search
-        value={searchText}
-        loading={loading}
-        onSearchChange={handleChange}
-        onResultSelect={handleSelect}
-        minCharacters={minCharacters}
-        placeholder={placeholder}
-        results={
-          loading ? [{ title: strings.MESSAGE_LOADING }] : createResultsArray(results, resultFormat)
-        }
-        disabled={!isEditable}
-        input={{ icon: icon, iconPosition: 'left' }}
-        noResultsMessage={strings.MESSAGE_NO_RESULTS}
-      />
+      <Form.Field key={`search-${label}`} error={!validationState.isValid}>
+        <Search
+          value={searchText}
+          loading={loading}
+          onSearchChange={handleChange}
+          onResultSelect={handleSelect}
+          minCharacters={minCharacters}
+          placeholder={placeholder}
+          results={
+            loading
+              ? [{ title: strings.MESSAGE_LOADING }]
+              : createResultsArray(results, resultFormat)
+          }
+          disabled={!isEditable}
+          input={{ icon: icon, iconPosition: 'left' }}
+          noResultsMessage={strings.MESSAGE_NO_RESULTS}
+        />
+        {validationState.isValid ? null : (
+          <Label pointing prompt content={validationState?.validationMessage} />
+        )}
+      </Form.Field>
       <DisplaySelection {...displayProps} />
     </>
   )
