@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Header } from 'semantic-ui-react'
+import { Button, Grid, Header, Popup } from 'semantic-ui-react'
 import { TemplateAction, Trigger } from '../../../../utils/generated/graphql'
 import CheckboxIO from '../../shared/CheckboxIO'
 import { EvaluationHeader } from '../../shared/Evaluation'
@@ -15,6 +15,11 @@ type GetActionsForTrigger = (
   trigger: Trigger,
   allTemplateActions: TemplateAction[]
 ) => TemplateActions
+
+enum ActionPosition {
+  TOP,
+  BOTTOM,
+}
 
 type IsAsynchronous = (templateAction: TemplateAction) => boolean
 
@@ -74,10 +79,22 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
     })
   }
 
-  const addAction = () => {
-    updateTemplate(templateId, {
-      templateActionsUsingId: { create: [{ ...newAction, trigger, sequence: lastSequence + 1 }] },
-    })
+  const addAction = (actionPosition: ActionPosition) => {
+    let counter = 1
+    if (actionPosition === ActionPosition.TOP)
+      updateTemplate(templateId, {
+        templateActionsUsingId: {
+          updateById: sequential.map((action) => ({
+            id: action.id,
+            patch: { sequence: ++counter },
+          })),
+          create: [{ ...newAction, trigger, sequence: 1 }],
+        },
+      })
+    else
+      updateTemplate(templateId, {
+        templateActionsUsingId: { create: [{ ...newAction, trigger, sequence: lastSequence + 1 }] },
+      })
   }
 
   const setIsSequential: SetIsSequential = (id, isSequential) => {
@@ -186,7 +203,30 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
         <Header as="h4" className="no-margin-no-padding">
           {trigger}
         </Header>
-        <IconButton title="add new action" name="add square" onClick={addAction} />
+        {/* <IconButton title="add new action" name="add square" onClick={addAction} /> */}
+        <Popup
+          flowing
+          hoverable
+          trigger={<Button content="add new action" icon="add square" />}
+          position="right center"
+        >
+          <Grid divided columns={2}>
+            <Grid.Column textAlign="center">
+              <IconButton
+                title="top"
+                name="sort up"
+                onClick={() => addAction(ActionPosition.TOP)}
+              />
+            </Grid.Column>
+            <Grid.Column textAlign="center">
+              <IconButton
+                title="bottom"
+                name="sort down"
+                onClick={() => addAction(ActionPosition.BOTTOM)}
+              />
+            </Grid.Column>
+          </Grid>
+        </Popup>
       </div>
       {renderTemplateActions('Sequential', sequential)}
       {renderTemplateActions('Asynchronous', asynchronous)}
