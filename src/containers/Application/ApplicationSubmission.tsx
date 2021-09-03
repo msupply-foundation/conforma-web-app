@@ -66,7 +66,7 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
               color="blue"
               as={Link}
               to={`/application/${serialNumber}/summary`}
-              content={`${strings.BUTTON_BACK_TO} ${name}`}
+              content={strings.BUTTON_VIEW_APPLICATION}
             />
             <p>
               <Link to={'/'}>
