@@ -14,6 +14,8 @@ import {
   ApplicationLinkQueryResult,
   SchemaColumn,
   SchemaInfo,
+  GetApplicationJoinLinkTableName,
+  CaseType,
 } from '../../../utils/types'
 
 import { camelCase, snakeCase } from 'lodash'
@@ -57,7 +59,7 @@ export const getTableDisplaysForTableName = (
   return displayTableRowsWithExistingColumns.map((displayTable) => ({
     columnName: String(displayTable?.columnName),
     isTextColumn: !!displayTable?.isTextColumn,
-    title: String(displayTable?.columnName),
+    title: String(displayTable?.title),
   }))
 }
 
@@ -130,13 +132,20 @@ export const buildCountQuery = ({ pluralTableName }: OutcomeDisplay) => {
   return { query, getCount }
 }
 
-export const getDBApplicationJoinLinkTableName = (tableName: string) =>
-  snakeCase(`${tableName}ApplicationJoins`)
+export const getApplicationJoinLinkTableName: GetApplicationJoinLinkTableName = ({
+  tableName,
+  caseType,
+}) => {
+  const linkTableName = `${tableName} Application Join`
+  if (caseType === CaseType.Camel) return camelCase(linkTableName)
+  else return snakeCase(linkTableName)
+}
 
-export const getApplicationJoinLinkTableName = (tableName: string) => `${tableName}ApplicationJoins`
+export const getApplicationJoinLinkQueryName = (tableName: string) =>
+  `${getApplicationJoinLinkTableName({ tableName, caseType: CaseType.Camel })}s`
 
 export const buildApplicationLinkQuery = ({ tableName }: OutcomeDisplay) => {
-  const applicationJoin = getApplicationJoinLinkTableName(tableName)
+  const applicationJoin = getApplicationJoinLinkQueryName(tableName)
 
   const query = gql`
       query get${tableName}Applications ($id: Int!) {
