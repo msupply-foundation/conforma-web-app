@@ -6,6 +6,7 @@ import { Loading } from '../../components'
 import strings from '../../utils/constants'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ApplicationLinkQuery } from '../../utils/types'
+import { Link } from 'react-router-dom'
 
 const ApplicationLinks: React.FC<{ applicationLinkQuery: ApplicationLinkQuery; id: number }> = ({
   applicationLinkQuery,
@@ -24,7 +25,6 @@ const ApplicationLinks: React.FC<{ applicationLinkQuery: ApplicationLinkQuery; i
   if (!data) return <Loading />
 
   const applications = applicationLinkQuery.getApplications(data)
-  const navigateToApplication = (serial: string) => push(`/application/${serial}`)
   if (applications.length === 0) return null
 
   return (
@@ -43,13 +43,13 @@ const ApplicationLinks: React.FC<{ applicationLinkQuery: ApplicationLinkQuery; i
           </Table.Header>
           <Table.Body>
             {applications.map((row, index) => (
-              <Table.Row
-                key={index}
-                className="clickable"
-                onClick={() => navigateToApplication(row.serial)}
-              >
+              <Table.Row key={index}>
                 {Object.values(row).map((value, index) => (
-                  <Table.Cell key={index}>{value}</Table.Cell>
+                  <Table.Cell key={index}>
+                    <Link to={`/application/${row.serial}`} target="_blank">
+                      {value}
+                    </Link>
+                  </Table.Cell>
                 ))}
               </Table.Row>
             ))}
