@@ -53,11 +53,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   useEffect(() => {
     onSave({
-      text: textFormat
-        ? getTextFormat(textFormat, selection)
-        : selection.length > 0
-        ? JSON.stringify(selection)
-        : undefined,
+      text: getTextFormat(textFormat, selection),
       selection: selection,
     })
   }, [selection])
@@ -183,8 +179,20 @@ const getDefaultString = (result: any, fieldType: ResultsField = 'title') => {
   }
 }
 
-const getTextFormat = (textFormat: string, selection: any[]) => {
-  const strings = selection.map((item) => substituteValues(textFormat, item))
+const getTextFormat = (textFormat: string, selection: any[]): string | undefined => {
+  if (selection.length === 0) return undefined
+  if (textFormat) {
+    const strings = selection.map((item) => substituteValues(textFormat, item))
+    return strings.join(', ')
+  }
+  // Default "text" field -- needs to return consistent string regardless of
+  // object field order
+  const strings = selection.map((item) => {
+    const itemFields = Object.entries(item)
+      .sort()
+      .map(([key, value]) => `${key}: ${value}`)
+    return `{${itemFields.join(', ')}}`
+  })
   return strings.join(', ')
 }
 
