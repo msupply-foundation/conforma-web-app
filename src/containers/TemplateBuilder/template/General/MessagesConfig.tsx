@@ -48,7 +48,7 @@ const MessagesConfig: React.FC<MessagesConfigProps> = ({ isOpen, onClose }) => {
   const updateMessage = async () => {
     const { startMessage, submissionMessage } = state
     const result = await updateTemplate(templateId, {
-      startMessage: startMessage && startMessage !== '' ? startMessage : null,
+      startMessage: startMessage ? startMessage : null,
       submissionMessage,
     })
     if (!result) return
