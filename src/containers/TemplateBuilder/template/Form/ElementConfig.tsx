@@ -42,10 +42,10 @@ const getState: GetState = (element: TemplateElement) => ({
   title: element.title || '',
   category: element.category || TemplateElementCategory.Information,
   elementTypePluginCode: element.elementTypePluginCode || '',
-  visibilityCondition: element.visibilityCondition || true,
-  isRequired: element.isRequired || true,
-  isEditable: element.isEditable || true,
-  validation: element.validation || true,
+  visibilityCondition: !!element.visibilityCondition,
+  isRequired: !!element.isRequired,
+  isEditable: !!element.isEditable,
+  validation: !!element.validation,
   helpText: element.helpText || '',
   validationMessage: element.validationMessage || '',
   parameters: element.parameters || {},
@@ -106,6 +106,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   }
 
   const updateElement = async () => {
+    console.log('here')
     const result = await updateTemplateSection(selectedSectionId, {
       templateElementsUsingId: {
         updateById: [{ id: state.id, patch: state }],

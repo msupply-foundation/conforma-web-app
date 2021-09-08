@@ -1,7 +1,7 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { Header, Icon, Label, Modal } from 'semantic-ui-react'
+import { Icon, Label, Modal } from 'semantic-ui-react'
 import { TemplateAction } from '../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import DropdownIO from '../../shared/DropdownIO'
@@ -21,6 +21,7 @@ type ActionConfigProps = {
 type ActionUpdateState = {
   actionCode: string
   description: string
+  eventCode: string
   condition: EvaluatorNode
   parameterQueries: ParametersType
   id: number
@@ -31,6 +32,7 @@ type GetState = (action: TemplateAction) => ActionUpdateState
 const getState: GetState = (action: TemplateAction) => ({
   actionCode: action?.actionCode || '',
   description: action?.description || '',
+  eventCode: action?.eventCode || '',
   condition: action?.condition || true,
   parameterQueries: action?.parameterQueries || {},
   id: action?.id || 0,
@@ -95,6 +97,12 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             setTemplateAction={(templateAction) => {
               setState({ ...state, ...templateAction })
             }}
+          />
+          <TextIO
+            text={state.description}
+            title="Scheduled Event Code"
+            setText={(text) => setState({ ...state, eventCode: text })}
+            isPropUpdated={true}
           />
           <TextIO text={templateAction?.trigger || ''} title="Trigger" />
           <div className="long">
