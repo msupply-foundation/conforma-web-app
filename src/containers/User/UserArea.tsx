@@ -34,9 +34,9 @@ const UserArea: React.FC = () => {
     <Container id="user-area" fluid>
       <BrandArea />
       <div id="user-area-left">
-        <OutcomeDisplaysContext>
-          <MainMenuBar templates={templates} />
-        </OutcomeDisplaysContext>
+        {/* <OutcomeDisplaysContext> */}
+        <MainMenuBar templates={templates} />
+        {/* </OutcomeDisplaysContext> */}
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
       <UserMenu
@@ -75,15 +75,15 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
     setDropDownsState((currState) => getNewDropdownsState(basepath, currState))
   }, [pathname])
 
-  const outcomeDisplayState = useOutcomeDisplayState()
-  const outcomes =
-    (outcomeDisplayState?.outcomeDisplaysStructure?.outcomeDisplays as OutcomeDisplay[]) || []
+  // const outcomeDisplayState = useOutcomeDisplayState()
+  // const outcomes =
+  //   (outcomeDisplayState?.outcomeDisplaysStructure?.outcomeDisplays as OutcomeDisplay[]) || []
 
-  const outcomeOptions = outcomes.map(({ code, title, tableName }): any => ({
-    key: code,
-    text: title,
-    value: tableName,
-  }))
+  // const outcomeOptions = outcomes.map(({ code, title, tableName }): any => ({
+  //   key: code,
+  //   text: title,
+  //   value: tableName,
+  // }))
 
   const templateOptions = templates
     .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.List))
@@ -121,10 +121,10 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
       }))
   )
 
-  const handleOutcomeChange = (_: SyntheticEvent, { value }: any) => {
-    setDropDownsState({ ...dropdownsState, outcomes: { active: true, selection: value } })
-    push(`/outcomes/${value}`)
-  }
+  // const handleOutcomeChange = (_: SyntheticEvent, { value }: any) => {
+  //   setDropDownsState({ ...dropdownsState, outcomes: { active: true, selection: value } })
+  //   push(`/outcomes/${value}`)
+  // }
 
   const handleTemplateChange = (_: SyntheticEvent, { value }: any) => {
     setDropDownsState({ ...dropdownsState, templates: { active: true, selection: value } })
@@ -152,7 +152,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
             />
           </List.Item>
         )}
-        {outcomeOptions.length > 1 && (
+        {/* {outcomeOptions.length > 1 && (
           <List.Item className={dropdownsState.outcomes.active ? 'selected-link' : ''}>
             <Dropdown
               text={strings.MENU_ITEM_OUTCOMES}
@@ -161,7 +161,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
               value={dropdownsState.outcomes.selection}
             />
           </List.Item>
-        )}
+        )} */}
         {isAdmin && (
           <List.Item className={dropdownsState.admin.active ? 'selected-link' : ''}>
             <Dropdown
