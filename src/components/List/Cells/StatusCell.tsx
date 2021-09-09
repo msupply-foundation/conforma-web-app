@@ -1,12 +1,35 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Progress } from 'semantic-ui-react'
-import { ApplicationStatus } from '../../../utils/generated/graphql'
+import { Button, Icon, ModalProps, Progress } from 'semantic-ui-react'
+import { ApplicationStatus, useDeleteApplicationMutation } from '../../../utils/generated/graphql'
 import { CellProps } from '../../../utils/types'
 import enumsToLocalStrings from '../../../utils/data/enumsToLocalisedStrings'
 import strings from '../../../utils/constants'
+import messages from '../../../utils/messages'
+import ModalConfirmation from '../../Main/ModalConfirmation'
 
-const StatusCell: React.FC<CellProps> = ({ application }) => {
+const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplication }) => {
+  const [showModalDeletion, setShowModalDeletion] = useState<ModalProps>({ open: false })
+
+  const showConfirmation = () => {
+    const { title, message, option } = messages.APPLICATION_DELETION_CONFIRM
+    setShowModalDeletion({
+      open: true,
+      title,
+      message,
+      option,
+      onClick: () => {
+        deleteApplication()
+        setShowModalDeletion({ open: false })
+      },
+      onClose: () => setShowModalDeletion({ open: false }),
+    })
+  }
+
+  const deleteDraft = () => {
+    showConfirmation()
+  }
+
   const { serial, status } = application
   switch (status) {
     case ApplicationStatus.ChangesRequired:
@@ -23,8 +46,13 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
           <Link to={`/application/${serial}`} className="user-action">
             {strings.ACTION_EDIT_DRAFT}
           </Link>
-          {/* TO DO: Trash icon should link to application delete */}
-          <Icon name="trash alternate outline" />
+          <Icon
+            className="delete-icon"
+            name="trash alternate outline"
+            loading={loading}
+            onClick={deleteDraft}
+          />
+          <ModalConfirmation {...showModalDeletion} />
         </>
       )
     case ApplicationStatus.Completed:

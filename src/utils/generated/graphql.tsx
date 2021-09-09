@@ -29189,6 +29189,19 @@ export type CreateReviewMutation = (
   )> }
 );
 
+export type DeleteApplicationMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteApplicationMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteApplication?: Maybe<(
+    { __typename?: 'DeleteApplicationPayload' }
+    & Pick<DeleteApplicationPayload, 'clientMutationId'>
+  )> }
+);
+
 export type RestartApplicationMutationVariables = Exact<{
   serial: Scalars['String'];
   applicationPatch: ApplicationPatch;
@@ -30566,6 +30579,38 @@ export function useCreateReviewMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateReviewMutationHookResult = ReturnType<typeof useCreateReviewMutation>;
 export type CreateReviewMutationResult = Apollo.MutationResult<CreateReviewMutation>;
 export type CreateReviewMutationOptions = Apollo.BaseMutationOptions<CreateReviewMutation, CreateReviewMutationVariables>;
+export const DeleteApplicationDocument = gql`
+    mutation deleteApplication($id: Int!) {
+  deleteApplication(input: {id: $id}) {
+    clientMutationId
+  }
+}
+    `;
+export type DeleteApplicationMutationFn = Apollo.MutationFunction<DeleteApplicationMutation, DeleteApplicationMutationVariables>;
+
+/**
+ * __useDeleteApplicationMutation__
+ *
+ * To run a mutation, you first call `useDeleteApplicationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteApplicationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteApplicationMutation, { data, loading, error }] = useDeleteApplicationMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteApplicationMutation(baseOptions?: Apollo.MutationHookOptions<DeleteApplicationMutation, DeleteApplicationMutationVariables>) {
+        return Apollo.useMutation<DeleteApplicationMutation, DeleteApplicationMutationVariables>(DeleteApplicationDocument, baseOptions);
+      }
+export type DeleteApplicationMutationHookResult = ReturnType<typeof useDeleteApplicationMutation>;
+export type DeleteApplicationMutationResult = Apollo.MutationResult<DeleteApplicationMutation>;
+export type DeleteApplicationMutationOptions = Apollo.BaseMutationOptions<DeleteApplicationMutation, DeleteApplicationMutationVariables>;
 export const RestartApplicationDocument = gql`
     mutation restartApplication($serial: String!, $applicationPatch: ApplicationPatch!) {
   updateApplicationBySerial(input: {serial: $serial, patch: $applicationPatch}) {
