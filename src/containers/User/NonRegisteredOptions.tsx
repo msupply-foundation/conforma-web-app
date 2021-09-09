@@ -7,7 +7,11 @@ import messages from '../../utils/messages'
 import strings from '../../utils/constants'
 import { LoginPayload } from '../../utils/types'
 
-const UserRegister: React.FC = () => {
+interface NonRegisteredProps {
+  option: 'register' | 'reset-password'
+}
+
+const NonRegisteredOptions: React.FC<NonRegisteredProps> = ({ option }) => {
   const [networkError, setNetworkError] = useState('')
   const { push } = useRouter()
   const { onLogin } = useUserState()
@@ -32,11 +36,12 @@ const UserRegister: React.FC = () => {
   const onLoginSuccess = async (loginResult: LoginPayload) => {
     const { JWT, user, templatePermissions, orgList, isAdmin } = loginResult
     await onLogin(JWT, user, templatePermissions, orgList, isAdmin)
-    push('/application/new?type=UserRegistration')
+    if (option === 'register') push('/application/new?type=UserRegistration')
+    else if (option === 'reset-password') push('/application/new?type=PasswordReset')
   }
 
   if (networkError) return <p>{networkError}</p>
   else return <p>{messages.REDIRECT_TO_REGISTRATION}</p>
 }
 
-export default UserRegister
+export default NonRegisteredOptions
