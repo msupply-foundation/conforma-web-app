@@ -4,7 +4,7 @@ import { hot } from 'react-hot-loader'
 import Login from '../User/Login'
 import Verify from '../User/Verification'
 import { UserProvider } from '../../contexts/UserState'
-import NonRegisteredOptions from '../User/NonRegisteredOptions'
+import NonRegisteredLogin from '../User/NonRegisteredLogin'
 import AuthenticatedContent from './AuthenticatedWrapper'
 
 const AppWrapper: React.FC = () => {
@@ -16,10 +16,10 @@ const AppWrapper: React.FC = () => {
             <Login />
           </Route>
           <Route exact path="/register">
-            <NonRegisteredOptions option="register" />
+            <NonRegisteredLogin option="register" />
           </Route>
           <Route exact path="/reset-password">
-            <NonRegisteredOptions option="reset-password" />
+            <NonRegisteredLogin option="reset-password" />
           </Route>
           <Route exact path="/verify">
             <Verify />

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer } from 'react'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
+import { useRouter } from '../utils/hooks/useRouter'
 import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
 import strings from '../utils/constants'
 
@@ -91,6 +92,9 @@ export function UserProvider({ children }: UserProviderProps) {
   const [state, dispatch] = useReducer(reducer, initialState)
   const userState = state
   const setUserState = dispatch
+  const {
+    query: { sessionId },
+  } = useRouter()
 
   const logout = () => {
     localStorage.clear()
