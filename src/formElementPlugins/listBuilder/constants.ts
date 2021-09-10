@@ -1,11 +1,11 @@
 export default {
-  BUTTON_LAUNCH_MODAL: 'Add item',
-  BUTTON_ADD: 'Add',
-  BUTTON_UPDATE: 'Update',
-  BUTTON_EDIT: 'Edit',
-  BUTTON_DELETE: 'Delete item',
-  BUTTON_CANCEL: 'Cancel',
+  BUTTON_LAUNCH_MODAL: 'Adicionar item',
+  BUTTON_ADD: 'Adicionar',
+  BUTTON_UPDATE: 'Atualizar',
+  BUTTON_EDIT: 'Editar',
+  BUTTON_DELETE: 'Deletar item',
+  BUTTON_CANCEL: 'Cancelar',
   ERROR_LIST_ITEMS_NOT_VALID:
-    "Can't add item to list. There are invalid entries or incomplete required fields",
-  VALIDATION_MESSAGE_DEFAULT: 'This is a required question',
+    'Não foi possível adicionar item a list. Verifica se existem campos inválidos ou incompletos',
+  VALIDATION_MESSAGE_DEFAULT: 'Este item é obrigatório',
 }

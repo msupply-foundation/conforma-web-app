@@ -1,4 +1,6 @@
+import strings from '../../constants'
 import { ElementBase, SectionDetails, SectionsStructure } from '../../types'
+
 interface BuildSectionsStructureProps {
   sectionDetails: SectionDetails[]
   baseElements: ElementBase[]
@@ -33,7 +35,7 @@ const buildSectionsStructure = ({
       // Will build the array of elements
       const state = elements.map((element) => ({ element }))
 
-      const pageName = `Page ${pageNumber}`
+      const pageName = `${strings.LABEL_APPLICATION_PAGE} ${pageNumber}`
       return {
         ...pages,
         [pageNumber]: { name: pageName, number: pageNumber, state, sectionCode: section.code },

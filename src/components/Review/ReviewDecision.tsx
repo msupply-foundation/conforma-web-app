@@ -37,7 +37,7 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
               radio
               label={option.title}
               name={option.title}
-              value={option.code}
+              value={strings[option.code]}
               checked={option.value}
               onChange={onChangeDecision}
             />
