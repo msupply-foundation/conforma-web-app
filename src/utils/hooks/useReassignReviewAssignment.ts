@@ -1,50 +1,49 @@
 import { useUserState } from '../../contexts/UserState'
 import {
-  useUpdateReviewAssignmentMutation,
+  useUpdateAssigneeInReviewAssignmentMutation,
   ReviewAssignmentStatus,
   ReviewAssignmentPatch,
   TemplateElementCategory,
   Trigger,
 } from '../generated/graphql'
-import { AssignmentDetails, FullStructure } from '../types'
+import { AssignmentDetails, PageElement } from '../types'
 
-// below lines are used to get return type of the function that is returned by useUpdateReviewAssignmentMutation
-type UseUpdateReviewAssignmentMutationReturnType = ReturnType<
-  typeof useUpdateReviewAssignmentMutation
+// below lines are used to get return type of the function that is returned by useUpdateReviewReassignmentMutation
+type UseUpdateAssigneeInReviewAssignmentMutationReturnType = ReturnType<
+  typeof useUpdateAssigneeInReviewAssignmentMutation
 >
-type PromiseReturnType = ReturnType<UseUpdateReviewAssignmentMutationReturnType[0]>
-// hook used to assign section/s to user as per type definition below (returns promise that resolve with mutation result data)
-type UseUpdateReviewAssignment = (structure: FullStructure) => {
-  assignSectionToUser: (props: {
+type PromiseReturnType = ReturnType<UseUpdateAssigneeInReviewAssignmentMutationReturnType[0]>
+// hook used to reassign section/s to user (and unassign previous section)
+// as per type definition below (returns promise that resolve with mutation result data)
+type UseReassignReviewAssignment = () => {
+  reassignSection: (props: {
     // Section code is optional if omitted all sections are assigned
     sectionCode?: string
-    assignment: AssignmentDetails
-    // isSelfAssignment defaults to false
-    isSelfAssignment?: boolean
+    unassignmentId?: number
+    reassignment: AssignmentDetails
+    elements: PageElement[]
   }) => PromiseReturnType
 }
 
 type ConstructAssignSectionPatch = (
   reviewLevel: number,
   isFinalDecision: boolean,
-  isSelfAssignment: boolean,
+  elements: PageElement[],
   sectionCode?: string
 ) => ReviewAssignmentPatch
 
-const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
+const useReasignReviewAssignment: UseReassignReviewAssignment = () => {
   const {
     userState: { currentUser },
   } = useUserState()
-  const [updateAssignment] = useUpdateReviewAssignmentMutation()
+  const [reassignReview] = useUpdateAssigneeInReviewAssignmentMutation()
 
-  const constructAssignSectionPatch: ConstructAssignSectionPatch = (
+  const constructUnassignSectionPatch: ConstructAssignSectionPatch = (
     reviewLevel,
     isFinalDecision,
-    isSelfAssignment,
+    elements,
     sectionCode
   ) => {
-    const elements = Object.values(structure?.elementsById || {})
-
     // Will get assignment questions filtering elements by:
     // - level 1 (or finalDecision) -> if existing response linked
     // - level 1+ -> if existing review linked
@@ -66,9 +65,11 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
 
     return {
       status: ReviewAssignmentStatus.Assigned,
+      isLocked: false,
       assignerId: currentUser?.userId || null,
-      // onReviewSelfAssign will trigger core action to disallow other reviewers to self assign
-      trigger: isSelfAssignment ? Trigger.OnReviewSelfAssign : Trigger.OnReviewAssign,
+      // onReviewReassign will trigger core action to move remove
+      // previous assignment ASSIGNED to another reviewer
+      // trigger: Trigger.OnReviewReassign,
       timeUpdated: new Date().toISOString(),
       reviewQuestionAssignmentsUsingId: {
         create: createReviewQuestionAssignments,
@@ -77,17 +78,16 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
   }
 
   return {
-    assignSectionToUser: async ({ sectionCode, assignment, isSelfAssignment = false }) => {
-      console.log('Assigning...', sectionCode, assignment, isSelfAssignment)
-
-      const { id, isFinalDecision, level } = assignment
-      const result = await updateAssignment({
+    reassignSection: async ({ sectionCode, unassignmentId = 0, reassignment, elements }) => {
+      const { id, isFinalDecision, level } = reassignment
+      const result = await reassignReview({
         variables: {
-          assignmentId: id,
-          assignmentPatch: constructAssignSectionPatch(
+          unassignmentId,
+          reassignmentId: id,
+          reassignmentPatch: constructUnassignSectionPatch(
             level,
             isFinalDecision,
-            isSelfAssignment,
+            elements,
             sectionCode
           ),
         },
@@ -99,4 +99,4 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
   }
 }
 
-export default useUpdateReviewAssignment
+export default useReasignReviewAssignment
