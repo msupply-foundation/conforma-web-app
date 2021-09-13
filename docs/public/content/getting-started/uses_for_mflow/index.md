@@ -1,7 +1,7 @@
 +++
 title = "Uses of mFlow"
 insert_anchor_links = "right"
-weight = 1
+weight = 2
 +++
 
 The original inspiration for creating mFlow was to provide a low-cost tool to help manage regulatory workflows in the healthcare industry.
