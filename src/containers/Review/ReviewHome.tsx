@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Segment, Header } from 'semantic-ui-react'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
-import AssignmentSectionRow from './AssignmentSectionRow'
+import AssignmentSectionRow from '../Assign/AssignmentSectionRow'
 import ReviewSectionRow from './ReviewSectionRow'
 
 interface ReviewHomeProps {
