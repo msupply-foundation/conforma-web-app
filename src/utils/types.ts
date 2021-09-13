@@ -602,6 +602,12 @@ export type SchemaInfo = {
 // OUTCOMES DISPLAY
 // *****************
 
+export interface Outcome {
+  code: string
+  title: string
+  tableName: string
+}
+
 export type OutcomeDisplay = {
   code: string
   detailColumnName: string
