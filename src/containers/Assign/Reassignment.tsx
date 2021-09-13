@@ -44,8 +44,6 @@ const Reassignment: React.FC<ReassignmentProps> = ({
     )
     const reassignment = assignments.find((assignment) => assignment.reviewer.id === value)
 
-    console.log('assignment', reassignment)
-
     if (!reassignment) return
     try {
       await reassignSection({

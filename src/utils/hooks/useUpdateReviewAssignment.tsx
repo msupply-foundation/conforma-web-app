@@ -78,8 +78,6 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
 
   return {
     assignSectionToUser: async ({ sectionCode, assignment, isSelfAssignment = false }) => {
-      console.log('Assigning...', sectionCode, assignment, isSelfAssignment)
-
       const { id, isFinalDecision, level } = assignment
       const result = await updateAssignment({
         variables: {
