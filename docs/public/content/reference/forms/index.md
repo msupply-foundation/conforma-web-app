@@ -643,19 +643,3 @@ _Input for numeric fields_
 - **category**: `Information`
 
 _For specifying where the list of questions is broken into UI pages/steps. The **previous** question of this element will be the **last** element on a page_
-
-#### Input parameters
-
-- ~~**pageBreakValidityCheck**: `boolean` -- If `true`, the user cannot proceed to the next page unless _all_ questions on the current page have passed validation~~
-  - ~~default: `false`~~
-
----
-
-```
-
-```
-
-```
-
-```
-
