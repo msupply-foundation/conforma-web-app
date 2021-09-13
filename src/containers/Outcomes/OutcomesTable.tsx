@@ -1,37 +1,35 @@
 import React from 'react'
-import { useQuery } from '@apollo/client'
 import { Header, Table } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { useOutcomesTable } from '../../utils/hooks/useOutcomes'
 import { OutcomeDisplay, TableDisplay, TableDisplayQuery } from '../../utils/types'
 
-const OutcomeTable: React.FC<{
-  outcomeDisplay: OutcomeDisplay
-  tableDisplayColumns: TableDisplay[]
-  tableQuery: TableDisplayQuery
-  outcomeCode: string
-}> = ({ outcomeDisplay, tableDisplayColumns, tableQuery, outcomeCode }) => {
-  const { push } = useRouter()
-  const { data, error } = useQuery(tableQuery.query, { fetchPolicy: 'network-only' })
-  usePageTitle(outcomeDisplay.title)
+const OutcomeTable: React.FC = () => {
+  const {
+    push,
+    params: { tableName },
+  } = useRouter()
 
-  // if (error) return <Message error title={strings.ERROR_GENERIC} list={[error.message]} />
-  // Silently ignore errors for demo
-  if (error) return null
-  if (!data) return <Loading />
+  const { outcomeTable, loading, error } = useOutcomesTable({ tableName })
+  usePageTitle(outcomeTable?.title || '')
 
-  const tableData = tableQuery.getNodes(data)
-  const showDetailsForRow = (id: number) => push(`/outcomes/${outcomeCode}/${id}`)
+  if (error) return <p>{error?.message}</p>
+  if (loading || !outcomeTable) return <Loading />
+
+  const showDetailsForRow = (id: number) => push(`/outcomes/${tableName}/${id}`)
+
+  const { headerRow, tableRows, totalCount, title } = outcomeTable
 
   return (
     <div id="outcomes-display">
-      <Header as="h4">{outcomeDisplay.title}</Header>
+      <Header as="h4">{outcomeTable.title}</Header>
       <div id="list-container" className="outcome-table-container">
         <Table sortable stackable selectable>
           <Table.Header>
             <Table.Row>
-              {tableDisplayColumns.map(({ title }) => (
+              {headerRow.map(({ title }: any) => (
                 <Table.HeaderCell key={title} colSpan={1}>
                   {title}
                 </Table.HeaderCell>
@@ -39,17 +37,15 @@ const OutcomeTable: React.FC<{
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {tableData.map((row: any) => {
+            {tableRows.map((row: any) => {
               return (
                 <Table.Row
                   key={row.id}
                   className="clickable"
                   onClick={() => showDetailsForRow(row.id)}
                 >
-                  {tableDisplayColumns.map(({ columnName }) => (
-                    <Table.Cell key={columnName}>
-                      {getTableValue(row, columnName, row.isTextValue)}
-                    </Table.Cell>
+                  {row.rowValues.map((value: any, index: number) => (
+                    <Table.Cell key={index}>{value}</Table.Cell>
                   ))}
                 </Table.Row>
               )
@@ -59,16 +55,6 @@ const OutcomeTable: React.FC<{
       </div>
     </div>
   )
-}
-
-const getTableValue = (
-  row: { [columnName: string]: any | string },
-  columnName: string,
-  isTextValue: boolean
-) => {
-  const value = row[columnName]
-  if (!value) return ''
-  return isTextValue || typeof value === 'string' ? value : value.text
 }
 
 export default OutcomeTable

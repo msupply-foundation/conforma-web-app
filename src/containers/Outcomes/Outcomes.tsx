@@ -16,10 +16,10 @@ const Outcomes: React.FC = () => {
 
   return (
     <Switch>
-      <Route exact path={`${path}/:tableName/:id`}>
-        {/* <OutcomeDetailsWrapper displays={outcomeDisplaysStructure} /> */}
-      </Route>
-      <Route exact path={`${path}/:code`}>
+      {/* <Route exact path={`${path}/:tableName/:id`}> */}
+      {/* <OutcomeDetailsWrapper displays={outcomeDisplaysStructure} /> */}
+      {/* </Route> */}
+      <Route exact path={`${path}/:tableName`}>
         <OutcomeTable />
       </Route>
       <Route exact path={`${path}`}>
