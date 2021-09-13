@@ -163,7 +163,7 @@ export default {
   REVIEW_STATUS_IN_PROGRESS: 'Em andamento',
   REVIEW_STATUS_NOT_STARTED: 'Não iniciado',
   REVIEW_STATUS_PENDING_ACTION: 'Avaliação pendente',
-  REVIEW_IN_PROGRESS_BY: 'Availação em andamento',
+  REVIEW_IN_PROGRESS_BY: 'Availação em andamento por',
   REVIEW_CONSOLIDATION_BY: 'Revisado por',
   REVIEW_NOT_FOUND: 'Não encontrado',
   REVIEW_NOT_READY: 'Avaliação bloqueada',
