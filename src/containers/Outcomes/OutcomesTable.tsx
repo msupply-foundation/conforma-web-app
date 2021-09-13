@@ -20,11 +20,11 @@ const OutcomeTable: React.FC = () => {
 
   const showDetailsForRow = (id: number) => push(`/outcomes/${tableName}/${id}`)
 
-  const { headerRow, tableRows, totalCount, title } = outcomeTable
+  const { headerRow, tableRows, title, totalCount } = outcomeTable
 
   return (
     <div id="outcomes-display">
-      <Header as="h4">{outcomeTable.title}</Header>
+      <Header as="h4">{title}</Header>
       <div id="list-container" className="outcome-table-container">
         <Table sortable stackable selectable>
           <Table.Header>

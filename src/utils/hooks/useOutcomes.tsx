@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { getRequest } from '../../utils/helpers/fetchMethods'
 import config from '../../config'
 import { LOCAL_STORAGE_JWT_KEY } from '../data/globalConstants'
-import { Outcome, TemplatePermissions } from '../types'
-import { OutcomesTableResponse } from '../../containers/Outcomes/types'
+import { TemplatePermissions } from '../types'
+import { OutcomesResponse, OutcomesTableResponse } from '../../containers/Outcomes/types'
 const serverURL = config.serverREST
 
 // 3 simple hooks for returning Outcome state
@@ -32,7 +32,7 @@ export const useOutcomesList = ({ templatePermissions }: OutcomeListProps) => {
   // State (perhaps it should be?)
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
-  const [outcomesList, setOutcomesList] = useState<Outcome[]>([])
+  const [outcomesList, setOutcomesList] = useState<OutcomesResponse>([])
 
   useEffect(() => {
     const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY)
