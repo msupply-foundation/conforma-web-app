@@ -1,11 +1,11 @@
 import React from 'react'
 
 import { Route, Switch } from 'react-router-dom'
-import { Loading, NoMatch } from '../../components'
+import { NoMatch } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
 import OutcomeDetailsWrapper from './OutcomesDetailWrapper'
 import OutcomeList from './OutcomesList'
-import OutcomeTableWrapper from './OutcomesTableWrapper'
+import OutcomeTable from './OutcomesTable'
 import { useOutcomeDisplayState } from './contexts/outcomesState'
 
 // Wrapping outcomes so that outcomes display info is reloaded without full page reload
@@ -16,13 +16,14 @@ const Outcomes: React.FC = () => {
 
   return (
     <Switch>
-      <Route exact path={`${path}/:code/:id`}>
+      <Route exact path={`${path}/:tableName/:id`}>
         {/* <OutcomeDetailsWrapper displays={outcomeDisplaysStructure} /> */}
       </Route>
       <Route exact path={`${path}/:code`}>
-        {/* <OutcomeTableWrapper displays={outcomeDisplaysStructure} /> */}
+        <OutcomeTable />
       </Route>
       <Route exact path={`${path}`}>
+        // Redirect back to Dashboard?
         {/* <OutcomeList displays={outcomeDisplaysStructure} /> */}
       </Route>
       <Route>
