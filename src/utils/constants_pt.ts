@@ -178,7 +178,7 @@ export default {
     'Alguns problemos foram identificados nas informações enviadas. Favor atualizar e reenviar o formulário',
   SUBTITLE_APPLICATION_SUMMARY: 'Favor avaliar cada secção antes de clicar em enviar',
   SUBTITLE_REVIEW: 'Favor completer as secções que foram atribuídas a si',
-  SUBTITLE_SUBMISSION_STEPS: 'Stages for this application:',
+  SUBTITLE_SUBMISSION_STEPS: 'Estágio do processo de avaliação:',
   USER_NONREGISTERED: 'nonRegistered',
   VALIDATION_REQUIRED_ERROR: 'Campo obrigatório',
   [Decision.ListOfQuestions]: 'Solitação de informação do solicitante',
