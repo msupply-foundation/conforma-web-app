@@ -6,9 +6,9 @@ import UserSelection from './UserSelection'
 const DevOptions: React.FC = () => {
   return (
     <div id="dev-options" style={menuStyle}>
-      <Dropdown item icon="user">
+      {/* <Dropdown item icon="user">
         <UserSelection />
-      </Dropdown>
+      </Dropdown> */}
 
       <Dropdown item icon="file video outline">
         <Snapshots />
