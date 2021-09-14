@@ -1,8 +1,8 @@
 import React from 'react'
-
-import { useQuery } from '@apollo/client'
 import { Message, Header, Form, Segment } from 'semantic-ui-react'
 import { Loading } from '../../components'
+import usePageTitle from '../../utils/hooks/usePageTitle'
+import { useRouter } from '../../utils/hooks/useRouter'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import strings from '../../utils/constants'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
@@ -14,44 +14,32 @@ import {
 } from '../../utils/types'
 import config from '../../config'
 import { defaultEvaluatedElement } from '../../utils/hooks/useLoadApplication'
+import { useOutcomesDetail } from '../../utils/hooks/useOutcomes'
+import { FormattedCell, formatCellText } from './FormattedCell'
+import { DisplayDefinition } from './types'
 
-const OutcomeDetails: React.FC<{
-  detailDisplayColumns: DetailDisplay[]
-  id: number
-  headerColumn: string
-  detailQuery: DetailDisplayQuery
-}> = ({ detailDisplayColumns, id, headerColumn, detailQuery }) => {
-  const { data, error } = useQuery(detailQuery.query, {
-    variables: { id },
-    fetchPolicy: 'network-only',
-  })
+const OutcomeDetails: React.FC = () => {
+  const {
+    push,
+    params: { tableName, id },
+  } = useRouter()
+  const { outcomeDetail, loading, error } = useOutcomesDetail({ tableName, recordId: id })
+  usePageTitle(outcomeDetail?.header.value || '')
 
-  // if (error) return <Message error title={strings.ERROR_GENERIC} list={[error.message]} />
-  // Silently ignore errors for demo
-  if (error) return null
-  if (!data) return <Loading />
+  if (error) return <p>{error?.message}</p>
+  if (loading || !outcomeDetail) return <Loading />
 
-  const detailData = detailQuery.getNode(data)
+  const { header, columns, displayDefinitions, item, linkedApplications } = outcomeDetail
 
   return (
     <>
-      <Header as="h4">{detailData[headerColumn]}</Header>
+      <Header as="h4">{header.value}</Header>
       <Form className="form-area">
         <div className="detail-container">
-          {detailDisplayColumns.map((detail, index) => {
+          {columns.map((columnName, index) => {
             return (
-              <Segment key={index} className="summary-page-element">
-                <SummaryViewWrapper
-                  element={constructElement(detail, index)}
-                  applicationData={
-                    {
-                      config /* TODO this is a hacky way of passing through server URL, I think it needs to be decoupled from applicationData. Config is needed for log_url in organisation to be displayed with imageDisplays plugin */,
-                    } as ApplicationDetails
-                  }
-                  response={getDetailValue(detailData, detail.columnName, detail.isTextColumn)}
-                  allResponses={{}}
-                  displayTitle={true}
-                />
+              <Segment key={`cell_${index}`} className="summary-page-element">
+                {constructElement(item[columnName], displayDefinitions[columnName], id)}
               </Segment>
             )
           })}
@@ -61,34 +49,53 @@ const OutcomeDetails: React.FC<{
   )
 }
 
-const getDetailValue = (
-  row: { [columnName: string]: object | string },
-  columnName: string,
-  isTextValue: boolean
-) => {
-  const value = row[columnName]
-  if (!value) return { id: 0, text: '' }
-  return isTextValue || typeof value === 'string'
-    ? ({ id: 0, text: value } as ResponseFull)
-    : ({ id: 0, ...value } as ResponseFull)
+const constructElement = (value: any, displayDefinition: DisplayDefinition, id: number) => {
+  const { title } = displayDefinition
+  const { elementTypePluginCode, elementParameters, response } = getElementDetails(
+    value,
+    displayDefinition
+  )
+  const element = {
+    id,
+    code: `Detail${id}`,
+    pluginCode: elementTypePluginCode as string,
+    category: TemplateElementCategory.Information,
+    title,
+    parameters: elementParameters,
+    validationExpression: true,
+    validationMessage: '',
+    elementIndex: 0,
+    page: 0,
+    sectionIndex: 0,
+    helpText: null,
+    sectionCode: '0',
+    ...defaultEvaluatedElement,
+    isRequired: false,
+  }
+  return (
+    <SummaryViewWrapper
+      element={element}
+      applicationData={{ config } as ApplicationDetails}
+      /* TODO this is a hacky way of passing through server URL, I think it needs to be decoupled from applicationData. Config is needed for log_url in organisation to be displayed with imageDisplays plugin */
+      response={response}
+      allResponses={{}}
+    />
+  )
 }
 
-const constructElement = (detail: DetailDisplay, index: number) => ({
-  id: index,
-  code: String(index),
-  pluginCode: detail.elementTypePluginCode as string,
-  category: TemplateElementCategory.Information,
-  title: detail.title as string,
-  parameters: detail.parameters,
-  validationExpression: true,
-  validationMessage: '',
-  elementIndex: 0,
-  page: 0,
-  sectionIndex: 0,
-  helpText: null,
-  sectionCode: '0',
-  ...defaultEvaluatedElement,
-  isRequired: false,
-})
+const getElementDetails = (value: any, displayDefinition: DisplayDefinition) => {
+  // If it's not already a plugin element, structure it as a shortText
+  // element for display purposes
+  const { formatting } = displayDefinition
+  const isAlreadyElement = !!formatting?.elementTypePluginCode
+  const elementTypePluginCode = isAlreadyElement ? formatting?.elementTypePluginCode : 'shortText'
+  const elementParameters = isAlreadyElement
+    ? formatting?.elementParameters
+    : {
+        label: displayDefinition.title,
+      }
+  const response = isAlreadyElement ? value : { text: formatCellText(value, displayDefinition) }
+  return { elementTypePluginCode, elementParameters, response }
+}
 
 export default OutcomeDetails

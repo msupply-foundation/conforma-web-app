@@ -4,7 +4,7 @@ import { Loading } from '../../components'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useOutcomesTable } from '../../utils/hooks/useOutcomes'
-import { OutcomeDisplay, TableDisplay, TableDisplayQuery } from '../../utils/types'
+import { FormattedCell } from './FormattedCell'
 
 const OutcomeTable: React.FC = () => {
   const {
@@ -40,12 +40,14 @@ const OutcomeTable: React.FC = () => {
             {tableRows.map((row: any) => {
               return (
                 <Table.Row
-                  key={row.id}
+                  key={`row_${row.id}`}
                   className="clickable"
                   onClick={() => showDetailsForRow(row.id)}
                 >
                   {row.rowValues.map((value: any, index: number) => (
-                    <Table.Cell key={index}>{value}</Table.Cell>
+                    <Table.Cell key={`value_${index}`}>
+                      <FormattedCell value={value} columnDetails={headerRow[index]} />
+                    </Table.Cell>
                   ))}
                 </Table.Row>
               )

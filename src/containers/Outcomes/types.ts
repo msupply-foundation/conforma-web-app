@@ -6,9 +6,9 @@ export type OutcomesResponse = {
 }[]
 
 interface FormatOptions {
-  elementTypePluginCode: string
-  elementParameters: object
-  markdown?: boolean
+  elementTypePluginCode?: string
+  elementParameters?: object
+  substitution?: string
   dateFormat?: string
   // Add more as required
 }
@@ -19,7 +19,7 @@ export interface DisplayDefinition {
   dataType?: string
   formatting: FormatOptions
 }
-interface HeaderRow extends DisplayDefinition {
+export interface HeaderRow extends DisplayDefinition {
   columnName: string
 }
 

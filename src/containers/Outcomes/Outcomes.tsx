@@ -2,6 +2,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { NoMatch } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
+import OutcomeDetails from './OutcomesDetail'
 import OutcomeTable from './OutcomesTable'
 
 const Outcomes: React.FC = () => {
@@ -11,9 +12,9 @@ const Outcomes: React.FC = () => {
 
   return (
     <Switch>
-      {/* <Route exact path={`${path}/:tableName/:id`}> */}
-      {/* <OutcomeDetailsWrapper displays={outcomeDisplaysStructure} /> */}
-      {/* </Route> */}
+      <Route exact path={`${path}/:tableName/:id`}>
+        <OutcomeDetails />
+      </Route>
       <Route exact path={`${path}/:tableName`}>
         <OutcomeTable />
       </Route>
