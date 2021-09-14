@@ -4,7 +4,9 @@ import { Loading } from '../../components'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useOutcomesTable } from '../../utils/hooks/useOutcomes'
-import { FormattedCell } from './FormattedCell'
+import { HeaderRow } from './types'
+import Markdown from '../../utils/helpers/semanticReactMarkdown'
+import { constructElement, formatCellText } from './helpers'
 
 const OutcomeTable: React.FC = () => {
   const {
@@ -46,7 +48,7 @@ const OutcomeTable: React.FC = () => {
                 >
                   {row.rowValues.map((value: any, index: number) => (
                     <Table.Cell key={`value_${index}`}>
-                      <FormattedCell value={value} columnDetails={headerRow[index]} />
+                      {getCellComponent(value, headerRow[index], row.id)}
                     </Table.Cell>
                   ))}
                 </Table.Row>
@@ -60,3 +62,12 @@ const OutcomeTable: React.FC = () => {
 }
 
 export default OutcomeTable
+
+// If the cell contains plugin data, return a SummaryView component, otherwise
+// just format the text and return Markdown component
+const getCellComponent = (value: any, columnDetails: HeaderRow, id: number) => {
+  const { formatting } = columnDetails
+  const { elementTypePluginCode } = formatting
+  if (elementTypePluginCode) return constructElement(value, columnDetails, id)
+  else return <Markdown text={formatCellText(value, columnDetails) || ''} />
+}
