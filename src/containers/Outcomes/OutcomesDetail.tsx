@@ -30,7 +30,7 @@ const OutcomeDetails: React.FC = () => {
   const { header, columns, displayDefinitions, item, linkedApplications } = outcomeDetail
 
   return (
-    <>
+    <div id="outcomes-display">
       <Header as="h4">{header.value}</Header>
       <Form className="form-area">
         <div className="detail-container">
@@ -43,7 +43,7 @@ const OutcomeDetails: React.FC = () => {
           })}
         </div>
       </Form>
-    </>
+    </div>
   )
 }
 
