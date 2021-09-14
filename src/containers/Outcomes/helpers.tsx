@@ -1,5 +1,7 @@
 import React from 'react'
-import { DisplayDefinition, HeaderRow } from './types'
+import { DateTime, DateTimeFormatOptions } from 'luxon'
+import { DateTimeConstant } from '../../utils/data/LuxonDateTimeConstants'
+import { DisplayDefinition, DisplayDefinitionBasic, HeaderRow } from './types'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { defaultEvaluatedElement } from '../../utils/hooks/useLoadApplication'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
@@ -8,7 +10,7 @@ import config from '../../config'
 
 export const formatCellText = (
   value: any,
-  columnDetails: HeaderRow | DisplayDefinition
+  columnDetails: HeaderRow | DisplayDefinition | DisplayDefinitionBasic
 ): string | null => {
   const { dataType, formatting } = columnDetails
   const { elementTypePluginCode, substitution, dateFormat } = formatting
@@ -18,8 +20,7 @@ export const formatCellText = (
   // Custom formatters -- these can be chained
   let formattedValue: any
   if (dataType === 'timestamp with time zone') {
-    // TO-DO Convert to Luxon Date string
-    formattedValue = value
+    formattedValue = DateTime.fromISO(value).toLocaleString(interpretDateFormat(dateFormat))
   }
   if (substitution) {
     formattedValue = substitution.replace('%1', formattedValue ?? value)
@@ -81,4 +82,14 @@ export const getElementDetails = (value: any, displayDefinition: DisplayDefiniti
       ? value
       : { text: formatCellText(value, displayDefinition) }
   return { elementTypePluginCode, elementParameters, response }
+}
+
+const interpretDateFormat = (
+  dateFormat: DateTimeConstant | DateTimeFormatOptions | undefined
+): DateTimeFormatOptions => {
+  if (!dateFormat) return {}
+  if (typeof dateFormat === 'string') {
+    if (DateTime?.[dateFormat]) return DateTime[dateFormat]
+  }
+  return dateFormat as DateTimeFormatOptions
 }

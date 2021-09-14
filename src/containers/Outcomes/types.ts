@@ -1,3 +1,6 @@
+import { DateTimeFormatOptions } from 'luxon'
+import { DateTimeConstant } from '../../utils/data/LuxonDateTimeConstants'
+
 // Response value of /outcomes endpoint
 export type OutcomesResponse = {
   tableName: string
@@ -9,8 +12,13 @@ interface FormatOptions {
   elementTypePluginCode?: string
   elementParameters?: object
   substitution?: string
-  dateFormat?: string
+  dateFormat?: DateTimeConstant | DateTimeFormatOptions
   // Add more as required
+}
+
+export interface DisplayDefinitionBasic {
+  dataType?: string
+  formatting: FormatOptions
 }
 
 export interface DisplayDefinition {
@@ -66,4 +74,12 @@ export interface OutcomesDetailResponse {
   item: { [key: string]: any }
   displayDefinitions: { [key: string]: DisplayDefinition }
   linkedApplications?: LinkedApplication[]
+}
+
+export type ApplicationDisplayField = {
+  field: keyof LinkedApplication
+  displayName: string
+  dataType: string
+  link: string | null
+  linkVar?: keyof LinkedApplication
 }

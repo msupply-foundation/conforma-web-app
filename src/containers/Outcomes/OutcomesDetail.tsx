@@ -5,6 +5,7 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useOutcomesDetail } from '../../utils/hooks/useOutcomes'
 import { constructElement } from './helpers'
+import ApplicationLinks from './ApplicationLinks'
 
 const OutcomeDetails: React.FC = () => {
   const {
@@ -33,6 +34,7 @@ const OutcomeDetails: React.FC = () => {
           })}
         </div>
       </Form>
+      {linkedApplications && <ApplicationLinks linkedApplications={linkedApplications} />}
     </div>
   )
 }
