@@ -3,7 +3,6 @@ import { DisplayDefinition, HeaderRow } from './types'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { defaultEvaluatedElement } from '../../utils/hooks/useLoadApplication'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
-import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { ApplicationDetails } from '../../utils/types'
 import config from '../../config'
 
