@@ -43,7 +43,7 @@ const ApplicationLinks: React.FC<{ linkedApplications: LinkedApplication[] }> = 
 }) => (
   <div id="linked-applications-container">
     <Header as="h4">{strings.APP_LINK_LINKED_APPLICATIONS}</Header>
-    <Table sortable stackable selectable>
+    <Table stackable selectable>
       <Table.Header>
         <Table.Row>
           {displayFields.map(({ field, displayName }, index) => (

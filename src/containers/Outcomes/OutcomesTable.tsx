@@ -44,7 +44,7 @@ const OutcomeTable: React.FC = () => {
     <div id="outcomes-display">
       <Header as="h4">{title}</Header>
       <div id="list-container" className="outcome-table-container">
-        <Table sortable stackable selectable>
+        <Table stackable selectable>
           <Table.Header>
             <Table.Row>
               {headerRow.map(({ title }: any) => (
