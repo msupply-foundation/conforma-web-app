@@ -26,7 +26,7 @@ const useQuerySectionActivation = ({
 
   useEffect(() => {
     if (!activeSections) {
-      updateQuery({ activeSections: joinOrNone(defaultActiveSectionCodes) })
+      updateQuery({ activeSections: joinOrNone(defaultActiveSectionCodes) }, true)
     }
   }, [activeSections])
 

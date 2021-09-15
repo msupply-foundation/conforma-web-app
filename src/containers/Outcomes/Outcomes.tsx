@@ -18,10 +18,6 @@ const Outcomes: React.FC = () => {
       <Route exact path={`${path}/:tableName`}>
         <OutcomeTable />
       </Route>
-      <Route exact path={`${path}`}>
-        // Redirect back to Dashboard?
-        {/* <OutcomeList displays={outcomeDisplaysStructure} /> */}
-      </Route>
       <Route>
         <NoMatch />
       </Route>

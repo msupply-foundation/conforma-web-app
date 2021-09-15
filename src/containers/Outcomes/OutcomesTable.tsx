@@ -3,6 +3,7 @@ import { Header, Table } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { useUserState } from '../../contexts/UserState'
 import { useOutcomesTable } from '../../utils/hooks/useOutcomes'
 import { HeaderRow, OutcomeTableAPIQueries } from './types'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
@@ -15,11 +16,15 @@ const OutcomeTable: React.FC = () => {
     query,
     params: { tableName },
   } = useRouter()
-  const [apiQueries, setApiQueries] = useState<OutcomeTableAPIQueries>({})
+  const {
+    userState: { templatePermissions },
+  } = useUserState()
 
+  const [apiQueries, setApiQueries] = useState<OutcomeTableAPIQueries>({})
   const { outcomeTable, loading, error } = useOutcomesTable({
     tableName,
     apiQueries,
+    templatePermissions, // This is only so changing user refreshes the display
   })
   usePageTitle(outcomeTable?.title || '')
 

@@ -65,7 +65,7 @@ const ApplicationLinks: React.FC<{ linkedApplications: LinkedApplication[] }> = 
                   {displayFields.map(({ field, dataType, link, linkVar }, index) => (
                     <Table.Cell key={`${id}_${field}_${index}`}>
                       {link && linkVar ? (
-                        <Link to={link + application[linkVar]} target="_blank">
+                        <Link to={link + application[linkVar]}>
                           {formatCellText(application[field], { dataType, formatting: {} })}
                         </Link>
                       ) : (
