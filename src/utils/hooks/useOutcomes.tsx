@@ -8,7 +8,7 @@ import {
   OutcomesTableResponse,
   OutcomesDetailResponse,
   OutcomeTableAPIQueries,
-} from '../../containers/Outcomes/types'
+} from '../../utils/types'
 const serverURL = config.serverREST
 
 // 3 simple hooks for returning Outcome state

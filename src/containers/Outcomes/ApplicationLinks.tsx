@@ -3,7 +3,7 @@ import strings from '../../utils/constants'
 import { Header, Table } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Link } from 'react-router-dom'
-import { ApplicationDisplayField, LinkedApplication } from './types'
+import { ApplicationDisplayField, LinkedApplication } from '../../utils/types'
 import { formatCellText } from './helpers'
 
 // These can be modified if we want more/different columns in application list

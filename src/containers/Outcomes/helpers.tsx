@@ -1,7 +1,7 @@
 import React from 'react'
 import { DateTime, DateTimeFormatOptions } from 'luxon'
 import { DateTimeConstant } from '../../utils/data/LuxonDateTimeConstants'
-import { DisplayDefinition, DisplayDefinitionBasic, HeaderRow } from './types'
+import { DisplayDefinition, DisplayDefinitionBasic, HeaderRow } from '../../utils/types'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { defaultEvaluatedElement } from '../../utils/hooks/useLoadApplication'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
