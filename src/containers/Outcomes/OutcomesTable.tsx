@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Header, Table } from 'semantic-ui-react'
 import { Loading } from '../../components'
+import strings from '../../utils/constants'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
@@ -71,7 +72,10 @@ const OutcomeTable: React.FC = () => {
             })}
           </Table.Body>
         </Table>
-        <PaginationBar totalCount={totalCount} />
+        <PaginationBar
+          totalCount={totalCount}
+          perPageText={strings.OUTCOMES_TABLE_PAGINATION_TEXT}
+        />
       </div>
     </div>
   )
