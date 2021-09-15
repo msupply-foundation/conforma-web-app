@@ -41,8 +41,6 @@ const displayFields: ApplicationDisplayField[] = [
 const ApplicationLinks: React.FC<{ linkedApplications: LinkedApplication[] }> = ({
   linkedApplications,
 }) => {
-  const { push } = useRouter()
-
   return (
     <>
       <Header as="h4">{strings.APP_LINK_LINKED_APPLICATIONS}</Header>
