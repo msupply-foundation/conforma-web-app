@@ -11,28 +11,28 @@ import { formatCellText } from './helpers'
 const displayFields: ApplicationDisplayField[] = [
   {
     field: 'name',
-    displayName: 'Name',
+    displayName: strings.APP_LINK_NAME,
     dataType: 'character varying',
     link: '/application/',
     linkVar: 'serial',
   },
   {
     field: 'serial',
-    displayName: 'Serial',
+    displayName: strings.APP_LINK_SERIAL,
     dataType: 'character varying',
     link: '/application/',
     linkVar: 'serial',
   },
   {
     field: 'templateName',
-    displayName: 'Application Type',
+    displayName: strings.APP_LINK_TYPE,
     dataType: 'character varying',
     link: '/applications?type=',
     linkVar: 'templateCode',
   },
   {
     field: 'dateCompleted',
-    displayName: 'Date Completed',
+    displayName: strings.APP_LINK_COMPLETED,
     dataType: 'timestamp with time zone',
     link: null,
   },
@@ -45,7 +45,7 @@ const ApplicationLinks: React.FC<{ linkedApplications: LinkedApplication[] }> = 
 
   return (
     <>
-      <Header as="h4">Linked Applications</Header>
+      <Header as="h4">{strings.APP_LINK_LINKED_APPLICATIONS}</Header>
       <div id="list-container">
         <Table sortable stackable selectable>
           <Table.Header>

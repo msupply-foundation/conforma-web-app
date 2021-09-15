@@ -254,4 +254,9 @@ export default {
   TEMPLATE_BUTTON_SAVE: 'Save',
   TEMPLATE_BUTTON_ADD: 'Add',
   TEMPLATE_APPEARS_IN: 'Appears in',
+  APP_LINK_LINKED_APPLICATIONS: 'Linked Application',
+  APP_LINK_NAME: 'Name',
+  APP_LINK_SERIAL: 'Serial',
+  APP_LINK_TYPE: 'Application Type',
+  APP_LINK_COMPLETED: 'Date Completed',
 }
