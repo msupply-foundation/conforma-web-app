@@ -1212,20 +1212,10 @@ a:hover {
 #outcomes-display {
   .flex-column();
   align-items: center;
+  width: @applicationListWidth;
 
-  .outcomes-container {
-    .flex-row();
-    align-items: center;
-    flex-wrap: 1;
-
-    .outcome {
-      margin: 15px;
-      max-width: 330px;
-      border-radius: @borderRadius;
-      background-color: @surfacesWhite;
-      box-shadow: @templateBoxShadow;
-      padding: 10px;
-    }
+  .outcome-nav {
+    width: 70%;
   }
 
   .outcome-table-container {
@@ -1245,11 +1235,22 @@ a:hover {
     max-width: 450px;
   }
 
-  .detail-container {
-    .flex-row();
-    align-items: start;
-    justify-content: space-between;
-    flex-wrap: wrap;
+  .outcome-detail-container {
+    .flex-column();
+    align-items: center;
+    // Limit size of images in Table (that come from SummaryView elements)
+    .ui.image {
+      width: unset;
+      max-height: 100px;
+    }
+  }
+
+  .outcome-detail-table {
+    min-width: 500px;
+  }
+
+  #linked-applications-container {
+    margin-top: 45px;
   }
 }
 
