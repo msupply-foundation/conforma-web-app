@@ -1236,11 +1236,12 @@ a:hover {
       width: unset;
       max-height: 50px;
     }
+    width: clamp(700px, 65%, 1127px);
   }
 
   .summary-page-element {
     margin: 10px;
-    min-width: 150px;
+    min-width: 200px;
     max-width: 450px;
   }
 
