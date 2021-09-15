@@ -55,21 +55,19 @@ const OutcomeTable: React.FC = () => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {tableRows.map((row: any) => {
-              return (
-                <Table.Row
-                  key={`row_${row.id}`}
-                  className="clickable"
-                  onClick={() => showDetailsForRow(row.id)}
-                >
-                  {row.rowValues.map((value: any, index: number) => (
-                    <Table.Cell key={`value_${index}`}>
-                      {getCellComponent(value, headerRow[index], row.id)}
-                    </Table.Cell>
-                  ))}
-                </Table.Row>
-              )
-            })}
+            {tableRows.map((row: any) => (
+              <Table.Row
+                key={`row_${row.id}`}
+                className="clickable"
+                onClick={() => showDetailsForRow(row.id)}
+              >
+                {row.rowValues.map((value: any, index: number) => (
+                  <Table.Cell key={`value_${index}`}>
+                    {getCellComponent(value, headerRow[index], row.id)}
+                  </Table.Cell>
+                ))}
+              </Table.Row>
+            ))}
           </Table.Body>
         </Table>
         <PaginationBar

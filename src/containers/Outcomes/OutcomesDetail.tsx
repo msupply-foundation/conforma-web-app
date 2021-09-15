@@ -42,18 +42,16 @@ const OutcomeDetails: React.FC = () => {
         <div className="outcome-detail-table">
           <Table celled stackable striped>
             <Table.Body>
-              {columns.map((columnName, index) => {
-                return (
-                  <Table.Row key={`row_${columnName}`}>
-                    <Table.Cell key={`${columnName}_${index}`} textAlign="right">
-                      <strong>{displayDefinitions[columnName].title}</strong>
-                    </Table.Cell>
-                    <Table.Cell key={`${columnName}_${index}`}>
-                      {getCellComponent(item[columnName], displayDefinitions[columnName], item.id)}
-                    </Table.Cell>
-                  </Table.Row>
-                )
-              })}
+              {columns.map((columnName, index) => (
+                <Table.Row key={`row_${columnName}`}>
+                  <Table.Cell key={`${columnName}_${index}`} textAlign="right">
+                    <strong>{displayDefinitions[columnName].title}</strong>
+                  </Table.Cell>
+                  <Table.Cell key={`${columnName}_${index}`}>
+                    {getCellComponent(item[columnName], displayDefinitions[columnName], item.id)}
+                  </Table.Cell>
+                </Table.Row>
+              ))}
             </Table.Body>
           </Table>
         </div>

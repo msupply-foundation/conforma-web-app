@@ -40,43 +40,41 @@ const displayFields: ApplicationDisplayField[] = [
 
 const ApplicationLinks: React.FC<{ linkedApplications: LinkedApplication[] }> = ({
   linkedApplications,
-}) => {
-  return (
-    <div id="linked-applications-container">
-      <Header as="h4">{strings.APP_LINK_LINKED_APPLICATIONS}</Header>
-      <Table sortable stackable selectable>
-        <Table.Header>
-          <Table.Row>
-            {displayFields.map(({ field, displayName }, index) => (
-              <Table.HeaderCell key={`${field}_${index}`} colSpan={1}>
-                {displayName}
-              </Table.HeaderCell>
-            ))}
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {linkedApplications.map((application) => {
-            const { id, templateCode } = application
-            return (
-              <Table.Row key={`${templateCode}_${id}`}>
-                {displayFields.map(({ field, dataType, link, linkVar }, index) => (
-                  <Table.Cell key={`${id}_${field}_${index}`}>
-                    {link && linkVar ? (
-                      <Link to={link + application[linkVar]}>
-                        {formatCellText(application[field], { dataType, formatting: {} })}
-                      </Link>
-                    ) : (
-                      formatCellText(application[field], { dataType, formatting: {} })
-                    )}
-                  </Table.Cell>
-                ))}
-              </Table.Row>
-            )
-          })}
-        </Table.Body>
-      </Table>
-    </div>
-  )
-}
+}) => (
+  <div id="linked-applications-container">
+    <Header as="h4">{strings.APP_LINK_LINKED_APPLICATIONS}</Header>
+    <Table sortable stackable selectable>
+      <Table.Header>
+        <Table.Row>
+          {displayFields.map(({ field, displayName }, index) => (
+            <Table.HeaderCell key={`${field}_${index}`} colSpan={1}>
+              {displayName}
+            </Table.HeaderCell>
+          ))}
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {linkedApplications.map((application) => {
+          const { id, templateCode } = application
+          return (
+            <Table.Row key={`${templateCode}_${id}`}>
+              {displayFields.map(({ field, dataType, link, linkVar }, index) => (
+                <Table.Cell key={`${id}_${field}_${index}`}>
+                  {link && linkVar ? (
+                    <Link to={link + application[linkVar]}>
+                      {formatCellText(application[field], { dataType, formatting: {} })}
+                    </Link>
+                  ) : (
+                    formatCellText(application[field], { dataType, formatting: {} })
+                  )}
+                </Table.Cell>
+              ))}
+            </Table.Row>
+          )
+        })}
+      </Table.Body>
+    </Table>
+  </div>
+)
 
 export default ApplicationLinks
