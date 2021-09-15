@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header, Form, Segment } from 'semantic-ui-react'
+import { Header, Form, Segment, Label, Icon } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -18,23 +18,36 @@ const OutcomeDetails: React.FC = () => {
   if (error) return <p>{error?.message}</p>
   if (loading || !outcomeDetail) return <Loading />
 
-  const { header, columns, displayDefinitions, item, linkedApplications } = outcomeDetail
+  const { header, tableTitle, columns, displayDefinitions, item, linkedApplications } =
+    outcomeDetail
 
   return (
-    <div id="outcomes-display">
-      <Header as="h4">{header.value}</Header>
-      <Form className="form-area">
-        <div className="detail-container">
-          {columns.map((columnName, index) => {
-            return (
-              <Segment key={`cell_${index}`} className="summary-page-element">
-                {constructElement(item[columnName], displayDefinitions[columnName], id)}
-              </Segment>
-            )
-          })}
-        </div>
-      </Form>
-      {linkedApplications && <ApplicationLinks linkedApplications={linkedApplications} />}
+    <div id="list-container">
+      <Label
+        className="back-label clickable"
+        onClick={() => push(`/outcomes/${tableName}`)}
+        content={
+          <>
+            <Icon name="chevron left" className="dark-grey" />
+            {tableTitle}
+          </>
+        }
+      />
+      <div id="outcomes-display">
+        <Header as="h4">{header.value}</Header>
+        <Form className="form-area">
+          <div className="detail-container">
+            {columns.map((columnName, index) => {
+              return (
+                <Segment key={`cell_${index}`} className="summary-page-element">
+                  {constructElement(item[columnName], displayDefinitions[columnName], id)}
+                </Segment>
+              )
+            })}
+          </div>
+        </Form>
+        {linkedApplications && <ApplicationLinks linkedApplications={linkedApplications} />}
+      </div>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import {
   OutcomesResponse,
   OutcomesTableResponse,
   OutcomesDetailResponse,
+  OutcomeTableAPIQueries,
 } from '../../containers/Outcomes/types'
 const serverURL = config.serverREST
 
@@ -18,9 +19,11 @@ interface OutcomeListProps {
 
 interface OutcomeTableProps extends OutcomeListProps {
   tableName: string
+  apiQueries: OutcomeTableAPIQueries
 }
 
-interface OutcomeDetailsProps extends OutcomeTableProps {
+interface OutcomeDetailsProps extends OutcomeListProps {
+  tableName: string
   recordId: number
 }
 
@@ -48,7 +51,12 @@ export const useOutcomesList = ({ templatePermissions }: OutcomeListProps) => {
   return { error, loading, outcomesList }
 }
 
-export const useOutcomesTable = ({ templatePermissions, tableName }: OutcomeTableProps) => {
+export const useOutcomesTable = ({
+  templatePermissions,
+  tableName,
+  apiQueries,
+}: OutcomeTableProps) => {
+  const { first, offset, orderBy, ascending } = apiQueries
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [outcomeTable, setOutcomeTable] = useState<OutcomesTableResponse>()
@@ -56,9 +64,15 @@ export const useOutcomesTable = ({ templatePermissions, tableName }: OutcomeTabl
   useEffect(() => {
     const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY)
     if (!JWT) return
-    const url = `${serverURL}/outcomes/table/${tableName}`
+    const queryElements = []
+    if (first) queryElements.push(`first=${first}`)
+    if (offset) queryElements.push(`offset=${offset}`)
+    if (orderBy) queryElements.push(`orderBy=${orderBy}`)
+    if (ascending) queryElements.push(`ascending=${ascending}`)
+    const queryString = queryElements.join('&')
+    const url = `${serverURL}/outcomes/table/${tableName}?${queryString}`
     processRequest(url, JWT, setError, setLoading, setOutcomeTable)
-  }, [templatePermissions, tableName])
+  }, [templatePermissions, tableName, apiQueries])
 
   return { error, loading, outcomeTable }
 }

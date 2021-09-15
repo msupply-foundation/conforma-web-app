@@ -1,21 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Header, Table } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useOutcomesTable } from '../../utils/hooks/useOutcomes'
-import { HeaderRow } from './types'
+import { HeaderRow, OutcomeTableAPIQueries } from './types'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { constructElement, formatCellText } from './helpers'
+import PaginationBar from '../../components/List/Pagination'
 
 const OutcomeTable: React.FC = () => {
   const {
     push,
+    query,
     params: { tableName },
   } = useRouter()
+  const [apiQueries, setApiQueries] = useState<OutcomeTableAPIQueries>({})
 
-  const { outcomeTable, loading, error } = useOutcomesTable({ tableName })
+  const { outcomeTable, loading, error } = useOutcomesTable({
+    tableName,
+    apiQueries,
+  })
   usePageTitle(outcomeTable?.title || '')
+
+  useEffect(() => {
+    setApiQueries(getAPIQueryParams(query))
+  }, [query])
 
   if (error) return <p>{error?.message}</p>
   if (loading || !outcomeTable) return <Loading />
@@ -56,6 +66,7 @@ const OutcomeTable: React.FC = () => {
             })}
           </Table.Body>
         </Table>
+        <PaginationBar totalCount={totalCount} />
       </div>
     </div>
   )
@@ -70,4 +81,19 @@ const getCellComponent = (value: any, columnDetails: HeaderRow, id: number) => {
   const { elementTypePluginCode } = formatting
   if (elementTypePluginCode) return constructElement(value, columnDetails, id)
   else return <Markdown text={formatCellText(value, columnDetails) || ''} />
+}
+
+// NOTE: This is temporary -- when we add more filtering and search
+// functionality, we will build query objects the same way the list works,
+// but it's overkill for this first version
+const getAPIQueryParams = ({ page, perPage, sortBy }: any) => {
+  const offset = page && perPage ? String((Number(page) - 1) * Number(perPage)) : undefined
+  let orderBy: string | undefined = undefined
+  let ascending: string | undefined = undefined
+  if (sortBy) {
+    const [fieldName, direction] = sortBy.split(':')
+    orderBy = fieldName
+    ascending = direction === 'asc' ? 'true' : 'false'
+  }
+  return { first: perPage, offset, orderBy, ascending }
 }

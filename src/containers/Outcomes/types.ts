@@ -68,6 +68,7 @@ export interface DetailsHeader {
 // Response object of /outcomes/table/.../item endpoint
 export interface OutcomesDetailResponse {
   tableName: string
+  tableTitle: string
   id: number
   header: DetailsHeader
   columns: string[]
@@ -82,4 +83,11 @@ export type ApplicationDisplayField = {
   dataType: string
   link: string | null
   linkVar?: keyof LinkedApplication
+}
+
+export type OutcomeTableAPIQueries = {
+  first?: string | undefined
+  offset?: string | undefined
+  orderBy?: string | undefined
+  ascending?: string | undefined
 }

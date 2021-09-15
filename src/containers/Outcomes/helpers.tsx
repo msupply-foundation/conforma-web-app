@@ -18,14 +18,18 @@ export const formatCellText = (
   if (!value) return ''
 
   // Custom formatters -- these can be chained
-  let formattedValue: any
+  let formattedValue = String(value)
   if (dataType === 'timestamp with time zone') {
-    formattedValue = DateTime.fromISO(value).toLocaleString(interpretDateFormat(dateFormat))
+    formattedValue = DateTime.fromISO(formattedValue).toLocaleString(
+      interpretDateFormat(dateFormat)
+    )
   }
   if (substitution) {
-    formattedValue = substitution.replace('%1', formattedValue ?? value)
+    formattedValue = substitution.replace('%1', formattedValue)
   }
-  // Add other custom formatters here
+  // Add two spaces to lines with carriage returns so Markdown renders them as line breaks
+  formattedValue = formattedValue.replace(/([^\s\s]$)/gm, '$1  ')
+  // Add additional custom formatters here
   return formattedValue || String(value)
 }
 

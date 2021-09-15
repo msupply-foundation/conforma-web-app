@@ -1231,15 +1231,23 @@ a:hover {
   .outcome-table-container {
     .flex-column();
     align-items: center;
+    // Limit size of images in Table (that come from SummaryView elements)
+    .ui.image {
+      width: unset;
+      max-height: 50px;
+    }
   }
 
   .summary-page-element {
     margin: 10px;
+    min-width: 150px;
+    max-width: 450px;
   }
 
   .detail-container {
     .flex-row();
-    align-items: center;
+    align-items: start;
+    justify-content: space-between;
     flex-wrap: wrap;
   }
 }
