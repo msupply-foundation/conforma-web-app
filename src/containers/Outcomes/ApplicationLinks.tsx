@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom'
 import { ApplicationDisplayField, LinkedApplication } from '../../utils/types'
 import { formatCellText } from './helpers'
 
-// These can be modified if we want more/different columns in application list
-// TO-DO Put these in constants file
+// These can be modified if we want more/different columns in linked application
+// list
 const displayFields: ApplicationDisplayField[] = [
   {
     field: 'name',

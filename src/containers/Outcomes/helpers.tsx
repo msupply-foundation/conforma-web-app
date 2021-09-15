@@ -35,7 +35,7 @@ export const formatCellText = (
 
 // Takes element configurations or straight values and returns a
 // SummaryViewComponent to display it. All elements in Details view show as a
-// SummaryView component, but (in theory) table cells can as well
+// SummaryView component, but table cells can as well
 export const constructElement = (value: any, displayDefinition: DisplayDefinition, id: number) => {
   const { title } = displayDefinition
   const { elementTypePluginCode, elementParameters, response } = getElementDetails(
@@ -92,8 +92,6 @@ const interpretDateFormat = (
   dateFormat: DateTimeConstant | DateTimeFormatOptions | undefined
 ): DateTimeFormatOptions => {
   if (!dateFormat) return {}
-  if (typeof dateFormat === 'string') {
-    if (DateTime?.[dateFormat]) return DateTime[dateFormat]
-  }
+  if (typeof dateFormat === 'string' && DateTime?.[dateFormat]) return DateTime[dateFormat]
   return dateFormat as DateTimeFormatOptions
 }
