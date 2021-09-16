@@ -1,4 +1,4 @@
-import PortugueseStrings from './constants_pt'
-import EnglishStrings from './constants_en'
+import portugueseStrings from './constants_pt'
+import englishStrings from './constants_en'
 
-export default PortugueseStrings
+export default portugueseStrings
