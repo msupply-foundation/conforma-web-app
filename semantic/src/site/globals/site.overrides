@@ -1541,6 +1541,20 @@ a:hover {
   color: @interactiveHigh !important;
 }
 
+// Text sizes
+
+.smaller-text {
+  font-size: @smallerText;
+}
+
+.slightly-smaller-text {
+  font-size: @slightlySmallerText;
+}
+
+.tiny-bit-smaller-text {
+  font-size: @tinyBitSmallerText;
+}
+
 // Position adjustments
 .shift-up-1 {
   transform: translateY(-1px);
