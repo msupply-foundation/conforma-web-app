@@ -44,10 +44,10 @@ const OutcomeDetails: React.FC = () => {
             <Table.Body>
               {columns.map((columnName, index) => (
                 <Table.Row key={`row_${columnName}`}>
-                  <Table.Cell key={`${columnName}_${index}`} textAlign="right">
+                  <Table.Cell key={`${columnName}_${index}_key`} textAlign="right">
                     <strong>{displayDefinitions[columnName].title}</strong>
                   </Table.Cell>
-                  <Table.Cell key={`${columnName}_${index}`}>
+                  <Table.Cell key={`${columnName}_${index}_val`}>
                     {getCellComponent(item[columnName], displayDefinitions[columnName], item.id)}
                   </Table.Cell>
                 </Table.Row>
