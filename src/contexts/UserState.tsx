@@ -92,9 +92,6 @@ export function UserProvider({ children }: UserProviderProps) {
   const [state, dispatch] = useReducer(reducer, initialState)
   const userState = state
   const setUserState = dispatch
-  const {
-    query: { sessionId },
-  } = useRouter()
 
   const logout = () => {
     localStorage.clear()
