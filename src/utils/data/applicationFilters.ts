@@ -50,43 +50,43 @@ const getDateRangeForUnit: GetDateRangeForUnit = (unit, value = 0) => {
 }
 
 const NAMED_DATE_RANGES: NamedDates = {
-  today: { getDates: () => [today(), today()], title: strings.FILTER_NAMED_DATE_TODAY },
+  today: { getDates: () => [today(), today()], title: strings.DATE_TODAY },
   yesterday: {
     getDates: () => getDateRangeForUnit('day', -1),
-    title: strings.FILTER_NAMED_DATE_YESTERDAY,
+    title: strings.DATE_YESTERDAY,
   },
   'this-week': {
     getDates: () => getDateRangeForUnit('week'),
-    title: strings.FILTER_NAMED_DATE_THIS_WEEK,
+    title: strings.DATE_THIS_WEEK,
   },
   'last-week': {
     getDates: () => getDateRangeForUnit('week', -1),
-    title: strings.FILTER_NAMED_DATE_LAST_WEEK,
+    title: strings.DATE_LAST_WEEK,
   },
   'this-month': {
     getDates: () => getDateRangeForUnit('month'),
-    title: strings.FILTER_NAMED_DATE_THIS_MONTH,
+    title: strings.DATE_THIS_MONTH,
   },
   'last-month': {
     getDates: () => getDateRangeForUnit('month', -1),
 
-    title: strings.FILTER_NAMED_DATE_LAST_MONTH,
+    title: strings.DATE_LAST_MONTH,
   },
   'next-month': {
     getDates: () => getDateRangeForUnit('month', 1),
-    title: strings.FILTER_NAMED_DATE_NEXT_MONTH,
+    title: strings.DATE_NEXT_MONTH,
   },
   'this-year': {
     getDates: () => getDateRangeForUnit('year'),
-    title: strings.FILTER_NAMED_DATE_THIS_YEAR,
+    title: strings.DATE_THIS_YEAR,
   },
   'last-year': {
     getDates: () => getDateRangeForUnit('year', -1),
-    title: strings.FILTER_NAMED_DATE_LAST_YEAR,
+    title: strings.DATE_LAST_YEAR,
   },
   'next-year': {
     getDates: () => getDateRangeForUnit('year', 1),
-    title: strings.FILTER_NAMED_DATE_NEXT_YEAR,
+    title: strings.DATE_NEXT_YEAR,
   },
 }
 
