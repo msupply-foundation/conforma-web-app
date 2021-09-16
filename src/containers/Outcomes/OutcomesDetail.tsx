@@ -1,11 +1,12 @@
 import React from 'react'
-import { Header, Form, Segment, Label, Icon, Table } from 'semantic-ui-react'
+import { Header, Message, Label, Icon, Table } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { useOutcomesDetail } from '../../utils/hooks/useOutcomes'
+import { ErrorResponse, useOutcomesDetail } from '../../utils/hooks/useOutcomes'
+import strings from '../../utils/constants'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
-import { DisplayDefinition, HeaderRow } from '../../utils/types'
+import { DisplayDefinition, LinkedApplication } from '../../utils/types'
 import { constructElement, formatCellText } from './helpers'
 import ApplicationLinks from './ApplicationLinks'
 
@@ -22,6 +23,10 @@ const OutcomeDetails: React.FC = () => {
 
   const { header, tableTitle, columns, displayDefinitions, item, linkedApplications } =
     outcomeDetail
+
+  const linkedApplicationsError = getLinkedApplicationsError(linkedApplications)
+  if (linkedApplicationsError)
+    console.error(linkedApplicationsError.message + '\n' + linkedApplicationsError?.detail)
 
   return (
     <div id="outcomes-display">
@@ -56,7 +61,12 @@ const OutcomeDetails: React.FC = () => {
           </Table>
         </div>
       </div>
-      {linkedApplications && <ApplicationLinks linkedApplications={linkedApplications} />}
+      {linkedApplicationsError && (
+        <Message error header={strings.ERROR_GENERIC} content={linkedApplicationsError.message} />
+      )}
+      {!linkedApplicationsError && linkedApplications && (
+        <ApplicationLinks linkedApplications={linkedApplications as LinkedApplication[]} />
+      )}
     </div>
   )
 }
@@ -69,3 +79,10 @@ const getCellComponent = (value: any, columnDetails: DisplayDefinition, id: numb
   if (elementTypePluginCode) return constructElement(value, columnDetails, id)
   else return <Markdown text={formatCellText(value, columnDetails) || ''} />
 }
+
+const getLinkedApplicationsError = (
+  linkedApplications: LinkedApplication[] | [ErrorResponse] | undefined
+): ErrorResponse | false =>
+  linkedApplications && (linkedApplications[0] as ErrorResponse)?.error
+    ? (linkedApplications[0] as ErrorResponse)
+    : false

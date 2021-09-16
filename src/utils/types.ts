@@ -24,6 +24,7 @@ import { SemanticICONS } from 'semantic-ui-react'
 import { DocumentNode } from '@apollo/client'
 import { DateTime, DateTimeFormatOptions } from 'luxon'
 import { DateTimeConstant } from '../utils/data/LuxonDateTimeConstants'
+import { ErrorResponse } from './hooks/useOutcomes'
 
 export {
   ApplicationDetails,
@@ -666,7 +667,7 @@ export interface OutcomesDetailResponse {
   columns: string[]
   item: { [key: string]: any }
   displayDefinitions: { [key: string]: DisplayDefinition }
-  linkedApplications?: LinkedApplication[]
+  linkedApplications?: LinkedApplication[] | [ErrorResponse]
 }
 
 export type ApplicationDisplayField = {

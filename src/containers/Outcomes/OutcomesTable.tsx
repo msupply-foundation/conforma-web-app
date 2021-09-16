@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Header, Table } from 'semantic-ui-react'
+import { Header, Table, Message } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import strings from '../../utils/constants'
 import usePageTitle from '../../utils/hooks/usePageTitle'
@@ -33,7 +33,9 @@ const OutcomeTable: React.FC = () => {
     setApiQueries(getAPIQueryParams(query))
   }, [query])
 
-  if (error) return <p>{error?.message}</p>
+  if (error) {
+    return <Message error header={strings.ERROR_GENERIC} content={error.message} />
+  }
   if (loading || !outcomeTable) return <Loading />
 
   const showDetailsForRow = (id: number) => push(`/outcomes/${tableName}/${id}`)

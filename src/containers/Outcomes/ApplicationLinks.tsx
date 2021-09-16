@@ -1,7 +1,6 @@
 import React from 'react'
 import strings from '../../utils/constants'
 import { Header, Table } from 'semantic-ui-react'
-import { useRouter } from '../../utils/hooks/useRouter'
 import { Link } from 'react-router-dom'
 import { ApplicationDisplayField, LinkedApplication } from '../../utils/types'
 import { formatCellText } from './helpers'

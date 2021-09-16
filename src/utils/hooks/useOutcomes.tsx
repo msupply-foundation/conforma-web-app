@@ -27,10 +27,11 @@ interface OutcomeDetailsProps extends OutcomeListProps {
   recordId: number
 }
 
-type ErrorResponse = {
-  statusCode: number
-  error: string
+export type ErrorResponse = {
+  statusCode?: number // from HTTP errors
+  error: string | boolean
   message: string
+  detail?: string // from GraphQL errors (caught by back-end)
 }
 
 export const useOutcomesList = ({ templatePermissions }: OutcomeListProps) => {
