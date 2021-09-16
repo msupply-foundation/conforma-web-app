@@ -166,8 +166,10 @@ export const buildApplicationLinkQuery = ({ tableName }: OutcomeDisplay) => {
 
   const getApplications = (queryResult: ApplicationLinkQueryResult) => {
     const applicationJoins = queryResult?.[tableName]?.[applicationJoin]?.nodes || []
-    if (applicationJoins.length === 0) return []
-    return applicationJoins.map(({ application }) => ({
+    // Remove null joins which is breaking the app
+    const cleanApplicationJoins = applicationJoins.filter((join) => !!join)
+    if (cleanApplicationJoins.length === 0) return []
+    return cleanApplicationJoins.map(({ application }) => ({
       name: String(application.name),
       serial: String(application.serial),
       templateName: String(application?.template?.name),
