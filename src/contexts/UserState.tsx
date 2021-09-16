@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer } from 'react'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
+import { useRouter } from '../utils/hooks/useRouter'
 import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
 import strings from '../utils/constants'
 

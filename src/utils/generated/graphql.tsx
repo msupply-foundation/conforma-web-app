@@ -196,6 +196,7 @@ export type Query = Node & {
   applicationListFilterReviewer?: Maybe<ApplicationListFilterReviewerConnection>;
   applicationListFilterStage?: Maybe<ApplicationListFilterStageConnection>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
+  assignableQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignedQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignerList?: Maybe<AssignerListConnection>;
   assignmentList?: Maybe<AssignmentListConnection>;
@@ -214,7 +215,7 @@ export type Query = Node & {
   reviewReviewerId?: Maybe<Scalars['Int']>;
   reviewStage?: Maybe<Scalars['Int']>;
   reviewTimeStageCreated?: Maybe<Scalars['Datetime']>;
-  templateQuestionsCount?: Maybe<Scalars['BigInt']>;
+  submittedAssignedQuestionsCount?: Maybe<Scalars['BigInt']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
   /** Reads a single `ActionQueue` using its globally unique `ID`. */
@@ -1387,6 +1388,12 @@ export type QueryApplicationStatusHistoryApplicationIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryAssignableQuestionsCountArgs = {
+  appId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryAssignedQuestionsCountArgs = {
   appId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
@@ -1396,8 +1403,8 @@ export type QueryAssignedQuestionsCountArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAssignerListArgs = {
-  stageid?: Maybe<Scalars['Int']>;
-  assignerid?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -1517,8 +1524,10 @@ export type QueryReviewTimeStageCreatedArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryTemplateQuestionsCountArgs = {
+export type QuerySubmittedAssignedQuestionsCountArgs = {
   appId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
 };
 
 
@@ -8078,12 +8087,12 @@ export enum ApplicationListShapesOrderBy {
   ReviewerActionDesc = 'REVIEWER_ACTION_DESC',
   AssignerActionAsc = 'ASSIGNER_ACTION_ASC',
   AssignerActionDesc = 'ASSIGNER_ACTION_DESC',
-  IsFullyAssignedLevel_1Asc = 'IS_FULLY_ASSIGNED_LEVEL_1_ASC',
-  IsFullyAssignedLevel_1Desc = 'IS_FULLY_ASSIGNED_LEVEL_1_DESC',
-  AssignedQuestionsLevel_1Asc = 'ASSIGNED_QUESTIONS_LEVEL_1_ASC',
-  AssignedQuestionsLevel_1Desc = 'ASSIGNED_QUESTIONS_LEVEL_1_DESC',
   TotalQuestionsAsc = 'TOTAL_QUESTIONS_ASC',
-  TotalQuestionsDesc = 'TOTAL_QUESTIONS_DESC'
+  TotalQuestionsDesc = 'TOTAL_QUESTIONS_DESC',
+  TotalAssignedAsc = 'TOTAL_ASSIGNED_ASC',
+  TotalAssignedDesc = 'TOTAL_ASSIGNED_DESC',
+  TotalAssignLockedAsc = 'TOTAL_ASSIGN_LOCKED_ASC',
+  TotalAssignLockedDesc = 'TOTAL_ASSIGN_LOCKED_DESC'
 }
 
 /** A condition to be used against `ApplicationListShape` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -8120,12 +8129,12 @@ export type ApplicationListShapeCondition = {
   reviewerAction?: Maybe<ReviewerAction>;
   /** Checks for equality with the object’s `assignerAction` field. */
   assignerAction?: Maybe<AssignerAction>;
-  /** Checks for equality with the object’s `isFullyAssignedLevel1` field. */
-  isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `assignedQuestionsLevel1` field. */
-  assignedQuestionsLevel1?: Maybe<Scalars['BigInt']>;
   /** Checks for equality with the object’s `totalQuestions` field. */
   totalQuestions?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `totalAssigned` field. */
+  totalAssigned?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `totalAssignLocked` field. */
+  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 export enum ReviewerAction {
@@ -8140,6 +8149,7 @@ export enum ReviewerAction {
 
 export enum AssignerAction {
   Assign = 'ASSIGN',
+  AssignLocked = 'ASSIGN_LOCKED',
   ReAssign = 'RE_ASSIGN'
 }
 
@@ -8178,12 +8188,12 @@ export type ApplicationListShapeFilter = {
   reviewerAction?: Maybe<ReviewerActionFilter>;
   /** Filter by the object’s `assignerAction` field. */
   assignerAction?: Maybe<AssignerActionFilter>;
-  /** Filter by the object’s `isFullyAssignedLevel1` field. */
-  isFullyAssignedLevel1?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `assignedQuestionsLevel1` field. */
-  assignedQuestionsLevel1?: Maybe<BigIntFilter>;
   /** Filter by the object’s `totalQuestions` field. */
   totalQuestions?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `totalAssigned` field. */
+  totalAssigned?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `totalAssignLocked` field. */
+  totalAssignLocked?: Maybe<BigIntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationListShapeFilter>>;
   /** Checks for any expressions in this list. */
@@ -8301,9 +8311,9 @@ export type ApplicationListShape = {
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
-  isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
-  assignedQuestionsLevel1?: Maybe<Scalars['BigInt']>;
   totalQuestions?: Maybe<Scalars['BigInt']>;
+  totalAssigned?: Maybe<Scalars['BigInt']>;
+  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 /** A `ApplicationListShape` edge in the connection. */
@@ -10606,12 +10616,12 @@ export type AssignerListRecordFilter = {
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `assignerAction` field. */
   assignerAction?: Maybe<AssignerActionFilter>;
-  /** Filter by the object’s `isFullyAssignedLevel1` field. */
-  isFullyAssignedLevel1?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `assignedQuestionsLevel1` field. */
-  assignedQuestionsLevel1?: Maybe<BigIntFilter>;
   /** Filter by the object’s `totalQuestions` field. */
   totalQuestions?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `totalAssigned` field. */
+  totalAssigned?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `totalAssignLocked` field. */
+  totalAssignLocked?: Maybe<BigIntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<AssignerListRecordFilter>>;
   /** Checks for any expressions in this list. */
@@ -10636,9 +10646,9 @@ export type AssignerListRecord = {
   __typename?: 'AssignerListRecord';
   applicationId?: Maybe<Scalars['Int']>;
   assignerAction?: Maybe<AssignerAction>;
-  isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
-  assignedQuestionsLevel1?: Maybe<Scalars['BigInt']>;
   totalQuestions?: Maybe<Scalars['BigInt']>;
+  totalAssigned?: Maybe<Scalars['BigInt']>;
+  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 /** A `AssignerListRecord` edge in the connection. */
@@ -23962,9 +23972,9 @@ export type ApplicationListShapeInput = {
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
-  isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
-  assignedQuestionsLevel1?: Maybe<Scalars['BigInt']>;
   totalQuestions?: Maybe<Scalars['BigInt']>;
+  totalAssigned?: Maybe<Scalars['BigInt']>;
+  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 /** The output of our create `ApplicationListShape` mutation. */
@@ -29760,7 +29770,7 @@ export type FullTemplateFragment = (
     { __typename?: 'TemplatePermissionsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'TemplatePermission' }
-      & Pick<TemplatePermission, 'allowedSections' | 'canSelfAssign' | 'id' | 'levelNumber' | 'restrictions' | 'stageNumber' | 'permissionNameId'>
+      & Pick<TemplatePermission, 'allowedSections' | 'canMakeFinalDecision' | 'canSelfAssign' | 'id' | 'levelNumber' | 'restrictions' | 'stageNumber' | 'permissionNameId'>
       & { permissionName?: Maybe<(
         { __typename?: 'PermissionName' }
         & Pick<PermissionName, 'id' | 'name' | 'permissionPolicyId'>
@@ -30403,7 +30413,7 @@ export type GetApplicationListQuery = (
     & Pick<ApplicationListShapesConnection, 'totalCount'>
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationListShape' }
-      & Pick<ApplicationListShape, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'applicant' | 'orgName' | 'stage' | 'stageColour' | 'status' | 'outcome' | 'lastActiveDate' | 'reviewerAction' | 'assignerAction' | 'assigners' | 'reviewers' | 'isFullyAssignedLevel1' | 'assignedQuestionsLevel1' | 'totalQuestions'>
+      & Pick<ApplicationListShape, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'applicant' | 'orgName' | 'stage' | 'stageColour' | 'status' | 'outcome' | 'lastActiveDate' | 'reviewerAction' | 'assignerAction' | 'assigners' | 'reviewers' | 'totalQuestions' | 'totalAssigned' | 'totalAssignLocked'>
     )>>, pageInfo: (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
@@ -31123,6 +31133,7 @@ export const FullTemplateFragmentDoc = gql`
   templatePermissions {
     nodes {
       allowedSections
+      canMakeFinalDecision
       canSelfAssign
       id
       levelNumber
@@ -32217,9 +32228,9 @@ export const GetApplicationListDocument = gql`
       assignerAction
       assigners
       reviewers
-      isFullyAssignedLevel1
-      assignedQuestionsLevel1
       totalQuestions
+      totalAssigned
+      totalAssignLocked
     }
     pageInfo {
       hasPreviousPage
