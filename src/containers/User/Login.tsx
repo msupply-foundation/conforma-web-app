@@ -149,8 +149,12 @@ const Login: React.FC = () => {
               </Button>
               <p className="center-text">
                 <strong>
-                  <Link to="/register">{strings.LINK_LOGIN_USER}</Link>
+                  <Link to="/register">{strings.LINK_NEW_ACCOUNT}</Link>
                 </strong>
+                <br />
+                <span className="smaller-text">
+                  <Link to="/reset-password">{strings.LINK_RESET_PASSWORD}</Link>
+                </span>
               </p>
             </>
           )}
