@@ -96,16 +96,16 @@ export const APPLICATION_FILTERS: FilterDefinitions = {
     title: strings.FILTER_LAST_ACTIVE,
     options: { namedDates: NAMED_DATE_RANGES },
   },
-  isFullyAssignedLevel1: {
-    type: 'boolean',
-    title: strings.FILTER_ASSIGNMENT_STATUS,
-    options: {
-      booleanMapping: {
-        true: strings.FILTER_ASSIGNMENT_STATUS_TRUE,
-        false: strings.FILTER_ASSIGNMENT_STATUS_FALSE,
-      },
-    },
-  },
+  // isFullyAssignedLevel1: {
+  //   type: 'boolean',
+  //   title: strings.FILTER_ASSIGNMENT_STATUS,
+  //   options: {
+  //     booleanMapping: {
+  //       true: strings.FILTER_ASSIGNMENT_STATUS_TRUE,
+  //       false: strings.FILTER_ASSIGNMENT_STATUS_FALSE,
+  //     },
+  //   },
+  // },
   // reviewersAssignedCount: {
   //   type: 'number',
   // },
