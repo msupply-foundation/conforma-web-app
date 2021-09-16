@@ -6,11 +6,13 @@ import { useTemplateState, disabledMessage } from '../TemplateWrapper'
 
 type ReviewTemplatePermssionProps = {
   templatePermission: TemplatePermission
+  stageNumber?: number
   levelNumber: number
 }
 
-type SetSelfAssign = (canSelfAssign: boolean) => void
 type SetAllowedSection = (sectionCode: string, isAllowed: boolean) => boolean
+type SetMakeDecision = (canMakeDecision: boolean) => void
+type SetSelfAssign = (canSelfAssign: boolean) => void
 
 type SortSections = (sections: string[] | null) => string[] | null
 
@@ -20,6 +22,7 @@ const sortSections: SortSections = (sections) =>
 
 const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
   templatePermission,
+  stageNumber = 1,
   levelNumber,
 }) => {
   const { updateTemplate } = useOperationState()
@@ -30,12 +33,30 @@ const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
 
   const sectionCodes = sections.map((section) => section?.code || '')
   const selfAssignDisabled = levelNumber > 1
+  const makeDecisionDisabled = levelNumber > 1 || stageNumber === 1
 
   const allowedSections = sortSections(
     (templatePermission?.allowedSections ? [...templatePermission?.allowedSections] : null) as
       | string[]
       | null
   )
+
+  const setMakeDecision: SetMakeDecision = (canMakeDecision) => {
+    updateTemplate(templateId, {
+      templatePermissionsUsingId: {
+        updateById: [
+          {
+            id: templatePermission?.id || 0,
+            patch: {
+              canMakeFinalDecision: canMakeDecision,
+              canSelfAssign: true,
+              allowedSections: null,
+            },
+          },
+        ],
+      },
+    })
+  }
 
   const setSelfAssign: SetSelfAssign = (canSelfAssign) => {
     updateTemplate(templateId, {
@@ -47,20 +68,27 @@ const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
     })
   }
 
-  const getSelfAssignedDisabledMessage = () => {
-    if (!isDraft) return disabledMessage
-    if (selfAssignDisabled) return 'Level above one is only self assignable'
-    return ''
-  }
-  const selfAssignedDisabledMessage = getSelfAssignedDisabledMessage()
+  const allowedSectionsDisabledMessage = !isDraft
+    ? disabledMessage
+    : selfAssignDisabled
+    ? 'Level above one is only self assignable'
+    : templatePermission?.canSelfAssign
+    ? 'Self assignable review is for all sections'
+    : ''
 
-  const getAllowedSectionsDisabledMessage = () => {
-    if (!isDraft) return disabledMessage
-    if (selfAssignDisabled) return 'Level above one is only self assignable'
-    if (templatePermission?.canSelfAssign) return 'Self assignable review is for all sections'
-    return ''
-  }
-  const allowedSectionsDisabledMessage = getAllowedSectionsDisabledMessage()
+  const makeDecisionDisbaleMessage = !isDraft
+    ? disabledMessage
+    : makeDecisionDisabled
+    ? 'Make decision only available for level 1 in stages higher than 1'
+    : ''
+
+  const selfAssignedDisabledMessage = !isDraft
+    ? disabledMessage
+    : selfAssignDisabled
+    ? 'Level above one is only self assignable'
+    : templatePermission?.canMakeFinalDecision
+    ? 'Make final decision is always self-assignable'
+    : ''
 
   const setAllowedSection: SetAllowedSection = (sectionCode, isAllowed) => {
     const getNewSections = () => {
@@ -103,6 +131,13 @@ const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
         disabled={!!selfAssignedDisabledMessage}
         disabledMessage={selfAssignedDisabledMessage}
         value={!!templatePermission?.canSelfAssign}
+      />
+      <CheckboxIO
+        title="Make Decision"
+        setValue={(canMakeDecision) => setMakeDecision(canMakeDecision)}
+        disabled={!!makeDecisionDisbaleMessage}
+        disabledMessage={makeDecisionDisbaleMessage}
+        value={!!templatePermission?.canMakeFinalDecision}
       />
       {sectionCodes.map((sectionCode) => (
         <CheckboxIO

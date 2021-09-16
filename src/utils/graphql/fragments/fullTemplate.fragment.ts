@@ -38,6 +38,7 @@ export default gql`
     templatePermissions {
       nodes {
         allowedSections
+        canMakeFinalDecision
         canSelfAssign
         id
         levelNumber

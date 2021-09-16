@@ -34293,7 +34293,7 @@ export type FullTemplateFragment = (
     { __typename?: 'TemplatePermissionsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'TemplatePermission' }
-      & Pick<TemplatePermission, 'allowedSections' | 'canSelfAssign' | 'id' | 'levelNumber' | 'restrictions' | 'stageNumber' | 'permissionNameId'>
+      & Pick<TemplatePermission, 'allowedSections' | 'canMakeFinalDecision' | 'canSelfAssign' | 'id' | 'levelNumber' | 'restrictions' | 'stageNumber' | 'permissionNameId'>
       & { permissionName?: Maybe<(
         { __typename?: 'PermissionName' }
         & Pick<PermissionName, 'id' | 'name' | 'permissionPolicyId'>
@@ -35629,6 +35629,7 @@ export const FullTemplateFragmentDoc = gql`
   templatePermissions {
     nodes {
       allowedSections
+      canMakeFinalDecision
       canSelfAssign
       id
       levelNumber
