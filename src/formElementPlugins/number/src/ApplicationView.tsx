@@ -79,6 +79,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   function handleLoseFocus() {
+    if (!textValue) return
     const [number, text] = parseInput(textValue, numberFormatter, simple, prefix, suffix)
     const validation = customValidate(number, type, minValue, maxValue)
     setInternalValidation(validation)
