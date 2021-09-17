@@ -1,6 +1,6 @@
 import { useUserState } from '../../contexts/UserState'
 import {
-  useUpdateAssigneeInReviewAssignmentMutation,
+  useReasignReviewAssignmentMutation,
   ReviewAssignmentStatus,
   ReviewAssignmentPatch,
   TemplateElementCategory,
@@ -9,10 +9,10 @@ import {
 import { AssignmentDetails, PageElement } from '../types'
 
 // below lines are used to get return type of the function that is returned by useUpdateReviewReassignmentMutation
-type UseUpdateAssigneeInReviewAssignmentMutationReturnType = ReturnType<
-  typeof useUpdateAssigneeInReviewAssignmentMutation
+type UseReassignReviewAssignmentMutationReturnType = ReturnType<
+  typeof useReasignReviewAssignmentMutation
 >
-type PromiseReturnType = ReturnType<UseUpdateAssigneeInReviewAssignmentMutationReturnType[0]>
+type PromiseReturnType = ReturnType<UseReassignReviewAssignmentMutationReturnType[0]>
 // hook used to reassign section/s to user (and unassign previous section)
 // as per type definition below (returns promise that resolve with mutation result data)
 type UseReassignReviewAssignment = () => {
@@ -36,7 +36,7 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = () => {
   const {
     userState: { currentUser },
   } = useUserState()
-  const [reassignReview] = useUpdateAssigneeInReviewAssignmentMutation()
+  const [reassignReview] = useReasignReviewAssignmentMutation()
 
   const constructUnassignSectionPatch: ConstructAssignSectionPatch = (
     reviewLevel,

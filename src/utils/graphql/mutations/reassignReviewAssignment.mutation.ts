@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  mutation updateAssigneeInReviewAssignment(
+  mutation reasignReviewAssignment(
     $unassignmentId: Int!
     # $unassignmentStatus: ReviewAssignmentStatus = AVAILABLE
     $reassignmentId: Int!
