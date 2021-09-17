@@ -27,12 +27,15 @@ const Reassignment: React.FC<ReassignmentProps> = ({
   const [reassignmentError, setReassignmentError] = useState(false)
   const { reassignSection } = useReasignReviewAssignment()
 
-  const assignmentOptions = getAssignmentOptions({
-    assignments,
-    sectionCode,
-    elements,
-    previousAssignee,
-  })
+  const assignmentOptions = getAssignmentOptions(
+    {
+      assignments,
+      sectionCode,
+      elements,
+      previousAssignee,
+    },
+    null
+  )
   if (!assignmentOptions) return null
 
   const onReassignment = async (value: number) => {

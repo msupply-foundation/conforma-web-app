@@ -1,14 +1,23 @@
-import { AssignmentDetails, PageElement } from '../../utils/types'
-import { ReviewAssignmentStatus, TemplateElementCategory } from '../../utils/generated/graphql'
+import { AssignmentDetails, PageElement, User } from '../../utils/types'
+import {
+  ReviewAssignmentStatus,
+  ReviewStatus,
+  TemplateElementCategory,
+} from '../../utils/generated/graphql'
 import { AssignmentOption } from '../../utils/data/assignmentOptions'
 import strings from '../../utils/constants'
 
-const getOptionFromAssignment = ({ reviewer, isCurrentUserReviewer }: AssignmentDetails) => ({
+const getOptionFromAssignment = ({
+  review,
+  reviewer,
+  isCurrentUserReviewer,
+}: AssignmentDetails) => ({
   key: reviewer.id,
   value: reviewer.id,
   text: isCurrentUserReviewer
     ? strings.ASSIGNMENT_YOURSELF
     : `${reviewer.firstName || ''} ${reviewer.lastName || ''}`,
+  disabled: review?.current.reviewStatus === ReviewStatus.Submitted,
 })
 
 interface GetAssignmentOptionsProps {
@@ -18,12 +27,10 @@ interface GetAssignmentOptionsProps {
   previousAssignee?: number
 }
 
-const getAssignmentOptions = ({
-  assignments,
-  sectionCode,
-  elements,
-  previousAssignee,
-}: GetAssignmentOptionsProps) => {
+const getAssignmentOptions = (
+  { assignments, sectionCode, elements, previousAssignee }: GetAssignmentOptionsProps,
+  currentUser: User | null
+) => {
   const currentSectionAssignable = assignments.filter(
     ({ assignableSectionRestrictions }) =>
       assignableSectionRestrictions.length === 0 ||
@@ -47,6 +54,7 @@ const getAssignmentOptions = ({
   // This could differ from currentUserAssignable list because self assignable assignments don't have assigner
   const currentlyAssigned = assignments.find(
     (assignment) =>
+      assignment.reviewer.id !== currentUser?.userId &&
       assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned &&
       matchAssignmentToSection(assignment, sectionCode)
   )
@@ -54,6 +62,7 @@ const getAssignmentOptions = ({
   if (!previousAssignee && currentlyAssigned)
     return {
       selected: currentlyAssigned.reviewer.id,
+      isCompleted: currentlyAssigned.review?.current.reviewStatus === ReviewStatus.Submitted,
       options: [
         getOptionFromAssignment(currentlyAssigned),
         {
@@ -71,6 +80,7 @@ const getAssignmentOptions = ({
 
   const assigneeOptions = {
     selected: previousAssignee || AssignmentOption.NOT_ASSIGNED,
+    isCompleted: false,
     options: [...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment))],
   }
 
@@ -79,6 +89,7 @@ const getAssignmentOptions = ({
       key: AssignmentOption.NOT_ASSIGNED,
       value: AssignmentOption.NOT_ASSIGNED,
       text: strings.ASSIGNMENT_NOT_ASSIGNED,
+      disabled: false,
     })
 
   return assigneeOptions

@@ -4,7 +4,15 @@ import strings from '../../utils/constants'
 
 interface AssigneeProps {
   assignmentError: boolean
-  assignmentOptions: { selected: number; options: { key: number; value: number; text: string }[] }
+  assignmentOptions: {
+    isCompleted: boolean
+    selected: number
+    options: {
+      key: number
+      value: number
+      text: string
+    }[]
+  }
   checkIsLastLevel: (assignee: number) => boolean
   onAssignment: (assignee: number) => void
   shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
@@ -33,7 +41,7 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({
     if (checkIsLastLevel(value)) setShouldAssign(value as number)
   }
 
-  const { options, selected } = assignmentOptions
+  const { isCompleted, options, selected } = assignmentOptions
 
   if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
   return (
@@ -41,6 +49,7 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({
       className="reviewer-dropdown"
       options={options}
       value={selected}
+      disabled={isCompleted}
       onChange={onAssigneeSelection}
     />
   )
