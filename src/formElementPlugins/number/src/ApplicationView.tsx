@@ -108,6 +108,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         placeholder={placeholder}
         onChange={handleChange}
         onBlur={handleLoseFocus}
+        onClick={handleLoseFocus} // To capture changes via stepper
         onFocus={setIsActive}
         value={textValue ? textValue : ''}
         disabled={!isEditable}
