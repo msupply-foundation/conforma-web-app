@@ -3039,9 +3039,7 @@ export type ReviewAssignmentStatusFilter = {
 
 export enum ReviewAssignmentStatus {
   Available = 'AVAILABLE',
-  Assigned = 'ASSIGNED',
-  SelfAssignedByAnother = 'SELF_ASSIGNED_BY_ANOTHER',
-  AvailableForSelfAssignment = 'AVAILABLE_FOR_SELF_ASSIGNMENT'
+  Assigned = 'ASSIGNED'
 }
 
 /** A filter to be used against many `ReviewAssignmentAssignerJoin` object types. All fields are combined with a logical ‘and.’ */
