@@ -2,6 +2,7 @@ import React from 'react'
 import { DateTime, DateTimeFormatOptions } from 'luxon'
 import { DateTimeConstant } from '../../utils/data/LuxonDateTimeConstants'
 import { DisplayDefinition, DisplayDefinitionBasic, HeaderRow } from '../../utils/types'
+import { substituteValues } from '../../utils/helpers/utilityFunctions'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { defaultEvaluatedElement } from '../../utils/hooks/useLoadApplication'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
@@ -17,6 +18,14 @@ export const formatCellText = (
   if (elementTypePluginCode && dataType === 'json') return null // Leave these to be handled by SummaryView component
   if (!value) return ''
 
+  // Handle array values by building a Markdown list, and formatting each
+  // element within
+  if (Array.isArray(value))
+    return value.reduce(
+      (markdownList: string, element: any) =>
+        markdownList + `- ${formatCellText(element, columnDetails)}\n`,
+      ''
+    )
   // Custom formatters -- these can be chained
   let formattedValue = String(value)
   if (dataType === 'timestamp with time zone') {
@@ -25,7 +34,7 @@ export const formatCellText = (
     )
   }
   if (substitution) {
-    formattedValue = substitution.replace('%1', formattedValue)
+    formattedValue = substituteValues(substitution, value)
   }
   // Add two spaces to lines with carriage returns so Markdown renders them as line breaks
   formattedValue = formattedValue.replace(/([^\s\s]$)/gm, '$1  ')
