@@ -79,12 +79,12 @@ const actionDefinitions: ActionDefinition[] = [
   {
     action: ReviewAction.canSelfAssign,
     checkMethod: ({ reviewAssignmentStatus, isSelfAssignable, isLocked }) =>
-      reviewAssignmentStatus === ReviewAssignmentStatus.Available && isSelfAssignable,
+      reviewAssignmentStatus === ReviewAssignmentStatus.Available && isSelfAssignable && !isLocked,
   },
   {
     action: ReviewAction.canSelfAssignLocked,
-    checkMethod: ({ reviewAssignmentStatus }) =>
-      reviewAssignmentStatus === ReviewAssignmentStatus.SelfAssignedByAnother,
+    checkMethod: ({ reviewAssignmentStatus, isSelfAssignable, isLocked }) =>
+      reviewAssignmentStatus === ReviewAssignmentStatus.Available && isSelfAssignable && isLocked,
   },
   {
     action: ReviewAction.canContinue,
