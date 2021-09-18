@@ -92,7 +92,7 @@ export const useOutcomesDetail = ({
     if (!JWT) return
     const url = `${serverURL}/outcomes/table/${tableName}/item/${recordId}`
     processRequest(url, JWT, setError, setLoading, setOutcomeDetail)
-  }, [templatePermissions])
+  }, [templatePermissions, tableName, recordId])
 
   return { error, loading, outcomeDetail }
 }
