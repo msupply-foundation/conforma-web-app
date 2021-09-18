@@ -50,11 +50,6 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
                 columns,
                 application,
               }
-              const sectionsProps = {
-                index,
-                application,
-                colSpan: columns.length + 1,
-              }
               return (
                 <Fragment key={`ApplicationList-application-${index}`}>
                   <ApplicationRow {...rowProps} />
