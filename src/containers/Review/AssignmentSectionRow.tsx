@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Dropdown, Grid, Label, Message } from 'semantic-ui-react'
+import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
 import { AssignmentOption } from '../../utils/data/assignmentOptions'
-import { ReviewAssignmentStatus, TemplateElementCategory } from '../../utils/generated/graphql'
+import {
+  ReviewAssignmentStatus,
+  ReviewStatus,
+  TemplateElementCategory,
+} from '../../utils/generated/graphql'
 import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
-import { AssignmentDetails, FullStructure } from '../../utils/types'
+import { AssignmentDetails, FullStructure, User } from '../../utils/types'
 
 type AssignmentSectionRowProps = {
   assignments: AssignmentDetails[]
@@ -15,10 +20,13 @@ type AssignmentSectionRowProps = {
 // Component renders options calculated in getAssignmentOptions, and will execute assignment mutation on drop down change
 const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
   const { assignments, sectionCode, structure, shouldAssignState } = props
+  const {
+    userState: { currentUser },
+  } = useUserState()
   const [assignmentError, setAssignmentError] = useState(false)
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
 
-  const assignmentOptions = getAssignmentOptions(props)
+  const assignmentOptions = getAssignmentOptions(props, currentUser)
   if (!assignmentOptions) return null
 
   const onAssignment = async (value: number) => {
@@ -60,7 +68,15 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
 
 interface AssigneeProps {
   assignmentError: boolean
-  assignmentOptions: { selected: number; options: { key: number; value: number; text: string }[] }
+  assignmentOptions: {
+    isCompleted: boolean
+    selected: number
+    options: {
+      key: number
+      value: number
+      text: string
+    }[]
+  }
   checkIsLastLevel: (assignee: number) => boolean
   onAssignment: (assignee: number) => void
   shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
@@ -89,7 +105,7 @@ const Assignee: React.FC<AssigneeProps> = ({
     if (checkIsLastLevel(value)) setShouldAssign(value as number)
   }
 
-  const { options, selected } = assignmentOptions
+  const { isCompleted, options, selected } = assignmentOptions
 
   if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
   return (
@@ -97,24 +113,29 @@ const Assignee: React.FC<AssigneeProps> = ({
       className="reviewer-dropdown"
       options={options}
       value={selected}
+      disabled={isCompleted}
       onChange={onAssigneeSelection}
     />
   )
 }
 
-const getOptionFromAssignment = ({ reviewer, isCurrentUserReviewer }: AssignmentDetails) => ({
+const getOptionFromAssignment = ({
+  review,
+  isCurrentUserReviewer,
+  reviewer,
+}: AssignmentDetails) => ({
   key: reviewer.id,
   value: reviewer.id,
   text: isCurrentUserReviewer
     ? strings.ASSIGNMENT_YOURSELF
     : `${reviewer.firstName || ''} ${reviewer.lastName || ''}`,
+  disabled: review?.current.reviewStatus === ReviewStatus.Submitted,
 })
 
-const getAssignmentOptions = ({
-  assignments,
-  sectionCode,
-  structure,
-}: AssignmentSectionRowProps) => {
+const getAssignmentOptions = (
+  { assignments, sectionCode, structure }: AssignmentSectionRowProps,
+  currentUser: User | null
+) => {
   const currentSectionAssignable = assignments.filter(
     ({ assignableSectionRestrictions }) =>
       assignableSectionRestrictions.length === 0 ||
@@ -139,6 +160,7 @@ const getAssignmentOptions = ({
   // This could differ from currentUserAssignable list because self assignable assignments don't have assigner
   const currentlyAssigned = assignments.find(
     (assignment) =>
+      assignment.reviewer.id !== currentUser?.userId &&
       assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned &&
       matchAssignmentToSection(assignment, sectionCode)
   )
@@ -147,6 +169,7 @@ const getAssignmentOptions = ({
   if (currentlyAssigned)
     return {
       selected: currentlyAssigned.reviewer.id,
+      isCompleted: currentlyAssigned.review?.current.reviewStatus === ReviewStatus.Submitted,
       options: [
         getOptionFromAssignment(currentlyAssigned),
         {
@@ -159,6 +182,7 @@ const getAssignmentOptions = ({
 
   return {
     selected: AssignmentOption.NOT_ASSIGNED,
+    isCompleted: false,
     options: [
       ...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment)),
       {
