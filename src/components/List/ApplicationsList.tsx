@@ -1,6 +1,8 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Table, Message } from 'semantic-ui-react'
+import { useDeleteApplicationMutation } from '../../utils/generated/graphql'
 import messages from '../../utils/messages'
+import strings from '../../utils/constants'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
 
@@ -74,11 +76,27 @@ interface ApplicationRowProps {
 }
 
 const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application }) => {
-  return (
+  const [isDeleted, setIsDeleted] = useState<boolean>(false)
+  const [deleteApplication, { data, loading, error }] = useDeleteApplicationMutation({
+    variables: { id: application.id || 0 },
+  })
+  const props = {
+    application,
+    loading,
+    deleteApplication,
+  }
+
+  useEffect(() => {
+    if (data) setIsDeleted(true)
+  }, [data])
+
+  if (error) return <Message error header={strings.ERROR_APPLICATION_DELETE} list={[error]} />
+
+  return isDeleted ? null : (
     <Table.Row key={`ApplicationList-application-${application.id}`} className="list-row">
-      {columns.map(({ headerName, ColumnComponent }, index) => (
+      {columns.map(({ ColumnComponent }, index) => (
         <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
-          <ColumnComponent application={application} />
+          <ColumnComponent {...props} />
         </Table.Cell>
       ))}
     </Table.Row>
