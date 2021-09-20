@@ -1,10 +1,18 @@
 import { gql } from '@apollo/client'
 
+// TODO: Use Fragments - Assignment Review and User ?
 export default gql`
   query getReviewInfo($applicationId: Int, $assignerId: Int!) {
     reviewAssignments(condition: { applicationId: $applicationId }, orderBy: TIME_UPDATED_DESC) {
       nodes {
-        ...ReviewAssignment
+        id
+        status
+        timeUpdated
+        levelNumber
+        reviewerId
+        isLastLevel
+        isFinalDecision
+        allowedSections
         stage {
           id
           number
@@ -29,6 +37,18 @@ export default gql`
                 id
                 # don't want to get comment here (it is queried and set independently, to re-fireing of useGetReviewInfo when comment changed)
                 decision
+              }
+            }
+          }
+        }
+        reviewQuestionAssignments {
+          nodes {
+            id
+            templateElement {
+              id
+              section {
+                id
+                code
               }
             }
           }
