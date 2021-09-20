@@ -129,6 +129,8 @@ interface AssignmentDetails {
   isCurrentUserReviewer: boolean
   isFinalDecision: boolean
   isLastLevel: boolean
+  isSelfAssignable: boolean
+  isLocked: boolean
   totalAssignedQuestions: number
   reviewQuestionAssignments: ReviewQuestionAssignment[]
   assignableSectionRestrictions: (string | null)[]
