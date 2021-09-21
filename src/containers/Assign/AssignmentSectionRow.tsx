@@ -3,6 +3,7 @@ import { Grid, Label } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import strings from '../../utils/constants'
 import { AssignmentOption } from '../../utils/data/assignmentOptions'
+import { useUnassignReviewAssignmentMutation } from '../../utils/generated/graphql'
 import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
@@ -22,7 +23,10 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     userState: { currentUser },
   } = useUserState()
   const [isReassignment, setIsReassignment] = useState(false)
+  const [isUnassignment, setIsUnassignment] = useState(false)
   const [assignmentError, setAssignmentError] = useState(false)
+  const [unassignmentError, setUnassignmentError] = useState(false)
+  const [unassignSectionFromUser] = useUnassignReviewAssignmentMutation()
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
   const elements = Object.values(structure?.elementsById || {})
 
@@ -38,8 +42,17 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
 
   const onAssignment = async (value: number) => {
     if (value === assignmentOptions.selected) return
-    if (value === AssignmentOption.UNASSIGN) return console.log('un assignment not implemented')
     if (value === AssignmentOption.REASSIGN) setIsReassignment(true)
+
+    if (value === AssignmentOption.UNASSIGN) {
+      const unassignment = assignments.find(
+        (assignment) => assignment.reviewer.id === assignmentOptions.selected
+      )
+      if (unassignment) {
+        console.log('unassigning id', unassignment.id)
+        unassignUser(unassignment.id)
+      }
+    }
 
     const assignment = assignments.find((assignment) => assignment.reviewer.id === value)
 
@@ -58,6 +71,15 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     return assignment.isLastLevel
   }
 
+  const unassignUser = async (unassignmentId: number) => {
+    try {
+      await unassignSectionFromUser({ variables: { unassignmentId } })
+    } catch (e) {
+      console.log(e)
+      setUnassignmentError(true)
+    }
+  }
+
   return (
     <Grid className="section-single-row-box-container">
       <Grid.Row>
@@ -67,7 +89,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
             content={isReassignment ? strings.LABEL_UNASSIGN_FROM : strings.LABEL_REVIEWER}
           />
           <AssigneeDropdown
-            assignmentError={assignmentError}
+            assignmentError={assignmentError || unassignmentError}
             assignmentOptions={assignmentOptions}
             checkIsLastLevel={isLastLevel}
             onAssignment={onAssignment}
