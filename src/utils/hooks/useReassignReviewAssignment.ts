@@ -67,9 +67,9 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = () => {
       status: ReviewAssignmentStatus.Assigned,
       isLocked: false,
       assignerId: currentUser?.userId || null,
-      // onReviewReassign will trigger core action to move remove
-      // previous assignment ASSIGNED to another reviewer
-      // trigger: Trigger.OnReviewReassign,
+      trigger: Trigger.OnReviewReassign,
+      // OnReviewReassign to trigger action on new ReviewAssignment assigned change status of Review - if existing - back to DRAFT
+      // onReviewUnassign also set in mutation to trigger core action on previous ReviewAssignment unassigned changeStatus of review to LOCKED
       timeUpdated: new Date().toISOString(),
       reviewQuestionAssignmentsUsingId: {
         create: createReviewQuestionAssignments,
