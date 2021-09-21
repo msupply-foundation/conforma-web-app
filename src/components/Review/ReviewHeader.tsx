@@ -18,7 +18,6 @@ const ReviewHeader: React.FC<ReviewHeaderProps> = ({ applicationName, stage }) =
         subheader={<Header as="h2" content={strings.LABEL_REVIEW} />}
       />
       <Stage name={stage.name || ''} colour={stage.colour} />
-      {/* <p>{strings.SUBTITLE_REVIEW}</p> */}
     </div>
   )
 }
