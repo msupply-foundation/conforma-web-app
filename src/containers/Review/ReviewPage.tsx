@@ -145,7 +145,7 @@ const ReviewPage: React.FC<{
 
   const ReviewSubheader: React.FC = () =>
     isLocked ? (
-      <ReviewLockedLabel reviewer={isAssignedToCurrentUser ? thisReview?.reviewer : undefined} />
+      <ReviewLockedLabel reviewer={isAssignedToCurrentUser ? undefined : thisReview?.reviewer} />
     ) : isConsolidation ? (
       <ConsolidationByLabel
         isSubmitted={isSubmitted}
