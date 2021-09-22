@@ -4,7 +4,7 @@ export default gql`
   fragment FullTemplate on Template {
     ...templateFragment
     nodeId
-    configApplications: applications(filter: { isConfig: { equalTo: true } }) {
+    configApplications: applications(filter: { isConfig: { equalTo: true } }, orderBy: ID_DESC) {
       nodes {
         serial
         id
@@ -38,6 +38,7 @@ export default gql`
     templatePermissions {
       nodes {
         allowedSections
+        canMakeFinalDecision
         canSelfAssign
         id
         levelNumber

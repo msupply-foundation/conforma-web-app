@@ -17,6 +17,7 @@ import {
   ApplicationLinkQueryByCode,
   OutcomeCountQueryByCode,
   SchemaInfo,
+  CaseType,
 } from '../../../utils/types'
 import {
   buildTableQuery,
@@ -26,7 +27,6 @@ import {
   getTableDisplaysForTableName,
   getDetailDisplaysForTableName,
   getApplicationJoinLinkTableName,
-  getDBApplicationJoinLinkTableName,
   getSchemaInfo,
 } from './helpers'
 
@@ -109,7 +109,11 @@ const OutcomeDisplayInner: React.FC<OutcomeDisplayInnerProps> = ({
         detailDisplaysByCode[displayCode]
       )
 
-      if (schemaTablesAsCamelcase.includes(getApplicationJoinLinkTableName(tableName)))
+      if (
+        schemaTablesAsCamelcase.includes(
+          getApplicationJoinLinkTableName({ tableName, caseType: CaseType.Camel })
+        )
+      )
         applicationLinkQueryByCode[displayCode] = buildApplicationLinkQuery(outcomeDisplay)
 
       outcomeCountQueryByCode[displayCode] = buildCountQuery(outcomeDisplay)
@@ -156,13 +160,16 @@ const useGetSchemaColumns = ({
 
   const displayNodes = outcomeDisplaysData?.outcomeDisplays?.nodes || []
   const outcomeTables = displayNodes.map((display) => snakeCase(display?.tableName || ''))
-  const outcomeApplicationLinkTabeles = displayNodes.map((display) =>
-    getDBApplicationJoinLinkTableName(display?.tableName || '')
+  const outcomeApplicationLinkTables = displayNodes.map((display) =>
+    getApplicationJoinLinkTableName({
+      tableName: display?.tableName || '',
+      caseType: CaseType.Snake,
+    })
   )
   const shouldFetchColumns = !outcomeDisplaysError && outcomeTables.length > 1
 
   const { data, error } = useGetSchemaColumnsQuery({
-    variables: { tableNames: [...outcomeTables, ...outcomeApplicationLinkTabeles] },
+    variables: { tableNames: [...outcomeTables, ...outcomeApplicationLinkTables] },
     fetchPolicy: 'network-only',
     skip: !shouldFetchColumns,
   })

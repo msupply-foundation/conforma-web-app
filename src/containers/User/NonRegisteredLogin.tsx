@@ -7,9 +7,17 @@ import messages from '../../utils/messages'
 import strings from '../../utils/constants'
 import { LoginPayload } from '../../utils/types'
 
-const UserRegister: React.FC = () => {
+interface NonRegisteredLoginProps {
+  option: 'register' | 'reset-password' | 'redirect'
+  redirect?: string
+}
+
+const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirect }) => {
   const [networkError, setNetworkError] = useState('')
-  const { push } = useRouter()
+  const {
+    push,
+    query: { sessionId },
+  } = useRouter()
   const { onLogin } = useUserState()
 
   // useEffect ensures isLoggedIn only runs on first mount, not re-renders
@@ -18,11 +26,13 @@ const UserRegister: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    // Log in as 'nonRegistered' user to be able to apply for User Registration form
+    // Log in as 'nonRegistered' user to be able to apply for User Registration
+    // form or reset password
 
     attemptLogin({
       username: strings.USER_NONREGISTERED,
       password: '',
+      sessionId,
       onLoginSuccess,
     }).catch((error) => {
       setNetworkError(error.message)
@@ -32,11 +42,13 @@ const UserRegister: React.FC = () => {
   const onLoginSuccess = async (loginResult: LoginPayload) => {
     const { JWT, user, templatePermissions, orgList, isAdmin } = loginResult
     await onLogin(JWT, user, templatePermissions, orgList, isAdmin)
-    push('/application/new?type=UserRegistration')
+    if (option === 'register') push('/application/new?type=UserRegistration')
+    else if (option === 'reset-password') push('/application/new?type=PasswordReset')
+    else if (option === 'redirect' && redirect) push(redirect)
   }
 
   if (networkError) return <p>{networkError}</p>
   else return <p>{messages.REDIRECT_TO_REGISTRATION}</p>
 }
 
-export default UserRegister
+export default NonRegisteredLogin

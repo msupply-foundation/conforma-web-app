@@ -60,6 +60,7 @@ const PermissionNameList: React.FC<PermissionNameListProps> = ({
             {type === PermissionPolicyType.Review && levelNumber && (
               <ReviewTemplatePermission
                 templatePermission={templatePermission}
+                stageNumber={stageNumber}
                 levelNumber={levelNumber}
               />
             )}

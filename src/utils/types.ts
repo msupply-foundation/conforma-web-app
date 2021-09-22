@@ -706,6 +706,16 @@ export type OutcomeDisplaysStructure = {
   applicationLinkQueryByCode: ApplicationLinkQueryByCode
 }
 
+export enum CaseType {
+  Snake,
+  Camel,
+}
+
+export type GetApplicationJoinLinkTableName = (props: {
+  tableName: string
+  caseType: CaseType
+}) => string
+
 // *****************
 // LIST FILTERS
 // *****************
