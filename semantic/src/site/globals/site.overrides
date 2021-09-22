@@ -1762,6 +1762,10 @@ a:hover {
 .config-container-alternate {
   .config-container();
   background-color: rgba(0, 0, 0, 0.03);
+
+  .ui.segment {
+    .padding-zero();
+  }
 }
 
 /*******************************

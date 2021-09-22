@@ -3,8 +3,9 @@ import { Checkbox, Popup } from 'semantic-ui-react'
 
 type CheckboxIOprops = {
   value: boolean
-  title: string
   setValue: (value: boolean) => boolean | undefined | void
+  title?: string
+  basic?: boolean
   disabled?: boolean
   disabledMessage?: string
   isPropUpdated?: boolean
@@ -13,6 +14,7 @@ type CheckboxIOprops = {
 const CheckboxIO: React.FC<CheckboxIOprops> = ({
   value,
   setValue,
+  basic = false,
   disabled = false,
   title,
   disabledMessage,
@@ -34,7 +36,8 @@ const CheckboxIO: React.FC<CheckboxIOprops> = ({
           <div className="io-component value">
             <Checkbox
               checked={innerValue}
-              toggle
+              toggle={!basic}
+              slider={basic}
               disabled={disabled}
               size="small"
               onChange={() => {

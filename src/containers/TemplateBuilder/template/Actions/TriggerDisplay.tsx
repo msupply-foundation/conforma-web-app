@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Checkbox, Header } from 'semantic-ui-react'
+import { Checkbox, Header, Segment } from 'semantic-ui-react'
 import strings from '../../../../utils/constants'
 import { TemplateAction, Trigger } from '../../../../utils/generated/graphql'
 import CheckboxIO from '../../shared/CheckboxIO'
@@ -127,26 +127,37 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
           {templateActions.map((templateAction, index) => (
             <div key={templateAction.id} className="config-container-alternate">
               <div className="flex-row-start-center">
-                {!isAsynchronous(templateAction) && templateAction?.sequence !== firstSequence && (
+                <Segment basic className="flex-column-center-center">
+                  {!isAsynchronous(templateAction) && templateAction?.sequence !== firstSequence && (
+                    <IconButton
+                      name="angle up"
+                      onClick={() => {
+                        swapSequences(templateAction, templateActions[index - 1])
+                      }}
+                    />
+                  )}
+                  {!isAsynchronous(templateAction) && templateAction?.sequence !== lastSequence && (
+                    <IconButton
+                      name="angle down"
+                      onClick={() => {
+                        swapSequences(templateAction, templateActions[index + 1])
+                      }}
+                    />
+                  )}
                   <IconButton
-                    name="angle up"
-                    onClick={() => {
-                      swapSequences(templateAction, templateActions[index - 1])
-                    }}
+                    name="setting"
+                    onClick={() => setCurrentTemplateAction(templateAction)}
                   />
-                )}
-                {!isAsynchronous(templateAction) && templateAction?.sequence !== lastSequence && (
-                  <IconButton
-                    name="angle down"
-                    onClick={() => {
-                      swapSequences(templateAction, templateActions[index + 1])
-                    }}
+                  <CheckboxIO
+                    basic={true}
+                    disabled={!isDraft}
+                    disabledMessage={disabledMessage}
+                    value={!isAsynchronous(templateAction)}
+                    setValue={(isSequential) =>
+                      setIsSequential(templateAction?.id || 0, isSequential)
+                    }
                   />
-                )}
-                <IconButton
-                  name="setting"
-                  onClick={() => setCurrentTemplateAction(templateAction)}
-                />
+                </Segment>
                 <div className="flex-row-start-center-wrap">
                   <TextIO
                     title={strings.TEMPLATE_LABEL_ACTION}
@@ -168,15 +179,6 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
                     </div>
                   </div>
                 </div>
-                <CheckboxIO
-                  disabled={!isDraft}
-                  disabledMessage={disabledMessage}
-                  title={strings.TEMPLATE_LABEL_SEQUENTIAL}
-                  value={!isAsynchronous(templateAction)}
-                  setValue={(isSequential) =>
-                    setIsSequential(templateAction?.id || 0, isSequential)
-                  }
-                />
                 <IconButton
                   disabled={!isDraft}
                   disabledMessage={disabledMessage}
