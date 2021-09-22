@@ -5,6 +5,7 @@ import { Loading } from '../../../components'
 import { FieldMapType, LookUpTableType } from '../../types'
 import { DownloadButton } from '..'
 import { useRouter } from '../../../utils/hooks/useRouter'
+import strings from '../../../utils/constants'
 
 const TABLE_PREFIX = 'lookup_table_'
 
@@ -25,22 +26,28 @@ const ListTable: React.FC<any> = ({
   }
 
   return error ? (
-    <Message error header={'Error loading lookup-table'} list={[error.message]} />
+    <Message error header={strings.LOOKUP_ERROR_TITLE} list={[error.message]} />
   ) : loading || !allTableStructures ? (
     <Loading />
   ) : (
     <Table sortable stackable selectable>
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell key={`lookup-table-header-title`} colSpan={1}>
-            Label
-          </Table.HeaderCell>
-          <Table.HeaderCell key={`lookup-table-header-table-name`} colSpan={1}>
-            Table Name
-          </Table.HeaderCell>
-          <Table.HeaderCell key={`lookup-table-header-actions`} colSpan={2}>
-            Actions
-          </Table.HeaderCell>
+          <Table.HeaderCell
+            key={`lookup-table-header-title`}
+            colSpan={1}
+            content={strings.LOOKUP_TABLE_HEADER_LABEL}
+          ></Table.HeaderCell>
+          <Table.HeaderCell
+            key={`lookup-table-header-table-name`}
+            colSpan={1}
+            content={strings.LOOKUP_TABLE_HEADER_NAME}
+          ></Table.HeaderCell>
+          <Table.HeaderCell
+            key={`lookup-table-header-actions`}
+            colSpan={2}
+            content={strings.LOOKUP_TABLE_HEADER_ACTIONS}
+          ></Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
@@ -56,7 +63,7 @@ const ListTable: React.FC<any> = ({
                 <Table.Cell collapsing>
                   <Button.Group>
                     <Popup
-                      content="View lookup table"
+                      content={strings.LOOKUP_TABLE_VIEW}
                       trigger={
                         <Button icon as={NavLink} to={`${path}/${lookupTable.id}`}>
                           <Icon name="eye" />
@@ -64,7 +71,7 @@ const ListTable: React.FC<any> = ({
                       }
                     />
                     <Popup
-                      content="Import lookup table"
+                      content={strings.LOOKUP_TABLE_IMPORT}
                       trigger={
                         <Button icon as={NavLink} to={`${path}/${lookupTable.id}/import`}>
                           <Icon name="upload" />
@@ -72,7 +79,7 @@ const ListTable: React.FC<any> = ({
                       }
                     />
                     <DownloadButton
-                      popUpContent={`Download '${lookupTable.label}' table`}
+                      popUpContent={strings.LOOKUP_TABLE_DOWNLOAD.replace('%1', lookupTable.label)}
                       id={lookupTable.id}
                     />
                   </Button.Group>
@@ -80,13 +87,13 @@ const ListTable: React.FC<any> = ({
                 <Table.Cell icon="chevron down" collapsing />
               </Table.Row>
               {lookupTable.isExpanded && (
-                <Table.Row key={`table_row_detail_${lookupTable.id}`}>
+                <Table.Row key={`table-row-detail-${lookupTable.id}`}>
                   <Table.Cell colSpan="4">
                     <Table>
                       <Table.Header>
                         <Table.Row>
-                          <Table.HeaderCell>Database Field-name</Table.HeaderCell>
-                          <Table.HeaderCell>Lookup-table Label</Table.HeaderCell>
+                          <Table.HeaderCell content={strings.LOOKUP_TABLE_FIELD_NAME} />
+                          <Table.HeaderCell content={strings.LOOKUP_TABLE_LABEL} />
                         </Table.Row>
                       </Table.Header>
                       <Table.Body>
@@ -108,7 +115,7 @@ const ListTable: React.FC<any> = ({
         ) : (
           <Table.Row>
             <Table.Cell colSpan="4">
-              <Header as="h5" icon="exclamation circle" content="No lookup-table found!" />
+              <Header as="h5" icon="exclamation circle" content={strings.LOOKUP_ERROR_NOT_FOUND} />
             </Table.Cell>
           </Table.Row>
         )}
