@@ -196,7 +196,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
   }
 
   return (
-    <div className="flex-column-start-start">
+    <div className="flex-column-start-stretch">
       <div className="spacer-20" />
       <div className="flex-row-start-center">
         <Header as="h4" className="no-margin-no-padding">
@@ -204,7 +204,11 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
         </Header>
         {isDraft && (
           <>
-            <IconButton title="add new action" name="add square" onClick={addAction} />
+            <IconButton
+              title={strings.TEMPLATE_BUTTON_ACTION_ADD}
+              name="add square"
+              onClick={addAction}
+            />
             <Checkbox
               toggle
               label={strings.TEMPLATE_LABEL_ACTION_ON_TOP}
