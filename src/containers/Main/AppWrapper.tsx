@@ -9,9 +9,13 @@ import NonRegisteredLogin from '../User/NonRegisteredLogin'
 import AuthenticatedContent from './AuthenticatedWrapper'
 
 const AppWrapper: React.FC = () => {
-  const { error, loading } = useLanguageProvider()
+  const { error, loading, languageState } = useLanguageProvider()
   if (error) return <p>Can't load language provider</p>
-  if (loading) return <p>Loading...</p>
+  if (loading) {
+    console.log('Loading...')
+    return <p>Loading...</p>
+  }
+  console.log('State', languageState)
   return (
     <Router>
       <UserProvider>
