@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Button, Grid, Icon, Input, Label, Loader, Modal } from 'semantic-ui-react'
+import { Button, Grid, Header, Icon, Input, Label, Loader, Modal, Table } from 'semantic-ui-react'
 import config from '../../config'
 
 const snapshotsBaseUrl = `${config.serverREST}/snapshot`
@@ -102,34 +102,33 @@ const Snapshots: React.FC = () => {
     return (
       <>
         {data.map((snapshotName) => (
-          <Grid.Row key={`app_menu_${snapshotName}`} style={{ paddingBottom: 0 }}>
-            <Grid.Column width={3} textAlign="right">
-              <Label>{snapshotName}</Label>
-            </Grid.Column>
-
+          <Table.Row key={`app_menu_${snapshotName}`} style={{ paddingBottom: 0 }}>
+            <Table.Cell textAlign="right">
+              <p>{snapshotName}</p>
+            </Table.Cell>
             {compareFrom === '' && (
               <>
-                <Grid.Column>
+                <Table.Cell>
                   <Icon
                     size="large"
                     className="clickable"
                     name="play circle"
                     onClick={() => useSnapshot(snapshotName)}
                   />
-                </Grid.Column>
-                <Grid.Column>
+                </Table.Cell>
+                <Table.Cell width={1}>
                   <Icon
                     size="large"
                     className="clickable"
                     name="record"
                     onClick={() => takeSnapshot(snapshotName)}
                   />
-                </Grid.Column>
-                <Grid.Column>
+                </Table.Cell>
+                <Table.Cell textAlign="left">
                   <a href={`${snapshotFilesUrl}/${snapshotName}.zip`} target="_blank">
                     <Icon name="download" size="large" />
                   </a>
-                </Grid.Column>
+                </Table.Cell>
                 {/* <Icon
                     className="clickable"
                     size="big"
@@ -156,7 +155,7 @@ const Snapshots: React.FC = () => {
                   />
                 </>
               ) : null} */}
-          </Grid.Row>
+          </Table.Row>
         ))}
       </>
     )
@@ -187,23 +186,24 @@ const Snapshots: React.FC = () => {
     const [value, setValue] = useState('')
     if (compareFrom !== '') return null
     return (
-      <Grid.Row>
-        <Grid.Column width={3}>
-          <Input
-            size="mini"
-            onChange={(_, { value }) => setValue(value)}
-            placeholder="New Snapshot"
-          />
-        </Grid.Column>
-        <Grid.Column textAlign="left">
-          <Icon
-            size="large"
-            className="clickable"
-            name="record"
-            onClick={() => takeSnapshot(value)}
-          />
-        </Grid.Column>
-      </Grid.Row>
+      <>
+        <Table.Cell>
+          <div className="flex-row-start" style={{ alignItems: 'center' }}>
+            <Input
+              size="mini"
+              onChange={(_, { value }) => setValue(value)}
+              placeholder="New Snapshot"
+              style={{ paddingRight: 10 }}
+            />
+            <Icon
+              size="large"
+              className="clickable"
+              name="record"
+              onClick={() => takeSnapshot(value)}
+            />
+          </div>
+        </Table.Cell>
+      </>
     )
   }
 
@@ -212,11 +212,16 @@ const Snapshots: React.FC = () => {
     if (compareFrom !== '') return null
     // />
     return (
-      <Grid.Row>
-        <Grid.Column width={3}>
-          <Button size="mini" onClick={() => fileInputRef?.current?.click()}>
-            Upload Snapshot {''}
-            <Icon name="upload" />
+      <>
+        <Table.Cell colSpan={3} textAlign="right">
+          <Button
+            primary
+            // color="blue"
+            // size="mini"
+            onClick={() => fileInputRef?.current?.click()}
+            // labelPosition="right"
+          >
+            Upload <Icon name="upload" />
           </Button>
           <input
             type="file"
@@ -227,18 +232,23 @@ const Snapshots: React.FC = () => {
             multiple={false}
             onChange={(e) => uploadSnapshot(e)}
           />
-        </Grid.Column>
-      </Grid.Row>
+        </Table.Cell>
+      </>
     )
   }
 
   return (
-    <div id="list-container" style={{ backgroundColor: 'white' }}>
-      <Grid textAlign="center">
-        {newSnapshot()}
-        {renderUploadSnapshot()}
-        {renderSnapshotList()}
-      </Grid>
+    <div id="list-container" style={{ width: 400 }}>
+      <Header>Snapshots</Header>
+      <Table stackable>
+        <Table.Body>
+          <Table.Row>
+            {newSnapshot()}
+            {renderUploadSnapshot()}
+          </Table.Row>
+          {renderSnapshotList()}
+        </Table.Body>
+      </Table>
       {renderLoadingAndError()}
     </div>
   )
