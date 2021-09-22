@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Grid, Header, Popup } from 'semantic-ui-react'
+import { Checkbox, Header } from 'semantic-ui-react'
 import strings from '../../../../utils/constants'
 import { TemplateAction, Trigger } from '../../../../utils/generated/graphql'
 import CheckboxIO from '../../shared/CheckboxIO'
@@ -16,11 +16,6 @@ type GetActionsForTrigger = (
   trigger: Trigger,
   allTemplateActions: TemplateAction[]
 ) => TemplateActions
-
-enum ActionPosition {
-  TOP,
-  BOTTOM,
-}
 
 type IsAsynchronous = (templateAction: TemplateAction) => boolean
 
@@ -62,6 +57,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
     template: { id: templateId, isDraft },
   } = useTemplateState()
   const { allActionsByCode } = useActionState()
+  const [addActionTop, setAddActionTop] = useState(true)
   const { sequential, asynchronous } = getActionsForTrigger(trigger, allTemplateActions)
   const lastSequence = sequential.reduce(
     (max, current) =>
@@ -80,9 +76,9 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
     })
   }
 
-  const addAction = (actionPosition: ActionPosition) => {
+  const addAction = () => {
     let counter = 1
-    if (actionPosition === ActionPosition.TOP)
+    if (addActionTop)
       updateTemplate(templateId, {
         templateActionsUsingId: {
           updateById: sequential.map((action) => ({
@@ -122,7 +118,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
     if (templateActions.length === 0) return null
 
     return (
-      <div className="flex-column-start-start">
+      <div className="flex-column-start-stretch">
         <div className="spacer-10" />
         <div className="config-container">
           <Header as="h5" className="no-margin-no-padding">
@@ -206,30 +202,17 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
         <Header as="h4" className="no-margin-no-padding">
           {trigger}
         </Header>
-        {/* <IconButton title="add new action" name="add square" onClick={addAction} /> */}
-        <Popup
-          flowing
-          hoverable
-          trigger={<Button content={strings.TEMPLATE_BUTTON_ACTION_ADD} icon="add square" />}
-          position="right center"
-        >
-          <Grid divided columns={2}>
-            <Grid.Column textAlign="center">
-              <IconButton
-                title="top"
-                name="sort up"
-                onClick={() => addAction(ActionPosition.TOP)}
-              />
-            </Grid.Column>
-            <Grid.Column textAlign="center">
-              <IconButton
-                title="bottom"
-                name="sort down"
-                onClick={() => addAction(ActionPosition.BOTTOM)}
-              />
-            </Grid.Column>
-          </Grid>
-        </Popup>
+        {isDraft && (
+          <>
+            <IconButton title="add new action" name="add square" onClick={addAction} />
+            <Checkbox
+              toggle
+              label={strings.TEMPLATE_LABEL_ACTION_ON_TOP}
+              onChange={() => setAddActionTop(!addActionTop)}
+              checked={addActionTop}
+            />
+          </>
+        )}
       </div>
       {renderTemplateActions('Sequential', sequential)}
       {renderTemplateActions('Asynchronous', asynchronous)}
