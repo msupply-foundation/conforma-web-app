@@ -2,6 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Button, Header } from 'semantic-ui-react'
 import { MainMenu } from '..'
+import strings from '../../../utils/constants'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import { LookUpTableListMainMenuType } from '../../types'
 
@@ -21,9 +22,7 @@ const ListMainMenu: React.FC<LookUpTableListMainMenuType> = ({
         </Header>
       }
       actions={
-        <Button primary as={NavLink} to={`${path}/import`}>
-          Add new Lookup-table
-        </Button>
+        <Button primary as={NavLink} to={`${path}/import`} content={strings.LOOKUP_TABLE_ADD} />
       }
     />
   )
