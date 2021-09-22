@@ -4,10 +4,14 @@ import { hot } from 'react-hot-loader'
 import Login from '../User/Login'
 import Verify from '../User/Verification'
 import { UserProvider } from '../../contexts/UserState'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import NonRegisteredLogin from '../User/NonRegisteredLogin'
 import AuthenticatedContent from './AuthenticatedWrapper'
 
 const AppWrapper: React.FC = () => {
+  const { error, loading } = useLanguageProvider()
+  if (error) return <p>Can't load language provider</p>
+  if (loading) return <p>Loading...</p>
   return (
     <Router>
       <UserProvider>

@@ -6,6 +6,8 @@ import cache from './cache'
 import { AppWrapper } from './containers/Main'
 import { ApolloClient, ApolloProvider, createHttpLink, NormalizedCacheObject } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import { LanguageProvider } from './contexts/Localisation'
+import { useLanguageProvider } from './contexts/Localisation'
 import { persistCache } from 'apollo3-cache-persist'
 import { Loading } from './components'
 
@@ -31,6 +33,7 @@ const httpLink = createHttpLink({
 
 const App: React.FC = () => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | undefined>(undefined)
+
   useEffect(() => {
     const client = new ApolloClient({
       link: authLink.concat(httpLink),
@@ -64,7 +67,9 @@ const App: React.FC = () => {
 
   return client ? (
     <ApolloProvider client={client}>
-      <AppWrapper />
+      <LanguageProvider>
+        <AppWrapper />
+      </LanguageProvider>
     </ApolloProvider>
   ) : (
     <Loading />

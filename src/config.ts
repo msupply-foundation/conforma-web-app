@@ -11,6 +11,7 @@ const config = {
   uploadEndpoint: '/upload',
   paginationPresets: [2, 5, 10, 20, 50],
   version: 'dev',
+  defaultLanguageCode: 'en_NZ',
 }
 
 export default config
