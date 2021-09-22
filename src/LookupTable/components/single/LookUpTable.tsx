@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { Header, Message, Table } from 'semantic-ui-react'
 import { Loading } from '../../../components'
+import strings from '../../../utils/constants'
 import { useGetSingleTable } from '../../hooks'
 import { FieldMapType } from '../../types'
 import { toCamelCase } from '../../utils'
@@ -15,7 +16,7 @@ const LookupTable: React.FC<any> = ({ structure }) => {
   const { loading, called, error } = singleTableLoadState
 
   return error ? (
-    <Message error header={'Error loading lookup-table'} list={[error.message]} />
+    <Message error header={strings.LOOKUP_ERROR_TITLE} list={[error.message]} />
   ) : loading || !called || !lookupTable ? (
     <Loading />
   ) : (
@@ -49,7 +50,7 @@ const LookupTable: React.FC<any> = ({ structure }) => {
         ) : (
           <Table.Row key={`lookup-table-${structure.name}-row-error`}>
             <Table.Cell>
-              <Header as="h5" icon="exclamation circle" content="No data found!" />
+              <Header as="h5" icon="exclamation circle" content={strings.LOOKUP_ERROR_NOT_FOUND} />
             </Table.Cell>
           </Table.Row>
         )}
