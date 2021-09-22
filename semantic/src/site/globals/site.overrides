@@ -222,6 +222,13 @@ a:hover {
   margin-top: 30px;
 }
 
+// Localisation selector
+.top-right-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 /*--------------------------------
    Main area, User area & Footer
 ---------------------------------*/

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { SyntheticEvent, useState, useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
 import { Link } from 'react-router-dom'
-import { Form, Button, Container, Icon, Image, Header, List } from 'semantic-ui-react'
+import { Form, Button, Container, Icon, Image, Header, List, Dropdown } from 'semantic-ui-react'
 import isLoggedIn from '../../utils/helpers/loginCheck'
-import strings from '../../utils/constants'
 import messages from '../../utils/messages'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { LoginPayload, OrganisationSimple } from '../../utils/types'
 const logo = require('../../../images/logos/logo_512.png').default
@@ -22,6 +22,11 @@ const Login: React.FC = () => {
   const [selectedOrgId, setSelectedOrgId] = useState<number>(NO_ORG_SELECTED)
   const { push, history } = useRouter()
   const { onLogin } = useUserState()
+  const {
+    languageState: { strings },
+  } = useLanguageProvider()
+
+  console.log('strings', strings)
 
   const noOrgOption: OrganisationSimple = {
     orgId: LOGIN_AS_NO_ORG,
@@ -97,6 +102,7 @@ const Login: React.FC = () => {
 
   return (
     <Container id="login-container">
+      <LanguageSelector />
       <div id="login-box">
         <div className="flex-centered">
           <Image src={logo} className="image-icon" />
@@ -189,6 +195,39 @@ const Login: React.FC = () => {
         </Form>
       </div>
     </Container>
+  )
+}
+
+const LanguageSelector: React.FC = () => {
+  const {
+    languageState: { languageOptions, selectedLanguage },
+    setLanguageState,
+  } = useLanguageProvider()
+  if (!selectedLanguage) return null
+
+  const dropdownOptions = languageOptions.map((opt, index) => ({
+    key: opt.code,
+    text: `${opt.flag} ${opt.languageName}`,
+    value: index,
+  }))
+
+  const handleLanguageChange = async (_: SyntheticEvent, { value }: any) => {
+    console.log('Value', value as number)
+    console.log('type', typeof value)
+    console.log(languageOptions[value])
+    setLanguageState({ type: 'setSelectedLanguage', value: languageOptions[value].code })
+  }
+
+  return (
+    <div className="top-right-corner">
+      <Dropdown
+        text={`${selectedLanguage.flag} ${selectedLanguage.languageName}
+      `}
+        options={dropdownOptions}
+        onChange={handleLanguageChange}
+        direction="left"
+      />
+    </div>
   )
 }
 
