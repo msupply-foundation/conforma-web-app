@@ -84,7 +84,7 @@ const ComponentLibrary: ComponentLibraryType = {
   OperatorContainer: ({ children }) => (
     <div className="evaluator-operator-container">{children}</div>
   ),
-  FlexColumn: ({ children }) => <div className="flex-column-start-start">{children}</div>,
+  FlexColumn: ({ children }) => <div className="flex-column-start-stretch">{children}</div>,
   FlexRow: ({ children }) => <div className="flex-row-start-center">{children}</div>,
 }
 

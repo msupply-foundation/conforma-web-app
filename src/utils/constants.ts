@@ -255,6 +255,7 @@ export default {
   TEMPLATE_LABEL_ACTION: 'Action',
   TEMPLATE_LABEL_ACTION_DESCRIPTION: 'new action description',
   TEMPLATE_LABEL_ACTION_MESSAGE: 'new action message',
+  TEMPLATE_LABEL_ACTION_ON_TOP: 'Add on top',
   TEMPLATE_LABEL_DESCRIPTION: 'Description',
   TEMPLATE_LABEL_CONDITION: 'Condition',
   TEMPLATE_LABEL_SEQUENTIAL: 'Is Sequential',
