@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Grid, Header, Popup } from 'semantic-ui-react'
+import strings from '../../../../utils/constants'
 import { TemplateAction, Trigger } from '../../../../utils/generated/graphql'
 import CheckboxIO from '../../shared/CheckboxIO'
 import { EvaluationHeader } from '../../shared/Evaluation'
@@ -49,9 +50,9 @@ type RemoveAction = (id: number) => void
 
 const newAction = {
   actionCode: 'cLog',
-  description: 'new action description',
+  description: strings.TEMPLATE_LABEL_ACTION_DESCRIPTION,
   parameterQueries: {
-    message: 'new action message',
+    message: strings.TEMPLATE_LABEL_ACTION_MESSAGE,
   },
 }
 
@@ -152,19 +153,21 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
                 />
                 <div className="flex-row-start-center-wrap">
                   <TextIO
-                    title="Action"
+                    title={strings.TEMPLATE_LABEL_ACTION}
                     text={allActionsByCode[String(templateAction?.actionCode)]?.name || ''}
                   />
                   <TextIO
-                    title="Description"
+                    title={strings.TEMPLATE_LABEL_DESCRIPTION}
                     text={templateAction?.description || ''}
                     isTextArea={true}
                   />
                   <div className="config-container">
                     <div className="flex-row-start-center">
-                      <Header as="h6" className="no-margin-no-padding">
-                        Condition
-                      </Header>
+                      <Header
+                        as="h6"
+                        className="no-margin-no-padding"
+                        content={strings.TEMPLATE_LABEL_CONDITION}
+                      />
                       <EvaluationHeader evaluation={templateAction?.condition} />
                     </div>
                   </div>
@@ -172,7 +175,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
                 <CheckboxIO
                   disabled={!isDraft}
                   disabledMessage={disabledMessage}
-                  title="Is Sequential"
+                  title={strings.TEMPLATE_LABEL_SEQUENTIAL}
                   value={!isAsynchronous(templateAction)}
                   setValue={(isSequential) =>
                     setIsSequential(templateAction?.id || 0, isSequential)
@@ -207,7 +210,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
         <Popup
           flowing
           hoverable
-          trigger={<Button content="add new action" icon="add square" />}
+          trigger={<Button content={strings.TEMPLATE_BUTTON_ACTION_ADD} icon="add square" />}
           position="right center"
         >
           <Grid divided columns={2}>
