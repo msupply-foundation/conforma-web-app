@@ -1,12 +1,11 @@
-import path from 'path'
-import React, { createContext, useContext, useEffect, useReducer, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import config from '../config'
 import strings from '../utils/constants'
 import { getRequest } from '../utils/helpers/fetchMethods'
 
 const initialLanguageCode = localStorage.getItem('language') ?? config.defaultLanguageCode
 
-type LanguageProviderProps = { languagePref?: string; children: React.ReactNode }
+type LanguageProviderProps = { children: React.ReactNode }
 
 type LanguageOption = {
   languageName: string
@@ -15,121 +14,88 @@ type LanguageOption = {
   flag: string // To-do: limit to flag emojis
 }
 
-type LanguageStrings = { [key: string]: string }
+type LanguageStrings = { [Property in keyof typeof strings]?: string }
 
 interface LanguageState {
   languageOptions: LanguageOption[]
-  selectedLanguageCode: string | null
   selectedLanguage: LanguageOption | null
   strings: LanguageStrings
-}
-
-export type UpdateAction =
-  | {
-      type: 'setLanuageOptions'
-      value: LanguageOption[]
-    }
-  | {
-      type: 'setSelectedLanguage'
-      value: string // code
-    }
-  | {
-      type: 'setLanguageStrings'
-      value: LanguageStrings
-    }
-  | {
-      type: 'setState'
-      value: {
-        languageOptions: LanguageOption[]
-        selectedLanguageCode: string
-        strings: LanguageStrings
-      }
-    }
-
-type Reducer = (state: LanguageState, action: UpdateAction) => LanguageState
-
-const reducer: Reducer = (state, action) => {
-  switch (action.type) {
-    case 'setLanuageOptions':
-      return { ...state, languageOptions: action.value }
-    case 'setSelectedLanguage':
-      const selectedLanguageCode = action.value
-      let selectedLanguage =
-        state.languageOptions.find((element) => element.code === selectedLanguageCode) ?? null
-      localStorage.setItem('language', selectedLanguageCode)
-      return { ...state, selectedLanguageCode, selectedLanguage }
-    case 'setLanguageStrings':
-      return { ...state, strings: action.value }
-    case 'setState':
-      const { languageOptions, selectedLanguageCode: code, strings } = action.value
-      selectedLanguage = languageOptions.find((element) => element.code === code) ?? null
-      localStorage.setItem('language', code)
-      return { languageOptions, selectedLanguageCode: code, selectedLanguage, strings }
-  }
-}
-const initialState = {
-  languageOptions: [],
-  selectedLanguageCode: initialLanguageCode,
-  selectedLanguage: null,
-  strings: {},
-}
-const initialContext: {
-  languageState: LanguageState
   loading: boolean
-  error: boolean
-  setLanguageState: React.Dispatch<UpdateAction>
+  error: any
+}
+
+const initialContext: {
+  strings: LanguageStrings
+  selectedLanguage: LanguageOption | null
+  languageOptions: LanguageOption[]
+  loading: boolean
+  error: any
+  setLanguage: Function
 } = {
-  languageState: initialState,
+  strings: {},
+  selectedLanguage: null,
+  languageOptions: [],
   loading: true,
-  error: false,
-  setLanguageState: () => {},
+  error: null,
+  setLanguage: () => {},
 }
 
 const LanguageProviderContext = createContext(initialContext)
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [languageState, dispatch] = useReducer(reducer, initialState)
-  const setLanguageState = dispatch
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  const [languageState, setLanguageState] = useState<LanguageState>({
+    languageOptions: [],
+    selectedLanguage: null,
+    strings: {},
+    loading: true,
+    error: null,
+  })
+  const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(initialLanguageCode)
 
   // Load initial language and fetch options list
-  const setInitialState = async () => {
+  const updateLanguageState = async (languageCode: string) => {
+    setLanguageState({ ...languageState, loading: true })
+    const { languageOptions } = languageState
     try {
-      const strings = await getLanguageStrings(initialLanguageCode)
-      if (strings?.error) {
-        setError(true)
-        console.log(strings.message)
-        return
-      }
-      const languageOptions = await getLanguageOptions()
-      if (languageOptions?.error) {
-        setError(true)
-        console.log(strings.message)
-        return
-      }
+      // Only fetch options the first time
+      const options = languageOptions.length === 0 ? await getLanguageOptions() : languageOptions
+      const selectedLanguage =
+        options.find((lang: LanguageOption) => lang.code === languageCode) ?? null
+      const strings = await getLanguageStrings(languageCode)
       setLanguageState({
-        type: 'setState',
-        value: {
-          languageOptions,
-          selectedLanguageCode: initialLanguageCode,
-          strings,
-        },
+        ...languageState,
+        languageOptions: options,
+        selectedLanguage,
+        strings,
+        loading: false,
       })
-      setLoading(false)
-      setError(false)
+      localStorage.setItem('language', languageCode)
     } catch (err) {
-      setLoading(false)
-      setError(true)
-      console.log(err.message)
+      setLanguageState({
+        ...languageState,
+        loading: false,
+        error: err,
+      })
+      localStorage.removeItem('language')
     }
   }
+
+  // Fetch new language when language code changes
   useEffect(() => {
-    setInitialState()
-  }, [])
+    updateLanguageState(selectedLanguageCode)
+  }, [selectedLanguageCode])
 
   return (
-    <LanguageProviderContext.Provider value={{ languageState, loading, error, setLanguageState }}>
+    <LanguageProviderContext.Provider
+      value={{
+        strings: languageState.strings,
+        selectedLanguage: languageState.selectedLanguage,
+        languageOptions: languageState.languageOptions,
+        loading: languageState.loading,
+        error: languageState.error,
+        setLanguage: setSelectedLanguageCode,
+      }}
+    >
       {children}
     </LanguageProviderContext.Provider>
   )
@@ -140,11 +106,13 @@ export const useLanguageProvider = () => useContext(LanguageProviderContext)
 const getLanguageStrings = async (code: string) => {
   // If code is default, then load English strings locally and return
   if (code === config.defaultLanguageCode) return strings
-  // Else fetch static file from server
+  // Else fetch language file from server
   try {
+    const strings = await getRequest(config.serverREST + '/language/' + code)
+    if (strings?.error) throw new Error(`Language code: ${code}, ${strings?.message}`)
     return await getRequest(config.serverREST + '/language/' + code)
   } catch (err) {
-    return { error: true, message: err.message }
+    throw err
   }
 
   //   TO - DO
@@ -154,8 +122,10 @@ const getLanguageStrings = async (code: string) => {
 
 const getLanguageOptions = async () => {
   try {
-    return await getRequest(config.serverREST + '/localisations')
+    const options = await getRequest(config.serverREST + '/localisations')
+    if (options?.error) throw new Error('Unable to fetch languages list')
+    return options
   } catch (err) {
-    return { error: true, message: err.message }
+    throw err
   }
 }

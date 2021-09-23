@@ -22,15 +22,11 @@ const Login: React.FC = () => {
   const [selectedOrgId, setSelectedOrgId] = useState<number>(NO_ORG_SELECTED)
   const { push, history } = useRouter()
   const { onLogin } = useUserState()
-  const {
-    languageState: { strings },
-  } = useLanguageProvider()
-
-  console.log('strings', strings)
+  const { strings } = useLanguageProvider()
 
   const noOrgOption: OrganisationSimple = {
     orgId: LOGIN_AS_NO_ORG,
-    orgName: strings.LABEL_NO_ORG_OPTION,
+    orgName: strings.LABEL_NO_ORG_OPTION ?? '',
     userRole: null,
     isSystemOrg: false,
   }
@@ -199,10 +195,7 @@ const Login: React.FC = () => {
 }
 
 const LanguageSelector: React.FC = () => {
-  const {
-    languageState: { languageOptions, selectedLanguage },
-    setLanguageState,
-  } = useLanguageProvider()
+  const { languageOptions, selectedLanguage, setLanguage } = useLanguageProvider()
   if (!selectedLanguage) return null
 
   const dropdownOptions = languageOptions.map((opt, index) => ({
@@ -212,10 +205,7 @@ const LanguageSelector: React.FC = () => {
   }))
 
   const handleLanguageChange = async (_: SyntheticEvent, { value }: any) => {
-    console.log('Value', value as number)
-    console.log('type', typeof value)
-    console.log(languageOptions[value])
-    setLanguageState({ type: 'setSelectedLanguage', value: languageOptions[value].code })
+    setLanguage(languageOptions[value].code)
   }
 
   return (
