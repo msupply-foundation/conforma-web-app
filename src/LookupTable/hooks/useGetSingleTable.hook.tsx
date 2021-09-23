@@ -45,7 +45,7 @@ const useGetSingleTable = () => {
     if (structure?.name) {
       const tableName = `${GQL_TABLE_NAME_PREFIX}${capitalizeFirstLetter(
         toCamelCase(structure.name)
-      )}s`
+      )}`
 
       if (!loading && called && !error && data[tableName]) {
         setLookupTable(data[tableName].nodes)
