@@ -11,7 +11,7 @@ const ListTableLayout: React.FC<ListLayoutProps> = ({
   isEditable = true,
 }) => {
   return (
-    <Table celled selectable={isEditable}>
+    <Table className="list-builder" celled selectable={isEditable}>
       <Table.Header>
         <Table.Row>
           {fieldTitles.map((title) => (

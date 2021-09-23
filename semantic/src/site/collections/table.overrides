@@ -88,3 +88,11 @@
     border-bottom-right-radius: 10px;
   }
 }
+
+// For listBuilder table not overlap the Application/Review
+// Page area - will show scroll when bigger than container
+.ui.table.list-builder {
+  overflow: auto;
+  display: inline-block;
+  max-width: inherit;
+}
