@@ -25,7 +25,6 @@ const OutcomeTable: React.FC = () => {
   const { outcomeTable, loading, error } = useOutcomesTable({
     tableName,
     apiQueries,
-    templatePermissions, // This is only so changing user refreshes the display
   })
   usePageTitle(outcomeTable?.title || '')
 

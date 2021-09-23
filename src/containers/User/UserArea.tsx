@@ -21,7 +21,7 @@ const UserArea: React.FC = () => {
   const {
     templatesData: { templates },
   } = useListTemplates(templatePermissions, false)
-  const { outcomesList } = useOutcomesList({ templatePermissions })
+  const { outcomesList } = useOutcomesList()
 
   if (!currentUser || currentUser?.username === strings.USER_NONREGISTERED) return null
 
