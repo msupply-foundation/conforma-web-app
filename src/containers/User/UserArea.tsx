@@ -1,9 +1,9 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { Button, Container, Image, List, Dropdown } from 'semantic-ui-react'
+import { Button, Container, Image, List, Dropdown, Modal, Header, Form } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { Link } from 'react-router-dom'
-import strings from '../../utils/constants'
 import {
   OrganisationSimple,
   User,
@@ -20,6 +20,7 @@ import { UiLocation } from '../../utils/generated/graphql'
 const brandLogo = require('../../../images/brand_logo.png').default
 
 const UserArea: React.FC = () => {
+  const { strings } = useLanguageProvider()
   const {
     userState: { currentUser, orgList, templatePermissions },
     onLogin,
@@ -58,6 +59,7 @@ interface DropdownsState {
   admin: { active: boolean; selection: string }
 }
 const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
+  const { strings } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
     templates: { active: false, selection: '' },
@@ -178,6 +180,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
 }
 
 const BrandArea: React.FC = () => {
+  const { strings } = useLanguageProvider()
   return (
     <div id="brand-area" className="hide-on-mobile">
       <Image src={brandLogo} />
@@ -196,6 +199,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   orgs,
   onLogin,
 }) => {
+  const { strings } = useLanguageProvider()
   const LOGIN_AS_NO_ORG = 0 // Ensures server returns no organisation
 
   const JWT = localStorage.getItem('persistJWT') as string
@@ -245,13 +249,20 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
 }
 
 const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user, templates }) => {
+  const { strings, selectedLanguage } = useLanguageProvider()
   const { logout } = useUserState()
   const { push } = useRouter()
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <div id="user-menu">
+      <Modal onClose={() => setIsOpen(false)} onOpen={() => setIsOpen(true)} open={isOpen}>
+        <LanguageSelector />
+      </Modal>
       <Button>
         <Button.Content visible>
-          <Dropdown text={`${user?.firstName || ''} ${user?.lastName || ''}`}>
+          <Dropdown
+            text={`${selectedLanguage?.flag} ${user?.firstName || ''} ${user?.lastName || ''}`}
+          >
             <Dropdown.Menu>
               {templates.map(({ code, name, icon, templateCategory: { icon: catIcon } }) => (
                 <Dropdown.Item
@@ -262,11 +273,57 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
                 />
               ))}
               <Dropdown.Item icon="log out" text={strings.MENU_LOGOUT} onClick={() => logout()} />
+              <Dropdown.Item
+                icon="globe"
+                text={strings.MENU_CHANGE_LANGUAGE}
+                onClick={() => setIsOpen(true)}
+              />
             </Dropdown.Menu>
           </Dropdown>
         </Button.Content>
       </Button>
     </div>
+  )
+}
+
+const LanguageSelector: React.FC = () => {
+  const { strings, selectedLanguage, languageOptions, setLanguage } = useLanguageProvider()
+  return (
+    <Container id="language-switcher">
+      <div id="login-box">
+        <div className="flex-centered">
+          <Header as="h3" className="login-header">
+            {strings.MENU_LANGUAGE_SELECT}
+          </Header>
+          <p>
+            <strong>{strings.MENU_LANGUAGE_SELECT}</strong>
+          </p>
+        </div>
+        <Form>
+          {/* <List
+            celled
+            relaxed="very"
+            className="no-bottom-border"
+            items={[...loginPayload?.orgList, noOrgOption].map((org: OrganisationSimple) => ({
+              key: `list-item-${org.orgId}`,
+              content: (
+                <div
+                  className="section-single-row-box-container clickable"
+                  onClick={() => setSelectedOrgId(org.orgId)}
+                >
+                  <div className="centered-flex-box-row flex-grow-1">
+                    <span style={{ fontStyle: org.orgId === LOGIN_AS_NO_ORG ? 'italic' : '' }}>
+                      {org.orgName}
+                    </span>
+                  </div>
+                  <Icon name="chevron right" />
+                </div>
+              ),
+            }))}
+          /> */}
+        </Form>
+      </div>
+    </Container>
   )
 }
 
