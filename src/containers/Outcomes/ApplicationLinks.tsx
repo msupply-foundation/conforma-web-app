@@ -11,28 +11,28 @@ const displayFields: ApplicationDisplayField[] = [
   {
     field: 'name',
     displayName: strings.APP_LINK_NAME,
-    dataType: 'character varying',
+    dataType: 'string',
     link: '/application/',
     linkVar: 'serial',
   },
   {
     field: 'serial',
     displayName: strings.APP_LINK_SERIAL,
-    dataType: 'character varying',
+    dataType: 'string',
     link: '/application/',
     linkVar: 'serial',
   },
   {
     field: 'templateName',
     displayName: strings.APP_LINK_TYPE,
-    dataType: 'character varying',
+    dataType: 'string',
     link: '/applications?type=',
     linkVar: 'templateCode',
   },
   {
     field: 'dateCompleted',
     displayName: strings.APP_LINK_COMPLETED,
-    dataType: 'timestamp with time zone',
+    dataType: 'Date',
     link: null,
   },
 ]
