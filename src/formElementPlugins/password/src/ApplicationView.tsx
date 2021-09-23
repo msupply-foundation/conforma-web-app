@@ -3,7 +3,7 @@ import { Form, Checkbox } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import config from '../../../config'
 import { useUserState } from '../../../contexts/UserState'
-import strings from '../constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -17,6 +17,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   currentResponse,
   allResponses,
 }) => {
+  const { getPluginStrings } = useLanguageProvider()
+  const strings = getPluginStrings('password')
   const { isEditable } = element
   const {
     placeholder,

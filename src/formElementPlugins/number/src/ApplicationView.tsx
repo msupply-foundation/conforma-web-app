@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
-import strings from '../constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 
 export enum NumberType {
   INTEGER = 'integer',
@@ -20,6 +20,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   currentResponse,
 }) => {
+  const { getPluginStrings } = useLanguageProvider()
+  const strings = getPluginStrings('number')
   const { isEditable } = element
   const {
     placeholder,
@@ -93,6 +95,32 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       }
     : {}
 
+  const customValidate = (
+    number: number | null | undefined,
+    type: NumberType,
+    minValue: number = -Infinity,
+    maxValue: number = Infinity
+  ): { isValid: boolean; validationMessage?: string } => {
+    if (number === NaN || number === null)
+      return { isValid: false, validationMessage: strings.ERROR_NOT_NUMBER }
+    if (type === NumberType.INTEGER && !Number.isInteger(number))
+      return {
+        isValid: false,
+        validationMessage: strings.ERROR_NOT_INTEGER,
+      }
+    if ((number as number) < minValue)
+      return {
+        isValid: false,
+        validationMessage: strings.ERROR_TOO_SMALL,
+      }
+    if ((number as number) > maxValue)
+      return {
+        isValid: false,
+        validationMessage: strings.ERROR_TOO_BIG,
+      }
+    return { isValid: true }
+  }
+
   return (
     <>
       <label>
@@ -143,32 +171,6 @@ const parseInput = (
     ? String(number)
     : ((prefix + numberFormatter.format(number) + suffix) as string)
   return [number, text]
-}
-
-const customValidate = (
-  number: number | null | undefined,
-  type: NumberType,
-  minValue: number = -Infinity,
-  maxValue: number = Infinity
-): { isValid: boolean; validationMessage?: string } => {
-  if (number === NaN || number === null)
-    return { isValid: false, validationMessage: strings.ERROR_NOT_NUMBER }
-  if (type === NumberType.INTEGER && !Number.isInteger(number))
-    return {
-      isValid: false,
-      validationMessage: strings.ERROR_NOT_INTEGER,
-    }
-  if ((number as number) < minValue)
-    return {
-      isValid: false,
-      validationMessage: strings.ERROR_TOO_SMALL,
-    }
-  if ((number as number) > maxValue)
-    return {
-      isValid: false,
-      validationMessage: strings.ERROR_TOO_BIG,
-    }
-  return { isValid: true }
 }
 
 export default ApplicationView
