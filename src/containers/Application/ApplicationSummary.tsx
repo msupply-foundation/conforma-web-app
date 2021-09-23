@@ -79,6 +79,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     stages,
     responsesByCode,
     info: {
+      name,
       serial,
       current: { status },
       isChangeRequest,
@@ -97,12 +98,10 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
             isCompleted ? strings.TITLE_APPLICATION_COMPLETED : strings.TITLE_APPLICATION_SUMMARY
           }
           subheader={
-            isCompleted ? null : (
-              <Header.Subheader
-                className="center-text"
-                content={strings.SUBTITLE_APPLICATION_SUMMARY}
-              />
-            )
+            <Header.Subheader
+              className="center-text"
+              content={isCompleted ? name : strings.SUBTITLE_APPLICATION_SUMMARY}
+            />
           }
         />
       </div>
