@@ -25,7 +25,6 @@ const OutcomeTable: React.FC = () => {
   const { outcomeTable, loading, error } = useOutcomesTable({
     tableName,
     apiQueries,
-    templatePermissions, // This is only so changing user refreshes the display
   })
   usePageTitle(outcomeTable?.title || '')
 
@@ -57,15 +56,15 @@ const OutcomeTable: React.FC = () => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {tableRows.map((row: any) => (
+            {tableRows.map(({ id, rowValues }: { id: number; rowValues: any }) => (
               <Table.Row
-                key={`row_${row.id}`}
+                key={`row_${id}`}
                 className="clickable"
-                onClick={() => showDetailsForRow(row.id)}
+                onClick={() => showDetailsForRow(id)}
               >
-                {row.rowValues.map((value: any, index: number) => (
+                {rowValues.map((value: any, index: number) => (
                   <Table.Cell key={`value_${index}`}>
-                    {getCellComponent(value, headerRow[index], row.id)}
+                    {getCellComponent(value, headerRow[index], id)}
                   </Table.Cell>
                 ))}
               </Table.Row>

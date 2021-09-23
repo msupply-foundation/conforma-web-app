@@ -3,6 +3,7 @@ import { getRequest } from '../../utils/helpers/fetchMethods'
 import config from '../../config'
 import { LOCAL_STORAGE_JWT_KEY } from '../data/globalConstants'
 import { TemplatePermissions } from '../types'
+import { useUserState } from '../../contexts/UserState'
 import {
   OutcomesResponse,
   OutcomesTableResponse,
@@ -13,16 +14,12 @@ const serverURL = config.serverREST
 
 // 3 simple hooks for returning Outcome state
 
-interface OutcomeListProps {
-  templatePermissions?: TemplatePermissions
-}
-
-interface OutcomeTableProps extends OutcomeListProps {
+interface OutcomeTableProps {
   tableName: string
   apiQueries: OutcomeTableAPIQueries
 }
 
-interface OutcomeDetailsProps extends OutcomeListProps {
+interface OutcomeDetailsProps {
   tableName: string
   recordId: number
 }
@@ -34,13 +31,16 @@ export type ErrorResponse = {
   detail?: string // from GraphQL errors (caught by back-end)
 }
 
-export const useOutcomesList = ({ templatePermissions }: OutcomeListProps) => {
+export const useOutcomesList = () => {
   // Note: we don't *need* templatePermissions, we only pass it in so that the
   // hook can react to changes, since JWT (what we *actually* need) is not in
   // State (perhaps it should be?)
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [outcomesList, setOutcomesList] = useState<OutcomesResponse>([])
+  const {
+    userState: { templatePermissions },
+  } = useUserState()
 
   useEffect(() => {
     const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY)
@@ -52,15 +52,14 @@ export const useOutcomesList = ({ templatePermissions }: OutcomeListProps) => {
   return { error, loading, outcomesList }
 }
 
-export const useOutcomesTable = ({
-  templatePermissions,
-  tableName,
-  apiQueries,
-}: OutcomeTableProps) => {
+export const useOutcomesTable = ({ tableName, apiQueries }: OutcomeTableProps) => {
   const { first, offset, orderBy, ascending } = apiQueries
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [outcomeTable, setOutcomeTable] = useState<OutcomesTableResponse>()
+  const {
+    userState: { templatePermissions },
+  } = useUserState()
 
   useEffect(() => {
     const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY)
@@ -78,21 +77,20 @@ export const useOutcomesTable = ({
   return { error, loading, outcomeTable }
 }
 
-export const useOutcomesDetail = ({
-  templatePermissions,
-  tableName,
-  recordId,
-}: OutcomeDetailsProps) => {
+export const useOutcomesDetail = ({ tableName, recordId }: OutcomeDetailsProps) => {
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [outcomeDetail, setOutcomeDetail] = useState<OutcomesDetailResponse>()
+  const {
+    userState: { templatePermissions },
+  } = useUserState()
 
   useEffect(() => {
     const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY)
     if (!JWT) return
     const url = `${serverURL}/outcomes/table/${tableName}/item/${recordId}`
     processRequest(url, JWT, setError, setLoading, setOutcomeDetail)
-  }, [templatePermissions])
+  }, [templatePermissions, tableName, recordId])
 
   return { error, loading, outcomeDetail }
 }
