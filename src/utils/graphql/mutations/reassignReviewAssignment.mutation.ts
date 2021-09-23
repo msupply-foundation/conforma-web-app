@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 export default gql`
   mutation reasignReviewAssignment(
     $unassignmentId: Int!
+    # $unassignmentStatus: ReviewAssignmentStatus = AVAILABLE
     $reassignmentId: Int!
     $reassignmentPatch: ReviewAssignmentPatch!
   ) {
@@ -14,10 +15,7 @@ export default gql`
       }
     }
     unassignmentUpdate: updateReviewAssignment(
-      input: {
-        id: $unassignmentId
-        patch: { status: AVAILABLE, isLocked: true, trigger: ON_REVIEW_UNASSIGN }
-      }
+      input: { id: $unassignmentId, patch: { status: AVAILABLE, isLocked: true } }
     ) {
       reviewAssignment {
         ...ReviewAssignment
