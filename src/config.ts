@@ -11,7 +11,8 @@ const config = {
   uploadEndpoint: '/upload',
   paginationPresets: [2, 5, 10, 20, 50],
   version: 'dev',
-  defaultLanguageCode: 'en_nz',
+  defaultLanguageCode: 'default',
+  pluginsFolder: 'formElementPlugins',
 }
 
 export default config

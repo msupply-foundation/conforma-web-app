@@ -1,6 +1,7 @@
 import { Decision } from './generated/graphql'
 
 export default {
+  AAA_STRING: 'TEST',
   APP_NAME: 'mFlow',
   APP_NAME_SUBHEADER: 'Application Manager',
   ACTION_ASSIGN: 'Assign',
@@ -145,6 +146,7 @@ export default {
   MENU_CHANGE_LANGUAGE: 'Change Language',
   MENU_LOGOUT: 'Log out',
   MENU_LANGUAGE_SELECT: 'Please select a language',
+  MENU_LANGUAGE_CURRENT: 'current',
   TITLE_HISTORY_CHANGED_BY_APPLICANT: 'Changed by applicant',
   TITLE_HISTORY_CONSOLIDATION: 'Consolidation',
   TITLE_HISTORY_REVIEW: 'Review',

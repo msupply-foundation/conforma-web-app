@@ -333,6 +333,18 @@ a:hover {
   min-width: 120px;
 }
 
+#language-modal {
+  display: flex;
+  flex-direction: column;
+  max-width: 350px;
+  border-radius: @borderRadius;
+  padding: 12px;
+
+  .ui.form {
+    margin-top: 15px;
+  }
+}
+
 // Whole content container except Header and Footer
 #content-area {
   padding-top: @headerHeight + 12px;

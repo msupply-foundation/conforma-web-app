@@ -1,5 +1,15 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { Button, Container, Image, List, Dropdown, Modal, Header, Form } from 'semantic-ui-react'
+import {
+  Button,
+  Container,
+  Image,
+  List,
+  Dropdown,
+  Modal,
+  Header,
+  Form,
+  Icon,
+} from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
@@ -255,7 +265,12 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
   const [isOpen, setIsOpen] = useState(false)
   return (
     <div id="user-menu">
-      <Modal onClose={() => setIsOpen(false)} onOpen={() => setIsOpen(true)} open={isOpen}>
+      <Modal
+        onClose={() => setIsOpen(false)}
+        onOpen={() => setIsOpen(true)}
+        open={isOpen}
+        id="language-modal"
+      >
         <LanguageSelector />
       </Modal>
       <Button>
@@ -289,40 +304,33 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
 const LanguageSelector: React.FC = () => {
   const { strings, selectedLanguage, languageOptions, setLanguage } = useLanguageProvider()
   return (
-    <Container id="language-switcher">
-      <div id="login-box">
-        <div className="flex-centered">
-          <Header as="h3" className="login-header">
-            {strings.MENU_LANGUAGE_SELECT}
-          </Header>
-          <p>
-            <strong>{strings.MENU_LANGUAGE_SELECT}</strong>
-          </p>
-        </div>
-        <Form>
-          {/* <List
-            celled
-            relaxed="very"
-            className="no-bottom-border"
-            items={[...loginPayload?.orgList, noOrgOption].map((org: OrganisationSimple) => ({
-              key: `list-item-${org.orgId}`,
-              content: (
-                <div
-                  className="section-single-row-box-container clickable"
-                  onClick={() => setSelectedOrgId(org.orgId)}
-                >
-                  <div className="centered-flex-box-row flex-grow-1">
-                    <span style={{ fontStyle: org.orgId === LOGIN_AS_NO_ORG ? 'italic' : '' }}>
-                      {org.orgName}
-                    </span>
-                  </div>
-                  <Icon name="chevron right" />
-                </div>
-              ),
-            }))}
-          /> */}
-        </Form>
+    <Container>
+      <div className="flex-centered">
+        <Header as="h3">{strings.MENU_LANGUAGE_SELECT}</Header>
       </div>
+      <Form>
+        <List celled relaxed="very" className="no-bottom-border">
+          {languageOptions.map(({ code, flag, languageName, description }) => (
+            <List.Item onClick={() => setLanguage(code)} key={`lang_${code}`}>
+              <List.Icon size="big" verticalAlign="middle">
+                {flag}
+              </List.Icon>
+              <List.Content>
+                <List.Header as="a">
+                  {selectedLanguage?.code === code ? (
+                    <>
+                      <strong>{languageName}</strong> ({strings.MENU_LANGUAGE_CURRENT})
+                    </>
+                  ) : (
+                    languageName
+                  )}
+                </List.Header>
+                <List.Description as="a">{description}</List.Description>
+              </List.Content>
+            </List.Item>
+          ))}
+        </List>
+      </Form>
     </Container>
   )
 }
