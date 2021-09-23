@@ -41,7 +41,8 @@ const ReviewerActionCell: React.FC<CellProps> = ({
   }
 
   if (!!reviewerAction) actions.push(getReviewActionString(reviewerAction))
-  if (!!assignerAction) actions.push(getAssignActionString(assignerAction))
+  if (!!assignerAction && assignerAction != AssignerAction.AssignLocked)
+    actions.push(getAssignActionString(assignerAction))
 
   if (actions.length == 0)
     return (
