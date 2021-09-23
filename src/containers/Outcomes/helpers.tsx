@@ -29,7 +29,7 @@ export const formatCellText = (
   // Custom formatters -- these can be chained
   let formattedValue = String(value)
   // TO-DO: Standardize dataType options, see issue #992
-  if (dataType === 'timestamp with time zone' || dataType === 'date') {
+  if (dataType === 'Date') {
     formattedValue = DateTime.fromISO(formattedValue).toLocaleString(
       interpretDateFormat(dateFormat)
     )
