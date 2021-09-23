@@ -133,7 +133,9 @@ const ImportCsvModal: React.FC<any> = ({
               <label>{strings.LABEL_FILE_UPLOAD_TITLE}</label>
 
               <Button as="label" htmlFor="file" type="button" animated="fade">
-                <Button.Content visible icon="file" />
+                <Button.Content visible>
+                  <Icon name="file" />
+                </Button.Content>
                 <Button.Content hidden content={strings.LABEL_FILE_UPLOAD} />
               </Button>
               <input type="file" id="file" hidden onChange={(event) => fileChange(event)} />
