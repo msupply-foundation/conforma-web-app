@@ -1,7 +1,6 @@
 import { Decision } from './generated/graphql'
 
 export default {
-  AAA_STRING: 'TEST',
   APP_NAME: 'mFlow',
   APP_NAME_SUBHEADER: 'Application Manager',
   ACTION_ASSIGN: 'Assign',

@@ -4,7 +4,7 @@ import { Label, Button, Search, Header, Icon } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import useListApplications from '../../utils/hooks/useListApplications'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { findUserRole, checkExistingUserRole } from '../../utils/helpers/list/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import mapColumnsByRole from '../../utils/helpers/list/mapColumnsByRole'
@@ -17,6 +17,7 @@ import ListFilters from './ListFilters/ListFilters'
 import { APPLICATION_FILTERS } from '../../utils/data/applicationFilters'
 
 const ListWrapper: React.FC = () => {
+  const { strings } = useLanguageProvider()
   const { query, updateQuery } = useRouter()
   const { type, userRole } = query
   const {
@@ -27,7 +28,7 @@ const ListWrapper: React.FC = () => {
   const [searchText, setSearchText] = useState<string>(query?.search)
   const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
   const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>()
-  usePageTitle(strings.PAGE_TITLE_LIST)
+  usePageTitle(strings.PAGE_TITLE_LIST as string)
 
   if (isNonRegistered) {
     logout()
