@@ -29808,33 +29808,6 @@ export type GetLookupTableStructureByIdQuery = (
   )> }
 );
 
-export type GetOutcomeDisplaysQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetOutcomeDisplaysQuery = (
-  { __typename?: 'Query' }
-  & { outcomeDisplays?: Maybe<(
-    { __typename?: 'OutcomeDisplaysConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'OutcomeDisplay' }
-      & Pick<OutcomeDisplay, 'code' | 'detailColumnName' | 'id' | 'pluralTableName' | 'tableName' | 'title'>
-      & { outcomeDisplayTables: (
-        { __typename?: 'OutcomeDisplayTablesConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'OutcomeDisplayTable' }
-          & Pick<OutcomeDisplayTable, 'columnName' | 'id' | 'isTextColumn' | 'title'>
-        )>> }
-      ), outcomeDisplayDetails: (
-        { __typename?: 'OutcomeDisplayDetailsConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'OutcomeDisplayDetail' }
-          & Pick<OutcomeDisplayDetail, 'columnName' | 'elementTypePluginCode' | 'isTextColumn' | 'id' | 'title' | 'parameters'>
-        )>> }
-      ) }
-    )>> }
-  )> }
-);
-
 export type GetReviewDecisionCommentQueryVariables = Exact<{
   reviewDecisionId: Scalars['Int'];
 }>;
@@ -31716,63 +31689,6 @@ export function useGetLookupTableStructureByIdLazyQuery(baseOptions?: Apollo.Laz
 export type GetLookupTableStructureByIdQueryHookResult = ReturnType<typeof useGetLookupTableStructureByIdQuery>;
 export type GetLookupTableStructureByIdLazyQueryHookResult = ReturnType<typeof useGetLookupTableStructureByIdLazyQuery>;
 export type GetLookupTableStructureByIdQueryResult = Apollo.QueryResult<GetLookupTableStructureByIdQuery, GetLookupTableStructureByIdQueryVariables>;
-export const GetOutcomeDisplaysDocument = gql`
-    query getOutcomeDisplays {
-  outcomeDisplays {
-    nodes {
-      code
-      detailColumnName
-      id
-      pluralTableName
-      tableName
-      title
-      outcomeDisplayTables {
-        nodes {
-          columnName
-          id
-          isTextColumn
-          title
-        }
-      }
-      outcomeDisplayDetails {
-        nodes {
-          columnName
-          elementTypePluginCode
-          isTextColumn
-          id
-          title
-          parameters
-        }
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetOutcomeDisplaysQuery__
- *
- * To run a query within a React component, call `useGetOutcomeDisplaysQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetOutcomeDisplaysQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetOutcomeDisplaysQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetOutcomeDisplaysQuery(baseOptions?: Apollo.QueryHookOptions<GetOutcomeDisplaysQuery, GetOutcomeDisplaysQueryVariables>) {
-        return Apollo.useQuery<GetOutcomeDisplaysQuery, GetOutcomeDisplaysQueryVariables>(GetOutcomeDisplaysDocument, baseOptions);
-      }
-export function useGetOutcomeDisplaysLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOutcomeDisplaysQuery, GetOutcomeDisplaysQueryVariables>) {
-          return Apollo.useLazyQuery<GetOutcomeDisplaysQuery, GetOutcomeDisplaysQueryVariables>(GetOutcomeDisplaysDocument, baseOptions);
-        }
-export type GetOutcomeDisplaysQueryHookResult = ReturnType<typeof useGetOutcomeDisplaysQuery>;
-export type GetOutcomeDisplaysLazyQueryHookResult = ReturnType<typeof useGetOutcomeDisplaysLazyQuery>;
-export type GetOutcomeDisplaysQueryResult = Apollo.QueryResult<GetOutcomeDisplaysQuery, GetOutcomeDisplaysQueryVariables>;
 export const GetReviewDecisionCommentDocument = gql`
     query getReviewDecisionComment($reviewDecisionId: Int!) {
   reviewDecision(id: $reviewDecisionId) {
