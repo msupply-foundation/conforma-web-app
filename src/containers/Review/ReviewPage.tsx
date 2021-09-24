@@ -153,14 +153,14 @@ const ReviewPage: React.FC<{
       <div style={{ display: 'flex' }}>
         {isConsolidation ? (
           isAssignedToCurrentUser ? (
-            <ConsolidationByLabel />
+            <ConsolidationByLabel strings={strings} />
           ) : (
-            <ConsolidationByLabel user={thisReview?.reviewer} />
+            <ConsolidationByLabel user={thisReview?.reviewer} strings={strings} />
           )
         ) : isAssignedToCurrentUser ? (
-          <ReviewByLabel />
+          <ReviewByLabel strings={strings} />
         ) : (
-          <ReviewByLabel user={thisReview?.reviewer} />
+          <ReviewByLabel user={thisReview?.reviewer} strings={strings} />
         )}
       </div>
       <div id="application-summary-content">
@@ -241,7 +241,7 @@ const SectionRowStatus: React.FC<SectionState> = (section) => {
       const totalDone = (reviewProgress?.doneConform || 0) + (reviewProgress?.doneNonConform || 0)
       if (totalDone > 0) return <ReviewSectionProgressBar reviewProgress={reviewProgress} />
     }
-    return <ReviewInProgressLabel />
+    return <ReviewInProgressLabel strings={strings} />
   }
   // else: not reviewable
   return null
@@ -316,7 +316,7 @@ const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
     <Segment.Group horizontal id="previous-review">
       <Segment>
         <Header as="h3">{strings.LABEL_PREVIOUS_REVIEW}:</Header>
-        <ReviewByLabel user={review.reviewer} />
+        <ReviewByLabel user={review.reviewer} strings={strings} />
         <Button
           className="button-med"
           as={Link}

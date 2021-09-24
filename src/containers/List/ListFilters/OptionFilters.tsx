@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import { Dropdown, Input } from 'semantic-ui-react'
 import { EnumFilterProps, StaticListFilterProps, SearchableListFilterProps } from './types'
 import { FilterContainer, FilterOptions } from './common'
-import strings from '../../../utils/constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 
 const EnumFilter: React.FC<EnumFilterProps> = ({
   getActiveOptions,
@@ -69,6 +69,7 @@ const SearchableListFilter: React.FC<SearchableListFilterProps> = ({
   title,
   onRemove,
 }) => {
+  const { strings } = useLanguageProvider()
   const [searchValue, setSearchValue] = useState('')
 
   const { query, resultExtractor, variables } = getFilterListQuery({

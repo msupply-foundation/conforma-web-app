@@ -11,7 +11,7 @@ import { ApplicationStatus } from '../../utils/generated/graphql'
 import { checkPageIsAccessible } from '../../utils/helpers/structure'
 import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
 
 const ApplicationPage: React.FC<ApplicationProps> = ({
@@ -20,6 +20,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   strictSectionPage,
   isValidating,
 }) => {
+  const { strings } = useLanguageProvider()
   const {
     query: { serialNumber, sectionCode, page },
     push,

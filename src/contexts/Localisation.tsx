@@ -26,7 +26,7 @@ type LanguageOption = {
   enabled: boolean
 }
 
-type LanguageStrings = { [Property in keyof typeof strings]: string }
+export type LanguageStrings = { [Property in keyof typeof strings]: string }
 
 interface LanguageState {
   languageOptions: LanguageOption[]
