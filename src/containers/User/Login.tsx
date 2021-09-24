@@ -4,7 +4,6 @@ import { useUserState } from '../../contexts/UserState'
 import { Link } from 'react-router-dom'
 import { Form, Button, Container, Icon, Image, Header, List, Dropdown } from 'semantic-ui-react'
 import isLoggedIn from '../../utils/helpers/loginCheck'
-import messages from '../../utils/messages'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { LoginPayload, OrganisationSimple } from '../../utils/types'
@@ -108,7 +107,7 @@ const Login: React.FC = () => {
         </div>
         <Header as="h2" className="centered header-space-around-medium">
           {loginPayload && selectedOrgId === NO_ORG_SELECTED
-            ? messages.LOGIN_WELCOME.replace('%1', loginPayload.user.firstName)
+            ? strings.LOGIN_WELCOME.replace('%1', loginPayload.user.firstName)
             : strings.TITLE_LOGIN}
         </Header>
         <Form>
@@ -163,7 +162,7 @@ const Login: React.FC = () => {
           {loginPayload?.orgList && loginPayload?.orgList?.length > 1 && (
             <>
               <p>
-                <strong>{messages.LOGIN_ORG_SELECT}</strong>
+                <strong>{strings.LOGIN_ORG_SELECT}</strong>
               </p>
               <List
                 celled

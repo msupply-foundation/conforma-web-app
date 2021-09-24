@@ -44,7 +44,6 @@ import useScrollableAttachments, {
 import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
-import messages from '../../utils/messages'
 import { Link } from 'react-router-dom'
 
 const ReviewPage: React.FC<{
@@ -73,6 +72,14 @@ const ReviewPage: React.FC<{
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!fullReviewStructure) return <Loading />
+
+  const messages = {
+    REVIEW_STATUS_PENDING: {
+      title: strings.REVIEW_STATUS_PENDING_TITLE,
+      message: strings.REVIEW_STATUS_PENDING_MESSAGE,
+      option: strings.OK,
+    },
+  }
 
   // TODO decide how to handle this, and localise if not deleted
   if (

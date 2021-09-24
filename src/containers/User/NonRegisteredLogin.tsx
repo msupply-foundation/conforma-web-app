@@ -3,8 +3,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import isLoggedIn from '../../utils/helpers/loginCheck'
 import { attemptLogin } from '../../utils/helpers/attemptLogin'
 import { useUserState } from '../../contexts/UserState'
-import messages from '../../utils/messages'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { LoginPayload } from '../../utils/types'
 
 interface NonRegisteredLoginProps {
@@ -13,6 +12,8 @@ interface NonRegisteredLoginProps {
 }
 
 const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirect }) => {
+  const { strings } = useLanguageProvider()
+
   const [networkError, setNetworkError] = useState('')
   const {
     push,
@@ -48,7 +49,7 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirec
   }
 
   if (networkError) return <p>{networkError}</p>
-  else return <p>{messages.REDIRECT_TO_REGISTRATION}</p>
+  else return <p>{strings.LOGIN_REDIRECT_TO_REGISTRATION}</p>
 }
 
 export default NonRegisteredLogin

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { Table, Message } from 'semantic-ui-react'
-import messages from '../../utils/messages'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
 
@@ -19,6 +19,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   handleSort,
   loading,
 }) => {
+  const { strings } = useLanguageProvider()
   return (
     <>
       <Table sortable stackable selectable>
@@ -61,7 +62,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
       </Table>
       {loading && <Loading />}
       {applications && applications.length === 0 && (
-        <Message floating color="yellow" header={messages.APPLICATIONS_LIST_EMPTY} />
+        <Message floating color="yellow" header={strings.APPLICATIONS_LIST_EMPTY} />
       )}
     </>
   )

@@ -26,7 +26,7 @@ type LanguageOption = {
   enabled: boolean
 }
 
-type LanguageStrings = { [Property in keyof typeof strings]?: string }
+type LanguageStrings = { [Property in keyof typeof strings]: string }
 
 interface LanguageState {
   languageOptions: LanguageOption[]
@@ -45,7 +45,7 @@ const initialContext: {
   setLanguage: Function
   getPluginStrings: Function
 } = {
-  strings: {},
+  strings: {} as LanguageStrings,
   selectedLanguage: initSelectedLanguage,
   languageOptions: [],
   loading: true,
@@ -60,7 +60,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   const [languageState, setLanguageState] = useState<LanguageState>({
     languageOptions: [],
     selectedLanguage: initSelectedLanguage,
-    strings: {},
+    strings: {} as LanguageStrings,
     loading: true,
     error: null,
   })
@@ -88,7 +88,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
       const options = languageOptions.length === 0 ? await getLanguageOptions() : languageOptions
       const selectedLanguage =
         options.find((lang: LanguageOption) => lang.code === languageCode) ?? null
-      const strings = await getLanguageStrings(languageCode)
+      const strings = (await getLanguageStrings(languageCode)) as LanguageStrings
       setLanguageState({
         ...languageState,
         languageOptions: options,

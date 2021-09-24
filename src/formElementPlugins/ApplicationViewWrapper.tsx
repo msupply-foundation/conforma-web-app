@@ -17,13 +17,14 @@ import { Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 import strings from '../utils/constants'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'
-import messages from '../utils/messages'
+import { useLanguageProvider } from '../contexts/Localisation'
 import globalConfig from '../config'
 import { SemanticICONS } from 'semantic-ui-react'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
+  const { strings } = useLanguageProvider()
   const [responseMutation] = useUpdateResponseMutation()
   const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
     props
@@ -196,7 +197,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const {
     isChangeRequest = false,
     isChanged = false,
-    reviewerComment = messages.APPLICATION_OTHER_CHANGES_MADE,
+    reviewerComment = strings.APPLICATION_OTHER_CHANGES_MADE,
   } = changesRequired || {}
 
   const getChangeRequestClassesAndIcon = () => {
