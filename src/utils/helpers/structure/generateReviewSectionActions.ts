@@ -128,10 +128,11 @@ const generateReviewSectionActions: GenerateSectionActions = ({
 
     const totalNewReviewable = section?.consolidationProgress?.totalNewReviewable
 
-    const isAssignedToCurrentUser =
-      reviewer.id === currentUserId && (totalReviewable > 0 || isFinalDecision)
+    const isReviewable =
+      (totalReviewable || 0) > 0 && thisReview?.current.reviewStatus !== ReviewStatus.Discontinued
 
-    const isReviewable = (totalReviewable || 0) > 0
+    const isAssignedToCurrentUser =
+      reviewer.id === currentUserId && (isReviewable || isFinalDecision)
 
     const checkMethodProps = {
       isReviewable,
