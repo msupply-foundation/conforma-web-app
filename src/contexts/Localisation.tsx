@@ -73,7 +73,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     if (selectedLanguageCode === defaultLanguageCode) return defaultPluginStrings
     try {
       const localisedPluginStrings = require(`../${pluginsFolder}/${plugin}/localisation/${selectedLanguageCode}/strings.json`)
-      return processStrings(defaultPluginStrings, localisedPluginStrings)
+      return consolidateStrings(defaultPluginStrings, localisedPluginStrings)
     } catch {
       return defaultPluginStrings
     }
@@ -138,8 +138,7 @@ const getLanguageStrings = async (code: string) => {
   try {
     const fetchedStrings = await getRequest(config.serverREST + '/language/' + code)
     if (fetchedStrings?.error) throw new Error(`Language code: ${code}, ${fetchedStrings?.message}`)
-    // const pluginStrings = getPluginStrings(code)
-    return processStrings(strings, fetchedStrings)
+    return consolidateStrings(strings, fetchedStrings)
   } catch (err) {
     throw err
   }
@@ -157,7 +156,7 @@ const getLanguageOptions = async () => {
 
 // Checks all keys from English master list in remoteStrings, and provide
 // English fallback if missing.
-const processStrings = (refStrings: LanguageStrings, remoteStrings: LanguageStrings) =>
+const consolidateStrings = (refStrings: LanguageStrings, remoteStrings: LanguageStrings) =>
   mapValues(
     refStrings,
     (englishString, key: keyof LanguageStrings) => remoteStrings?.[key] ?? englishString
