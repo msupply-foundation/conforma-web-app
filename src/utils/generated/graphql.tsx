@@ -8167,6 +8167,8 @@ export enum ApplicationStageStatusAllsOrderBy {
   SerialDesc = 'SERIAL_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
+  SessionIdAsc = 'SESSION_ID_ASC',
+  SessionIdDesc = 'SESSION_ID_DESC',
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC',
   OrgIdAsc = 'ORG_ID_ASC',
@@ -8211,6 +8213,8 @@ export type ApplicationStageStatusAllCondition = {
   serial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `name` field. */
   name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `sessionId` field. */
+  sessionId?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `orgId` field. */
@@ -8255,6 +8259,8 @@ export type ApplicationStageStatusAllFilter = {
   serial?: Maybe<StringFilter>;
   /** Filter by the object’s `name` field. */
   name?: Maybe<StringFilter>;
+  /** Filter by the object’s `sessionId` field. */
+  sessionId?: Maybe<StringFilter>;
   /** Filter by the object’s `userId` field. */
   userId?: Maybe<IntFilter>;
   /** Filter by the object’s `orgId` field. */
@@ -8312,6 +8318,7 @@ export type ApplicationStageStatusAll = {
   templateCode?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  sessionId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
@@ -8352,6 +8359,8 @@ export enum ApplicationStageStatusLatestsOrderBy {
   SerialDesc = 'SERIAL_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
+  SessionIdAsc = 'SESSION_ID_ASC',
+  SessionIdDesc = 'SESSION_ID_DESC',
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC',
   OrgIdAsc = 'ORG_ID_ASC',
@@ -8396,6 +8405,8 @@ export type ApplicationStageStatusLatestCondition = {
   serial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `name` field. */
   name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `sessionId` field. */
+  sessionId?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `orgId` field. */
@@ -8440,6 +8451,8 @@ export type ApplicationStageStatusLatestFilter = {
   serial?: Maybe<StringFilter>;
   /** Filter by the object’s `name` field. */
   name?: Maybe<StringFilter>;
+  /** Filter by the object’s `sessionId` field. */
+  sessionId?: Maybe<StringFilter>;
   /** Filter by the object’s `userId` field. */
   userId?: Maybe<IntFilter>;
   /** Filter by the object’s `orgId` field. */
@@ -8497,6 +8510,7 @@ export type ApplicationStageStatusLatest = {
   templateCode?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  sessionId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
@@ -29794,33 +29808,6 @@ export type GetLookupTableStructureByIdQuery = (
   )> }
 );
 
-export type GetOutcomeDisplaysQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetOutcomeDisplaysQuery = (
-  { __typename?: 'Query' }
-  & { outcomeDisplays?: Maybe<(
-    { __typename?: 'OutcomeDisplaysConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'OutcomeDisplay' }
-      & Pick<OutcomeDisplay, 'code' | 'detailColumnName' | 'id' | 'pluralTableName' | 'tableName' | 'title'>
-      & { outcomeDisplayTables: (
-        { __typename?: 'OutcomeDisplayTablesConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'OutcomeDisplayTable' }
-          & Pick<OutcomeDisplayTable, 'columnName' | 'id' | 'isTextColumn' | 'title'>
-        )>> }
-      ), outcomeDisplayDetails: (
-        { __typename?: 'OutcomeDisplayDetailsConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'OutcomeDisplayDetail' }
-          & Pick<OutcomeDisplayDetail, 'columnName' | 'elementTypePluginCode' | 'isTextColumn' | 'id' | 'title' | 'parameters'>
-        )>> }
-      ) }
-    )>> }
-  )> }
-);
-
 export type GetReviewDecisionCommentQueryVariables = Exact<{
   reviewDecisionId: Scalars['Int'];
 }>;
@@ -31702,63 +31689,6 @@ export function useGetLookupTableStructureByIdLazyQuery(baseOptions?: Apollo.Laz
 export type GetLookupTableStructureByIdQueryHookResult = ReturnType<typeof useGetLookupTableStructureByIdQuery>;
 export type GetLookupTableStructureByIdLazyQueryHookResult = ReturnType<typeof useGetLookupTableStructureByIdLazyQuery>;
 export type GetLookupTableStructureByIdQueryResult = Apollo.QueryResult<GetLookupTableStructureByIdQuery, GetLookupTableStructureByIdQueryVariables>;
-export const GetOutcomeDisplaysDocument = gql`
-    query getOutcomeDisplays {
-  outcomeDisplays {
-    nodes {
-      code
-      detailColumnName
-      id
-      pluralTableName
-      tableName
-      title
-      outcomeDisplayTables {
-        nodes {
-          columnName
-          id
-          isTextColumn
-          title
-        }
-      }
-      outcomeDisplayDetails {
-        nodes {
-          columnName
-          elementTypePluginCode
-          isTextColumn
-          id
-          title
-          parameters
-        }
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetOutcomeDisplaysQuery__
- *
- * To run a query within a React component, call `useGetOutcomeDisplaysQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetOutcomeDisplaysQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetOutcomeDisplaysQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetOutcomeDisplaysQuery(baseOptions?: Apollo.QueryHookOptions<GetOutcomeDisplaysQuery, GetOutcomeDisplaysQueryVariables>) {
-        return Apollo.useQuery<GetOutcomeDisplaysQuery, GetOutcomeDisplaysQueryVariables>(GetOutcomeDisplaysDocument, baseOptions);
-      }
-export function useGetOutcomeDisplaysLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOutcomeDisplaysQuery, GetOutcomeDisplaysQueryVariables>) {
-          return Apollo.useLazyQuery<GetOutcomeDisplaysQuery, GetOutcomeDisplaysQueryVariables>(GetOutcomeDisplaysDocument, baseOptions);
-        }
-export type GetOutcomeDisplaysQueryHookResult = ReturnType<typeof useGetOutcomeDisplaysQuery>;
-export type GetOutcomeDisplaysLazyQueryHookResult = ReturnType<typeof useGetOutcomeDisplaysLazyQuery>;
-export type GetOutcomeDisplaysQueryResult = Apollo.QueryResult<GetOutcomeDisplaysQuery, GetOutcomeDisplaysQueryVariables>;
 export const GetReviewDecisionCommentDocument = gql`
     query getReviewDecisionComment($reviewDecisionId: Int!) {
   reviewDecision(id: $reviewDecisionId) {

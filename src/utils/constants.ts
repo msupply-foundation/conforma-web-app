@@ -179,6 +179,7 @@ export default {
   TITLE_LOGIN: 'Login',
   TITLE_APPLICATION_FORM: 'application form',
   TITLE_APPLICATION_SUMMARY: 'Review and Submit',
+  TITLE_APPLICATION_COMPLETED: 'Completed application',
   TITLE_DETAILS: 'Details',
   TITLE_INTRODUCTION: 'Introduction',
   TITLE_REVIEW_COMMENT: 'Overall comment',
@@ -287,4 +288,10 @@ export default {
   TEMPLATE_BUTTON_SAVE: 'Save',
   TEMPLATE_BUTTON_ADD: 'Add',
   TEMPLATE_APPEARS_IN: 'Appears in',
+  OUTCOMES_TABLE_PAGINATION_TEXT: 'Items per page',
+  APP_LINK_LINKED_APPLICATIONS: 'Linked Applications',
+  APP_LINK_NAME: 'Name',
+  APP_LINK_SERIAL: 'Serial',
+  APP_LINK_TYPE: 'Application Type',
+  APP_LINK_COMPLETED: 'Date Completed',
 }

@@ -14,18 +14,12 @@ import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { Link } from 'react-router-dom'
-import {
-  OrganisationSimple,
-  User,
-  LoginPayload,
-  TemplateInList,
-  OutcomeDisplay,
-} from '../../utils/types'
+import { OrganisationSimple, User, LoginPayload, TemplateInList } from '../../utils/types'
 import useListTemplates from '../../utils/hooks/useListTemplates'
+import { useOutcomesList } from '../../utils/hooks/useOutcomes'
 import { useRouter } from '../../utils/hooks/useRouter'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
-import OutcomeDisplaysContext, { useOutcomeDisplayState } from '../Outcomes/contexts/outcomesState'
 import { UiLocation } from '../../utils/generated/graphql'
 const brandLogo = require('../../../images/brand_logo.png').default
 
@@ -38,6 +32,7 @@ const UserArea: React.FC = () => {
   const {
     templatesData: { templates },
   } = useListTemplates(templatePermissions, false)
+  const { outcomesList } = useOutcomesList()
 
   if (!currentUser || currentUser?.username === strings.USER_NONREGISTERED) return null
 
@@ -45,9 +40,7 @@ const UserArea: React.FC = () => {
     <Container id="user-area" fluid>
       <BrandArea />
       <div id="user-area-left">
-        <OutcomeDisplaysContext>
-          <MainMenuBar templates={templates} />
-        </OutcomeDisplaysContext>
+        <MainMenuBar templates={templates} outcomes={outcomesList} />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
       <UserMenu
@@ -61,6 +54,7 @@ const UserArea: React.FC = () => {
 }
 interface MainMenuBarProps {
   templates: TemplateInList[]
+  outcomes: { tableName: string; title: string; code: string }[]
 }
 interface DropdownsState {
   dashboard: { active: boolean }
@@ -68,7 +62,7 @@ interface DropdownsState {
   outcomes: { active: boolean; selection: string }
   admin: { active: boolean; selection: string }
 }
-const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
+const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, outcomes }) => {
   const { strings } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
@@ -87,11 +81,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates }) => {
     setDropDownsState((currState) => getNewDropdownsState(basepath, currState))
   }, [pathname])
 
-  const outcomeDisplayState = useOutcomeDisplayState()
-  const outcomes =
-    (outcomeDisplayState?.outcomeDisplaysStructure?.outcomeDisplays as OutcomeDisplay[]) || []
-
-  const outcomeOptions = outcomes.map(({ code, title, tableName }): any => ({
+  const outcomeOptions = outcomes.map(({ code, title, tableName }) => ({
     key: code,
     text: title,
     value: tableName,

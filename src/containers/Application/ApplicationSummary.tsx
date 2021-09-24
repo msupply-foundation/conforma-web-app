@@ -80,16 +80,31 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     stages,
     responsesByCode,
     info: {
+      name,
       serial,
       current: { status },
       isChangeRequest,
     },
   } = fullStructure
+
+  const isCompleted = status === ApplicationStatus.Completed
+
   return (
     <Container id="application-summary">
       <div id="application-summary-header">
-        <Header as="h2" textAlign="center" content={strings.TITLE_APPLICATION_SUMMARY} />
-        <p className="center-text">{strings.SUBTITLE_APPLICATION_SUMMARY}</p>
+        <Header
+          as="h2"
+          textAlign="center"
+          content={
+            isCompleted ? strings.TITLE_APPLICATION_COMPLETED : strings.TITLE_APPLICATION_SUMMARY
+          }
+          subheader={
+            <Header.Subheader
+              className="center-text"
+              content={isCompleted ? name : strings.SUBTITLE_APPLICATION_SUMMARY}
+            />
+          }
+        />
       </div>
       <div id="application-summary-content">
         <div id="application-sections">
