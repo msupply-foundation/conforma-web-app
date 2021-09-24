@@ -5,6 +5,7 @@ import { attemptLogin } from '../../utils/helpers/attemptLogin'
 import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { LoginPayload } from '../../utils/types'
+import config from '../../config'
 
 interface NonRegisteredLoginProps {
   option: 'register' | 'reset-password' | 'redirect'
@@ -31,7 +32,7 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirec
     // form or reset password
 
     attemptLogin({
-      username: strings.USER_NONREGISTERED,
+      username: config.nonRegisteredUser,
       password: '',
       sessionId,
       onLoginSuccess,

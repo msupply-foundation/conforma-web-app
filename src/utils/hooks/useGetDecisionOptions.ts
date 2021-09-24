@@ -1,30 +1,30 @@
 import { useState, useEffect } from 'react'
 import { Decision, ReviewStatus } from '../generated/graphql'
 import strings from '../constants'
-import { AssignmentDetails, DecisionOption, ReviewAssignment, ReviewDetails } from '../types'
+import { DecisionOption, ReviewAssignment, ReviewDetails } from '../types'
 
 const initilDecisionOptions: DecisionOption[] = [
   {
     code: Decision.ListOfQuestions,
-    title: strings[Decision.ListOfQuestions],
+    title: strings.DECISION_LIST_OF_QUESTIONS,
     isVisible: false,
     value: false,
   },
   {
     code: Decision.NonConform,
-    title: strings[Decision.NonConform],
+    title: strings.DECISION_NON_CONFORM,
     isVisible: false,
     value: false,
   },
   {
     code: Decision.Conform,
-    title: strings[Decision.Conform],
+    title: strings.DECISION_CONFORM,
     isVisible: false,
     value: false,
   },
   {
     code: Decision.ChangesRequested,
-    title: strings[Decision.ChangesRequested],
+    title: strings.DECISION_CHANGES_REQUESTED,
     isVisible: false,
     value: false,
   },

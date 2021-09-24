@@ -6,7 +6,7 @@ import OperationContext, { useOperationState } from './shared/OperationContext'
 import { snapshotFilesUrl } from './shared/OperationContextHelpers'
 import TextIO from './shared/TextIO'
 import useGetTemplates, { Template } from './useGetTemplates'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 
 type CellPropsTemplate = Template & { numberOfTemplates?: number }
@@ -130,6 +130,7 @@ const TemplatesWrapper: React.FC = () => (
 )
 
 const Templates: React.FC = () => {
+  const { strings } = useLanguageProvider()
   const [selectedRow, setSelectedRow] = useState(-1)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { templates, refetch } = useGetTemplates()

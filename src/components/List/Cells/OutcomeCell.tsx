@@ -4,10 +4,8 @@ import { Label, SemanticCOLORS, SemanticICONS } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { ApplicationOutcome } from '../../../utils/generated/graphql'
 
-const OutcomeCell: React.FC<CellProps> = ({ application }) => {
+const useOutcomeDisplayMap = () => {
   const { strings } = useLanguageProvider()
-  const { outcome } = application
-
   const outcomeDisplayMap: {
     [key in ApplicationOutcome]: { icon: SemanticICONS; color: SemanticCOLORS; text: string }
   } = {
@@ -17,6 +15,12 @@ const OutcomeCell: React.FC<CellProps> = ({ application }) => {
     EXPIRED: { icon: 'time', color: 'orange', text: strings.OUTCOME_EXPIRED },
     WITHDRAWN: { icon: 'user cancel', color: 'yellow', text: strings.OUTCOME_WITHDRAWN },
   }
+  return outcomeDisplayMap
+}
+
+const OutcomeCell: React.FC<CellProps> = ({ application }) => {
+  const outcomeDisplayMap = useOutcomeDisplayMap()
+  const { outcome } = application
 
   if (outcome === ApplicationOutcome.Pending) return null
   // Only show label if no longer in progress

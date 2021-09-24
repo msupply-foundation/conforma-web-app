@@ -24,7 +24,6 @@ import { UiLocation } from '../../utils/generated/graphql'
 const brandLogo = require('../../../images/brand_logo.png').default
 
 const UserArea: React.FC = () => {
-  const { strings } = useLanguageProvider()
   const {
     userState: { currentUser, orgList, templatePermissions },
     onLogin,
@@ -34,7 +33,7 @@ const UserArea: React.FC = () => {
   } = useListTemplates(templatePermissions, false)
   const { outcomesList } = useOutcomesList()
 
-  if (!currentUser || currentUser?.username === strings.USER_NONREGISTERED) return null
+  if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
 
   return (
     <Container id="user-area" fluid>

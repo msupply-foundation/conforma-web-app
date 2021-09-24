@@ -14,10 +14,11 @@ import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
 import PaginationBar from '../../components/List/Pagination'
 import ListFilters from './ListFilters/ListFilters'
-import { APPLICATION_FILTERS } from '../../utils/data/applicationFilters'
+import { useApplicationFilters } from '../../utils/data/applicationFilters'
 
 const ListWrapper: React.FC = () => {
   const { strings } = useLanguageProvider()
+  const APPLICATION_FILTERS = useApplicationFilters()
   const { query, updateQuery } = useRouter()
   const { type, userRole } = query
   const {
@@ -136,7 +137,7 @@ const ListWrapper: React.FC = () => {
           loading={loading}
         />
       )}
-      <PaginationBar totalCount={applicationCount} />
+      <PaginationBar totalCount={applicationCount} strings={strings} />
     </div>
   )
 }

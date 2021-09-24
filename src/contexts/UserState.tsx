@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useReducer } from 'react'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
-import { useRouter } from '../utils/hooks/useRouter'
 import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
-import strings from '../utils/constants'
+import config from '../config'
 
 type UserState = {
   currentUser: User | null
@@ -51,7 +50,7 @@ const reducer = (state: UserState, action: UserActions) => {
         templatePermissions: newPermissions,
         orgList: newOrgList,
         isAdmin: newIsAdmin,
-        isNonRegistered: newUser.username === strings.USER_NONREGISTERED,
+        isNonRegistered: newUser.username === config.nonRegisteredUser,
       }
     case 'setLoading':
       const { isLoading } = action

@@ -4,7 +4,7 @@ import { Container, Message } from 'semantic-ui-react'
 import { Loading, NoMatch, ReviewContainer } from '../../components'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { useRouter } from '../../utils/hooks/useRouter'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 import ReviewPage from './ReviewPage'
 import { getPreviousStageAssignment } from '../../utils/helpers/assignment/getPreviousStageAssignment'
@@ -13,6 +13,7 @@ const ReviewPageWrapper: React.FC<{
   structure: FullStructure
   reviewAssignments: AssignmentDetails[]
 }> = ({ structure, reviewAssignments }) => {
+  const { strings } = useLanguageProvider()
   const {
     query: { reviewId },
     match: { path },

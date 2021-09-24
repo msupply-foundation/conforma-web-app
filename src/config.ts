@@ -13,6 +13,7 @@ const config = {
   version: 'dev',
   defaultLanguageCode: 'default',
   pluginsFolder: 'formElementPlugins',
+  nonRegisteredUser: 'nonRegistered',
 }
 
 export default config
