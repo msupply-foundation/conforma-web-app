@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import config from '../config'
-import strings from '../utils/constants'
+import strings from '../utils/languageStrings'
 import { getRequest } from '../utils/helpers/fetchMethods'
 import { mapValues } from 'lodash'
 

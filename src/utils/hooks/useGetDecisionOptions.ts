@@ -1,34 +1,36 @@
 import { useState, useEffect } from 'react'
 import { Decision, ReviewStatus } from '../generated/graphql'
-import strings from '../constants'
+import { LanguageStrings, useLanguageProvider } from '../../contexts/Localisation'
 import { DecisionOption, ReviewAssignment, ReviewDetails } from '../types'
 
-const initilDecisionOptions: DecisionOption[] = [
-  {
-    code: Decision.ListOfQuestions,
-    title: strings.DECISION_LIST_OF_QUESTIONS,
-    isVisible: false,
-    value: false,
-  },
-  {
-    code: Decision.NonConform,
-    title: strings.DECISION_NON_CONFORM,
-    isVisible: false,
-    value: false,
-  },
-  {
-    code: Decision.Conform,
-    title: strings.DECISION_CONFORM,
-    isVisible: false,
-    value: false,
-  },
-  {
-    code: Decision.ChangesRequested,
-    title: strings.DECISION_CHANGES_REQUESTED,
-    isVisible: false,
-    value: false,
-  },
-]
+const getInitialDecisionOptions = (strings: LanguageStrings): DecisionOption[] => {
+  return [
+    {
+      code: Decision.ListOfQuestions,
+      title: strings.DECISION_LIST_OF_QUESTIONS,
+      isVisible: false,
+      value: false,
+    },
+    {
+      code: Decision.NonConform,
+      title: strings.DECISION_NON_CONFORM,
+      isVisible: false,
+      value: false,
+    },
+    {
+      code: Decision.Conform,
+      title: strings.DECISION_CONFORM,
+      isVisible: false,
+      value: false,
+    },
+    {
+      code: Decision.ChangesRequested,
+      title: strings.DECISION_CHANGES_REQUESTED,
+      isVisible: false,
+      value: false,
+    },
+  ]
+}
 
 // hook used to manage state of options shown in review submit, as per type definition below
 type UseGetDecisionOptions = (
@@ -43,8 +45,11 @@ type UseGetDecisionOptions = (
 }
 
 const useGetDecisionOptions: UseGetDecisionOptions = (assignment, thisReview) => {
+  const { strings } = useLanguageProvider()
   const { isLastLevel, isFinalDecision, canSubmitReviewAs } = assignment as ReviewAssignment
-  const [decisionOptions, setDecisionOptions] = useState<DecisionOption[]>(initilDecisionOptions)
+  const [decisionOptions, setDecisionOptions] = useState<DecisionOption[]>(
+    getInitialDecisionOptions(strings)
+  )
   const [isDecisionError, setIsDecisionError] = useState(false)
 
   const isDraft = thisReview?.current.reviewStatus === ReviewStatus.Draft

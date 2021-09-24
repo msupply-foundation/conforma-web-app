@@ -29,7 +29,7 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
  * - @returns Object with each Column details to construct header and rows of applications list.s
  */
 
-const useAllColumns = () => {
+export const useMapColumnsByRole = () => {
   const { strings } = useLanguageProvider()
   const allColumns: { [key in APPLICATION_COLUMNS]: ColumnDetails } = {
     SERIAL_NUMBER: {
@@ -98,11 +98,10 @@ const useAllColumns = () => {
       ColumnComponent: ApplicantActionCell,
     },
   }
-  return allColumns
-}
 
-export default (userRoles: USER_ROLES): Array<ColumnDetails> => {
-  const allColumns = useAllColumns()
-  const columns: Array<ColumnDetails> = COLUMNS_PER_ROLE[userRoles].map((key) => allColumns[key])
-  return columns
+  const mapColumnsByRole = (userRoles: USER_ROLES): Array<ColumnDetails> => {
+    const columns: Array<ColumnDetails> = COLUMNS_PER_ROLE[userRoles].map((key) => allColumns[key])
+    return columns
+  }
+  return mapColumnsByRole
 }

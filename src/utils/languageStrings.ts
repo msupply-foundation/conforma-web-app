@@ -1,5 +1,3 @@
-import { Decision } from './generated/graphql'
-
 export default {
   APP_NAME: 'mFlow',
   APP_NAME_SUBHEADER: 'Application Manager',

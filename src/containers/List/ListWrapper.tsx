@@ -7,7 +7,7 @@ import useListApplications from '../../utils/hooks/useListApplications'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { findUserRole, checkExistingUserRole } from '../../utils/helpers/list/findUserRole'
 import { useUserState } from '../../contexts/UserState'
-import mapColumnsByRole from '../../utils/helpers/list/mapColumnsByRole'
+import { useMapColumnsByRole } from '../../utils/helpers/list/mapColumnsByRole'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
@@ -19,6 +19,7 @@ import { useApplicationFilters } from '../../utils/data/applicationFilters'
 const ListWrapper: React.FC = () => {
   const { strings } = useLanguageProvider()
   const APPLICATION_FILTERS = useApplicationFilters()
+  const mapColumnsByRole = useMapColumnsByRole()
   const { query, updateQuery } = useRouter()
   const { type, userRole } = query
   const {
