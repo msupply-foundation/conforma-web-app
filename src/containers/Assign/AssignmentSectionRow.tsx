@@ -58,21 +58,31 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     return assignment.isLastLevel
   }
 
+  const selectedReviewer = assignmentOptions.options.find(
+    ({ value }) => value === assignmentOptions.selected
+  )
+
   return (
     <Grid className="section-single-row-box-container">
       <Grid.Row>
         <Grid.Column className="centered-flex-box-row">
-          <Label
-            className="simple-label"
-            content={isReassignment ? strings.LABEL_UNASSIGN_FROM : strings.LABEL_REVIEWER}
-          />
-          <AssigneeDropdown
-            assignmentError={assignmentError}
-            assignmentOptions={assignmentOptions}
-            checkIsLastLevel={isLastLevel}
-            onAssignment={onAssignment}
-            shouldAssignState={shouldAssignState}
-          />
+          {isReassignment ? (
+            <>
+              <Label className="simple-label" content={strings.LABEL_UNASSIGN_FROM} />
+              <Label content={selectedReviewer?.text} />
+            </>
+          ) : (
+            <>
+              <Label className="simple-label" content={strings.LABEL_REVIEWER} />
+              <AssigneeDropdown
+                assignmentError={assignmentError}
+                assignmentOptions={assignmentOptions}
+                checkIsLastLevel={isLastLevel}
+                onAssignment={onAssignment}
+                shouldAssignState={shouldAssignState}
+              />
+            </>
+          )}
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>
