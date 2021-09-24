@@ -255,4 +255,10 @@ export default {
   TEMPLATE_BUTTON_SAVE: 'Save',
   TEMPLATE_BUTTON_ADD: 'Add',
   TEMPLATE_APPEARS_IN: 'Appears in',
+  OUTCOMES_TABLE_PAGINATION_TEXT: 'Items per page',
+  APP_LINK_LINKED_APPLICATIONS: 'Linked Applications',
+  APP_LINK_NAME: 'Name',
+  APP_LINK_SERIAL: 'Serial',
+  APP_LINK_TYPE: 'Application Type',
+  APP_LINK_COMPLETED: 'Date Completed',
 }
