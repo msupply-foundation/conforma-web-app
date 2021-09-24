@@ -31852,7 +31852,7 @@ export const ReasignReviewAssignmentDocument = gql`
       ...ReviewAssignment
     }
   }
-  unassignmentUpdate: updateReviewAssignment(input: {id: $unassignmentId, patch: {status: AVAILABLE, isLocked: true}}) {
+  unassignmentUpdate: updateReviewAssignment(input: {id: $unassignmentId, patch: {status: AVAILABLE, isLocked: true, trigger: ON_REVIEW_UNASSIGN}}) {
     reviewAssignment {
       ...ReviewAssignment
     }
