@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom'
 import { Icon, Progress } from 'semantic-ui-react'
 import { ApplicationStatus } from '../../../utils/generated/graphql'
 import { CellProps } from '../../../utils/types'
-import enumsToLocalStrings from '../../../utils/data/enumsToLocalisedStrings'
-import strings from '../../../utils/constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
 
 const StatusCell: React.FC<CellProps> = ({ application }) => {
+  const { strings } = useLanguageProvider()
+  const { Status } = useLocalisedEnums()
   const { serial, status } = application
   switch (status) {
     case ApplicationStatus.ChangesRequired:
@@ -43,7 +45,7 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
       console.log('Problem getting status of application serial ', serial)
       return null
     default:
-      return <p>{enumsToLocalStrings[status as ApplicationStatus]}</p>
+      return <p>{Status[status as ApplicationStatus]}</p>
   }
 }
 
