@@ -90,8 +90,6 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, appli
 
   if (error) return <Message error header={strings.ERROR_APPLICATION_DELETE} list={[error]} />
 
-  if (loading) return <Loading />
-
   return (
     <Table.Row key={`ApplicationList-application-${application.id}`} className="list-row">
       {columns.map(({ ColumnComponent }, index) => (
