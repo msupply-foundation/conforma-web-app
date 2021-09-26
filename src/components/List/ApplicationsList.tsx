@@ -12,6 +12,7 @@ interface ApplicationsListProps {
   sortQuery: SortQuery
   handleSort: Function
   loading: boolean
+  refetch: Function
 }
 
 const ApplicationsList: React.FC<ApplicationsListProps> = ({
@@ -20,6 +21,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   sortQuery: { sortColumn, sortDirection },
   handleSort,
   loading,
+  refetch,
 }) => {
   return (
     <>
@@ -48,7 +50,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
           ) : (
             applications.map((application, index) => {
               const rowProps = {
-                index,
+                refetch,
                 columns,
                 application,
               }
@@ -70,15 +72,15 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
 }
 
 interface ApplicationRowProps {
-  index: number
+  refetch: Function
   columns: Array<ColumnDetails>
   application: ApplicationListRow
 }
 
-const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application }) => {
-  const [isDeleted, setIsDeleted] = useState<boolean>(false)
-  const [deleteApplication, { data, loading, error }] = useDeleteApplicationMutation({
+const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, application }) => {
+  const [deleteApplication, { loading, error }] = useDeleteApplicationMutation({
     variables: { id: application.id || 0 },
+    onCompleted: () => refetch(),
   })
   const props = {
     application,
@@ -86,13 +88,11 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application })
     deleteApplication,
   }
 
-  useEffect(() => {
-    if (data) setIsDeleted(true)
-  }, [data])
-
   if (error) return <Message error header={strings.ERROR_APPLICATION_DELETE} list={[error]} />
 
-  return isDeleted ? null : (
+  if (loading) return <Loading />
+
+  return (
     <Table.Row key={`ApplicationList-application-${application.id}`} className="list-row">
       {columns.map(({ ColumnComponent }, index) => (
         <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>

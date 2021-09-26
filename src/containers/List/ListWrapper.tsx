@@ -34,7 +34,7 @@ const ListWrapper: React.FC = () => {
     return null
   }
 
-  const { error, loading, applications, applicationCount } = useListApplications(query)
+  const { error, loading, refetch, applications, applicationCount } = useListApplications(query)
 
   useEffect(() => {
     if (!templatePermissions) return
@@ -133,6 +133,7 @@ const ListWrapper: React.FC = () => {
           sortQuery={sortQuery}
           handleSort={handleSort}
           loading={loading}
+          refetch={refetch}
         />
       )}
       <PaginationBar totalCount={applicationCount} />
