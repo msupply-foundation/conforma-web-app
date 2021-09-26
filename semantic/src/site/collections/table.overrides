@@ -3,7 +3,8 @@
 *******************************/
 
 // For ApplicationList page
-#list-container {
+#list-container,
+#linked-applications-container {
   .ui.table {
     border-collapse: separate;
     border-spacing: 0 10px;
