@@ -46,7 +46,6 @@ const useGetApplicationStructure = ({
   const [firstRunProcessValidation, setFirstRunProcessValidation] = useState(
     firstRunValidation && structure.info.current?.status === ApplicationStatus.Draft
   )
-
   const [lastRefetchedTimestamp, setLastRefetchedTimestamp] = useState<number>(0)
   const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState<number>(0)
 

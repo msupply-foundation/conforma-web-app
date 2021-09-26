@@ -12,6 +12,7 @@ export default gql`
     submissionMessage
     version
     icon
+    languageStrings
     templateCategory {
       id
       code

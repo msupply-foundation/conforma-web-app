@@ -21,6 +21,7 @@ export default gql`
         name
         templateCode
         templateName
+        languageStrings
         applicant
         orgName
         stage

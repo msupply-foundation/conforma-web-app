@@ -6,12 +6,15 @@ import { useGetApplicationListQuery, ApplicationListShape } from '../../utils/ge
 import { BasicStringObject } from '../types'
 import { useUserState } from '../../contexts/UserState'
 import { useApplicationFilters } from '../data/applicationFilters'
+import { useLanguageProvider } from '../../contexts/Localisation'
+import replaceLocalisedStrings from '../helpers/structure/replaceLocalisedStrings'
 
 const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicStringObject) => {
   const APPLICATION_FILTERS = useApplicationFilters()
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
   const [applicationCount, setApplicationCount] = useState<number>(0)
   const [error, setError] = useState('')
+  const { selectedLanguage } = useLanguageProvider()
   const { updateQuery } = useRouter()
   const {
     userState: { currentUser },
@@ -52,7 +55,9 @@ const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicSt
       return
     }
     if (data?.applicationList) {
-      const applicationsList = data?.applicationList?.nodes
+      const applicationsList = (data?.applicationList?.nodes).map((application) =>
+        replaceLocalisedStrings(application, application?.languageStrings, selectedLanguage.code)
+      )
       setApplications(applicationsList as ApplicationListShape[])
       setApplicationCount(data?.applicationList?.totalCount)
     }

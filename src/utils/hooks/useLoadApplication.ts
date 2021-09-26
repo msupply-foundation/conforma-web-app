@@ -11,7 +11,6 @@ import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
 import { EvaluatorParameters } from '../types'
 import {
-  Application,
   ApplicationStageStatusAll,
   ApplicationStatus,
   Organisation,
@@ -26,13 +25,14 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import { buildSectionsStructure } from '../helpers/structure'
 import config from '../../config'
 import { getSectionDetails } from '../helpers/application/getSectionsDetails'
+import replaceLocalisedStrings from '../../utils/helpers/structure/replaceLocalisedStrings'
 
 const graphQLEndpoint = config.serverGraphQL
 
 const MAX_REFETCH = 10
 
 const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
-  const { strings } = useLanguageProvider()
+  const { strings, selectedLanguage } = useLanguageProvider()
   const [isLoading, setIsLoading] = useState(true)
   const [structureError, setStructureError] = useState('')
   const [structure, setFullStructure] = useState<FullStructure>()
@@ -56,7 +56,22 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     }
     if (!data) return
 
-    const application = data.applicationBySerial as Application
+    const templateLanguageStrings = data?.applicationBySerial?.template?.languageStrings
+
+    if (!templateLanguageStrings) {
+      setStructureError('Missing localisation strings')
+      return
+    }
+
+    const translatedData = replaceLocalisedStrings(
+      data,
+      templateLanguageStrings,
+      selectedLanguage.code
+    )
+
+    console.log('translatedData', translatedData)
+
+    const application = translatedData.applicationBySerial
 
     // No unexpected error - just a application not accessible to user (Show 404 page)
     if (!application) {
@@ -88,7 +103,8 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     const sections = (application?.template?.templateSections?.nodes || []) as TemplateSection[]
     const sectionDetails = getSectionDetails(sections)
 
-    const stages = data.applicationStageStatusLatests?.nodes as ApplicationStageStatusAll[]
+    const stages = translatedData.applicationStageStatusLatests
+      ?.nodes as ApplicationStageStatusAll[]
     if (stages.length > 1) console.log('StageStatusAll More than one results for 1 application!')
     const {
       stageId,

@@ -10,8 +10,10 @@ import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
 import { EvaluatorParameters } from '../types'
 import { getTemplateSections } from '../helpers/application/getSectionsDetails'
-import { TemplateDetails } from '../types'
+import { TemplateDetails, CustomLanguageStrings } from '../types'
+import replaceLocalisedStrings from '../helpers/structure/replaceLocalisedStrings'
 import config from '../../config'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 const graphQLEndpoint = config.serverGraphQL
 
@@ -21,6 +23,7 @@ interface UseLoadTemplateProps {
 
 const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
   const [template, setTemplate] = useState<TemplateDetails>()
+  const { selectedLanguage } = useLanguageProvider()
   const [error, setError] = useState('')
   const {
     userState: { currentUser },
@@ -48,7 +51,13 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
       return
     }
 
-    const template = data?.templates?.nodes[0] as Template
+    const unprocessedTemplate = data?.templates?.nodes[0] as Template
+    const { languageStrings } = unprocessedTemplate
+    const template = replaceLocalisedStrings(
+      unprocessedTemplate,
+      languageStrings,
+      selectedLanguage.code
+    )
 
     error = checkForTemplateSectionErrors(template)
     if (error) {
@@ -90,6 +99,7 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
         elementsDefaults,
         sections,
         startMessage,
+        languageStrings,
       })
     })
   }, [data, currentUser])

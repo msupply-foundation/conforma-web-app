@@ -37,6 +37,7 @@ export {
   ColumnDetails,
   ContextApplicationState,
   CurrentPage,
+  CustomLanguageStrings,
   DecisionOption,
   ElementBase,
   ElementsById,
@@ -493,6 +494,8 @@ interface StageDetails {
   description?: string
 }
 
+type CustomLanguageStrings = { [key: string]: { [key: string]: string } }
+
 interface TemplateCategoryDetails {
   title: string
   icon: SemanticICONS | undefined
@@ -523,6 +526,7 @@ interface TemplateDetails {
   elementsDefaults?: EvaluatorNode[]
   sections?: SectionDetails[] // TODO: Change to not optional after re-structure
   startMessage?: string
+  languageStrings?: CustomLanguageStrings
 }
 
 interface TemplatePermissions {

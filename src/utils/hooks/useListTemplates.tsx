@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { SemanticICONS } from 'semantic-ui-react'
+import { useLanguageProvider } from '../../contexts/Localisation'
+import translate from '../../utils/helpers/structure/replaceLocalisedStrings'
 import {
   Filter,
   PermissionPolicyType,
@@ -26,6 +28,7 @@ const emptyTemplateData = {
 
 const useListTemplates = (templatePermissions: TemplatePermissions, isLoading: boolean) => {
   const [templatesData, setTemplatesData] = useState<TemplatesData>(emptyTemplateData)
+  const { selectedLanguage } = useLanguageProvider()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
 
@@ -41,9 +44,11 @@ const useListTemplates = (templatePermissions: TemplatePermissions, isLoading: b
     }
 
     if (data?.templates?.nodes) {
-      const filteredTemplates = (data?.templates?.nodes || []).filter(
-        (template) => templatePermissions[String(template?.code)]
-      ) as Template[]
+      const filteredTemplates = (data?.templates?.nodes || [])
+        .filter((template) => templatePermissions[String(template?.code)])
+        .map((template) =>
+          translate(template, template?.languageStrings, selectedLanguage.code)
+        ) as Template[]
       if (filteredTemplates.length === 0) {
         setTemplatesData(emptyTemplateData)
         return setLoading(false)
