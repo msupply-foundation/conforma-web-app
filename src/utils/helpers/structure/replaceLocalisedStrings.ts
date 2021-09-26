@@ -15,16 +15,19 @@ const replaceLocalisedStrings = <T>(
 ): T =>
   mapValuesDeep(inputObject, (value: any, key: string) => {
     if (typeof value !== 'string') return value
-    if (!value.match(matchExpression)) return value
-    const keyName = value.replace(matchExpression, '$1')
-    // Try and replace with preferred lanuage
-    if (strings?.[languageCode]?.[keyName]) return strings?.[languageCode]?.[keyName]
-    // Else try and replace with default language
-    if (strings?.[config.defaultLanguageCode]?.[keyName])
-      return strings?.[config.defaultLanguageCode]?.[keyName]
-    // Else return error string
-    console.log(value.match(matchExpression))
-    return 'STRING KEY NOT FOUND'
+    const matches = value.match(matchExpression)
+    if (!matches) return value
+
+    const keyNames = matches.map((m) => m.replace(matchExpression, '$1'))
+    let translatedString = value
+    matches.forEach((match, index) => {
+      const replacement =
+        strings?.[languageCode]?.[keyNames[index]] ??
+        strings?.[config.defaultLanguageCode]?.[keyNames[index]] ??
+        'STRING KEY NOT FOUND'
+      translatedString = translatedString.replace(match, replacement)
+    })
+    return translatedString
   })
 
 export default replaceLocalisedStrings
