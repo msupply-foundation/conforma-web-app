@@ -11,7 +11,7 @@ import { useUserState } from '../../contexts/UserState'
 import { EvaluatorParameters } from '../types'
 import { getTemplateSections } from '../helpers/application/getSectionsDetails'
 import { TemplateDetails, CustomLanguageStrings } from '../types'
-import replaceLocalisedStrings from '../helpers/structure/replaceLocalisedStrings'
+import translate from '../helpers/structure/replaceLocalisedStrings'
 import config from '../../config'
 import { useLanguageProvider } from '../../contexts/Localisation'
 
@@ -53,11 +53,7 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
 
     const unprocessedTemplate = data?.templates?.nodes[0] as Template
     const { languageStrings } = unprocessedTemplate
-    const template = replaceLocalisedStrings(
-      unprocessedTemplate,
-      languageStrings,
-      selectedLanguage.code
-    )
+    const template = translate(unprocessedTemplate, languageStrings, selectedLanguage.code)
 
     error = checkForTemplateSectionErrors(template)
     if (error) {

@@ -7,7 +7,7 @@ import { BasicStringObject } from '../types'
 import { useUserState } from '../../contexts/UserState'
 import { useApplicationFilters } from '../data/applicationFilters'
 import { useLanguageProvider } from '../../contexts/Localisation'
-import replaceLocalisedStrings from '../helpers/structure/replaceLocalisedStrings'
+import translate from '../helpers/structure/replaceLocalisedStrings'
 
 const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicStringObject) => {
   const APPLICATION_FILTERS = useApplicationFilters()
@@ -56,7 +56,7 @@ const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicSt
     }
     if (data?.applicationList) {
       const applicationsList = (data?.applicationList?.nodes).map((application) =>
-        replaceLocalisedStrings(application, application?.languageStrings, selectedLanguage.code)
+        translate(application, application?.languageStrings, selectedLanguage.code)
       )
       setApplications(applicationsList as ApplicationListShape[])
       setApplicationCount(data?.applicationList?.totalCount)

@@ -25,7 +25,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import { buildSectionsStructure } from '../helpers/structure'
 import config from '../../config'
 import { getSectionDetails } from '../helpers/application/getSectionsDetails'
-import replaceLocalisedStrings from '../../utils/helpers/structure/replaceLocalisedStrings'
+import translate from '../../utils/helpers/structure/replaceLocalisedStrings'
 
 const graphQLEndpoint = config.serverGraphQL
 
@@ -63,13 +63,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       return
     }
 
-    const translatedData = replaceLocalisedStrings(
-      data,
-      templateLanguageStrings,
-      selectedLanguage.code
-    )
-
-    console.log('translatedData', translatedData)
+    const translatedData = translate(data, templateLanguageStrings, selectedLanguage.code)
 
     const application = translatedData.applicationBySerial
 

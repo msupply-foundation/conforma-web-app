@@ -11,9 +11,9 @@ const replaceLocalisedStrings = <T>(
   inputObject: T,
   strings: CustomLanguageStrings,
   languageCode: string,
-  matchExpression: RegExp = /^strings\.([A-Z0-9_]+)$/gm
-): T => {
-  const newObject = mapValuesDeep(inputObject, (value: any, key: string) => {
+  matchExpression: RegExp = /strings\.([A-Z0-9_]+)/gm
+): T =>
+  mapValuesDeep(inputObject, (value: any, key: string) => {
     if (typeof value !== 'string') return value
     if (!value.match(matchExpression)) return value
     const keyName = value.replace(matchExpression, '$1')
@@ -23,9 +23,8 @@ const replaceLocalisedStrings = <T>(
     if (strings?.[config.defaultLanguageCode]?.[keyName])
       return strings?.[config.defaultLanguageCode]?.[keyName]
     // Else return error string
+    console.log(value.match(matchExpression))
     return 'STRING KEY NOT FOUND'
   })
-  return newObject
-}
 
 export default replaceLocalisedStrings
