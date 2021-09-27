@@ -107,7 +107,7 @@ const ListWrapper: React.FC = () => {
   ) : (
     <div id="list-container">
       <div id="list-top">
-        <Header as="h2">{template?.name ?? ''}</Header>
+        <Header as="h2">{template?.name ?? strings.PAGE_TITLE_LIST}</Header>
         <Search
           className="flex-grow-1"
           // size="large"
