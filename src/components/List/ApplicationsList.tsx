@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment } from 'react'
 import { Table, Message } from 'semantic-ui-react'
 import { useDeleteApplicationMutation } from '../../utils/generated/graphql'
 import messages from '../../utils/messages'
