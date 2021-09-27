@@ -15,7 +15,7 @@ const LookUpMainMenu: React.FC<any> = (props) => {
     <MainMenu
       header={
         <Header
-          content={strings.LOOKUP_TABLE_TITLE.replace('%1', tableLabel)}
+          content={`${strings.LOOKUP_TABLE_TITLE}: ${tableLabel}`}
           subheader={strings.LOOKUP_TABLE_CONTENTS}
         />
       }

@@ -98,7 +98,7 @@ const ImportCsvModal: React.FC<any> = ({
       <Modal.Header>
         {!tableLabel
           ? strings.LOOKUP_TABLE_IMPORT
-          : strings.LOOKUP_TABLE_IMPORT_INTO.replace('%1', tableLabel)}
+          : `${strings.LOOKUP_TABLE_IMPORT_INTO}: ${tableLabel}`}
       </Modal.Header>
       <Modal.Content>
         {submitting ? (
@@ -113,10 +113,11 @@ const ImportCsvModal: React.FC<any> = ({
         ) : success.length > 0 ? (
           <Message
             positive
-            header={strings.LOOKUP_TABLE_SUCCESS.replace('%1', tableLabel || tableName).replace(
-              '%2',
-              tableLabel ? strings.LABEL_CREATED : strings.LABEL_UPDATED
-            )}
+            header={
+              tableLabel
+                ? `${strings.LOOKUP_TABLE_TITLE} ${tableLabel} ${strings.LOOKUP_TABLE_SUCCESS_CREATED}`
+                : `${strings.LOOKUP_TABLE_TITLE} ${tableLabel} ${strings.LOOKUP_TABLE_SUCCESS_UPDATED}`
+            }
             list={[...success]}
           />
         ) : (
