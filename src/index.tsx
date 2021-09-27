@@ -6,8 +6,8 @@ import cache from './cache'
 import { AppWrapper } from './containers/Main'
 import { ApolloClient, ApolloProvider, createHttpLink, NormalizedCacheObject } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { LanguageProvider } from './contexts/Localisation'
-import { useLanguageProvider } from './contexts/Localisation'
+import { LanguageOption, LanguageProvider } from './contexts/Localisation'
+import usePrefs from './utils/hooks/usePrefs'
 import { persistCache } from 'apollo3-cache-persist'
 import { Loading } from './components'
 
@@ -33,6 +33,7 @@ const httpLink = createHttpLink({
 
 const App: React.FC = () => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | undefined>(undefined)
+  const { preferences, languageOptions, error, loading } = usePrefs()
 
   useEffect(() => {
     const client = new ApolloClient({
@@ -65,9 +66,17 @@ const App: React.FC = () => {
     return () => {}
   }, [])
 
-  return client ? (
+  if (error) {
+    console.error(error)
+    return <p>Can't load preferences. {error?.message}</p>
+  }
+
+  return client && !loading ? (
     <ApolloProvider client={client}>
-      <LanguageProvider>
+      <LanguageProvider
+        languageOptions={languageOptions as LanguageOption[]}
+        defaultLanguageCode={preferences?.defaultLanguageCode as string}
+      >
         <AppWrapper />
       </LanguageProvider>
     </ApolloProvider>

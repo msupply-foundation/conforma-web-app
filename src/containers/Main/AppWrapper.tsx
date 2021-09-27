@@ -7,23 +7,17 @@ import { UserProvider } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import NonRegisteredLogin from '../User/NonRegisteredLogin'
 import AuthenticatedContent from './AuthenticatedWrapper'
-import useConfig from '../../utils/hooks/useConfig'
 import { Loading } from '../../components'
 
 const AppWrapper: React.FC = () => {
   const { error, loading } = useLanguageProvider()
-  const { error: configError, loading: configLoading } = useConfig()
 
   if (error) {
     console.error(error)
     return <p>Can't load language provider. {error.message}</p>
   }
-  if (configError) {
-    console.error(error)
-    return <p>Can't load configuration. {error.message}</p>
-  }
 
-  if (loading || configLoading) {
+  if (loading) {
     return <Loading />
   }
 
