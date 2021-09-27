@@ -6,9 +6,13 @@ import config from '../../config'
 
 interface PaginationProps {
   totalCount: number
+  perPageText?: string
 }
 
-const PaginationBar: React.FC<PaginationProps> = ({ totalCount }) => {
+const PaginationBar: React.FC<PaginationProps> = ({
+  totalCount,
+  perPageText = strings.LABEL_LIST_PER_PAGE,
+}) => {
   const { query, updateQuery } = useRouter()
 
   const page = Number(query?.page) || 1
@@ -37,7 +41,7 @@ const PaginationBar: React.FC<PaginationProps> = ({ totalCount }) => {
       <Grid.Row>
         <Grid.Column textAlign="right" width={6} floated="right">
           <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-            <span style={{ padding: 5 }}>{`${strings.LABEL_LIST_PER_PAGE}:`}</span>
+            <span style={{ padding: 5 }}>{`${perPageText}:`}</span>
             <Dropdown
               selection
               compact
