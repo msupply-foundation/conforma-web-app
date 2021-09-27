@@ -11,6 +11,8 @@ import { Loading } from '../../components'
 
 const AppWrapper: React.FC = () => {
   const { error, loading, selectedLanguage } = useLanguageProvider()
+
+  console.log('selectedLanguage', selectedLanguage)
   if (error) {
     console.error(error)
     return <p>Can't load language provider. {error.message}</p>

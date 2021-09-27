@@ -248,7 +248,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
 }
 
 const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user, templates }) => {
-  const { strings, selectedLanguage } = useLanguageProvider()
+  const { strings, selectedLanguage, languageOptions } = useLanguageProvider()
   const { logout } = useUserState()
   const { push } = useRouter()
   const [isOpen, setIsOpen] = useState(false)
@@ -277,11 +277,13 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
                 />
               ))}
               <Dropdown.Item icon="log out" text={strings.MENU_LOGOUT} onClick={() => logout()} />
-              <Dropdown.Item
-                icon="globe"
-                text={strings.MENU_CHANGE_LANGUAGE}
-                onClick={() => setIsOpen(true)}
-              />
+              {languageOptions.length > 1 && (
+                <Dropdown.Item
+                  icon="globe"
+                  text={strings.MENU_CHANGE_LANGUAGE}
+                  onClick={() => setIsOpen(true)}
+                />
+              )}
             </Dropdown.Menu>
           </Dropdown>
         </Button.Content>
