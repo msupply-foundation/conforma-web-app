@@ -11,7 +11,7 @@ const replaceLocalisedStrings = <T>(
   inputObject: T,
   strings: CustomLanguageStrings,
   languageCode: string,
-  matchExpression: RegExp = /strings\.([A-Z0-9_]+)/gm
+  matchExpression: RegExp = /\[strings\.([A-Z0-9_]+)\]/gm
 ): T =>
   mapValuesDeep(inputObject, (value: any, key: string) => {
     if (typeof value !== 'string') return value
