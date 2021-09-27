@@ -148,6 +148,8 @@ interface BasicStringObject {
 
 interface CellProps {
   application: ApplicationListShape
+  loading: boolean
+  deleteApplication: Function
 }
 
 interface ColumnDetails {
