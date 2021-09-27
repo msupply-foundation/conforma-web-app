@@ -15,6 +15,7 @@ import ApplicationsList from '../../components/List/ApplicationsList'
 import PaginationBar from '../../components/List/Pagination'
 import ListFilters from './ListFilters/ListFilters'
 import { APPLICATION_FILTERS } from '../../utils/data/applicationFilters'
+import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
 
 const ListWrapper: React.FC = () => {
   const { query, updateQuery } = useRouter()
@@ -35,6 +36,7 @@ const ListWrapper: React.FC = () => {
   }
 
   const { error, loading, applications, applicationCount } = useListApplications(query)
+  const { template } = useLoadTemplate({ templateCode: query?.type })
 
   useEffect(() => {
     if (!templatePermissions) return
@@ -105,7 +107,7 @@ const ListWrapper: React.FC = () => {
   ) : (
     <div id="list-container">
       <div id="list-top">
-        <Header as="h2">{query.type}</Header>
+        <Header as="h2">{template?.name ?? ''}</Header>
         <Search
           className="flex-grow-1"
           // size="large"
