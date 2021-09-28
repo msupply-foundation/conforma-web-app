@@ -2,6 +2,7 @@ import axios from 'axios'
 import config from '../../config'
 import React, { Fragment, useState } from 'react'
 import { Popup, Button, Icon, Message } from 'semantic-ui-react'
+const LOCAL_STORAGE_JWT_KEY = 'persistJWT'
 
 const DownloadButton = ({
   id,
@@ -29,10 +30,18 @@ const DownloadButton = ({
     clearTimeout(timeout)
   }
 
+  const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY || '')
+  const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
+
   const downloadItem = async (event: any) => {
     event.stopPropagation()
     await axios
-      .get(config.serverREST + `/lookup-table/export/${id}`)
+      .get(config.serverREST + `/admin/lookup-table/export/${id}`, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          ...authHeader,
+        },
+      })
       .then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')

@@ -86,7 +86,6 @@ const Login: React.FC = () => {
     }
     attemptLoginOrg({
       orgId,
-      JWT: loginPayload.JWT,
       onLoginOrgSuccess: (loginOrgResult: LoginPayload) => {
         finishLogin(loginOrgResult)
       },

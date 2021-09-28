@@ -7,6 +7,7 @@ import {
   useRestartApplicationMutation,
   useUpdateTemplateStageMutation,
 } from '../../../utils/generated/graphql'
+import { postRequest } from '../../../utils/helpers/fetchMethods'
 import useCreateApplication from '../../../utils/hooks/useCreateApplication'
 import useGetApplicationSerial from '../../../utils/hooks/useGetApplicationSerial'
 import {
@@ -21,7 +22,8 @@ import {
   UpdateTemplateStage,
 } from './OperationContext'
 
-const snapshotsBaseUrl = `${config.serverREST}/snapshot`
+const baseAdminUrl = `${config.serverREST}/admin`
+const snapshotsBaseUrl = `${baseAdminUrl}/snapshot`
 const takeSnapshotUrl = `${snapshotsBaseUrl}/take`
 export const snapshotFilesUrl = `${snapshotsBaseUrl}/files`
 const useSnapshotUrl = `${snapshotsBaseUrl}/use`
@@ -267,12 +269,12 @@ const safeFetch = async (
 ) => {
   setErrorAndLoadingState({ isLoading: true })
   try {
-    const resultRaw = await fetch(url, {
-      method: 'POST',
+    const resultJson = await postRequest({
+      url,
       headers: typeof body === 'string' ? { 'Content-Type': 'application/json' } : {},
-      body,
+      jsonBody: body,
     })
-    const resultJson = await resultRaw.json()
+
     if (!!resultJson?.success) {
       setErrorAndLoadingState({ isLoading: false })
       return true

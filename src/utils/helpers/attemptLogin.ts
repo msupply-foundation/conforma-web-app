@@ -15,7 +15,6 @@ interface loginParameters {
 interface loginOrgParameters {
   orgId: number
   sessionId?: string
-  JWT: string
   onLoginOrgSuccess: Function
   onLoginOrgFailure?: Function
 }
@@ -28,7 +27,10 @@ export const attemptLogin = async ({
   onLoginFailure = () => {},
 }: loginParameters) => {
   try {
-    const loginResult: LoginPayload = await postRequest({ username, password, sessionId }, loginURL)
+    const loginResult: LoginPayload = await postRequest({
+      jsonBody: { username, password, sessionId },
+      url: loginURL,
+    })
 
     if (!loginResult.success) {
       onLoginFailure()
@@ -41,17 +43,14 @@ export const attemptLogin = async ({
 export const attemptLoginOrg = async ({
   orgId,
   sessionId,
-  JWT,
   onLoginOrgSuccess,
   onLoginOrgFailure = () => {},
 }: loginOrgParameters) => {
   try {
-    const authHeader = { Authorization: 'Bearer ' + JWT }
-    const loginResult: LoginPayload = await postRequest(
-      { orgId, sessionId },
-      loginOrgURL,
-      authHeader
-    )
+    const loginResult: LoginPayload = await postRequest({
+      jsonBody: { orgId, sessionId },
+      url: loginOrgURL,
+    })
 
     if (!loginResult.success) {
       onLoginOrgFailure()

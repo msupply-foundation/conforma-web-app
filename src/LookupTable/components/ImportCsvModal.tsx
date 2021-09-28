@@ -14,6 +14,7 @@ import { LookUpTableImportCsvContext } from '../contexts'
 import config from '../../config'
 import axios from 'axios'
 import pluralize from 'pluralize'
+const LOCAL_STORAGE_JWT_KEY = 'persistJWT'
 
 const ImportCsvModal: React.FC<any> = ({
   onImportSuccess,
@@ -52,15 +53,19 @@ const ImportCsvModal: React.FC<any> = ({
 
     if (!tableStructureID) formData.append('tableName', pluralTableName)
 
+    const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY || '')
+    const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
+
     await axios
       .post(
         config.serverREST +
-          '/lookup-table/import' +
+          '/admin/lookup-table/import' +
           (tableStructureID ? '/' + String(tableStructureID) : ''),
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
+            ...authHeader,
           },
         }
       )

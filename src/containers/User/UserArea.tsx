@@ -204,7 +204,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   const JWT = localStorage.getItem('persistJWT') as string
 
   const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
-    await attemptLoginOrg({ orgId, JWT, onLoginOrgSuccess })
+    await attemptLoginOrg({ orgId, onLoginOrgSuccess })
   }
   const onLoginOrgSuccess = async ({
     user,

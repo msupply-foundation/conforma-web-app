@@ -138,7 +138,7 @@ const getLanguageStrings = async (code: string) => {
   if (code === 'default') return strings
   // Else fetch language file from server
   try {
-    const fetchedStrings = await getRequest(config.serverREST + '/language/' + code)
+    const fetchedStrings = await getRequest(config.serverREST + '/public/language/' + code)
     if (fetchedStrings?.error) throw new Error(`Language code: ${code}, ${fetchedStrings?.message}`)
     return consolidateStrings(strings, fetchedStrings)
   } catch (err) {
@@ -148,7 +148,7 @@ const getLanguageStrings = async (code: string) => {
 
 const getLanguageOptions = async () => {
   try {
-    const options = await getRequest(config.serverREST + '/localisations')
+    const options = await getRequest(config.serverREST + '/public/localisations')
     if (options?.error) throw new Error('Unable to fetch languages list')
     return options.filter((lang: LanguageOption) => lang?.enabled)
   } catch (err) {

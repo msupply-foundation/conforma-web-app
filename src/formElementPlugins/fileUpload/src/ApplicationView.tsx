@@ -5,6 +5,7 @@ import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
 import { useRouter } from '../../../utils/hooks/useRouter'
+import { postRequest } from '../../../utils/helpers/fetchMethods'
 
 interface FileResponseData {
   uniqueId: string
@@ -250,11 +251,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   async function uploadFile(file: any) {
     const fileData = new FormData()
     await fileData.append('file', file)
-    const response = await fetch(
-      `${host}${uploadEndpoint}?user_id=${currentUser?.userId}&application_serial=${serialNumber}&application_response_id=${application_response_id}`,
-      { method: 'POST', body: fileData }
-    )
-    return await response.json()
+    return await postRequest({
+      url: `${host}${uploadEndpoint}?user_id=${currentUser?.userId}&application_serial=${serialNumber}&application_response_id=${application_response_id}`,
+      otherBody: fileData,
+    })
   }
 }
 

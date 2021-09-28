@@ -9,7 +9,7 @@ import { useUserState } from '../../contexts/UserState'
 
 const hardcodedPassword = '123456'
 
-const loginURL = config.serverREST + '/login'
+const loginURL = config.serverREST + '/public/login'
 const loginOrgURL = config.serverREST + '/login-org'
 
 const UserSelection: React.FC = () => {
@@ -31,7 +31,10 @@ const UserSelection: React.FC = () => {
   const handleChangeUser = async (username: string) => {
     setIsOpen(false)
     // Selected User login
-    const loginResult = await attemptLogin({ username, password: hardcodedPassword }, loginURL)
+    const loginResult = await attemptLogin({
+      jsonBody: { username, password: hardcodedPassword },
+      url: loginURL,
+    })
     if (!loginResult.success) {
       console.log(`Problem logging in user: ${username}`)
       return
@@ -44,12 +47,11 @@ const UserSelection: React.FC = () => {
       return
     }
     const selectedOrg = orgList[0]
-    const authHeader = { Authorization: 'Bearer ' + JWT }
-    const verifyOrgResult = await attemptLogin(
-      { userId: user.userId, orgId: selectedOrg.orgId },
-      loginOrgURL,
-      authHeader
-    )
+
+    const verifyOrgResult = await attemptLogin({
+      jsonBody: { userId: user.userId, orgId: selectedOrg.orgId },
+      url: loginOrgURL,
+    })
 
     if (!verifyOrgResult.success) {
       console.log(`Problem logging in with organisation: ${selectedOrg.name}`)
