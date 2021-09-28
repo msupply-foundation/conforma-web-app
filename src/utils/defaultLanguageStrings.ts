@@ -27,6 +27,9 @@ export default {
   ACTION_VIEW: 'View',
   ACTION_MAKE_CHANGES: 'Make changes',
   ACTION_EDIT_DRAFT: 'Edit draft',
+  APPLICATION_DELETION_CONFIRM_TITLE: 'Delete application',
+  APPLICATION_DELETION_CONFIRM_MESSAGE:
+    'Please confirm you would like to delete a draft application',
   OUTCOME_PENDING: 'In progress',
   OUTCOME_APPROVED: 'Approved',
   OUTCOME_REJECTED: 'Rejected',
