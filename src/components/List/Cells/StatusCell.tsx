@@ -1,14 +1,44 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Progress } from 'semantic-ui-react'
+import { Icon, ModalProps, Progress } from 'semantic-ui-react'
 import { ApplicationStatus } from '../../../utils/generated/graphql'
 import { CellProps } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
+import ModalConfirmation from '../../Main/ModalConfirmation'
 
-const StatusCell: React.FC<CellProps> = ({ application }) => {
+const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplication }) => {
   const { strings } = useLanguageProvider()
   const { Status } = useLocalisedEnums()
+  const [showModalDeletion, setShowModalDeletion] = useState<ModalProps>({ open: false })
+
+  const messages = {
+    APPLICATION_DELETION_CONFIRM: {
+      title: strings.APPLICATION_DELETION_CONFIRM_TITLE,
+      message: strings.APPLICATION_DELETION_CONFIRM_MESSAGE,
+      option: strings.OK,
+    },
+  }
+
+  const showConfirmation = () => {
+    const { title, message, option } = messages.APPLICATION_DELETION_CONFIRM
+    setShowModalDeletion({
+      open: true,
+      title,
+      message,
+      option,
+      onClick: () => {
+        deleteApplication()
+        setShowModalDeletion({ open: false })
+      },
+      onClose: () => setShowModalDeletion({ open: false }),
+    })
+  }
+
+  const deleteDraft = () => {
+    showConfirmation()
+  }
+
   const { serial, status } = application
   switch (status) {
     case ApplicationStatus.ChangesRequired:
@@ -25,8 +55,13 @@ const StatusCell: React.FC<CellProps> = ({ application }) => {
           <Link to={`/application/${serial}`} className="user-action">
             {strings.ACTION_EDIT_DRAFT}
           </Link>
-          {/* TO DO: Trash icon should link to application delete */}
-          <Icon name="trash alternate outline" />
+          <Icon
+            className="delete-icon"
+            name="trash alternate outline"
+            loading={loading}
+            onClick={deleteDraft}
+          />
+          <ModalConfirmation {...showModalDeletion} />
         </>
       )
     case ApplicationStatus.Completed:
