@@ -15,7 +15,7 @@ export const formatCellText = (
 ): string | null => {
   const { dataType, formatting } = columnDetails
   const { elementTypePluginCode, substitution, dateFormat } = formatting
-  if (elementTypePluginCode && dataType === 'json') return null // Leave these to be handled by SummaryView component
+  if (elementTypePluginCode && dataType === 'object') return null // Leave these to be handled by SummaryView component
   if (!value) return ''
 
   // Handle array values by building a Markdown list, and formatting each
@@ -92,7 +92,7 @@ export const getElementDetails = (value: any, displayDefinition: DisplayDefiniti
         label: displayDefinition.title,
       }
   const response =
-    isAlreadyElement && dataType === 'jsonb'
+    isAlreadyElement && dataType === 'object'
       ? value
       : { text: formatCellText(value, displayDefinition) }
   return { elementTypePluginCode, elementParameters, response }
