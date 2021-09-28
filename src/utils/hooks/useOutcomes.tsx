@@ -110,6 +110,10 @@ const processRequest = (
   setLoadingMethod(true)
   getRequest(url, { Authorization: `Bearer ${JWT}` })
     .then((response) => {
+      if (response?.error) {
+        setState(response, false, undefined)
+        return
+      }
       if (response?.statusCode) {
         setState(response, false, undefined)
         return

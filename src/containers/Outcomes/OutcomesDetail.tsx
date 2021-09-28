@@ -16,9 +16,9 @@ const OutcomeDetails: React.FC = () => {
     params: { tableName, id },
   } = useRouter()
   const { outcomeDetail, loading, error } = useOutcomesDetail({ tableName, recordId: id })
-  usePageTitle(outcomeDetail?.header.value || '')
+  usePageTitle(outcomeDetail?.header?.value || '')
 
-  if (error) return <p>{error?.message}</p>
+  if (error) return <Message error header={error?.message} content={error?.detail} />
   if (loading || !outcomeDetail) return <Loading />
 
   const { header, tableTitle, columns, displayDefinitions, item, linkedApplications } =
