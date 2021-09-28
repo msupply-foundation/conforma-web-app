@@ -14,7 +14,7 @@ interface AssigneeProps {
     }[]
   }
   checkIsLastLevel: (assignee: number) => boolean
-  onAssignment: (assignee: number) => void
+  onSelection: (assignee: number) => void
   shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
 }
 
@@ -22,7 +22,7 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({
   assignmentError,
   assignmentOptions,
   checkIsLastLevel,
-  onAssignment,
+  onSelection,
   shouldAssignState: [shouldAssign, setShouldAssign],
 }) => {
   // Do auto-assign for other sections when assignee is selected
@@ -32,11 +32,11 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({
   useEffect(() => {
     // Option -1 (UNASSIGNED) or -2 (Re-assign) shouldn't change others
     if ((shouldAssign as number) < 1) return
-    onAssignment(shouldAssign as number)
+    onSelection(shouldAssign as number)
   }, [shouldAssign])
 
   const onAssigneeSelection = async (_: any, { value }: any) => {
-    onAssignment(value as number)
+    onSelection(value as number)
     // When review isLastLevel then all sections are assigned to same user (similar to consolidation)
     if (checkIsLastLevel(value)) setShouldAssign(value as number)
   }
