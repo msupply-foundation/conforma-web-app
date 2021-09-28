@@ -157,9 +157,8 @@ const getLanguageOptions = async () => {
 }
 
 // Checks all keys from English master list in remoteStrings, and provide
-// English fallback if missing.
+// English fallback if missing or empty string.
 const consolidateStrings = (refStrings: LanguageStrings, remoteStrings: LanguageStrings) =>
-  mapValues(
-    refStrings,
-    (englishString, key: keyof LanguageStrings) => remoteStrings?.[key] ?? englishString
+  mapValues(refStrings, (englishString, key: keyof LanguageStrings) =>
+    remoteStrings?.[key] ? remoteStrings?.[key] : englishString
   )
