@@ -46,7 +46,7 @@ enum LookUpTableImportCsvActions {
 type LookUpTableImportCsvType = {
   uploadModalOpen: boolean
   file: File | null
-  tableName: string | null
+  tableName: string
   submittable: boolean
   submitting: boolean
   errors: []

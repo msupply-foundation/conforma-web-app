@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import { Table, Message } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../contexts/Localisation'
+import { useDeleteApplicationMutation } from '../../utils/generated/graphql'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
 
@@ -10,6 +11,7 @@ interface ApplicationsListProps {
   sortQuery: SortQuery
   handleSort: Function
   loading: boolean
+  refetch: Function
 }
 
 const ApplicationsList: React.FC<ApplicationsListProps> = ({
@@ -18,6 +20,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   sortQuery: { sortColumn, sortDirection },
   handleSort,
   loading,
+  refetch,
 }) => {
   const { strings } = useLanguageProvider()
   return (
@@ -47,7 +50,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
           ) : (
             applications.map((application, index) => {
               const rowProps = {
-                index,
+                refetch,
                 columns,
                 application,
               }
@@ -69,17 +72,30 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
 }
 
 interface ApplicationRowProps {
-  index: number
+  refetch: Function
   columns: Array<ColumnDetails>
   application: ApplicationListRow
 }
 
-const ApplicationRow: React.FC<ApplicationRowProps> = ({ columns, application }) => {
+const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, application }) => {
+  const { strings } = useLanguageProvider()
+  const [deleteApplication, { loading, error }] = useDeleteApplicationMutation({
+    variables: { id: application.id || 0 },
+    onCompleted: () => refetch(),
+  })
+  const props = {
+    application,
+    loading,
+    deleteApplication,
+  }
+
+  if (error) return <Message error header={strings.ERROR_APPLICATION_DELETE} list={[error]} />
+
   return (
     <Table.Row key={`ApplicationList-application-${application.id}`} className="list-row">
-      {columns.map(({ headerName, ColumnComponent }, index) => (
+      {columns.map(({ ColumnComponent }, index) => (
         <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
-          <ColumnComponent application={application} />
+          <ColumnComponent {...props} />
         </Table.Cell>
       ))}
     </Table.Row>

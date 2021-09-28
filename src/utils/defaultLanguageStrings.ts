@@ -27,6 +27,9 @@ export default {
   ACTION_VIEW: 'View',
   ACTION_MAKE_CHANGES: 'Make changes',
   ACTION_EDIT_DRAFT: 'Edit draft',
+  APPLICATION_DELETION_CONFIRM_TITLE: 'Delete application',
+  APPLICATION_DELETION_CONFIRM_MESSAGE:
+    'Please confirm you would like to delete a draft application',
   OUTCOME_PENDING: 'In progress',
   OUTCOME_APPROVED: 'Approved',
   OUTCOME_REJECTED: 'Rejected',
@@ -85,6 +88,7 @@ export default {
   PLACEHOLDER_SEARCH: 'Search Applications...',
   DATE_APPLICATION_PLACEHOLDER: '31/12/2020',
   ERROR_APPLICATION_CREATE: 'Problem loading application creation page',
+  ERROR_APPLICATION_DELETE: 'Problem deleting application',
   ERROR_APPLICATION_PAGE: 'Problem loading application',
   ERROR_APPLICATION_SUBMIT: 'Problem submitting application',
   ERROR_APPLICATIONS_LIST: 'Problem loading applications list',
