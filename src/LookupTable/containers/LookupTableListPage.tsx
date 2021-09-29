@@ -9,6 +9,7 @@ import { AllLookupTableStructuresType } from '../types'
 import { useGetAllTableStructures } from '../hooks'
 import { useHistory } from 'react-router'
 import { useRouter } from '../../utils/hooks/useRouter'
+import strings from '../../utils/constants'
 
 const LookupTableListPage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
   const { pathname } = useRouter()
@@ -24,8 +25,8 @@ const LookupTableListPage: React.FC<{ basePath: string }> = ({ basePath = '' }) 
   return (
     <Container style={{ padding: '2em 0em' }}>
       <LookUpTableListMainMenu
-        headerText={'Lookup Tables'}
-        subHeaderText={'This page contains the list of all lookup-tables'}
+        headerText={strings.LOOKUP_TABLES_TITLE}
+        subHeaderText={strings.LOOKUP_TABLE_SUBTITLE}
       />
       <Divider />
       <LookUpTableListTable

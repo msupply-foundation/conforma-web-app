@@ -579,6 +579,11 @@ a:hover {
 
 .list-row {
   padding-bottom: 30px;
+
+  .delete-icon {
+    .clickable();
+    padding-left: 10px;
+  }
 }
 
 .flex-grow-1 {
@@ -1212,35 +1217,50 @@ a:hover {
 #outcomes-display {
   .flex-column();
   align-items: center;
+  width: @applicationListWidth;
 
-  .outcomes-container {
-    .flex-row();
-    align-items: center;
-    flex-wrap: 1;
+  .ui.header {
+    padding-top: 30px;
+  }
 
-    .outcome {
-      margin: 15px;
-      max-width: 330px;
-      border-radius: @borderRadius;
-      background-color: @surfacesWhite;
-      box-shadow: @templateBoxShadow;
-      padding: 10px;
-    }
+  .outcome-nav {
+    width: 70%;
   }
 
   .outcome-table-container {
     .flex-column();
     align-items: center;
+    // Limit size of images in Table (that come from SummaryView elements)
+    .ui.image {
+      width: unset;
+      max-height: 50px;
+    }
+    padding-top: 0;
+    width: clamp(700px, 65%, 1127px);
   }
 
   .summary-page-element {
     margin: 10px;
+    min-width: 200px;
+    max-width: 450px;
   }
 
-  .detail-container {
-    .flex-row();
+  .outcome-detail-container {
+    .flex-column();
     align-items: center;
-    flex-wrap: wrap;
+    // Limit size of images in Table (that come from SummaryView elements)
+    .ui.image {
+      width: unset;
+      max-height: 100px;
+    }
+  }
+
+  .outcome-detail-table {
+    min-width: 500px;
+  }
+
+  #linked-applications-container {
+    margin-top: 45px;
   }
 }
 
