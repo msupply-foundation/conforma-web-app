@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Header, Button, Icon, Label } from 'semantic-ui-react'
 import { useUserState } from '../contexts/UserState'
-import strings from '../utils/constants'
+import { useLanguageProvider } from '../contexts/Localisation'
 import { USER_ROLES } from '../utils/data'
 import { PermissionPolicyType, Filter, UiLocation } from '../utils/generated/graphql'
 import useListApplications from '../utils/hooks/useListApplications'
@@ -11,6 +11,7 @@ import usePageTitle from '../utils/hooks/usePageTitle'
 import { TemplateDetails, TemplateInList } from '../utils/types'
 
 const Dashboard: React.FC = () => {
+  const { strings } = useLanguageProvider()
   const {
     userState: { templatePermissions, isNonRegistered },
     logout,
@@ -48,6 +49,7 @@ const Dashboard: React.FC = () => {
 }
 
 const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template }) => {
+  const { strings } = useLanguageProvider()
   const { name, code, hasApplyPermission, filters, permissions, totalApplications } = template
 
   const userRole =
@@ -114,13 +116,16 @@ const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter }> =
   )
 }
 
-const StartNewTemplate: React.FC<{ template: TemplateInList }> = ({ template: { name, code } }) => (
-  <div className="no-applications">
-    <Label className="simple-label" content={strings.LABEL_DASHBOARD_NO_APPLICATIONS} />
-    <Link to={`/application/new?type=${code}`}>
-      {strings.LABEL_DASHBOARD_START_NEW.replace('%1', name)}
-    </Link>
-  </div>
-)
+const StartNewTemplate: React.FC<{ template: TemplateInList }> = ({ template: { name, code } }) => {
+  const { strings } = useLanguageProvider()
+  return (
+    <div className="no-applications">
+      <Label className="simple-label" content={strings.LABEL_DASHBOARD_NO_APPLICATIONS} />
+      <Link to={`/application/new?type=${code}`}>
+        {strings.LABEL_DASHBOARD_START_NEW.replace('%1', name)}
+      </Link>
+    </div>
+  )
+}
 
 export default Dashboard

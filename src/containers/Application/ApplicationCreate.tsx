@@ -6,7 +6,7 @@ import useCreateApplication from '../../utils/hooks/useCreateApplication'
 import useLoadTemplate from '../../utils/hooks/useLoadTemplate'
 import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { SectionsList } from '../../components/Sections'
 import ApplicationHomeWrapper from '../../components/Application/ApplicationHomeWrapper'
 import { ElementForEvaluation, EvaluatorNode, User } from '../../utils/types'
@@ -14,6 +14,7 @@ import { evaluateElements } from '../../utils/helpers/evaluateElements'
 import useGetApplicationSerial from '../../utils/hooks/useGetApplicationSerial'
 
 const ApplicationCreate: React.FC = () => {
+  const { strings } = useLanguageProvider()
   const {
     push,
     query: { type },

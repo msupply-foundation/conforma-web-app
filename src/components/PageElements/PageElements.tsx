@@ -18,7 +18,7 @@ import ApplicantElementWrapper from './Elements/ApplicantElementWrapper'
 import ConsolidateReviewDecision from './Elements/ConsolidateReviewDecision'
 import ReviewApplicantResponse from './Elements/ReviewApplicantResponse'
 import { useRouter } from '../../utils/hooks/useRouter'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 interface PageElementProps {
   elements: PageElement[]
@@ -268,13 +268,16 @@ export const UpdateIcon: React.FC<{ onClick: Function }> = ({ onClick }) => (
   <Icon className="clickable" name="edit" size="large" color="blue" onClick={onClick} />
 )
 
-export const UpdatedLabel: React.FC = () => (
-  <div className="updated-label">
-    <Icon name="circle" size="tiny" color="blue" />
-    <Label className="simple-label">
-      <strong>{strings.LABEL_RESPONSE_UPDATED}</strong>
-    </Label>
-  </div>
-)
+export const UpdatedLabel: React.FC = () => {
+  const { strings } = useLanguageProvider()
+  return (
+    <div className="updated-label">
+      <Icon name="circle" size="tiny" color="blue" />
+      <Label className="simple-label">
+        <strong>{strings.LABEL_RESPONSE_UPDATED}</strong>
+      </Label>
+    </div>
+  )
+}
 
 export default PageElements

@@ -2,7 +2,7 @@ import React from 'react'
 import { Grid, Label } from 'semantic-ui-react'
 import getSimplifiedTimeDifference from '../../utils/dateAndTime/getSimplifiedTimeDifference'
 import { ReviewAction, ReviewSectionComponentProps } from '../../utils/types'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
   action,
@@ -10,6 +10,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
   assignment,
   fullStructure,
 }) => {
+  const { strings } = useLanguageProvider()
   const getContent = () => {
     switch (action) {
       case ReviewAction.unknown:

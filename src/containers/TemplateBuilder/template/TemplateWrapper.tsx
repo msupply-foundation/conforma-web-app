@@ -3,7 +3,7 @@ import { matchPath } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Header, Icon, Message } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../../components'
-import strings from '../../../utils/constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 
 import {
   FullTemplateFragment,
@@ -155,6 +155,7 @@ const defaultTemplateContextState: TemplateContextState = {
 const Context = createContext<TemplateContextState>(defaultTemplateContextState)
 
 const TemplateWrapper: React.FC = () => {
+  const { strings } = useLanguageProvider()
   const {
     query: { templateId },
   } = useRouter()

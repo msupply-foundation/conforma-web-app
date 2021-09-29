@@ -4,7 +4,7 @@ import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/gr
 import ApplicantResponseElement from './ApplicantResponseElement'
 import ReviewResponseElement from './ReviewResponseElement'
 import ReviewInlineInput from './ReviewInlineInput'
-import strings from '../../../utils/constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import { UpdateIcon } from '../PageElements'
 import ViewHistoryButton from '../ViewHistoryButton'
 
@@ -34,6 +34,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
   previousReviewResponse,
   originalReviewResponse,
 }) => {
+  const { strings } = useLanguageProvider()
   const [isActiveEdit, setIsActiveEdit] = useState(false)
   const isConsolidation = true
   const decisionExists = !!reviewResponse?.decision

@@ -5,7 +5,7 @@ import useGetQuestionReviewHistory from '../../utils/hooks/useGetQuestionReviewH
 import HistoryResponseElement from '../PageElements/Elements/HistoryResponseElement'
 import { useUserState } from '../../contexts/UserState'
 import { Stage } from '../Review'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { StageDetails, TemplateDetails } from '../../utils/types'
 
 interface HistoryPanelProps {
@@ -15,6 +15,7 @@ interface HistoryPanelProps {
 }
 
 const HistoryPanel: React.FC<HistoryPanelProps> = ({ template, stages, isApplicant = false }) => {
+  const { strings } = useLanguageProvider()
   const {
     userState: { currentUser },
   } = useUserState()

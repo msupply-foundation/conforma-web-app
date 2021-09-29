@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Checkbox, Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
-import strings from '../constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import config from '../pluginConfig.json'
 
 interface Checkbox {
@@ -24,6 +24,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   initialValue,
 }) => {
+  const { getPluginStrings } = useLanguageProvider()
+  const strings = getPluginStrings('checkbox')
   const { isEditable } = element
   const { label, description, checkboxes, type, layout } = parameters
 
@@ -50,6 +52,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       selectedValuesArray: checkboxElements.filter((cb) => cb.selected),
     })
   }, [checkboxElements])
+
+  const createTextString = (checkboxes: Checkbox[]) =>
+    checkboxes
+      .reduce((output, cb) => {
+        const text = cb.selected ? cb.text : cb.textNegative
+        return output + (output === '' ? text : ', ' + text)
+      }, '')
+      .replace(/^$/, `*<${strings.LABEL_SUMMMARY_NOTHING_SELECTED}>*`)
 
   function toggle(e: any, data: any) {
     const { index } = data
@@ -120,11 +130,3 @@ const getInitialState = (initialValue: CheckboxSavedState, checkboxes: Checkbox[
       }))
   )
 }
-
-const createTextString = (checkboxes: Checkbox[]) =>
-  checkboxes
-    .reduce((output, cb) => {
-      const text = cb.selected ? cb.text : cb.textNegative
-      return output + (output === '' ? text : ', ' + text)
-    }, '')
-    .replace(/^$/, `*<${strings.LABEL_SUMMMARY_NOTHING_SELECTED}>*`)
