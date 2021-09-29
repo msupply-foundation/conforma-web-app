@@ -6,6 +6,7 @@ const snapshotsBaseUrl = `${config.serverREST}/snapshot`
 const snapshotListUrl = `${snapshotsBaseUrl}/list`
 const takeSnapshotUrl = `${snapshotsBaseUrl}/take`
 const useSnapshotUrl = `${snapshotsBaseUrl}/use`
+const deleteSnapshotUrl = `${snapshotsBaseUrl}/delete`
 const snapshotFilesUrl = `${snapshotsBaseUrl}/files`
 const uploadSnapshotUrl = `${snapshotsBaseUrl}/upload`
 // const diffSnapshotUrl = `${snapshotsBaseUrl}/diff`
@@ -30,7 +31,6 @@ const Snapshots: React.FC = () => {
     try {
       const snapshotListRaw = await fetch(snapshotListUrl, { method: 'GET' })
       const snapshotList: string[] = (await snapshotListRaw.json()).snapshotsNames
-
       setData(snapshotList)
     } catch (e) {}
   }
@@ -72,6 +72,24 @@ const Snapshots: React.FC = () => {
     }
   }
 
+  const deleteSnapshot = async (name: string) => {
+    setIsLoading(true)
+    try {
+      const resultRaw = await fetch(`${deleteSnapshotUrl}?name=${name}`, {
+        method: 'POST',
+      })
+      const resultJson = await resultRaw.json()
+      if (resultJson.success) {
+        await getList()
+        setIsLoading(false)
+        return
+      }
+      setSnapshotError(resultJson)
+    } catch (error) {
+      setSnapshotError({ message: 'Front end error while deleting snapshot', error })
+    }
+  }
+
   const uploadSnapshot = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target?.files) return
 
@@ -89,7 +107,11 @@ const Snapshots: React.FC = () => {
       })
       const resultJson = await resultRaw.json()
 
-      if (resultJson.success) return setIsLoading(false)
+      if (resultJson.success) {
+        await getList()
+        setIsLoading(false)
+        return
+      }
       setSnapshotError(resultJson)
     } catch (error) {
       setSnapshotError({ message: 'Front end error while uploading snapshot', error })
@@ -124,10 +146,18 @@ const Snapshots: React.FC = () => {
                     onClick={() => takeSnapshot(snapshotName)}
                   />
                 </Table.Cell>
-                <Table.Cell textAlign="left">
+                <Table.Cell>
                   <a href={`${snapshotFilesUrl}/${snapshotName}.zip`} target="_blank">
                     <Icon name="download" size="large" />
                   </a>
+                </Table.Cell>
+                <Table.Cell textAlign="left">
+                  <Icon
+                    size="large"
+                    className="clickable"
+                    name="trash alternate"
+                    onClick={() => deleteSnapshot(snapshotName)}
+                  />
                 </Table.Cell>
                 {/* <Icon
                     className="clickable"
@@ -213,7 +243,7 @@ const Snapshots: React.FC = () => {
     // />
     return (
       <>
-        <Table.Cell colSpan={3} textAlign="right">
+        <Table.Cell colSpan={4} textAlign="right">
           <Button
             primary
             // color="blue"
