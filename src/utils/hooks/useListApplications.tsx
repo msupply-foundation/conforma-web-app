@@ -29,6 +29,7 @@ const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicSt
   const {
     data,
     loading,
+    refetch,
     error: applicationsError,
   } = useGetApplicationListQuery({
     variables: {
@@ -66,6 +67,7 @@ const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicSt
   return {
     error,
     loading,
+    refetch,
     applications,
     applicationCount,
   }

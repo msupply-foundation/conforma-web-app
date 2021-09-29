@@ -69,8 +69,8 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   // Helper function provided to plugins to determine where to read their
   // language strings from
   const getPluginStrings = (plugin: string) => {
-    const defaultPluginStrings = require(`../${pluginsFolder}/${plugin}/localisation/${defaultLanguageCode}/strings.json`)
-    if (selectedLanguageCode === defaultLanguageCode) return defaultPluginStrings
+    const defaultPluginStrings = require(`../${pluginsFolder}/${plugin}/localisation/default/strings.json`)
+    if (selectedLanguageCode === 'default') return defaultPluginStrings
     try {
       const localisedPluginStrings = require(`../${pluginsFolder}/${plugin}/localisation/${selectedLanguageCode}/strings.json`)
       return consolidateStrings(defaultPluginStrings, localisedPluginStrings)
@@ -87,7 +87,9 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
       // Only fetch options the first time
       const options = languageOptions.length === 0 ? await getLanguageOptions() : languageOptions
       const selectedLanguage =
-        options.find((lang: LanguageOption) => lang.code === languageCode) ?? null
+        options.find((lang: LanguageOption) => lang.code === languageCode) ?? options[0]
+      // Safety in case stored language code is no longer available on server
+      setSelectedLanguageCode(selectedLanguage.code)
       const strings = (await getLanguageStrings(languageCode)) as LanguageStrings
       setLanguageState({
         ...languageState,
@@ -132,8 +134,8 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 export const useLanguageProvider = () => useContext(LanguageProviderContext)
 
 const getLanguageStrings = async (code: string) => {
-  // If code is default, then return default (local) English strings
-  if (code === defaultLanguageCode) return strings
+  // If default language code not available on server, just use local defaults
+  if (code === 'default') return strings
   // Else fetch language file from server
   try {
     const fetchedStrings = await getRequest(config.serverREST + '/language/' + code)
@@ -155,9 +157,8 @@ const getLanguageOptions = async () => {
 }
 
 // Checks all keys from English master list in remoteStrings, and provide
-// English fallback if missing.
+// English fallback if missing or empty string.
 const consolidateStrings = (refStrings: LanguageStrings, remoteStrings: LanguageStrings) =>
-  mapValues(
-    refStrings,
-    (englishString, key: keyof LanguageStrings) => remoteStrings?.[key] ?? englishString
+  mapValues(refStrings, (englishString, key: keyof LanguageStrings) =>
+    remoteStrings?.[key] ? remoteStrings?.[key] : englishString
   )

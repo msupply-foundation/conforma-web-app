@@ -21,7 +21,7 @@ const Login: React.FC = () => {
   const [selectedOrgId, setSelectedOrgId] = useState<number>(NO_ORG_SELECTED)
   const { push, history } = useRouter()
   const { onLogin } = useUserState()
-  const { strings } = useLanguageProvider()
+  const { strings, languageOptions } = useLanguageProvider()
 
   const noOrgOption: OrganisationSimple = {
     orgId: LOGIN_AS_NO_ORG,
@@ -97,7 +97,7 @@ const Login: React.FC = () => {
 
   return (
     <Container id="login-container">
-      <LanguageSelector />
+      {languageOptions.length > 1 && <LanguageSelector />}
       <div id="login-box">
         <div className="flex-centered">
           <Image src={logo} className="image-icon" />
