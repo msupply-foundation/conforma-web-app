@@ -215,6 +215,7 @@ const LanguageSelector: React.FC = () => {
         options={dropdownOptions}
         onChange={handleLanguageChange}
         direction="left"
+        value={languageOptions.findIndex((lang) => lang.code === selectedLanguage.code)}
       />
     </div>
   )

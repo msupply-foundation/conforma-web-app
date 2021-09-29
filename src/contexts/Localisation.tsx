@@ -4,21 +4,25 @@ import strings from '../utils/defaultLanguageStrings'
 import { getRequest } from '../utils/helpers/fetchMethods'
 import { mapValues } from 'lodash'
 
-const { defaultLanguageCode, pluginsFolder } = config
+const { pluginsFolder } = config
 
-const initialLanguageCode = localStorage.getItem('language') ?? defaultLanguageCode
+const savedLanguageCode = localStorage.getItem('language')
 
 const initSelectedLanguage: LanguageOption = {
-  code: initialLanguageCode,
+  code: savedLanguageCode ?? '',
   languageName: '',
   description: '',
   flag: '',
   enabled: true,
 }
 
-type LanguageProviderProps = { children: React.ReactNode }
+type LanguageProviderProps = {
+  children: React.ReactNode
+  languageOptions: LanguageOption[]
+  defaultLanguageCode: string
+}
 
-type LanguageOption = {
+export type LanguageOption = {
   languageName: string
   description: string
   code: string
@@ -56,15 +60,21 @@ const initialContext: {
 
 const LanguageProviderContext = createContext(initialContext)
 
-export function LanguageProvider({ children }: LanguageProviderProps) {
+export function LanguageProvider({
+  children,
+  languageOptions,
+  defaultLanguageCode,
+}: LanguageProviderProps) {
   const [languageState, setLanguageState] = useState<LanguageState>({
-    languageOptions: [],
+    languageOptions,
     selectedLanguage: initSelectedLanguage,
     strings: {} as LanguageStrings,
     loading: true,
     error: null,
   })
-  const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(initialLanguageCode)
+  const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(
+    savedLanguageCode ?? defaultLanguageCode
+  )
 
   // Helper function provided to plugins to determine where to read their
   // language strings from
@@ -84,16 +94,15 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     setLanguageState({ ...languageState, loading: true })
     const { languageOptions } = languageState
     try {
-      // Only fetch options the first time
-      const options = languageOptions.length === 0 ? await getLanguageOptions() : languageOptions
       const selectedLanguage =
-        options.find((lang: LanguageOption) => lang.code === languageCode) ?? options[0]
+        languageOptions.find((lang: LanguageOption) => lang.code === languageCode) ??
+        languageOptions[0]
       // Safety in case stored language code is no longer available on server
       setSelectedLanguageCode(selectedLanguage.code)
       const strings = (await getLanguageStrings(languageCode)) as LanguageStrings
       setLanguageState({
         ...languageState,
-        languageOptions: options,
+        languageOptions,
         selectedLanguage,
         strings,
         loading: false,
@@ -141,16 +150,6 @@ const getLanguageStrings = async (code: string) => {
     const fetchedStrings = await getRequest(config.serverREST + '/language/' + code)
     if (fetchedStrings?.error) throw new Error(`Language code: ${code}, ${fetchedStrings?.message}`)
     return consolidateStrings(strings, fetchedStrings)
-  } catch (err) {
-    throw err
-  }
-}
-
-const getLanguageOptions = async () => {
-  try {
-    const options = await getRequest(config.serverREST + '/localisations')
-    if (options?.error) throw new Error('Unable to fetch languages list')
-    return options.filter((lang: LanguageOption) => lang?.enabled)
   } catch (err) {
     throw err
   }

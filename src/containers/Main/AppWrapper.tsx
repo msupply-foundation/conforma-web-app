@@ -16,9 +16,11 @@ const AppWrapper: React.FC = () => {
     console.error(error)
     return <p>Can't load language provider. {error.message}</p>
   }
+
   if (loading) {
     return <Loading />
   }
+
   return (
     <Router>
       <UserProvider>
