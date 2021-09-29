@@ -4,7 +4,6 @@ Function to replace localised strings that are outside the core system (which is
 
 // @ts-ignore
 import mapValuesDeep from 'map-values-deep'
-import config from '../../../config'
 import { CustomLanguageStrings } from '../../types'
 
 const replaceLocalisedStrings = <T>(
@@ -23,7 +22,7 @@ const replaceLocalisedStrings = <T>(
     matches.forEach((match, index) => {
       const replacement =
         strings?.[languageCode]?.[keyNames[index]] ??
-        strings?.[config.defaultLanguageCode]?.[keyNames[index]] ??
+        strings?.default?.[keyNames[index]] ??
         'STRING KEY NOT FOUND'
       translatedString = translatedString.replace(match, replacement)
     })
