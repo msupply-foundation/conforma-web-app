@@ -5,10 +5,6 @@ import { FullStructure, SectionState, Page, ReviewProgress } from '../../types'
 const generateReviewerResponsesProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach(generatePageReviewProgress)
   newStructure?.sortedSections?.forEach(generateSectionReviewProgress)
-
-  newStructure?.sortedSections?.forEach((section) =>
-    console.log(section.details.code, section.reviewProgress)
-  )
 }
 
 const generateSectionReviewProgress = (section: SectionState) => {
