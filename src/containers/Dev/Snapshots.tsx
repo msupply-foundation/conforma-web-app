@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Button, Grid, Header, Icon, Input, Label, Loader, Modal, Table } from 'semantic-ui-react'
+import { Button, Header, Icon, Input, Label, Loader, Modal, Table } from 'semantic-ui-react'
 import config from '../../config'
 
 const snapshotsBaseUrl = `${config.serverREST}/snapshot`
@@ -244,13 +244,7 @@ const Snapshots: React.FC = () => {
     return (
       <>
         <Table.Cell colSpan={4} textAlign="right">
-          <Button
-            primary
-            // color="blue"
-            // size="mini"
-            onClick={() => fileInputRef?.current?.click()}
-            // labelPosition="right"
-          >
+          <Button primary onClick={() => fileInputRef?.current?.click()}>
             Upload <Icon name="upload" />
           </Button>
           <input
