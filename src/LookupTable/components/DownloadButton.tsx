@@ -2,6 +2,7 @@ import axios from 'axios'
 import config from '../../config'
 import React, { Fragment, useState } from 'react'
 import { Popup, Button, Icon, Message } from 'semantic-ui-react'
+import strings from '../../utils/constants'
 
 const DownloadButton = ({
   id,
@@ -52,7 +53,7 @@ const DownloadButton = ({
       open={open}
       content={
         error ? (
-          <Message negative header="Error trying to download" content={error} />
+          <Message negative header={strings.LABEL_FILE_DOWNLOAD_ERROR} content={error} />
         ) : (
           popUpContent
         )

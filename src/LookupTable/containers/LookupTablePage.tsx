@@ -6,6 +6,7 @@ import { matchPath, useHistory, useParams } from 'react-router'
 import { useGetSingleTableStructure } from '../hooks'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ImportCsvModal } from '../components'
+import strings from '../../utils/constants'
 
 const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
   const { pathname } = useRouter()
@@ -20,12 +21,8 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
 
   let { lookupTableID: structureID } = useParams<{ lookupTableID: string }>()
 
-  const {
-    structureLoadState,
-    structure,
-    getStructure,
-    setStructureID,
-  } = useGetSingleTableStructure()
+  const { structureLoadState, structure, getStructure, setStructureID } =
+    useGetSingleTableStructure()
 
   const { loading, error, called }: any = structureLoadState
 
@@ -36,7 +33,7 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
   return (
     <React.Fragment>
       {error ? (
-        <Message error header={'Error loading lookup-table'} list={[error.message]} />
+        <Message error header={strings.LOOKUP_ERROR_TITLE} list={[error.message]} />
       ) : loading || !called ? (
         <Loading />
       ) : structure ? (
@@ -46,7 +43,7 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
           <LookUpTable structure={structure} />
         </Container>
       ) : (
-        <Message error header={'No lookup table found'} />
+        <Message error header={strings.LOOKUP_ERROR_NOT_FOUND} />
       )}
       <ImportCsvModal
         tableLabel={structure?.label}
