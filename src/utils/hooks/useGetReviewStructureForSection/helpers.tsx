@@ -6,6 +6,7 @@ import {
   TemplateElement,
   ReviewResponseStatus,
   ReviewStatus,
+  ReviewAssignmentStatus,
 } from '../../generated/graphql'
 import {
   addChangeRequestForReviewer,
@@ -28,6 +29,7 @@ import {
   SectionState,
   PageElement,
   AssignmentDetails,
+  ReviewAssignment,
 } from '../../types'
 
 const getSectionIds = ({
@@ -123,8 +125,8 @@ const generateReviewStructure: GenerateReviewStructure = ({
   const sections = getFilteredSections(sectionIds, newStructure.sortedSections || [])
   generateReviewSectionActions({
     sections,
-    reviewAssignment,
     thisReview: newStructure.thisReview,
+    reviewAssignment: newStructure.assignment as ReviewAssignment,
     currentUserId: currentUser?.userId as number,
   })
 
@@ -150,6 +152,8 @@ const setReviewAndAssignment = (structure: FullStructure, reviewAssignment: Assi
   // review info comes from reviewAssignment that's passed to this hook
   structure.thisReview = review
   structure.assignment = {
+    assignee: reviewAssignment.reviewer,
+    assignmentStatus: reviewAssignment.current.assignmentStatus as ReviewAssignmentStatus,
     isLastLevel,
     finalDecision: isFinalDecision
       ? {
