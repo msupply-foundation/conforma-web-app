@@ -347,7 +347,9 @@ interface ResponsesByCode {
 interface ReviewAssignment {
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
-  isFinalDecision: boolean
+  finalDecision: {
+    decisionOnReview: boolean
+  } | null
 }
 
 type ReviewSectionComponentProps = {

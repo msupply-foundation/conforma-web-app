@@ -5,6 +5,10 @@ import { FullStructure, SectionState, Page, ReviewProgress } from '../../types'
 const generateReviewerResponsesProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach(generatePageReviewProgress)
   newStructure?.sortedSections?.forEach(generateSectionReviewProgress)
+
+  newStructure?.sortedSections?.forEach((section) =>
+    console.log(section.details.code, section.reviewProgress)
+  )
 }
 
 const generateSectionReviewProgress = (section: SectionState) => {
@@ -13,8 +17,14 @@ const generateSectionReviewProgress = (section: SectionState) => {
 
 const generatePageReviewProgress = (page: Page) => {
   const totalReviewable = page.state.filter(
-    ({ isAssigned, thisReviewLatestResponse, latestApplicationResponse, element }) =>
-      (isAssigned || !!thisReviewLatestResponse) &&
+    ({
+      isAssigned,
+      thisReviewLatestResponse,
+      latestOriginalReviewResponse,
+      latestApplicationResponse,
+      element,
+    }) =>
+      (isAssigned || !!thisReviewLatestResponse || !!latestOriginalReviewResponse) &&
       element.isVisible &&
       latestApplicationResponse?.id
   )
