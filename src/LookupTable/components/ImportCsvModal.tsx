@@ -13,7 +13,7 @@ import {
 import { LookUpTableImportCsvContext } from '../contexts'
 import config from '../../config'
 import axios from 'axios'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import pluralize from 'pluralize'
 
 const ImportCsvModal: React.FC<any> = ({
@@ -23,6 +23,7 @@ const ImportCsvModal: React.FC<any> = ({
   tableLabel = '',
   tableStructureID = 0,
 }: any) => {
+  const { strings } = useLanguageProvider()
   const { state, dispatch } = React.useContext(LookUpTableImportCsvContext)
   const { uploadModalOpen, file, tableName, submittable, submitting, errors, success } = state
 
