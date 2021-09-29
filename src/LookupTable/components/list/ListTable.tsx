@@ -5,7 +5,7 @@ import { Loading } from '../../../components'
 import { FieldMapType, LookUpTableType } from '../../types'
 import { DownloadButton } from '..'
 import { useRouter } from '../../../utils/hooks/useRouter'
-import strings from '../../../utils/constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 
 const TABLE_PREFIX = 'lookup_table_'
 
@@ -14,6 +14,7 @@ const ListTable: React.FC<any> = ({
   allTableStructuresLoadState,
   setAllTableStructures,
 }: any) => {
+  const { strings } = useLanguageProvider()
   const { loading, error } = allTableStructuresLoadState
   const {
     match: { path },

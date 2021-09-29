@@ -2,10 +2,11 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Button, Header } from 'semantic-ui-react'
 import { DownloadButton, MainMenu } from '..'
-import strings from '../../../utils/constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useRouter } from '../../../utils/hooks/useRouter'
 
 const LookUpMainMenu: React.FC<any> = (props) => {
+  const { strings } = useLanguageProvider()
   const { tableLabel, tableId } = props
   const {
     match: { path },

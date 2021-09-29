@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Button, Header } from 'semantic-ui-react'
 import { MainMenu } from '..'
-import strings from '../../../utils/constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import { LookUpTableListMainMenuType } from '../../types'
 
@@ -10,6 +10,7 @@ const ListMainMenu: React.FC<LookUpTableListMainMenuType> = ({
   headerText,
   subHeaderText = '',
 }) => {
+  const { strings } = useLanguageProvider()
   const {
     match: { path },
   } = useRouter()

@@ -7,7 +7,7 @@ import {
   User,
 } from '../generated/graphql'
 import { HistoryElement } from '../types'
-import strings from '../constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 interface UseGetQuestionHistoryProps {
   serial: string
@@ -33,6 +33,7 @@ interface ResponsesByStageByDate {
 }
 
 const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuestionHistoryProps) => {
+  const { strings } = useLanguageProvider()
   const [historyList, setHistoryList] = useState<HistoryElementsByStage>([])
   const { data, error, loading } = isApplicant
     ? useGetHistoryForApplicantQuery({ variables })

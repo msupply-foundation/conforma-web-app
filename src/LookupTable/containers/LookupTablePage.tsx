@@ -6,9 +6,10 @@ import { matchPath, useHistory, useParams } from 'react-router'
 import { useGetSingleTableStructure } from '../hooks'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ImportCsvModal } from '../components'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
+  const { strings } = useLanguageProvider()
   const { pathname } = useRouter()
 
   const match: any = matchPath(pathname, {

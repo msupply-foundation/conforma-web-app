@@ -35,7 +35,8 @@ import {
   ReviewStatus,
   useUpdateReviewResponseMutation,
 } from '../../utils/generated/graphql'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
+import useLocalisedEnums from '../../utils/hooks/useLocalisedEnums'
 import useGetReviewStructureForSections from '../../utils/hooks/useGetReviewStructureForSection'
 import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivation'
 import useScrollableAttachments, {
@@ -44,7 +45,6 @@ import useScrollableAttachments, {
 import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
-import messages from '../../utils/messages'
 import { Link } from 'react-router-dom'
 
 const ReviewPage: React.FC<{
@@ -52,6 +52,7 @@ const ReviewPage: React.FC<{
   previousAssignment: AssignmentDetails
   fullApplicationStructure: FullStructure
 }> = ({ reviewAssignment, previousAssignment, fullApplicationStructure }) => {
+  const { strings } = useLanguageProvider()
   const {
     userState: { currentUser },
   } = useUserState()
@@ -73,6 +74,14 @@ const ReviewPage: React.FC<{
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!fullReviewStructure) return <Loading />
+
+  const messages = {
+    REVIEW_STATUS_PENDING: {
+      title: strings.REVIEW_STATUS_PENDING_TITLE,
+      message: strings.REVIEW_STATUS_PENDING_MESSAGE,
+      option: strings.OK,
+    },
+  }
 
   // TODO decide how to handle this, and localise if not deleted
   if (
@@ -146,14 +155,14 @@ const ReviewPage: React.FC<{
       <div style={{ display: 'flex' }}>
         {isConsolidation ? (
           isAssignedToCurrentUser ? (
-            <ConsolidationByLabel />
+            <ConsolidationByLabel strings={strings} />
           ) : (
-            <ConsolidationByLabel user={thisReview?.reviewer} />
+            <ConsolidationByLabel user={thisReview?.reviewer} strings={strings} />
           )
         ) : isAssignedToCurrentUser ? (
-          <ReviewByLabel />
+          <ReviewByLabel strings={strings} />
         ) : (
-          <ReviewByLabel user={thisReview?.reviewer} />
+          <ReviewByLabel user={thisReview?.reviewer} strings={strings} />
         )}
       </div>
       <div id="application-summary-content">
@@ -219,6 +228,7 @@ const ReviewPage: React.FC<{
 }
 
 const SectionRowStatus: React.FC<SectionState> = (section) => {
+  const { strings } = useLanguageProvider()
   const { assignment, reviewProgress, consolidationProgress } = section
   const { isConsolidation, isReviewable, isAssignedToCurrentUser } = assignment as SectionAssignment
 
@@ -234,7 +244,7 @@ const SectionRowStatus: React.FC<SectionState> = (section) => {
       const totalDone = (reviewProgress?.doneConform || 0) + (reviewProgress?.doneNonConform || 0)
       if (totalDone > 0) return <ReviewSectionProgressBar reviewProgress={reviewProgress} />
     }
-    return <ReviewInProgressLabel />
+    return <ReviewInProgressLabel strings={strings} />
   }
   // else: not reviewable
   return null
@@ -251,6 +261,7 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
   stageNumber,
   page,
 }) => {
+  const { strings } = useLanguageProvider()
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
 
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)
@@ -304,12 +315,14 @@ const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
   review,
   isFinalDecision,
   serial,
-}) =>
-  isFinalDecision && !!review ? (
+}) => {
+  const { strings } = useLanguageProvider()
+  const { Decision } = useLocalisedEnums()
+  return isFinalDecision && !!review ? (
     <Segment.Group horizontal id="previous-review">
       <Segment>
         <Header as="h3">{strings.LABEL_PREVIOUS_REVIEW}:</Header>
-        <ReviewByLabel user={review.reviewer} />
+        <ReviewByLabel user={review.reviewer} strings={strings} />
         <Button
           className="button-med"
           as={Link}
@@ -323,7 +336,7 @@ const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
           <p style={{ width: '150px' }}>
             <strong>{strings.LABEL_REVIEW_SUBMITTED_AS}:</strong>
           </p>
-          {strings[review.reviewDecision.decision]}
+          {Decision[review.reviewDecision.decision]}
         </Segment>
       )}
       {!review?.reviewDecision?.comment && review.reviewDecision?.comment !== '' && (
@@ -333,5 +346,6 @@ const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
       )}
     </Segment.Group>
   ) : null
+}
 
 export default ReviewPage

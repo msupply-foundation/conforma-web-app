@@ -15,15 +15,16 @@ import evaluateExpression, { isEvaluationExpression } from '@openmsupply/express
 import { isEqual } from 'lodash'
 import { Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
-import strings from '../utils/constants'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'
-import messages from '../utils/messages'
+import { useLanguageProvider } from '../contexts/Localisation'
 import globalConfig from '../config'
 import { SemanticICONS } from 'semantic-ui-react'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
+  const { strings } = useLanguageProvider()
+  const calculateValidationState = useCalculateValidationState()
   const [responseMutation] = useUpdateResponseMutation()
   const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
     props
@@ -196,7 +197,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const {
     isChangeRequest = false,
     isChanged = false,
-    reviewerComment = messages.APPLICATION_OTHER_CHANGES_MADE,
+    reviewerComment = strings.APPLICATION_OTHER_CHANGES_MADE,
   } = changesRequired || {}
 
   const getChangeRequestClassesAndIcon = () => {
@@ -274,33 +275,39 @@ export const buildParameters = (
   return [simpleParameters, parameterExpressions]
 }
 
-const calculateValidationState = async ({
-  validationExpression,
-  validationMessage,
-  isRequired,
-  isStrictPage,
-  responses,
-  evaluationParameters,
-  currentResponse,
-}: {
-  validationExpression: EvaluatorNode | undefined
-  validationMessage: string | null | undefined
-  isRequired: boolean | undefined
-  isStrictPage: boolean | undefined
-  responses: any // thisResponse field makes it not "ResponsesByCode"
-  evaluationParameters: EvaluatorParameters
-  currentResponse: ResponseFull | null
-}) => {
-  const validationResult = validationExpression
-    ? await validate(validationExpression, validationMessage as string, evaluationParameters)
-    : { isValid: true }
+const useCalculateValidationState = () => {
+  const { strings } = useLanguageProvider()
 
-  if (!validationResult.isValid && currentResponse?.text !== undefined) return validationResult
-  // !responses.thisResponse, check for null, undefined, empty string
-  if (isRequired && isStrictPage && !responses?.thisResponse)
-    return {
-      isValid: false,
-      validationMessage: validationMessage || strings.VALIDATION_REQUIRED_ERROR,
-    }
-  return { isValid: true }
+  const calculateValidationState = async ({
+    validationExpression,
+    validationMessage,
+    isRequired,
+    isStrictPage,
+    responses,
+    evaluationParameters,
+    currentResponse,
+  }: {
+    validationExpression: EvaluatorNode | undefined
+    validationMessage: string | null | undefined
+    isRequired: boolean | undefined
+    isStrictPage: boolean | undefined
+    responses: any // thisResponse field makes it not "ResponsesByCode"
+    evaluationParameters: EvaluatorParameters
+    currentResponse: ResponseFull | null
+  }) => {
+    const validationResult = validationExpression
+      ? await validate(validationExpression, validationMessage as string, evaluationParameters)
+      : { isValid: true }
+
+    if (!validationResult.isValid && currentResponse?.text !== undefined) return validationResult
+    // !responses.thisResponse, check for null, undefined, empty string
+    if (isRequired && isStrictPage && !responses?.thisResponse)
+      return {
+        isValid: false,
+        validationMessage: validationMessage || strings.VALIDATION_REQUIRED_ERROR,
+      }
+    return { isValid: true }
+  }
+
+  return calculateValidationState
 }

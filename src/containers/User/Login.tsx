@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { SyntheticEvent, useState, useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
 import { Link } from 'react-router-dom'
-import { Form, Button, Container, Icon, Image, Header, List } from 'semantic-ui-react'
+import { Form, Button, Container, Icon, Image, Header, List, Dropdown } from 'semantic-ui-react'
 import isLoggedIn from '../../utils/helpers/loginCheck'
-import strings from '../../utils/constants'
-import messages from '../../utils/messages'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { LoginPayload, OrganisationSimple } from '../../utils/types'
 const logo = require('../../../images/logos/logo_512.png').default
@@ -22,10 +21,11 @@ const Login: React.FC = () => {
   const [selectedOrgId, setSelectedOrgId] = useState<number>(NO_ORG_SELECTED)
   const { push, history } = useRouter()
   const { onLogin } = useUserState()
+  const { strings, languageOptions } = useLanguageProvider()
 
   const noOrgOption: OrganisationSimple = {
     orgId: LOGIN_AS_NO_ORG,
-    orgName: strings.LABEL_NO_ORG_OPTION,
+    orgName: strings.LABEL_NO_ORG_OPTION ?? '',
     userRole: null,
     isSystemOrg: false,
   }
@@ -97,6 +97,7 @@ const Login: React.FC = () => {
 
   return (
     <Container id="login-container">
+      {languageOptions.length > 1 && <LanguageSelector />}
       <div id="login-box">
         <div className="flex-centered">
           <Image src={logo} className="image-icon" />
@@ -106,7 +107,7 @@ const Login: React.FC = () => {
         </div>
         <Header as="h2" className="centered header-space-around-medium">
           {loginPayload && selectedOrgId === NO_ORG_SELECTED
-            ? messages.LOGIN_WELCOME.replace('%1', loginPayload.user.firstName)
+            ? strings.LOGIN_WELCOME.replace('%1', loginPayload.user.firstName)
             : strings.TITLE_LOGIN}
         </Header>
         <Form>
@@ -161,7 +162,7 @@ const Login: React.FC = () => {
           {loginPayload?.orgList && loginPayload?.orgList?.length > 1 && (
             <>
               <p>
-                <strong>{messages.LOGIN_ORG_SELECT}</strong>
+                <strong>{strings.LOGIN_ORG_SELECT}</strong>
               </p>
               <List
                 celled
@@ -189,6 +190,33 @@ const Login: React.FC = () => {
         </Form>
       </div>
     </Container>
+  )
+}
+
+const LanguageSelector: React.FC = () => {
+  const { languageOptions, selectedLanguage, setLanguage } = useLanguageProvider()
+  if (!selectedLanguage) return null
+
+  const dropdownOptions = languageOptions.map((opt, index) => ({
+    key: opt.code,
+    text: `${opt.flag} ${opt.languageName}`,
+    value: index,
+  }))
+
+  const handleLanguageChange = async (_: SyntheticEvent, { value }: any) => {
+    setLanguage(languageOptions[value].code)
+  }
+
+  return (
+    <div className="top-right-corner">
+      <Dropdown
+        text={`${selectedLanguage.flag} ${selectedLanguage.languageName}
+      `}
+        options={dropdownOptions}
+        onChange={handleLanguageChange}
+        direction="left"
+      />
+    </div>
   )
 }
 

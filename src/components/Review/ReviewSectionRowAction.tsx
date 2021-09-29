@@ -8,7 +8,7 @@ import {
   ReviewProgress,
   ReviewSectionComponentProps,
 } from '../../utils/types'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
 import { ReviewStatus } from '../../utils/generated/graphql'
@@ -16,6 +16,7 @@ import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignme
 import useRemakePreviousReview from '../../utils/hooks/useRemakePreviousReview'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
+  const { strings } = useLanguageProvider()
   const {
     action,
     isAssignedToCurrentUser,
@@ -98,6 +99,7 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   thisReview,
   action,
 }) => {
+  const { strings } = useLanguageProvider()
   const {
     location: { pathname },
     push,
@@ -186,6 +188,7 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure: structure,
   shouldAssignState: [shouldAssign, setShouldAssign],
 }) => {
+  const { strings } = useLanguageProvider()
   const [assignmentError, setAssignmentError] = useState(false)
 
   // Do auto-assign for other sections when one is selected
@@ -230,6 +233,7 @@ const ViewSubmittedReviewButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
   section: { details },
 }) => {
+  const { strings } = useLanguageProvider()
   const { pathname, push } = useRouter()
   const reviewId = fullStructure.thisReview?.id
   return (
