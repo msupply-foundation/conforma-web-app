@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getAllTemplates {
+  query getAllTemplates($languageCode: String! = "") {
     templates {
       nodes {
         code
@@ -13,6 +13,12 @@ export default gql`
         status
         templateCategory {
           title
+        }
+        customLocalisations(condition: { languageCode: $languageCode }) {
+          nodes {
+            languageCode
+            strings
+          }
         }
         applications(filter: { isConfig: { equalTo: false } }) {
           totalCount

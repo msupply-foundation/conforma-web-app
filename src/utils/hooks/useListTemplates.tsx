@@ -28,7 +28,6 @@ const emptyTemplateData = {
 
 const useListTemplates = (templatePermissions: TemplatePermissions, isLoading: boolean) => {
   const [templatesData, setTemplatesData] = useState<TemplatesData>(emptyTemplateData)
-  const { selectedLanguage } = useLanguageProvider()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
 
@@ -47,7 +46,8 @@ const useListTemplates = (templatePermissions: TemplatePermissions, isLoading: b
       const filteredTemplates = (data?.templates?.nodes || [])
         .filter((template) => templatePermissions[String(template?.code)])
         .map((template) =>
-          translate(template, template?.languageStrings, selectedLanguage.code)
+          // translate(template, template?.languageStrings, selectedLanguage.code)
+          translate(template, {})
         ) as Template[]
       if (filteredTemplates.length === 0) {
         setTemplatesData(emptyTemplateData)

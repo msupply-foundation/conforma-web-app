@@ -10,7 +10,7 @@ import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
 import { EvaluatorParameters } from '../types'
 import { getTemplateSections } from '../helpers/application/getSectionsDetails'
-import { TemplateDetails, CustomLanguageStrings } from '../types'
+import { TemplateDetails } from '../types'
 import translate from '../helpers/structure/replaceLocalisedStrings'
 import config from '../../config'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -36,6 +36,7 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
   } = useGetTemplateQuery({
     variables: {
       code: templateCode || '',
+      langCode: selectedLanguage.code,
     },
     skip: !templateCode,
     fetchPolicy: 'network-only',
@@ -52,8 +53,10 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
     }
 
     const unprocessedTemplate = data?.templates?.nodes[0] as Template
-    const { languageStrings } = unprocessedTemplate
-    const template = translate(unprocessedTemplate, languageStrings, selectedLanguage.code)
+    const languageStrings = unprocessedTemplate?.customLocalisations.nodes?.[0]?.strings ?? {}
+    const template = translate(unprocessedTemplate, languageStrings)
+
+    console.log('template', template)
 
     error = checkForTemplateSectionErrors(template)
     if (error) {

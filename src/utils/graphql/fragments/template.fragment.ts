@@ -12,7 +12,12 @@ export default gql`
     submissionMessage
     version
     icon
-    languageStrings
+    customLocalisations(condition: { languageCode: $langCode }) {
+      nodes {
+        languageCode
+        strings
+      }
+    }
     templateCategory {
       id
       code

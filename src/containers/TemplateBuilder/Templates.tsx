@@ -157,6 +157,7 @@ const Templates: React.FC = () => {
     isInnerRender = false
   ) => {
     if (rowIndex === selectedRow && !isInnerRender) return null
+    console.log('template', template)
 
     return (
       <Table.Row

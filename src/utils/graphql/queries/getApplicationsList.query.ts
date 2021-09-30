@@ -7,6 +7,7 @@ export default gql`
     $paginationOffset: Int!
     $numberToFetch: Int!
     $userId: Int! = 0
+    $languageCode: String! = ""
   ) {
     applicationList(
       filter: $filters
@@ -14,6 +15,7 @@ export default gql`
       offset: $paginationOffset
       first: $numberToFetch
       userid: $userId
+      languageCode: $languageCode
     ) {
       nodes {
         id
@@ -21,7 +23,6 @@ export default gql`
         name
         templateCode
         templateName
-        languageStrings
         applicant
         orgName
         stage
@@ -29,6 +30,7 @@ export default gql`
         status
         outcome
         lastActiveDate
+        languageStrings
         reviewerAction
         assignerAction
         assigners

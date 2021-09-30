@@ -6,6 +6,7 @@ export default gql`
     $isConfig: Boolean = false
     $serial: String
     $templateId: Int!
+    $langCode: String! = ""
     $userId: Int
     $orgId: Int
     $sessionId: String!

@@ -44,6 +44,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   const { data, loading, error, refetch } = useGetApplicationQuery({
     variables: {
       serial: serialNumber,
+      langCode: selectedLanguage.code,
     },
     fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
     notifyOnNetworkStatusChange: true,
@@ -56,14 +57,10 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     }
     if (!data) return
 
-    const templateLanguageStrings = data?.applicationBySerial?.template?.languageStrings
+    const templateLanguageStrings =
+      data?.applicationBySerial?.template?.customLocalisations?.nodes[0]?.strings ?? {}
 
-    if (!templateLanguageStrings) {
-      setStructureError('Missing localisation strings')
-      return
-    }
-
-    const translatedData = translate(data, templateLanguageStrings, selectedLanguage.code)
+    const translatedData = translate(data, templateLanguageStrings)
 
     const application = translatedData.applicationBySerial
 

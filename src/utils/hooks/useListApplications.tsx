@@ -10,11 +10,11 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import translate from '../helpers/structure/replaceLocalisedStrings'
 
 const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicStringObject) => {
+  const { selectedLanguage } = useLanguageProvider()
   const APPLICATION_FILTERS = useApplicationFilters()
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
   const [applicationCount, setApplicationCount] = useState<number>(0)
   const [error, setError] = useState('')
-  const { selectedLanguage } = useLanguageProvider()
   const { updateQuery } = useRouter()
   const {
     userState: { currentUser },
@@ -38,6 +38,7 @@ const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicSt
       paginationOffset,
       numberToFetch,
       userId: currentUser?.userId as number,
+      languageCode: selectedLanguage.code,
     },
     fetchPolicy: 'network-only',
   })
@@ -57,7 +58,7 @@ const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicSt
     }
     if (data?.applicationList) {
       const applicationsList = (data?.applicationList?.nodes).map((application) =>
-        translate(application, application?.languageStrings, selectedLanguage.code)
+        translate(application, application?.languageStrings)
       )
       setApplications(applicationsList as ApplicationListShape[])
       setApplicationCount(data?.applicationList?.totalCount)

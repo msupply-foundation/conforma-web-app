@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon'
 import { useState, useEffect } from 'react'
+import { useLanguageProvider } from '../../contexts/Localisation'
+import translate from '../../utils/helpers/structure/replaceLocalisedStrings'
 import { TemplateStatus, useGetAllTemplatesQuery } from '../../utils/generated/graphql'
 
 export type Template = {
@@ -20,15 +22,22 @@ export type Templates = {
 }[]
 
 const useGetTemplates = () => {
+  const { selectedLanguage } = useLanguageProvider()
   const [templates, setTemplates] = useState<Templates>([])
 
-  const { data, error, refetch } = useGetAllTemplatesQuery({ fetchPolicy: 'network-only' })
+  const { data, error, refetch } = useGetAllTemplatesQuery({
+    variables: {
+      languageCode: selectedLanguage.code,
+    },
+    fetchPolicy: 'network-only',
+  })
 
   useEffect(() => {
     if (data && !error) {
       const templates: Templates = []
 
       const templateNodes = data?.templates?.nodes || []
+      console.log('templateNodes', templateNodes)
       templateNodes.forEach((template) => {
         if (
           !template?.code ||
@@ -41,6 +50,10 @@ const useGetTemplates = () => {
           return
         }
 
+        const languageStrings = template?.customLocalisations?.nodes?.[0]?.strings ?? {}
+
+        const translatedTemplate: any = translate(template, languageStrings)
+
         const {
           code,
           name,
@@ -50,7 +63,7 @@ const useGetTemplates = () => {
           versionTimestamp,
           templateCategory,
           applications,
-        } = template
+        } = translatedTemplate
         const holder = templates.find(({ main }) => main.code === code)
 
         const current = {

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE) {
+  query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE, $langCode: String! = "") {
     templates(condition: { code: $code, status: $status }) {
       nodes {
         ...templateFragment

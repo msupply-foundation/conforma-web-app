@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getApplication($serial: String!) {
+  query getApplication($serial: String!, $langCode: String! = "") {
     applicationBySerial(serial: $serial) {
       ...Application
       template {

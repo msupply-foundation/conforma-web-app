@@ -57,6 +57,8 @@ export type Query = Node & {
   constraintsInfos?: Maybe<ConstraintsInfosConnection>;
   /** Reads and enables pagination through a set of `Counter`. */
   counters?: Maybe<CountersConnection>;
+  /** Reads and enables pagination through a set of `CustomLocalisation`. */
+  customLocalisations?: Maybe<CustomLocalisationsConnection>;
   /** Reads and enables pagination through a set of `ElementTypePlugin`. */
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
   /** Reads and enables pagination through a set of `File`. */
@@ -144,6 +146,7 @@ export type Query = Node & {
   applicationStatusHistory?: Maybe<ApplicationStatusHistory>;
   counter?: Maybe<Counter>;
   counterByName?: Maybe<Counter>;
+  customLocalisation?: Maybe<CustomLocalisation>;
   elementTypePlugin?: Maybe<ElementTypePlugin>;
   file?: Maybe<File>;
   fileByUniqueId?: Maybe<File>;
@@ -235,6 +238,8 @@ export type Query = Node & {
   applicationStatusHistoryByNodeId?: Maybe<ApplicationStatusHistory>;
   /** Reads a single `Counter` using its globally unique `ID`. */
   counterByNodeId?: Maybe<Counter>;
+  /** Reads a single `CustomLocalisation` using its globally unique `ID`. */
+  customLocalisationByNodeId?: Maybe<CustomLocalisation>;
   /** Reads a single `ElementTypePlugin` using its globally unique `ID`. */
   elementTypePluginByNodeId?: Maybe<ElementTypePlugin>;
   /** Reads a single `File` using its globally unique `ID`. */
@@ -465,6 +470,19 @@ export type QueryCountersArgs = {
   orderBy?: Maybe<Array<CountersOrderBy>>;
   condition?: Maybe<CounterCondition>;
   filter?: Maybe<CounterFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCustomLocalisationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+  condition?: Maybe<CustomLocalisationCondition>;
+  filter?: Maybe<CustomLocalisationFilter>;
 };
 
 
@@ -1029,6 +1047,12 @@ export type QueryCounterByNameArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryCustomLocalisationArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryElementTypePluginArgs = {
   code: Scalars['String'];
 };
@@ -1318,6 +1342,7 @@ export type QueryVerificationByUniqueIdArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryApplicationListArgs = {
   userid?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -1586,6 +1611,12 @@ export type QueryApplicationStatusHistoryByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCounterByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCustomLocalisationByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -2418,8 +2449,6 @@ export type TemplateFilter = {
   versionTimestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `version` field. */
   version?: Maybe<IntFilter>;
-  /** Filter by the object’s `languageStrings` field. */
-  languageStrings?: Maybe<JsonFilter>;
   /** Filter by the object’s `templateSections` relation. */
   templateSections?: Maybe<TemplateToManyTemplateSectionFilter>;
   /** Some related `templateSections` exist. */
@@ -2460,6 +2489,10 @@ export type TemplateFilter = {
   files?: Maybe<TemplateToManyFileFilter>;
   /** Some related `files` exist. */
   filesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `customLocalisations` relation. */
+  customLocalisations?: Maybe<TemplateToManyCustomLocalisationFilter>;
+  /** Some related `customLocalisations` exist. */
+  customLocalisationsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `templateCategory` relation. */
   templateCategory?: Maybe<TemplateCategoryFilter>;
   /** A related `templateCategory` exists. */
@@ -3357,6 +3390,10 @@ export type PermissionNameFilter = {
   templatePermissions?: Maybe<PermissionNameToManyTemplatePermissionFilter>;
   /** Some related `templatePermissions` exist. */
   templatePermissionsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `customLocalisations` relation. */
+  customLocalisations?: Maybe<PermissionNameToManyCustomLocalisationFilter>;
+  /** Some related `customLocalisations` exist. */
+  customLocalisationsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `permissionPolicy` relation. */
   permissionPolicy?: Maybe<PermissionPolicyFilter>;
   /** A related `permissionPolicy` exists. */
@@ -3423,32 +3460,82 @@ export type TemplatePermissionFilter = {
   not?: Maybe<TemplatePermissionFilter>;
 };
 
-/** A filter to be used against `PermissionPolicy` object types. All fields are combined with a logical ‘and.’ */
-export type PermissionPolicyFilter = {
+/** A filter to be used against many `CustomLocalisation` object types. All fields are combined with a logical ‘and.’ */
+export type PermissionNameToManyCustomLocalisationFilter = {
+  /** Every related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<CustomLocalisationFilter>;
+  /** Some related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<CustomLocalisationFilter>;
+  /** No related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<CustomLocalisationFilter>;
+};
+
+/** A filter to be used against `CustomLocalisation` object types. All fields are combined with a logical ‘and.’ */
+export type CustomLocalisationFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `name` field. */
-  name?: Maybe<StringFilter>;
-  /** Filter by the object’s `description` field. */
-  description?: Maybe<StringFilter>;
-  /** Filter by the object’s `rules` field. */
-  rules?: Maybe<JsonFilter>;
-  /** Filter by the object’s `type` field. */
-  type?: Maybe<PermissionPolicyTypeFilter>;
-  /** Filter by the object’s `isAdmin` field. */
-  isAdmin?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `defaultRestrictions` field. */
-  defaultRestrictions?: Maybe<JsonFilter>;
-  /** Filter by the object’s `permissionNames` relation. */
-  permissionNames?: Maybe<PermissionPolicyToManyPermissionNameFilter>;
-  /** Some related `permissionNames` exist. */
-  permissionNamesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `languageCode` field. */
+  languageCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `strings` field. */
+  strings?: Maybe<JsonFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `filterId` field. */
+  filterId?: Maybe<IntFilter>;
+  /** Filter by the object’s `outcomeDisplayId` field. */
+  outcomeDisplayId?: Maybe<IntFilter>;
+  /** Filter by the object’s `permissionNameId` field. */
+  permissionNameId?: Maybe<IntFilter>;
+  /** Filter by the object’s `template` relation. */
+  template?: Maybe<TemplateFilter>;
+  /** A related `template` exists. */
+  templateExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `filter` relation. */
+  filter?: Maybe<FilterFilter>;
+  /** A related `filter` exists. */
+  filterExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `outcomeDisplay` relation. */
+  outcomeDisplay?: Maybe<OutcomeDisplayFilter>;
+  /** A related `outcomeDisplay` exists. */
+  outcomeDisplayExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `permissionName` relation. */
+  permissionName?: Maybe<PermissionNameFilter>;
+  /** A related `permissionName` exists. */
+  permissionNameExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<PermissionPolicyFilter>>;
+  and?: Maybe<Array<CustomLocalisationFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<PermissionPolicyFilter>>;
+  or?: Maybe<Array<CustomLocalisationFilter>>;
   /** Negates the expression. */
-  not?: Maybe<PermissionPolicyFilter>;
+  not?: Maybe<CustomLocalisationFilter>;
+};
+
+/** A filter to be used against `Filter` object types. All fields are combined with a logical ‘and.’ */
+export type FilterFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: Maybe<StringFilter>;
+  /** Filter by the object’s `query` field. */
+  query?: Maybe<JsonFilter>;
+  /** Filter by the object’s `userRole` field. */
+  userRole?: Maybe<PermissionPolicyTypeFilter>;
+  /** Filter by the object’s `templateFilterJoins` relation. */
+  templateFilterJoins?: Maybe<FilterToManyTemplateFilterJoinFilter>;
+  /** Some related `templateFilterJoins` exist. */
+  templateFilterJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `customLocalisations` relation. */
+  customLocalisations?: Maybe<FilterToManyCustomLocalisationFilter>;
+  /** Some related `customLocalisations` exist. */
+  customLocalisationsExist?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<FilterFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<FilterFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<FilterFilter>;
 };
 
 /** A filter to be used against PermissionPolicyType fields. All fields are combined with a logical ‘and.’ */
@@ -3482,6 +3569,202 @@ export enum PermissionPolicyType {
   Apply = 'APPLY',
   Assign = 'ASSIGN'
 }
+
+/** A filter to be used against many `TemplateFilterJoin` object types. All fields are combined with a logical ‘and.’ */
+export type FilterToManyTemplateFilterJoinFilter = {
+  /** Every related `TemplateFilterJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<TemplateFilterJoinFilter>;
+  /** Some related `TemplateFilterJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<TemplateFilterJoinFilter>;
+  /** No related `TemplateFilterJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<TemplateFilterJoinFilter>;
+};
+
+/** A filter to be used against `TemplateFilterJoin` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateFilterJoinFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `filterId` field. */
+  filterId?: Maybe<IntFilter>;
+  /** Filter by the object’s `template` relation. */
+  template?: Maybe<TemplateFilter>;
+  /** Filter by the object’s `filter` relation. */
+  filter?: Maybe<FilterFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<TemplateFilterJoinFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<TemplateFilterJoinFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<TemplateFilterJoinFilter>;
+};
+
+/** A filter to be used against many `CustomLocalisation` object types. All fields are combined with a logical ‘and.’ */
+export type FilterToManyCustomLocalisationFilter = {
+  /** Every related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<CustomLocalisationFilter>;
+  /** Some related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<CustomLocalisationFilter>;
+  /** No related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<CustomLocalisationFilter>;
+};
+
+/** A filter to be used against `OutcomeDisplay` object types. All fields are combined with a logical ‘and.’ */
+export type OutcomeDisplayFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `tableName` field. */
+  tableName?: Maybe<StringFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: Maybe<StringFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `permissionNames` field. */
+  permissionNames?: Maybe<StringListFilter>;
+  /** Filter by the object’s `tableViewIncludeColumns` field. */
+  tableViewIncludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `tableViewExcludeColumns` field. */
+  tableViewExcludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `detailViewIncludeColumns` field. */
+  detailViewIncludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `detailViewExcludeColumns` field. */
+  detailViewExcludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `detailViewHeaderColumn` field. */
+  detailViewHeaderColumn?: Maybe<StringFilter>;
+  /** Filter by the object’s `showLinkedApplications` field. */
+  showLinkedApplications?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `priority` field. */
+  priority?: Maybe<IntFilter>;
+  /** Filter by the object’s `outcomeDisplayTables` relation. */
+  outcomeDisplayTables?: Maybe<OutcomeDisplayToManyOutcomeDisplayTableFilter>;
+  /** Some related `outcomeDisplayTables` exist. */
+  outcomeDisplayTablesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `outcomeDisplayDetails` relation. */
+  outcomeDisplayDetails?: Maybe<OutcomeDisplayToManyOutcomeDisplayDetailFilter>;
+  /** Some related `outcomeDisplayDetails` exist. */
+  outcomeDisplayDetailsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `customLocalisations` relation. */
+  customLocalisations?: Maybe<OutcomeDisplayToManyCustomLocalisationFilter>;
+  /** Some related `customLocalisations` exist. */
+  customLocalisationsExist?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<OutcomeDisplayFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<OutcomeDisplayFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<OutcomeDisplayFilter>;
+};
+
+/** A filter to be used against many `OutcomeDisplayTable` object types. All fields are combined with a logical ‘and.’ */
+export type OutcomeDisplayToManyOutcomeDisplayTableFilter = {
+  /** Every related `OutcomeDisplayTable` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<OutcomeDisplayTableFilter>;
+  /** Some related `OutcomeDisplayTable` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<OutcomeDisplayTableFilter>;
+  /** No related `OutcomeDisplayTable` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<OutcomeDisplayTableFilter>;
+};
+
+/** A filter to be used against `OutcomeDisplayTable` object types. All fields are combined with a logical ‘and.’ */
+export type OutcomeDisplayTableFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `columnName` field. */
+  columnName?: Maybe<StringFilter>;
+  /** Filter by the object’s `isTextColumn` field. */
+  isTextColumn?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: Maybe<StringFilter>;
+  /** Filter by the object’s `outcomeDisplayId` field. */
+  outcomeDisplayId?: Maybe<IntFilter>;
+  /** Filter by the object’s `outcomeDisplay` relation. */
+  outcomeDisplay?: Maybe<OutcomeDisplayFilter>;
+  /** A related `outcomeDisplay` exists. */
+  outcomeDisplayExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<OutcomeDisplayTableFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<OutcomeDisplayTableFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<OutcomeDisplayTableFilter>;
+};
+
+/** A filter to be used against many `OutcomeDisplayDetail` object types. All fields are combined with a logical ‘and.’ */
+export type OutcomeDisplayToManyOutcomeDisplayDetailFilter = {
+  /** Every related `OutcomeDisplayDetail` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<OutcomeDisplayDetailFilter>;
+  /** Some related `OutcomeDisplayDetail` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<OutcomeDisplayDetailFilter>;
+  /** No related `OutcomeDisplayDetail` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<OutcomeDisplayDetailFilter>;
+};
+
+/** A filter to be used against `OutcomeDisplayDetail` object types. All fields are combined with a logical ‘and.’ */
+export type OutcomeDisplayDetailFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `columnName` field. */
+  columnName?: Maybe<StringFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: Maybe<StringFilter>;
+  /** Filter by the object’s `elementTypePluginCode` field. */
+  elementTypePluginCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `isTextColumn` field. */
+  isTextColumn?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `parameters` field. */
+  parameters?: Maybe<JsonFilter>;
+  /** Filter by the object’s `outcomeDisplayId` field. */
+  outcomeDisplayId?: Maybe<IntFilter>;
+  /** Filter by the object’s `outcomeDisplay` relation. */
+  outcomeDisplay?: Maybe<OutcomeDisplayFilter>;
+  /** A related `outcomeDisplay` exists. */
+  outcomeDisplayExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<OutcomeDisplayDetailFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<OutcomeDisplayDetailFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<OutcomeDisplayDetailFilter>;
+};
+
+/** A filter to be used against many `CustomLocalisation` object types. All fields are combined with a logical ‘and.’ */
+export type OutcomeDisplayToManyCustomLocalisationFilter = {
+  /** Every related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<CustomLocalisationFilter>;
+  /** Some related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<CustomLocalisationFilter>;
+  /** No related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<CustomLocalisationFilter>;
+};
+
+/** A filter to be used against `PermissionPolicy` object types. All fields are combined with a logical ‘and.’ */
+export type PermissionPolicyFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: Maybe<StringFilter>;
+  /** Filter by the object’s `rules` field. */
+  rules?: Maybe<JsonFilter>;
+  /** Filter by the object’s `type` field. */
+  type?: Maybe<PermissionPolicyTypeFilter>;
+  /** Filter by the object’s `isAdmin` field. */
+  isAdmin?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `defaultRestrictions` field. */
+  defaultRestrictions?: Maybe<JsonFilter>;
+  /** Filter by the object’s `permissionNames` relation. */
+  permissionNames?: Maybe<PermissionPolicyToManyPermissionNameFilter>;
+  /** Some related `permissionNames` exist. */
+  permissionNamesExist?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<PermissionPolicyFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<PermissionPolicyFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<PermissionPolicyFilter>;
+};
 
 /** A filter to be used against many `PermissionName` object types. All fields are combined with a logical ‘and.’ */
 export type PermissionPolicyToManyPermissionNameFilter = {
@@ -4471,60 +4754,6 @@ export type TemplateToManyTemplateFilterJoinFilter = {
   none?: Maybe<TemplateFilterJoinFilter>;
 };
 
-/** A filter to be used against `TemplateFilterJoin` object types. All fields are combined with a logical ‘and.’ */
-export type TemplateFilterJoinFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateId` field. */
-  templateId?: Maybe<IntFilter>;
-  /** Filter by the object’s `filterId` field. */
-  filterId?: Maybe<IntFilter>;
-  /** Filter by the object’s `template` relation. */
-  template?: Maybe<TemplateFilter>;
-  /** Filter by the object’s `filter` relation. */
-  filter?: Maybe<FilterFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<TemplateFilterJoinFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<TemplateFilterJoinFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<TemplateFilterJoinFilter>;
-};
-
-/** A filter to be used against `Filter` object types. All fields are combined with a logical ‘and.’ */
-export type FilterFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `code` field. */
-  code?: Maybe<StringFilter>;
-  /** Filter by the object’s `title` field. */
-  title?: Maybe<StringFilter>;
-  /** Filter by the object’s `query` field. */
-  query?: Maybe<JsonFilter>;
-  /** Filter by the object’s `userRole` field. */
-  userRole?: Maybe<PermissionPolicyTypeFilter>;
-  /** Filter by the object’s `templateFilterJoins` relation. */
-  templateFilterJoins?: Maybe<FilterToManyTemplateFilterJoinFilter>;
-  /** Some related `templateFilterJoins` exist. */
-  templateFilterJoinsExist?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<FilterFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<FilterFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<FilterFilter>;
-};
-
-/** A filter to be used against many `TemplateFilterJoin` object types. All fields are combined with a logical ‘and.’ */
-export type FilterToManyTemplateFilterJoinFilter = {
-  /** Every related `TemplateFilterJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<TemplateFilterJoinFilter>;
-  /** Some related `TemplateFilterJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<TemplateFilterJoinFilter>;
-  /** No related `TemplateFilterJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<TemplateFilterJoinFilter>;
-};
-
 /** A filter to be used against many `TemplatePermission` object types. All fields are combined with a logical ‘and.’ */
 export type TemplateToManyTemplatePermissionFilter = {
   /** Every related `TemplatePermission` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -4627,6 +4856,16 @@ export type TemplateToManyFileFilter = {
   some?: Maybe<FileFilter>;
   /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<FileFilter>;
+};
+
+/** A filter to be used against many `CustomLocalisation` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateToManyCustomLocalisationFilter = {
+  /** Every related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<CustomLocalisationFilter>;
+  /** Some related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<CustomLocalisationFilter>;
+  /** No related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<CustomLocalisationFilter>;
 };
 
 /** A filter to be used against `TemplateCategory` object types. All fields are combined with a logical ‘and.’ */
@@ -4792,7 +5031,6 @@ export type Template = Node & {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   /** Reads a single `TemplateCategory` that is related to this `Template`. */
   templateCategory?: Maybe<TemplateCategory>;
   /** Reads and enables pagination through a set of `TemplateSection`. */
@@ -4815,6 +5053,8 @@ export type Template = Node & {
   reviewAssignments: ReviewAssignmentsConnection;
   /** Reads and enables pagination through a set of `File`. */
   files: FilesConnection;
+  /** Reads and enables pagination through a set of `CustomLocalisation`. */
+  customLocalisations: CustomLocalisationsConnection;
 };
 
 
@@ -4937,6 +5177,18 @@ export type TemplateFilesArgs = {
   filter?: Maybe<FileFilter>;
 };
 
+
+export type TemplateCustomLocalisationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+  condition?: Maybe<CustomLocalisationCondition>;
+  filter?: Maybe<CustomLocalisationFilter>;
+};
+
 export type TemplateCategory = Node & {
   __typename?: 'TemplateCategory';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -4989,8 +5241,6 @@ export enum TemplatesOrderBy {
   VersionTimestampDesc = 'VERSION_TIMESTAMP_DESC',
   VersionAsc = 'VERSION_ASC',
   VersionDesc = 'VERSION_DESC',
-  LanguageStringsAsc = 'LANGUAGE_STRINGS_ASC',
-  LanguageStringsDesc = 'LANGUAGE_STRINGS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -5021,8 +5271,6 @@ export type TemplateCondition = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `version` field. */
   version?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `languageStrings` field. */
-  languageStrings?: Maybe<Scalars['JSON']>;
 };
 
 /** A connection to a list of `Template` values. */
@@ -5905,6 +6153,8 @@ export type PermissionName = Node & {
   permissionJoins: PermissionJoinsConnection;
   /** Reads and enables pagination through a set of `TemplatePermission`. */
   templatePermissions: TemplatePermissionsConnection;
+  /** Reads and enables pagination through a set of `CustomLocalisation`. */
+  customLocalisations: CustomLocalisationsConnection;
 };
 
 
@@ -5929,6 +6179,18 @@ export type PermissionNameTemplatePermissionsArgs = {
   orderBy?: Maybe<Array<TemplatePermissionsOrderBy>>;
   condition?: Maybe<TemplatePermissionCondition>;
   filter?: Maybe<TemplatePermissionFilter>;
+};
+
+
+export type PermissionNameCustomLocalisationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+  condition?: Maybe<CustomLocalisationCondition>;
+  filter?: Maybe<CustomLocalisationFilter>;
 };
 
 export type PermissionPolicy = Node & {
@@ -6089,6 +6351,387 @@ export type TemplatePermissionsEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `TemplatePermission` at the end of the edge. */
   node?: Maybe<TemplatePermission>;
+};
+
+/** Methods to use when ordering `CustomLocalisation`. */
+export enum CustomLocalisationsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  LanguageCodeAsc = 'LANGUAGE_CODE_ASC',
+  LanguageCodeDesc = 'LANGUAGE_CODE_DESC',
+  StringsAsc = 'STRINGS_ASC',
+  StringsDesc = 'STRINGS_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  FilterIdAsc = 'FILTER_ID_ASC',
+  FilterIdDesc = 'FILTER_ID_DESC',
+  OutcomeDisplayIdAsc = 'OUTCOME_DISPLAY_ID_ASC',
+  OutcomeDisplayIdDesc = 'OUTCOME_DISPLAY_ID_DESC',
+  PermissionNameIdAsc = 'PERMISSION_NAME_ID_ASC',
+  PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `CustomLocalisation` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type CustomLocalisationCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `languageCode` field. */
+  languageCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `strings` field. */
+  strings?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `filterId` field. */
+  filterId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `outcomeDisplayId` field. */
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `permissionNameId` field. */
+  permissionNameId?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `CustomLocalisation` values. */
+export type CustomLocalisationsConnection = {
+  __typename?: 'CustomLocalisationsConnection';
+  /** A list of `CustomLocalisation` objects. */
+  nodes: Array<Maybe<CustomLocalisation>>;
+  /** A list of edges which contains the `CustomLocalisation` and cursor to aid in pagination. */
+  edges: Array<CustomLocalisationsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CustomLocalisation` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type CustomLocalisation = Node & {
+  __typename?: 'CustomLocalisation';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  /** Reads a single `Template` that is related to this `CustomLocalisation`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `CustomLocalisation`. */
+  filter?: Maybe<Filter>;
+  /** Reads a single `OutcomeDisplay` that is related to this `CustomLocalisation`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+  /** Reads a single `PermissionName` that is related to this `CustomLocalisation`. */
+  permissionName?: Maybe<PermissionName>;
+};
+
+export type Filter = Node & {
+  __typename?: 'Filter';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  code: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  /** Reads and enables pagination through a set of `TemplateFilterJoin`. */
+  templateFilterJoins: TemplateFilterJoinsConnection;
+  /** Reads and enables pagination through a set of `CustomLocalisation`. */
+  customLocalisations: CustomLocalisationsConnection;
+};
+
+
+export type FilterTemplateFilterJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<TemplateFilterJoinsOrderBy>>;
+  condition?: Maybe<TemplateFilterJoinCondition>;
+  filter?: Maybe<TemplateFilterJoinFilter>;
+};
+
+
+export type FilterCustomLocalisationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+  condition?: Maybe<CustomLocalisationCondition>;
+  filter?: Maybe<CustomLocalisationFilter>;
+};
+
+/** Methods to use when ordering `TemplateFilterJoin`. */
+export enum TemplateFilterJoinsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  FilterIdAsc = 'FILTER_ID_ASC',
+  FilterIdDesc = 'FILTER_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `TemplateFilterJoin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type TemplateFilterJoinCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `filterId` field. */
+  filterId?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `TemplateFilterJoin` values. */
+export type TemplateFilterJoinsConnection = {
+  __typename?: 'TemplateFilterJoinsConnection';
+  /** A list of `TemplateFilterJoin` objects. */
+  nodes: Array<Maybe<TemplateFilterJoin>>;
+  /** A list of edges which contains the `TemplateFilterJoin` and cursor to aid in pagination. */
+  edges: Array<TemplateFilterJoinsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TemplateFilterJoin` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type TemplateFilterJoin = Node & {
+  __typename?: 'TemplateFilterJoin';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  templateId: Scalars['Int'];
+  filterId: Scalars['Int'];
+  /** Reads a single `Template` that is related to this `TemplateFilterJoin`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `TemplateFilterJoin`. */
+  filter?: Maybe<Filter>;
+};
+
+/** A `TemplateFilterJoin` edge in the connection. */
+export type TemplateFilterJoinsEdge = {
+  __typename?: 'TemplateFilterJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `TemplateFilterJoin` at the end of the edge. */
+  node?: Maybe<TemplateFilterJoin>;
+};
+
+export type OutcomeDisplay = Node & {
+  __typename?: 'OutcomeDisplay';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  tableName: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn: Scalars['String'];
+  showLinkedApplications: Scalars['Boolean'];
+  priority?: Maybe<Scalars['Int']>;
+  /** Reads and enables pagination through a set of `OutcomeDisplayTable`. */
+  outcomeDisplayTables: OutcomeDisplayTablesConnection;
+  /** Reads and enables pagination through a set of `OutcomeDisplayDetail`. */
+  outcomeDisplayDetails: OutcomeDisplayDetailsConnection;
+  /** Reads and enables pagination through a set of `CustomLocalisation`. */
+  customLocalisations: CustomLocalisationsConnection;
+};
+
+
+export type OutcomeDisplayOutcomeDisplayTablesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<OutcomeDisplayTablesOrderBy>>;
+  condition?: Maybe<OutcomeDisplayTableCondition>;
+  filter?: Maybe<OutcomeDisplayTableFilter>;
+};
+
+
+export type OutcomeDisplayOutcomeDisplayDetailsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<OutcomeDisplayDetailsOrderBy>>;
+  condition?: Maybe<OutcomeDisplayDetailCondition>;
+  filter?: Maybe<OutcomeDisplayDetailFilter>;
+};
+
+
+export type OutcomeDisplayCustomLocalisationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+  condition?: Maybe<CustomLocalisationCondition>;
+  filter?: Maybe<CustomLocalisationFilter>;
+};
+
+/** Methods to use when ordering `OutcomeDisplayTable`. */
+export enum OutcomeDisplayTablesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ColumnNameAsc = 'COLUMN_NAME_ASC',
+  ColumnNameDesc = 'COLUMN_NAME_DESC',
+  IsTextColumnAsc = 'IS_TEXT_COLUMN_ASC',
+  IsTextColumnDesc = 'IS_TEXT_COLUMN_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
+  OutcomeDisplayIdAsc = 'OUTCOME_DISPLAY_ID_ASC',
+  OutcomeDisplayIdDesc = 'OUTCOME_DISPLAY_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `OutcomeDisplayTable` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type OutcomeDisplayTableCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `columnName` field. */
+  columnName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `isTextColumn` field. */
+  isTextColumn?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `title` field. */
+  title?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `outcomeDisplayId` field. */
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `OutcomeDisplayTable` values. */
+export type OutcomeDisplayTablesConnection = {
+  __typename?: 'OutcomeDisplayTablesConnection';
+  /** A list of `OutcomeDisplayTable` objects. */
+  nodes: Array<Maybe<OutcomeDisplayTable>>;
+  /** A list of edges which contains the `OutcomeDisplayTable` and cursor to aid in pagination. */
+  edges: Array<OutcomeDisplayTablesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `OutcomeDisplayTable` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type OutcomeDisplayTable = Node & {
+  __typename?: 'OutcomeDisplayTable';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  columnName?: Maybe<Scalars['String']>;
+  isTextColumn?: Maybe<Scalars['Boolean']>;
+  title?: Maybe<Scalars['String']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  /** Reads a single `OutcomeDisplay` that is related to this `OutcomeDisplayTable`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+};
+
+/** A `OutcomeDisplayTable` edge in the connection. */
+export type OutcomeDisplayTablesEdge = {
+  __typename?: 'OutcomeDisplayTablesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `OutcomeDisplayTable` at the end of the edge. */
+  node?: Maybe<OutcomeDisplayTable>;
+};
+
+/** Methods to use when ordering `OutcomeDisplayDetail`. */
+export enum OutcomeDisplayDetailsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ColumnNameAsc = 'COLUMN_NAME_ASC',
+  ColumnNameDesc = 'COLUMN_NAME_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
+  ElementTypePluginCodeAsc = 'ELEMENT_TYPE_PLUGIN_CODE_ASC',
+  ElementTypePluginCodeDesc = 'ELEMENT_TYPE_PLUGIN_CODE_DESC',
+  IsTextColumnAsc = 'IS_TEXT_COLUMN_ASC',
+  IsTextColumnDesc = 'IS_TEXT_COLUMN_DESC',
+  ParametersAsc = 'PARAMETERS_ASC',
+  ParametersDesc = 'PARAMETERS_DESC',
+  OutcomeDisplayIdAsc = 'OUTCOME_DISPLAY_ID_ASC',
+  OutcomeDisplayIdDesc = 'OUTCOME_DISPLAY_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `OutcomeDisplayDetail` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type OutcomeDisplayDetailCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `columnName` field. */
+  columnName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `title` field. */
+  title?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `elementTypePluginCode` field. */
+  elementTypePluginCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `isTextColumn` field. */
+  isTextColumn?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `parameters` field. */
+  parameters?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `outcomeDisplayId` field. */
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `OutcomeDisplayDetail` values. */
+export type OutcomeDisplayDetailsConnection = {
+  __typename?: 'OutcomeDisplayDetailsConnection';
+  /** A list of `OutcomeDisplayDetail` objects. */
+  nodes: Array<Maybe<OutcomeDisplayDetail>>;
+  /** A list of edges which contains the `OutcomeDisplayDetail` and cursor to aid in pagination. */
+  edges: Array<OutcomeDisplayDetailsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `OutcomeDisplayDetail` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type OutcomeDisplayDetail = Node & {
+  __typename?: 'OutcomeDisplayDetail';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  columnName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  elementTypePluginCode?: Maybe<Scalars['String']>;
+  isTextColumn?: Maybe<Scalars['Boolean']>;
+  parameters?: Maybe<Scalars['JSON']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  /** Reads a single `OutcomeDisplay` that is related to this `OutcomeDisplayDetail`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+};
+
+/** A `OutcomeDisplayDetail` edge in the connection. */
+export type OutcomeDisplayDetailsEdge = {
+  __typename?: 'OutcomeDisplayDetailsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `OutcomeDisplayDetail` at the end of the edge. */
+  node?: Maybe<OutcomeDisplayDetail>;
+};
+
+/** A `CustomLocalisation` edge in the connection. */
+export type CustomLocalisationsEdge = {
+  __typename?: 'CustomLocalisationsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `CustomLocalisation` at the end of the edge. */
+  node?: Maybe<CustomLocalisation>;
 };
 
 /** A `PermissionJoin` edge in the connection. */
@@ -7770,89 +8413,6 @@ export type TemplateStagesEdge = {
   node?: Maybe<TemplateStage>;
 };
 
-/** Methods to use when ordering `TemplateFilterJoin`. */
-export enum TemplateFilterJoinsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  TemplateIdAsc = 'TEMPLATE_ID_ASC',
-  TemplateIdDesc = 'TEMPLATE_ID_DESC',
-  FilterIdAsc = 'FILTER_ID_ASC',
-  FilterIdDesc = 'FILTER_ID_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `TemplateFilterJoin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type TemplateFilterJoinCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateId` field. */
-  templateId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `filterId` field. */
-  filterId?: Maybe<Scalars['Int']>;
-};
-
-/** A connection to a list of `TemplateFilterJoin` values. */
-export type TemplateFilterJoinsConnection = {
-  __typename?: 'TemplateFilterJoinsConnection';
-  /** A list of `TemplateFilterJoin` objects. */
-  nodes: Array<Maybe<TemplateFilterJoin>>;
-  /** A list of edges which contains the `TemplateFilterJoin` and cursor to aid in pagination. */
-  edges: Array<TemplateFilterJoinsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `TemplateFilterJoin` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type TemplateFilterJoin = Node & {
-  __typename?: 'TemplateFilterJoin';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  templateId: Scalars['Int'];
-  filterId: Scalars['Int'];
-  /** Reads a single `Template` that is related to this `TemplateFilterJoin`. */
-  template?: Maybe<Template>;
-  /** Reads a single `Filter` that is related to this `TemplateFilterJoin`. */
-  filter?: Maybe<Filter>;
-};
-
-export type Filter = Node & {
-  __typename?: 'Filter';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  code: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
-  query?: Maybe<Scalars['JSON']>;
-  userRole?: Maybe<PermissionPolicyType>;
-  /** Reads and enables pagination through a set of `TemplateFilterJoin`. */
-  templateFilterJoins: TemplateFilterJoinsConnection;
-};
-
-
-export type FilterTemplateFilterJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<TemplateFilterJoinsOrderBy>>;
-  condition?: Maybe<TemplateFilterJoinCondition>;
-  filter?: Maybe<TemplateFilterJoinFilter>;
-};
-
-/** A `TemplateFilterJoin` edge in the connection. */
-export type TemplateFilterJoinsEdge = {
-  __typename?: 'TemplateFilterJoinsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `TemplateFilterJoin` at the end of the edge. */
-  node?: Maybe<TemplateFilterJoin>;
-};
-
 /** Methods to use when ordering `TemplateAction`. */
 export enum TemplateActionsOrderBy {
   Natural = 'NATURAL',
@@ -7967,8 +8527,6 @@ export enum ApplicationListShapesOrderBy {
   TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
   TemplateNameAsc = 'TEMPLATE_NAME_ASC',
   TemplateNameDesc = 'TEMPLATE_NAME_DESC',
-  LanguageStringsAsc = 'LANGUAGE_STRINGS_ASC',
-  LanguageStringsDesc = 'LANGUAGE_STRINGS_DESC',
   ApplicantAsc = 'APPLICANT_ASC',
   ApplicantDesc = 'APPLICANT_DESC',
   OrgNameAsc = 'ORG_NAME_ASC',
@@ -7983,6 +8541,10 @@ export enum ApplicationListShapesOrderBy {
   OutcomeDesc = 'OUTCOME_DESC',
   LastActiveDateAsc = 'LAST_ACTIVE_DATE_ASC',
   LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC',
+  LanguageCodeAsc = 'LANGUAGE_CODE_ASC',
+  LanguageCodeDesc = 'LANGUAGE_CODE_DESC',
+  LanguageStringsAsc = 'LANGUAGE_STRINGS_ASC',
+  LanguageStringsDesc = 'LANGUAGE_STRINGS_DESC',
   AssignersAsc = 'ASSIGNERS_ASC',
   AssignersDesc = 'ASSIGNERS_DESC',
   ReviewersAsc = 'REVIEWERS_ASC',
@@ -8011,8 +8573,6 @@ export type ApplicationListShapeCondition = {
   templateCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateName` field. */
   templateName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `languageStrings` field. */
-  languageStrings?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `applicant` field. */
   applicant?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `orgName` field. */
@@ -8027,6 +8587,10 @@ export type ApplicationListShapeCondition = {
   outcome?: Maybe<ApplicationOutcome>;
   /** Checks for equality with the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `languageCode` field. */
+  languageCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `languageStrings` field. */
+  languageStrings?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `assigners` field. */
   assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `reviewers` field. */
@@ -8072,8 +8636,6 @@ export type ApplicationListShapeFilter = {
   templateCode?: Maybe<StringFilter>;
   /** Filter by the object’s `templateName` field. */
   templateName?: Maybe<StringFilter>;
-  /** Filter by the object’s `languageStrings` field. */
-  languageStrings?: Maybe<JsonFilter>;
   /** Filter by the object’s `applicant` field. */
   applicant?: Maybe<StringFilter>;
   /** Filter by the object’s `orgName` field. */
@@ -8088,6 +8650,10 @@ export type ApplicationListShapeFilter = {
   outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Filter by the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `languageCode` field. */
+  languageCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `languageStrings` field. */
+  languageStrings?: Maybe<JsonFilter>;
   /** Filter by the object’s `assigners` field. */
   assigners?: Maybe<StringListFilter>;
   /** Filter by the object’s `reviewers` field. */
@@ -8208,7 +8774,6 @@ export type ApplicationListShape = {
   name?: Maybe<Scalars['String']>;
   templateCode?: Maybe<Scalars['String']>;
   templateName?: Maybe<Scalars['String']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   applicant?: Maybe<Scalars['String']>;
   orgName?: Maybe<Scalars['String']>;
   stage?: Maybe<Scalars['String']>;
@@ -8216,6 +8781,8 @@ export type ApplicationListShape = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  languageCode?: Maybe<Scalars['String']>;
+  languageStrings?: Maybe<Scalars['JSON']>;
   assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
@@ -9277,120 +9844,6 @@ export type OutcomeDisplayCondition = {
   priority?: Maybe<Scalars['Int']>;
 };
 
-/** A filter to be used against `OutcomeDisplay` object types. All fields are combined with a logical ‘and.’ */
-export type OutcomeDisplayFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `tableName` field. */
-  tableName?: Maybe<StringFilter>;
-  /** Filter by the object’s `title` field. */
-  title?: Maybe<StringFilter>;
-  /** Filter by the object’s `code` field. */
-  code?: Maybe<StringFilter>;
-  /** Filter by the object’s `permissionNames` field. */
-  permissionNames?: Maybe<StringListFilter>;
-  /** Filter by the object’s `tableViewIncludeColumns` field. */
-  tableViewIncludeColumns?: Maybe<StringListFilter>;
-  /** Filter by the object’s `tableViewExcludeColumns` field. */
-  tableViewExcludeColumns?: Maybe<StringListFilter>;
-  /** Filter by the object’s `detailViewIncludeColumns` field. */
-  detailViewIncludeColumns?: Maybe<StringListFilter>;
-  /** Filter by the object’s `detailViewExcludeColumns` field. */
-  detailViewExcludeColumns?: Maybe<StringListFilter>;
-  /** Filter by the object’s `detailViewHeaderColumn` field. */
-  detailViewHeaderColumn?: Maybe<StringFilter>;
-  /** Filter by the object’s `showLinkedApplications` field. */
-  showLinkedApplications?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `priority` field. */
-  priority?: Maybe<IntFilter>;
-  /** Filter by the object’s `outcomeDisplayTables` relation. */
-  outcomeDisplayTables?: Maybe<OutcomeDisplayToManyOutcomeDisplayTableFilter>;
-  /** Some related `outcomeDisplayTables` exist. */
-  outcomeDisplayTablesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `outcomeDisplayDetails` relation. */
-  outcomeDisplayDetails?: Maybe<OutcomeDisplayToManyOutcomeDisplayDetailFilter>;
-  /** Some related `outcomeDisplayDetails` exist. */
-  outcomeDisplayDetailsExist?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<OutcomeDisplayFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<OutcomeDisplayFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<OutcomeDisplayFilter>;
-};
-
-/** A filter to be used against many `OutcomeDisplayTable` object types. All fields are combined with a logical ‘and.’ */
-export type OutcomeDisplayToManyOutcomeDisplayTableFilter = {
-  /** Every related `OutcomeDisplayTable` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<OutcomeDisplayTableFilter>;
-  /** Some related `OutcomeDisplayTable` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<OutcomeDisplayTableFilter>;
-  /** No related `OutcomeDisplayTable` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<OutcomeDisplayTableFilter>;
-};
-
-/** A filter to be used against `OutcomeDisplayTable` object types. All fields are combined with a logical ‘and.’ */
-export type OutcomeDisplayTableFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `columnName` field. */
-  columnName?: Maybe<StringFilter>;
-  /** Filter by the object’s `isTextColumn` field. */
-  isTextColumn?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `title` field. */
-  title?: Maybe<StringFilter>;
-  /** Filter by the object’s `outcomeDisplayId` field. */
-  outcomeDisplayId?: Maybe<IntFilter>;
-  /** Filter by the object’s `outcomeDisplay` relation. */
-  outcomeDisplay?: Maybe<OutcomeDisplayFilter>;
-  /** A related `outcomeDisplay` exists. */
-  outcomeDisplayExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<OutcomeDisplayTableFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<OutcomeDisplayTableFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<OutcomeDisplayTableFilter>;
-};
-
-/** A filter to be used against many `OutcomeDisplayDetail` object types. All fields are combined with a logical ‘and.’ */
-export type OutcomeDisplayToManyOutcomeDisplayDetailFilter = {
-  /** Every related `OutcomeDisplayDetail` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<OutcomeDisplayDetailFilter>;
-  /** Some related `OutcomeDisplayDetail` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<OutcomeDisplayDetailFilter>;
-  /** No related `OutcomeDisplayDetail` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<OutcomeDisplayDetailFilter>;
-};
-
-/** A filter to be used against `OutcomeDisplayDetail` object types. All fields are combined with a logical ‘and.’ */
-export type OutcomeDisplayDetailFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `columnName` field. */
-  columnName?: Maybe<StringFilter>;
-  /** Filter by the object’s `title` field. */
-  title?: Maybe<StringFilter>;
-  /** Filter by the object’s `elementTypePluginCode` field. */
-  elementTypePluginCode?: Maybe<StringFilter>;
-  /** Filter by the object’s `isTextColumn` field. */
-  isTextColumn?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `parameters` field. */
-  parameters?: Maybe<JsonFilter>;
-  /** Filter by the object’s `outcomeDisplayId` field. */
-  outcomeDisplayId?: Maybe<IntFilter>;
-  /** Filter by the object’s `outcomeDisplay` relation. */
-  outcomeDisplay?: Maybe<OutcomeDisplayFilter>;
-  /** A related `outcomeDisplay` exists. */
-  outcomeDisplayExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<OutcomeDisplayDetailFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<OutcomeDisplayDetailFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<OutcomeDisplayDetailFilter>;
-};
-
 /** A connection to a list of `OutcomeDisplay` values. */
 export type OutcomeDisplaysConnection = {
   __typename?: 'OutcomeDisplaysConnection';
@@ -9402,194 +9855,6 @@ export type OutcomeDisplaysConnection = {
   pageInfo: PageInfo;
   /** The count of *all* `OutcomeDisplay` you could get from the connection. */
   totalCount: Scalars['Int'];
-};
-
-export type OutcomeDisplay = Node & {
-  __typename?: 'OutcomeDisplay';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  tableName: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
-  code: Scalars['String'];
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn: Scalars['String'];
-  showLinkedApplications: Scalars['Boolean'];
-  priority?: Maybe<Scalars['Int']>;
-  /** Reads and enables pagination through a set of `OutcomeDisplayTable`. */
-  outcomeDisplayTables: OutcomeDisplayTablesConnection;
-  /** Reads and enables pagination through a set of `OutcomeDisplayDetail`. */
-  outcomeDisplayDetails: OutcomeDisplayDetailsConnection;
-};
-
-
-export type OutcomeDisplayOutcomeDisplayTablesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<OutcomeDisplayTablesOrderBy>>;
-  condition?: Maybe<OutcomeDisplayTableCondition>;
-  filter?: Maybe<OutcomeDisplayTableFilter>;
-};
-
-
-export type OutcomeDisplayOutcomeDisplayDetailsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<OutcomeDisplayDetailsOrderBy>>;
-  condition?: Maybe<OutcomeDisplayDetailCondition>;
-  filter?: Maybe<OutcomeDisplayDetailFilter>;
-};
-
-/** Methods to use when ordering `OutcomeDisplayTable`. */
-export enum OutcomeDisplayTablesOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  ColumnNameAsc = 'COLUMN_NAME_ASC',
-  ColumnNameDesc = 'COLUMN_NAME_DESC',
-  IsTextColumnAsc = 'IS_TEXT_COLUMN_ASC',
-  IsTextColumnDesc = 'IS_TEXT_COLUMN_DESC',
-  TitleAsc = 'TITLE_ASC',
-  TitleDesc = 'TITLE_DESC',
-  OutcomeDisplayIdAsc = 'OUTCOME_DISPLAY_ID_ASC',
-  OutcomeDisplayIdDesc = 'OUTCOME_DISPLAY_ID_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `OutcomeDisplayTable` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type OutcomeDisplayTableCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `columnName` field. */
-  columnName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `isTextColumn` field. */
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `title` field. */
-  title?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `outcomeDisplayId` field. */
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-};
-
-/** A connection to a list of `OutcomeDisplayTable` values. */
-export type OutcomeDisplayTablesConnection = {
-  __typename?: 'OutcomeDisplayTablesConnection';
-  /** A list of `OutcomeDisplayTable` objects. */
-  nodes: Array<Maybe<OutcomeDisplayTable>>;
-  /** A list of edges which contains the `OutcomeDisplayTable` and cursor to aid in pagination. */
-  edges: Array<OutcomeDisplayTablesEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `OutcomeDisplayTable` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type OutcomeDisplayTable = Node & {
-  __typename?: 'OutcomeDisplayTable';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  columnName?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  title?: Maybe<Scalars['String']>;
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-  /** Reads a single `OutcomeDisplay` that is related to this `OutcomeDisplayTable`. */
-  outcomeDisplay?: Maybe<OutcomeDisplay>;
-};
-
-/** A `OutcomeDisplayTable` edge in the connection. */
-export type OutcomeDisplayTablesEdge = {
-  __typename?: 'OutcomeDisplayTablesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `OutcomeDisplayTable` at the end of the edge. */
-  node?: Maybe<OutcomeDisplayTable>;
-};
-
-/** Methods to use when ordering `OutcomeDisplayDetail`. */
-export enum OutcomeDisplayDetailsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  ColumnNameAsc = 'COLUMN_NAME_ASC',
-  ColumnNameDesc = 'COLUMN_NAME_DESC',
-  TitleAsc = 'TITLE_ASC',
-  TitleDesc = 'TITLE_DESC',
-  ElementTypePluginCodeAsc = 'ELEMENT_TYPE_PLUGIN_CODE_ASC',
-  ElementTypePluginCodeDesc = 'ELEMENT_TYPE_PLUGIN_CODE_DESC',
-  IsTextColumnAsc = 'IS_TEXT_COLUMN_ASC',
-  IsTextColumnDesc = 'IS_TEXT_COLUMN_DESC',
-  ParametersAsc = 'PARAMETERS_ASC',
-  ParametersDesc = 'PARAMETERS_DESC',
-  OutcomeDisplayIdAsc = 'OUTCOME_DISPLAY_ID_ASC',
-  OutcomeDisplayIdDesc = 'OUTCOME_DISPLAY_ID_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `OutcomeDisplayDetail` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type OutcomeDisplayDetailCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `columnName` field. */
-  columnName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `title` field. */
-  title?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `elementTypePluginCode` field. */
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `isTextColumn` field. */
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `parameters` field. */
-  parameters?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `outcomeDisplayId` field. */
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-};
-
-/** A connection to a list of `OutcomeDisplayDetail` values. */
-export type OutcomeDisplayDetailsConnection = {
-  __typename?: 'OutcomeDisplayDetailsConnection';
-  /** A list of `OutcomeDisplayDetail` objects. */
-  nodes: Array<Maybe<OutcomeDisplayDetail>>;
-  /** A list of edges which contains the `OutcomeDisplayDetail` and cursor to aid in pagination. */
-  edges: Array<OutcomeDisplayDetailsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `OutcomeDisplayDetail` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type OutcomeDisplayDetail = Node & {
-  __typename?: 'OutcomeDisplayDetail';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  columnName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  parameters?: Maybe<Scalars['JSON']>;
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-  /** Reads a single `OutcomeDisplay` that is related to this `OutcomeDisplayDetail`. */
-  outcomeDisplay?: Maybe<OutcomeDisplay>;
-};
-
-/** A `OutcomeDisplayDetail` edge in the connection. */
-export type OutcomeDisplayDetailsEdge = {
-  __typename?: 'OutcomeDisplayDetailsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `OutcomeDisplayDetail` at the end of the edge. */
-  node?: Maybe<OutcomeDisplayDetail>;
 };
 
 /** A `OutcomeDisplay` edge in the connection. */
@@ -10836,6 +11101,8 @@ export type Mutation = {
   createApplicationStatusHistory?: Maybe<CreateApplicationStatusHistoryPayload>;
   /** Creates a single `Counter`. */
   createCounter?: Maybe<CreateCounterPayload>;
+  /** Creates a single `CustomLocalisation`. */
+  createCustomLocalisation?: Maybe<CreateCustomLocalisationPayload>;
   /** Creates a single `ElementTypePlugin`. */
   createElementTypePlugin?: Maybe<CreateElementTypePluginPayload>;
   /** Creates a single `File`. */
@@ -10942,6 +11209,10 @@ export type Mutation = {
   updateCounter?: Maybe<UpdateCounterPayload>;
   /** Updates a single `Counter` using a unique key and a patch. */
   updateCounterByName?: Maybe<UpdateCounterPayload>;
+  /** Updates a single `CustomLocalisation` using its globally unique id and a patch. */
+  updateCustomLocalisationByNodeId?: Maybe<UpdateCustomLocalisationPayload>;
+  /** Updates a single `CustomLocalisation` using a unique key and a patch. */
+  updateCustomLocalisation?: Maybe<UpdateCustomLocalisationPayload>;
   /** Updates a single `ElementTypePlugin` using its globally unique id and a patch. */
   updateElementTypePluginByNodeId?: Maybe<UpdateElementTypePluginPayload>;
   /** Updates a single `ElementTypePlugin` using a unique key and a patch. */
@@ -11142,6 +11413,10 @@ export type Mutation = {
   deleteCounter?: Maybe<DeleteCounterPayload>;
   /** Deletes a single `Counter` using a unique key. */
   deleteCounterByName?: Maybe<DeleteCounterPayload>;
+  /** Deletes a single `CustomLocalisation` using its globally unique id. */
+  deleteCustomLocalisationByNodeId?: Maybe<DeleteCustomLocalisationPayload>;
+  /** Deletes a single `CustomLocalisation` using a unique key. */
+  deleteCustomLocalisation?: Maybe<DeleteCustomLocalisationPayload>;
   /** Deletes a single `ElementTypePlugin` using its globally unique id. */
   deleteElementTypePluginByNodeId?: Maybe<DeleteElementTypePluginPayload>;
   /** Deletes a single `ElementTypePlugin` using a unique key. */
@@ -11359,6 +11634,12 @@ export type MutationCreateApplicationStatusHistoryArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCounterArgs = {
   input: CreateCounterInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCustomLocalisationArgs = {
+  input: CreateCustomLocalisationInput;
 };
 
 
@@ -11677,6 +11958,18 @@ export type MutationUpdateCounterArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateCounterByNameArgs = {
   input: UpdateCounterByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCustomLocalisationByNodeIdArgs = {
+  input: UpdateCustomLocalisationByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCustomLocalisationArgs = {
+  input: UpdateCustomLocalisationInput;
 };
 
 
@@ -12277,6 +12570,18 @@ export type MutationDeleteCounterArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteCounterByNameArgs = {
   input: DeleteCounterByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCustomLocalisationByNodeIdArgs = {
+  input: DeleteCustomLocalisationByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCustomLocalisationArgs = {
+  input: DeleteCustomLocalisationInput;
 };
 
 
@@ -13028,7 +13333,6 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -13040,6 +13344,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `templateCategory` in the `TemplateInput` mutation. */
@@ -13155,7 +13460,6 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   icon?: Maybe<Scalars['String']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -13167,6 +13471,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `templateSection` in the `TemplateInput` mutation. */
@@ -13286,7 +13591,6 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -13298,6 +13602,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `templateStage` in the `TemplateInput` mutation. */
@@ -13401,7 +13706,6 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -13413,6 +13717,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `templateFilterJoin` in the `TemplateInput` mutation. */
@@ -13511,7 +13816,6 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -13523,6 +13827,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `templatePermission` in the `TemplateInput` mutation. */
@@ -13659,6 +13964,7 @@ export type UpdatePermissionNameOnTemplatePermissionForTemplatePermissionPermiss
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `permissionPolicy` in the `PermissionNameInput` mutation. */
@@ -13776,6 +14082,7 @@ export type UpdatePermissionNameOnPermissionNameForPermissionNamePermissionPolic
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `permissionJoin` in the `PermissionNameInput` mutation. */
@@ -14327,6 +14634,7 @@ export type UpdatePermissionNameOnPermissionJoinForPermissionJoinPermissionNameI
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `templatePermission` in the `PermissionNameInput` mutation. */
@@ -14409,7 +14717,6 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -14421,6 +14728,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `TemplateInput` mutation. */
@@ -14553,7 +14861,6 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -14565,6 +14872,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `actionQueue` in the `TemplateInput` mutation. */
@@ -14762,7 +15070,6 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -14774,6 +15081,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `triggerSchedule` in the `TemplateInput` mutation. */
@@ -15789,7 +16097,6 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -15801,6 +16108,7 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `reviewAssignment` in the `TemplateInput` mutation. */
@@ -16644,7 +16952,6 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -16656,6 +16963,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `file` in the `TemplateInput` mutation. */
@@ -17814,7 +18122,6 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -17826,10 +18133,127 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `customLocalisation` in the `TemplateInput` mutation. */
+export type CustomLocalisationTemplateIdFkeyInverseInput = {
+  /** Flag indicating whether all other `customLocalisation` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<CustomLocalisationNodeIdConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyDelete>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<CustomLocalisationNodeIdDelete>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateById?: Maybe<Array<CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingCustomLocalisationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate>>;
+  /** A `CustomLocalisationInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<CustomLocalisationTemplateIdFkeyCustomLocalisationCreateInput>>;
+};
+
+/** The fields on `customLocalisation` to look up the row to connect. */
+export type CustomLocalisationCustomLocalisationPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type CustomLocalisationNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `customLocalisation` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `customLocalisation` to look up the row to delete. */
+export type CustomLocalisationCustomLocalisationPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type CustomLocalisationNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `customLocalisation` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `customLocalisation` to look up the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingCustomLocalisationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `customLocalisation` being updated. */
+export type UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `template` in the `CustomLocalisationInput` mutation. */
+export type CustomLocalisationTemplateIdFkeyInput = {
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectById?: Maybe<TemplateTemplatePkeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TemplateNodeIdConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteById?: Maybe<TemplateTemplatePkeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateById?: Maybe<TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByNodeId?: Maybe<CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate>;
+  /** A `TemplateInput` object that will be created and connected to this object. */
+  create?: Maybe<CustomLocalisationTemplateIdFkeyTemplateCreateInput>;
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingTemplatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `template` being updated. */
+export type UpdateTemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  version?: Maybe<Scalars['Int']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type FileOnFileForFileTemplateIdFkeyNodeIdUpdate = {
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `template` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `template` being updated. */
@@ -17850,7 +18274,6 @@ export type TemplatePatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -17862,6 +18285,1071 @@ export type TemplatePatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
+};
+
+/** The `template` to be created by this mutation. */
+export type CustomLocalisationTemplateIdFkeyTemplateCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  version?: Maybe<Scalars['Int']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `filter` in the `CustomLocalisationInput` mutation. */
+export type CustomLocalisationFilterIdFkeyInput = {
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectById?: Maybe<FilterFilterPkeyConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectByCode?: Maybe<FilterFilterCodeKeyConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectByNodeId?: Maybe<FilterNodeIdConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteById?: Maybe<FilterFilterPkeyDelete>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteByCode?: Maybe<FilterFilterCodeKeyDelete>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<FilterNodeIdDelete>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateById?: Maybe<FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterPkeyUpdate>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateByCode?: Maybe<FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateByNodeId?: Maybe<CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate>;
+  /** A `FilterInput` object that will be created and connected to this object. */
+  create?: Maybe<CustomLocalisationFilterIdFkeyFilterCreateInput>;
+};
+
+/** The fields on `filter` to look up the row to connect. */
+export type FilterFilterPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `filter` to look up the row to connect. */
+export type FilterFilterCodeKeyConnect = {
+  code: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type FilterNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `filter` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `filter` to look up the row to delete. */
+export type FilterFilterPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `filter` to look up the row to delete. */
+export type FilterFilterCodeKeyDelete = {
+  code: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type FilterNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `filter` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `filter` to look up the row to update. */
+export type FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterPkeyUpdate = {
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: UpdateFilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `filter` being updated. */
+export type UpdateFilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationFilterIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `templateFilterJoin` in the `FilterInput` mutation. */
+export type TemplateFilterJoinFilterIdFkeyInverseInput = {
+  /** Flag indicating whether all other `templateFilterJoin` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<TemplateFilterJoinTemplateFilterJoinPkeyConnect>>;
+  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<TemplateFilterJoinNodeIdConnect>>;
+  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<TemplateFilterJoinTemplateFilterJoinPkeyDelete>>;
+  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<TemplateFilterJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `templateFilterJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `templateFilterJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate>>;
+  /** A `TemplateFilterJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput>>;
+};
+
+/** The fields on `templateFilterJoin` to look up the row to update. */
+export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
+  patch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
+export type UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<TemplateFilterJoinFilterIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `filter` in the `TemplateFilterJoinInput` mutation. */
+export type TemplateFilterJoinFilterIdFkeyInput = {
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectById?: Maybe<FilterFilterPkeyConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectByCode?: Maybe<FilterFilterCodeKeyConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectByNodeId?: Maybe<FilterNodeIdConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteById?: Maybe<FilterFilterPkeyDelete>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteByCode?: Maybe<FilterFilterCodeKeyDelete>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<FilterNodeIdDelete>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateById?: Maybe<FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateByCode?: Maybe<FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateByNodeId?: Maybe<TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate>;
+  /** A `FilterInput` object that will be created and connected to this object. */
+  create?: Maybe<TemplateFilterJoinFilterIdFkeyFilterCreateInput>;
+};
+
+/** The fields on `filter` to look up the row to update. */
+export type FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate = {
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `filter` being updated. */
+export type UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationFilterIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `customLocalisation` in the `FilterInput` mutation. */
+export type CustomLocalisationFilterIdFkeyInverseInput = {
+  /** Flag indicating whether all other `customLocalisation` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<CustomLocalisationNodeIdConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyDelete>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<CustomLocalisationNodeIdDelete>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateById?: Maybe<Array<CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingCustomLocalisationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate>>;
+  /** A `CustomLocalisationInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<CustomLocalisationFilterIdFkeyCustomLocalisationCreateInput>>;
+};
+
+/** The fields on `customLocalisation` to look up the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingCustomLocalisationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `customLocalisation` being updated. */
+export type UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `outcomeDisplay` in the `CustomLocalisationInput` mutation. */
+export type CustomLocalisationOutcomeDisplayIdFkeyInput = {
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectByNodeId?: Maybe<OutcomeDisplayNodeIdConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyDelete>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<OutcomeDisplayNodeIdDelete>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateById?: Maybe<OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateByTableNameAndCode?: Maybe<OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateByNodeId?: Maybe<CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate>;
+  /** A `OutcomeDisplayInput` object that will be created and connected to this object. */
+  create?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyOutcomeDisplayCreateInput>;
+};
+
+/** The fields on `outcomeDisplay` to look up the row to connect. */
+export type OutcomeDisplayOutcomeDisplayPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `outcomeDisplay` to look up the row to connect. */
+export type OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect = {
+  tableName: Scalars['String'];
+  code: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type OutcomeDisplayNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `outcomeDisplay` to look up the row to delete. */
+export type OutcomeDisplayOutcomeDisplayPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `outcomeDisplay` to look up the row to delete. */
+export type OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete = {
+  tableName: Scalars['String'];
+  code: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type OutcomeDisplayNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `outcomeDisplay` to look up the row to update. */
+export type OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate = {
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: UpdateOutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+export type UpdateOutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  tableName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
+  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
+  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `outcomeDisplayTable` in the `OutcomeDisplayInput` mutation. */
+export type OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput = {
+  /** Flag indicating whether all other `outcomeDisplayTable` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `outcomeDisplayTable` for the far side of the relationship. */
+  connectById?: Maybe<Array<OutcomeDisplayTableOutcomeDisplayTablePkeyConnect>>;
+  /** The primary key(s) for `outcomeDisplayTable` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<OutcomeDisplayTableNodeIdConnect>>;
+  /** The primary key(s) for `outcomeDisplayTable` for the far side of the relationship. */
+  deleteById?: Maybe<Array<OutcomeDisplayTableOutcomeDisplayTablePkeyDelete>>;
+  /** The primary key(s) for `outcomeDisplayTable` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<OutcomeDisplayTableNodeIdDelete>>;
+  /** The primary key(s) and patch data for `outcomeDisplayTable` for the far side of the relationship. */
+  updateById?: Maybe<Array<OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate>>;
+  /** The primary key(s) and patch data for `outcomeDisplayTable` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate>>;
+  /** A `OutcomeDisplayTableInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput>>;
+};
+
+/** The fields on `outcomeDisplayTable` to look up the row to connect. */
+export type OutcomeDisplayTableOutcomeDisplayTablePkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type OutcomeDisplayTableNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplayTable` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `outcomeDisplayTable` to look up the row to delete. */
+export type OutcomeDisplayTableOutcomeDisplayTablePkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type OutcomeDisplayTableNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplayTable` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `outcomeDisplayTable` to look up the row to update. */
+export type OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate = {
+  /** An object where the defined keys will be set on the `outcomeDisplayTable` being updated. */
+  patch: UpdateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `outcomeDisplayTable` being updated. */
+export type UpdateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  columnName?: Maybe<Scalars['String']>;
+  isTextColumn?: Maybe<Scalars['Boolean']>;
+  title?: Maybe<Scalars['String']>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `outcomeDisplay` in the `OutcomeDisplayTableInput` mutation. */
+export type OutcomeDisplayTableOutcomeDisplayIdFkeyInput = {
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectByNodeId?: Maybe<OutcomeDisplayNodeIdConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyDelete>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<OutcomeDisplayNodeIdDelete>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateById?: Maybe<OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateByTableNameAndCode?: Maybe<OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateByNodeId?: Maybe<OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate>;
+  /** A `OutcomeDisplayInput` object that will be created and connected to this object. */
+  create?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput>;
+};
+
+/** The fields on `outcomeDisplay` to look up the row to update. */
+export type OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate = {
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+export type UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  tableName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
+  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
+  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `outcomeDisplayDetail` in the `OutcomeDisplayInput` mutation. */
+export type OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput = {
+  /** Flag indicating whether all other `outcomeDisplayDetail` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `outcomeDisplayDetail` for the far side of the relationship. */
+  connectById?: Maybe<Array<OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect>>;
+  /** The primary key(s) for `outcomeDisplayDetail` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<OutcomeDisplayDetailNodeIdConnect>>;
+  /** The primary key(s) for `outcomeDisplayDetail` for the far side of the relationship. */
+  deleteById?: Maybe<Array<OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete>>;
+  /** The primary key(s) for `outcomeDisplayDetail` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<OutcomeDisplayDetailNodeIdDelete>>;
+  /** The primary key(s) and patch data for `outcomeDisplayDetail` for the far side of the relationship. */
+  updateById?: Maybe<Array<OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate>>;
+  /** The primary key(s) and patch data for `outcomeDisplayDetail` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate>>;
+  /** A `OutcomeDisplayDetailInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput>>;
+};
+
+/** The fields on `outcomeDisplayDetail` to look up the row to connect. */
+export type OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type OutcomeDisplayDetailNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplayDetail` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `outcomeDisplayDetail` to look up the row to delete. */
+export type OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type OutcomeDisplayDetailNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplayDetail` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `outcomeDisplayDetail` to look up the row to update. */
+export type OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate = {
+  /** An object where the defined keys will be set on the `outcomeDisplayDetail` being updated. */
+  patch: UpdateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `outcomeDisplayDetail` being updated. */
+export type UpdateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  columnName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  elementTypePluginCode?: Maybe<Scalars['String']>;
+  isTextColumn?: Maybe<Scalars['Boolean']>;
+  parameters?: Maybe<Scalars['JSON']>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `outcomeDisplay` in the `OutcomeDisplayDetailInput` mutation. */
+export type OutcomeDisplayDetailOutcomeDisplayIdFkeyInput = {
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectByNodeId?: Maybe<OutcomeDisplayNodeIdConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyDelete>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<OutcomeDisplayNodeIdDelete>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateById?: Maybe<OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateByTableNameAndCode?: Maybe<OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateByNodeId?: Maybe<OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate>;
+  /** A `OutcomeDisplayInput` object that will be created and connected to this object. */
+  create?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput>;
+};
+
+/** The fields on `outcomeDisplay` to look up the row to update. */
+export type OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate = {
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+export type UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  tableName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
+  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
+  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `customLocalisation` in the `OutcomeDisplayInput` mutation. */
+export type CustomLocalisationOutcomeDisplayIdFkeyInverseInput = {
+  /** Flag indicating whether all other `customLocalisation` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<CustomLocalisationNodeIdConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyDelete>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<CustomLocalisationNodeIdDelete>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateById?: Maybe<Array<CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingCustomLocalisationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate>>;
+  /** A `CustomLocalisationInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<CustomLocalisationOutcomeDisplayIdFkeyCustomLocalisationCreateInput>>;
+};
+
+/** The fields on `customLocalisation` to look up the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingCustomLocalisationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `customLocalisation` being updated. */
+export type UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `permissionName` in the `CustomLocalisationInput` mutation. */
+export type CustomLocalisationPermissionNameIdFkeyInput = {
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  connectById?: Maybe<PermissionNamePermissionNamePkeyConnect>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  connectByName?: Maybe<PermissionNamePermissionNameNameKeyConnect>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PermissionNameNodeIdConnect>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  deleteById?: Maybe<PermissionNamePermissionNamePkeyDelete>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  deleteByName?: Maybe<PermissionNamePermissionNameNameKeyDelete>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PermissionNameNodeIdDelete>;
+  /** The primary key(s) and patch data for `permissionName` for the far side of the relationship. */
+  updateById?: Maybe<PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNamePkeyUpdate>;
+  /** The primary key(s) and patch data for `permissionName` for the far side of the relationship. */
+  updateByName?: Maybe<PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate>;
+  /** The primary key(s) and patch data for `permissionName` for the far side of the relationship. */
+  updateByNodeId?: Maybe<CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate>;
+  /** A `PermissionNameInput` object that will be created and connected to this object. */
+  create?: Maybe<CustomLocalisationPermissionNameIdFkeyPermissionNameCreateInput>;
+};
+
+/** The fields on `permissionName` to look up the row to update. */
+export type PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNamePkeyUpdate = {
+  /** An object where the defined keys will be set on the `permissionName` being updated. */
+  patch: UpdatePermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `permissionName` being updated. */
+export type UpdatePermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  permissionPolicyId?: Maybe<Scalars['Int']>;
+  permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `customLocalisation` in the `PermissionNameInput` mutation. */
+export type CustomLocalisationPermissionNameIdFkeyInverseInput = {
+  /** Flag indicating whether all other `customLocalisation` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<CustomLocalisationNodeIdConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyDelete>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<CustomLocalisationNodeIdDelete>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateById?: Maybe<Array<CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingCustomLocalisationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate>>;
+  /** A `CustomLocalisationInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<CustomLocalisationPermissionNameIdFkeyCustomLocalisationCreateInput>>;
+};
+
+/** The fields on `customLocalisation` to look up the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingCustomLocalisationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `customLocalisation` being updated. */
+export type UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `customLocalisation` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: CustomLocalisationPatch;
+};
+
+/** Represents an update to a `CustomLocalisation`. Fields that are set will be updated. */
+export type CustomLocalisationPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** The `customLocalisation` to be created by this mutation. */
+export type CustomLocalisationPermissionNameIdFkeyCustomLocalisationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** The fields on `permissionName` to look up the row to update. */
+export type PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `permissionName` being updated. */
+  patch: UpdatePermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `permissionName` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `permissionName` being updated. */
+  patch: PermissionNamePatch;
+};
+
+/** Represents an update to a `PermissionName`. Fields that are set will be updated. */
+export type PermissionNamePatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  permissionPolicyId?: Maybe<Scalars['Int']>;
+  permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
+};
+
+/** The `permissionName` to be created by this mutation. */
+export type CustomLocalisationPermissionNameIdFkeyPermissionNameCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  permissionPolicyId?: Maybe<Scalars['Int']>;
+  permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `customLocalisation` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: CustomLocalisationPatch;
+};
+
+/** The `customLocalisation` to be created by this mutation. */
+export type CustomLocalisationOutcomeDisplayIdFkeyCustomLocalisationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** The fields on `outcomeDisplay` to look up the row to update. */
+export type OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
+  tableName: Scalars['String'];
+  code: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: OutcomeDisplayPatch;
+};
+
+/** Represents an update to a `OutcomeDisplay`. Fields that are set will be updated. */
+export type OutcomeDisplayPatch = {
+  id?: Maybe<Scalars['Int']>;
+  tableName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
+  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
+  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInverseInput>;
+};
+
+/** The `outcomeDisplay` to be created by this mutation. */
+export type OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  tableName: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn: Scalars['String'];
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
+  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
+  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplayDetail` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `outcomeDisplayDetail` being updated. */
+  patch: OutcomeDisplayDetailPatch;
+};
+
+/** Represents an update to a `OutcomeDisplayDetail`. Fields that are set will be updated. */
+export type OutcomeDisplayDetailPatch = {
+  id?: Maybe<Scalars['Int']>;
+  columnName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  elementTypePluginCode?: Maybe<Scalars['String']>;
+  isTextColumn?: Maybe<Scalars['Boolean']>;
+  parameters?: Maybe<Scalars['JSON']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInput>;
+};
+
+/** The `outcomeDisplayDetail` to be created by this mutation. */
+export type OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  columnName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  elementTypePluginCode?: Maybe<Scalars['String']>;
+  isTextColumn?: Maybe<Scalars['Boolean']>;
+  parameters?: Maybe<Scalars['JSON']>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInput>;
+};
+
+/** The fields on `outcomeDisplay` to look up the row to update. */
+export type OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
+  tableName: Scalars['String'];
+  code: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: OutcomeDisplayPatch;
+};
+
+/** The `outcomeDisplay` to be created by this mutation. */
+export type OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  tableName: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn: Scalars['String'];
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
+  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
+  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplayTable` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `outcomeDisplayTable` being updated. */
+  patch: OutcomeDisplayTablePatch;
+};
+
+/** Represents an update to a `OutcomeDisplayTable`. Fields that are set will be updated. */
+export type OutcomeDisplayTablePatch = {
+  id?: Maybe<Scalars['Int']>;
+  columnName?: Maybe<Scalars['String']>;
+  isTextColumn?: Maybe<Scalars['Boolean']>;
+  title?: Maybe<Scalars['String']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInput>;
+};
+
+/** The `outcomeDisplayTable` to be created by this mutation. */
+export type OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  columnName?: Maybe<Scalars['String']>;
+  isTextColumn?: Maybe<Scalars['Boolean']>;
+  title?: Maybe<Scalars['String']>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInput>;
+};
+
+/** The fields on `outcomeDisplay` to look up the row to update. */
+export type OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: UpdateOutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch;
+  tableName: Scalars['String'];
+  code: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: OutcomeDisplayPatch;
+};
+
+/** The `outcomeDisplay` to be created by this mutation. */
+export type CustomLocalisationOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  tableName: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn: Scalars['String'];
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
+  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
+  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `customLocalisation` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: CustomLocalisationPatch;
+};
+
+/** The `customLocalisation` to be created by this mutation. */
+export type CustomLocalisationFilterIdFkeyCustomLocalisationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** The fields on `filter` to look up the row to update. */
+export type FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
+  code: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `filter` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: FilterPatch;
+};
+
+/** Represents an update to a `Filter`. Fields that are set will be updated. */
+export type FilterPatch = {
+  id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationFilterIdFkeyInverseInput>;
+};
+
+/** The `filter` to be created by this mutation. */
+export type TemplateFilterJoinFilterIdFkeyFilterCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  code: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationFilterIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `templateFilterJoin` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
+  patch: TemplateFilterJoinPatch;
+};
+
+/** Represents an update to a `TemplateFilterJoin`. Fields that are set will be updated. */
+export type TemplateFilterJoinPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<TemplateFilterJoinFilterIdFkeyInput>;
+};
+
+/** The `templateFilterJoin` to be created by this mutation. */
+export type TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<TemplateFilterJoinFilterIdFkeyInput>;
+};
+
+/** The fields on `filter` to look up the row to update. */
+export type FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: UpdateFilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch;
+  code: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `filter` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: FilterPatch;
+};
+
+/** The `filter` to be created by this mutation. */
+export type CustomLocalisationFilterIdFkeyFilterCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  code: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationFilterIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `customLocalisation` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: CustomLocalisationPatch;
+};
+
+/** The `customLocalisation` to be created by this mutation. */
+export type CustomLocalisationTemplateIdFkeyCustomLocalisationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type FileOnFileForFileTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `template` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: TemplatePatch;
 };
 
 /** The `template` to be created by this mutation. */
@@ -17878,7 +19366,6 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -17890,6 +19377,7 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `FileInput` mutation. */
@@ -21019,7 +22507,6 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -21031,6 +22518,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -21718,7 +23206,6 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -21730,6 +23217,7 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -22471,7 +23959,6 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -22483,6 +23970,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -22544,7 +24032,6 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -22556,6 +24043,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -22621,7 +24109,6 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -22633,6 +24120,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -22687,16 +24175,6 @@ export type PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyN
   patch: PermissionNamePatch;
 };
 
-/** Represents an update to a `PermissionName`. Fields that are set will be updated. */
-export type PermissionNamePatch = {
-  id?: Maybe<Scalars['Int']>;
-  name?: Maybe<Scalars['String']>;
-  permissionPolicyId?: Maybe<Scalars['Int']>;
-  permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
-};
-
 /** The `permissionName` to be created by this mutation. */
 export type PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput = {
   id?: Maybe<Scalars['Int']>;
@@ -22705,6 +24183,7 @@ export type PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -22986,6 +24465,7 @@ export type PermissionNamePermissionPolicyIdFkeyPermissionNameCreateInput = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** The fields on `permissionPolicy` to look up the row to update. */
@@ -23050,6 +24530,7 @@ export type TemplatePermissionPermissionNameIdFkeyPermissionNameCreateInput = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -23096,7 +24577,6 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -23108,174 +24588,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `filter` in the `TemplateFilterJoinInput` mutation. */
-export type TemplateFilterJoinFilterIdFkeyInput = {
-  /** The primary key(s) for `filter` for the far side of the relationship. */
-  connectById?: Maybe<FilterFilterPkeyConnect>;
-  /** The primary key(s) for `filter` for the far side of the relationship. */
-  connectByCode?: Maybe<FilterFilterCodeKeyConnect>;
-  /** The primary key(s) for `filter` for the far side of the relationship. */
-  connectByNodeId?: Maybe<FilterNodeIdConnect>;
-  /** The primary key(s) for `filter` for the far side of the relationship. */
-  deleteById?: Maybe<FilterFilterPkeyDelete>;
-  /** The primary key(s) for `filter` for the far side of the relationship. */
-  deleteByCode?: Maybe<FilterFilterCodeKeyDelete>;
-  /** The primary key(s) for `filter` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<FilterNodeIdDelete>;
-  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
-  updateById?: Maybe<FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate>;
-  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
-  updateByCode?: Maybe<FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate>;
-  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
-  updateByNodeId?: Maybe<TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate>;
-  /** A `FilterInput` object that will be created and connected to this object. */
-  create?: Maybe<TemplateFilterJoinFilterIdFkeyFilterCreateInput>;
-};
-
-/** The fields on `filter` to look up the row to connect. */
-export type FilterFilterPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The fields on `filter` to look up the row to connect. */
-export type FilterFilterCodeKeyConnect = {
-  code: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type FilterNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `filter` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `filter` to look up the row to delete. */
-export type FilterFilterPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** The fields on `filter` to look up the row to delete. */
-export type FilterFilterCodeKeyDelete = {
-  code: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type FilterNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `filter` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `filter` to look up the row to update. */
-export type FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate = {
-  /** An object where the defined keys will be set on the `filter` being updated. */
-  patch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `filter` being updated. */
-export type UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  query?: Maybe<Scalars['JSON']>;
-  userRole?: Maybe<PermissionPolicyType>;
-  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `templateFilterJoin` in the `FilterInput` mutation. */
-export type TemplateFilterJoinFilterIdFkeyInverseInput = {
-  /** Flag indicating whether all other `templateFilterJoin` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
-  connectById?: Maybe<Array<TemplateFilterJoinTemplateFilterJoinPkeyConnect>>;
-  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<TemplateFilterJoinNodeIdConnect>>;
-  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
-  deleteById?: Maybe<Array<TemplateFilterJoinTemplateFilterJoinPkeyDelete>>;
-  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<TemplateFilterJoinNodeIdDelete>>;
-  /** The primary key(s) and patch data for `templateFilterJoin` for the far side of the relationship. */
-  updateById?: Maybe<Array<TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `templateFilterJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate>>;
-  /** A `TemplateFilterJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput>>;
-};
-
-/** The fields on `templateFilterJoin` to look up the row to update. */
-export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate = {
-  /** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
-  patch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
-export type UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
-  filterToFilterId?: Maybe<TemplateFilterJoinFilterIdFkeyInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `templateFilterJoin` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
-  patch: TemplateFilterJoinPatch;
-};
-
-/** Represents an update to a `TemplateFilterJoin`. Fields that are set will be updated. */
-export type TemplateFilterJoinPatch = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  filterId?: Maybe<Scalars['Int']>;
-  templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
-  filterToFilterId?: Maybe<TemplateFilterJoinFilterIdFkeyInput>;
-};
-
-/** The `templateFilterJoin` to be created by this mutation. */
-export type TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
-  filterToFilterId?: Maybe<TemplateFilterJoinFilterIdFkeyInput>;
-};
-
-/** The fields on `filter` to look up the row to update. */
-export type FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `filter` being updated. */
-  patch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
-  code: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `filter` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `filter` being updated. */
-  patch: FilterPatch;
-};
-
-/** Represents an update to a `Filter`. Fields that are set will be updated. */
-export type FilterPatch = {
-  id?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  query?: Maybe<Scalars['JSON']>;
-  userRole?: Maybe<PermissionPolicyType>;
-  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
-};
-
-/** The `filter` to be created by this mutation. */
-export type TemplateFilterJoinFilterIdFkeyFilterCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  code: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
-  query?: Maybe<Scalars['JSON']>;
-  userRole?: Maybe<PermissionPolicyType>;
-  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -23316,7 +24629,6 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -23328,6 +24640,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -23373,7 +24686,6 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -23385,6 +24697,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The fields on `templateSection` to look up the row to update. */
@@ -23435,7 +24748,6 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   icon?: Maybe<Scalars['String']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -23447,6 +24759,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The fields on `templateCategory` to look up the row to update. */
@@ -23506,7 +24819,6 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -23518,6 +24830,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -23681,7 +24994,6 @@ export type ApplicationListShapeInput = {
   name?: Maybe<Scalars['String']>;
   templateCode?: Maybe<Scalars['String']>;
   templateName?: Maybe<Scalars['String']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   applicant?: Maybe<Scalars['String']>;
   orgName?: Maybe<Scalars['String']>;
   stage?: Maybe<Scalars['String']>;
@@ -23689,6 +25001,8 @@ export type ApplicationListShapeInput = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  languageCode?: Maybe<Scalars['String']>;
+  languageStrings?: Maybe<Scalars['JSON']>;
   assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
@@ -23923,6 +25237,56 @@ export type CreateCounterPayloadCounterEdgeArgs = {
   orderBy?: Maybe<Array<CountersOrderBy>>;
 };
 
+/** All input for the create `CustomLocalisation` mutation. */
+export type CreateCustomLocalisationInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `CustomLocalisation` to be created by this mutation. */
+  customLocalisation: CustomLocalisationInput;
+};
+
+/** An input for mutations affecting `CustomLocalisation` */
+export type CustomLocalisationInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** The output of our create `CustomLocalisation` mutation. */
+export type CreateCustomLocalisationPayload = {
+  __typename?: 'CreateCustomLocalisationPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `CustomLocalisation` that was created by this mutation. */
+  customLocalisation?: Maybe<CustomLocalisation>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `CustomLocalisation`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `CustomLocalisation`. */
+  filter?: Maybe<Filter>;
+  /** Reads a single `OutcomeDisplay` that is related to this `CustomLocalisation`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+  /** Reads a single `PermissionName` that is related to this `CustomLocalisation`. */
+  permissionName?: Maybe<PermissionName>;
+  /** An edge for our `CustomLocalisation`. May be used by Relay 1. */
+  customLocalisationEdge?: Maybe<CustomLocalisationsEdge>;
+};
+
+
+/** The output of our create `CustomLocalisation` mutation. */
+export type CreateCustomLocalisationPayloadCustomLocalisationEdgeArgs = {
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+};
+
 /** All input for the create `ElementTypePlugin` mutation. */
 export type CreateElementTypePluginInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -24033,6 +25397,7 @@ export type FilterInput = {
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
   templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationFilterIdFkeyInverseInput>;
 };
 
 /** The output of our create `Filter` mutation. */
@@ -24205,400 +25570,7 @@ export type OutcomeDisplayInput = {
   priority?: Maybe<Scalars['Int']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `outcomeDisplayTable` in the `OutcomeDisplayInput` mutation. */
-export type OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput = {
-  /** Flag indicating whether all other `outcomeDisplayTable` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `outcomeDisplayTable` for the far side of the relationship. */
-  connectById?: Maybe<Array<OutcomeDisplayTableOutcomeDisplayTablePkeyConnect>>;
-  /** The primary key(s) for `outcomeDisplayTable` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<OutcomeDisplayTableNodeIdConnect>>;
-  /** The primary key(s) for `outcomeDisplayTable` for the far side of the relationship. */
-  deleteById?: Maybe<Array<OutcomeDisplayTableOutcomeDisplayTablePkeyDelete>>;
-  /** The primary key(s) for `outcomeDisplayTable` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<OutcomeDisplayTableNodeIdDelete>>;
-  /** The primary key(s) and patch data for `outcomeDisplayTable` for the far side of the relationship. */
-  updateById?: Maybe<Array<OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate>>;
-  /** The primary key(s) and patch data for `outcomeDisplayTable` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate>>;
-  /** A `OutcomeDisplayTableInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput>>;
-};
-
-/** The fields on `outcomeDisplayTable` to look up the row to connect. */
-export type OutcomeDisplayTableOutcomeDisplayTablePkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type OutcomeDisplayTableNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplayTable` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `outcomeDisplayTable` to look up the row to delete. */
-export type OutcomeDisplayTableOutcomeDisplayTablePkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type OutcomeDisplayTableNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplayTable` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `outcomeDisplayTable` to look up the row to update. */
-export type OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplayTable` being updated. */
-  patch: UpdateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `outcomeDisplayTable` being updated. */
-export type UpdateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  title?: Maybe<Scalars['String']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `outcomeDisplay` in the `OutcomeDisplayTableInput` mutation. */
-export type OutcomeDisplayTableOutcomeDisplayIdFkeyInput = {
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectByNodeId?: Maybe<OutcomeDisplayNodeIdConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyDelete>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<OutcomeDisplayNodeIdDelete>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateById?: Maybe<OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateByTableNameAndCode?: Maybe<OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateByNodeId?: Maybe<OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate>;
-  /** A `OutcomeDisplayInput` object that will be created and connected to this object. */
-  create?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput>;
-};
-
-/** The fields on `outcomeDisplay` to look up the row to connect. */
-export type OutcomeDisplayOutcomeDisplayPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The fields on `outcomeDisplay` to look up the row to connect. */
-export type OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect = {
-  tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type OutcomeDisplayNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `outcomeDisplay` to look up the row to delete. */
-export type OutcomeDisplayOutcomeDisplayPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** The fields on `outcomeDisplay` to look up the row to delete. */
-export type OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete = {
-  tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type OutcomeDisplayNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `outcomeDisplay` to look up the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-export type UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  tableName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn?: Maybe<Scalars['String']>;
-  showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  priority?: Maybe<Scalars['Int']>;
-  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
-  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `outcomeDisplayDetail` in the `OutcomeDisplayInput` mutation. */
-export type OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput = {
-  /** Flag indicating whether all other `outcomeDisplayDetail` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `outcomeDisplayDetail` for the far side of the relationship. */
-  connectById?: Maybe<Array<OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect>>;
-  /** The primary key(s) for `outcomeDisplayDetail` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<OutcomeDisplayDetailNodeIdConnect>>;
-  /** The primary key(s) for `outcomeDisplayDetail` for the far side of the relationship. */
-  deleteById?: Maybe<Array<OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete>>;
-  /** The primary key(s) for `outcomeDisplayDetail` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<OutcomeDisplayDetailNodeIdDelete>>;
-  /** The primary key(s) and patch data for `outcomeDisplayDetail` for the far side of the relationship. */
-  updateById?: Maybe<Array<OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate>>;
-  /** The primary key(s) and patch data for `outcomeDisplayDetail` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate>>;
-  /** A `OutcomeDisplayDetailInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput>>;
-};
-
-/** The fields on `outcomeDisplayDetail` to look up the row to connect. */
-export type OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type OutcomeDisplayDetailNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplayDetail` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `outcomeDisplayDetail` to look up the row to delete. */
-export type OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type OutcomeDisplayDetailNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplayDetail` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `outcomeDisplayDetail` to look up the row to update. */
-export type OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplayDetail` being updated. */
-  patch: UpdateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `outcomeDisplayDetail` being updated. */
-export type UpdateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  parameters?: Maybe<Scalars['JSON']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `outcomeDisplay` in the `OutcomeDisplayDetailInput` mutation. */
-export type OutcomeDisplayDetailOutcomeDisplayIdFkeyInput = {
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectByNodeId?: Maybe<OutcomeDisplayNodeIdConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyDelete>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<OutcomeDisplayNodeIdDelete>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateById?: Maybe<OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateByTableNameAndCode?: Maybe<OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateByNodeId?: Maybe<OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate>;
-  /** A `OutcomeDisplayInput` object that will be created and connected to this object. */
-  create?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput>;
-};
-
-/** The fields on `outcomeDisplay` to look up the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-export type UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  tableName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn?: Maybe<Scalars['String']>;
-  showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  priority?: Maybe<Scalars['Int']>;
-  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
-  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
-};
-
-/** The fields on `outcomeDisplay` to look up the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
-  tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: OutcomeDisplayPatch;
-};
-
-/** Represents an update to a `OutcomeDisplay`. Fields that are set will be updated. */
-export type OutcomeDisplayPatch = {
-  id?: Maybe<Scalars['Int']>;
-  tableName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn?: Maybe<Scalars['String']>;
-  showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  priority?: Maybe<Scalars['Int']>;
-  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
-  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
-};
-
-/** The `outcomeDisplay` to be created by this mutation. */
-export type OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  tableName: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
-  code: Scalars['String'];
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn: Scalars['String'];
-  showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  priority?: Maybe<Scalars['Int']>;
-  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
-  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplayDetail` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `outcomeDisplayDetail` being updated. */
-  patch: OutcomeDisplayDetailPatch;
-};
-
-/** Represents an update to a `OutcomeDisplayDetail`. Fields that are set will be updated. */
-export type OutcomeDisplayDetailPatch = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  parameters?: Maybe<Scalars['JSON']>;
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInput>;
-};
-
-/** The `outcomeDisplayDetail` to be created by this mutation. */
-export type OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  parameters?: Maybe<Scalars['JSON']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInput>;
-};
-
-/** The fields on `outcomeDisplay` to look up the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
-  tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: OutcomeDisplayPatch;
-};
-
-/** The `outcomeDisplay` to be created by this mutation. */
-export type OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  tableName: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
-  code: Scalars['String'];
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn: Scalars['String'];
-  showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  priority?: Maybe<Scalars['Int']>;
-  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
-  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplayTable` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `outcomeDisplayTable` being updated. */
-  patch: OutcomeDisplayTablePatch;
-};
-
-/** Represents an update to a `OutcomeDisplayTable`. Fields that are set will be updated. */
-export type OutcomeDisplayTablePatch = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  title?: Maybe<Scalars['String']>;
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInput>;
-};
-
-/** The `outcomeDisplayTable` to be created by this mutation. */
-export type OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  title?: Maybe<Scalars['String']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInverseInput>;
 };
 
 /** The output of our create `OutcomeDisplay` mutation. */
@@ -24800,6 +25772,7 @@ export type PermissionNameInput = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** The output of our create `PermissionName` mutation. */
@@ -25241,7 +26214,6 @@ export type TemplateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -25253,6 +26225,7 @@ export type TemplateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The output of our create `Template` mutation. */
@@ -26211,6 +27184,52 @@ export type UpdateCounterByNameInput = {
   /** An object where the defined keys will be set on the `Counter` being updated. */
   patch: CounterPatch;
   name: Scalars['String'];
+};
+
+/** All input for the `updateCustomLocalisationByNodeId` mutation. */
+export type UpdateCustomLocalisationByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `CustomLocalisation` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `CustomLocalisation` being updated. */
+  patch: CustomLocalisationPatch;
+};
+
+/** The output of our update `CustomLocalisation` mutation. */
+export type UpdateCustomLocalisationPayload = {
+  __typename?: 'UpdateCustomLocalisationPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `CustomLocalisation` that was updated by this mutation. */
+  customLocalisation?: Maybe<CustomLocalisation>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `CustomLocalisation`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `CustomLocalisation`. */
+  filter?: Maybe<Filter>;
+  /** Reads a single `OutcomeDisplay` that is related to this `CustomLocalisation`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+  /** Reads a single `PermissionName` that is related to this `CustomLocalisation`. */
+  permissionName?: Maybe<PermissionName>;
+  /** An edge for our `CustomLocalisation`. May be used by Relay 1. */
+  customLocalisationEdge?: Maybe<CustomLocalisationsEdge>;
+};
+
+
+/** The output of our update `CustomLocalisation` mutation. */
+export type UpdateCustomLocalisationPayloadCustomLocalisationEdgeArgs = {
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+};
+
+/** All input for the `updateCustomLocalisation` mutation. */
+export type UpdateCustomLocalisationInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `CustomLocalisation` being updated. */
+  patch: CustomLocalisationPatch;
+  id: Scalars['Int'];
 };
 
 /** All input for the `updateElementTypePluginByNodeId` mutation. */
@@ -28086,6 +29105,49 @@ export type DeleteCounterByNameInput = {
   name: Scalars['String'];
 };
 
+/** All input for the `deleteCustomLocalisationByNodeId` mutation. */
+export type DeleteCustomLocalisationByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `CustomLocalisation` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `CustomLocalisation` mutation. */
+export type DeleteCustomLocalisationPayload = {
+  __typename?: 'DeleteCustomLocalisationPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `CustomLocalisation` that was deleted by this mutation. */
+  customLocalisation?: Maybe<CustomLocalisation>;
+  deletedCustomLocalisationNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `CustomLocalisation`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `CustomLocalisation`. */
+  filter?: Maybe<Filter>;
+  /** Reads a single `OutcomeDisplay` that is related to this `CustomLocalisation`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+  /** Reads a single `PermissionName` that is related to this `CustomLocalisation`. */
+  permissionName?: Maybe<PermissionName>;
+  /** An edge for our `CustomLocalisation`. May be used by Relay 1. */
+  customLocalisationEdge?: Maybe<CustomLocalisationsEdge>;
+};
+
+
+/** The output of our delete `CustomLocalisation` mutation. */
+export type DeleteCustomLocalisationPayloadCustomLocalisationEdgeArgs = {
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+};
+
+/** All input for the `deleteCustomLocalisation` mutation. */
+export type DeleteCustomLocalisationInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
 /** All input for the `deleteElementTypePluginByNodeId` mutation. */
 export type DeleteElementTypePluginByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -29613,8 +30675,14 @@ export type StageFragment = (
 
 export type TemplateFragmentFragment = (
   { __typename?: 'Template' }
-  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'startMessage' | 'submissionMessage' | 'version' | 'icon' | 'languageStrings'>
-  & { templateCategory?: Maybe<(
+  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'startMessage' | 'submissionMessage' | 'version' | 'icon'>
+  & { customLocalisations: (
+    { __typename?: 'CustomLocalisationsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'CustomLocalisation' }
+      & Pick<CustomLocalisation, 'languageCode' | 'strings'>
+    )>> }
+  ), templateCategory?: Maybe<(
     { __typename?: 'TemplateCategory' }
     & Pick<TemplateCategory, 'id' | 'code' | 'title' | 'icon' | 'uiLocation'>
   )>, templateFilterJoins: (
@@ -29648,6 +30716,7 @@ export type CreateApplicationMutationVariables = Exact<{
   isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   templateId: Scalars['Int'];
+  langCode?: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId: Scalars['String'];
@@ -29777,6 +30846,7 @@ export type DeleteWholeApplicationMutation = (
 
 export type UpdateTemplateMutationVariables = Exact<{
   id: Scalars['Int'];
+  langCode?: Scalars['String'];
   templatePatch: TemplatePatch;
 }>;
 
@@ -30133,6 +31203,7 @@ export type GetAllResponsesQuery = (
 
 export type GetApplicationQueryVariables = Exact<{
   serial: Scalars['String'];
+  langCode?: Scalars['String'];
 }>;
 
 
@@ -30199,6 +31270,7 @@ export type GetApplicationListQueryVariables = Exact<{
   paginationOffset: Scalars['Int'];
   numberToFetch: Scalars['Int'];
   userId?: Scalars['Int'];
+  languageCode?: Scalars['String'];
 }>;
 
 
@@ -30209,7 +31281,7 @@ export type GetApplicationListQuery = (
     & Pick<ApplicationListShapesConnection, 'totalCount'>
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationListShape' }
-      & Pick<ApplicationListShape, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'languageStrings' | 'applicant' | 'orgName' | 'stage' | 'stageColour' | 'status' | 'outcome' | 'lastActiveDate' | 'reviewerAction' | 'assignerAction' | 'assigners' | 'reviewers' | 'totalQuestions' | 'totalAssigned' | 'totalAssignLocked'>
+      & Pick<ApplicationListShape, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'applicant' | 'orgName' | 'stage' | 'stageColour' | 'status' | 'outcome' | 'lastActiveDate' | 'languageStrings' | 'reviewerAction' | 'assignerAction' | 'assigners' | 'reviewers' | 'totalQuestions' | 'totalAssigned' | 'totalAssignLocked'>
     )>>, pageInfo: (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
@@ -30453,6 +31525,7 @@ export type GetSchemaColumnsQuery = (
 export type GetTemplateQueryVariables = Exact<{
   code: Scalars['String'];
   status?: Maybe<TemplateStatus>;
+  langCode?: Scalars['String'];
 }>;
 
 
@@ -30489,6 +31562,7 @@ export type GetTemplateQuery = (
 
 export type GetTemplatesQueryVariables = Exact<{
   status?: Maybe<TemplateStatus>;
+  langCode?: Scalars['String'];
 }>;
 
 
@@ -30583,7 +31657,9 @@ export type GetAllPermissionNamesQuery = (
   )> }
 );
 
-export type GetAllTemplatesQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllTemplatesQueryVariables = Exact<{
+  languageCode?: Scalars['String'];
+}>;
 
 
 export type GetAllTemplatesQuery = (
@@ -30596,7 +31672,13 @@ export type GetAllTemplatesQuery = (
       & { templateCategory?: Maybe<(
         { __typename?: 'TemplateCategory' }
         & Pick<TemplateCategory, 'title'>
-      )>, applications: (
+      )>, customLocalisations: (
+        { __typename?: 'CustomLocalisationsConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'CustomLocalisation' }
+          & Pick<CustomLocalisation, 'languageCode' | 'strings'>
+        )>> }
+      ), applications: (
         { __typename?: 'ApplicationsConnection' }
         & Pick<ApplicationsConnection, 'totalCount'>
       ) }
@@ -30620,6 +31702,7 @@ export type GetTemplateCategoriesQuery = (
 
 export type GetFullTemplateInfoQueryVariables = Exact<{
   id: Scalars['Int'];
+  langCode?: Scalars['String'];
 }>;
 
 
@@ -30814,7 +31897,12 @@ export const TemplateFragmentFragmentDoc = gql`
   submissionMessage
   version
   icon
-  languageStrings
+  customLocalisations(condition: {languageCode: $langCode}) {
+    nodes {
+      languageCode
+      strings
+    }
+  }
   templateCategory {
     id
     code
@@ -30976,7 +32064,7 @@ export const TemplateStageFragmentDoc = gql`
 }
     `;
 export const CreateApplicationDocument = gql`
-    mutation createApplication($name: String!, $isConfig: Boolean = false, $serial: String, $templateId: Int!, $userId: Int, $orgId: Int, $sessionId: String!, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE, $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]) {
+    mutation createApplication($name: String!, $isConfig: Boolean = false, $serial: String, $templateId: Int!, $langCode: String! = "", $userId: Int, $orgId: Int, $sessionId: String!, $outcome: ApplicationOutcome = PENDING, $trigger: Trigger = ON_APPLICATION_CREATE, $responses: [ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput!]) {
   createApplication(input: {application: {isConfig: $isConfig, name: $name, serial: $serial, templateId: $templateId, userId: $userId, orgId: $orgId, sessionId: $sessionId, isActive: true, outcome: $outcome, trigger: $trigger, applicationResponsesUsingId: {create: $responses}}}) {
     application {
       userId
@@ -31015,6 +32103,7 @@ export type CreateApplicationMutationFn = Apollo.MutationFunction<CreateApplicat
  *      isConfig: // value for 'isConfig'
  *      serial: // value for 'serial'
  *      templateId: // value for 'templateId'
+ *      langCode: // value for 'langCode'
  *      userId: // value for 'userId'
  *      orgId: // value for 'orgId'
  *      sessionId: // value for 'sessionId'
@@ -31215,7 +32304,7 @@ export type DeleteWholeApplicationMutationHookResult = ReturnType<typeof useDele
 export type DeleteWholeApplicationMutationResult = Apollo.MutationResult<DeleteWholeApplicationMutation>;
 export type DeleteWholeApplicationMutationOptions = Apollo.BaseMutationOptions<DeleteWholeApplicationMutation, DeleteWholeApplicationMutationVariables>;
 export const UpdateTemplateDocument = gql`
-    mutation updateTemplate($id: Int!, $templatePatch: TemplatePatch!) {
+    mutation updateTemplate($id: Int!, $langCode: String! = "", $templatePatch: TemplatePatch!) {
   updateTemplate(input: {id: $id, patch: $templatePatch}) {
     template {
       ...FullTemplate
@@ -31239,6 +32328,7 @@ export type UpdateTemplateMutationFn = Apollo.MutationFunction<UpdateTemplateMut
  * const [updateTemplateMutation, { data, loading, error }] = useUpdateTemplateMutation({
  *   variables: {
  *      id: // value for 'id'
+ *      langCode: // value for 'langCode'
  *      templatePatch: // value for 'templatePatch'
  *   },
  * });
@@ -31907,7 +32997,7 @@ export type GetAllResponsesQueryHookResult = ReturnType<typeof useGetAllResponse
 export type GetAllResponsesLazyQueryHookResult = ReturnType<typeof useGetAllResponsesLazyQuery>;
 export type GetAllResponsesQueryResult = Apollo.QueryResult<GetAllResponsesQuery, GetAllResponsesQueryVariables>;
 export const GetApplicationDocument = gql`
-    query getApplication($serial: String!) {
+    query getApplication($serial: String!, $langCode: String! = "") {
   applicationBySerial(serial: $serial) {
     ...Application
     template {
@@ -31963,6 +33053,7 @@ ${StageFragmentDoc}`;
  * const { data, loading, error } = useGetApplicationQuery({
  *   variables: {
  *      serial: // value for 'serial'
+ *      langCode: // value for 'langCode'
  *   },
  * });
  */
@@ -32011,15 +33102,14 @@ export type GetApplicationSerialQueryHookResult = ReturnType<typeof useGetApplic
 export type GetApplicationSerialLazyQueryHookResult = ReturnType<typeof useGetApplicationSerialLazyQuery>;
 export type GetApplicationSerialQueryResult = Apollo.QueryResult<GetApplicationSerialQuery, GetApplicationSerialQueryVariables>;
 export const GetApplicationListDocument = gql`
-    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $userId: Int! = 0) {
-  applicationList(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch, userid: $userId) {
+    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $userId: Int! = 0, $languageCode: String! = "") {
+  applicationList(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch, userid: $userId, languageCode: $languageCode) {
     nodes {
       id
       serial
       name
       templateCode
       templateName
-      languageStrings
       applicant
       orgName
       stage
@@ -32027,6 +33117,7 @@ export const GetApplicationListDocument = gql`
       status
       outcome
       lastActiveDate
+      languageStrings
       reviewerAction
       assignerAction
       assigners
@@ -32061,6 +33152,7 @@ export const GetApplicationListDocument = gql`
  *      paginationOffset: // value for 'paginationOffset'
  *      numberToFetch: // value for 'numberToFetch'
  *      userId: // value for 'userId'
+ *      languageCode: // value for 'languageCode'
  *   },
  * });
  */
@@ -32454,7 +33546,7 @@ export type GetSchemaColumnsQueryHookResult = ReturnType<typeof useGetSchemaColu
 export type GetSchemaColumnsLazyQueryHookResult = ReturnType<typeof useGetSchemaColumnsLazyQuery>;
 export type GetSchemaColumnsQueryResult = Apollo.QueryResult<GetSchemaColumnsQuery, GetSchemaColumnsQueryVariables>;
 export const GetTemplateDocument = gql`
-    query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE) {
+    query getTemplate($code: String!, $status: TemplateStatus = AVAILABLE, $langCode: String! = "") {
   templates(condition: {code: $code, status: $status}) {
     nodes {
       ...templateFragment
@@ -32497,6 +33589,7 @@ ${ElementFragmentFragmentDoc}`;
  *   variables: {
  *      code: // value for 'code'
  *      status: // value for 'status'
+ *      langCode: // value for 'langCode'
  *   },
  * });
  */
@@ -32510,7 +33603,7 @@ export type GetTemplateQueryHookResult = ReturnType<typeof useGetTemplateQuery>;
 export type GetTemplateLazyQueryHookResult = ReturnType<typeof useGetTemplateLazyQuery>;
 export type GetTemplateQueryResult = Apollo.QueryResult<GetTemplateQuery, GetTemplateQueryVariables>;
 export const GetTemplatesDocument = gql`
-    query getTemplates($status: TemplateStatus = AVAILABLE) {
+    query getTemplates($status: TemplateStatus = AVAILABLE, $langCode: String! = "") {
   templates(condition: {status: $status}) {
     nodes {
       ...templateFragment
@@ -32532,6 +33625,7 @@ export const GetTemplatesDocument = gql`
  * const { data, loading, error } = useGetTemplatesQuery({
  *   variables: {
  *      status: // value for 'status'
+ *      langCode: // value for 'langCode'
  *   },
  * });
  */
@@ -32745,7 +33839,7 @@ export type GetAllPermissionNamesQueryHookResult = ReturnType<typeof useGetAllPe
 export type GetAllPermissionNamesLazyQueryHookResult = ReturnType<typeof useGetAllPermissionNamesLazyQuery>;
 export type GetAllPermissionNamesQueryResult = Apollo.QueryResult<GetAllPermissionNamesQuery, GetAllPermissionNamesQueryVariables>;
 export const GetAllTemplatesDocument = gql`
-    query getAllTemplates {
+    query getAllTemplates($languageCode: String! = "") {
   templates {
     nodes {
       code
@@ -32757,6 +33851,12 @@ export const GetAllTemplatesDocument = gql`
       status
       templateCategory {
         title
+      }
+      customLocalisations(condition: {languageCode: $languageCode}) {
+        nodes {
+          languageCode
+          strings
+        }
       }
       applications(filter: {isConfig: {equalTo: false}}) {
         totalCount
@@ -32778,6 +33878,7 @@ export const GetAllTemplatesDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllTemplatesQuery({
  *   variables: {
+ *      languageCode: // value for 'languageCode'
  *   },
  * });
  */
@@ -32829,7 +33930,7 @@ export type GetTemplateCategoriesQueryHookResult = ReturnType<typeof useGetTempl
 export type GetTemplateCategoriesLazyQueryHookResult = ReturnType<typeof useGetTemplateCategoriesLazyQuery>;
 export type GetTemplateCategoriesQueryResult = Apollo.QueryResult<GetTemplateCategoriesQuery, GetTemplateCategoriesQueryVariables>;
 export const GetFullTemplateInfoDocument = gql`
-    query getFullTemplateInfo($id: Int!) {
+    query getFullTemplateInfo($id: Int!, $langCode: String! = "") {
   template(id: $id) {
     ...FullTemplate
   }
@@ -32849,6 +33950,7 @@ export const GetFullTemplateInfoDocument = gql`
  * const { data, loading, error } = useGetFullTemplateInfoQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      langCode: // value for 'langCode'
  *   },
  * });
  */
