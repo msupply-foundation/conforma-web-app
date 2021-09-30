@@ -210,11 +210,11 @@ There is documentation on the code of these as well in the [repo](https://github
 
 8. Change Application Outcome (on last stage submission)
 
-   - Action:
+   - Action: "changeOutcome"
    - Description: "**CORE-ACTION** Change application outcome when last level and last stage - usually a final decision - submits a review as CONFORM or NON_CONFORM. Outcome will be APPROVED or REJECTED accordingly"
    - Condition: When Reviewer is_last_stage & is_last_level & decision is either CONFORM or NON_CONFORM
 
-9. Change Application Outcome (on Rejection in early stage)
+**Note**: No need to use "changeStatus" for seting status of COMPLETED when application outcomes is set to APPROVED/REJECTED - this will happen automatically.
 
 ### Other actions
 
