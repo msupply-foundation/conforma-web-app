@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Checkbox, Header } from 'semantic-ui-react'
-import strings from '../../../../utils/constants'
+import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { TemplateAction, Trigger } from '../../../../utils/generated/graphql'
 import CheckboxIO from '../../shared/CheckboxIO'
 import { EvaluationHeader } from '../../shared/Evaluation'
@@ -43,15 +43,8 @@ type SetIsSequential = (id: number, isSequential: boolean) => void
 type SwapSequences = (fromAction: TemplateAction, toAction: TemplateAction) => void
 type RemoveAction = (id: number) => void
 
-const newAction = {
-  actionCode: 'cLog',
-  description: strings.TEMPLATE_LABEL_ACTION_DESCRIPTION,
-  parameterQueries: {
-    message: strings.TEMPLATE_LABEL_ACTION_MESSAGE,
-  },
-}
-
 const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateActions }) => {
+  const { strings } = useLanguageProvider()
   const { updateTemplate } = useOperationState()
   const {
     template: { id: templateId, isDraft },
@@ -59,6 +52,15 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
   const { allActionsByCode } = useActionState()
   const [addActionTop, setAddActionTop] = useState(true)
   const { sequential, asynchronous } = getActionsForTrigger(trigger, allTemplateActions)
+
+  const newAction = {
+    actionCode: 'cLog',
+    description: strings.TEMPLATE_LABEL_ACTION_DESCRIPTION,
+    parameterQueries: {
+      message: strings.TEMPLATE_LABEL_ACTION_MESSAGE,
+    },
+  }
+
   const lastSequence = sequential.reduce(
     (max, current) =>
       max === 0 || max < Number(current?.sequence) ? Number(current?.sequence) : max,
