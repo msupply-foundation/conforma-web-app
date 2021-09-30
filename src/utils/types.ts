@@ -14,7 +14,6 @@ import {
   User as GraphQLUser,
   Organisation as GraphQLOrg,
   Filter,
-  Application,
   UiLocation,
 } from './generated/graphql'
 
@@ -346,9 +345,13 @@ interface ResponsesByCode {
 }
 
 interface ReviewAssignment {
+  assignee: GraphQLUser
+  assignmentStatus: ReviewAssignmentStatus
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
-  isFinalDecision: boolean
+  finalDecision: {
+    decisionOnReview: boolean
+  } | null
 }
 
 type ReviewSectionComponentProps = {

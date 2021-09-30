@@ -1,7 +1,7 @@
 import { ReviewStatus, ReviewAssignmentStatus } from '../../generated/graphql'
 import {
   SectionState,
-  AssignmentDetails,
+  ReviewAssignment,
   ReviewDetails,
   ReviewAction,
   ConsolidationProgress,
@@ -10,8 +10,8 @@ import {
 
 type GenerateSectionActions = (props: {
   sections: SectionState[]
-  reviewAssignment: AssignmentDetails
   thisReview?: ReviewDetails | null
+  reviewAssignment: ReviewAssignment
   currentUserId: number
 }) => void
 
@@ -106,16 +106,14 @@ const actionDefinitions: ActionDefinition[] = [
 
 const generateReviewSectionActions: GenerateSectionActions = ({
   sections,
-  reviewAssignment: {
-    isFinalDecision,
-    reviewer,
-    level,
-    current: { assignmentStatus },
-  },
+  reviewAssignment: { assignee, finalDecision, assignmentStatus },
   thisReview,
   currentUserId,
 }) => {
-  const isConsolidation = level > 1 || isFinalDecision
+  const reviewLevel = thisReview?.level || 1
+  const isFinalDecision = !!finalDecision
+  const isFinalDecisionOnReview = !!finalDecision?.decisionOnReview
+  const isConsolidation = reviewLevel > 1 || (isFinalDecision && !isFinalDecisionOnReview)
 
   sections.forEach((section) => {
     const { totalReviewable, totalPendingReview, totalActive } = isConsolidation
@@ -125,15 +123,15 @@ const generateReviewSectionActions: GenerateSectionActions = ({
     const totalNewReviewable = section?.consolidationProgress?.totalNewReviewable
 
     const isAssignedToCurrentUser =
-      reviewer.id === currentUserId && (totalReviewable > 0 || isFinalDecision)
+      assignee?.id === currentUserId && (totalReviewable > 0 || isFinalDecision)
 
     const isReviewable = (totalReviewable || 0) > 0
 
     const checkMethodProps = {
       isReviewable,
       isAssignedToCurrentUser,
-      isFinalDecision,
-      reviewLevel: level,
+      isFinalDecision: !!finalDecision,
+      reviewLevel,
       reviewAssignmentStatus: assignmentStatus,
       isReviewExisting: !!thisReview,
       reviewStatus: thisReview?.current.reviewStatus,

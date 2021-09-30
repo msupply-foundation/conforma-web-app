@@ -156,9 +156,9 @@ a:hover {
   align-items: center;
 }
 
-.flex-column-start-start {
+.flex-column-start-stretch {
   .flex-column-start();
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 .spacer-20 {
@@ -1781,7 +1781,7 @@ a:hover {
   margin-left: 30px;
 }
 .evaluator-operator-container {
-  .flex-column-start-start();
+  .flex-column-start-stretch();
   background: rgba(0, 0, 0, 0.03);
   padding: 5px;
   margin: 2px;
@@ -1791,7 +1791,7 @@ a:hover {
 }
 
 .config-container {
-  .flex-column-start-start();
+  .flex-column-start-stretch();
   padding: 10px;
   border-radius: @borderRadius;
   background-color: @surfacesWhite;

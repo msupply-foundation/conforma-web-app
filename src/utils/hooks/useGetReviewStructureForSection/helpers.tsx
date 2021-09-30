@@ -6,19 +6,21 @@ import {
   TemplateElement,
   ReviewResponseStatus,
   ReviewStatus,
+  ReviewAssignmentStatus,
 } from '../../generated/graphql'
 import {
   addChangeRequestForReviewer,
   addElementsById,
+  addReviewResponses,
   addSortedSectionsAndPages,
   generateConsolidationValidity,
   generateConsolidatorResponsesProgress,
+  generateFinalDecisionProgress,
   generateReviewerChangesRequestedProgress,
   generateReviewerResponsesProgress,
   generateReviewSectionActions,
   generateReviewValidity,
 } from '../../helpers/structure'
-import addReviewResponses from '../../helpers/structure/addReviewResponses'
 
 import {
   UseGetReviewStructureForSectionProps,
@@ -26,6 +28,8 @@ import {
   FullStructure,
   SectionState,
   PageElement,
+  AssignmentDetails,
+  ReviewAssignment,
 } from '../../types'
 
 const getSectionIds = ({
@@ -76,16 +80,7 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // mutate fullApplicationStructure
   let newStructure: FullStructure = cloneDeep(fullApplicationStructure)
 
-  const { reviewQuestionAssignments, level, isLastLevel, isFinalDecision, review } =
-    reviewAssignment
-
-  // review info comes from reviewAssignment that's passed to this hook
-  newStructure.thisReview = review
-  newStructure.assignment = {
-    isLastLevel,
-    isFinalDecision,
-    canSubmitReviewAs: null,
-  }
+  const { reviewQuestionAssignments, level } = reviewAssignment
 
   // This is usefull for linking assignments to elements
   newStructure = addElementsById(newStructure)
@@ -101,6 +96,8 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // latestOriginalReviewResponse and previousOriginalReviewResponse
   newStructure = addAllReviewResponses(newStructure, data)
 
+  setReviewAndAssignment(newStructure, reviewAssignment)
+
   // Update fields element.isNewReviewResponse for reviews re-submitted to a consolidator
   setIsNewReviewResponse(newStructure)
 
@@ -114,7 +111,8 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // since the reviews with isChangeRequest (and not changed) need to be removed from done accountings
   generateReviewerChangesRequestedProgress(newStructure)
 
-  if (level === 1 && !isFinalDecision) {
+  if (newStructure.assignment?.finalDecision) generateFinalDecisionProgress(newStructure)
+  else if (level === 1) {
     generateReviewerResponsesProgress(newStructure)
     generateReviewValidity(newStructure)
   } else {
@@ -127,8 +125,8 @@ const generateReviewStructure: GenerateReviewStructure = ({
   const sections = getFilteredSections(sectionIds, newStructure.sortedSections || [])
   generateReviewSectionActions({
     sections,
-    reviewAssignment,
     thisReview: newStructure.thisReview,
+    reviewAssignment: newStructure.assignment as ReviewAssignment,
     currentUserId: currentUser?.userId as number,
   })
 
@@ -142,6 +140,28 @@ const setIsNewApplicationResponse = (structure: FullStructure) => {
       element?.latestApplicationResponse?.timeUpdated === structure.info.current.timeStageCreated &&
       !!element?.previousApplicationResponse
   })
+}
+
+const setReviewAndAssignment = (structure: FullStructure, reviewAssignment: AssignmentDetails) => {
+  const { isLastLevel, isFinalDecision, review } = reviewAssignment
+
+  const isPreviousStageConsolidation = Object.values(structure.elementsById || {}).some(
+    ({ lowerLevelReviewLatestResponse }) => !!lowerLevelReviewLatestResponse
+  )
+
+  // review info comes from reviewAssignment that's passed to this hook
+  structure.thisReview = review
+  structure.assignment = {
+    assignee: reviewAssignment.reviewer,
+    assignmentStatus: reviewAssignment.current.assignmentStatus as ReviewAssignmentStatus,
+    isLastLevel,
+    finalDecision: isFinalDecision
+      ? {
+          decisionOnReview: !isPreviousStageConsolidation,
+        }
+      : null,
+    canSubmitReviewAs: null,
+  }
 }
 
 const setIsNewReviewResponse = (structure: FullStructure) => {
@@ -200,13 +220,14 @@ const addIsActiveReviewResponse = (structure: FullStructure) => {
 
 const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponsesQuery) => {
   // Following arrays have been sorted in useGetReviewResponsesQuery
-  const thisReviewResponses = data?.thisReviewResponses?.nodes as ReviewResponse[]
-  const lowerLevelReviewResponses = data?.previousLevelReviewResponses?.nodes as ReviewResponse[]
-  const originalReviewResponses = data?.originalReviewResponses?.nodes as ReviewResponse[]
-  const previousOriginalReviewResponses = data?.previousOriginalReviewResponses
-    ?.nodes as ReviewResponse[]
+  const thisReviewResponses = (data?.thisReviewResponses?.nodes || []) as ReviewResponse[]
+  const lowerLevelReviewResponses = (data?.previousLevelReviewResponses?.nodes ||
+    []) as ReviewResponse[]
+  const originalReviewResponses = (data?.originalReviewResponses?.nodes || []) as ReviewResponse[]
+  const previousOriginalReviewResponses = (data?.previousOriginalReviewResponses?.nodes ||
+    []) as ReviewResponse[]
 
-  const isFinalDecision = !!structure.assignment?.isFinalDecision
+  const isFinalDecision = !!structure.assignment?.finalDecision
 
   // add thisReviewLatestResponse and thisReviewPreviousResponse
   // includes for a consolidation also has reviewResponsesByReviewResponseLinkId with Consolidator decision
@@ -224,6 +245,7 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
     (element, response) => (element.lowerLevelReviewLatestResponse = response),
     (element, response) => (element.lowerLevelReviewPreviousResponse = response)
   )
+
   // add latestOriginalReviewResponse and previousOriginalReviewResponse
   // or previousStage originalResponses - when it s final decision (and original is in previous stage)
   structure = addReviewResponses(
