@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { hot } from 'react-hot-loader'
 import Login from '../User/Login'
 import Verify from '../User/Verification'
-import { UserProvider } from '../../contexts/UserState'
+import { UserProvider, useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import NonRegisteredLogin from '../User/NonRegisteredLogin'
 import AuthenticatedContent from './AuthenticatedWrapper'
@@ -37,6 +37,9 @@ const AppWrapper: React.FC = () => {
           <Route exact path="/verify">
             <Verify />
           </Route>
+          <Route exact path="/logout">
+            <Logout />
+          </Route>
           <Route>
             <AuthenticatedContent />
           </Route>
@@ -48,3 +51,9 @@ const AppWrapper: React.FC = () => {
 
 declare const module: any
 export default hot(module)(AppWrapper)
+
+const Logout: React.FC = () => {
+  const { logout } = useUserState()
+  logout()
+  return null
+}
