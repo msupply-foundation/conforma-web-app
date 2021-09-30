@@ -17,7 +17,6 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 - [Level 1+ Reviews and Changes Requested](Level-1+-Reviews-and-Changes-Requested.md)
 - [Assignment Process](Assignment-Process.md)
 - [Actions on Applications](Actions-on-Applications.md)
-  List-Core-Actions
 
 ### Admin
 
