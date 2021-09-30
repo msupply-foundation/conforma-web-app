@@ -10,7 +10,7 @@ Core-actions aren't meant to be modified, and only someone with expertise should
 ## Briefing
 
 Core-actions are listed in each template and are configurations that run after certain events happen triggered by changes done by users in Applications linked to the template.
-These actions should be added at the start of a template creation - one siimple way is to duplicate the `Sample template` to start with all of these core-actions in the new template configuration.
+These actions should be added at the start of a template creation - one simple way is to duplicate the `Sample template` to start with all of these core-actions in the new template configuration, although it is recommended you duplicate one of the other core templates that mostly closely matches your requirements, and it will also have all the core actions included (with some exceptions for a couple of the simpler templates)
 Some of the plugin actions - which aren't core-actions - are also defined per template (and some examples at the end) used mainly for configuring notifications, generatioin of certificates and outcomes.
 
 ## Lists
