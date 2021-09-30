@@ -1,6 +1,6 @@
 # List of Core Actions
 
-The snapshot loaded with the system at the start called `core_templates` has a list of all core-actions included in template `Sample template`.
+The snapshot loaded with the system at the start, called `core_templates`, has a template called `Sample template`, which contains all the core actions listed here.
 
 ## Disclaimer
 
