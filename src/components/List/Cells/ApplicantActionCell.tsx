@@ -2,10 +2,11 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { ApplicationStatus } from '../../../utils/generated/graphql'
 import { CellProps } from '../../../utils/types'
-import strings from '../../../utils/constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Icon } from 'semantic-ui-react'
 
 const ApplicantActionCell: React.FC<CellProps> = ({ application: { status, serial } }) => {
+  const { strings } = useLanguageProvider()
   let action = ''
 
   if (status === ApplicationStatus.ChangesRequired) action = strings.ACTION_UPDATE

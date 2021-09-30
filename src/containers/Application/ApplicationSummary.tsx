@@ -6,7 +6,7 @@ import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, SectionWrapper } from '../../components'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { Link } from 'react-router-dom'
@@ -17,6 +17,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
   structure: fullStructure,
   requestRevalidation,
 }) => {
+  const { strings } = useLanguageProvider()
   const { replace, push, query } = useRouter()
   const [error, setError] = useState(false)
 

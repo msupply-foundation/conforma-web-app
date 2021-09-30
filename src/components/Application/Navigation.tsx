@@ -7,7 +7,7 @@ import {
   SectionDetails,
   SectionsStructure,
 } from '../../utils/types'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { useRouter } from '../../utils/hooks/useRouter'
 
 interface NavigationProps {
@@ -27,6 +27,7 @@ const Navigation: React.FC<NavigationProps> = ({
   requestRevalidation,
   isValidating,
 }) => {
+  const { strings } = useLanguageProvider()
   const { push } = useRouter()
 
   const currentSectionDetails = sections[current.sectionCode].details

@@ -7,7 +7,7 @@ import {
   ReviewSectionRowProgress,
   ReviewSectionRowAction,
 } from '../../components/Review'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import useGetReviewStructureForSections from '../../utils/hooks/useGetReviewStructureForSection'
 import {
   AssignmentDetails,
@@ -33,6 +33,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   fullApplicationStructure,
   shouldAssignState,
 }) => {
+  const { strings } = useLanguageProvider()
   const { fullReviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment: assignment,
     fullApplicationStructure,

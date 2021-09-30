@@ -2,7 +2,7 @@ import axios from 'axios'
 import config from '../../config'
 import React, { Fragment, useState } from 'react'
 import { Popup, Button, Icon, Message } from 'semantic-ui-react'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 const DownloadButton = ({
   id,
@@ -11,6 +11,7 @@ const DownloadButton = ({
   content = '',
   ...props
 }: any) => {
+  const { strings } = useLanguageProvider()
   const [open, setOpen] = useState(openPopup)
   const [error, setError]: any = useState('')
 

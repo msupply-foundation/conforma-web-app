@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Dropdown, Grid, Label, Message } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { AssignmentOption } from '../../utils/data/assignmentOptions'
 import {
   ReviewAssignmentStatus,
@@ -19,6 +19,8 @@ type AssignmentSectionRowProps = {
 }
 // Component renders options calculated in getAssignmentOptions, and will execute assignment mutation on drop down change
 const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
+  const { strings } = useLanguageProvider()
+  const getAssignmentOptions = useGetAssignmentOptions()
   const { assignments, sectionCode, structure, shouldAssignState } = props
   const {
     userState: { currentUser },
@@ -89,6 +91,7 @@ const Assignee: React.FC<AssigneeProps> = ({
   onAssignment,
   shouldAssignState: [shouldAssign, setShouldAssign],
 }) => {
+  const { strings } = useLanguageProvider()
   // Do auto-assign for other sections when assignee is selected
   // for assignment in another row when shouldAssign == assignee index
   // Note: This is required to be passed on as props to be processed
@@ -119,85 +122,91 @@ const Assignee: React.FC<AssigneeProps> = ({
   )
 }
 
-const getOptionFromAssignment = ({
-  review,
-  isCurrentUserReviewer,
-  reviewer,
-}: AssignmentDetails) => ({
-  key: reviewer.id,
-  value: reviewer.id,
-  text: isCurrentUserReviewer
-    ? strings.ASSIGNMENT_YOURSELF
-    : `${reviewer.firstName || ''} ${reviewer.lastName || ''}`,
-  disabled: review?.current.reviewStatus === ReviewStatus.Submitted,
-})
+const useGetAssignmentOptions = () => {
+  const { strings } = useLanguageProvider()
 
-const getAssignmentOptions = (
-  { assignments, sectionCode, structure }: AssignmentSectionRowProps,
-  currentUser: User | null
-) => {
-  const currentSectionAssignable = assignments.filter(
-    ({ assignableSectionRestrictions }) =>
-      assignableSectionRestrictions.length === 0 ||
-      assignableSectionRestrictions.includes(sectionCode)
-  )
+  const getOptionFromAssignment = ({
+    review,
+    isCurrentUserReviewer,
+    reviewer,
+  }: AssignmentDetails) => ({
+    key: reviewer.id,
+    value: reviewer.id,
+    text: isCurrentUserReviewer
+      ? strings.ASSIGNMENT_YOURSELF
+      : `${reviewer.firstName || ''} ${reviewer.lastName || ''}`,
+    disabled: review?.current.reviewStatus === ReviewStatus.Submitted,
+  })
 
-  const currentUserAssignable = currentSectionAssignable.filter(
-    (assignment) => assignment.isCurrentUserAssigner
-  )
+  const getAssignmentOptions = (
+    { assignments, sectionCode, structure }: AssignmentSectionRowProps,
+    currentUser: User | null
+  ) => {
+    const currentSectionAssignable = assignments.filter(
+      ({ assignableSectionRestrictions }) =>
+        assignableSectionRestrictions.length === 0 ||
+        assignableSectionRestrictions.includes(sectionCode)
+    )
 
-  // Dont' want to render assignment section row if they have no actions
-  if (currentUserAssignable.length === 0) return null
-  const elements = Object.values(structure?.elementsById || {})
-  const numberOfAssignableElements = elements.filter(
-    ({ element }) =>
-      (!sectionCode || element.sectionCode === sectionCode) &&
-      element.category === TemplateElementCategory.Question
-  ).length
+    const currentUserAssignable = currentSectionAssignable.filter(
+      (assignment) => assignment.isCurrentUserAssigner
+    )
 
-  if (numberOfAssignableElements === 0) return null
+    // Dont' want to render assignment section row if they have no actions
+    if (currentUserAssignable.length === 0) return null
+    const elements = Object.values(structure?.elementsById || {})
+    const numberOfAssignableElements = elements.filter(
+      ({ element }) =>
+        (!sectionCode || element.sectionCode === sectionCode) &&
+        element.category === TemplateElementCategory.Question
+    ).length
 
-  // This could differ from currentUserAssignable list because self assignable assignments don't have assigner
-  const currentlyAssigned = assignments.find(
-    (assignment) =>
-      assignment.reviewer.id !== currentUser?.userId &&
-      assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned &&
-      matchAssignmentToSection(assignment, sectionCode)
-  )
+    if (numberOfAssignableElements === 0) return null
 
-  // For now just show an option to un assign
-  if (currentlyAssigned)
+    // This could differ from currentUserAssignable list because self assignable assignments don't have assigner
+    const currentlyAssigned = assignments.find(
+      (assignment) =>
+        assignment.reviewer.id !== currentUser?.userId &&
+        assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned &&
+        matchAssignmentToSection(assignment, sectionCode)
+    )
+
+    // For now just show an option to un assign
+    if (currentlyAssigned)
+      return {
+        selected: currentlyAssigned.reviewer.id,
+        isCompleted: currentlyAssigned.review?.current.reviewStatus === ReviewStatus.Submitted,
+        options: [
+          getOptionFromAssignment(currentlyAssigned),
+          {
+            key: AssignmentOption.UNASSIGN,
+            value: AssignmentOption.UNASSIGN,
+            text: strings.ASSIGNMENT_UNASSIGN,
+          },
+        ],
+      }
+
     return {
-      selected: currentlyAssigned.reviewer.id,
-      isCompleted: currentlyAssigned.review?.current.reviewStatus === ReviewStatus.Submitted,
+      selected: AssignmentOption.NOT_ASSIGNED,
+      isCompleted: false,
       options: [
-        getOptionFromAssignment(currentlyAssigned),
+        ...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment)),
         {
-          key: AssignmentOption.UNASSIGN,
-          value: AssignmentOption.UNASSIGN,
-          text: strings.ASSIGNMENT_UNASSIGN,
+          key: AssignmentOption.NOT_ASSIGNED,
+          value: AssignmentOption.NOT_ASSIGNED,
+          text: strings.ASSIGNMENT_NOT_ASSIGNED,
         },
       ],
     }
-
-  return {
-    selected: AssignmentOption.NOT_ASSIGNED,
-    isCompleted: false,
-    options: [
-      ...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment)),
-      {
-        key: AssignmentOption.NOT_ASSIGNED,
-        value: AssignmentOption.NOT_ASSIGNED,
-        text: strings.ASSIGNMENT_NOT_ASSIGNED,
-      },
-    ],
   }
+  // Find at least one reviewQuestion assignment in assignment that matches sectionCode
+  const matchAssignmentToSection = (assignment: AssignmentDetails, sectionCode: string) =>
+    assignment.reviewQuestionAssignments.some(
+      (reviewQuestionAssignment) =>
+        reviewQuestionAssignment.templateElement?.section?.code === sectionCode
+    )
+
+  return getAssignmentOptions
 }
-// Find at least one reviewQuestion assignment in assignment that matches sectionCode
-const matchAssignmentToSection = (assignment: AssignmentDetails, sectionCode: string) =>
-  assignment.reviewQuestionAssignments.some(
-    (reviewQuestionAssignment) =>
-      reviewQuestionAssignment.templateElement?.section?.code === sectionCode
-  )
 
 export default AssignmentSectionRow

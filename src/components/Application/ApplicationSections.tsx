@@ -7,7 +7,7 @@ import {
   SectionAndPage,
 } from '../../utils/types'
 import { ApplicationProgressBar } from '../'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useRestartApplication from '../../utils/hooks/useRestartApplication'
 import { ApplicationStatus } from '../../utils/generated/graphql'
@@ -17,6 +17,7 @@ interface ApplicationSectionsProps {
 }
 
 const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure }) => {
+  const { strings } = useLanguageProvider()
   const { push } = useRouter()
 
   const {
@@ -136,6 +137,7 @@ type ActionisChangesRequestProps = ActionProps & {
 }
 
 const ActionsChangesRequest: React.FC<ActionisChangesRequestProps> = (props) => {
+  const { strings } = useLanguageProvider()
   const {
     sectionCode,
     generalProgress,
@@ -177,6 +179,7 @@ type ActionGeneralProps = ActionProps & {
 
 // General is for Draft application - without changes requested (so not submitted yet)
 const ActionGeneral: React.FC<ActionGeneralProps> = (props) => {
+  const { strings } = useLanguageProvider()
   const { sectionCode, generalProgress, isStrictSection, isBeforeStrict, resumeApplication } = props
   if (isStrictSection)
     return (

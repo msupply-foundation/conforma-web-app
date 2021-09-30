@@ -1,13 +1,14 @@
 import React, { ReactNode } from 'react'
 import { Icon, Label } from 'semantic-ui-react'
-import strings from '../../utils/constants'
+import { LanguageStrings } from '../../contexts/Localisation'
 import { User } from '../../utils/generated/graphql'
 interface ReviewLabelProps {
   reviewer?: User
   message?: string
+  strings: LanguageStrings
 }
 
-export const ReviewInProgressLabel: React.FC<ReviewLabelProps> = ({ reviewer }) =>
+export const ReviewInProgressLabel: React.FC<ReviewLabelProps> = ({ reviewer, strings }) =>
   reviewer ? (
     <LabelWrapper labelContent={`${strings.REVIEW_IN_PROGRESS_BY} `} reviewer={reviewer} />
   ) : (
@@ -18,7 +19,7 @@ export const ReviewInProgressLabel: React.FC<ReviewLabelProps> = ({ reviewer }) 
     />
   )
 
-export const ReviewLockedLabel: React.FC<ReviewLabelProps> = ({ reviewer }) => (
+export const ReviewLockedLabel: React.FC<ReviewLabelProps> = ({ reviewer, strings }) => (
   <LabelWrapper
     labelContent={`${strings.LABEL_ASSIGNMENT_LOCKED} ${
       reviewer ? '' : strings.ASSIGNMENT_YOURSELF
@@ -28,11 +29,11 @@ export const ReviewLockedLabel: React.FC<ReviewLabelProps> = ({ reviewer }) => (
   />
 )
 
-export const ReviewLabel: React.FC<ReviewLabelProps> = ({ reviewer, message }) => (
+export const ReviewLabel: React.FC<ReviewLabelProps> = ({ reviewer, message, strings }) => (
   <LabelWrapper labelContent={message || strings.REVIEW_NOT_FOUND} reviewer={reviewer} />
 )
 
-export const ReviewSelfAssignmentLabel: React.FC<ReviewLabelProps> = ({ reviewer }) => (
+export const ReviewSelfAssignmentLabel: React.FC<ReviewLabelProps> = ({ reviewer, strings }) => (
   <LabelWrapper
     labelContent={
       reviewer ? `${strings.LABEL_ASSIGNMENT_AVAILABLE} ` : strings.LABEL_ASSIGNMENT_SELF
@@ -41,7 +42,10 @@ export const ReviewSelfAssignmentLabel: React.FC<ReviewLabelProps> = ({ reviewer
   />
 )
 
-export const ReviewByLabel: React.FC<{ user?: User }> = ({ user }) => {
+export const ReviewByLabel: React.FC<{ user?: User; strings: LanguageStrings }> = ({
+  user,
+  strings,
+}) => {
   const doneByYourself = !user
   const reviewLabel = `${strings.REVIEW_IN_PROGRESS_BY} ${
     doneByYourself ? strings.ASSIGNMENT_YOURSELF : ''
@@ -49,7 +53,10 @@ export const ReviewByLabel: React.FC<{ user?: User }> = ({ user }) => {
   return <LabelWrapper labelContent={reviewLabel} reviewer={user} />
 }
 
-export const ConsolidationByLabel: React.FC<{ user?: User }> = ({ user }) => {
+export const ConsolidationByLabel: React.FC<{ user?: User; strings: LanguageStrings }> = ({
+  user,
+  strings,
+}) => {
   const doneByYourself = !user
   const consolidationLabel = `${strings.REVIEW_CONSOLIDATION_BY} ${
     doneByYourself ? strings.ASSIGNMENT_YOURSELF : ''
