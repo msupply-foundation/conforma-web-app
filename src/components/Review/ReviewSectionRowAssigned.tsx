@@ -8,6 +8,7 @@ import {
   ReviewLockedLabel,
   ReviewSelfAssignmentLabel,
   ReviewInProgressLabel,
+  ReviewCanMakeDecisionLabel,
 } from './ReviewLabel'
 
 const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
@@ -21,8 +22,13 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
     switch (action) {
       case ReviewAction.unknown:
         return null
-      case ReviewAction.canSelfAssign:
       case ReviewAction.canMakeDecision:
+        return isAssignedToCurrentUser ? (
+          <ReviewCanMakeDecisionLabel strings={strings} />
+        ) : (
+          <ReviewCanMakeDecisionLabel reviewer={assignment.reviewer} strings={strings} />
+        )
+      case ReviewAction.canSelfAssign:
         return isAssignedToCurrentUser ? (
           <ReviewSelfAssignmentLabel strings={strings} />
         ) : (
