@@ -50,7 +50,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
     template: { id: templateId, isDraft },
   } = useTemplateState()
   const { allActionsByCode } = useActionState()
-  const [addActionTop, setAddActionTop] = useState(true)
+  const [addActionAtBottom, setAddActionAtBottom] = useState(true)
   const { sequential, asynchronous } = getActionsForTrigger(trigger, allTemplateActions)
 
   const newAction = {
@@ -80,7 +80,11 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
 
   const addAction = () => {
     let counter = 1
-    if (addActionTop)
+    if (addActionAtBottom)
+      updateTemplate(templateId, {
+        templateActionsUsingId: { create: [{ ...newAction, trigger, sequence: lastSequence + 1 }] },
+      })
+    else
       updateTemplate(templateId, {
         templateActionsUsingId: {
           updateById: sequential.map((action) => ({
@@ -89,10 +93,6 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
           })),
           create: [{ ...newAction, trigger, sequence: 1 }],
         },
-      })
-    else
-      updateTemplate(templateId, {
-        templateActionsUsingId: { create: [{ ...newAction, trigger, sequence: lastSequence + 1 }] },
       })
   }
 
@@ -214,8 +214,8 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
             <Checkbox
               toggle
               label={strings.TEMPLATE_LABEL_ACTION_ON_TOP}
-              onChange={() => setAddActionTop(!addActionTop)}
-              checked={addActionTop}
+              onChange={() => setAddActionAtBottom(!addActionAtBottom)}
+              checked={!addActionAtBottom}
             />
           </>
         )}
