@@ -93,7 +93,10 @@ export function UserProvider({ children }: UserProviderProps) {
   const setUserState = dispatch
 
   const logout = () => {
+    // Delete everything EXCEPT language preference in localStorage
+    const language = localStorage.getItem('language')
     localStorage.clear()
+    if (language) localStorage.setItem('language', language)
     window.location.href = '/login'
   }
 
