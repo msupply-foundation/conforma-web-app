@@ -33,6 +33,14 @@ export const ReviewLabel: React.FC<ReviewLabelProps> = ({ reviewer, message, str
   <LabelWrapper labelContent={message || strings.REVIEW_NOT_FOUND} reviewer={reviewer} />
 )
 
+export const ReviewCanMakeDecisionLabel: React.FC<ReviewLabelProps> = ({ reviewer, strings }) => {
+  const doneByYourself = !reviewer
+  const consolidationLabel = `${strings.LABEL_REVIEW_MAKE_DECISION_BY} ${
+    doneByYourself ? strings.ASSIGNMENT_YOURSELF : ''
+  }`
+  return <LabelWrapper labelContent={consolidationLabel} reviewer={reviewer} />
+}
+
 export const ReviewSelfAssignmentLabel: React.FC<ReviewLabelProps> = ({ reviewer, strings }) => (
   <LabelWrapper
     labelContent={
