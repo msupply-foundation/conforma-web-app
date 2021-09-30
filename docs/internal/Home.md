@@ -22,7 +22,7 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 ### Admin
 
 - [Template Builder](Template-Builder.md)
-- [List Core Actions](List-Core-Actions.md)
+- [List of Core Actions](List-Core-Actions.md)
 
 ### Development
 
