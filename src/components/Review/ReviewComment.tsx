@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Form, Message, TextArea } from 'semantic-ui-react'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import {
   useGetReviewDecisionCommentQuery,
   useUpdateReviewDecisionCommentMutation,
@@ -13,6 +13,7 @@ type ReviewCommentProps = {
 }
 
 const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEditable }) => {
+  const { strings } = useLanguageProvider()
   const [updateComment] = useUpdateReviewDecisionCommentMutation()
   const { data, error } = useGetReviewDecisionCommentQuery({
     variables: { reviewDecisionId: reviewDecisionId as number },

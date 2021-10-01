@@ -5,7 +5,7 @@ import buildSortFields, { getPaginationVariables } from '../helpers/list/buildQu
 import { useGetApplicationListQuery, ApplicationListShape } from '../../utils/generated/graphql'
 import { BasicStringObject, TemplateType } from '../types'
 import { useUserState } from '../../contexts/UserState'
-import { APPLICATION_FILTERS } from '../data/applicationFilters'
+import { useApplicationFilters } from '../data/applicationFilters'
 
 const useListApplications = ({
   sortBy,
@@ -14,6 +14,7 @@ const useListApplications = ({
   type,
   ...queryFilters
 }: BasicStringObject) => {
+  const APPLICATION_FILTERS = useApplicationFilters()
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
   const [applicationCount, setApplicationCount] = useState<number>(0)
   const [templateType, setTemplateType] = useState<TemplateType>()

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Header } from 'semantic-ui-react'
+import { Checkbox, Header } from 'semantic-ui-react'
+import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { TemplateAction, Trigger } from '../../../../utils/generated/graphql'
 import CheckboxIO from '../../shared/CheckboxIO'
 import { EvaluationHeader } from '../../shared/Evaluation'
@@ -42,21 +43,24 @@ type SetIsSequential = (id: number, isSequential: boolean) => void
 type SwapSequences = (fromAction: TemplateAction, toAction: TemplateAction) => void
 type RemoveAction = (id: number) => void
 
-const newAction = {
-  actionCode: 'cLog',
-  description: 'new action description',
-  parameterQueries: {
-    message: 'new action message',
-  },
-}
-
 const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateActions }) => {
+  const { strings } = useLanguageProvider()
   const { updateTemplate } = useOperationState()
   const {
     template: { id: templateId, isDraft },
   } = useTemplateState()
   const { allActionsByCode } = useActionState()
+  const [addActionAtBottom, setAddActionAtBottom] = useState(true)
   const { sequential, asynchronous } = getActionsForTrigger(trigger, allTemplateActions)
+
+  const newAction = {
+    actionCode: 'cLog',
+    description: strings.TEMPLATE_LABEL_ACTION_DESCRIPTION,
+    parameterQueries: {
+      message: strings.TEMPLATE_LABEL_ACTION_MESSAGE,
+    },
+  }
+
   const lastSequence = sequential.reduce(
     (max, current) =>
       max === 0 || max < Number(current?.sequence) ? Number(current?.sequence) : max,
@@ -75,9 +79,21 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
   }
 
   const addAction = () => {
-    updateTemplate(templateId, {
-      templateActionsUsingId: { create: [{ ...newAction, trigger, sequence: lastSequence + 1 }] },
-    })
+    let counter = 1
+    if (addActionAtBottom)
+      updateTemplate(templateId, {
+        templateActionsUsingId: { create: [{ ...newAction, trigger, sequence: lastSequence + 1 }] },
+      })
+    else
+      updateTemplate(templateId, {
+        templateActionsUsingId: {
+          updateById: sequential.map((action) => ({
+            id: action.id,
+            patch: { sequence: ++counter },
+          })),
+          create: [{ ...newAction, trigger, sequence: 1 }],
+        },
+      })
   }
 
   const setIsSequential: SetIsSequential = (id, isSequential) => {
@@ -104,7 +120,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
     if (templateActions.length === 0) return null
 
     return (
-      <div className="flex-column-start-start">
+      <div className="flex-column-start-stretch">
         <div className="spacer-10" />
         <div className="config-container">
           <Header as="h5" className="no-margin-no-padding">
@@ -135,19 +151,21 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
                 />
                 <div className="flex-row-start-center-wrap">
                   <TextIO
-                    title="Action"
+                    title={strings.TEMPLATE_LABEL_ACTION}
                     text={allActionsByCode[String(templateAction?.actionCode)]?.name || ''}
                   />
                   <TextIO
-                    title="Description"
+                    title={strings.TEMPLATE_LABEL_DESCRIPTION}
                     text={templateAction?.description || ''}
                     isTextArea={true}
                   />
                   <div className="config-container">
                     <div className="flex-row-start-center">
-                      <Header as="h6" className="no-margin-no-padding">
-                        Condition
-                      </Header>
+                      <Header
+                        as="h6"
+                        className="no-margin-no-padding"
+                        content={strings.TEMPLATE_LABEL_CONDITION}
+                      />
                       <EvaluationHeader evaluation={templateAction?.condition} />
                     </div>
                   </div>
@@ -155,7 +173,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
                 <CheckboxIO
                   disabled={!isDraft}
                   disabledMessage={disabledMessage}
-                  title="Is Sequential"
+                  title={strings.TEMPLATE_LABEL_SEQUENTIAL}
                   value={!isAsynchronous(templateAction)}
                   setValue={(isSequential) =>
                     setIsSequential(templateAction?.id || 0, isSequential)
@@ -180,13 +198,27 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
   }
 
   return (
-    <div className="flex-column-start-start">
+    <div className="flex-column-start-stretch">
       <div className="spacer-20" />
       <div className="flex-row-start-center">
         <Header as="h4" className="no-margin-no-padding">
           {trigger}
         </Header>
-        <IconButton title="add new action" name="add square" onClick={addAction} />
+        {isDraft && (
+          <>
+            <IconButton
+              title={strings.TEMPLATE_BUTTON_ACTION_ADD}
+              name="add square"
+              onClick={addAction}
+            />
+            <Checkbox
+              toggle
+              label={strings.TEMPLATE_LABEL_ACTION_ON_TOP}
+              onChange={() => setAddActionAtBottom(!addActionAtBottom)}
+              checked={!addActionAtBottom}
+            />
+          </>
+        )}
       </div>
       {renderTemplateActions('Sequential', sequential)}
       {renderTemplateActions('Asynchronous', asynchronous)}

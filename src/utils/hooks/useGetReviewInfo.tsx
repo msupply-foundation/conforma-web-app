@@ -8,7 +8,7 @@ import {
   useGetReviewInfoQuery,
   User,
 } from '../generated/graphql'
-import messages from '../messages'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { useUserState } from '../../contexts/UserState'
 
 const MAX_REFETCH = 10
@@ -18,6 +18,7 @@ interface UseGetReviewInfoProps {
 }
 
 const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
+  const { strings } = useLanguageProvider()
   const [assignments, setAssignments] = useState<AssignmentDetails[]>()
   const [isFetching, setIsFetching] = useState(true)
   const [fetchingError, setFetchingError] = useState('')
@@ -68,7 +69,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
           setRefetchAttempts(refetchAttempts + 1)
           refetch()
         }, 500)
-      } else setFetchingError(messages.TRIGGER_RUNNING)
+      } else setFetchingError(strings.TRIGGER_RUNNING)
       return
     }
 

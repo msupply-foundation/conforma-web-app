@@ -1,8 +1,7 @@
 import React, { Fragment } from 'react'
 import { Table, Message } from 'semantic-ui-react'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { useDeleteApplicationMutation } from '../../utils/generated/graphql'
-import messages from '../../utils/messages'
-import strings from '../../utils/constants'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
 
@@ -23,6 +22,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   loading,
   refetch,
 }) => {
+  const { strings } = useLanguageProvider()
   return (
     <>
       <Table sortable stackable selectable>
@@ -65,7 +65,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
       </Table>
       {loading && <Loading />}
       {applications && applications.length === 0 && (
-        <Message floating color="yellow" header={messages.APPLICATIONS_LIST_EMPTY} />
+        <Message floating color="yellow" header={strings.APPLICATIONS_LIST_EMPTY} />
       )}
     </>
   )
@@ -78,6 +78,7 @@ interface ApplicationRowProps {
 }
 
 const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, application }) => {
+  const { strings } = useLanguageProvider()
   const [deleteApplication, { loading, error }] = useDeleteApplicationMutation({
     variables: { id: application.id || 0 },
     onCompleted: () => refetch(),

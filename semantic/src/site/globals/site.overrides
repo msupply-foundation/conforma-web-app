@@ -156,9 +156,9 @@ a:hover {
   align-items: center;
 }
 
-.flex-column-start-start {
+.flex-column-start-stretch {
   .flex-column-start();
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 .spacer-20 {
@@ -220,6 +220,13 @@ a:hover {
 
 #login-button {
   margin-top: 30px;
+}
+
+// Localisation selector
+.top-right-corner {
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 
 /*--------------------------------
@@ -324,6 +331,18 @@ a:hover {
   background-color: @surfacesWhite;
   color: @darkGrey;
   min-width: 120px;
+}
+
+#language-modal {
+  display: flex;
+  flex-direction: column;
+  max-width: 350px;
+  border-radius: @borderRadius;
+  padding: 12px;
+
+  .ui.form {
+    margin-top: 15px;
+  }
 }
 
 // Whole content container except Header and Footer
@@ -1762,7 +1781,7 @@ a:hover {
   margin-left: 30px;
 }
 .evaluator-operator-container {
-  .flex-column-start-start();
+  .flex-column-start-stretch();
   background: rgba(0, 0, 0, 0.03);
   padding: 5px;
   margin: 2px;
@@ -1772,7 +1791,7 @@ a:hover {
 }
 
 .config-container {
-  .flex-column-start-start();
+  .flex-column-start-stretch();
   padding: 10px;
   border-radius: @borderRadius;
   background-color: @surfacesWhite;
