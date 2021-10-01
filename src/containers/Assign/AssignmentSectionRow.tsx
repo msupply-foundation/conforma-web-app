@@ -90,6 +90,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
       setUnassignmentError(true)
     }
   }
+
   const selectedReviewer = assignmentOptions.options.find(
     ({ value }) => value === assignmentOptions.selected
   )
