@@ -126,7 +126,7 @@ const generateReviewSectionActions: GenerateSectionActions = ({
     const totalNewReviewable = section?.consolidationProgress?.totalNewReviewable
 
     const isReviewable =
-      (totalReviewable || 0) > 0 && thisReview?.current.reviewStatus !== ReviewStatus.Discontinued
+      (totalReviewable || 0) > 0 && assignmentStatus === ReviewAssignmentStatus.Assigned
 
     const isAssignedToCurrentUser =
       assignee?.id === currentUserId && (isReviewable || isFinalDecision)
