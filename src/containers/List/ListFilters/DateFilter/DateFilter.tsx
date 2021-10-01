@@ -20,7 +20,7 @@ import {
   formatDateUrl,
   parseDateRange,
 } from '../../../../utils/dateAndTime/parseDateRange'
-import strings from '../../../../utils/constants'
+import { useLanguageProvider } from '../../../../contexts/Localisation'
 
 const WEEKDAYS = Info.weekdays('short')
 
@@ -31,6 +31,7 @@ const DateFilter: React.FC<DateFilterProps> = ({
   setDateString,
   onRemove,
 }) => {
+  const { strings } = useLanguageProvider()
   // Below variable is puerly for next/previous button visibility
   const [calendarMonths, setCalendarMonths] = useState<{ [key in CalendarType]: DateTime | null }>({
     FROM: null,

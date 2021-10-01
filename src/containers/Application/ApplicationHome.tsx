@@ -3,7 +3,7 @@ import { Button, Message, Segment } from 'semantic-ui-react'
 import { FullStructure, StageAndStatus, TemplateDetails } from '../../utils/types'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { ApplicationSections, Loading } from '../../components'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { ApplicationStatus } from '../../utils/generated/graphql'
@@ -16,6 +16,7 @@ interface ApplicationProps {
 }
 
 const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) => {
+  const { strings } = useLanguageProvider()
   const {
     query: { serialNumber },
     replace,

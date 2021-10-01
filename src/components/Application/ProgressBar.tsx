@@ -6,7 +6,7 @@ const BOTTOM_PAD = 10
 
 import React, { RefObject } from 'react'
 import { Accordion, Container, Grid, Icon, List, Sticky, Progress } from 'semantic-ui-react'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import styleConstants from '../../utils/data/styleConstants'
 import { checkPageIsAccessible } from '../../utils/helpers/structure'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -43,6 +43,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
   strictSectionPage,
   context,
 }) => {
+  const { strings } = useLanguageProvider()
   const {
     info: { isLinear },
     sections,

@@ -1,37 +1,55 @@
-import React from 'react'
-import { useQuery } from '@apollo/client'
-import { Header, Table } from 'semantic-ui-react'
+import React, { useEffect, useState } from 'react'
+import { Header, Table, Message } from 'semantic-ui-react'
 import { Loading } from '../../components'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { OutcomeDisplay, TableDisplay, TableDisplayQuery } from '../../utils/types'
+import { useUserState } from '../../contexts/UserState'
+import { useOutcomesTable } from '../../utils/hooks/useOutcomes'
+import { HeaderRow, OutcomeTableAPIQueries } from '../../utils/types'
+import Markdown from '../../utils/helpers/semanticReactMarkdown'
+import { constructElement, formatCellText } from './helpers'
+import PaginationBar from '../../components/List/Pagination'
 
-const OutcomeTable: React.FC<{
-  outcomeDisplay: OutcomeDisplay
-  tableDisplayColumns: TableDisplay[]
-  tableQuery: TableDisplayQuery
-  outcomeCode: string
-}> = ({ outcomeDisplay, tableDisplayColumns, tableQuery, outcomeCode }) => {
-  const { push } = useRouter()
-  const { data, error } = useQuery(tableQuery.query, { fetchPolicy: 'network-only' })
-  usePageTitle(outcomeDisplay.title)
+const OutcomeTable: React.FC = () => {
+  const { strings } = useLanguageProvider()
+  const {
+    push,
+    query,
+    params: { tableName },
+  } = useRouter()
+  const {
+    userState: { templatePermissions },
+  } = useUserState()
 
-  // if (error) return <Message error title={strings.ERROR_GENERIC} list={[error.message]} />
-  // Silently ignore errors for demo
-  if (error) return null
-  if (!data) return <Loading />
+  const [apiQueries, setApiQueries] = useState<OutcomeTableAPIQueries>({})
+  const { outcomeTable, loading, error } = useOutcomesTable({
+    tableName,
+    apiQueries,
+  })
+  usePageTitle(outcomeTable?.title || '')
 
-  const tableData = tableQuery.getNodes(data)
-  const showDetailsForRow = (id: number) => push(`/outcomes/${outcomeCode}/${id}`)
+  useEffect(() => {
+    setApiQueries(getAPIQueryParams(query))
+  }, [query])
+
+  if (error) {
+    return <Message error header={strings.ERROR_GENERIC} content={error.message} />
+  }
+  if (loading || !outcomeTable) return <Loading />
+
+  const showDetailsForRow = (id: number) => push(`/outcomes/${tableName}/${id}`)
+
+  const { headerRow, tableRows, title, totalCount } = outcomeTable
 
   return (
     <div id="outcomes-display">
-      <Header as="h4">{outcomeDisplay.title}</Header>
+      <Header as="h4">{title}</Header>
       <div id="list-container" className="outcome-table-container">
-        <Table sortable stackable selectable>
+        <Table stackable selectable>
           <Table.Header>
             <Table.Row>
-              {tableDisplayColumns.map(({ title }) => (
+              {headerRow.map(({ title }: any) => (
                 <Table.HeaderCell key={title} colSpan={1}>
                   {title}
                 </Table.HeaderCell>
@@ -39,36 +57,53 @@ const OutcomeTable: React.FC<{
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {tableData.map((row: any) => {
-              return (
-                <Table.Row
-                  key={row.id}
-                  className="clickable"
-                  onClick={() => showDetailsForRow(row.id)}
-                >
-                  {tableDisplayColumns.map(({ columnName }) => (
-                    <Table.Cell key={columnName}>
-                      {getTableValue(row, columnName, row.isTextValue)}
-                    </Table.Cell>
-                  ))}
-                </Table.Row>
-              )
-            })}
+            {tableRows.map(({ id, rowValues }: { id: number; rowValues: any }) => (
+              <Table.Row
+                key={`row_${id}`}
+                className="clickable"
+                onClick={() => showDetailsForRow(id)}
+              >
+                {rowValues.map((value: any, index: number) => (
+                  <Table.Cell key={`value_${index}`}>
+                    {getCellComponent(value, headerRow[index], id)}
+                  </Table.Cell>
+                ))}
+              </Table.Row>
+            ))}
           </Table.Body>
         </Table>
+        <PaginationBar
+          totalCount={totalCount}
+          perPageText={strings.OUTCOMES_TABLE_PAGINATION_TEXT}
+          strings={strings}
+        />
       </div>
     </div>
   )
 }
 
-const getTableValue = (
-  row: { [columnName: string]: any | string },
-  columnName: string,
-  isTextValue: boolean
-) => {
-  const value = row[columnName]
-  if (!value) return ''
-  return isTextValue || typeof value === 'string' ? value : value.text
+export default OutcomeTable
+
+// If the cell contains plugin data, return a SummaryView component, otherwise
+// just format the text and return Markdown component
+const getCellComponent = (value: any, columnDetails: HeaderRow, id: number) => {
+  const { formatting } = columnDetails
+  const { elementTypePluginCode } = formatting
+  if (elementTypePluginCode) return constructElement(value, columnDetails, id)
+  else return <Markdown text={formatCellText(value, columnDetails) || ''} />
 }
 
-export default OutcomeTable
+// NOTE: This is temporary -- when we add more filtering and search
+// functionality, we will build query objects the same way the list works,
+// but it's overkill for this first version
+const getAPIQueryParams = ({ page, perPage, sortBy }: any) => {
+  const offset = page && perPage ? String((Number(page) - 1) * Number(perPage)) : undefined
+  let orderBy: string | undefined = undefined
+  let ascending: string | undefined = undefined
+  if (sortBy) {
+    const [fieldName, direction] = sortBy.split(':')
+    orderBy = fieldName
+    ascending = direction === 'asc' ? 'true' : 'false'
+  }
+  return { first: perPage, offset, orderBy, ascending }
+}

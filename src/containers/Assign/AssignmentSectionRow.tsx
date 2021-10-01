@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { Grid, Label } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { AssignmentOption } from '../../utils/data/assignmentOptions'
 import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
-import getAssignmentOptions from './getAssignmentOptions'
+import useGetAssignmentOptions from './useGetAssignmentOptions'
 import Reassignment from './Reassignment'
 
 type AssignmentSectionRowProps = {
@@ -17,6 +17,8 @@ type AssignmentSectionRowProps = {
 }
 // Component renders options calculated in getAssignmentOptions, and will execute assignment mutation on drop down change
 const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
+  const { strings } = useLanguageProvider()
+  const getAssignmentOptions = useGetAssignmentOptions()
   const { assignments, sectionCode, structure, shouldAssignState } = props
   const {
     userState: { currentUser },

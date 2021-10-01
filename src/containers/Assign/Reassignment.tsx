@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Label, Grid } from 'semantic-ui-react'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { AssignmentOption } from '../../utils/data/assignmentOptions'
 import useReasignReviewAssignment from '../../utils/hooks/useReassignReviewAssignment'
 import { AssignmentDetails, PageElement } from '../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
-import getAssignmentOptions from './getAssignmentOptions'
+import useGetAssignmentOptions from './useGetAssignmentOptions'
 
 interface ReassignmentProps {
   assignments: AssignmentDetails[]
@@ -24,6 +24,8 @@ const Reassignment: React.FC<ReassignmentProps> = ({
   shouldAssignState,
   previousAssignee,
 }) => {
+  const { strings } = useLanguageProvider()
+  const getAssignmentOptions = useGetAssignmentOptions()
   const [reassignmentError, setReassignmentError] = useState(false)
   const { reassignSection } = useReasignReviewAssignment()
 

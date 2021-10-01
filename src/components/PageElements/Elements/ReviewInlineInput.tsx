@@ -1,30 +1,34 @@
 import React, { useState } from 'react'
 import { Button, Form, Radio, TextArea } from 'semantic-ui-react'
-import strings from '../../../utils/constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import { ReviewResponse, ReviewResponseDecision } from '../../../utils/generated/graphql'
 import useUpdateReviewResponse from '../../../utils/hooks/useUpdateReviewResponse'
 
-const optionsMap = {
-  consolidation: [
-    {
-      label: strings.LABEL_CONSOLIDATION_AGREE,
-      decision: ReviewResponseDecision.Agree,
-    },
-    {
-      label: strings.LABEL_CONSOLIDATION_DISAGREE,
-      decision: ReviewResponseDecision.Disagree,
-    },
-  ],
-  review: [
-    {
-      label: strings.LABEL_REVIEW_APPROVE,
-      decision: ReviewResponseDecision.Approve,
-    },
-    {
-      label: strings.LABEL_REVIEW_RESSUBMIT,
-      decision: ReviewResponseDecision.Decline,
-    },
-  ],
+const useOptionsMap = () => {
+  const { strings } = useLanguageProvider()
+  const optionsMap = {
+    consolidation: [
+      {
+        label: strings.LABEL_CONSOLIDATION_AGREE,
+        decision: ReviewResponseDecision.Agree,
+      },
+      {
+        label: strings.LABEL_CONSOLIDATION_DISAGREE,
+        decision: ReviewResponseDecision.Disagree,
+      },
+    ],
+    review: [
+      {
+        label: strings.LABEL_REVIEW_APPROVE,
+        decision: ReviewResponseDecision.Approve,
+      },
+      {
+        label: strings.LABEL_REVIEW_RESSUBMIT,
+        decision: ReviewResponseDecision.Decline,
+      },
+    ],
+  }
+  return optionsMap
 }
 
 interface ReviewInlineInputProps {
@@ -40,9 +44,11 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
   isConsolidation,
   stageNumber,
 }) => {
+  const { strings } = useLanguageProvider()
   const [reviewResponse, setReviewResponse] = useState(initialReviewResponse)
   const updateResponse = useUpdateReviewResponse()
 
+  const optionsMap = useOptionsMap()
   const options = isConsolidation ? optionsMap.consolidation : optionsMap.review
 
   const submit = async () => {

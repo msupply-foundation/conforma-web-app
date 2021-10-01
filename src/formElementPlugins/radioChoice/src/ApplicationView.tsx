@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Radio, Form, Input, Label } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
-import strings from '../constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -13,6 +13,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   getDefaultIndex,
 }) => {
+  const { getPluginStrings } = useLanguageProvider()
+  const strings = getPluginStrings('radioChoice')
   const {
     label,
     description,

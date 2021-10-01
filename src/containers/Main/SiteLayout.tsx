@@ -11,7 +11,6 @@ import { Container } from 'semantic-ui-react'
 import DevOptions from '../Dev/DevOptions'
 import LayoutHelpers from '../../components/LayoutHelpers'
 import Outcomes from '../Outcomes/Outcomes'
-import OutcomeDisplaysContext from '../Outcomes/contexts/outcomesState'
 
 const SiteLayout: React.FC = () => {
   return (

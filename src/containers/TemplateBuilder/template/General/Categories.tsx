@@ -8,21 +8,34 @@ import DropdownIO from '../../shared/DropdownIO'
 import { useOperationState } from '../../shared/OperationContext'
 import TextIO, { iconLink } from '../../shared/TextIO'
 import { useTemplateState } from '../TemplateWrapper'
-import strings from '../../../../utils/constants'
+import { useLanguageProvider } from '../../../../contexts/Localisation'
 
-const noCategory = {
-  title: strings.TEMPLATE_NO_CATEGORY,
-  id: -1,
-  code: '',
-  icon: '',
-  uiLocation: [],
-}
+const useCategoryInfo = () => {
+  const { strings } = useLanguageProvider()
 
-const newCategory = {
-  code: strings.TEMPLATE_NEW_CODE,
-  icon: strings.DEFAULT_TEMPLATE_CATEGORY_ICON,
-  title: strings.TEMPLATE_NEW_TITLE,
-  uiLocation: [UiLocation.List],
+  const noCategory = {
+    title: strings.TEMPLATE_NO_CATEGORY,
+    id: -1,
+    code: '',
+    icon: '',
+    uiLocation: [],
+  }
+
+  const newCategory = {
+    code: strings.TEMPLATE_NEW_CODE,
+    icon: strings.DEFAULT_TEMPLATE_CATEGORY_ICON,
+    title: strings.TEMPLATE_NEW_TITLE,
+    uiLocation: [UiLocation.List],
+  }
+
+  const uiLocationOptions: { key: UiLocation; locationName: string }[] = [
+    { key: UiLocation.List, locationName: strings.TEMPLATE_UI_MENU },
+    { key: UiLocation.Dashboard, locationName: strings.TEMPLATE_UI_DASHBOARD },
+    { key: UiLocation.User, locationName: strings.TEMPLATE_UI_USER },
+    { key: UiLocation.Admin, locationName: strings.TEMPLATE_UI_ADMIN },
+  ]
+
+  return { noCategory, newCategory, uiLocationOptions }
 }
 
 type CategoryUpdate = {
@@ -33,14 +46,9 @@ type CategoryUpdate = {
   uiLocation: UiLocation[]
 }
 
-const uiLocationOptions: { key: UiLocation; locationName: string }[] = [
-  { key: UiLocation.List, locationName: strings.TEMPLATE_UI_MENU },
-  { key: UiLocation.Dashboard, locationName: strings.TEMPLATE_UI_DASHBOARD },
-  { key: UiLocation.User, locationName: strings.TEMPLATE_UI_USER },
-  { key: UiLocation.Admin, locationName: strings.TEMPLATE_UI_ADMIN },
-]
-
 const Category: React.FC<{}> = () => {
+  const { strings } = useLanguageProvider()
+  const { noCategory, newCategory, uiLocationOptions } = useCategoryInfo()
   const { category, template } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const [updateState, setUpdateState] = useState<CategoryUpdate | null>(null)

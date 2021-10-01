@@ -6,7 +6,7 @@ import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, SectionWrapper } from '../../components'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import useQuerySectionActivation from '../../utils/hooks/useQuerySectionActivation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { Link } from 'react-router-dom'
@@ -17,6 +17,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
   structure: fullStructure,
   requestRevalidation,
 }) => {
+  const { strings } = useLanguageProvider()
   const { replace, push, query } = useRouter()
   const [error, setError] = useState(false)
 
@@ -79,16 +80,31 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     stages,
     responsesByCode,
     info: {
+      name,
       serial,
       current: { status },
       isChangeRequest,
     },
   } = fullStructure
+
+  const isCompleted = status === ApplicationStatus.Completed
+
   return (
     <Container id="application-summary">
       <div id="application-summary-header">
-        <Header as="h2" textAlign="center" content={strings.TITLE_APPLICATION_SUMMARY} />
-        <p className="center-text">{strings.SUBTITLE_APPLICATION_SUMMARY}</p>
+        <Header
+          as="h2"
+          textAlign="center"
+          content={
+            isCompleted ? strings.TITLE_APPLICATION_COMPLETED : strings.TITLE_APPLICATION_SUMMARY
+          }
+          subheader={
+            <Header.Subheader
+              className="center-text"
+              content={isCompleted ? name : strings.SUBTITLE_APPLICATION_SUMMARY}
+            />
+          }
+        />
       </div>
       <div id="application-summary-content">
         <div id="application-sections">
