@@ -5,11 +5,12 @@ import { ApplicationProps } from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
 import { Stage } from '../../components/Review'
 import { useRouter } from '../../utils/hooks/useRouter'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { Link } from 'react-router-dom'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 
 const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
+  const { strings } = useLanguageProvider()
   const {
     userState: { isNonRegistered },
     logout,

@@ -1,8 +1,9 @@
 import React from 'react'
-import strings from '../utils/constants'
+import { useLanguageProvider } from '../contexts/Localisation'
 import usePageTitle from '../utils/hooks/usePageTitle'
 
 export const AdminLocalisations: React.FC = () => {
+  const { strings } = useLanguageProvider()
   usePageTitle(strings.PAGE_TITLE_LOCALISATION)
   return (
     <div>
@@ -13,6 +14,7 @@ export const AdminLocalisations: React.FC = () => {
 }
 
 export const AdminPlugins: React.FC = () => {
+  const { strings } = useLanguageProvider()
   usePageTitle(strings.PAGE_TITLE_PLUGINS)
   return (
     <div>
@@ -23,6 +25,7 @@ export const AdminPlugins: React.FC = () => {
 }
 
 export const AdminPermissions: React.FC = () => {
+  const { strings } = useLanguageProvider()
   usePageTitle(strings.PAGE_TITLE_PERMISSIONS)
   return (
     <div>
@@ -33,6 +36,7 @@ export const AdminPermissions: React.FC = () => {
 }
 
 export const AdminOutcomes: React.FC = () => {
+  const { strings } = useLanguageProvider()
   usePageTitle(strings.PAGE_TITLE_OUTCOMES)
   return (
     <div>

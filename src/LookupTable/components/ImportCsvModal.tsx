@@ -13,6 +13,7 @@ import {
 import { LookUpTableImportCsvContext } from '../contexts'
 import config from '../../config'
 import axios from 'axios'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import pluralize from 'pluralize'
 
 const ImportCsvModal: React.FC<any> = ({
@@ -22,6 +23,7 @@ const ImportCsvModal: React.FC<any> = ({
   tableLabel = '',
   tableStructureID = 0,
 }: any) => {
+  const { strings } = useLanguageProvider()
   const { state, dispatch } = React.useContext(LookUpTableImportCsvContext)
   const { uploadModalOpen, file, tableName, submittable, submitting, errors, success } = state
 
@@ -95,32 +97,37 @@ const ImportCsvModal: React.FC<any> = ({
       open={uploadModalOpen}
     >
       <Modal.Header>
-        {!tableLabel ? 'Import Lookup-table' : `Import into Lookup-table: ${tableLabel}`}
+        {!tableLabel
+          ? strings.LOOKUP_TABLE_IMPORT
+          : `${strings.LOOKUP_TABLE_IMPORT_INTO} ${tableLabel}`}
       </Modal.Header>
       <Modal.Content>
         {submitting ? (
           <Segment basic placeholder>
             <Dimmer active inverted>
-              <Loader inverted>Submitting...</Loader>
+              <Loader inverted content={strings.LABEL_SUBMITTING} />
             </Dimmer>
             <Image src="https://react.semantic-ui.com/images/wireframe/short-paragraph.png" />
           </Segment>
         ) : errors.length > 0 ? (
-          <Message error header="Errors found" list={[...errors]} />
+          <Message error header={strings.ERROR_FOUND} list={[...errors]} />
         ) : success.length > 0 ? (
           <Message
             positive
-            header={`Lookup table '${tableLabel || tableName}' has been successfully
-              ${!tableLabel ? ' created' : ' updated'}.`}
+            header={
+              tableLabel
+                ? strings.LOOKUP_TABLE_SUCCESS_CREATED.replace('%1', tableLabel)
+                : strings.LOOKUP_TABLE_SUCCESS_UPDATED.replace('%1', tableLabel)
+            }
             list={[...success]}
           />
         ) : (
           <Form>
             {!tableLabel && (
               <Form.Field>
-                <label>Table name</label>
+                <label>{strings.LOOKUP_TABLE_NAME}</label>
                 <input
-                  placeholder="Table name"
+                  placeholder={strings.LOOKUP_TABLE_NAME}
                   value={tableName || ''}
                   onChange={(event) =>
                     dispatch({ type: 'SET_TABLE_NAME', payload: event.target.value })
@@ -129,19 +136,19 @@ const ImportCsvModal: React.FC<any> = ({
               </Form.Field>
             )}
             <Form.Field>
-              <label>File input & upload </label>
+              <label>{strings.LABEL_FILE_UPLOAD_TITLE}</label>
 
               <Button as="label" htmlFor="file" type="button" animated="fade">
                 <Button.Content visible>
                   <Icon name="file" />
                 </Button.Content>
-                <Button.Content hidden>Choose a File</Button.Content>
+                <Button.Content hidden content={strings.LABEL_FILE_UPLOAD} />
               </Button>
               <input type="file" id="file" hidden onChange={(event) => fileChange(event)} />
               <Form.Input
                 fluid
-                label="File Chosen: "
-                placeholder="Use the above bar to browse your file system"
+                label={strings.LABEL_FILE_UPLOAD_CHOSEN}
+                placeholder={strings.LABEL_FILE_UPLOAD_PLACEHOLDER}
                 readOnly
                 value={file?.name || ''}
               />
@@ -150,12 +157,10 @@ const ImportCsvModal: React.FC<any> = ({
         )}
       </Modal.Content>
       <Modal.Actions>
-        <Button color="black" onClick={onClose}>
-          Close
-        </Button>
+        <Button color="black" onClick={onClose} content={strings.BUTTON_CLOSE} />
         {errors.length > 0 || success.length > 0 ? (
           <Button
-            content={success ? 'Import another CSV' : 'Try again'}
+            content={success ? strings.LOOKUP_TABLE_IMPORT_OTHER : strings.LABEL_TRY_AGAIN}
             labelPosition="right"
             icon="download"
             color={success ? 'green' : 'orange'}
@@ -163,7 +168,7 @@ const ImportCsvModal: React.FC<any> = ({
           />
         ) : (
           <Button
-            content="Import CSV"
+            content={strings.LABEL_FILE_IMPORT_CSV}
             labelPosition="right"
             icon="download"
             onClick={(event) => onImportCSV(event)}

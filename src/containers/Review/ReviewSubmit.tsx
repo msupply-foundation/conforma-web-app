@@ -4,13 +4,12 @@ import { ModalWarning } from '../../components'
 import ModalConfirmation from '../../components/Main/ModalConfirmation'
 import ReviewComment from '../../components/Review/ReviewComment'
 import ReviewDecision from '../../components/Review/ReviewDecision'
-import strings from '../../utils/constants'
 import { Decision, ReviewStatus } from '../../utils/generated/graphql'
 import useGetDecisionOptions from '../../utils/hooks/useGetDecisionOptions'
 import { useGetFullReviewStructureAsync } from '../../utils/hooks/useGetReviewStructureForSection'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useSubmitReview from '../../utils/hooks/useSubmitReview'
-import messages from '../../utils/messages'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 
 type ReviewSubmitProps = {
@@ -64,11 +63,35 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   assignment,
   previousAssignment,
 }) => {
+  const { strings } = useLanguageProvider()
   const {
     location: { pathname },
     replace,
     push,
   } = useRouter()
+
+  const messages = {
+    REVIEW_SUBMISSION_CONFIRM: {
+      title: strings.REVIEW_SUBMISSION_CONFIRM_TITLE,
+      message: strings.REVIEW_SUBMISSION_CONFIRM_MESSAGE,
+      option: strings.BUTTON_SUBMIT,
+    },
+    REVIEW_DECISION_SET_FAIL: {
+      title: strings.REVIEW_DECISION_SET_FAIL_TITLE,
+      message: strings.REVIEW_DECISION_SET_FAIL_MESSAGE,
+      option: strings.OK,
+    },
+    REVIEW_DECISION_MISMATCH: {
+      title: strings.REVIEW_DECISION_MISMATCH_TITLE,
+      message: strings.REVIEW_DECISION_MISMATCH_MESSAGE,
+      option: strings.OK,
+    },
+    REVIEW_STATUS_PENDING: {
+      title: strings.REVIEW_STATUS_PENDING_TITLE,
+      message: strings.REVIEW_STATUS_PENDING_MESSAGE,
+      option: strings.OK,
+    },
+  }
 
   // Need to refetch review status before submission, in case it's pending
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
@@ -201,7 +224,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
         content={strings.BUTTON_REVIEW_SUBMIT}
       />
       {attemptSubmissionFailed && (
-        <Label className="simple-label alert-text" content={messages.REVIEW_SUBMISSION_FAIL} />
+        <Label className="simple-label alert-text" content={strings.REVIEW_SUBMISSION_FAIL} />
       )}
       <ModalWarning {...showWarningModal} />
       <ModalConfirmation {...showModalConfirmation} />

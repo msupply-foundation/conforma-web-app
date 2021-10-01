@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Modal, Form, Segment, Icon, Label } from 'semantic-ui-react'
+import { Button, Modal, Form, Segment, Icon } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { User } from '../../../utils/types'
 import { DisplayType, InputResponseField, ListItem, ListLayoutProps } from './types'
@@ -13,7 +13,7 @@ import {
   createTextString,
 } from './helpers'
 import { ListCardLayout, ListTableLayout, ListInlineLayout } from './displayComponents'
-import strings from '../constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
@@ -28,6 +28,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   applicationData,
   allResponses,
 }) => {
+  const { getPluginStrings } = useLanguageProvider()
+  const strings = getPluginStrings('listBuilder')
+
   const { isEditable } = element
   const {
     label,

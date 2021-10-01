@@ -73,7 +73,7 @@ const Permissions: React.FC = () => {
     })
   }
   return (
-    <div className="flex-column-start-start">
+    <div className="flex-column-start-stretch">
       <PermissionsHeader type={PermissionPolicyType.Apply} header={'Apply'} />
       <PermissionNameList type={PermissionPolicyType.Apply} />
       <div className="spacer-20" />

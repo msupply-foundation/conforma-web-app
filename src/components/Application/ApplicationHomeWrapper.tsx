@@ -1,7 +1,7 @@
 import React from 'react'
 import { Header, Container } from 'semantic-ui-react'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 interface ApplicationHomeWrapperProps {
   startMessage?: string
@@ -19,6 +19,7 @@ const ApplicationHomeWrapper: React.FC<ApplicationHomeWrapperProps> = ({
   ButtonSegment,
   children,
 }) => {
+  const { strings } = useLanguageProvider()
   return (
     <>
       <Container id="application-home-content">
