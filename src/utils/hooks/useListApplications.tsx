@@ -7,10 +7,6 @@ import { BasicStringObject, TemplateType } from '../types'
 import { useUserState } from '../../contexts/UserState'
 import { useApplicationFilters } from '../data/applicationFilters'
 
-<<<<<<< HEAD
-const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicStringObject) => {
-  const APPLICATION_FILTERS = useApplicationFilters()
-=======
 const useListApplications = ({
   sortBy,
   page,
@@ -18,7 +14,7 @@ const useListApplications = ({
   type,
   ...queryFilters
 }: BasicStringObject) => {
->>>>>>> 6608e083e63f978aba59a032140736a4c9fc2f42
+  const APPLICATION_FILTERS = useApplicationFilters()
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
   const [applicationCount, setApplicationCount] = useState<number>(0)
   const [templateType, setTemplateType] = useState<TemplateType>()
