@@ -167,10 +167,10 @@ There is documentation on the code of these as well in the [repo](https://github
    - Description: "**CORE-ACTION** On Re-assignment if review is existing change to DRAFT or LOCKED (if assignment flag is_locked isTrue)"
    - Condition: Always
 
-   #### Trigger: ON_REVIEW_UNASSIGN
+#### Trigger: ON_REVIEW_UNASSIGN
 
 1. Unlock other Self-Assignments
-1. Change Review status to DISCONTINUED
+2. Change Review status to DISCONTINUED
 
 ##### Actions
 
