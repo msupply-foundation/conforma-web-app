@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { Label, Header, List, Divider, Form, Button } from 'semantic-ui-react'
 import { useUserState } from '../contexts/UserState'
-import strings from '../utils/constants'
 import usePageTitle from '../utils/hooks/usePageTitle'
 
 const LayoutHelpers: React.FC = () => {

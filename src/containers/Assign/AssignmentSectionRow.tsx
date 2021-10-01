@@ -2,20 +2,14 @@ import React, { useState } from 'react'
 import { Grid, Label, ModalProps } from 'semantic-ui-react'
 import ModalConfirmation from '../../components/Main/ModalConfirmation'
 import { useUserState } from '../../contexts/UserState'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { AssignmentOption } from '../../utils/data/assignmentOptions'
 import { useUnassignReviewAssignmentMutation } from '../../utils/generated/graphql'
 import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
-import getAssignmentOptions from './getAssignmentOptions'
+import useGetAssignmentOptions from './useGetAssignmentOptions'
 import Reassignment from './Reassignment'
-
-const UNASSIGN_MESSAGE = {
-  title: strings.UNASSIGN_TITLE,
-  message: strings.UNASSIGN_MESSAGE,
-  option: strings.BUTTON_SUBMIT,
-}
 
 type AssignmentSectionRowProps = {
   assignments: AssignmentDetails[]
@@ -25,6 +19,13 @@ type AssignmentSectionRowProps = {
 }
 // Component renders options calculated in getAssignmentOptions, and will execute assignment mutation on drop down change
 const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
+  const { strings } = useLanguageProvider()
+  const UNASSIGN_MESSAGE = {
+    title: strings.UNASSIGN_TITLE,
+    message: strings.UNASSIGN_MESSAGE,
+    option: strings.BUTTON_SUBMIT,
+  }
+  const getAssignmentOptions = useGetAssignmentOptions()
   const { assignments, sectionCode, structure, shouldAssignState } = props
   const {
     userState: { currentUser },
@@ -89,22 +90,31 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
       setUnassignmentError(true)
     }
   }
+  const selectedReviewer = assignmentOptions.options.find(
+    ({ value }) => value === assignmentOptions.selected
+  )
 
   return (
     <Grid className="section-single-row-box-container">
       <Grid.Row>
         <Grid.Column className="centered-flex-box-row">
-          <Label
-            className="simple-label"
-            content={isReassignment ? strings.LABEL_UNASSIGN_FROM : strings.LABEL_REVIEWER}
-          />
-          <AssigneeDropdown
-            assignmentError={assignmentError || unassignmentError}
-            assignmentOptions={assignmentOptions}
-            checkIsLastLevel={isLastLevel}
-            onSelection={onSelectedOption}
-            shouldAssignState={shouldAssignState}
-          />
+          {isReassignment ? (
+            <>
+              <Label className="simple-label" content={strings.LABEL_UNASSIGN_FROM} />
+              <Label content={selectedReviewer?.text} />
+            </>
+          ) : (
+            <>
+              <Label className="simple-label" content={strings.LABEL_REVIEWER} />
+              <AssigneeDropdown
+                assignmentError={assignmentError || unassignmentError}
+                assignmentOptions={assignmentOptions}
+                checkIsLastLevel={isLastLevel}
+                onSelection={onSelectedOption}
+                shouldAssignState={shouldAssignState}
+              />
+            </>
+          )}
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>

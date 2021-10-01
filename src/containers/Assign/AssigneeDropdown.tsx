@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Dropdown, Message } from 'semantic-ui-react'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 interface AssigneeProps {
   assignmentError: boolean
@@ -25,6 +25,7 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({
   onSelection,
   shouldAssignState: [shouldAssign, setShouldAssign],
 }) => {
+  const { strings } = useLanguageProvider()
   // Do auto-assign for other sections when assignee is selected
   // for assignment in another row when shouldAssign == assignee index
   // Note: This is required to be passed on as props to be processed

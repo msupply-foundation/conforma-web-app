@@ -3,12 +3,13 @@ import { Container, Header, Icon, Label } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
 import { TemplateDetails, User } from '../../utils/types'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 export interface ApplicationContainerProps {
   template: TemplateDetails
 }
 
 const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, children }) => {
+  const { strings } = useLanguageProvider()
   const { replace } = useRouter()
   const {
     userState: { currentUser, isNonRegistered },

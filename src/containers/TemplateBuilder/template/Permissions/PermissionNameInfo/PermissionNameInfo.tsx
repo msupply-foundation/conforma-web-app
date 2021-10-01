@@ -64,7 +64,7 @@ const PermissionNameInfo: React.FC<PermissionNameInfoProps> = ({ permissionName,
         <div className="config-modal-container">
           <Header as="h1"> {`Statistics for ${name}`} </Header>
           <div className="flex-row-start-start">
-            <div className="flex-column-start-start">
+            <div className="flex-column-start-stretch">
               <Header as="h2">Users and Organisations</Header>
               {permissionJoins.length === 0 &&
                 'Permission name is not linked to any users or user-organisations'}
@@ -75,7 +75,7 @@ const PermissionNameInfo: React.FC<PermissionNameInfoProps> = ({ permissionName,
                 />
               ))}
             </div>
-            <div className="flex-column-start-start">
+            <div className="flex-column-start-stretch">
               <Header as="h2">Linked Templates</Header>
               {templatePermissions.length === 0 && 'Permission name is not used to any templates'}
               {templatePermissions.map((templatePermission) => (

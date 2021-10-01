@@ -5,6 +5,7 @@
 
 import React from 'react'
 import ReactMarkdown, { ReactMarkdownProps } from 'react-markdown'
+import { Link } from 'react-router-dom'
 import { Message, Icon, Header } from 'semantic-ui-react'
 
 type SemanticComponent = 'Message' | 'noParagraph' // Enum for available renderers
@@ -50,10 +51,16 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
 
   const renderer = semanticComponent ? renderers[semanticComponent] : null
 
+  // Forces Markdown-generated links to use React-Router <Link> component,
+  // otherwise it does a page reload
+  const linkRenderer = {
+    link: (props: any) => <Link to={props.href}>{props.children}</Link>,
+  }
+
   return (
     <ReactMarkdown
       children={text}
-      renderers={renderer}
+      renderers={{ ...renderer, ...linkRenderer }}
       linkTarget={newTabLinks ? '_blank' : undefined}
     ></ReactMarkdown>
   )

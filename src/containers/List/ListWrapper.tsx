@@ -4,19 +4,22 @@ import { Label, Button, Search, Header, Icon } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import useListApplications from '../../utils/hooks/useListApplications'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { findUserRole, checkExistingUserRole } from '../../utils/helpers/list/findUserRole'
 import { useUserState } from '../../contexts/UserState'
-import mapColumnsByRole from '../../utils/helpers/list/mapColumnsByRole'
+import { useMapColumnsByRole } from '../../utils/helpers/list/mapColumnsByRole'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
 import PaginationBar from '../../components/List/Pagination'
 import ListFilters from './ListFilters/ListFilters'
-import { APPLICATION_FILTERS } from '../../utils/data/applicationFilters'
+import { useApplicationFilters } from '../../utils/data/applicationFilters'
 
 const ListWrapper: React.FC = () => {
+  const { strings } = useLanguageProvider()
+  const APPLICATION_FILTERS = useApplicationFilters()
+  const mapColumnsByRole = useMapColumnsByRole()
   const { query, updateQuery } = useRouter()
   const { type, userRole } = query
   const {
@@ -27,14 +30,14 @@ const ListWrapper: React.FC = () => {
   const [searchText, setSearchText] = useState<string>(query?.search)
   const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
   const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>()
-  usePageTitle(strings.PAGE_TITLE_LIST)
+  usePageTitle(strings.PAGE_TITLE_LIST as string)
 
   if (isNonRegistered) {
     logout()
     return null
   }
 
-  const { error, loading, applications, applicationCount } = useListApplications(query)
+  const { error, loading, refetch, applications, applicationCount } = useListApplications(query)
 
   useEffect(() => {
     if (!templatePermissions) return
@@ -133,9 +136,10 @@ const ListWrapper: React.FC = () => {
           sortQuery={sortQuery}
           handleSort={handleSort}
           loading={loading}
+          refetch={refetch}
         />
       )}
-      <PaginationBar totalCount={applicationCount} />
+      <PaginationBar totalCount={applicationCount} strings={strings} />
     </div>
   )
 }
