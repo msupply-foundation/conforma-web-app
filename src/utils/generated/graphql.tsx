@@ -30234,6 +30234,7 @@ export type GetApplicationListQueryVariables = Exact<{
   paginationOffset: Scalars['Int'];
   numberToFetch: Scalars['Int'];
   userId?: Scalars['Int'];
+  templateCode: Scalars['String'];
 }>;
 
 
@@ -30249,6 +30250,12 @@ export type GetApplicationListQuery = (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
     ) }
+  )>, templates?: Maybe<(
+    { __typename?: 'TemplatesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'Template' }
+      & Pick<Template, 'code' | 'name' | 'namePlural'>
+    )>> }
   )> }
 );
 
@@ -32099,7 +32106,7 @@ export type GetApplicationSerialQueryHookResult = ReturnType<typeof useGetApplic
 export type GetApplicationSerialLazyQueryHookResult = ReturnType<typeof useGetApplicationSerialLazyQuery>;
 export type GetApplicationSerialQueryResult = Apollo.QueryResult<GetApplicationSerialQuery, GetApplicationSerialQueryVariables>;
 export const GetApplicationListDocument = gql`
-    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $userId: Int! = 0) {
+    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $userId: Int! = 0, $templateCode: String!) {
   applicationList(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch, userid: $userId) {
     nodes {
       id
@@ -32128,6 +32135,13 @@ export const GetApplicationListDocument = gql`
     }
     totalCount
   }
+  templates(condition: {status: AVAILABLE, code: $templateCode}) {
+    nodes {
+      code
+      name
+      namePlural
+    }
+  }
 }
     `;
 
@@ -32148,6 +32162,7 @@ export const GetApplicationListDocument = gql`
  *      paginationOffset: // value for 'paginationOffset'
  *      numberToFetch: // value for 'numberToFetch'
  *      userId: // value for 'userId'
+ *      templateCode: // value for 'templateCode'
  *   },
  * });
  */

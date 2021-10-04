@@ -9,9 +9,7 @@ const config = {
     : 'http://localhost:5000/graphql',
   serverREST: isProductionBuild ? getUrl('server') : 'http://localhost:8080',
   uploadEndpoint: '/upload',
-  paginationPresets: [2, 5, 10, 20, 50],
   version: 'dev',
-  defaultLanguageCode: 'en_nz',
   pluginsFolder: 'formElementPlugins',
   nonRegisteredUser: 'nonRegistered',
 }

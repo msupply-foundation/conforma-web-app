@@ -76,6 +76,7 @@ export {
   TemplatePermissions,
   TemplateInList,
   TemplatesDetails,
+  TemplateType,
   UseGetApplicationProps,
   User,
   UseGetReviewStructureForSectionProps,
@@ -543,6 +544,12 @@ type TemplatesDetails = {
   name: string
   code: string
 }[]
+
+interface TemplateType {
+  code: string
+  name: string
+  namePlural: string
+}
 
 interface UseGetApplicationProps {
   serialNumber: string
