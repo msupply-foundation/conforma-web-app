@@ -9,6 +9,7 @@ import Evaluation from '../../shared/Evaluation'
 import { useOperationState } from '../../shared/OperationContext'
 import { Parameters, ParametersType } from '../../shared/Parameters'
 import TextIO from '../../shared/TextIO'
+import { useFullApplicationState } from '../ApplicationWrapper'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import { useActionState } from './Actions'
 import FromExistingAction from './FromExistingAction'
@@ -44,7 +45,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const [state, setState] = useState<ActionUpdateState | null>(null)
-  const { allActionsByCode } = useActionState()
+  const { allActionsByCode, applicationData } = useActionState()
 
   useEffect(() => {
     if (!templateAction) return setState(null)
@@ -121,6 +122,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             currentElementCode={''}
             evaluation={state?.condition}
             setEvaluation={(condition) => setState({ ...state, condition })}
+            applicationData={applicationData}
           />
         </div>
         <div className="flex-row-center-center">

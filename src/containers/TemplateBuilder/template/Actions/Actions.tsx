@@ -9,6 +9,7 @@ import {
   Trigger,
   useGetAllActionsQuery,
 } from '../../../../utils/generated/graphql'
+import { ApplicationDetails } from '../../../../utils/types'
 import CheckboxIO from '../../shared/CheckboxIO'
 import DropdownIO from '../../shared/DropdownIO'
 import { EvaluationHeader } from '../../shared/Evaluation'
@@ -18,18 +19,32 @@ import TextIO from '../../shared/TextIO'
 import { stringSort } from '../Permissions/PermissionNameInfo/PermissionNameInfo'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import TriggerDisplay from './TriggerDisplay'
+import { useFormStructureState } from '../Form/FormWrapper'
+import { getRequest } from '../../../../utils/helpers/fetchMethods'
+import config from '../../../../config'
 
 type ActionsByCode = { [actionCode: string]: ActionPlugin }
 
 type ActionContext = {
   allActionsByCode: ActionsByCode
+  applicationData: any
 }
 
-const Context = createContext<ActionContext>({ allActionsByCode: {} })
+const Context = createContext<ActionContext>({ allActionsByCode: {}, applicationData: {} })
 
 const ActionsWrapper: React.FC = () => {
-  const [state, setState] = useState<ActionContext | null>(null)
+  const [state, setState] = useState<ActionContext>({ allActionsByCode: {}, applicationData: {} })
   const { data } = useGetAllActionsQuery()
+  const { configApplicationId } = useFormStructureState()
+
+  useEffect(() => {
+    if (!configApplicationId) return
+    const url = `${config.serverREST}/admin/get-application-data?applicationId=${configApplicationId}`
+    getRequest(url).then((applicationData) => {
+      console.log(applicationData)
+      setState({ ...state, applicationData })
+    })
+  }, [])
 
   useEffect(() => {
     const allActions = data?.actionPlugins?.nodes
@@ -41,7 +56,7 @@ const ActionsWrapper: React.FC = () => {
       allActionsByCode[String(actionPlugin?.code)] = actionPlugin as ActionPlugin
     })
 
-    setState({ allActionsByCode })
+    setState({ ...state, allActionsByCode })
   }, [data])
 
   if (!state) return <Loading />
