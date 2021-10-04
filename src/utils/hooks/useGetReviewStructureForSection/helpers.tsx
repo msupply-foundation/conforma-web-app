@@ -143,7 +143,8 @@ const setIsNewApplicationResponse = (structure: FullStructure) => {
 }
 
 const setReviewAndAssignment = (structure: FullStructure, reviewAssignment: AssignmentDetails) => {
-  const { isLastLevel, isLocked, isFinalDecision, isSelfAssignable, review } = reviewAssignment
+  const { isLastLevel, isLocked, isFinalDecision, isSelfAssignable, review, level } =
+    reviewAssignment
 
   const isPreviousStageConsolidation = Object.values(structure.elementsById || {}).some(
     ({ lowerLevelReviewLatestResponse }) => !!lowerLevelReviewLatestResponse
@@ -153,6 +154,7 @@ const setReviewAndAssignment = (structure: FullStructure, reviewAssignment: Assi
   structure.thisReview = review
   structure.assignment = {
     assignee: reviewAssignment.reviewer,
+    assigneeLevel: level,
     assignmentStatus: reviewAssignment.current.assignmentStatus as ReviewAssignmentStatus,
     isLastLevel,
     isLocked,

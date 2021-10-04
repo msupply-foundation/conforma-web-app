@@ -109,14 +109,20 @@ const actionDefinitions: ActionDefinition[] = [
 
 const generateReviewSectionActions: GenerateSectionActions = ({
   sections,
-  reviewAssignment: { assignee, finalDecision, assignmentStatus, isSelfAssignable, isLocked },
+  reviewAssignment: {
+    assignee,
+    assigneeLevel,
+    finalDecision,
+    assignmentStatus,
+    isSelfAssignable,
+    isLocked,
+  },
   thisReview,
   currentUserId,
 }) => {
-  const reviewLevel = thisReview?.level || 1
   const isFinalDecision = !!finalDecision
   const isFinalDecisionOnReview = !!finalDecision?.decisionOnReview
-  const isConsolidation = reviewLevel > 1 || (isFinalDecision && !isFinalDecisionOnReview)
+  const isConsolidation = assigneeLevel > 1 || (isFinalDecision && !isFinalDecisionOnReview)
 
   sections.forEach((section) => {
     const { totalReviewable, totalPendingReview, totalActive } = isConsolidation
@@ -135,7 +141,7 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       isReviewable,
       isAssignedToCurrentUser,
       isFinalDecision: !!finalDecision,
-      reviewLevel,
+      reviewLevel: assigneeLevel,
       reviewAssignmentStatus: assignmentStatus,
       isReviewExisting: !!thisReview,
       reviewStatus: thisReview?.current.reviewStatus,
