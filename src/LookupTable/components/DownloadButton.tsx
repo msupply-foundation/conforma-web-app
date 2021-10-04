@@ -3,6 +3,7 @@ import config from '../../config'
 import React, { Fragment, useState } from 'react'
 import { Popup, Button, Icon, Message } from 'semantic-ui-react'
 const LOCAL_STORAGE_JWT_KEY = 'persistJWT'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 const DownloadButton = ({
   id,
@@ -11,6 +12,7 @@ const DownloadButton = ({
   content = '',
   ...props
 }: any) => {
+  const { strings } = useLanguageProvider()
   const [open, setOpen] = useState(openPopup)
   const [error, setError]: any = useState('')
 
@@ -61,7 +63,7 @@ const DownloadButton = ({
       open={open}
       content={
         error ? (
-          <Message negative header="Error trying to download" content={error} />
+          <Message negative header={strings.LABEL_FILE_DOWNLOAD_ERROR} content={error} />
         ) : (
           popUpContent
         )

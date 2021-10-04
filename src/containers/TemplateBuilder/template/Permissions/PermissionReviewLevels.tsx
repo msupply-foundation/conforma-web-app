@@ -63,7 +63,7 @@ const PermissionReviewLevel: React.FC<PemrmissionReviewLevelProps> = ({ stage })
   }
 
   return (
-    <div className="flex-column-start-start">
+    <div className="flex-column-start-stretch">
       <div className="flex-row-start-center">
         <Header as="h4" className="no-margin-no-padding">
           Review Levels{' '}

@@ -37,7 +37,8 @@ const ListWrapper: React.FC = () => {
     return null
   }
 
-  const { error, loading, refetch, applications, applicationCount } = useListApplications(query)
+  const { error, loading, refetch, templateType, applications, applicationCount } =
+    useListApplications(query)
 
   useEffect(() => {
     if (!templatePermissions) return
@@ -108,7 +109,7 @@ const ListWrapper: React.FC = () => {
   ) : (
     <div id="list-container">
       <div id="list-top">
-        <Header as="h2">{query.type}</Header>
+        <Header as="h2">{templateType?.name ?? strings.PAGE_TITLE_LIST}</Header>
         <Search
           className="flex-grow-1"
           // size="large"

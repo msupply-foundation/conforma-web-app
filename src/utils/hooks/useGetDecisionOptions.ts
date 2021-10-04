@@ -46,7 +46,7 @@ type UseGetDecisionOptions = (
 
 const useGetDecisionOptions: UseGetDecisionOptions = (assignment, thisReview) => {
   const { strings } = useLanguageProvider()
-  const { isLastLevel, isFinalDecision, canSubmitReviewAs } = assignment as ReviewAssignment
+  const { isLastLevel, finalDecision, canSubmitReviewAs } = assignment as ReviewAssignment
   const [decisionOptions, setDecisionOptions] = useState<DecisionOption[]>(
     getInitialDecisionOptions(strings)
   )
@@ -63,7 +63,7 @@ const useGetDecisionOptions: UseGetDecisionOptions = (assignment, thisReview) =>
       let value = false
       // if review is NOT DRAFT then use decision from DB (and make it the only one visible)
       if (!isDraft) isVisible = value = code === decisionInStructure
-      else if (isFinalDecision) {
+      else if (finalDecision) {
         isVisible = code === Decision.NonConform || code === Decision.Conform
         value = false
       }

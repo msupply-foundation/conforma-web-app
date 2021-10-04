@@ -14,7 +14,6 @@ import {
   User as GraphQLUser,
   Organisation as GraphQLOrg,
   Filter,
-  Application,
   UiLocation,
 } from './generated/graphql'
 
@@ -77,6 +76,7 @@ export {
   TemplatePermissions,
   TemplateInList,
   TemplatesDetails,
+  TemplateType,
   UseGetApplicationProps,
   User,
   UseGetReviewStructureForSectionProps,
@@ -345,9 +345,13 @@ interface ResponsesByCode {
 }
 
 interface ReviewAssignment {
+  assignee: GraphQLUser
+  assignmentStatus: ReviewAssignmentStatus
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
-  isFinalDecision: boolean
+  finalDecision: {
+    decisionOnReview: boolean
+  } | null
 }
 
 type ReviewSectionComponentProps = {
@@ -536,6 +540,12 @@ type TemplatesDetails = {
   name: string
   code: string
 }[]
+
+interface TemplateType {
+  code: string
+  name: string
+  namePlural: string
+}
 
 interface UseGetApplicationProps {
   serialNumber: string
