@@ -2,7 +2,7 @@ import { postRequest } from './fetchMethods'
 import config from '../../config'
 import { LoginPayload } from '../types'
 
-const loginURL = config.serverREST + '/login'
+const loginURL = config.serverREST + '/public/login'
 const loginOrgURL = config.serverREST + '/login-org'
 
 interface loginParameters {

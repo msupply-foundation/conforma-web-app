@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Button, Icon, Input, Label, Loader, Modal } from 'semantic-ui-react'
+import { Button, Icon, Input, Label, Loader, Modal, Table, Header } from 'semantic-ui-react'
 import config from '../../config'
 import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 
