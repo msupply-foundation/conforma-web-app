@@ -348,6 +348,7 @@ interface ResponsesByCode {
 
 interface ReviewAssignment {
   assignee: GraphQLUser
+  assigneeLevel: number
   assignmentStatus: ReviewAssignmentStatus
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
