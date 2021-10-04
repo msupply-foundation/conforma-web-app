@@ -196,7 +196,7 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   // Note: This is required to be passed on as props to be processed
   // in each row since the fullStructure is related to each section
   useEffect(() => {
-    if (shouldAssign == 1) {
+    if (shouldAssign === 1) {
       selfAssignReview()
     }
   }, [shouldAssign])
