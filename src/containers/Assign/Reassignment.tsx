@@ -58,7 +58,7 @@ const Reassignment: React.FC<ReassignmentProps> = ({
         elements,
       })
     } catch (e) {
-      console.log(e)
+      console.error(e)
       setReassignmentError(true)
     }
   }
