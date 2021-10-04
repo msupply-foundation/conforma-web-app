@@ -15,7 +15,7 @@ interface AssigneeProps {
   }
   checkIsLastLevel: (assignee: number) => boolean
   onAssignment: (assignee: number) => void
-  shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
+  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
 }
 
 const AssigneeDropdown: React.FC<AssigneeProps> = ({
@@ -32,8 +32,8 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({
   // in each row since the fullStructure is related to each section
   useEffect(() => {
     // Option -1 (UNASSIGNED) or -2 (Re-assign) shouldn't change others
-    if ((shouldAssign as number) < 1) return
-    onAssignment(shouldAssign as number)
+    if (shouldAssign < 1) return
+    onAssignment(shouldAssign)
   }, [shouldAssign])
 
   const onAssigneeSelection = async (_: any, { value }: any) => {

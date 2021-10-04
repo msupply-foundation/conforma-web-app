@@ -12,7 +12,7 @@ interface ReassignmentProps {
   sectionCode: string
   elements: PageElement[]
   isLastLevel: (selectedIndex: number) => boolean
-  shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
+  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
   previousAssignee: number
 }
 

@@ -13,7 +13,7 @@ type AssignmentSectionRowProps = {
   assignments: AssignmentDetails[]
   sectionCode: string
   structure: FullStructure
-  shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
+  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
 }
 // Component renders options calculated in getAssignmentOptions, and will execute assignment mutation on drop down change
 const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {

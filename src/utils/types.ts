@@ -367,7 +367,7 @@ type ReviewSectionComponentProps = {
   action: ReviewAction
   isAssignedToCurrentUser: boolean
   isConsolidation: boolean
-  shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
+  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
 }
 
 interface ReviewDetails {
