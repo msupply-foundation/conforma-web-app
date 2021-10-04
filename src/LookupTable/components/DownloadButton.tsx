@@ -2,7 +2,6 @@ import axios from 'axios'
 import config from '../../config'
 import React, { Fragment, useState } from 'react'
 import { Popup, Button, Icon, Message } from 'semantic-ui-react'
-const LOCAL_STORAGE_JWT_KEY = 'persistJWT'
 import { useLanguageProvider } from '../../contexts/Localisation'
 
 const DownloadButton = ({
@@ -32,7 +31,7 @@ const DownloadButton = ({
     clearTimeout(timeout)
   }
 
-  const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY || '')
+  const JWT = localStorage.getItem(config.localStorageJWTKey || '')
   const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
 
   const downloadItem = async (event: any) => {

@@ -1,5 +1,5 @@
 // Generic GET/POST methods for re-use throughout app
-const LOCAL_STORAGE_JWT_KEY = 'persistJWT'
+import config from '../../config'
 
 export async function postRequest({
   jsonBody = {},
@@ -12,7 +12,7 @@ export async function postRequest({
   url: string
   headers?: object
 }) {
-  const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY || '')
+  const JWT = localStorage.getItem(config.localStorageJWTKey || '')
   const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
   const body = otherBody || JSON.stringify(jsonBody)
 
@@ -34,7 +34,7 @@ export async function postRequest({
 }
 
 export async function getRequest(endpointUrl: string, headers: object = {}) {
-  const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY || '')
+  const JWT = localStorage.getItem(config.localStorageJWTKey || '')
   const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
 
   try {

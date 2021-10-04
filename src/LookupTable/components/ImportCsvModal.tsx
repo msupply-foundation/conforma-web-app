@@ -15,7 +15,6 @@ import config from '../../config'
 import axios from 'axios'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import pluralize from 'pluralize'
-const LOCAL_STORAGE_JWT_KEY = 'persistJWT'
 
 const ImportCsvModal: React.FC<any> = ({
   onImportSuccess,
@@ -55,7 +54,7 @@ const ImportCsvModal: React.FC<any> = ({
 
     if (!tableStructureID) formData.append('tableName', pluralTableName)
 
-    const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY || '')
+    const JWT = localStorage.getItem(config.localStorageJWTKey || '')
     const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
 
     await axios

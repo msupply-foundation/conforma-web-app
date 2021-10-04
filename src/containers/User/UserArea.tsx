@@ -201,7 +201,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   const { strings } = useLanguageProvider()
   const LOGIN_AS_NO_ORG = 0 // Ensures server returns no organisation
 
-  const JWT = localStorage.getItem('persistJWT') as string
+  const JWT = localStorage.getItem(config.localStorageJWTKey) as string
 
   const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
     await attemptLoginOrg({ orgId, onLoginOrgSuccess })
@@ -230,7 +230,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   return (
     <div id="org-selector">
       {user?.organisation?.logoUrl && (
-        <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST)} />
+        <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST + '/public')} />
       )}
       <div>
         {dropdownOptions.length === 1 ? (
