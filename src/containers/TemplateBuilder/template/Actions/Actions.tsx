@@ -28,23 +28,23 @@ type ActionsByCode = { [actionCode: string]: ActionPlugin }
 type ActionContext = {
   allActionsByCode: ActionsByCode
   applicationData: any
+  loading: boolean
 }
 
-const Context = createContext<ActionContext>({ allActionsByCode: {}, applicationData: {} })
+const Context = createContext<ActionContext>({
+  allActionsByCode: {},
+  applicationData: {},
+  loading: true,
+})
 
 const ActionsWrapper: React.FC = () => {
-  const [state, setState] = useState<ActionContext>({ allActionsByCode: {}, applicationData: {} })
+  const [state, setState] = useState<ActionContext>({
+    allActionsByCode: {},
+    applicationData: {},
+    loading: true,
+  })
   const { data } = useGetAllActionsQuery()
   const { configApplicationId } = useFormStructureState()
-
-  useEffect(() => {
-    if (!configApplicationId) return
-    const url = `${config.serverREST}/admin/get-application-data?applicationId=${configApplicationId}`
-    getRequest(url).then((applicationData) => {
-      console.log(applicationData)
-      setState({ ...state, applicationData })
-    })
-  }, [])
 
   useEffect(() => {
     const allActions = data?.actionPlugins?.nodes
@@ -56,10 +56,17 @@ const ActionsWrapper: React.FC = () => {
       allActionsByCode[String(actionPlugin?.code)] = actionPlugin as ActionPlugin
     })
 
-    setState({ ...state, allActionsByCode })
-  }, [data])
+    if (!configApplicationId) return
+    const url = `${config.serverREST}/admin/get-application-data?applicationId=${configApplicationId}`
+    getRequest(url).then((applicationData) => {
+      console.log(applicationData)
+      setState({ allActionsByCode, applicationData, loading: false })
+    })
+  }, [data, configApplicationId])
 
-  if (!state) return <Loading />
+  console.log('state', state)
+
+  if (state.loading) return <Loading />
 
   return (
     <Context.Provider value={state}>
