@@ -27,14 +27,13 @@ type ActionsByCode = { [actionCode: string]: ActionPlugin }
 
 type ActionContext = {
   allActionsByCode: ActionsByCode
-  applicationData: any
-  loading: boolean
+  applicationData: { [key: string]: any }
+  loading?: boolean
 }
 
 const Context = createContext<ActionContext>({
   allActionsByCode: {},
   applicationData: {},
-  loading: true,
 })
 
 const ActionsWrapper: React.FC = () => {
@@ -59,12 +58,9 @@ const ActionsWrapper: React.FC = () => {
     if (!configApplicationId) return
     const url = `${config.serverREST}/admin/get-application-data?applicationId=${configApplicationId}`
     getRequest(url).then((applicationData) => {
-      console.log(applicationData)
       setState({ allActionsByCode, applicationData, loading: false })
     })
   }, [data, configApplicationId])
-
-  console.log('state', state)
 
   if (state.loading) return <Loading />
 
