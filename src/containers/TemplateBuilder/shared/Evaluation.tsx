@@ -69,10 +69,8 @@ const Evaluation: React.FC<EvaluationProps> = ({
       thisResponse: fullStructure?.responsesByCode?.[currentElementCode]?.text,
     },
     currentUser,
-    applicationData: fullStructure ? fullStructure?.info : applicationData,
+    applicationData: applicationData ? applicationData : fullStructure?.info,
   }
-
-  console.log('objects', objects)
 
   const evaluationParameters = {
     objects,

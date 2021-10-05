@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Accordion, Button, Header, Icon } from 'semantic-ui-react'
 import { EvaluatorNode, FullStructure } from '../../../utils/types'
+import { useActionState } from '../template/Actions/Actions'
 import CheckboxIO from './CheckboxIO'
 import Evaluation from './Evaluation'
 import JsonIO from './JsonIO'
@@ -21,6 +22,7 @@ export const Parameters: React.FC<ParametersProps> = ({
   currentElementCode,
   fullStructure,
 }) => {
+  const { applicationData } = useActionState()
   const [asGui, setAsGui] = useState(true)
   const [isActive, setIsActive] = useState(false)
 
@@ -88,6 +90,7 @@ export const Parameters: React.FC<ParametersProps> = ({
                     }}
                     key={key}
                     evaluation={value}
+                    applicationData={applicationData}
                     currentElementCode={currentElementCode}
                     fullStructure={fullStructure}
                     label={key}
