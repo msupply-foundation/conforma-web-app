@@ -192,11 +192,11 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   const [assignmentError, setAssignmentError] = useState(false)
 
   // Do auto-assign for other sections when one is selected
-  // for auto-assignment in another row when shouldAssign == true
+  // for auto-assignment in another row when shouldAssign == 1
   // Note: This is required to be passed on as props to be processed
   // in each row since the fullStructure is related to each section
   useEffect(() => {
-    if (shouldAssign == true) {
+    if (shouldAssign === 1) {
       selfAssignReview()
     }
   }, [shouldAssign])
@@ -221,7 +221,7 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
       className="user-action clickable"
       onClick={() => {
         selfAssignReview()
-        setShouldAssign(true)
+        setShouldAssign(1)
       }}
     >
       {strings.BUTTON_SELF_ASSIGN}
