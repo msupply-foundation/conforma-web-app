@@ -159,6 +159,7 @@ const createHash = async (password: string) => {
     const output = await postRequest({
       url: config.serverREST + '/create-hash',
       jsonBody: { password },
+      headers: { 'Content-Type': 'application/json' },
     })
 
     return output.hash

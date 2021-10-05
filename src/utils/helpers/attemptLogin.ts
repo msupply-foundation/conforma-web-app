@@ -30,6 +30,7 @@ export const attemptLogin = async ({
     const loginResult: LoginPayload = await postRequest({
       jsonBody: { username, password, sessionId },
       url: loginURL,
+      headers: { 'Content-Type': 'application/json' },
     })
 
     if (!loginResult.success) {
@@ -50,6 +51,7 @@ export const attemptLoginOrg = async ({
     const loginResult: LoginPayload = await postRequest({
       jsonBody: { orgId, sessionId },
       url: loginOrgURL,
+      headers: { 'Content-Type': 'application/json' },
     })
 
     if (!loginResult.success) {

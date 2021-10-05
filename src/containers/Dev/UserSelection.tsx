@@ -34,6 +34,7 @@ const UserSelection: React.FC = () => {
     const loginResult = await attemptLogin({
       jsonBody: { username, password: hardcodedPassword },
       url: loginURL,
+      headers: { 'Content-Type': 'application/json' },
     })
     if (!loginResult.success) {
       console.log(`Problem logging in user: ${username}`)
@@ -51,6 +52,7 @@ const UserSelection: React.FC = () => {
     const verifyOrgResult = await attemptLogin({
       jsonBody: { userId: user.userId, orgId: selectedOrg.orgId },
       url: loginOrgURL,
+      headers: { 'Content-Type': 'application/json' },
     })
 
     if (!verifyOrgResult.success) {
