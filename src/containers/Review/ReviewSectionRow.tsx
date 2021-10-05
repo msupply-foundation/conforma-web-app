@@ -23,7 +23,7 @@ type ReviewSectionRowProps = {
   assignment: AssignmentDetails
   previousAssignment: AssignmentDetails
   fullApplicationStructure: FullStructure
-  shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
+  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
 }
 
 const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({

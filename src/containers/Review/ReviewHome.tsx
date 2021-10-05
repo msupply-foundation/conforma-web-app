@@ -17,7 +17,7 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({
   assignmentInPreviousStage,
   fullApplicationStructure,
 }) => {
-  const [shouldAssign, setShouldAssign] = useState<number | boolean>(false)
+  const [shouldAssign, setShouldAssign] = useState<number>(0)
   return (
     <>
       {Object.values(fullApplicationStructure.sections).map(({ details: { id, title, code } }) => (

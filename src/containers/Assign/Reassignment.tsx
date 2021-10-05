@@ -12,7 +12,7 @@ interface ReassignmentProps {
   sectionCode: string
   elements: PageElement[]
   isLastLevel: (selectedIndex: number) => boolean
-  shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
+  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
   previousAssignee: number
 }
 
@@ -44,7 +44,7 @@ const Reassignment: React.FC<ReassignmentProps> = ({
     if (value === assignmentOptions.selected) return console.log('Re-assignment to same reviewer')
     if (value === AssignmentOption.UNASSIGN) return console.log('un assignment not implemented')
 
-    const previousAssigmnet = assignments.find(
+    const previousAssignment = assignments.find(
       (assignment) => assignment.reviewer.id === previousAssignee
     )
     const reassignment = assignments.find((assignment) => assignment.reviewer.id === value)
@@ -52,13 +52,13 @@ const Reassignment: React.FC<ReassignmentProps> = ({
     if (!reassignment) return
     try {
       await reassignSection({
-        unassignmentId: previousAssigmnet?.id,
+        unassignmentId: previousAssignment?.id,
         reassignment,
         sectionCode,
         elements,
       })
     } catch (e) {
-      console.log(e)
+      console.error(e)
       setReassignmentError(true)
     }
   }

@@ -29731,14 +29731,14 @@ export type DeleteApplicationMutation = (
   )> }
 );
 
-export type ReasignReviewAssignmentMutationVariables = Exact<{
+export type ReassignReviewAssignmentMutationVariables = Exact<{
   unassignmentId: Scalars['Int'];
   reassignmentId: Scalars['Int'];
   reassignmentPatch: ReviewAssignmentPatch;
 }>;
 
 
-export type ReasignReviewAssignmentMutation = (
+export type ReassignReviewAssignmentMutation = (
   { __typename?: 'Mutation' }
   & { reassignmentUpdate?: Maybe<(
     { __typename?: 'UpdateReviewAssignmentPayload' }
@@ -30250,6 +30250,7 @@ export type GetApplicationListQueryVariables = Exact<{
   paginationOffset: Scalars['Int'];
   numberToFetch: Scalars['Int'];
   userId?: Scalars['Int'];
+  templateCode: Scalars['String'];
 }>;
 
 
@@ -30265,6 +30266,12 @@ export type GetApplicationListQuery = (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
     ) }
+  )>, templates?: Maybe<(
+    { __typename?: 'TemplatesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'Template' }
+      & Pick<Template, 'code' | 'name' | 'namePlural'>
+    )>> }
   )> }
 );
 
@@ -31167,8 +31174,8 @@ export function useDeleteApplicationMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteApplicationMutationHookResult = ReturnType<typeof useDeleteApplicationMutation>;
 export type DeleteApplicationMutationResult = Apollo.MutationResult<DeleteApplicationMutation>;
 export type DeleteApplicationMutationOptions = Apollo.BaseMutationOptions<DeleteApplicationMutation, DeleteApplicationMutationVariables>;
-export const ReasignReviewAssignmentDocument = gql`
-    mutation reasignReviewAssignment($unassignmentId: Int!, $reassignmentId: Int!, $reassignmentPatch: ReviewAssignmentPatch!) {
+export const ReassignReviewAssignmentDocument = gql`
+    mutation reassignReviewAssignment($unassignmentId: Int!, $reassignmentId: Int!, $reassignmentPatch: ReviewAssignmentPatch!) {
   reassignmentUpdate: updateReviewAssignment(input: {id: $reassignmentId, patch: $reassignmentPatch}) {
     reviewAssignment {
       ...ReviewAssignment
@@ -31181,20 +31188,20 @@ export const ReasignReviewAssignmentDocument = gql`
   }
 }
     ${ReviewAssignmentFragmentDoc}`;
-export type ReasignReviewAssignmentMutationFn = Apollo.MutationFunction<ReasignReviewAssignmentMutation, ReasignReviewAssignmentMutationVariables>;
+export type ReassignReviewAssignmentMutationFn = Apollo.MutationFunction<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>;
 
 /**
- * __useReasignReviewAssignmentMutation__
+ * __useReassignReviewAssignmentMutation__
  *
- * To run a mutation, you first call `useReasignReviewAssignmentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useReasignReviewAssignmentMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useReassignReviewAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReassignReviewAssignmentMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [reasignReviewAssignmentMutation, { data, loading, error }] = useReasignReviewAssignmentMutation({
+ * const [reassignReviewAssignmentMutation, { data, loading, error }] = useReassignReviewAssignmentMutation({
  *   variables: {
  *      unassignmentId: // value for 'unassignmentId'
  *      reassignmentId: // value for 'reassignmentId'
@@ -31202,12 +31209,12 @@ export type ReasignReviewAssignmentMutationFn = Apollo.MutationFunction<ReasignR
  *   },
  * });
  */
-export function useReasignReviewAssignmentMutation(baseOptions?: Apollo.MutationHookOptions<ReasignReviewAssignmentMutation, ReasignReviewAssignmentMutationVariables>) {
-        return Apollo.useMutation<ReasignReviewAssignmentMutation, ReasignReviewAssignmentMutationVariables>(ReasignReviewAssignmentDocument, baseOptions);
+export function useReassignReviewAssignmentMutation(baseOptions?: Apollo.MutationHookOptions<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>) {
+        return Apollo.useMutation<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>(ReassignReviewAssignmentDocument, baseOptions);
       }
-export type ReasignReviewAssignmentMutationHookResult = ReturnType<typeof useReasignReviewAssignmentMutation>;
-export type ReasignReviewAssignmentMutationResult = Apollo.MutationResult<ReasignReviewAssignmentMutation>;
-export type ReasignReviewAssignmentMutationOptions = Apollo.BaseMutationOptions<ReasignReviewAssignmentMutation, ReasignReviewAssignmentMutationVariables>;
+export type ReassignReviewAssignmentMutationHookResult = ReturnType<typeof useReassignReviewAssignmentMutation>;
+export type ReassignReviewAssignmentMutationResult = Apollo.MutationResult<ReassignReviewAssignmentMutation>;
+export type ReassignReviewAssignmentMutationOptions = Apollo.BaseMutationOptions<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>;
 export const RestartApplicationDocument = gql`
     mutation restartApplication($serial: String!, $applicationPatch: ApplicationPatch!) {
   updateApplicationBySerial(input: {serial: $serial, patch: $applicationPatch}) {
@@ -32149,7 +32156,7 @@ export type GetApplicationSerialQueryHookResult = ReturnType<typeof useGetApplic
 export type GetApplicationSerialLazyQueryHookResult = ReturnType<typeof useGetApplicationSerialLazyQuery>;
 export type GetApplicationSerialQueryResult = Apollo.QueryResult<GetApplicationSerialQuery, GetApplicationSerialQueryVariables>;
 export const GetApplicationListDocument = gql`
-    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $userId: Int! = 0) {
+    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $userId: Int! = 0, $templateCode: String!) {
   applicationList(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch, userid: $userId) {
     nodes {
       id
@@ -32178,6 +32185,13 @@ export const GetApplicationListDocument = gql`
     }
     totalCount
   }
+  templates(condition: {status: AVAILABLE, code: $templateCode}) {
+    nodes {
+      code
+      name
+      namePlural
+    }
+  }
 }
     `;
 
@@ -32198,6 +32212,7 @@ export const GetApplicationListDocument = gql`
  *      paginationOffset: // value for 'paginationOffset'
  *      numberToFetch: // value for 'numberToFetch'
  *      userId: // value for 'userId'
+ *      templateCode: // value for 'templateCode'
  *   },
  * });
  */
