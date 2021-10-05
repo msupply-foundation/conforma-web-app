@@ -3,7 +3,7 @@ import { Button, Icon, Input, Label, Loader, Modal, Table, Header } from 'semant
 import config from '../../config'
 import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 
-const baseEndpoint = `${config.serverREST}/admin`
+const baseEndpoint = `${config.serverREST}/admin/snapshot`
 const snapshotListUrl = `${baseEndpoint}/list`
 const takeSnapshotUrl = `${baseEndpoint}/take`
 const useSnapshotUrl = `${baseEndpoint}/use`
