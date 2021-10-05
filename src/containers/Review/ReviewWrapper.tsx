@@ -7,8 +7,7 @@ import useGetReviewInfo from '../../utils/hooks/useGetReviewInfo'
 import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { FullStructure } from '../../utils/types'
-import strings from '../../utils/constants'
-import { ReviewContainer } from '../../components/Review'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
 import ReviewHomeWrapper from './ReviewHomeWrapper'
 
@@ -17,6 +16,7 @@ interface ReviewWrapperProps {
 }
 
 const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
+  const { strings } = useLanguageProvider()
   const {
     match: { path },
   } = useRouter()

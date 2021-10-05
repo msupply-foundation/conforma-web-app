@@ -14,7 +14,6 @@ import {
   User as GraphQLUser,
   Organisation as GraphQLOrg,
   Filter,
-  Application,
   UiLocation,
 } from './generated/graphql'
 
@@ -77,6 +76,7 @@ export {
   TemplatePermissions,
   TemplateInList,
   TemplatesDetails,
+  TemplateType,
   UseGetApplicationProps,
   User,
   UseGetReviewStructureForSectionProps,
@@ -129,6 +129,8 @@ interface AssignmentDetails {
   isCurrentUserReviewer: boolean
   isFinalDecision: boolean
   isLastLevel: boolean
+  isSelfAssignable: boolean
+  isLocked: boolean
   totalAssignedQuestions: number
   reviewQuestionAssignments: ReviewQuestionAssignment[]
   assignableSectionRestrictions: (string | null)[]
@@ -345,9 +347,16 @@ interface ResponsesByCode {
 }
 
 interface ReviewAssignment {
+  assignee: GraphQLUser
+  assigneeLevel: number
+  assignmentStatus: ReviewAssignmentStatus
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
-  isFinalDecision: boolean
+  isLocked: boolean
+  isSelfAssignable: boolean
+  finalDecision: {
+    decisionOnReview: boolean
+  } | null
 }
 
 type ReviewSectionComponentProps = {
@@ -359,7 +368,7 @@ type ReviewSectionComponentProps = {
   action: ReviewAction
   isAssignedToCurrentUser: boolean
   isConsolidation: boolean
-  shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
+  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
 }
 
 interface ReviewDetails {
@@ -536,6 +545,12 @@ type TemplatesDetails = {
   name: string
   code: string
 }[]
+
+interface TemplateType {
+  code: string
+  name: string
+  namePlural: string
+}
 
 interface UseGetApplicationProps {
   serialNumber: string

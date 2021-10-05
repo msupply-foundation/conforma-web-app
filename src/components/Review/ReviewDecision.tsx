@@ -2,7 +2,7 @@ import React from 'react'
 import { Checkbox, Container, Form, Message } from 'semantic-ui-react'
 import { Decision } from '../../utils/generated/graphql'
 import { DecisionOption } from '../../utils/types'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 type ReviewDecisionProps = {
   decisionOptions: DecisionOption[]
@@ -17,6 +17,7 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
   isDecisionError,
   isEditable,
 }) => {
+  const { strings } = useLanguageProvider()
   if (isEditable) {
     const onChangeDecision = (_: any, { value: code }: any) => setDecision(code)
     const visibleOptions = decisionOptions.filter((option) => option.isVisible)

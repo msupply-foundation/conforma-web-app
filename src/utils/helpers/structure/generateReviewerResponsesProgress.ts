@@ -13,8 +13,14 @@ const generateSectionReviewProgress = (section: SectionState) => {
 
 const generatePageReviewProgress = (page: Page) => {
   const totalReviewable = page.state.filter(
-    ({ isAssigned, thisReviewLatestResponse, latestApplicationResponse, element }) =>
-      (isAssigned || !!thisReviewLatestResponse) &&
+    ({
+      isAssigned,
+      thisReviewLatestResponse,
+      latestOriginalReviewResponse,
+      latestApplicationResponse,
+      element,
+    }) =>
+      (isAssigned || !!thisReviewLatestResponse || !!latestOriginalReviewResponse) &&
       element.isVisible &&
       latestApplicationResponse?.id
   )

@@ -4,7 +4,7 @@ import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/gr
 import ApplicantResponseElement from './ApplicantResponseElement'
 import ReviewResponseElement from './ReviewResponseElement'
 import ReviewInlineInput from './ReviewInlineInput'
-import strings from '../../../utils/constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import { UpdateIcon } from '../PageElements'
 import ViewHistoryButton from '../ViewHistoryButton'
 
@@ -41,6 +41,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   isChangeRequest,
   isChanged,
 }) => {
+  const { strings } = useLanguageProvider()
   const [isActiveEdit, setIsActiveEdit] = useState(false)
   const decisionExists = !!reviewResponse?.decision
   const triggerTitle = isNewApplicationResponse

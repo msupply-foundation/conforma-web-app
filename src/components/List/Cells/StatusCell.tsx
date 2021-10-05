@@ -3,13 +3,22 @@ import { Link } from 'react-router-dom'
 import { Icon, ModalProps, Progress } from 'semantic-ui-react'
 import { ApplicationStatus } from '../../../utils/generated/graphql'
 import { CellProps } from '../../../utils/types'
-import enumsToLocalStrings from '../../../utils/data/enumsToLocalisedStrings'
-import strings from '../../../utils/constants'
-import messages from '../../../utils/messages'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
 import ModalConfirmation from '../../Main/ModalConfirmation'
 
 const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplication }) => {
+  const { strings } = useLanguageProvider()
+  const { Status } = useLocalisedEnums()
   const [showModalDeletion, setShowModalDeletion] = useState<ModalProps>({ open: false })
+
+  const messages = {
+    APPLICATION_DELETION_CONFIRM: {
+      title: strings.APPLICATION_DELETION_CONFIRM_TITLE,
+      message: strings.APPLICATION_DELETION_CONFIRM_MESSAGE,
+      option: strings.OK,
+    },
+  }
 
   const showConfirmation = () => {
     const { title, message, option } = messages.APPLICATION_DELETION_CONFIRM
@@ -71,7 +80,7 @@ const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplicati
       console.log('Problem getting status of application serial ', serial)
       return null
     default:
-      return <p>{enumsToLocalStrings[status as ApplicationStatus]}</p>
+      return <p>{Status[status as ApplicationStatus]}</p>
   }
 }
 

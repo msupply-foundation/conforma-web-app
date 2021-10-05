@@ -7,6 +7,7 @@ export default gql`
     $paginationOffset: Int!
     $numberToFetch: Int!
     $userId: Int! = 0
+    $templateCode: String!
   ) {
     applicationList(
       filter: $filters
@@ -42,6 +43,13 @@ export default gql`
         hasNextPage
       }
       totalCount
+    }
+    templates(condition: { status: AVAILABLE, code: $templateCode }) {
+      nodes {
+        code
+        name
+        namePlural
+      }
     }
   }
 `

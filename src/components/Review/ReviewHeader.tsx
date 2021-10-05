@@ -1,7 +1,7 @@
 import React from 'react'
 import { Header } from 'semantic-ui-react'
 import { StageDetails } from '../../utils/types'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { Stage } from '../Review'
 
 export interface ReviewHeaderProps {
@@ -10,6 +10,7 @@ export interface ReviewHeaderProps {
 }
 
 const ReviewHeader: React.FC<ReviewHeaderProps> = ({ applicationName, stage }) => {
+  const { strings } = useLanguageProvider()
   return (
     <div id="application-summary-header">
       <Header
@@ -18,7 +19,6 @@ const ReviewHeader: React.FC<ReviewHeaderProps> = ({ applicationName, stage }) =
         subheader={<Header as="h2" content={strings.LABEL_REVIEW} />}
       />
       <Stage name={stage.name || ''} colour={stage.colour} />
-      {/* <p>{strings.SUBTITLE_REVIEW}</p> */}
     </div>
   )
 }

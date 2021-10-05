@@ -18,7 +18,7 @@ import ApplicantElementWrapper from './Elements/ApplicantElementWrapper'
 import ConsolidateReviewDecision from './Elements/ConsolidateReviewDecision'
 import ReviewApplicantResponse from './Elements/ReviewApplicantResponse'
 import { useRouter } from '../../utils/hooks/useRouter'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 interface PageElementProps {
   elements: PageElement[]
@@ -135,10 +135,15 @@ const PageElements: React.FC<PageElementProps> = ({
             } = state
 
             const isResponseUpdated = !!isChangeRequest || !!isChanged
-            // Applicant can edit the summary page when is first submission and a response has been added
-            // Or when changes required for any question that have been updated (isUpdating true)
+
+            // Applicant can add new response to elements not responded in first submission or changes required
+            const canApplicantAddNew = canEdit && !isUpdating && !latestApplicationResponse?.value
+            // And can edit if not an empty response in first submission or
+            // during updated to changes required any question that have been updated (isUpdating true)
             const canApplicantEdit =
-              canEdit && (isUpdating ? isResponseUpdated : !!latestApplicationResponse?.value)
+              canEdit &&
+              !canApplicantAddNew &&
+              (isUpdating ? isResponseUpdated : !!latestApplicationResponse?.value)
 
             const reviewResponse = previousApplicationResponse?.reviewResponses.nodes[0]
             const summaryViewProps = getSummaryViewProps(element)
@@ -157,6 +162,7 @@ const PageElements: React.FC<PageElementProps> = ({
               previousApplicationResponse,
               summaryViewProps,
               reviewResponse: reviewResponse as ReviewResponse,
+              canApplicantAddNew,
               canApplicantEdit,
               enableViewHistory,
               isChanged,
@@ -268,13 +274,20 @@ export const UpdateIcon: React.FC<{ onClick: Function }> = ({ onClick }) => (
   <Icon className="clickable" name="edit" size="large" color="blue" onClick={onClick} />
 )
 
-export const UpdatedLabel: React.FC = () => (
-  <div className="updated-label">
-    <Icon name="circle" size="tiny" color="blue" />
-    <Label className="simple-label">
-      <strong>{strings.LABEL_RESPONSE_UPDATED}</strong>
-    </Label>
-  </div>
+export const AddIcon: React.FC<{ onClick: Function }> = ({ onClick }) => (
+  <Icon className="clickable" name="add" size="large" color="blue" onClick={onClick} />
 )
+
+export const UpdatedLabel: React.FC = () => {
+  const { strings } = useLanguageProvider()
+  return (
+    <div className="updated-label">
+      <Icon name="circle" size="tiny" color="blue" />
+      <Label className="simple-label">
+        <strong>{strings.LABEL_RESPONSE_UPDATED}</strong>
+      </Label>
+    </div>
+  )
+}
 
 export default PageElements

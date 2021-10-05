@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Button, Icon, Grid, List, Image, Message, Segment, Loader } from 'semantic-ui-react'
 import { nanoid } from 'nanoid'
 import { ApplicationViewProps } from '../../types'
-import strings from '../constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
 import { useRouter } from '../../../utils/hooks/useRouter'
 
@@ -37,6 +37,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   currentResponse,
   applicationData,
 }) => {
+  const { getPluginStrings } = useLanguageProvider()
+  const strings = getPluginStrings('fileUpload')
   const { isEditable } = element
   const { label, description, fileCountLimit, fileExtensions, fileSizeLimit } = parameters
 

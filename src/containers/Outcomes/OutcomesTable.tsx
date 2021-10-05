@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Header, Table, Message } from 'semantic-ui-react'
 import { Loading } from '../../components'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
@@ -12,6 +12,7 @@ import { constructElement, formatCellText } from './helpers'
 import PaginationBar from '../../components/List/Pagination'
 
 const OutcomeTable: React.FC = () => {
+  const { strings } = useLanguageProvider()
   const {
     push,
     query,
@@ -74,6 +75,7 @@ const OutcomeTable: React.FC = () => {
         <PaginationBar
           totalCount={totalCount}
           perPageText={strings.OUTCOMES_TABLE_PAGINATION_TEXT}
+          strings={strings}
         />
       </div>
     </div>

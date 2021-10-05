@@ -4,13 +4,14 @@ import { Loading } from '../../components'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ErrorResponse, useOutcomesDetail } from '../../utils/hooks/useOutcomes'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { DisplayDefinition, LinkedApplication } from '../../utils/types'
 import { constructElement, formatCellText } from './helpers'
 import ApplicationLinks from './ApplicationLinks'
 
 const OutcomeDetails: React.FC = () => {
+  const { strings } = useLanguageProvider()
   const {
     push,
     params: { tableName, id },

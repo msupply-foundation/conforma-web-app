@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Dropdown, Icon } from 'semantic-ui-react'
-import strings from '../../../utils/constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import { FilterDefinitions } from '../../../utils/types'
 import BooleanFilter from './BooleanFilter'
@@ -25,6 +25,7 @@ const getDisplayableFilters = (filterDefinitions: FilterDefinitions) => {
 
 const ListFilters: React.FC<{ filterDefinitions: FilterDefinitions; filterListParameters: any }> =
   ({ filterDefinitions, filterListParameters }) => {
+    const { strings } = useLanguageProvider()
     const { query, updateQuery } = useRouter()
 
     const displayableFilters = getDisplayableFilters(filterDefinitions)

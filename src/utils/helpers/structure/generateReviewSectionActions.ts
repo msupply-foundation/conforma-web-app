@@ -1,7 +1,7 @@
 import { ReviewStatus, ReviewAssignmentStatus } from '../../generated/graphql'
 import {
   SectionState,
-  AssignmentDetails,
+  ReviewAssignment,
   ReviewDetails,
   ReviewAction,
   ConsolidationProgress,
@@ -10,8 +10,8 @@ import {
 
 type GenerateSectionActions = (props: {
   sections: SectionState[]
-  reviewAssignment: AssignmentDetails
   thisReview?: ReviewDetails | null
+  reviewAssignment: ReviewAssignment
   currentUserId: number
 }) => void
 
@@ -28,6 +28,8 @@ type ActionDefinition = {
     isReviewExisting: boolean
     reviewStatus: ReviewStatus | undefined
     isReviewActive: boolean
+    isSelfAssignable: boolean
+    isLocked: boolean
   }) => boolean
 }
 
@@ -72,17 +74,18 @@ const actionDefinitions: ActionDefinition[] = [
   },
   {
     action: ReviewAction.canContinueLocked,
-    checkMethod: ({ reviewStatus }) => reviewStatus === ReviewStatus.Locked,
+    checkMethod: ({ reviewStatus }) =>
+      reviewStatus === ReviewStatus.Locked || reviewStatus === ReviewStatus.Discontinued,
   },
   {
     action: ReviewAction.canSelfAssign,
-    checkMethod: ({ reviewAssignmentStatus }) =>
-      reviewAssignmentStatus === ReviewAssignmentStatus.AvailableForSelfAssignment,
+    checkMethod: ({ reviewAssignmentStatus, isSelfAssignable, isLocked }) =>
+      reviewAssignmentStatus === ReviewAssignmentStatus.Available && isSelfAssignable && !isLocked,
   },
   {
     action: ReviewAction.canSelfAssignLocked,
-    checkMethod: ({ reviewAssignmentStatus }) =>
-      reviewAssignmentStatus === ReviewAssignmentStatus.SelfAssignedByAnother,
+    checkMethod: ({ reviewAssignmentStatus, isSelfAssignable, isLocked }) =>
+      reviewAssignmentStatus === ReviewAssignmentStatus.Available && isSelfAssignable && isLocked,
   },
   {
     action: ReviewAction.canContinue,
@@ -107,15 +110,19 @@ const actionDefinitions: ActionDefinition[] = [
 const generateReviewSectionActions: GenerateSectionActions = ({
   sections,
   reviewAssignment: {
-    isFinalDecision,
-    reviewer,
-    level,
-    current: { assignmentStatus },
+    assignee,
+    assigneeLevel,
+    finalDecision,
+    assignmentStatus,
+    isSelfAssignable,
+    isLocked,
   },
   thisReview,
   currentUserId,
 }) => {
-  const isConsolidation = level > 1 || isFinalDecision
+  const isFinalDecision = !!finalDecision
+  const isFinalDecisionOnReview = !!finalDecision?.decisionOnReview
+  const isConsolidation = assigneeLevel > 1 || (isFinalDecision && !isFinalDecisionOnReview)
 
   sections.forEach((section) => {
     const { totalReviewable, totalPendingReview, totalActive } = isConsolidation
@@ -124,22 +131,25 @@ const generateReviewSectionActions: GenerateSectionActions = ({
 
     const totalNewReviewable = section?.consolidationProgress?.totalNewReviewable
 
-    const isAssignedToCurrentUser =
-      reviewer.id === currentUserId && (totalReviewable > 0 || isFinalDecision)
+    const isReviewable =
+      (totalReviewable || 0) > 0 && assignmentStatus === ReviewAssignmentStatus.Assigned
 
-    const isReviewable = (totalReviewable || 0) > 0
+    const isAssignedToCurrentUser =
+      assignee?.id === currentUserId && (isReviewable || isFinalDecision)
 
     const checkMethodProps = {
       isReviewable,
       isAssignedToCurrentUser,
-      isFinalDecision,
-      reviewLevel: level,
+      isFinalDecision: !!finalDecision,
+      reviewLevel: assigneeLevel,
       reviewAssignmentStatus: assignmentStatus,
       isReviewExisting: !!thisReview,
       reviewStatus: thisReview?.current.reviewStatus,
       isSecondReview: (totalNewReviewable || 0) > 0,
       isPendingReview: (totalPendingReview || 0) > 0,
       isReviewActive: (totalActive || 0) > 0,
+      isSelfAssignable,
+      isLocked,
     }
 
     const foundAction = actionDefinitions.find(({ checkMethod }) => checkMethod(checkMethodProps))

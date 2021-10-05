@@ -84,7 +84,7 @@ type PolicyRulesProps = {
 }
 
 const RowLevelPolicyInfo: React.FC<PolicyRulesProps> = ({ rules }) => (
-  <div className="flex-column-start-start">
+  <div className="flex-column-start-stretch">
     {Object.entries(rules).map(([tableName, rules]) => (
       <div key={tableName} className="config-container-alternate">
         <TextIO title="Table name" text={tableName} />

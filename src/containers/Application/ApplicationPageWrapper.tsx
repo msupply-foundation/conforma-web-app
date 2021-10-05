@@ -8,7 +8,7 @@ import {
   MethodToCallProps,
   ApplicationProps,
 } from '../../utils/types'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { Message } from 'semantic-ui-react'
 import { ApplicationPage, ApplicationSummary } from '.'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
@@ -25,6 +25,7 @@ interface RevalidationState {
 }
 
 const ApplicationPageWrapper: React.FC<ApplicationProps> = ({ structure }) => {
+  const { strings } = useLanguageProvider()
   const {
     match: { path },
   } = useRouter()

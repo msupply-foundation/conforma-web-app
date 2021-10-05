@@ -5,7 +5,7 @@ import ReviewHome from './ReviewHome'
 import { useUserState } from '../../contexts/UserState'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { AssignmentDetails, Filters, FullStructure } from '../../utils/types'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { Stage } from '../../components/Review'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { getPreviousStageAssignment } from '../../utils/helpers/assignment/getPreviousStageAssignment'
@@ -16,6 +16,7 @@ const ReviewHomeWrapper: React.FC<{
   structure: FullStructure
   assignments: AssignmentDetails[]
 }> = ({ structure, assignments }) => {
+  const { strings } = useLanguageProvider()
   const { error, fullStructure: fullApplicationStructure } = useGetApplicationStructure({
     structure,
     firstRunValidation: false,
@@ -101,7 +102,7 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
         onClick={() => push(`/applications?type=${templateCode}`)}
         icon={<Icon name="chevron left" className="dark-grey" />}
       />
-      <Header content={applicationName} subheader={<Header as="h5" content={orgName} />} />
+      <Header as="h3" content={applicationName} subheader={<Header as="h5" content={orgName} />} />
     </div>
   )
 }
@@ -119,6 +120,8 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
   filters,
   setFilters,
 }) => {
+  const { strings } = useLanguageProvider()
+  const { getStageOptions, getReviewerOptions } = useHelpers()
   const {
     userState: { currentUser },
   } = useUserState()
@@ -163,40 +166,46 @@ const ReviewerAndStageSelection: React.FC<ReviewerAndStageSelectionProps> = ({
   )
 }
 
-const getStageOptions = (structure: FullStructure, assignments: AssignmentDetails[]) =>
-  structure.stages
-    .filter(({ number }) => assignments.some(({ current: { stage } }) => number === stage.number))
-    .map(({ number, name, colour }) => ({
-      className: 'padding-zero',
-      key: number,
-      value: number,
-      text: <Stage name={name} colour={colour || ''} />,
-    }))
+const useHelpers = () => {
+  const { strings } = useLanguageProvider()
 
-const getReviewerOptions = (assignments: AssignmentDetails[], currentUserId: number) => {
-  const reviewerOptions: { value: number; key: number; text: string }[] = [
-    {
-      value: ALL_REVIEWERS,
-      key: ALL_REVIEWERS,
-      text: strings.REVIEW_FILTER_EVERYONE,
-    },
-    {
-      value: currentUserId,
-      key: currentUserId,
-      text: strings.REVIEW_FILTER_YOURSELF,
-    },
-  ]
-  assignments.forEach(({ reviewer: { id, username } }) => {
-    if (!id || !username) return
-    if (reviewerOptions.some((option) => option.key === id)) return
-    reviewerOptions.push({
-      value: id,
-      key: id,
-      text: username,
+  const getStageOptions = (structure: FullStructure, assignments: AssignmentDetails[]) =>
+    structure.stages
+      .filter(({ number }) => assignments.some(({ current: { stage } }) => number === stage.number))
+      .map(({ number, name, colour }) => ({
+        className: 'padding-zero',
+        key: number,
+        value: number,
+        text: <Stage name={name} colour={colour || ''} />,
+      }))
+
+  const getReviewerOptions = (assignments: AssignmentDetails[], currentUserId: number) => {
+    const reviewerOptions: { value: number; key: number; text: string }[] = [
+      {
+        value: ALL_REVIEWERS,
+        key: ALL_REVIEWERS,
+        text: strings.REVIEW_FILTER_EVERYONE,
+      },
+      {
+        value: currentUserId,
+        key: currentUserId,
+        text: strings.REVIEW_FILTER_YOURSELF,
+      },
+    ]
+    assignments.forEach(({ reviewer: { id, username } }) => {
+      if (!id || !username) return
+      if (reviewerOptions.some((option) => option.key === id)) return
+      reviewerOptions.push({
+        value: id,
+        key: id,
+        text: username,
+      })
     })
-  })
 
-  return reviewerOptions
+    return reviewerOptions
+  }
+
+  return { getStageOptions, getReviewerOptions }
 }
 
 export default ReviewHomeWrapper

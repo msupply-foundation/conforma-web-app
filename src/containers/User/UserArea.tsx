@@ -1,9 +1,19 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { Button, Container, Image, List, Dropdown } from 'semantic-ui-react'
+import {
+  Button,
+  Container,
+  Image,
+  List,
+  Dropdown,
+  Modal,
+  Header,
+  Form,
+  Icon,
+} from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { Link } from 'react-router-dom'
-import strings from '../../utils/constants'
 import { OrganisationSimple, User, LoginPayload, TemplateInList } from '../../utils/types'
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import { useOutcomesList } from '../../utils/hooks/useOutcomes'
@@ -23,7 +33,7 @@ const UserArea: React.FC = () => {
   } = useListTemplates(templatePermissions, false)
   const { outcomesList } = useOutcomesList()
 
-  if (!currentUser || currentUser?.username === strings.USER_NONREGISTERED) return null
+  if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
 
   return (
     <Container id="user-area" fluid>
@@ -52,6 +62,7 @@ interface DropdownsState {
   admin: { active: boolean; selection: string }
 }
 const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, outcomes }) => {
+  const { strings } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
     templates: { active: false, selection: '' },
@@ -168,6 +179,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, outcomes }) => {
 }
 
 const BrandArea: React.FC = () => {
+  const { strings } = useLanguageProvider()
   return (
     <div id="brand-area" className="hide-on-mobile">
       <Image src={brandLogo} />
@@ -186,6 +198,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   orgs,
   onLogin,
 }) => {
+  const { strings } = useLanguageProvider()
   const LOGIN_AS_NO_ORG = 0 // Ensures server returns no organisation
 
   const JWT = localStorage.getItem('persistJWT') as string
@@ -235,13 +248,25 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
 }
 
 const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user, templates }) => {
+  const { strings, selectedLanguage, languageOptions } = useLanguageProvider()
   const { logout } = useUserState()
   const { push } = useRouter()
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <div id="user-menu">
+      <Modal
+        onClose={() => setIsOpen(false)}
+        onOpen={() => setIsOpen(true)}
+        open={isOpen}
+        id="language-modal"
+      >
+        <LanguageSelector />
+      </Modal>
       <Button>
         <Button.Content visible>
-          <Dropdown text={`${user?.firstName || ''} ${user?.lastName || ''}`}>
+          <Dropdown
+            text={`${selectedLanguage?.flag} ${user?.firstName || ''} ${user?.lastName || ''}`}
+          >
             <Dropdown.Menu>
               {templates.map(({ code, name, icon, templateCategory: { icon: catIcon } }) => (
                 <Dropdown.Item
@@ -252,11 +277,52 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
                 />
               ))}
               <Dropdown.Item icon="log out" text={strings.MENU_LOGOUT} onClick={() => logout()} />
+              {languageOptions.length > 1 && (
+                <Dropdown.Item
+                  icon="globe"
+                  text={strings.MENU_CHANGE_LANGUAGE}
+                  onClick={() => setIsOpen(true)}
+                />
+              )}
             </Dropdown.Menu>
           </Dropdown>
         </Button.Content>
       </Button>
     </div>
+  )
+}
+
+const LanguageSelector: React.FC = () => {
+  const { strings, selectedLanguage, languageOptions, setLanguage } = useLanguageProvider()
+  return (
+    <Container>
+      <div className="flex-centered">
+        <Header as="h3">{strings.MENU_LANGUAGE_SELECT}</Header>
+      </div>
+      <Form>
+        <List celled relaxed="very" className="no-bottom-border">
+          {languageOptions.map(({ code, flag, languageName, description }) => (
+            <List.Item onClick={() => setLanguage(code)} key={`lang_${code}`}>
+              <List.Icon size="big" verticalAlign="middle">
+                {flag}
+              </List.Icon>
+              <List.Content>
+                <List.Header as="a">
+                  {selectedLanguage?.code === code ? (
+                    <>
+                      <strong>{languageName}</strong> ({strings.MENU_LANGUAGE_CURRENT})
+                    </>
+                  ) : (
+                    languageName
+                  )}
+                </List.Header>
+                <List.Description as="a">{description}</List.Description>
+              </List.Content>
+            </List.Item>
+          ))}
+        </List>
+      </Form>
+    </Container>
   )
 }
 

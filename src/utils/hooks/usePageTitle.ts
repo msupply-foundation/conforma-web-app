@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 const usePageTitle = (title: string) => {
+  const { strings } = useLanguageProvider()
   const [pageTitle, setPageTitle] = useState(title)
 
   useEffect(() => {
