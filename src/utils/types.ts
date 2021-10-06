@@ -129,6 +129,8 @@ interface AssignmentDetails {
   isCurrentUserReviewer: boolean
   isFinalDecision: boolean
   isLastLevel: boolean
+  isSelfAssignable: boolean
+  isLocked: boolean
   totalAssignedQuestions: number
   reviewQuestionAssignments: ReviewQuestionAssignment[]
   assignableSectionRestrictions: (string | null)[]
@@ -346,9 +348,12 @@ interface ResponsesByCode {
 
 interface ReviewAssignment {
   assignee: GraphQLUser
+  assigneeLevel: number
   assignmentStatus: ReviewAssignmentStatus
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
+  isLocked: boolean
+  isSelfAssignable: boolean
   finalDecision: {
     decisionOnReview: boolean
   } | null
@@ -363,7 +368,7 @@ type ReviewSectionComponentProps = {
   action: ReviewAction
   isAssignedToCurrentUser: boolean
   isConsolidation: boolean
-  shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
+  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
 }
 
 interface ReviewDetails {

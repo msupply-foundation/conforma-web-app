@@ -75,10 +75,6 @@ export type Query = Node & {
   outcomeDisplays?: Maybe<OutcomeDisplaysConnection>;
   /** Reads and enables pagination through a set of `OutcomeDisplayColumnDefinition`. */
   outcomeDisplayColumnDefinitions?: Maybe<OutcomeDisplayColumnDefinitionsConnection>;
-  /** Reads and enables pagination through a set of `OutcomeDisplayDetail`. */
-  outcomeDisplayDetails?: Maybe<OutcomeDisplayDetailsConnection>;
-  /** Reads and enables pagination through a set of `OutcomeDisplayTable`. */
-  outcomeDisplayTables?: Maybe<OutcomeDisplayTablesConnection>;
   /** Reads and enables pagination through a set of `PermissionJoin`. */
   permissionJoins?: Maybe<PermissionJoinsConnection>;
   /** Reads and enables pagination through a set of `PermissionName`. */
@@ -163,8 +159,6 @@ export type Query = Node & {
   outcomeDisplayByTableNameAndCode?: Maybe<OutcomeDisplay>;
   outcomeDisplayColumnDefinition?: Maybe<OutcomeDisplayColumnDefinition>;
   outcomeDisplayColumnDefinitionByTableNameAndColumnName?: Maybe<OutcomeDisplayColumnDefinition>;
-  outcomeDisplayDetail?: Maybe<OutcomeDisplayDetail>;
-  outcomeDisplayTable?: Maybe<OutcomeDisplayTable>;
   permissionJoin?: Maybe<PermissionJoin>;
   permissionName?: Maybe<PermissionName>;
   permissionNameByName?: Maybe<PermissionName>;
@@ -259,10 +253,6 @@ export type Query = Node & {
   outcomeDisplayByNodeId?: Maybe<OutcomeDisplay>;
   /** Reads a single `OutcomeDisplayColumnDefinition` using its globally unique `ID`. */
   outcomeDisplayColumnDefinitionByNodeId?: Maybe<OutcomeDisplayColumnDefinition>;
-  /** Reads a single `OutcomeDisplayDetail` using its globally unique `ID`. */
-  outcomeDisplayDetailByNodeId?: Maybe<OutcomeDisplayDetail>;
-  /** Reads a single `OutcomeDisplayTable` using its globally unique `ID`. */
-  outcomeDisplayTableByNodeId?: Maybe<OutcomeDisplayTable>;
   /** Reads a single `PermissionJoin` using its globally unique `ID`. */
   permissionJoinByNodeId?: Maybe<PermissionJoin>;
   /** Reads a single `PermissionName` using its globally unique `ID`. */
@@ -592,32 +582,6 @@ export type QueryOutcomeDisplayColumnDefinitionsArgs = {
   orderBy?: Maybe<Array<OutcomeDisplayColumnDefinitionsOrderBy>>;
   condition?: Maybe<OutcomeDisplayColumnDefinitionCondition>;
   filter?: Maybe<OutcomeDisplayColumnDefinitionFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryOutcomeDisplayDetailsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<OutcomeDisplayDetailsOrderBy>>;
-  condition?: Maybe<OutcomeDisplayDetailCondition>;
-  filter?: Maybe<OutcomeDisplayDetailFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryOutcomeDisplayTablesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<OutcomeDisplayTablesOrderBy>>;
-  condition?: Maybe<OutcomeDisplayTableCondition>;
-  filter?: Maybe<OutcomeDisplayTableFilter>;
 };
 
 
@@ -1157,18 +1121,6 @@ export type QueryOutcomeDisplayColumnDefinitionByTableNameAndColumnNameArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryOutcomeDisplayDetailArgs = {
-  id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryOutcomeDisplayTableArgs = {
-  id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryPermissionJoinArgs = {
   id: Scalars['Int'];
 };
@@ -1688,18 +1640,6 @@ export type QueryOutcomeDisplayByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryOutcomeDisplayColumnDefinitionByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryOutcomeDisplayDetailByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryOutcomeDisplayTableByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -2401,6 +2341,8 @@ export enum Trigger {
   OnReviewSubmit = 'ON_REVIEW_SUBMIT',
   OnReviewRestart = 'ON_REVIEW_RESTART',
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
+  OnReviewUnassign = 'ON_REVIEW_UNASSIGN',
+  OnReviewReassign = 'ON_REVIEW_REASSIGN',
   OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnVerification = 'ON_VERIFICATION',
@@ -3075,6 +3017,8 @@ export type ReviewAssignmentFilter = {
   isLocked?: Maybe<BooleanFilter>;
   /** Filter by the object’s `isFinalDecision` field. */
   isFinalDecision?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isSelfAssignable` field. */
+  isSelfAssignable?: Maybe<BooleanFilter>;
   /** Filter by the object’s `reviewAssignmentAssignerJoins` relation. */
   reviewAssignmentAssignerJoins?: Maybe<ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter>;
   /** Some related `reviewAssignmentAssignerJoins` exist. */
@@ -3145,9 +3089,7 @@ export type ReviewAssignmentStatusFilter = {
 
 export enum ReviewAssignmentStatus {
   Available = 'AVAILABLE',
-  SelfAssignedByAnother = 'SELF_ASSIGNED_BY_ANOTHER',
-  Assigned = 'ASSIGNED',
-  AvailableForSelfAssignment = 'AVAILABLE_FOR_SELF_ASSIGNMENT'
+  Assigned = 'ASSIGNED'
 }
 
 /** A filter to be used against many `ReviewAssignmentAssignerJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -4102,7 +4044,8 @@ export enum ReviewStatus {
   Submitted = 'SUBMITTED',
   ChangesRequested = 'CHANGES_REQUESTED',
   Pending = 'PENDING',
-  Locked = 'LOCKED'
+  Locked = 'LOCKED',
+  Discontinued = 'DISCONTINUED'
 }
 
 /** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
@@ -6426,6 +6369,8 @@ export enum ReviewAssignmentsOrderBy {
   IsLockedDesc = 'IS_LOCKED_DESC',
   IsFinalDecisionAsc = 'IS_FINAL_DECISION_ASC',
   IsFinalDecisionDesc = 'IS_FINAL_DECISION_DESC',
+  IsSelfAssignableAsc = 'IS_SELF_ASSIGNABLE_ASC',
+  IsSelfAssignableDesc = 'IS_SELF_ASSIGNABLE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -6470,6 +6415,8 @@ export type ReviewAssignmentCondition = {
   isLocked?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `isFinalDecision` field. */
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isSelfAssignable` field. */
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
 };
 
 /** A connection to a list of `ReviewAssignment` values. */
@@ -6508,6 +6455,7 @@ export type ReviewAssignment = Node & {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
   assigner?: Maybe<User>;
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
@@ -9624,92 +9572,12 @@ export type OutcomeDisplayFilter = {
   showLinkedApplications?: Maybe<BooleanFilter>;
   /** Filter by the object’s `priority` field. */
   priority?: Maybe<IntFilter>;
-  /** Filter by the object’s `outcomeDisplayTables` relation. */
-  outcomeDisplayTables?: Maybe<OutcomeDisplayToManyOutcomeDisplayTableFilter>;
-  /** Some related `outcomeDisplayTables` exist. */
-  outcomeDisplayTablesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `outcomeDisplayDetails` relation. */
-  outcomeDisplayDetails?: Maybe<OutcomeDisplayToManyOutcomeDisplayDetailFilter>;
-  /** Some related `outcomeDisplayDetails` exist. */
-  outcomeDisplayDetailsExist?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<OutcomeDisplayFilter>>;
   /** Checks for any expressions in this list. */
   or?: Maybe<Array<OutcomeDisplayFilter>>;
   /** Negates the expression. */
   not?: Maybe<OutcomeDisplayFilter>;
-};
-
-/** A filter to be used against many `OutcomeDisplayTable` object types. All fields are combined with a logical ‘and.’ */
-export type OutcomeDisplayToManyOutcomeDisplayTableFilter = {
-  /** Every related `OutcomeDisplayTable` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<OutcomeDisplayTableFilter>;
-  /** Some related `OutcomeDisplayTable` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<OutcomeDisplayTableFilter>;
-  /** No related `OutcomeDisplayTable` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<OutcomeDisplayTableFilter>;
-};
-
-/** A filter to be used against `OutcomeDisplayTable` object types. All fields are combined with a logical ‘and.’ */
-export type OutcomeDisplayTableFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `columnName` field. */
-  columnName?: Maybe<StringFilter>;
-  /** Filter by the object’s `isTextColumn` field. */
-  isTextColumn?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `title` field. */
-  title?: Maybe<StringFilter>;
-  /** Filter by the object’s `outcomeDisplayId` field. */
-  outcomeDisplayId?: Maybe<IntFilter>;
-  /** Filter by the object’s `outcomeDisplay` relation. */
-  outcomeDisplay?: Maybe<OutcomeDisplayFilter>;
-  /** A related `outcomeDisplay` exists. */
-  outcomeDisplayExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<OutcomeDisplayTableFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<OutcomeDisplayTableFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<OutcomeDisplayTableFilter>;
-};
-
-/** A filter to be used against many `OutcomeDisplayDetail` object types. All fields are combined with a logical ‘and.’ */
-export type OutcomeDisplayToManyOutcomeDisplayDetailFilter = {
-  /** Every related `OutcomeDisplayDetail` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<OutcomeDisplayDetailFilter>;
-  /** Some related `OutcomeDisplayDetail` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<OutcomeDisplayDetailFilter>;
-  /** No related `OutcomeDisplayDetail` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<OutcomeDisplayDetailFilter>;
-};
-
-/** A filter to be used against `OutcomeDisplayDetail` object types. All fields are combined with a logical ‘and.’ */
-export type OutcomeDisplayDetailFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `columnName` field. */
-  columnName?: Maybe<StringFilter>;
-  /** Filter by the object’s `title` field. */
-  title?: Maybe<StringFilter>;
-  /** Filter by the object’s `elementTypePluginCode` field. */
-  elementTypePluginCode?: Maybe<StringFilter>;
-  /** Filter by the object’s `isTextColumn` field. */
-  isTextColumn?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `parameters` field. */
-  parameters?: Maybe<JsonFilter>;
-  /** Filter by the object’s `outcomeDisplayId` field. */
-  outcomeDisplayId?: Maybe<IntFilter>;
-  /** Filter by the object’s `outcomeDisplay` relation. */
-  outcomeDisplay?: Maybe<OutcomeDisplayFilter>;
-  /** A related `outcomeDisplay` exists. */
-  outcomeDisplayExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<OutcomeDisplayDetailFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<OutcomeDisplayDetailFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<OutcomeDisplayDetailFilter>;
 };
 
 /** A connection to a list of `OutcomeDisplay` values. */
@@ -9741,176 +9609,6 @@ export type OutcomeDisplay = Node & {
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications: Scalars['Boolean'];
   priority?: Maybe<Scalars['Int']>;
-  /** Reads and enables pagination through a set of `OutcomeDisplayTable`. */
-  outcomeDisplayTables: OutcomeDisplayTablesConnection;
-  /** Reads and enables pagination through a set of `OutcomeDisplayDetail`. */
-  outcomeDisplayDetails: OutcomeDisplayDetailsConnection;
-};
-
-
-export type OutcomeDisplayOutcomeDisplayTablesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<OutcomeDisplayTablesOrderBy>>;
-  condition?: Maybe<OutcomeDisplayTableCondition>;
-  filter?: Maybe<OutcomeDisplayTableFilter>;
-};
-
-
-export type OutcomeDisplayOutcomeDisplayDetailsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<OutcomeDisplayDetailsOrderBy>>;
-  condition?: Maybe<OutcomeDisplayDetailCondition>;
-  filter?: Maybe<OutcomeDisplayDetailFilter>;
-};
-
-/** Methods to use when ordering `OutcomeDisplayTable`. */
-export enum OutcomeDisplayTablesOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  ColumnNameAsc = 'COLUMN_NAME_ASC',
-  ColumnNameDesc = 'COLUMN_NAME_DESC',
-  IsTextColumnAsc = 'IS_TEXT_COLUMN_ASC',
-  IsTextColumnDesc = 'IS_TEXT_COLUMN_DESC',
-  TitleAsc = 'TITLE_ASC',
-  TitleDesc = 'TITLE_DESC',
-  OutcomeDisplayIdAsc = 'OUTCOME_DISPLAY_ID_ASC',
-  OutcomeDisplayIdDesc = 'OUTCOME_DISPLAY_ID_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `OutcomeDisplayTable` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type OutcomeDisplayTableCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `columnName` field. */
-  columnName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `isTextColumn` field. */
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `title` field. */
-  title?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `outcomeDisplayId` field. */
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-};
-
-/** A connection to a list of `OutcomeDisplayTable` values. */
-export type OutcomeDisplayTablesConnection = {
-  __typename?: 'OutcomeDisplayTablesConnection';
-  /** A list of `OutcomeDisplayTable` objects. */
-  nodes: Array<Maybe<OutcomeDisplayTable>>;
-  /** A list of edges which contains the `OutcomeDisplayTable` and cursor to aid in pagination. */
-  edges: Array<OutcomeDisplayTablesEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `OutcomeDisplayTable` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type OutcomeDisplayTable = Node & {
-  __typename?: 'OutcomeDisplayTable';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  columnName?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  title?: Maybe<Scalars['String']>;
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-  /** Reads a single `OutcomeDisplay` that is related to this `OutcomeDisplayTable`. */
-  outcomeDisplay?: Maybe<OutcomeDisplay>;
-};
-
-/** A `OutcomeDisplayTable` edge in the connection. */
-export type OutcomeDisplayTablesEdge = {
-  __typename?: 'OutcomeDisplayTablesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `OutcomeDisplayTable` at the end of the edge. */
-  node?: Maybe<OutcomeDisplayTable>;
-};
-
-/** Methods to use when ordering `OutcomeDisplayDetail`. */
-export enum OutcomeDisplayDetailsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  ColumnNameAsc = 'COLUMN_NAME_ASC',
-  ColumnNameDesc = 'COLUMN_NAME_DESC',
-  TitleAsc = 'TITLE_ASC',
-  TitleDesc = 'TITLE_DESC',
-  ElementTypePluginCodeAsc = 'ELEMENT_TYPE_PLUGIN_CODE_ASC',
-  ElementTypePluginCodeDesc = 'ELEMENT_TYPE_PLUGIN_CODE_DESC',
-  IsTextColumnAsc = 'IS_TEXT_COLUMN_ASC',
-  IsTextColumnDesc = 'IS_TEXT_COLUMN_DESC',
-  ParametersAsc = 'PARAMETERS_ASC',
-  ParametersDesc = 'PARAMETERS_DESC',
-  OutcomeDisplayIdAsc = 'OUTCOME_DISPLAY_ID_ASC',
-  OutcomeDisplayIdDesc = 'OUTCOME_DISPLAY_ID_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `OutcomeDisplayDetail` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type OutcomeDisplayDetailCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `columnName` field. */
-  columnName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `title` field. */
-  title?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `elementTypePluginCode` field. */
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `isTextColumn` field. */
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `parameters` field. */
-  parameters?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `outcomeDisplayId` field. */
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-};
-
-/** A connection to a list of `OutcomeDisplayDetail` values. */
-export type OutcomeDisplayDetailsConnection = {
-  __typename?: 'OutcomeDisplayDetailsConnection';
-  /** A list of `OutcomeDisplayDetail` objects. */
-  nodes: Array<Maybe<OutcomeDisplayDetail>>;
-  /** A list of edges which contains the `OutcomeDisplayDetail` and cursor to aid in pagination. */
-  edges: Array<OutcomeDisplayDetailsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `OutcomeDisplayDetail` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type OutcomeDisplayDetail = Node & {
-  __typename?: 'OutcomeDisplayDetail';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  columnName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  parameters?: Maybe<Scalars['JSON']>;
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-  /** Reads a single `OutcomeDisplay` that is related to this `OutcomeDisplayDetail`. */
-  outcomeDisplay?: Maybe<OutcomeDisplay>;
-};
-
-/** A `OutcomeDisplayDetail` edge in the connection. */
-export type OutcomeDisplayDetailsEdge = {
-  __typename?: 'OutcomeDisplayDetailsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `OutcomeDisplayDetail` at the end of the edge. */
-  node?: Maybe<OutcomeDisplayDetail>;
 };
 
 /** A `OutcomeDisplay` edge in the connection. */
@@ -11175,10 +10873,6 @@ export type Mutation = {
   createOutcomeDisplay?: Maybe<CreateOutcomeDisplayPayload>;
   /** Creates a single `OutcomeDisplayColumnDefinition`. */
   createOutcomeDisplayColumnDefinition?: Maybe<CreateOutcomeDisplayColumnDefinitionPayload>;
-  /** Creates a single `OutcomeDisplayDetail`. */
-  createOutcomeDisplayDetail?: Maybe<CreateOutcomeDisplayDetailPayload>;
-  /** Creates a single `OutcomeDisplayTable`. */
-  createOutcomeDisplayTable?: Maybe<CreateOutcomeDisplayTablePayload>;
   /** Creates a single `PermissionJoin`. */
   createPermissionJoin?: Maybe<CreatePermissionJoinPayload>;
   /** Creates a single `PermissionName`. */
@@ -11315,14 +11009,6 @@ export type Mutation = {
   updateOutcomeDisplayColumnDefinition?: Maybe<UpdateOutcomeDisplayColumnDefinitionPayload>;
   /** Updates a single `OutcomeDisplayColumnDefinition` using a unique key and a patch. */
   updateOutcomeDisplayColumnDefinitionByTableNameAndColumnName?: Maybe<UpdateOutcomeDisplayColumnDefinitionPayload>;
-  /** Updates a single `OutcomeDisplayDetail` using its globally unique id and a patch. */
-  updateOutcomeDisplayDetailByNodeId?: Maybe<UpdateOutcomeDisplayDetailPayload>;
-  /** Updates a single `OutcomeDisplayDetail` using a unique key and a patch. */
-  updateOutcomeDisplayDetail?: Maybe<UpdateOutcomeDisplayDetailPayload>;
-  /** Updates a single `OutcomeDisplayTable` using its globally unique id and a patch. */
-  updateOutcomeDisplayTableByNodeId?: Maybe<UpdateOutcomeDisplayTablePayload>;
-  /** Updates a single `OutcomeDisplayTable` using a unique key and a patch. */
-  updateOutcomeDisplayTable?: Maybe<UpdateOutcomeDisplayTablePayload>;
   /** Updates a single `PermissionJoin` using its globally unique id and a patch. */
   updatePermissionJoinByNodeId?: Maybe<UpdatePermissionJoinPayload>;
   /** Updates a single `PermissionJoin` using a unique key and a patch. */
@@ -11523,14 +11209,6 @@ export type Mutation = {
   deleteOutcomeDisplayColumnDefinition?: Maybe<DeleteOutcomeDisplayColumnDefinitionPayload>;
   /** Deletes a single `OutcomeDisplayColumnDefinition` using a unique key. */
   deleteOutcomeDisplayColumnDefinitionByTableNameAndColumnName?: Maybe<DeleteOutcomeDisplayColumnDefinitionPayload>;
-  /** Deletes a single `OutcomeDisplayDetail` using its globally unique id. */
-  deleteOutcomeDisplayDetailByNodeId?: Maybe<DeleteOutcomeDisplayDetailPayload>;
-  /** Deletes a single `OutcomeDisplayDetail` using a unique key. */
-  deleteOutcomeDisplayDetail?: Maybe<DeleteOutcomeDisplayDetailPayload>;
-  /** Deletes a single `OutcomeDisplayTable` using its globally unique id. */
-  deleteOutcomeDisplayTableByNodeId?: Maybe<DeleteOutcomeDisplayTablePayload>;
-  /** Deletes a single `OutcomeDisplayTable` using a unique key. */
-  deleteOutcomeDisplayTable?: Maybe<DeleteOutcomeDisplayTablePayload>;
   /** Deletes a single `PermissionJoin` using its globally unique id. */
   deletePermissionJoinByNodeId?: Maybe<DeletePermissionJoinPayload>;
   /** Deletes a single `PermissionJoin` using a unique key. */
@@ -11754,18 +11432,6 @@ export type MutationCreateOutcomeDisplayArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateOutcomeDisplayColumnDefinitionArgs = {
   input: CreateOutcomeDisplayColumnDefinitionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateOutcomeDisplayDetailArgs = {
-  input: CreateOutcomeDisplayDetailInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateOutcomeDisplayTableArgs = {
-  input: CreateOutcomeDisplayTableInput;
 };
 
 
@@ -12174,30 +11840,6 @@ export type MutationUpdateOutcomeDisplayColumnDefinitionArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateOutcomeDisplayColumnDefinitionByTableNameAndColumnNameArgs = {
   input: UpdateOutcomeDisplayColumnDefinitionByTableNameAndColumnNameInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateOutcomeDisplayDetailByNodeIdArgs = {
-  input: UpdateOutcomeDisplayDetailByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateOutcomeDisplayDetailArgs = {
-  input: UpdateOutcomeDisplayDetailInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateOutcomeDisplayTableByNodeIdArgs = {
-  input: UpdateOutcomeDisplayTableByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateOutcomeDisplayTableArgs = {
-  input: UpdateOutcomeDisplayTableInput;
 };
 
 
@@ -12798,30 +12440,6 @@ export type MutationDeleteOutcomeDisplayColumnDefinitionArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteOutcomeDisplayColumnDefinitionByTableNameAndColumnNameArgs = {
   input: DeleteOutcomeDisplayColumnDefinitionByTableNameAndColumnNameInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteOutcomeDisplayDetailByNodeIdArgs = {
-  input: DeleteOutcomeDisplayDetailByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteOutcomeDisplayDetailArgs = {
-  input: DeleteOutcomeDisplayDetailInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteOutcomeDisplayTableByNodeIdArgs = {
-  input: DeleteOutcomeDisplayTableByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteOutcomeDisplayTableArgs = {
-  input: DeleteOutcomeDisplayTableInput;
 };
 
 
@@ -16287,6 +15905,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateI
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -16398,6 +16017,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -16509,6 +16129,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -16622,6 +16243,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisat
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -16895,6 +16517,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -17014,6 +16637,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -17441,6 +17065,7 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -17536,6 +17161,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFk
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -17722,6 +17348,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignm
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -17930,6 +17557,7 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -21590,6 +21218,7 @@ export type ReviewAssignmentPatch = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -21623,6 +21252,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -21740,6 +21370,7 @@ export type ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCr
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -21866,6 +21497,7 @@ export type ReviewAssignmentLevelIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -21937,6 +21569,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -22165,6 +21798,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -22249,6 +21883,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -22563,6 +22198,7 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -22642,6 +22278,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -22718,6 +22355,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -22794,6 +22432,7 @@ export type ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -25370,402 +25009,6 @@ export type OutcomeDisplayInput = {
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   priority?: Maybe<Scalars['Int']>;
-  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
-  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `outcomeDisplayTable` in the `OutcomeDisplayInput` mutation. */
-export type OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput = {
-  /** Flag indicating whether all other `outcomeDisplayTable` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `outcomeDisplayTable` for the far side of the relationship. */
-  connectById?: Maybe<Array<OutcomeDisplayTableOutcomeDisplayTablePkeyConnect>>;
-  /** The primary key(s) for `outcomeDisplayTable` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<OutcomeDisplayTableNodeIdConnect>>;
-  /** The primary key(s) for `outcomeDisplayTable` for the far side of the relationship. */
-  deleteById?: Maybe<Array<OutcomeDisplayTableOutcomeDisplayTablePkeyDelete>>;
-  /** The primary key(s) for `outcomeDisplayTable` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<OutcomeDisplayTableNodeIdDelete>>;
-  /** The primary key(s) and patch data for `outcomeDisplayTable` for the far side of the relationship. */
-  updateById?: Maybe<Array<OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate>>;
-  /** The primary key(s) and patch data for `outcomeDisplayTable` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate>>;
-  /** A `OutcomeDisplayTableInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput>>;
-};
-
-/** The fields on `outcomeDisplayTable` to look up the row to connect. */
-export type OutcomeDisplayTableOutcomeDisplayTablePkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type OutcomeDisplayTableNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplayTable` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `outcomeDisplayTable` to look up the row to delete. */
-export type OutcomeDisplayTableOutcomeDisplayTablePkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type OutcomeDisplayTableNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplayTable` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `outcomeDisplayTable` to look up the row to update. */
-export type OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplayTable` being updated. */
-  patch: UpdateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `outcomeDisplayTable` being updated. */
-export type UpdateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  title?: Maybe<Scalars['String']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `outcomeDisplay` in the `OutcomeDisplayTableInput` mutation. */
-export type OutcomeDisplayTableOutcomeDisplayIdFkeyInput = {
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectByNodeId?: Maybe<OutcomeDisplayNodeIdConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyDelete>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<OutcomeDisplayNodeIdDelete>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateById?: Maybe<OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateByTableNameAndCode?: Maybe<OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateByNodeId?: Maybe<OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate>;
-  /** A `OutcomeDisplayInput` object that will be created and connected to this object. */
-  create?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput>;
-};
-
-/** The fields on `outcomeDisplay` to look up the row to connect. */
-export type OutcomeDisplayOutcomeDisplayPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The fields on `outcomeDisplay` to look up the row to connect. */
-export type OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect = {
-  tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type OutcomeDisplayNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `outcomeDisplay` to look up the row to delete. */
-export type OutcomeDisplayOutcomeDisplayPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** The fields on `outcomeDisplay` to look up the row to delete. */
-export type OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete = {
-  tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type OutcomeDisplayNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `outcomeDisplay` to look up the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-export type UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  tableName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn?: Maybe<Scalars['String']>;
-  showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  priority?: Maybe<Scalars['Int']>;
-  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
-  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `outcomeDisplayDetail` in the `OutcomeDisplayInput` mutation. */
-export type OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput = {
-  /** Flag indicating whether all other `outcomeDisplayDetail` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `outcomeDisplayDetail` for the far side of the relationship. */
-  connectById?: Maybe<Array<OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect>>;
-  /** The primary key(s) for `outcomeDisplayDetail` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<OutcomeDisplayDetailNodeIdConnect>>;
-  /** The primary key(s) for `outcomeDisplayDetail` for the far side of the relationship. */
-  deleteById?: Maybe<Array<OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete>>;
-  /** The primary key(s) for `outcomeDisplayDetail` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<OutcomeDisplayDetailNodeIdDelete>>;
-  /** The primary key(s) and patch data for `outcomeDisplayDetail` for the far side of the relationship. */
-  updateById?: Maybe<Array<OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate>>;
-  /** The primary key(s) and patch data for `outcomeDisplayDetail` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate>>;
-  /** A `OutcomeDisplayDetailInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput>>;
-};
-
-/** The fields on `outcomeDisplayDetail` to look up the row to connect. */
-export type OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type OutcomeDisplayDetailNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplayDetail` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `outcomeDisplayDetail` to look up the row to delete. */
-export type OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type OutcomeDisplayDetailNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplayDetail` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `outcomeDisplayDetail` to look up the row to update. */
-export type OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplayDetail` being updated. */
-  patch: UpdateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `outcomeDisplayDetail` being updated. */
-export type UpdateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  parameters?: Maybe<Scalars['JSON']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `outcomeDisplay` in the `OutcomeDisplayDetailInput` mutation. */
-export type OutcomeDisplayDetailOutcomeDisplayIdFkeyInput = {
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectByNodeId?: Maybe<OutcomeDisplayNodeIdConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyDelete>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<OutcomeDisplayNodeIdDelete>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateById?: Maybe<OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateByTableNameAndCode?: Maybe<OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateByNodeId?: Maybe<OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate>;
-  /** A `OutcomeDisplayInput` object that will be created and connected to this object. */
-  create?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput>;
-};
-
-/** The fields on `outcomeDisplay` to look up the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-export type UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  tableName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn?: Maybe<Scalars['String']>;
-  showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  priority?: Maybe<Scalars['Int']>;
-  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
-  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
-};
-
-/** The fields on `outcomeDisplay` to look up the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
-  tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: OutcomeDisplayPatch;
-};
-
-/** Represents an update to a `OutcomeDisplay`. Fields that are set will be updated. */
-export type OutcomeDisplayPatch = {
-  id?: Maybe<Scalars['Int']>;
-  tableName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn?: Maybe<Scalars['String']>;
-  showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  priority?: Maybe<Scalars['Int']>;
-  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
-  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
-};
-
-/** The `outcomeDisplay` to be created by this mutation. */
-export type OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  tableName: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
-  code: Scalars['String'];
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn: Scalars['String'];
-  showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  priority?: Maybe<Scalars['Int']>;
-  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
-  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplayDetail` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `outcomeDisplayDetail` being updated. */
-  patch: OutcomeDisplayDetailPatch;
-};
-
-/** Represents an update to a `OutcomeDisplayDetail`. Fields that are set will be updated. */
-export type OutcomeDisplayDetailPatch = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  parameters?: Maybe<Scalars['JSON']>;
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInput>;
-};
-
-/** The `outcomeDisplayDetail` to be created by this mutation. */
-export type OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  parameters?: Maybe<Scalars['JSON']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInput>;
-};
-
-/** The fields on `outcomeDisplay` to look up the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
-  tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: OutcomeDisplayPatch;
-};
-
-/** The `outcomeDisplay` to be created by this mutation. */
-export type OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  tableName: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
-  code: Scalars['String'];
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn: Scalars['String'];
-  showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  priority?: Maybe<Scalars['Int']>;
-  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
-  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `outcomeDisplayTable` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `outcomeDisplayTable` being updated. */
-  patch: OutcomeDisplayTablePatch;
-};
-
-/** Represents an update to a `OutcomeDisplayTable`. Fields that are set will be updated. */
-export type OutcomeDisplayTablePatch = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  title?: Maybe<Scalars['String']>;
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInput>;
-};
-
-/** The `outcomeDisplayTable` to be created by this mutation. */
-export type OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  title?: Maybe<Scalars['String']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInput>;
 };
 
 /** The output of our create `OutcomeDisplay` mutation. */
@@ -25824,86 +25067,6 @@ export type CreateOutcomeDisplayColumnDefinitionPayload = {
 /** The output of our create `OutcomeDisplayColumnDefinition` mutation. */
 export type CreateOutcomeDisplayColumnDefinitionPayloadOutcomeDisplayColumnDefinitionEdgeArgs = {
   orderBy?: Maybe<Array<OutcomeDisplayColumnDefinitionsOrderBy>>;
-};
-
-/** All input for the create `OutcomeDisplayDetail` mutation. */
-export type CreateOutcomeDisplayDetailInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `OutcomeDisplayDetail` to be created by this mutation. */
-  outcomeDisplayDetail: OutcomeDisplayDetailInput;
-};
-
-/** An input for mutations affecting `OutcomeDisplayDetail` */
-export type OutcomeDisplayDetailInput = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  parameters?: Maybe<Scalars['JSON']>;
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInput>;
-};
-
-/** The output of our create `OutcomeDisplayDetail` mutation. */
-export type CreateOutcomeDisplayDetailPayload = {
-  __typename?: 'CreateOutcomeDisplayDetailPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `OutcomeDisplayDetail` that was created by this mutation. */
-  outcomeDisplayDetail?: Maybe<OutcomeDisplayDetail>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `OutcomeDisplay` that is related to this `OutcomeDisplayDetail`. */
-  outcomeDisplay?: Maybe<OutcomeDisplay>;
-  /** An edge for our `OutcomeDisplayDetail`. May be used by Relay 1. */
-  outcomeDisplayDetailEdge?: Maybe<OutcomeDisplayDetailsEdge>;
-};
-
-
-/** The output of our create `OutcomeDisplayDetail` mutation. */
-export type CreateOutcomeDisplayDetailPayloadOutcomeDisplayDetailEdgeArgs = {
-  orderBy?: Maybe<Array<OutcomeDisplayDetailsOrderBy>>;
-};
-
-/** All input for the create `OutcomeDisplayTable` mutation. */
-export type CreateOutcomeDisplayTableInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `OutcomeDisplayTable` to be created by this mutation. */
-  outcomeDisplayTable: OutcomeDisplayTableInput;
-};
-
-/** An input for mutations affecting `OutcomeDisplayTable` */
-export type OutcomeDisplayTableInput = {
-  id?: Maybe<Scalars['Int']>;
-  columnName?: Maybe<Scalars['String']>;
-  isTextColumn?: Maybe<Scalars['Boolean']>;
-  title?: Maybe<Scalars['String']>;
-  outcomeDisplayId?: Maybe<Scalars['Int']>;
-  outcomeDisplayToOutcomeDisplayId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInput>;
-};
-
-/** The output of our create `OutcomeDisplayTable` mutation. */
-export type CreateOutcomeDisplayTablePayload = {
-  __typename?: 'CreateOutcomeDisplayTablePayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `OutcomeDisplayTable` that was created by this mutation. */
-  outcomeDisplayTable?: Maybe<OutcomeDisplayTable>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `OutcomeDisplay` that is related to this `OutcomeDisplayTable`. */
-  outcomeDisplay?: Maybe<OutcomeDisplay>;
-  /** An edge for our `OutcomeDisplayTable`. May be used by Relay 1. */
-  outcomeDisplayTableEdge?: Maybe<OutcomeDisplayTablesEdge>;
-};
-
-
-/** The output of our create `OutcomeDisplayTable` mutation. */
-export type CreateOutcomeDisplayTablePayloadOutcomeDisplayTableEdgeArgs = {
-  orderBy?: Maybe<Array<OutcomeDisplayTablesOrderBy>>;
 };
 
 /** All input for the create `PermissionJoin` mutation. */
@@ -26113,6 +25276,7 @@ export type ReviewAssignmentInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
@@ -27770,6 +26934,22 @@ export type UpdateOutcomeDisplayByNodeIdInput = {
   patch: OutcomeDisplayPatch;
 };
 
+/** Represents an update to a `OutcomeDisplay`. Fields that are set will be updated. */
+export type OutcomeDisplayPatch = {
+  id?: Maybe<Scalars['Int']>;
+  tableName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
+};
+
 /** The output of our update `OutcomeDisplay` mutation. */
 export type UpdateOutcomeDisplayPayload = {
   __typename?: 'UpdateOutcomeDisplayPayload';
@@ -27866,86 +27046,6 @@ export type UpdateOutcomeDisplayColumnDefinitionByTableNameAndColumnNameInput = 
   patch: OutcomeDisplayColumnDefinitionPatch;
   tableName: Scalars['String'];
   columnName: Scalars['String'];
-};
-
-/** All input for the `updateOutcomeDisplayDetailByNodeId` mutation. */
-export type UpdateOutcomeDisplayDetailByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `OutcomeDisplayDetail` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `OutcomeDisplayDetail` being updated. */
-  patch: OutcomeDisplayDetailPatch;
-};
-
-/** The output of our update `OutcomeDisplayDetail` mutation. */
-export type UpdateOutcomeDisplayDetailPayload = {
-  __typename?: 'UpdateOutcomeDisplayDetailPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `OutcomeDisplayDetail` that was updated by this mutation. */
-  outcomeDisplayDetail?: Maybe<OutcomeDisplayDetail>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `OutcomeDisplay` that is related to this `OutcomeDisplayDetail`. */
-  outcomeDisplay?: Maybe<OutcomeDisplay>;
-  /** An edge for our `OutcomeDisplayDetail`. May be used by Relay 1. */
-  outcomeDisplayDetailEdge?: Maybe<OutcomeDisplayDetailsEdge>;
-};
-
-
-/** The output of our update `OutcomeDisplayDetail` mutation. */
-export type UpdateOutcomeDisplayDetailPayloadOutcomeDisplayDetailEdgeArgs = {
-  orderBy?: Maybe<Array<OutcomeDisplayDetailsOrderBy>>;
-};
-
-/** All input for the `updateOutcomeDisplayDetail` mutation. */
-export type UpdateOutcomeDisplayDetailInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `OutcomeDisplayDetail` being updated. */
-  patch: OutcomeDisplayDetailPatch;
-  id: Scalars['Int'];
-};
-
-/** All input for the `updateOutcomeDisplayTableByNodeId` mutation. */
-export type UpdateOutcomeDisplayTableByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `OutcomeDisplayTable` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `OutcomeDisplayTable` being updated. */
-  patch: OutcomeDisplayTablePatch;
-};
-
-/** The output of our update `OutcomeDisplayTable` mutation. */
-export type UpdateOutcomeDisplayTablePayload = {
-  __typename?: 'UpdateOutcomeDisplayTablePayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `OutcomeDisplayTable` that was updated by this mutation. */
-  outcomeDisplayTable?: Maybe<OutcomeDisplayTable>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `OutcomeDisplay` that is related to this `OutcomeDisplayTable`. */
-  outcomeDisplay?: Maybe<OutcomeDisplay>;
-  /** An edge for our `OutcomeDisplayTable`. May be used by Relay 1. */
-  outcomeDisplayTableEdge?: Maybe<OutcomeDisplayTablesEdge>;
-};
-
-
-/** The output of our update `OutcomeDisplayTable` mutation. */
-export type UpdateOutcomeDisplayTablePayloadOutcomeDisplayTableEdgeArgs = {
-  orderBy?: Maybe<Array<OutcomeDisplayTablesOrderBy>>;
-};
-
-/** All input for the `updateOutcomeDisplayTable` mutation. */
-export type UpdateOutcomeDisplayTableInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `OutcomeDisplayTable` being updated. */
-  patch: OutcomeDisplayTablePatch;
-  id: Scalars['Int'];
 };
 
 /** All input for the `updatePermissionJoinByNodeId` mutation. */
@@ -29754,80 +28854,6 @@ export type DeleteOutcomeDisplayColumnDefinitionByTableNameAndColumnNameInput = 
   columnName: Scalars['String'];
 };
 
-/** All input for the `deleteOutcomeDisplayDetailByNodeId` mutation. */
-export type DeleteOutcomeDisplayDetailByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `OutcomeDisplayDetail` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The output of our delete `OutcomeDisplayDetail` mutation. */
-export type DeleteOutcomeDisplayDetailPayload = {
-  __typename?: 'DeleteOutcomeDisplayDetailPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `OutcomeDisplayDetail` that was deleted by this mutation. */
-  outcomeDisplayDetail?: Maybe<OutcomeDisplayDetail>;
-  deletedOutcomeDisplayDetailNodeId?: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `OutcomeDisplay` that is related to this `OutcomeDisplayDetail`. */
-  outcomeDisplay?: Maybe<OutcomeDisplay>;
-  /** An edge for our `OutcomeDisplayDetail`. May be used by Relay 1. */
-  outcomeDisplayDetailEdge?: Maybe<OutcomeDisplayDetailsEdge>;
-};
-
-
-/** The output of our delete `OutcomeDisplayDetail` mutation. */
-export type DeleteOutcomeDisplayDetailPayloadOutcomeDisplayDetailEdgeArgs = {
-  orderBy?: Maybe<Array<OutcomeDisplayDetailsOrderBy>>;
-};
-
-/** All input for the `deleteOutcomeDisplayDetail` mutation. */
-export type DeleteOutcomeDisplayDetailInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
-/** All input for the `deleteOutcomeDisplayTableByNodeId` mutation. */
-export type DeleteOutcomeDisplayTableByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `OutcomeDisplayTable` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The output of our delete `OutcomeDisplayTable` mutation. */
-export type DeleteOutcomeDisplayTablePayload = {
-  __typename?: 'DeleteOutcomeDisplayTablePayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `OutcomeDisplayTable` that was deleted by this mutation. */
-  outcomeDisplayTable?: Maybe<OutcomeDisplayTable>;
-  deletedOutcomeDisplayTableNodeId?: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `OutcomeDisplay` that is related to this `OutcomeDisplayTable`. */
-  outcomeDisplay?: Maybe<OutcomeDisplay>;
-  /** An edge for our `OutcomeDisplayTable`. May be used by Relay 1. */
-  outcomeDisplayTableEdge?: Maybe<OutcomeDisplayTablesEdge>;
-};
-
-
-/** The output of our delete `OutcomeDisplayTable` mutation. */
-export type DeleteOutcomeDisplayTablePayloadOutcomeDisplayTableEdgeArgs = {
-  orderBy?: Maybe<Array<OutcomeDisplayTablesOrderBy>>;
-};
-
-/** All input for the `deleteOutcomeDisplayTable` mutation. */
-export type DeleteOutcomeDisplayTableInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
 /** All input for the `deletePermissionJoinByNodeId` mutation. */
 export type DeletePermissionJoinByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -30954,6 +29980,26 @@ export type OrganisationFragment = (
   & Pick<Organisation, 'id' | 'name' | 'address' | 'registration' | 'logoUrl'>
 );
 
+export type ReviewAssignmentFragment = (
+  { __typename?: 'ReviewAssignment' }
+  & Pick<ReviewAssignment, 'id' | 'status' | 'timeUpdated' | 'levelNumber' | 'reviewerId' | 'isLocked' | 'isLastLevel' | 'isFinalDecision' | 'isSelfAssignable' | 'allowedSections'>
+  & { reviewQuestionAssignments: (
+    { __typename?: 'ReviewQuestionAssignmentsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ReviewQuestionAssignment' }
+      & Pick<ReviewQuestionAssignment, 'id'>
+      & { templateElement?: Maybe<(
+        { __typename?: 'TemplateElement' }
+        & Pick<TemplateElement, 'id'>
+        & { section?: Maybe<(
+          { __typename?: 'TemplateSection' }
+          & Pick<TemplateSection, 'id' | 'code'>
+        )> }
+      )> }
+    )>> }
+  ) }
+);
+
 export type ReviewResponseFragmentFragment = (
   { __typename?: 'ReviewResponse' }
   & Pick<ReviewResponse, 'id' | 'applicationResponseId' | 'decision' | 'comment' | 'stageNumber' | 'status' | 'timeUpdated' | 'originalReviewResponseId' | 'reviewResponseLinkId' | 'templateElementId'>
@@ -31086,6 +30132,30 @@ export type DeleteApplicationMutation = (
   & { deleteApplication?: Maybe<(
     { __typename?: 'DeleteApplicationPayload' }
     & Pick<DeleteApplicationPayload, 'clientMutationId'>
+  )> }
+);
+
+export type ReassignReviewAssignmentMutationVariables = Exact<{
+  unassignmentId: Scalars['Int'];
+  reassignmentId: Scalars['Int'];
+  reassignmentPatch: ReviewAssignmentPatch;
+}>;
+
+
+export type ReassignReviewAssignmentMutation = (
+  { __typename?: 'Mutation' }
+  & { reassignmentUpdate?: Maybe<(
+    { __typename?: 'UpdateReviewAssignmentPayload' }
+    & { reviewAssignment?: Maybe<(
+      { __typename?: 'ReviewAssignment' }
+      & ReviewAssignmentFragment
+    )> }
+  )>, unassignmentUpdate?: Maybe<(
+    { __typename?: 'UpdateReviewAssignmentPayload' }
+    & { reviewAssignment?: Maybe<(
+      { __typename?: 'ReviewAssignment' }
+      & ReviewAssignmentFragment
+    )> }
   )> }
 );
 
@@ -31716,7 +30786,7 @@ export type GetReviewInfoQuery = (
     { __typename?: 'ReviewAssignmentsConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ReviewAssignment' }
-      & Pick<ReviewAssignment, 'id' | 'status' | 'timeUpdated' | 'levelNumber' | 'reviewerId' | 'isLastLevel' | 'isFinalDecision' | 'allowedSections' | 'timeStageCreated' | 'trigger'>
+      & Pick<ReviewAssignment, 'timeStageCreated' | 'trigger'>
       & { stage?: Maybe<(
         { __typename?: 'TemplateStage' }
         & Pick<TemplateStage, 'id' | 'number' | 'title' | 'colour'>
@@ -31736,20 +30806,6 @@ export type GetReviewInfoQuery = (
             )>> }
           ) }
         )>> }
-      ), reviewQuestionAssignments: (
-        { __typename?: 'ReviewQuestionAssignmentsConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'ReviewQuestionAssignment' }
-          & Pick<ReviewQuestionAssignment, 'id'>
-          & { templateElement?: Maybe<(
-            { __typename?: 'TemplateElement' }
-            & Pick<TemplateElement, 'id'>
-            & { section?: Maybe<(
-              { __typename?: 'TemplateSection' }
-              & Pick<TemplateSection, 'id' | 'code'>
-            )> }
-          )> }
-        )>> }
       ), reviewAssignmentAssignerJoins: (
         { __typename?: 'ReviewAssignmentAssignerJoinsConnection' }
         & { nodes: Array<Maybe<(
@@ -31760,6 +30816,7 @@ export type GetReviewInfoQuery = (
           )> }
         )>> }
       ) }
+      & ReviewAssignmentFragment
     )>> }
   )> }
 );
@@ -32330,6 +31387,32 @@ export const OrganisationFragmentDoc = gql`
   logoUrl
 }
     `;
+export const ReviewAssignmentFragmentDoc = gql`
+    fragment ReviewAssignment on ReviewAssignment {
+  id
+  status
+  timeUpdated
+  levelNumber
+  reviewerId
+  isLocked
+  isLastLevel
+  isFinalDecision
+  isSelfAssignable
+  allowedSections
+  reviewQuestionAssignments {
+    nodes {
+      id
+      templateElement {
+        id
+        section {
+          id
+          code
+        }
+      }
+    }
+  }
+}
+    `;
 export const StageFragmentDoc = gql`
     fragment Stage on ApplicationStageStatusLatest {
   stage
@@ -32479,6 +31562,47 @@ export function useDeleteApplicationMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteApplicationMutationHookResult = ReturnType<typeof useDeleteApplicationMutation>;
 export type DeleteApplicationMutationResult = Apollo.MutationResult<DeleteApplicationMutation>;
 export type DeleteApplicationMutationOptions = Apollo.BaseMutationOptions<DeleteApplicationMutation, DeleteApplicationMutationVariables>;
+export const ReassignReviewAssignmentDocument = gql`
+    mutation reassignReviewAssignment($unassignmentId: Int!, $reassignmentId: Int!, $reassignmentPatch: ReviewAssignmentPatch!) {
+  reassignmentUpdate: updateReviewAssignment(input: {id: $reassignmentId, patch: $reassignmentPatch}) {
+    reviewAssignment {
+      ...ReviewAssignment
+    }
+  }
+  unassignmentUpdate: updateReviewAssignment(input: {id: $unassignmentId, patch: {status: AVAILABLE, isLocked: true, trigger: ON_REVIEW_UNASSIGN}}) {
+    reviewAssignment {
+      ...ReviewAssignment
+    }
+  }
+}
+    ${ReviewAssignmentFragmentDoc}`;
+export type ReassignReviewAssignmentMutationFn = Apollo.MutationFunction<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>;
+
+/**
+ * __useReassignReviewAssignmentMutation__
+ *
+ * To run a mutation, you first call `useReassignReviewAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReassignReviewAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [reassignReviewAssignmentMutation, { data, loading, error }] = useReassignReviewAssignmentMutation({
+ *   variables: {
+ *      unassignmentId: // value for 'unassignmentId'
+ *      reassignmentId: // value for 'reassignmentId'
+ *      reassignmentPatch: // value for 'reassignmentPatch'
+ *   },
+ * });
+ */
+export function useReassignReviewAssignmentMutation(baseOptions?: Apollo.MutationHookOptions<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>) {
+        return Apollo.useMutation<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>(ReassignReviewAssignmentDocument, baseOptions);
+      }
+export type ReassignReviewAssignmentMutationHookResult = ReturnType<typeof useReassignReviewAssignmentMutation>;
+export type ReassignReviewAssignmentMutationResult = Apollo.MutationResult<ReassignReviewAssignmentMutation>;
+export type ReassignReviewAssignmentMutationOptions = Apollo.BaseMutationOptions<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>;
 export const RestartApplicationDocument = gql`
     mutation restartApplication($serial: String!, $applicationPatch: ApplicationPatch!) {
   updateApplicationBySerial(input: {serial: $serial, patch: $applicationPatch}) {
@@ -33650,14 +32774,7 @@ export const GetReviewInfoDocument = gql`
     query getReviewInfo($applicationId: Int, $assignerId: Int!) {
   reviewAssignments(condition: {applicationId: $applicationId}, orderBy: TIME_UPDATED_DESC) {
     nodes {
-      id
-      status
-      timeUpdated
-      levelNumber
-      reviewerId
-      isLastLevel
-      isFinalDecision
-      allowedSections
+      ...ReviewAssignment
       stage {
         id
         number
@@ -33685,18 +32802,6 @@ export const GetReviewInfoDocument = gql`
           }
         }
       }
-      reviewQuestionAssignments {
-        nodes {
-          id
-          templateElement {
-            id
-            section {
-              id
-              code
-            }
-          }
-        }
-      }
       reviewAssignmentAssignerJoins(filter: {assignerId: {equalTo: $assignerId}}) {
         nodes {
           assigner {
@@ -33709,7 +32814,7 @@ export const GetReviewInfoDocument = gql`
     }
   }
 }
-    `;
+    ${ReviewAssignmentFragmentDoc}`;
 
 /**
  * __useGetReviewInfoQuery__

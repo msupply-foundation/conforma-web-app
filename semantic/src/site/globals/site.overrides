@@ -483,6 +483,10 @@ a:hover {
   display: flex;
   align-items: center;
   padding-bottom: 10px;
+
+  .ui.header {
+    margin-top: 0em;
+  }
 }
 
 .ui.segment.review-application-segment {

@@ -50,25 +50,27 @@ export const ReviewSelfAssignmentLabel: React.FC<ReviewLabelProps> = ({ reviewer
   />
 )
 
-export const ReviewByLabel: React.FC<{ user?: User; strings: LanguageStrings }> = ({
-  user,
-  strings,
-}) => {
+export const ReviewByLabel: React.FC<{
+  user?: User
+  strings: LanguageStrings
+  isSubmitted?: boolean
+}> = ({ user, strings, isSubmitted = false }) => {
   const doneByYourself = !user
-  const reviewLabel = `${strings.REVIEW_IN_PROGRESS_BY} ${
+  const reviewLabel = `${isSubmitted ? strings.REVIEW_DONE_BY : strings.REVIEW_IN_PROGRESS_BY} ${
     doneByYourself ? strings.ASSIGNMENT_YOURSELF : ''
   }`
   return <LabelWrapper labelContent={reviewLabel} reviewer={user} />
 }
 
-export const ConsolidationByLabel: React.FC<{ user?: User; strings: LanguageStrings }> = ({
-  user,
-  strings,
-}) => {
+export const ConsolidationByLabel: React.FC<{
+  user?: User
+  strings: LanguageStrings
+  isSubmitted?: boolean
+}> = ({ user, strings, isSubmitted = false }) => {
   const doneByYourself = !user
-  const consolidationLabel = `${strings.REVIEW_CONSOLIDATION_BY} ${
-    doneByYourself ? strings.ASSIGNMENT_YOURSELF : ''
-  }`
+  const consolidationLabel = `${
+    isSubmitted ? strings.CONSOLIDATION_DONE_BY : strings.CONSOLIDATION_IN_PROGRESS_BY
+  } ${doneByYourself ? strings.ASSIGNMENT_YOURSELF : ''}`
   return <LabelWrapper labelContent={consolidationLabel} reviewer={user} />
 }
 

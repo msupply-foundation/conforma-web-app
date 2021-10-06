@@ -1,14 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Button,
-  Divider,
-  Header,
-  Icon,
-  Label,
-  Message,
-  ModalProps,
-  Segment,
-} from 'semantic-ui-react'
+import { Button, Header, Icon, Label, Message, ModalProps, Segment } from 'semantic-ui-react'
 import {
   Loading,
   ConsolidationSectionProgressBar,
@@ -18,7 +9,11 @@ import {
   SectionWrapper,
   ModalWarning,
 } from '../../components'
-import { ReviewByLabel, ConsolidationByLabel } from '../../components/Review/ReviewLabel'
+import {
+  ReviewByLabel,
+  ConsolidationByLabel,
+  ReviewLockedLabel,
+} from '../../components/Review/ReviewLabel'
 import ReviewComment from '../../components/Review/ReviewComment'
 import {
   AssignmentDetails,
@@ -83,10 +78,10 @@ const ReviewPage: React.FC<{
     },
   }
 
-  // TODO decide how to handle this, and localise if not deleted
   if (
     reviewAssignment?.reviewer?.id !== currentUser?.userId &&
-    fullReviewStructure?.thisReview?.current.reviewStatus !== ReviewStatus.Submitted
+    fullReviewStructure?.thisReview?.current.reviewStatus !== ReviewStatus.Submitted &&
+    fullReviewStructure?.thisReview?.current.reviewStatus !== ReviewStatus.Discontinued
   ) {
     const {
       info: {
@@ -147,24 +142,39 @@ const ReviewPage: React.FC<{
     (section) => section.assignment?.isConsolidation
   )
 
+  const isSubmitted =
+    thisReview?.current.reviewStatus === ReviewStatus.Submitted ||
+    thisReview?.current.reviewStatus === ReviewStatus.ChangesRequested
+  const isLocked =
+    thisReview?.current.reviewStatus == ReviewStatus.Locked ||
+    thisReview?.current.reviewStatus === ReviewStatus.Discontinued
+
+  const ReviewSubheader: React.FC = () =>
+    isLocked ? (
+      <ReviewLockedLabel
+        reviewer={isAssignedToCurrentUser ? undefined : thisReview?.reviewer}
+        strings={strings}
+      />
+    ) : isConsolidation ? (
+      <ConsolidationByLabel
+        isSubmitted={isSubmitted}
+        user={isAssignedToCurrentUser ? undefined : thisReview?.reviewer}
+        strings={strings}
+      />
+    ) : (
+      <ReviewByLabel
+        isSubmitted={isSubmitted}
+        user={isAssignedToCurrentUser ? undefined : thisReview?.reviewer}
+        strings={strings}
+      />
+    )
+
   return error ? (
     <Message error title={strings.ERROR_GENERIC} list={[error]} />
   ) : (
     <>
       <ReviewHeader applicationName={name} stage={stage} />
-      <div style={{ display: 'flex' }}>
-        {isConsolidation ? (
-          isAssignedToCurrentUser ? (
-            <ConsolidationByLabel strings={strings} />
-          ) : (
-            <ConsolidationByLabel user={thisReview?.reviewer} strings={strings} />
-          )
-        ) : isAssignedToCurrentUser ? (
-          <ReviewByLabel strings={strings} />
-        ) : (
-          <ReviewByLabel user={thisReview?.reviewer} strings={strings} />
-        )}
-      </div>
+      <ReviewSubheader />
       <div id="application-summary-content">
         {Object.values(sections).map((section) => (
           <SectionWrapper
