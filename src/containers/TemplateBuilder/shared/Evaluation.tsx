@@ -13,6 +13,8 @@ import CheckboxIO from './CheckboxIO'
 import JsonIO from './JsonIO'
 import TextIO from './TextIO'
 
+const JWT = localStorage.getItem(config.localStorageJWTKey)
+
 type EvaluationProps = {
   evaluation: EvaluatorNode
   currentElementCode: string
@@ -77,6 +79,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
       fetch: fetch.bind(window),
       endpoint: config.serverGraphQL,
     },
+    headers: { Authorization: 'Bearer ' + JWT },
   }
 
   return (

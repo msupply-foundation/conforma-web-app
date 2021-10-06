@@ -229,6 +229,7 @@ interface EvaluatorParameters {
   pgConnection?: any // Any, because not likely to be used in front-end
   graphQLConnection?: IGraphQLConnection
   APIfetch?: Function
+  headers?: { [key: string]: string }
 }
 
 type ElementsById = { [templateElementId: string]: PageElement }

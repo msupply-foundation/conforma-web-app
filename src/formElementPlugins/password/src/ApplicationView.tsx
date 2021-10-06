@@ -6,6 +6,8 @@ import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 
+const JWT = localStorage.getItem(config.localStorageJWTKey)
+
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
@@ -63,6 +65,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           objects: { responses, currentUser, applicationData },
           APIfetch: fetch,
           graphQLConnection: { fetch: fetch.bind(window), endpoint: config.serverGraphQL },
+          headers: { Authorization: 'Bearer ' + JWT },
         })
         setInternalValidation(customValidation)
       }
@@ -79,6 +82,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       objects: { responses, currentUser, applicationData },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: config.serverGraphQL },
+      headers: { Authorization: 'Bearer ' + JWT },
     })
     setInternalValidation(customValidation)
     const passwordsMatch = password === passwordConfirm

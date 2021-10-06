@@ -6,7 +6,10 @@ import { ApplicationViewProps } from '../../types'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import evaluateExpression from '@openmsupply/expression-evaluator'
+import config from '../../../config'
 import useDebounce from './useDebounce'
+
+const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 interface DisplayFormat {
   title?: string
@@ -71,6 +74,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       objects: { search, currentUser, applicationData, responses: allResponses },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+      headers: { Authorization: 'Bearer ' + JWT },
     })
       .then((results: any) => {
         if (results == null) {
