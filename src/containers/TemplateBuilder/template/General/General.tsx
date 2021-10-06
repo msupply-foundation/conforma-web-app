@@ -27,9 +27,7 @@ const General: React.FC = () => {
     })
   const [isMessageConfigOpen, setIsMessageConfigOpen] = useState(false)
 
-  const canSetAvailable =
-    availableTemplatesData?.templates?.nodes?.length === 0 &&
-    template.status !== TemplateStatus.Available
+  const canSetAvailable = template.status !== TemplateStatus.Available
 
   const canSetDraft = template.status !== TemplateStatus.Draft && template.applicationCount === 0
 
