@@ -334,4 +334,7 @@ export default {
   LOOKUP_TABLE_SUCCESS_CREATED: 'Lookup table %1 has been successfully created.',
   LOOKUP_TABLE_SUCCESS_UPDATED: 'Lookup table %1 has been successfully updated.',
   LOOKUP_TABLES_TITLE: 'Lookup Tables',
+  NO_MATCH_404_DEFAULT_HEADER: 'Something went wrong',
+  NO_MATCH_404_DEFAULT_CONTENT: 'Page not found',
+  NO_MATCH_404_GO_BACK: 'Go back',
 }

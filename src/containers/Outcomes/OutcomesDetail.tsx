@@ -1,6 +1,6 @@
 import React from 'react'
 import { Header, Message, Label, Icon, Table } from 'semantic-ui-react'
-import { Loading } from '../../components'
+import { Loading, NoMatch } from '../../components'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ErrorResponse, useOutcomesDetail } from '../../utils/hooks/useOutcomes'
@@ -19,7 +19,7 @@ const OutcomeDetails: React.FC = () => {
   const { outcomeDetail, loading, error } = useOutcomesDetail({ tableName, recordId: id })
   usePageTitle(outcomeDetail?.header?.value || '')
 
-  if (error) return <Message error header={error?.message} content={error?.detail} />
+  if (error) return <NoMatch header={error?.message} message={error?.detail} />
   if (loading || !outcomeDetail) return <Loading />
 
   const { header, tableTitle, columns, displayDefinitions, item, linkedApplications } =
