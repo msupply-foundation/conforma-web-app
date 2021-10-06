@@ -39,7 +39,7 @@ const UserSelection: React.FC = () => {
     if (!loginResult.success) {
       console.log(`Problem logging in user: ${username}`)
       return
-    }
+    } else localStorage.setItem(config.localStorageJWTKey, loginResult.JWT)
 
     // Organisation login (auto-select first in list)
     const { JWT, user, templatePermissions, orgList, isAdmin } = loginResult
