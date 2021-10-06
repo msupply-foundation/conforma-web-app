@@ -14,7 +14,10 @@ export default gql`
       }
     }
     unassignmentUpdate: updateReviewAssignment(
-      input: { id: $unassignmentId, patch: { status: AVAILABLE, trigger: ON_REVIEW_UNASSIGN } }
+      input: {
+        id: $unassignmentId
+        patch: { status: AVAILABLE, isLocked: true, trigger: ON_REVIEW_UNASSIGN }
+      }
     ) {
       reviewAssignment {
         ...ReviewAssignment
