@@ -15,7 +15,7 @@ First of all, some bulletpoint (and rules) to help clarify the diagram
 - One `review_assignment` should exist per reviewer/application/stage/level
 - Review assignment should only be assignable by a reviewer if has `is_self_assignable` = **True**, otherwise by linked `Assigner`.
 - Review assignment should not be editable once stage of review assignment is different to the current application stage.
-- `is_last_level` field is a helper field for front end (to avoid front ending needing to figure if if review is last level for given stage)
+- `is_last_level` field is an automatically calculated field to help front-end (to avoid front ending needing to figure if if review is last level for given stage)
 
 ### Assignment status
 
@@ -25,7 +25,7 @@ Review assignment can have the following statuses
 - `Assigned` -> indicates that the reviewer is able to create a review (or one already exists)
   - At least one `review_question_assignment` was linked to review_assignment
 
-To also determine if this assignment can be Self-assigned 3 other fields come in the scene:
+To also determine if this assignment can be Self-assigned, 3 other fields come on the scene:
 
 - `is_self_assignable` -> Can be self assigned (if not locked - how we prevent other self-assigners after one is already assigned)
 - `is_locked` -> Can be used to either prevent self-assignment or to generate a Review with status = LOCKED when assignment status is ASSIGNED\*
@@ -34,7 +34,7 @@ Another possibility for assignment is using the flag:
 
 - `is_final_decision` -> Used to assign reviewers with specific permissions that gets Assignment.status = ASSIGNED automatically.
 
-\* This is specifically used for assignement of partial reviews, for example 2 reviewers have been assigned to Sections of the same application. After one submits back to the Applicant the other one needs to be blocked, this would be flagged in the Review.status = LOCKED. But if there is only Assignment and no review started, we set the Assignment is_locked = true to generate a Review.status LOCKED when started.
+\* This is specifically used for assignment of partial reviews. For example, 2 reviewers have been assigned to different Sections of the same application. After one submits back to the Applicant the other one needs to be blocked -- this would be flagged in the Review.status = LOCKED. But if there is only Assignment and no review started, we set the Assignment is_locked = true to generate a Review.status LOCKED when started.
 
 ### Restrictions
 
