@@ -308,6 +308,8 @@ export default {
   TEMPLATE_BUTTON_SAVE: 'Save',
   TEMPLATE_BUTTON_ADD: 'Add',
   TEMPLATE_APPEARS_IN: 'Appears in',
+  UNASSIGN_TITLE: 'Unassignment of reviewer',
+  UNASSIGN_MESSAGE: 'Are you sure you would like to un-assign?',
   OUTCOMES_TABLE_PAGINATION_TEXT: 'Items per page',
   APP_LINK_LINKED_APPLICATIONS: 'Linked Applications',
   APP_LINK_NAME: 'Name',
