@@ -18,9 +18,6 @@ const OutcomeTable: React.FC = () => {
     query,
     params: { tableName },
   } = useRouter()
-  const {
-    userState: { templatePermissions },
-  } = useUserState()
 
   const [apiQueries, setApiQueries] = useState<OutcomeTableAPIQueries>({})
   const { outcomeTable, loading, error } = useOutcomesTable({

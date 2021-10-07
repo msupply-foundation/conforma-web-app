@@ -4,6 +4,7 @@ import { ApplicationViewProps } from '../../types'
 import config from '../../../config'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import { postRequest } from '../../../utils/helpers/fetchMethods'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -155,15 +156,12 @@ export default ApplicationView
 
 const createHash = async (password: string) => {
   try {
-    const response = await fetch(config.serverREST + '/create-hash', {
-      method: 'POST',
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ password }),
+    const output = await postRequest({
+      url: config.serverREST + '/create-hash',
+      jsonBody: { password },
+      headers: { 'Content-Type': 'application/json' },
     })
-    const output = await response.json()
+
     return output.hash
   } catch (err) {
     throw err

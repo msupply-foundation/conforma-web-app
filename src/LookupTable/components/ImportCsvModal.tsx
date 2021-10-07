@@ -54,15 +54,19 @@ const ImportCsvModal: React.FC<any> = ({
 
     if (!tableStructureID) formData.append('tableName', pluralTableName)
 
+    const JWT = localStorage.getItem(config.localStorageJWTKey || '')
+    const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
+
     await axios
       .post(
         config.serverREST +
-          '/lookup-table/import' +
+          '/admin/lookup-table/import' +
           (tableStructureID ? '/' + String(tableStructureID) : ''),
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
+            ...authHeader,
           },
         }
       )

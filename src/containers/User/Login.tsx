@@ -8,6 +8,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { LoginPayload, OrganisationSimple } from '../../utils/types'
 const logo = require('../../../images/logos/logo_512.png').default
+import config from '../../config'
 
 const LOGIN_AS_NO_ORG = 0
 const NO_ORG_SELECTED = -1
@@ -36,6 +37,7 @@ const Login: React.FC = () => {
   }, [])
 
   const onLoginSuccess = (loginResult: LoginPayload) => {
+    localStorage.setItem(config.localStorageJWTKey, loginResult.JWT)
     setIsError(false)
     setLoginPayload({
       ...loginResult,
@@ -86,7 +88,6 @@ const Login: React.FC = () => {
     }
     attemptLoginOrg({
       orgId,
-      JWT: loginPayload.JWT,
       onLoginOrgSuccess: (loginOrgResult: LoginPayload) => {
         finishLogin(loginOrgResult)
       },

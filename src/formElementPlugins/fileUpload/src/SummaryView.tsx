@@ -1,6 +1,7 @@
 import React from 'react'
 import { Grid, Form, Image, List } from 'semantic-ui-react'
 import config from '../../../config'
+import prefs from '../config.json'
 import { SummaryViewProps } from '../../types'
 
 const host = config.serverREST
@@ -19,7 +20,10 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
               <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
                 <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
                   <a href={host + file.fileUrl} target="_blank">
-                    <Image src={host + file.thumbnailUrl} style={{ maxHeight: '100px' }} />
+                    <Image
+                      src={host + file.thumbnailUrl}
+                      style={{ maxHeight: prefs.summaryViewThumbnailHeight }}
+                    />
                   </a>
                 </Grid.Row>
                 <Grid.Row centered style={{ boxShadow: 'none' }}>

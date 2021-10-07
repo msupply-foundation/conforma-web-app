@@ -104,7 +104,7 @@ export function UserProvider({ children }: UserProviderProps) {
     // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/application-manager-web-app/pull/841#discussion_r670822649
     if (JWT == 'undefined' || JWT == undefined) logout()
     dispatch({ type: 'setLoading', isLoading: true })
-    localStorage.setItem('persistJWT', JWT)
+    localStorage.setItem(config.localStorageJWTKey, JWT)
     if (!user || !permissions) fetchUserInfo({ dispatch: setUserState }, logout)
     else {
       dispatch({
@@ -119,7 +119,7 @@ export function UserProvider({ children }: UserProviderProps) {
   }
 
   // Initial check for persisted user in local storage
-  const JWT = localStorage.getItem('persistJWT')
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
   // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/application-manager-web-app/pull/841#discussion_r670822649
   if (JWT === 'undefined') logout()
   if (JWT && !userState.currentUser && !userState.isLoading) {

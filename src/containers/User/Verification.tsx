@@ -21,7 +21,7 @@ const Verify: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [verification, setVerification] = useState<Verification>()
 
-  const verifyUrl = `${config.serverREST}/verify?uid=${uid}`
+  const verifyUrl = `${config.serverREST}/public/verify?uid=${uid}`
 
   useEffect(() => {
     getRequest(verifyUrl).then((result) => {
