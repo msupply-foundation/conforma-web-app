@@ -1,15 +1,31 @@
 // Generic GET/POST methods for re-use throughout app
+import config from '../../config'
 
-export async function postRequest(body: object, endpointUrl: string, headers: object = {}) {
+export async function postRequest({
+  jsonBody = {},
+  otherBody,
+  url,
+  headers = {},
+}: {
+  jsonBody?: object
+  otherBody?: any
+  url: string
+  headers?: object
+}) {
+  const JWT = localStorage.getItem(config.localStorageJWTKey || '')
+  const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
+  const body = otherBody || JSON.stringify(jsonBody)
+
   try {
-    const response = await fetch(endpointUrl, {
+    const response = await fetch(url, {
       method: 'POST',
       cache: 'no-cache',
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json'
+        ...authHeader,
         ...headers,
       },
-      body: JSON.stringify(body),
+      body,
     })
     return response.json()
   } catch (err) {
@@ -18,12 +34,16 @@ export async function postRequest(body: object, endpointUrl: string, headers: ob
 }
 
 export async function getRequest(endpointUrl: string, headers: object = {}) {
+  const JWT = localStorage.getItem(config.localStorageJWTKey || '')
+  const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
+
   try {
     const response = await fetch(endpointUrl, {
       method: 'GET',
       // cache: 'no-cache',
       headers: {
         'Content-Type': 'application/json',
+        ...authHeader,
         ...headers,
       },
     })
