@@ -183,7 +183,7 @@ There is documentation on the code of these as well in the [repo](https://github
 2. Change Review status to DISCONTINUED
    - Action: "changeStatus"
    - Description: "**CORE-ACTION** On Re-assignment happens change previous review status to DISCONTINUED"
-   - Condition: Review Assignment with isLocked True (as set in Reassignmnet mutation)
+   - Condition: Always
 
 #### Trigger: ON_REVIEW_SUBMIT
 

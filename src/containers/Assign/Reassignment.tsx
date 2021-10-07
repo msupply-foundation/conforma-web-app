@@ -70,7 +70,7 @@ const Reassignment: React.FC<ReassignmentProps> = ({
         assignmentError={reassignmentError}
         assignmentOptions={assignmentOptions}
         checkIsLastLevel={isLastLevel}
-        onAssignment={onReassignment}
+        onSelection={onReassignment}
         shouldAssignState={shouldAssignState}
       />
     </Grid.Column>
