@@ -19,7 +19,8 @@ type EvaluationProps = {
   evaluation: EvaluatorNode
   currentElementCode: string
   setEvaluation: (evaluation: EvaluatorNode) => void
-  fullStructure?: FullStructure
+  fullStructure?: FullStructure // for Form
+  applicationData?: any // for Actions
   label: string
   updateKey?: (key: string) => void
   deleteKey?: () => void
@@ -55,6 +56,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
   label,
   currentElementCode,
   fullStructure,
+  applicationData,
   updateKey,
   deleteKey,
 }) => {
@@ -69,7 +71,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
       thisResponse: fullStructure?.responsesByCode?.[currentElementCode]?.text,
     },
     currentUser,
-    applicationData: fullStructure?.info,
+    applicationData: applicationData ? applicationData : fullStructure?.info,
   }
 
   const evaluationParameters = {

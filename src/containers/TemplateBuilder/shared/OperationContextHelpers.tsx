@@ -22,8 +22,7 @@ import {
   UpdateTemplateStage,
 } from './OperationContext'
 
-const baseAdminUrl = `${config.serverREST}/admin`
-const snapshotsBaseUrl = `${baseAdminUrl}/snapshot`
+const snapshotsBaseUrl = `${config.serverREST}/admin/snapshot`
 const takeSnapshotUrl = `${snapshotsBaseUrl}/take`
 export const snapshotFilesUrl = `${snapshotsBaseUrl}/files`
 const useSnapshotUrl = `${snapshotsBaseUrl}/use`

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Segment, Header } from 'semantic-ui-react'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
-import AssignmentSectionRow from './AssignmentSectionRow'
+import AssignmentSectionRow from '../Assign/AssignmentSectionRow'
 import ReviewSectionRow from './ReviewSectionRow'
 
 interface ReviewHomeProps {
@@ -17,7 +17,7 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({
   assignmentInPreviousStage,
   fullApplicationStructure,
 }) => {
-  const [shouldAssign, setShouldAssign] = useState<number | boolean>(false)
+  const [shouldAssign, setShouldAssign] = useState<number>(0)
   return (
     <>
       {Object.values(fullApplicationStructure.sections).map(({ details: { id, title, code } }) => (
