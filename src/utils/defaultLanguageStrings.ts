@@ -242,7 +242,6 @@ export default {
   DATE_LAST_YEAR: 'Last Year',
   DATE_YEARS_AGO: 'years ago',
   FOOTER_TEXT: 'Powered by mSupply Application Manager',
-  FOOTER_COPYRIGHT: '© 2020',
   FILTER_ADD_FILTER: 'Filter',
   FILTER_START_TYPING: 'Start typing...',
   FILTER_REMOVE: 'Remove filter',

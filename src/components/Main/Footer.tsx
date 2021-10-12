@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
         <p>
           {strings.FOOTER_TEXT}
           <br />
-          {strings.FOOTER_COPYRIGHT}
+          {'© ' + new Date().getFullYear()}
           <br />
           {`version: ${config.version}`}
         </p>
