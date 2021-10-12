@@ -802,10 +802,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@openmsupply/expression-evaluator@^1.9.2":
-  version "1.9.2"
-  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.9.2/7b0a8f627eabe2c2e0e86e99082aa76b9192513cb1a3faf2ffe9d0d65f515139#b1d9f22f259880c55c912a24d17bc8c916565b15"
-  integrity sha512-FamcBTA3kK5rfyG+aXFdkBFHY3mft3ROefHibrb68A2aVXeY3uCljE0tcRdnEG7lfjgsPKnWJ7SnGZizhSeqtQ==
+"@openmsupply/expression-evaluator@^1.9.3":
+  version "1.9.3"
+  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.9.3/fc856b2824beb70bb1922a2893b91657c03ec10ef3d84081ef78c51bb8e6eec7#f9ea2ef61409a14a2d0617bf4af82bc7b3ea24ab"
+  integrity sha512-HzrA9oDnE0aITsT0UZnva6/w/6h14wgqCOQJLudXuqcprI4QbyVmlTIBSO2xLmf+ZvDKWKFbw0czTE6qtCSuyg==
 
 "@polka/url@^1.0.0-next.15":
   version "1.0.0-next.15"

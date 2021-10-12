@@ -21,6 +21,7 @@ import globalConfig from '../config'
 import { SemanticICONS } from 'semantic-ui-react'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
+const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const { strings } = useLanguageProvider()
@@ -74,6 +75,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         objects: { responses: allResponses, currentUser, applicationData },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+        headers: { Authorization: 'Bearer ' + JWT },
       }).then((result: any) => {
         // Need to do our own equality check since React treats 'result' as
         // different object to original and causes a re-render even when not
@@ -101,6 +103,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         objects: { responses, currentUser, applicationData },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+        headers: { Authorization: 'Bearer ' + JWT },
       },
       currentResponse,
     })

@@ -14,6 +14,7 @@ import { TemplateDetails } from '../types'
 import config from '../../config'
 
 const graphQLEndpoint = config.serverGraphQL
+const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 interface UseLoadTemplateProps {
   templateCode?: string
@@ -79,6 +80,7 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
       objects: { currentUser },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+      headers: { Authorization: 'Bearer ' + JWT },
     }
     evaluate(template?.startMessage || '', evaluatorParams).then((startMessage: any) => {
       setTemplate({

@@ -28,6 +28,7 @@ import config from '../../config'
 import { getSectionDetails } from '../helpers/application/getSectionsDetails'
 
 const graphQLEndpoint = config.serverGraphQL
+const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 const MAX_REFETCH = 10
 
@@ -161,6 +162,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       objects: { currentUser, applicationData: applicationDetails },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+      headers: { Authorization: 'Bearer ' + JWT },
     }
     const templateMessages: any = [
       evaluate(application.template?.startMessage || '', evaluatorParams),
