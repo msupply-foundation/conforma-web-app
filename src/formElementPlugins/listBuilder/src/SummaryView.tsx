@@ -5,7 +5,6 @@ import { Form } from 'semantic-ui-react'
 import { ListCardLayout, ListTableLayout, ListInlineLayout } from './displayComponents'
 import { getDefaultDisplayFormat } from './helpers'
 import { DisplayType, ListLayoutProps } from './types'
-import strings from '../constants'
 
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, response }) => {
   const {

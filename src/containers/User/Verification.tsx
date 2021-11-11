@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Link } from 'react-router-dom'
 import { Header, Icon, Segment, Container } from 'semantic-ui-react'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { getRequest } from '../../utils/helpers/fetchMethods'
 import isLoggedIn from '../../utils/helpers/loginCheck'
@@ -14,13 +14,14 @@ interface Verification {
 }
 
 const Verify: React.FC = () => {
+  const { strings } = useLanguageProvider()
   const {
     query: { uid },
   } = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [verification, setVerification] = useState<Verification>()
 
-  const verifyUrl = `${config.serverREST}/verify?uid=${uid}`
+  const verifyUrl = `${config.serverREST}/public/verify?uid=${uid}`
 
   useEffect(() => {
     getRequest(verifyUrl).then((result) => {

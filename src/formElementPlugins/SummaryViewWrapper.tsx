@@ -11,6 +11,7 @@ import globalConfig from '../config'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
+const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   element,
@@ -46,6 +47,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
         },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+        headers: { Authorization: 'Bearer ' + JWT },
       }).then((result: any) =>
         setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
       )

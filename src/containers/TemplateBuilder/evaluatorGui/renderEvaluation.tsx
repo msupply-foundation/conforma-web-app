@@ -17,63 +17,63 @@ export const renderEvaluation: ParseAndRenderEvaluationType = (
   evaluation,
   setEvaluation,
   ComponentLibrary,
-  evaluatorParamers
+  evaluatorParameters
 ) => {
   const _setEvaluation = (typedEvaluation: EvaluationType) =>
     setEvaluation(convertTypedEvaluationToBaseType(typedEvaluation))
 
-  return renderEvaluationElement(evaluation, _setEvaluation, ComponentLibrary, evaluatorParamers)
+  return renderEvaluationElement(evaluation, _setEvaluation, ComponentLibrary, evaluatorParameters)
 }
 
-const Evaluate: React.FC<{ typedEvaluation: EvaluationType; evaluatorParamers?: IParameters }> = ({
-  typedEvaluation,
-  evaluatorParamers,
-}) => {
-  const [evaluationResult, setEvaluationResult] = useState<ValueNode | undefined | null>(undefined)
+const Evaluate: React.FC<{ typedEvaluation: EvaluationType; evaluatorParameters?: IParameters }> =
+  ({ typedEvaluation, evaluatorParameters }) => {
+    const [evaluationResult, setEvaluationResult] = useState<ValueNode | undefined | null>(
+      undefined
+    )
 
-  const evaluateNode = async () => {
-    try {
-      const result = await evaluateExpression(
-        convertTypedEvaluationToBaseType(typedEvaluation),
-        evaluatorParamers
-      )
-      setEvaluationResult(result)
-    } catch (e) {
-      setEvaluationResult('Problem Executing Evaluation')
+    const evaluateNode = async () => {
+      try {
+        const result = await evaluateExpression(
+          convertTypedEvaluationToBaseType(typedEvaluation),
+          evaluatorParameters
+        )
+        setEvaluationResult(result)
+      } catch (e) {
+        setEvaluationResult('Problem Executing Evaluation')
+      }
     }
-  }
 
-  return (
-    <>
-      <Icon className="clickable" name="lightning" onClick={() => evaluateNode()} />
-      <Modal
-        className="config-modal"
-        open={evaluationResult !== undefined}
-        onClose={() => setEvaluationResult(undefined)}
-      >
-        <div className="config-modal-container ">
-          <Header>Evaluation Result</Header>
-          {evaluationResult === undefined && <Loading />}
-          {evaluationResult !== undefined && (
-            <pre>{JSON.stringify(evaluationResult, null, ' ')}</pre>
-          )}
-          {typeof evaluationResult === 'string' && (
-            <>
-              <Header as="h4">Markdown</Header>
-              <Markdown text={evaluationResult} />
-            </>
-          )}
-        </div>
-      </Modal>
-    </>
-  )
-}
+    return (
+      <>
+        <Icon className="clickable" name="lightning" onClick={() => evaluateNode()} />
+        <Modal
+          className="config-modal"
+          open={evaluationResult !== undefined}
+          onClose={() => setEvaluationResult(undefined)}
+        >
+          <div className="config-modal-container ">
+            <Header>Evaluation Result</Header>
+            {evaluationResult === undefined && <Loading />}
+            {evaluationResult !== undefined && (
+              <pre>{JSON.stringify(evaluationResult, null, ' ')}</pre>
+            )}
+            {typeof evaluationResult === 'string' && (
+              <>
+                <Header as="h4">Markdown</Header>
+                <Markdown text={evaluationResult} />
+              </>
+            )}
+          </div>
+        </Modal>
+      </>
+    )
+  }
 
 export const renderEvaluationElement: RenderEvaluationElementType = (
   evaluation,
   setEvaluation,
   ComponentLibrary,
-  evaluatorParamers
+  evaluatorParameters
 ) => {
   const typedEvaluation = getTypedEvaluation(evaluation)
   const gui = guis.find(({ match }) => match(typedEvaluation))
@@ -95,10 +95,13 @@ export const renderEvaluationElement: RenderEvaluationElementType = (
                 setSelected={onSelect}
                 title="operator"
               />
-              <Evaluate typedEvaluation={typedEvaluation} evaluatorParamers={evaluatorParamers} />
+              <Evaluate
+                typedEvaluation={typedEvaluation}
+                evaluatorParameters={evaluatorParameters}
+              />
             </ComponentLibrary.FlexRow>
             <EvaluationOutputType evaluation={typedEvaluation} setEvaluation={setEvaluation} />
-            {gui.render(typedEvaluation, setEvaluation, ComponentLibrary, evaluatorParamers)}
+            {gui.render(typedEvaluation, setEvaluation, ComponentLibrary, evaluatorParameters)}
           </ComponentLibrary.OperatorContainer>
         </ComponentLibrary.FlexRow>
       )

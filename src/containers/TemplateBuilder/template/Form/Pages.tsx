@@ -160,7 +160,7 @@ const PageMove: React.FC = () => {
 
   if (!currentPage) return null
 
-  const movePageInSection = async (fromNumber: number, toNumber: number) => {
+  const movePageInSection = async (fromNumber: number, toNumber: number, newPageNumber: number) => {
     const nextPage = currentSection.pages[fromNumber]
     const currentPage = currentSection.pages[toNumber]
 
@@ -184,7 +184,8 @@ const PageMove: React.FC = () => {
       })),
     ]
 
-    setSelectedPageNumber(-1)
+    // Keep selected page after moving
+    setSelectedPageNumber(newPageNumber)
 
     updateTemplateSection(currentSection.id, {
       templateElementsUsingId: {
@@ -258,7 +259,7 @@ const PageMove: React.FC = () => {
           disabled={!isDraft}
           disabledMessage={disabledMessage}
           onClick={() => {
-            movePageInSection(selectedPageNumber, selectedPageNumber - 1)
+            movePageInSection(selectedPageNumber, selectedPageNumber - 1, selectedPageNumber - 1)
           }}
         />
       )}
@@ -268,7 +269,7 @@ const PageMove: React.FC = () => {
           disabled={!isDraft}
           disabledMessage={disabledMessage}
           onClick={() => {
-            movePageInSection(selectedPageNumber + 1, selectedPageNumber)
+            movePageInSection(selectedPageNumber + 1, selectedPageNumber, selectedPageNumber + 1)
           }}
         />
       )}

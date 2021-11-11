@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer } from 'react'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
 import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
-import strings from '../utils/constants'
+import config from '../config'
 
 type UserState = {
   currentUser: User | null
@@ -50,7 +50,7 @@ const reducer = (state: UserState, action: UserActions) => {
         templatePermissions: newPermissions,
         orgList: newOrgList,
         isAdmin: newIsAdmin,
-        isNonRegistered: newUser.username === strings.USER_NONREGISTERED,
+        isNonRegistered: newUser.username === config.nonRegisteredUser,
       }
     case 'setLoading':
       const { isLoading } = action
@@ -93,7 +93,10 @@ export function UserProvider({ children }: UserProviderProps) {
   const setUserState = dispatch
 
   const logout = () => {
+    // Delete everything EXCEPT language preference in localStorage
+    const language = localStorage.getItem('language')
     localStorage.clear()
+    if (language) localStorage.setItem('language', language)
     window.location.href = '/login'
   }
 
@@ -101,7 +104,7 @@ export function UserProvider({ children }: UserProviderProps) {
     // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/application-manager-web-app/pull/841#discussion_r670822649
     if (JWT == 'undefined' || JWT == undefined) logout()
     dispatch({ type: 'setLoading', isLoading: true })
-    localStorage.setItem('persistJWT', JWT)
+    localStorage.setItem(config.localStorageJWTKey, JWT)
     if (!user || !permissions) fetchUserInfo({ dispatch: setUserState }, logout)
     else {
       dispatch({
@@ -116,7 +119,7 @@ export function UserProvider({ children }: UserProviderProps) {
   }
 
   // Initial check for persisted user in local storage
-  const JWT = localStorage.getItem('persistJWT')
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
   // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/application-manager-web-app/pull/841#discussion_r670822649
   if (JWT === 'undefined') logout()
   if (JWT && !userState.currentUser && !userState.isLoading) {

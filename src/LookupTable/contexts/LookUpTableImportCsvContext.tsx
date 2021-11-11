@@ -1,3 +1,4 @@
+import { camelCase } from 'lodash'
 import React, { useReducer } from 'react'
 import {
   LookUpTableImportCsvActions,
@@ -47,8 +48,10 @@ const LookUpTableImportCsvReducer = (
       return { ...state, uploadModalOpen: false }
     case LookUpTableImportCsvActions.ImportCSV:
       return { ...state, file: action.payload }
-    case LookUpTableImportCsvActions.SetTableName:
-      return { ...state, tableName: action.payload }
+    case LookUpTableImportCsvActions.SetTableName: {
+      const removeNumbers = action.payload.replace(/([0-9])/gm, '')
+      return { ...state, tableName: camelCase(removeNumbers) }
+    }
     case LookUpTableImportCsvActions.submittable:
       return { ...state, submittable: action.payload }
     case LookUpTableImportCsvActions.submitting:

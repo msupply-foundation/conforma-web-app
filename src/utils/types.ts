@@ -14,7 +14,6 @@ import {
   User as GraphQLUser,
   Organisation as GraphQLOrg,
   Filter,
-  Application,
   UiLocation,
 } from './generated/graphql'
 
@@ -22,7 +21,9 @@ import { ValidationState } from '../formElementPlugins/types'
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SemanticICONS } from 'semantic-ui-react'
 import { DocumentNode } from '@apollo/client'
-import { DateTime } from 'luxon'
+import { DateTime, DateTimeFormatOptions } from 'luxon'
+import { DateTimeConstant } from '../utils/data/LuxonDateTimeConstants'
+import { ErrorResponse } from './hooks/useOutcomes'
 
 export {
   ApplicationDetails,
@@ -75,6 +76,7 @@ export {
   TemplatePermissions,
   TemplateInList,
   TemplatesDetails,
+  TemplateType,
   UseGetApplicationProps,
   User,
   UseGetReviewStructureForSectionProps,
@@ -127,6 +129,8 @@ interface AssignmentDetails {
   isCurrentUserReviewer: boolean
   isFinalDecision: boolean
   isLastLevel: boolean
+  isSelfAssignable: boolean
+  isLocked: boolean
   totalAssignedQuestions: number
   reviewQuestionAssignments: ReviewQuestionAssignment[]
   assignableSectionRestrictions: (string | null)[]
@@ -146,6 +150,8 @@ interface BasicStringObject {
 
 interface CellProps {
   application: ApplicationListShape
+  loading: boolean
+  deleteApplication: Function
 }
 
 interface ColumnDetails {
@@ -225,6 +231,7 @@ interface EvaluatorParameters {
   pgConnection?: any // Any, because not likely to be used in front-end
   graphQLConnection?: IGraphQLConnection
   APIfetch?: Function
+  headers?: { [key: string]: string }
 }
 
 type ElementsById = { [templateElementId: string]: PageElement }
@@ -341,9 +348,16 @@ interface ResponsesByCode {
 }
 
 interface ReviewAssignment {
+  assignee: GraphQLUser
+  assigneeLevel: number
+  assignmentStatus: ReviewAssignmentStatus
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
-  isFinalDecision: boolean
+  isLocked: boolean
+  isSelfAssignable: boolean
+  finalDecision: {
+    decisionOnReview: boolean
+  } | null
 }
 
 type ReviewSectionComponentProps = {
@@ -355,7 +369,7 @@ type ReviewSectionComponentProps = {
   action: ReviewAction
   isAssignedToCurrentUser: boolean
   isConsolidation: boolean
-  shouldAssignState: [number | boolean, React.Dispatch<React.SetStateAction<number | boolean>>]
+  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
 }
 
 interface ReviewDetails {
@@ -533,6 +547,12 @@ type TemplatesDetails = {
   code: string
 }[]
 
+interface TemplateType {
+  code: string
+  name: string
+  namePlural: string
+}
+
 interface UseGetApplicationProps {
   serialNumber: string
   currentUser: User
@@ -589,132 +609,99 @@ interface SortQuery {
 }
 
 // *****************
-// SCHEMA INFO
-// *****************
-
-export type SchemaColumn = { columnName: string }
-
-export type SchemaInfo = {
-  [tableName: string]: SchemaColumn[]
-}
-
-// *****************
 // OUTCOMES DISPLAY
 // *****************
 
-export type OutcomeDisplay = {
+// Response value of /outcomes endpoint
+export type OutcomesResponse = {
+  tableName: string
+  title: string
   code: string
-  detailColumnName: string
-  pluralTableName: string
+}[]
+
+interface FormatOptions {
+  elementTypePluginCode?: string
+  elementParameters?: object
+  substitution?: string
+  dateFormat?: DateTimeConstant | DateTimeFormatOptions
+  // Add more as required
+}
+
+export interface DisplayDefinitionBasic {
+  dataType?: string
+  formatting: FormatOptions
+}
+
+export interface DisplayDefinition {
+  title: string
+  isBasicField: boolean
+  dataType?: string
+  formatting: FormatOptions
+}
+export interface HeaderRow extends DisplayDefinition {
+  columnName: string
+}
+
+interface TableRow {
+  id: number
+  rowValues: any[]
+  item: { [key: string]: any }
+}
+
+// Response object of /outcomes/table endpoint
+export interface OutcomesTableResponse {
   tableName: string
   title: string
+  code: string
+  headerRow: HeaderRow[]
+  tableRows: TableRow[]
+  totalCount: number
+  message?: string
 }
 
-export type OutcomeDisplays = OutcomeDisplay[]
+export interface LinkedApplication {
+  id: number
+  name: string
+  serial: string
+  templateName: string
+  templateCode: string
+  dateCompleted: Date
+}
 
-export type TableDisplay = {
+export interface DetailsHeader {
+  value: any
   columnName: string
-  isTextColumn: boolean
-  title: string
+  isBasicField: boolean
+  dataType: string | undefined
+  formatting: FormatOptions
 }
 
-export type TableDisplaysByCode = {
-  [code: string]: TableDisplay[]
-}
-
-export type DetailDisplay = {
-  columnName: string
-  elementTypePluginCode: string
-  isTextColumn: boolean
-  title: string
-  parameters: object
-}
-
-export type DetailDisplaysByCode = {
-  [code: string]: DetailDisplay[]
-}
-
-export type GenericNode = {
-  [field: string]: object | string
-}
-
-export type TableQueryResult = { [queryName: string]: { nodes: GenericNode[] } }
-
-export type TableDisplayQuery = {
-  query: DocumentNode
-  getNodes: (queryResult: TableQueryResult) => GenericNode[]
-}
-
-export type TableDisplaysQueryByCode = {
-  [code: string]: TableDisplayQuery
-}
-
-export type DetailQueryResult = { [queryName: string]: GenericNode }
-
-export type DetailDisplayQuery = {
-  query: DocumentNode
-  getNode: (queryResult: DetailQueryResult) => GenericNode
-}
-
-export type DetailDisplayQueryByCode = {
-  [code: string]: DetailDisplayQuery
-}
-
-export type ApplicationLinkQueryResult = {
-  [tableName: string]: {
-    [applicationJoin: string]: {
-      nodes: {
-        application: Application
-      }[]
-    }
-  }
-}
-
-export type ApplicationLinkQuery = {
-  query: DocumentNode
-  getApplications: (queryResult: ApplicationLinkQueryResult) => {
-    name: string
-    serial: string
-    templateName: string
-  }[]
-}
-
-export type ApplicationLinkQueryByCode = {
-  [code: string]: ApplicationLinkQuery
-}
-
-export type OutcomeCountQueryResult = {
-  [tableName: string]: { totalCount: number }
-}
-
-export type OutcomeCountQuery = {
-  query: DocumentNode
-  getCount: (queryResult: OutcomeCountQueryResult) => number
-}
-
-export type OutcomeCountQueryByCode = {
-  [code: string]: OutcomeCountQuery
-}
-
-export type OutcomeDisplaysStructure = {
-  outcomeDisplays: OutcomeDisplays
-  tableDisplaysByCode: TableDisplaysByCode
-  detailDisplaysByCode: DetailDisplaysByCode
-  tableDisplayQueryByCode: TableDisplaysQueryByCode
-  detailDisplayQueryByCode: DetailDisplayQueryByCode
-  outcomeCountQueryByCode: OutcomeCountQueryByCode
-  applicationLinkQueryByCode: ApplicationLinkQueryByCode
-}
-
-export enum CaseType {
-  Snake,
-  Camel,
-}
-
-export type GetApplicationJoinLinkTableName = (props: {
+// Response object of /outcomes/table/.../item endpoint
+export interface OutcomesDetailResponse {
   tableName: string
-  caseType: CaseType
-}) => string
+  tableTitle: string
+  id: number
+  header: DetailsHeader
+  columns: string[]
+  item: { [key: string]: any }
+  displayDefinitions: { [key: string]: DisplayDefinition }
+  linkedApplications?: LinkedApplication[] | [ErrorResponse]
+}
+
+export type ApplicationDisplayField = {
+  field: keyof LinkedApplication
+  displayName: string
+  dataType: string
+  link: string | null
+  linkVar?: keyof LinkedApplication
+}
+
+export type OutcomeTableAPIQueries = {
+  first?: string | undefined
+  offset?: string | undefined
+  orderBy?: string | undefined
+  ascending?: string | undefined
+}
 
 // *****************
 // LIST FILTERS

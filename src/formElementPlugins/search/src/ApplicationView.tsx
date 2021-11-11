@@ -4,9 +4,12 @@ import React, { useEffect, useState } from 'react'
 import { Search, Label, Card, Icon, Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { useUserState } from '../../../contexts/UserState'
-import strings from '../constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import evaluateExpression from '@openmsupply/expression-evaluator'
+import config from '../../../config'
 import useDebounce from './useDebounce'
+
+const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 interface DisplayFormat {
   title?: string
@@ -24,6 +27,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   applicationData,
   allResponses,
 }) => {
+  const { getPluginStrings } = useLanguageProvider()
+  const strings = getPluginStrings('search')
   const {
     label,
     description,
@@ -69,6 +74,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       objects: { search, currentUser, applicationData, responses: allResponses },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+      headers: { Authorization: 'Bearer ' + JWT },
     })
       .then((results: any) => {
         if (results == null) {
@@ -103,6 +109,40 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const deleteItem = async (index: number) => {
     setSelection(selection.filter((_, i) => i !== index))
+  }
+
+  const createResultsArray = (results: any[], resultsFormat: DisplayFormat) => {
+    const { title, description } = resultsFormat
+    return results.map((result: any, index: number) => {
+      const titleString = title ? substituteValues(title, result) : getDefaultString(result)
+      const descriptionString = description
+        ? substituteValues(description, result)
+        : getDefaultString(result, 'description')
+      return {
+        index,
+        key: `result-${index}`,
+        title: titleString,
+        description: descriptionString,
+      }
+    })
+  }
+
+  type ResultsField = 'title' | 'description'
+  // If a displayFormat is not defined, results will be displayed some combination
+  // of the first two fields in the object
+  const getDefaultString = (result: any, fieldType: ResultsField = 'title') => {
+    if (!(result instanceof Object)) return result
+    const fields = Object.keys(result)
+    switch (fields.length) {
+      case 0:
+        return fieldType === 'title' ? strings.MESSAGE_NO_RESULTS : ''
+      case 1:
+        return fieldType === 'title' ? fields[0] : result[fields[0]]
+      default:
+        return fieldType === 'title'
+          ? `${fields[0]}: ${result[fields[0]]}`
+          : `${fields[1]}: ${result[fields[1]]}`
+    }
   }
 
   const displayProps: DisplayProps = {
@@ -143,40 +183,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <DisplaySelection {...displayProps} />
     </>
   )
-}
-
-const createResultsArray = (results: any[], resultsFormat: DisplayFormat) => {
-  const { title, description } = resultsFormat
-  return results.map((result: any, index: number) => {
-    const titleString = title ? substituteValues(title, result) : getDefaultString(result)
-    const descriptionString = description
-      ? substituteValues(description, result)
-      : getDefaultString(result, 'description')
-    return {
-      index,
-      key: `result-${index}`,
-      title: titleString,
-      description: descriptionString,
-    }
-  })
-}
-
-type ResultsField = 'title' | 'description'
-// If a displayFormat is not defined, results will be displayed some combination
-// of the first two fields in the object
-const getDefaultString = (result: any, fieldType: ResultsField = 'title') => {
-  if (!(result instanceof Object)) return result
-  const fields = Object.keys(result)
-  switch (fields.length) {
-    case 0:
-      return fieldType === 'title' ? strings.MESSAGE_NO_RESULTS : ''
-    case 1:
-      return fieldType === 'title' ? fields[0] : result[fields[0]]
-    default:
-      return fieldType === 'title'
-        ? `${fields[0]}: ${result[fields[0]]}`
-        : `${fields[1]}: ${result[fields[1]]}`
-  }
 }
 
 const getTextFormat = (textFormat: string, selection: any[]): string | undefined => {

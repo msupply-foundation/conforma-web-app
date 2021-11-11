@@ -1,7 +1,7 @@
 import React from 'react'
 import { Icon } from 'semantic-ui-react'
 import { ReviewResponse, ReviewResponseDecision } from '../../utils/generated/graphql'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import getSimplifiedTimeDifference from '../../utils/dateAndTime/getSimplifiedTimeDifference'
 
 interface DecisionLabelProps {
@@ -10,16 +10,20 @@ interface DecisionLabelProps {
   reviewResponse: ReviewResponse
 }
 
-const getDecisionString = (isPositiveDecision: boolean, isConsolidation: boolean) => {
-  if (isConsolidation) {
-    return isPositiveDecision
-      ? strings.LABEL_CONSOLIDATION_AGREE
-      : strings.LABEL_CONSOLIDATION_DISAGREE
-  }
+const useGetDecisionString = () => {
+  const { strings } = useLanguageProvider()
+  const getDecisionString = (isPositiveDecision: boolean, isConsolidation: boolean) => {
+    if (isConsolidation) {
+      return isPositiveDecision
+        ? strings.LABEL_CONSOLIDATION_AGREE
+        : strings.LABEL_CONSOLIDATION_DISAGREE
+    }
 
-  return isPositiveDecision
-    ? strings.LABEL_REVIEW_DECICION_CONFORM
-    : strings.LABEL_REVIEW_DECISION_NON_CONFORM
+    return isPositiveDecision
+      ? strings.LABEL_REVIEW_DECICION_CONFORM
+      : strings.LABEL_REVIEW_DECISION_NON_CONFORM
+  }
+  return getDecisionString
 }
 
 const DecisionLabel: React.FC<DecisionLabelProps> = ({
@@ -27,6 +31,7 @@ const DecisionLabel: React.FC<DecisionLabelProps> = ({
   isDecisionVisible,
   reviewResponse,
 }) => {
+  const getDecisionString = useGetDecisionString()
   const isPositiveDecision =
     reviewResponse?.decision === ReviewResponseDecision.Agree ||
     reviewResponse?.decision === ReviewResponseDecision.Approve

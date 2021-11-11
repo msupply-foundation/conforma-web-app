@@ -1,47 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react'
-import {
-  Button,
-  Grid,
-  GridColumn,
-  Icon,
-  Input,
-  Label,
-  Loader,
-  Modal,
-  Popup,
-} from 'semantic-ui-react'
+import { Button, Icon, Input, Label, Loader, Modal, Table, Header } from 'semantic-ui-react'
 import config from '../../config'
+import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 
-const snapshotsBaseUrl = `${config.serverREST}/snapshot`
-const snapshotListUrl = `${snapshotsBaseUrl}/list`
-const takeSnapshotUrl = `${snapshotsBaseUrl}/take`
-const useSnapshotUrl = `${snapshotsBaseUrl}/use`
-const snapshotFilesUrl = `${snapshotsBaseUrl}/files`
-const uploadSnapshotUrl = `${snapshotsBaseUrl}/upload`
+const baseEndpoint = `${config.serverREST}/admin/snapshot`
+const snapshotListUrl = `${baseEndpoint}/list`
+const takeSnapshotUrl = `${baseEndpoint}/take`
+const useSnapshotUrl = `${baseEndpoint}/use`
+const snapshotFilesUrl = `${baseEndpoint}/files`
+const uploadSnapshotUrl = `${baseEndpoint}/upload`
+const deleteSnapshotUrl = `${baseEndpoint}/delete`
 // const diffSnapshotUrl = `${snapshotsBaseUrl}/diff`
 
 const Snapshots: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false)
   const [compareFrom, setCompareFrom] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [snapshotError, setSnapshotError] =
-    useState<{ message: string; error: string } | null>(null)
+  const [snapshotError, setSnapshotError] = useState<{ message: string; error: string } | null>(
+    null
+  )
 
   const [data, setData] = useState<string[] | null>(null)
 
   useEffect(() => {
-    if (isOpen) {
-      setData(null)
-      setCompareFrom('')
-      setSnapshotError(null)
-      getList()
-    }
-  }, [isOpen])
+    setData(null)
+    setCompareFrom('')
+    setSnapshotError(null)
+    getList()
+  }, [])
 
   const getList = async () => {
     try {
-      const snapshotListRaw = await fetch(snapshotListUrl, { method: 'GET' })
-      const snapshotList: string[] = (await snapshotListRaw.json()).snapshotsNames
+      const snapshotListRaw = await getRequest(snapshotListUrl)
+      const snapshotList: string[] = snapshotListRaw.snapshotsNames
 
       setData(snapshotList)
     } catch (e) {}
@@ -53,13 +43,11 @@ const Snapshots: React.FC = () => {
 
   const takeSnapshot = async (name: string) => {
     if (!name) return
-    setIsOpen(false)
     setIsLoading(true)
     try {
-      const resultRaw = await fetch(`${takeSnapshotUrl}?name=${normaliseSnapshotName(name)}`, {
-        method: 'POST',
+      const resultJson = await postRequest({
+        url: `${takeSnapshotUrl}?name=${normaliseSnapshotName(name)}`,
       })
-      const resultJson = await resultRaw.json()
 
       if (resultJson.success) return setIsLoading(false)
 
@@ -70,13 +58,9 @@ const Snapshots: React.FC = () => {
   }
 
   const useSnapshot = async (name: string) => {
-    setIsOpen(false)
     setIsLoading(true)
     try {
-      const resultRaw = await fetch(`${useSnapshotUrl}?name=${name}`, {
-        method: 'POST',
-      })
-      const resultJson = await resultRaw.json()
+      const resultJson = await postRequest({ url: `${useSnapshotUrl}?name=${name}` })
 
       if (resultJson.success) return setIsLoading(false)
 
@@ -86,25 +70,45 @@ const Snapshots: React.FC = () => {
     }
   }
 
+  const deleteSnapshot = async (name: string) => {
+    setIsLoading(true)
+    try {
+      const resultRaw = await fetch(`${deleteSnapshotUrl}?name=${name}`, {
+        method: 'POST',
+      })
+      const resultJson = await resultRaw.json()
+      if (resultJson.success) {
+        await getList()
+        setIsLoading(false)
+        return
+      }
+      setSnapshotError(resultJson)
+    } catch (error) {
+      setSnapshotError({ message: 'Front end error while deleting snapshot', error })
+    }
+  }
+
   const uploadSnapshot = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target?.files) return
 
     const file = event.target.files[0]
     const snapshotName = normaliseSnapshotName(file.name.replace('.zip', ''))
 
-    setIsOpen(false)
     setIsLoading(true)
     try {
       const data = new FormData()
       data.append('file', file)
 
-      const resultRaw = await fetch(`${uploadSnapshotUrl}?name=${snapshotName}`, {
-        method: 'POST',
-        body: data,
+      const resultJson = await postRequest({
+        otherBody: data,
+        url: `${uploadSnapshotUrl}?name=${snapshotName}`,
       })
-      const resultJson = await resultRaw.json()
 
-      if (resultJson.success) return setIsLoading(false)
+      if (resultJson.success) {
+        await getList()
+        setIsLoading(false)
+        return
+      }
       setSnapshotError(resultJson)
     } catch (error) {
       setSnapshotError({ message: 'Front end error while uploading snapshot', error })
@@ -117,33 +121,50 @@ const Snapshots: React.FC = () => {
     return (
       <>
         {data.map((snapshotName) => (
-          <Grid.Row key={`app_menu_${snapshotName}`}>
-            <div>
-              <Label>{snapshotName}</Label>
-
-              {compareFrom === '' && (
-                <>
+          <Table.Row key={`app_menu_${snapshotName}`} style={{ paddingBottom: 0 }}>
+            <Table.Cell textAlign="right">
+              <p>{snapshotName}</p>
+            </Table.Cell>
+            {compareFrom === '' && (
+              <>
+                <Table.Cell>
                   <Icon
+                    size="large"
                     className="clickable"
                     name="play circle"
                     onClick={() => useSnapshot(snapshotName)}
                   />
+                </Table.Cell>
+                <Table.Cell width={1}>
                   <Icon
+                    size="large"
                     className="clickable"
                     name="record"
                     onClick={() => takeSnapshot(snapshotName)}
                   />
+                </Table.Cell>
+                <Table.Cell>
                   <a href={`${snapshotFilesUrl}/${snapshotName}.zip`} target="_blank">
-                    <Icon name="download" />
+                    <Icon name="download" size="large" />
                   </a>
-                  {/* <Icon
+                </Table.Cell>
+                <Table.Cell textAlign="left">
+                  <Icon
+                    size="large"
                     className="clickable"
+                    name="trash alternate"
+                    onClick={() => deleteSnapshot(snapshotName)}
+                  />
+                </Table.Cell>
+                {/* <Icon
+                    className="clickable"
+                    size="big"
                     name="random"
                     onClick={() => setCompareFrom(snapshotName)}
                   /> */}
-                </>
-              )}
-              {/* {compareFrom !== snapshotName && compareFrom !== '' ? (
+              </>
+            )}
+            {/* {compareFrom !== snapshotName && compareFrom !== '' ? (
                 <>
                   <a
                     ref={compareLinkRef}
@@ -161,8 +182,7 @@ const Snapshots: React.FC = () => {
                   />
                 </>
               ) : null} */}
-            </div>
-          </Grid.Row>
+          </Table.Row>
         ))}
       </>
     )
@@ -193,16 +213,24 @@ const Snapshots: React.FC = () => {
     const [value, setValue] = useState('')
     if (compareFrom !== '') return null
     return (
-      <Grid.Row key={`app_menu_new-snapshot`}>
-        <div>
-          <Input
-            size="mini"
-            onChange={(_, { value }) => setValue(value)}
-            placeholder="New Snapshot"
-          />
-          <Icon className="clickable" name="record" onClick={() => takeSnapshot(value)} />
-        </div>
-      </Grid.Row>
+      <>
+        <Table.Cell>
+          <div className="flex-row-start" style={{ alignItems: 'center' }}>
+            <Input
+              size="mini"
+              onChange={(_, { value }) => setValue(value)}
+              placeholder="New Snapshot"
+              style={{ paddingRight: 10 }}
+            />
+            <Icon
+              size="large"
+              className="clickable"
+              name="record"
+              onClick={() => takeSnapshot(value)}
+            />
+          </div>
+        </Table.Cell>
+      </>
     )
   }
 
@@ -211,45 +239,39 @@ const Snapshots: React.FC = () => {
     if (compareFrom !== '') return null
     // />
     return (
-      <Grid.Row key={`app_menu_upload-snapshot`}>
-        <Button size="mini" onClick={() => fileInputRef?.current?.click()}>
-          Upload Snapshot {''}
-          <Icon name="upload" />
-        </Button>
-        <input
-          type="file"
-          ref={fileInputRef}
-          accept=".zip"
-          hidden
-          name="file"
-          multiple={false}
-          onChange={(e) => uploadSnapshot(e)}
-        />
-      </Grid.Row>
+      <>
+        <Table.Cell colSpan={4} textAlign="right">
+          <Button primary onClick={() => fileInputRef?.current?.click()}>
+            Upload <Icon name="upload" />
+          </Button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept=".zip"
+            hidden
+            name="file"
+            multiple={false}
+            onChange={(e) => uploadSnapshot(e)}
+          />
+        </Table.Cell>
+      </>
     )
   }
 
   return (
-    <>
-      <Popup
-        position="bottom right"
-        trigger={<Icon name="angle down" style={{ paddingLeft: 10 }} />}
-        on="click"
-        onOpen={() => setIsOpen(true)}
-        onClose={() => setIsOpen(false)}
-        open={isOpen}
-        style={{ zIndex: 20 }}
-      >
-        <Grid textAlign="center" divided columns="equal">
-          <GridColumn>
+    <div id="list-container" style={{ width: 400 }}>
+      <Header>Snapshots</Header>
+      <Table stackable>
+        <Table.Body>
+          <Table.Row>
             {newSnapshot()}
-            {renderSnapshotList()}
             {renderUploadSnapshot()}
-          </GridColumn>
-        </Grid>
-      </Popup>
+          </Table.Row>
+          {renderSnapshotList()}
+        </Table.Body>
+      </Table>
       {renderLoadingAndError()}
-    </>
+    </div>
   )
 }
 

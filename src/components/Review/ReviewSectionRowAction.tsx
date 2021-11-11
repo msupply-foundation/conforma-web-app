@@ -8,7 +8,7 @@ import {
   ReviewProgress,
   ReviewSectionComponentProps,
 } from '../../utils/types'
-import strings from '../../utils/constants'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
 import { ReviewStatus } from '../../utils/generated/graphql'
@@ -16,6 +16,7 @@ import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignme
 import useRemakePreviousReview from '../../utils/hooks/useRemakePreviousReview'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
+  const { strings } = useLanguageProvider()
   const {
     action,
     isAssignedToCurrentUser,
@@ -98,6 +99,7 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   thisReview,
   action,
 }) => {
+  const { strings } = useLanguageProvider()
   const {
     location: { pathname },
     push,
@@ -186,14 +188,15 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure: structure,
   shouldAssignState: [shouldAssign, setShouldAssign],
 }) => {
+  const { strings } = useLanguageProvider()
   const [assignmentError, setAssignmentError] = useState(false)
 
   // Do auto-assign for other sections when one is selected
-  // for auto-assignment in another row when shouldAssign == true
+  // for auto-assignment in another row when shouldAssign == 1
   // Note: This is required to be passed on as props to be processed
   // in each row since the fullStructure is related to each section
   useEffect(() => {
-    if (shouldAssign == true) {
+    if (shouldAssign === 1) {
       selfAssignReview()
     }
   }, [shouldAssign])
@@ -218,7 +221,7 @@ const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
       className="user-action clickable"
       onClick={() => {
         selfAssignReview()
-        setShouldAssign(true)
+        setShouldAssign(1)
       }}
     >
       {strings.BUTTON_SELF_ASSIGN}
@@ -230,6 +233,7 @@ const ViewSubmittedReviewButton: React.FC<ReviewSectionComponentProps> = ({
   fullStructure,
   section: { details },
 }) => {
+  const { strings } = useLanguageProvider()
   const { pathname, push } = useRouter()
   const reviewId = fullStructure.thisReview?.id
   return (

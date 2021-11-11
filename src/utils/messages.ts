@@ -2,6 +2,11 @@ export default {
   APPLICATIONS_LIST_EMPTY: 'No applications found',
   APPLICATION_MISSING_TEMPLATE: '',
   APPLICATION_OTHER_CHANGES_MADE: 'This is a new submission and will require a review.',
+  APPLICATION_DELETION_CONFIRM: {
+    title: 'Delete application',
+    message: 'Please confirm you would like to delete a draft application',
+    option: 'OK',
+  },
   LOGIN_WELCOME: 'Welcome, %1',
   LOGIN_ORG_SELECT: 'Please select an organisation',
   VALIDATION_FAIL: {

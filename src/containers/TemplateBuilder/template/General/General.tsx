@@ -21,15 +21,12 @@ const General: React.FC = () => {
   const { updateTemplate } = useOperationState()
   const { structure } = useApplicationState()
   const { template } = useTemplateState()
-  const { data: availableTemplatesData, refetch: refetchAvailable } =
-    useGetTemplatesAvailableForCodeQuery({
-      variables: { code: template.code },
-    })
+  const { refetch: refetchAvailable } = useGetTemplatesAvailableForCodeQuery({
+    variables: { code: template.code },
+  })
   const [isMessageConfigOpen, setIsMessageConfigOpen] = useState(false)
 
-  const canSetAvailable =
-    availableTemplatesData?.templates?.nodes?.length === 0 &&
-    template.status !== TemplateStatus.Available
+  const canSetAvailable = template.status !== TemplateStatus.Available
 
   const canSetDraft = template.status !== TemplateStatus.Draft && template.applicationCount === 0
 

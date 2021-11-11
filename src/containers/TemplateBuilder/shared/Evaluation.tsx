@@ -13,11 +13,14 @@ import CheckboxIO from './CheckboxIO'
 import JsonIO from './JsonIO'
 import TextIO from './TextIO'
 
+const JWT = localStorage.getItem(config.localStorageJWTKey)
+
 type EvaluationProps = {
   evaluation: EvaluatorNode
   currentElementCode: string
   setEvaluation: (evaluation: EvaluatorNode) => void
-  fullStructure?: FullStructure
+  fullStructure?: FullStructure // for Form
+  applicationData?: any // for Actions
   label: string
   updateKey?: (key: string) => void
   deleteKey?: () => void
@@ -53,6 +56,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
   label,
   currentElementCode,
   fullStructure,
+  applicationData,
   updateKey,
   deleteKey,
 }) => {
@@ -67,7 +71,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
       thisResponse: fullStructure?.responsesByCode?.[currentElementCode]?.text,
     },
     currentUser,
-    applicationData: fullStructure?.info,
+    applicationData: applicationData ? applicationData : fullStructure?.info,
   }
 
   const evaluationParameters = {
@@ -77,6 +81,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
       fetch: fetch.bind(window),
       endpoint: config.serverGraphQL,
     },
+    headers: { Authorization: 'Bearer ' + JWT },
   }
 
   return (

@@ -12,7 +12,6 @@ import { useUserState } from '../../contexts/UserState'
 import { EvaluatorParameters } from '../types'
 import {
   Application,
-  ApplicationSection,
   ApplicationStageStatusAll,
   ApplicationStatus,
   Organisation,
@@ -23,16 +22,18 @@ import {
   useGetApplicationQuery,
   User,
 } from '../generated/graphql'
-import messages from '../messages'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import { buildSectionsStructure } from '../helpers/structure'
 import config from '../../config'
 import { getSectionDetails } from '../helpers/application/getSectionsDetails'
 
 const graphQLEndpoint = config.serverGraphQL
+const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 const MAX_REFETCH = 10
 
 const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
+  const { strings } = useLanguageProvider()
   const [isLoading, setIsLoading] = useState(true)
   const [structureError, setStructureError] = useState('')
   const [structure, setFullStructure] = useState<FullStructure>()
@@ -65,7 +66,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     }
 
     if (!application.template) {
-      setStructureError(messages.APPLICATION_MISSING_TEMPLATE)
+      setStructureError(strings.APPLICATION_MISSING_TEMPLATE)
       return
     }
 
@@ -81,7 +82,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           setRefetchAttempts(refetchAttempts + 1)
           refetch()
         }, 500)
-      } else setStructureError(messages.TRIGGER_RUNNING)
+      } else setStructureError(strings.TRIGGER_RUNNING)
       return
     }
 
@@ -161,6 +162,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       objects: { currentUser, applicationData: applicationDetails },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+      headers: { Authorization: 'Bearer ' + JWT },
     }
     const templateMessages: any = [
       evaluate(application.template?.startMessage || '', evaluatorParams),

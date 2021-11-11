@@ -1,13 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { CellProps } from '../../../utils/types'
-import strings from '../../../utils/constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import { AssignerAction, ReviewerAction } from '../../../utils/generated/graphql'
 import { Icon } from 'semantic-ui-react'
 
 const ReviewerActionCell: React.FC<CellProps> = ({
   application: { serial, reviewerAction, assignerAction },
 }) => {
+  const { strings } = useLanguageProvider()
   const actions = []
 
   const getReviewActionString = (reviewerAction: ReviewerAction) => {
@@ -41,7 +42,8 @@ const ReviewerActionCell: React.FC<CellProps> = ({
   }
 
   if (!!reviewerAction) actions.push(getReviewActionString(reviewerAction))
-  if (!!assignerAction) actions.push(getAssignActionString(assignerAction))
+  if (!!assignerAction && assignerAction != AssignerAction.AssignLocked)
+    actions.push(getAssignActionString(assignerAction))
 
   if (actions.length == 0)
     return (

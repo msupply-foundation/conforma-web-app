@@ -3,7 +3,10 @@ import { Form, Checkbox } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import config from '../../../config'
 import { useUserState } from '../../../contexts/UserState'
-import strings from '../constants'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import { postRequest } from '../../../utils/helpers/fetchMethods'
+
+const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -17,6 +20,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   currentResponse,
   allResponses,
 }) => {
+  const { getPluginStrings } = useLanguageProvider()
+  const strings = getPluginStrings('password')
   const { isEditable } = element
   const {
     placeholder,
@@ -60,6 +65,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           objects: { responses, currentUser, applicationData },
           APIfetch: fetch,
           graphQLConnection: { fetch: fetch.bind(window), endpoint: config.serverGraphQL },
+          headers: { Authorization: 'Bearer ' + JWT },
         })
         setInternalValidation(customValidation)
       }
@@ -76,6 +82,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       objects: { responses, currentUser, applicationData },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: config.serverGraphQL },
+      headers: { Authorization: 'Bearer ' + JWT },
     })
     setInternalValidation(customValidation)
     const passwordsMatch = password === passwordConfirm
@@ -153,15 +160,12 @@ export default ApplicationView
 
 const createHash = async (password: string) => {
   try {
-    const response = await fetch(config.serverREST + '/create-hash', {
-      method: 'POST',
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ password }),
+    const output = await postRequest({
+      url: config.serverREST + '/create-hash',
+      jsonBody: { password },
+      headers: { 'Content-Type': 'application/json' },
     })
-    const output = await response.json()
+
     return output.hash
   } catch (err) {
     throw err

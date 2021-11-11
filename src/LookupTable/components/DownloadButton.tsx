@@ -2,6 +2,7 @@ import axios from 'axios'
 import config from '../../config'
 import React, { Fragment, useState } from 'react'
 import { Popup, Button, Icon, Message } from 'semantic-ui-react'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 const DownloadButton = ({
   id,
@@ -10,6 +11,7 @@ const DownloadButton = ({
   content = '',
   ...props
 }: any) => {
+  const { strings } = useLanguageProvider()
   const [open, setOpen] = useState(openPopup)
   const [error, setError]: any = useState('')
 
@@ -29,10 +31,18 @@ const DownloadButton = ({
     clearTimeout(timeout)
   }
 
+  const JWT = localStorage.getItem(config.localStorageJWTKey || '')
+  const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
+
   const downloadItem = async (event: any) => {
     event.stopPropagation()
     await axios
-      .get(config.serverREST + `/lookup-table/export/${id}`)
+      .get(config.serverREST + `/admin/lookup-table/export/${id}`, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          ...authHeader,
+        },
+      })
       .then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
@@ -52,7 +62,7 @@ const DownloadButton = ({
       open={open}
       content={
         error ? (
-          <Message negative header="Error trying to download" content={error} />
+          <Message negative header={strings.LABEL_FILE_DOWNLOAD_ERROR} content={error} />
         ) : (
           popUpContent
         )

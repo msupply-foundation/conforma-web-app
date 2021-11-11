@@ -32,7 +32,7 @@ const PermissionNameList: React.FC<PermissionNameListProps> = ({
     updateTemplate(templateId, { templatePermissionsUsingId: { deleteById: [{ id }] } })
   }
   return (
-    <div className="flex-column-start-start">
+    <div className="flex-column-start-stretch">
       {getMatchingTemplatePermission({ type, stageNumber, templatePermissions, levelNumber }).map(
         (templatePermission) => (
           <div key={templatePermission?.id} className="config-container">
@@ -60,6 +60,7 @@ const PermissionNameList: React.FC<PermissionNameListProps> = ({
             {type === PermissionPolicyType.Review && levelNumber && (
               <ReviewTemplatePermission
                 templatePermission={templatePermission}
+                stageNumber={stageNumber}
                 levelNumber={levelNumber}
               />
             )}
