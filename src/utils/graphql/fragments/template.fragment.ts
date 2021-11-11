@@ -8,6 +8,7 @@ export default gql`
     status
     namePlural
     isLinear
+    isInteractive
     startMessage
     submissionMessage
     version
