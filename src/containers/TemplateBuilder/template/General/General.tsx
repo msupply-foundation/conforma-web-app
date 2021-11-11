@@ -93,7 +93,17 @@ const General: React.FC = () => {
           updateTemplate(template.id, { isLinear: checked })
         }}
         disabled={!template.isDraft}
-        disabledMessage="Can only change code of draft template"
+        disabledMessage="Can only change isLinear of draft template"
+      />
+
+      <CheckboxIO
+        title="Interactive"
+        value={!!template?.isInteractive}
+        setValue={(checked) => {
+          updateTemplate(template.id, { isInteractive: checked })
+        }}
+        disabled={!template.isDraft}
+        disabledMessage="Can only change isInteractive of draft template"
       />
 
       <Category />
