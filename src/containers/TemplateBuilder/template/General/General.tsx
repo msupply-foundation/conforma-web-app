@@ -98,12 +98,12 @@ const General: React.FC = () => {
 
       <CheckboxIO
         title="Interactive"
-        value={!!template?.isInteractive}
+        value={!!template?.canApplicantMakeChanges}
         setValue={(checked) => {
-          updateTemplate(template.id, { isInteractive: checked })
+          updateTemplate(template.id, { canApplicantMakeChanges: checked })
         }}
         disabled={!template.isDraft}
-        disabledMessage="Can only change isInteractive of draft template"
+        disabledMessage="Can only change canApplicantMakeChanges of draft template"
       />
 
       <Category />

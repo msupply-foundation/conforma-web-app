@@ -156,7 +156,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       })
     })
 
-    const isInteractive = application.template?.isInteractive ?? true
+    const canApplicantMakeChanges = application.template?.canApplicantMakeChanges ?? true
 
     const templateStages = application.template?.templateStages.nodes as TemplateStage[]
 
@@ -181,7 +181,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           colour: stage.colour as string,
         })),
         sections: buildSectionsStructure({ sectionDetails, baseElements }),
-        isInteractive,
+        canApplicantMakeChanges,
         attemptSubmission: false,
       }
 

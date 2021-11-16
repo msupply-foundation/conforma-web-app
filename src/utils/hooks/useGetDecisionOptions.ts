@@ -5,7 +5,7 @@ import { DecisionOption, ReviewAssignment, ReviewDetails } from '../types'
 
 const getInitialDecisionOptions = (
   strings: LanguageStrings,
-  isInteractive: boolean
+  canApplicantMakeChanges: boolean
 ): DecisionOption[] => {
   let availableOptions = [
     {
@@ -29,7 +29,7 @@ const getInitialDecisionOptions = (
   ]
 
   // Only display LOQ options if template is interactive with Applicant
-  if (isInteractive)
+  if (canApplicantMakeChanges)
     availableOptions.push({
       code: Decision.ListOfQuestions,
       title: strings.DECISION_LIST_OF_QUESTIONS,
@@ -42,7 +42,7 @@ const getInitialDecisionOptions = (
 
 // hook used to manage state of options shown in review submit, as per type definition below
 type UseGetDecisionOptions = (
-  isInteractive: boolean,
+  canApplicantMakeChanges: boolean,
   assignment?: ReviewAssignment,
   thisReview?: ReviewDetails | null
 ) => {
@@ -53,11 +53,15 @@ type UseGetDecisionOptions = (
   isDecisionError: boolean
 }
 
-const useGetDecisionOptions: UseGetDecisionOptions = (isInteractive, assignment, thisReview) => {
+const useGetDecisionOptions: UseGetDecisionOptions = (
+  canApplicantMakeChanges,
+  assignment,
+  thisReview
+) => {
   const { strings } = useLanguageProvider()
   const { isLastLevel, finalDecision, canSubmitReviewAs } = assignment as ReviewAssignment
   const [decisionOptions, setDecisionOptions] = useState<DecisionOption[]>(
-    getInitialDecisionOptions(strings, isInteractive)
+    getInitialDecisionOptions(strings, canApplicantMakeChanges)
   )
   const [isDecisionError, setIsDecisionError] = useState(false)
 
