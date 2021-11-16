@@ -165,14 +165,14 @@ const Snapshots: React.FC = () => {
                   <Icon
                     name="download"
                     size="large"
-                    className="clickable"
+                    className="clickable blue"
                     onClick={() => downloadSnapshot(snapshotName)}
                   />
                 </Table.Cell>
                 <Table.Cell textAlign="left">
                   <Icon
                     size="large"
-                    className="clickable blue"
+                    className="clickable"
                     name="trash alternate"
                     onClick={() => deleteSnapshot(snapshotName)}
                   />
