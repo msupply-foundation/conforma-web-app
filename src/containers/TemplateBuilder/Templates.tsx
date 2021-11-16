@@ -8,6 +8,7 @@ import TextIO from './shared/TextIO'
 import useGetTemplates, { Template } from './useGetTemplates'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
+import config from '../../config'
 
 type CellPropsTemplate = Template & { numberOfTemplates?: number }
 type CellProps = { template: CellPropsTemplate; refetch: () => void }
@@ -87,6 +88,7 @@ const ExportButton: React.FC<CellProps> = ({ template: { code, version, id } }) 
   const downloadLinkRef = useRef<HTMLAnchorElement>(null)
   const { exportTemplate } = useOperationState()
   const snapshotName = `${code}-${version}`
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
 
   return (
     <div key="export">
@@ -95,7 +97,16 @@ const ExportButton: React.FC<CellProps> = ({ template: { code, version, id } }) 
         className="clickable"
         onClick={async (e) => {
           e.stopPropagation()
-          if (await exportTemplate({ id, snapshotName })) downloadLinkRef?.current?.click()
+          if (await exportTemplate({ id, snapshotName })) {
+            const res = await fetch(`${snapshotFilesUrl}/${snapshotName}.zip`, {
+              headers: { Authorization: `Bearer ${JWT}` },
+            })
+            const data = await res.blob()
+            var a = document.createElement('a')
+            a.href = window.URL.createObjectURL(data)
+            a.download = `${snapshotName}.zip`
+            a.click()
+          }
         }}
       >
         <Icon className="clickable" key="export" name="sign-out" />
