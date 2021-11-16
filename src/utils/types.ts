@@ -248,6 +248,7 @@ interface FullStructure {
   lastValidationTimestamp?: number
   attemptSubmission: boolean
   info: ApplicationDetails
+  canApplicantMakeChanges: boolean
   sections: SectionsStructure
   stages: StageDetails[]
   responsesByCode?: ResponsesByCode

@@ -8,6 +8,7 @@ export default gql`
     status
     namePlural
     isLinear
+    canApplicantMakeChanges
     startMessage
     submissionMessage
     version
