@@ -156,6 +156,8 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       })
     })
 
+    const canApplicantMakeChanges = application.template?.canApplicantMakeChanges ?? true
+
     const templateStages = application.template?.templateStages.nodes as TemplateStage[]
 
     const evaluatorParams: EvaluatorParameters = {
@@ -179,6 +181,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           colour: stage.colour as string,
         })),
         sections: buildSectionsStructure({ sectionDetails, baseElements }),
+        canApplicantMakeChanges,
         attemptSubmission: false,
       }
 

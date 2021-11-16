@@ -21,6 +21,8 @@ const Snapshots: React.FC = () => {
 
   const [data, setData] = useState<string[] | null>(null)
 
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
+
   useEffect(() => {
     setData(null)
     setCompareFrom('')
@@ -47,6 +49,7 @@ const Snapshots: React.FC = () => {
     try {
       const resultJson = await postRequest({
         url: `${takeSnapshotUrl}?name=${normaliseSnapshotName(name)}`,
+        headers: { Authorization: `Bearer ${JWT}` },
       })
 
       if (resultJson.success) return setIsLoading(false)
@@ -60,7 +63,10 @@ const Snapshots: React.FC = () => {
   const useSnapshot = async (name: string) => {
     setIsLoading(true)
     try {
-      const resultJson = await postRequest({ url: `${useSnapshotUrl}?name=${name}` })
+      const resultJson = await postRequest({
+        url: `${useSnapshotUrl}?name=${name}`,
+        headers: { Authorization: `Bearer ${JWT}` },
+      })
 
       if (resultJson.success) return setIsLoading(false)
 
@@ -73,10 +79,10 @@ const Snapshots: React.FC = () => {
   const deleteSnapshot = async (name: string) => {
     setIsLoading(true)
     try {
-      const resultRaw = await fetch(`${deleteSnapshotUrl}?name=${name}`, {
-        method: 'POST',
+      const resultJson = await postRequest({
+        url: `${deleteSnapshotUrl}?name=${name}`,
+        headers: { Authorization: `Bearer ${JWT}` },
       })
-      const resultJson = await resultRaw.json()
       if (resultJson.success) {
         await getList()
         setIsLoading(false)
@@ -102,6 +108,7 @@ const Snapshots: React.FC = () => {
       const resultJson = await postRequest({
         otherBody: data,
         url: `${uploadSnapshotUrl}?name=${snapshotName}`,
+        headers: { Authorization: `Bearer ${JWT}` },
       })
 
       if (resultJson.success) {
@@ -113,6 +120,17 @@ const Snapshots: React.FC = () => {
     } catch (error) {
       setSnapshotError({ message: 'Front end error while uploading snapshot', error })
     }
+  }
+
+  const downloadSnapshot = async (snapshotName: string) => {
+    const res = await fetch(`${snapshotFilesUrl}/${snapshotName}.zip`, {
+      headers: { Authorization: `Bearer ${JWT}` },
+    })
+    const data = await res.blob()
+    var a = document.createElement('a')
+    a.href = window.URL.createObjectURL(data)
+    a.download = `${snapshotName}.zip`
+    a.click()
   }
 
   const renderSnapshotList = () => {
@@ -144,9 +162,12 @@ const Snapshots: React.FC = () => {
                   />
                 </Table.Cell>
                 <Table.Cell>
-                  <a href={`${snapshotFilesUrl}/${snapshotName}.zip`} target="_blank">
-                    <Icon name="download" size="large" />
-                  </a>
+                  <Icon
+                    name="download"
+                    size="large"
+                    className="clickable blue"
+                    onClick={() => downloadSnapshot(snapshotName)}
+                  />
                 </Table.Cell>
                 <Table.Cell textAlign="left">
                   <Icon
