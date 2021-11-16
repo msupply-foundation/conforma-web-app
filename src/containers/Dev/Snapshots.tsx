@@ -122,6 +122,17 @@ const Snapshots: React.FC = () => {
     }
   }
 
+  const downloadSnapshot = async (snapshotName: string) => {
+    const res = await fetch(`${snapshotFilesUrl}/${snapshotName}.zip`, {
+      headers: { Authorization: `Bearer ${JWT}` },
+    })
+    const data = await res.blob()
+    var a = document.createElement('a')
+    a.href = window.URL.createObjectURL(data)
+    a.download = `${snapshotName}.zip`
+    a.click()
+  }
+
   const renderSnapshotList = () => {
     // const compareLinkRef = useRef<HTMLAnchorElement>(null)
     if (!data) return null
@@ -151,14 +162,17 @@ const Snapshots: React.FC = () => {
                   />
                 </Table.Cell>
                 <Table.Cell>
-                  <a href={`${snapshotFilesUrl}/${snapshotName}.zip`} target="_blank">
-                    <Icon name="download" size="large" />
-                  </a>
+                  <Icon
+                    name="download"
+                    size="large"
+                    className="clickable"
+                    onClick={() => downloadSnapshot(snapshotName)}
+                  />
                 </Table.Cell>
                 <Table.Cell textAlign="left">
                   <Icon
                     size="large"
-                    className="clickable"
+                    className="clickable blue"
                     name="trash alternate"
                     onClick={() => deleteSnapshot(snapshotName)}
                   />
