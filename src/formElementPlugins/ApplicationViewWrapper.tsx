@@ -21,7 +21,6 @@ import globalConfig from '../config'
 import { SemanticICONS } from 'semantic-ui-react'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
-const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const { strings } = useLanguageProvider()
@@ -70,6 +69,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   // Update dynamic parameters when responses change
   useEffect(() => {
+    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
     Object.entries(parameterExpressions).forEach(([field, expression]) => {
       evaluateExpression(expression as EvaluatorNode, {
         objects: { responses: allResponses, currentUser, applicationData },
@@ -92,6 +92,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }, [currentResponse, isStrictPage])
 
   const onUpdate = async (value: LooseString) => {
+    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
     const responses = { thisResponse: value, ...allResponses }
     const newValidationState = await calculateValidationState({
       validationExpression,
