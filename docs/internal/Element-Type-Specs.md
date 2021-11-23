@@ -321,6 +321,15 @@ _One or more checkboxes, any number of which can be selected/toggled_
 
 - **type**: `string` -- Can be "toggle" to display as a toggle switch, or "slider" to display as a slider switch (defaults to regular checkbox).
 - **layout**: `string` -- if "inline", displays checkboxes horizontally in rows. Useful if there are a lot of checkboxes.
+- **resetButton**: `boolean` -- if `true`, element will show a "Reset" button, which allows user to reset selections to the initial (loading) state. (Default: `false`)
+- **keyMap**: `object` -- if the input `checkboxes` property (above) has different property names that what is required (for example, if pulling from an API), then this `keyMap` parameter can be used to re-map the input property names to the requried property names. For example, if your input "checkbox" data contained an array of objects of the type `{ name: "Nicole", active: true}`, you would provide a `keyMap` object like this:
+```
+{
+  label: "name",
+  selected: "active"
+}
+```
+This tells the element to look at the "name" field for the `label`, and the "active" field for the `selected` status. Note that all the "checkbox" fields can be re-mapped, but it is only required that you provide the ones that are different.
 
 #### Response type
 

@@ -30,13 +30,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const { label, description, checkboxes, type, layout, resetButton = false, keyMap } = parameters
 
   const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
-    getInitialState(initialValue, checkboxes)
+    getInitialState(initialValue, checkboxes, keyMap)
   )
   const [initialState, setInitialState] = useState<Checkbox[]>()
 
   // When checkbox array changes after initial load (e.g. when its being dynamically loaded from an API)
   useEffect(() => {
-    const initState = getInitialState(initialValue, checkboxes)
+    const initState = getInitialState(initialValue, checkboxes, keyMap)
     setCheckboxElements(initState)
     setInitialState(initState)
   }, [checkboxes])
@@ -101,7 +101,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       ))}
       {resetButton && (
         <div style={{ marginTop: 10 }}>
-          <Button primary content="Reset selections" compact onClick={resetState} />
+          <Button primary content={strings.BUTTON_RESET_SELECTION} compact onClick={resetState} />
         </div>
       )}
     </>
@@ -110,12 +110,31 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
 export default ApplicationView
 
-const getInitialState = (initialValue: CheckboxSavedState, checkboxes: Checkbox[]) => {
+type KeyMap = {
+  label?: string
+  text?: string
+  textNegative?: string
+  key?: string
+  selected?: string
+}
+
+const getInitialState = (
+  initialValue: CheckboxSavedState,
+  checkboxes: Checkbox[],
+  keyMap: KeyMap | undefined
+) => {
   // Returns a consistent array of Checkbox objects, regardless of input structure
   const { values: initValues } = initialValue
+  const checkboxPropertyNames = {
+    label: keyMap?.label ?? 'label',
+    text: keyMap?.text ?? 'text',
+    textNegative: keyMap?.textNegative ?? 'textNegative',
+    key: keyMap?.key ?? 'key',
+    selected: keyMap?.selected ?? 'selected',
+  }
   return (
     checkboxes
-      .map((cb: Checkbox, index: number) => {
+      .map((cb: any, index: number) => {
         if (typeof cb === 'string' || typeof cb === 'number')
           return {
             label: String(cb),
@@ -126,11 +145,11 @@ const getInitialState = (initialValue: CheckboxSavedState, checkboxes: Checkbox[
           }
         else
           return {
-            label: cb.label,
-            text: cb?.text || cb.label,
-            textNegative: cb?.textNegative || '',
-            key: cb?.key || index,
-            selected: cb?.selected || false,
+            label: cb?.[checkboxPropertyNames.label],
+            text: cb?.[checkboxPropertyNames.text] || cb?.[checkboxPropertyNames.label],
+            textNegative: cb?.[checkboxPropertyNames.textNegative] || '',
+            key: cb?.[checkboxPropertyNames.key] || index,
+            selected: cb?.[checkboxPropertyNames.selected] || false,
           }
       })
       // Replaces with any already-selected values from database
