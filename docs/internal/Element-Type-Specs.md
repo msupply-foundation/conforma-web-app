@@ -308,16 +308,19 @@ _One or more checkboxes, any number of which can be selected/toggled_
 - **checkboxes**: `array[string | checkbox]` -- an array of labels, one per checkbox. For more complexity, an array of Checkbox objects can be provided, with the following properties:
 
 ```
-
 {
   label: <string> - text to display next to checkbox (Can be empty string but not omitted)
   text: <string> - value to store in Response "text" field and shown in Summary View. Will be same as label if omitted.
   textNegative: <string> - value to store in Response "text" field if checkbox is un-selected. (Optional -- defaults to empty string)
   key: <string | number> - unique code used as key/property name for Response object. Defaults to numerical index of array if omitted
   selected: <boolean> - initial state of checkbox
+  ...Other properties
 }
-
 ```
+
+"Other properties" refers to any additional properties included in the object. For example, an API call might return objects with a bunch of additional fields. These are not required for the Checbox display, but will be passed along and stored as part of the response, so any of these properties can be referred to in subsequent elements or actions.
+
+To handle objects returned that don't have the required fields, you can use the `keyMap` parameter (below) to map fields to required key names.
 
 - **type**: `string` -- Can be "toggle" to display as a toggle switch, or "slider" to display as a slider switch (defaults to regular checkbox).
 - **layout**: `string` -- if "inline", displays checkboxes horizontally in rows. Useful if there are a lot of checkboxes.
@@ -342,6 +345,7 @@ This tells the element to look at the "name" field for the `label`, and the "act
         <key-name-2> : { text: <text value>, isSelected: <boolean>}
         ... for all checkbox keys
         }
+    ...Other properties
     selectedValuesArray: [
       <checkbox elements -- same as the values above but filtered for selected-only>
     ]

@@ -49,7 +49,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       values: Object.fromEntries(
         checkboxElements.map((cb) => [
           cb.key,
-          { text: cb.text, textNegative: cb.textNegative, selected: cb.selected },
+          { ...cb, text: cb.text, textNegative: cb.textNegative, selected: cb.selected },
         ])
       ),
       selectedValuesArray: checkboxElements.filter((cb) => cb.selected),
@@ -145,6 +145,7 @@ const getInitialState = (
           }
         else
           return {
+            ...cb,
             label: cb?.[checkboxPropertyNames.label],
             text: cb?.[checkboxPropertyNames.text] || cb?.[checkboxPropertyNames.label],
             textNegative: cb?.[checkboxPropertyNames.textNegative] || '',
