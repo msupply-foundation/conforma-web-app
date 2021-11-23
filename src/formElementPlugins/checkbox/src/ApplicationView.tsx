@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Checkbox, Form } from 'semantic-ui-react'
+import { Button, Checkbox, Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import config from '../pluginConfig.json'
@@ -27,15 +27,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const { getPluginStrings } = useLanguageProvider()
   const strings = getPluginStrings('checkbox')
   const { isEditable } = element
-  const { label, description, checkboxes, type, layout } = parameters
+  const { label, description, checkboxes, type, layout, resetButton = false, keyMap } = parameters
 
   const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
     getInitialState(initialValue, checkboxes)
   )
+  const [initialState, setInitialState] = useState<Checkbox[]>()
 
   // When checkbox array changes after initial load (e.g. when its being dynamically loaded from an API)
   useEffect(() => {
-    setCheckboxElements(getInitialState(initialValue, checkboxes))
+    const initState = getInitialState(initialValue, checkboxes)
+    setCheckboxElements(initState)
+    setInitialState(initState)
   }, [checkboxes])
 
   useEffect(() => {
@@ -61,12 +64,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       }, '')
       .replace(/^$/, `*<${strings.LABEL_SUMMMARY_NOTHING_SELECTED}>*`)
 
-  function toggle(e: any, data: any) {
+  const toggle = (e: any, data: any) => {
     const { index } = data
     const changedCheckbox = { ...checkboxElements[index] }
     changedCheckbox.selected = !changedCheckbox.selected
     setCheckboxElements(checkboxElements.map((cb, i) => (i === index ? changedCheckbox : cb)))
   }
+
+  const resetState = () => setCheckboxElements(initialState as Checkbox[])
 
   const styles =
     layout === 'inline'
@@ -94,6 +99,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           />
         </Form.Field>
       ))}
+      {resetButton && (
+        <div style={{ marginTop: 10 }}>
+          <Button primary content="Reset selections" compact onClick={resetState} />
+        </div>
+      )}
     </>
   )
 }
