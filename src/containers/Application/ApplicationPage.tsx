@@ -66,6 +66,8 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
     },
   } = fullStructure
 
+  console.log(fullStructure)
+
   return (
     <Container id="application-form">
       <Grid stackable>

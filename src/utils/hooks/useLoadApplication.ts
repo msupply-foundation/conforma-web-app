@@ -166,13 +166,14 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
       headers: { Authorization: 'Bearer ' + JWT },
     }
-    const templateMessages: any = [
-      evaluate(application.template?.startMessage || '', evaluatorParams),
-      evaluate(application.template?.submissionMessage || '', evaluatorParams),
-    ]
-    Promise.all(templateMessages).then(([startMessage, submissionMessage]: any) => {
+
+    evaluate(application.template?.startMessage || '', evaluatorParams).then((startMessage) => {
       let newStructure: FullStructure = {
-        info: { ...applicationDetails, submissionMessage, startMessage },
+        info: {
+          ...applicationDetails,
+          submissionMessage: application.template?.submissionMessage,
+          startMessage: startMessage as string,
+        },
         stages: templateStages.map((stage) => ({
           id: stage.id,
           name: stage.title as string,
