@@ -348,6 +348,9 @@ This tells the element to look at the "name" field for the `label`, and the "act
     ...Other properties
     selectedValuesArray: [
       <checkbox elements -- same as the values above but filtered for selected-only>
+    ],
+    unselectedValuesArray: [
+      <checkbox elements -- same as the values above but filtered for UNselected-only>
     ]
 }
 
