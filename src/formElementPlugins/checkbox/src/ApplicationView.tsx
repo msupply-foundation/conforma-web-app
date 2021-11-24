@@ -53,6 +53,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         ])
       ),
       selectedValuesArray: checkboxElements.filter((cb) => cb.selected),
+      unselectedValuesArray: checkboxElements.filter((cb) => !cb.selected),
     })
   }, [checkboxElements])
 
