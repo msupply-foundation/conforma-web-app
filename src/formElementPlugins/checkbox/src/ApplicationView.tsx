@@ -29,16 +29,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const { isEditable } = element
   const { label, description, checkboxes, type, layout, resetButton = false, keyMap } = parameters
 
+  const [isFirstRender, setIsFirstRender] = useState(true)
+
   const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
-    getInitialState(initialValue, checkboxes, keyMap)
+    getInitialState(initialValue, checkboxes, keyMap, isFirstRender)
   )
-  const [initialState, setInitialState] = useState<Checkbox[]>()
 
   // When checkbox array changes after initial load (e.g. when its being dynamically loaded from an API)
   useEffect(() => {
-    const initState = getInitialState(initialValue, checkboxes, keyMap)
-    setCheckboxElements(initState)
-    setInitialState(initState)
+    if (checkboxes[0] !== config.parameterLoadingValues.label && isFirstRender) {
+      setIsFirstRender(false)
+    }
+    setCheckboxElements(getInitialState(initialValue, checkboxes, keyMap, isFirstRender))
   }, [checkboxes])
 
   useEffect(() => {
@@ -72,7 +74,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setCheckboxElements(checkboxElements.map((cb, i) => (i === index ? changedCheckbox : cb)))
   }
 
-  const resetState = () => setCheckboxElements(initialState as Checkbox[])
+  const resetState = () =>
+    setCheckboxElements(getInitialState(initialValue, checkboxes, keyMap, isFirstRender))
 
   const styles =
     layout === 'inline'
@@ -122,7 +125,8 @@ type KeyMap = {
 const getInitialState = (
   initialValue: CheckboxSavedState,
   checkboxes: Checkbox[],
-  keyMap: KeyMap | undefined
+  keyMap: KeyMap | undefined,
+  isFirstRender: boolean
 ) => {
   // Returns a consistent array of Checkbox objects, regardless of input structure
   const { values: initValues } = initialValue
@@ -133,31 +137,31 @@ const getInitialState = (
     key: keyMap?.key ?? 'key',
     selected: keyMap?.selected ?? 'selected',
   }
-  return (
-    checkboxes
-      .map((cb: any, index: number) => {
-        if (typeof cb === 'string' || typeof cb === 'number')
-          return {
-            label: String(cb),
-            text: String(cb),
-            textNegative: '',
-            key: index,
-            selected: false,
-          }
-        else
-          return {
-            ...cb,
-            label: cb?.[checkboxPropertyNames.label],
-            text: cb?.[checkboxPropertyNames.text] || cb?.[checkboxPropertyNames.label],
-            textNegative: cb?.[checkboxPropertyNames.textNegative] || '',
-            key: cb?.[checkboxPropertyNames.key] || index,
-            selected: cb?.[checkboxPropertyNames.selected] || false,
-          }
-      })
-      // Replaces with any already-selected values from database
-      .map((cb) => ({
+  const checkboxElements = checkboxes.map((cb: any, index: number) => {
+    if (typeof cb === 'string' || typeof cb === 'number')
+      return {
+        label: String(cb),
+        text: String(cb),
+        textNegative: '',
+        key: index,
+        selected: false,
+      }
+    else
+      return {
+        ...cb,
+        label: cb?.[checkboxPropertyNames.label],
+        text: cb?.[checkboxPropertyNames.text] || cb?.[checkboxPropertyNames.label],
+        textNegative: cb?.[checkboxPropertyNames.textNegative] || '',
+        key: cb?.[checkboxPropertyNames.key] || index,
+        selected: cb?.[checkboxPropertyNames.selected] || false,
+      }
+  })
+  // On first render, we set elements to the *saved* state, but after that we
+  // replace them with the new, changed checkbox values
+  return isFirstRender
+    ? checkboxElements.map((cb) => ({
         ...cb,
         selected: initValues?.[cb.key] ? initValues[cb.key].selected : cb.selected,
       }))
-  )
+    : checkboxElements
 }
