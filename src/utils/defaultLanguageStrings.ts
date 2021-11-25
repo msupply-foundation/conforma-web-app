@@ -1,5 +1,5 @@
 export default {
-  APP_NAME: 'mFlow',
+  APP_NAME: 'conforma',
   APP_NAME_SUBHEADER: 'Application Manager',
   OK: 'OK',
   CANCEL: 'Cancel',
@@ -191,7 +191,7 @@ export default {
   TITLE_HISTORY_REVIEW: 'Review',
   TITLE_HISTORY_SUBMITTED_BY_APPLICANT: 'Submitted by applicant',
   TITLE_HISTORY_PANEL: 'Review History',
-  TITLE_LOGIN_HEADER: 'mFlow Application Manager',
+  TITLE_LOGIN_HEADER: 'Conforma Application Manager',
   TITLE_LOGIN: 'Login',
   TITLE_APPLICATION_FORM: 'application form',
   TITLE_APPLICATION_SUMMARY: 'Review and Submit',
