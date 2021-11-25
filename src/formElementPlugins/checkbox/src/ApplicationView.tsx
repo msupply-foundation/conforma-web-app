@@ -34,16 +34,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
     getInitialState(initialValue, checkboxes, keyMap, isFirstRender)
   )
-  const [initialState, setInitialState] = useState<Checkbox[]>()
 
   // When checkbox array changes after initial load (e.g. when its being dynamically loaded from an API)
   useEffect(() => {
     if (checkboxes[0] !== config.parameterLoadingValues.label && isFirstRender) {
       setIsFirstRender(false)
     }
-    const initState = getInitialState(initialValue, checkboxes, keyMap, isFirstRender)
-    setCheckboxElements(initState)
-    setInitialState(initState)
+    setCheckboxElements(getInitialState(initialValue, checkboxes, keyMap, isFirstRender))
   }, [checkboxes])
 
   useEffect(() => {
@@ -77,7 +74,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setCheckboxElements(checkboxElements.map((cb, i) => (i === index ? changedCheckbox : cb)))
   }
 
-  const resetState = () => setCheckboxElements(initialState as Checkbox[])
+  const resetState = () =>
+    setCheckboxElements(getInitialState(initialValue, checkboxes, keyMap, isFirstRender))
 
   const styles =
     layout === 'inline'
