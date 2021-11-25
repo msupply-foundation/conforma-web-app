@@ -21,7 +21,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 import { UiLocation } from '../../utils/generated/graphql'
-const brandLogo = require('../../../images/brand_logo.png').default
+const brandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
 
 const UserArea: React.FC = () => {
   const {
@@ -182,12 +182,14 @@ const BrandArea: React.FC = () => {
   const { strings } = useLanguageProvider()
   return (
     <div id="brand-area" className="hide-on-mobile">
-      <Image src={brandLogo} />
+      <Link to="/">
+        <Image src={brandLogo} />
+      </Link>
       <div>
-        <Link to="/">
+        {/* <Link to="/">
           <h2 className="brand-area-text">{strings.APP_NAME}</h2>
           <h3 className="brand-area-text">{strings.APP_NAME_SUBHEADER}</h3>
-        </Link>
+        </Link> */}
       </div>
     </div>
   )

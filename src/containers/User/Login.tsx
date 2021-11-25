@@ -7,7 +7,7 @@ import isLoggedIn from '../../utils/helpers/loginCheck'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { LoginPayload, OrganisationSimple } from '../../utils/types'
-const logo = require('../../../images/logos/logo_512.png').default
+const logo = require('../../../images/logos/conforma_logo_wide_1024.png').default
 import config from '../../config'
 
 const LOGIN_AS_NO_ORG = 0
@@ -100,7 +100,7 @@ const Login: React.FC = () => {
     <Container id="login-container">
       {languageOptions.length > 1 && <LanguageSelector />}
       <div id="login-box">
-        <div className="flex-centered">
+        <div className="flex-column-center">
           <Image src={logo} className="image-icon" />
           <Header as="h3" className="login-header">
             {strings.TITLE_LOGIN_HEADER}
