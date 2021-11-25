@@ -53,9 +53,6 @@ const SiteLayout: React.FC = () => {
             <Route>
               <NoMatch />
             </Route>
-            <Route>
-              <NoMatch />
-            </Route>
           </Switch>
         </Container>
         <Footer />
