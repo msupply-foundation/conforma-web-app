@@ -10,7 +10,6 @@ import {
   EvaluatorNode,
 } from '../types'
 const graphQLEndpoint = config.serverGraphQL
-const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 type PartialEvaluatedElement = Partial<EvaluatedElement>
 type EvaluationObject = {
@@ -52,6 +51,7 @@ const evaluateSingleElement: EvaluateElement = async (
   evaluationOptions,
   { responses, currentUser, applicationData }
 ) => {
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
   const evaluationParameters = {
     objects: {
       responses: { ...responses, thisResponse: responses?.[element.code]?.text },
