@@ -9,8 +9,6 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 import config from '../../../config'
 import useDebounce from './useDebounce'
 
-const JWT = localStorage.getItem(config.localStorageJWTKey)
-
 interface DisplayFormat {
   title?: string
   subtitle?: string
@@ -70,6 +68,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const evaluateSearchQuery = (text: string) => {
     const search = { text }
+    const JWT = localStorage.getItem(config.localStorageJWTKey)
     evaluateExpression(source, {
       objects: { search, currentUser, applicationData, responses: allResponses },
       APIfetch: fetch,
