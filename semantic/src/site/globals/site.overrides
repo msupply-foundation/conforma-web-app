@@ -191,7 +191,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   background-color: white;
-  max-width: 450px;
+  width: clamp(250px, 35%, 450px);
   box-shadow: @basicBoxShadow;
   border-radius: @borderRadius;
   padding: 20px;
@@ -205,12 +205,13 @@ a:hover {
 }
 
 .login-header {
-  margin: 0 !important;
+  margin: 20px 0 0 0 !important;
   letter-spacing: @letterSpacingRegular !important;
 }
 
 .image-icon {
-  height: 45px;
+  // height: 45px;
+  width: 250px;
   margin-right: 12px;
 }
 
@@ -258,7 +259,7 @@ a:hover {
 }
 
 #brand-area {
-  width: clamp(100px, 25%, 400px);
+  width: clamp(100px, 25%, 200px);
   display: flex;
   align-items: center;
   gap: 20px;

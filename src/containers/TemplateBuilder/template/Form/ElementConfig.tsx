@@ -106,7 +106,6 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   }
 
   const updateElement = async () => {
-    console.log('here')
     const result = await updateTemplateSection(selectedSectionId, {
       templateElementsUsingId: {
         updateById: [{ id: state.id, patch: state }],

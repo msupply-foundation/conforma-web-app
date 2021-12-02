@@ -11,7 +11,6 @@ import globalConfig from '../config'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 
 const graphQLEndpoint = globalConfig.serverGraphQL
-const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   element,
@@ -38,6 +37,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
 
   useEffect(() => {
     // Update dynamic parameters when responses change
+    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
     Object.entries(parameterExpressions).forEach(([field, expression]) => {
       evaluateExpression(expression as EvaluatorNode, {
         objects: {
