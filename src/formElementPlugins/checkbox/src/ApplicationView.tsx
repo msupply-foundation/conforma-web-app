@@ -46,8 +46,19 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useEffect(() => {
     // Don't save response if parameters are still loading
     if (checkboxElements[0].text === config.parameterLoadingValues.label) return
+    const {
+      text,
+      textUnselected,
+      textMarkdownList,
+      textUnselectedMarkdownList,
+      textMarkdownPropertyList,
+    } = createTextStrings(checkboxElements, strings.LABEL_SUMMMARY_NOTHING_SELECTED)
     onSave({
-      text: createTextString(checkboxElements),
+      text,
+      textUnselected,
+      textMarkdownList,
+      textUnselectedMarkdownList,
+      textMarkdownPropertyList,
       values: Object.fromEntries(
         checkboxElements.map((cb) => [
           cb.key,
@@ -58,14 +69,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       unselectedValuesArray: checkboxElements.filter((cb) => !cb.selected),
     })
   }, [checkboxElements])
-
-  const createTextString = (checkboxes: Checkbox[]) =>
-    checkboxes
-      .reduce((output, cb) => {
-        const text = cb.selected ? cb.text : cb.textNegative
-        return output + (output === '' ? text : ', ' + text)
-      }, '')
-      .replace(/^$/, `*<${strings.LABEL_SUMMMARY_NOTHING_SELECTED}>*`)
 
   const toggle = (e: any, data: any) => {
     const { index } = data
@@ -164,4 +167,36 @@ const getInitialState = (
         selected: initValues?.[cb.key] ? initValues[cb.key].selected : cb.selected,
       }))
     : checkboxElements
+}
+
+const createTextStrings = (checkboxes: Checkbox[], nothingSelectedText: string) => {
+  let text = ''
+  let textUnselected = ''
+  let textMarkdownList = ''
+  let textUnselectedMarkdownList = ''
+  let textMarkdownPropertyList = ''
+  checkboxes.forEach((cb) => {
+    textMarkdownPropertyList =
+      textMarkdownPropertyList + `- ${cb.label}: ${cb.selected ? cb.text : cb.textNegative}\n`
+    if (cb.selected) {
+      text = text === '' ? cb.text : `${text}, ${cb.text}`
+      textMarkdownList = textMarkdownList + `- ${cb.text}\n`
+    } else {
+      textUnselected = textUnselected === '' ? cb.text : `${textUnselected}, ${cb.text}`
+      textUnselectedMarkdownList = textUnselectedMarkdownList + `- ${cb.text}\n`
+      if (cb.textNegative) {
+        text = text === '' ? cb.textNegative : `${text}, ${cb.textNegative}`
+        textMarkdownList = textMarkdownList + `- ${cb.textNegative}\n`
+      }
+    }
+  })
+  if (text === '') text = `*${nothingSelectedText}*`
+  if (textMarkdownList === '') textMarkdownList = `- *${nothingSelectedText}*\n`
+  return {
+    text,
+    textUnselected,
+    textMarkdownList,
+    textUnselectedMarkdownList,
+    textMarkdownPropertyList,
+  }
 }

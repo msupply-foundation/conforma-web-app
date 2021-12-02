@@ -339,6 +339,11 @@ interface ResponseFull {
   list?: any // Used in ListBuilder
   date?: any // Used in DatePicker
   number?: number | null // Used in Number plugin
+  // Next 4 used in Checkbox Summary view
+  textUnselected?: string
+  textMarkdownList?: string
+  textUnselectedMarkdownList?: string
+  textMarkdownPropertyList?: string
   timeCreated?: Date
   reviewResponse?: ReviewResponse
   customValidation?: ValidationState
