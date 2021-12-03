@@ -135,6 +135,8 @@ const Category: React.FC<{}> = () => {
           setValue={(value) => {
             updateTemplate(template.id, { templateCategoryId: value === -1 ? null : Number(value) })
           }}
+          minLabelWidth={100}
+          labelTextAlign="right"
         />
 
         {renderAddEdit()}

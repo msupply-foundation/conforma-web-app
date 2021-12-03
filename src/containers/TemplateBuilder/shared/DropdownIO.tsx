@@ -21,6 +21,8 @@ type DropdownIOprops = {
   getValue?: GetterOrKey
   getText?: GetterOrKey
   placeholder?: string
+  minLabelWidth?: number
+  labelTextAlign?: string
 }
 
 const defaultGetters: GetterOrKey = (row) => String(row)
@@ -48,8 +50,11 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
   getValue = defaultGetters,
   getText = defaultGetters,
   placeholder,
+  minLabelWidth = 100,
+  labelTextAlign = 'center',
 }) => {
   const [innerValue, setInnerValue] = useState(value)
+  const style: any = { minWidth: minLabelWidth, textAlign: labelTextAlign }
 
   useEffect(() => {
     if (isPropUpdated) setInnerValue(value)
@@ -90,14 +95,18 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
   const renderLabel = () => {
     if (link) {
       return (
-        <div className="io-component key">
+        <div className="io-component key" style={style}>
           <a target="_blank" href={link}>
             {title}
           </a>
         </div>
       )
     }
-    return <div className="io-component key">{title}</div>
+    return (
+      <div className="io-component key" style={style}>
+        {title}
+      </div>
+    )
   }
 
   return (

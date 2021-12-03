@@ -103,7 +103,7 @@ const TemplateContainer: React.FC = () => {
           </div>
         ))}
       </div>
-      {selected.render()}
+      <div className="template-builder-content">{selected.render()}</div>
     </div>
   )
 }

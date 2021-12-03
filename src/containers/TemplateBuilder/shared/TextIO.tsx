@@ -18,6 +18,8 @@ type TextIOprops = {
   isPropUpdated?: boolean
   textAreaDefaulRows?: number
   iconColor?: SemanticCOLORS
+  minLabelWidth?: number
+  labelTextAlign?: string
   onIconClick?: () => void
 }
 
@@ -39,11 +41,14 @@ const TextIO: React.FC<TextIOprops> = ({
   textAreaDefaulRows = 4,
   isPropUpdated = false,
   iconColor,
+  minLabelWidth = 50,
+  labelTextAlign = 'center',
   onIconClick,
 }) => {
   const [defaultRows] = useState(getDefaultRows(text, textAreaDefaulRows))
   const [innerValue, setInnerValue] = useState(text)
-  const style = color ? { color } : {}
+  const style: any = { minWidth: minLabelWidth, textAlign: labelTextAlign }
+  if (color) style.color = color
 
   useEffect(() => {
     if (isPropUpdated) setInnerValue(text)

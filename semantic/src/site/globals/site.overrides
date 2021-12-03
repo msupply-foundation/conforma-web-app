@@ -1603,11 +1603,11 @@ a:hover {
 .io-wrapper {
   .flex-row();
   align-items: stretch;
-  margin: 2px;
+  margin: 2px 2px 8px;
   .io-component {
     flex-grow: 1;
     margin: 0px;
-    text-align: center;
+    // text-align: center;
     white-space: nowrap;
     border: 2px solid @indicatorColor;
     border-radius: @borderRadius;
@@ -1661,7 +1661,7 @@ a:hover {
 .longer {
   input,
   textarea {
-    min-width: 600px !important;
+    min-width: 500px !important;
   }
 }
 .long {
@@ -1695,6 +1695,11 @@ a:hover {
     .flex-row();
     justify-content: center;
   }
+  .template-builder-content {
+    background-color: @surfacesWhite;
+    padding: 20px 2rem 30px;
+    margin-top: 20px;
+  }
   .template-builder-tabs {
     .flex-row();
     margin: 5px;
@@ -1714,7 +1719,7 @@ a:hover {
   margin: 3px;
   padding: 20px;
   border-radius: @borderRadius;
-  background: @surfacesWhite;
+  background: @surfacesLight;
   p {
     font-size: @slightlySmallerText;
     margin-top: 10px;
@@ -1731,6 +1736,13 @@ a:hover {
   color: @surfacesWhite !important;
   .header {
     color: @surfacesWhite !important;
+  }
+}
+
+.filter-joins {
+  .ui.label {
+    margin-right: 7px;
+    margin-bottom: 7px;
   }
 }
 

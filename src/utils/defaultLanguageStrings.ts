@@ -283,6 +283,13 @@ export default {
   PAGE_TITLE_PERMISSIONS: 'Permissions',
   DEFAULT_TEMPLATE_CATEGORY_TITLE: 'General',
   DEFAULT_TEMPLATE_CATEGORY_ICON: 'globe',
+  TEMPLATE_GEN_BUTTON_AVAILABLE: 'Make Available',
+  TEMPLATE_GEN_BUTTON_AVAILABLE_DISABLED:
+    'At least one template with the same code is already available, or this template already available',
+  TEMPLATE_GEN_BUTTON_DRAFT: 'Make Draft',
+  TEMPLATE_GEN_BUTTON_DRAFT_DISABLED: 'Already has appications or is draft',
+  TEMPLATE_GEN_BUTTON_DISABLE: 'Disable',
+  TEMPLATE_GEN_BUTTON_DISABLE_DISABLED: 'Already disabled',
   TEMPLATE_CATEGORIES: 'Categories',
   TEMPLATE_NO_CATEGORY: 'No category',
   TEMPLATE_NEW_CODE: 'New code',
