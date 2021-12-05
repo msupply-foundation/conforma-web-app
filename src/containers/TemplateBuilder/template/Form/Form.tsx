@@ -15,6 +15,7 @@ type FormState = {
   setSelectedSectionId: SetSelectedSectionId
   setSelectedPageNumber: SetSelectedPageNumber
   unselect: () => void
+  isReady: boolean
 }
 
 const contextNotDefined = () => {
@@ -26,6 +27,7 @@ const defaultFormState: FormState = {
   setSelectedSectionId: contextNotDefined,
   setSelectedPageNumber: contextNotDefined,
   unselect: contextNotDefined,
+  isReady: false,
 }
 const FormContext = createContext<FormState>(defaultFormState)
 
@@ -41,6 +43,7 @@ const Form: React.FC = () => {
         setState((state) => ({ ...state, selectedSectionId })),
       unselect: () =>
         setState((state) => ({ ...state, selectedPageNumber: -1, selectedSectionId: -1 })),
+      isReady: true,
     })
   }, [])
 

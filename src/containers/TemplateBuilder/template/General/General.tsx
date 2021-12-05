@@ -129,20 +129,23 @@ const General: React.FC = () => {
         </Header>
         <IconButton name="setting" onClick={() => setIsMessageConfigOpen(true)} />
       </div>
-      <div className="config-container">
-        <Header className="no-margin-no-padding" as="h6">
+      <div className="flex-column-center full-width-container">
+        <div className="spacer-20" />
+        <Header className="no-margin-no-padding center-text" as="h4">
           Start Message
         </Header>
-        <div className="spacer-20" />
-        <Markdown text={structure.info.startMessage || ''} />
+        <div className="config-container text-block-width">
+          <Markdown text={structure.info.startMessage || ''} />
+        </div>
       </div>
-
-      <div className="config-container">
-        <Header className="no-margin-no-padding" as="h6">
+      <div className="flex-column-center full-width-container">
+        <div className="spacer-20" />
+        <Header className="no-margin-no-padding center-textz" as="h4">
           Submission Message
         </Header>
-        <div className="spacer-20" />
-        <Markdown text={structure.info.submissionMessage || ''} />
+        <div className="config-container text-block-width">
+          <Markdown text={structure.info.submissionMessage || ''} />
+        </div>
       </div>
       <MessagesConfig isOpen={isMessageConfigOpen} onClose={() => setIsMessageConfigOpen(false)} />
     </div>

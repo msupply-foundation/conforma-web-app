@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Header, Label } from 'semantic-ui-react'
 import { IconButton } from '../../shared/IconButton'
 
@@ -17,10 +17,17 @@ const Sections: React.FC = () => {
   const { moveStructure } = useFormStructureState()
   const { updateTemplate } = useOperationState()
   const { structure } = useFullApplicationState()
-  const { setSelectedSectionId, selectedSectionId, setSelectedPageNumber } = useFormState()
+  const { setSelectedSectionId, selectedSectionId, setSelectedPageNumber, isReady } = useFormState()
   const {
     template: { isDraft, id: templateId },
   } = useTemplateState()
+
+  // Load page with Section 1, Page 1 already visible
+  useEffect(() => {
+    if (!isReady) return
+    setSelectedSectionId(structure.sortedSections?.[0]?.details.id as number)
+    setSelectedPageNumber(1)
+  }, [isReady])
 
   const createNewSection = () =>
     updateTemplate(templateId, {
@@ -53,7 +60,7 @@ const Sections: React.FC = () => {
               key={section.details.id}
               onClick={() => {
                 setSelectedSectionId(section.details.id)
-                setSelectedPageNumber(-1)
+                setSelectedPageNumber(1)
               }}
               className={`clickable ${
                 section.details.id === selectedSectionId ? 'builder-selected ' : ''
