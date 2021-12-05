@@ -81,7 +81,7 @@ const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
 
   return (
     <div className="flex-row-start-center">
-      <Header as="h5" className="no-margin-no-padding">
+      <Header as="h5" className="no-margin-no-padding right-margin-space-10">
         {header}
       </Header>
       <DropdownIO

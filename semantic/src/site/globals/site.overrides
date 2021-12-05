@@ -188,6 +188,10 @@ a:hover {
   max-width: 800px;
 }
 
+.right-margin-space-10 {
+  margin-right: 10px !important;
+}
+
 /*--------------------------------
    Login page
 ---------------------------------*/
@@ -1644,7 +1648,7 @@ a:hover {
   .key {
     border-end-end-radius: 0px;
     border-start-end-radius: 0px;
-    background-color: @surfacesLight;
+    background-color: @indicatorColor;
     a {
       text-decoration: underline;
     }

@@ -74,7 +74,10 @@ const Permissions: React.FC = () => {
   }
   return (
     <div className="flex-column-start-stretch">
-      <PermissionsHeader type={PermissionPolicyType.Apply} header={'Apply'} />
+      <Header as="h3" className="">
+        Apply
+      </Header>
+      <PermissionsHeader type={PermissionPolicyType.Apply} header={''} />
       <PermissionNameList type={PermissionPolicyType.Apply} />
       <div className="spacer-20" />
       <div className="flex-row-start-center">
@@ -83,6 +86,7 @@ const Permissions: React.FC = () => {
         </Header>
         <IconButton
           name="add square"
+          size="large"
           disabled={!isDraft}
           disabledMessage={disabledMessage}
           onClick={addStage}
@@ -90,7 +94,7 @@ const Permissions: React.FC = () => {
       </div>
       {templateStages.map((stage) => (
         <div key={stage.id} className="config-container">
-          <div className="flex-row-start-center">
+          <div className="flex-row-start-start">
             <div className="flex-row-start-center-wrap">
               <TextIO
                 title="Name"
@@ -99,7 +103,12 @@ const Permissions: React.FC = () => {
                 disabled={!isDraft}
                 disabledMessage={disabledMessage}
               />
-              <TextIO title="Number" text={String(stage?.number)} />
+              <TextIO
+                title="Number"
+                text={String(stage?.number)}
+                disabled
+                disabledMessage="Stage number determined by order"
+              />
               <TextIO
                 title="Colour"
                 link={colourLink}
@@ -120,7 +129,6 @@ const Permissions: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="flex-grow-1" />
             <Stage name={stage?.title || ''} colour={stage?.colour || 'grey'} />
             {canRemoveStage(stage) && (
               <IconButton
@@ -134,7 +142,7 @@ const Permissions: React.FC = () => {
           <div className="spacer-10" />
           <PermissionsHeader
             type={PermissionPolicyType.Assign}
-            header={'Level 1 Assign'}
+            header={'Level 1 Assign:'}
             stageNumber={stage?.number || 0}
             levelNumber={1}
           />
@@ -145,6 +153,7 @@ const Permissions: React.FC = () => {
           />
           <div className="spacer-10" />
           <PermissionReviewLevel stage={stage} />
+          <div className="spacer-20" />
         </div>
       ))}
     </div>
