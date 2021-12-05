@@ -45,8 +45,8 @@ export const Parameters: React.FC<ParametersProps> = ({
       {isActive && (
         <Accordion.Content className="evaluation-container-content" active={isActive}>
           <>
-            <div className="flex-column-start-center">
-              <div className="flex-row-center-center">
+            <div className="flex-column-start-stretch">
+              <div className="config-container-params">
                 <CheckboxIO title="Show As GUI" value={asGui} setValue={setAsGui} />
                 <div className="spacer-10" />
                 {asGui && (

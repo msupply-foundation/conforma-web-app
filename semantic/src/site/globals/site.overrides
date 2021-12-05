@@ -1667,7 +1667,7 @@ a:hover {
 .long {
   input,
   textarea {
-    min-width: 400px !important;
+    min-width: 300px !important;
   }
 }
 .template-builder-templates {
@@ -1760,7 +1760,7 @@ a:hover {
   margin: 2px;
   background-color: @surfacesWhite;
   .evaluation-container-title {
-    .flex-row-center-center();
+    .flex-row-center-center-wrap();
   }
   .evaluation-container-content {
     .flex-row() !important;
@@ -1773,7 +1773,9 @@ a:hover {
   width: 90% !important;
 
   .config-modal-container {
-    .flex-column-center-center();
+    .config-modal-content-wrapper {
+      .flex-column();
+    }
     padding: 10px;
   }
   .config-modal-info {
@@ -1804,8 +1806,13 @@ a:hover {
 }
 
 .config-container-alternate {
-  .config-container();
+  .config-container;
   background-color: rgba(0, 0, 0, 0.03);
+}
+
+.config-container-params {
+  .flex-row-start-center-wrap();
+  justify-content: center;
 }
 
 /*******************************
