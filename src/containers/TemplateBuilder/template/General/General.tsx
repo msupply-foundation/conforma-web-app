@@ -134,7 +134,7 @@ const General: React.FC = () => {
         <Header className="no-margin-no-padding center-text" as="h4">
           Start Message
         </Header>
-        <div className="config-container text-block-width">
+        <div className="config-container-alternate text-block-width">
           <Markdown text={structure.info.startMessage || ''} />
         </div>
       </div>
@@ -143,7 +143,7 @@ const General: React.FC = () => {
         <Header className="no-margin-no-padding center-textz" as="h4">
           Submission Message
         </Header>
-        <div className="config-container text-block-width">
+        <div className="config-container-alternate text-block-width">
           <Markdown text={structure.info.submissionMessage || ''} />
         </div>
       </div>

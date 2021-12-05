@@ -52,7 +52,7 @@ const Pages: React.FC = () => {
   }
   return (
     <>
-      <div className="spacer-10" />
+      <div className="spacer-20" />
       <div className="flex-row-start-center">
         <Header className="no-margin-no-padding" as="h3">
           Pages
@@ -61,21 +61,22 @@ const Pages: React.FC = () => {
           disabled={!isDraft}
           disabledMessage={disabledMessage}
           name="add square"
+          size="large"
           onClick={createNewPage}
         />
-
-        {Object.values(currentSection.pages).map((_, index) => (
-          <Label
-            key={currentSection.pages[index + 1].elements[0].id}
-            onClick={() => {
-              setSelectedPageNumber(index + 1)
-            }}
-            className={`clickable ${index + 1 === selectedPageNumber ? 'builder-selected ' : ''}`}
-          >
-            {`Page ${index + 1}`}
-          </Label>
-        ))}
       </div>
+      <div className="spacer-10" />
+      {Object.values(currentSection.pages).map((_, index) => (
+        <Label
+          key={currentSection.pages[index + 1].elements[0].id}
+          onClick={() => {
+            setSelectedPageNumber(index + 1)
+          }}
+          className={`clickable ${index + 1 === selectedPageNumber ? 'builder-selected ' : ''}`}
+        >
+          {`Page ${index + 1}`}
+        </Label>
+      ))}
       <Page />
     </>
   )

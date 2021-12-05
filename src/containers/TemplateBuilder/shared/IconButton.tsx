@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Icon, Popup } from 'semantic-ui-react'
+import { IconSizeProp } from 'semantic-ui-react/dist/commonjs/elements/Icon/Icon'
 import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic'
 
 type IconButtonProps = {
@@ -8,6 +9,7 @@ type IconButtonProps = {
   disabled?: boolean
   title?: string
   name: SemanticICONS
+  size?: IconSizeProp
   onClick: () => void
 }
 
@@ -15,6 +17,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
   name,
   onClick,
   title = '',
+  size = undefined,
   disabledMessage,
   disabled = false,
 }) => {
@@ -22,6 +25,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
     <Icon
       className={`icon-button`}
       name={name}
+      size={size}
       onClick={() => (disabled ? console.log('action disable') : onClick())}
     />
   )

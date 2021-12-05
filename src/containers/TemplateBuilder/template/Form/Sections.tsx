@@ -44,7 +44,7 @@ const Sections: React.FC = () => {
 
   return (
     <>
-      <div className="flex-row-start-center">
+      <div className="flex-row-start-center full-width-container">
         <Header className="no-margin-no-padding" as="h3">
           Sections
         </Header>{' '}
@@ -52,8 +52,17 @@ const Sections: React.FC = () => {
           disabled={!isDraft}
           disabledMessage={disabledMessage}
           name="add square"
+          size="large"
           onClick={createNewSection}
         />
+        <div className="flex-row-end">
+          <Button inverted primary onClick={resetApplication}>
+            Reset Application
+          </Button>
+        </div>
+      </div>
+      <div className="spacer-10" />
+      <div className="flex-row-start-center">
         <div className="flex-row-start-center-wrap flex-grow-1">
           {Object.values(structure.sections).map((section) => (
             <Label
@@ -70,11 +79,8 @@ const Sections: React.FC = () => {
             </Label>
           ))}
         </div>
-        <Button inverted primary onClick={resetApplication}>
-          Reset Application
-        </Button>
       </div>
-
+      <div className="spacer-20" />
       <Section />
     </>
   )

@@ -121,6 +121,12 @@ a:hover {
   .flex-row-start-center;
   flex-wrap: wrap;
 }
+
+.flex-row-end {
+  .flex-row();
+  width: 100%;
+  justify-content: flex-end;
+}
 .flex-column {
   display: flex;
   flex-direction: column;
@@ -1638,7 +1644,7 @@ a:hover {
   .key {
     border-end-end-radius: 0px;
     border-start-end-radius: 0px;
-    background-color: @indicatorColor;
+    background-color: @surfacesLight;
     a {
       text-decoration: underline;
     }
@@ -1821,12 +1827,11 @@ a:hover {
   border-radius: @borderRadius;
   background-color: @surfacesWhite;
   margin: 5px;
-  background-color: @surfacesLight;
 }
 
 .config-container-alternate {
   .config-container();
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: @surfacesLight;
 }
 
 /*******************************
