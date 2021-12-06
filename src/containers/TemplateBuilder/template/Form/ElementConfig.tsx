@@ -265,7 +265,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
         <div className="spacer-20" />
         <div className="flex-row-center-center">
           <ButtonWithFallback
-            title="Save"
+            title={strings.TEMPLATE_BUTTON_SAVE}
             disabled={!isDraft}
             disabledMessage={disabledMessage}
             onClick={updateElement}
@@ -273,23 +273,33 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           <ButtonWithFallback
             disabled={!isDraft}
             disabledMessage={disabledMessage}
-            title="Remove"
+            title={strings.TEMPLATE_BUTTON_REMOVE}
             onClick={removeElement}
           />
           <ButtonWithFallback
-            title="Close"
+            title={strings.TEMPLATE_BUTTON_CLOSE}
             onClick={() => (shouldUpdate ? setOpen(true) : onlyClose())}
           />
           <Modal
             basic
             size="small"
             icon="save"
-            header="There are changes not saved. Would you like to save and close?"
+            header={strings.TEMPLATE_MESSAGE_SAVE_AND_CLOSE}
             open={open}
             onClose={() => setOpen(false)}
             actions={[
-              { key: 'save', content: 'Save', positive: true, onClick: saveAndClose },
-              { key: 'close', content: 'Close', positive: false, onClick: onlyClose },
+              {
+                key: 'save',
+                content: strings.TEMPLATE_BUTTON_SAVE,
+                positive: true,
+                onClick: saveAndClose,
+              },
+              {
+                key: 'close',
+                content: strings.TEMPLATE_BUTTON_CLOSE,
+                positive: false,
+                onClick: onlyClose,
+              },
             ]}
           />
         </div>
