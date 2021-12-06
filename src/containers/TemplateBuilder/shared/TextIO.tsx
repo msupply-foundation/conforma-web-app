@@ -97,7 +97,6 @@ const TextIO: React.FC<TextIOprops> = ({
         value={innerValue}
         disabled={disabled}
         className={ioCSS + ' value'}
-        s
         size="small"
         onChange={(_, { value }) => {
           setInnerValue(value)
