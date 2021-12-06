@@ -17,6 +17,7 @@ type ParametersProps = {
   fullStructure?: FullStructure
   requiredParameters?: string[]
   optionalParameters?: string[]
+  type?: 'FormElement' | 'Action'
 }
 
 export const Parameters: React.FC<ParametersProps> = ({
@@ -26,6 +27,7 @@ export const Parameters: React.FC<ParametersProps> = ({
   fullStructure,
   requiredParameters,
   optionalParameters,
+  type,
 }) => {
   const { applicationData } = useActionState()
   const [asGui, setAsGui] = useState(true)
@@ -125,9 +127,10 @@ export const Parameters: React.FC<ParametersProps> = ({
                     }}
                     key={key}
                     evaluation={value}
-                    applicationData={applicationData}
-                    currentElementCode={currentElementCode}
                     fullStructure={fullStructure}
+                    applicationData={applicationData}
+                    type={type}
+                    currentElementCode={currentElementCode}
                     label={key}
                   />
                 ))}

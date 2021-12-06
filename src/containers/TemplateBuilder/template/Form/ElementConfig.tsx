@@ -237,6 +237,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 fullStructure={structure}
                 evaluation={state[key]}
                 setEvaluation={(evaluation) => setState({ ...state, [key]: evaluation })}
+                type="FormElement"
               />
             ))}
           </div>
@@ -247,6 +248,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             fullStructure={structure}
             parameters={state.parameters}
             setParameters={(parameters) => setState({ ...state, parameters })}
+            type="FormElement"
           />
           <div className="spacer-20" />
           <div className="flex-row-center-center">
