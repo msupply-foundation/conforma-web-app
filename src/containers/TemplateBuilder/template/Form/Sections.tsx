@@ -180,7 +180,7 @@ const Section: React.FC = () => {
   }
 
   return (
-    <div key={selectedSectionId} className="flex-row-start-center">
+    <div key={selectedSectionId} className="flex-row-start-center-wrap">
       {canMoveForward && (
         <IconButton
           disabled={!isDraft}
