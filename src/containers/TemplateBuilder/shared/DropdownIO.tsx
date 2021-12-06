@@ -84,7 +84,6 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
         className={ioCSS + ' value'}
         options={calculatedOptions}
         scrolling
-        size="small"
         onChange={(_, { value }) => {
           if (typeof value !== 'string' && typeof value !== 'number') return
           setInnerValue(value)

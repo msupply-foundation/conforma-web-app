@@ -20,6 +20,7 @@ type TextIOprops = {
   textAreaDefaulRows?: number
   iconColor?: SemanticCOLORS
   minLabelWidth?: number
+  maxLabelWidth?: number
   labelTextAlign?: string
   onIconClick?: () => void
 }
@@ -44,12 +45,13 @@ const TextIO: React.FC<TextIOprops> = ({
   isPropUpdated = false,
   iconColor,
   minLabelWidth = 50,
+  maxLabelWidth,
   labelTextAlign = 'center',
   onIconClick,
 }) => {
   const [defaultRows] = useState(getDefaultRows(text, textAreaDefaulRows))
   const [innerValue, setInnerValue] = useState(text)
-  const style: any = { minWidth: minLabelWidth, textAlign: labelTextAlign }
+  const style: any = { minWidth: minLabelWidth, maxWidth: maxLabelWidth, textAlign: labelTextAlign }
   if (color) style.color = color
   const ioCSS = labelNegative ? 'io-component-negative' : 'io-component'
 

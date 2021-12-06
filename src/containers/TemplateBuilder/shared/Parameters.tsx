@@ -30,7 +30,10 @@ export const Parameters: React.FC<ParametersProps> = ({
     key1 > key2 ? -1 : key1 === key2 ? 0 : 1
   )
   return (
-    <Accordion className="evaluation-container config-container-alternate">
+    <Accordion
+      className="evaluation-container config-container-alternate"
+      style={{ minWidth: 450 }}
+    >
       <Accordion.Title
         className="evaluation-container-title"
         active={isActive}
@@ -39,38 +42,42 @@ export const Parameters: React.FC<ParametersProps> = ({
         <Header
           as="h4"
           className="no-margin-no-padding"
-        >{`Plugin Specific Parameters (${sortedParameters.length})`}</Header>
-        <Icon size="large" name={isActive ? 'angle up' : 'angle down'} />
+        >{`Plugin-specific Parameters (${sortedParameters.length})`}</Header>
+        <div className="flex-row-end">
+          <Icon size="large" name={isActive ? 'angle up' : 'angle down'} />
+        </div>
       </Accordion.Title>
       {isActive && (
         <Accordion.Content className="evaluation-container-content" active={isActive}>
           <>
             <div className="flex-column-start-center">
-              <div className="flex-row-center-center">
-                <CheckboxIO title="Show As GUI" value={asGui} setValue={setAsGui} />
-                <div className="spacer-10" />
-                {asGui && (
-                  <Button
-                    primary
-                    inverted
-                    onClick={() => {
-                      setParameters({ ...parameters, newParameter: null })
-                    }}
-                  >
-                    Add Parameter
-                  </Button>
+              <div className="config-container-outline">
+                <div className="flex-row flex-gap-20">
+                  <CheckboxIO title="Show As GUI" value={asGui} setValue={setAsGui} />
+                  <div className="spacer-10" />
+                  {asGui && (
+                    <Button
+                      primary
+                      inverted
+                      onClick={() => {
+                        setParameters({ ...parameters, newParameter: null })
+                      }}
+                    >
+                      Add Parameter
+                    </Button>
+                  )}
+                </div>
+                {!asGui && (
+                  <div className="long">
+                    <JsonIO
+                      isPropUpdated={true}
+                      object={parameters}
+                      label=""
+                      setObject={(value) => setParameters(value as ParametersType)}
+                    />
+                  </div>
                 )}
               </div>
-              {!asGui && (
-                <div className="long">
-                  <JsonIO
-                    isPropUpdated={true}
-                    object={parameters}
-                    label=""
-                    setObject={(value) => setParameters(value as ParametersType)}
-                  />
-                </div>
-              )}
 
               {asGui &&
                 sortedParameters.map(([key, value]) => (

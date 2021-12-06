@@ -116,10 +116,35 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
     onClose()
   }
 
+  console.log(state)
   return (
-    <Modal className="config-modal" open={true} onClose={onClose}>
+    <Modal centered className="config-modal" open={true} onClose={onClose}>
       <div className="config-modal-container">
         {!isDraft && <Label color="red">Template form only editable on draft templates</Label>}
+        <div className="config-modal-header">
+          <Header as="h3">{state.title}</Header>
+          <div className="flex-column">
+            <DropdownIO
+              title="Type"
+              value={state.elementTypePluginCode}
+              getKey={'code'}
+              getValue={'code'}
+              getText={'displayName'}
+              setValue={(value) => {
+                setState({ ...state, elementTypePluginCode: String(value) })
+              }}
+              options={Object.values(pluginProvider.pluginManifest)}
+              labelNegative
+              minLabelWidth={50}
+            />
+            <FromExistingElement
+              pluginCode={state.elementTypePluginCode}
+              setTemplateElement={(existingElement) => {
+                setState({ ...state, ...existingElement })
+              }}
+            />
+          </div>
+        </div>
         <Label className="element-edit-info" attached="top right">
           <a
             href="https://github.com/openmsupply/application-manager-web-app/wiki/Element-Type-Specs"
@@ -128,115 +153,114 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             <Icon name="info circle" size="big" color="blue" />
           </a>
         </Label>
-        <div className="flex-row-center-center-wrap">
-          <DropdownIO
-            title="Type"
-            value={state.elementTypePluginCode}
-            getKey={'code'}
-            getValue={'code'}
-            getText={'displayName'}
-            setValue={(value) => {
-              setState({ ...state, elementTypePluginCode: String(value) })
-            }}
-            options={Object.values(pluginProvider.pluginManifest)}
-          />
-
-          <FromExistingElement
-            pluginCode={state.elementTypePluginCode}
-            setTemplateElement={(existingElement) => {
-              setState({ ...state, ...existingElement })
-            }}
-          />
-
-          <DropdownIO
-            title="Category"
-            value={state.category}
-            getKey={'category'}
-            getValue={'category'}
-            getText={'title'}
-            isPropUpdated={true}
-            setValue={(value) => {
-              setState({ ...state, category: value as TemplateElementCategory })
-            }}
-            options={[
-              { category: TemplateElementCategory.Information, title: 'Information' },
-              { category: TemplateElementCategory.Question, title: 'Question' },
-            ]}
-          />
-
-          <TextIO
-            text={state.code}
-            title="Code"
-            setText={(text) => setState({ ...state, code: text })}
-            isPropUpdated={true}
-          />
-          <div className="long">
-            <TextIO
-              text={state.title}
-              title="Title"
-              setText={(text) => setState({ ...state, title: text })}
-              isPropUpdated={true}
-            />
+        <div className="config-modal-info">
+          <div className="config-container-outline" style={{ maxWidth: 600 }}>
+            <div className="flex-row-start-start">
+              <div className="full-width-container">
+                <TextIO
+                  text={state.title}
+                  title="Title"
+                  setText={(text) => setState({ ...state, title: text })}
+                  isPropUpdated={true}
+                  minLabelWidth={60}
+                  maxLabelWidth={60}
+                />
+              </div>
+            </div>
+            <div className="flex-row-start-start">
+              <TextIO
+                text={state.code}
+                title="Code"
+                setText={(text) => setState({ ...state, code: text })}
+                isPropUpdated={true}
+                minLabelWidth={60}
+                maxLabelWidth={60}
+              />
+              <DropdownIO
+                title="Category"
+                value={state.category}
+                getKey={'category'}
+                getValue={'category'}
+                getText={'title'}
+                isPropUpdated={true}
+                setValue={(value) => {
+                  setState({ ...state, category: value as TemplateElementCategory })
+                }}
+                options={[
+                  { category: TemplateElementCategory.Information, title: 'Information' },
+                  { category: TemplateElementCategory.Question, title: 'Question' },
+                ]}
+              />
+            </div>
+            <div className="flex-row-start-center-wrap">
+              <div className="full-width-container">
+                <TextIO
+                  text={state.validationMessage}
+                  title="Validation Message"
+                  isTextArea={true}
+                  setText={(text) => setState({ ...state, validationMessage: text })}
+                  isPropUpdated={true}
+                  minLabelWidth={100}
+                  maxLabelWidth={100}
+                  labelTextAlign="right"
+                  textAreaDefaulRows={3}
+                />
+              </div>
+            </div>
+            <div className="flex-row-start-center-wrap">
+              <div className="full-width-container">
+                <TextIO
+                  text={state.helpText}
+                  isTextArea={true}
+                  title="Help Text"
+                  setText={(text) => setState({ ...state, helpText: text })}
+                  isPropUpdated={true}
+                  minLabelWidth={100}
+                  maxLabelWidth={100}
+                  labelTextAlign="right"
+                />
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div className="flex-row-center-center">
-          <div className="long">
-            <TextIO
-              text={state.validationMessage}
-              title="Validation Message"
-              isTextArea={true}
-              setText={(text) => setState({ ...state, validationMessage: text })}
-              isPropUpdated={true}
-            />
+          <div className="spacer-10" />
+          <div className="config-container-alternate">
+            <Header as="h4">Common Properties</Header>
+            {evaluations.map(({ key, title }) => (
+              <Evaluation
+                label={title}
+                key={key}
+                currentElementCode={state.code}
+                fullStructure={structure}
+                evaluation={state[key]}
+                setEvaluation={(evaluation) => setState({ ...state, [key]: evaluation })}
+              />
+            ))}
           </div>
-          <div className="long">
-            <TextIO
-              text={state.helpText}
-              isTextArea={true}
-              title="Help Text"
-              setText={(text) => setState({ ...state, helpText: text })}
-              isPropUpdated={true}
+          <div className="spacer-10" />
+          <Parameters
+            key="parametersElement"
+            currentElementCode={state.code}
+            fullStructure={structure}
+            parameters={state.parameters}
+            setParameters={(parameters) => setState({ ...state, parameters })}
+          />
+          <div className="spacer-20" />
+          <div className="flex-row-center-center">
+            <ButtonWithFallback
+              title="Save"
+              disabled={!isDraft}
+              disabledMessage={disabledMessage}
+              onClick={updateElement}
             />
+
+            <ButtonWithFallback
+              disabled={!isDraft}
+              disabledMessage={disabledMessage}
+              title="Remove"
+              onClick={removeElement}
+            />
+            <ButtonWithFallback title="Cancel" onClick={onClose} />
           </div>
-        </div>
-        <div className="config-container-alternate">
-          <Header as="h4">Common Properties</Header>
-          {evaluations.map(({ key, title }) => (
-            <Evaluation
-              label={title}
-              key={key}
-              currentElementCode={state.code}
-              fullStructure={structure}
-              evaluation={state[key]}
-              setEvaluation={(evaluation) => setState({ ...state, [key]: evaluation })}
-            />
-          ))}
-        </div>
-        <Parameters
-          key="parametersElement"
-          currentElementCode={state.code}
-          fullStructure={structure}
-          parameters={state.parameters}
-          setParameters={(parameters) => setState({ ...state, parameters })}
-        />
-
-        <div className="spacer-20" />
-        <div className="flex-row-center-center">
-          <ButtonWithFallback
-            title="Save"
-            disabled={!isDraft}
-            disabledMessage={disabledMessage}
-            onClick={updateElement}
-          />
-
-          <ButtonWithFallback
-            disabled={!isDraft}
-            disabledMessage={disabledMessage}
-            title="Remove"
-            onClick={removeElement}
-          />
-          <ButtonWithFallback title="Cancel" onClick={onClose} />
         </div>
       </div>
     </Modal>

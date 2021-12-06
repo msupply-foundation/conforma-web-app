@@ -32,7 +32,7 @@ export const EvaluationHeader: React.FC<EvaluationHeaderProps> = ({ evaluation }
   const typedEvaluation = getTypedEvaluation(evaluation)
 
   return (
-    <div className="flex-row-start-center">
+    <div className="flex-row-start-center" style={{ marginTop: 6 }}>
       <TextIO title="Type" text={typedEvaluation.type} />
       {typedEvaluation.type === 'operator' && (
         <TextIO title="operator" text={typedEvaluation.asOperator.operator} />
@@ -84,26 +84,37 @@ const Evaluation: React.FC<EvaluationProps> = ({
 
   return (
     <Accordion className="evaluation-container">
-      <Accordion.Title className="evaluation-container-title" active={isActive}>
-        {!updateKey && <Label>{label}</Label>}
-        {deleteKey && <Icon className="clickable" name="window close" onClick={deleteKey} />}
-
-        {updateKey && <TextIO title="Parameter Name" text={label} setText={updateKey} />}
-
+      <Accordion.Title className="evaluation-container-title flex-gap-10" active={isActive}>
+        {!updateKey && <Label style={{ minWidth: 120, textAlign: 'center' }}>{label}</Label>}
+        {deleteKey && (
+          <Icon
+            className="clickable left-margin-space-10"
+            name="window close"
+            onClick={deleteKey}
+          />
+        )}
+        {updateKey && (
+          <div className="flex-row-start-center" style={{ marginTop: 6 }}>
+            <TextIO title="Parameter Name" text={label} setText={updateKey} />
+          </div>
+        )}
         <EvaluationHeader evaluation={evaluation} />
-
-        <Icon
-          size="large"
-          name={isActive ? 'angle up' : 'angle down'}
-          onClick={() => setIsActive(!isActive)}
-        />
+        <div className="flex-row-end">
+          <Icon
+            size="large"
+            name={isActive ? 'angle up' : 'angle down'}
+            onClick={() => setIsActive(!isActive)}
+          />
+        </div>
       </Accordion.Title>
       {isActive && (
         <Accordion.Content className="evaluation-container-content" active={isActive}>
           <>
             <div className="flex-column-start-center">
-              <CheckboxIO title="Show As GUI" value={asGui} setValue={setAsGui} />
-              <div className="spacer-10" />
+              <div style={{ marginLeft: 30 }}>
+                <CheckboxIO title="Show As GUI" value={asGui} setValue={setAsGui} />
+                <div className="spacer-10" />
+              </div>
               {!asGui && (
                 <div className="long">
                   <JsonIO
@@ -126,7 +137,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
               <div className="object-properties-container">
                 <Label>Object Properties</Label>
                 <div className="spacer-20" />
-                <ReactJson src={objects} collapsed={2} />
+                <ReactJson src={objects} collapsed={1} />
               </div>
             )}
           </>

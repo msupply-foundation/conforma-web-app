@@ -77,6 +77,11 @@ a:hover {
   justify-content: space-between;
 }
 
+.flex-row-space_evenly {
+  .flex-row();
+  justify-content: space-evenly;
+}
+
 .flex-row-start {
   .flex-row();
   justify-content: flex-start;
@@ -99,6 +104,11 @@ a:hover {
 
 .flex-row-space_between-center {
   .flex-row-space_between();
+  align-items: center;
+}
+
+.flex-row-space_evenly-center {
+  .flex-row-space_evenly();
   align-items: center;
 }
 
@@ -190,6 +200,10 @@ a:hover {
 
 .right-margin-space-10 {
   margin-right: 10px !important;
+}
+
+.left-margin-space-10 {
+  margin-left: 10px !important;
 }
 
 .flex-gap-10 {
@@ -1630,17 +1644,23 @@ a:hover {
   .flex-row();
   align-items: stretch;
   margin: 2px 2px 8px;
+  min-height: 25px;
   .io-component {
     flex-grow: 1;
     margin: 0px;
     // text-align: center;
-    white-space: nowrap;
+    // white-space: nowrap;
     border: 2px solid @surfacesLight;
     border-radius: @borderRadius;
     font-size: 12px;
     padding: 2px;
     padding-left: 10px;
     padding-right: 10px;
+    line-height: 1.4285em // resets height set by Modal;;
+  }
+
+  .ui.checkbox {
+    vertical-align: middle;
   }
 
   .io-component-negative {
@@ -1655,7 +1675,7 @@ a:hover {
     padding: 0px !important;
     font-size: 12px !important;
     width: none !important;
-    min-width: 200px;
+    // min-width: 200px;
   }
 
   .key {
@@ -1684,7 +1704,7 @@ a:hover {
 
 .from-existing-dropdown {
   font-size: 12px !important;
-  border: 2px solid @indicatorColor !important;
+  border: 1px solid @surfacesDark !important;
   border-radius: @borderRadius !important;
   margin: 2px !important;
 }
@@ -1802,15 +1822,17 @@ a:hover {
 }
 
 .evaluation-container {
+  width: 100%;
   border-radius: @borderRadius;
   border: 1px solid @indicatorColor;
   padding: 2px;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin: 2px;
   background-color: @surfacesWhite;
   .evaluation-container-title {
-    .flex-row-center-center();
+    .flex-row-start-center();
+    white-space: nowrap;
   }
   .evaluation-container-content {
     .flex-row() !important;
@@ -1820,14 +1842,27 @@ a:hover {
 }
 
 .config-modal {
-  width: 90% !important;
+  min-width: 700px !important;
+  max-width: 90% !important;
+  width: fit-content !important;
 
   .config-modal-container {
     .flex-column-center-center();
-    padding: 10px;
+    padding: 0 0 10px 0;
   }
   .config-modal-info {
     background-color: @surfacesWhite !important;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .config-modal-header {
+    .flex-row-center-center();
+    gap: 50px;
+    background-color: @surfacesLight;
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding: 10px;
   }
 }
 

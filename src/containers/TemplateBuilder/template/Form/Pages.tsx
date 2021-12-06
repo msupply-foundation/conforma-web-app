@@ -66,17 +66,19 @@ const Pages: React.FC = () => {
         />
       </div>
       <div className="spacer-10" />
-      {Object.values(currentSection.pages).map((_, index) => (
-        <Label
-          key={currentSection.pages[index + 1].elements[0].id}
-          onClick={() => {
-            setSelectedPageNumber(index + 1)
-          }}
-          className={`clickable ${index + 1 === selectedPageNumber ? 'builder-selected ' : ''}`}
-        >
-          {`Page ${index + 1}`}
-        </Label>
-      ))}
+      <div className="flex-row-start-center-wrap flex-grow-1 flex-gap-10">
+        {Object.values(currentSection.pages).map((_, index) => (
+          <Label
+            key={currentSection.pages[index + 1].elements[0].id}
+            onClick={() => {
+              setSelectedPageNumber(index + 1)
+            }}
+            className={`clickable ${index + 1 === selectedPageNumber ? 'builder-selected ' : ''}`}
+          >
+            {`Page ${index + 1}`}
+          </Label>
+        ))}
+      </div>
       <Page />
     </>
   )

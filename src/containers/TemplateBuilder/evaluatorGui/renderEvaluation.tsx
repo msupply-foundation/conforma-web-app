@@ -45,8 +45,15 @@ const Evaluate: React.FC<{ typedEvaluation: EvaluationType; evaluatorParameters?
 
     return (
       <>
-        <Icon className="clickable" name="lightning" onClick={() => evaluateNode()} />
+        <Icon
+          className="clickable"
+          name="play"
+          size="large"
+          onClick={() => evaluateNode()}
+          style={{ marginBottom: 8 }}
+        />
         <Modal
+          centered
           className="config-modal"
           open={evaluationResult !== undefined}
           onClose={() => setEvaluationResult(undefined)}
