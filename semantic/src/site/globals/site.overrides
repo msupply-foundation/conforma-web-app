@@ -1627,12 +1627,17 @@ a:hover {
     margin: 0px;
     // text-align: center;
     white-space: nowrap;
-    border: 2px solid @indicatorColor;
+    border: 2px solid @surfacesLight;
     border-radius: @borderRadius;
     font-size: 12px;
     padding: 2px;
     padding-left: 10px;
     padding-right: 10px;
+  }
+
+  .io-component-negative {
+    .io-component();
+    border: 1px solid @surfacesDark;
   }
 
   input,
@@ -1648,10 +1653,17 @@ a:hover {
   .key {
     border-end-end-radius: 0px;
     border-start-end-radius: 0px;
-    background-color: @indicatorColor;
+    background-color: @surfacesLight;
     a {
       text-decoration: underline;
     }
+  }
+
+  .key-negative {
+    .key();
+    background-color: @headersInteractiveMed;
+    border: 1px solid @headersInteractiveMed;
+    color: white;
   }
 
   .value {
@@ -1836,6 +1848,11 @@ a:hover {
 .config-container-alternate {
   .config-container();
   background-color: @surfacesLight;
+}
+
+.config-container-outline {
+  .config-container();
+  border: 1px solid @surfacesMed;
 }
 
 /*******************************

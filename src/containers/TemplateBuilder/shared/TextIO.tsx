@@ -13,6 +13,7 @@ type TextIOprops = {
   disabledMessage?: string
   icon?: string
   color?: string
+  labelNegative?: boolean
   link?: string
   isTextArea?: boolean
   isPropUpdated?: boolean
@@ -36,6 +37,7 @@ const TextIO: React.FC<TextIOprops> = ({
   icon,
   disabledMessage,
   color,
+  labelNegative = false,
   link,
   isTextArea = false,
   textAreaDefaulRows = 4,
@@ -49,6 +51,7 @@ const TextIO: React.FC<TextIOprops> = ({
   const [innerValue, setInnerValue] = useState(text)
   const style: any = { minWidth: minLabelWidth, textAlign: labelTextAlign }
   if (color) style.color = color
+  const ioCSS = labelNegative ? 'io-component-negative' : 'io-component'
 
   useEffect(() => {
     if (isPropUpdated) setInnerValue(text)
@@ -58,7 +61,7 @@ const TextIO: React.FC<TextIOprops> = ({
     if (setText) return null
 
     return (
-      <div className="io-component value" style={{ whiteSpace: isTextArea ? 'normal' : 'nowrap' }}>
+      <div className={ioCSS + ' value'} style={{ whiteSpace: isTextArea ? 'normal' : 'nowrap' }}>
         {text}
       </div>
     )
@@ -69,7 +72,7 @@ const TextIO: React.FC<TextIOprops> = ({
 
     if (isTextArea) {
       return (
-        <div className="io-component value">
+        <div className={ioCSS + ' value'}>
           <Form>
             <TextArea
               disabled={disabled}
@@ -89,7 +92,8 @@ const TextIO: React.FC<TextIOprops> = ({
       <Input
         value={innerValue}
         disabled={disabled}
-        className="io-component value"
+        className={ioCSS + ' value'}
+        s
         size="small"
         onChange={(_, { value }) => {
           setInnerValue(value)
@@ -115,9 +119,10 @@ const TextIO: React.FC<TextIOprops> = ({
   }
 
   const renderLabel = () => {
+    const keyClass = labelNegative ? 'io-component-negative key-negative' : 'io-component key'
     if (link) {
       return (
-        <div style={style} className="io-component key">
+        <div style={style} className={keyClass}>
           <a style={style} target="_blank" href={link}>
             {title} {icon && renderIcon()}
           </a>
@@ -125,7 +130,7 @@ const TextIO: React.FC<TextIOprops> = ({
       )
     }
     return (
-      <div style={style} className="io-component key">
+      <div style={style} className={keyClass}>
         {title} {icon && renderIcon()}
       </div>
     )

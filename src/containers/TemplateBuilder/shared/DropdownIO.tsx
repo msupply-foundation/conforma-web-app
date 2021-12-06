@@ -14,6 +14,7 @@ type DropdownIOprops = {
   ) => void
   disabled?: boolean
   disabledMessage?: string
+  labelNegative?: boolean
   link?: string
   isPropUpdated?: boolean
   options?: any[]
@@ -43,6 +44,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
   disabled = false,
   title = '',
   disabledMessage,
+  labelNegative = false,
   link,
   isPropUpdated = false,
   options = [],
@@ -55,6 +57,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
 }) => {
   const [innerValue, setInnerValue] = useState(value)
   const style: any = { minWidth: minLabelWidth, textAlign: labelTextAlign }
+  const ioCSS = labelNegative ? 'io-component-negative' : 'io-component'
 
   useEffect(() => {
     if (isPropUpdated) setInnerValue(value)
@@ -62,7 +65,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
   const renderText = () => {
     if (setValue) return null
 
-    return <div className="io-component value">{value}</div>
+    return <div className={ioCSS + ' value'}>{value}</div>
   }
 
   const renderDropdown = () => {
@@ -78,7 +81,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
         value={innerValue}
         disabled={disabled}
         placeholder={placeholder}
-        className="io-component value"
+        className={ioCSS + ' value'}
         options={calculatedOptions}
         scrolling
         size="small"
@@ -93,9 +96,10 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
   }
 
   const renderLabel = () => {
+    const keyClass = labelNegative ? 'io-component-negative key-negative' : 'io-component key'
     if (link) {
       return (
-        <div className="io-component key" style={style}>
+        <div className={keyClass} style={style}>
           <a target="_blank" href={link}>
             {title}
           </a>
@@ -103,7 +107,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
       )
     }
     return (
-      <div className="io-component key" style={style}>
+      <div className={keyClass} style={style}>
         {title}
       </div>
     )
