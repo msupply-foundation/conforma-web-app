@@ -1765,7 +1765,7 @@ a:hover {
   .evaluation-container-content {
     .flex-row() !important;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: space-between;
   }
 }
 
