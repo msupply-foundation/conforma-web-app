@@ -130,7 +130,7 @@ const General: React.FC = () => {
       </div>
       <div className="flex-column-center full-width-container">
         <div className="spacer-20" />
-        <Header className="no-margin-no-padding center-text" as="h4">
+        <Header className="no-margin-no-padding" as="h4">
           Start Message
         </Header>
         <div className="config-container-alternate text-block-width">
@@ -139,7 +139,7 @@ const General: React.FC = () => {
       </div>
       <div className="flex-column-center full-width-container">
         <div className="spacer-20" />
-        <Header className="no-margin-no-padding center-textz" as="h4">
+        <Header className="no-margin-no-padding" as="h4">
           Submission Message
         </Header>
         <div className="config-container-alternate text-block-width">
