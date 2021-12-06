@@ -73,10 +73,11 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const { selectedSectionId } = useFormState()
   const { updateApplication, updateTemplateSection } = useOperationState()
   const [state, setState] = useState<ElementUpdateState | null>(null)
+  const [isUpdated, setIsUpdated] = useState<boolean>(true)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     if (!element) return setState(null)
-
     setState(getState(element))
   }, [element])
 
@@ -111,13 +112,17 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
         updateById: [{ id: state.id, patch: state }],
       },
     })
+    setIsUpdated(true)
     if (!result) return
+  }
 
+  const saveAndClose = () => {
+    updateElement()
     onClose()
   }
 
   return (
-    <Modal className="config-modal" open={true} onClose={onClose}>
+    <Modal className="config-modal" open={true}>
       <div className="config-modal-container">
         <div className="config-modal-content-wrapper">
           {!isDraft && <Label color="red">Template form only editable on draft templates</Label>}
@@ -219,7 +224,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             currentElementCode={state.code}
             fullStructure={structure}
             parameters={state.parameters}
-            setParameters={(parameters) => setState({ ...state, parameters })}
+            setParameters={(parameters) => {
+              setState({ ...state, parameters })
+              setIsUpdated(false)
+            }}
           />
           <div className="spacer-20" />
           <div className="flex-row-center-center">
@@ -236,7 +244,22 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               title="Remove"
               onClick={removeElement}
             />
-            <ButtonWithFallback title="Cancel" onClick={onClose} />
+            <ButtonWithFallback
+              title="Close"
+              onClick={() => (isUpdated ? onClose() : setOpen(true))}
+            />
+            <Modal
+              basic
+              size="small"
+              icon="save"
+              header="There are changes not saved. Would you like to save and close?"
+              open={open}
+              onClose={() => setOpen(false)}
+              actions={[
+                { key: 'save', content: 'Save', positive: true, onClick: saveAndClose },
+                { key: 'close', content: 'Close', positive: false, onClick: onClose },
+              ]}
+            />
           </div>
         </div>
       </div>
