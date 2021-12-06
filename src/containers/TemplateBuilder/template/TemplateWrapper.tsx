@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { matchPath } from 'react-router'
 import { Link } from 'react-router-dom'
-import { Header, Icon, Message } from 'semantic-ui-react'
+import { Header, Icon, Message, Label } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../../components'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 
@@ -79,11 +79,21 @@ const TemplateContainer: React.FC = () => {
 
   return (
     <div className="template-builder-wrapper">
-      <div className="flex-row-space_between-center">
-        <Link to="/admin/templates">
+      <Label
+        className="back-label clickable"
+        // onClick={() => replace(`/applications?type=${code}`)}
+        content={
+          <>
+            <Icon name="chevron left" className="dark-grey" />
+            Templates/Procedures
+          </>
+        }
+      />
+      <div className="flex-row-space-between-center-wrap">
+        {/* <Link to="/admin/templates">
           <Icon name="angle left" />
           {'Templates/Procedures'}
-        </Link>
+        </Link> */}
         <div className="template-builder-info-bar">
           <TextIO title="version" text={String(version)} labelNegative />
           <TextIO title="name" text={name} labelNegative />
