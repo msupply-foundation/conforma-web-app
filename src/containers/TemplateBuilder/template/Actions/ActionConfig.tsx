@@ -72,7 +72,6 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   return (
     <Modal className="config-modal" open={true} onClose={onClose}>
       <div className="config-modal-container ">
-        {!isDraft && <Label color="red">Actions only editable in draft templates</Label>}
         <div className="config-modal-header">
           <div className="flex-column">
             <Header as="h3">Configure Action</Header>
@@ -100,7 +99,11 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             />
           </div>
         </div>
-        <Label className="element-edit-info" attached="top right">
+        <Label
+          className="element-edit-info"
+          attached="top right"
+          style={{ borderTopRightRadius: 8 }}
+        >
           <a
             href="https://github.com/openmsupply/application-manager-server/wiki/List-of-Action-plugins"
             target="_blank"
@@ -109,6 +112,8 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           </a>
         </Label>
         <div className="config-modal-info">
+          {!isDraft && <Label color="red">Actions only editable in draft templates</Label>}
+          <div className="spacer-10" />
           <div className="config-container-outline">
             <div className="flex-column-start-center">
               <TextIO

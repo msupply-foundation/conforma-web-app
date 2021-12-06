@@ -137,6 +137,7 @@ const Category: React.FC<{}> = () => {
           }}
           minLabelWidth={100}
           labelTextAlign="right"
+          additionalStyles={{ marginBottom: 0 }}
         />
 
         {renderAddEdit()}

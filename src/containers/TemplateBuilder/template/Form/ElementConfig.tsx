@@ -116,11 +116,9 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
     onClose()
   }
 
-  console.log(state)
   return (
     <Modal className="config-modal" open={true} onClose={onClose}>
       <div className="config-modal-container">
-        {!isDraft && <Label color="red">Template form only editable on draft templates</Label>}
         <div className="config-modal-header">
           <Header as="h3">{state.title}</Header>
           <div className="flex-column">
@@ -145,7 +143,11 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             />
           </div>
         </div>
-        <Label className="element-edit-info" attached="top right">
+        <Label
+          className="element-edit-info"
+          attached="top right"
+          style={{ borderTopRightRadius: 8 }}
+        >
           <a
             href="https://github.com/openmsupply/application-manager-web-app/wiki/Element-Type-Specs"
             target="_blank"
@@ -154,6 +156,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           </a>
         </Label>
         <div className="config-modal-info">
+          {!isDraft && <Label color="red">Template form only editable on draft templates</Label>}
+          <div className="spacer-10" />
           <div className="config-container-outline" style={{ maxWidth: 600 }}>
             <div className="flex-row-start-start">
               <div className="full-width-container">

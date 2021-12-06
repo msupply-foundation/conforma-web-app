@@ -126,6 +126,7 @@ const Filters: React.FC = () => {
           setValue={(_, fullValue) => {
             setSelectedFilter(fullValue)
           }}
+          additionalStyles={{ marginBottom: 0 }}
         />
         <Icon className="clickable" name="add square" onClick={addFilterJoin} />
       </div>
