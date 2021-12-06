@@ -307,6 +307,7 @@ export default {
   TEMPLATE_BUTTON_SAVE: 'Save',
   TEMPLATE_BUTTON_ADD: 'Add',
   TEMPLATE_APPEARS_IN: 'Appears in',
+  TEMPLATE_MESSAGE_SAVE_SUCCESS: 'Changes saved',
   UNASSIGN_TITLE: 'Unassignment of reviewer',
   UNASSIGN_MESSAGE: 'Are you sure you would like to un-assign?',
   OUTCOMES_TABLE_PAGINATION_TEXT: 'Items per page',

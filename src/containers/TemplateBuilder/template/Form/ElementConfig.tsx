@@ -1,6 +1,6 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import React, { useEffect, useState } from 'react'
-import { Modal, Label, Icon, Header } from 'semantic-ui-react'
+import { Modal, Label, Icon, Header, Message } from 'semantic-ui-react'
 import { pluginProvider } from '../../../../formElementPlugins'
 import { TemplateElement, TemplateElementCategory } from '../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
@@ -13,6 +13,7 @@ import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import { useFullApplicationState } from '../ApplicationWrapper'
 import { useFormState } from './Form'
 import FromExistingElement from './FromExistingElement'
+import { useLanguageProvider } from '../../../../contexts/Localisation'
 
 type ElementConfigProps = {
   element: TemplateElement | null
@@ -66,6 +67,7 @@ const evaluations: Evaluations = [
 ]
 
 const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
+  const { strings } = useLanguageProvider()
   const { structure } = useFullApplicationState()
   const {
     template: { isDraft },
@@ -74,11 +76,13 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const { updateApplication, updateTemplateSection } = useOperationState()
   const [state, setState] = useState<ElementUpdateState | null>(null)
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
+  const [changesSaved, setChangesSaved] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
     if (!element) return setState(null)
     setState(getState(element))
+    setChangesSaved(false)
   }, [element])
 
   if (!state || !element) return null
@@ -113,12 +117,23 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
       },
     })
     setShouldUpdate(false)
+    setChangesSaved(true)
     if (!result) return
   }
 
   const saveAndClose = () => {
     updateElement()
     onClose()
+  }
+
+  const onlyClose = () => {
+    setChangesSaved(false)
+    onClose()
+  }
+
+  const markNeedsUpdate = () => {
+    setShouldUpdate(true)
+    setChangesSaved(false)
   }
 
   return (
@@ -142,7 +157,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             getText={'displayName'}
             setValue={(value) => {
               setState({ ...state, elementTypePluginCode: String(value) })
-              setShouldUpdate(true)
+              markNeedsUpdate()
             }}
             options={Object.values(pluginProvider.pluginManifest)}
           />
@@ -151,7 +166,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             pluginCode={state.elementTypePluginCode}
             setTemplateElement={(existingElement) => {
               setState({ ...state, ...existingElement })
-              setShouldUpdate(true)
+              markNeedsUpdate()
             }}
           />
 
@@ -164,7 +179,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             isPropUpdated={true}
             setValue={(value) => {
               setState({ ...state, category: value as TemplateElementCategory })
-              setShouldUpdate(true)
+              markNeedsUpdate()
             }}
             options={[
               { category: TemplateElementCategory.Information, title: 'Information' },
@@ -177,7 +192,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             title="Code"
             setText={(text) => {
               setState({ ...state, code: text })
-              setShouldUpdate(true)
+              markNeedsUpdate()
             }}
             isPropUpdated={true}
           />
@@ -187,7 +202,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               title="Title"
               setText={(text) => {
                 setState({ ...state, title: text })
-                setShouldUpdate(true)
+                markNeedsUpdate()
               }}
               isPropUpdated={true}
             />
@@ -202,7 +217,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               isTextArea={true}
               setText={(text) => {
                 setState({ ...state, validationMessage: text })
-                setShouldUpdate(true)
+                markNeedsUpdate()
               }}
               isPropUpdated={true}
             />
@@ -214,7 +229,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               title="Help Text"
               setText={(text) => {
                 setState({ ...state, helpText: text })
-                setShouldUpdate(true)
+                markNeedsUpdate()
               }}
               isPropUpdated={true}
             />
@@ -231,7 +246,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               evaluation={state[key]}
               setEvaluation={(evaluation) => {
                 setState({ ...state, [key]: evaluation })
-                setShouldUpdate(true)
+                markNeedsUpdate()
               }}
             />
           ))}
@@ -243,7 +258,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           parameters={state.parameters}
           setParameters={(parameters) => {
             setState({ ...state, parameters })
-            setShouldUpdate(true)
+            markNeedsUpdate()
           }}
         />
 
@@ -263,7 +278,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           />
           <ButtonWithFallback
             title="Close"
-            onClick={() => (shouldUpdate ? setOpen(true) : onClose())}
+            onClick={() => (shouldUpdate ? setOpen(true) : onlyClose())}
           />
           <Modal
             basic
@@ -274,11 +289,19 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             onClose={() => setOpen(false)}
             actions={[
               { key: 'save', content: 'Save', positive: true, onClick: saveAndClose },
-              { key: 'close', content: 'Close', positive: false, onClick: onClose },
+              { key: 'close', content: 'Close', positive: false, onClick: onlyClose },
             ]}
           />
         </div>
       </div>
+      <Message
+        className="success-message"
+        attached="bottom"
+        success
+        icon={<Icon name="check circle outline" />}
+        header={strings.TEMPLATE_MESSAGE_SAVE_SUCCESS}
+        hidden={!changesSaved}
+      />
     </Modal>
   )
 }
