@@ -11,6 +11,7 @@ type IconButtonProps = {
   name: SemanticICONS
   size?: IconSizeProp
   onClick: () => void
+  hidden?: boolean
 }
 
 export const IconButton: React.FC<IconButtonProps> = ({
@@ -20,6 +21,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
   size = undefined,
   disabledMessage,
   disabled = false,
+  hidden,
 }) => {
   const renderIcon = () => (
     <Icon
@@ -34,7 +36,10 @@ export const IconButton: React.FC<IconButtonProps> = ({
       content={disabledMessage}
       disabled={!disabled || !disabledMessage}
       trigger={
-        <div className={disabled ? '' : 'clickable'}>
+        <div
+          className={disabled ? '' : 'clickable'}
+          style={{ visibility: hidden ? 'hidden' : 'visible' }}
+        >
           {title && (
             <div className={`io-wrapper`}>
               <div className="io-component key">{title}</div>

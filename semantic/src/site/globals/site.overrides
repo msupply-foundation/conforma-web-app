@@ -192,6 +192,14 @@ a:hover {
   margin-right: 10px !important;
 }
 
+.flex-gap-10 {
+  gap: 10px;
+}
+
+.flex-gap-20 {
+  gap: 20px;
+}
+
 /*--------------------------------
    Login page
 ---------------------------------*/
