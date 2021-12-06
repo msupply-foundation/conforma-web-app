@@ -73,7 +73,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const { selectedSectionId } = useFormState()
   const { updateApplication, updateTemplateSection } = useOperationState()
   const [state, setState] = useState<ElementUpdateState | null>(null)
-  const [isUpdated, setIsUpdated] = useState<boolean>(true)
+  const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -112,7 +112,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
         updateById: [{ id: state.id, patch: state }],
       },
     })
-    setIsUpdated(true)
+    setShouldUpdate(false)
     if (!result) return
   }
 
@@ -142,7 +142,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             getText={'displayName'}
             setValue={(value) => {
               setState({ ...state, elementTypePluginCode: String(value) })
-              setIsUpdated(false)
+              setShouldUpdate(true)
             }}
             options={Object.values(pluginProvider.pluginManifest)}
           />
@@ -151,7 +151,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             pluginCode={state.elementTypePluginCode}
             setTemplateElement={(existingElement) => {
               setState({ ...state, ...existingElement })
-              setIsUpdated(false)
+              setShouldUpdate(true)
             }}
           />
 
@@ -164,7 +164,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             isPropUpdated={true}
             setValue={(value) => {
               setState({ ...state, category: value as TemplateElementCategory })
-              setIsUpdated(false)
+              setShouldUpdate(true)
             }}
             options={[
               { category: TemplateElementCategory.Information, title: 'Information' },
@@ -177,7 +177,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             title="Code"
             setText={(text) => {
               setState({ ...state, code: text })
-              setIsUpdated(false)
+              setShouldUpdate(true)
             }}
             isPropUpdated={true}
           />
@@ -187,7 +187,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               title="Title"
               setText={(text) => {
                 setState({ ...state, title: text })
-                setIsUpdated(false)
+                setShouldUpdate(true)
               }}
               isPropUpdated={true}
             />
@@ -202,7 +202,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               isTextArea={true}
               setText={(text) => {
                 setState({ ...state, validationMessage: text })
-                setIsUpdated(false)
+                setShouldUpdate(true)
               }}
               isPropUpdated={true}
             />
@@ -214,7 +214,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               title="Help Text"
               setText={(text) => {
                 setState({ ...state, helpText: text })
-                setIsUpdated(false)
+                setShouldUpdate(true)
               }}
               isPropUpdated={true}
             />
@@ -231,7 +231,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               evaluation={state[key]}
               setEvaluation={(evaluation) => {
                 setState({ ...state, [key]: evaluation })
-                setIsUpdated(false)
+                setShouldUpdate(true)
               }}
             />
           ))}
@@ -243,7 +243,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           parameters={state.parameters}
           setParameters={(parameters) => {
             setState({ ...state, parameters })
-            setIsUpdated(false)
+            setShouldUpdate(true)
           }}
         />
 
@@ -263,7 +263,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           />
           <ButtonWithFallback
             title="Close"
-            onClick={() => (isUpdated ? onClose() : setOpen(true))}
+            onClick={() => (shouldUpdate ? setOpen(true) : onClose())}
           />
           <Modal
             basic

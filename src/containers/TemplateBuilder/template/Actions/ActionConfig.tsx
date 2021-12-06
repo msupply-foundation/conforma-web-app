@@ -9,7 +9,6 @@ import Evaluation from '../../shared/Evaluation'
 import { useOperationState } from '../../shared/OperationContext'
 import { Parameters, ParametersType } from '../../shared/Parameters'
 import TextIO from '../../shared/TextIO'
-import { useFullApplicationState } from '../ApplicationWrapper'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import { useActionState } from './Actions'
 import FromExistingAction from './FromExistingAction'
@@ -46,7 +45,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const { updateTemplate } = useOperationState()
   const [state, setState] = useState<ActionUpdateState | null>(null)
   const { allActionsByCode, applicationData } = useActionState()
-  const [isUpdated, setIsUpdated] = useState<boolean>(true)
+  const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -62,10 +61,8 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
         updateById: [{ id: state.id, patch: state }],
       },
     })
-    setIsUpdated(true)
+    setShouldUpdate(false)
     if (!result) return
-
-    onClose()
   }
 
   const saveAndClose = () => {
@@ -96,7 +93,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             getText={'name'}
             setValue={(value) => {
               setState({ ...state, actionCode: String(value) })
-              setIsUpdated(false)
+              setShouldUpdate(true)
             }}
             options={Object.values(allActionsByCode)}
           />
@@ -105,7 +102,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             pluginCode={state.actionCode}
             setTemplateAction={(templateAction) => {
               setState({ ...state, ...templateAction })
-              setIsUpdated(false)
+              setShouldUpdate(true)
             }}
           />
           <TextIO
@@ -113,7 +110,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             title="Scheduled Event Code"
             setText={(text) => {
               setState({ ...state, eventCode: text })
-              setIsUpdated(false)
+              setShouldUpdate(true)
             }}
             isPropUpdated={true}
           />
@@ -125,7 +122,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               title="Description"
               setText={(text) => {
                 setState({ ...state, description: text })
-                setIsUpdated(false)
+                setShouldUpdate(true)
               }}
               isPropUpdated={true}
             />
@@ -138,7 +135,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             evaluation={state?.condition}
             setEvaluation={(condition) => {
               setState({ ...state, condition })
-              setIsUpdated(false)
+              setShouldUpdate(true)
             }}
             applicationData={applicationData}
           />
@@ -158,7 +155,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           parameters={state.parameterQueries}
           setParameters={(parameterQueries) => {
             setState({ ...state, parameterQueries })
-            setIsUpdated(false)
+            setShouldUpdate(true)
           }}
         />
         <div className="spacer-20" />
@@ -171,7 +168,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           />
           <ButtonWithFallback
             title="Close"
-            onClick={() => (isUpdated ? onClose() : setOpen(true))}
+            onClick={() => (shouldUpdate ? setOpen(true) : onClose())}
           />
           <Modal
             basic
