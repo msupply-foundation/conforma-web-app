@@ -85,7 +85,7 @@ const ComponentLibrary: ComponentLibraryType = {
     <div className="evaluator-operator-container">{children}</div>
   ),
   FlexColumn: ({ children }) => <div className="flex-column-start-stretch">{children}</div>,
-  FlexRow: ({ children }) => <div className="flex-row-start-center-wrap">{children}</div>,
+  FlexRow: ({ children }) => <div className="flex-row-start-center">{children}</div>,
 }
 
 export default ComponentLibrary
