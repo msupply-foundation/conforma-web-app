@@ -37,8 +37,7 @@ const General: React.FC = () => {
 
   return (
     <div className="flex-column-center-start">
-      <div className="flex-row">
-        <div className="spacer-10" />
+      <div className="flex-row flex-gap-10">
         <ButtonWithFallback
           title={strings.TEMPLATE_GEN_BUTTON_AVAILABLE}
           disabledMessage={strings.TEMPLATE_GEN_BUTTON_AVAILABLE_DISABLED}

@@ -63,7 +63,7 @@ const Sections: React.FC = () => {
       </div>
       <div className="spacer-10" />
       <div className="flex-row-start-center">
-        <div className="flex-row-start-center-wrap flex-grow-1">
+        <div className="flex-row-start-center-wrap flex-grow-1 flex-gap-10">
           {Object.values(structure.sections).map((section) => (
             <Label
               key={section.details.id}
