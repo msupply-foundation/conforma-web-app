@@ -53,7 +53,6 @@ const Evaluate: React.FC<{ typedEvaluation: EvaluationType; evaluatorParameters?
           style={{ marginBottom: 8 }}
         />
         <Modal
-          centered
           className="config-modal"
           open={evaluationResult !== undefined}
           onClose={() => setEvaluationResult(undefined)}

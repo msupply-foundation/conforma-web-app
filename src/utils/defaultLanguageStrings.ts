@@ -310,7 +310,7 @@ export default {
   TEMPLATE_LABEL_DESCRIPTION: 'Description',
   TEMPLATE_LABEL_CONDITION: 'Condition',
   TEMPLATE_LABEL_SEQUENTIAL: 'Is Sequential',
-  TEMPLATE_BUTTON_ACTION_ADD: 'add new action',
+  TEMPLATE_BUTTON_ACTION_ADD: 'Add Action',
   TEMPLATE_BUTTON_SAVE: 'Save',
   TEMPLATE_BUTTON_ADD: 'Add',
   TEMPLATE_APPEARS_IN: 'Appears in',

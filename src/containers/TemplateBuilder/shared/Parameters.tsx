@@ -3,6 +3,7 @@ import { Accordion, Button, Header, Icon } from 'semantic-ui-react'
 import { EvaluatorNode, FullStructure } from '../../../utils/types'
 import { useActionState } from '../template/Actions/Actions'
 import CheckboxIO from './CheckboxIO'
+import TextIO from '../shared/TextIO'
 import Evaluation from './Evaluation'
 import JsonIO from './JsonIO'
 
@@ -14,6 +15,8 @@ type ParametersProps = {
   currentElementCode: string
   setParameters: (parameters: ParametersType) => void
   fullStructure?: FullStructure
+  requiredParameters?: string[]
+  optionalParameters?: string[]
 }
 
 export const Parameters: React.FC<ParametersProps> = ({
@@ -21,6 +24,8 @@ export const Parameters: React.FC<ParametersProps> = ({
   setParameters,
   currentElementCode,
   fullStructure,
+  requiredParameters,
+  optionalParameters,
 }) => {
   const { applicationData } = useActionState()
   const [asGui, setAsGui] = useState(true)
@@ -51,6 +56,29 @@ export const Parameters: React.FC<ParametersProps> = ({
         <Accordion.Content className="evaluation-container-content" active={isActive}>
           <>
             <div className="flex-column-start-center">
+              {(requiredParameters || optionalParameters) && (
+                <div className="flex-row-start-center-wrap" style={{ maxWidth: 600 }}>
+                  <TextIO
+                    title="Required Parameters"
+                    text={
+                      requiredParameters && requiredParameters.length > 0
+                        ? JSON.stringify(requiredParameters, null, 2)
+                        : '<none>'
+                    }
+                    labelNegative
+                  />
+                  <TextIO
+                    title="Optional Parameters"
+                    isTextArea={true}
+                    text={
+                      optionalParameters && optionalParameters.length > 0
+                        ? JSON.stringify(optionalParameters, null, 2)
+                        : '<none>'
+                    }
+                    labelNegative
+                  />
+                </div>
+              )}
               <div className="config-container-outline">
                 <div className="flex-row flex-gap-20">
                   <CheckboxIO title="Show As GUI" value={asGui} setValue={setAsGui} />

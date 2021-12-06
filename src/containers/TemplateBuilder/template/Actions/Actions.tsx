@@ -117,6 +117,7 @@ const Actions: React.FC = () => {
             setSelectedTrigger(trigger as Trigger)
           }}
           options={availableTriggers}
+          additionalStyles={{ margin: 0 }}
         />
         {selectedTrigger && (
           <IconButton

@@ -1,7 +1,8 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { stat } from 'fs'
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { Icon, Label, Modal } from 'semantic-ui-react'
+import { Icon, Label, Modal, Header } from 'semantic-ui-react'
 import { TemplateAction } from '../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import DropdownIO from '../../shared/DropdownIO'
@@ -72,6 +73,33 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
     <Modal className="config-modal" open={true} onClose={onClose}>
       <div className="config-modal-container ">
         {!isDraft && <Label color="red">Actions only editable in draft templates</Label>}
+        <div className="config-modal-header">
+          <div className="flex-column">
+            <Header as="h3">Configure Action</Header>
+            <p className="smaller-text">Trigger: {templateAction?.trigger || ''}</p>
+          </div>
+          <div className="flex-column">
+            <DropdownIO
+              title="Type"
+              value={templateAction?.actionCode || ''}
+              getKey={'code'}
+              getValue={'code'}
+              getText={'name'}
+              setValue={(value) => {
+                setState({ ...state, actionCode: String(value) })
+              }}
+              options={Object.values(allActionsByCode)}
+              labelNegative
+              minLabelWidth={50}
+            />
+            <FromExistingAction
+              pluginCode={state.actionCode}
+              setTemplateAction={(templateAction) => {
+                setState({ ...state, ...templateAction })
+              }}
+            />
+          </div>
+        </div>
         <Label className="element-edit-info" attached="top right">
           <a
             href="https://github.com/openmsupply/application-manager-server/wiki/List-of-Action-plugins"
@@ -80,76 +108,54 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             <Icon name="info circle" size="big" color="blue" />
           </a>
         </Label>
-        <div className="flex-row-center-center-wrap">
-          <DropdownIO
-            title="Type"
-            value={templateAction?.actionCode || ''}
-            getKey={'code'}
-            getValue={'code'}
-            getText={'name'}
-            setValue={(value) => {
-              setState({ ...state, actionCode: String(value) })
-            }}
-            options={Object.values(allActionsByCode)}
-          />
-
-          <FromExistingAction
-            pluginCode={state.actionCode}
-            setTemplateAction={(templateAction) => {
-              setState({ ...state, ...templateAction })
-            }}
-          />
-          <TextIO
-            text={state.eventCode}
-            title="Scheduled Event Code"
-            setText={(text) => setState({ ...state, eventCode: text })}
-            isPropUpdated={true}
-          />
-          <TextIO text={templateAction?.trigger || ''} title="Trigger" />
-          <div className="long">
-            <TextIO
-              text={state.description}
-              isTextArea={true}
-              title="Description"
-              setText={(text) => setState({ ...state, description: text })}
-              isPropUpdated={true}
-            />
+        <div className="config-modal-info">
+          <div className="config-container-outline">
+            <div className="flex-column-start-center">
+              <TextIO
+                text={state.eventCode}
+                title="Scheduled Event Code"
+                setText={(text) => setState({ ...state, eventCode: text })}
+                isPropUpdated={true}
+                minLabelWidth={150}
+              />
+              <TextIO
+                text={state.description}
+                isTextArea={true}
+                title="Description"
+                setText={(text) => setState({ ...state, description: text })}
+                isPropUpdated={true}
+                minLabelWidth={150}
+                maxLabelWidth={150}
+                textAreaDefaultRows={2}
+                additionalStyles={{ minWidth: 500 }}
+              />
+              <Evaluation
+                label="Condition"
+                currentElementCode={''}
+                evaluation={state?.condition}
+                setEvaluation={(condition) => setState({ ...state, condition })}
+                applicationData={applicationData}
+              />
+            </div>
           </div>
-        </div>
-        <div className="config-container-alternate">
-          <Evaluation
-            label="Condition"
+          <div className="spacer-10" />
+          <Parameters
             currentElementCode={''}
-            evaluation={state?.condition}
-            setEvaluation={(condition) => setState({ ...state, condition })}
-            applicationData={applicationData}
+            parameters={state.parameterQueries}
+            setParameters={(parameterQueries) => setState({ ...state, parameterQueries })}
+            requiredParameters={(currentActionPlugin?.requiredParameters as string[]) || []}
+            optionalParameters={(currentActionPlugin?.optionalParameters as string[]) || []}
           />
-        </div>
-        <div className="flex-row-center-center">
-          <TextIO
-            title="Required Parameters"
-            text={JSON.stringify(currentActionPlugin?.requiredParameters || [])}
-          />
-          <TextIO
-            title="Optional Parameters"
-            text={JSON.stringify(currentActionPlugin?.optionalParameters || [])}
-          />
-        </div>
-        <Parameters
-          currentElementCode={''}
-          parameters={state.parameterQueries}
-          setParameters={(parameterQueries) => setState({ ...state, parameterQueries })}
-        />
-        <div className="spacer-20" />
-        <div className="flex-row-center-center">
-          <ButtonWithFallback
-            title="Save"
-            disabled={!isDraft}
-            disabledMessage={disabledMessage}
-            onClick={updateAction}
-          />
-
-          <ButtonWithFallback title="Cancel" onClick={onClose} />
+          <div className="spacer-20" />
+          <div className="flex-row-center-center">
+            <ButtonWithFallback
+              title="Save"
+              disabled={!isDraft}
+              disabledMessage={disabledMessage}
+              onClick={updateAction}
+            />
+            <ButtonWithFallback title="Cancel" onClick={onClose} />
+          </div>
         </div>
       </div>
     </Modal>

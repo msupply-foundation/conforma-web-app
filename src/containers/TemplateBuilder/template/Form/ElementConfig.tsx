@@ -118,7 +118,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
 
   console.log(state)
   return (
-    <Modal centered className="config-modal" open={true} onClose={onClose}>
+    <Modal className="config-modal" open={true} onClose={onClose}>
       <div className="config-modal-container">
         {!isDraft && <Label color="red">Template form only editable on draft templates</Label>}
         <div className="config-modal-header">
@@ -203,7 +203,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   minLabelWidth={100}
                   maxLabelWidth={100}
                   labelTextAlign="right"
-                  textAreaDefaulRows={3}
+                  textAreaDefaultRows={3}
                 />
               </div>
             </div>

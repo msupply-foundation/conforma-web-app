@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Checkbox, Header } from 'semantic-ui-react'
+import { Checkbox, Header, Button } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { TemplateAction, Trigger } from '../../../../utils/generated/graphql'
 import CheckboxIO from '../../shared/CheckboxIO'
@@ -217,11 +217,9 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
           </Header>
           {isDraft && (
             <>
-              <IconButton
-                title={strings.TEMPLATE_BUTTON_ACTION_ADD}
-                name="add square"
-                onClick={addAction}
-              />
+              <Button primary inverted onClick={addAction}>
+                {strings.TEMPLATE_BUTTON_ACTION_ADD}
+              </Button>
               <Checkbox
                 toggle
                 label={strings.TEMPLATE_LABEL_ACTION_ON_TOP}

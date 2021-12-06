@@ -1876,8 +1876,8 @@ a:hover {
   padding: 5px;
   margin: 2px;
   border-radius: @borderRadius;
-  border: 2px solid rgba(0, 0, 0, 0.2);
-  background-color: rgba(50, 252, 50, 0.01);
+  border: 1px solid @surfacesMed;
+  // background-color: rgba(50, 252, 50, 0.01);
 }
 
 .config-container {

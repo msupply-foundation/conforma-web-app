@@ -12,6 +12,7 @@ type IconButtonProps = {
   size?: IconSizeProp
   onClick: () => void
   hidden?: boolean
+  additionalStyles?: object
 }
 
 export const IconButton: React.FC<IconButtonProps> = ({
@@ -22,6 +23,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
   disabledMessage,
   disabled = false,
   hidden,
+  additionalStyles = {},
 }) => {
   const renderIcon = () => (
     <Icon
@@ -41,7 +43,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
           style={{ visibility: hidden ? 'hidden' : 'visible' }}
         >
           {title && (
-            <div className={`io-wrapper`}>
+            <div className={`io-wrapper`} style={{ ...additionalStyles }}>
               <div className="io-component key">{title}</div>
               <div className="io-component value">{renderIcon()}</div>
             </div>
