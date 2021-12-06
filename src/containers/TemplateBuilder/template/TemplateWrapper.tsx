@@ -85,11 +85,11 @@ const TemplateContainer: React.FC = () => {
           {'Templates/Procedures'}
         </Link>
         <div className="template-builder-info-bar">
-          <TextIO title="version" text={String(version)} />
-          <TextIO title="name" text={name} />
-          <TextIO title="code" text={code} />
-          <TextIO title="status" text={status} />
-          <TextIO title="# applications" text={String(applicationCount)} />
+          <TextIO title="version" text={String(version)} labelNegative />
+          <TextIO title="name" text={name} labelNegative />
+          <TextIO title="code" text={code} labelNegative />
+          <TextIO title="status" text={status} labelNegative />
+          <TextIO title="# applications" text={String(applicationCount)} labelNegative />
         </div>
       </div>
       <div className="template-builder-tabs">
