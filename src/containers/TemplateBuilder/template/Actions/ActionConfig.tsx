@@ -46,10 +46,11 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const { updateTemplate } = useOperationState()
   const [state, setState] = useState<ActionUpdateState | null>(null)
   const { allActionsByCode, applicationData } = useActionState()
+  const [isUpdated, setIsUpdated] = useState<boolean>(true)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     if (!templateAction) return setState(null)
-
     setState(getState(templateAction))
   }, [templateAction])
 
@@ -61,15 +62,21 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
         updateById: [{ id: state.id, patch: state }],
       },
     })
+    setIsUpdated(true)
     if (!result) return
 
+    onClose()
+  }
+
+  const saveAndClose = () => {
+    updateAction()
     onClose()
   }
 
   const currentActionPlugin = allActionsByCode[String(templateAction?.actionCode)]
 
   return (
-    <Modal className="config-modal" open={true} onClose={onClose}>
+    <Modal className="config-modal" open={true}>
       <div className="config-modal-container ">
         {!isDraft && <Label color="red">Actions only editable in draft templates</Label>}
         <Label className="element-edit-info" attached="top right">
@@ -89,6 +96,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             getText={'name'}
             setValue={(value) => {
               setState({ ...state, actionCode: String(value) })
+              setIsUpdated(false)
             }}
             options={Object.values(allActionsByCode)}
           />
@@ -97,12 +105,16 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             pluginCode={state.actionCode}
             setTemplateAction={(templateAction) => {
               setState({ ...state, ...templateAction })
+              setIsUpdated(false)
             }}
           />
           <TextIO
             text={state.eventCode}
             title="Scheduled Event Code"
-            setText={(text) => setState({ ...state, eventCode: text })}
+            setText={(text) => {
+              setState({ ...state, eventCode: text })
+              setIsUpdated(false)
+            }}
             isPropUpdated={true}
           />
           <TextIO text={templateAction?.trigger || ''} title="Trigger" />
@@ -111,7 +123,10 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               text={state.description}
               isTextArea={true}
               title="Description"
-              setText={(text) => setState({ ...state, description: text })}
+              setText={(text) => {
+                setState({ ...state, description: text })
+                setIsUpdated(false)
+              }}
               isPropUpdated={true}
             />
           </div>
@@ -121,7 +136,10 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             label="Condition"
             currentElementCode={''}
             evaluation={state?.condition}
-            setEvaluation={(condition) => setState({ ...state, condition })}
+            setEvaluation={(condition) => {
+              setState({ ...state, condition })
+              setIsUpdated(false)
+            }}
             applicationData={applicationData}
           />
         </div>
@@ -138,7 +156,10 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
         <Parameters
           currentElementCode={''}
           parameters={state.parameterQueries}
-          setParameters={(parameterQueries) => setState({ ...state, parameterQueries })}
+          setParameters={(parameterQueries) => {
+            setState({ ...state, parameterQueries })
+            setIsUpdated(false)
+          }}
         />
         <div className="spacer-20" />
         <div className="flex-row-center-center">
@@ -148,8 +169,22 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             disabledMessage={disabledMessage}
             onClick={updateAction}
           />
-
-          <ButtonWithFallback title="Cancel" onClick={onClose} />
+          <ButtonWithFallback
+            title="Close"
+            onClick={() => (isUpdated ? onClose() : setOpen(true))}
+          />
+          <Modal
+            basic
+            size="small"
+            icon="save"
+            header="There are changes not saved. Would you like to save and close?"
+            open={open}
+            onClose={() => setOpen(false)}
+            actions={[
+              { key: 'save', content: 'Save', positive: true, onClick: saveAndClose },
+              { key: 'close', content: 'Close', positive: false, onClick: onClose },
+            ]}
+          />
         </div>
       </div>
     </Modal>

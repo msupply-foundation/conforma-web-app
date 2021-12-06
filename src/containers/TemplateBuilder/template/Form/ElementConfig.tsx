@@ -142,6 +142,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             getText={'displayName'}
             setValue={(value) => {
               setState({ ...state, elementTypePluginCode: String(value) })
+              setIsUpdated(false)
             }}
             options={Object.values(pluginProvider.pluginManifest)}
           />
@@ -150,6 +151,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             pluginCode={state.elementTypePluginCode}
             setTemplateElement={(existingElement) => {
               setState({ ...state, ...existingElement })
+              setIsUpdated(false)
             }}
           />
 
@@ -162,6 +164,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             isPropUpdated={true}
             setValue={(value) => {
               setState({ ...state, category: value as TemplateElementCategory })
+              setIsUpdated(false)
             }}
             options={[
               { category: TemplateElementCategory.Information, title: 'Information' },
@@ -172,14 +175,20 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           <TextIO
             text={state.code}
             title="Code"
-            setText={(text) => setState({ ...state, code: text })}
+            setText={(text) => {
+              setState({ ...state, code: text })
+              setIsUpdated(false)
+            }}
             isPropUpdated={true}
           />
           <div className="long">
             <TextIO
               text={state.title}
               title="Title"
-              setText={(text) => setState({ ...state, title: text })}
+              setText={(text) => {
+                setState({ ...state, title: text })
+                setIsUpdated(false)
+              }}
               isPropUpdated={true}
             />
           </div>
@@ -191,7 +200,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               text={state.validationMessage}
               title="Validation Message"
               isTextArea={true}
-              setText={(text) => setState({ ...state, validationMessage: text })}
+              setText={(text) => {
+                setState({ ...state, validationMessage: text })
+                setIsUpdated(false)
+              }}
               isPropUpdated={true}
             />
           </div>
@@ -200,7 +212,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               text={state.helpText}
               isTextArea={true}
               title="Help Text"
-              setText={(text) => setState({ ...state, helpText: text })}
+              setText={(text) => {
+                setState({ ...state, helpText: text })
+                setIsUpdated(false)
+              }}
               isPropUpdated={true}
             />
           </div>
@@ -214,7 +229,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               currentElementCode={state.code}
               fullStructure={structure}
               evaluation={state[key]}
-              setEvaluation={(evaluation) => setState({ ...state, [key]: evaluation })}
+              setEvaluation={(evaluation) => {
+                setState({ ...state, [key]: evaluation })
+                setIsUpdated(false)
+              }}
             />
           ))}
         </div>
@@ -223,7 +241,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           currentElementCode={state.code}
           fullStructure={structure}
           parameters={state.parameters}
-          setParameters={(parameters) => setState({ ...state, parameters })}
+          setParameters={(parameters) => {
+            setState({ ...state, parameters })
+            setIsUpdated(false)
+          }}
         />
 
         <div className="spacer-20" />
@@ -234,29 +255,28 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             disabledMessage={disabledMessage}
             onClick={updateElement}
           />
-            <ButtonWithFallback
-              disabled={!isDraft}
-              disabledMessage={disabledMessage}
-              title="Remove"
-              onClick={removeElement}
-            />
-            <ButtonWithFallback
-              title="Close"
-              onClick={() => (isUpdated ? onClose() : setOpen(true))}
-            />
-            <Modal
-              basic
-              size="small"
-              icon="save"
-              header="There are changes not saved. Would you like to save and close?"
-              open={open}
-              onClose={() => setOpen(false)}
-              actions={[
-                { key: 'save', content: 'Save', positive: true, onClick: saveAndClose },
-                { key: 'close', content: 'Close', positive: false, onClick: onClose },
-              ]}
-            />
-          </div>
+          <ButtonWithFallback
+            disabled={!isDraft}
+            disabledMessage={disabledMessage}
+            title="Remove"
+            onClick={removeElement}
+          />
+          <ButtonWithFallback
+            title="Close"
+            onClick={() => (isUpdated ? onClose() : setOpen(true))}
+          />
+          <Modal
+            basic
+            size="small"
+            icon="save"
+            header="There are changes not saved. Would you like to save and close?"
+            open={open}
+            onClose={() => setOpen(false)}
+            actions={[
+              { key: 'save', content: 'Save', positive: true, onClick: saveAndClose },
+              { key: 'close', content: 'Close', positive: false, onClick: onClose },
+            ]}
+          />
         </div>
       </div>
     </Modal>
