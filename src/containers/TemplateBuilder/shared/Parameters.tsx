@@ -30,8 +30,8 @@ export const Parameters: React.FC<ParametersProps> = ({
     // Sort elements only when opening modal
     const sortedParameters = Object.entries(parameters)
       .sort(([key1], [key2]) => (key1 > key2 ? -1 : key1 === key2 ? 0 : 1))
-      .map(([key, element]) => ({ [key]: element }))
-    setParameters(Object.assign(sortedParameters))
+      .reduce((sortedParameters, [key, element]) => ({ ...sortedParameters, [key]: element }), {})
+    setParameters(sortedParameters)
   }, [])
 
   return (
@@ -41,10 +41,9 @@ export const Parameters: React.FC<ParametersProps> = ({
         active={isActive}
         onClick={() => setIsActive(!isActive)}
       >
-        <Header
-          as="h4"
-          className="no-margin-no-padding"
-        >{`Plugin Specific Parameters (${parameters.length})`}</Header>
+        <Header as="h4" className="no-margin-no-padding">{`Plugin Specific Parameters (${
+          Object.keys(parameters).length
+        })`}</Header>
         <Icon size="large" name={isActive ? 'angle up' : 'angle down'} />
       </Accordion.Title>
       {isActive && (
