@@ -211,27 +211,24 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
           onClick={() => doubleMove(false)}
         />
       )}
-
-      {!currentElement.isFirstInPage && (
-        <IconButton
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          name="angle up"
-          onClick={() => {
-            swapElement(moveStructure.elements[elementId].previousElement)
-          }}
-        />
-      )}
-      {!currentElement.isLastInPage && (
-        <IconButton
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          name="angle down"
-          onClick={async () => {
-            swapElement(moveStructure.elements[elementId].nextElement)
-          }}
-        />
-      )}
+      <IconButton
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        name="angle up"
+        onClick={() => {
+          swapElement(moveStructure.elements[elementId].previousElement)
+        }}
+        hidden={currentElement.isFirstInPage}
+      />
+      <IconButton
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        name="angle down"
+        onClick={async () => {
+          swapElement(moveStructure.elements[elementId].nextElement)
+        }}
+        hidden={currentElement.isLastInPage}
+      />
     </>
   )
 }
