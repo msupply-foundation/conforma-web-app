@@ -43,7 +43,6 @@ const Elements: React.FC = () => {
     const elementsAfterLastIndex = currentSection.allElements.filter(
       ({ index }) => index > lastElementIndex
     )
-
     updateTemplateSection(currentSection.id, {
       templateElementsUsingId: {
         updateById: elementsAfterLastIndex.map(({ id, index }) => ({
@@ -122,6 +121,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
   } = useTemplateState()
 
   const currentElement = moveStructure.elements[elementId]
+
   if (selectedPageNumber === -1 || selectedSectionId === -1) return null
 
   const currentSection = moveStructure.sections[selectedSectionId]
@@ -218,7 +218,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
         onClick={() => {
           swapElement(moveStructure.elements[elementId].previousElement)
         }}
-        hidden={currentElement.isFirstInPage}
+        hidden={currentElement?.isFirstInPage ?? true}
       />
       <IconButton
         disabled={!isDraft}
@@ -227,7 +227,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
         onClick={async () => {
           swapElement(moveStructure.elements[elementId].nextElement)
         }}
-        hidden={currentElement.isLastInPage}
+        hidden={currentElement?.isLastInPage ?? true}
       />
     </>
   )
