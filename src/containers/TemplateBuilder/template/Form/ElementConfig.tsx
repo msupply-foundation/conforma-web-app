@@ -314,7 +314,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             <ButtonWithFallback
               title={strings.TEMPLATE_BUTTON_SAVE}
               disabled={!isDraft || !shouldUpdate}
-              disabledMessage={disabledMessage}
+              disabledMessage={!isDraft ? disabledMessage : 'No changes'}
               onClick={updateElement}
             />
             <ButtonWithFallback
