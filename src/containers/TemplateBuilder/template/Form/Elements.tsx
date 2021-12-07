@@ -195,22 +195,22 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
 
   return (
     <>
-      {!(currentSection.isFirst && currentPage.isFirst) && (
-        <IconButton
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          name="angle double up"
-          onClick={() => doubleMove(true)}
-        />
-      )}
-      {!(currentSection.isLast && currentPage.isLast) && (
-        <IconButton
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          name="angle double down"
-          onClick={() => doubleMove(false)}
-        />
-      )}
+      <IconButton
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        name="angle double left"
+        onClick={() => doubleMove(true)}
+        hidden={currentSection.isFirst && currentPage.isFirst}
+        toolTip="Move to previous page"
+      />
+      <IconButton
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        name="angle double right"
+        onClick={() => doubleMove(false)}
+        hidden={currentSection.isLast && currentPage.isLast}
+        toolTip="Move to next page"
+      />
       <IconButton
         disabled={!isDraft}
         disabledMessage={disabledMessage}
@@ -219,6 +219,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
           swapElement(moveStructure.elements[elementId].previousElement)
         }}
         hidden={currentElement?.isFirstInPage ?? true}
+        toolTip="Move up"
       />
       <IconButton
         disabled={!isDraft}
@@ -228,6 +229,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
           swapElement(moveStructure.elements[elementId].nextElement)
         }}
         hidden={currentElement?.isLastInPage ?? true}
+        toolTip="Move down"
       />
     </>
   )
