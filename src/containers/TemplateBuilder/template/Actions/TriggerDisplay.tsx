@@ -151,49 +151,53 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
                   name="setting"
                   onClick={() => setCurrentTemplateAction(templateAction)}
                 />
-                <div className="flex-row-start-center-wrap">
-                  <TextIO
-                    title={strings.TEMPLATE_LABEL_ACTION}
-                    text={allActionsByCode[String(templateAction?.actionCode)]?.name || ''}
-                    minLabelWidth={90}
-                    labelTextAlign="right"
-                  />
-                  <TextIO
-                    title={strings.TEMPLATE_LABEL_DESCRIPTION}
-                    text={templateAction?.description || ''}
-                    isTextArea={true}
-                    minLabelWidth={90}
-                    labelTextAlign="right"
-                  />
-                  <div className="config-container-outline">
-                    <div className="flex-row-start-center">
-                      <Header
-                        as="h6"
-                        className="no-margin-no-padding right-margin-space-10"
-                        content={strings.TEMPLATE_LABEL_CONDITION}
-                      />
-                      <EvaluationHeader evaluation={templateAction?.condition} />
+                <div className="flex-row-space-between" style={{ width: '100%' }}>
+                  <div className="flex-row-start-center-wrap">
+                    <TextIO
+                      title={strings.TEMPLATE_LABEL_ACTION}
+                      text={allActionsByCode[String(templateAction?.actionCode)]?.name || ''}
+                      minLabelWidth={90}
+                      labelTextAlign="right"
+                    />
+                    <TextIO
+                      title={strings.TEMPLATE_LABEL_DESCRIPTION}
+                      text={templateAction?.description || ''}
+                      isTextArea={true}
+                      minLabelWidth={90}
+                      labelTextAlign="right"
+                    />
+                    <div className="config-container-outline">
+                      <div className="flex-row-start-center">
+                        <Header
+                          as="h6"
+                          className="no-margin-no-padding right-margin-space-10"
+                          content={strings.TEMPLATE_LABEL_CONDITION}
+                        />
+                        <EvaluationHeader evaluation={templateAction?.condition} />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div style={{ alignSelf: 'flex-end' }}>
-                  <CheckboxIO
-                    disabled={!isDraft}
-                    disabledMessage={disabledMessage}
-                    title={strings.TEMPLATE_LABEL_SEQUENTIAL}
-                    value={!isAsynchronous(templateAction)}
-                    setValue={(isSequential) =>
-                      setIsSequential(templateAction?.id || 0, isSequential)
-                    }
-                  />
-                </div>
-                <div style={{ alignSelf: 'flex-start' }}>
-                  <IconButton
-                    disabled={!isDraft}
-                    disabledMessage={disabledMessage}
-                    name="window close"
-                    onClick={() => removeAction(templateAction?.id)}
-                  />
+                  <div className="flex-row">
+                    <div style={{ alignSelf: 'flex-end' }}>
+                      <CheckboxIO
+                        disabled={!isDraft}
+                        disabledMessage={disabledMessage}
+                        title={strings.TEMPLATE_LABEL_SEQUENTIAL}
+                        value={!isAsynchronous(templateAction)}
+                        setValue={(isSequential) =>
+                          setIsSequential(templateAction?.id || 0, isSequential)
+                        }
+                      />
+                    </div>
+                    <div style={{ alignSelf: 'flex-start' }}>
+                      <IconButton
+                        disabled={!isDraft}
+                        disabledMessage={disabledMessage}
+                        name="window close"
+                        onClick={() => removeAction(templateAction?.id)}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
