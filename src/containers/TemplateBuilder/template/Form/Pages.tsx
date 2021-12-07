@@ -239,42 +239,42 @@ const PageMove: React.FC = () => {
 
   return (
     <>
-      {!currentSection.isFirst && (
-        <IconButton
-          name="angle double up"
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          onClick={() => moveToSection(currentSection.previousSection)}
-        />
-      )}
-      {!currentSection.isLast && (
-        <IconButton
-          name="angle double down"
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          onClick={() => moveToSection(currentSection.nextSection)}
-        />
-      )}
-      {!currentPage.isFirst && (
-        <IconButton
-          name="angle up"
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          onClick={() => {
-            movePageInSection(selectedPageNumber, selectedPageNumber - 1, selectedPageNumber - 1)
-          }}
-        />
-      )}
-      {!currentPage.isLast && (
-        <IconButton
-          name="angle down"
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          onClick={() => {
-            movePageInSection(selectedPageNumber + 1, selectedPageNumber, selectedPageNumber + 1)
-          }}
-        />
-      )}
+      <IconButton
+        name="angle double left"
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        onClick={() => moveToSection(currentSection.previousSection)}
+        hidden={currentSection.isFirst}
+        toolTip="Move to previous section"
+      />
+      <IconButton
+        name="angle double right"
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        onClick={() => moveToSection(currentSection.nextSection)}
+        hidden={currentSection.isLast}
+        toolTip="Move to next section"
+      />
+      <IconButton
+        name="angle up"
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        onClick={() => {
+          movePageInSection(selectedPageNumber, selectedPageNumber - 1, selectedPageNumber - 1)
+        }}
+        hidden={currentPage.isFirst}
+        toolTip="Move up"
+      />
+      <IconButton
+        name="angle down"
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        onClick={() => {
+          movePageInSection(selectedPageNumber + 1, selectedPageNumber, selectedPageNumber + 1)
+        }}
+        hidden={currentPage.isLast}
+        toolTip="Move down"
+      />
     </>
   )
 }

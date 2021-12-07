@@ -187,6 +187,7 @@ const Section: React.FC = () => {
         name="angle up"
         onClick={moveSectionForward}
         hidden={!canMoveForward}
+        toolTip="Move up"
       />
       <IconButton
         disabled={!isDraft}
@@ -194,6 +195,7 @@ const Section: React.FC = () => {
         name="angle down"
         onClick={moveSectionBackward}
         hidden={!canMoveBackward}
+        toolTip="Move to down"
       />
 
       <div className="long">

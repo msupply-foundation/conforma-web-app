@@ -13,6 +13,7 @@ type IconButtonProps = {
   onClick: () => void
   hidden?: boolean
   additionalStyles?: object
+  toolTip?: string
 }
 
 export const IconButton: React.FC<IconButtonProps> = ({
@@ -24,6 +25,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
   disabled = false,
   hidden,
   additionalStyles = {},
+  toolTip,
 }) => {
   const renderIcon = () => (
     <Icon
@@ -31,6 +33,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
       name={name}
       size={size}
       onClick={() => (disabled ? console.log('action disable') : onClick())}
+      title={toolTip}
     />
   )
   return (
