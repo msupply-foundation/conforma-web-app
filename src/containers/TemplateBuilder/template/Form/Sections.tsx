@@ -181,22 +181,21 @@ const Section: React.FC = () => {
 
   return (
     <div key={selectedSectionId} className="flex-row-start-center-wrap">
-      {canMoveForward && (
-        <IconButton
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          name="angle up"
-          onClick={moveSectionForward}
-        />
-      )}
-      {canMoveBackward && (
-        <IconButton
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          name="angle down"
-          onClick={moveSectionBackward}
-        />
-      )}
+      <IconButton
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        name="angle up"
+        onClick={moveSectionForward}
+        hidden={!canMoveForward}
+      />
+      <IconButton
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        name="angle down"
+        onClick={moveSectionBackward}
+        hidden={!canMoveBackward}
+      />
+
       <div className="long">
         <TextIO
           title="title"
