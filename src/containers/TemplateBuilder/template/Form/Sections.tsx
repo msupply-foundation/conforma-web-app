@@ -36,7 +36,7 @@ const Sections: React.FC = () => {
     })
 
   return (
-    <>
+    <div className="config-container-outline" style={{ minWidth: 700 }}>
       <div className="flex-row-start-center full-width-container">
         <Header className="no-margin-no-padding" as="h3">
           Sections
@@ -75,7 +75,7 @@ const Sections: React.FC = () => {
       </div>
       <div className="spacer-20" />
       <Section />
-    </>
+    </div>
   )
 }
 

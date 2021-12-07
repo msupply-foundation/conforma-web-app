@@ -51,8 +51,7 @@ const Pages: React.FC = () => {
     })
   }
   return (
-    <>
-      <div className="spacer-20" />
+    <div className="config-container-outline">
       <div className="flex-row-start-center">
         <Header className="no-margin-no-padding" as="h3">
           Pages
@@ -80,7 +79,7 @@ const Pages: React.FC = () => {
         ))}
       </div>
       <Page />
-    </>
+    </div>
   )
 }
 
@@ -134,7 +133,7 @@ const Page: React.FC = () => {
   return (
     <>
       <div className="spacer-10" />
-      <div className="flex-row-start-center">
+      <div className="flex-row-start-center page-controller">
         <PageMove />
         <Header className="no-margin-no-padding" as="h5">{`Page ${selectedPageNumber}`}</Header>
         <IconButton

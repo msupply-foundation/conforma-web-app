@@ -58,7 +58,7 @@ const Elements: React.FC = () => {
   return (
     <div
       key={`${selectedSectionId}_${selectedPageNumber}`}
-      className="builder-page-elements-wrapper"
+      className="builder-page-elements-wrapper config-container-outline"
     >
       <PageElements
         canEdit={true}

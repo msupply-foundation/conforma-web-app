@@ -48,9 +48,11 @@ const Form: React.FC = () => {
 
   return (
     <FormContext.Provider value={state}>
-      <Sections />
-      <Pages />
-      <Elements />
+      <div className="flex-column-start-stretch">
+        <Sections />
+        <Pages />
+        <Elements />
+      </div>
     </FormContext.Provider>
   )
 }

@@ -1761,6 +1761,7 @@ a:hover {
     flex-wrap: wrap;
   }
   .template-builder-content {
+    .flex-column-center();
     background-color: @surfacesWhite;
     padding: 20px 2rem 30px;
     margin-top: 20px;
@@ -1804,6 +1805,15 @@ a:hover {
   }
 }
 
+.page-controller {
+  background-color: @surfacesLight;
+  width: fit-content;
+  padding: 10px;
+  border: 1px solid @surfacesMed;
+  border-radius: @borderRadius;
+  margin: 15px;
+}
+
 .filter-joins {
   .ui.label {
     margin-right: 7px;
@@ -1814,12 +1824,11 @@ a:hover {
 .builder-page-elements-wrapper {
   background: white;
   padding: 10px;
-  margin: 10px;
+  min-width: 900px;
   .element-config-options-container {
     .flex-row();
     align-items: flex-start;
     justify-content: flex-end;
-    width: 100px;
     margin-right: 30px;
     margin: 5px;
   }
