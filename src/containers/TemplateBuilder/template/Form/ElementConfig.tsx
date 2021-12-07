@@ -145,7 +145,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
     setShowRemoveElementModal({
       ...REMOVE_MESSAGE,
       open: true,
-      onClick: () => removeElement(),
+      onClick: () => {
+        removeElement()
+        setShowRemoveElementModal({ open: false })
+      },
       onClose: () => setShowRemoveElementModal({ open: false }),
     })
   }
@@ -343,10 +346,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 },
               ]}
             />
-            <ModalConfirmation {...showRemoveElementModal} />
           </div>
         </div>
       </div>
+      <ModalConfirmation {...showRemoveElementModal} />
       <Message
         className="success-message"
         attached="bottom"
