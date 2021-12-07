@@ -172,7 +172,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
         <div className="flex-row-center-center">
           <ButtonWithFallback
             title={strings.TEMPLATE_BUTTON_SAVE}
-            disabled={!isDraft}
+            disabled={!isDraft || !shouldUpdate}
             disabledMessage={disabledMessage}
             onClick={updateAction}
           />

@@ -280,7 +280,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
         <div className="flex-row-center-center">
           <ButtonWithFallback
             title={strings.TEMPLATE_BUTTON_SAVE}
-            disabled={!isDraft}
+            disabled={!isDraft || !shouldUpdate}
             disabledMessage={disabledMessage}
             onClick={updateElement}
           />
