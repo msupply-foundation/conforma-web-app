@@ -1653,8 +1653,6 @@ a:hover {
   .io-component {
     flex-grow: 1;
     margin: 0px;
-    // text-align: center;
-    // white-space: nowrap;
     border: 2px solid @surfacesLight;
     border-radius: @borderRadius;
     font-size: 12px;
@@ -1680,7 +1678,6 @@ a:hover {
     padding: 0px !important;
     font-size: 12px !important;
     width: none !important;
-    // min-width: 200px;
   }
 
   .key {

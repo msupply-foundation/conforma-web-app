@@ -32,8 +32,12 @@ const columns: Columns = [
     title: '',
     render: ({ template: { version, versionTimestamp } }) => (
       <React.Fragment key="version">
-        <TextIO text={String(version)} title="version" />
-        <TextIO text={String(versionTimestamp.toFormat('dd MMM yy'))} title="date" />
+        <TextIO text={String(version)} title="version" maxLabelWidth={70} />
+        <TextIO
+          text={String(versionTimestamp.toFormat('dd MMM yy'))}
+          title="date"
+          minLabelWidth={70}
+        />
       </React.Fragment>
     ),
   },
@@ -49,8 +53,8 @@ const columns: Columns = [
     title: '',
     render: ({ template: { applicationCount, numberOfTemplates } }) => (
       <React.Fragment key="counts">
-        <TextIO text={String(applicationCount)} title="# application" />
-        {numberOfTemplates && <TextIO text={String(numberOfTemplates)} title="# templates" />}
+        <TextIO text={String(applicationCount)} title="Applications" />
+        {numberOfTemplates && <TextIO text={String(numberOfTemplates)} title="Templates" />}
       </React.Fragment>
     ),
   },

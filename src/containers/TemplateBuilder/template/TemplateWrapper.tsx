@@ -81,7 +81,7 @@ const TemplateContainer: React.FC = () => {
     <div className="template-builder-wrapper">
       <Label
         className="back-label clickable"
-        // onClick={() => replace(`/applications?type=${code}`)}
+        onClick={() => push(`/admin/templates`)}
         content={
           <>
             <Icon name="chevron left" className="dark-grey" />
@@ -90,10 +90,6 @@ const TemplateContainer: React.FC = () => {
         }
       />
       <div className="flex-row-space-between-center-wrap">
-        {/* <Link to="/admin/templates">
-          <Icon name="angle left" />
-          {'Templates/Procedures'}
-        </Link> */}
         <div className="template-builder-info-bar">
           <TextIO title="version" text={String(version)} labelNegative />
           <TextIO title="name" text={name} labelNegative />
