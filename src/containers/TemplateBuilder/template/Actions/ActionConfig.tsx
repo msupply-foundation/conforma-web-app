@@ -1,7 +1,7 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { Icon, Label, Modal, Header } from 'semantic-ui-react'
+import { Icon, Label, Message, Modal, Header } from 'semantic-ui-react'
 import { TemplateAction } from '../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import DropdownIO from '../../shared/DropdownIO'
@@ -12,6 +12,7 @@ import TextIO from '../../shared/TextIO'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import { useActionState } from './Actions'
 import FromExistingAction from './FromExistingAction'
+import { useLanguageProvider } from '../../../../contexts/Localisation'
 
 type ActionConfigProps = {
   templateAction: TemplateAction | null
@@ -39,17 +40,21 @@ const getState: GetState = (action: TemplateAction) => ({
 })
 
 const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) => {
+  const { strings } = useLanguageProvider()
   const {
     template: { id: templateId, isDraft },
   } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const [state, setState] = useState<ActionUpdateState | null>(null)
   const { allActionsByCode, applicationData } = useActionState()
+  const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
+  const [changesSaved, setChangesSaved] = useState<boolean>(false)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     if (!templateAction) return setState(null)
-
     setState(getState(templateAction))
+    setChangesSaved(false)
   }, [templateAction])
 
   if (!state || !templateAction) return null
@@ -60,15 +65,25 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
         updateById: [{ id: state.id, patch: state }],
       },
     })
+    setShouldUpdate(false)
+    setChangesSaved(true)
     if (!result) return
+  }
 
+  const saveAndClose = () => {
+    updateAction()
     onClose()
+  }
+
+  const markNeedsUpdate = () => {
+    setShouldUpdate(true)
+    setChangesSaved(false)
   }
 
   const currentActionPlugin = allActionsByCode[String(templateAction?.actionCode)]
 
   return (
-    <Modal className="config-modal" open={true} onClose={onClose}>
+    <Modal className="config-modal" open={true}>
       <div className="config-modal-container ">
         <div className="config-modal-header">
           <div className="flex-column">
@@ -117,7 +132,10 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               <TextIO
                 text={state.eventCode}
                 title="Scheduled Event Code"
-                setText={(text) => setState({ ...state, eventCode: text })}
+                setText={(text) => {
+                  setState({ ...state, eventCode: text })
+                  markNeedsUpdate()
+                }}
                 isPropUpdated={true}
                 minLabelWidth={150}
               />
@@ -125,7 +143,10 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                 text={state.description}
                 isTextArea={true}
                 title="Description"
-                setText={(text) => setState({ ...state, description: text })}
+                setText={(text) => {
+                  setState({ ...state, description: text })
+                  markNeedsUpdate()
+                }}
                 isPropUpdated={true}
                 minLabelWidth={150}
                 maxLabelWidth={150}
@@ -136,7 +157,10 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                 label="Condition"
                 currentElementCode={''}
                 evaluation={state?.condition}
-                setEvaluation={(condition) => setState({ ...state, condition })}
+                setEvaluation={(condition) => {
+                  setState({ ...state, condition })
+                  markNeedsUpdate()
+                }}
                 applicationData={applicationData}
                 type="Action"
               />
@@ -154,15 +178,48 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           <div className="spacer-20" />
           <div className="flex-row-center-center">
             <ButtonWithFallback
-              title="Save"
-              disabled={!isDraft}
+              title={strings.TEMPLATE_BUTTON_SAVE}
+              disabled={!isDraft || !shouldUpdate}
               disabledMessage={disabledMessage}
               onClick={updateAction}
             />
-            <ButtonWithFallback title="Cancel" onClick={onClose} />
+            <ButtonWithFallback
+              title={strings.TEMPLATE_BUTTON_CLOSE}
+              onClick={() => (shouldUpdate ? setOpen(true) : onClose())}
+            />
+            <Modal
+              basic
+              size="small"
+              icon="save"
+              header={strings.TEMPLATE_MESSAGE_SAVE_AND_CLOSE}
+              open={open}
+              onClose={() => setOpen(false)}
+              actions={[
+                {
+                  key: 'save',
+                  content: strings.TEMPLATE_BUTTON_SAVE,
+                  positive: true,
+                  onClick: saveAndClose,
+                },
+                {
+                  key: 'close',
+                  content: strings.TEMPLATE_BUTTON_CLOSE,
+                  positive: false,
+                  onClick: onClose,
+                },
+              ]}
+            />
           </div>
         </div>
       </div>
+      <Message
+        className="success-message"
+        attached="bottom"
+        success
+        icon={<Icon name="check circle outline" />}
+        header={strings.TEMPLATE_MESSAGE_SAVE_SUCCESS}
+        hidden={!changesSaved}
+      />
     </Modal>
   )
 }

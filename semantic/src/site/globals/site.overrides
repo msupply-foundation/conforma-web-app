@@ -1886,6 +1886,10 @@ a:hover {
   }
 }
 
+.sucess-message {
+  justify-content: center;
+}
+
 .object-properties-container {
   .flex-column-start-center();
   margin-left: 30px;

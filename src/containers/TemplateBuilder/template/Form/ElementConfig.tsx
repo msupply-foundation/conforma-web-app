@@ -1,6 +1,6 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import React, { useEffect, useState } from 'react'
-import { Modal, Label, Icon, Header } from 'semantic-ui-react'
+import { Modal, Label, Icon, Header, Message, ModalProps } from 'semantic-ui-react'
 import { pluginProvider } from '../../../../formElementPlugins'
 import { TemplateElement, TemplateElementCategory } from '../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
@@ -13,6 +13,8 @@ import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import { useFullApplicationState } from '../ApplicationWrapper'
 import { useFormState } from './Form'
 import FromExistingElement from './FromExistingElement'
+import { useLanguageProvider } from '../../../../contexts/Localisation'
+import ModalConfirmation from '../../../../components/Main/ModalConfirmation'
 
 type ElementConfigProps = {
   element: TemplateElement | null
@@ -57,6 +59,7 @@ type Evaluations = {
   key: keyof ElementUpdateState
   title: string
 }[]
+
 const evaluations: Evaluations = [
   { key: 'isEditable', title: 'Is Editable' },
   { key: 'isRequired', title: 'Is Required' },
@@ -66,6 +69,14 @@ const evaluations: Evaluations = [
 ]
 
 const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
+  const { strings } = useLanguageProvider()
+
+  const REMOVE_MESSAGE = {
+    title: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE,
+    message: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT,
+    option: strings.TEMPLATE_BUTTON_CONFIRM,
+  }
+
   const { structure } = useFullApplicationState()
   const {
     template: { isDraft },
@@ -73,11 +84,15 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const { selectedSectionId } = useFormState()
   const { updateApplication, updateTemplateSection } = useOperationState()
   const [state, setState] = useState<ElementUpdateState | null>(null)
+  const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
+  const [changesSaved, setChangesSaved] = useState<boolean>(false)
+  const [open, setOpen] = useState(false) // TODO: Use ConfirmationModal (2 actions...)
+  const [showRemoveElementModal, setShowRemoveElementModal] = useState<ModalProps>({ open: false })
 
   useEffect(() => {
     if (!element) return setState(null)
-
     setState(getState(element))
+    setChangesSaved(false)
   }, [element])
 
   if (!state || !element) return null
@@ -111,13 +126,32 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
         updateById: [{ id: state.id, patch: state }],
       },
     })
+    setShouldUpdate(false)
+    setChangesSaved(true)
     if (!result) return
+  }
 
+  const saveAndClose = () => {
+    updateElement()
     onClose()
   }
 
+  const markNeedsUpdate = () => {
+    setShouldUpdate(true)
+    setChangesSaved(false)
+  }
+
+  const confirmAndRemove = () => {
+    setShowRemoveElementModal({
+      ...REMOVE_MESSAGE,
+      open: true,
+      onClick: () => removeElement(),
+      onClose: () => setShowRemoveElementModal({ open: false }),
+    })
+  }
+
   return (
-    <Modal className="config-modal" open={true} onClose={onClose}>
+    <Modal className="config-modal" open={true}>
       <div className="config-modal-container">
         <div className="config-modal-header">
           <Header as="h3">{state.title}</Header>
@@ -164,7 +198,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 <TextIO
                   text={state.title}
                   title="Title"
-                  setText={(text) => setState({ ...state, title: text })}
+                  setText={(text) => {
+                    setState({ ...state, title: text })
+                    markNeedsUpdate()
+                  }}
                   isPropUpdated={true}
                   minLabelWidth={60}
                   maxLabelWidth={60}
@@ -175,7 +212,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               <TextIO
                 text={state.code}
                 title="Code"
-                setText={(text) => setState({ ...state, code: text })}
+                setText={(text) => {
+                  setState({ ...state, code: text })
+                  markNeedsUpdate()
+                }}
                 isPropUpdated={true}
                 minLabelWidth={60}
                 maxLabelWidth={60}
@@ -189,6 +229,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 isPropUpdated={true}
                 setValue={(value) => {
                   setState({ ...state, category: value as TemplateElementCategory })
+                  markNeedsUpdate()
                 }}
                 options={[
                   { category: TemplateElementCategory.Information, title: 'Information' },
@@ -202,7 +243,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   text={state.validationMessage}
                   title="Validation Message"
                   isTextArea={true}
-                  setText={(text) => setState({ ...state, validationMessage: text })}
+                  setText={(text) => {
+                    setState({ ...state, validationMessage: text })
+                    markNeedsUpdate()
+                  }}
                   isPropUpdated={true}
                   minLabelWidth={100}
                   maxLabelWidth={100}
@@ -217,7 +261,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   text={state.helpText}
                   isTextArea={true}
                   title="Help Text"
-                  setText={(text) => setState({ ...state, helpText: text })}
+                  setText={(text) => {
+                    setState({ ...state, helpText: text })
+                    markNeedsUpdate()
+                  }}
                   isPropUpdated={true}
                   minLabelWidth={100}
                   maxLabelWidth={100}
@@ -236,7 +283,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 currentElementCode={state.code}
                 fullStructure={structure}
                 evaluation={state[key]}
-                setEvaluation={(evaluation) => setState({ ...state, [key]: evaluation })}
+                setEvaluation={(evaluation) => {
+                  setState({ ...state, [key]: evaluation })
+                  markNeedsUpdate()
+                }}
                 type="FormElement"
               />
             ))}
@@ -247,28 +297,64 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             currentElementCode={state.code}
             fullStructure={structure}
             parameters={state.parameters}
-            setParameters={(parameters) => setState({ ...state, parameters })}
+            setParameters={(parameters) => {
+              setState({ ...state, parameters })
+              markNeedsUpdate()
+            }}
             type="FormElement"
           />
           <div className="spacer-20" />
           <div className="flex-row-center-center">
             <ButtonWithFallback
-              title="Save"
-              disabled={!isDraft}
+              title={strings.TEMPLATE_BUTTON_SAVE}
+              disabled={!isDraft || !shouldUpdate}
               disabledMessage={disabledMessage}
               onClick={updateElement}
             />
-
             <ButtonWithFallback
               disabled={!isDraft}
               disabledMessage={disabledMessage}
-              title="Remove"
-              onClick={removeElement}
+              title={strings.TEMPLATE_BUTTON_REMOVE}
+              onClick={confirmAndRemove}
             />
-            <ButtonWithFallback title="Cancel" onClick={onClose} />
+            <ButtonWithFallback
+              title={strings.TEMPLATE_BUTTON_CLOSE}
+              onClick={() => (shouldUpdate ? setOpen(true) : onClose())}
+            />
+            <Modal
+              basic
+              size="small"
+              icon="save"
+              header={strings.TEMPLATE_MESSAGE_SAVE_AND_CLOSE}
+              open={open}
+              onClose={() => setOpen(false)}
+              actions={[
+                {
+                  key: 'save',
+                  content: strings.TEMPLATE_BUTTON_SAVE,
+                  positive: true,
+                  onClick: saveAndClose,
+                },
+                {
+                  key: 'close',
+                  content: strings.TEMPLATE_BUTTON_CLOSE,
+                  positive: false,
+                  onClick: onClose,
+                },
+              ]}
+            />
+            <ModalConfirmation {...showRemoveElementModal} />
           </div>
         </div>
       </div>
+      <Message
+        className="success-message"
+        attached="bottom"
+        success
+        icon={<Icon name="check circle outline" />}
+        header={strings.TEMPLATE_MESSAGE_SAVE_SUCCESS}
+        hidden={!changesSaved}
+      />
     </Modal>
   )
 }

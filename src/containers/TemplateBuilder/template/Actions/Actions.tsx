@@ -9,13 +9,8 @@ import {
   Trigger,
   useGetAllActionsQuery,
 } from '../../../../utils/generated/graphql'
-import { ApplicationDetails } from '../../../../utils/types'
-import CheckboxIO from '../../shared/CheckboxIO'
 import DropdownIO from '../../shared/DropdownIO'
-import { EvaluationHeader } from '../../shared/Evaluation'
 import { IconButton } from '../../shared/IconButton'
-import { useOperationState } from '../../shared/OperationContext'
-import TextIO from '../../shared/TextIO'
 import { stringSort } from '../Permissions/PermissionNameInfo/PermissionNameInfo'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import TriggerDisplay from './TriggerDisplay'
