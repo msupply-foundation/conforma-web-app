@@ -51,8 +51,7 @@ const Pages: React.FC = () => {
     })
   }
   return (
-    <>
-      <div className="spacer-10" />
+    <div className="config-container-outline">
       <div className="flex-row-start-center">
         <Header className="no-margin-no-padding" as="h3">
           Pages
@@ -61,9 +60,12 @@ const Pages: React.FC = () => {
           disabled={!isDraft}
           disabledMessage={disabledMessage}
           name="add square"
+          size="large"
           onClick={createNewPage}
         />
-
+      </div>
+      <div className="spacer-10" />
+      <div className="flex-row-start-center-wrap flex-grow-1 flex-gap-10">
         {Object.values(currentSection.pages).map((_, index) => (
           <Label
             key={currentSection.pages[index + 1].elements[0].id}
@@ -77,7 +79,7 @@ const Pages: React.FC = () => {
         ))}
       </div>
       <Page />
-    </>
+    </div>
   )
 }
 
@@ -131,7 +133,7 @@ const Page: React.FC = () => {
   return (
     <>
       <div className="spacer-10" />
-      <div className="flex-row-start-center">
+      <div className="flex-row-start-center page-controller">
         <PageMove />
         <Header className="no-margin-no-padding" as="h5">{`Page ${selectedPageNumber}`}</Header>
         <IconButton
@@ -237,42 +239,42 @@ const PageMove: React.FC = () => {
 
   return (
     <>
-      {!currentSection.isFirst && (
-        <IconButton
-          name="angle double up"
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          onClick={() => moveToSection(currentSection.previousSection)}
-        />
-      )}
-      {!currentSection.isLast && (
-        <IconButton
-          name="angle double down"
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          onClick={() => moveToSection(currentSection.nextSection)}
-        />
-      )}
-      {!currentPage.isFirst && (
-        <IconButton
-          name="angle up"
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          onClick={() => {
-            movePageInSection(selectedPageNumber, selectedPageNumber - 1, selectedPageNumber - 1)
-          }}
-        />
-      )}
-      {!currentPage.isLast && (
-        <IconButton
-          name="angle down"
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          onClick={() => {
-            movePageInSection(selectedPageNumber + 1, selectedPageNumber, selectedPageNumber + 1)
-          }}
-        />
-      )}
+      <IconButton
+        name="angle double left"
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        onClick={() => moveToSection(currentSection.previousSection)}
+        hidden={currentSection.isFirst}
+        toolTip="Move to previous section"
+      />
+      <IconButton
+        name="angle double right"
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        onClick={() => moveToSection(currentSection.nextSection)}
+        hidden={currentSection.isLast}
+        toolTip="Move to next section"
+      />
+      <IconButton
+        name="angle up"
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        onClick={() => {
+          movePageInSection(selectedPageNumber, selectedPageNumber - 1, selectedPageNumber - 1)
+        }}
+        hidden={currentPage.isFirst}
+        toolTip="Move up"
+      />
+      <IconButton
+        name="angle down"
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        onClick={() => {
+          movePageInSection(selectedPageNumber + 1, selectedPageNumber, selectedPageNumber + 1)
+        }}
+        hidden={currentPage.isLast}
+        toolTip="Move down"
+      />
     </>
   )
 }

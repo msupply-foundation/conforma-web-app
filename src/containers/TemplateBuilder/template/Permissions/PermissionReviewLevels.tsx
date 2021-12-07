@@ -84,11 +84,13 @@ const PermissionReviewLevel: React.FC<PemrmissionReviewLevelProps> = ({ stage })
               header={`Review Level ${level?.number}`}
               stageNumber={stage?.number || 0}
               levelNumber={level?.number}
+              labelNegative
             />
             <TextIO
               title="Level Name"
               text={level?.name}
               disabled={!isDraft}
+              labelNegative
               disabledMessage={disabledMessage}
               setText={(name) => updateLevelName(level?.id || 0, name)}
             />

@@ -90,7 +90,7 @@ const FromExistingElement: React.FC<FromExistingElementProps> = ({
 
   return (
     <Dropdown
-      text="From Existing"
+      text="Or select from existing..."
       className="from-existing-dropdown"
       search
       selection
