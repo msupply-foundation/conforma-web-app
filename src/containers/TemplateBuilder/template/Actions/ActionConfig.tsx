@@ -48,13 +48,13 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const [state, setState] = useState<ActionUpdateState | null>(null)
   const { allActionsByCode, applicationData } = useActionState()
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
-  const [changesSaved, setChangesSaved] = useState<boolean>(false)
+  const [showSaveAlert, setShowSaveAlert] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
     if (!templateAction) return setState(null)
     setState(getState(templateAction))
-    setChangesSaved(false)
+    setShowSaveAlert(false)
   }, [templateAction])
 
   if (!state || !templateAction) return null
@@ -66,7 +66,8 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
       },
     })
     setShouldUpdate(false)
-    setChangesSaved(true)
+    setShowSaveAlert(true)
+    setTimeout(() => setShowSaveAlert(false), 2000)
     if (!result) return
   }
 
@@ -77,7 +78,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
 
   const markNeedsUpdate = () => {
     setShouldUpdate(true)
-    setChangesSaved(false)
+    setShowSaveAlert(false)
   }
 
   const currentActionPlugin = allActionsByCode[String(templateAction?.actionCode)]
@@ -216,12 +217,12 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
         </div>
       </div>
       <Message
-        className="success-message"
-        attached="bottom"
+        className="alert-success"
         success
         icon={<Icon name="check circle outline" />}
         header={strings.TEMPLATE_MESSAGE_SAVE_SUCCESS}
-        hidden={!changesSaved}
+        hidden={!showSaveAlert}
+        onClick={() => setShowSaveAlert(false)}
       />
     </Modal>
   )

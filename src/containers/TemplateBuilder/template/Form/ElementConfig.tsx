@@ -85,14 +85,14 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const { updateApplication, updateTemplateSection } = useOperationState()
   const [state, setState] = useState<ElementUpdateState | null>(null)
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
-  const [changesSaved, setChangesSaved] = useState<boolean>(false)
+  const [showSaveAlert, setShowSaveAlert] = useState<boolean>(false)
   const [open, setOpen] = useState(false) // TODO: Use ConfirmationModal (2 actions...)
   const [showRemoveElementModal, setShowRemoveElementModal] = useState<ModalProps>({ open: false })
 
   useEffect(() => {
     if (!element) return setState(null)
     setState(getState(element))
-    setChangesSaved(false)
+    setShowSaveAlert(false)
   }, [element])
 
   if (!state || !element) return null
@@ -127,7 +127,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
       },
     })
     setShouldUpdate(false)
-    setChangesSaved(true)
+    setShowSaveAlert(true)
+    setTimeout(() => setShowSaveAlert(false), 2000)
     if (!result) return
   }
 
@@ -138,7 +139,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
 
   const markNeedsUpdate = () => {
     setShouldUpdate(true)
-    setChangesSaved(false)
+    setShowSaveAlert(false)
   }
 
   const confirmAndRemove = () => {
@@ -351,12 +352,12 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
       </div>
       <ModalConfirmation {...showRemoveElementModal} />
       <Message
-        className="success-message"
-        attached="bottom"
+        className="alert-success"
         success
         icon={<Icon name="check circle outline" />}
         header={strings.TEMPLATE_MESSAGE_SAVE_SUCCESS}
-        hidden={!changesSaved}
+        hidden={!showSaveAlert}
+        onClick={() => setShowSaveAlert(false)}
       />
     </Modal>
   )
