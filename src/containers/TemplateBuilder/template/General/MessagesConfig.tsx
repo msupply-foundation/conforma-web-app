@@ -66,7 +66,6 @@ const MessagesConfig: React.FC<MessagesConfigProps> = ({ isOpen, onClose }) => {
             label={title}
             key={key}
             currentElementCode={''}
-            fullStructure={structure}
             evaluation={state[key]}
             setEvaluation={(evaluation) => setState({ ...state, [key]: evaluation })}
           />

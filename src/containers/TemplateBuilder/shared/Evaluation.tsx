@@ -17,11 +17,12 @@ type EvaluationProps = {
   evaluation: EvaluatorNode
   currentElementCode: string
   setEvaluation: (evaluation: EvaluatorNode) => void
-  fullStructure?: FullStructure // for Form
+  fullStructure?: FullStructure // for Form Elements
   applicationData?: any // for Actions
   label: string
   updateKey?: (key: string) => void
   deleteKey?: () => void
+  type?: 'FormElement' | 'Action'
 }
 
 type EvaluationHeaderProps = {
@@ -57,21 +58,28 @@ const Evaluation: React.FC<EvaluationProps> = ({
   applicationData,
   updateKey,
   deleteKey,
+  type,
 }) => {
   const {
     userState: { currentUser },
   } = useUserState()
   const [isActive, setIsActive] = useState(false)
   const [asGui, setAsGui] = useState(true)
-  const objects = {
-    responses: {
-      ...fullStructure?.responsesByCode,
-      thisResponse: fullStructure?.responsesByCode?.[currentElementCode]?.text,
-    },
-    currentUser,
-    applicationData: applicationData ? applicationData : fullStructure?.info,
-  }
   const JWT = localStorage.getItem(config.localStorageJWTKey)
+  const objects =
+    type === 'Action'
+      ? { applicationData }
+      : type === 'FormElement'
+      ? {
+          responses: {
+            ...fullStructure?.responsesByCode,
+            thisResponse: fullStructure?.responsesByCode?.[currentElementCode]?.text,
+          },
+          currentUser,
+          applicationData: fullStructure?.info,
+        }
+      : undefined
+
   const evaluationParameters = {
     objects,
     APIfetch: fetch,
@@ -133,7 +141,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
                   evaluationParameters
                 )}
             </div>
-            {fullStructure && (
+            {objects && (
               <div className="object-properties-container">
                 <Label>Object Properties</Label>
                 <div className="spacer-20" />

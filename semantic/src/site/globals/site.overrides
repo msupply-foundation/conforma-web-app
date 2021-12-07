@@ -1889,6 +1889,7 @@ a:hover {
 .object-properties-container {
   .flex-column-start-center();
   margin-left: 30px;
+  max-width: 500px;
 }
 .evaluator-operator-container {
   .flex-column-start-stretch();

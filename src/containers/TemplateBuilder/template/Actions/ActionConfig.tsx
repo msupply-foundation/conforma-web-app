@@ -1,5 +1,4 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
-import { stat } from 'fs'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import { Icon, Label, Modal, Header } from 'semantic-ui-react'
@@ -10,7 +9,6 @@ import Evaluation from '../../shared/Evaluation'
 import { useOperationState } from '../../shared/OperationContext'
 import { Parameters, ParametersType } from '../../shared/Parameters'
 import TextIO from '../../shared/TextIO'
-import { useFullApplicationState } from '../ApplicationWrapper'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import { useActionState } from './Actions'
 import FromExistingAction from './FromExistingAction'
@@ -140,6 +138,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                 evaluation={state?.condition}
                 setEvaluation={(condition) => setState({ ...state, condition })}
                 applicationData={applicationData}
+                type="Action"
               />
             </div>
           </div>
@@ -150,6 +149,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             setParameters={(parameterQueries) => setState({ ...state, parameterQueries })}
             requiredParameters={(currentActionPlugin?.requiredParameters as string[]) || []}
             optionalParameters={(currentActionPlugin?.optionalParameters as string[]) || []}
+            type="Action"
           />
           <div className="spacer-20" />
           <div className="flex-row-center-center">

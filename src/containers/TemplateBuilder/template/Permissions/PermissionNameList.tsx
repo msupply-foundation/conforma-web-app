@@ -40,11 +40,12 @@ const PermissionNameList: React.FC<PermissionNameListProps> = ({
               <TextIO
                 title="Permission Name"
                 text={templatePermission?.permissionName?.name || ''}
-                icon="info circle"
-                iconColor="blue"
-                onIconClick={() =>
-                  setPermissionNameInfo(templatePermission?.permissionName as PermissionName)
-                }
+                // DISABLED FOR NOW, TILL WE FIGURE OUT A BETTER WAY TO DISPLAY IT
+                // icon="info circle"
+                // iconColor="blue"
+                // onIconClick={() =>
+                //   setPermissionNameInfo(templatePermission?.permissionName as PermissionName)
+                // }
               />
               <TextIO
                 title="Permission Policy"
