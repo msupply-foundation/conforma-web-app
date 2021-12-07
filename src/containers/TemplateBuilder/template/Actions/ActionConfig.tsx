@@ -170,7 +170,10 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           <Parameters
             currentElementCode={''}
             parameters={state.parameterQueries}
-            setParameters={(parameterQueries) => setState({ ...state, parameterQueries })}
+            setParameters={(parameterQueries) => {
+              setState({ ...state, parameterQueries })
+              markNeedsUpdate()
+            }}
             requiredParameters={(currentActionPlugin?.requiredParameters as string[]) || []}
             optionalParameters={(currentActionPlugin?.optionalParameters as string[]) || []}
             type="Action"
