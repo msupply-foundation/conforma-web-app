@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Accordion, Button, Header, Icon } from 'semantic-ui-react'
 import { EvaluatorNode, FullStructure } from '../../../utils/types'
 import { useActionState } from '../template/Actions/Actions'
@@ -33,9 +33,14 @@ export const Parameters: React.FC<ParametersProps> = ({
   const [asGui, setAsGui] = useState(true)
   const [isActive, setIsActive] = useState(false)
 
-  const sortedParameters = Object.entries(parameters).sort(([key1], [key2]) =>
-    key1 > key2 ? -1 : key1 === key2 ? 0 : 1
-  )
+  useEffect(() => {
+    // Sort elements only when opening modal
+    const sortedParameters = Object.entries(parameters)
+      .sort(([key1], [key2]) => (key1 > key2 ? -1 : key1 === key2 ? 0 : 1))
+      .reduce((sortedParameters, [key, element]) => ({ ...sortedParameters, [key]: element }), {})
+    setParameters(sortedParameters)
+  }, [])
+
   return (
     <Accordion
       className="evaluation-container config-container-alternate"
@@ -49,7 +54,8 @@ export const Parameters: React.FC<ParametersProps> = ({
         <Header
           as="h4"
           className="no-margin-no-padding"
-        >{`Plugin-specific Parameters (${sortedParameters.length})`}</Header>
+          content={`Plugin Specific Parameters (${Object.keys(parameters).length})`}
+        />
         <div className="flex-row-end">
           <Icon size="large" name={isActive ? 'angle up' : 'angle down'} />
         </div>
@@ -110,11 +116,9 @@ export const Parameters: React.FC<ParametersProps> = ({
               </div>
 
               {asGui &&
-                sortedParameters.map(([key, value]) => (
+                Object.entries(parameters).map(([key, value]) => (
                   <Evaluation
-                    setEvaluation={(value: any) =>
-                      setParameters({ ...parameters, [key]: value?.value || value })
-                    }
+                    setEvaluation={(value: any) => setParameters({ ...parameters, [key]: value })}
                     updateKey={(newKey) => {
                       const newParameters = { ...parameters }
                       delete newParameters[key]
