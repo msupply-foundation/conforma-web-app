@@ -33,14 +33,6 @@ export const Parameters: React.FC<ParametersProps> = ({
   const [asGui, setAsGui] = useState(true)
   const [isActive, setIsActive] = useState(false)
 
-  useEffect(() => {
-    // Sort elements only when opening modal
-    const sortedParameters = Object.entries(parameters)
-      .sort(([key1], [key2]) => (key1 > key2 ? -1 : key1 === key2 ? 0 : 1))
-      .reduce((sortedParameters, [key, element]) => ({ ...sortedParameters, [key]: element }), {})
-    setParameters(sortedParameters)
-  }, [])
-
   return (
     <Accordion
       className="evaluation-container config-container-alternate"
