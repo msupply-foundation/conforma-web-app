@@ -100,6 +100,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               getText={'name'}
               setValue={(value) => {
                 setState({ ...state, actionCode: String(value) })
+                markNeedsUpdate()
               }}
               options={Object.values(allActionsByCode)}
               labelNegative
@@ -109,6 +110,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               pluginCode={state.actionCode}
               setTemplateAction={(templateAction) => {
                 setState({ ...state, ...templateAction })
+                markNeedsUpdate()
               }}
             />
           </div>
@@ -135,8 +137,8 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                 title="Scheduled Event Code"
                 setText={(text) => {
                   setState({ ...state, eventCode: text })
-                  markNeedsUpdate()
                 }}
+                markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}
                 minLabelWidth={150}
               />
@@ -146,8 +148,8 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                 title="Description"
                 setText={(text) => {
                   setState({ ...state, description: text })
-                  markNeedsUpdate()
                 }}
+                markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}
                 minLabelWidth={150}
                 maxLabelWidth={150}

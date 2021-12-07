@@ -14,7 +14,7 @@ import { GuisType } from './types'
 export const guis: GuisType = [
   {
     selector: 'string',
-    default: getTypedEvaluation('defult string'),
+    default: getTypedEvaluation('Default string'),
     match: (typedEvaluation) => typedEvaluation.type === 'string',
     render: (evaluation, setEvaluation, ComponentLibrary) => (
       <ComponentLibrary.TextInput

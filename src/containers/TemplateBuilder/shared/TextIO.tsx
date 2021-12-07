@@ -9,6 +9,7 @@ type TextIOprops = {
   text?: string
   title?: string
   setText?: (text: string, resetValue: (text: string) => void) => void
+  markNeedsUpdate?: () => void
   disabled?: boolean
   disabledMessage?: string
   icon?: string
@@ -34,6 +35,7 @@ const getDefaultRows = (text: string, textAreaDefaulRows: number) => {
 const TextIO: React.FC<TextIOprops> = ({
   text = '',
   setText,
+  markNeedsUpdate = () => {},
   disabled = false,
   title = '',
   icon,
@@ -85,6 +87,7 @@ const TextIO: React.FC<TextIOprops> = ({
               onBlur={() => setText(innerValue, setInnerValue)}
               onChange={(_, { value }) => {
                 setInnerValue(String(value))
+                markNeedsUpdate()
               }}
             />
           </Form>
@@ -100,6 +103,7 @@ const TextIO: React.FC<TextIOprops> = ({
         size="small"
         onChange={(_, { value }) => {
           setInnerValue(value)
+          markNeedsUpdate()
         }}
         // Dont' want to try and query api on every key change of query text
         onBlur={() => setText(innerValue, setInnerValue)}

@@ -168,6 +168,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               getText={'displayName'}
               setValue={(value) => {
                 setState({ ...state, elementTypePluginCode: String(value) })
+                markNeedsUpdate()
               }}
               options={Object.values(pluginProvider.pluginManifest)}
               labelNegative
@@ -177,6 +178,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               pluginCode={state.elementTypePluginCode}
               setTemplateElement={(existingElement) => {
                 setState({ ...state, ...existingElement })
+                markNeedsUpdate()
               }}
             />
           </div>
@@ -204,8 +206,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   title="Title"
                   setText={(text) => {
                     setState({ ...state, title: text })
-                    markNeedsUpdate()
                   }}
+                  markNeedsUpdate={markNeedsUpdate}
                   isPropUpdated={true}
                   minLabelWidth={60}
                   maxLabelWidth={60}
@@ -218,8 +220,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 title="Code"
                 setText={(text) => {
                   setState({ ...state, code: text })
-                  markNeedsUpdate()
                 }}
+                markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}
                 minLabelWidth={60}
                 maxLabelWidth={60}
@@ -249,8 +251,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   isTextArea={true}
                   setText={(text) => {
                     setState({ ...state, validationMessage: text })
-                    markNeedsUpdate()
                   }}
+                  markNeedsUpdate={markNeedsUpdate}
                   isPropUpdated={true}
                   minLabelWidth={100}
                   maxLabelWidth={100}
@@ -267,8 +269,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   title="Help Text"
                   setText={(text) => {
                     setState({ ...state, helpText: text })
-                    markNeedsUpdate()
                   }}
+                  markNeedsUpdate={markNeedsUpdate}
                   isPropUpdated={true}
                   minLabelWidth={100}
                   maxLabelWidth={100}
