@@ -41,9 +41,11 @@ export const Parameters: React.FC<ParametersProps> = ({
         active={isActive}
         onClick={() => setIsActive(!isActive)}
       >
-        <Header as="h4" className="no-margin-no-padding">{`Plugin Specific Parameters (${
-          Object.keys(parameters).length
-        })`}</Header>
+        <Header
+          as="h4"
+          className="no-margin-no-padding"
+          content={`Plugin Specific Parameters (${Object.keys(parameters).length})`}
+        />
         <Icon size="large" name={isActive ? 'angle up' : 'angle down'} />
       </Accordion.Title>
       {isActive && (
