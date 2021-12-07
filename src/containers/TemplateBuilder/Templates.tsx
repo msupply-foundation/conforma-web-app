@@ -1,6 +1,6 @@
 import React, { ReactNode, useRef } from 'react'
 import { useState } from 'react'
-import { Button, Header, Icon, Table } from 'semantic-ui-react'
+import { Button, Header, Icon, Table, Label } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import OperationContext, { useOperationState } from './shared/OperationContext'
 import { snapshotFilesUrl } from './shared/OperationContextHelpers'
@@ -53,8 +53,10 @@ const columns: Columns = [
     title: '',
     render: ({ template: { applicationCount, numberOfTemplates } }) => (
       <React.Fragment key="counts">
-        <TextIO text={String(applicationCount)} title="Applications" />
-        {numberOfTemplates && <TextIO text={String(numberOfTemplates)} title="Templates" />}
+        <TextIO text={String(applicationCount)} title="Applications" minLabelWidth={90} />
+        {numberOfTemplates && (
+          <TextIO text={String(numberOfTemplates)} title="Templates" minLabelWidth={90} />
+        )}
       </React.Fragment>
     ),
   },
@@ -232,11 +234,20 @@ const Templates: React.FC = () => {
     <div className="template-builder-templates">
       <div key="top-bar" className="top-bar">
         <Header as="h3">Templates / Procedures</Header>
-
         <div className="flex-grow-1" />
-        <TextIO icon="edit" text="edit" />
-        <TextIO icon="sign-out" text="export" />
-        <TextIO icon="copy" text="duplicate" />
+        Key:
+        <Label>
+          <Icon name="edit" />
+          Edit
+        </Label>
+        <Label>
+          <Icon name="sign-out" />
+          Export
+        </Label>
+        <Label>
+          <Icon name="copy" />
+          Duplicate
+        </Label>
         {renderImportButton()}
       </div>
       <div className="flex-column-center">
