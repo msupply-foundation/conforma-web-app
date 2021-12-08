@@ -319,6 +319,7 @@ export default {
   TEMPLATE_APPEARS_IN: 'Appears in',
   TEMPLATE_MESSAGE_SAVE_AND_CLOSE: 'There are changes not saved. Would you like to save and close?',
   TEMPLATE_MESSAGE_SAVE_SUCCESS: 'Changes saved',
+  TEMPLATE_MESSAGE_SAVE_DISABLED: 'No changes',
   TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE: 'Remove element',
   TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT: 'Are you sure you would like to remove this element?',
   UNASSIGN_TITLE: 'Unassignment of reviewer',
