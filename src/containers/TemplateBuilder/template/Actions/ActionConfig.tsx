@@ -186,7 +186,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             <ButtonWithFallback
               title={strings.TEMPLATE_BUTTON_SAVE}
               disabled={!isDraft || !shouldUpdate}
-              disabledMessage={disabledMessage}
+              disabledMessage={!isDraft ? disabledMessage : strings.TEMPLATE_MESSAGE_SAVE_DISABLED}
               onClick={updateAction}
             />
             <ButtonWithFallback
