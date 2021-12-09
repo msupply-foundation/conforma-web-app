@@ -308,9 +308,6 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 20px;
-  .image {
-    height: 100%;
-  }
   .brand-area-text {
     color: @userAreaText !important;
     margin: 0;
