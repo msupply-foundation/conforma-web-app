@@ -34,8 +34,6 @@ const Form: React.FC = () => {
   const { moveStructure } = useFormStructureState()
   const [state, setState] = useState<FormState>(defaultFormState)
 
-  console.log('state', state)
-
   useEffect(() => {
     setState({
       // Select first section on refresh if none is loaded
