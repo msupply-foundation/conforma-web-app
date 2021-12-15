@@ -62,7 +62,7 @@ const Sections: React.FC = () => {
               key={section.details.id}
               onClick={() => {
                 setSelectedSectionId(section.details.id)
-                setSelectedPageNumber(-1)
+                setSelectedPageNumber(1)
               }}
               className={`clickable ${
                 section.details.id === selectedSectionId ? 'builder-selected ' : ''

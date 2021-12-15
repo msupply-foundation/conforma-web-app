@@ -23,7 +23,7 @@ const contextNotDefined = () => {
 }
 const defaultFormState: FormState = {
   selectedSectionId: -1,
-  selectedPageNumber: -1,
+  selectedPageNumber: 1,
   setSelectedSectionId: contextNotDefined,
   setSelectedPageNumber: contextNotDefined,
   unselect: contextNotDefined,
@@ -33,6 +33,8 @@ const FormContext = createContext<FormState>(defaultFormState)
 const Form: React.FC = () => {
   const { moveStructure } = useFormStructureState()
   const [state, setState] = useState<FormState>(defaultFormState)
+
+  console.log('state', state)
 
   useEffect(() => {
     setState({
