@@ -8,7 +8,7 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
-import { OverviewTab, AssignmentTab, SummaryTab, NotesTab, DocumentsTab } from './'
+import { OverviewTab, AssignmentTab, SummaryTab, NotesTab, DocumentsTab, ReviewProgress } from './'
 
 interface ReviewWrapperProps {
   structure: FullStructure
@@ -44,7 +44,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     updateQuery({ tab: tabIdentifiers[0] })
   }
 
-  const getTabFromQuery = (tabQuery: string | any) => {
+  const getTabFromQuery = (tabQuery: string | undefined) => {
     const index = tabIdentifiers.findIndex((tabName) => tabName === tabQuery)
     return index === -1 ? 0 : index
   }
@@ -105,6 +105,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
             applicationName={name}
             orgName={org?.name as string}
           />
+          <ReviewProgress structure={structure} />
           <Tab panes={tabPanes} onTabChange={handleTabChange} activeIndex={getTabFromQuery(tab)} />
         </Route>
         <Route exact path={`${path}/:reviewId`}>

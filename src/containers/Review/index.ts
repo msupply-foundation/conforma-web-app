@@ -5,5 +5,14 @@ import AssignmentTab from './assignment/AssignmentTab'
 import SummaryTab from './summary/SummaryTab'
 import NotesTab from './notes/NotesTab'
 import DocumentsTab from './documents/DocumentsTab'
+import ReviewProgress from './ProgressBar'
 
-export { ReviewWrapper, OverviewTab, AssignmentTab, SummaryTab, NotesTab, DocumentsTab }
+export {
+  ReviewWrapper,
+  OverviewTab,
+  AssignmentTab,
+  SummaryTab,
+  NotesTab,
+  DocumentsTab,
+  ReviewProgress,
+}

@@ -532,6 +532,12 @@ a:hover {
   }
 }
 
+#review-progress {
+  .flex-row-center();
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
 .ui.segment.review-application-segment {
   margin: 0px;
   padding: 0px;

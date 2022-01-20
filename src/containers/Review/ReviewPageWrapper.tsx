@@ -31,14 +31,6 @@ const ReviewPageWrapper: React.FC<{
     userId: currentUser?.userId as number,
   })
 
-  // Get application structure with evaluated properties (i.e visibility)
-  // const { error, fullStructure: fullApplicationStructure } = useGetApplicationStructure({
-  //   structure,
-  //   firstRunValidation: false,
-  //   shouldCalculateProgress: false,
-  //   shouldGetDraftResponses: false,
-  // })
-
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (loading || !fullStructure) return <Loading />
 
