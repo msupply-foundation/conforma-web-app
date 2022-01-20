@@ -1,20 +1,20 @@
 import React from 'react'
 import { Grid, Message } from 'semantic-ui-react'
-import { Loading } from '../../components'
+import { Loading } from '../../../components'
 import {
   ReviewSectionRowAssigned,
   ReviewSectionRowLastActionDate,
   ReviewSectionRowProgress,
   ReviewSectionRowAction,
-} from '../../components/Review'
-import { useLanguageProvider } from '../../contexts/Localisation'
-import useGetReviewStructureForSections from '../../utils/hooks/useGetReviewStructureForSection'
+} from '../../../components/Review'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import useGetReviewStructureForSections from '../../../utils/hooks/useGetReviewStructureForSection'
 import {
   AssignmentDetails,
   FullStructure,
   ReviewAction,
   ReviewSectionComponentProps,
-} from '../../utils/types'
+} from '../../../utils/types'
 
 // Component renders a line for review assignment within a section
 // to be used in ReviewHome and Expansions

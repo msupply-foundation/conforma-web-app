@@ -9,7 +9,7 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
-import ReviewHomeWrapper from './ReviewHomeWrapper'
+import ReviewHomeWrapper from './assignment/AssignmentWrapper'
 
 interface ReviewWrapperProps {
   structure: FullStructure

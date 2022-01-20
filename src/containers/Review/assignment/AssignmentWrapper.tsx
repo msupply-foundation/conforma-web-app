@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Dropdown, Header, Icon, Label, Message } from 'semantic-ui-react'
-import Loading from '../../components/Loading'
-import ReviewHome from './ReviewHome'
-import { useUserState } from '../../contexts/UserState'
-import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
-import { AssignmentDetails, Filters, FullStructure } from '../../utils/types'
-import { useLanguageProvider } from '../../contexts/Localisation'
-import { Stage } from '../../components/Review'
-import { useRouter } from '../../utils/hooks/useRouter'
-import { getPreviousStageAssignment } from '../../utils/helpers/assignment/getPreviousStageAssignment'
+import Loading from '../../../components/Loading'
+import ReviewHome from './Assignment'
+import { useUserState } from '../../../contexts/UserState'
+import useGetApplicationStructure from '../../../utils/hooks/useGetApplicationStructure'
+import { AssignmentDetails, Filters, FullStructure } from '../../../utils/types'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import { Stage } from '../../../components/Review'
+import { useRouter } from '../../../utils/hooks/useRouter'
+import { getPreviousStageAssignment } from '../../../utils/helpers/assignment/getPreviousStageAssignment'
 
 const ALL_REVIEWERS = 0
 

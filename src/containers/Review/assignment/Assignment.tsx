@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Segment, Header } from 'semantic-ui-react'
-import { AssignmentDetails, FullStructure } from '../../utils/types'
-import AssignmentSectionRow from '../Assign/AssignmentSectionRow'
-import ReviewSectionRow from './ReviewSectionRow'
+import { AssignmentDetails, FullStructure } from '../../../utils/types'
+import AssignmentSectionRow from '../../Assign/AssignmentSectionRow'
+import ReviewSectionRow from './AssignmentSectionRow'
 
 interface ReviewHomeProps {
   assignmentsByStage: AssignmentDetails[]
