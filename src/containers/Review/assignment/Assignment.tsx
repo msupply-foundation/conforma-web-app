@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Segment, Header } from 'semantic-ui-react'
 import { AssignmentDetails, FullStructure } from '../../../utils/types'
 import AssignmentSectionRow from '../../Assign/AssignmentSectionRow'
-import ReviewSectionRow from './AssignmentSectionRow'
+import ReviewSectionRow from './ReviewSectionRow'
 
 interface ReviewHomeProps {
   assignmentsByStage: AssignmentDetails[]
@@ -11,7 +11,7 @@ interface ReviewHomeProps {
   fullApplicationStructure: FullStructure
 }
 
-const ReviewHome: React.FC<ReviewHomeProps> = ({
+const Assignment: React.FC<ReviewHomeProps> = ({
   assignmentsByStage,
   assignmentsByUserAndStage,
   assignmentInPreviousStage,
@@ -49,4 +49,4 @@ const ReviewHome: React.FC<ReviewHomeProps> = ({
   )
 }
 
-export default ReviewHome
+export default Assignment

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Dropdown, Header, Icon, Label, Message } from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
-import ReviewHome from './Assignment'
+import Assignment from './Assignment'
 import { useUserState } from '../../../contexts/UserState'
 import useGetApplicationStructure from '../../../utils/hooks/useGetApplicationStructure'
 import { AssignmentDetails, Filters, FullStructure } from '../../../utils/types'
@@ -12,7 +12,7 @@ import { getPreviousStageAssignment } from '../../../utils/helpers/assignment/ge
 
 const ALL_REVIEWERS = 0
 
-const ReviewHomeWrapper: React.FC<{
+const AssignmentWrapper: React.FC<{
   structure: FullStructure
   assignments: AssignmentDetails[]
 }> = ({ structure, assignments }) => {
@@ -72,7 +72,7 @@ const ReviewHomeWrapper: React.FC<{
       />
       <ReviewerAndStageSelection {...reviewerAndStageSelectionProps} />
       {filters && (
-        <ReviewHome
+        <Assignment
           assignmentsByStage={getFilteredByStage(assignments)}
           assignmentsByUserAndStage={getFilteredReviewer(assignments)}
           assignmentInPreviousStage={assignmentInPreviousStage}
@@ -208,4 +208,4 @@ const useHelpers = () => {
   return { getStageOptions, getReviewerOptions }
 }
 
-export default ReviewHomeWrapper
+export default AssignmentWrapper

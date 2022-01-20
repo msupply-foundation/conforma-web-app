@@ -9,7 +9,7 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
-import ReviewHomeWrapper from './assignment/AssignmentWrapper'
+import AssignmentWrapper from './assignment/AssignmentWrapper'
 
 interface ReviewWrapperProps {
   structure: FullStructure
@@ -42,7 +42,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   return (
     <Switch>
       <Route exact path={path}>
-        <ReviewHomeWrapper {...{ assignments, structure }} />
+        <AssignmentWrapper {...{ assignments, structure }} />
       </Route>
       <Route exact path={`${path}/:reviewId`}>
         <ReviewPageWrapper {...{ structure, reviewAssignments: assignments }} />
