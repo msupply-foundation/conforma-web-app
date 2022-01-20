@@ -8,7 +8,7 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
-import AssignmentWrapper from './assignment/AssignmentWrapper'
+import { OverviewTab, AssignmentTab, SummaryTab, NotesTab, DocumentsTab } from './'
 
 interface ReviewWrapperProps {
   structure: FullStructure
@@ -27,6 +27,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     structure,
     firstRunValidation: false,
     shouldCalculateProgress: false,
+    shouldGetDraftResponses: false,
   })
 
   usePageTitle(strings.PAGE_TITLE_REVIEW.replace('%1', structure.info.serial))
@@ -53,18 +54,46 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   }
 
   const tabPanes = [
-    { menuItem: strings.REVIEW_TAB_OVERVIEW, render: () => <Tab.Pane>Overview</Tab.Pane> },
+    {
+      menuItem: strings.REVIEW_TAB_OVERVIEW,
+      render: () => (
+        <Tab.Pane>
+          <OverviewTab structure={structure} />
+        </Tab.Pane>
+      ),
+    },
     {
       menuItem: strings.REVIEW_TAB_ASSIGNMENT,
       render: () => (
         <Tab.Pane>
-          <AssignmentWrapper {...{ structure }} />
+          <AssignmentTab structure={structure} />
         </Tab.Pane>
       ),
     },
-    { menuItem: strings.REVIEW_TAB_SUMMARY, render: () => <Tab.Pane>Summary</Tab.Pane> },
-    { menuItem: strings.REVIEW_TAB_NOTES, render: () => <Tab.Pane>Internal Notes</Tab.Pane> },
-    { menuItem: strings.REVIEW_TAB_DOCUMENTS, render: () => <Tab.Pane>Documents</Tab.Pane> },
+    {
+      menuItem: strings.REVIEW_TAB_SUMMARY,
+      render: () => (
+        <Tab.Pane>
+          <SummaryTab structure={structure} />
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: strings.REVIEW_TAB_NOTES,
+      render: () => (
+        <Tab.Pane>
+          <NotesTab structure={structure} />
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: strings.REVIEW_TAB_DOCUMENTS,
+      render: () => (
+        <Tab.Pane>
+          <DocumentsTab structure={structure} />
+        </Tab.Pane>
+      ),
+    },
   ]
 
   return (

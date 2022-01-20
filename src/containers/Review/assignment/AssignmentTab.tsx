@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Dropdown, Header, Icon, Label, Message } from 'semantic-ui-react'
+import { Container, Dropdown, Label, Message } from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
 import Assignment from './Assignment'
 import { useUserState } from '../../../contexts/UserState'
 import { AssignmentDetails, Filters, FullStructure } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Stage } from '../../../components/Review'
-import { useRouter } from '../../../utils/hooks/useRouter'
 import { getPreviousStageAssignment } from '../../../utils/helpers/assignment/getPreviousStageAssignment'
 import useGetReviewInfo from '../../../utils/hooks/useGetReviewInfo'
 import { NoMatch } from '../../../components'
 
 const ALL_REVIEWERS = 0
 
-const AssignmentWrapper: React.FC<{
+const AssignmentTab: React.FC<{
   structure: FullStructure
 }> = ({ structure: fullStructure }) => {
   const { strings } = useLanguageProvider()
@@ -68,7 +67,7 @@ const AssignmentWrapper: React.FC<{
   } = fullStructure
 
   return (
-    <Container id="review-area">
+    <Container id="assignment-tab">
       <ReviewerAndStageSelection {...reviewerAndStageSelectionProps} />
       {filters && (
         <Assignment
@@ -183,4 +182,4 @@ const useHelpers = () => {
   return { getStageOptions, getReviewerOptions }
 }
 
-export default AssignmentWrapper
+export default AssignmentTab
