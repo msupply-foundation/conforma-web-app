@@ -1,10 +1,8 @@
-import React from 'react'
+import React, { SyntheticEvent } from 'react'
 import { Route, Switch } from 'react-router'
-import { Container, Message, Tab, Label, Icon, Header } from 'semantic-ui-react'
+import { Container, Message, Tab, Label, Icon, Header, StrictTabProps } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
-import { useUserState } from '../../contexts/UserState'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
-import useGetReviewInfo from '../../utils/hooks/useGetReviewInfo'
 import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { FullStructure } from '../../utils/types'
@@ -16,10 +14,14 @@ interface ReviewWrapperProps {
   structure: FullStructure
 }
 
+const tabIdentifiers = ['overview', 'assignment', 'summary', 'notes', 'documents']
+
 const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   const { strings } = useLanguageProvider()
   const {
     match: { path },
+    query: { tab },
+    updateQuery,
   } = useRouter()
   const { error, fullStructure } = useGetApplicationStructure({
     structure,
@@ -37,16 +39,32 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     info: { template, org, name },
   } = fullStructure
 
+  if (!tab) {
+    updateQuery({ tab: tabIdentifiers[0] })
+  }
+
+  const getTabFromQuery = (tabQuery: string | any) => {
+    const index = tabIdentifiers.findIndex((tabName) => tabName === tabQuery)
+    return index === -1 ? 0 : index
+  }
+
+  const handleTabChange = (_: SyntheticEvent, data: StrictTabProps) => {
+    updateQuery({ tab: tabIdentifiers[data.activeIndex as number] })
+  }
+
   const tabPanes = [
-    { menuItem: 'Overview', render: () => <Tab.Pane>Overview</Tab.Pane> },
+    { menuItem: strings.REVIEW_TAB_OVERVIEW, render: () => <Tab.Pane>Overview</Tab.Pane> },
     {
-      menuItem: 'Assignment',
+      menuItem: strings.REVIEW_TAB_ASSIGNMENT,
       render: () => (
         <Tab.Pane>
           <AssignmentWrapper {...{ structure }} />
         </Tab.Pane>
       ),
     },
+    { menuItem: strings.REVIEW_TAB_SUMMARY, render: () => <Tab.Pane>Summary</Tab.Pane> },
+    { menuItem: strings.REVIEW_TAB_NOTES, render: () => <Tab.Pane>Internal Notes</Tab.Pane> },
+    { menuItem: strings.REVIEW_TAB_DOCUMENTS, render: () => <Tab.Pane>Documents</Tab.Pane> },
   ]
 
   return (
@@ -58,7 +76,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
             applicationName={name}
             orgName={org?.name as string}
           />
-          <Tab panes={tabPanes} />
+          <Tab panes={tabPanes} onTabChange={handleTabChange} activeIndex={getTabFromQuery(tab)} />
         </Route>
         <Route exact path={`${path}/:reviewId`}>
           <ReviewPageWrapper {...{ structure }} />
