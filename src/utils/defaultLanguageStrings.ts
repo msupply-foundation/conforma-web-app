@@ -358,4 +358,6 @@ export default {
   NO_MATCH_404_DEFAULT_HEADER: 'Something went wrong',
   NO_MATCH_404_DEFAULT_CONTENT: 'Page not found',
   NO_MATCH_404_GO_BACK: 'Go back',
+  TIMELINE_APPLICATION_STARTED: 'Application started',
+  TIMELINE_ASSIGNED: 'Reviewer %1 was assigned Sections %2 by %3',
 }
