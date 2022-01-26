@@ -19,12 +19,14 @@ const ReviewProgress: React.FC<{
   const [currentStageClass, currentStageIcon]: [string, SemanticICONS] =
     outcome === ApplicationOutcome.Rejected ? ['rejected', 'remove'] : ['', 'circle']
 
+  const isApproved = outcome === ApplicationOutcome.Approved
+
   const steps = [
     <Step key="first">
       <StepTitle>Submitted</StepTitle>
     </Step>,
     ...stages.map((stage) =>
-      stage.number === currentStage.number ? (
+      stage.number === currentStage.number && !isApproved ? (
         <Step
           key={stage.name}
           customContent={() => (
@@ -46,7 +48,7 @@ const ReviewProgress: React.FC<{
   return (
     <div id="review-progress">
       <div id="stepper-wrapper">
-        <Stepper id="stepper" step={currentStage.number} numbered={false}>
+        <Stepper id="stepper" step={currentStage.number + Number(isApproved)} numbered={false}>
           {steps}
         </Stepper>
       </div>

@@ -553,7 +553,11 @@ a:hover {
   .step.pending {
     background: @surfacesWhite;
     border: 2px solid @surfacesDark;
+    .content {
+      margin-top: 1.2em; // to offset height added by grey border
+    }
   }
+
   .title {
     color: @headersInteractiveLow;
     font-family: @fontName;
