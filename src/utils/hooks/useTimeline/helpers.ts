@@ -132,11 +132,11 @@ const getReviewDecision = (event: ActivityLog, fullLog: ActivityLog[], index: nu
   const previousEvent = fullLog?.[index - 1]
   if (
     previousEvent.type === 'REVIEW_DECISION' &&
-    previousEvent.details.reviewer.id === event.details.reviewer.id
+    previousEvent.details.reviewId === event.details.reviewId
   )
     return previousEvent.details
   // Review decision SHOULD be previous event, but there's nothing in the
-  // database to guarantee the decision record gets written first, so we'll
+  // database to *guarantee* the decision record gets written first, so we'll
   // check the next event just in case
   const nextEvent = fullLog?.[index + 1]
   if (
@@ -148,12 +148,12 @@ const getReviewDecision = (event: ActivityLog, fullLog: ActivityLog[], index: nu
 }
 
 const checkResubmission = (event: ActivityLog, fullLog: ActivityLog[]) =>
-  fullLog.find(
+  !!fullLog.find(
     (e) =>
       e.type === 'REVIEW' &&
       e.value === 'SUBMITTED' &&
       e.timestamp < event.timestamp &&
-      e.details.reviewer.id === event.details.reviewer.id
+      e.details.reviewId === event.details.reviewId
   )
 
 const stringifySections = (sections: Section[]) => {
