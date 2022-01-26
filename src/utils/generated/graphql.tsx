@@ -36342,7 +36342,7 @@ export type GetStageFilterListQuery = (
 );
 
 export type GetActivityLogQueryVariables = Exact<{
-  appId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
 }>;
 
 
@@ -38187,8 +38187,8 @@ export type GetStageFilterListQueryHookResult = ReturnType<typeof useGetStageFil
 export type GetStageFilterListLazyQueryHookResult = ReturnType<typeof useGetStageFilterListLazyQuery>;
 export type GetStageFilterListQueryResult = Apollo.QueryResult<GetStageFilterListQuery, GetStageFilterListQueryVariables>;
 export const GetActivityLogDocument = gql`
-    query getActivityLog($appId: Int) {
-  activityLogs(condition: {applicationId: $appId}, orderBy: TIMESTAMP_ASC) {
+    query getActivityLog($applicationId: Int!) {
+  activityLogs(condition: {applicationId: $applicationId}, orderBy: TIMESTAMP_ASC) {
     nodes {
       value
       type
@@ -38216,7 +38216,7 @@ export const GetActivityLogDocument = gql`
  * @example
  * const { data, loading, error } = useGetActivityLogQuery({
  *   variables: {
- *      appId: // value for 'appId'
+ *      applicationId: // value for 'applicationId'
  *   },
  * });
  */

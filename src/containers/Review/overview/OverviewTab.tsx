@@ -4,7 +4,7 @@ import Loading from '../../../components/Loading'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import useTimeline from '../../../utils/hooks/useTimeline'
+import useTimeline from '../../../utils/hooks/useTimeline/useTimeline'
 
 const OverviewTab: React.FC<{
   structure: FullStructure
