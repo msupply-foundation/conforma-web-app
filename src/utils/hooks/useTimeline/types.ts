@@ -21,7 +21,7 @@ interface TimelineStage {
 
 interface Timeline {
   stages: TimelineStage[]
-  rawLog: ActivityLog[]
+  //   rawLog: ActivityLog[]
 }
 
 enum TimelineEventType {

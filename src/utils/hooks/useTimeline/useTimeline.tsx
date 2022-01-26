@@ -51,5 +51,8 @@ const buildTimeline = (activityLog: ActivityLog[], strings: LanguageStrings): Ti
         stages[stageIndex].events.push(timelineEvent)
     }
   })
-  return { stages, rawLog: activityLog }
+  return {
+    stages,
+    // rawLog: activityLog -- turn this on if we ever need it
+  }
 }

@@ -13,11 +13,11 @@ const getApplicationSubmittedVariant = (
   if (changesRequiredEvent && changesRequiredEvent.timestamp < event.timestamp)
     return {
       eventType: TimelineEventType.ApplicationResubmitted,
-      displayString: () => strings.TIMELINE_APPLICATION_SUBMITTED,
+      displayString: () => strings.TIMELINE_APPLICATION_RESUBMITTED,
     }
   return {
     eventType: TimelineEventType.ApplicationSubmitted,
-    displayString: () => strings.TIMELINE_APPLICATION_RESUBMITTED,
+    displayString: () => strings.TIMELINE_APPLICATION_SUBMITTED,
   }
 }
 const getReviewVariant = (
