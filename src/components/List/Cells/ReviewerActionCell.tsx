@@ -58,7 +58,7 @@ const ReviewerActionCell: React.FC<CellProps> = ({
         <div key={index}>
           {/* To-do: style the | once we can see it properly */}
           {index > 0 ? <span key={`divider_${index}`}>{' | '}</span> : ''}
-          <Link className="user-action" to={`/application/${serial}/review`}>
+          <Link className="user-action" to={`/application/${serial}/review?tab=assignment`}>
             {action}
           </Link>
         </div>
