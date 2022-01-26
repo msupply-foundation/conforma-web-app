@@ -23,7 +23,7 @@ const contextNotDefined = () => {
 }
 const defaultFormState: FormState = {
   selectedSectionId: -1,
-  selectedPageNumber: -1,
+  selectedPageNumber: 1,
   setSelectedSectionId: contextNotDefined,
   setSelectedPageNumber: contextNotDefined,
   unselect: contextNotDefined,
