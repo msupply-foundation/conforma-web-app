@@ -31,100 +31,103 @@ const getReviewVariant = (
   const isConsolidation = details.level > 1
   const reviewDecision = status === 'SUBMITTED' ? getReviewDecision(event, fullLog, index) : null
   const isResubmission = status === 'SUBMITTED' ? checkResubmission(event, fullLog) : false
-  if (status === 'Started') {
-    return {
-      eventType: !isConsolidation
-        ? TimelineEventType.ReviewStarted
-        : TimelineEventType.ConsolidationStarted,
-      displayString: ({ reviewer, sections }) =>
-        !isConsolidation
-          ? strings.TIMELINE_REVIEW_STARTED.replace('%1', `**${reviewer?.name}**`).replace(
-              '%2',
-              stringifySections(sections)
-            )
-          : strings.TIMELINE_CONSOLIDATION_STARTED.replace('%1', `**${reviewer?.name}**`),
-    }
-  } else if (status === 'Re-started') {
-    return {
-      eventType: !isConsolidation
-        ? TimelineEventType.ReviewRestarted
-        : TimelineEventType.ConsolidationRestarted,
-      displayString: ({ reviewer, sections }) =>
-        !isConsolidation
-          ? strings.TIMELINE_REVIEW_RESTARTED.replace('%1', `**${reviewer?.name}**`).replace(
-              '%2',
-              stringifySections(sections)
-            )
-          : strings.TIMELINE_CONSOLIDATION_RESTARTED.replace('%1', `**${reviewer?.name}**`),
-    }
-  } else if (status === 'SUBMITTED' && !reviewDecision && !isResubmission) {
-    return {
-      eventType: !isConsolidation
-        ? TimelineEventType.ReviewSubmitted
-        : TimelineEventType.ConsolidationSubmitted,
-      displayString: ({ reviewer, sections }) =>
-        !isConsolidation
-          ? strings.TIMELINE_REVIEW_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
-              '%2',
-              stringifySections(sections)
-            )
-          : strings.TIMELINE_CONSOLIDATION_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
-              '%2',
-              stringifySections(sections)
-            ),
-    }
-  } else if (status === 'SUBMITTED' && reviewDecision && !isResubmission) {
-    return {
-      extras: { reviewDecision },
-      eventType: !isConsolidation
-        ? TimelineEventType.ReviewSubmittedWithDecision
-        : TimelineEventType.ConsolidationSubmittedWithDecision,
-      displayString: ({ reviewer, sections }) =>
-        !isConsolidation
-          ? strings.TIMELINE_REVIEW_SUBMITTED_DECISION.replace('%1', `**${reviewer?.name}**`)
-              .replace('%2', stringifySections(sections))
-              .replace('%3', `**${reviewDecision.decision}** (${reviewDecision?.comment})`)
-          : strings.TIMELINE_CONSOLIDATION_SUBMITTED_DECISION.replace(
-              '%1',
-              `**${reviewer?.name}**`
-            ).replace('%2', stringifySections(sections)),
-    }
-  } else if (status === 'SUBMITTED' && !reviewDecision && isResubmission) {
-    return {
-      eventType: !isConsolidation
-        ? TimelineEventType.ReviewSubmitted
-        : TimelineEventType.ConsolidationSubmitted,
-      displayString: ({ reviewer, sections }) =>
-        !isConsolidation
-          ? strings.TIMELINE_REVIEW_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
-              '%2',
-              stringifySections(sections)
-            )
-          : strings.TIMELINE_CONSOLIDATION_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
-              '%2',
-              stringifySections(sections)
-            ),
-    }
-  } else if (status === 'SUBMITTED' && reviewDecision && isResubmission) {
-    return {
-      extras: { reviewDecision },
-      eventType: !isConsolidation
-        ? TimelineEventType.ReviewResubmittedWithDecision
-        : TimelineEventType.ConsolidationResubmittedWithDecision,
-      displayString: ({ reviewer, sections }) =>
-        !isConsolidation
-          ? strings.TIMELINE_REVIEW_RESUBMITTED_DECISION.replace('%1', `**${reviewer?.name}**`)
-              .replace('%2', stringifySections(sections))
-              .replace('%3', `**${reviewDecision.decision}** (${reviewDecision?.comment})`)
-          : strings.TIMELINE_CONSOLIDATION_RESUBMITTED_DECISION.replace(
-              '%1',
-              `**${reviewer?.name}**`
-            ).replace('%2', stringifySections(sections)),
-    }
-  }
-  return {
-    eventType: TimelineEventType.Error,
-    displayString: () => 'Problem parsing this review event',
+
+  switch (true) {
+    case status === 'Started':
+      return {
+        eventType: !isConsolidation
+          ? TimelineEventType.ReviewStarted
+          : TimelineEventType.ConsolidationStarted,
+        displayString: ({ reviewer, sections }) =>
+          !isConsolidation
+            ? strings.TIMELINE_REVIEW_STARTED.replace('%1', `**${reviewer?.name}**`).replace(
+                '%2',
+                stringifySections(sections)
+              )
+            : strings.TIMELINE_CONSOLIDATION_STARTED.replace('%1', `**${reviewer?.name}**`),
+      }
+    case status === 'Re-started':
+      return {
+        eventType: !isConsolidation
+          ? TimelineEventType.ReviewRestarted
+          : TimelineEventType.ConsolidationRestarted,
+        displayString: ({ reviewer, sections }) =>
+          !isConsolidation
+            ? strings.TIMELINE_REVIEW_RESTARTED.replace('%1', `**${reviewer?.name}**`).replace(
+                '%2',
+                stringifySections(sections)
+              )
+            : strings.TIMELINE_CONSOLIDATION_RESTARTED.replace('%1', `**${reviewer?.name}**`),
+      }
+    case status === 'SUBMITTED' && !reviewDecision && !isResubmission:
+      return {
+        eventType: !isConsolidation
+          ? TimelineEventType.ReviewSubmitted
+          : TimelineEventType.ConsolidationSubmitted,
+        displayString: ({ reviewer, sections }) =>
+          !isConsolidation
+            ? strings.TIMELINE_REVIEW_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
+                '%2',
+                stringifySections(sections)
+              )
+            : strings.TIMELINE_CONSOLIDATION_SUBMITTED.replace(
+                '%1',
+                `**${reviewer?.name}**`
+              ).replace('%2', stringifySections(sections)),
+      }
+    case status === 'SUBMITTED' && reviewDecision && !isResubmission:
+      return {
+        extras: { reviewDecision },
+        eventType: !isConsolidation
+          ? TimelineEventType.ReviewSubmittedWithDecision
+          : TimelineEventType.ConsolidationSubmittedWithDecision,
+        displayString: ({ reviewer, sections }) =>
+          !isConsolidation
+            ? strings.TIMELINE_REVIEW_SUBMITTED_DECISION.replace('%1', `**${reviewer?.name}**`)
+                .replace('%2', stringifySections(sections))
+                .replace('%3', `**${reviewDecision.decision}** (${reviewDecision?.comment})`)
+            : strings.TIMELINE_CONSOLIDATION_SUBMITTED_DECISION.replace(
+                '%1',
+                `**${reviewer?.name}**`
+              ).replace('%2', stringifySections(sections)),
+      }
+    case status === 'SUBMITTED' && !reviewDecision && isResubmission:
+      return {
+        eventType: !isConsolidation
+          ? TimelineEventType.ReviewSubmitted
+          : TimelineEventType.ConsolidationSubmitted,
+        displayString: ({ reviewer, sections }) =>
+          !isConsolidation
+            ? strings.TIMELINE_REVIEW_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
+                '%2',
+                stringifySections(sections)
+              )
+            : strings.TIMELINE_CONSOLIDATION_SUBMITTED.replace(
+                '%1',
+                `**${reviewer?.name}**`
+              ).replace('%2', stringifySections(sections)),
+      }
+    case status === 'SUBMITTED' && reviewDecision && isResubmission:
+      return {
+        extras: { reviewDecision },
+        eventType: !isConsolidation
+          ? TimelineEventType.ReviewResubmittedWithDecision
+          : TimelineEventType.ConsolidationResubmittedWithDecision,
+        displayString: ({ reviewer, sections }) =>
+          !isConsolidation
+            ? strings.TIMELINE_REVIEW_RESUBMITTED_DECISION.replace('%1', `**${reviewer?.name}**`)
+                .replace('%2', stringifySections(sections))
+                .replace('%3', `**${reviewDecision.decision}** (${reviewDecision?.comment})`)
+            : strings.TIMELINE_CONSOLIDATION_RESUBMITTED_DECISION.replace(
+                '%1',
+                `**${reviewer?.name}**`
+              ).replace('%2', stringifySections(sections)),
+      }
+    default:
+      return {
+        eventType: TimelineEventType.Error,
+        displayString: () => 'Problem parsing this review event',
+      }
   }
 }
 
