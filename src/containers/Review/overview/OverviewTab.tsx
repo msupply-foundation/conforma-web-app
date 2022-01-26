@@ -15,14 +15,13 @@ const OverviewTab: React.FC<{
   } = useUserState()
   const { timeline, loading, error } = useTimeline(fullStructure.info.id)
 
-  // console.log('timeline', timeline)
-
   return (
     <Container id="overview-tab">
       <Message>
         <Message.Header>Placeholder for OVERVIEW tab</Message.Header>
       </Message>
-      <pre>{JSON.stringify(timeline, null, 2)}</pre>
+      {loading && <p>Loading...</p>}
+      {timeline && <pre>{JSON.stringify(timeline, null, 2)}</pre>}
     </Container>
   )
 }
