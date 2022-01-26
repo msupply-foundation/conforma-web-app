@@ -550,6 +550,14 @@ a:hover {
     background: @success;
   }
 
+  .content {
+    text-align: center;
+    left: -80px;
+  }
+  .content.last {
+    text-align: center;
+  }
+
   .step.pending {
     background: @surfacesWhite;
     border: 2px solid @surfacesDark;
