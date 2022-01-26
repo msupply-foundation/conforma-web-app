@@ -33,7 +33,6 @@ const getReviewVariant = (
   const { details } = event
   const isConsolidation = details.level > 1
   const reviewDecision = status === 'SUBMITTED' ? getReviewDecision(event, fullLog, index) : null
-  console.log('reviewDecision', reviewDecision)
   if (status === 'Started') {
     return {
       eventType: !isConsolidation
@@ -59,8 +58,6 @@ const getReviewVariant = (
           : '%1 re-started their consolidation'.replace('%1', `**${reviewer?.name}**`),
     }
   } else if (status === 'SUBMITTED' && !reviewDecision) {
-    console.log('SUBMITTED')
-    console.log(event)
     return {
       eventType: !isConsolidation
         ? TimelineEventType.ReviewSubmitted
@@ -75,9 +72,8 @@ const getReviewVariant = (
               .replace('%2', stringifySections(sections)),
     }
   } else if (status === 'SUBMITTED' && reviewDecision) {
-    console.log('event after decision', event)
     return {
-      reviewDecision,
+      extras: { reviewDecision },
       eventType: !isConsolidation
         ? TimelineEventType.ReviewSubmittedWithDecision
         : TimelineEventType.ConsolidationSubmittedWithDecision,
@@ -100,8 +96,6 @@ const getReviewVariant = (
 
 const getReviewDecision = (event: ActivityLog, fullLog: ActivityLog[], index: number) => {
   const previousEvent = fullLog?.[index - 1]
-  //   console.log('Review', event)
-  //   console.log('previousEvent', previousEvent)
   if (
     previousEvent.type === 'REVIEW_DECISION' &&
     previousEvent.details.reviewer.id === event.details.reviewer.id

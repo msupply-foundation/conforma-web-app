@@ -56,7 +56,7 @@ enum TimelineEventType {
 type MapOutput = {
   eventType: TimelineEventType
   displayString?: (details: GenericObject) => string
-  reviewDecision?: GenericObject
+  extras?: GenericObject
 }
 
 interface Section {

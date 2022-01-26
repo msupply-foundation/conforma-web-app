@@ -29,12 +29,12 @@ class EventMap {
     const {
       eventType,
       displayString: display,
-      reviewDecision,
+      extras, //e.g. review decision
     } = typeof mapOutput === 'function' ? mapOutput(event, index) : mapOutput
     if (eventType === TimelineEventType.Error) console.error('Problem with event:', event)
     const displayString =
       typeof display === 'function' ? display(event.details) : 'Problem loading this event'
-    return { id, timestamp, eventType, displayString, details: { ...details, reviewDecision } }
+    return { id, timestamp, eventType, displayString, details: { ...details, ...extras } }
   }
 
   private eventMap: {

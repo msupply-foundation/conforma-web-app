@@ -1,16 +1,8 @@
 import { useEffect, useState } from 'react'
 import { LanguageStrings, useLanguageProvider } from '../../../contexts/Localisation'
-import { ActivityLog, EventType, useGetActivityLogQuery } from '../../generated/graphql'
+import { ActivityLog, useGetActivityLogQuery } from '../../generated/graphql'
 import EventMap from './eventMap'
-import {
-  GenericObject,
-  TimelineEvent,
-  TimelineStage,
-  Timeline,
-  TimelineEventType,
-  MapOutput,
-  Section,
-} from './types'
+import { TimelineStage, Timeline, TimelineEventType } from './types'
 
 const useTimeline = (applicationId: number) => {
   const { strings } = useLanguageProvider()
@@ -46,6 +38,7 @@ export default useTimeline
 const buildTimeline = (activityLog: ActivityLog[], strings: LanguageStrings): Timeline => {
   // Group by stage
   const eventMap = new EventMap(activityLog, strings)
+  console.log(eventMap)
   const stages: TimelineStage[] = []
   let stageIndex = -1
   activityLog.forEach((event, index) => {
