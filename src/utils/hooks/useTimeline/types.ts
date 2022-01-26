@@ -8,7 +8,7 @@ interface TimelineEvent {
   eventType: TimelineEventType
   timestamp: Date
   displayString: string
-  details: { [key: string]: any }
+  details: { [key: string]: GenericObject }
 }
 
 interface TimelineStage {

@@ -1,14 +1,6 @@
 import { LanguageStrings } from '../../../contexts/Localisation'
 import { ActivityLog, EventType } from '../../generated/graphql'
-import {
-  GenericObject,
-  TimelineEvent,
-  TimelineStage,
-  Timeline,
-  TimelineEventType,
-  MapOutput,
-  Section,
-} from './types'
+import { TimelineEvent, TimelineEventType, MapOutput } from './types'
 import { getApplicationSubmittedVariant, getReviewVariant, stringifySections } from './helpers'
 
 class EventMap {
@@ -43,7 +35,7 @@ class EventMap {
     }
   } = {
     // Map activity-log entries to timeline-specific events
-    STAGE: {}, // Already handled above
+    STAGE: {}, // Already handled in caller
     STATUS: {
       Started: {
         eventType: TimelineEventType.ApplicationStarted,
@@ -52,9 +44,9 @@ class EventMap {
       'New Stage': { eventType: TimelineEventType.Ignore },
       'Re-started': {
         eventType: TimelineEventType.ApplicationRestarted,
-        displayString: () => 'Application restarted',
+        displayString: () => this.strings.TIMELINE_APPLICATION_RESTARTED,
       },
-      SUBMITTED: (event) => getApplicationSubmittedVariant(event, this.fullLog),
+      SUBMITTED: (event) => getApplicationSubmittedVariant(event, this.fullLog, this.strings),
       CHANGES_REQUIRED: { eventType: TimelineEventType.Ignore },
       COMPLETED: { eventType: TimelineEventType.Ignore },
     },
@@ -62,19 +54,19 @@ class EventMap {
       PENDING: { eventType: TimelineEventType.Ignore },
       EXPIRED: {
         eventType: TimelineEventType.ApplicationExpired,
-        displayString: () => 'Application Expired',
+        displayString: () => this.strings.TIMELINE_APPLICATION_EXPIRED,
       },
       WITHDRAWN: {
         eventType: TimelineEventType.ApplicationWithdrawn,
-        displayString: () => 'Application Withdrawn',
+        displayString: () => this.strings.TIMELINE_APPLICATION_WITHDRAWN,
       },
       APPROVED: {
         eventType: TimelineEventType.ApplicationApproved,
-        displayString: () => 'Application Approved',
+        displayString: () => this.strings.TIMELINE_APPLICATION_APPROVED,
       },
       REJECTED: {
         eventType: TimelineEventType.ApplicationRejected,
-        displayString: () => 'Application Rejected',
+        displayString: () => this.strings.TIMELINE_APPLICATION_REJECTED,
       },
     },
     ASSIGNMENT: {
@@ -88,13 +80,12 @@ class EventMap {
       'Self-Assigned': {
         eventType: TimelineEventType.SelfAssigned,
         displayString: ({ reviewer }) =>
-          'Reviewer %1 assigned themselves'.replace('%1', `**${reviewer?.name}**`),
+          this.strings.TIMELINE_SELF_ASSIGNED.replace('%1', `**${reviewer?.name}**`),
       },
       UnAssigned: {
         eventType: TimelineEventType.Unassigned,
         displayString: ({ reviewer, sections, assigner }) =>
-          'Reviewer %1 was unassigned from Sections %2 by %3'
-            .replace('%1', `**${reviewer?.name}**`)
+          this.strings.TIMELINE_UNASSIGNED.replace('%1', `**${reviewer?.name}**`)
             .replace('%2', stringifySections(sections))
             .replace('%3', `**${assigner?.name}**`),
       },
@@ -106,11 +97,14 @@ class EventMap {
       DISCONTINUED: {
         eventType: TimelineEventType.ReviewDiscontinued,
         displayString: ({ reviewer }) =>
-          `%1's review was discontinued`.replace('%1', `**${reviewer?.name}**`),
+          this.strings.TIMELINE_REVIEW_DISCONTINUED.replace('%1', `**${reviewer?.name}**`),
       },
-      Started: (event, index) => getReviewVariant('Started', event, this.fullLog, index),
-      'Re-started': (event, index) => getReviewVariant('Re-started', event, this.fullLog, index),
-      SUBMITTED: (event, index) => getReviewVariant('SUBMITTED', event, this.fullLog, index),
+      Started: (event, index) =>
+        getReviewVariant('Started', event, this.fullLog, index, this.strings),
+      'Re-started': (event, index) =>
+        getReviewVariant('Re-started', event, this.fullLog, index, this.strings),
+      SUBMITTED: (event, index) =>
+        getReviewVariant('SUBMITTED', event, this.fullLog, index, this.strings),
     },
     REVIEW_DECISION: {
       // Ignore all because decision gets combined into Review event

@@ -38,7 +38,6 @@ export default useTimeline
 const buildTimeline = (activityLog: ActivityLog[], strings: LanguageStrings): Timeline => {
   // Group by stage
   const eventMap = new EventMap(activityLog, strings)
-  console.log(eventMap)
   const stages: TimelineStage[] = []
   let stageIndex = -1
   activityLog.forEach((event, index) => {
@@ -48,7 +47,6 @@ const buildTimeline = (activityLog: ActivityLog[], strings: LanguageStrings): Ti
       stageIndex++
     } else {
       const timelineEvent = eventMap.getTimelineEvent(event, index)
-      // const timelineEvent = processEvent(event, activityLog, index, strings)
       if (timelineEvent.eventType !== TimelineEventType.Ignore && stageIndex >= 0)
         stages[stageIndex].events.push(timelineEvent)
     }

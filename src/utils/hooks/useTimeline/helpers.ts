@@ -1,38 +1,36 @@
-import { LanguageStrings, useLanguageProvider } from '../../../contexts/Localisation'
-import { ActivityLog, EventType, useGetActivityLogQuery } from '../../generated/graphql'
-import {
-  GenericObject,
-  TimelineEvent,
-  TimelineStage,
-  Timeline,
-  TimelineEventType,
-  MapOutput,
-  Section,
-} from './types'
+import { LanguageStrings } from '../../../contexts/Localisation'
+import { ActivityLog } from '../../generated/graphql'
+import { TimelineEventType, MapOutput, Section } from './types'
 
-const getApplicationSubmittedVariant = (event: ActivityLog, fullLog: ActivityLog[]): MapOutput => {
+const getApplicationSubmittedVariant = (
+  event: ActivityLog,
+  fullLog: ActivityLog[],
+  strings: LanguageStrings
+): MapOutput => {
   const changesRequiredEvent = fullLog.find(
     (e) => e.type === 'STATUS' && e.value === 'CHANGES_REQUIRED'
   )
   if (changesRequiredEvent && changesRequiredEvent.timestamp < event.timestamp)
     return {
       eventType: TimelineEventType.ApplicationResubmitted,
-      displayString: () => 'Application re-submitted after making changes',
+      displayString: () => strings.TIMELINE_APPLICATION_SUBMITTED,
     }
   return {
     eventType: TimelineEventType.ApplicationSubmitted,
-    displayString: () => 'Application submitted',
+    displayString: () => strings.TIMELINE_APPLICATION_RESUBMITTED,
   }
 }
 const getReviewVariant = (
   status: string,
   event: ActivityLog,
   fullLog: ActivityLog[],
-  index: number
+  index: number,
+  strings: LanguageStrings
 ): MapOutput => {
   const { details } = event
   const isConsolidation = details.level > 1
   const reviewDecision = status === 'SUBMITTED' ? getReviewDecision(event, fullLog, index) : null
+  const isResubmission = status === 'SUBMITTED' ? checkResubmission(event, fullLog) : false
   if (status === 'Started') {
     return {
       eventType: !isConsolidation
@@ -40,10 +38,11 @@ const getReviewVariant = (
         : TimelineEventType.ConsolidationStarted,
       displayString: ({ reviewer, sections }) =>
         !isConsolidation
-          ? '%1 started their review of Sections %2'
-              .replace('%1', `**${reviewer?.name}**`)
-              .replace('%2', stringifySections(sections))
-          : '%1 started their consolidation'.replace('%1', `**${reviewer?.name}**`),
+          ? strings.TIMELINE_REVIEW_STARTED.replace('%1', `**${reviewer?.name}**`).replace(
+              '%2',
+              stringifySections(sections)
+            )
+          : strings.TIMELINE_CONSOLIDATION_STARTED.replace('%1', `**${reviewer?.name}**`),
     }
   } else if (status === 'Re-started') {
     return {
@@ -52,26 +51,29 @@ const getReviewVariant = (
         : TimelineEventType.ConsolidationRestarted,
       displayString: ({ reviewer, sections }) =>
         !isConsolidation
-          ? '%1 re-started their review of Sections %2'
-              .replace('%1', `**${reviewer?.name}**`)
-              .replace('%2', stringifySections(sections))
-          : '%1 re-started their consolidation'.replace('%1', `**${reviewer?.name}**`),
+          ? strings.TIMELINE_REVIEW_RESTARTED.replace('%1', `**${reviewer?.name}**`).replace(
+              '%2',
+              stringifySections(sections)
+            )
+          : strings.TIMELINE_CONSOLIDATION_RESTARTED.replace('%1', `**${reviewer?.name}**`),
     }
-  } else if (status === 'SUBMITTED' && !reviewDecision) {
+  } else if (status === 'SUBMITTED' && !reviewDecision && !isResubmission) {
     return {
       eventType: !isConsolidation
         ? TimelineEventType.ReviewSubmitted
         : TimelineEventType.ConsolidationSubmitted,
       displayString: ({ reviewer, sections }) =>
         !isConsolidation
-          ? '%1 submitted their review of Sections %2'
-              .replace('%1', `**${reviewer?.name}**`)
-              .replace('%2', stringifySections(sections))
-          : '%1 submitted their consolidation'
-              .replace('%1', `**${reviewer?.name}**`)
-              .replace('%2', stringifySections(sections)),
+          ? strings.TIMELINE_REVIEW_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
+              '%2',
+              stringifySections(sections)
+            )
+          : strings.TIMELINE_CONSOLIDATION_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
+              '%2',
+              stringifySections(sections)
+            ),
     }
-  } else if (status === 'SUBMITTED' && reviewDecision) {
+  } else if (status === 'SUBMITTED' && reviewDecision && !isResubmission) {
     return {
       extras: { reviewDecision },
       eventType: !isConsolidation
@@ -79,13 +81,45 @@ const getReviewVariant = (
         : TimelineEventType.ConsolidationSubmittedWithDecision,
       displayString: ({ reviewer, sections }) =>
         !isConsolidation
-          ? '%1 submitted their review of Sections %2 with decision %3'
-              .replace('%1', `**${reviewer?.name}**`)
+          ? strings.TIMELINE_REVIEW_SUBMITTED_DECISION.replace('%1', `**${reviewer?.name}**`)
               .replace('%2', stringifySections(sections))
               .replace('%3', `**${reviewDecision.decision}** (${reviewDecision?.comment})`)
-          : '%1 submitted their consolidation with decision %2'
-              .replace('%1', `**${reviewer?.name}**`)
-              .replace('%2', stringifySections(sections)),
+          : strings.TIMELINE_CONSOLIDATION_SUBMITTED_DECISION.replace(
+              '%1',
+              `**${reviewer?.name}**`
+            ).replace('%2', stringifySections(sections)),
+    }
+  } else if (status === 'SUBMITTED' && !reviewDecision && isResubmission) {
+    return {
+      eventType: !isConsolidation
+        ? TimelineEventType.ReviewSubmitted
+        : TimelineEventType.ConsolidationSubmitted,
+      displayString: ({ reviewer, sections }) =>
+        !isConsolidation
+          ? strings.TIMELINE_REVIEW_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
+              '%2',
+              stringifySections(sections)
+            )
+          : strings.TIMELINE_CONSOLIDATION_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
+              '%2',
+              stringifySections(sections)
+            ),
+    }
+  } else if (status === 'SUBMITTED' && reviewDecision && isResubmission) {
+    return {
+      extras: { reviewDecision },
+      eventType: !isConsolidation
+        ? TimelineEventType.ReviewResubmittedWithDecision
+        : TimelineEventType.ConsolidationResubmittedWithDecision,
+      displayString: ({ reviewer, sections }) =>
+        !isConsolidation
+          ? strings.TIMELINE_REVIEW_RESUBMITTED_DECISION.replace('%1', `**${reviewer?.name}**`)
+              .replace('%2', stringifySections(sections))
+              .replace('%3', `**${reviewDecision.decision}** (${reviewDecision?.comment})`)
+          : strings.TIMELINE_CONSOLIDATION_RESUBMITTED_DECISION.replace(
+              '%1',
+              `**${reviewer?.name}**`
+            ).replace('%2', stringifySections(sections)),
     }
   }
   return {
@@ -112,7 +146,15 @@ const getReviewDecision = (event: ActivityLog, fullLog: ActivityLog[], index: nu
     return nextEvent.details
   return null
 }
-// The review decision is
+
+const checkResubmission = (event: ActivityLog, fullLog: ActivityLog[]) =>
+  fullLog.find(
+    (e) =>
+      e.type === 'REVIEW' &&
+      e.value === 'SUBMITTED' &&
+      e.timestamp < event.timestamp &&
+      e.details.reviewer.id === event.details.reviewer.id
+  )
 
 const stringifySections = (sections: Section[]) => {
   return `*${sections.map((section: Section) => section.title).join(', ')}*`
