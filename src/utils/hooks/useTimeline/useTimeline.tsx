@@ -43,7 +43,7 @@ const buildTimeline = (activityLog: ActivityLog[], strings: LanguageStrings): Ti
   activityLog.forEach((event, index) => {
     if (event.type === 'STAGE') {
       // Stages become the parents of all other events
-      stages.push({ ...event.details, timestamp: event.timestamp, events: [] })
+      stages.push({ ...event.details.stage, timestamp: event.timestamp, events: [] })
       stageIndex++
     } else {
       const timelineEvent = eventMap.getTimelineEvent(event, index)
