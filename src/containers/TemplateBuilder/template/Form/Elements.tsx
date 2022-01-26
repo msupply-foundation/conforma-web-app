@@ -167,7 +167,6 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
   }
 
   const doubleMove = (forward = true) => {
-    console.log('yow')
     if ((!forward && currentPage.isLast) || (forward && currentPage.isFirst)) {
       moveToSection(forward ? currentSection.previousSection : currentSection.nextSection)
     } else {
