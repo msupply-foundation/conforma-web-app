@@ -58,7 +58,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       menuItem: strings.REVIEW_TAB_OVERVIEW,
       render: () => (
         <Tab.Pane>
-          <OverviewTab structure={structure} />
+          <OverviewTab structure={fullStructure} />
         </Tab.Pane>
       ),
     },
@@ -66,7 +66,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       menuItem: strings.REVIEW_TAB_ASSIGNMENT,
       render: () => (
         <Tab.Pane>
-          <AssignmentTab structure={structure} />
+          <AssignmentTab structure={fullStructure} />
         </Tab.Pane>
       ),
     },
@@ -74,7 +74,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       menuItem: strings.REVIEW_TAB_SUMMARY,
       render: () => (
         <Tab.Pane>
-          <SummaryTab structure={structure} />
+          <SummaryTab structure={fullStructure} />
         </Tab.Pane>
       ),
     },
@@ -82,7 +82,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       menuItem: strings.REVIEW_TAB_NOTES,
       render: () => (
         <Tab.Pane>
-          <NotesTab structure={structure} />
+          <NotesTab structure={fullStructure} />
         </Tab.Pane>
       ),
     },
@@ -90,7 +90,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       menuItem: strings.REVIEW_TAB_DOCUMENTS,
       render: () => (
         <Tab.Pane>
-          <DocumentsTab structure={structure} />
+          <DocumentsTab structure={fullStructure} />
         </Tab.Pane>
       ),
     },
