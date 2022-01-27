@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { DateTime } from 'luxon'
-import { Container, Accordion, Icon, Message, Label, Segment } from 'semantic-ui-react'
+import { Icon, Message, Segment } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { Timeline, TimelineEvent, TimelineStage } from '../../../utils/hooks/useTimeline/types'
 import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
 import { FullStructure } from '../../../utils/types'
 import { ActivityLog, ApplicationOutcome } from '../../../utils/generated/graphql'
@@ -16,26 +15,17 @@ export const Overview: React.FC<{
   },
   activityLog,
 }) => {
-  const { strings } = useLanguageProvider()
-  const [isActive, setIsActive] = useState(true)
   const { Outcome } = useLocalisedEnums()
-
   const applicant = `${user?.firstName} ${user?.lastName}`
   const organisation = org?.name
   const { started, completed } = getDates(activityLog)
-
   const stage = current.stage.name
-
-  console.log(serial, applicant, organisation, outcome, started, completed, stage)
 
   return (
     <div id="overview">
-      {/* <Label className="simple-label" size="big">
-        {serial}
-      </Label> */}
       <Segment basic>
         <Message info icon>
-          <Icon name="info circle" />
+          <Icon name="info circle" color="teal" />
           <Message.Content>
             <div className="flex-row wrap">
               <p className="left-item">
@@ -65,6 +55,12 @@ export const Overview: React.FC<{
               <p className="right-item">
                 <strong>Outcome: </strong>
                 {Outcome[outcome as ApplicationOutcome]}
+              </p>
+            </div>
+            <div className="flex-row wrap">
+              <p className="left-item">
+                <strong>Serial: </strong>
+                {serial}
               </p>
             </div>
           </Message.Content>

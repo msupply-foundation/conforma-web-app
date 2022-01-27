@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { DateTime } from 'luxon'
 import { Container, Accordion, Icon, List } from 'semantic-ui-react'
-import { useLanguageProvider } from '../../../contexts/Localisation'
 import { TimelineEvent, TimelineStage } from '../../../utils/hooks/useTimeline/types'
 import { Stage } from '../../../components/Review'
 import Markdown from '../../../utils/helpers/semanticReactMarkdown'
@@ -9,13 +8,12 @@ import Markdown from '../../../utils/helpers/semanticReactMarkdown'
 export const TimelineStageUI: React.FC<{
   stage: TimelineStage
 }> = ({ stage }) => {
-  const { strings } = useLanguageProvider()
-  const [isActive, setIsActive] = useState(true)
+  const [isActive, setIsActive] = useState(false)
 
   const groupedEvents = groupEventsByDate(stage.events)
 
   return (
-    <Container id="overview-tab">
+    <Container className="timeline-stage">
       <Accordion>
         <Accordion.Title active={isActive} onClick={() => setIsActive(!isActive)}>
           <Icon name="dropdown" />
