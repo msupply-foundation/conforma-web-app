@@ -13,7 +13,7 @@ const ReviewContainer: React.FC<ReviewContainerProps> = ({ application, children
   const { push } = useRouter()
   const { serial, org } = application
   return (
-    <Container id="review-area">
+    <Container id="review-container">
       <div className="top-container">
         <Label
           className="back-label clickable"

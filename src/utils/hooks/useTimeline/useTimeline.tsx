@@ -53,6 +53,6 @@ const buildTimeline = (activityLog: ActivityLog[], strings: LanguageStrings): Ti
   })
   return {
     stages,
-    // rawLog: activityLog -- turn this on if we ever need it
+    rawLog: activityLog,
   }
 }
