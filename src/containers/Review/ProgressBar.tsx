@@ -1,6 +1,7 @@
 import React from 'react'
 import { Icon, SemanticICONS } from 'semantic-ui-react'
 import { FullStructure } from '../../utils/types'
+import { useLanguageProvider } from '../../contexts/Localisation'
 // @ts-ignore -- no types provided
 import { Stepper, Step, StepTitle } from 'react-progress-stepper'
 import { ApplicationOutcome } from '../../utils/generated/graphql'
@@ -8,6 +9,7 @@ import { ApplicationOutcome } from '../../utils/generated/graphql'
 const ReviewProgress: React.FC<{
   structure: FullStructure
 }> = ({ structure: fullStructure }) => {
+  const { strings } = useLanguageProvider()
   const {
     stages,
     info: {
@@ -23,7 +25,7 @@ const ReviewProgress: React.FC<{
 
   const steps = [
     <Step key="first">
-      <StepTitle>Submitted</StepTitle>
+      <StepTitle>{strings.REVIEW_PROGRESS_BAR_SUBMITTED}</StepTitle>
     </Step>,
     ...stages.map((stage) =>
       stage.number === currentStage.number && !isApproved ? (
