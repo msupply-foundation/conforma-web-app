@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Dropdown, Message } from 'semantic-ui-react'
-import { useLanguageProvider } from '../../contexts/Localisation'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 
 interface AssigneeProps {
   assignmentError: boolean

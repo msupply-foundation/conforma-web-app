@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Dropdown, Header, Icon, Label, Message } from 'semantic-ui-react'
-import Loading from '../../components/Loading'
-import ReviewHome from './ReviewHome'
-import { useUserState } from '../../contexts/UserState'
-import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
-import { AssignmentDetails, Filters, FullStructure } from '../../utils/types'
-import { useLanguageProvider } from '../../contexts/Localisation'
-import { Stage } from '../../components/Review'
-import { useRouter } from '../../utils/hooks/useRouter'
-import { getPreviousStageAssignment } from '../../utils/helpers/assignment/getPreviousStageAssignment'
+import { Container, Dropdown, Label, Message } from 'semantic-ui-react'
+import Loading from '../../../components/Loading'
+import Assignment from './Assignment'
+import { useUserState } from '../../../contexts/UserState'
+import { AssignmentDetails, Filters, FullStructure } from '../../../utils/types'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import { Stage } from '../../../components/Review'
+import { getPreviousStageAssignment } from '../../../utils/helpers/assignment/getPreviousStageAssignment'
+import useGetReviewInfo from '../../../utils/hooks/useGetReviewInfo'
+import { NoMatch } from '../../../components'
 
 const ALL_REVIEWERS = 0
 
-const ReviewHomeWrapper: React.FC<{
+const AssignmentTab: React.FC<{
   structure: FullStructure
-  assignments: AssignmentDetails[]
-}> = ({ structure, assignments }) => {
+}> = ({ structure: fullStructure }) => {
   const { strings } = useLanguageProvider()
-  const { error, fullStructure: fullApplicationStructure } = useGetApplicationStructure({
-    structure,
-    firstRunValidation: false,
-    shouldCalculateProgress: false,
+  const {
+    userState: { currentUser },
+  } = useUserState()
+
+  const { error, loading, assignments } = useGetReviewInfo({
+    applicationId: fullStructure.info.id,
+    userId: currentUser?.userId as number,
   })
 
   const [filters, setFilters] = useState<Filters | null>(null)
@@ -41,69 +43,41 @@ const ReviewHomeWrapper: React.FC<{
     )
   }
 
-  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
+  if (error) return <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
 
-  if (!fullApplicationStructure) return <Loading />
+  if (loading || !fullStructure) return <Loading />
+  if (!assignments || assignments.length === 0) return <NoMatch />
 
   const reviewerAndStageSelectionProps: ReviewerAndStageSelectionProps = {
     filters,
     setFilters,
-    structure: fullApplicationStructure,
+    structure: fullStructure,
     assignments,
   }
 
   // Get Previous stage (last level reviewer) assignment
   const assignmentInPreviousStage = getPreviousStageAssignment(
-    structure.info.serial,
+    fullStructure.info.serial,
     assignments,
     filters?.selectedStage
   )
 
   const {
     info: { template, org, name },
-  } = fullApplicationStructure
+  } = fullStructure
 
   return (
-    <Container id="review-area">
-      <ReviewHomeHeader
-        templateCode={template.code}
-        applicationName={name}
-        orgName={org?.name as string}
-      />
+    <Container id="assignment-tab">
       <ReviewerAndStageSelection {...reviewerAndStageSelectionProps} />
       {filters && (
-        <ReviewHome
+        <Assignment
           assignmentsByStage={getFilteredByStage(assignments)}
           assignmentsByUserAndStage={getFilteredReviewer(assignments)}
           assignmentInPreviousStage={assignmentInPreviousStage}
-          fullApplicationStructure={fullApplicationStructure}
+          fullApplicationStructure={fullStructure}
         />
       )}
     </Container>
-  )
-}
-
-interface ReviewHomeProps {
-  templateCode: string
-  applicationName: string
-  orgName?: string
-}
-
-const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
-  templateCode,
-  applicationName,
-  orgName,
-}) => {
-  const { push } = useRouter()
-  return (
-    <div id="review-home-header">
-      <Label
-        className="simple-label clickable"
-        onClick={() => push(`/applications?type=${templateCode}`)}
-        icon={<Icon name="chevron left" className="dark-grey" />}
-      />
-      <Header as="h3" content={applicationName} subheader={<Header as="h5" content={orgName} />} />
-    </div>
   )
 }
 
@@ -208,4 +182,4 @@ const useHelpers = () => {
   return { getStageOptions, getReviewerOptions }
 }
 
-export default ReviewHomeWrapper
+export default AssignmentTab

@@ -219,6 +219,11 @@ export default {
   REVIEW_FILTER_YOURSELF: 'Yourself',
   REVIEW_FILTER_SHOW_TASKS_FOR: 'Show tasks for',
   REVIEW_FILTER_STAGE: 'Stage',
+  REVIEW_TAB_OVERVIEW: 'Overview',
+  REVIEW_TAB_ASSIGNMENT: 'Assignment',
+  REVIEW_TAB_SUMMARY: 'Summary',
+  REVIEW_TAB_NOTES: 'Internal Notes',
+  REVIEW_TAB_DOCUMENTS: 'Documents',
   SUBTITLE_APPLICATION_STEPS:
     'The following steps will need to be completed before the form can be submitted',
   SUBTITLE_APPLICATION_CHANGES_REQUIRED:
