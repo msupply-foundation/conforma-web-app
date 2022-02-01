@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Label, Grid } from 'semantic-ui-react'
-import { useLanguageProvider } from '../../contexts/Localisation'
-import { AssignmentOption } from '../../utils/data/assignmentOptions'
-import useReasignReviewAssignment from '../../utils/hooks/useReassignReviewAssignment'
-import { AssignmentDetails, PageElement } from '../../utils/types'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import { AssignmentOption } from '../../../utils/data/assignmentOptions'
+import useReasignReviewAssignment from '../../../utils/hooks/useReassignReviewAssignment'
+import { AssignmentDetails, PageElement } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
 
