@@ -1,11 +1,11 @@
-import { AssignmentDetails, PageElement, User } from '../../utils/types'
+import { AssignmentDetails, PageElement, User } from '../../../utils/types'
 import {
   ReviewAssignmentStatus,
   ReviewStatus,
   TemplateElementCategory,
-} from '../../utils/generated/graphql'
-import { AssignmentOption } from '../../utils/data/assignmentOptions'
-import { useLanguageProvider } from '../../contexts/Localisation'
+} from '../../../utils/generated/graphql'
+import { AssignmentOption } from '../../../utils/data/assignmentOptions'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 
 const useGetAssignmentOptions = () => {
   const { strings } = useLanguageProvider()
