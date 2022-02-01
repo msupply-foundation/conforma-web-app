@@ -4,7 +4,7 @@ import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 // @ts-ignore -- no types provided
 import { Stepper, Step, StepTitle } from 'react-progress-stepper'
-import { ApplicationOutcome } from '../../utils/generated/graphql'
+import { ApplicationOutcome, ApplicationStatus } from '../../utils/generated/graphql'
 
 const ReviewProgress: React.FC<{
   structure: FullStructure
@@ -14,12 +14,18 @@ const ReviewProgress: React.FC<{
     stages,
     info: {
       outcome,
-      current: { stage: currentStage },
+      current: { stage: currentStage, status },
     },
   } = fullStructure
 
   const [currentStageClass, currentStageIcon]: [string, SemanticICONS] =
-    outcome === ApplicationOutcome.Rejected ? ['rejected', 'remove'] : ['', 'circle']
+    outcome === ApplicationOutcome.Rejected
+      ? ['rejected', 'remove']
+      : status === ApplicationStatus.ChangesRequired
+      ? ['loq', 'circle']
+      : ['', 'circle']
+
+  console.log('info', fullStructure.info)
 
   const isApproved = outcome === ApplicationOutcome.Approved
 

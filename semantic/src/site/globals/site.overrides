@@ -605,6 +605,12 @@ a:hover {
       color: @surfacesWhite;
     }
   }
+
+  .loq {
+    .icon {
+      color: @attention;
+    }
+  }
 }
 
 .ui.segment.review-application-segment {
