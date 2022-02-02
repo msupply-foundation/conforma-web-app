@@ -11,6 +11,8 @@ const OverviewTab: React.FC<{
 }> = ({ structure: fullStructure }) => {
   const { timeline, loading, error } = useTimeline(fullStructure)
 
+  const currentStageNum = fullStructure.info.current.stage.number
+
   return (
     <Container id="overview-tab">
       {loading && <Loading />}
@@ -19,7 +21,10 @@ const OverviewTab: React.FC<{
         <Header as="h2" textAlign="center">
           Activity
         </Header>
-        {timeline && timeline.stages.map((stage) => <TimelineStageUI stage={stage} />)}
+        {timeline &&
+          timeline.stages.map((stage) => (
+            <TimelineStageUI stage={stage} isCurrentStage={stage.number === currentStageNum} />
+          ))}
       </div>
     </Container>
   )

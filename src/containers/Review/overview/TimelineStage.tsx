@@ -7,8 +7,9 @@ import Markdown from '../../../utils/helpers/semanticReactMarkdown'
 
 export const TimelineStageUI: React.FC<{
   stage: TimelineStage
-}> = ({ stage }) => {
-  const [isActive, setIsActive] = useState(false)
+  isCurrentStage: boolean
+}> = ({ stage, isCurrentStage }) => {
+  const [isActive, setIsActive] = useState(isCurrentStage)
 
   const groupedEvents = groupEventsByDate(stage.events)
 
