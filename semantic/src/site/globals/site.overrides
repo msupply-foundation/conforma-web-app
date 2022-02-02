@@ -691,7 +691,7 @@ a:hover {
 // Documents tab
 
 #documents-tab {
-  padding-top: 10px;
+  padding-top: 20px;
   padding-bottom: 20px;
 
   .flex-extra {
@@ -708,6 +708,10 @@ a:hover {
   .ui.image {
     max-height: 100px;
     // border: 1px solid @surfacesLight;
+  }
+
+  .ui.list {
+    margin-top: 30px;
   }
 
   .ui.list > .item {
