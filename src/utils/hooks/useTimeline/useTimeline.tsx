@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react'
 import { LanguageStrings, useLanguageProvider } from '../../../contexts/Localisation'
-import { ActivityLog, useGetActivityLogQuery } from '../../generated/graphql'
-import EventMap from './eventMap'
-import { TimelineStage, Timeline, TimelineEventType } from './types'
+import { ActivityLog, EventType, useGetActivityLogQuery } from '../../generated/graphql'
+import { FullStructure } from '../../types'
+import {
+  getAssignmentEvent,
+  getOutcomeEvent,
+  getReviewEvent,
+  getStatusEvent,
+} from './eventInterpretation'
+import { TimelineStage, Timeline, TimelineEventType, EventOutput } from './types'
 
-const useTimeline = (applicationId: number) => {
+const useTimeline = (structure: FullStructure) => {
   const { strings } = useLanguageProvider()
   const [timeline, setTimeline] = useState<Timeline>()
   const [error, setError] = useState('')
@@ -15,9 +21,11 @@ const useTimeline = (applicationId: number) => {
     loading: apolloLoading,
     error: apolloError,
   } = useGetActivityLogQuery({
-    variables: { applicationId },
+    variables: { applicationId: structure.info.id },
     // fetchPolicy: 'network-only',
   })
+
+  console.log(structure)
 
   useEffect(() => {
     if (apolloError) {
@@ -25,7 +33,7 @@ const useTimeline = (applicationId: number) => {
       setLoading(false)
     }
     if (data?.activityLogs?.nodes) {
-      setTimeline(buildTimeline(data?.activityLogs?.nodes as ActivityLog[], strings))
+      setTimeline(buildTimeline(data?.activityLogs?.nodes as ActivityLog[], structure, strings))
       setLoading(false)
     }
   }, [data, apolloLoading, apolloError])
@@ -35,9 +43,12 @@ const useTimeline = (applicationId: number) => {
 
 export default useTimeline
 
-const buildTimeline = (activityLog: ActivityLog[], strings: LanguageStrings): Timeline => {
+const buildTimeline = (
+  activityLog: ActivityLog[],
+  structure: FullStructure,
+  strings: LanguageStrings
+): Timeline => {
   // Group by stage
-  const eventMap = new EventMap(activityLog, strings)
   const stages: TimelineStage[] = []
   let stageIndex = -1
   activityLog.forEach((event, index) => {
@@ -46,13 +57,51 @@ const buildTimeline = (activityLog: ActivityLog[], strings: LanguageStrings): Ti
       stages.push({ ...event.details.stage, timestamp: event.timestamp, events: [] })
       stageIndex++
     } else {
-      const timelineEvent = eventMap.getTimelineEvent(event, index)
+      const timelineEvent = generateTimelineEvent[event.type](
+        event,
+        activityLog,
+        structure,
+        index,
+        strings
+      )
+      if (timelineEvent.eventType === TimelineEventType.Error)
+        console.log('Problem with event:', event)
       if (timelineEvent.eventType !== TimelineEventType.Ignore && stageIndex >= 0)
-        stages[stageIndex].events.push(timelineEvent)
+        stages[stageIndex].events.push({
+          id: event.id,
+          timestamp: event.timestamp,
+          details: event.details,
+          ...timelineEvent,
+        })
     }
   })
   return {
     stages,
     rawLog: activityLog,
   }
+}
+
+const generateTimelineEvent: {
+  [key in EventType]: (
+    event: ActivityLog,
+    fullLog: ActivityLog[],
+    structure: FullStructure,
+    index: number,
+    strings: LanguageStrings
+  ) => EventOutput
+} = {
+  STAGE: () =>
+    // Already handled in caller
+    ({ eventType: TimelineEventType.Ignore, displayString: '' }),
+  STATUS: (event, fullLog, _, __, strings) => getStatusEvent(event, fullLog, strings),
+  OUTCOME: (event, _, __, ___, strings) => getOutcomeEvent(event, strings),
+  ASSIGNMENT: (event, _, structure, __, strings) => getAssignmentEvent(event, structure, strings),
+  REVIEW: (event, fullLog, structure, index, strings) =>
+    getReviewEvent(event, fullLog, structure, index, strings),
+  REVIEW_DECISION: () =>
+    // Ignore all because decision gets combined into Review event
+    ({ eventType: TimelineEventType.Ignore, displayString: '' }),
+  PERMISSION: () =>
+    // Not interpreted in Timeline
+    ({ eventType: TimelineEventType.Ignore, displayString: '' }),
 }

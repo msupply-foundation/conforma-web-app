@@ -9,7 +9,7 @@ import useTimeline from '../../../utils/hooks/useTimeline'
 const OverviewTab: React.FC<{
   structure: FullStructure
 }> = ({ structure: fullStructure }) => {
-  const { timeline, loading, error } = useTimeline(fullStructure.info.id)
+  const { timeline, loading, error } = useTimeline(fullStructure)
 
   return (
     <Container id="overview-tab">
