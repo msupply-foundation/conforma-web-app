@@ -34,7 +34,7 @@ export const Overview: React.FC<{
                 {applicant}
               </p>
               <p className="right-item">
-                <strong>{strings.REVIEW_OVERVIEW_OUTCOME}: </strong>
+                <strong>{strings. REVIEW_OVERVIEW_ORG}: </strong>
                 {organisation}
               </p>
             </div>
