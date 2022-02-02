@@ -31,6 +31,8 @@ export {
   ApplicationListRow,
   ApplicationProps,
   AssignmentDetails,
+  AssignmentOptions,
+  AssignmentOption,
   CellProps,
   ChangeRequestsProgress,
   ColumnDetails,
@@ -124,7 +126,13 @@ interface AssignmentDetails {
   reviewerId?: number
   review: ReviewDetails | null
   reviewer: GraphQLUser
-  current: AssignmentStageAndStatus
+  current: {
+    stage: StageDetails
+    assignmentStatus: ReviewAssignmentStatus | null
+    timeStageCreated: Date
+    timeStatusUpdated: Date
+    // Doesn't store ReviewStatus
+  }
   isCurrentUserAssigner: boolean
   isCurrentUserReviewer: boolean
   isFinalDecision: boolean
@@ -136,12 +144,17 @@ interface AssignmentDetails {
   assignableSectionRestrictions: (string | null)[]
 }
 
-interface AssignmentStageAndStatus {
-  stage: StageDetails
-  assignmentStatus: ReviewAssignmentStatus | null
-  timeStageCreated: Date
-  timeStatusUpdated: Date
-  // Doesn't store ReviewStatus
+interface AssignmentOptions {
+  selected: number
+  isCompleted: boolean
+  options: AssignmentOption[]
+}
+
+interface AssignmentOption {
+  key: number
+  value: number
+  text: string
+  disabled?: boolean
 }
 
 interface BasicStringObject {
@@ -375,7 +388,6 @@ type ReviewSectionComponentProps = {
   action: ReviewAction
   isAssignedToCurrentUser: boolean
   isConsolidation: boolean
-  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
 }
 
 interface ReviewDetails {

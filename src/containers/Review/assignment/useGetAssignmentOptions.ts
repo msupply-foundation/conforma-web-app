@@ -1,10 +1,16 @@
-import { AssignmentDetails, PageElement, User } from '../../../utils/types'
+import {
+  AssignmentDetails,
+  AssignmentOptions,
+  AssignmentOption,
+  PageElement,
+  User,
+} from '../../../utils/types'
 import {
   ReviewAssignmentStatus,
   ReviewStatus,
   TemplateElementCategory,
 } from '../../../utils/generated/graphql'
-import { AssignmentOption } from '../../../utils/data/assignmentOptions'
+import { AssignmentEnum } from '../../../utils/data/assignmentOptions'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 
 const useGetAssignmentOptions = () => {
@@ -13,7 +19,7 @@ const useGetAssignmentOptions = () => {
     review,
     reviewer,
     isCurrentUserReviewer,
-  }: AssignmentDetails) => ({
+  }: AssignmentDetails): AssignmentOption => ({
     key: reviewer.id,
     value: reviewer.id,
     text: isCurrentUserReviewer
@@ -21,18 +27,17 @@ const useGetAssignmentOptions = () => {
       : `${reviewer.firstName || ''} ${reviewer.lastName || ''}`,
     disabled: review?.current.reviewStatus === ReviewStatus.Submitted,
   })
-
   interface GetAssignmentOptionsProps {
     assignments: AssignmentDetails[]
     sectionCode: string
     elements: PageElement[]
-    previousAssignee?: number
+    assignee?: number
   }
 
   const getAssignmentOptions = (
-    { assignments, sectionCode, elements, previousAssignee }: GetAssignmentOptionsProps,
+    { assignments, sectionCode, elements, assignee: previousAssignee }: GetAssignmentOptionsProps,
     currentUser: User | null
-  ) => {
+  ): AssignmentOptions | null => {
     const currentSectionAssignable = assignments.filter(
       ({ assignableSectionRestrictions }) =>
         assignableSectionRestrictions.length === 0 ||
@@ -40,7 +45,7 @@ const useGetAssignmentOptions = () => {
     )
 
     const currentUserAssignable = currentSectionAssignable.filter(
-      (assignment) => assignment.isCurrentUserAssigner
+      ({ isCurrentUserAssigner, isSelfAssignable }) => isCurrentUserAssigner || isSelfAssignable
     )
 
     // Dont' want to render assignment section row if they have no actions
@@ -68,28 +73,28 @@ const useGetAssignmentOptions = () => {
         options: [
           getOptionFromAssignment(currentlyAssigned),
           {
-            key: AssignmentOption.UNASSIGN,
-            value: AssignmentOption.UNASSIGN,
+            key: AssignmentEnum.UNASSIGN,
+            value: AssignmentEnum.UNASSIGN,
             text: strings.ASSIGNMENT_UNASSIGN,
           },
           {
-            key: AssignmentOption.REASSIGN,
-            value: AssignmentOption.REASSIGN,
+            key: AssignmentEnum.REASSIGN,
+            value: AssignmentEnum.REASSIGN,
             text: strings.ASSIGNMENT_REASSIGN,
           },
         ],
       }
 
     const assigneeOptions = {
-      selected: previousAssignee || AssignmentOption.NOT_ASSIGNED,
+      selected: previousAssignee || AssignmentEnum.NOT_ASSIGNED,
       isCompleted: false,
       options: [...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment))],
     }
 
     if (!previousAssignee)
       assigneeOptions.options.push({
-        key: AssignmentOption.NOT_ASSIGNED,
-        value: AssignmentOption.NOT_ASSIGNED,
+        key: AssignmentEnum.NOT_ASSIGNED,
+        value: AssignmentEnum.NOT_ASSIGNED,
         text: strings.ASSIGNMENT_NOT_ASSIGNED,
         disabled: false,
       })

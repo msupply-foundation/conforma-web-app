@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Segment, Header } from 'semantic-ui-react'
+import { Button, Segment, Header } from 'semantic-ui-react'
 import { AssignmentDetails, FullStructure } from '../../../utils/types'
 import AssignmentSectionRow from './AssignmentSectionRow'
 import ReviewSectionRow from './ReviewSectionRow'
@@ -39,12 +39,12 @@ const Assignment: React.FC<ReviewHomeProps> = ({
                 assignment,
                 fullApplicationStructure,
                 previousAssignment: assignmentInPreviousStage,
-                shouldAssignState: [shouldAssign, setShouldAssign],
               }}
             />
           ))}
         </Segment>
       ))}
+      <Button />
     </>
   )
 }
