@@ -79,7 +79,7 @@ const buildTimeline = (
   // Put final outcome at the end of the event list
   if (finalOutcome) stages[stageIndex].events.push(finalOutcome)
   // Placeholder event if no activity yet in stage
-  if (stages[stageIndex].events.length === 0)
+  if (stageIndex > -1 && stages[stageIndex].events.length === 0)
     stages[stageIndex].events.push({
       eventType: TimelineEventType.Ignore,
       displayString: `*${strings.TIMELINE_NO_ACTIVITY}*`,
