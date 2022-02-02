@@ -53,7 +53,7 @@ enum TimelineEventType {
   ConsolidationResubmittedWithDecision = 'CONSOLIDATION_RESUBMITTED_WITH_DECISION',
 }
 
-type MapOutput = {
+type EventOutput = {
   eventType: TimelineEventType
   displayString: string
   extras?: GenericObject
@@ -71,6 +71,6 @@ export {
   TimelineStage,
   Timeline,
   TimelineEventType,
-  MapOutput,
+  EventOutput,
   Section,
 }

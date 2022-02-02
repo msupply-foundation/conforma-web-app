@@ -1,7 +1,7 @@
 import { LanguageStrings } from '../../../contexts/Localisation'
 import { ActivityLog } from '../../generated/graphql'
-import { FullStructure, SectionsStructure } from '../../types'
-import { TimelineEventType, MapOutput, Section } from './types'
+import { SectionsStructure } from '../../types'
+import { Section } from './types'
 
 export const getReviewDecision = (event: ActivityLog, fullLog: ActivityLog[], index: number) => {
   const previousEvent = fullLog?.[index - 1]
@@ -31,7 +31,13 @@ export const checkResubmission = (event: ActivityLog, fullLog: ActivityLog[]) =>
       e.details.reviewId === event.details.reviewId
   )
 
-export const stringifySections = (sections: Section[], sectionsStructure: SectionsStructure) =>
+export const stringifySections = (
+  sections: Section[],
+  sectionsStructure: SectionsStructure,
+  strings: LanguageStrings
+) =>
   sections.length === Object.keys(sectionsStructure).length
-    ? '*All Sections*'
-    : `*${sections.map((section: Section) => section.title).join(', ')}*`
+    ? `*${strings.TIMELINE_ALL_SECTIONS}*`
+    : `${strings.TIMELINE_SECTIONS}: *${sections
+        .map((section: Section) => section.title)
+        .join(', ')}*`

@@ -8,7 +8,7 @@ import {
   getReviewEvent,
   getStatusEvent,
 } from './eventInterpretation'
-import { TimelineStage, Timeline, TimelineEventType, MapOutput } from './types'
+import { TimelineStage, Timeline, TimelineEventType, EventOutput } from './types'
 
 const useTimeline = (structure: FullStructure) => {
   const { strings } = useLanguageProvider()
@@ -82,22 +82,26 @@ const buildTimeline = (
 }
 
 const generateTimelineEvent: {
-  [key in EventType | any]: (
+  [key in EventType]: (
     event: ActivityLog,
     fullLog: ActivityLog[],
     structure: FullStructure,
     index: number,
     strings: LanguageStrings
-  ) => MapOutput
+  ) => EventOutput
 } = {
-  // STAGE: () => ({}), // Already handled in caller
+  STAGE: () =>
+    // Already handled in caller
+    ({ eventType: TimelineEventType.Ignore, displayString: '' }),
   STATUS: (event, fullLog, _, __, strings) => getStatusEvent(event, fullLog, strings),
   OUTCOME: (event, _, __, ___, strings) => getOutcomeEvent(event, strings),
   ASSIGNMENT: (event, _, structure, __, strings) => getAssignmentEvent(event, structure, strings),
   REVIEW: (event, fullLog, structure, index, strings) =>
     getReviewEvent(event, fullLog, structure, index, strings),
-  REVIEW_DECISION: (event, fullLog, structure, index, strings) =>
+  REVIEW_DECISION: () =>
     // Ignore all because decision gets combined into Review event
     ({ eventType: TimelineEventType.Ignore, displayString: '' }),
-  // PERMISSION: {},
+  PERMISSION: () =>
+    // Not interpreted in Timeline
+    ({ eventType: TimelineEventType.Ignore, displayString: '' }),
 }

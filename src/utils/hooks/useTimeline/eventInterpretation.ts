@@ -1,14 +1,14 @@
 import { LanguageStrings } from '../../../contexts/Localisation'
 import { ActivityLog } from '../../generated/graphql'
-import { FullStructure, SectionsStructure } from '../../types'
-import { TimelineEventType, MapOutput, Section } from './types'
+import { FullStructure } from '../../types'
+import { TimelineEventType, EventOutput } from './types'
 import { getReviewDecision, checkResubmission, stringifySections } from './helpers'
 
 const getStatusEvent = (
   { value, timestamp, details: { prevStatus } }: ActivityLog,
   fullLog: ActivityLog[],
   strings: LanguageStrings
-): MapOutput => {
+): EventOutput => {
   const changesRequiredEvent = fullLog.find(
     (e) => e.type === 'STATUS' && e.value === 'CHANGES_REQUIRED'
   )
@@ -50,7 +50,7 @@ const getStatusEvent = (
   }
 }
 
-const getOutcomeEvent = ({ value }: ActivityLog, strings: LanguageStrings): MapOutput => {
+const getOutcomeEvent = ({ value }: ActivityLog, strings: LanguageStrings): EventOutput => {
   switch (value) {
     case 'PENDING':
       // Don't display PENDING as its covered by other types of events
@@ -90,13 +90,13 @@ const getAssignmentEvent = (
   { value, details: { reviewer, assigner, sections } }: ActivityLog,
   structure: FullStructure,
   strings: LanguageStrings
-): MapOutput => {
+): EventOutput => {
   switch (value) {
     case 'Assigned':
       return {
         eventType: TimelineEventType.AssignedByAnother,
         displayString: strings.TIMELINE_ASSIGNED.replace('%1', `**${reviewer?.name}**`)
-          .replace('%2', stringifySections(sections, structure.sections))
+          .replace('%2', stringifySections(sections, structure.sections, strings))
           .replace('%3', `**${assigner?.name}**`),
       }
     case 'Self-Assigned':
@@ -108,7 +108,7 @@ const getAssignmentEvent = (
       return {
         eventType: TimelineEventType.Unassigned,
         displayString: strings.TIMELINE_UNASSIGNED.replace('%1', `**${reviewer?.name}**`)
-          .replace('%2', stringifySections(sections, structure.sections))
+          .replace('%2', stringifySections(sections, structure.sections, strings))
           .replace('%3', `**${assigner?.name}**`),
       }
     default:
@@ -125,7 +125,7 @@ const getReviewEvent = (
   structure: FullStructure,
   index: number,
   strings: LanguageStrings
-): MapOutput => {
+): EventOutput => {
   const {
     value,
     details: { prevStatus, reviewer, sections, level },
@@ -143,7 +143,7 @@ const getReviewEvent = (
         displayString: !isConsolidation
           ? strings.TIMELINE_REVIEW_STARTED.replace('%1', `**${reviewer?.name}**`).replace(
               '%2',
-              stringifySections(sections, structure.sections)
+              stringifySections(sections, structure.sections, strings)
             )
           : strings.TIMELINE_CONSOLIDATION_STARTED.replace('%1', `**${reviewer?.name}**`),
       }
@@ -155,7 +155,7 @@ const getReviewEvent = (
         displayString: !isConsolidation
           ? strings.TIMELINE_REVIEW_RESTARTED.replace('%1', `**${reviewer?.name}**`).replace(
               '%2',
-              stringifySections(sections, structure.sections)
+              stringifySections(sections, structure.sections, strings)
             )
           : strings.TIMELINE_CONSOLIDATION_RESTARTED.replace('%1', `**${reviewer?.name}**`),
       }
@@ -167,11 +167,11 @@ const getReviewEvent = (
         displayString: !isConsolidation
           ? strings.TIMELINE_REVIEW_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
               '%2',
-              stringifySections(sections, structure.sections)
+              stringifySections(sections, structure.sections, strings)
             )
           : strings.TIMELINE_CONSOLIDATION_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
               '%2',
-              stringifySections(sections, structure.sections)
+              stringifySections(sections, structure.sections, strings)
             ),
       }
     case value === 'SUBMITTED' && reviewDecision && !isResubmission:
@@ -182,12 +182,12 @@ const getReviewEvent = (
           : TimelineEventType.ConsolidationSubmittedWithDecision,
         displayString: !isConsolidation
           ? strings.TIMELINE_REVIEW_SUBMITTED_DECISION.replace('%1', `**${reviewer?.name}**`)
-              .replace('%2', stringifySections(sections, structure.sections))
+              .replace('%2', stringifySections(sections, structure.sections, strings))
               .replace('%3', `**${reviewDecision.decision}** (${reviewDecision?.comment})`)
           : strings.TIMELINE_CONSOLIDATION_SUBMITTED_DECISION.replace(
               '%1',
               `**${reviewer?.name}**`
-            ).replace('%2', stringifySections(sections, structure.sections)),
+            ).replace('%2', stringifySections(sections, structure.sections, strings)),
       }
     case value === 'SUBMITTED' && !reviewDecision && isResubmission:
       return {
@@ -197,11 +197,11 @@ const getReviewEvent = (
         displayString: !isConsolidation
           ? strings.TIMELINE_REVIEW_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
               '%2',
-              stringifySections(sections, structure.sections)
+              stringifySections(sections, structure.sections, strings)
             )
           : strings.TIMELINE_CONSOLIDATION_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
               '%2',
-              stringifySections(sections, structure.sections)
+              stringifySections(sections, structure.sections, strings)
             ),
       }
     case value === 'SUBMITTED' && reviewDecision && isResubmission:
@@ -212,12 +212,12 @@ const getReviewEvent = (
           : TimelineEventType.ConsolidationResubmittedWithDecision,
         displayString: !isConsolidation
           ? strings.TIMELINE_REVIEW_RESUBMITTED_DECISION.replace('%1', `**${reviewer?.name}**`)
-              .replace('%2', stringifySections(sections, structure.sections))
+              .replace('%2', stringifySections(sections, structure.sections, strings))
               .replace('%3', `**${reviewDecision.decision}** (${reviewDecision?.comment})`)
           : strings.TIMELINE_CONSOLIDATION_RESUBMITTED_DECISION.replace(
               '%1',
               `**${reviewer?.name}**`
-            ).replace('%2', stringifySections(sections, structure.sections)),
+            ).replace('%2', stringifySections(sections, structure.sections, strings)),
       }
     default:
       return {
