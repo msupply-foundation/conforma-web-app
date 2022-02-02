@@ -358,6 +358,7 @@ export default {
   NO_MATCH_404_DEFAULT_HEADER: 'Something went wrong',
   NO_MATCH_404_DEFAULT_CONTENT: 'Page not found',
   NO_MATCH_404_GO_BACK: 'Go back',
+  TIMELINE_NO_ACTIVITY: 'Moved to stage -- no activity yet',
   TIMELINE_APPLICATION_STARTED: 'Application started',
   TIMELINE_APPLICATION_RESTARTED: 'Application restarted',
   TIMELINE_APPLICATION_SUBMITTED: 'Application submitted',

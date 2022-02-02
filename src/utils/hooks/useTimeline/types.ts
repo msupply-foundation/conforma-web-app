@@ -15,7 +15,7 @@ interface TimelineStage {
   number: number
   name: string
   colour: string
-  timestamp: Date
+  timestamp: string
   events: TimelineEvent[]
 }
 
