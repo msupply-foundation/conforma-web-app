@@ -8,7 +8,7 @@ import {
   getReviewEvent,
   getStatusEvent,
 } from './eventInterpretation'
-import { TimelineStage, Timeline, TimelineEventType, EventOutput } from './types'
+import { TimelineStage, Timeline, TimelineEventType, EventOutput, TimelineEvent } from './types'
 
 const useTimeline = (structure: FullStructure) => {
   const { strings } = useLanguageProvider()
@@ -49,30 +49,35 @@ const buildTimeline = (
   // Group by stage
   const stages: TimelineStage[] = []
   let stageIndex = -1
+  let finalOutcome: TimelineEvent | null = null
   activityLog.forEach((event, index) => {
     if (event.type === 'STAGE') {
       // Stages become the parents of all other events
       stages.push({ ...event.details.stage, timestamp: event.timestamp, events: [] })
       stageIndex++
     } else {
-      const timelineEvent = generateTimelineEvent[event.type](
-        event,
-        activityLog,
-        structure,
-        index,
-        strings
-      )
+      const timelineEvent = {
+        id: event.id,
+        timestamp: event.timestamp,
+        details: event.details,
+        ...generateTimelineEvent[event.type](event, activityLog, structure, index, strings),
+      }
       if (timelineEvent.eventType === TimelineEventType.Error)
         console.log('Problem with event:', event)
-      if (timelineEvent.eventType !== TimelineEventType.Ignore && stageIndex >= 0)
-        stages[stageIndex].events.push({
-          id: event.id,
-          timestamp: event.timestamp,
-          details: event.details,
-          ...timelineEvent,
-        })
+      if (event.type === 'OUTCOME' && event.value !== 'PENDING') finalOutcome = timelineEvent
+      else if (
+        // Show special changes required message is currently waiting
+        ((event.type === 'STATUS' || event.type === 'REVIEW') &&
+          event.value === 'CHANGES_REQUIRED' &&
+          index === activityLog.length - 1) ||
+        // Normal event
+        (timelineEvent.eventType !== TimelineEventType.Ignore && stageIndex >= 0)
+      )
+        stages[stageIndex].events.push(timelineEvent)
     }
   })
+  // Put final outcome at the end of the event list
+  if (finalOutcome) stages[stageIndex].events.push(finalOutcome)
   return {
     stages,
     rawLog: activityLog,

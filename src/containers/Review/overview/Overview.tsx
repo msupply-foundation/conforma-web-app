@@ -71,7 +71,6 @@ export const Overview: React.FC<{
 }
 
 const getDates = (activityLog: ActivityLog[]): { started: string; completed: string } => {
-  console.log(activityLog)
   const startEvent = activityLog.find((e) => e.type === 'STATUS' && e.value === 'DRAFT')
   const endEvent = activityLog.find((e) => e.type === 'OUTCOME' && e.value !== 'PENDING')
   return { started: startEvent?.timestamp, completed: endEvent?.timestamp }

@@ -49,10 +49,11 @@ const getStatusEvent = (
         displayString: '',
       }
     case value === 'CHANGES_REQUIRED':
-      // Don't display, since info will be conveyed in review/decision
+      // Mostly ignored, only shows when event is *last* in list (see
+      // buildTimeline function)
       return {
         eventType: TimelineEventType.Ignore,
-        displayString: '',
+        displayString: `*> ${strings.TIMELINE_WAITING_FOR_APPLICANT}*`,
       }
     default:
       return {
@@ -148,6 +149,25 @@ const getReviewEvent = (
   const isResubmission = value === 'SUBMITTED' ? checkResubmission(event, fullLog) : false
 
   switch (true) {
+    case value === 'CHANGES_REQUESTED':
+      // Mostly ignored, only shows when event is *last* in list
+      return {
+        eventType: TimelineEventType.Ignore,
+        displayString: `*> ${strings.TIMELINE_WAITING_FOR_REVIEWER}*`.replace(
+          '%1',
+          `**${reviewer?.name}**`
+        ),
+      }
+    case value === 'PENDING' || value === 'LOCKED':
+      return {
+        eventType: TimelineEventType.Ignore,
+        displayString: '',
+      }
+    case value === 'DISCONTINUED':
+      return {
+        eventType: TimelineEventType.ReviewDiscontinued,
+        displayString: strings.TIMELINE_REVIEW_DISCONTINUED.replace('%1', `**${reviewer?.name}**`),
+      }
     case value === 'DRAFT' && !prevStatus:
       return {
         eventType: !isConsolidation
@@ -160,7 +180,7 @@ const getReviewEvent = (
             )
           : strings.TIMELINE_CONSOLIDATION_STARTED.replace('%1', `**${reviewer?.name}**`),
       }
-    case value === 'DRAFT' && prevStatus === 'CHANGES_REQUESTED':
+    case value === 'DRAFT' && (prevStatus === 'CHANGES_REQUESTED' || prevStatus === 'PENDING'):
       return {
         eventType: !isConsolidation
           ? TimelineEventType.ReviewRestarted
@@ -196,7 +216,10 @@ const getReviewEvent = (
         displayString: !isConsolidation
           ? strings.TIMELINE_REVIEW_SUBMITTED_DECISION.replace('%1', `**${reviewer?.name}**`)
               .replace('%2', stringifySections(sections, structure.sections, strings))
-              .replace('%3', `**${reviewDecision.decision}** (${reviewDecision?.comment})`)
+              .replace(
+                '%3',
+                `**${reviewDecision.decision}** (${strings.TIMELINE_COMMENT} *${reviewDecision?.comment}*)`
+              )
           : strings.TIMELINE_CONSOLIDATION_SUBMITTED_DECISION.replace(
               '%1',
               `**${reviewer?.name}**`
@@ -226,7 +249,10 @@ const getReviewEvent = (
         displayString: !isConsolidation
           ? strings.TIMELINE_REVIEW_RESUBMITTED_DECISION.replace('%1', `**${reviewer?.name}**`)
               .replace('%2', stringifySections(sections, structure.sections, strings))
-              .replace('%3', `**${reviewDecision.decision}** (${reviewDecision?.comment})`)
+              .replace(
+                '%3',
+                `**${reviewDecision.decision}** (${strings.TIMELINE_COMMENT} ${reviewDecision?.comment})`
+              )
           : strings.TIMELINE_CONSOLIDATION_RESUBMITTED_DECISION.replace(
               '%1',
               `**${reviewer?.name}**`
