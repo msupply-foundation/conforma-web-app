@@ -2,24 +2,28 @@ import { LanguageStrings } from '../../../contexts/Localisation'
 import { ActivityLog } from '../../generated/graphql'
 import { SectionsStructure } from '../../types'
 import { Section } from './types'
+import { DateTime } from 'luxon'
 
-export const getReviewDecision = (event: ActivityLog, fullLog: ActivityLog[], index: number) => {
-  const previousEvent = fullLog?.[index - 1]
-  if (
-    previousEvent.type === 'REVIEW_DECISION' &&
-    previousEvent.details.reviewId === event.details.reviewId
+export const getAssociatedReviewDecision = (
+  event: ActivityLog,
+  fullLog: ActivityLog[],
+  index: number
+) => {
+  const possibleDecisions = fullLog.filter(
+    (e) => e.type === 'REVIEW_DECISION' && e.details.reviewId === event.details.reviewId
   )
-    return previousEvent.details
-  // Review decision SHOULD be previous event, but there's nothing in the
-  // database to *guarantee* the decision record gets written first, so we'll
-  // check the next event just in case
-  const nextEvent = fullLog?.[index + 1]
-  if (
-    nextEvent.type === 'REVIEW_DECISION' &&
-    nextEvent.details.reviewer.id === event.details.reviewer.id
-  )
-    return nextEvent.details
-  return null
+  if (possibleDecisions.length === 0) return null
+  // If there is more than one Decision, choose the one with the closest
+  // timestamp to the review submission
+  const reviewDecision = possibleDecisions.reduce((closest, e) => {
+    const reviewUnixTimestamp = DateTime.fromISO(event.timestamp).toMillis()
+    return Math.abs(DateTime.fromISO(e.timestamp).toMillis() - reviewUnixTimestamp) <
+      Math.abs(DateTime.fromISO(closest.timestamp).toMillis() - reviewUnixTimestamp)
+      ? e
+      : closest
+  })
+
+  return reviewDecision.details
 }
 
 export const checkResubmission = (event: ActivityLog, fullLog: ActivityLog[]) =>

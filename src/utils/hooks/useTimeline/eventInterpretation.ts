@@ -2,7 +2,7 @@ import { LanguageStrings } from '../../../contexts/Localisation'
 import { ActivityLog } from '../../generated/graphql'
 import { FullStructure } from '../../types'
 import { TimelineEventType, EventOutput } from './types'
-import { getReviewDecision, checkResubmission, stringifySections } from './helpers'
+import { getAssociatedReviewDecision, checkResubmission, stringifySections } from './helpers'
 
 const getStatusEvent = (
   { value, timestamp, details: { prevStatus } }: ActivityLog,
@@ -41,6 +41,18 @@ const getStatusEvent = (
       return {
         eventType: TimelineEventType.ApplicationSubmitted,
         displayString: strings.TIMELINE_APPLICATION_SUBMITTED,
+      }
+    case value === 'COMPLETED':
+      // Outcome change will be used instead
+      return {
+        eventType: TimelineEventType.Ignore,
+        displayString: '',
+      }
+    case value === 'CHANGES_REQUIRED':
+      // Don't display, since info will be conveyed in review/decision
+      return {
+        eventType: TimelineEventType.Ignore,
+        displayString: '',
       }
     default:
       return {
@@ -131,7 +143,8 @@ const getReviewEvent = (
     details: { prevStatus, reviewer, sections, level },
   } = event
   const isConsolidation = level > 1
-  const reviewDecision = value === 'SUBMITTED' ? getReviewDecision(event, fullLog, index) : null
+  const reviewDecision =
+    value === 'SUBMITTED' ? getAssociatedReviewDecision(event, fullLog, index) : null
   const isResubmission = value === 'SUBMITTED' ? checkResubmission(event, fullLog) : false
 
   switch (true) {
