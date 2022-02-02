@@ -231,14 +231,14 @@ const getReviewEvent = (
           ? TimelineEventType.ReviewSubmitted
           : TimelineEventType.ConsolidationSubmitted,
         displayString: !isConsolidation
-          ? strings.TIMELINE_REVIEW_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
+          ? strings.TIMELINE_REVIEW_RESUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
               '%2',
               stringifySections(sections, structure.sections, strings)
             )
-          : strings.TIMELINE_CONSOLIDATION_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
-              '%2',
-              stringifySections(sections, structure.sections, strings)
-            ),
+          : strings.TIMELINE_CONSOLIDATION_RESUBMITTED.replace(
+              '%1',
+              `**${reviewer?.name}**`
+            ).replace('%2', stringifySections(sections, structure.sections, strings)),
       }
     case value === 'SUBMITTED' && reviewDecision && isResubmission:
       return {
