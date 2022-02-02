@@ -36503,7 +36503,7 @@ export type GetApplicationDocsQuery = (
     { __typename?: 'FilesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'File' }
-      & Pick<File, 'description' | 'filePath' | 'originalFilename' | 'thumbnailPath' | 'timestamp'>
+      & Pick<File, 'uniqueId' | 'description' | 'filePath' | 'originalFilename' | 'thumbnailPath' | 'timestamp'>
     )>> }
   )> }
 );
@@ -38507,6 +38507,7 @@ export const GetApplicationDocsDocument = gql`
     query getApplicationDocs($applicationSerial: String!) {
   files(condition: {applicationSerial: $applicationSerial, isOutputDoc: true}) {
     nodes {
+      uniqueId
       description
       filePath
       originalFilename
