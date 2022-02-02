@@ -15,6 +15,7 @@ export const Overview: React.FC<{
   },
   activityLog,
 }) => {
+  const { strings } = useLanguageProvider()
   const { Outcome } = useLocalisedEnums()
   const applicant = `${user?.firstName} ${user?.lastName}`
   const organisation = org?.name
@@ -29,37 +30,37 @@ export const Overview: React.FC<{
           <Message.Content>
             <div className="flex-row wrap">
               <p className="left-item">
-                <strong>Applicant: </strong>
+                <strong>{strings.REVIEW_OVERVIEW_APPLICANT}: </strong>
                 {applicant}
               </p>
               <p className="right-item">
-                <strong>Organisation: </strong>
+                <strong>{strings.REVIEW_OVERVIEW_OUTCOME}: </strong>
                 {organisation}
               </p>
             </div>
             <div className="flex-row wrap">
               <p className="left-item">
-                <strong>Started: </strong>
+                <strong>{strings.REVIEW_OVERVIEW_STARTED}: </strong>
                 {DateTime.fromISO(started).toLocaleString()}
               </p>
               <p className="right-item">
-                <strong>Completed: </strong>
+                <strong>{strings.REVIEW_OVERVIEW_COMPLETED}: </strong>
                 {completed && DateTime.fromISO(completed).toLocaleString()}
               </p>
             </div>
             <div className="flex-row wrap">
               <p className="left-item">
-                <strong>Stage: </strong>
+                <strong>{strings.REVIEW_OVERVIEW_STAGE}: </strong>
                 {stage}
               </p>
               <p className="right-item">
-                <strong>Outcome: </strong>
+                <strong>{strings.REVIEW_OVERVIEW_OUTCOME}: </strong>
                 {Outcome[outcome as ApplicationOutcome]}
               </p>
             </div>
             <div className="flex-row wrap">
               <p className="left-item">
-                <strong>Serial: </strong>
+                <strong>{strings.REVIEW_OVERVIEW_SERIAL}: </strong>
                 {serial}
               </p>
             </div>
