@@ -55,7 +55,7 @@ enum TimelineEventType {
 
 type MapOutput = {
   eventType: TimelineEventType
-  displayString?: (details: GenericObject) => string
+  displayString: string
   extras?: GenericObject
 }
 

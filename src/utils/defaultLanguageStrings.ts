@@ -385,4 +385,5 @@ export default {
   TIMELINE_CONSOLIDATION_RESUBMITTED: '%1 re-submitted their consolidation of Sections %2',
   TIMELINE_CONSOLIDATION_RESUBMITTED_DECISION:
     '%1 re-submitted their consolidation of Sections %2 with decision %3',
+  TIMELINE_ERROR_MESSAGE: 'Problem parsing this event -- See console for details',
 }

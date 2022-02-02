@@ -13,7 +13,7 @@ const OverviewTab: React.FC<{
   const {
     userState: { currentUser },
   } = useUserState()
-  const { timeline, loading, error } = useTimeline(fullStructure.info.id)
+  const { timeline, loading, error } = useTimeline(fullStructure)
 
   return (
     <Container id="overview-tab">
