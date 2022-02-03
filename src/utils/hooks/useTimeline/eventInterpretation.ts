@@ -117,7 +117,7 @@ const getAssignmentEvent = (
         eventType: TimelineEventType.SelfAssigned,
         displayString: strings.TIMELINE_SELF_ASSIGNED.replace('%1', `**${reviewer?.name}**`),
       }
-    case 'UnAssigned':
+    case 'Unassigned':
       return {
         eventType: TimelineEventType.Unassigned,
         displayString: strings.TIMELINE_UNASSIGNED.replace('%1', `**${reviewer?.name}**`)
