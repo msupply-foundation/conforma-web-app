@@ -39,9 +39,11 @@ export const stringifySections = (
   sections: Section[],
   sectionsStructure: SectionsStructure,
   strings: LanguageStrings
-) =>
-  sections.length === Object.keys(sectionsStructure).length
+) => {
+  if (!sections) return '---'
+  return sections.length === Object.keys(sectionsStructure).length
     ? `*${strings.TIMELINE_ALL_SECTIONS}*`
     : `${strings.TIMELINE_SECTIONS}: *${sections
         .map((section: Section) => section.title)
         .join(', ')}*`
+}
