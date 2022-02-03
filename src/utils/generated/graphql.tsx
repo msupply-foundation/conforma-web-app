@@ -36851,7 +36851,7 @@ export type GetApplicationNotesQuery = (
     { __typename?: 'ApplicationNotesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationNote' }
-      & Pick<ApplicationNote, 'comment' | 'timestamp'>
+      & Pick<ApplicationNote, 'id' | 'comment' | 'timestamp'>
       & { org?: Maybe<(
         { __typename?: 'Organisation' }
         & Pick<Organisation, 'id' | 'name'>
@@ -39006,6 +39006,7 @@ export const GetApplicationNotesDocument = gql`
     query getApplicationNotes($applicationId: Int!) {
   applicationNotes(condition: {applicationId: $applicationId}, orderBy: TIMESTAMP_DESC) {
     nodes {
+      id
       comment
       org {
         id

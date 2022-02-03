@@ -4,6 +4,7 @@ export default gql`
   query getApplicationNotes($applicationId: Int!) {
     applicationNotes(condition: { applicationId: $applicationId }, orderBy: TIMESTAMP_DESC) {
       nodes {
+        id
         comment
         org {
           id

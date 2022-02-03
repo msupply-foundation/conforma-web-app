@@ -25,7 +25,11 @@ const OverviewTab: React.FC<{
         </Header>
         {timeline &&
           timeline.stages.map((stage) => (
-            <TimelineStageUI stage={stage} isCurrentStage={stage.number === currentStageNum} />
+            <TimelineStageUI
+              key={stage.name}
+              stage={stage}
+              isCurrentStage={stage.number === currentStageNum}
+            />
           ))}
       </div>
     </Container>

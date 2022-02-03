@@ -91,7 +91,7 @@ const NewCommentForm: React.FC<{
       </p>
       <List>
         {files.map((file) => (
-          <List.Item>{file.name}</List.Item>
+          <List.Item key={file.name}>{file.name}</List.Item>
         ))}
       </List>
       <Button type="submit" primary className="wide-button">

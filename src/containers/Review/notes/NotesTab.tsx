@@ -76,7 +76,10 @@ const NotesTab: React.FC<{
       {notes.map((note) => {
         const isCurrentUser = note?.user?.id === currentUser?.userId
         return (
-          <div className={`note-container${isCurrentUser ? ' highlight-background' : ''}`}>
+          <div
+            key={note.id}
+            className={`note-container${isCurrentUser ? ' highlight-background' : ''}`}
+          >
             <div className="note-comment-row">
               <div className="comment">
                 <Markdown text={note.comment} />
@@ -125,7 +128,7 @@ const FilesDisplay: React.FC<any> = ({ files }) => {
   return (
     <div className="file-row">
       {files.map((file: FileData) => (
-        <div className="file-container">
+        <div className="file-container" key={file.uniqueId}>
           <a href={`${downloadUrl}/file?uid=${file?.uniqueId}`} target="_blank">
             <Image src={`${downloadUrl}/file?uid=${file?.uniqueId}&thumbnail=true`} />
           </a>
@@ -145,7 +148,7 @@ const sortAndFilter = (
 ): ApplicationNote[] => {
   const sort = sortDesc ? (e: ApplicationNote[]) => e : (e: ApplicationNote[]) => [...e].reverse()
   const fileFilter = filesOnly
-    ? (e: ApplicationNote[]) => e.filter((note) => note.files.nodes.length > 1)
+    ? (e: ApplicationNote[]) => e.filter((note) => note.files.nodes.length > 0)
     : (e: ApplicationNote[]) => e
   return fileFilter(sort(notes))
 }
