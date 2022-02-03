@@ -1,27 +1,33 @@
-import React, { useState, useEffect } from 'react'
-import { Container, Message } from 'semantic-ui-react'
+import React from 'react'
+import { Container, Header } from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
-import { useUserState } from '../../../contexts/UserState'
-import { FullStructure } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import { FullStructure } from '../../../utils/types'
+import { TimelineStageUI } from './TimelineStage'
+import { Overview } from './Overview'
 import useTimeline from '../../../utils/hooks/useTimeline'
 
 const OverviewTab: React.FC<{
   structure: FullStructure
 }> = ({ structure: fullStructure }) => {
   const { strings } = useLanguageProvider()
-  const {
-    userState: { currentUser },
-  } = useUserState()
   const { timeline, loading, error } = useTimeline(fullStructure)
+
+  const currentStageNum = fullStructure.info.current.stage.number
 
   return (
     <Container id="overview-tab">
-      <Message>
-        <Message.Header>Placeholder for OVERVIEW tab</Message.Header>
-      </Message>
-      {loading && <p>Loading...</p>}
-      {timeline && <pre>{JSON.stringify(timeline, null, 2)}</pre>}
+      {loading && <Loading />}
+      {timeline && <Overview structure={fullStructure} activityLog={timeline.rawLog} />}
+      <div id="timeline">
+        <Header as="h2" textAlign="center">
+          {strings.REVIEW_OVERVIEW_ACTIVITY}
+        </Header>
+        {timeline &&
+          timeline.stages.map((stage) => (
+            <TimelineStageUI stage={stage} isCurrentStage={stage.number === currentStageNum} />
+          ))}
+      </div>
     </Container>
   )
 }

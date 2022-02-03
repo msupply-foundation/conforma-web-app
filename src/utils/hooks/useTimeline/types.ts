@@ -6,7 +6,7 @@ type GenericObject = { [key: string]: any }
 interface TimelineEvent {
   id: number
   eventType: TimelineEventType
-  timestamp: Date
+  timestamp: string
   displayString: string
   details: { [key: string]: GenericObject }
 }
@@ -15,13 +15,13 @@ interface TimelineStage {
   number: number
   name: string
   colour: string
-  timestamp: Date
+  timestamp: string
   events: TimelineEvent[]
 }
 
 interface Timeline {
   stages: TimelineStage[]
-  //   rawLog: ActivityLog[]
+  rawLog: ActivityLog[]
 }
 
 enum TimelineEventType {

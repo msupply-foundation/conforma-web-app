@@ -105,8 +105,16 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
             applicationName={name}
             orgName={org?.name as string}
           />
-          <ReviewProgress structure={structure} />
-          <Tab panes={tabPanes} onTabChange={handleTabChange} activeIndex={getTabFromQuery(tab)} />
+          <div id="review-home-content">
+            <ReviewProgress structure={structure} />
+            <div id="review-tabs">
+              <Tab
+                panes={tabPanes}
+                onTabChange={handleTabChange}
+                activeIndex={getTabFromQuery(tab)}
+              />
+            </div>
+          </div>
         </Route>
         <Route exact path={`${path}/:reviewId`}>
           <ReviewPageWrapper {...{ structure }} />

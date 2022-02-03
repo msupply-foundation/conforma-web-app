@@ -535,6 +535,7 @@ a:hover {
 // Progress bar on Review home page
 
 #review-progress {
+  width: 100%;
   .flex-row-center();
   margin-top: 40px;
   margin-bottom: 100px;
@@ -702,6 +703,64 @@ a:hover {
 #previous-review {
   .segment {
     width: 30%;
+  }
+}
+
+// Review Home page
+
+#review-home-content {
+  .flex-column-center;
+}
+
+#review-tabs {
+  max-width: 900px;
+}
+
+// Overview tab
+
+#overview {
+  margin-bottom: 20px;
+  .simple-label {
+    position: absolute;
+    right: -1px;
+    top: 0;
+  }
+  .wrap {
+    flex-wrap: wrap;
+  }
+  .ui.message p {
+    color: @headersInteractiveDarker;
+  }
+  .ui.message p:first-child {
+    margin-top: 0.75em;
+  }
+  .ui.message p:last-child {
+    margin-bottom: 0.75em;
+  }
+  .left-item {
+    min-width: 300px;
+  }
+  .right-item {
+    // flex-grow: 2;
+  }
+}
+
+#timeline {
+  margin-left: 30px;
+  margin-right: 30px;
+  .timeline-stage {
+    margin-bottom: 1.5em;
+  }
+  .timeline-day {
+    padding: 5px;
+    margin-left: 25px;
+    p {
+      font-size: @fontSmall;
+    }
+  }
+  .item {
+    margin-left: 20px;
+    max-width: 600px;
   }
 }
 
