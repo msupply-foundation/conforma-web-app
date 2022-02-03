@@ -535,6 +535,7 @@ a:hover {
 // Progress bar on Review home page
 
 #review-progress {
+  width: 100%;
   .flex-row-center();
   margin-top: 40px;
   margin-bottom: 100px;
