@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Grid, Label, ModalProps } from 'semantic-ui-react'
 import ModalConfirmation from '../../../components/Main/ModalConfirmation'
 import { useUserState } from '../../../contexts/UserState'
@@ -35,7 +35,20 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
   const [showUnassignmentModal, setShowUnassignmentModal] = useState<ModalProps>({ open: false })
   const [unassignSectionFromUser] = useUnassignReviewAssignmentMutation()
   const [assignedSections] = assignedSectionsState
+  const [originalAssignee, setOriginalAssignee] = useState<string>()
   const elements = Object.values(structure?.elementsById || {})
+
+  useEffect(() => {
+    if (assignmentOptions?.selected != AssignmentEnum.NOT_ASSIGNED) {
+      const foundPreviousAssignee = assignments.find(
+        ({ reviewer }) => assignmentOptions?.selected === reviewer.id
+      )
+      if (foundPreviousAssignee) {
+        const { reviewer } = foundPreviousAssignee
+        setOriginalAssignee(`${reviewer?.firstName || ''} ${reviewer.lastName || ''}`)
+      }
+    }
+  }, [])
 
   const assignmentOptions = getAssignmentOptions(
     {
@@ -81,10 +94,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     }
   }
 
-  const selectedReviewer = assignmentOptions.options.find(
-    ({ value }) => value === assignmentOptions.selected
-  )
-
   return (
     <Grid className="section-single-row-box-container">
       <Grid.Row>
@@ -92,7 +101,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
           {isReassignment ? (
             <>
               <Label className="simple-label" content={strings.LABEL_UNASSIGN_FROM} />
-              <Label content={selectedReviewer?.text} />
+              <Label content={originalAssignee} />
             </>
           ) : (
             <>
@@ -100,6 +109,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
               <AssigneeDropdown
                 assignmentError={assignmentError || unassignmentError}
                 assignmentOptions={assignmentOptions}
+                sectionCode={sectionCode}
                 checkIsLastLevel={isLastLevel}
                 onSelection={onSelectedOption}
                 assignedSectionsState={assignedSectionsState}

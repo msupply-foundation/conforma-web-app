@@ -13,6 +13,7 @@ interface AssigneeProps {
       text: string
     }[]
   }
+  sectionCode: string
   checkIsLastLevel: (assignee: number) => boolean
   onSelection: (assignee: number) => void
   assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
@@ -22,6 +23,7 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({
   assignmentError,
   assignmentOptions,
   checkIsLastLevel,
+  sectionCode,
   onSelection,
   assignedSectionsState: [assignedSections, setAssignedSections],
 }) => {
@@ -36,7 +38,7 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({
         (sectionCode) => (allSectionsToUserId[sectionCode] = value as number)
       )
       setAssignedSections(allSectionsToUserId)
-    }
+    } else setAssignedSections({ ...assignedSections, [sectionCode]: value as number })
   }
 
   const { isCompleted, options, selected } = assignmentOptions
