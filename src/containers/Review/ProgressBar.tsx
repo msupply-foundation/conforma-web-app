@@ -25,8 +25,6 @@ const ReviewProgress: React.FC<{
       ? ['loq', 'circle']
       : ['', 'circle']
 
-  console.log('info', fullStructure.info)
-
   const isApproved = outcome === ApplicationOutcome.Approved
 
   const steps = [
