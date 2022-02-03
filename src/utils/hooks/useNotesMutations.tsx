@@ -34,19 +34,20 @@ const useNotesMutations = (applicationId: number) => {
       },
     })
     if (mutationResult.errors) throw new Error(mutationResult.errors.toString())
-    // Then upload the files with post request
+    // Then upload the files with Post request
     setLoadingMessage('Uploading files...')
     const noteId = mutationResult.data?.createApplicationNote?.applicationNote?.id
+
     const fileData = new FormData()
     files.forEach((file) => fileData.append('file', file))
     const fileResult = await postRequest({
       url: `${fileEndpoint}?user_id=${userId}&application_serial=${serial}&application_note_id=${noteId}`,
       otherBody: fileData,
     })
-    console.log('fileResult', fileResult)
 
+    setLoadingMessage('')
     // Then force refetch
-    return mutationResult
+    return { mutationResult, fileResult }
   }
 
   return {

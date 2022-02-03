@@ -13,7 +13,8 @@ const downloadUrl = `${config.serverREST}/public`
 const NewCommentForm: React.FC<{
   structure: FullStructure
   setShowForm: (val: boolean) => void
-}> = ({ structure, setShowForm }) => {
+  refetch: Function
+}> = ({ structure, setShowForm, refetch }) => {
   const { strings } = useLanguageProvider()
   const {
     userState: { currentUser },
@@ -25,7 +26,6 @@ const NewCommentForm: React.FC<{
   const {
     submit,
     // update,
-    // result,
     error: submitError,
     loadingMessage,
   } = useNotesMutations(structure.info.id)
@@ -39,6 +39,7 @@ const NewCommentForm: React.FC<{
     setShowForm(false)
     const result = await submit(currentUser as User, structure, comment, files)
     console.log('result', result)
+    refetch()
 
     // Insert comment, return ID
     // Upload files with comment ID
@@ -95,6 +96,9 @@ const NewCommentForm: React.FC<{
       </List>
       <Button type="submit" primary className="wide-button">
         Submit
+      </Button>
+      <Button secondary className="wide-button" onClick={() => setShowForm(false)}>
+        Cancel
       </Button>
     </Form>
   )

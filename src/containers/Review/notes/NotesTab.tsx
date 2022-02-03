@@ -36,11 +36,9 @@ const NotesTab: React.FC<{
   const {
     userState: { currentUser },
   } = useUserState()
-  const [newNote, setNewNote] = useState<string | null>(null)
-  const [files, setFiles] = useState<File[]>([])
   const [showForm, setShowForm] = useState(false)
 
-  const { data, loading, error } = useGetApplicationNotesQuery({
+  const { data, loading, error, refetch } = useGetApplicationNotesQuery({
     variables: { applicationId: fullStructure.info.id },
     // fetchPolicy: 'network-only',
   })
@@ -112,7 +110,9 @@ const NotesTab: React.FC<{
           content={strings.REVIEW_NOTES_NEW_COMMENT}
         />
       </Form.Field>
-      {showForm && <NewCommentForm structure={fullStructure} setShowForm={setShowForm} />}
+      {showForm && (
+        <NewCommentForm structure={fullStructure} setShowForm={setShowForm} refetch={refetch} />
+      )}
     </Container>
   ) : null
 }
