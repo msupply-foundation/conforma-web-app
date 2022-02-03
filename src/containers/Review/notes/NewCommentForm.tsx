@@ -1,20 +1,16 @@
 import React, { useState, useEffect, SyntheticEvent, useRef } from 'react'
 import { Button, Checkbox, Container, Dropdown, Icon, Image, Form, List } from 'semantic-ui-react'
-import Loading from '../../../components/Loading'
-import { ApplicationNote, useGetApplicationNotesQuery } from '../../../utils/generated/graphql'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure, User } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useNotesMutations from '../../../utils/hooks/useNotesMutations'
 import config from '../../../config'
 
-const downloadUrl = `${config.serverREST}/public`
-
 const NewCommentForm: React.FC<{
   structure: FullStructure
   setShowForm: (val: boolean) => void
-  refetch: Function
-}> = ({ structure, setShowForm, refetch }) => {
+  refetchNotes: Function
+}> = ({ structure, setShowForm, refetchNotes }) => {
   const { strings } = useLanguageProvider()
   const {
     userState: { currentUser },
@@ -36,14 +32,10 @@ const NewCommentForm: React.FC<{
       return
     }
     console.log('Submitting...')
-    setShowForm(false)
     const result = await submit(currentUser as User, structure, comment, files)
     console.log('result', result)
-    refetch()
-
-    // Insert comment, return ID
-    // Upload files with comment ID
-    // Refetch notes (if required)
+    setShowForm(false)
+    refetchNotes()
   }
 
   const handleFiles = (e: any) => {
@@ -94,7 +86,7 @@ const NewCommentForm: React.FC<{
           <List.Item key={file.name}>{file.name}</List.Item>
         ))}
       </List>
-      <Button type="submit" primary className="wide-button">
+      <Button loading={!!loadingMessage} type="submit" primary className="wide-button">
         Submit
       </Button>
       <Button secondary className="wide-button" onClick={() => setShowForm(false)}>

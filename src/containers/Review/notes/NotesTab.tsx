@@ -114,7 +114,11 @@ const NotesTab: React.FC<{
         />
       </Form.Field>
       {showForm && (
-        <NewCommentForm structure={fullStructure} setShowForm={setShowForm} refetch={refetch} />
+        <NewCommentForm
+          structure={fullStructure}
+          setShowForm={setShowForm}
+          refetchNotes={refetch}
+        />
       )}
     </Container>
   ) : null
