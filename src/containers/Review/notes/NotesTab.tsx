@@ -7,6 +7,7 @@ import { FullStructure } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { DateTime } from 'luxon'
 import Markdown from '../../../utils/helpers/semanticReactMarkdown'
+import NewCommentForm from './NewCommentForm'
 import config from '../../../config'
 
 const downloadUrl = `${config.serverREST}/public`
@@ -21,15 +22,23 @@ interface FileData {
 
 const NotesTab: React.FC<{
   structure: FullStructure
-}> = ({ structure: fullStructure }) => {
+  state: {
+    sortDesc: boolean
+    setSortDesc: Function
+    filesOnlyFilter: boolean
+    setFilesOnlyFilter: Function
+  }
+}> = ({
+  structure: fullStructure,
+  state: { sortDesc, setSortDesc, filesOnlyFilter, setFilesOnlyFilter },
+}) => {
   const { strings } = useLanguageProvider()
   const {
     userState: { currentUser },
   } = useUserState()
   const [newNote, setNewNote] = useState<string | null>(null)
   const [files, setFiles] = useState<File[]>([])
-  const [sortDesc, setSortDesc] = useState(true)
-  const [filesOnlyFilter, setFilesOnlyFilter] = useState(false)
+  const [showForm, setShowForm] = useState(false)
 
   const { data, loading, error } = useGetApplicationNotesQuery({
     variables: { applicationId: fullStructure.info.id },
@@ -99,10 +108,11 @@ const NotesTab: React.FC<{
         <Button
           primary
           className="wide-button"
-          onClick={() => alert('In progress...')}
+          onClick={() => setShowForm(true)}
           content={strings.REVIEW_NOTES_NEW_COMMENT}
         />
       </Form.Field>
+      {showForm && <NewCommentForm structure={fullStructure} />}
     </Container>
   ) : null
 }

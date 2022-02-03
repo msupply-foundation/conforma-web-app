@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react'
+import React, { SyntheticEvent, useState } from 'react'
 import { Route, Switch } from 'react-router'
 import { Container, Message, Tab, Label, Icon, Header, StrictTabProps } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
@@ -29,6 +29,10 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     shouldCalculateProgress: false,
     shouldGetDraftResponses: false,
   })
+  // State variables for NOTES tab, needed here to preserve state between tab
+  // switches:
+  const [sortDesc, setSortDesc] = useState(true)
+  const [filesOnlyFilter, setFilesOnlyFilter] = useState(false)
 
   usePageTitle(strings.PAGE_TITLE_REVIEW.replace('%1', structure.info.serial))
 
@@ -82,7 +86,10 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       menuItem: strings.REVIEW_TAB_NOTES,
       render: () => (
         <Tab.Pane>
-          <NotesTab structure={fullStructure} />
+          <NotesTab
+            structure={fullStructure}
+            state={{ sortDesc, setSortDesc, filesOnlyFilter, setFilesOnlyFilter }}
+          />
         </Tab.Pane>
       ),
     },
