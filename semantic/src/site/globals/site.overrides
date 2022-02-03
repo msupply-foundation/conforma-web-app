@@ -532,10 +532,85 @@ a:hover {
   }
 }
 
+// Progress bar on Review home page
+
 #review-progress {
   .flex-row-center();
-  margin-top: 20px;
-  margin-bottom: 30px;
+  margin-top: 40px;
+  margin-bottom: 100px;
+}
+
+#stepper-wrapper {
+  width: 90%;
+  max-width: 800px;
+}
+
+.stepper {
+  .step.completed {
+    background: @success;
+  }
+
+  .content {
+    text-align: center;
+    left: -80px;
+  }
+  .content.last {
+    text-align: center;
+  }
+
+  .step.pending {
+    background: @surfacesWhite;
+    border: 2px solid @surfacesDark;
+    .content {
+      margin-top: 1.2em; // to offset height added by grey border
+    }
+  }
+
+  .title {
+    color: @headersInteractiveLow;
+    font-family: @fontName;
+  }
+  .progress-bar.pending {
+    background: @surfacesDark;
+  }
+
+  .progress-bar.progress {
+    background: @surfacesDark;
+  }
+
+  .progress-bar.progress::after {
+    background: @surfacesDark;
+  }
+
+  .step-custom-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid @surfacesDark;
+    border-radius: 100%;
+    background-color: @surfacesWhite;
+    .icon {
+      margin: 0;
+      color: @interactiveHigh;
+      line-height: 1;
+    }
+  }
+
+  .rejected {
+    border: none;
+    background-color: @attention;
+    .icon {
+      color: @surfacesWhite;
+    }
+  }
+
+  .loq {
+    .icon {
+      color: @attention;
+    }
+  }
 }
 
 .ui.segment.review-application-segment {
