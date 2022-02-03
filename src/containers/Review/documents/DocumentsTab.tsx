@@ -27,8 +27,6 @@ const DocumentsTab: React.FC<{
 
   const docs = data?.files?.nodes
 
-  console.log('docs', docs)
-
   return docs ? (
     <Container id="documents-tab">
       <Header as="h3" className="center-text">

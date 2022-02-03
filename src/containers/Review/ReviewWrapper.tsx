@@ -112,6 +112,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
                 panes={tabPanes}
                 onTabChange={handleTabChange}
                 activeIndex={getTabFromQuery(tab)}
+                // renderActiveOnly={false}
               />
             </div>
           </div>

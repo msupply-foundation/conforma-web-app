@@ -719,6 +719,69 @@ a:hover {
   }
 }
 
+// Notes tab
+
+#notes-tab {
+  // .flex-column-center();
+  .note-container {
+    .flex-column();
+    // width: 90%;
+    margin-bottom: 15px;
+    padding: 14px;
+    padding-right: 20px;
+    padding-left: 20px;
+    background: @surfacesWhite;
+    border: 2px solid @surfacesMed;
+    border-radius: @borderRadius;
+  }
+  .options-row {
+    .flex-row-end();
+    width: 90%;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    p {
+      margin: 0;
+      font-size: @slightlySmallerText;
+      font-weight: bold;
+    }
+  }
+
+  .note-comment-row {
+    .flex-row-space-between;
+    gap: 15%;
+    margin-bottom: 15px;
+  }
+
+  .file-row {
+    .flex-row-start-center-wrap();
+    gap: 25px;
+  }
+
+  .file-container {
+    .flex-column();
+    justify-content: flex-end;
+    align-items: flex-start;
+    max-width: 25%;
+    font-size: @smallerText;
+    .ui.image {
+      max-height: 60px;
+    }
+  }
+
+  .comment {
+  }
+
+  .note-footer-row {
+    align-self: flex-end;
+    display: flex;
+    flex-direction: column;
+    p {
+      margin: 0;
+    }
+  }
+}
+
 /*--------------------------------
       Application List
 ---------------------------------*/
@@ -1070,15 +1133,15 @@ a:hover {
   padding-bottom: 26px;
 }
 
+// Background for Active elements changes (Summary/Review/Consolidation)
+.highlight-background {
+  background-color: @activeCommentBackground !important;
+}
+
 .ui.basic.segment.summary-page-element-container {
   margin-bottom: 10px;
   margin-top: 0px;
   padding: 0px;
-
-  // Background for Active elements changes (Summary/Review/Consolidation)
-  .changeable-background {
-    background-color: @activeCommentBackground !important;
-  }
 
   .response-container {
     .flex-row();
