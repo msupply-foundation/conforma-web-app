@@ -156,6 +156,7 @@ export default {
   LABEL_SUBMITTING: 'Submitting...',
   LABEL_TRY_AGAIN: 'Try again',
   LABEL_VERIFICATION_FAILED: 'Verificaton Failed',
+  REVIEW_PROGRESS_BAR_SUBMITTED: 'Submitted',
   REVIEW_SUBMISSION_CONFIRM_TITLE: 'Submitting Review',
   REVIEW_SUBMISSION_CONFIRM_MESSAGE: 'Are you sure?',
   REVIEW_SUBMISSION_CONFIRM_OPTION: 'Submitting Review',
