@@ -10,7 +10,7 @@ import {
   ReviewStatus,
   TemplateElementCategory,
 } from '../../../utils/generated/graphql'
-import { AssignmentEnum } from '../../../utils/data/assignmentOptions'
+import { AssignmentEnum } from '../../../utils/data/assignmentEnum'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 
 const useGetAssignmentOptions = () => {
