@@ -66,6 +66,7 @@ export {
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
+  SectionAssignee,
   SectionAssignment,
   SectionState,
   SectionsStructure,
@@ -474,6 +475,10 @@ enum ReviewAction {
 interface ChangeRequestsProgress {
   totalChangeRequests: number
   doneChangeRequests: number
+}
+
+interface SectionAssignee {
+  [sectionCode: string]: number | undefined
 }
 
 interface SectionAssignment {

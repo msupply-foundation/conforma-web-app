@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Dropdown, Message } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-
+import { SectionAssignee } from '../../../utils/types'
 interface AssigneeProps {
   assignmentError: boolean
   assignmentOptions: {
@@ -15,7 +15,7 @@ interface AssigneeProps {
   }
   checkIsLastLevel: (assignee: number) => boolean
   onSelection: (assignee: number) => void
-  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
+  assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
 }
 
 const AssigneeDropdown: React.FC<AssigneeProps> = ({
@@ -23,23 +23,20 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({
   assignmentOptions,
   checkIsLastLevel,
   onSelection,
-  shouldAssignState: [shouldAssign, setShouldAssign],
+  assignedSectionsState: [assignedSections, setAssignedSections],
 }) => {
   const { strings } = useLanguageProvider()
-  // Do auto-assign for other sections when assignee is selected
-  // for assignment in another row when shouldAssign == assignee index
-  // Note: This is required to be passed on as props to be processed
-  // in each row since the fullStructure is related to each section
-  useEffect(() => {
-    // Option -1 (UNASSIGNED) or -2 (Re-assign) shouldn't change others
-    if (shouldAssign < 1) return
-    onSelection(shouldAssign)
-  }, [shouldAssign])
 
   const onAssigneeSelection = async (_: any, { value }: any) => {
     onSelection(value as number)
     // When review isLastLevel then all sections are assigned to same user (similar to consolidation)
-    if (checkIsLastLevel(value)) setShouldAssign(value as number)
+    if (checkIsLastLevel(value)) {
+      let allSectionsToUserId: SectionAssignee = {}
+      Object.keys(assignedSections).forEach(
+        (sectionCode) => (allSectionsToUserId[sectionCode] = value as number)
+      )
+      setAssignedSections(allSectionsToUserId)
+    }
   }
 
   const { isCompleted, options, selected } = assignmentOptions

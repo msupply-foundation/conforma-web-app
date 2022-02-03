@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Button, Segment, Header } from 'semantic-ui-react'
-import { AssignmentDetails, FullStructure } from '../../../utils/types'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import useUpdateReviewAssignment from '../../../utils/hooks/useUpdateReviewAssignment'
+import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 import AssignmentSectionRow from './AssignmentSectionRow'
 import ReviewSectionRow from './ReviewSectionRow'
 
@@ -17,7 +19,37 @@ const Assignment: React.FC<ReviewHomeProps> = ({
   assignmentInPreviousStage,
   fullApplicationStructure,
 }) => {
-  const [shouldAssign, setShouldAssign] = useState<number>(0)
+  const { strings } = useLanguageProvider()
+  const { assignSectionsToUser } = useUpdateReviewAssignment(fullApplicationStructure)
+  const [assignedSections, setAssignedSections] = useState<SectionAssignee>(
+    Object.values(fullApplicationStructure.sections).reduce(
+      (assignedSections, { details: { code } }) => ({ ...assignedSections, [code]: undefined }),
+      {}
+    )
+  )
+
+  const submitAssignments = () => {
+    let groupedSectionsPerAssignment: {
+      sectionCodes: string[]
+      assignment: AssignmentDetails
+    }[] = []
+
+    Object.entries(assignedSections).forEach(([sectionCode, userId]) => {
+      const found = groupedSectionsPerAssignment.find(
+        ({ assignment: { reviewerId } }) => reviewerId === userId
+      )
+      if (found) found.sectionCodes.push(sectionCode)
+      else {
+        const assignment = assignmentsByStage.find(({ reviewer: { id } }) => id === userId)
+        if (assignment)
+          groupedSectionsPerAssignment.push({ sectionCodes: [sectionCode], assignment })
+      }
+    })
+    groupedSectionsPerAssignment.forEach(({ sectionCodes, assignment }) =>
+      assignSectionsToUser({ sectionCodes, assignment })
+    )
+  }
+
   return (
     <>
       {Object.values(fullApplicationStructure.sections).map(({ details: { id, title, code } }) => (
@@ -28,7 +60,7 @@ const Assignment: React.FC<ReviewHomeProps> = ({
               assignments: assignmentsByStage,
               structure: fullApplicationStructure,
               sectionCode: code,
-              shouldAssignState: [shouldAssign, setShouldAssign],
+              assignedSectionsState: [assignedSections, setAssignedSections],
             }}
           />
           {assignmentsByUserAndStage.map((assignment) => (
@@ -44,7 +76,9 @@ const Assignment: React.FC<ReviewHomeProps> = ({
           ))}
         </Segment>
       ))}
-      <Button />
+      <div style={{ marginTop: 10 }}>
+        <Button primary content={strings.BUTTON_SUBMIT} compact onClick={submitAssignments} />
+      </div>
     </>
   )
 }

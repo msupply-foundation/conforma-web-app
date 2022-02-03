@@ -3,7 +3,7 @@ import { Label, Grid } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { AssignmentEnum } from '../../../utils/data/assignmentOptions'
 import useReasignReviewAssignment from '../../../utils/hooks/useReassignReviewAssignment'
-import { AssignmentDetails, PageElement } from '../../../utils/types'
+import { AssignmentDetails, PageElement, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
 
@@ -12,8 +12,8 @@ interface ReassignmentProps {
   sectionCode: string
   elements: PageElement[]
   isLastLevel: (selectedIndex: number) => boolean
-  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
   previousAssignee: number
+  assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
 }
 
 const Reassignment: React.FC<ReassignmentProps> = ({
@@ -21,8 +21,8 @@ const Reassignment: React.FC<ReassignmentProps> = ({
   sectionCode,
   elements,
   isLastLevel,
-  shouldAssignState,
   previousAssignee,
+  assignedSectionsState,
 }) => {
   const { strings } = useLanguageProvider()
   const getAssignmentOptions = useGetAssignmentOptions()
@@ -71,7 +71,7 @@ const Reassignment: React.FC<ReassignmentProps> = ({
         assignmentOptions={assignmentOptions}
         checkIsLastLevel={isLastLevel}
         onSelection={onReassignment}
-        shouldAssignState={shouldAssignState}
+        assignedSectionsState={assignedSectionsState}
       />
     </Grid.Column>
   )
