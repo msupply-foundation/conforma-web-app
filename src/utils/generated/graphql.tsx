@@ -36107,6 +36107,25 @@ export type CreateApplicationMutation = (
   )> }
 );
 
+export type CreateNoteMutationVariables = Exact<{
+  applicationId: Scalars['Int'];
+  userId: Scalars['Int'];
+  orgId?: Maybe<Scalars['Int']>;
+  comment: Scalars['String'];
+}>;
+
+
+export type CreateNoteMutation = (
+  { __typename?: 'Mutation' }
+  & { createApplicationNote?: Maybe<(
+    { __typename?: 'CreateApplicationNotePayload' }
+    & { applicationNote?: Maybe<(
+      { __typename?: 'ApplicationNote' }
+      & Pick<ApplicationNote, 'id' | 'timestamp' | 'comment'>
+    )> }
+  )> }
+);
+
 export type CreateReviewMutationVariables = Exact<{
   reviewInput: ReviewInput;
 }>;
@@ -37578,6 +37597,45 @@ export function useCreateApplicationMutation(baseOptions?: Apollo.MutationHookOp
 export type CreateApplicationMutationHookResult = ReturnType<typeof useCreateApplicationMutation>;
 export type CreateApplicationMutationResult = Apollo.MutationResult<CreateApplicationMutation>;
 export type CreateApplicationMutationOptions = Apollo.BaseMutationOptions<CreateApplicationMutation, CreateApplicationMutationVariables>;
+export const CreateNoteDocument = gql`
+    mutation createNote($applicationId: Int!, $userId: Int!, $orgId: Int, $comment: String!) {
+  createApplicationNote(input: {applicationNote: {comment: $comment, applicationId: $applicationId, orgId: $orgId, userId: $userId}}) {
+    applicationNote {
+      id
+      timestamp
+      comment
+    }
+  }
+}
+    `;
+export type CreateNoteMutationFn = Apollo.MutationFunction<CreateNoteMutation, CreateNoteMutationVariables>;
+
+/**
+ * __useCreateNoteMutation__
+ *
+ * To run a mutation, you first call `useCreateNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateNoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createNoteMutation, { data, loading, error }] = useCreateNoteMutation({
+ *   variables: {
+ *      applicationId: // value for 'applicationId'
+ *      userId: // value for 'userId'
+ *      orgId: // value for 'orgId'
+ *      comment: // value for 'comment'
+ *   },
+ * });
+ */
+export function useCreateNoteMutation(baseOptions?: Apollo.MutationHookOptions<CreateNoteMutation, CreateNoteMutationVariables>) {
+        return Apollo.useMutation<CreateNoteMutation, CreateNoteMutationVariables>(CreateNoteDocument, baseOptions);
+      }
+export type CreateNoteMutationHookResult = ReturnType<typeof useCreateNoteMutation>;
+export type CreateNoteMutationResult = Apollo.MutationResult<CreateNoteMutation>;
+export type CreateNoteMutationOptions = Apollo.BaseMutationOptions<CreateNoteMutation, CreateNoteMutationVariables>;
 export const CreateReviewDocument = gql`
     mutation createReview($reviewInput: ReviewInput!) {
   createReview(input: {review: $reviewInput}) {

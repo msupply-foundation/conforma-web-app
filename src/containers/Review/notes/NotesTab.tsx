@@ -112,7 +112,7 @@ const NotesTab: React.FC<{
           content={strings.REVIEW_NOTES_NEW_COMMENT}
         />
       </Form.Field>
-      {showForm && <NewCommentForm structure={fullStructure} />}
+      {showForm && <NewCommentForm structure={fullStructure} setShowForm={setShowForm} />}
     </Container>
   ) : null
 }

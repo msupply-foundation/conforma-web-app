@@ -780,6 +780,10 @@ a:hover {
       margin: 0;
     }
   }
+
+  .ui.form textarea {
+    max-width: 100%;
+  }
 }
 
 /*--------------------------------
