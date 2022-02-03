@@ -478,7 +478,10 @@ interface ChangeRequestsProgress {
 }
 
 interface SectionAssignee {
-  [sectionCode: string]: number | undefined
+  [sectionCode: string]: {
+    newAssignee: number | undefined
+    previousAssignee?: number
+  }
 }
 
 interface SectionAssignment {

@@ -35,10 +35,11 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({
     if (checkIsLastLevel(value)) {
       let allSectionsToUserId: SectionAssignee = {}
       Object.keys(assignedSections).forEach(
-        (sectionCode) => (allSectionsToUserId[sectionCode] = value as number)
+        (sectionCode) => (allSectionsToUserId[sectionCode] = { newAssignee: value as number })
       )
       setAssignedSections(allSectionsToUserId)
-    } else setAssignedSections({ ...assignedSections, [sectionCode]: value as number })
+    } else
+      setAssignedSections({ ...assignedSections, [sectionCode]: { newAssignee: value as number } })
   }
 
   const { isCompleted, options, selected } = assignmentOptions

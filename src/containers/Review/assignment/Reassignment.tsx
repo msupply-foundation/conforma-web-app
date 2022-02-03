@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { Label, Grid } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { AssignmentEnum } from '../../../utils/data/assignmentOptions'
-import { ReviewAssignmentStatus } from '../../../utils/generated/graphql'
-import useReasignReviewAssignment from '../../../utils/hooks/useReassignReviewAssignment'
+import { AssignmentEnum } from '../../../utils/data/assignmentEnum'
 import { AssignmentDetails, PageElement, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
@@ -28,7 +26,6 @@ const Reassignment: React.FC<ReassignmentProps> = ({
   const { strings } = useLanguageProvider()
   const getAssignmentOptions = useGetAssignmentOptions()
   const [reassignmentError, setReassignmentError] = useState(false)
-  const { reassignSection } = useReasignReviewAssignment()
   const [assignedSections, setAssignedSections] = assignedSectionsState
   const assignmentOptions = getAssignmentOptions(
     {
@@ -45,10 +42,6 @@ const Reassignment: React.FC<ReassignmentProps> = ({
     if (value === assignmentOptions.selected) return console.log('Re-assignment to same reviewer')
     if (value === AssignmentEnum.UNASSIGN) return console.log('un assignment not implemented')
 
-    const previousAssignment = assignments.find(
-      ({ reviewer, current: { assignmentStatus } }) =>
-        reviewer.id === previousAssignee && assignmentStatus === ReviewAssignmentStatus.Assigned
-    )
     const reassignment = assignments.find((assignment) => assignment.reviewer.id === value)
 
     if (!reassignment) return
@@ -56,21 +49,15 @@ const Reassignment: React.FC<ReassignmentProps> = ({
     if (isLastLevel(value)) {
       let allSectionsToUserId: SectionAssignee = {}
       Object.keys(assignedSections).forEach(
-        (sectionCode) => (allSectionsToUserId[sectionCode] = value as number)
+        (sectionCode) =>
+          (allSectionsToUserId[sectionCode] = { newAssignee: value as number, previousAssignee })
       )
       setAssignedSections(allSectionsToUserId)
-    } else setAssignedSections({ ...assignedSections, [sectionCode]: value as number })
-    // try {
-    //   await reassignSection({
-    //     unassignmentId: previousAssignment?.id,
-    //     reassignment,
-    //     sectionCode,
-    //     elements,
-    //   })
-    // } catch (e) {
-    //   console.error(e)
-    //   setReassignmentError(true)
-    // }
+    } else
+      setAssignedSections({
+        ...assignedSections,
+        [sectionCode]: { newAssignee: value as number, previousAssignee },
+      })
   }
 
   return (

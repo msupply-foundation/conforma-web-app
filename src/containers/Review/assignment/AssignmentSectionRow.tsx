@@ -3,7 +3,7 @@ import { Grid, Label, ModalProps } from 'semantic-ui-react'
 import ModalConfirmation from '../../../components/Main/ModalConfirmation'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { AssignmentEnum } from '../../../utils/data/assignmentOptions'
+import { AssignmentEnum } from '../../../utils/data/assignmentEnum'
 import { useUnassignReviewAssignmentMutation } from '../../../utils/generated/graphql'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
@@ -55,7 +55,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
       assignments,
       sectionCode,
       elements,
-      assignee: assignedSections[sectionCode],
+      assignee: assignedSections[sectionCode]?.newAssignee,
     },
     currentUser
   )

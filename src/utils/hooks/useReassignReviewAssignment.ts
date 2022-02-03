@@ -6,7 +6,7 @@ import {
   TemplateElementCategory,
   Trigger,
 } from '../generated/graphql'
-import { AssignmentDetails, PageElement } from '../types'
+import { AssignmentDetails, FullStructure } from '../types'
 
 // below lines are used to get return type of the function that is returned by useUpdateReviewReassignmentMutation
 type UseReassignReviewAssignmentMutationReturnType = ReturnType<
@@ -15,24 +15,22 @@ type UseReassignReviewAssignmentMutationReturnType = ReturnType<
 type PromiseReturnType = ReturnType<UseReassignReviewAssignmentMutationReturnType[0]>
 // hook used to reassign section/s to user (and unassign previous section)
 // as per type definition below (returns promise that resolve with mutation result data)
-type UseReassignReviewAssignment = () => {
-  reassignSection: (props: {
-    // Section code is optional if omitted all sections are assigned
-    sectionCode?: string
+type UseReassignReviewAssignment = (structure: FullStructure) => {
+  reassignSections: (props: {
+    // Section code if empty all sections are assigned
+    sectionCodes: string[]
     unassignmentId?: number
     reassignment: AssignmentDetails
-    elements: PageElement[]
   }) => PromiseReturnType
 }
 
 type ConstructAssignSectionPatch = (
   reviewLevel: number,
   isFinalDecision: boolean,
-  elements: PageElement[],
-  sectionCode?: string
+  sectionCodes: string[]
 ) => ReviewAssignmentPatch
 
-const useReasignReviewAssignment: UseReassignReviewAssignment = () => {
+const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
   const {
     userState: { currentUser },
   } = useUserState()
@@ -41,21 +39,22 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = () => {
   const constructUnassignSectionPatch: ConstructAssignSectionPatch = (
     reviewLevel,
     isFinalDecision,
-    elements,
-    sectionCode
+    sectionCodes
   ) => {
+    const elements = Object.values(structure?.elementsById || {})
+
     // Will get assignment questions filtering elements by:
     // - level 1 (or finalDecision) -> if existing response linked
     // - level 1+ -> if existing review linked
     // - question category
-    // - [Optional] section code (if one passed through)
+    // - section codes (if none - then will consider all sections)
     //
     // TODO: Would be nice to replace this to use something similar
     // to what is in addIsPendingReview (useGetReviewStructureForSection/helpers)
     const assignableElements = elements.filter(
       ({ element, response, lowerLevelReviewLatestResponse }) =>
         (reviewLevel === 1 || isFinalDecision ? !!response : !!lowerLevelReviewLatestResponse) &&
-        (!sectionCode || element.sectionCode === sectionCode) &&
+        (sectionCodes.length === 0 || sectionCodes.includes(element.sectionCode)) &&
         element.category === TemplateElementCategory.Question
     )
 
@@ -78,18 +77,13 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = () => {
   }
 
   return {
-    reassignSection: async ({ sectionCode, unassignmentId = 0, reassignment, elements }) => {
+    reassignSections: async ({ sectionCodes, unassignmentId = 0, reassignment }) => {
       const { id, isFinalDecision, level } = reassignment
       const result = await reassignReview({
         variables: {
           unassignmentId,
           reassignmentId: id,
-          reassignmentPatch: constructUnassignSectionPatch(
-            level,
-            isFinalDecision,
-            elements,
-            sectionCode
-          ),
+          reassignmentPatch: constructUnassignSectionPatch(level, isFinalDecision, sectionCodes),
         },
       })
 
