@@ -57,7 +57,7 @@ const NotesTab: React.FC<{
     variables: { applicationId: fullStructure.info.id },
     // fetchPolicy: 'network-only',
   })
-  const { deleteNote, error: submitError } = useNotesMutations(fullStructure.info.id, refetch)
+  const { deleteNote, error: noteMutationError } = useNotesMutations(fullStructure.info.id, refetch)
 
   const { sortDesc, filesOnlyFilter, showForm } = state
 
@@ -105,6 +105,7 @@ const NotesTab: React.FC<{
           onChange={(_, { checked }) => setState({ ...state, filesOnlyFilter: checked as boolean })}
         />
       </div>
+      {noteMutationError && <Message error content={noteMutationError} />}
       <div className="wrapper">
         {notes.length > 0 ? (
           notes.map((note) => {

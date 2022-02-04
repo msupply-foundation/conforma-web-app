@@ -405,6 +405,7 @@ export default {
   REVIEW_NOTES_SUBMIT_MSG: 'Submitting note...',
   REVIEW_NOTES_UPLOADING_MSG: 'Uploading files...',
   REVIEW_NOTES_DELETING_MSG: 'Deleting note...',
+  REVIEW_NOTES_MUTATION_ERROR: 'Problem modifying note. See console for details.',
   REVIEW_NOTES_NEWEST_FIRST: 'Newest first',
   REVIEW_NOTES_OLDEST_FIRST: 'Oldest first',
   REVIEW_NOTES_NO_NOTES: 'No notes on this application yet',

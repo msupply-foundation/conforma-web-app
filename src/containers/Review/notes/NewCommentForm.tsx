@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Button, Form, List, Header, ModalProps } from 'semantic-ui-react'
+import { Button, Form, List, Header, ModalProps, Message } from 'semantic-ui-react'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure, User } from '../../../utils/types'
 import reactStringReplace from 'react-string-replace'
@@ -22,7 +22,7 @@ const NewCommentForm: React.FC<{
   const [error, setError] = useState('')
   const {
     submit,
-    error: submitError,
+    error: noteMutationError,
     loadingMessage,
   } = useNotesMutations(structure.info.id, refetchNotes)
 
@@ -41,6 +41,7 @@ const NewCommentForm: React.FC<{
 
   return (
     <div id="new-comment-form" className="wrapper">
+      {noteMutationError && <Message error content={noteMutationError} />}
       <Form onSubmit={handleSubmit} className="item-container">
         <Form.Field>
           <label>

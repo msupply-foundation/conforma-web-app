@@ -35,7 +35,11 @@ const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
         comment,
       },
     })
-    if (mutationResult.errors) throw new Error(mutationResult.errors.toString())
+    if (mutationResult?.errors) {
+      setError(strings.REVIEW_NOTES_MUTATION_ERROR)
+      console.log(mutationResult?.errors)
+      return
+    }
 
     // Then upload the files with Post request
     const noteId = mutationResult.data?.createApplicationNote?.applicationNote?.id
@@ -70,7 +74,10 @@ const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
         noteId,
       },
     })
-    if (mutationResult.errors) throw new Error(mutationResult.errors.toString())
+    if (mutationResult?.errors) {
+      setError(strings.REVIEW_NOTES_MUTATION_ERROR)
+      console.log(mutationResult.errors)
+    }
     // We don't need to delete file records, as they'll be deleted automatically
     // due to foreign key references in file table, and back-end is triggered to
     // handle deleting the actual files
