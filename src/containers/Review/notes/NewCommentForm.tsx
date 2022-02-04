@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Button, Form, List, Header } from 'semantic-ui-react'
+import { Button, Form, List, Header, ModalProps } from 'semantic-ui-react'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure, User } from '../../../utils/types'
 import reactStringReplace from 'react-string-replace'
@@ -96,7 +96,7 @@ const NewCommentForm: React.FC<{
             className="wide-button"
             onClick={() => setState({ ...state, showForm: false, comment: '', files: [] })}
           >
-            {strings.BUTTON_CANCEL}
+            {strings.CANCEL}
           </Button>
           <p className="smaller-text">
             <em>{loadingMessage}</em>

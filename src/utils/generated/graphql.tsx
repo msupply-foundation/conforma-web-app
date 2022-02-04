@@ -36166,6 +36166,22 @@ export type DeleteApplicationMutation = (
   )> }
 );
 
+export type DeleteNoteMutationVariables = Exact<{
+  noteId: Scalars['Int'];
+}>;
+
+
+export type DeleteNoteMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteApplicationNote?: Maybe<(
+    { __typename?: 'DeleteApplicationNotePayload' }
+    & { applicationNote?: Maybe<(
+      { __typename?: 'ApplicationNote' }
+      & Pick<ApplicationNote, 'id'>
+    )> }
+  )> }
+);
+
 export type ReassignReviewAssignmentMutationVariables = Exact<{
   unassignmentId: Scalars['Int'];
   reassignmentId: Scalars['Int'];
@@ -37710,6 +37726,40 @@ export function useDeleteApplicationMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteApplicationMutationHookResult = ReturnType<typeof useDeleteApplicationMutation>;
 export type DeleteApplicationMutationResult = Apollo.MutationResult<DeleteApplicationMutation>;
 export type DeleteApplicationMutationOptions = Apollo.BaseMutationOptions<DeleteApplicationMutation, DeleteApplicationMutationVariables>;
+export const DeleteNoteDocument = gql`
+    mutation deleteNote($noteId: Int!) {
+  deleteApplicationNote(input: {id: $noteId}) {
+    applicationNote {
+      id
+    }
+  }
+}
+    `;
+export type DeleteNoteMutationFn = Apollo.MutationFunction<DeleteNoteMutation, DeleteNoteMutationVariables>;
+
+/**
+ * __useDeleteNoteMutation__
+ *
+ * To run a mutation, you first call `useDeleteNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteNoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteNoteMutation, { data, loading, error }] = useDeleteNoteMutation({
+ *   variables: {
+ *      noteId: // value for 'noteId'
+ *   },
+ * });
+ */
+export function useDeleteNoteMutation(baseOptions?: Apollo.MutationHookOptions<DeleteNoteMutation, DeleteNoteMutationVariables>) {
+        return Apollo.useMutation<DeleteNoteMutation, DeleteNoteMutationVariables>(DeleteNoteDocument, baseOptions);
+      }
+export type DeleteNoteMutationHookResult = ReturnType<typeof useDeleteNoteMutation>;
+export type DeleteNoteMutationResult = Apollo.MutationResult<DeleteNoteMutation>;
+export type DeleteNoteMutationOptions = Apollo.BaseMutationOptions<DeleteNoteMutation, DeleteNoteMutationVariables>;
 export const ReassignReviewAssignmentDocument = gql`
     mutation reassignReviewAssignment($unassignmentId: Int!, $reassignmentId: Int!, $reassignmentPatch: ReviewAssignmentPatch!) {
   reassignmentUpdate: updateReviewAssignment(input: {id: $reassignmentId, patch: $reassignmentPatch}) {

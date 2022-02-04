@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Checkbox,
@@ -8,15 +8,18 @@ import {
   Image,
   Form,
   Message,
+  ModalProps,
 } from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
 import { ApplicationNote, useGetApplicationNotesQuery } from '../../../utils/generated/graphql'
+import ModalWarning from '../../../components/Main/ModalWarning'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { DateTime } from 'luxon'
 import Markdown from '../../../utils/helpers/semanticReactMarkdown'
 import NewCommentForm from './NewCommentForm'
+import useNotesMutations from '../../../utils/hooks/useNotesMutations'
 import config from '../../../config'
 
 const downloadUrl = `${config.serverREST}/public`
@@ -46,13 +49,23 @@ const NotesTab: React.FC<{
   const {
     userState: { currentUser },
   } = useUserState()
+  const [modalOpen, setModalOpen] = useState(false)
+  const [noteIdToDelete, setNoteIdToDelete] = useState<number>(0)
 
   const { data, loading, error, refetch } = useGetApplicationNotesQuery({
     variables: { applicationId: fullStructure.info.id },
     // fetchPolicy: 'network-only',
   })
+  const { deleteNote, error: submitError } = useNotesMutations(fullStructure.info.id, refetch)
 
   const { sortDesc, filesOnlyFilter, showForm } = state
+
+  const handleDelete = async () => {
+    await deleteNote(noteIdToDelete)
+    setModalOpen(false)
+    setNoteIdToDelete(0)
+    refetch()
+  }
 
   if (error) return <p>{error.message}</p>
   if (loading) return <Loading />
@@ -65,8 +78,16 @@ const NotesTab: React.FC<{
 
   return notes ? (
     <Container id="notes-tab">
+      <ModalWarning
+        title={strings.REVIEW_NOTES_DELETE_TITLE}
+        message={strings.REVIEW_NOTES_DELETE_MESSAGE}
+        option={strings.BUTTON_CONFIRM}
+        open={modalOpen}
+        onClick={() => handleDelete()}
+        onClose={() => setModalOpen(false)}
+      />
       <div className="options-row">
-        <p>Sort order:</p>
+        <p>{strings.REVIEW_NOTES_SORT_ORDER}</p>
         <Dropdown
           selection
           options={[
@@ -76,7 +97,7 @@ const NotesTab: React.FC<{
           value={sortDesc}
           onChange={(_, { value }) => setState({ ...state, sortDesc: value as boolean })}
         />
-        <p>Files only:</p>
+        <p>{strings.REVIEW_NOTES_FILES_ONLY}</p>
         <Checkbox
           toggle
           checked={filesOnlyFilter}
@@ -100,10 +121,13 @@ const NotesTab: React.FC<{
                   </div>
                   <Icon
                     className="clickable"
-                    name="edit"
+                    name="delete"
                     size="large"
                     color="blue"
-                    onClick={() => alert('Not implemented yet')}
+                    onClick={() => {
+                      setNoteIdToDelete(note.id)
+                      setModalOpen(true)
+                    }}
                     style={{ visibility: isCurrentUser ? 'visible' : 'hidden' }}
                   />
                 </div>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useCreateNoteMutation } from '../generated/graphql'
+import { useCreateNoteMutation, useDeleteNoteMutation } from '../generated/graphql'
 import { postRequest } from '../../utils/helpers/fetchMethods'
 import { FullStructure, User } from '../types'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -12,7 +12,11 @@ const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
   const [error, setError] = useState<string>()
   const [loadingMessage, setLoadingMessage] = useState('')
 
-  const [applicationSubmitMutation] = useCreateNoteMutation({
+  const [createNoteMutation] = useCreateNoteMutation({
+    onError: (submissionError) => setError(submissionError.message),
+  })
+
+  const [deleteNoteMutation] = useDeleteNoteMutation({
     onError: (submissionError) => setError(submissionError.message),
   })
 
@@ -23,7 +27,7 @@ const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
     } = structure
     setLoadingMessage(strings.REVIEW_NOTES_SUBMIT_MSG)
     // First create the note
-    const mutationResult = await applicationSubmitMutation({
+    const mutationResult = await createNoteMutation({
       variables: {
         applicationId,
         userId,
@@ -59,10 +63,23 @@ const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
     return { mutationResult, fileResults }
   }
 
+  const deleteNote = async (noteId: number) => {
+    setLoadingMessage(strings.REVIEW_NOTES_DELETING_MSG)
+    const mutationResult = await deleteNoteMutation({
+      variables: {
+        noteId,
+      },
+    })
+    if (mutationResult.errors) throw new Error(mutationResult.errors.toString())
+
+    setLoadingMessage('')
+  }
+
   return {
     error,
     loadingMessage,
     submit,
+    deleteNote,
   }
 }
 
