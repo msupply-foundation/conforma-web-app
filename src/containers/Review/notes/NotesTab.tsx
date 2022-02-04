@@ -8,7 +8,6 @@ import {
   Image,
   Form,
   Message,
-  ModalProps,
 } from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
 import { ApplicationNote, useGetApplicationNotesQuery } from '../../../utils/generated/graphql'
@@ -16,11 +15,13 @@ import ModalWarning from '../../../components/Main/ModalWarning'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { DateTime } from 'luxon'
+import { DateTime, Interval } from 'luxon'
 import Markdown from '../../../utils/helpers/semanticReactMarkdown'
 import NewCommentForm from './NewCommentForm'
 import useNotesMutations from '../../../utils/hooks/useNotesMutations'
 import config from '../../../config'
+
+const COMMENT_DELETION_LIMIT = 5 // minutes
 
 const downloadUrl = `${config.serverREST}/public`
 
@@ -128,7 +129,9 @@ const NotesTab: React.FC<{
                       setNoteIdToDelete(note.id)
                       setModalOpen(true)
                     }}
-                    style={{ visibility: isCurrentUser ? 'visible' : 'hidden' }}
+                    style={{
+                      visibility: isCurrentUser && canDelete(note.timestamp) ? 'visible' : 'hidden',
+                    }}
                   />
                 </div>
                 <FilesDisplay files={note.files.nodes as FileData[]} />
@@ -205,4 +208,13 @@ const sortAndFilter = (
     ? (e: ApplicationNote[]) => e.filter((note) => note.files.nodes.length > 0)
     : (e: ApplicationNote[]) => e
   return fileFilter(sort(notes))
+}
+
+const canDelete = (timestamp: string): boolean => {
+  // This is pretty insecure -- all someone needs to do is change their local
+  // time on their computer and they can delete whatever they want!
+  return (
+    Interval.fromDateTimes(DateTime.fromISO(timestamp), DateTime.now()).length('minutes') <
+    COMMENT_DELETION_LIMIT
+  )
 }
