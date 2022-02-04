@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {
   Button,
   Checkbox,
@@ -70,8 +70,8 @@ const NotesTab: React.FC<{
         <Dropdown
           selection
           options={[
-            { key: 'newest', text: 'Newest first', value: true },
-            { key: 'oldest', text: 'Oldest first', value: false },
+            { key: 'newest', text: strings.REVIEW_NOTES_NEWEST_FIRST, value: true },
+            { key: 'oldest', text: strings.REVIEW_NOTES_OLDEST_FIRST, value: false },
           ]}
           value={sortDesc}
           onChange={(_, { value }) => setState({ ...state, sortDesc: value as boolean })}
@@ -120,7 +120,7 @@ const NotesTab: React.FC<{
             )
           })
         ) : (
-          <Message negative header="No notes on this application yet" />
+          <Message negative header={strings.REVIEW_NOTES_NO_NOTES} />
         )}
         {!showForm && (
           <div className="item-container">
@@ -132,7 +132,7 @@ const NotesTab: React.FC<{
                 onClick={() => setState({ ...state, showForm: true })}
               >
                 <Icon name="plus" size="tiny" color="blue" />
-                {strings.REVIEW_NOTES_NEW_COMMENT}
+                {strings.REVIEW_NOTES_NEW_NOTE}
               </Button>
             </Form.Field>
           </div>

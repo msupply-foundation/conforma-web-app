@@ -1,16 +1,14 @@
 import { useState } from 'react'
-import {
-  ApplicationResponseStatus,
-  TemplateElementCategory,
-  useCreateNoteMutation,
-} from '../generated/graphql'
+import { useCreateNoteMutation } from '../generated/graphql'
 import { postRequest } from '../../utils/helpers/fetchMethods'
-import { FullStructure, UseGetApplicationProps, User } from '../types'
+import { FullStructure, User } from '../types'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import config from '../../config'
 
 const fileEndpoint = `${config.serverREST}${config.uploadEndpoint}`
 
-const useNotesMutations = (applicationId: number) => {
+const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
+  const { strings } = useLanguageProvider()
   const [error, setError] = useState<string>()
   const [loadingMessage, setLoadingMessage] = useState('')
 
@@ -23,7 +21,7 @@ const useNotesMutations = (applicationId: number) => {
     const {
       info: { serial, id: applicationId },
     } = structure
-    setLoadingMessage('Creating note...')
+    setLoadingMessage(strings.REVIEW_NOTES_SUBMIT_MSG)
     // First create the note
     const mutationResult = await applicationSubmitMutation({
       variables: {
@@ -34,20 +32,31 @@ const useNotesMutations = (applicationId: number) => {
       },
     })
     if (mutationResult.errors) throw new Error(mutationResult.errors.toString())
+
     // Then upload the files with Post request
-    setLoadingMessage('Uploading files...')
     const noteId = mutationResult.data?.createApplicationNote?.applicationNote?.id
 
-    const fileData = new FormData()
-    files.forEach((file) => fileData.append('file', file))
-    const fileResult = await postRequest({
-      url: `${fileEndpoint}?user_id=${userId}&application_serial=${serial}&application_note_id=${noteId}`,
-      otherBody: fileData,
-    })
+    if (files.length > 0) setLoadingMessage(strings.REVIEW_NOTES_UPLOADING_MSG)
 
+    const fileResults: any = []
+    files.forEach((file) => {
+      // Should be able to do this in a single POST request, but doesn't work
+      // reliably with multiple files
+      const fileData = new FormData()
+      fileData.append('file', file)
+      fileResults.push(
+        postRequest({
+          url: `${fileEndpoint}?user_id=${userId}&application_serial=${serial}&application_note_id=${noteId}`,
+          otherBody: fileData,
+        })
+      )
+    })
+    await Promise.all(fileResults)
     setLoadingMessage('')
-    // Then force refetch
-    return { mutationResult, fileResult }
+
+    // Then force refetch to update UI
+    refetchNotes()
+    return { mutationResult, fileResults }
   }
 
   return {

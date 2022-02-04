@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react'
 import { Button, Form, List, Header } from 'semantic-ui-react'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure, User } from '../../../utils/types'
-import { useLanguageProvider } from '../../../contexts/Localisation'
+import reactStringReplace from 'react-string-replace'
+import { LanguageStrings, useLanguageProvider } from '../../../contexts/Localisation'
 import useNotesMutations from '../../../utils/hooks/useNotesMutations'
 import { NotesState } from './NotesTab'
 
@@ -19,36 +20,40 @@ const NewCommentForm: React.FC<{
   const fileInputRef = useRef<any>(null)
   const { files, comment } = state
   const [error, setError] = useState('')
-  const { submit, error: submitError, loadingMessage } = useNotesMutations(structure.info.id)
+  const {
+    submit,
+    error: submitError,
+    loadingMessage,
+  } = useNotesMutations(structure.info.id, refetchNotes)
 
   const handleSubmit = async () => {
     if (!comment) {
-      setError('You need a comment')
+      setError(strings.REVIEW_NOTES_COMMENT_ERROR)
       return
     }
-    console.log('Submitting...')
     const result = await submit(currentUser as User, structure, comment, files)
-    console.log('result', result)
-    setState({ ...state, showForm: false })
-    refetchNotes()
+    setState({ ...state, showForm: false, comment: '', files: [] })
   }
 
   const handleFiles = (e: any) => {
     setState({ ...state, files: [...files, ...e.target.files] })
   }
 
-  console.log('Loading', loadingMessage)
-
   return (
     <div id="new-comment-form" className="wrapper">
       <Form onSubmit={handleSubmit} className="item-container">
         <Form.Field>
           <label>
-            Enter comment (
-            <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank">
-              Markdown
-            </a>{' '}
-            formatting is supported)
+            {strings.REVIEW_NOTES_ENTER_COMMENT}{' '}
+            {reactStringReplace(
+              strings.REVIEW_NOTES_MARKDOWN_SUPPORT,
+              strings.MARKDOWN,
+              (match) => (
+                <a href={strings.MARKDOWN_LINK} target="_blank">
+                  {match}
+                </a>
+              )
+            )}
           </label>
           <div className="textarea-row" style={{ gap: 15 }}>
             <Form.TextArea
@@ -61,7 +66,11 @@ const NewCommentForm: React.FC<{
               }}
             />
             {files.length > 0 && (
-              <FileList files={files} setFiles={(files: File[]) => setState({ ...state, files })} />
+              <FileList
+                files={files}
+                setFiles={(files: File[]) => setState({ ...state, files })}
+                strings={strings}
+              />
             )}
           </div>
         </Form.Field>
@@ -74,29 +83,38 @@ const NewCommentForm: React.FC<{
           onChange={handleFiles}
         />
         <p className="clickable slightly-smaller-text">
-          <a onClick={() => fileInputRef?.current?.click()}>+ Add files</a>
+          <a
+            onClick={() => fileInputRef?.current?.click()}
+          >{`+ ${strings.REVIEW_NOTES_ADD_FILES}`}</a>
         </p>
         <div className="file-row">
           <Button loading={!!loadingMessage} type="submit" primary className="wide-button">
-            Submit
+            {strings.BUTTON_SUBMIT}
           </Button>
           <Button
             secondary
             className="wide-button"
-            onClick={() => setState({ ...state, showForm: false })}
+            onClick={() => setState({ ...state, showForm: false, comment: '', files: [] })}
           >
-            Cancel
+            {strings.BUTTON_CANCEL}
           </Button>
+          <p className="smaller-text">
+            <em>{loadingMessage}</em>
+          </p>
         </div>
       </Form>
     </div>
   )
 }
 
-const FileList: React.FC<{ files: File[]; setFiles: Function }> = ({ files, setFiles }) => (
+const FileList: React.FC<{ files: File[]; setFiles: Function; strings: LanguageStrings }> = ({
+  files,
+  setFiles,
+  strings,
+}) => (
   <div id="files-list">
-    <Header as="h4">Files</Header>
-    <p className="smaller-text">(Click to remove)</p>
+    <Header as="h4">{strings.REVIEW_NOTES_FILES}</Header>
+    <p className="smaller-text">{strings.REVIEW_NOTES_CLICK_TO_REMOVE}</p>
     <List bulleted>
       {files.map((file) => (
         <List.Item
