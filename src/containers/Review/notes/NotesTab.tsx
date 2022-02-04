@@ -147,7 +147,7 @@ const NotesTab: React.FC<{
             )
           })
         ) : (
-          <Message negative header={strings.REVIEW_NOTES_NO_NOTES} />
+          <Message floating header={strings.REVIEW_NOTES_NO_NOTES} />
         )}
         {!showForm && (
           <div className="item-container">
