@@ -71,7 +71,9 @@ const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
       },
     })
     if (mutationResult.errors) throw new Error(mutationResult.errors.toString())
-
+    // We don't need to delete file records, as they'll be deleted automatically
+    // due to foreign key references in file table, and back-end is triggered to
+    // handle deleting the actual files
     setLoadingMessage('')
   }
 
