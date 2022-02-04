@@ -36,7 +36,7 @@ const NotesTab: React.FC<{
   const {
     userState: { currentUser },
   } = useUserState()
-  const [showForm, setShowForm] = useState(false)
+  const [showForm, setShowForm] = useState(true)
 
   const { data, loading, error, refetch } = useGetApplicationNotesQuery({
     variables: { applicationId: fullStructure.info.id },
@@ -72,47 +72,52 @@ const NotesTab: React.FC<{
           onChange={(_, { checked }) => setFilesOnlyFilter(checked as boolean)}
         />
       </div>
-
-      {notes.map((note) => {
-        const isCurrentUser = note?.user?.id === currentUser?.userId
-        return (
-          <div
-            key={note.id}
-            className={`note-container${isCurrentUser ? ' highlight-background' : ''}`}
-          >
-            <div className="note-comment-row">
-              <div className="comment">
-                <Markdown text={note.comment} />
+      <div className="wrapper">
+        {notes.map((note) => {
+          const isCurrentUser = note?.user?.id === currentUser?.userId
+          return (
+            <div
+              key={note.id}
+              className={`note-container item-container${
+                isCurrentUser ? ' highlight-background' : ''
+              }`}
+            >
+              <div className="note-comment-row">
+                <div className="comment">
+                  <Markdown text={note.comment} />
+                </div>
+                <Icon
+                  className="clickable"
+                  name="edit"
+                  size="large"
+                  color="blue"
+                  onClick={() => alert('Not implemented yet')}
+                  style={{ visibility: isCurrentUser ? 'visible' : 'hidden' }}
+                />
               </div>
-              <Icon
-                className="clickable"
-                name="edit"
-                size="large"
-                color="blue"
-                onClick={() => alert('Not implemented yet')}
-                style={{ visibility: isCurrentUser ? 'visible' : 'hidden' }}
-              />
+              <FilesDisplay files={note.files.nodes as FileData[]} />
+              <div className="note-footer-row">
+                <p className="tiny-bit-smaller-text">
+                  <strong>{note.user?.fullName}</strong>
+                </p>
+                <p className="slightly-smaller-text dark-grey">
+                  {DateTime.fromISO(note.timestamp).toLocaleString(DateTime.DATETIME_MED)}
+                </p>
+              </div>
             </div>
-            <FilesDisplay files={note.files.nodes as FileData[]} />
-            <div className="note-footer-row">
-              <p className="tiny-bit-smaller-text">
-                <strong>{note.user?.fullName}</strong>
-              </p>
-              <p className="slightly-smaller-text dark-grey">
-                {DateTime.fromISO(note.timestamp).toLocaleString(DateTime.DATETIME_MED)}
-              </p>
-            </div>
+          )
+        })}
+        {!showForm && (
+          <div className="item-container">
+            <Form.Field>
+              <Button primary inverted className="wide-button" onClick={() => setShowForm(true)}>
+                <Icon name="plus" size="tiny" color="blue" />
+                {strings.REVIEW_NOTES_NEW_COMMENT}
+              </Button>
+            </Form.Field>
           </div>
-        )
-      })}
-      <Form.Field>
-        <Button
-          primary
-          className="wide-button"
-          onClick={() => setShowForm(true)}
-          content={strings.REVIEW_NOTES_NEW_COMMENT}
-        />
-      </Form.Field>
+        )}
+      </div>
       {showForm && (
         <NewCommentForm
           structure={fullStructure}

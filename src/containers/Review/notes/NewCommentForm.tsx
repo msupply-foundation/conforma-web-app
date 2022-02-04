@@ -1,5 +1,15 @@
 import React, { useState, useEffect, SyntheticEvent, useRef } from 'react'
-import { Button, Checkbox, Container, Dropdown, Icon, Image, Form, List } from 'semantic-ui-react'
+import {
+  Button,
+  Checkbox,
+  Container,
+  Dropdown,
+  Icon,
+  Image,
+  Form,
+  List,
+  Header,
+} from 'semantic-ui-react'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure, User } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
@@ -45,55 +55,74 @@ const NewCommentForm: React.FC<{
   console.log('Loading', loadingMessage)
 
   return (
-    <Form id="new-comment-form" onSubmit={handleSubmit}>
-      <Form.Field>
-        <label>
-          Enter comment (
-          <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank">
-            Markdown
-          </a>{' '}
-          formatting is supported)
-        </label>
-        <Form.TextArea
-          rows={6}
-          error={
-            error
-              ? {
-                  content: error,
-                  pointing: 'above',
-                }
-              : false
-          }
-          onChange={(e) => {
-            setComment(e.target.value)
-            setError('')
-          }}
+    <div id="new-comment-form" className="wrapper">
+      <Form onSubmit={handleSubmit} className="item-container">
+        <Form.Field>
+          <label>
+            Enter comment (
+            <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank">
+              Markdown
+            </a>{' '}
+            formatting is supported)
+          </label>
+          <div className="textarea-row" style={{ gap: 15 }}>
+            <Form.TextArea
+              rows={6}
+              error={
+                error
+                  ? {
+                      content: error,
+                      // pointing: 'above',
+                    }
+                  : false
+              }
+              onChange={(e) => {
+                setComment(e.target.value)
+                setError('')
+              }}
+            />
+            {files.length > 0 && <FileList files={files} setFiles={setFiles} />}
+          </div>
+        </Form.Field>
+        <input
+          type="file"
+          ref={fileInputRef}
+          hidden
+          name="file-upload"
+          multiple={true}
+          onChange={handleFiles}
         />
-      </Form.Field>
-      <input
-        type="file"
-        ref={fileInputRef}
-        hidden
-        name="file-upload"
-        multiple={true}
-        onChange={handleFiles}
-      />
-      <p className="clickable">
-        <a onClick={() => fileInputRef?.current?.click()}>+ Add files</a>
-      </p>
-      <List>
-        {files.map((file) => (
-          <List.Item key={file.name}>{file.name}</List.Item>
-        ))}
-      </List>
-      <Button loading={!!loadingMessage} type="submit" primary className="wide-button">
-        Submit
-      </Button>
-      <Button secondary className="wide-button" onClick={() => setShowForm(false)}>
-        Cancel
-      </Button>
-    </Form>
+        <p className="clickable slightly-smaller-text">
+          <a onClick={() => fileInputRef?.current?.click()}>+ Add files</a>
+        </p>
+        <div className="file-row">
+          <Button loading={!!loadingMessage} type="submit" primary className="wide-button">
+            Submit
+          </Button>
+          <Button secondary className="wide-button" onClick={() => setShowForm(false)}>
+            Cancel
+          </Button>
+        </div>
+      </Form>
+    </div>
   )
 }
+
+const FileList: React.FC<{ files: File[]; setFiles: Function }> = ({ files, setFiles }) => (
+  <div id="files-list">
+    <Header as="h4">Files</Header>
+    <p className="smaller-text">(Click to remove)</p>
+    <List bulleted>
+      {files.map((file) => (
+        <List.Item
+          key={file.name}
+          onClick={() => setFiles(files.filter((f) => f.name !== file.name))}
+        >
+          <a>{file.name}</a>
+        </List.Item>
+      ))}
+    </List>
+  </div>
+)
 
 export default NewCommentForm

@@ -799,9 +799,18 @@ a:hover {
 
 #notes-tab {
   // .flex-column-center();
-  .note-container {
+  .wrapper {
+    .flex-column-center();
+  }
+
+  .item-container {
     .flex-column();
-    // width: 90%;
+    // align-items: flex-end;
+    width: 90%;
+    max-width: 750px;
+  }
+
+  .note-container {
     margin-bottom: 15px;
     padding: 14px;
     padding-right: 20px;
@@ -810,6 +819,7 @@ a:hover {
     border: 2px solid @surfacesMed;
     border-radius: @borderRadius;
   }
+
   .options-row {
     .flex-row-end();
     width: 90%;
@@ -845,9 +855,6 @@ a:hover {
     }
   }
 
-  .comment {
-  }
-
   .note-footer-row {
     align-self: flex-end;
     display: flex;
@@ -857,8 +864,34 @@ a:hover {
     }
   }
 
-  .ui.form textarea {
-    max-width: 100%;
+  #new-comment-form {
+    margin-top: 10px;
+
+    .textarea-row {
+      .flex-row();
+      flex-wrap: wrap;
+    }
+  }
+
+  .ui.form {
+    .field {
+      margin: 0;
+      flex-basis: 65%;
+    }
+    textarea {
+      display: block;
+      max-width: 500px;
+    }
+    h4 {
+      margin-bottom: 0;
+    }
+    p {
+      margin-top: 0;
+    }
+    #files-list {
+      flex-basis: 30%;
+      max-width: 30%;
+    }
   }
 }
 
