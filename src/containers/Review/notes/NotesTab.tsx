@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Checkbox, Container, Dropdown, Icon, Image, Form } from 'semantic-ui-react'
+import {
+  Button,
+  Checkbox,
+  Container,
+  Dropdown,
+  Icon,
+  Image,
+  Form,
+  Message,
+} from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
 import { ApplicationNote, useGetApplicationNotesQuery } from '../../../utils/generated/graphql'
 import { useUserState } from '../../../contexts/UserState'
@@ -20,28 +29,30 @@ interface FileData {
   uniqueId: string
 }
 
+export interface NotesState {
+  sortDesc: boolean
+  filesOnlyFilter: boolean
+  showForm: boolean
+  files: File[]
+  comment: string
+}
+
 const NotesTab: React.FC<{
   structure: FullStructure
-  state: {
-    sortDesc: boolean
-    setSortDesc: Function
-    filesOnlyFilter: boolean
-    setFilesOnlyFilter: Function
-  }
-}> = ({
-  structure: fullStructure,
-  state: { sortDesc, setSortDesc, filesOnlyFilter, setFilesOnlyFilter },
-}) => {
+  state: NotesState
+  setState: (state: NotesState) => void
+}> = ({ structure: fullStructure, state, setState }) => {
   const { strings } = useLanguageProvider()
   const {
     userState: { currentUser },
   } = useUserState()
-  const [showForm, setShowForm] = useState(true)
 
   const { data, loading, error, refetch } = useGetApplicationNotesQuery({
     variables: { applicationId: fullStructure.info.id },
     // fetchPolicy: 'network-only',
   })
+
+  const { sortDesc, filesOnlyFilter, showForm } = state
 
   if (error) return <p>{error.message}</p>
   if (loading) return <Loading />
@@ -63,54 +74,63 @@ const NotesTab: React.FC<{
             { key: 'oldest', text: 'Oldest first', value: false },
           ]}
           value={sortDesc}
-          onChange={(_, { value }) => setSortDesc(value as boolean)}
+          onChange={(_, { value }) => setState({ ...state, sortDesc: value as boolean })}
         />
         <p>Files only:</p>
         <Checkbox
           toggle
           checked={filesOnlyFilter}
-          onChange={(_, { checked }) => setFilesOnlyFilter(checked as boolean)}
+          onChange={(_, { checked }) => setState({ ...state, filesOnlyFilter: checked as boolean })}
         />
       </div>
       <div className="wrapper">
-        {notes.map((note) => {
-          const isCurrentUser = note?.user?.id === currentUser?.userId
-          return (
-            <div
-              key={note.id}
-              className={`note-container item-container${
-                isCurrentUser ? ' highlight-background' : ''
-              }`}
-            >
-              <div className="note-comment-row">
-                <div className="comment">
-                  <Markdown text={note.comment} />
+        {notes.length > 0 ? (
+          notes.map((note) => {
+            const isCurrentUser = note?.user?.id === currentUser?.userId
+            return (
+              <div
+                key={note.id}
+                className={`note-container item-container${
+                  isCurrentUser ? ' highlight-background' : ''
+                }`}
+              >
+                <div className="note-comment-row">
+                  <div className="comment">
+                    <Markdown text={note.comment} />
+                  </div>
+                  <Icon
+                    className="clickable"
+                    name="edit"
+                    size="large"
+                    color="blue"
+                    onClick={() => alert('Not implemented yet')}
+                    style={{ visibility: isCurrentUser ? 'visible' : 'hidden' }}
+                  />
                 </div>
-                <Icon
-                  className="clickable"
-                  name="edit"
-                  size="large"
-                  color="blue"
-                  onClick={() => alert('Not implemented yet')}
-                  style={{ visibility: isCurrentUser ? 'visible' : 'hidden' }}
-                />
+                <FilesDisplay files={note.files.nodes as FileData[]} />
+                <div className="note-footer-row">
+                  <p className="tiny-bit-smaller-text">
+                    <strong>{note.user?.fullName}</strong>
+                  </p>
+                  <p className="slightly-smaller-text dark-grey">
+                    {DateTime.fromISO(note.timestamp).toLocaleString(DateTime.DATETIME_MED)}
+                  </p>
+                </div>
               </div>
-              <FilesDisplay files={note.files.nodes as FileData[]} />
-              <div className="note-footer-row">
-                <p className="tiny-bit-smaller-text">
-                  <strong>{note.user?.fullName}</strong>
-                </p>
-                <p className="slightly-smaller-text dark-grey">
-                  {DateTime.fromISO(note.timestamp).toLocaleString(DateTime.DATETIME_MED)}
-                </p>
-              </div>
-            </div>
-          )
-        })}
+            )
+          })
+        ) : (
+          <Message negative header="No notes on this application yet" />
+        )}
         {!showForm && (
           <div className="item-container">
             <Form.Field>
-              <Button primary inverted className="wide-button" onClick={() => setShowForm(true)}>
+              <Button
+                primary
+                inverted
+                className="wide-button"
+                onClick={() => setState({ ...state, showForm: true })}
+              >
                 <Icon name="plus" size="tiny" color="blue" />
                 {strings.REVIEW_NOTES_NEW_COMMENT}
               </Button>
@@ -121,7 +141,8 @@ const NotesTab: React.FC<{
       {showForm && (
         <NewCommentForm
           structure={fullStructure}
-          setShowForm={setShowForm}
+          state={state}
+          setState={setState}
           refetchNotes={refetch}
         />
       )}

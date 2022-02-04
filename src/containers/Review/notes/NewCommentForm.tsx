@@ -1,40 +1,25 @@
-import React, { useState, useEffect, SyntheticEvent, useRef } from 'react'
-import {
-  Button,
-  Checkbox,
-  Container,
-  Dropdown,
-  Icon,
-  Image,
-  Form,
-  List,
-  Header,
-} from 'semantic-ui-react'
+import React, { useState, useRef } from 'react'
+import { Button, Form, List, Header } from 'semantic-ui-react'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure, User } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useNotesMutations from '../../../utils/hooks/useNotesMutations'
-import config from '../../../config'
+import { NotesState } from './NotesTab'
 
 const NewCommentForm: React.FC<{
   structure: FullStructure
-  setShowForm: (val: boolean) => void
+  state: NotesState
+  setState: (state: NotesState) => void
   refetchNotes: Function
-}> = ({ structure, setShowForm, refetchNotes }) => {
+}> = ({ structure, state, setState, refetchNotes }) => {
   const { strings } = useLanguageProvider()
   const {
     userState: { currentUser },
   } = useUserState()
   const fileInputRef = useRef<any>(null)
-  const [comment, setComment] = useState<string>()
-  const [files, setFiles] = useState<File[]>([])
+  const { files, comment } = state
   const [error, setError] = useState('')
-  const {
-    submit,
-    // update,
-    error: submitError,
-    loadingMessage,
-  } = useNotesMutations(structure.info.id)
+  const { submit, error: submitError, loadingMessage } = useNotesMutations(structure.info.id)
 
   const handleSubmit = async () => {
     if (!comment) {
@@ -44,12 +29,12 @@ const NewCommentForm: React.FC<{
     console.log('Submitting...')
     const result = await submit(currentUser as User, structure, comment, files)
     console.log('result', result)
-    setShowForm(false)
+    setState({ ...state, showForm: false })
     refetchNotes()
   }
 
   const handleFiles = (e: any) => {
-    setFiles([...files, ...e.target.files])
+    setState({ ...state, files: [...files, ...e.target.files] })
   }
 
   console.log('Loading', loadingMessage)
@@ -68,20 +53,16 @@ const NewCommentForm: React.FC<{
           <div className="textarea-row" style={{ gap: 15 }}>
             <Form.TextArea
               rows={6}
-              error={
-                error
-                  ? {
-                      content: error,
-                      // pointing: 'above',
-                    }
-                  : false
-              }
+              value={comment}
+              error={error ? error : false}
               onChange={(e) => {
-                setComment(e.target.value)
+                setState({ ...state, comment: e.target.value })
                 setError('')
               }}
             />
-            {files.length > 0 && <FileList files={files} setFiles={setFiles} />}
+            {files.length > 0 && (
+              <FileList files={files} setFiles={(files: File[]) => setState({ ...state, files })} />
+            )}
           </div>
         </Form.Field>
         <input
@@ -99,7 +80,11 @@ const NewCommentForm: React.FC<{
           <Button loading={!!loadingMessage} type="submit" primary className="wide-button">
             Submit
           </Button>
-          <Button secondary className="wide-button" onClick={() => setShowForm(false)}>
+          <Button
+            secondary
+            className="wide-button"
+            onClick={() => setState({ ...state, showForm: false })}
+          >
             Cancel
           </Button>
         </div>

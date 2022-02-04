@@ -9,6 +9,7 @@ import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
 import { OverviewTab, AssignmentTab, SummaryTab, NotesTab, DocumentsTab, ReviewProgress } from './'
+import { NotesState } from './notes/NotesTab'
 
 interface ReviewWrapperProps {
   structure: FullStructure
@@ -29,10 +30,16 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     shouldCalculateProgress: false,
     shouldGetDraftResponses: false,
   })
-  // State variables for NOTES tab, needed here to preserve state between tab
-  // switches:
-  const [sortDesc, setSortDesc] = useState(true)
-  const [filesOnlyFilter, setFilesOnlyFilter] = useState(false)
+
+  // State values for NOTES tab, need to instantiate here to preserve state
+  // between tab switches:
+  const [notesState, setNotesState] = useState<NotesState>({
+    sortDesc: true,
+    filesOnlyFilter: false,
+    showForm: false,
+    files: [],
+    comment: '',
+  })
 
   usePageTitle(strings.PAGE_TITLE_REVIEW.replace('%1', structure.info.serial))
 
@@ -86,10 +93,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       menuItem: strings.REVIEW_TAB_NOTES,
       render: () => (
         <Tab.Pane>
-          <NotesTab
-            structure={fullStructure}
-            state={{ sortDesc, setSortDesc, filesOnlyFilter, setFilesOnlyFilter }}
-          />
+          <NotesTab structure={fullStructure} state={notesState} setState={setNotesState} />
         </Tab.Pane>
       ),
     },

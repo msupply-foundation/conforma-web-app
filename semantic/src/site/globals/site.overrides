@@ -798,14 +798,19 @@ a:hover {
 // Notes tab
 
 #notes-tab {
-  // .flex-column-center();
+  margin-bottom: 30px;
+  min-height: 200px;
   .wrapper {
     .flex-column-center();
   }
 
+  .ui.message {
+    min-width: 50%;
+    margin: 100px 0;
+  }
+
   .item-container {
     .flex-column();
-    // align-items: flex-end;
     width: 90%;
     max-width: 750px;
   }
