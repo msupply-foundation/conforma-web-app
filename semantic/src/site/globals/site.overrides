@@ -787,11 +787,24 @@ a:hover {
   }
 
   .ui.list {
-    margin-top: 30px;
+    margin-top: 10px;
   }
 
   .ui.list > .item {
     margin-top: 20px;
+    background-color: @surfacesLight;
+    padding: 15px;
+    border-radius: @borderRadius;
+    border: 1px solid @surfacesMed;
+    min-width: 400px;
+    h4 {
+      max-width: 250px;
+      line-height: 1.5em;
+      margin-bottom: 0.5em;
+    }
+    p {
+      margin-bottom: 0.4em;
+    }
   }
 }
 
