@@ -36107,6 +36107,25 @@ export type CreateApplicationMutation = (
   )> }
 );
 
+export type CreateNoteMutationVariables = Exact<{
+  applicationId: Scalars['Int'];
+  userId: Scalars['Int'];
+  orgId?: Maybe<Scalars['Int']>;
+  comment: Scalars['String'];
+}>;
+
+
+export type CreateNoteMutation = (
+  { __typename?: 'Mutation' }
+  & { createApplicationNote?: Maybe<(
+    { __typename?: 'CreateApplicationNotePayload' }
+    & { applicationNote?: Maybe<(
+      { __typename?: 'ApplicationNote' }
+      & Pick<ApplicationNote, 'id' | 'timestamp' | 'comment'>
+    )> }
+  )> }
+);
+
 export type CreateReviewMutationVariables = Exact<{
   reviewInput: ReviewInput;
 }>;
@@ -36144,6 +36163,22 @@ export type DeleteApplicationMutation = (
   & { deleteApplication?: Maybe<(
     { __typename?: 'DeleteApplicationPayload' }
     & Pick<DeleteApplicationPayload, 'clientMutationId'>
+  )> }
+);
+
+export type DeleteNoteMutationVariables = Exact<{
+  noteId: Scalars['Int'];
+}>;
+
+
+export type DeleteNoteMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteApplicationNote?: Maybe<(
+    { __typename?: 'DeleteApplicationNotePayload' }
+    & { applicationNote?: Maybe<(
+      { __typename?: 'ApplicationNote' }
+      & Pick<ApplicationNote, 'id'>
+    )> }
   )> }
 );
 
@@ -36818,6 +36853,35 @@ export type GetLookupTableStructureByIdQuery = (
   & { lookupTable?: Maybe<(
     { __typename?: 'LookupTable' }
     & Pick<LookupTable, 'id' | 'label' | 'name' | 'fieldMap'>
+  )> }
+);
+
+export type GetApplicationNotesQueryVariables = Exact<{
+  applicationId: Scalars['Int'];
+}>;
+
+
+export type GetApplicationNotesQuery = (
+  { __typename?: 'Query' }
+  & { applicationNotes?: Maybe<(
+    { __typename?: 'ApplicationNotesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'ApplicationNote' }
+      & Pick<ApplicationNote, 'id' | 'comment' | 'timestamp'>
+      & { org?: Maybe<(
+        { __typename?: 'Organisation' }
+        & Pick<Organisation, 'id' | 'name'>
+      )>, user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'fullName' | 'id' | 'username'>
+      )>, files: (
+        { __typename?: 'FilesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'File' }
+          & Pick<File, 'filePath' | 'description' | 'id' | 'originalFilename' | 'uniqueId'>
+        )>> }
+      ) }
+    )>> }
   )> }
 );
 
@@ -37549,6 +37613,45 @@ export function useCreateApplicationMutation(baseOptions?: Apollo.MutationHookOp
 export type CreateApplicationMutationHookResult = ReturnType<typeof useCreateApplicationMutation>;
 export type CreateApplicationMutationResult = Apollo.MutationResult<CreateApplicationMutation>;
 export type CreateApplicationMutationOptions = Apollo.BaseMutationOptions<CreateApplicationMutation, CreateApplicationMutationVariables>;
+export const CreateNoteDocument = gql`
+    mutation createNote($applicationId: Int!, $userId: Int!, $orgId: Int, $comment: String!) {
+  createApplicationNote(input: {applicationNote: {comment: $comment, applicationId: $applicationId, orgId: $orgId, userId: $userId}}) {
+    applicationNote {
+      id
+      timestamp
+      comment
+    }
+  }
+}
+    `;
+export type CreateNoteMutationFn = Apollo.MutationFunction<CreateNoteMutation, CreateNoteMutationVariables>;
+
+/**
+ * __useCreateNoteMutation__
+ *
+ * To run a mutation, you first call `useCreateNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateNoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createNoteMutation, { data, loading, error }] = useCreateNoteMutation({
+ *   variables: {
+ *      applicationId: // value for 'applicationId'
+ *      userId: // value for 'userId'
+ *      orgId: // value for 'orgId'
+ *      comment: // value for 'comment'
+ *   },
+ * });
+ */
+export function useCreateNoteMutation(baseOptions?: Apollo.MutationHookOptions<CreateNoteMutation, CreateNoteMutationVariables>) {
+        return Apollo.useMutation<CreateNoteMutation, CreateNoteMutationVariables>(CreateNoteDocument, baseOptions);
+      }
+export type CreateNoteMutationHookResult = ReturnType<typeof useCreateNoteMutation>;
+export type CreateNoteMutationResult = Apollo.MutationResult<CreateNoteMutation>;
+export type CreateNoteMutationOptions = Apollo.BaseMutationOptions<CreateNoteMutation, CreateNoteMutationVariables>;
 export const CreateReviewDocument = gql`
     mutation createReview($reviewInput: ReviewInput!) {
   createReview(input: {review: $reviewInput}) {
@@ -37623,6 +37726,40 @@ export function useDeleteApplicationMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteApplicationMutationHookResult = ReturnType<typeof useDeleteApplicationMutation>;
 export type DeleteApplicationMutationResult = Apollo.MutationResult<DeleteApplicationMutation>;
 export type DeleteApplicationMutationOptions = Apollo.BaseMutationOptions<DeleteApplicationMutation, DeleteApplicationMutationVariables>;
+export const DeleteNoteDocument = gql`
+    mutation deleteNote($noteId: Int!) {
+  deleteApplicationNote(input: {id: $noteId}) {
+    applicationNote {
+      id
+    }
+  }
+}
+    `;
+export type DeleteNoteMutationFn = Apollo.MutationFunction<DeleteNoteMutation, DeleteNoteMutationVariables>;
+
+/**
+ * __useDeleteNoteMutation__
+ *
+ * To run a mutation, you first call `useDeleteNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteNoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteNoteMutation, { data, loading, error }] = useDeleteNoteMutation({
+ *   variables: {
+ *      noteId: // value for 'noteId'
+ *   },
+ * });
+ */
+export function useDeleteNoteMutation(baseOptions?: Apollo.MutationHookOptions<DeleteNoteMutation, DeleteNoteMutationVariables>) {
+        return Apollo.useMutation<DeleteNoteMutation, DeleteNoteMutationVariables>(DeleteNoteDocument, baseOptions);
+      }
+export type DeleteNoteMutationHookResult = ReturnType<typeof useDeleteNoteMutation>;
+export type DeleteNoteMutationResult = Apollo.MutationResult<DeleteNoteMutation>;
+export type DeleteNoteMutationOptions = Apollo.BaseMutationOptions<DeleteNoteMutation, DeleteNoteMutationVariables>;
 export const ReassignReviewAssignmentDocument = gql`
     mutation reassignReviewAssignment($unassignmentId: Int!, $reassignmentId: Int!, $reassignmentPatch: ReviewAssignmentPatch!) {
   reassignmentUpdate: updateReviewAssignment(input: {id: $reassignmentId, patch: $reassignmentPatch}) {
@@ -38915,6 +39052,61 @@ export function useGetLookupTableStructureByIdLazyQuery(baseOptions?: Apollo.Laz
 export type GetLookupTableStructureByIdQueryHookResult = ReturnType<typeof useGetLookupTableStructureByIdQuery>;
 export type GetLookupTableStructureByIdLazyQueryHookResult = ReturnType<typeof useGetLookupTableStructureByIdLazyQuery>;
 export type GetLookupTableStructureByIdQueryResult = Apollo.QueryResult<GetLookupTableStructureByIdQuery, GetLookupTableStructureByIdQueryVariables>;
+export const GetApplicationNotesDocument = gql`
+    query getApplicationNotes($applicationId: Int!) {
+  applicationNotes(condition: {applicationId: $applicationId}, orderBy: TIMESTAMP_DESC) {
+    nodes {
+      id
+      comment
+      org {
+        id
+        name
+      }
+      user {
+        fullName
+        id
+        username
+      }
+      files {
+        nodes {
+          filePath
+          description
+          id
+          originalFilename
+          uniqueId
+        }
+      }
+      timestamp
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetApplicationNotesQuery__
+ *
+ * To run a query within a React component, call `useGetApplicationNotesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetApplicationNotesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetApplicationNotesQuery({
+ *   variables: {
+ *      applicationId: // value for 'applicationId'
+ *   },
+ * });
+ */
+export function useGetApplicationNotesQuery(baseOptions?: Apollo.QueryHookOptions<GetApplicationNotesQuery, GetApplicationNotesQueryVariables>) {
+        return Apollo.useQuery<GetApplicationNotesQuery, GetApplicationNotesQueryVariables>(GetApplicationNotesDocument, baseOptions);
+      }
+export function useGetApplicationNotesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApplicationNotesQuery, GetApplicationNotesQueryVariables>) {
+          return Apollo.useLazyQuery<GetApplicationNotesQuery, GetApplicationNotesQueryVariables>(GetApplicationNotesDocument, baseOptions);
+        }
+export type GetApplicationNotesQueryHookResult = ReturnType<typeof useGetApplicationNotesQuery>;
+export type GetApplicationNotesLazyQueryHookResult = ReturnType<typeof useGetApplicationNotesLazyQuery>;
+export type GetApplicationNotesQueryResult = Apollo.QueryResult<GetApplicationNotesQuery, GetApplicationNotesQueryVariables>;
 export const GetReviewDecisionCommentDocument = gql`
     query getReviewDecisionComment($reviewDecisionId: Int!) {
   reviewDecision(id: $reviewDecisionId) {
