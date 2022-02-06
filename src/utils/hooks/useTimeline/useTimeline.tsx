@@ -57,6 +57,7 @@ const buildTimeline = (
         timestamp: event.timestamp,
         details: event.details,
         ...generateTimelineEvent[event.type](event, activityLog, structure, index, strings),
+        logType: event.type,
       }
       if (timelineEvent.eventType === TimelineEventType.Error)
         console.log('Problem with event:', event)
@@ -82,6 +83,7 @@ const buildTimeline = (
       id: 0,
       timestamp: stages[stageIndex].timestamp,
       details: {},
+      logType: null,
     })
   return {
     stages,

@@ -9,6 +9,7 @@ interface TimelineEvent {
   timestamp: string
   displayString: string
   details: { [key: string]: GenericObject }
+  logType: EventType | null
 }
 
 interface TimelineStage {

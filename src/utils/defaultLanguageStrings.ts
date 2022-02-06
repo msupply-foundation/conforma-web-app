@@ -379,6 +379,8 @@ export default {
   TIMELINE_ASSIGNED: 'Reviewer %1 was assigned %2 by %3',
   TIMELINE_SELF_ASSIGNED: 'Reviewer %1 assigned themselves',
   TIMELINE_UNASSIGNED: 'Reviewer %1 was unassigned from %2 by %3',
+  // Used for matching in subesquent URL replacements
+  TIMELINE_REVIEW: 'review',
   TIMELINE_REVIEW_DISCONTINUED: "%1's review was discontinued",
   TIMELINE_REVIEW_STARTED: '%1 started their review of %2',
   TIMELINE_REVIEW_RESTARTED: '%1 restarted their review of %2',

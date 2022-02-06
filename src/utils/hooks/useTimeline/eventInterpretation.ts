@@ -173,12 +173,16 @@ const getReviewEvent = (
         eventType: !isConsolidation
           ? TimelineEventType.ReviewStarted
           : TimelineEventType.ConsolidationStarted,
-        displayString: !isConsolidation
+        displayString: (!isConsolidation
           ? strings.TIMELINE_REVIEW_STARTED.replace('%1', `**${reviewer?.name}**`).replace(
               '%2',
               stringifySections(sections, structure.sections, strings)
             )
-          : strings.TIMELINE_CONSOLIDATION_STARTED.replace('%1', `**${reviewer?.name}**`),
+          : strings.TIMELINE_CONSOLIDATION_STARTED.replace('%1', `**${reviewer?.name}**`)
+        ).replace(
+          strings.TIMELINE_REVIEW,
+          `[${strings.TIMELINE_REVIEW}](/application/S-MQI-0001/review/${event.details?.reviewId})`
+        ),
       }
     case value === 'DRAFT' && (prevStatus === 'CHANGES_REQUESTED' || prevStatus === 'PENDING'):
       return {
