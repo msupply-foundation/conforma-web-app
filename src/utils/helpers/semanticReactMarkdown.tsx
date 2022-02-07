@@ -52,17 +52,24 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
   const renderer = semanticComponent ? renderers[semanticComponent] : null
 
   // Forces Markdown-generated links to use React-Router <Link> component,
-  // otherwise it does a page reload
+  // otherwise it does a page reload. Only applies to local links, external ones
+  // are handled through regular <a> tags
   const linkRenderer = {
-    link: (props: any) => <Link to={props.href}>{props.children}</Link>,
+    link: (props: any) => {
+      return !props.href.startsWith('http') ? (
+        <Link to={{ pathname: props.href }} target={newTabLinks ? '_blank' : undefined}>
+          {props.children}
+        </Link>
+      ) : (
+        <a href={props.href} target={newTabLinks ? '_blank' : undefined}>
+          {props.children}
+        </a>
+      )
+    },
   }
 
   return (
-    <ReactMarkdown
-      children={text}
-      renderers={{ ...renderer, ...linkRenderer }}
-      linkTarget={newTabLinks ? '_blank' : undefined}
-    ></ReactMarkdown>
+    <ReactMarkdown children={text} renderers={{ ...renderer, ...linkRenderer }}></ReactMarkdown>
   )
 }
 
