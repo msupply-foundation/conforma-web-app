@@ -1,5 +1,5 @@
 import { LanguageStrings } from '../../../contexts/Localisation'
-import { ActivityLog } from '../../generated/graphql'
+import { ActivityLog, Decision } from '../../generated/graphql'
 import { FullStructure } from '../../types'
 import { TimelineEventType, EventOutput } from './types'
 import { getAssociatedReviewDecision, checkResubmission, stringifySections } from './helpers'
@@ -137,7 +137,8 @@ const getReviewEvent = (
   fullLog: ActivityLog[],
   structure: FullStructure,
   index: number,
-  strings: LanguageStrings
+  strings: LanguageStrings,
+  decisionStrings: { [key in Decision]: string }
 ): EventOutput => {
   const {
     value,
@@ -222,7 +223,9 @@ const getReviewEvent = (
               .replace('%2', stringifySections(sections, structure.sections, strings))
               .replace(
                 '%3',
-                `**${reviewDecision.decision}** (${strings.TIMELINE_COMMENT} *${reviewDecision?.comment}*)`
+                `**${decisionStrings[reviewDecision.decision as Decision]}** (${
+                  strings.TIMELINE_COMMENT
+                } *${reviewDecision?.comment}*)`
               )
           : strings.TIMELINE_CONSOLIDATION_SUBMITTED_DECISION.replace(
               '%1',
@@ -255,7 +258,9 @@ const getReviewEvent = (
               .replace('%2', stringifySections(sections, structure.sections, strings))
               .replace(
                 '%3',
-                `**${reviewDecision.decision}** (${strings.TIMELINE_COMMENT} ${reviewDecision?.comment})`
+                `**${decisionStrings[reviewDecision.decision as Decision]}** (${
+                  strings.TIMELINE_COMMENT
+                } ${reviewDecision?.comment})`
               )
           : strings.TIMELINE_CONSOLIDATION_RESUBMITTED_DECISION.replace(
               '%1',

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { LanguageStrings, useLanguageProvider } from '../../../contexts/Localisation'
-import { ActivityLog, EventType, useGetActivityLogQuery } from '../../generated/graphql'
+import { ActivityLog, Decision, EventType, useGetActivityLogQuery } from '../../generated/graphql'
 import { FullStructure } from '../../types'
 import {
   getAssignmentEvent,
@@ -8,10 +8,12 @@ import {
   getReviewEvent,
   getStatusEvent,
 } from './eventInterpretation'
+import useLocalisedEnums from '../useLocalisedEnums'
 import { TimelineStage, Timeline, TimelineEventType, EventOutput, TimelineEvent } from './types'
 
 const useTimeline = (structure: FullStructure) => {
   const { strings } = useLanguageProvider()
+  const { Decision: decisionStrings } = useLocalisedEnums()
   const [timeline, setTimeline] = useState<Timeline>()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
@@ -27,7 +29,14 @@ const useTimeline = (structure: FullStructure) => {
       setLoading(false)
     }
     if (data?.activityLogs?.nodes) {
-      setTimeline(buildTimeline(data?.activityLogs?.nodes as ActivityLog[], structure, strings))
+      setTimeline(
+        buildTimeline(
+          data?.activityLogs?.nodes as ActivityLog[],
+          structure,
+          strings,
+          decisionStrings
+        )
+      )
       setLoading(false)
     }
   }, [data, apolloError])
@@ -40,7 +49,8 @@ export default useTimeline
 const buildTimeline = (
   activityLog: ActivityLog[],
   structure: FullStructure,
-  strings: LanguageStrings
+  strings: LanguageStrings,
+  desicionStrings: { [key in Decision]: string }
 ): Timeline => {
   // Group by stage
   const stages: TimelineStage[] = []
@@ -56,7 +66,14 @@ const buildTimeline = (
         id: event.id,
         timestamp: event.timestamp,
         details: event.details,
-        ...generateTimelineEvent[event.type](event, activityLog, structure, index, strings),
+        ...generateTimelineEvent[event.type](
+          event,
+          activityLog,
+          structure,
+          index,
+          strings,
+          desicionStrings
+        ),
         logType: event.type,
       }
       if (timelineEvent.eventType === TimelineEventType.Error)
@@ -97,7 +114,10 @@ const generateTimelineEvent: {
     fullLog: ActivityLog[],
     structure: FullStructure,
     index: number,
-    strings: LanguageStrings
+    strings: LanguageStrings,
+    decisionStrings: {
+      [key in Decision]: string
+    }
   ) => EventOutput
 } = {
   STAGE: () =>
@@ -106,8 +126,8 @@ const generateTimelineEvent: {
   STATUS: (event, fullLog, _, __, strings) => getStatusEvent(event, fullLog, strings),
   OUTCOME: (event, _, __, ___, strings) => getOutcomeEvent(event, strings),
   ASSIGNMENT: (event, _, structure, __, strings) => getAssignmentEvent(event, structure, strings),
-  REVIEW: (event, fullLog, structure, index, strings) =>
-    getReviewEvent(event, fullLog, structure, index, strings),
+  REVIEW: (event, fullLog, structure, index, strings, decisionStrings) =>
+    getReviewEvent(event, fullLog, structure, index, strings, decisionStrings),
   REVIEW_DECISION: () =>
     // Ignore all because decision gets combined into Review event
     ({ eventType: TimelineEventType.Ignore, displayString: '' }),
