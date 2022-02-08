@@ -8,7 +8,8 @@ export default {
   APPLICATIONS_LIST_EMPTY: 'No applications found',
   APPLICATION_MISSING_TEMPLATE: '',
   APPLICATION_OTHER_CHANGES_MADE: 'This is a new submission and will require a review.',
-  TRIGGER_RUNNING: 'Trigger is running. Please wait to reload page again.',
+  TRIGGER_ERROR:
+    'Problem waiting for triggers to finish. Please check console for detailed error info.',
   LOGIN_WELCOME: 'Welcome, %1',
   LOGIN_ORG_SELECT: 'Please select an organisation',
   LOGIN_REDIRECT_TO_REGISTRATION: 'Re-directing to user registration application...',

@@ -69,7 +69,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
           setRefetchAttempts(refetchAttempts + 1)
           refetch()
         }, 500)
-      } else setFetchingError(strings.TRIGGER_RUNNING)
+      } else setFetchingError(strings.TRIGGER_ERROR)
       return
     }
 
