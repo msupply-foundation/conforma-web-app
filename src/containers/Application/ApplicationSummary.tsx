@@ -87,7 +87,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     },
   } = fullStructure
 
-  const isCompleted = status === ApplicationStatus.Completed
+  const isSubmitted = status !== ApplicationStatus.Draft
 
   return (
     <Container id="application-summary">
@@ -96,12 +96,12 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
           as="h2"
           textAlign="center"
           content={
-            isCompleted ? strings.TITLE_APPLICATION_COMPLETED : strings.TITLE_APPLICATION_SUMMARY
+            isSubmitted ? strings.TITLE_APPLICATION_SUBMITTED : strings.TITLE_APPLICATION_SUMMARY
           }
           subheader={
             <Header.Subheader
               className="center-text"
-              content={isCompleted ? name : strings.SUBTITLE_APPLICATION_SUMMARY}
+              content={isSubmitted ? name : strings.SUBTITLE_APPLICATION_SUMMARY}
             />
           }
         />

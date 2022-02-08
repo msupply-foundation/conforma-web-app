@@ -31,15 +31,6 @@ export const checkResubmission = (event: ActivityLog, fullLog: ActivityLog[]) =>
       e.details.reviewId === event.details.reviewId
   )
 
-export const checkLastSubmission = (event: ActivityLog, fullLog: ActivityLog[]) =>
-  !fullLog.find(
-    (e) =>
-      e.type === 'REVIEW' &&
-      e.value === 'SUBMITTED' &&
-      e.timestamp > event.timestamp &&
-      e.details.reviewId === event.details.reviewId
-  )
-
 export const stringifySections = (
   sections: Section[],
   sectionsStructure: SectionsStructure,
@@ -57,12 +48,21 @@ export const getReviewLinkString = (
   hyperlinkReplaceString: string,
   structure: FullStructure,
   event: ActivityLog,
-  isLastSubmission: boolean
+  fullLog: ActivityLog[]
 ) => {
-  if (!isLastSubmission) return hyperlinkReplaceString
+  if (!isLastSubmission(event, fullLog)) return hyperlinkReplaceString
 
   const sections = Object.keys(structure.sections)
   const sectionString =
     event.details.sections.length === sections.length ? 'all' : sections.join(',')
   return `[${hyperlinkReplaceString}](/application/${structure.info.serial}/review/${event.details?.reviewId}?activeSections=${sectionString})`
 }
+
+const isLastSubmission = (event: ActivityLog, fullLog: ActivityLog[]) =>
+  !fullLog.find(
+    (e) =>
+      e.type === 'REVIEW' &&
+      e.value === 'SUBMITTED' &&
+      e.timestamp > event.timestamp &&
+      e.details.reviewId === event.details.reviewId
+  )

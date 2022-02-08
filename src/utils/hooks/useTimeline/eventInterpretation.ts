@@ -5,7 +5,6 @@ import { TimelineEventType, EventOutput } from './types'
 import {
   getAssociatedReviewDecision,
   checkResubmission,
-  checkLastSubmission,
   stringifySections,
   getReviewLinkString,
 } from './helpers'
@@ -157,7 +156,6 @@ const getReviewEvent = (
   const isConsolidation = level > 1
   const reviewDecision = value === 'SUBMITTED' ? getAssociatedReviewDecision(event, fullLog) : null
   const isResubmission = value === 'SUBMITTED' ? checkResubmission(event, fullLog) : false
-  const isLastSubmission = value === 'SUBMITTED' ? checkLastSubmission(event, fullLog) : false
   const hyperlinkReplaceString = isConsolidation
     ? strings.TIMELINE_CONSOLIDATION
     : strings.TIMELINE_REVIEW
@@ -235,7 +233,7 @@ const getReviewEvent = (
           )
           .replace(
             hyperlinkReplaceString,
-            getReviewLinkString(hyperlinkReplaceString, structure, event, isLastSubmission)
+            getReviewLinkString(hyperlinkReplaceString, structure, event, fullLog)
           ),
       }
     case value === 'SUBMITTED' && !reviewDecision && isResubmission:
@@ -266,6 +264,10 @@ const getReviewEvent = (
                 ? ` (${strings.TIMELINE_COMMENT} *${reviewDecision?.comment}*)`
                 : ''
             }`
+          )
+          .replace(
+            hyperlinkReplaceString,
+            getReviewLinkString(hyperlinkReplaceString, structure, event, fullLog)
           ),
       }
     default:

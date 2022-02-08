@@ -1194,6 +1194,10 @@ a:hover {
 
   h2.ui.header {
     padding-top: 10px;
+    margin-top: -0.142em;
+  }
+  h5.ui.header {
+    margin-bottom: 0;
   }
 }
 
