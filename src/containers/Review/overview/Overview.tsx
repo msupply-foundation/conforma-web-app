@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { DateTime } from 'luxon'
 import { Header, Icon, Message, Segment } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'

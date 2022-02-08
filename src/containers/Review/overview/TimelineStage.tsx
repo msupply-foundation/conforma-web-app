@@ -4,15 +4,12 @@ import { Container, Accordion, Icon, List } from 'semantic-ui-react'
 import { TimelineEvent, TimelineStage } from '../../../utils/hooks/useTimeline/types'
 import { Stage } from '../../../components/Review'
 import Markdown from '../../../utils/helpers/semanticReactMarkdown'
-import { EventType } from '../../../utils/generated/graphql'
 
 export const TimelineStageUI: React.FC<{
   stage: TimelineStage
   isCurrentStage: boolean
 }> = ({ stage, isCurrentStage }) => {
   const [isActive, setIsActive] = useState(isCurrentStage)
-
-  const reviews = stage.events.filter((event) => event.logType === EventType.Review)
 
   const groupedEvents = groupEventsByDate(stage.events)
 
