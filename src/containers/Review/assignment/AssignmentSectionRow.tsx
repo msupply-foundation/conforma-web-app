@@ -3,12 +3,14 @@ import { Grid, Label, ModalProps } from 'semantic-ui-react'
 import ModalConfirmation from '../../../components/Main/ModalConfirmation'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { AssignmentEnum } from '../../../utils/data/assignmentEnum'
 import { useUnassignReviewAssignmentMutation } from '../../../utils/generated/graphql'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
 import Reassignment from './Reassignment'
+import AssigneeLabel from './AssigneeLabel'
+
+const NOT_ASSIGNED = 0
 
 type AssignmentSectionRowProps = {
   assignments: AssignmentDetails[]
@@ -39,7 +41,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
   const elements = Object.values(structure?.elementsById || {})
 
   useEffect(() => {
-    if (assignmentOptions?.selected != AssignmentEnum.NOT_ASSIGNED) {
+    if (assignmentOptions?.selected != NOT_ASSIGNED) {
       const foundPreviousAssignee = assignments.find(
         ({ reviewer }) => assignmentOptions?.selected === reviewer.id
       )
@@ -63,20 +65,14 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
 
   const onSelectedOption = async (value: number) => {
     if (value === assignmentOptions.selected) return
-    if (value === AssignmentEnum.REASSIGN) setIsReassignment(true)
+    // if (value === AssignmentEnum.REASSIGN) setIsReassignment(true)
 
-    if (value === AssignmentEnum.UNASSIGN) {
-      const unassignment = assignments.find(
-        (assignment) => assignment.reviewer.id === assignmentOptions.selected
-      )
-      if (unassignment)
-        setShowUnassignmentModal({
-          ...UNASSIGN_MESSAGE,
-          open: true,
-          onClick: () => unassignUser(unassignment.id),
-          onClose: () => setShowUnassignmentModal({ open: false }),
-        })
-    }
+    // if (value === AssignmentEnum.UNASSIGN) {
+    // const unassignment = assignments.find(
+    //   (assignment) => assignment.reviewer.id === assignmentOptions.selected
+    // )
+
+    // }
   }
 
   const isLastLevel = (selected: number): boolean => {
@@ -85,9 +81,23 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     return assignment.isLastLevel
   }
 
-  const unassignUser = async (unassignmentId: number) => {
+  const setIsUnassignment = () => {
+    if (!showUnassignmentModal.open)
+      setShowUnassignmentModal({
+        ...UNASSIGN_MESSAGE,
+        open: true,
+        onClick: () => unassignAssignee(),
+        onClose: () => setShowUnassignmentModal({ open: false }),
+      })
+  }
+
+  const unassignAssignee = async () => {
+    const unassignment = assignments.find(
+      (assignment) => assignment.reviewer.id === assignmentOptions.selected
+    )
+    if (!unassignment) return
     try {
-      await unassignSectionFromUser({ variables: { unassignmentId } })
+      await unassignSectionFromUser({ variables: { unassignmentId: unassignment.id } })
     } catch (e) {
       console.log(e)
       setUnassignmentError(true)
@@ -98,11 +108,13 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     <Grid className="section-single-row-box-container">
       <Grid.Row>
         <Grid.Column className="centered-flex-box-row">
-          {isReassignment ? (
-            <>
-              <Label className="simple-label" content={strings.LABEL_UNASSIGN_FROM} />
-              <Label content={originalAssignee} />
-            </>
+          {originalAssignee ? (
+            <AssigneeLabel
+              assignee={originalAssignee}
+              isReassignment={isReassignment}
+              setIsReassignment={setIsReassignment}
+              setIsUnassignment={setIsUnassignment}
+            />
           ) : (
             <>
               <Label className="simple-label" content={strings.LABEL_REVIEWER} />

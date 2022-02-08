@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Label, Grid } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { AssignmentEnum } from '../../../utils/data/assignmentEnum'
 import { AssignmentDetails, PageElement, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
@@ -40,7 +39,7 @@ const Reassignment: React.FC<ReassignmentProps> = ({
 
   const onReassignment = async (value: number) => {
     if (value === assignmentOptions.selected) return console.log('Re-assignment to same reviewer')
-    if (value === AssignmentEnum.UNASSIGN) return console.log('un assignment not implemented')
+    // if (value === AssignmentEnum.UNASSIGN) return console.log('un assignment not implemented')
 
     const reassignment = assignments.find((assignment) => assignment.reviewer.id === value)
 

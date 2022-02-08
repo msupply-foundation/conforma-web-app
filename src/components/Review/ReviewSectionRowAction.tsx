@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Grid, Icon, Label, Message } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import {
@@ -16,11 +16,7 @@ import useRemakePreviousReview from '../../utils/hooks/useRemakePreviousReview'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const { strings } = useLanguageProvider()
-  const {
-    action,
-    isAssignedToCurrentUser,
-    assignment: { isCurrentUserReviewer },
-  } = props
+  const { action, isAssignedToCurrentUser } = props
 
   const getContent = () => {
     switch (action) {

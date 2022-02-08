@@ -10,23 +10,33 @@ import {
   ReviewStatus,
   TemplateElementCategory,
 } from '../../../utils/generated/graphql'
-import { AssignmentEnum } from '../../../utils/data/assignmentEnum'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+
+const NOT_ASSIGNED = 0
 
 const useGetAssignmentOptions = () => {
   const { strings } = useLanguageProvider()
+
   const getOptionFromAssignment = ({
     review,
     reviewer,
     isCurrentUserReviewer,
-  }: AssignmentDetails): AssignmentOption => ({
-    key: reviewer.id,
-    value: reviewer.id,
-    text: isCurrentUserReviewer
-      ? strings.ASSIGNMENT_YOURSELF
-      : `${reviewer.firstName || ''} ${reviewer.lastName || ''}`,
-    disabled: review?.current.reviewStatus === ReviewStatus.Submitted,
-  })
+  }: AssignmentDetails): AssignmentOption => {
+    console.log(
+      'Review',
+      reviewer.username,
+      'submitted',
+      review?.current.reviewStatus === ReviewStatus.Submitted
+    )
+    return {
+      key: reviewer.id,
+      value: reviewer.id,
+      text: isCurrentUserReviewer
+        ? strings.ASSIGNMENT_YOURSELF
+        : `${reviewer.firstName || ''} ${reviewer.lastName || ''}`,
+      disabled: review?.current.reviewStatus === ReviewStatus.Submitted,
+    }
+  }
   interface GetAssignmentOptionsProps {
     assignments: AssignmentDetails[]
     sectionCode: string
@@ -38,6 +48,8 @@ const useGetAssignmentOptions = () => {
     { assignments, sectionCode, elements, assignee: previousAssignee }: GetAssignmentOptionsProps,
     currentUser: User | null
   ): AssignmentOptions | null => {
+    console.log('Previous assignee', previousAssignee)
+
     const currentSectionAssignable = assignments.filter(
       ({ assignableSectionRestrictions }) =>
         assignableSectionRestrictions.length === 0 ||
@@ -70,33 +82,20 @@ const useGetAssignmentOptions = () => {
       return {
         selected: currentlyAssigned.reviewer.id,
         isCompleted: currentlyAssigned.review?.current.reviewStatus === ReviewStatus.Submitted,
-        options: [
-          getOptionFromAssignment(currentlyAssigned),
-          {
-            key: AssignmentEnum.UNASSIGN,
-            value: AssignmentEnum.UNASSIGN,
-            text: strings.ASSIGNMENT_UNASSIGN,
-          },
-          {
-            key: AssignmentEnum.REASSIGN,
-            value: AssignmentEnum.REASSIGN,
-            text: strings.ASSIGNMENT_REASSIGN,
-          },
-        ],
+        options: [getOptionFromAssignment(currentlyAssigned)],
       }
 
     const assigneeOptions = {
-      selected: previousAssignee || AssignmentEnum.NOT_ASSIGNED,
+      selected: previousAssignee || NOT_ASSIGNED,
       isCompleted: false,
       options: [...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment))],
     }
 
     if (!previousAssignee)
       assigneeOptions.options.push({
-        key: AssignmentEnum.NOT_ASSIGNED,
-        value: AssignmentEnum.NOT_ASSIGNED,
+        key: NOT_ASSIGNED,
+        value: NOT_ASSIGNED,
         text: strings.ASSIGNMENT_NOT_ASSIGNED,
-        disabled: false,
       })
 
     return assigneeOptions
