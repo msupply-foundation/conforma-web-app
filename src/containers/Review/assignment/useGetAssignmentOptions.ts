@@ -62,10 +62,8 @@ const useGetAssignmentOptions = () => {
 
     if (numberOfAssignableElements === 0) return null
 
-    // This could differ from currentUserAssignable list because self assignable assignments don't have assigner
     const currentlyAssigned = assignments.find(
       (assignment) =>
-        assignment.reviewer.id !== currentUser?.userId &&
         assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned &&
         matchAssignmentToSection(assignment, sectionCode)
     )

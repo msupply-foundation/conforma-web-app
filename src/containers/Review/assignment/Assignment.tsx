@@ -42,13 +42,17 @@ const Assignment: React.FC<ReviewHomeProps> = ({
     }[] = []
 
     const reassignedSections = Object.entries(assignedSections).filter(
-      ([sectionCode, { previousAssignee }]) => !!previousAssignee
+      ([_, { previousAssignee }]) => !!previousAssignee
     )
 
     reassignedSections.forEach(([sectionCode, sectionAssignee]) => {
       const { newAssignee, previousAssignee } = sectionAssignee
       const found = reassignmentGroupedSections.find(
-        ({ reassignment: { reviewerId } }) => reviewerId === newAssignee
+        ({
+          reassignment: {
+            reviewer: { id },
+          },
+        }) => id === newAssignee
       )
       const unassignment = assignmentsByStage.find(
         ({ reviewer: { id } }) => id === previousAssignee
@@ -72,8 +76,6 @@ const Assignment: React.FC<ReviewHomeProps> = ({
       reassignSections({ sectionCodes, reassignment, unassignmentId })
     )
 
-    console.log('Reassignments', reassignmentGroupedSections)
-
     // First assignment - grouping sections that belong to same assignment
     let assignmentGroupedSections: {
       sectionCodes: string[]
@@ -81,12 +83,16 @@ const Assignment: React.FC<ReviewHomeProps> = ({
     }[] = []
 
     const firstAssignedSections = Object.entries(assignedSections).filter(
-      ([sectionCode, { previousAssignee }]) => previousAssignee === undefined
+      ([_, { previousAssignee }]) => previousAssignee === undefined
     )
 
     firstAssignedSections.forEach(([sectionCode, { newAssignee }]) => {
       const found = assignmentGroupedSections.find(
-        ({ assignment: { reviewerId } }) => reviewerId === newAssignee
+        ({
+          assignment: {
+            reviewer: { id },
+          },
+        }) => id === newAssignee
       )
       if (found) found.sectionCodes.push(sectionCode)
       else {
@@ -97,8 +103,6 @@ const Assignment: React.FC<ReviewHomeProps> = ({
     assignmentGroupedSections.forEach(({ sectionCodes, assignment }) =>
       assignSectionsToUser({ sectionCodes, assignment })
     )
-
-    console.log('assignments', assignmentGroupedSections)
   }
 
   return (
