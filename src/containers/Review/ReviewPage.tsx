@@ -52,7 +52,7 @@ const ReviewPage: React.FC<{
     userState: { currentUser },
   } = useUserState()
 
-  const { push } = useRouter()
+  const { push, query } = useRouter()
 
   const { fullReviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment,
@@ -61,6 +61,7 @@ const ReviewPage: React.FC<{
 
   const { isSectionActive, toggleSection } = useQuerySectionActivation({
     defaultActiveSectionCodes: [],
+    allSections: Object.keys(fullApplicationStructure.sections).map((section) => section),
   })
 
   const { addScrollable, scrollTo } = useScrollableAttachments()

@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { DateTime } from 'luxon'
 import { Container, Accordion, Icon, List } from 'semantic-ui-react'
 import { TimelineEvent, TimelineStage } from '../../../utils/hooks/useTimeline/types'
-import { ReviewTable } from './ReviewTable'
 import { Stage } from '../../../components/Review'
 import Markdown from '../../../utils/helpers/semanticReactMarkdown'
 import { EventType } from '../../../utils/generated/graphql'
@@ -25,7 +24,6 @@ export const TimelineStageUI: React.FC<{
           <Stage name={stage.name} colour={stage.colour} />
         </Accordion.Title>
         <Accordion.Content active={isActive}>
-          <ReviewTable reviews={reviews} />
           {groupedEvents.map((group) => (
             <div className="timeline-day" key={group.dateString}>
               <List>

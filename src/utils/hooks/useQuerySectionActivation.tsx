@@ -16,8 +16,10 @@ type IsSectionActive = (sectionCode: string) => boolean
 
 const useQuerySectionActivation = ({
   defaultActiveSectionCodes,
+  allSections,
 }: {
   defaultActiveSectionCodes: string[]
+  allSections?: string[]
 }) => {
   const {
     query: { activeSections },
@@ -27,6 +29,9 @@ const useQuerySectionActivation = ({
   useEffect(() => {
     if (!activeSections) {
       updateQuery({ activeSections: joinOrNone(defaultActiveSectionCodes) }, true)
+    }
+    if (activeSections === 'all' && allSections) {
+      updateQuery({ activeSections: joinOrNone(allSections) }, true)
     }
   }, [activeSections])
 

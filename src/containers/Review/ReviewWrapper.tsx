@@ -51,10 +51,6 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     info: { template, org, name },
   } = fullStructure
 
-  if (!tab) {
-    updateQuery({ tab: tabIdentifiers[0] })
-  }
-
   const getTabFromQuery = (tabQuery: string | undefined) => {
     const index = tabIdentifiers.findIndex((tabName) => tabName === tabQuery)
     return index === -1 ? 0 : index
@@ -142,7 +138,16 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
   applicationName,
   orgName,
 }) => {
-  const { push } = useRouter()
+  const {
+    push,
+    query: { tab },
+    updateQuery,
+  } = useRouter()
+
+  if (!tab) {
+    updateQuery({ tab: tabIdentifiers[0] })
+  }
+
   return (
     <div id="review-home-header">
       <Label

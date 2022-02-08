@@ -1,14 +1,10 @@
 import { LanguageStrings } from '../../../contexts/Localisation'
 import { ActivityLog } from '../../generated/graphql'
-import { SectionsStructure } from '../../types'
+import { FullStructure, SectionsStructure } from '../../types'
 import { Section } from './types'
 import { DateTime } from 'luxon'
 
-export const getAssociatedReviewDecision = (
-  event: ActivityLog,
-  fullLog: ActivityLog[],
-  index: number
-) => {
+export const getAssociatedReviewDecision = (event: ActivityLog, fullLog: ActivityLog[]) => {
   const possibleDecisions = fullLog.filter(
     (e) => e.type === 'REVIEW_DECISION' && e.details.reviewId === event.details.reviewId
   )
@@ -35,6 +31,15 @@ export const checkResubmission = (event: ActivityLog, fullLog: ActivityLog[]) =>
       e.details.reviewId === event.details.reviewId
   )
 
+export const checkLastSubmission = (event: ActivityLog, fullLog: ActivityLog[]) =>
+  !fullLog.find(
+    (e) =>
+      e.type === 'REVIEW' &&
+      e.value === 'SUBMITTED' &&
+      e.timestamp > event.timestamp &&
+      e.details.reviewId === event.details.reviewId
+  )
+
 export const stringifySections = (
   sections: Section[],
   sectionsStructure: SectionsStructure,
@@ -46,4 +51,18 @@ export const stringifySections = (
     : `${strings.TIMELINE_SECTIONS}: *${sections
         .map((section: Section) => section.title)
         .join(', ')}*`
+}
+
+export const getReviewLinkString = (
+  hyperlinkReplaceString: string,
+  structure: FullStructure,
+  event: ActivityLog,
+  isLastSubmission: boolean
+) => {
+  if (!isLastSubmission) return hyperlinkReplaceString
+
+  const sections = Object.keys(structure.sections)
+  const sectionString =
+    event.details.sections.length === sections.length ? 'all' : sections.join(',')
+  return `[${hyperlinkReplaceString}](/application/${structure.info.serial}/review/${event.details?.reviewId}?activeSections=${sectionString})`
 }

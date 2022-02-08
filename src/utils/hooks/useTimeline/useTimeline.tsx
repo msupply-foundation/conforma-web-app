@@ -78,11 +78,12 @@ const buildTimeline = (
       }
       if (timelineEvent.eventType === TimelineEventType.Error)
         console.log('Problem with event:', event)
+
       if (event.type === 'OUTCOME' && event.value !== 'PENDING') finalOutcome = timelineEvent
       else if (
         // Show special changes required message is currently waiting
-        ((event.type === 'STATUS' || event.type === 'REVIEW') &&
-          event.value === 'CHANGES_REQUIRED' &&
+        (((event.type === 'STATUS' && event.value === 'CHANGES_REQUIRED') ||
+          (event.type === 'REVIEW' && event.value === 'CHANGES_REQUESTED')) &&
           index === activityLog.length - 1) ||
         // Normal event
         (timelineEvent.eventType !== TimelineEventType.Ignore && stageIndex >= 0)
