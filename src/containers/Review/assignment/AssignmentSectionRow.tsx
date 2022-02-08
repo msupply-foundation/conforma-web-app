@@ -36,7 +36,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
   const [unassignmentError, setUnassignmentError] = useState(false)
   const [showUnassignmentModal, setShowUnassignmentModal] = useState<ModalProps>({ open: false })
   const [unassignSectionFromUser] = useUnassignReviewAssignmentMutation()
-  const [assignedSections] = assignedSectionsState
+  const [assignedSections, setAssignedSections] = assignedSectionsState
   const [originalAssignee, setOriginalAssignee] = useState<string>()
   const elements = Object.values(structure?.elementsById || {})
 
@@ -63,8 +63,19 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
   )
   if (!assignmentOptions) return null
 
-  const onSelectedOption = async (value: number) => {
-    if (value === assignmentOptions.selected) return
+  const onAssigneeSelection = async (assignee: number) => {
+    // When review isLastLevel then all sections are assigned to same user (similar to consolidation)
+    if (isLastLevel(assignee)) {
+      let allSectionsToUserId: SectionAssignee = {}
+      Object.keys(assignedSections).forEach(
+        (sectionCode) => (allSectionsToUserId[sectionCode] = { newAssignee: assignee as number })
+      )
+      setAssignedSections(allSectionsToUserId)
+    } else
+      setAssignedSections({
+        ...assignedSections,
+        [sectionCode]: { newAssignee: assignee as number },
+      })
   }
 
   const isLastLevel = (selected: number): boolean => {
@@ -114,9 +125,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
                 assignmentError={assignmentError || unassignmentError}
                 assignmentOptions={assignmentOptions}
                 sectionCode={sectionCode}
-                checkIsLastLevel={isLastLevel}
-                onSelection={onSelectedOption}
-                assignedSectionsState={assignedSectionsState}
+                onChangeMethod={(selected: number) => onAssigneeSelection(selected)}
               />
             </>
           )}

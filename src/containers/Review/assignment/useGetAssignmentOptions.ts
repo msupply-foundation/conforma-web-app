@@ -22,12 +22,6 @@ const useGetAssignmentOptions = () => {
     reviewer,
     isCurrentUserReviewer,
   }: AssignmentDetails): AssignmentOption => {
-    console.log(
-      'Review',
-      reviewer.username,
-      'submitted',
-      review?.current.reviewStatus === ReviewStatus.Submitted
-    )
     return {
       key: reviewer.id,
       value: reviewer.id,
@@ -48,8 +42,6 @@ const useGetAssignmentOptions = () => {
     { assignments, sectionCode, elements, assignee: previousAssignee }: GetAssignmentOptionsProps,
     currentUser: User | null
   ): AssignmentOptions | null => {
-    console.log('Previous assignee', previousAssignee)
-
     const currentSectionAssignable = assignments.filter(
       ({ assignableSectionRestrictions }) =>
         assignableSectionRestrictions.length === 0 ||

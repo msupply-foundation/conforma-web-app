@@ -39,7 +39,6 @@ const Reassignment: React.FC<ReassignmentProps> = ({
 
   const onReassignment = async (value: number) => {
     if (value === assignmentOptions.selected) return console.log('Re-assignment to same reviewer')
-    // if (value === AssignmentEnum.UNASSIGN) return console.log('un assignment not implemented')
 
     const reassignment = assignments.find((assignment) => assignment.reviewer.id === value)
 
@@ -47,10 +46,12 @@ const Reassignment: React.FC<ReassignmentProps> = ({
 
     if (isLastLevel(value)) {
       let allSectionsToUserId: SectionAssignee = {}
+
       Object.keys(assignedSections).forEach(
         (sectionCode) =>
           (allSectionsToUserId[sectionCode] = { newAssignee: value as number, previousAssignee })
       )
+
       setAssignedSections(allSectionsToUserId)
     } else
       setAssignedSections({
@@ -66,9 +67,7 @@ const Reassignment: React.FC<ReassignmentProps> = ({
         assignmentError={reassignmentError}
         assignmentOptions={assignmentOptions}
         sectionCode={sectionCode}
-        checkIsLastLevel={isLastLevel}
-        onSelection={onReassignment}
-        assignedSectionsState={assignedSectionsState}
+        onChangeMethod={(selected: number) => onReassignment(selected)}
       />
     </Grid.Column>
   )

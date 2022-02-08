@@ -68,6 +68,8 @@ const Assignment: React.FC<ReviewHomeProps> = ({
       reassignSections({ sectionCodes, reassignment, unassignmentId })
     )
 
+    console.log('Reassignments', reassignmentGroupedSections)
+
     // First assignment - grouping sections that belong to same assignment
     let assignmentGroupedSections: {
       sectionCodes: string[]
@@ -91,6 +93,8 @@ const Assignment: React.FC<ReviewHomeProps> = ({
     assignmentGroupedSections.forEach(({ sectionCodes, assignment }) =>
       assignSectionsToUser({ sectionCodes, assignment })
     )
+
+    console.log('assignments', assignmentGroupedSections)
   }
 
   return (

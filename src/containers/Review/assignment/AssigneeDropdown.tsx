@@ -1,7 +1,6 @@
 import React from 'react'
 import { Dropdown, Message } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { SectionAssignee } from '../../../utils/types'
 interface AssigneeProps {
   assignmentError: boolean
   assignmentOptions: {
@@ -14,33 +13,15 @@ interface AssigneeProps {
     }[]
   }
   sectionCode: string
-  checkIsLastLevel: (assignee: number) => boolean
-  onSelection: (assignee: number) => void
-  assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
+  onChangeMethod: (selected: number) => void
 }
 
 const AssigneeDropdown: React.FC<AssigneeProps> = ({
   assignmentError,
   assignmentOptions,
-  checkIsLastLevel,
-  sectionCode,
-  onSelection,
-  assignedSectionsState: [assignedSections, setAssignedSections],
+  onChangeMethod,
 }) => {
   const { strings } = useLanguageProvider()
-
-  const onAssigneeSelection = async (_: any, { value }: any) => {
-    onSelection(value as number)
-    // When review isLastLevel then all sections are assigned to same user (similar to consolidation)
-    if (checkIsLastLevel(value)) {
-      let allSectionsToUserId: SectionAssignee = {}
-      Object.keys(assignedSections).forEach(
-        (sectionCode) => (allSectionsToUserId[sectionCode] = { newAssignee: value as number })
-      )
-      setAssignedSections(allSectionsToUserId)
-    } else
-      setAssignedSections({ ...assignedSections, [sectionCode]: { newAssignee: value as number } })
-  }
 
   const { isCompleted, options, selected } = assignmentOptions
 
@@ -51,7 +32,7 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({
       options={options}
       value={selected}
       disabled={isCompleted}
-      onChange={onAssigneeSelection}
+      onChange={(_: any, { value }: any) => onChangeMethod(value as number)}
     />
   )
 }
