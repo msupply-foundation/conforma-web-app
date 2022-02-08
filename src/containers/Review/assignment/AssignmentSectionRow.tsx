@@ -65,14 +65,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
 
   const onSelectedOption = async (value: number) => {
     if (value === assignmentOptions.selected) return
-    // if (value === AssignmentEnum.REASSIGN) setIsReassignment(true)
-
-    // if (value === AssignmentEnum.UNASSIGN) {
-    // const unassignment = assignments.find(
-    //   (assignment) => assignment.reviewer.id === assignmentOptions.selected
-    // )
-
-    // }
   }
 
   const isLastLevel = (selected: number): boolean => {
