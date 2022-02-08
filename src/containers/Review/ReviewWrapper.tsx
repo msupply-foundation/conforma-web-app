@@ -9,6 +9,8 @@ import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
 import { OverviewTab, AssignmentTab, NotesTab, DocumentsTab, ReviewProgress } from './'
+import { useApplicationProvider } from '../../contexts/Application'
+import { useUserState } from '../../contexts/UserState'
 import { NotesState } from './notes/NotesTab'
 
 interface ReviewWrapperProps {
@@ -19,6 +21,7 @@ const tabIdentifiers = ['overview', 'assignment', 'summary', 'notes', 'documents
 
 const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   const { strings } = useLanguageProvider()
+  const { reloadApp, setReload } = useApplicationProvider()
   const {
     match: { path },
     query: { tab },
@@ -30,6 +33,9 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     shouldCalculateProgress: false,
     shouldGetDraftResponses: false,
   })
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   // State values for NOTES tab, need to instantiate here to preserve state
   // between tab switches:
@@ -106,6 +112,19 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
           />
           <div id="review-home-content">
             <ReviewProgress structure={structure} />
+            <p className="clickable" onClick={() => reloadApp()}>
+              Click to run reload function
+            </p>
+            <p
+              className="clickable"
+              onClick={() =>
+                setReload(() => {
+                  console.log('The function has changed')
+                })
+              }
+            >
+              Click to change function
+            </p>
             <div id="review-tabs">
               <Tab
                 panes={tabPanes}

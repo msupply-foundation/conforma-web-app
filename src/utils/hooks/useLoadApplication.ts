@@ -27,6 +27,7 @@ import { buildSectionsStructure } from '../helpers/structure'
 import config from '../../config'
 import { getSectionDetails } from '../helpers/application/getSectionsDetails'
 import useTriggers from './useTriggers'
+import { nanoid } from 'nanoid'
 
 const graphQLEndpoint = config.serverGraphQL
 const JWT = localStorage.getItem(config.localStorageJWTKey)
@@ -39,6 +40,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   const {
     userState: { currentUser },
   } = useUserState()
+  const [instanceId, setInstanceId] = useState(nanoid())
 
   const {
     ready: triggersReady,
@@ -51,12 +53,15 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     variables: {
       serial: serialNumber,
     },
-    fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
+    fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
     skip: !triggersReady,
   })
 
+  console.log('instanceId', instanceId)
+
   useEffect(() => {
+    console.log('Refetched?')
     if (triggersError) {
       setStructureError(strings.TRIGGER_ERROR)
       console.error('Trigger error:', triggersError)
@@ -73,6 +78,8 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     if (!triggersReady || !data) return
 
     const application = data.applicationBySerial as Application
+
+    console.log('application', application)
 
     // No unexpected error - just a application not accessible to user (Show 404 page)
     if (!application) {
@@ -193,10 +200,16 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     })
   }, [data, loading, triggersReady, triggersLoading, triggersError])
 
+  const reloadApplication = async () => {
+    console.log('Reloading...')
+    recheckTriggers()
+  }
+
   return {
     error: structureError || error?.message,
     isLoading: loading || isLoading,
     structure,
+    reloadApplication,
   }
 }
 
