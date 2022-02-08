@@ -31,14 +31,11 @@ import useTriggers from './useTriggers'
 const graphQLEndpoint = config.serverGraphQL
 const JWT = localStorage.getItem(config.localStorageJWTKey)
 
-// const MAX_REFETCH = 10
-
 const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
   const { strings } = useLanguageProvider()
   const [isLoading, setIsLoading] = useState(true)
   const [structureError, setStructureError] = useState('')
   const [structure, setFullStructure] = useState<FullStructure>()
-  // const [refetchAttempts, setRefetchAttempts] = useState(0)
   const {
     userState: { currentUser },
   } = useUserState()
