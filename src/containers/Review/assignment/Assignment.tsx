@@ -50,17 +50,21 @@ const Assignment: React.FC<ReviewHomeProps> = ({
       const found = reassignmentGroupedSections.find(
         ({ reassignment: { reviewerId } }) => reviewerId === newAssignee
       )
+      const unassignment = assignmentsByStage.find(
+        ({ reviewer: { id } }) => id === previousAssignee
+      )
+
       if (found) {
         found.sectionCodes.push(sectionCode)
-        if (!!previousAssignee && found?.unassignmentId != previousAssignee)
+        if (!!unassignment && found?.unassignmentId != unassignment.id)
           console.log('Unassignment for more than one previous assignee - Failed')
       } else {
         const reassignment = assignmentsByStage.find(({ reviewer: { id } }) => id === newAssignee)
-        if (reassignment && !!previousAssignee)
+        if (reassignment && unassignment)
           reassignmentGroupedSections.push({
             sectionCodes: [sectionCode],
             reassignment,
-            unassignmentId: previousAssignee,
+            unassignmentId: unassignment.id,
           })
       }
     })
