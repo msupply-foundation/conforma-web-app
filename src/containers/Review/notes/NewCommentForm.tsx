@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Button, Form, List, Header, ModalProps, Message } from 'semantic-ui-react'
+import { Button, Form, List, Header, Message } from 'semantic-ui-react'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure, User } from '../../../utils/types'
 import reactStringReplace from 'react-string-replace'
