@@ -79,8 +79,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     const application = data.applicationBySerial as Application
 
-    console.log('application', application)
-
     // No unexpected error - just a application not accessible to user (Show 404 page)
     if (!application) {
       setIsLoading(false)
@@ -193,6 +191,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         sections: buildSectionsStructure({ sectionDetails, baseElements }),
         canApplicantMakeChanges,
         attemptSubmission: false,
+        reload: reloadApplication,
       }
 
       setFullStructure(newStructure)

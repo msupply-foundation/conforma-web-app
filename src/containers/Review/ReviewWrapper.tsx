@@ -9,7 +9,6 @@ import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
 import { OverviewTab, AssignmentTab, NotesTab, DocumentsTab, ReviewProgress } from './'
-import { useApplicationProvider } from '../../contexts/Application'
 import { useUserState } from '../../contexts/UserState'
 import { NotesState } from './notes/NotesTab'
 
@@ -21,7 +20,6 @@ const tabIdentifiers = ['overview', 'assignment', 'summary', 'notes', 'documents
 
 const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   const { strings } = useLanguageProvider()
-  const { reloadApp, setReload } = useApplicationProvider()
   const {
     match: { path },
     query: { tab },
@@ -46,6 +44,8 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     files: [],
     comment: '',
   })
+
+  console.log('structure', structure)
 
   usePageTitle(strings.PAGE_TITLE_REVIEW.replace('%1', structure.info.serial))
 
@@ -112,18 +112,8 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
           />
           <div id="review-home-content">
             <ReviewProgress structure={structure} />
-            <p className="clickable" onClick={() => reloadApp()}>
-              Click to run reload function
-            </p>
-            <p
-              className="clickable"
-              onClick={() =>
-                setReload(() => {
-                  console.log('The function has changed')
-                })
-              }
-            >
-              Click to change function
+            <p className="clickable" onClick={() => structure.reload()}>
+              Click to reload
             </p>
             <div id="review-tabs">
               <Tab
