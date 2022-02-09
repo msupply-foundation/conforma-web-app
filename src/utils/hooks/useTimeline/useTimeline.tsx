@@ -27,8 +27,6 @@ const useTimeline = (structure: FullStructure) => {
     // fetchPolicy: 'network-only',
   })
 
-  console.log('Using timeline')
-
   useEffect(() => {
     if (apolloError) {
       setError(apolloError.message)

@@ -57,7 +57,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   })
 
   useEffect(() => {
-    console.log('Refetched?')
     if (triggersError) {
       setStructureError(strings.TRIGGER_ERROR)
       console.error('Trigger error:', triggersError)

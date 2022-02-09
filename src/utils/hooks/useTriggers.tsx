@@ -9,7 +9,7 @@ const serverURL = config.serverREST
 
 interface TriggerError {
   type: 'trigger' | 'timeout' | 'network'
-  result?: ApolloError | TriggerData[] | undefined
+  result?: ApolloError | TriggerData[] | Error | undefined
 }
 
 type TriggerStatus = 'ready' | 'processing' | 'error'
@@ -52,24 +52,27 @@ const useTriggers = (serialNumber: string) => {
 
   const getTriggers = async () => {
     console.log('Checking triggers, attempt #', refetchAttempts)
-    const result: TriggerState = await getRequest(
-      `${serverURL}/check-triggers?serial=${serialNumber}`
-    )
-    console.log('Result', result.status)
-    switch (result.status) {
-      case 'error':
-        clearTimeout(timerId as Timer)
-        setLoading(false)
-        setError({ type: 'trigger', result: result.errors })
-        break
-      case 'processing':
-        setRefetchAttempts((prev) => prev + 1)
-        break
-      case 'ready':
-        clearTimeout(timerId as Timer)
-        setReady(true)
-        setLoading(false)
-        break
+    try {
+      const result: TriggerState = await getRequest(
+        `${serverURL}/check-triggers?serial=${serialNumber}`
+      )
+      switch (result.status) {
+        case 'error':
+          clearTimeout(timerId as Timer)
+          setLoading(false)
+          setError({ type: 'trigger', result: result.errors })
+          break
+        case 'processing':
+          setRefetchAttempts((prev) => prev + 1)
+          break
+        case 'ready':
+          clearTimeout(timerId as Timer)
+          setReady(true)
+          setLoading(false)
+          break
+      }
+    } catch (err) {
+      setError({ type: 'network', result: err as Error })
     }
   }
 

@@ -9,7 +9,6 @@ import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
 import { OverviewTab, AssignmentTab, NotesTab, DocumentsTab, ReviewProgress } from './'
-import { useUserState } from '../../contexts/UserState'
 import { NotesState } from './notes/NotesTab'
 
 interface ReviewWrapperProps {
@@ -31,9 +30,6 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     shouldCalculateProgress: false,
     shouldGetDraftResponses: false,
   })
-  const {
-    userState: { currentUser },
-  } = useUserState()
 
   // State values for NOTES tab, need to instantiate here to preserve state
   // between tab switches:
