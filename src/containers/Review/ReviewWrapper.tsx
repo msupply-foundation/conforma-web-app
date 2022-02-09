@@ -45,8 +45,6 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     comment: '',
   })
 
-  console.log('structure', structure)
-
   usePageTitle(strings.PAGE_TITLE_REVIEW.replace('%1', structure.info.serial))
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
@@ -112,9 +110,6 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
           />
           <div id="review-home-content">
             <ReviewProgress structure={structure} />
-            <p className="clickable" onClick={() => structure.reload()}>
-              Click to reload
-            </p>
             <div id="review-tabs">
               <Tab
                 panes={tabPanes}

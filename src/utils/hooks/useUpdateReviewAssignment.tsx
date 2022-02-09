@@ -37,7 +37,6 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
   } = useUserState()
   const [updateAssignment] = useUpdateReviewAssignmentMutation({
     onCompleted: () => {
-      console.log('Re-assigned...')
       structure.reload()
     },
   })

@@ -27,7 +27,6 @@ import { buildSectionsStructure } from '../helpers/structure'
 import config from '../../config'
 import { getSectionDetails } from '../helpers/application/getSectionsDetails'
 import useTriggers from './useTriggers'
-import { nanoid } from 'nanoid'
 
 const graphQLEndpoint = config.serverGraphQL
 const JWT = localStorage.getItem(config.localStorageJWTKey)
@@ -40,7 +39,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   const {
     userState: { currentUser },
   } = useUserState()
-  const [instanceId, setInstanceId] = useState(nanoid())
 
   const {
     ready: triggersReady,
@@ -49,7 +47,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     recheckTriggers,
   } = useTriggers(serialNumber)
 
-  const { data, loading, error, refetch } = useGetApplicationQuery({
+  const { data, loading, error } = useGetApplicationQuery({
     variables: {
       serial: serialNumber,
     },
@@ -57,8 +55,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     notifyOnNetworkStatusChange: true,
     skip: !triggersReady,
   })
-
-  console.log('instanceId', instanceId)
 
   useEffect(() => {
     console.log('Refetched?')
@@ -72,8 +68,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       setIsLoading(true)
       return
     }
-
-    console.log('Triggers ready?', triggersReady)
 
     if (!triggersReady || !data) return
 

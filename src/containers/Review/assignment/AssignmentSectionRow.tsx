@@ -34,7 +34,11 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
   const [assignmentError, setAssignmentError] = useState(false)
   const [unassignmentError, setUnassignmentError] = useState(false)
   const [showUnassignmentModal, setShowUnassignmentModal] = useState<ModalProps>({ open: false })
-  const [unassignSectionFromUser] = useUnassignReviewAssignmentMutation()
+  const [unassignSectionFromUser] = useUnassignReviewAssignmentMutation({
+    onCompleted: () => {
+      structure.reload()
+    },
+  })
   const { assignSectionToUser } = useUpdateReviewAssignment(structure)
   const elements = Object.values(structure?.elementsById || {})
 
