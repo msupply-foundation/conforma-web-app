@@ -4,6 +4,8 @@ import {
   ElementBase,
   EvaluatedElement,
   FullStructure,
+  LevelDetails,
+  StageDetails,
   TemplateDetails,
   UseGetApplicationProps,
 } from '../types'
@@ -19,6 +21,7 @@ import {
   TemplateElementCategory,
   TemplateSection,
   TemplateStage,
+  TemplateStageReviewLevel,
   useGetApplicationQuery,
   User,
 } from '../generated/graphql'
@@ -167,6 +170,24 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       headers: { Authorization: 'Bearer ' + JWT },
     }
 
+    const getStageAndLevels = (stage: TemplateStage) => {
+      const stageLevels = stage.templateStageReviewLevelsByStageId
+        .nodes as TemplateStageReviewLevel[]
+      return {
+        stage: {
+          id: stage.id,
+          name: stage.title as string,
+          number: stage.number as number,
+          description: stage.description ? stage.description : undefined,
+          colour: stage.colour as string,
+        },
+        levels: stageLevels.map(({ name: levelName, number: levelNumber }) => ({
+          name: levelName as string,
+          number: levelNumber as number,
+        })),
+      }
+    }
+
     evaluate(application.template?.startMessage || '', evaluatorParams).then((startMessage) => {
       let newStructure: FullStructure = {
         info: {
@@ -174,13 +195,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           submissionMessage: application.template?.submissionMessage,
           startMessage: startMessage as string,
         },
-        stages: templateStages.map((stage) => ({
-          id: stage.id,
-          name: stage.title as string,
-          number: stage.number as number,
-          description: stage.description ? stage.description : undefined,
-          colour: stage.colour as string,
-        })),
+        stages: templateStages.map((stage) => getStageAndLevels(stage)),
         sections: buildSectionsStructure({ sectionDetails, baseElements }),
         canApplicantMakeChanges,
         attemptSubmission: false,
