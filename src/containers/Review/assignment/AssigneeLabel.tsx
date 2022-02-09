@@ -4,6 +4,7 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 
 interface AssigneeLabelProps {
   assignee: string
+  isSelfAssigned: boolean
   isReassignment: boolean
   setIsReassignment: React.Dispatch<React.SetStateAction<boolean>>
   setIsUnassignment: () => void
@@ -11,6 +12,7 @@ interface AssigneeLabelProps {
 
 const AssigneeLabel: React.FC<AssigneeLabelProps> = ({
   assignee,
+  isSelfAssigned,
   isReassignment,
   setIsReassignment,
   setIsUnassignment,
@@ -24,7 +26,7 @@ const AssigneeLabel: React.FC<AssigneeLabelProps> = ({
           isReassignment ? strings.LABEL_UNASSIGN_FROM : strings.LABEL_REVIEWER
         }: ${assignee}`}
       />
-      {!isReassignment && (
+      {!isReassignment && !isSelfAssigned && (
         <>
           <a className="user-action clickable" onClick={() => setIsReassignment(true)}>
             {strings.ACTION_RE_ASSIGN}

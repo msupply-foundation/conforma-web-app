@@ -118,6 +118,10 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     }
   }
 
+  const isSelfAssignment = !assignmentOptions.options.some(
+    ({ text }) => text != strings.ASSIGNMENT_YOURSELF
+  )
+
   return (
     <Grid className="section-single-row-box-container">
       <Grid.Row>
@@ -125,6 +129,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
           {originalAssignee ? (
             <AssigneeLabel
               assignee={originalAssignee}
+              isSelfAssigned={isSelfAssignment}
               isReassignment={isReassignment}
               setIsReassignment={setIsReassignment}
               setIsUnassignment={setIsUnassignment}

@@ -72,7 +72,9 @@ const useGetAssignmentOptions = () => {
       return {
         selected: currentlyAssigned.reviewer.id,
         isCompleted: currentlyAssigned.review?.current.reviewStatus === ReviewStatus.Submitted,
-        options: [getOptionFromAssignment(currentlyAssigned)],
+        options: [
+          ...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment)),
+        ],
       }
 
     const assigneeOptions = {
