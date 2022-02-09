@@ -8,6 +8,7 @@ import {
   getReviewEvent,
   getStatusEvent,
 } from './eventInterpretation'
+import { getDecisionIcon } from './helpers'
 import useLocalisedEnums from '../useLocalisedEnums'
 import { TimelineStage, Timeline, TimelineEventType, EventOutput, TimelineEvent } from './types'
 
@@ -79,6 +80,8 @@ const buildTimeline = (
       if (timelineEvent.eventType === TimelineEventType.Error)
         console.log('Problem with event:', event)
 
+      if (stageIndex < 0) return
+
       if (event.type === 'OUTCOME' && event.value !== 'PENDING') finalOutcome = timelineEvent
       else if (
         // Show special changes required message is currently waiting
@@ -103,6 +106,17 @@ const buildTimeline = (
       details: {},
       logType: null,
     })
+  // Add emoji icon if last event in stage is a review decision
+  stages.forEach((stage, index) => {
+    // Don't worry about final stage -- OUTCOME result used instead
+    if (index === structure.stages.length - 1) return
+    const events = stage.events
+    const lastEvent = events[events.length - 1]
+    if (lastEvent.eventType === TimelineEventType.ReviewSubmittedWithDecision) {
+      const decision = lastEvent?.extras?.reviewDecision?.decision
+      lastEvent.displayString = `${getDecisionIcon(decision)} ${lastEvent.displayString}`
+    }
+  })
   return {
     stages,
     rawLog: activityLog,

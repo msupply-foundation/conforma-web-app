@@ -26,7 +26,7 @@ const getStatusEvent = (
       }
     case value === 'DRAFT' && prevStatus === 'CHANGES_REQUIRED':
       return {
-        eventType: TimelineEventType.ApplicationRestarted,
+        eventType: TimelineEventType.Ignore,
         displayString: strings.TIMELINE_APPLICATION_RESTARTED,
       }
     case value === 'SUBMITTED' && prevStatus === 'COMPLETED':
