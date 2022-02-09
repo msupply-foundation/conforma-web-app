@@ -1,5 +1,5 @@
 import React from 'react'
-import { Label, ModalProps } from 'semantic-ui-react'
+import { Label } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 
 interface AssigneeLabelProps {
@@ -20,9 +20,10 @@ const AssigneeLabel: React.FC<AssigneeLabelProps> = ({
     <>
       <Label
         className="simple-label"
-        content={isReassignment ? strings.LABEL_UNASSIGN_FROM : strings.LABEL_REVIEWER}
+        content={`${
+          isReassignment ? strings.LABEL_UNASSIGN_FROM : strings.LABEL_REVIEWER
+        }: ${assignee}`}
       />
-      <Label content={assignee} />
       {!isReassignment && (
         <>
           <a className="user-action clickable" onClick={() => setIsReassignment(true)}>

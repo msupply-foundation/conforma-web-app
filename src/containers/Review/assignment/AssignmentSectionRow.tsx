@@ -17,9 +17,16 @@ type AssignmentSectionRowProps = {
   sectionCode: string
   structure: FullStructure
   assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
+  setEnableSubmit: React.Dispatch<React.SetStateAction<boolean>>
 }
 // Component renders options calculated in getAssignmentOptions, and will execute assignment mutation on drop down change
-const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
+const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
+  assignments,
+  sectionCode,
+  structure,
+  assignedSectionsState,
+  setEnableSubmit,
+}) => {
   const { strings } = useLanguageProvider()
   const UNASSIGN_MESSAGE = {
     title: strings.UNASSIGN_TITLE,
@@ -27,7 +34,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     option: strings.BUTTON_SUBMIT,
   }
   const getAssignmentOptions = useGetAssignmentOptions()
-  const { assignments, sectionCode, structure, assignedSectionsState } = props
   const {
     userState: { currentUser },
   } = useUserState()
@@ -51,6 +57,11 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
       }
     }
   }, [])
+
+  useEffect(() => {
+    if (Object.values(assignedSections).some(({ newAssignee }) => newAssignee !== undefined))
+      setEnableSubmit(true)
+  }, [assignedSections])
 
   const assignmentOptions = getAssignmentOptions(
     {

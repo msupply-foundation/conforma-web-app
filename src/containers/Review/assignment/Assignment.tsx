@@ -23,6 +23,7 @@ const Assignment: React.FC<ReviewHomeProps> = ({
   const { strings } = useLanguageProvider()
   const { assignSectionsToUser } = useUpdateReviewAssignment(fullApplicationStructure)
   const { reassignSections } = useReasignReviewAssignment(fullApplicationStructure)
+  const [enableSubmit, setEnableSubmit] = useState<boolean>(false)
   const [assignedSections, setAssignedSections] = useState<SectionAssignee>(
     Object.values(fullApplicationStructure.sections).reduce(
       (assignedSections, { details: { code } }) => ({
@@ -116,6 +117,7 @@ const Assignment: React.FC<ReviewHomeProps> = ({
               structure: fullApplicationStructure,
               sectionCode: code,
               assignedSectionsState: [assignedSections, setAssignedSections],
+              setEnableSubmit,
             }}
           />
           {assignmentsByUserAndStage.map((assignment) => (
@@ -132,7 +134,13 @@ const Assignment: React.FC<ReviewHomeProps> = ({
         </Segment>
       ))}
       <div style={{ marginTop: 10 }}>
-        <Button primary content={strings.BUTTON_SUBMIT} compact onClick={submitAssignments} />
+        <Button
+          primary
+          content={strings.BUTTON_SUBMIT}
+          compact
+          onClick={submitAssignments}
+          disabled={!enableSubmit}
+        />
       </div>
     </>
   )
