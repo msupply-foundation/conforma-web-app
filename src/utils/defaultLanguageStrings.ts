@@ -376,9 +376,11 @@ export default {
   TIMELINE_APPLICATION_REJECTED: '❌ Application has been **rejected**',
   TIMELINE_WAITING_FOR_APPLICANT: 'Waiting for applicant to make changes',
   TIMELINE_WAITING_FOR_REVIEWER: 'Waiting for reviewer %1 to make changes',
-  TIMELINE_ASSIGNED: 'Reviewer %1 was assigned %2 by %3',
-  TIMELINE_SELF_ASSIGNED: 'Reviewer %1 was assigned to %2 by self-assignment',
+  TIMELINE_REVIEW_ASSIGNED: 'Reviewer %1 was assigned %2 by %3',
+  TIMELINE_REVIEW_SELF_ASSIGNED: 'Reviewer %1 was assigned to %2 by self-assignment',
   TIMELINE_UNASSIGNED: 'Reviewer %1 was unassigned from %2 by %3',
+  TIMELINE_CONSOLIDATION_ASSIGNED: '%1 was assigned to consolidate %2 by %3',
+  TIMELINE_CONSOLIDATION_SELF_ASSIGNED: '%1 was assigned to consolidate %2 by self-assignment',
   // Used for matching in subesquent URL replacements
   TIMELINE_REVIEW: 'review',
   TIMELINE_CONSOLIDATION: 'consolidation',
