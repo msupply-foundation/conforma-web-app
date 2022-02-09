@@ -909,6 +909,25 @@ a:hover {
     #files-list {
       flex-basis: 30%;
       max-width: 30%;
+      .floating-icon {
+        position: absolute;
+        left: 100%;
+        top: calc(50% - 13px);
+        opacity: 0;
+      }
+      .floating-icon:hover {
+        opacity: 1;
+      }
+      .icon-after {
+        .floating-icon {
+          opacity: 0;
+        }
+      }
+      .icon-after:hover {
+        .floating-icon {
+          opacity: 1;
+        }
+      }
     }
   }
 }
@@ -1925,6 +1944,13 @@ a:hover {
 .right-justify-content {
   width: 100%;
   text-align: right;
+}
+
+// Text overflow handling
+
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /*--------------------------------

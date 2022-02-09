@@ -416,7 +416,7 @@ export default {
   REVIEW_NOTES_MARKDOWN_SUPPORT: '(Markdown formatting is supported)',
   REVIEW_NOTES_ADD_FILES: 'Add files',
   REVIEW_NOTES_FILES: 'Files',
-  REVIEW_NOTES_CLICK_TO_REMOVE: '(Click to remove)',
+  REVIEW_NOTES_HOVER_TO_REMOVE: '(Hover to remove)',
   REVIEW_NOTES_DELETE_TITLE: 'Are you sure?',
   REVIEW_NOTES_DELETE_MESSAGE:
     'Clicking "Confirm" will permanently delete your comment, including any associated files. Close this dialog to go back.',
