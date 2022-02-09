@@ -73,7 +73,7 @@ const buildTimeline = (
           structure,
           index,
           strings,
-          desicionStrings
+          decisionStrings
         ),
         logType: event.type,
       }
