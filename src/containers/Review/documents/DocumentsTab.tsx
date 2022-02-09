@@ -46,13 +46,11 @@ const DocumentsTab: React.FC<{
                 <p className="slightly-smaller-text">
                   {DateTime.fromISO(doc?.timestamp).toLocaleString()}
                 </p>
-                {/* <p>{doc?.description}</p> */}
                 <p className="smaller-text">
                   <a href={`${downloadUrl}/file?uid=${doc?.uniqueId}`} target="_blank">
                     {doc?.originalFilename}
                   </a>
                 </p>
-                {/* <p>{DateTime.fromISO(doc?.timestamp).toLocaleString()}</p> */}
               </div>
             </div>
           </List.Item>
