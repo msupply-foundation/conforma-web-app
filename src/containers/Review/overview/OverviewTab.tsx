@@ -28,9 +28,6 @@ const OverviewTab: React.FC<{
         <Header as="h2" textAlign="center">
           {strings.REVIEW_OVERVIEW_ACTIVITY}
         </Header>
-        <p className="clickable" onClick={() => refreshTimeline()}>
-          Click to refresh
-        </p>
         {timeline &&
           timeline.stages.map((stage) => (
             <TimelineStageUI
