@@ -51,7 +51,7 @@ const buildTimeline = (
   activityLog: ActivityLog[],
   structure: FullStructure,
   strings: LanguageStrings,
-  desicionStrings: { [key in Decision]: string }
+  decisionStrings: { [key in Decision]: string }
 ): Timeline => {
   // Group by stage
   const stages: TimelineStage[] = []
