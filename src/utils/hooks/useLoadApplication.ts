@@ -171,8 +171,8 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     }
 
     const getStageAndLevels = (stage: TemplateStage) => {
-      const stageLevels = stage.templateStageReviewLevelsByStageId
-        .nodes as TemplateStageReviewLevel[]
+      const stageLevels =
+        (stage.templateStageReviewLevelsByStageId?.nodes as TemplateStageReviewLevel[]) || []
       return {
         stage: {
           id: stage.id,
