@@ -69,7 +69,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       menuItem: strings.REVIEW_TAB_OVERVIEW,
       render: () => (
         <Tab.Pane>
-          <OverviewTab structure={fullStructure} />
+          <OverviewTab structure={fullStructure} isActive={getTabFromQuery(tab) === 0} />
         </Tab.Pane>
       ),
     },

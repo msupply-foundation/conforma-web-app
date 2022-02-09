@@ -23,7 +23,6 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
   const [assignments, setAssignments] = useState<AssignmentDetails[]>()
   const [isFetching, setIsFetching] = useState(true)
   const [fetchingError, setFetchingError] = useState('')
-  const [refetchAttempts, setRefetchAttempts] = useState(0)
   const {
     userState: { currentUser },
   } = useUserState()
