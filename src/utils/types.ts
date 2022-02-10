@@ -49,6 +49,7 @@ export {
   Filters,
   FullStructure,
   HistoryElement,
+  LevelDetails,
   LooseString,
   MethodRevalidate,
   MethodToCallProps,
@@ -251,8 +252,8 @@ interface EvaluatorParameters {
 type ElementsById = { [templateElementId: string]: PageElement }
 
 interface Filters {
-  selectedReviewer: number
-  selectedStage: number
+  selectedLevel: number
+  currentStage: number
 }
 
 interface FullStructure {
@@ -264,7 +265,10 @@ interface FullStructure {
   info: ApplicationDetails
   canApplicantMakeChanges: boolean
   sections: SectionsStructure
-  stages: StageDetails[]
+  stages: {
+    stage: StageDetails
+    levels: LevelDetails[]
+  }[]
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
   sortedSections?: SectionState[]
@@ -529,6 +533,11 @@ interface StageDetails {
   number: number
   colour: string
   description?: string
+}
+
+interface LevelDetails {
+  name: string
+  number: number
 }
 
 interface TemplateCategoryDetails {

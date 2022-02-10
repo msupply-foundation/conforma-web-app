@@ -622,6 +622,10 @@ a:hover {
 .review-section-row {
   .section-single-row-box-container();
 
+  .ui.grid > .row {
+    justify-content: stretch;
+  }
+
   .assigned-column {
     text-align: center;
   }

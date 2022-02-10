@@ -3,7 +3,11 @@ import { Grid, Label, ModalProps } from 'semantic-ui-react'
 import ModalConfirmation from '../../../components/Main/ModalConfirmation'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { useUnassignReviewAssignmentMutation } from '../../../utils/generated/graphql'
+import {
+  ReviewAssignmentStatus,
+  ReviewStatus,
+  useUnassignReviewAssignmentMutation,
+} from '../../../utils/generated/graphql'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
@@ -15,6 +19,7 @@ const NOT_ASSIGNED = 0
 type AssignmentSectionRowProps = {
   assignments: AssignmentDetails[]
   sectionCode: string
+  reviewLevel: number
   structure: FullStructure
   assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
   setEnableSubmit: React.Dispatch<React.SetStateAction<boolean>>
@@ -23,6 +28,7 @@ type AssignmentSectionRowProps = {
 const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   assignments,
   sectionCode,
+  reviewLevel,
   structure,
   assignedSectionsState,
   setEnableSubmit,
@@ -72,6 +78,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     },
     currentUser
   )
+
   if (!assignmentOptions) return null
 
   const onAssigneeSelection = async (assignee: number) => {
@@ -122,13 +129,29 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     ({ text }) => text != strings.ASSIGNMENT_YOURSELF
   )
 
+  const isSubmitted =
+    assignments.find(
+      (assignment) => assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned
+    )?.review?.current.reviewStatus === ReviewStatus.Submitted || false
+
+  const levelName =
+    structure.stages
+      .find(({ stage: { number } }) => number === structure.info.current.stage.number)
+      ?.levels.find(({ number }) => reviewLevel === number)?.name || strings.LEVEL_NOT_FOUND
+
   return (
-    <Grid className="section-single-row-box-container">
+    <Grid columns={2} className="section-single-row-box-container">
       <Grid.Row>
+        <Grid.Column className="review-level">
+          <Label className="simple-label">
+            {strings.REVIEW_FILTER_LEVEL}: <strong>{levelName}</strong>
+          </Label>
+        </Grid.Column>
         <Grid.Column className="centered-flex-box-row">
           {originalAssignee ? (
             <AssigneeLabel
               assignee={originalAssignee}
+              isSubmitted={isSubmitted}
               isSelfAssigned={isSelfAssignment}
               isReassignment={isReassignment}
               setIsReassignment={setIsReassignment}
