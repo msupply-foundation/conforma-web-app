@@ -64,7 +64,7 @@ const useToast = (props: ToastProps): ToastReturn => {
     if (state.clickable || props.clickable) newState.onClick = () => setShowToast(false)
     else delete newState.onClick
 
-    setMessageState((prev) => newState)
+    setMessageState(newState)
     setShowToast(true)
     setTimeout(() => {
       console.log('Timeout')
@@ -87,36 +87,28 @@ const getMessageStyleProps = (style: MessageStyle = 'basic'): MessageStyleProps 
     negative: false,
     error: false,
     warning: false,
-    icon: 'info circle',
+    icon: 'check circle outline',
   }
-
-  console.log('style', style)
   switch (style) {
     case 'basic':
       break
     case 'info':
       styleProps.info = true
-      styleProps.icon = 'info circle'
       break
     case 'success':
       styleProps.success = true
-      styleProps.icon = 'check circle outline'
       break
     case 'positive':
       styleProps.positive = true
-      styleProps.icon = 'check circle outline'
       break
     case 'negative':
       styleProps.negative = true
-      styleProps.icon = 'warning circle'
       break
     case 'error':
       styleProps.error = true
-      styleProps.icon = 'warning circle'
       break
     case 'warning':
       styleProps.warning = true
-      styleProps.icon = 'warning sign'
       break
   }
   return styleProps

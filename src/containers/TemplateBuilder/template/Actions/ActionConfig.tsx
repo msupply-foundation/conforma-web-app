@@ -52,7 +52,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const [open, setOpen] = useState(false)
   const [toastComponent, showToast] = useToast({
     title: strings.TEMPLATE_MESSAGE_SAVE_SUCCESS,
-    style: 'warning',
+    style: 'success',
   })
 
   useEffect(() => {
