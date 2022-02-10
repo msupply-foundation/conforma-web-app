@@ -64,7 +64,7 @@ const useToast = (props: ToastProps): ToastReturn => {
     if (state.clickable || props.clickable) newState.onClick = () => setShowToast(false)
     else delete newState.onClick
 
-    setMessageState((prev) => newState)
+    setMessageState(newState)
     setShowToast(true)
     setTimeout(() => {
       console.log('Timeout')
@@ -89,8 +89,6 @@ const getMessageStyleProps = (style: MessageStyle = 'basic'): MessageStyleProps 
     warning: false,
     icon: 'info circle',
   }
-
-  console.log('style', style)
   switch (style) {
     case 'basic':
       break
