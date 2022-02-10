@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Header, Button, Checkbox } from 'semantic-ui-react'
-import { getRequest } from '../../utils/helpers/fetchMethods'
+import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 import config from '../../config'
 import { LanguageOption, useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
@@ -18,17 +18,29 @@ export const AdminLocalisations: React.FC = () => {
     )
   }, [])
 
-  useEffect(() => {
-    if (installedLanguages.length === 0) return
-    // To-do: update on server
-    console.log('TO-DO: Updating...')
-  }, [installedLanguages])
-
-  const handleSelect = (language: LanguageOption, index: number) => {
+  const handleSelect = async (language: LanguageOption, index: number) => {
     const enabled = language.enabled
+    const currentLanguages = [...installedLanguages]
     const newLanguages = [...installedLanguages]
-    newLanguages[index] = { ...language, enabled: !enabled }
+    const updatedLanguage = { ...language, enabled: !enabled }
+    newLanguages[index] = updatedLanguage
     setInstalledLanguages(newLanguages)
+    updateOnServer(updatedLanguage, currentLanguages)
+  }
+
+  const updateOnServer = async (
+    updatedLanguage: LanguageOption,
+    currentLanguages: LanguageOption[]
+  ) => {
+    const result = await postRequest({
+      url: `${config.serverREST}/admin/enable-language?code=${updatedLanguage.code}&enabled=${updatedLanguage.enabled}`,
+    })
+    if (result.success) console.log('Language updated')
+    else {
+      // revert local state
+      setInstalledLanguages(currentLanguages)
+      console.error(result.message)
+    }
   }
 
   return (
