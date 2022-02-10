@@ -22,12 +22,10 @@ const AssigneeLabel: React.FC<AssigneeLabelProps> = ({
   const { strings } = useLanguageProvider()
   return (
     <>
-      <Label
-        className="simple-label"
-        content={`${
-          isReassignment ? strings.LABEL_UNASSIGN_FROM : strings.LABEL_REVIEWER
-        }: ${assignee}`}
-      />
+      <Label className="simple-label" style={{ marginRight: 30 }}>
+        {isReassignment ? strings.LABEL_UNASSIGN_FROM : strings.LABEL_REVIEWER}:{' '}
+        <strong>{assignee}</strong>
+      </Label>
       {isSubmitted ? null : (
         <>
           {!isReassignment && !isSelfAssigned && (
