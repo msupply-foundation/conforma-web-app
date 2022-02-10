@@ -33,7 +33,7 @@ const AssignmentTab: React.FC<{
     )
   }
 
-  const getFilteredReviewer = (assignments: AssignmentDetails[]) => {
+  const getFilteredLevel = (assignments: AssignmentDetails[]) => {
     if (!filters) return []
     return getFilteredByStage(assignments).filter(
       (assignment) =>
@@ -55,9 +55,6 @@ const AssignmentTab: React.FC<{
 
   const {
     info: {
-      template,
-      org,
-      name,
       current: {
         stage: { name: stageName, colour: stageColour },
       },
@@ -66,20 +63,20 @@ const AssignmentTab: React.FC<{
 
   return (
     <Container id="assignment-tab">
-      <div className="centered-flex-box-row">
+      <div className="flex-column-start-center">
         <Label className="uppercase-label" content={strings.REVIEW_OVERVIEW_STAGE} />
         <Stage name={stageName} colour={stageColour || ''} />
+        <ReviewLevel
+          filters={filters}
+          setFilters={setFilters}
+          structure={fullStructure}
+          assignments={assignments}
+        />
       </div>
-      <ReviewLevel
-        filters={filters}
-        setFilters={setFilters}
-        structure={fullStructure}
-        assignments={assignments}
-      />
       {filters && (
         <Assignment
-          assignmentsByStage={getFilteredByStage(assignments)}
-          assignmentsByUserAndStage={getFilteredReviewer(assignments)}
+          filters={filters}
+          assignmentsByStageAndLevel={getFilteredLevel(assignments)}
           assignmentInPreviousStage={assignmentInPreviousStage}
           fullApplicationStructure={fullStructure}
         />

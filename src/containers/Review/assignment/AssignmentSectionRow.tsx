@@ -15,6 +15,7 @@ const NOT_ASSIGNED = 0
 type AssignmentSectionRowProps = {
   assignments: AssignmentDetails[]
   sectionCode: string
+  reviewLevel: number
   structure: FullStructure
   assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
   setEnableSubmit: React.Dispatch<React.SetStateAction<boolean>>
@@ -23,6 +24,7 @@ type AssignmentSectionRowProps = {
 const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   assignments,
   sectionCode,
+  reviewLevel,
   structure,
   assignedSectionsState,
   setEnableSubmit,
@@ -72,6 +74,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     },
     currentUser
   )
+
   if (!assignmentOptions) return null
 
   const onAssigneeSelection = async (assignee: number) => {
@@ -122,9 +125,20 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     ({ text }) => text != strings.ASSIGNMENT_YOURSELF
   )
 
+  const levelName =
+    structure.stages
+      .find(({ stage: { number } }) => number === structure.info.current.stage.number)
+      ?.levels.find(({ number }) => reviewLevel === number)?.name || strings.LEVEL_NOT_FOUND
+
   return (
-    <Grid className="section-single-row-box-container">
+    <Grid columns={2} className="section-single-row-box-container">
       <Grid.Row>
+        <Grid.Column className="review-level">
+          <Label
+            className="simple-label"
+            content={`${strings.REVIEW_FILTER_LEVEL}: ${levelName}`}
+          />
+        </Grid.Column>
         <Grid.Column className="centered-flex-box-row">
           {originalAssignee ? (
             <AssigneeLabel

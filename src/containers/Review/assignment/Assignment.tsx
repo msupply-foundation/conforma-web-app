@@ -3,20 +3,19 @@ import { Button, Segment, Header } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useUpdateReviewAssignment from '../../../utils/hooks/useUpdateReviewAssignment'
 import useReasignReviewAssignment from '../../../utils/hooks/useReassignReviewAssignment'
-import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
+import { AssignmentDetails, Filters, FullStructure, SectionAssignee } from '../../../utils/types'
 import AssignmentSectionRow from './AssignmentSectionRow'
 import ReviewSectionRow from './ReviewSectionRow'
 
 interface ReviewHomeProps {
-  assignmentsByStage: AssignmentDetails[]
-  assignmentsByUserAndStage: AssignmentDetails[]
+  filters: Filters | null
+  assignmentsByStageAndLevel: AssignmentDetails[]
   assignmentInPreviousStage: AssignmentDetails
   fullApplicationStructure: FullStructure
 }
 
 const Assignment: React.FC<ReviewHomeProps> = ({
-  assignmentsByStage,
-  assignmentsByUserAndStage,
+  assignmentsByStageAndLevel,
   assignmentInPreviousStage,
   fullApplicationStructure,
 }) => {
@@ -55,7 +54,7 @@ const Assignment: React.FC<ReviewHomeProps> = ({
           },
         }) => id === newAssignee
       )
-      const unassignment = assignmentsByStage.find(
+      const unassignment = assignmentsByStageAndLevel.find(
         ({ reviewer: { id } }) => id === previousAssignee
       )
 
@@ -64,7 +63,9 @@ const Assignment: React.FC<ReviewHomeProps> = ({
         if (!!unassignment && found?.unassignmentId != unassignment.id)
           console.log('Unassignment for more than one previous assignee - Failed')
       } else {
-        const reassignment = assignmentsByStage.find(({ reviewer: { id } }) => id === newAssignee)
+        const reassignment = assignmentsByStageAndLevel.find(
+          ({ reviewer: { id } }) => id === newAssignee
+        )
         if (reassignment && unassignment)
           reassignmentGroupedSections.push({
             sectionCodes: [sectionCode],
@@ -97,7 +98,9 @@ const Assignment: React.FC<ReviewHomeProps> = ({
       )
       if (found) found.sectionCodes.push(sectionCode)
       else {
-        const assignment = assignmentsByStage.find(({ reviewer: { id } }) => id === newAssignee)
+        const assignment = assignmentsByStageAndLevel.find(
+          ({ reviewer: { id } }) => id === newAssignee
+        )
         if (assignment) assignmentGroupedSections.push({ sectionCodes: [sectionCode], assignment })
       }
     })
@@ -106,21 +109,31 @@ const Assignment: React.FC<ReviewHomeProps> = ({
     )
   }
 
+  const assignmentGroupedLevel: { [level: number]: AssignmentDetails[] } = {}
+  assignmentsByStageAndLevel.forEach((assignment) => {
+    const { level } = assignment
+    if (!assignmentGroupedLevel[level]) assignmentGroupedLevel[level] = [assignment]
+    else assignmentGroupedLevel[level].push(assignment)
+  })
+
   return (
     <>
       {Object.values(fullApplicationStructure.sections).map(({ details: { id, title, code } }) => (
         <Segment className="stripes" key={id}>
           <Header className="section-title" as="h5" content={title} />
-          <AssignmentSectionRow
-            {...{
-              assignments: assignmentsByStage,
-              structure: fullApplicationStructure,
-              sectionCode: code,
-              assignedSectionsState: [assignedSections, setAssignedSections],
-              setEnableSubmit,
-            }}
-          />
-          {assignmentsByUserAndStage.map((assignment) => (
+          {Object.entries(assignmentGroupedLevel).map(([level, assignments]) => (
+            <AssignmentSectionRow
+              {...{
+                assignments: assignments,
+                sectionCode: code,
+                reviewLevel: Number(level),
+                structure: fullApplicationStructure,
+                assignedSectionsState: [assignedSections, setAssignedSections],
+                setEnableSubmit,
+              }}
+            />
+          ))}
+          {assignmentsByStageAndLevel.map((assignment) => (
             <ReviewSectionRow
               {...{
                 key: assignment.id,

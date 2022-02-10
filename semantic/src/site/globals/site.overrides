@@ -546,6 +546,14 @@ a:hover {
 .review-section-row {
   .section-single-row-box-container();
 
+  .ui.grid > .row {
+    justify-content: stretch;
+  }
+
+  // .ui.grid > .column.review-level {
+  //   width: 10%;
+  // }
+
   .assigned-column {
     text-align: center;
   }

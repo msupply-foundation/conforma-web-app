@@ -24,7 +24,7 @@ const ReviewLevel: React.FC<ReviewLevelProps> = ({
   useEffect(() => {
     setFilters({
       selectedLevel: ALL_LEVELS,
-      selectedStage: structure.info.current.stage.number,
+      selectedStage: structure.info.current.stage.number, // Fixed with current for application
     })
   }, [])
 
@@ -46,7 +46,7 @@ const ReviewLevel: React.FC<ReviewLevelProps> = ({
         <Label className="simple-label" content={strings.REVIEW_FILTER_SHOW_TASKS_FOR} />
         <Dropdown
           className="reviewer-dropdown"
-          options={getLevelsOptions(stage.levels, assignments)}
+          options={getLevelsOptions(stage.levels)}
           value={filters?.selectedLevel}
           onChange={changeFilters('selectedLevel')}
         />
@@ -58,7 +58,7 @@ const ReviewLevel: React.FC<ReviewLevelProps> = ({
 const useHelpers = () => {
   const { strings } = useLanguageProvider()
 
-  const getLevelsOptions = (levels: LevelDetails[], assignments: AssignmentDetails[]) => {
+  const getLevelsOptions = (levels: LevelDetails[]) => {
     let levelsOptions: { value: number; key: number; text: string }[] = [
       ...levels.map(({ name, number }) => ({
         text: name,
