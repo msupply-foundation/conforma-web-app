@@ -160,7 +160,8 @@ export default {
   LABEL_VERIFICATION_FAILED: 'Verificaton Failed',
   REVIEW_PROGRESS_BAR_SUBMITTED: 'Submitted',
   REVIEW_SUBMISSION_CONFIRM_TITLE: 'Submitting Review',
-  REVIEW_SUBMISSION_CONFIRM_MESSAGE: 'Are you sure?',
+  REVIEW_SUBMISSION_CONFIRM_MESSAGE:
+    'You are about to submit your review. Are you sure you wish to proceed?',
   REVIEW_SUBMISSION_CONFIRM_OPTION: 'Submitting Review',
   REVIEW_SUBMISSION_FAIL: 'Not all sections have been reviewed',
   REVIEW_SUBMISSION_ERROR: 'Something wrong with server - review mutation failed',
