@@ -16,11 +16,7 @@ const useTimeline = (structure: FullStructure) => {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
 
-  const {
-    data,
-    loading: apolloLoading,
-    error: apolloError,
-  } = useGetActivityLogQuery({
+  const { data, error: apolloError } = useGetActivityLogQuery({
     variables: { applicationId: structure.info.id },
     // fetchPolicy: 'network-only',
   })
@@ -34,7 +30,7 @@ const useTimeline = (structure: FullStructure) => {
       setTimeline(buildTimeline(data?.activityLogs?.nodes as ActivityLog[], structure, strings))
       setLoading(false)
     }
-  }, [data, apolloLoading, apolloError])
+  }, [data, apolloError])
 
   return { error, loading, timeline }
 }
