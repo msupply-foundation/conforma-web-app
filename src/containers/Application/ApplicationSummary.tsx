@@ -116,7 +116,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
               section={section}
               responsesByCode={responsesByCode as ResponsesByCode}
               applicationData={fullStructure.info}
-              stages={stages}
+              stages={stages.map(({ stage }) => stage)}
               serial={serial}
               isSummary
               canEdit={status === ApplicationStatus.Draft}

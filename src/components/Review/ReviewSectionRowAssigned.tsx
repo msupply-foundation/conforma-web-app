@@ -29,7 +29,7 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
           <ReviewCanMakeDecisionLabel reviewer={assignment.reviewer} strings={strings} />
         )
       case ReviewAction.canSelfAssign:
-        return isAssignedToCurrentUser ? (
+        return !isAssignedToCurrentUser ? (
           <ReviewSelfAssignmentLabel strings={strings} />
         ) : (
           <ReviewSelfAssignmentLabel reviewer={assignment.reviewer} strings={strings} />
@@ -45,7 +45,7 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
         return isAssignedToCurrentUser ? (
           thisReview?.current.reviewStatus === ReviewStatus.Submitted ? (
             <ReviewLabel
-              message={`${strings.REVIEW_SUBMITTED_BY} ${strings.REVIEW_FILTER_YOURSELF}`}
+              message={`${strings.REVIEW_SUBMITTED_BY} ${strings.ASSIGNMENT_YOURSELF}`}
               strings={strings}
             />
           ) : (

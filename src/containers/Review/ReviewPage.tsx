@@ -212,7 +212,7 @@ const ReviewPage: React.FC<{
             )}
             responsesByCode={responsesByCode as ResponsesByCode}
             applicationData={fullApplicationStructure.info}
-            stages={fullApplicationStructure.stages}
+            stages={fullApplicationStructure.stages.map(({ stage }) => stage)}
             serial={serial}
             isReview
             isConsolidation={section.assignment?.isConsolidation}

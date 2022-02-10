@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Button, Form, List, Header, ModalProps, Message } from 'semantic-ui-react'
+import { Button, Form, List, Header, Message, Icon } from 'semantic-ui-react'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure, User } from '../../../utils/types'
 import reactStringReplace from 'react-string-replace'
@@ -115,14 +115,26 @@ const FileList: React.FC<{ files: File[]; setFiles: Function; strings: LanguageS
 }) => (
   <div id="files-list">
     <Header as="h4">{strings.REVIEW_NOTES_FILES}</Header>
-    <p className="smaller-text">{strings.REVIEW_NOTES_CLICK_TO_REMOVE}</p>
+    <p className="smaller-text" style={{ marginBottom: '0.5em' }}>
+      {strings.REVIEW_NOTES_HOVER_TO_REMOVE}
+    </p>
     <List bulleted>
       {files.map((file) => (
-        <List.Item
-          key={file.name}
-          onClick={() => setFiles(files.filter((f) => f.name !== file.name))}
-        >
-          <a>{file.name}</a>
+        <List.Item key={file.name}>
+          <div
+            className="text-ellipsis icon-after tiny-bit-smaller-text"
+            style={{ paddingBottom: 1 }}
+          >
+            {file.name}
+            <Icon
+              circular
+              name="close"
+              color="blue"
+              size="small"
+              className="floating-icon clickable"
+              onClick={() => setFiles(files.filter((f) => f.name !== file.name))}
+            />
+          </div>
         </List.Item>
       ))}
     </List>
