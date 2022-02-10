@@ -52,7 +52,7 @@ const ReviewPage: React.FC<{
     userState: { currentUser },
   } = useUserState()
 
-  const { push } = useRouter()
+  const { push, query } = useRouter()
 
   const { fullReviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment,
@@ -61,6 +61,7 @@ const ReviewPage: React.FC<{
 
   const { isSectionActive, toggleSection } = useQuerySectionActivation({
     defaultActiveSectionCodes: [],
+    allSections: Object.keys(fullApplicationStructure.sections).map((section) => section),
   })
 
   const { addScrollable, scrollTo } = useScrollableAttachments()
@@ -89,9 +90,10 @@ const ReviewPage: React.FC<{
         current: { stage },
       },
     } = fullReviewStructure
+
     return (
       <>
-        <ReviewHeader applicationName={name} stage={stage} />
+        <ReviewHeader applicationName={name} stage={reviewAssignment.current.stage} />
         <Label className="simple-label" content={strings.LABEL_REVIEW_IN_PROGRESS} />
       </>
     )
@@ -173,7 +175,7 @@ const ReviewPage: React.FC<{
     <Message error title={strings.ERROR_GENERIC} list={[error]} />
   ) : (
     <>
-      <ReviewHeader applicationName={name} stage={stage} />
+      <ReviewHeader applicationName={name} stage={reviewAssignment.current.stage} />
       <ReviewSubheader />
       <div id="application-summary-content">
         {Object.values(sections).map((section) => (

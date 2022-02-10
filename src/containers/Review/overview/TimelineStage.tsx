@@ -29,8 +29,7 @@ export const TimelineStageUI: React.FC<{
                 </List.Header>
                 {group.events.map((event) => (
                   <List.Item key={event.id}>
-                    {/* <Icon name="briefcase" /> */}
-                    <Markdown text={event.displayString} />
+                    <Markdown text={event.displayString} newTabLinks={true} />
                   </List.Item>
                 ))}
               </List>

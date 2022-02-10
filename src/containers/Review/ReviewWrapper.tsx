@@ -8,7 +8,7 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
-import { OverviewTab, AssignmentTab, SummaryTab, NotesTab, DocumentsTab, ReviewProgress } from './'
+import { OverviewTab, AssignmentTab, NotesTab, DocumentsTab, ReviewProgress } from './'
 import { NotesState } from './notes/NotesTab'
 
 interface ReviewWrapperProps {
@@ -51,10 +51,6 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     info: { template, org, name },
   } = fullStructure
 
-  if (!tab) {
-    updateQuery({ tab: tabIdentifiers[0] })
-  }
-
   const getTabFromQuery = (tabQuery: string | undefined) => {
     const index = tabIdentifiers.findIndex((tabName) => tabName === tabQuery)
     return index === -1 ? 0 : index
@@ -78,14 +74,6 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       render: () => (
         <Tab.Pane>
           <AssignmentTab structure={fullStructure} />
-        </Tab.Pane>
-      ),
-    },
-    {
-      menuItem: strings.REVIEW_TAB_SUMMARY,
-      render: () => (
-        <Tab.Pane>
-          <SummaryTab structure={fullStructure} />
         </Tab.Pane>
       ),
     },
@@ -149,7 +137,16 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
   applicationName,
   orgName,
 }) => {
-  const { push } = useRouter()
+  const {
+    push,
+    query: { tab },
+    updateQuery,
+  } = useRouter()
+
+  if (!tab) {
+    updateQuery({ tab: tabIdentifiers[0] })
+  }
+
   return (
     <div id="review-home-header">
       <Label
