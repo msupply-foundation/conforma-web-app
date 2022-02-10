@@ -31,7 +31,7 @@ const ReviewProgress: React.FC<{
     <Step key="first">
       <StepTitle>{strings.REVIEW_PROGRESS_BAR_SUBMITTED}</StepTitle>
     </Step>,
-    ...stages.map((stage) =>
+    ...stages.map(({ stage }) =>
       stage.number === currentStage.number && !isApproved ? (
         <Step
           key={stage.name}

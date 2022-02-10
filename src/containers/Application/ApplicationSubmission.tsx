@@ -81,7 +81,7 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
           <Segment basic textAlign="left" id="submission-content">
             <p className="dark-grey">{strings.SUBTITLE_SUBMISSION_STEPS}</p>
             <List>
-              {stages.map(({ name, description, colour }) =>
+              {stages.map(({ stage: { name, description, colour } }) =>
                 name ? (
                   <List.Item key={`list_stage_${name}`}>
                     <List.Content>

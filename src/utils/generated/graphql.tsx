@@ -3898,10 +3898,8 @@ export type ApplicationNoteFilter = {
   timestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `comment` field. */
   comment?: Maybe<StringFilter>;
-  /** Filter by the object’s `files` relation. */
-  files?: Maybe<ApplicationNoteToManyFileFilter>;
-  /** Some related `files` exist. */
-  filesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `files` field. */
+  files?: Maybe<JsonFilter>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
   /** Filter by the object’s `user` relation. */
@@ -3914,76 +3912,6 @@ export type ApplicationNoteFilter = {
   or?: Maybe<Array<ApplicationNoteFilter>>;
   /** Negates the expression. */
   not?: Maybe<ApplicationNoteFilter>;
-};
-
-/** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationNoteToManyFileFilter = {
-  /** Every related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<FileFilter>;
-  /** Some related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<FileFilter>;
-  /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<FileFilter>;
-};
-
-/** A filter to be used against `File` object types. All fields are combined with a logical ‘and.’ */
-export type FileFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `uniqueId` field. */
-  uniqueId?: Maybe<StringFilter>;
-  /** Filter by the object’s `originalFilename` field. */
-  originalFilename?: Maybe<StringFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateId` field. */
-  templateId?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationSerial` field. */
-  applicationSerial?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicationResponseId` field. */
-  applicationResponseId?: Maybe<IntFilter>;
-  /** Filter by the object’s `description` field. */
-  description?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicationNoteId` field. */
-  applicationNoteId?: Maybe<IntFilter>;
-  /** Filter by the object’s `isOutputDoc` field. */
-  isOutputDoc?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `filePath` field. */
-  filePath?: Maybe<StringFilter>;
-  /** Filter by the object’s `thumbnailPath` field. */
-  thumbnailPath?: Maybe<StringFilter>;
-  /** Filter by the object’s `mimetype` field. */
-  mimetype?: Maybe<StringFilter>;
-  /** Filter by the object’s `submitted` field. */
-  submitted?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `timestamp` field. */
-  timestamp?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `user` relation. */
-  user?: Maybe<UserFilter>;
-  /** A related `user` exists. */
-  userExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `template` relation. */
-  template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationByApplicationSerial` relation. */
-  applicationByApplicationSerial?: Maybe<ApplicationFilter>;
-  /** A related `applicationByApplicationSerial` exists. */
-  applicationByApplicationSerialExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationResponse` relation. */
-  applicationResponse?: Maybe<ApplicationResponseFilter>;
-  /** A related `applicationResponse` exists. */
-  applicationResponseExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationNote` relation. */
-  applicationNote?: Maybe<ApplicationNoteFilter>;
-  /** A related `applicationNote` exists. */
-  applicationNoteExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<FileFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<FileFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<FileFilter>;
 };
 
 /** A filter to be used against `Organisation` object types. All fields are combined with a logical ‘and.’ */
@@ -4827,6 +4755,60 @@ export type ApplicationToManyFileFilter = {
   some?: Maybe<FileFilter>;
   /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<FileFilter>;
+};
+
+/** A filter to be used against `File` object types. All fields are combined with a logical ‘and.’ */
+export type FileFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `uniqueId` field. */
+  uniqueId?: Maybe<StringFilter>;
+  /** Filter by the object’s `originalFilename` field. */
+  originalFilename?: Maybe<StringFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationSerial` field. */
+  applicationSerial?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationResponseId` field. */
+  applicationResponseId?: Maybe<IntFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: Maybe<StringFilter>;
+  /** Filter by the object’s `isOutputDoc` field. */
+  isOutputDoc?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `filePath` field. */
+  filePath?: Maybe<StringFilter>;
+  /** Filter by the object’s `thumbnailPath` field. */
+  thumbnailPath?: Maybe<StringFilter>;
+  /** Filter by the object’s `mimetype` field. */
+  mimetype?: Maybe<StringFilter>;
+  /** Filter by the object’s `submitted` field. */
+  submitted?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `user` relation. */
+  user?: Maybe<UserFilter>;
+  /** A related `user` exists. */
+  userExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `template` relation. */
+  template?: Maybe<TemplateFilter>;
+  /** A related `template` exists. */
+  templateExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationByApplicationSerial` relation. */
+  applicationByApplicationSerial?: Maybe<ApplicationFilter>;
+  /** A related `applicationByApplicationSerial` exists. */
+  applicationByApplicationSerialExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationResponse` relation. */
+  applicationResponse?: Maybe<ApplicationResponseFilter>;
+  /** A related `applicationResponse` exists. */
+  applicationResponseExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<FileFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<FileFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<FileFilter>;
 };
 
 /** A filter to be used against many `Notification` object types. All fields are combined with a logical ‘and.’ */
@@ -7219,6 +7201,8 @@ export enum ApplicationNotesOrderBy {
   TimestampDesc = 'TIMESTAMP_DESC',
   CommentAsc = 'COMMENT_ASC',
   CommentDesc = 'COMMENT_DESC',
+  FilesAsc = 'FILES_ASC',
+  FilesDesc = 'FILES_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -7237,6 +7221,8 @@ export type ApplicationNoteCondition = {
   timestamp?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `comment` field. */
   comment?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `files` field. */
+  files?: Maybe<Scalars['JSON']>;
 };
 
 /** A connection to a list of `ApplicationNote` values. */
@@ -7261,151 +7247,14 @@ export type ApplicationNote = Node & {
   userId: Scalars['Int'];
   orgId: Scalars['Int'];
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   /** Reads a single `Application` that is related to this `ApplicationNote`. */
   application?: Maybe<Application>;
   /** Reads a single `User` that is related to this `ApplicationNote`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `ApplicationNote`. */
   org?: Maybe<Organisation>;
-  /** Reads and enables pagination through a set of `File`. */
-  files: FilesConnection;
-};
-
-
-export type ApplicationNoteFilesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<FilesOrderBy>>;
-  condition?: Maybe<FileCondition>;
-  filter?: Maybe<FileFilter>;
-};
-
-/** Methods to use when ordering `File`. */
-export enum FilesOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  UniqueIdAsc = 'UNIQUE_ID_ASC',
-  UniqueIdDesc = 'UNIQUE_ID_DESC',
-  OriginalFilenameAsc = 'ORIGINAL_FILENAME_ASC',
-  OriginalFilenameDesc = 'ORIGINAL_FILENAME_DESC',
-  UserIdAsc = 'USER_ID_ASC',
-  UserIdDesc = 'USER_ID_DESC',
-  TemplateIdAsc = 'TEMPLATE_ID_ASC',
-  TemplateIdDesc = 'TEMPLATE_ID_DESC',
-  ApplicationSerialAsc = 'APPLICATION_SERIAL_ASC',
-  ApplicationSerialDesc = 'APPLICATION_SERIAL_DESC',
-  ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
-  ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
-  DescriptionAsc = 'DESCRIPTION_ASC',
-  DescriptionDesc = 'DESCRIPTION_DESC',
-  ApplicationNoteIdAsc = 'APPLICATION_NOTE_ID_ASC',
-  ApplicationNoteIdDesc = 'APPLICATION_NOTE_ID_DESC',
-  IsOutputDocAsc = 'IS_OUTPUT_DOC_ASC',
-  IsOutputDocDesc = 'IS_OUTPUT_DOC_DESC',
-  FilePathAsc = 'FILE_PATH_ASC',
-  FilePathDesc = 'FILE_PATH_DESC',
-  ThumbnailPathAsc = 'THUMBNAIL_PATH_ASC',
-  ThumbnailPathDesc = 'THUMBNAIL_PATH_DESC',
-  MimetypeAsc = 'MIMETYPE_ASC',
-  MimetypeDesc = 'MIMETYPE_DESC',
-  SubmittedAsc = 'SUBMITTED_ASC',
-  SubmittedDesc = 'SUBMITTED_DESC',
-  TimestampAsc = 'TIMESTAMP_ASC',
-  TimestampDesc = 'TIMESTAMP_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `File` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type FileCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `uniqueId` field. */
-  uniqueId?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `originalFilename` field. */
-  originalFilename?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `userId` field. */
-  userId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateId` field. */
-  templateId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `applicationSerial` field. */
-  applicationSerial?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicationResponseId` field. */
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `description` field. */
-  description?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicationNoteId` field. */
-  applicationNoteId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `isOutputDoc` field. */
-  isOutputDoc?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `filePath` field. */
-  filePath?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `thumbnailPath` field. */
-  thumbnailPath?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `mimetype` field. */
-  mimetype?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `submitted` field. */
-  submitted?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `timestamp` field. */
-  timestamp?: Maybe<Scalars['Datetime']>;
-};
-
-/** A connection to a list of `File` values. */
-export type FilesConnection = {
-  __typename?: 'FilesConnection';
-  /** A list of `File` objects. */
-  nodes: Array<Maybe<File>>;
-  /** A list of edges which contains the `File` and cursor to aid in pagination. */
-  edges: Array<FilesEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `File` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type File = Node & {
-  __typename?: 'File';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  uniqueId: Scalars['String'];
-  originalFilename: Scalars['String'];
-  userId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  applicationSerial?: Maybe<Scalars['String']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
-  isOutputDoc: Scalars['Boolean'];
-  filePath: Scalars['String'];
-  thumbnailPath?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  submitted?: Maybe<Scalars['Boolean']>;
-  timestamp: Scalars['Datetime'];
-  /** Reads a single `User` that is related to this `File`. */
-  user?: Maybe<User>;
-  /** Reads a single `Template` that is related to this `File`. */
-  template?: Maybe<Template>;
-  /** Reads a single `Application` that is related to this `File`. */
-  applicationByApplicationSerial?: Maybe<Application>;
-  /** Reads a single `ApplicationResponse` that is related to this `File`. */
-  applicationResponse?: Maybe<ApplicationResponse>;
-  /** Reads a single `ApplicationNote` that is related to this `File`. */
-  applicationNote?: Maybe<ApplicationNote>;
-};
-
-/** A `File` edge in the connection. */
-export type FilesEdge = {
-  __typename?: 'FilesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `File` at the end of the edge. */
-  node?: Maybe<File>;
 };
 
 /** A `ApplicationNote` edge in the connection. */
@@ -8706,6 +8555,123 @@ export type UserOrganisationsEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `UserOrganisation` at the end of the edge. */
   node?: Maybe<UserOrganisation>;
+};
+
+/** Methods to use when ordering `File`. */
+export enum FilesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  UniqueIdAsc = 'UNIQUE_ID_ASC',
+  UniqueIdDesc = 'UNIQUE_ID_DESC',
+  OriginalFilenameAsc = 'ORIGINAL_FILENAME_ASC',
+  OriginalFilenameDesc = 'ORIGINAL_FILENAME_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  ApplicationSerialAsc = 'APPLICATION_SERIAL_ASC',
+  ApplicationSerialDesc = 'APPLICATION_SERIAL_DESC',
+  ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
+  ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  IsOutputDocAsc = 'IS_OUTPUT_DOC_ASC',
+  IsOutputDocDesc = 'IS_OUTPUT_DOC_DESC',
+  FilePathAsc = 'FILE_PATH_ASC',
+  FilePathDesc = 'FILE_PATH_DESC',
+  ThumbnailPathAsc = 'THUMBNAIL_PATH_ASC',
+  ThumbnailPathDesc = 'THUMBNAIL_PATH_DESC',
+  MimetypeAsc = 'MIMETYPE_ASC',
+  MimetypeDesc = 'MIMETYPE_DESC',
+  SubmittedAsc = 'SUBMITTED_ASC',
+  SubmittedDesc = 'SUBMITTED_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `File` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type FileCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `uniqueId` field. */
+  uniqueId?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `originalFilename` field. */
+  originalFilename?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationSerial` field. */
+  applicationSerial?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicationResponseId` field. */
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `isOutputDoc` field. */
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `filePath` field. */
+  filePath?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `thumbnailPath` field. */
+  thumbnailPath?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `mimetype` field. */
+  mimetype?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `submitted` field. */
+  submitted?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
+};
+
+/** A connection to a list of `File` values. */
+export type FilesConnection = {
+  __typename?: 'FilesConnection';
+  /** A list of `File` objects. */
+  nodes: Array<Maybe<File>>;
+  /** A list of edges which contains the `File` and cursor to aid in pagination. */
+  edges: Array<FilesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `File` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type File = Node & {
+  __typename?: 'File';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  uniqueId: Scalars['String'];
+  originalFilename: Scalars['String'];
+  userId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc: Scalars['Boolean'];
+  filePath: Scalars['String'];
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  /** Reads a single `User` that is related to this `File`. */
+  user?: Maybe<User>;
+  /** Reads a single `Template` that is related to this `File`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Application` that is related to this `File`. */
+  applicationByApplicationSerial?: Maybe<Application>;
+  /** Reads a single `ApplicationResponse` that is related to this `File`. */
+  applicationResponse?: Maybe<ApplicationResponse>;
+};
+
+/** A `File` edge in the connection. */
+export type FilesEdge = {
+  __typename?: 'FilesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `File` at the end of the edge. */
+  node?: Maybe<File>;
 };
 
 /** Methods to use when ordering `UserApplicationJoin`. */
@@ -17830,10 +17796,10 @@ export type UpdateApplicationNoteOnApplicationNoteForApplicationNoteApplicationI
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ApplicationNoteInput` mutation. */
@@ -18653,10 +18619,10 @@ export type UpdateApplicationNoteOnApplicationNoteForApplicationNoteUserIdFkeyPa
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `ApplicationNoteInput` mutation. */
@@ -18978,10 +18944,10 @@ export type UpdateApplicationNoteOnApplicationNoteForApplicationNoteOrgIdFkeyPat
   userId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisation` in the `ApplicationNoteInput` mutation. */
@@ -19624,7 +19590,6 @@ export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -19635,7 +19600,6 @@ export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `user` in the `FileInput` mutation. */
@@ -20686,7 +20650,6 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -20697,7 +20660,6 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `template` in the `FileInput` mutation. */
@@ -20923,7 +20885,6 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   templateId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -20934,7 +20895,6 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `applicationResponse` in the `FileInput` mutation. */
@@ -21226,7 +21186,6 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -21237,200 +21196,6 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `applicationNote` in the `FileInput` mutation. */
-export type FileApplicationNoteIdFkeyInput = {
-  /** The primary key(s) for `applicationNote` for the far side of the relationship. */
-  connectById?: Maybe<ApplicationNoteApplicationNotePkeyConnect>;
-  /** The primary key(s) for `applicationNote` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ApplicationNoteNodeIdConnect>;
-  /** The primary key(s) for `applicationNote` for the far side of the relationship. */
-  deleteById?: Maybe<ApplicationNoteApplicationNotePkeyDelete>;
-  /** The primary key(s) for `applicationNote` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ApplicationNoteNodeIdDelete>;
-  /** The primary key(s) and patch data for `applicationNote` for the far side of the relationship. */
-  updateById?: Maybe<ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate>;
-  /** The primary key(s) and patch data for `applicationNote` for the far side of the relationship. */
-  updateByNodeId?: Maybe<FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate>;
-  /** A `ApplicationNoteInput` object that will be created and connected to this object. */
-  create?: Maybe<FileApplicationNoteIdFkeyApplicationNoteCreateInput>;
-};
-
-/** The fields on `applicationNote` to look up the row to update. */
-export type ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate = {
-  /** An object where the defined keys will be set on the `applicationNote` being updated. */
-  patch: UpdateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `applicationNote` being updated. */
-export type UpdateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  comment?: Maybe<Scalars['String']>;
-  applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `file` in the `ApplicationNoteInput` mutation. */
-export type FileApplicationNoteIdFkeyInverseInput = {
-  /** Flag indicating whether all other `file` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  connectById?: Maybe<Array<FileFilePkeyConnect>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  connectByUniqueId?: Maybe<Array<FileFileUniqueIdKeyConnect>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<FileNodeIdConnect>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  deleteById?: Maybe<Array<FileFilePkeyDelete>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  deleteByUniqueId?: Maybe<Array<FileFileUniqueIdKeyDelete>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<FileNodeIdDelete>>;
-  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateById?: Maybe<Array<FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate>>;
-  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateByUniqueId?: Maybe<Array<FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate>>;
-  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate>>;
-  /** A `FileInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<FileApplicationNoteIdFkeyFileCreateInput>>;
-};
-
-/** The fields on `file` to look up the row to update. */
-export type FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate = {
-  /** An object where the defined keys will be set on the `file` being updated. */
-  patch: UpdateFileOnFileForFileApplicationNoteIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `file` being updated. */
-export type UpdateFileOnFileForFileApplicationNoteIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  uniqueId?: Maybe<Scalars['String']>;
-  originalFilename?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  applicationSerial?: Maybe<Scalars['String']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  description?: Maybe<Scalars['String']>;
-  isOutputDoc?: Maybe<Scalars['Boolean']>;
-  filePath?: Maybe<Scalars['String']>;
-  thumbnailPath?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  submitted?: Maybe<Scalars['Boolean']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  userToUserId?: Maybe<FileUserIdFkeyInput>;
-  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
-  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
-  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
-};
-
-/** The fields on `file` to look up the row to update. */
-export type FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `file` being updated. */
-  patch: UpdateFileOnFileForFileApplicationNoteIdFkeyPatch;
-  uniqueId: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `file` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `file` being updated. */
-  patch: FilePatch;
-};
-
-/** Represents an update to a `File`. Fields that are set will be updated. */
-export type FilePatch = {
-  id?: Maybe<Scalars['Int']>;
-  uniqueId?: Maybe<Scalars['String']>;
-  originalFilename?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  applicationSerial?: Maybe<Scalars['String']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
-  isOutputDoc?: Maybe<Scalars['Boolean']>;
-  filePath?: Maybe<Scalars['String']>;
-  thumbnailPath?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  submitted?: Maybe<Scalars['Boolean']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  userToUserId?: Maybe<FileUserIdFkeyInput>;
-  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
-  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
-  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
-};
-
-/** The `file` to be created by this mutation. */
-export type FileApplicationNoteIdFkeyFileCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  uniqueId: Scalars['String'];
-  originalFilename: Scalars['String'];
-  userId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  applicationSerial?: Maybe<Scalars['String']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  description?: Maybe<Scalars['String']>;
-  isOutputDoc?: Maybe<Scalars['Boolean']>;
-  filePath: Scalars['String'];
-  thumbnailPath?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  submitted?: Maybe<Scalars['Boolean']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  userToUserId?: Maybe<FileUserIdFkeyInput>;
-  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
-  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
-  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `applicationNote` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `applicationNote` being updated. */
-  patch: ApplicationNotePatch;
-};
-
-/** Represents an update to a `ApplicationNote`. Fields that are set will be updated. */
-export type ApplicationNotePatch = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  comment?: Maybe<Scalars['String']>;
-  applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
-};
-
-/** The `applicationNote` to be created by this mutation. */
-export type FileApplicationNoteIdFkeyApplicationNoteCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  comment: Scalars['String'];
-  applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** The fields on `file` to look up the row to update. */
@@ -21448,6 +21213,28 @@ export type ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdat
   patch: FilePatch;
 };
 
+/** Represents an update to a `File`. Fields that are set will be updated. */
+export type FilePatch = {
+  id?: Maybe<Scalars['Int']>;
+  uniqueId?: Maybe<Scalars['String']>;
+  originalFilename?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
+  filePath?: Maybe<Scalars['String']>;
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  userToUserId?: Maybe<FileUserIdFkeyInput>;
+  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
+  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+};
+
 /** The `file` to be created by this mutation. */
 export type FileApplicationResponseIdFkeyFileCreateInput = {
   id?: Maybe<Scalars['Int']>;
@@ -21457,7 +21244,6 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -21468,7 +21254,6 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -25331,7 +25116,6 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -25342,7 +25126,6 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -25417,7 +25200,6 @@ export type FileUserIdFkeyFileCreateInput = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -25428,7 +25210,6 @@ export type FileUserIdFkeyFileCreateInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** The fields on `user` to look up the row to update. */
@@ -26119,7 +25900,6 @@ export type FileTemplateIdFkeyFileCreateInput = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -26130,7 +25910,6 @@ export type FileTemplateIdFkeyFileCreateInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -26662,17 +26441,31 @@ export type OrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate
   patch: ApplicationNotePatch;
 };
 
+/** Represents an update to a `ApplicationNote`. Fields that are set will be updated. */
+export type ApplicationNotePatch = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
+  applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
+};
+
 /** The `applicationNote` to be created by this mutation. */
 export type ApplicationNoteOrgIdFkeyApplicationNoteCreateInput = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** The fields on `organisation` to look up the row to update. */
@@ -26889,11 +26682,11 @@ export type ApplicationNoteUserIdFkeyApplicationNoteCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** The fields on `user` to look up the row to update. */
@@ -27395,11 +27188,11 @@ export type ApplicationNoteApplicationIdFkeyApplicationNoteCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -28993,11 +28786,11 @@ export type ApplicationNoteInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** The output of our create `ApplicationNote` mutation. */
@@ -29248,7 +29041,6 @@ export type FileInput = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -29259,7 +29051,6 @@ export type FileInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** The output of our create `File` mutation. */
@@ -29279,8 +29070,6 @@ export type CreateFilePayload = {
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
-  /** Reads a single `ApplicationNote` that is related to this `File`. */
-  applicationNote?: Maybe<ApplicationNote>;
   /** An edge for our `File`. May be used by Relay 1. */
   fileEdge?: Maybe<FilesEdge>;
 };
@@ -31679,8 +31468,6 @@ export type UpdateFilePayload = {
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
-  /** Reads a single `ApplicationNote` that is related to this `File`. */
-  applicationNote?: Maybe<ApplicationNote>;
   /** An edge for our `File`. May be used by Relay 1. */
   fileEdge?: Maybe<FilesEdge>;
 };
@@ -34116,8 +33903,6 @@ export type DeleteFilePayload = {
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
-  /** Reads a single `ApplicationNote` that is related to this `File`. */
-  applicationNote?: Maybe<ApplicationNote>;
   /** An edge for our `File`. May be used by Relay 1. */
   fileEdge?: Maybe<FilesEdge>;
 };
@@ -36063,6 +35848,13 @@ export type TemplateFragmentFragment = (
 export type TemplateStageFragment = (
   { __typename?: 'TemplateStage' }
   & Pick<TemplateStage, 'number' | 'title' | 'id' | 'description' | 'colour'>
+  & { templateStageReviewLevelsByStageId: (
+    { __typename?: 'TemplateStageReviewLevelsConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'TemplateStageReviewLevel' }
+      & Pick<TemplateStageReviewLevel, 'name' | 'number'>
+    )>> }
+  ) }
 );
 
 export type UserFragment = (
@@ -37556,6 +37348,12 @@ export const TemplateStageFragmentDoc = gql`
   id
   description
   colour
+  templateStageReviewLevelsByStageId {
+    nodes {
+      name
+      number
+    }
+  }
 }
     `;
 export const CreateApplicationDocument = gql`
