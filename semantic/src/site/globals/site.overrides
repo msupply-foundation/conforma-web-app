@@ -550,10 +550,6 @@ a:hover {
     justify-content: stretch;
   }
 
-  // .ui.grid > .column.review-level {
-  //   width: 10%;
-  // }
-
   .assigned-column {
     text-align: center;
   }
