@@ -1,24 +1,32 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Grid, Label, ModalProps } from 'semantic-ui-react'
 import ModalConfirmation from '../../../components/Main/ModalConfirmation'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { AssignmentOption } from '../../../utils/data/assignmentOptions'
 import { useUnassignReviewAssignmentMutation } from '../../../utils/generated/graphql'
-import useUpdateReviewAssignment from '../../../utils/hooks/useUpdateReviewAssignment'
-import { AssignmentDetails, FullStructure } from '../../../utils/types'
+import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
 import Reassignment from './Reassignment'
+import AssigneeLabel from './AssigneeLabel'
+
+const NOT_ASSIGNED = 0
 
 type AssignmentSectionRowProps = {
   assignments: AssignmentDetails[]
   sectionCode: string
   structure: FullStructure
-  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
+  assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
+  setEnableSubmit: React.Dispatch<React.SetStateAction<boolean>>
 }
 // Component renders options calculated in getAssignmentOptions, and will execute assignment mutation on drop down change
-const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
+const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
+  assignments,
+  sectionCode,
+  structure,
+  assignedSectionsState,
+  setEnableSubmit,
+}) => {
   const { strings } = useLanguageProvider()
   const UNASSIGN_MESSAGE = {
     title: strings.UNASSIGN_TITLE,
@@ -26,7 +34,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     option: strings.BUTTON_SUBMIT,
   }
   const getAssignmentOptions = useGetAssignmentOptions()
-  const { assignments, sectionCode, structure, shouldAssignState } = props
   const {
     userState: { currentUser },
   } = useUserState()
@@ -35,45 +42,51 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
   const [unassignmentError, setUnassignmentError] = useState(false)
   const [showUnassignmentModal, setShowUnassignmentModal] = useState<ModalProps>({ open: false })
   const [unassignSectionFromUser] = useUnassignReviewAssignmentMutation()
-  const { assignSectionToUser } = useUpdateReviewAssignment(structure)
+  const [assignedSections, setAssignedSections] = assignedSectionsState
+  const [originalAssignee, setOriginalAssignee] = useState<string>()
   const elements = Object.values(structure?.elementsById || {})
+
+  useEffect(() => {
+    if (assignmentOptions?.selected != NOT_ASSIGNED) {
+      const foundPreviousAssignee = assignments.find(
+        ({ reviewer }) => assignmentOptions?.selected === reviewer.id
+      )
+      if (foundPreviousAssignee) {
+        const { reviewer } = foundPreviousAssignee
+        setOriginalAssignee(`${reviewer?.firstName || ''} ${reviewer.lastName || ''}`)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (Object.values(assignedSections).some(({ newAssignee }) => newAssignee !== undefined))
+      setEnableSubmit(true)
+  }, [assignedSections])
 
   const assignmentOptions = getAssignmentOptions(
     {
       assignments,
       sectionCode,
       elements,
+      assignee: assignedSections[sectionCode]?.newAssignee,
     },
     currentUser
   )
   if (!assignmentOptions) return null
 
-  const onSelectedOption = async (value: number) => {
-    if (value === assignmentOptions.selected) return
-    if (value === AssignmentOption.REASSIGN) setIsReassignment(true)
-
-    if (value === AssignmentOption.UNASSIGN) {
-      const unassignment = assignments.find(
-        (assignment) => assignment.reviewer.id === assignmentOptions.selected
+  const onAssigneeSelection = async (assignee: number) => {
+    // When review isLastLevel then all sections are assigned to same user (similar to consolidation)
+    if (isLastLevel(assignee)) {
+      let allSectionsToUserId: SectionAssignee = {}
+      Object.keys(assignedSections).forEach(
+        (sectionCode) => (allSectionsToUserId[sectionCode] = { newAssignee: assignee as number })
       )
-      if (unassignment)
-        setShowUnassignmentModal({
-          ...UNASSIGN_MESSAGE,
-          open: true,
-          onClick: () => unassignUser(unassignment.id),
-          onClose: () => setShowUnassignmentModal({ open: false }),
-        })
-    }
-
-    const assignment = assignments.find((assignment) => assignment.reviewer.id === value)
-
-    if (!assignment) return
-    try {
-      await assignSectionToUser({ assignment, sectionCode })
-    } catch (e) {
-      console.log(e)
-      setAssignmentError(true)
-    }
+      setAssignedSections(allSectionsToUserId)
+    } else
+      setAssignedSections({
+        ...assignedSections,
+        [sectionCode]: { newAssignee: assignee as number },
+      })
   }
 
   const isLastLevel = (selected: number): boolean => {
@@ -82,37 +95,53 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
     return assignment.isLastLevel
   }
 
-  const unassignUser = async (unassignmentId: number) => {
+  const setIsUnassignment = () => {
+    if (!showUnassignmentModal.open)
+      setShowUnassignmentModal({
+        ...UNASSIGN_MESSAGE,
+        open: true,
+        onClick: () => unassignAssignee(),
+        onClose: () => setShowUnassignmentModal({ open: false }),
+      })
+  }
+
+  const unassignAssignee = async () => {
+    const unassignment = assignments.find(
+      (assignment) => assignment.reviewer.id === assignmentOptions.selected
+    )
+    if (!unassignment) return
     try {
-      await unassignSectionFromUser({ variables: { unassignmentId } })
+      await unassignSectionFromUser({ variables: { unassignmentId: unassignment.id } })
     } catch (e) {
       console.log(e)
       setUnassignmentError(true)
     }
   }
 
-  const selectedReviewer = assignmentOptions.options.find(
-    ({ value }) => value === assignmentOptions.selected
+  const isSelfAssignment = !assignmentOptions.options.some(
+    ({ text }) => text != strings.ASSIGNMENT_YOURSELF
   )
 
   return (
     <Grid className="section-single-row-box-container">
       <Grid.Row>
         <Grid.Column className="centered-flex-box-row">
-          {isReassignment ? (
-            <>
-              <Label className="simple-label" content={strings.LABEL_UNASSIGN_FROM} />
-              <Label content={selectedReviewer?.text} />
-            </>
+          {originalAssignee ? (
+            <AssigneeLabel
+              assignee={originalAssignee}
+              isSelfAssigned={isSelfAssignment}
+              isReassignment={isReassignment}
+              setIsReassignment={setIsReassignment}
+              setIsUnassignment={setIsUnassignment}
+            />
           ) : (
             <>
               <Label className="simple-label" content={strings.LABEL_REVIEWER} />
               <AssigneeDropdown
                 assignmentError={assignmentError || unassignmentError}
                 assignmentOptions={assignmentOptions}
-                checkIsLastLevel={isLastLevel}
-                onSelection={onSelectedOption}
-                shouldAssignState={shouldAssignState}
+                sectionCode={sectionCode}
+                onChangeMethod={(selected: number) => onAssigneeSelection(selected)}
               />
             </>
           )}
@@ -125,8 +154,8 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = (props) => {
             sectionCode={sectionCode}
             elements={elements}
             isLastLevel={isLastLevel}
-            shouldAssignState={shouldAssignState}
             previousAssignee={assignmentOptions.selected}
+            assignedSectionsState={assignedSectionsState}
           />
         )}
         <ModalConfirmation {...showUnassignmentModal} />

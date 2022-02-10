@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Grid, Icon, Label, Message } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import {
@@ -12,16 +12,11 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
 import { ReviewStatus } from '../../utils/generated/graphql'
-import useUpdateReviewAssignment from '../../utils/hooks/useUpdateReviewAssignment'
 import useRemakePreviousReview from '../../utils/hooks/useRemakePreviousReview'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const { strings } = useLanguageProvider()
-  const {
-    action,
-    isAssignedToCurrentUser,
-    assignment: { isCurrentUserReviewer },
-  } = props
+  const { action, isAssignedToCurrentUser } = props
 
   const getContent = () => {
     switch (action) {
@@ -66,11 +61,6 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
             <em>{strings.REVIEW_STATUS_PENDING_ACTION}</em>
           </Label>
         )
-      }
-
-      case ReviewAction.canSelfAssign: {
-        if (isCurrentUserReviewer) return <SelfAssignButton {...props} />
-        return null
       }
 
       default:
@@ -178,53 +168,6 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   return (
     <a className="user-action clickable" onClick={doAction}>
       {getButtonName()}
-    </a>
-  )
-}
-
-// SELF ASSIGN REVIEW button
-const SelfAssignButton: React.FC<ReviewSectionComponentProps> = ({
-  assignment,
-  fullStructure: structure,
-  shouldAssignState: [shouldAssign, setShouldAssign],
-}) => {
-  const { strings } = useLanguageProvider()
-  const [assignmentError, setAssignmentError] = useState(false)
-
-  // Do auto-assign for other sections when one is selected
-  // for auto-assignment in another row when shouldAssign == 1
-  // Note: This is required to be passed on as props to be processed
-  // in each row since the fullStructure is related to each section
-  useEffect(() => {
-    if (shouldAssign === 1) {
-      selfAssignReview()
-    }
-  }, [shouldAssign])
-
-  const { assignSectionToUser } = useUpdateReviewAssignment(structure)
-
-  const selfAssignReview = async () => {
-    {
-      try {
-        await assignSectionToUser({ assignment, isSelfAssignment: true })
-      } catch (e) {
-        console.log(e)
-        setAssignmentError(true)
-      }
-    }
-  }
-
-  if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
-
-  return (
-    <a
-      className="user-action clickable"
-      onClick={() => {
-        selfAssignReview()
-        setShouldAssign(1)
-      }}
-    >
-      {strings.BUTTON_SELF_ASSIGN}
     </a>
   )
 }

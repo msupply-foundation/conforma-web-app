@@ -23,7 +23,6 @@ type ReviewSectionRowProps = {
   assignment: AssignmentDetails
   previousAssignment: AssignmentDetails
   fullApplicationStructure: FullStructure
-  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
 }
 
 const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
@@ -31,7 +30,6 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   assignment,
   previousAssignment,
   fullApplicationStructure,
-  shouldAssignState,
 }) => {
   const { strings } = useLanguageProvider()
   const { fullReviewStructure, error } = useGetReviewStructureForSections({
@@ -61,12 +59,10 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     action: section?.assignment?.action || ReviewAction.unknown,
     isConsolidation: section.assignment?.isConsolidation || false,
     isAssignedToCurrentUser,
-    shouldAssignState,
   }
 
   const canRenderRow =
     section?.assignment?.isAssignedToCurrentUser ||
-    section?.assignment?.action === ReviewAction.canSelfAssign ||
     section?.assignment?.action === ReviewAction.canMakeDecision ||
     section?.assignment?.isReviewable
 
