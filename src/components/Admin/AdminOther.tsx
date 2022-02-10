@@ -1,17 +1,6 @@
 import React from 'react'
-import { useLanguageProvider } from '../contexts/Localisation'
-import usePageTitle from '../utils/hooks/usePageTitle'
-
-export const AdminLocalisations: React.FC = () => {
-  const { strings } = useLanguageProvider()
-  usePageTitle(strings.PAGE_TITLE_LOCALISATION)
-  return (
-    <div>
-      <h1>Localisations Management page</h1>
-      not implemented
-    </div>
-  )
-}
+import { useLanguageProvider } from '../../contexts/Localisation'
+import usePageTitle from '../../utils/hooks/usePageTitle'
 
 export const AdminPlugins: React.FC = () => {
   const { strings } = useLanguageProvider()

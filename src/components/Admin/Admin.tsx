@@ -1,14 +1,15 @@
 import React from 'react'
 import { Link, Route, Switch } from 'react-router-dom'
 import { Header } from 'semantic-ui-react'
-import { Loading, NoMatch } from '.'
-import Snapshots from '../containers/Dev/Snapshots'
-import TemplateWrapper from '../containers/TemplateBuilder/template/TemplateWrapper'
-import Templates from '../containers/TemplateBuilder/Templates'
-import { useUserState } from '../contexts/UserState'
-import { LookupTableRoutes } from '../LookupTable'
-import { useRouter } from '../utils/hooks/useRouter'
-import { AdminLocalisations, AdminOutcomes, AdminPermissions, AdminPlugins } from './AdminOther'
+import { Loading, NoMatch } from '..'
+import Snapshots from '../../containers/Dev/Snapshots'
+import TemplateWrapper from '../../containers/TemplateBuilder/template/TemplateWrapper'
+import Templates from '../../containers/TemplateBuilder/Templates'
+import { useUserState } from '../../contexts/UserState'
+import { LookupTableRoutes } from '../../LookupTable'
+import { useRouter } from '../../utils/hooks/useRouter'
+import { AdminOutcomes, AdminPermissions, AdminPlugins } from './AdminOther'
+import { AdminLocalisations } from './AdminLocalisations'
 
 const Admin: React.FC = () => {
   const {
