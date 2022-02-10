@@ -253,7 +253,7 @@ type ElementsById = { [templateElementId: string]: PageElement }
 
 interface Filters {
   selectedLevel: number
-  selectedStage: number
+  currentStage: number
 }
 
 interface FullStructure {

@@ -19,12 +19,11 @@ const ReviewLevel: React.FC<ReviewLevelProps> = ({
   setFilters,
 }) => {
   const { strings } = useLanguageProvider()
-  const { getLevelsOptions } = useHelpers()
 
   useEffect(() => {
     setFilters({
       selectedLevel: ALL_LEVELS,
-      selectedStage: structure.info.current.stage.number, // Fixed with current for application
+      currentStage: structure.info.current.stage.number, // Fixed with current for application
     })
   }, [])
 
@@ -33,30 +32,6 @@ const ReviewLevel: React.FC<ReviewLevelProps> = ({
     (_: any, { value }: any) => {
       if (filters) setFilters({ ...filters, [filterType]: value })
     }
-
-  if (!filters) return null
-
-  const stage = structure.stages.find(({ stage: { number } }) => number === filters.selectedStage)
-
-  if (!stage) return null
-
-  return (
-    <div className="section-single-row-box-container" id="review-filters-container">
-      <div className="centered-flex-box-row">
-        <Label className="uppercase-label" content={strings.REVIEW_FILTER_SHOW_TASKS_FOR} />
-        <Dropdown
-          className="reviewer-dropdown"
-          options={getLevelsOptions(stage.levels)}
-          value={filters?.selectedLevel}
-          onChange={changeFilters('selectedLevel')}
-        />
-      </div>
-    </div>
-  )
-}
-
-const useHelpers = () => {
-  const { strings } = useLanguageProvider()
 
   const getLevelsOptions = (levels: LevelDetails[]) => {
     let levelsOptions: { value: number; key: number; text: string }[] = [
@@ -75,7 +50,25 @@ const useHelpers = () => {
     return levelsOptions
   }
 
-  return { getLevelsOptions }
+  if (!filters) return null
+
+  const stage = structure.stages.find(({ stage: { number } }) => number === filters.currentStage)
+
+  if (!stage) return null
+
+  return (
+    <div className="section-single-row-box-container" id="review-filters-container">
+      <div className="centered-flex-box-row">
+        <Label className="uppercase-label" content={strings.REVIEW_FILTER_SHOW_TASKS_FOR} />
+        <Dropdown
+          className="reviewer-dropdown"
+          options={getLevelsOptions(stage.levels)}
+          value={filters?.selectedLevel}
+          onChange={changeFilters('selectedLevel')}
+        />
+      </div>
+    </div>
+  )
 }
 
 export default ReviewLevel

@@ -143,10 +143,9 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     <Grid columns={2} className="section-single-row-box-container">
       <Grid.Row>
         <Grid.Column className="review-level">
-          <Label
-            className="simple-label"
-            content={`${strings.REVIEW_FILTER_LEVEL}: ${levelName}`}
-          />
+          <Label className="simple-label">
+            {strings.REVIEW_FILTER_LEVEL}: <strong>{levelName}</strong>
+          </Label>
         </Grid.Column>
         <Grid.Column className="centered-flex-box-row">
           {originalAssignee ? (

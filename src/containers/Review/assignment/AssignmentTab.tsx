@@ -29,7 +29,7 @@ const AssignmentTab: React.FC<{
   const getFilteredByStage = (assignments: AssignmentDetails[]) => {
     if (!filters) return []
     return assignments.filter(
-      (assignment) => assignment.current.stage.number === filters.selectedStage
+      (assignment) => assignment.current.stage.number === filters.currentStage
     )
   }
 
@@ -50,7 +50,7 @@ const AssignmentTab: React.FC<{
   const assignmentInPreviousStage = getPreviousStageAssignment(
     fullStructure.info.serial,
     assignments,
-    filters?.selectedStage
+    filters?.currentStage
   )
 
   const {
