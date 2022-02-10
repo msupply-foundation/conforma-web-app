@@ -40,7 +40,7 @@ export const Overview: React.FC<{
               </p>
               <p className="right-item">
                 <strong>{strings.REVIEW_OVERVIEW_ORG}: </strong>
-                {organisation}
+                {organisation || <em>{strings.LABEL_NO_ORG}</em>}
               </p>
             </div>
             <div className="flex-row wrap">
@@ -50,7 +50,7 @@ export const Overview: React.FC<{
               </p>
               <p className="right-item">
                 <strong>{strings.REVIEW_OVERVIEW_COMPLETED}: </strong>
-                {completed && DateTime.fromISO(completed).toLocaleString()}
+                {(completed && DateTime.fromISO(completed).toLocaleString()) || '...'}
               </p>
             </div>
             <div className="flex-row wrap">

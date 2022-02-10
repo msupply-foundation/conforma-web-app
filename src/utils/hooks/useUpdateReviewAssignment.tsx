@@ -15,12 +15,10 @@ type UseUpdateReviewAssignmentMutationReturnType = ReturnType<
 type PromiseReturnType = ReturnType<UseUpdateReviewAssignmentMutationReturnType[0]>
 // hook used to assign section/s to user as per type definition below (returns promise that resolve with mutation result data)
 type UseUpdateReviewAssignment = (structure: FullStructure) => {
-  assignSectionToUser: (props: {
+  assignSectionsToUser: (props: {
     // Section code is optional if omitted all sections are assigned
-    sectionCode?: string
+    sectionCodes: string[]
     assignment: AssignmentDetails
-    // isSelfAssignment defaults to false
-    isSelfAssignment?: boolean
   }) => PromiseReturnType
 }
 
@@ -28,7 +26,7 @@ type ConstructAssignSectionPatch = (
   reviewLevel: number,
   isFinalDecision: boolean,
   isSelfAssignment: boolean,
-  sectionCode?: string
+  sectionCodes: string[]
 ) => ReviewAssignmentPatch
 
 const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
@@ -44,8 +42,8 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
   const constructAssignSectionPatch: ConstructAssignSectionPatch = (
     reviewLevel,
     isFinalDecision,
-    isSelfAssignment,
-    sectionCode
+    isSelfAssignable,
+    sectionCodes
   ) => {
     const elements = Object.values(structure?.elementsById || {})
 
@@ -53,14 +51,14 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
     // - level 1 (or finalDecision) -> if existing response linked
     // - level 1+ -> if existing review linked
     // - question category
-    // - [Optional] section code (if one passed through)
+    // - section codes (if none - then will consider all sections)
     //
     // TODO: Would be nice to replace this to use something similar
     // to what is in addIsPendingReview (useGetReviewStructureForSection/helpers)
     const assignableElements = elements.filter(
       ({ element, response, lowerLevelReviewLatestResponse }) =>
         (reviewLevel === 1 || isFinalDecision ? !!response : !!lowerLevelReviewLatestResponse) &&
-        (!sectionCode || element.sectionCode === sectionCode) &&
+        (sectionCodes.length === 0 || sectionCodes.includes(element.sectionCode)) &&
         element.category === TemplateElementCategory.Question
     )
 
@@ -71,8 +69,7 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
     return {
       status: ReviewAssignmentStatus.Assigned,
       assignerId: currentUser?.userId || null,
-      // onReviewSelfAssign will trigger core action to disallow other reviewers to self assign
-      trigger: isSelfAssignment ? Trigger.OnReviewSelfAssign : Trigger.OnReviewAssign,
+      trigger: isSelfAssignable ? Trigger.OnReviewSelfAssign : Trigger.OnReviewAssign,
       timeUpdated: new Date().toISOString(),
       reviewQuestionAssignmentsUsingId: {
         create: createReviewQuestionAssignments,
@@ -81,16 +78,16 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
   }
 
   return {
-    assignSectionToUser: async ({ sectionCode, assignment, isSelfAssignment = false }) => {
-      const { id, isFinalDecision, level } = assignment
+    assignSectionsToUser: async ({ sectionCodes, assignment }) => {
+      const { id, isFinalDecision, isSelfAssignable, level } = assignment
       const result = await updateAssignment({
         variables: {
           assignmentId: id,
           assignmentPatch: constructAssignSectionPatch(
             level,
             isFinalDecision,
-            isSelfAssignment,
-            sectionCode
+            isSelfAssignable,
+            sectionCodes
           ),
         },
       })

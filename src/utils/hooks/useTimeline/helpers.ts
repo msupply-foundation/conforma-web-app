@@ -1,5 +1,5 @@
 import { LanguageStrings } from '../../../contexts/Localisation'
-import { ActivityLog } from '../../generated/graphql'
+import { ActivityLog, Decision } from '../../generated/graphql'
 import { FullStructure, SectionsStructure } from '../../types'
 import { Section } from './types'
 import { DateTime } from 'luxon'
@@ -66,3 +66,17 @@ const isLastSubmission = (event: ActivityLog, fullLog: ActivityLog[]) =>
       e.timestamp > event.timestamp &&
       e.details.reviewId === event.details.reviewId
   )
+
+export const getDecisionIcon = (decision: Decision) => {
+  switch (decision) {
+    case Decision.NonConform:
+      return '❌'
+    case Decision.ListOfQuestions:
+      return '❓'
+    case Decision.Conform:
+      return '✅'
+    default:
+      // Shouldn't happen
+      return '❗'
+  }
+}

@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { Label, Grid } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { AssignmentOption } from '../../../utils/data/assignmentOptions'
-import useReasignReviewAssignment from '../../../utils/hooks/useReassignReviewAssignment'
-import { AssignmentDetails, PageElement } from '../../../utils/types'
+import { AssignmentDetails, PageElement, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
 
@@ -12,8 +10,8 @@ interface ReassignmentProps {
   sectionCode: string
   elements: PageElement[]
   isLastLevel: (selectedIndex: number) => boolean
-  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
   previousAssignee: number
+  assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
 }
 
 const Reassignment: React.FC<ReassignmentProps> = ({
@@ -21,20 +19,19 @@ const Reassignment: React.FC<ReassignmentProps> = ({
   sectionCode,
   elements,
   isLastLevel,
-  shouldAssignState,
   previousAssignee,
+  assignedSectionsState,
 }) => {
   const { strings } = useLanguageProvider()
   const getAssignmentOptions = useGetAssignmentOptions()
   const [reassignmentError, setReassignmentError] = useState(false)
-  const { reassignSection } = useReasignReviewAssignment()
-
+  const [assignedSections, setAssignedSections] = assignedSectionsState
   const assignmentOptions = getAssignmentOptions(
     {
       assignments,
       sectionCode,
       elements,
-      previousAssignee,
+      assignee: previousAssignee,
     },
     null
   )
@@ -42,25 +39,25 @@ const Reassignment: React.FC<ReassignmentProps> = ({
 
   const onReassignment = async (value: number) => {
     if (value === assignmentOptions.selected) return console.log('Re-assignment to same reviewer')
-    if (value === AssignmentOption.UNASSIGN) return console.log('un assignment not implemented')
 
-    const previousAssignment = assignments.find(
-      (assignment) => assignment.reviewer.id === previousAssignee
-    )
     const reassignment = assignments.find((assignment) => assignment.reviewer.id === value)
 
     if (!reassignment) return
-    try {
-      await reassignSection({
-        unassignmentId: previousAssignment?.id,
-        reassignment,
-        sectionCode,
-        elements,
+
+    if (isLastLevel(value)) {
+      let allSectionsToUserId: SectionAssignee = {}
+
+      Object.keys(assignedSections).forEach(
+        (sectionCode) =>
+          (allSectionsToUserId[sectionCode] = { newAssignee: value as number, previousAssignee })
+      )
+
+      setAssignedSections(allSectionsToUserId)
+    } else
+      setAssignedSections({
+        ...assignedSections,
+        [sectionCode]: { newAssignee: value as number, previousAssignee },
       })
-    } catch (e) {
-      console.error(e)
-      setReassignmentError(true)
-    }
   }
 
   return (
@@ -69,9 +66,8 @@ const Reassignment: React.FC<ReassignmentProps> = ({
       <AssigneeDropdown
         assignmentError={reassignmentError}
         assignmentOptions={assignmentOptions}
-        checkIsLastLevel={isLastLevel}
-        onSelection={onReassignment}
-        shouldAssignState={shouldAssignState}
+        sectionCode={sectionCode}
+        onChangeMethod={(selected: number) => onReassignment(selected)}
       />
     </Grid.Column>
   )

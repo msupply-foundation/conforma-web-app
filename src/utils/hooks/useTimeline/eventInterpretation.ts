@@ -26,7 +26,7 @@ const getStatusEvent = (
       }
     case value === 'DRAFT' && prevStatus === 'CHANGES_REQUIRED':
       return {
-        eventType: TimelineEventType.ApplicationRestarted,
+        eventType: TimelineEventType.Ignore,
         displayString: strings.TIMELINE_APPLICATION_RESTARTED,
       }
     case value === 'SUBMITTED' && prevStatus === 'COMPLETED':
@@ -105,25 +105,36 @@ const getOutcomeEvent = ({ value }: ActivityLog, strings: LanguageStrings): Even
 }
 
 const getAssignmentEvent = (
-  { value, details: { reviewer, assigner, sections } }: ActivityLog,
+  { value, details: { reviewer, assigner, sections, reviewLevel } }: ActivityLog,
   structure: FullStructure,
   strings: LanguageStrings
 ): EventOutput => {
+  const isConsolidation = reviewLevel > 1
   switch (value) {
     case 'Assigned':
       return {
-        eventType: TimelineEventType.AssignedByAnother,
-        displayString: strings.TIMELINE_ASSIGNED.replace('%1', `**${reviewer?.name}**`)
+        eventType: !isConsolidation
+          ? TimelineEventType.AssignedReviewByAnother
+          : TimelineEventType.AssignedConsolidationByAnother,
+        displayString: (!isConsolidation
+          ? strings.TIMELINE_REVIEW_ASSIGNED
+          : strings.TIMELINE_CONSOLIDATION_ASSIGNED
+        )
+          .replace('%1', `**${reviewer?.name}**`)
           .replace('%2', stringifySections(sections, structure.sections, strings))
           .replace('%3', `**${assigner?.name}**`),
       }
     case 'Self-Assigned':
       return {
-        eventType: TimelineEventType.SelfAssigned,
-        displayString: strings.TIMELINE_SELF_ASSIGNED.replace(
-          '%1',
-          `**${reviewer?.name}**`
-        ).replace('%2', stringifySections(sections, structure.sections, strings)),
+        eventType: !isConsolidation
+          ? TimelineEventType.SelfAssignedReview
+          : TimelineEventType.SelfAssignedConsolidation,
+        displayString: (!isConsolidation
+          ? strings.TIMELINE_REVIEW_SELF_ASSIGNED
+          : strings.TIMELINE_CONSOLIDATION_SELF_ASSIGNED
+        )
+          .replace('%1', `**${reviewer?.name}**`)
+          .replace('%2', stringifySections(sections, structure.sections, strings)),
       }
     case 'Unassigned':
       return {

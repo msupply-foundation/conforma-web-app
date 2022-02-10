@@ -9,6 +9,7 @@ interface TimelineEvent {
   timestamp: string
   displayString: string
   details: { [key: string]: GenericObject }
+  extras?: GenericObject
   logType: EventType | null
 }
 
@@ -36,8 +37,10 @@ enum TimelineEventType {
   ApplicationWithdrawn = 'APPLICATION_WITHDRAWN',
   ApplicationApproved = 'APPLICATION_APPROVED',
   ApplicationRejected = 'APPLICATION_REJECTED',
-  AssignedByAnother = 'ASSIGNED_BY_ANOTHER',
-  SelfAssigned = 'SELF_ASSIGNED',
+  AssignedReviewByAnother = 'ASSIGNED_REVIEW_BY_ANOTHER',
+  SelfAssignedReview = 'SELF_ASSIGNED_REVIEW',
+  AssignedConsolidationByAnother = 'ASSIGNED_CONSOLIDATION_BY_ANOTHER',
+  SelfAssignedConsolidation = 'SELF_ASSIGNED_CONSOLIDATION',
   Unassigned = 'UNASSIGNED',
   ReviewStarted = 'REVIEW_STARTED',
   ReviewSubmitted = 'REVIEW_SUBMITTED',
