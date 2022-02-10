@@ -38,14 +38,14 @@ const useGetAssignmentOptions = () => {
     assignee?: number
   }
 
-  const getAssignmentOptions = (
-    { assignments, sectionCode, elements, assignee: previousAssignee }: GetAssignmentOptionsProps,
-    currentUser: User | null
-  ): AssignmentOptions | null => {
+  const getAssignmentOptions = ({
+    assignments,
+    sectionCode,
+    elements,
+    assignee: previousAssignee,
+  }: GetAssignmentOptionsProps): AssignmentOptions | null => {
     const currentSectionAssignable = assignments.filter(
-      ({ assignableSectionRestrictions }) =>
-        assignableSectionRestrictions.length === 0 ||
-        assignableSectionRestrictions.includes(sectionCode)
+      ({ allowedSections }) => allowedSections.length === 0 || allowedSections.includes(sectionCode)
     )
 
     const currentUserAssignable = currentSectionAssignable.filter(
