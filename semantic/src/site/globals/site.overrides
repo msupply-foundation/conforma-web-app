@@ -764,6 +764,50 @@ a:hover {
   }
 }
 
+// Documents tab
+
+#documents-tab {
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  .flex-extra {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .icon-container {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 20%;
+  }
+
+  .ui.image {
+    max-height: 100px;
+    // border: 1px solid @surfacesLight;
+  }
+
+  .ui.list {
+    margin-top: 10px;
+  }
+
+  .ui.list > .item {
+    margin-top: 20px;
+    background-color: @surfacesLight;
+    padding: 15px;
+    border-radius: @borderRadius;
+    border: 1px solid @surfacesMed;
+    min-width: 400px;
+    h4 {
+      max-width: 250px;
+      line-height: 1.5em;
+      margin-bottom: 0.5em;
+    }
+    p {
+      margin-bottom: 0.4em;
+    }
+  }
+}
+
 /*--------------------------------
       Application List
 ---------------------------------*/
