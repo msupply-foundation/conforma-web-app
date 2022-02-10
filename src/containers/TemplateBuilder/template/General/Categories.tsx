@@ -183,13 +183,10 @@ const Category: React.FC<{}> = () => {
           <div className="spacer-20" />
           <div className="flex-row">
             <ButtonWithFallback
-              title={updateState.id ? strings.TEMPLATE_BUTTON_SAVE : strings.TEMPLATE_BUTTON_ADD}
+              title={updateState.id ? strings.BUTTON_SAVE : strings.TEMPLATE_BUTTON_ADD}
               onClick={updateState.id ? editCategory : addCategory}
             />
-            <ButtonWithFallback
-              title={strings.BUTTON_CANCEL}
-              onClick={() => setUpdateState(null)}
-            />
+            <ButtonWithFallback title={strings.CANCEL} onClick={() => setUpdateState(null)} />
           </div>
         </div>
       )}

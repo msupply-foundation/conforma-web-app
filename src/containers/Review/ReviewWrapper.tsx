@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react'
+import React, { SyntheticEvent, useState } from 'react'
 import { Route, Switch } from 'react-router'
 import { Container, Message, Tab, Label, Icon, Header, StrictTabProps } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
@@ -9,6 +9,7 @@ import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
 import { OverviewTab, AssignmentTab, SummaryTab, NotesTab, DocumentsTab, ReviewProgress } from './'
+import { NotesState } from './notes/NotesTab'
 
 interface ReviewWrapperProps {
   structure: FullStructure
@@ -28,6 +29,16 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     firstRunValidation: false,
     shouldCalculateProgress: false,
     shouldGetDraftResponses: false,
+  })
+
+  // State values for NOTES tab, need to instantiate here to preserve state
+  // between tab switches:
+  const [notesState, setNotesState] = useState<NotesState>({
+    sortDesc: true,
+    filesOnlyFilter: false,
+    showForm: false,
+    files: [],
+    comment: '',
   })
 
   usePageTitle(strings.PAGE_TITLE_REVIEW.replace('%1', structure.info.serial))
@@ -82,7 +93,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       menuItem: strings.REVIEW_TAB_NOTES,
       render: () => (
         <Tab.Pane>
-          <NotesTab structure={fullStructure} />
+          <NotesTab structure={fullStructure} state={notesState} setState={setNotesState} />
         </Tab.Pane>
       ),
     },
@@ -146,7 +157,7 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
         onClick={() => push(`/applications?type=${templateCode}`)}
         icon={<Icon name="chevron left" className="dark-grey" />}
       />
-      <Header as="h3" content={applicationName} subheader={<Header as="h5" content={orgName} />} />
+      <Header as="h3" content={applicationName} subheader={orgName} />
     </div>
   )
 }

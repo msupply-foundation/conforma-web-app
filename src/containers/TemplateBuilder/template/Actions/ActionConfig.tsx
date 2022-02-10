@@ -184,13 +184,13 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           <div className="spacer-20" />
           <div className="flex-row-center-center">
             <ButtonWithFallback
-              title={strings.TEMPLATE_BUTTON_SAVE}
+              title={strings.BUTTON_SAVE}
               disabled={!isDraft || !shouldUpdate}
               disabledMessage={!isDraft ? disabledMessage : strings.TEMPLATE_MESSAGE_SAVE_DISABLED}
               onClick={updateAction}
             />
             <ButtonWithFallback
-              title={strings.TEMPLATE_BUTTON_CLOSE}
+              title={strings.BUTTON_CLOSE}
               onClick={() => (shouldUpdate ? setOpen(true) : onClose())}
             />
             <Modal
@@ -203,13 +203,13 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               actions={[
                 {
                   key: 'save',
-                  content: strings.TEMPLATE_BUTTON_SAVE,
+                  content: strings.BUTTON_SAVE,
                   positive: true,
                   onClick: saveAndClose,
                 },
                 {
                   key: 'close',
-                  content: strings.TEMPLATE_BUTTON_CLOSE,
+                  content: strings.BUTTON_CLOSE,
                   positive: false,
                   onClick: onClose,
                 },
