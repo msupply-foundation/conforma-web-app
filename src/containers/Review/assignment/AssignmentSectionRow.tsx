@@ -3,7 +3,11 @@ import { Grid, Label, ModalProps } from 'semantic-ui-react'
 import ModalConfirmation from '../../../components/Main/ModalConfirmation'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { useUnassignReviewAssignmentMutation } from '../../../utils/generated/graphql'
+import {
+  ReviewAssignmentStatus,
+  ReviewStatus,
+  useUnassignReviewAssignmentMutation,
+} from '../../../utils/generated/graphql'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
@@ -125,6 +129,11 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     ({ text }) => text != strings.ASSIGNMENT_YOURSELF
   )
 
+  const isSubmitted =
+    assignments.find(
+      (assignment) => assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned
+    )?.review?.current.reviewStatus === ReviewStatus.Submitted || false
+
   const levelName =
     structure.stages
       .find(({ stage: { number } }) => number === structure.info.current.stage.number)
@@ -143,6 +152,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
           {originalAssignee ? (
             <AssigneeLabel
               assignee={originalAssignee}
+              isSubmitted={isSubmitted}
               isSelfAssigned={isSelfAssignment}
               isReassignment={isReassignment}
               setIsReassignment={setIsReassignment}

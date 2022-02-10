@@ -63,15 +63,17 @@ const AssignmentTab: React.FC<{
 
   return (
     <Container id="assignment-tab">
-      <div className="flex-column-start-center">
-        <Label className="uppercase-label" content={strings.REVIEW_OVERVIEW_STAGE} />
-        <Stage name={stageName} colour={stageColour || ''} />
+      <div className="flex-row-space-between-center" id="review-filters-container">
         <ReviewLevel
           filters={filters}
           setFilters={setFilters}
           structure={fullStructure}
           assignments={assignments}
         />
+        <div className="centered-flex-box-row">
+          <Label className="uppercase-label" content={strings.REVIEW_OVERVIEW_STAGE} />
+          <Stage name={stageName} colour={stageColour || ''} />
+        </div>
       </div>
       {filters && (
         <Assignment

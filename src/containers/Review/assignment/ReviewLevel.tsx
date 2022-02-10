@@ -43,7 +43,7 @@ const ReviewLevel: React.FC<ReviewLevelProps> = ({
   return (
     <div className="section-single-row-box-container" id="review-filters-container">
       <div className="centered-flex-box-row">
-        <Label className="simple-label" content={strings.REVIEW_FILTER_SHOW_TASKS_FOR} />
+        <Label className="uppercase-label" content={strings.REVIEW_FILTER_SHOW_TASKS_FOR} />
         <Dropdown
           className="reviewer-dropdown"
           options={getLevelsOptions(stage.levels)}
