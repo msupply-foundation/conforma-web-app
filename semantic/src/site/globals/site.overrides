@@ -133,7 +133,7 @@ a:hover {
 }
 
 .flex-row-start-center-wrap {
-  .flex-row-start-center;
+  .flex-row-start-center();
   flex-wrap: wrap;
 }
 
