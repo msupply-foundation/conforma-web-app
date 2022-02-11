@@ -7,12 +7,12 @@ import {
 import { FullStructure } from '../../types'
 
 const generateFinalDecisionProgress = (newStructure: FullStructure) => {
-  if (newStructure.assignment?.finalDecision?.decisionOnReview) {
-    generateReviewerResponsesProgress(newStructure)
-    generateReviewValidity(newStructure)
-  } else {
+  if (newStructure.assignment?.isFinalDecisionOnConsolidation) {
     generateConsolidatorResponsesProgress(newStructure)
     generateConsolidationValidity(newStructure)
+  } else {
+    generateReviewerResponsesProgress(newStructure)
+    generateReviewValidity(newStructure)
   }
 }
 

@@ -111,7 +111,7 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // since the reviews with isChangeRequest (and not changed) need to be removed from done accountings
   generateReviewerChangesRequestedProgress(newStructure)
 
-  if (newStructure.assignment?.finalDecision) generateFinalDecisionProgress(newStructure)
+  if (newStructure.assignment?.isFinalDecision) generateFinalDecisionProgress(newStructure)
   else if (level === 1) {
     generateReviewerResponsesProgress(newStructure)
     generateReviewValidity(newStructure)
@@ -159,11 +159,8 @@ const setReviewAndAssignment = (structure: FullStructure, reviewAssignment: Assi
     isLastLevel,
     isLocked,
     isSelfAssignable,
-    finalDecision: isFinalDecision
-      ? {
-          decisionOnReview: !isPreviousStageConsolidation,
-        }
-      : null,
+    isFinalDecision,
+    isFinalDecisionOnConsolidation: isPreviousStageConsolidation,
     canSubmitReviewAs: null,
   }
 }
@@ -231,7 +228,7 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
   const previousOriginalReviewResponses = (data?.previousOriginalReviewResponses?.nodes ||
     []) as ReviewResponse[]
 
-  const isFinalDecision = !!structure.assignment?.finalDecision
+  const isFinalDecision = !!structure.assignment?.isFinalDecision
 
   // add thisReviewLatestResponse and thisReviewPreviousResponse
   // includes for a consolidation also has reviewResponsesByReviewResponseLinkId with Consolidator decision
