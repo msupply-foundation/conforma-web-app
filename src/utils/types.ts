@@ -381,9 +381,8 @@ interface ReviewAssignment {
   isLastLevel: boolean
   isLocked: boolean
   isSelfAssignable: boolean
-  finalDecision: {
-    decisionOnReview: boolean
-  } | null
+  isFinalDecision: boolean
+  isFinalDecisionOnConsolidation: boolean
 }
 
 type ReviewSectionComponentProps = {
