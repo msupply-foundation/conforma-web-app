@@ -42,7 +42,7 @@ interface MessageState extends MessageStyleProps {
   floating: boolean
 }
 
-const useToast = (props: ToastProps): ToastReturn => {
+const useToast = (props: ToastProps = {}): ToastReturn => {
   const [showToast, setShowToast] = useState(false)
   const [messageState, setMessageState] = useState<MessageState>({
     header: props.title || '',
