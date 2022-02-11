@@ -4,6 +4,7 @@ import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 import config from '../../config'
 import { LanguageOption, useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
+import useToast from '../../utils/hooks/useToast'
 import { exportLanguages } from '../../utils/localisation/exportLanguages'
 
 export const AdminLocalisations: React.FC = () => {
@@ -11,6 +12,7 @@ export const AdminLocalisations: React.FC = () => {
   usePageTitle(strings.PAGE_TITLE_LOCALISATION)
   const [exportDisabled, setExportDisabled] = useState(true)
   const [installedLanguages, setInstalledLanguages] = useState<LanguageOption[]>([])
+  const [toastComponent, showToast] = useToast({ position: 'top-left' })
 
   useEffect(() => {
     getRequest(`${config.serverREST}/public/get-prefs`).then((prefs) =>
@@ -39,12 +41,14 @@ export const AdminLocalisations: React.FC = () => {
     else {
       // revert local state
       setInstalledLanguages(currentLanguages)
+      showToast({ title: 'Error', text: result.message, style: 'error' })
       console.error(result.message)
     }
   }
 
   return (
     <div id="localisation-panel">
+      {toastComponent}
       <Header as="h1">Localisation</Header>
       <Header as="h4">Currently installed languages</Header>
       <div className="flex-row">
