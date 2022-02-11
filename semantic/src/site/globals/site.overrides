@@ -2073,13 +2073,40 @@ a:hover {
   }
 }
 
+@toastVerticalMargin: 40px;
+@toastHorizontalMargin: 20px;
+
 .toast-container {
-  position: absolute !important;
-  bottom: 60px;
-  left: 20px;
-  width: fit-content !important;
-  // box-shadow: 0 0 0 1px rgba(34, 36, 38, 0.22) inset, 0 2px 4px 0 rgba(34, 36, 38, 0.12),
-  //   0 2px 10px 0 rgba(34, 36, 38, 0.15) !important;
+  .toast-message {
+    width: fit-content !important;
+    position: absolute !important;
+  }
+  .bottom-left {
+    bottom: @toastVerticalMargin;
+    left: @toastHorizontalMargin;
+  }
+  .bottom-middle {
+    bottom: @toastVerticalMargin;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .bottom-right {
+    bottom: @toastVerticalMargin;
+    right: @toastHorizontalMargin;
+  }
+  .top-left {
+    top: @toastVerticalMargin;
+    left: @toastHorizontalMargin;
+  }
+  .top-middle {
+    top: @toastVerticalMargin;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .top-right {
+    top: @toastVerticalMargin;
+    right: @toastHorizontalMargin;
+  }
 }
 
 .object-properties-container {

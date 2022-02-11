@@ -69,7 +69,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
       },
     })
     setShouldUpdate(false)
-    showToast({ style: 'warning' })
+    showToast()
     if (!result) return
   }
 

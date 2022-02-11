@@ -24,13 +24,14 @@ interface ToastProps {
 type ToastReturn = [any, (state?: ToastProps) => void]
 
 interface MessageStyleProps {
-  icon: SemanticICONS
+  icon?: SemanticICONS
   success: boolean
   positive: boolean
   info: boolean
   negative: boolean
   error: boolean
   warning: boolean
+  position?: Position
 }
 
 interface MessageState extends MessageStyleProps {
@@ -48,6 +49,7 @@ const useToast = (props: ToastProps): ToastReturn => {
     content: props.text || '',
     floating: true,
     ...getMessageStyleProps(props.style),
+    position: props.position || 'bottom-left',
   })
 
   const displayToast = (state: ToastProps) => {
@@ -57,6 +59,7 @@ const useToast = (props: ToastProps): ToastReturn => {
       header: state.title || messageState.header,
       content: state.text || messageState.content,
       ...newStyle,
+      position: state.position || messageState.position,
     }
     if (state.showCloseIcon || props.showCloseIcon) newState.onDismiss = () => setShowToast(false)
     else delete newState.onDismiss
@@ -67,12 +70,17 @@ const useToast = (props: ToastProps): ToastReturn => {
     setMessageState(newState)
     setShowToast(true)
     setTimeout(() => {
-      console.log('Timeout')
       setShowToast(false)
     }, state.timeout ?? props.timeout ?? 3000)
   }
   return [
-    <Message className="toast-container" hidden={!showToast} {...messageState} />,
+    <div className="toast-container center-toast">
+      <Message
+        className={'toast-message ' + messageState.position}
+        hidden={!showToast}
+        {...messageState}
+      />
+    </div>,
     (state = {}) => displayToast(state),
   ]
 }
@@ -87,7 +95,6 @@ const getMessageStyleProps = (style: MessageStyle = 'basic'): MessageStyleProps 
     negative: false,
     error: false,
     warning: false,
-    icon: 'info circle',
   }
   switch (style) {
     case 'basic':
