@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Message, SemanticICONS } from 'semantic-ui-react'
+import { Message, SemanticICONS, Transition } from 'semantic-ui-react'
 
 type MessageStyle = 'basic' | 'info' | 'warning' | 'success' | 'positive' | 'negative' | 'error'
 
@@ -64,8 +64,9 @@ const useToast = (props: ToastProps): ToastReturn => {
     if (state.showCloseIcon || props.showCloseIcon) newState.onDismiss = () => setShowToast(false)
     else delete newState.onDismiss
 
-    if (state.clickable || props.clickable) newState.onClick = () => setShowToast(false)
-    else delete newState.onClick
+    // Clickable unless explicitly set to false
+    if (state.clickable === false || props.clickable === false) delete newState.onClick
+    else newState.onClick = () => setShowToast(false)
 
     setMessageState(newState)
     setShowToast(true)
@@ -75,11 +76,13 @@ const useToast = (props: ToastProps): ToastReturn => {
   }
   return [
     <div className="toast-container center-toast">
-      <Message
-        className={'toast-message ' + messageState.position}
-        hidden={!showToast}
-        {...messageState}
-      />
+      <Transition visible={showToast} animation="scale" duration={350}>
+        <Message
+          className={'toast-message ' + messageState.position}
+          hidden={!showToast}
+          {...messageState}
+        />
+      </Transition>
     </div>,
     (state = {}) => displayToast(state),
   ]
