@@ -377,6 +377,7 @@ interface ReviewAssignment {
   assignee: GraphQLUser
   assigneeLevel: number
   assignmentStatus: ReviewAssignmentStatus
+  assignedSections: string[]
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
   isLocked: boolean
