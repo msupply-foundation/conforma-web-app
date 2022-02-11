@@ -8,7 +8,8 @@ export default {
   APPLICATIONS_LIST_EMPTY: 'No applications found',
   APPLICATION_MISSING_TEMPLATE: '',
   APPLICATION_OTHER_CHANGES_MADE: 'This is a new submission and will require a review.',
-  TRIGGER_RUNNING: 'Trigger is running. Please wait to reload page again.',
+  TRIGGER_ERROR:
+    'Problem waiting for triggers to finish. Please check console for detailed error info.',
   LOGIN_WELCOME: 'Welcome, %1',
   LOGIN_ORG_SELECT: 'Please select an organisation',
   LOGIN_REDIRECT_TO_REGISTRATION: 'Re-directing to user registration application...',
@@ -159,7 +160,8 @@ export default {
   LABEL_VERIFICATION_FAILED: 'Verificaton Failed',
   REVIEW_PROGRESS_BAR_SUBMITTED: 'Submitted',
   REVIEW_SUBMISSION_CONFIRM_TITLE: 'Submitting Review',
-  REVIEW_SUBMISSION_CONFIRM_MESSAGE: 'Are you sure?',
+  REVIEW_SUBMISSION_CONFIRM_MESSAGE:
+    'You are about to submit your review. Are you sure you wish to proceed?',
   REVIEW_SUBMISSION_CONFIRM_OPTION: 'Submitting Review',
   REVIEW_SUBMISSION_FAIL: 'Not all sections have been reviewed',
   REVIEW_SUBMISSION_ERROR: 'Something wrong with server - review mutation failed',

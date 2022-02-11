@@ -19,7 +19,11 @@ const useTimeline = (structure: FullStructure) => {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
 
-  const { data, error: apolloError } = useGetActivityLogQuery({
+  const {
+    data,
+    error: apolloError,
+    refetch,
+  } = useGetActivityLogQuery({
     variables: { applicationId: structure.info.id },
     // fetchPolicy: 'network-only',
   })
@@ -42,7 +46,7 @@ const useTimeline = (structure: FullStructure) => {
     }
   }, [data, apolloError])
 
-  return { error, loading, timeline }
+  return { error, loading, timeline, refreshTimeline: refetch }
 }
 
 export default useTimeline

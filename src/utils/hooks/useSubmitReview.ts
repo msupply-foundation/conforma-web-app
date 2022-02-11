@@ -12,13 +12,19 @@ type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewMutati
 type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 // hook used to submit review, , as per type definition below (returns promise that resolve with mutation result data)
 type UseSubmitReview = (
-  reviewId: number
+  reviewId: number,
+  reload: () => void
 ) => (structure: FullStructure, decision: Decision) => PromiseReturnType
 
 type ConstructReviewPatch = (structure: FullStructure, decision: Decision) => ReviewPatch
 
-const useSubmitReview: UseSubmitReview = (reviewId) => {
-  const [updateReview] = useUpdateReviewMutation()
+const useSubmitReview: UseSubmitReview = (reviewId, reload) => {
+  const [updateReview] = useUpdateReviewMutation({
+    onCompleted: () => {
+      console.log('Reloading after submit')
+      reload()
+    },
+  })
 
   const constructReviewPatch: ConstructReviewPatch = (structure, decision) => {
     const reviewResponses = Object.values(structure?.elementsById || []).filter(

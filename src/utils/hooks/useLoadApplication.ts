@@ -29,36 +29,49 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import { buildSectionsStructure } from '../helpers/structure'
 import config from '../../config'
 import { getSectionDetails } from '../helpers/application/getSectionsDetails'
+import useTriggers from './useTriggers'
 
 const graphQLEndpoint = config.serverGraphQL
 const JWT = localStorage.getItem(config.localStorageJWTKey)
-
-const MAX_REFETCH = 10
 
 const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
   const { strings } = useLanguageProvider()
   const [isLoading, setIsLoading] = useState(true)
   const [structureError, setStructureError] = useState('')
   const [structure, setFullStructure] = useState<FullStructure>()
-  const [refetchAttempts, setRefetchAttempts] = useState(0)
   const {
     userState: { currentUser },
   } = useUserState()
 
-  const { data, loading, error, refetch } = useGetApplicationQuery({
+  const {
+    ready: triggersReady,
+    loading: triggersLoading,
+    error: triggersError,
+    recheckTriggers,
+  } = useTriggers(serialNumber)
+
+  const { data, loading, error } = useGetApplicationQuery({
     variables: {
       serial: serialNumber,
     },
-    fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
+    fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
+    skip: !triggersReady,
   })
 
   useEffect(() => {
-    if (loading) {
+    if (triggersError) {
+      setStructureError(strings.TRIGGER_ERROR)
+      console.error('Trigger error:', triggersError)
+      return
+    }
+
+    if (loading || triggersLoading) {
       setIsLoading(true)
       return
     }
-    if (!data) return
+
+    if (!triggersReady || !data) return
 
     const application = data.applicationBySerial as Application
 
@@ -75,19 +88,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     // Building the structure...
     setIsLoading(true)
-
-    // Checking if trigger is running before loading current status
-    if (application.trigger === null) {
-      setRefetchAttempts(0)
-    } else {
-      if (refetchAttempts < MAX_REFETCH) {
-        setTimeout(() => {
-          setRefetchAttempts(refetchAttempts + 1)
-          refetch()
-        }, 500)
-      } else setStructureError(strings.TRIGGER_RUNNING)
-      return
-    }
 
     const sections = (application?.template?.templateSections?.nodes || []) as TemplateSection[]
     const sectionDetails = getSectionDetails(sections)
@@ -199,17 +199,24 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         sections: buildSectionsStructure({ sectionDetails, baseElements }),
         canApplicantMakeChanges,
         attemptSubmission: false,
+        reload: reloadApplication,
       }
 
       setFullStructure(newStructure)
       setIsLoading(false)
     })
-  }, [data, loading])
+  }, [data, loading, triggersReady, triggersLoading, triggersError])
+
+  const reloadApplication = async () => {
+    console.log('Reloading...')
+    recheckTriggers()
+  }
 
   return {
     error: structureError || error?.message,
     isLoading: loading || isLoading,
     structure,
+    reloadApplication,
   }
 }
 
