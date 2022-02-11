@@ -143,7 +143,8 @@ interface AssignmentDetails {
   isLocked: boolean
   totalAssignedQuestions: number
   reviewQuestionAssignments: ReviewQuestionAssignment[]
-  assignableSectionRestrictions: (string | null)[]
+  allowedSections: string[]
+  assignedSections: string[]
 }
 
 interface AssignmentOptions {
@@ -380,9 +381,8 @@ interface ReviewAssignment {
   isLastLevel: boolean
   isLocked: boolean
   isSelfAssignable: boolean
-  finalDecision: {
-    decisionOnReview: boolean
-  } | null
+  isFinalDecision: boolean
+  isFinalDecisionOnConsolidation: boolean
 }
 
 type ReviewSectionComponentProps = {
