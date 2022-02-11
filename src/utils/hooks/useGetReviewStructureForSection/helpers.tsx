@@ -156,6 +156,7 @@ const setReviewAndAssignment = (structure: FullStructure, reviewAssignment: Assi
     assignee: reviewAssignment.reviewer,
     assigneeLevel: level,
     assignmentStatus: reviewAssignment.current.assignmentStatus as ReviewAssignmentStatus,
+    assignedSections: reviewAssignment.assignedSections,
     isLastLevel,
     isLocked,
     isSelfAssignable,

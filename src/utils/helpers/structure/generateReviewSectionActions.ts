@@ -112,6 +112,7 @@ const generateReviewSectionActions: GenerateSectionActions = ({
   reviewAssignment: {
     assignee,
     assigneeLevel,
+    assignedSections,
     isFinalDecision,
     isFinalDecisionOnConsolidation,
     assignmentStatus,
@@ -131,7 +132,9 @@ const generateReviewSectionActions: GenerateSectionActions = ({
     const totalNewReviewable = section?.consolidationProgress?.totalNewReviewable
 
     const isReviewable =
-      (totalReviewable || 0) > 0 && assignmentStatus === ReviewAssignmentStatus.Assigned
+      (totalReviewable || 0) > 0 &&
+      assignmentStatus === ReviewAssignmentStatus.Assigned &&
+      assignedSections.includes(section.details.code)
 
     const isAssignedToCurrentUser =
       assignee?.id === currentUserId && (isReviewable || isFinalDecision)

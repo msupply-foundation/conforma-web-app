@@ -48,7 +48,9 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   if (!section) return null
 
   const thisReview = fullReviewStructure?.thisReview
-  const isAssignedToCurrentUser = !!section?.assignment?.isAssignedToCurrentUser
+  const isAssignedToCurrentUser =
+    !!section?.assignment?.isAssignedToCurrentUser &&
+    assignment.assignedSections.includes(section.details.code)
 
   const props: ReviewSectionComponentProps = {
     fullStructure: fullReviewStructure,
