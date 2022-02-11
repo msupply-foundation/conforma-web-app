@@ -13,6 +13,7 @@ import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import { useActionState } from './Actions'
 import FromExistingAction from './FromExistingAction'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
+import useToast from '../../../../utils/hooks/useToast'
 
 type ActionConfigProps = {
   templateAction: TemplateAction | null
@@ -48,13 +49,15 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const [state, setState] = useState<ActionUpdateState | null>(null)
   const { allActionsByCode, applicationData } = useActionState()
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
-  const [showSaveAlert, setShowSaveAlert] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
+  const [toastComponent, showToast] = useToast({
+    title: strings.TEMPLATE_MESSAGE_SAVE_SUCCESS,
+    style: 'success',
+  })
 
   useEffect(() => {
     if (!templateAction) return setState(null)
     setState(getState(templateAction))
-    setShowSaveAlert(false)
   }, [templateAction])
 
   if (!state || !templateAction) return null
@@ -66,8 +69,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
       },
     })
     setShouldUpdate(false)
-    setShowSaveAlert(true)
-    setTimeout(() => setShowSaveAlert(false), 2000)
+    showToast()
     if (!result) return
   }
 
@@ -78,7 +80,6 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
 
   const markNeedsUpdate = () => {
     setShouldUpdate(true)
-    setShowSaveAlert(false)
   }
 
   const currentActionPlugin = allActionsByCode[String(templateAction?.actionCode)]
@@ -218,14 +219,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           </div>
         </div>
       </div>
-      <Message
-        className="alert-success"
-        success
-        icon={<Icon name="check circle outline" />}
-        header={strings.TEMPLATE_MESSAGE_SAVE_SUCCESS}
-        hidden={!showSaveAlert}
-        onClick={() => setShowSaveAlert(false)}
-      />
+      {toastComponent}
     </Modal>
   )
 }
