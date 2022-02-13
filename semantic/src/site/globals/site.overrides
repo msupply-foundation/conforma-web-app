@@ -2073,39 +2073,48 @@ a:hover {
   }
 }
 
-@toastVerticalMargin: 40px;
+@toastVerticalMargin: 20px;
 @toastHorizontalMargin: 20px;
 
 .toast-container {
+  .transition.visible {
+    display: flex !important;
+  }
   .toast-message {
     width: fit-content !important;
     position: absolute !important;
   }
   .bottom-left {
-    bottom: @toastVerticalMargin;
+    bottom: (@footerHeight + @toastVerticalMargin);
     left: @toastHorizontalMargin;
   }
   .bottom-middle {
-    bottom: @toastVerticalMargin;
+    bottom: (@footerHeight + @toastVerticalMargin);
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) !important;
   }
   .bottom-right {
-    bottom: @toastVerticalMargin;
+    bottom: (@footerHeight + @toastVerticalMargin);
     right: @toastHorizontalMargin;
   }
   .top-left {
-    top: @toastVerticalMargin;
+    top: (@headerHeight + @toastVerticalMargin);
     left: @toastHorizontalMargin;
   }
   .top-middle {
-    top: @toastVerticalMargin;
+    top: (@headerHeight + @toastVerticalMargin);
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) !important;
   }
   .top-right {
-    top: @toastVerticalMargin;
+    top: (@headerHeight + @toastVerticalMargin);
     right: @toastHorizontalMargin;
+  }
+  .icon.info {
+    color: @information;
+  }
+  .content {
+    margin-right: 30px;
   }
 }
 

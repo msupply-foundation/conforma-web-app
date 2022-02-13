@@ -1,3 +1,4 @@
+import { off } from 'process'
 import React, { useState } from 'react'
 import { Message, SemanticICONS, Transition } from 'semantic-ui-react'
 
@@ -18,6 +19,8 @@ export type Position =
   | 'top-middle'
   | 'top-right'
 
+type Offset = { x: number | string; y: number | string }
+
 interface ToastProps {
   title?: string
   text?: string
@@ -26,9 +29,11 @@ interface ToastProps {
   clickable?: boolean
   showCloseIcon?: boolean // also makes it close-able
   position?: Position
+  offset?: Offset
 }
 
 type ToastReturn = [any, (state?: ToastProps) => void]
+type TimeoutType = ReturnType<typeof setTimeout>
 
 interface MessageStyleProps {
   icon?: SemanticICONS
@@ -58,12 +63,13 @@ const useToast = (props: ToastProps = {}): ToastReturn => {
     ...getMessageStyleProps(props.style),
     position: props.position || 'bottom-left',
   })
+  const [offset, setOffset] = useState(calculateOffset(props.offset))
+  const [timeoutId, setTimeoutId] = useState<TimeoutType>(0)
+
+  console.log('offset', props.offset, offset)
 
   const displayToast = (state: ToastProps) => {
-    // if (showToast) {
-    //   setShowToast(false)
-    //   setTimeout(()=>di)
-    // }
+    clearTimeout(timeoutId)
     const newStyle = state.style ? getMessageStyleProps(state.style) : {}
     const newState = {
       ...messageState,
@@ -72,6 +78,7 @@ const useToast = (props: ToastProps = {}): ToastReturn => {
       ...newStyle,
       position: state.position || messageState.position,
     }
+
     if (state.showCloseIcon || props.showCloseIcon) newState.onDismiss = () => setShowToast(false)
     else delete newState.onDismiss
 
@@ -79,19 +86,24 @@ const useToast = (props: ToastProps = {}): ToastReturn => {
     if (state.clickable === false || props.clickable === false) delete newState.onClick
     else newState.onClick = () => setShowToast(false)
 
+    setOffset(calculateOffset(state.offset || props.offset))
+
     setMessageState(newState)
     setShowToast(true)
-    setTimeout(() => {
-      setShowToast(false)
-    }, state.timeout ?? props.timeout ?? 3000)
+    setTimeoutId(
+      setTimeout(() => {
+        setShowToast(false)
+      }, state.timeout ?? props.timeout ?? 3000)
+    )
   }
+
   return [
-    <div className="toast-container center-toast">
+    <div className="toast-container">
       <Transition visible={showToast} animation="scale" duration={350}>
         <Message
           className={'toast-message ' + messageState.position}
-          hidden={!showToast}
           {...messageState}
+          style={offset}
         />
       </Transition>
     </div>,
@@ -139,4 +151,11 @@ const getMessageStyleProps = (style: MessageStyle = 'basic'): MessageStyleProps 
       break
   }
   return styleProps
+}
+
+const calculateOffset = (offset: Offset | undefined) => {
+  if (!offset) return {}
+  const x = typeof offset.x === 'number' ? `${offset.x}px` : offset.x
+  const y = typeof offset.y === 'number' ? `${offset.y}px` : offset.y
+  return { transform: `translate(${x}, ${y})` }
 }

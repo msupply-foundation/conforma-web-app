@@ -11,25 +11,23 @@ const ToastDemo: React.FC<any> = () => {
   const [showCloseIcon, setShowCloseIcon] = useState(false)
   const [style, setStyle] = useState<MessageStyle>('basic')
   const [timeDelay, setTimeDelay] = useState<number>(5000)
+  const [offset, setOffset] = useState({ x: 0, y: 0 })
   const [toastComponent, showToast] = useToast()
 
-  // 'bottom-left'
-  // | 'bottom-middle'
-  // | 'bottom-right'
-  // | 'top-left'
-  // | 'top-middle'
-  // | 'top-right'
   const positionOptions = [
-    { text: 'Bottom left', value: 'bottom-left' },
-    { text: 'Bottom middle', value: 'bottom-middle' },
-  ]
+    'bottom-left',
+    'bottom-middle',
+    'bottom-right',
+    'top-left',
+    'top-middle',
+    'top-right',
+  ].map((pos) => ({ text: pos, value: pos }))
 
   const styleOptions = ['basic', 'info', 'warning', 'positive', 'success', 'negative', 'error'].map(
-    (x) => ({ text: x, value: x })
+    (style) => ({ text: style, value: style })
   )
   return (
     <div style={{ maxWidth: 400 }}>
-      {toastComponent}
       <Form className="flex-column" style={{ gap: 10 }}>
         <Form.Input
           label="Message Title"
@@ -73,6 +71,24 @@ const ToastDemo: React.FC<any> = () => {
           step={500}
           onChange={(e) => setTimeDelay(Number(e.target.value))}
         />
+        <div className="flex-row" style={{ gap: 10 }}>
+          <Form.Input
+            label="X Offset"
+            type="number"
+            value={offset.x}
+            step={1}
+            onChange={(e) => setOffset({ ...offset, x: Number(e.target.value) })}
+            style={{ maxWidth: 100 }}
+          />
+          <Form.Input
+            label="Y Offset"
+            type="number"
+            value={offset.y}
+            step={1}
+            onChange={(e) => setOffset({ ...offset, y: Number(e.target.value) })}
+            style={{ maxWidth: 100 }}
+          />
+        </div>
         <Button
           primary
           content="Toast it!"
@@ -85,10 +101,12 @@ const ToastDemo: React.FC<any> = () => {
               showCloseIcon,
               style,
               timeout: timeDelay,
+              offset,
             })
           }
         />
       </Form>
+      {toastComponent}
     </div>
   )
 }

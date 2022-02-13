@@ -53,6 +53,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const [toastComponent, showToast] = useToast({
     title: strings.TEMPLATE_MESSAGE_SAVE_SUCCESS,
     style: 'success',
+    offset: { x: 0, y: 75 }, // Inside Modal
   })
 
   useEffect(() => {
