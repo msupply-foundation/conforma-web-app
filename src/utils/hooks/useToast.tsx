@@ -1,9 +1,16 @@
 import React, { useState } from 'react'
 import { Message, SemanticICONS, Transition } from 'semantic-ui-react'
 
-type MessageStyle = 'basic' | 'info' | 'warning' | 'success' | 'positive' | 'negative' | 'error'
+export type MessageStyle =
+  | 'basic'
+  | 'info'
+  | 'warning'
+  | 'success'
+  | 'positive'
+  | 'negative'
+  | 'error'
 
-type Position =
+export type Position =
   | 'bottom-left'
   | 'bottom-middle'
   | 'bottom-right'
@@ -53,6 +60,10 @@ const useToast = (props: ToastProps = {}): ToastReturn => {
   })
 
   const displayToast = (state: ToastProps) => {
+    // if (showToast) {
+    //   setShowToast(false)
+    //   setTimeout(()=>di)
+    // }
     const newStyle = state.style ? getMessageStyleProps(state.style) : {}
     const newState = {
       ...messageState,
