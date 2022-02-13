@@ -2219,6 +2219,7 @@ a:hover {
   .toast-message {
     width: fit-content !important;
     position: absolute !important;
+    max-width: 350px;
   }
   .bottom-left {
     bottom: (@footerHeight + @toastVerticalMargin);

@@ -1,6 +1,11 @@
-import { off } from 'process'
 import React, { useState } from 'react'
 import { Message, SemanticICONS, Transition } from 'semantic-ui-react'
+import styleConstants from '../data/styleConstants'
+
+const { HEADER_OFFSET, BOTTOM_OFFSET } = styleConstants
+
+const TOAST_VERTICAL_MARGIN = '20px'
+const TOAST_HORIZONTAL_MARGIN = '20px'
 
 export type MessageStyle =
   | 'basic'
@@ -61,12 +66,11 @@ const useToast = (props: ToastProps = {}): ToastReturn => {
     content: props.text || '',
     floating: true,
     ...getMessageStyleProps(props.style),
-    position: props.position || 'bottom-left',
   })
-  const [offset, setOffset] = useState(calculateOffset(props.offset))
+  const [absolutePosition, setAbsolutePosition] = useState(
+    calculatePosition(props.position, props.offset, props.title, props.text, props.style)
+  )
   const [timeoutId, setTimeoutId] = useState<TimeoutType>(0)
-
-  console.log('offset', props.offset, offset)
 
   const displayToast = (state: ToastProps) => {
     clearTimeout(timeoutId)
@@ -76,7 +80,6 @@ const useToast = (props: ToastProps = {}): ToastReturn => {
       header: state.title || messageState.header,
       content: state.text || messageState.content,
       ...newStyle,
-      position: state.position || messageState.position,
     }
 
     if (state.showCloseIcon || props.showCloseIcon) newState.onDismiss = () => setShowToast(false)
@@ -86,7 +89,15 @@ const useToast = (props: ToastProps = {}): ToastReturn => {
     if (state.clickable === false || props.clickable === false) delete newState.onClick
     else newState.onClick = () => setShowToast(false)
 
-    setOffset(calculateOffset(state.offset || props.offset))
+    setAbsolutePosition(
+      calculatePosition(
+        state.position || props.position,
+        state.offset || props.offset,
+        state.title || props.title,
+        state.text || props.text,
+        state.style || props.style
+      )
+    )
 
     setMessageState(newState)
     setShowToast(true)
@@ -101,10 +112,10 @@ const useToast = (props: ToastProps = {}): ToastReturn => {
     <div className="toast-container">
       <Transition visible={showToast} animation="scale" duration={350}>
         <Message
-          className={'toast-message ' + messageState.position}
+          className="toast-message"
+          style={absolutePosition}
           {...messageState}
           hidden={!showToast}
-          style={offset}
         />
       </Transition>
     </div>,
@@ -154,9 +165,62 @@ const getMessageStyleProps = (style: MessageStyle = 'basic'): MessageStyleProps 
   return styleProps
 }
 
-const calculateOffset = (offset: Offset | undefined) => {
-  if (!offset) return {}
-  const x = typeof offset.x === 'number' ? `${offset.x}px` : offset.x
-  const y = typeof offset.y === 'number' ? `${offset.y}px` : offset.y
-  return { transform: `translate(${x}, ${y})` }
+const calculatePosition = (
+  position: Position = 'bottom-left',
+  offset: Offset = { x: 0, y: 0 },
+  title: string = '',
+  text: string = '',
+  style: MessageStyle = 'basic'
+) => {
+  const xOffset = typeof offset.x === 'number' ? `${offset.x}px` : offset.x
+  const yOffset = typeof offset.y === 'number' ? `${offset.y}px` : offset.y
+
+  const centerOffset = (title: string, text: string) => {
+    // This is a crude method to try and figure out the width of the element in
+    // order based on its text length. Other methods have not been
+    // successful. :(
+    const AVG_PX_PER_CHAR_TEXT = 6.5
+    const AVG_PX_PER_CHAR_TITLE = 7.2
+    const LEFT_SPACE = 24
+    const RIGHT_SPACE = 50
+    const ICON_SPACE = style !== 'basic' ? 75 : 0
+    const MAX_WIDTH = 350
+    const titleWidth = title.length * AVG_PX_PER_CHAR_TITLE
+    const textWidth = text.length * AVG_PX_PER_CHAR_TEXT
+    const width = Math.max(titleWidth, textWidth) + LEFT_SPACE + RIGHT_SPACE + ICON_SPACE
+    return -Math.min(width, MAX_WIDTH) / 2
+  }
+
+  switch (position) {
+    case 'bottom-left':
+      return {
+        bottom: `calc(${BOTTOM_OFFSET}px + ${TOAST_VERTICAL_MARGIN} + ${yOffset})`,
+        left: `calc(${TOAST_HORIZONTAL_MARGIN} + ${xOffset})`,
+      }
+    case 'bottom-middle':
+      return {
+        bottom: `calc(${BOTTOM_OFFSET}px + ${TOAST_VERTICAL_MARGIN} + ${yOffset})`,
+        left: `calc(50% + ${centerOffset(title, text)}px + ${xOffset})`,
+      }
+    case 'bottom-right':
+      return {
+        bottom: `calc(${BOTTOM_OFFSET}px + ${TOAST_VERTICAL_MARGIN} + ${yOffset})`,
+        right: `calc(${TOAST_HORIZONTAL_MARGIN} + ${xOffset})`,
+      }
+    case 'top-left':
+      return {
+        top: `calc(${HEADER_OFFSET}px + ${TOAST_VERTICAL_MARGIN} + ${yOffset})`,
+        left: `calc(${TOAST_HORIZONTAL_MARGIN} + ${xOffset})`,
+      }
+    case 'top-middle':
+      return {
+        top: `calc(${HEADER_OFFSET}px + ${TOAST_VERTICAL_MARGIN} + ${yOffset})`,
+        left: `calc(50% + ${centerOffset(title, text)}px + ${xOffset})`,
+      }
+    case 'top-right':
+      return {
+        top: `calc(${HEADER_OFFSET}px + ${TOAST_VERTICAL_MARGIN} + ${yOffset})`,
+        right: `calc(${TOAST_HORIZONTAL_MARGIN} + ${xOffset})`,
+      }
+  }
 }
