@@ -103,6 +103,7 @@ const useToast = (props: ToastProps = {}): ToastReturn => {
         <Message
           className={'toast-message ' + messageState.position}
           {...messageState}
+          hidden={!showToast}
           style={offset}
         />
       </Transition>
