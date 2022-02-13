@@ -74,7 +74,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const REMOVE_MESSAGE = {
     title: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE,
     message: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT,
-    option: strings.TEMPLATE_BUTTON_CONFIRM,
+    option: strings.BUTTON_CONFIRM,
   }
 
   const { structure } = useFullApplicationState()
@@ -312,7 +312,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           <div className="spacer-20" />
           <div className="flex-row-center-center">
             <ButtonWithFallback
-              title={strings.TEMPLATE_BUTTON_SAVE}
+              title={strings.BUTTON_SAVE}
               disabled={!isDraft || !shouldUpdate}
               disabledMessage={!isDraft ? disabledMessage : strings.TEMPLATE_MESSAGE_SAVE_DISABLED}
               onClick={updateElement}
@@ -320,11 +320,11 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             <ButtonWithFallback
               disabled={!isDraft}
               disabledMessage={disabledMessage}
-              title={strings.TEMPLATE_BUTTON_REMOVE}
+              title={strings.BUTTON_REMOVE}
               onClick={confirmAndRemove}
             />
             <ButtonWithFallback
-              title={strings.TEMPLATE_BUTTON_CLOSE}
+              title={strings.BUTTON_CLOSE}
               onClick={() => (shouldUpdate ? setOpen(true) : onClose())}
             />
             <Modal
@@ -337,13 +337,13 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               actions={[
                 {
                   key: 'save',
-                  content: strings.TEMPLATE_BUTTON_SAVE,
+                  content: strings.BUTTON_SAVE,
                   positive: true,
                   onClick: saveAndClose,
                 },
                 {
                   key: 'close',
-                  content: strings.TEMPLATE_BUTTON_CLOSE,
+                  content: strings.BUTTON_CLOSE,
                   positive: false,
                   onClick: onClose,
                 },

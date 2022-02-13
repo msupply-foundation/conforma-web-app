@@ -10,24 +10,31 @@ import {
 } from '../generated/graphql'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { useUserState } from '../../contexts/UserState'
+import useTriggers from './useTriggers'
 
-const MAX_REFETCH = 10
 interface UseGetReviewInfoProps {
   applicationId: number
+  serial: string
   userId: number
 }
 
-const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
+const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
   const { strings } = useLanguageProvider()
   const [assignments, setAssignments] = useState<AssignmentDetails[]>()
   const [isFetching, setIsFetching] = useState(true)
   const [fetchingError, setFetchingError] = useState('')
-  const [refetchAttempts, setRefetchAttempts] = useState(0)
   const {
     userState: { currentUser },
   } = useUserState()
 
-  const { data, loading, error, refetch } = useGetReviewInfoQuery({
+  const {
+    ready: triggersReady,
+    loading: triggersLoading,
+    error: triggersError,
+    recheckTriggers,
+  } = useTriggers(serial)
+
+  const { data, loading, error } = useGetReviewInfoQuery({
     variables: {
       applicationId,
       assignerId: currentUser?.userId as number,
@@ -37,39 +44,24 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
     // it's either this or removing 'totalCount' in `reviewQuestionAssignments` from this query
     // ended up removing totalCount from query and keeping this as nextFetchPolicy (was still seeing glitched with totalCount and had "can't update unmounted component error")
     fetchPolicy: 'network-only',
+    skip: !triggersReady,
   })
 
   useEffect(() => {
-    if (loading) return setIsFetching(true)
+    if (triggersError) {
+      setFetchingError(strings.TRIGGER_ERROR)
+      console.error('Trigger error:', triggersError)
+      return
+    }
+    if (loading || triggersLoading) return setIsFetching(true)
 
-    if (!data) return
+    if (!data || !triggersReady) return
 
     const reviewAssigments = data.reviewAssignments?.nodes as ReviewAssignment[]
 
     // Current user has no assignments
     if (!reviewAssigments) {
       setIsFetching(false)
-      return
-    }
-
-    const reviews: Review[] = reviewAssigments.map(({ reviews }) => reviews.nodes[0] as Review)
-    // Checking if any of reviews or reviewAssignment trigger is running before refetching assignments
-    // This is done to get latest status for reviews & assignment (afte trigger finishes to run)
-    if (
-      reviews.every((review) => !review || review?.trigger === null) &&
-      reviewAssigments.every(
-        (reviewAssignment) => !reviewAssigments || reviewAssignment?.trigger === null
-      )
-    ) {
-      setRefetchAttempts(0)
-    } else {
-      if (refetchAttempts < MAX_REFETCH) {
-        setTimeout(() => {
-          console.log('Will refetch getReviewInfo', refetchAttempts) // TODO: Remove log
-          setRefetchAttempts(refetchAttempts + 1)
-          refetch()
-        }, 500)
-      } else setFetchingError(strings.TRIGGER_RUNNING)
       return
     }
 
@@ -151,7 +143,7 @@ const useGetReviewInfo = ({ applicationId }: UseGetReviewInfoProps) => {
 
     setAssignments(assignments)
     setIsFetching(false)
-  }, [data, loading])
+  }, [data, loading, triggersReady, triggersLoading, triggersError])
 
   return {
     error: fetchingError || error?.message,

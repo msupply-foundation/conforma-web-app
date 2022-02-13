@@ -273,6 +273,7 @@ interface FullStructure {
   firstIncompleteReviewPage?: SectionAndPage
   sortedSections?: SectionState[]
   sortedPages?: Page[]
+  reload: () => void
 }
 
 interface HistoryElement {

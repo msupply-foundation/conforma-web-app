@@ -22,15 +22,14 @@ export const TimelineStageUI: React.FC<{
         </Accordion.Title>
         <Accordion.Content active={isActive}>
           {groupedEvents.map((group) => (
-            <div className="timeline-day">
+            <div className="timeline-day" key={group.dateString}>
               <List>
                 <List.Header>
                   <strong>{group.dateString}</strong>
                 </List.Header>
                 {group.events.map((event) => (
-                  <List.Item>
-                    {/* <Icon name="briefcase" /> */}
-                    <Markdown text={event.displayString} />
+                  <List.Item key={event.id}>
+                    <Markdown text={event.displayString} newTabLinks={true} />
                   </List.Item>
                 ))}
               </List>

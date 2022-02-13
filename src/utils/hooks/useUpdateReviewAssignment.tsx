@@ -33,7 +33,11 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
   const {
     userState: { currentUser },
   } = useUserState()
-  const [updateAssignment] = useUpdateReviewAssignmentMutation()
+  const [updateAssignment] = useUpdateReviewAssignmentMutation({
+    onCompleted: () => {
+      structure.reload()
+    },
+  })
 
   const constructAssignSectionPatch: ConstructAssignSectionPatch = (
     reviewLevel,
