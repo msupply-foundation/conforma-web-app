@@ -176,9 +176,8 @@ const calculatePosition = (
   const yOffset = typeof offset.y === 'number' ? `${offset.y}px` : offset.y
 
   const centerOffset = (title: string, text: string) => {
-    // This is a crude method to try and figure out the width of the element in
-    // order based on its text length. Other methods have not been
-    // successful. :(
+    // This is a crude method to try and figure out the width of the element
+    // based on its text length. Other methods have not been successful. :(
     const AVG_PX_PER_CHAR_TEXT = 6.5
     const AVG_PX_PER_CHAR_TITLE = 7.2
     const LEFT_SPACE = 24
