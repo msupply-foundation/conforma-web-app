@@ -11,6 +11,7 @@ export const AdminLocalisations: React.FC = () => {
   const { strings } = useLanguageProvider()
   usePageTitle(strings.PAGE_TITLE_LOCALISATION)
   const [exportDisabled, setExportDisabled] = useState(true)
+  const [importtDisabled, setImportDisabled] = useState(true)
   const [installedLanguages, setInstalledLanguages] = useState<LanguageOption[]>([])
   const [toastComponent, showToast] = useToast({ position: 'top-left' })
 
@@ -62,8 +63,8 @@ export const AdminLocalisations: React.FC = () => {
           handleSelect={handleSelect}
         />
       ))}
-      <Header as="h3">Export language files as spreadsheet:</Header>
-      <div className="flex-row-center-center" style={{ gap: 20 }}>
+      <Header as="h5">Export language files as spreadsheet (CSV):</Header>
+      <div className="flex-row-start-center" style={{ gap: 20 }}>
         <Button primary content="Export" onClick={() => exportLanguages(exportDisabled)} />
         <Checkbox
           checked={exportDisabled}
@@ -71,8 +72,15 @@ export const AdminLocalisations: React.FC = () => {
           label="Include disabled languages"
         />
       </div>
-      <Header as="h3">Import language files:</Header>
-      <Button primary content="Import" onClick={() => alert('Not implemented')} />
+      <Header as="h5">Import language files:</Header>
+      <div className="flex-row-start-center" style={{ gap: 20 }}>
+        <Button primary content="Import" onClick={() => alert('Not implemented')} />
+        <Checkbox
+          checked={exportDisabled}
+          onChange={() => setExportDisabled(!exportDisabled)}
+          label="Import disabled languages"
+        />
+      </div>
     </div>
   )
 }

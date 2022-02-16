@@ -3,6 +3,7 @@ import config from '../../config'
 import { LanguageOption, LanguageStrings } from '../../contexts/Localisation'
 import defaultLanguageStrings from '../../utils/defaultLanguageStrings'
 import { mapValues } from 'lodash'
+import { DateTime } from 'luxon'
 
 interface LanguageObject extends LanguageOption {
   translations: LanguageStrings
@@ -90,7 +91,11 @@ export const exportLanguages = async (includeDisabled = true) => {
   ]
   const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.map((row) => row.join(',')).join('\n')
   const encodedUri = encodeURI(csvContent)
-  window.open(encodedUri)
+  const hiddenLink = document.createElement('a')
+  hiddenLink.setAttribute('href', encodedUri)
+  hiddenLink.setAttribute('download', `conforma_localisations_${DateTime.now().toISODate()}.csv`)
+  document.body.appendChild(hiddenLink) // Required for FF
+  hiddenLink.click() // This will download the data file named "my_data.csv".
 }
 
 const getTranslations = (
