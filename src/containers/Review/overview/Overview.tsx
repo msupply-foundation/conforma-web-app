@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { DateTime } from 'luxon'
-import { Icon, Message, Segment } from 'semantic-ui-react'
+import { Header, Icon, Message, Segment } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
 import { FullStructure } from '../../../utils/types'
@@ -11,7 +11,7 @@ export const Overview: React.FC<{
   activityLog: ActivityLog[]
 }> = ({
   structure: {
-    info: { current, outcome, user, org, serial },
+    info: { current, outcome, user, org, serial, template },
   },
   activityLog,
 }) => {
@@ -28,14 +28,19 @@ export const Overview: React.FC<{
         <Message info icon>
           <Icon name="info circle" color="teal" />
           <Message.Content>
+            <div className="flex-row-center wrap">
+              <Header as="h3">
+                <strong>{template.name}</strong>
+              </Header>
+            </div>
             <div className="flex-row wrap">
               <p className="left-item">
                 <strong>{strings.REVIEW_OVERVIEW_APPLICANT}: </strong>
                 {applicant}
               </p>
               <p className="right-item">
-                <strong>{strings. REVIEW_OVERVIEW_ORG}: </strong>
-                {organisation}
+                <strong>{strings.REVIEW_OVERVIEW_ORG}: </strong>
+                {organisation || <em>{strings.LABEL_NO_ORG}</em>}
               </p>
             </div>
             <div className="flex-row wrap">
@@ -45,7 +50,7 @@ export const Overview: React.FC<{
               </p>
               <p className="right-item">
                 <strong>{strings.REVIEW_OVERVIEW_COMPLETED}: </strong>
-                {completed && DateTime.fromISO(completed).toLocaleString()}
+                {(completed && DateTime.fromISO(completed).toLocaleString()) || '...'}
               </p>
             </div>
             <div className="flex-row wrap">

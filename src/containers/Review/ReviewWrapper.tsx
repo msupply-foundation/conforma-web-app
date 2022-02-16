@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react'
+import React, { SyntheticEvent, useState } from 'react'
 import { Route, Switch } from 'react-router'
 import { Container, Message, Tab, Label, Icon, Header, StrictTabProps } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
@@ -8,13 +8,14 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
-import { OverviewTab, AssignmentTab, SummaryTab, NotesTab, DocumentsTab, ReviewProgress } from './'
+import { OverviewTab, AssignmentTab, NotesTab, DocumentsTab, ReviewProgress } from './'
+import { NotesState } from './notes/NotesTab'
 
 interface ReviewWrapperProps {
   structure: FullStructure
 }
 
-const tabIdentifiers = ['overview', 'assignment', 'summary', 'notes', 'documents']
+const tabIdentifiers = ['overview', 'assignment', 'notes', 'documents']
 
 const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   const { strings } = useLanguageProvider()
@@ -30,6 +31,16 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     shouldGetDraftResponses: false,
   })
 
+  // State values for NOTES tab, need to instantiate here to preserve state
+  // between tab switches:
+  const [notesState, setNotesState] = useState<NotesState>({
+    sortDesc: true,
+    filesOnlyFilter: false,
+    showForm: false,
+    files: [],
+    comment: '',
+  })
+
   usePageTitle(strings.PAGE_TITLE_REVIEW.replace('%1', structure.info.serial))
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
@@ -39,10 +50,6 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   const {
     info: { template, org, name },
   } = fullStructure
-
-  if (!tab) {
-    updateQuery({ tab: tabIdentifiers[0] })
-  }
 
   const getTabFromQuery = (tabQuery: string | undefined) => {
     const index = tabIdentifiers.findIndex((tabName) => tabName === tabQuery)
@@ -58,7 +65,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       menuItem: strings.REVIEW_TAB_OVERVIEW,
       render: () => (
         <Tab.Pane>
-          <OverviewTab structure={fullStructure} />
+          <OverviewTab structure={fullStructure} isActive={getTabFromQuery(tab) === 0} />
         </Tab.Pane>
       ),
     },
@@ -71,18 +78,10 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       ),
     },
     {
-      menuItem: strings.REVIEW_TAB_SUMMARY,
-      render: () => (
-        <Tab.Pane>
-          <SummaryTab structure={fullStructure} />
-        </Tab.Pane>
-      ),
-    },
-    {
       menuItem: strings.REVIEW_TAB_NOTES,
       render: () => (
         <Tab.Pane>
-          <NotesTab structure={fullStructure} />
+          <NotesTab structure={fullStructure} state={notesState} setState={setNotesState} />
         </Tab.Pane>
       ),
     },
@@ -138,7 +137,16 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
   applicationName,
   orgName,
 }) => {
-  const { push } = useRouter()
+  const {
+    push,
+    query: { tab },
+    updateQuery,
+  } = useRouter()
+
+  if (!tab) {
+    updateQuery({ tab: tabIdentifiers[0] })
+  }
+
   return (
     <div id="review-home-header">
       <Label
@@ -146,7 +154,7 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
         onClick={() => push(`/applications?type=${templateCode}`)}
         icon={<Icon name="chevron left" className="dark-grey" />}
       />
-      <Header as="h3" content={applicationName} subheader={<Header as="h5" content={orgName} />} />
+      <Header as="h3" content={applicationName} subheader={orgName} />
     </div>
   )
 }

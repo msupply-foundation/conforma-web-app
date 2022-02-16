@@ -21,6 +21,7 @@ const AssignmentTab: React.FC<{
 
   const { error, loading, assignments } = useGetReviewInfo({
     applicationId: fullStructure.info.id,
+    serial: fullStructure.info.serial,
     userId: currentUser?.userId as number,
   })
 

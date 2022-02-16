@@ -103,7 +103,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   const [showWarningModal, setShowWarningModal] = useState<ModalProps>({ open: false })
   // TODO: Show on message
   const [submissionError, setSubmissionError] = useState<boolean>(false)
-  const submitReview = useSubmitReview(Number(structure.thisReview?.id))
+  const submitReview = useSubmitReview(Number(structure.thisReview?.id), structure.reload)
   const setAttemptSubmission = () => (structure.attemptSubmission = true)
   const attemptSubmissionFailed = structure.attemptSubmission && structure.firstIncompleteReviewPage
 

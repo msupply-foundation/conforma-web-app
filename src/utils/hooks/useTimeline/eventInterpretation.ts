@@ -1,8 +1,13 @@
 import { LanguageStrings } from '../../../contexts/Localisation'
-import { ActivityLog } from '../../generated/graphql'
+import { ActivityLog, Decision } from '../../generated/graphql'
 import { FullStructure } from '../../types'
 import { TimelineEventType, EventOutput } from './types'
-import { getAssociatedReviewDecision, checkResubmission, stringifySections } from './helpers'
+import {
+  getAssociatedReviewDecision,
+  checkResubmission,
+  stringifySections,
+  getReviewLinkString,
+} from './helpers'
 
 const getStatusEvent = (
   { value, timestamp, details: { prevStatus } }: ActivityLog,
@@ -21,7 +26,7 @@ const getStatusEvent = (
       }
     case value === 'DRAFT' && prevStatus === 'CHANGES_REQUIRED':
       return {
-        eventType: TimelineEventType.ApplicationRestarted,
+        eventType: TimelineEventType.Ignore,
         displayString: strings.TIMELINE_APPLICATION_RESTARTED,
       }
     case value === 'SUBMITTED' && prevStatus === 'COMPLETED':
@@ -100,22 +105,36 @@ const getOutcomeEvent = ({ value }: ActivityLog, strings: LanguageStrings): Even
 }
 
 const getAssignmentEvent = (
-  { value, details: { reviewer, assigner, sections } }: ActivityLog,
+  { value, details: { reviewer, assigner, sections, reviewLevel } }: ActivityLog,
   structure: FullStructure,
   strings: LanguageStrings
 ): EventOutput => {
+  const isConsolidation = reviewLevel > 1
   switch (value) {
     case 'Assigned':
       return {
-        eventType: TimelineEventType.AssignedByAnother,
-        displayString: strings.TIMELINE_ASSIGNED.replace('%1', `**${reviewer?.name}**`)
+        eventType: !isConsolidation
+          ? TimelineEventType.AssignedReviewByAnother
+          : TimelineEventType.AssignedConsolidationByAnother,
+        displayString: (!isConsolidation
+          ? strings.TIMELINE_REVIEW_ASSIGNED
+          : strings.TIMELINE_CONSOLIDATION_ASSIGNED
+        )
+          .replace('%1', `**${reviewer?.name}**`)
           .replace('%2', stringifySections(sections, structure.sections, strings))
           .replace('%3', `**${assigner?.name}**`),
       }
     case 'Self-Assigned':
       return {
-        eventType: TimelineEventType.SelfAssigned,
-        displayString: strings.TIMELINE_SELF_ASSIGNED.replace('%1', `**${reviewer?.name}**`),
+        eventType: !isConsolidation
+          ? TimelineEventType.SelfAssignedReview
+          : TimelineEventType.SelfAssignedConsolidation,
+        displayString: (!isConsolidation
+          ? strings.TIMELINE_REVIEW_SELF_ASSIGNED
+          : strings.TIMELINE_CONSOLIDATION_SELF_ASSIGNED
+        )
+          .replace('%1', `**${reviewer?.name}**`)
+          .replace('%2', stringifySections(sections, structure.sections, strings)),
       }
     case 'Unassigned':
       return {
@@ -137,16 +156,20 @@ const getReviewEvent = (
   fullLog: ActivityLog[],
   structure: FullStructure,
   index: number,
-  strings: LanguageStrings
+  strings: LanguageStrings,
+  decisionStrings: { [key in Decision]: string }
 ): EventOutput => {
   const {
     value,
-    details: { prevStatus, reviewer, sections, level },
+    details: { prevStatus, reviewer, level },
   } = event
+
   const isConsolidation = level > 1
-  const reviewDecision =
-    value === 'SUBMITTED' ? getAssociatedReviewDecision(event, fullLog, index) : null
+  const reviewDecision = value === 'SUBMITTED' ? getAssociatedReviewDecision(event, fullLog) : null
   const isResubmission = value === 'SUBMITTED' ? checkResubmission(event, fullLog) : false
+  const hyperlinkReplaceString = isConsolidation
+    ? strings.TIMELINE_CONSOLIDATION
+    : strings.TIMELINE_REVIEW
 
   switch (true) {
     case value === 'CHANGES_REQUESTED':
@@ -173,39 +196,32 @@ const getReviewEvent = (
         eventType: !isConsolidation
           ? TimelineEventType.ReviewStarted
           : TimelineEventType.ConsolidationStarted,
-        displayString: !isConsolidation
-          ? strings.TIMELINE_REVIEW_STARTED.replace('%1', `**${reviewer?.name}**`).replace(
-              '%2',
-              stringifySections(sections, structure.sections, strings)
-            )
-          : strings.TIMELINE_CONSOLIDATION_STARTED.replace('%1', `**${reviewer?.name}**`),
+        displayString: (!isConsolidation
+          ? strings.TIMELINE_REVIEW_STARTED
+          : strings.TIMELINE_CONSOLIDATION_STARTED
+        ).replace('%1', `**${reviewer?.name}**`),
       }
     case value === 'DRAFT' && (prevStatus === 'CHANGES_REQUESTED' || prevStatus === 'PENDING'):
       return {
         eventType: !isConsolidation
           ? TimelineEventType.ReviewRestarted
           : TimelineEventType.ConsolidationRestarted,
-        displayString: !isConsolidation
-          ? strings.TIMELINE_REVIEW_RESTARTED.replace('%1', `**${reviewer?.name}**`).replace(
-              '%2',
-              stringifySections(sections, structure.sections, strings)
-            )
-          : strings.TIMELINE_CONSOLIDATION_RESTARTED.replace('%1', `**${reviewer?.name}**`),
+        displayString: (!isConsolidation
+          ? strings.TIMELINE_REVIEW_RESTARTED
+          : strings.TIMELINE_CONSOLIDATION_RESTARTED
+        ).replace('%1', `**${reviewer?.name}**`),
       }
     case value === 'SUBMITTED' && !reviewDecision && !isResubmission:
       return {
         eventType: !isConsolidation
           ? TimelineEventType.ReviewSubmitted
           : TimelineEventType.ConsolidationSubmitted,
-        displayString: !isConsolidation
-          ? strings.TIMELINE_REVIEW_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
-              '%2',
-              stringifySections(sections, structure.sections, strings)
-            )
-          : strings.TIMELINE_CONSOLIDATION_SUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
-              '%2',
-              stringifySections(sections, structure.sections, strings)
-            ),
+        displayString: (!isConsolidation
+          ? strings.TIMELINE_REVIEW_SUBMITTED
+          : strings.TIMELINE_CONSOLIDATION_SUBMITTED
+        )
+          .replace('%1', `**${reviewer?.name}**`)
+          .replace(hyperlinkReplaceString, 'LINK'),
       }
     case value === 'SUBMITTED' && reviewDecision && !isResubmission:
       return {
@@ -213,32 +229,33 @@ const getReviewEvent = (
         eventType: !isConsolidation
           ? TimelineEventType.ReviewSubmittedWithDecision
           : TimelineEventType.ConsolidationSubmittedWithDecision,
-        displayString: !isConsolidation
-          ? strings.TIMELINE_REVIEW_SUBMITTED_DECISION.replace('%1', `**${reviewer?.name}**`)
-              .replace('%2', stringifySections(sections, structure.sections, strings))
-              .replace(
-                '%3',
-                `**${reviewDecision.decision}** (${strings.TIMELINE_COMMENT} *${reviewDecision?.comment}*)`
-              )
-          : strings.TIMELINE_CONSOLIDATION_SUBMITTED_DECISION.replace(
-              '%1',
-              `**${reviewer?.name}**`
-            ).replace('%2', stringifySections(sections, structure.sections, strings)),
+        displayString: (!isConsolidation
+          ? strings.TIMELINE_REVIEW_SUBMITTED_DECISION
+          : strings.TIMELINE_CONSOLIDATION_SUBMITTED_DECISION
+        )
+          .replace('%1', `**${reviewer?.name}**`)
+          .replace(
+            '%2',
+            `**${decisionStrings[reviewDecision.decision as Decision]}**${
+              reviewDecision?.comment
+                ? ` (${strings.TIMELINE_COMMENT} *${reviewDecision?.comment}*)`
+                : ''
+            }`
+          )
+          .replace(
+            hyperlinkReplaceString,
+            getReviewLinkString(hyperlinkReplaceString, structure, event, fullLog)
+          ),
       }
     case value === 'SUBMITTED' && !reviewDecision && isResubmission:
       return {
         eventType: !isConsolidation
           ? TimelineEventType.ReviewSubmitted
           : TimelineEventType.ConsolidationSubmitted,
-        displayString: !isConsolidation
-          ? strings.TIMELINE_REVIEW_RESUBMITTED.replace('%1', `**${reviewer?.name}**`).replace(
-              '%2',
-              stringifySections(sections, structure.sections, strings)
-            )
-          : strings.TIMELINE_CONSOLIDATION_RESUBMITTED.replace(
-              '%1',
-              `**${reviewer?.name}**`
-            ).replace('%2', stringifySections(sections, structure.sections, strings)),
+        displayString: (!isConsolidation
+          ? strings.TIMELINE_REVIEW_RESUBMITTED
+          : strings.TIMELINE_CONSOLIDATION_RESUBMITTED
+        ).replace('%1', `**${reviewer?.name}**`),
       }
     case value === 'SUBMITTED' && reviewDecision && isResubmission:
       return {
@@ -246,17 +263,23 @@ const getReviewEvent = (
         eventType: !isConsolidation
           ? TimelineEventType.ReviewResubmittedWithDecision
           : TimelineEventType.ConsolidationResubmittedWithDecision,
-        displayString: !isConsolidation
-          ? strings.TIMELINE_REVIEW_RESUBMITTED_DECISION.replace('%1', `**${reviewer?.name}**`)
-              .replace('%2', stringifySections(sections, structure.sections, strings))
-              .replace(
-                '%3',
-                `**${reviewDecision.decision}** (${strings.TIMELINE_COMMENT} ${reviewDecision?.comment})`
-              )
-          : strings.TIMELINE_CONSOLIDATION_RESUBMITTED_DECISION.replace(
-              '%1',
-              `**${reviewer?.name}**`
-            ).replace('%2', stringifySections(sections, structure.sections, strings)),
+        displayString: (!isConsolidation
+          ? strings.TIMELINE_REVIEW_RESUBMITTED_DECISION
+          : strings.TIMELINE_CONSOLIDATION_RESUBMITTED_DECISION
+        )
+          .replace('%1', `**${reviewer?.name}**`)
+          .replace(
+            '%2',
+            `**${decisionStrings[reviewDecision.decision as Decision]}**${
+              reviewDecision?.comment
+                ? ` (${strings.TIMELINE_COMMENT} *${reviewDecision?.comment}*)`
+                : ''
+            }`
+          )
+          .replace(
+            hyperlinkReplaceString,
+            getReviewLinkString(hyperlinkReplaceString, structure, event, fullLog)
+          ),
       }
     default:
       return {

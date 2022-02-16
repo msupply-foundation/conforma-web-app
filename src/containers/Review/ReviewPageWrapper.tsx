@@ -28,6 +28,7 @@ const ReviewPageWrapper: React.FC<{
     assignments: reviewAssignments,
   } = useGetReviewInfo({
     applicationId: fullStructure.info.id,
+    serial: fullStructure.info.serial,
     userId: currentUser?.userId as number,
   })
 

@@ -11,6 +11,7 @@ import { Container } from 'semantic-ui-react'
 import DevOptions from '../Dev/DevOptions'
 import LayoutHelpers from '../../components/LayoutHelpers'
 import Outcomes from '../Outcomes/Outcomes'
+import ToastDemo from '../../components/ToastTest'
 
 const SiteLayout: React.FC = () => {
   return (
@@ -20,6 +21,9 @@ const SiteLayout: React.FC = () => {
         <DevOptions />
         <Container id="content-area" fluid>
           <Switch>
+            <Route exact path="/toast-demo-auth">
+              <ToastDemo />
+            </Route>
             <Route exact path="/">
               <Dashboard />
             </Route>
