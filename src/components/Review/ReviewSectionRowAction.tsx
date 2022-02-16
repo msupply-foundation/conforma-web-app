@@ -100,20 +100,12 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
 
   const remakeReview = useRemakePreviousReview({
     fullReviewStructure,
-    // assignment,
     previousAssignment,
   })
 
-  const restartReview = useRestartReview(
-    fullReviewStructure
-    // reviewId: thisReview?.id || 0,
-    // assignment,
-  )
+  const restartReview = useRestartReview(fullReviewStructure)
 
-  const createReview = useCreateReview(
-    fullReviewStructure
-    // assignment,
-  )
+  const createReview = useCreateReview(fullReviewStructure)
 
   const getButtonName = () => {
     switch (action) {

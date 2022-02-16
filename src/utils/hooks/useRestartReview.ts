@@ -12,11 +12,7 @@ import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSectio
 type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewMutation>
 type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 // hook used to restart a review, , as per type definition below (returns promise that resolve with mutation result data)
-type UseRestartReview = (
-  // reviewId: number
-  fullReviewStructure: FullStructure
-  // assignment: AssignmentDetails
-) => () => PromiseReturnType
+type UseRestartReview = (fullReviewStructure: FullStructure) => () => PromiseReturnType
 
 type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch
 

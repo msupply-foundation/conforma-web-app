@@ -13,8 +13,6 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
       current: { timeStatusCreated },
     },
   },
-  // thisReview,
-  // assignment,
 }) => {
   const { strings } = useLanguageProvider()
   const getContent = () => {

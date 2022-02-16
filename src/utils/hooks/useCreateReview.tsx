@@ -1,15 +1,12 @@
 import { Decision, ReviewInput, Trigger, useCreateReviewMutation } from '../generated/graphql'
-import { AssignmentDetails, FullStructure } from '../types'
+import { FullStructure } from '../types'
 import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSection'
 
 // below lines are used to get return type of the function that is returned by useCreateReviewMutation
 type UseCreateReviewMutationReturnType = ReturnType<typeof useCreateReviewMutation>
 type PromiseReturnType = ReturnType<UseCreateReviewMutationReturnType[0]>
 // hook used to start a review, , as per type definition below (returns promise that resolve with mutation result data)
-type UseCreateReview = (
-  fullReviewStructure: FullStructure
-  // assignment: AssignmentDetails
-) => () => PromiseReturnType
+type UseCreateReview = (fullReviewStructure: FullStructure) => () => PromiseReturnType
 
 type ConstructReviewInput = (structure: FullStructure) => ReviewInput
 
