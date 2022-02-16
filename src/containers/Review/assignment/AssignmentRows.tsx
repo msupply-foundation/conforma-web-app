@@ -1,5 +1,5 @@
 import React, { SetStateAction } from 'react'
-import { Header, Segment } from 'semantic-ui-react'
+import { Container, Grid, Header, Segment } from 'semantic-ui-react'
 import { useReviewStructureState } from '../../../contexts/ReviewStructuresState'
 import {
   AssignmentDetails,
@@ -38,18 +38,18 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
           {Object.entries(assignmentGroupedLevel).map(([level, assignments]) => (
             <>
               <AssignmentSectionRow
-                {...{
-                  assignments: assignments,
-                  sectionCode: code,
-                  reviewLevel: Number(level),
-                  structure: fullStructure,
-                  assignedSectionsState: [assignedSections, setAssignedSections],
-                  setEnableSubmit,
-                }}
+                key={`assignment-row-section-${code}-level-${level}`}
+                assignments={assignments}
+                sectionCode={code}
+                reviewLevel={Number(level)}
+                structure={fullStructure}
+                assignedSectionsState={[assignedSections, setAssignedSections]}
+                setEnableSubmit={setEnableSubmit}
               />
               {(assignments as AssignmentDetails[]).map((assignment) =>
                 structures[assignment.id] ? (
                   <ReviewSectionRow
+                    key={`review-row-section-${code}-assignment-${assignment.id}`}
                     sectionId={id}
                     reviewStructure={structures[assignment.id]}
                     previousAssignment={assignmentInPreviousStage}
