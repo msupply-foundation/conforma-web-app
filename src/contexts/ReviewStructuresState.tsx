@@ -2,8 +2,7 @@ import React, { createContext, useContext, useReducer } from 'react'
 import { AssignmentDetails, FullStructure } from '../utils/types'
 
 type ReviewStructuresState = {
-  structures: { [assignmentId: number]: FullStructure }
-  syncToken: boolean
+  [assignmentId: number]: FullStructure
 }
 
 export type ReviewStructuresActions =
@@ -17,12 +16,6 @@ export type ReviewStructuresActions =
       fullApplicationStructure: FullStructure
       assignments: AssignmentDetails[]
     }
-  | {
-      type: 'getSyncToken'
-    }
-  | {
-      type: 'releaseSyncToken'
-    }
 
 type InitialState = (props: {
   fullApplicationStructure: FullStructure
@@ -31,13 +24,11 @@ type InitialState = (props: {
 
 const initialState: InitialState = ({ fullApplicationStructure, assignments }) => {
   return assignments.reduce(
-    (reviewStructures: ReviewStructuresState, assignment) => {
-      return {
-        ...reviewStructures,
-        structures: { ...reviewStructures.structures, [assignment.id]: fullApplicationStructure },
-      }
-    },
-    { syncToken: false, structures: {} }
+    (reviewStructures: ReviewStructuresState, assignment) => ({
+      ...reviewStructures,
+      [assignment.id]: fullApplicationStructure,
+    }),
+    {}
   )
 }
 
@@ -50,17 +41,7 @@ const reducer = (state: ReviewStructuresState, action: ReviewStructuresActions) 
       const { reviewStructure, assignment } = action
       return {
         ...state,
-        structures: { ...state.structures, [assignment.id]: reviewStructure },
-      }
-    case 'getSyncToken':
-      return {
-        ...state,
-        syncToken: true,
-      }
-    case 'releaseSyncToken':
-      return {
-        ...state,
-        syncToken: false,
+        [assignment.id]: reviewStructure,
       }
     default:
       return state
@@ -71,7 +52,7 @@ const initialReviewStateContext: {
   reviewStructuresState: ReviewStructuresState
   setReviewStructures: React.Dispatch<ReviewStructuresActions>
 } = {
-  reviewStructuresState: { structures: {}, syncToken: false },
+  reviewStructuresState: {},
   setReviewStructures: () => {},
 }
 

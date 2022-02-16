@@ -20,9 +20,7 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
   enableSubmit,
 }) => {
   const { strings } = useLanguageProvider()
-  const {
-    reviewStructuresState: { structures },
-  } = useReviewStructureState()
+  const { reviewStructuresState } = useReviewStructureState()
   const { assignSectionsToUser } = useUpdateReviewAssignment(fullStructure)
   const { reassignSections } = useReasignReviewAssignment(fullStructure)
 
@@ -97,7 +95,7 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
       assignSectionsToUser({
         sectionCodes,
         assignment,
-        reviewStructure: structures[assignment.id],
+        reviewStructure: reviewStructuresState[assignment.id],
       })
     })
   }
