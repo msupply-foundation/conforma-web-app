@@ -166,8 +166,8 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
           )}
         </Grid.Column>
       </Grid.Row>
-      <Grid.Row>
-        {isReassignment && (
+      {isReassignment && (
+        <Grid.Row>
           <Reassignment
             assignments={assignments}
             sectionCode={sectionCode}
@@ -175,9 +175,9 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
             previousAssignee={assignmentOptions.selected}
             assignedSectionsState={assignedSectionsState}
           />
-        )}
-        <ModalConfirmation {...showUnassignmentModal} />
-      </Grid.Row>
+        </Grid.Row>
+      )}
+      <ModalConfirmation {...showUnassignmentModal} />
     </Grid>
   )
 }
