@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Message } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useReviewStructureState } from '../../../contexts/ReviewStructuresState'
@@ -11,13 +11,12 @@ interface ReviewHomeProps {
 
 // Component only used to update the contxt with reviewStructuresState (run one instance of hook)
 const Assignment: React.FC<ReviewHomeProps> = ({ assignment, structure }) => {
-  const {
-    reviewStructuresState: { syncToken, structures },
-    setReviewStructures,
-  } = useReviewStructureState()
+  const { reviewStructuresState, setReviewStructures } = useReviewStructureState()
   const { strings } = useLanguageProvider()
 
-  const shouldUpdate = !Object.keys(structures).some((key) => Number(key) === assignment.id)
+  const shouldUpdate = !Object.keys(reviewStructuresState).some(
+    (key) => Number(key) === assignment.id
+  )
 
   const { fullReviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment: assignment,
@@ -25,22 +24,17 @@ const Assignment: React.FC<ReviewHomeProps> = ({ assignment, structure }) => {
     awaitMode: !shouldUpdate,
   })
 
-  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
-
-  if (fullReviewStructure && shouldUpdate) {
-    // Token required because this was running on loop trying to set the Assignments many times
-    if (shouldUpdate && !syncToken) {
-      setReviewStructures({ type: 'getSyncToken' })
-
+  useEffect(() => {
+    if (fullReviewStructure && shouldUpdate) {
       setReviewStructures({
         type: 'addReviewStructure',
         reviewStructure: fullReviewStructure,
         assignment,
       })
-
-      setReviewStructures({ type: 'releaseSyncToken' })
     }
-  }
+  }, [fullReviewStructure])
+
+  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
 
   return null
 }
