@@ -19,6 +19,7 @@ type UseUpdateReviewAssignment = (structure: FullStructure) => {
     // Section code is optional if omitted all sections are assigned
     sectionCodes: string[]
     assignment: AssignmentDetails
+    reviewStructure: FullStructure
   }) => PromiseReturnType
 }
 
@@ -27,7 +28,8 @@ type ConstructAssignSectionPatch = (
   isFinalDecision: boolean,
   isSelfAssignment: boolean,
   sectionCodes: string[],
-  assignedSections: string[]
+  assignedSections: string[],
+  reviewStructure: FullStructure
 ) => ReviewAssignmentPatch
 
 const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
@@ -45,9 +47,10 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
     isFinalDecision,
     isSelfAssignable,
     sectionCodes,
-    assignedSections
+    assignedSections,
+    reviewStructure
   ) => {
-    const elements = Object.values(structure?.elementsById || {}).filter(
+    const elements = Object.values(reviewStructure?.elementsById || {}).filter(
       ({ element }) => element.category === TemplateElementCategory.Question
     )
 
@@ -97,7 +100,7 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
   }
 
   return {
-    assignSectionsToUser: async ({ sectionCodes, assignment }) => {
+    assignSectionsToUser: async ({ sectionCodes, assignment, reviewStructure }) => {
       const { id, isFinalDecision, isSelfAssignable, level, assignedSections } = assignment
       const result = await updateAssignment({
         variables: {
@@ -107,7 +110,8 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
             isFinalDecision,
             isSelfAssignable,
             sectionCodes,
-            assignedSections
+            assignedSections,
+            reviewStructure
           ),
         },
       })

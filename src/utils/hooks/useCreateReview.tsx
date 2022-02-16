@@ -6,19 +6,19 @@ import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSectio
 type UseCreateReviewMutationReturnType = ReturnType<typeof useCreateReviewMutation>
 type PromiseReturnType = ReturnType<UseCreateReviewMutationReturnType[0]>
 // hook used to start a review, , as per type definition below (returns promise that resolve with mutation result data)
-type UseCreateReview = (props: {
-  structure: FullStructure
-  assignment: AssignmentDetails
-}) => () => PromiseReturnType
+type UseCreateReview = (
+  fullReviewStructure: FullStructure
+  // assignment: AssignmentDetails
+) => () => PromiseReturnType
 
 type ConstructReviewInput = (structure: FullStructure) => ReviewInput
 
-const useCreateReview: UseCreateReview = ({ structure, assignment }) => {
+const useCreateReview: UseCreateReview = (fullReviewStructure) => {
   const [createReview] = useCreateReviewMutation()
+  const reviewAssignmentId = fullReviewStructure.assignment?.assignmentId
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
-    fullApplicationStructure: structure,
-    reviewAssignment: assignment,
+    fullReviewStructure,
   })
 
   const constructReviewInput: ConstructReviewInput = (structure) => {
@@ -31,9 +31,12 @@ const useCreateReview: UseCreateReview = ({ structure, assignment }) => {
     const reviewResponseCreate = reviewableElements.map(
       ({ lowerLevelReviewLatestResponse, response, reviewQuestionAssignmentId }) => {
         // link to applicaiton response or review response based on review level
-        const applicationResponseId = assignment.level > 1 ? undefined : response?.id
+        const applicationResponseId =
+          (fullReviewStructure.assignment?.assigneeLevel || 1) > 1 ? undefined : response?.id
         const reviewResponseLinkId =
-          assignment.level === 1 ? undefined : lowerLevelReviewLatestResponse?.id
+          (fullReviewStructure.assignment?.assigneeLevel || 1) === 1
+            ? undefined
+            : lowerLevelReviewLatestResponse?.id
         return {
           applicationResponseId,
           reviewResponseLinkId,
@@ -44,7 +47,7 @@ const useCreateReview: UseCreateReview = ({ structure, assignment }) => {
     // See comment at the bottom of file for resulting shape
     return {
       trigger: Trigger.OnReviewCreate,
-      reviewAssignmentId: assignment.id,
+      reviewAssignmentId,
       reviewResponsesUsingId: {
         create: reviewResponseCreate,
       },

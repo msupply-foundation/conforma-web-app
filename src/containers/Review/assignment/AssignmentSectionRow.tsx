@@ -50,7 +50,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   })
   const [assignedSections, setAssignedSections] = assignedSectionsState
   const [originalAssignee, setOriginalAssignee] = useState<string>()
-  const elements = Object.values(structure?.elementsById || {})
+  // const elements = Object.values(structure?.elementsById || {})
 
   useEffect(() => {
     if (assignmentOptions?.selected != NOT_ASSIGNED) {
@@ -72,7 +72,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   const assignmentOptions = getAssignmentOptions({
     assignments,
     sectionCode,
-    elements,
+    // elements,
     assignee: assignedSections[sectionCode]?.newAssignee,
   })
 
@@ -172,7 +172,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
           <Reassignment
             assignments={assignments}
             sectionCode={sectionCode}
-            elements={elements}
+            // elements={elements}
             isLastLevel={isLastLevel}
             previousAssignee={assignmentOptions.selected}
             assignedSectionsState={assignedSectionsState}

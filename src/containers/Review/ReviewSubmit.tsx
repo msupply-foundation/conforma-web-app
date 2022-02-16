@@ -95,7 +95,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
 
   // Need to refetch review status before submission, in case it's pending
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
-    fullApplicationStructure: structure,
+    fullReviewStructure: structure,
     reviewAssignment: assignment,
   })
 

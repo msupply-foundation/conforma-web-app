@@ -5,6 +5,7 @@ import {
   ChangeRequestsProgress,
   ConsolidationProgress,
   ReviewAction,
+  ReviewAssignment,
   ReviewProgress,
   ReviewSectionComponentProps,
 } from '../../utils/types'
@@ -82,11 +83,11 @@ const getConsolidatorChangesRequestedCount = (progress?: ChangeRequestsProgress)
 
 // Possible generate action button: START REVIEW, CONTINUE REVIEW, UPDATE REVIEW, RE-REVIEW or MAKE DECISION
 const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
-  fullStructure,
+  fullReviewStructure,
   section: { details, reviewProgress, consolidationProgress, changeRequestsProgress },
-  assignment,
+  // assignment,
   previousAssignment,
-  thisReview,
+  // thisReview,
   action,
 }) => {
   const { strings } = useLanguageProvider()
@@ -98,21 +99,21 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   const [error, setError] = useState(false)
 
   const remakeReview = useRemakePreviousReview({
-    structure: fullStructure,
-    assignment,
+    fullReviewStructure,
+    // assignment,
     previousAssignment,
   })
 
-  const restartReview = useRestartReview({
-    reviewId: thisReview?.id || 0,
-    structure: fullStructure,
-    assignment,
-  })
+  const restartReview = useRestartReview(
+    fullReviewStructure
+    // reviewId: thisReview?.id || 0,
+    // assignment,
+  )
 
-  const createReview = useCreateReview({
-    structure: fullStructure,
-    assignment,
-  })
+  const createReview = useCreateReview(
+    fullReviewStructure
+    // assignment,
+  )
 
   const getButtonName = () => {
     switch (action) {
@@ -144,9 +145,9 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   }
 
   const doAction = async () => {
-    const { isFinalDecision } = assignment
-    let reviewId = thisReview?.id as number
-    if (thisReview?.current.reviewStatus == ReviewStatus.Draft)
+    const { isFinalDecision } = fullReviewStructure.assignment as ReviewAssignment
+    let reviewId = fullReviewStructure.thisReview?.id as number
+    if (fullReviewStructure.thisReview?.current.reviewStatus == ReviewStatus.Draft)
       return push(
         `${pathname}/${reviewId}?activeSections=${isFinalDecision ? 'none' : details.code}`
       )
@@ -154,7 +155,7 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
     try {
       if (isFinalDecision)
         reviewId = (await remakeReview()).data?.createReview?.review?.id as number
-      else if (thisReview) await restartReview()
+      else if (fullReviewStructure.thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
       push(`${pathname}/${reviewId}?activeSections=${isFinalDecision ? 'none' : details.code}`)
     } catch (e) {
@@ -173,12 +174,12 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
 }
 
 const ViewSubmittedReviewButton: React.FC<ReviewSectionComponentProps> = ({
-  fullStructure,
+  fullReviewStructure,
   section: { details },
 }) => {
   const { strings } = useLanguageProvider()
   const { pathname, push } = useRouter()
-  const reviewId = fullStructure.thisReview?.id
+  const reviewId = fullReviewStructure.thisReview?.id
   return (
     <a
       className="user-action clickable"
@@ -191,12 +192,12 @@ const ViewSubmittedReviewButton: React.FC<ReviewSectionComponentProps> = ({
 
 // VIEW REVIEW Icon
 const ViewReviewIcon: React.FC<ReviewSectionComponentProps> = ({
-  fullStructure,
+  fullReviewStructure,
   section: { details },
 }) => {
   const { pathname, push } = useRouter()
 
-  const reviewId = fullStructure.thisReview?.id
+  const reviewId = fullReviewStructure.thisReview?.id
   return (
     <Icon
       name="chevron right"

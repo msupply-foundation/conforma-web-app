@@ -12,25 +12,25 @@ import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSectio
 type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewMutation>
 type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 // hook used to restart a review, , as per type definition below (returns promise that resolve with mutation result data)
-type UseRestartReview = (props: {
-  reviewId: number
-  structure: FullStructure
-  assignment: AssignmentDetails
-}) => () => PromiseReturnType
+type UseRestartReview = (
+  // reviewId: number
+  fullReviewStructure: FullStructure
+  // assignment: AssignmentDetails
+) => () => PromiseReturnType
 
 type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch
 
 // Need to duplicate or create new review responses for all assigned questions
-const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment }) => {
+const useRestartReview: UseRestartReview = (fullReviewStructure) => {
   const [updateReview] = useUpdateReviewMutation()
+  const reviewId = fullReviewStructure.thisReview?.id as number
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
-    fullApplicationStructure: structure,
-    reviewAssignment: assignment,
+    fullReviewStructure,
   })
 
   const shouldCreateConsolidationReviewResponse = (element: PageElement) => {
-    if (assignment.level === 1) return true
+    if (fullReviewStructure.assignment?.assigneeLevel === 1) return true
     return element?.lowerLevelReviewLatestResponse?.review?.status !== ReviewStatus.Draft
   }
 
@@ -41,7 +41,10 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
     const reviewableElements = elements.filter((element) => {
       const { isAssigned, isActiveReviewResponse, response } = element
       return (
-        shouldCreateConsolidationReviewResponse(element) && !!response && isAssigned && !isActiveReviewResponse
+        shouldCreateConsolidationReviewResponse(element) &&
+        !!response &&
+        isAssigned &&
+        !isActiveReviewResponse
       )
     })
 
@@ -55,9 +58,12 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
         reviewQuestionAssignmentId,
         lowerLevelReviewLatestResponse,
       }) => {
-        const applicationResponseId = assignment.level > 1 ? undefined : response?.id
+        const applicationResponseId =
+          (fullReviewStructure.assignment?.assigneeLevel || 1) > 1 ? undefined : response?.id
         const reviewResponseLinkId =
-          assignment.level === 1 ? undefined : lowerLevelReviewLatestResponse?.id
+          (fullReviewStructure.assignment?.assigneeLevel || 1) > 1
+            ? undefined
+            : lowerLevelReviewLatestResponse?.id
         // create new if element is awaiting review
         const shouldCreateNew = isPendingReview
         return {
@@ -87,7 +93,7 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
   return async () => {
     const result = await updateReview({
       variables: {
-        reviewId: reviewId,
+        reviewId,
         // See comment at the bottom of file for resulting shape
         reviewPatch: constructReviewPatch(await getFullReviewStructureAsync()),
       },

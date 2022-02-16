@@ -50,6 +50,7 @@ export {
   FullStructure,
   HistoryElement,
   LevelDetails,
+  LevelAssignments,
   LooseString,
   MethodRevalidate,
   MethodToCallProps,
@@ -65,6 +66,7 @@ export {
   ReviewQuestion,
   ReviewAssignment,
   ReviewSectionComponentProps,
+  ReviewStructureState,
   SectionAndPage,
   SectionDetails,
   SectionAssignee,
@@ -374,9 +376,12 @@ interface ResponsesByCode {
 }
 
 interface ReviewAssignment {
+  assignmentId: number
   assignee: GraphQLUser
   assigneeLevel: number
+  assigneeStage: number
   assignmentStatus: ReviewAssignmentStatus
+  assignmentDate: Date
   assignedSections: string[]
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
@@ -387,14 +392,17 @@ interface ReviewAssignment {
 }
 
 type ReviewSectionComponentProps = {
-  fullStructure: FullStructure
+  fullReviewStructure: FullStructure
   section: SectionState
-  assignment: AssignmentDetails
   previousAssignment: AssignmentDetails
-  thisReview?: ReviewDetails | null
   action: ReviewAction
   isAssignedToCurrentUser: boolean
   isConsolidation: boolean
+}
+
+interface ReviewStructureState {
+  reviewStructure: FullStructure
+  assignment: AssignmentDetails
 }
 
 interface ReviewDetails {
@@ -542,6 +550,10 @@ interface LevelDetails {
   number: number
 }
 
+interface LevelAssignments {
+  [level: number]: AssignmentDetails[]
+}
+
 interface TemplateCategoryDetails {
   title: string
   icon: SemanticICONS | undefined
@@ -634,8 +646,9 @@ interface LoginPayload {
 }
 
 interface UseGetReviewStructureForSectionProps {
-  fullApplicationStructure: FullStructure
-  reviewAssignment: AssignmentDetails
+  fullReviewStructure: FullStructure
+  reviewAssignment?: AssignmentDetails
+  previousAssignment?: AssignmentDetails
   filteredSectionIds?: number[]
   awaitMode?: boolean
 }
