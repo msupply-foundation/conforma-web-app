@@ -34,14 +34,12 @@ const useGetAssignmentOptions = () => {
   interface GetAssignmentOptionsProps {
     assignments: AssignmentDetails[]
     sectionCode: string
-    // elements: PageElement[]
     assignee?: number
   }
 
   const getAssignmentOptions = ({
     assignments,
     sectionCode,
-    // elements,
     assignee: previousAssignee,
   }: GetAssignmentOptionsProps): AssignmentOptions | null => {
     const currentSectionAssignable = assignments.filter(

@@ -35,18 +35,13 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   const sectionCode = section?.details.code
   const assignmentId = reviewStructure.assignment?.assignmentId
 
-  // const thisReview = fullReviewStructure?.thisReview
   // TODO: Make sure this fields is correctly set considering assignedSections
   const isAssignedToCurrentUser = !!section?.assignment?.isAssignedToCurrentUser
-  // !!section?.assignment?.isAssignedToCurrentUser &&
-  // fullReviewStructure.assignment?.assignedSections.includes(section.details.code)
 
   const props: ReviewSectionComponentProps = {
     fullReviewStructure: reviewStructure,
     section,
-    // assignment,
     previousAssignment,
-    // thisReview,
     action: section?.assignment?.action || ReviewAction.unknown,
     isConsolidation: section.assignment?.isConsolidation || false,
     isAssignedToCurrentUser,

@@ -14,9 +14,7 @@ import {
 const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
   fullReviewStructure: { assignment, thisReview },
   isAssignedToCurrentUser,
-  // thisReview,
   action,
-  // assignment,
 }) => {
   const { strings } = useLanguageProvider()
   const getLabel = () => {

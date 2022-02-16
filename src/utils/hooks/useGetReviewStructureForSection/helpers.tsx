@@ -8,7 +8,6 @@ import {
   ReviewStatus,
   ReviewAssignmentStatus,
 } from '../../generated/graphql'
-import stageFragment from '../../graphql/fragments/stage.fragment'
 import {
   addChangeRequestForReviewer,
   addElementsById,
