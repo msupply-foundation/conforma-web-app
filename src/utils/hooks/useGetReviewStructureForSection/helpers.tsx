@@ -33,11 +33,11 @@ import {
 } from '../../types'
 
 const getSectionIds = ({
-  fullReviewStructure,
+  reviewStructure,
   filteredSectionIds,
 }: UseGetReviewStructureForSectionProps) =>
   filteredSectionIds ||
-  Object.values(fullReviewStructure.sections).map((section) => section.details.id) ||
+  Object.values(reviewStructure.sections).map((section) => section.details.id) ||
   []
 
 interface CompileVariablesForReviewResponseQueryProps extends UseGetReviewStructureForSectionProps {
@@ -53,12 +53,12 @@ type GenerateReviewStructure = (
 const compileVariablesForReviewResponseQuery = ({
   reviewAssignment,
   sectionIds,
-  fullReviewStructure,
+  reviewStructure,
   currentUser,
 }: CompileVariablesForReviewResponseQueryProps) =>
   reviewAssignment
     ? {
-        applicationId: fullReviewStructure.info.id,
+        applicationId: reviewStructure.info.id,
         reviewAssignmentId: reviewAssignment.id as number,
         sectionIds,
         userId: currentUser?.userId as number,
@@ -72,13 +72,13 @@ const compileVariablesForReviewResponseQuery = ({
 const generateReviewStructure: GenerateReviewStructure = ({
   data,
   reviewAssignment,
-  fullReviewStructure,
+  reviewStructure,
   currentUser,
   sectionIds,
 }) => {
   // requires deep clone one we have concurrent useGetFullReviewStructure that could possibly
   // mutate fullApplicationStructure
-  let newStructure: FullStructure = cloneDeep(fullReviewStructure)
+  let newStructure: FullStructure = cloneDeep(reviewStructure)
 
   if (!reviewAssignment) return newStructure
 

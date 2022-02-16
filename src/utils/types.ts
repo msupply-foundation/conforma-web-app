@@ -391,7 +391,7 @@ interface ReviewAssignment {
 }
 
 type ReviewSectionComponentProps = {
-  fullReviewStructure: FullStructure
+  reviewStructure: FullStructure
   section: SectionState
   previousAssignment: AssignmentDetails
   action: ReviewAction
@@ -640,7 +640,7 @@ interface LoginPayload {
 }
 
 interface UseGetReviewStructureForSectionProps {
-  fullReviewStructure: FullStructure
+  reviewStructure: FullStructure
   reviewAssignment?: AssignmentDetails
   previousAssignment?: AssignmentDetails
   filteredSectionIds?: number[]

@@ -6,16 +6,16 @@ import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSectio
 type UseCreateReviewMutationReturnType = ReturnType<typeof useCreateReviewMutation>
 type PromiseReturnType = ReturnType<UseCreateReviewMutationReturnType[0]>
 // hook used to start a review, , as per type definition below (returns promise that resolve with mutation result data)
-type UseCreateReview = (fullReviewStructure: FullStructure) => () => PromiseReturnType
+type UseCreateReview = (reviewStructure: FullStructure) => () => PromiseReturnType
 
 type ConstructReviewInput = (structure: FullStructure) => ReviewInput
 
-const useCreateReview: UseCreateReview = (fullReviewStructure) => {
+const useCreateReview: UseCreateReview = (reviewStructure) => {
   const [createReview] = useCreateReviewMutation()
-  const reviewAssignmentId = fullReviewStructure.assignment?.assignmentId
+  const reviewAssignmentId = reviewStructure.assignment?.assignmentId
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
-    fullReviewStructure,
+    reviewStructure,
   })
 
   const constructReviewInput: ConstructReviewInput = (structure) => {
@@ -29,9 +29,9 @@ const useCreateReview: UseCreateReview = (fullReviewStructure) => {
       ({ lowerLevelReviewLatestResponse, response, reviewQuestionAssignmentId }) => {
         // link to applicaiton response or review response based on review level
         const applicationResponseId =
-          (fullReviewStructure.assignment?.assigneeLevel || 1) > 1 ? undefined : response?.id
+          (reviewStructure.assignment?.assigneeLevel || 1) > 1 ? undefined : response?.id
         const reviewResponseLinkId =
-          (fullReviewStructure.assignment?.assigneeLevel || 1) === 1
+          (reviewStructure.assignment?.assigneeLevel || 1) === 1
             ? undefined
             : lowerLevelReviewLatestResponse?.id
         return {

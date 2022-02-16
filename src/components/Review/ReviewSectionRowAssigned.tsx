@@ -12,7 +12,7 @@ import {
 } from './ReviewLabel'
 
 const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
-  fullReviewStructure: { assignment, thisReview },
+  reviewStructure: { assignment, thisReview },
   isAssignedToCurrentUser,
   action,
 }) => {

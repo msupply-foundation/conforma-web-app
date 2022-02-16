@@ -6,7 +6,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 
 const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
   action,
-  fullReviewStructure: {
+  reviewStructure: {
     assignment,
     thisReview,
     info: {

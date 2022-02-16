@@ -39,7 +39,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   const isAssignedToCurrentUser = !!section?.assignment?.isAssignedToCurrentUser
 
   const props: ReviewSectionComponentProps = {
-    fullReviewStructure: reviewStructure,
+    reviewStructure,
     section,
     previousAssignment,
     action: section?.assignment?.action || ReviewAction.unknown,
