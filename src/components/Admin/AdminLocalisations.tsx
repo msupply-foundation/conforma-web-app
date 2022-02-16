@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Header, Button, Checkbox } from 'semantic-ui-react'
 import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 import config from '../../config'
@@ -6,12 +6,14 @@ import { LanguageOption, useLanguageProvider } from '../../contexts/Localisation
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import useToast from '../../utils/hooks/useToast'
 import { exportLanguages } from '../../utils/localisation/exportLanguages'
+import { importLanguages } from '../../utils/localisation/importLanguages'
 
 export const AdminLocalisations: React.FC = () => {
   const { strings } = useLanguageProvider()
   usePageTitle(strings.PAGE_TITLE_LOCALISATION)
+  const fileInputRef = useRef<any>(null)
   const [exportDisabled, setExportDisabled] = useState(true)
-  const [importtDisabled, setImportDisabled] = useState(true)
+  const [importDisabled, setImportDisabled] = useState(true)
   const [installedLanguages, setInstalledLanguages] = useState<LanguageOption[]>([])
   const [toastComponent, showToast] = useToast({ position: 'top-left' })
 
@@ -47,6 +49,24 @@ export const AdminLocalisations: React.FC = () => {
     }
   }
 
+  const handleFileImport = async (e: any) => {
+    const file = e.target.files[0]
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      if (!event.target?.result) {
+        showToast({ title: 'Error', text: 'Problem processing file', style: 'error' })
+        return
+      }
+      importLanguages(event.target.result as string, importDisabled).then(({ success }) => {
+        if (!success) {
+          showToast({ title: 'Error', text: 'Problem processing file', style: 'error' })
+          return
+        }
+      })
+    }
+    reader.readAsText(file)
+  }
+
   return (
     <div id="localisation-panel">
       {toastComponent}
@@ -74,11 +94,20 @@ export const AdminLocalisations: React.FC = () => {
       </div>
       <Header as="h5">Import language files:</Header>
       <div className="flex-row-start-center" style={{ gap: 20 }}>
-        <Button primary content="Import" onClick={() => alert('Not implemented')} />
+        <input
+          type="file"
+          ref={fileInputRef}
+          hidden
+          name="file-upload"
+          multiple={false}
+          accept=".csv"
+          onChange={handleFileImport}
+        />
+        <Button primary content="Import" onClick={() => fileInputRef?.current?.click()} />
         <Checkbox
-          checked={exportDisabled}
-          onChange={() => setExportDisabled(!exportDisabled)}
-          label="Import disabled languages"
+          checked={importDisabled}
+          onChange={() => setImportDisabled(!importDisabled)}
+          label="Include disabled languages"
         />
       </div>
     </div>

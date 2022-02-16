@@ -5,7 +5,7 @@ import defaultLanguageStrings from '../../utils/defaultLanguageStrings'
 import { mapValues } from 'lodash'
 import { DateTime } from 'luxon'
 
-interface LanguageObject extends LanguageOption {
+export interface LanguageObject extends LanguageOption {
   translations: LanguageStrings
 }
 
