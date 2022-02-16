@@ -18,21 +18,21 @@ const Assignment: React.FC<ReviewHomeProps> = ({ assignment, structure }) => {
     (key) => Number(key) === assignment.id
   )
 
-  const { fullReviewStructure, error } = useGetReviewStructureForSections({
+  const { reviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment: assignment,
-    fullReviewStructure: structure,
+    reviewStructure: structure,
     awaitMode: !shouldUpdate,
   })
 
   useEffect(() => {
-    if (fullReviewStructure && shouldUpdate) {
+    if (reviewStructure && shouldUpdate) {
       setReviewStructures({
         type: 'addReviewStructure',
-        reviewStructure: fullReviewStructure,
+        reviewStructure,
         assignment,
       })
     }
-  }, [fullReviewStructure])
+  }, [reviewStructure])
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
 

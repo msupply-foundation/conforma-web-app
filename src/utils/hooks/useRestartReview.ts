@@ -5,28 +5,28 @@ import {
   Decision,
   ReviewStatus,
 } from '../generated/graphql'
-import { AssignmentDetails, FullStructure, PageElement } from '../types'
+import { FullStructure, PageElement } from '../types'
 import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSection'
 
 // below lines are used to get return type of the function that is returned by useRestartReviewMutation
 type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewMutation>
 type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 // hook used to restart a review, , as per type definition below (returns promise that resolve with mutation result data)
-type UseRestartReview = (fullReviewStructure: FullStructure) => () => PromiseReturnType
+type UseRestartReview = (reviewStructure: FullStructure) => () => PromiseReturnType
 
 type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch
 
 // Need to duplicate or create new review responses for all assigned questions
-const useRestartReview: UseRestartReview = (fullReviewStructure) => {
+const useRestartReview: UseRestartReview = (reviewStructure) => {
   const [updateReview] = useUpdateReviewMutation()
-  const reviewId = fullReviewStructure.thisReview?.id as number
+  const reviewId = reviewStructure.thisReview?.id as number
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
-    fullReviewStructure,
+    reviewStructure,
   })
 
   const shouldCreateConsolidationReviewResponse = (element: PageElement) => {
-    if (fullReviewStructure.assignment?.assigneeLevel === 1) return true
+    if (reviewStructure.assignment?.assigneeLevel === 1) return true
     return element?.lowerLevelReviewLatestResponse?.review?.status !== ReviewStatus.Draft
   }
 
@@ -55,9 +55,9 @@ const useRestartReview: UseRestartReview = (fullReviewStructure) => {
         lowerLevelReviewLatestResponse,
       }) => {
         const applicationResponseId =
-          (fullReviewStructure.assignment?.assigneeLevel || 1) > 1 ? undefined : response?.id
+          (reviewStructure.assignment?.assigneeLevel || 1) > 1 ? undefined : response?.id
         const reviewResponseLinkId =
-          (fullReviewStructure.assignment?.assigneeLevel || 1) > 1
+          (reviewStructure.assignment?.assigneeLevel || 1) > 1
             ? undefined
             : lowerLevelReviewLatestResponse?.id
         // create new if element is awaiting review
