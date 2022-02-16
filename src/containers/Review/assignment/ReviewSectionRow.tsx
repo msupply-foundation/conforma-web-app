@@ -1,61 +1,52 @@
 import React from 'react'
-import { Grid, Message } from 'semantic-ui-react'
-import { Loading } from '../../../components'
+import { Grid } from 'semantic-ui-react'
 import {
   ReviewSectionRowAssigned,
   ReviewSectionRowLastActionDate,
   ReviewSectionRowProgress,
   ReviewSectionRowAction,
 } from '../../../components/Review'
-import { useLanguageProvider } from '../../../contexts/Localisation'
-import useGetReviewStructureForSections from '../../../utils/hooks/useGetReviewStructureForSection'
 import {
   AssignmentDetails,
-  FullStructure,
   ReviewAction,
   ReviewSectionComponentProps,
+  ReviewStructureState,
 } from '../../../utils/types'
 
 // Component renders a line for review assignment within a section
 // to be used in ReviewHome and Expansions
 type ReviewSectionRowProps = {
   sectionId: number
-  assignment: AssignmentDetails
   previousAssignment: AssignmentDetails
-  fullApplicationStructure: FullStructure
+  reviewState: ReviewStructureState
 }
 
 const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   sectionId,
-  assignment,
   previousAssignment,
-  fullApplicationStructure,
+  reviewState,
 }) => {
-  const { strings } = useLanguageProvider()
-  const { fullReviewStructure, error } = useGetReviewStructureForSections({
-    reviewAssignment: assignment,
-    fullApplicationStructure,
-    filteredSectionIds: [sectionId],
-  })
-
-  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
-  if (!fullReviewStructure) return <Loading />
-
-  const section = fullReviewStructure.sortedSections?.find(
+  const section = reviewState.reviewStructure.sortedSections?.find(
     (section) => section.details.id === sectionId
   )
 
   if (!section) return null
 
-  const thisReview = fullReviewStructure?.thisReview
+  const sectionCode = section?.details.code
+  const { id } = reviewState.assignment
+
+  // const thisReview = fullReviewStructure?.thisReview
+  // TODO: Make sure this fields is correctly set considering assignedSections
   const isAssignedToCurrentUser = !!section?.assignment?.isAssignedToCurrentUser
+  // !!section?.assignment?.isAssignedToCurrentUser &&
+  // fullReviewStructure.assignment?.assignedSections.includes(section.details.code)
 
   const props: ReviewSectionComponentProps = {
-    fullStructure: fullReviewStructure,
+    fullReviewStructure: reviewState.reviewStructure,
     section,
-    assignment,
+    // assignment,
     previousAssignment,
-    thisReview,
+    // thisReview,
     action: section?.assignment?.action || ReviewAction.unknown,
     isConsolidation: section.assignment?.isConsolidation || false,
     isAssignedToCurrentUser,
@@ -67,7 +58,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     section?.assignment?.isReviewable
 
   return (
-    <>
+    <div key={`section_${sectionCode}_assignment_${id}`}>
       {canRenderRow && (
         <Grid className="review-section-row" verticalAlign="middle">
           <Grid.Row columns={4}>
@@ -78,7 +69,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
           </Grid.Row>
         </Grid>
       )}
-    </>
+    </div>
   )
 }
 

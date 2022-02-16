@@ -31,7 +31,7 @@ const NewCommentForm: React.FC<{
       setError(strings.REVIEW_NOTES_COMMENT_ERROR)
       return
     }
-    await submit(currentUser as User, structure, comment, files)
+    const result = await submit(currentUser as User, structure, comment, files)
     setState({ ...state, showForm: false, comment: '', files: [] })
   }
 
@@ -49,15 +49,13 @@ const NewCommentForm: React.FC<{
             {reactStringReplace(
               strings.REVIEW_NOTES_MARKDOWN_SUPPORT,
               strings.MARKDOWN,
-              (match, index) => (
-                <a href={strings.MARKDOWN_LINK} target="_blank" key={index}>
+              (match) => (
+                <a href={strings.MARKDOWN_LINK} target="_blank">
                   {match}
                 </a>
               )
             )}
           </label>
-        </Form.Field>
-        <Form.Field>
           <div className="textarea-row" style={{ gap: 15 }}>
             <Form.TextArea
               rows={6}

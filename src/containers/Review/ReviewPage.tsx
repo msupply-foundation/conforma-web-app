@@ -52,16 +52,18 @@ const ReviewPage: React.FC<{
     userState: { currentUser },
   } = useUserState()
 
-  const { push, query } = useRouter()
+  const { push } = useRouter()
 
   const { fullReviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment,
-    fullApplicationStructure,
+    fullReviewStructure: fullApplicationStructure,
   })
 
   const { isSectionActive, toggleSection } = useQuerySectionActivation({
     defaultActiveSectionCodes: [],
-    allSections: Object.keys(fullApplicationStructure.sections).map((section) => section),
+    allSections: (fullReviewStructure?.sortedSections as SectionState[]).map(
+      (section) => section.details.code
+    ),
   })
 
   const { addScrollable, scrollTo } = useScrollableAttachments()
@@ -211,8 +213,8 @@ const ReviewPage: React.FC<{
               />
             )}
             responsesByCode={responsesByCode as ResponsesByCode}
-            applicationData={fullApplicationStructure.info}
-            stages={fullApplicationStructure.stages.map(({ stage }) => stage)}
+            applicationData={fullReviewStructure.info}
+            stages={fullReviewStructure.stages.map(({ stage }) => stage)}
             serial={serial}
             isReview
             isConsolidation={section.assignment?.isConsolidation}

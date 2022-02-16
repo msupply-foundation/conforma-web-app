@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Grid, Label, ModalProps } from 'semantic-ui-react'
 import ModalConfirmation from '../../../components/Main/ModalConfirmation'
-import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import {
   ReviewAssignmentStatus,
@@ -40,9 +39,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     option: strings.BUTTON_SUBMIT,
   }
   const getAssignmentOptions = useGetAssignmentOptions()
-  const {
-    userState: { currentUser },
-  } = useUserState()
   const [isReassignment, setIsReassignment] = useState(false)
   const [assignmentError, setAssignmentError] = useState(false)
   const [unassignmentError, setUnassignmentError] = useState(false)
@@ -54,7 +50,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   })
   const [assignedSections, setAssignedSections] = assignedSectionsState
   const [originalAssignee, setOriginalAssignee] = useState<string>()
-  const elements = Object.values(structure?.elementsById || {})
+  // const elements = Object.values(structure?.elementsById || {})
 
   useEffect(() => {
     if (assignmentOptions?.selected != NOT_ASSIGNED) {
@@ -73,15 +69,12 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
       setEnableSubmit(true)
   }, [assignedSections])
 
-  const assignmentOptions = getAssignmentOptions(
-    {
-      assignments,
-      sectionCode,
-      elements,
-      assignee: assignedSections[sectionCode]?.newAssignee,
-    },
-    currentUser
-  )
+  const assignmentOptions = getAssignmentOptions({
+    assignments,
+    sectionCode,
+    // elements,
+    assignee: assignedSections[sectionCode]?.newAssignee,
+  })
 
   if (!assignmentOptions) return null
 
@@ -179,7 +172,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
           <Reassignment
             assignments={assignments}
             sectionCode={sectionCode}
-            elements={elements}
+            // elements={elements}
             isLastLevel={isLastLevel}
             previousAssignee={assignmentOptions.selected}
             assignedSectionsState={assignedSectionsState}

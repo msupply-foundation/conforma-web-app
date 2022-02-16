@@ -8,7 +8,7 @@ import useGetAssignmentOptions from './useGetAssignmentOptions'
 interface ReassignmentProps {
   assignments: AssignmentDetails[]
   sectionCode: string
-  elements: PageElement[]
+  // elements: PageElement[]
   isLastLevel: (selectedIndex: number) => boolean
   previousAssignee: number
   assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
@@ -17,7 +17,7 @@ interface ReassignmentProps {
 const Reassignment: React.FC<ReassignmentProps> = ({
   assignments,
   sectionCode,
-  elements,
+  // elements,
   isLastLevel,
   previousAssignee,
   assignedSectionsState,
@@ -26,15 +26,12 @@ const Reassignment: React.FC<ReassignmentProps> = ({
   const getAssignmentOptions = useGetAssignmentOptions()
   const [reassignmentError, setReassignmentError] = useState(false)
   const [assignedSections, setAssignedSections] = assignedSectionsState
-  const assignmentOptions = getAssignmentOptions(
-    {
-      assignments,
-      sectionCode,
-      elements,
-      assignee: previousAssignee,
-    },
-    null
-  )
+  const assignmentOptions = getAssignmentOptions({
+    assignments,
+    sectionCode,
+    // elements,
+    assignee: previousAssignee,
+  })
   if (!assignmentOptions) return null
 
   const onReassignment = async (value: number) => {

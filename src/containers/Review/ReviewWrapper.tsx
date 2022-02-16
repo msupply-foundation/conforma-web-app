@@ -15,7 +15,7 @@ interface ReviewWrapperProps {
   structure: FullStructure
 }
 
-const tabIdentifiers = ['overview', 'assignment', 'notes', 'documents']
+const tabIdentifiers = ['overview', 'assignment', 'summary', 'notes', 'documents']
 
 const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   const { strings } = useLanguageProvider()
@@ -73,7 +73,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       menuItem: strings.REVIEW_TAB_ASSIGNMENT,
       render: () => (
         <Tab.Pane>
-          <AssignmentTab structure={fullStructure} />
+          <AssignmentTab fullApplicationStructure={fullStructure} />
         </Tab.Pane>
       ),
     },

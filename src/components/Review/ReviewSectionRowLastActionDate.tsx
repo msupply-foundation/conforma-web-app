@@ -6,9 +6,15 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 
 const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
   action,
-  thisReview,
-  assignment,
-  fullStructure,
+  fullReviewStructure: {
+    assignment,
+    thisReview,
+    info: {
+      current: { timeStatusCreated },
+    },
+  },
+  // thisReview,
+  // assignment,
 }) => {
   const { strings } = useLanguageProvider()
   const getContent = () => {
@@ -27,7 +33,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
         return (
           <LastDate
             title={strings.ACTION_DATE_ASSIGNED}
-            indicator={getSimplifiedTimeDifference(assignment.current.timeStatusUpdated)}
+            indicator={getSimplifiedTimeDifference(assignment?.assignmentDate)}
           />
         )
       }
@@ -35,7 +41,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
         return (
           <LastDate
             title={strings.LABEL_APPLICATION_SUBMITTED}
-            indicator={getSimplifiedTimeDifference(fullStructure?.info.current?.timeStatusCreated)}
+            indicator={getSimplifiedTimeDifference(timeStatusCreated)}
           />
         )
     }

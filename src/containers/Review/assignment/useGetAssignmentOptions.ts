@@ -34,33 +34,33 @@ const useGetAssignmentOptions = () => {
   interface GetAssignmentOptionsProps {
     assignments: AssignmentDetails[]
     sectionCode: string
-    elements: PageElement[]
+    // elements: PageElement[]
     assignee?: number
   }
 
-  const getAssignmentOptions = (
-    { assignments, sectionCode, elements, assignee: previousAssignee }: GetAssignmentOptionsProps,
-    currentUser: User | null
-  ): AssignmentOptions | null => {
+  const getAssignmentOptions = ({
+    assignments,
+    sectionCode,
+    // elements,
+    assignee: previousAssignee,
+  }: GetAssignmentOptionsProps): AssignmentOptions | null => {
     const currentSectionAssignable = assignments.filter(
-      ({ assignableSectionRestrictions }) =>
-        assignableSectionRestrictions.length === 0 ||
-        assignableSectionRestrictions.includes(sectionCode)
+      ({ allowedSections }) => allowedSections.length === 0 || allowedSections.includes(sectionCode)
     )
 
     const currentUserAssignable = currentSectionAssignable.filter(
       ({ isCurrentUserAssigner, isSelfAssignable }) => isCurrentUserAssigner || isSelfAssignable
     )
 
-    // Dont' want to render assignment section row if they have no actions
-    if (currentUserAssignable.length === 0) return null
-    const numberOfAssignableElements = elements.filter(
-      ({ element }) =>
-        (!sectionCode || element.sectionCode === sectionCode) &&
-        element.category === TemplateElementCategory.Question
-    ).length
+    // // Dont' want to render assignment section row if they have no actions
+    // if (currentUserAssignable.length === 0) return null
+    // const numberOfAssignableElements = elements.filter(
+    //   ({ element }) =>
+    //     (!sectionCode || element.sectionCode === sectionCode) &&
+    //     element.category === TemplateElementCategory.Question
+    // ).length
 
-    if (numberOfAssignableElements === 0) return null
+    // if (numberOfAssignableElements === 0) return null
 
     const currentlyAssigned = assignments.find(
       (assignment) =>
