@@ -26,7 +26,9 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
   setAssignedSections,
   setEnableSubmit,
 }) => {
-  const { reviewStructuresState } = useReviewStructureState()
+  const {
+    reviewStructuresState: { structures },
+  } = useReviewStructureState()
 
   return (
     <>
@@ -45,15 +47,15 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
                   setEnableSubmit,
                 }}
               />
-              {(assignments as AssignmentDetails[]).map((assignment) => {
-                return reviewStructuresState[assignment.id] ? (
+              {(assignments as AssignmentDetails[]).map((assignment) =>
+                structures[assignment.id] ? (
                   <ReviewSectionRow
                     sectionId={id}
-                    reviewState={reviewStructuresState[assignment.id]}
+                    reviewStructure={structures[assignment.id]}
                     previousAssignment={assignmentInPreviousStage}
                   />
                 ) : null
-              })}
+              )}
             </>
           ))}
         </Segment>

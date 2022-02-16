@@ -66,7 +66,6 @@ export {
   ReviewQuestion,
   ReviewAssignment,
   ReviewSectionComponentProps,
-  ReviewStructureState,
   SectionAndPage,
   SectionDetails,
   SectionAssignee,
@@ -398,11 +397,6 @@ type ReviewSectionComponentProps = {
   action: ReviewAction
   isAssignedToCurrentUser: boolean
   isConsolidation: boolean
-}
-
-interface ReviewStructureState {
-  reviewStructure: FullStructure
-  assignment: AssignmentDetails
 }
 
 interface ReviewDetails {

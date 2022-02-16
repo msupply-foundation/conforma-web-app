@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Container, Label, Message } from 'semantic-ui-react'
+import { Container, Label, Message } from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
 import Assignment from './Assignment'
 import { useUserState } from '../../../contexts/UserState'
@@ -65,8 +65,6 @@ const AssignmentTab: React.FC<{
 
   if (loading || !fullStructure) return <Loading />
   if (!assignments || assignments.length === 0) return <NoMatch />
-
-  console.log('Render ASSIGNMENT_TAB', fullStructure, currentUser)
 
   // Get Previous stage (last level reviewer) assignment
   const assignmentInPreviousStage = getPreviousStageAssignment(

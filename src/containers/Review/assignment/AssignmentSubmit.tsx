@@ -20,11 +20,11 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
   enableSubmit,
 }) => {
   const { strings } = useLanguageProvider()
-  const { reviewStructuresState } = useReviewStructureState()
+  const {
+    reviewStructuresState: { structures },
+  } = useReviewStructureState()
   const { assignSectionsToUser } = useUpdateReviewAssignment(fullStructure)
   const { reassignSections } = useReasignReviewAssignment(fullStructure)
-
-  console.log('render ASSIGNMENT_SUBMIT after update on reviewState?', reviewStructuresState)
 
   const submitAssignments = () => {
     // Re-assignment - grouping sections that belong to same (new) assignment
@@ -94,12 +94,10 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
       }
     })
     assignmentGroupedSections.forEach(({ sectionCodes, assignment }) => {
-      console.log('Before assignment', reviewStructuresState[assignment.id])
-
       assignSectionsToUser({
         sectionCodes,
         assignment,
-        reviewStructure: reviewStructuresState[assignment.id].reviewStructure,
+        reviewStructure: structures[assignment.id],
       })
     })
   }
