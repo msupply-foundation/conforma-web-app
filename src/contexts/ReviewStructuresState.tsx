@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useReducer } from 'react'
-import { AssignmentDetails, FullStructure, ReviewStructureState } from '../utils/types'
+import { AssignmentDetails, FullStructure } from '../utils/types'
 
 type ReviewStructuresState = {
-  [assignmentId: number]: ReviewStructureState
+  structures: { [assignmentId: number]: FullStructure }
+  syncToken: boolean
 }
 
 export type ReviewStructuresActions =
@@ -16,6 +17,12 @@ export type ReviewStructuresActions =
       fullApplicationStructure: FullStructure
       assignments: AssignmentDetails[]
     }
+  | {
+      type: 'getSyncToken'
+    }
+  | {
+      type: 'releaseSyncToken'
+    }
 
 type InitialState = (props: {
   fullApplicationStructure: FullStructure
@@ -23,12 +30,15 @@ type InitialState = (props: {
 }) => ReviewStructuresState
 
 const initialState: InitialState = ({ fullApplicationStructure, assignments }) => {
-  return assignments.reduce((reviewStructures: ReviewStructuresState, assignment) => {
-    return {
-      ...reviewStructures,
-      [assignment.id]: { reviewStructure: fullApplicationStructure, assignment },
-    }
-  }, {})
+  return assignments.reduce(
+    (reviewStructures: ReviewStructuresState, assignment) => {
+      return {
+        ...reviewStructures,
+        structures: { ...reviewStructures.structures, [assignment.id]: fullApplicationStructure },
+      }
+    },
+    { syncToken: false, structures: {} }
+  )
 }
 
 const reducer = (state: ReviewStructuresState, action: ReviewStructuresActions) => {
@@ -38,14 +48,19 @@ const reducer = (state: ReviewStructuresState, action: ReviewStructuresActions) 
       return initialState({ fullApplicationStructure, assignments })
     case 'addReviewStructure':
       const { reviewStructure, assignment } = action
-      // console.log('adding reviewStrcuture in REVIEW_STATE', state, 'new state', {
-      //   ...state,
-      //   [assignment.id]: { reviewStructure, assignment },
-      // })
-
       return {
         ...state,
-        [assignment.id]: { reviewStructure, assignment },
+        structures: { ...state.structures, [assignment.id]: reviewStructure },
+      }
+    case 'getSyncToken':
+      return {
+        ...state,
+        syncToken: true,
+      }
+    case 'releaseSyncToken':
+      return {
+        ...state,
+        syncToken: false,
       }
     default:
       return state
@@ -56,7 +71,7 @@ const initialReviewStateContext: {
   reviewStructuresState: ReviewStructuresState
   setReviewStructures: React.Dispatch<ReviewStructuresActions>
 } = {
-  reviewStructuresState: {},
+  reviewStructuresState: { structures: {}, syncToken: false },
   setReviewStructures: () => {},
 }
 

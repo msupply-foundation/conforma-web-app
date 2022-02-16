@@ -8,9 +8,9 @@ import {
 } from '../../../components/Review'
 import {
   AssignmentDetails,
+  FullStructure,
   ReviewAction,
   ReviewSectionComponentProps,
-  ReviewStructureState,
 } from '../../../utils/types'
 
 // Component renders a line for review assignment within a section
@@ -18,22 +18,22 @@ import {
 type ReviewSectionRowProps = {
   sectionId: number
   previousAssignment: AssignmentDetails
-  reviewState: ReviewStructureState
+  reviewStructure: FullStructure
 }
 
 const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   sectionId,
   previousAssignment,
-  reviewState,
+  reviewStructure,
 }) => {
-  const section = reviewState.reviewStructure.sortedSections?.find(
+  const section = reviewStructure.sortedSections?.find(
     (section) => section.details.id === sectionId
   )
 
   if (!section) return null
 
   const sectionCode = section?.details.code
-  const { id } = reviewState.assignment
+  const assignmentId = reviewStructure.assignment?.assignmentId
 
   // const thisReview = fullReviewStructure?.thisReview
   // TODO: Make sure this fields is correctly set considering assignedSections
@@ -42,7 +42,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   // fullReviewStructure.assignment?.assignedSections.includes(section.details.code)
 
   const props: ReviewSectionComponentProps = {
-    fullReviewStructure: reviewState.reviewStructure,
+    fullReviewStructure: reviewStructure,
     section,
     // assignment,
     previousAssignment,
@@ -58,7 +58,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     section?.assignment?.isReviewable
 
   return (
-    <div key={`section_${sectionCode}_assignment_${id}`}>
+    <div key={`section_${sectionCode}_assignment_${assignmentId}`}>
       {canRenderRow && (
         <Grid className="review-section-row" verticalAlign="middle">
           <Grid.Row columns={4}>
