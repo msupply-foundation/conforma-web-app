@@ -143,7 +143,8 @@ interface AssignmentDetails {
   isLocked: boolean
   totalAssignedQuestions: number
   reviewQuestionAssignments: ReviewQuestionAssignment[]
-  assignableSectionRestrictions: (string | null)[]
+  allowedSections: string[]
+  assignedSections: string[]
 }
 
 interface AssignmentOptions {
