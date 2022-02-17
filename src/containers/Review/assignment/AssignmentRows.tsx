@@ -1,5 +1,5 @@
 import React, { SetStateAction } from 'react'
-import { Container, Grid, Header, Segment } from 'semantic-ui-react'
+import { Header, Segment } from 'semantic-ui-react'
 import { useReviewStructureState } from '../../../contexts/ReviewStructuresState'
 import {
   AssignmentDetails,

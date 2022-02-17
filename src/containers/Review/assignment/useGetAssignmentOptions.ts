@@ -1,15 +1,5 @@
-import {
-  AssignmentDetails,
-  AssignmentOptions,
-  AssignmentOption,
-  PageElement,
-  User,
-} from '../../../utils/types'
-import {
-  ReviewAssignmentStatus,
-  ReviewStatus,
-  TemplateElementCategory,
-} from '../../../utils/generated/graphql'
+import { AssignmentDetails, AssignmentOptions, AssignmentOption } from '../../../utils/types'
+import { ReviewAssignmentStatus, ReviewStatus } from '../../../utils/generated/graphql'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 
 const NOT_ASSIGNED = 0
@@ -50,20 +40,12 @@ const useGetAssignmentOptions = () => {
       ({ isCurrentUserAssigner, isSelfAssignable }) => isCurrentUserAssigner || isSelfAssignable
     )
 
-    // // Dont' want to render assignment section row if they have no actions
-    // if (currentUserAssignable.length === 0) return null
-    // const numberOfAssignableElements = elements.filter(
-    //   ({ element }) =>
-    //     (!sectionCode || element.sectionCode === sectionCode) &&
-    //     element.category === TemplateElementCategory.Question
-    // ).length
-
-    // if (numberOfAssignableElements === 0) return null
-
-    const currentlyAssigned = assignments.find(
-      (assignment) =>
-        assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned &&
-        matchAssignmentToSection(assignment, sectionCode)
+    const currentlyAssigned = assignments.find((assignment) =>
+      assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned &&
+      // Restriction only apply to level one that isn't lastLevel
+      (assignment.review?.level || 1 > 1 || assignment.isLastLevel)
+        ? true
+        : matchAssignmentToSection(assignment, sectionCode)
     )
 
     if (!previousAssignee && currentlyAssigned)
