@@ -813,6 +813,22 @@ a:hover {
   }
 }
 
+// Assignment tab
+#assignment-tab {
+  .ui.grid {
+    margin: 0;
+    .assigning-row {
+      background-color: @surfacesMed;
+    }
+  }
+  .ui.grid > .row {
+    border-radius: 6px;
+    padding: 0px;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+  }
+}
 // Notes tab
 
 #notes-tab {
