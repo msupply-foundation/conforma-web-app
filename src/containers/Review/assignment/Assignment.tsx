@@ -9,7 +9,7 @@ interface ReviewHomeProps {
   structure: FullStructure
 }
 
-// Component only used to update the contxt with reviewStructuresState (run one instance of hook)
+// Component only used to update the context with reviewStructuresState (run one instance of hook)
 const Assignment: React.FC<ReviewHomeProps> = ({ assignment, structure }) => {
   const { reviewStructuresState, setReviewStructures } = useReviewStructureState()
   const { strings } = useLanguageProvider()
