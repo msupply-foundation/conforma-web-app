@@ -833,6 +833,9 @@ a:hover {
       margin-bottom: 5px;
       // max-width: 700px;
     }
+    .ui.label.simple-label {
+      height: 100%;
+    }
   }
   .ui.grid > .row {
     border-radius: 6px;
