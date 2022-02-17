@@ -15,7 +15,7 @@ interface ReviewWrapperProps {
   structure: FullStructure
 }
 
-const tabIdentifiers = ['overview', 'assignment', 'summary', 'notes', 'documents']
+const tabIdentifiers = ['overview', 'assignment', 'notes', 'documents']
 
 const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   const { strings } = useLanguageProvider()
